@@ -16,9 +16,6 @@ import ctSim.*;
  */
 public class Controller {
 	protected static World world;
-
-	protected static WorldView worldView;
-
 	protected static ControlFrame controlFrame;
 
 	private static boolean test;
@@ -27,8 +24,6 @@ public class Controller {
 
 	public static void main(String[] args) {
 		world = new World();
-		worldView = new WorldView();
-		world.setWorldView(worldView);
 		controlFrame = new ControlFrame();
 		controlFrame.setVisible(true);
 		world.setControlFrame(controlFrame);
@@ -80,11 +75,10 @@ public class Controller {
 	}
 
 	/**
-	 * Gibt den Hinweis, dass sich der Zustand der Welt geaendert hat, an den
-	 * WorldView weiter
+	 * Gibt der Welt den Hinweis, dass sich ihr Zustand geaendert hat
 	 */
 	public static void noteChange() {
-		worldView.repaint();
+		world.noteChange();
 	}
 
 	/**
@@ -99,12 +93,5 @@ public class Controller {
 	 */
 	public static World getWorld() {
 		return world;
-	}
-
-	/**
-	 * @return Gibt worldView zurueck.
-	 */
-	public static WorldView getWorldView() {
-		return worldView;
 	}
 }

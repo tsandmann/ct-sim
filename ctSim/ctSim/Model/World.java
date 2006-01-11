@@ -4,17 +4,34 @@ import ctSim.Controller.Controller;
 import ctSim.View.ControlFrame;
 import ctSim.View.WorldView;
 
+import java.awt.Color;
 import java.util.*;
 
+import javax.media.j3d.Appearance;
+import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Canvas3D;
+import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.PickBounds;
 import javax.media.j3d.PickConeRay;
 import javax.media.j3d.PickInfo;
 import javax.media.j3d.PickShape;
+import javax.media.j3d.TexCoordGeneration;
+import javax.media.j3d.Texture;
+import javax.media.j3d.Texture2D;
 import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
+
+import com.sun.j3d.utils.behaviors.picking.PickRotateBehavior;
+import com.sun.j3d.utils.geometry.Box;
+import com.sun.j3d.utils.image.TextureLoader;
+import com.sun.j3d.utils.universe.SimpleUniverse;
 
 /**
  * Welt-Modell, kuemmert sich um die globale Simulation und das Zeitmanagement
@@ -30,10 +47,10 @@ public class World extends Thread {
 	private ControlFrame controlFrame;
 
 	/** Hoehe des Spielfelds in m */
-	public static final short PLAYGROUND_HEIGHT = 1;
+	public static final float PLAYGROUND_HEIGHT = 1f;
 
 	/** Breite des Spielfelds in m */
-	public static final short PLAYGROUND_WIDTH = 1;
+	public static final float PLAYGROUND_WIDTH = 1f;
 
 	/** Zeitbasis in Millisekunden. Realzeit - So oft wird simuliert */
 	public int baseTimeReal = 10;
@@ -60,14 +77,157 @@ public class World extends Thread {
 	/** Interne Zeitbasis in Millisekunden. */
 	private long simulTime = 0;
 
+	/** Zwei BranchGroups, eine fuer die ganze Welt, 
+	 * die andere fuer die Hindernisse */ 
+	public BranchGroup scene, obstBG;
+	
+	/** TransformGroup der gesamten Welt. Hier kommen auch die Bots hinein */
+	private TransformGroup worldTG;
+	
+	/** Die Klasse SimpleUniverse macht die Handhabung der Welt etwas leichter  */
+	private SimpleUniverse simpleUniverse;
+
+	public static final String WALL_TEXTURE = "textures/rock_wall.jpg";
+
+	
 	/** Erzeugt eine neue Welt */
 	public World() {
+
 		bots = new LinkedList();
 		obstacles = new LinkedList();
 		haveABreak = false;
+		
+		worldView = new WorldView(this);
+		
+		simpleUniverse = new SimpleUniverse(worldView.getWorldCanvas());
+		scene = createSceneGraph();
+		simpleUniverse.addBranchGraph(scene);
+		
+		worldView.setUniverse(simpleUniverse);
+		worldView.initGUI();
 
 	}
 
+	
+	/**
+	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
+	 * 
+	 * @return der Szenegraph
+	 */
+	public BranchGroup createSceneGraph() {
+		// Die Wurzel des Ganzen:
+		BranchGroup objRoot = new BranchGroup();
+		
+        PickRotateBehavior pickRotate = null;
+        Transform3D transform = new Transform3D();
+        BoundingSphere behaveBounds = new BoundingSphere();
+        
+        // TODO Diesen deprecated Dreh-Code Durch echte Navigation ersetzen. 
+        // TODO Dazu das Packet Navigation Packet von http://code.j3d.org/ verwenden 
+		// Alles um einen konstanten z-Wert nach hinten verschieben,
+		// damit die Welt zu sehen ist!!
+        // Und erlauben es zu drehen
+
+        pickRotate = new PickRotateBehavior(objRoot, worldView.getWorldCanvas(), behaveBounds);
+        objRoot.addChild(pickRotate);
+        
+        transform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));
+        worldTG = new TransformGroup(transform);
+        worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        worldTG.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+        worldTG.setPickable(true);
+
+        objRoot.addChild(worldTG);
+
+		// Der Boden der Roboterwelt ist hellgrau:
+		ColoringAttributes fieldAppCol = new ColoringAttributes((new Color3f(Color.LIGHT_GRAY)), ColoringAttributes.FASTEST);
+		Appearance fieldApp = new Appearance();
+		fieldApp.setColoringAttributes(fieldAppCol);
+
+		// Der Boden selbst ist ein sehr flacher Quader:
+		Box floor = new Box(PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, (float)0.01, fieldApp);
+		floor.setPickable(false);		
+		worldTG.addChild(floor);
+		
+		// Die TranformGroup fuer alle Hindernisse:
+		obstBG = new BranchGroup(); 
+		obstBG.setPickable(true);
+
+		// Vier quaderfoermige, dunkelgraue Hindernisse begrenzen die Roboterwelt:
+		ColoringAttributes obstAppCol = new ColoringAttributes((new Color3f(Color.DARK_GRAY)), ColoringAttributes.FASTEST);
+		Appearance obstApp = new Appearance();
+		obstApp.setColoringAttributes(obstAppCol);
+
+		// Textur
+		TexCoordGeneration tcg = new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR,
+				TexCoordGeneration.TEXTURE_COORDINATE_3,
+				new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),
+				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f),
+				new Vector4f(1.0f, 0.0f, 1.0f, 0.0f));
+		obstApp.setTexCoordGeneration(tcg);
+		TextureLoader loader = new TextureLoader(WALL_TEXTURE, worldView.getWorldCanvas());
+		Texture2D texture = (Texture2D)loader.getTexture();
+		texture.setBoundaryModeS(Texture.WRAP);
+		texture.setBoundaryModeT(Texture.WRAP);
+		obstApp.setTexture(texture);		
+		
+		// Die vier Hindernisse:
+		Box north = new Box(PLAYGROUND_WIDTH + (float)0.2, (float)0.1, (float)0.2,obstApp );
+		north.setPickable(true);
+		north.setName("North");
+		Box south = new Box(PLAYGROUND_WIDTH + (float)0.2, (float)0.1, (float)0.2,obstApp);
+		south.setPickable(true);
+		south.setName("South");
+		Box east = new Box((float)0.1, PLAYGROUND_HEIGHT + (float)0.2, (float)0.2,obstApp);
+		east.setPickable(true);
+		east.setName("East");
+		Box west = new Box((float)0.1, PLAYGROUND_HEIGHT + (float)0.2, (float)0.2,obstApp);
+		west.setPickable(true);
+		west.setName("West");
+
+		// Hindernisse werden an die richtige Position geschoben:
+		Transform3D translate = new Transform3D();
+
+		translate.set(new Vector3f((float)0, PLAYGROUND_HEIGHT + (float)0.1, (float)0.2));
+		TransformGroup tg1 = new TransformGroup(translate);
+        tg1.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tg1.setPickable(true);
+		tg1.addChild(north);
+		obstBG.addChild(tg1);
+		
+		translate.set(new Vector3f((float)0, -(PLAYGROUND_HEIGHT + (float)0.1), (float)0.2));
+		TransformGroup tg2 = new TransformGroup(translate);
+        tg2.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+        tg2.setPickable(true);
+        tg2.addChild(south);
+		obstBG.addChild(tg2);
+
+		translate.set(new Vector3f(PLAYGROUND_WIDTH + (float)0.1, (float)0, (float)0.2));
+		TransformGroup tg3 = new TransformGroup(translate);
+        tg3.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+        tg3.setPickable(true);
+        tg3.addChild(east);
+		obstBG.addChild(tg3);
+
+		translate.set(new Vector3f(-(PLAYGROUND_WIDTH + (float)0.1), (float)0, (float)0.2));
+		TransformGroup tg4 = new TransformGroup(translate);
+        tg4.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+        tg4.setPickable(true);
+        tg4.addChild(west);
+        obstBG.addChild(tg4);
+                
+		obstBG.compile();
+		
+		// Die Hindernisse der Welt hinzufuegen
+		worldTG.addChild(obstBG);
+		// es duerfen noch weitere dazukommen
+		worldTG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		
+		return objRoot;
+	}
+	
+	
 	/**
 	 * Fuegt einen Bot in die Welt ein
 	 * 
@@ -77,9 +237,9 @@ public class World extends Thread {
 	public void addBot(Bot bot) {
 		bots.add(bot);
 		bot.setWorld(this);
-		worldView.addBot(bot.getBotBG());
+		worldTG.addChild(bot.getBotBG());
 	}
-
+	
 	/**
 	 * Prueft, ob ein Bot mit irgendeinem anderen Objekt kollidiert
 	 * 
@@ -96,7 +256,7 @@ public class World extends Thread {
 		bounds.transform(transform);
 
 		// und noch die Welttransformation darauf anwenden
-		getWorldView().getWorldTG().getTransform(transform);
+		worldTG.getTransform(transform);
 		bounds.transform(transform);
 
 		PickBounds pickShape = new PickBounds(bounds);
@@ -110,7 +270,7 @@ public class World extends Thread {
 		// @see http://java3d.j3d.org/implementation/collision.html
 		// @see http://java3d.j3d.org/tutorials/
 		// @see http://code.j3d.org/
-		PickInfo pickInfo = worldView.obstBG.pickAny(PickInfo.PICK_BOUNDS,
+		PickInfo pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS,
 				PickInfo.NODE, pickShape);
 
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
@@ -118,6 +278,62 @@ public class World extends Thread {
 		else
 			return false;
 	}
+
+	/**
+	 * Liefert die Distanz in Metern zum naechesten Objekt zurueck, das man
+	 * sieht, wenn man von der uebergebenen Position aus in Richtung des
+	 * uebergebenen Vektors schaut.
+	 * 
+	 * @param pos
+	 *            Die Position, von der aus der Seh-Strahl verfolgt wird
+	 * @param heading
+	 *            Die Blickrichtung
+	 * @return Die Distanz zum naechsten Objekt in Metern
+	 */
+	public double watchObstacle(Point3d pos, Vector3d heading) {
+
+		// TODO: liefert immer nur 0 zurueck!
+
+		// TODO: Sehstrahl oeffnet einen Konus mit dem festen Winkel von 3 Grad;
+		// mus an realen IR-Sensor angepasst werden!
+
+		// Falls die Welt verschoben wurde:
+		Point3d relPos = new Point3d(pos);
+		Transform3D transform = new Transform3D();
+		worldTG.getTransform(transform);
+		transform.transform(relPos);
+
+		// oder rotiert:
+		Vector3d relHeading = new Vector3d(heading);
+		transform.transform(relHeading);
+
+		PickShape pickShape = new PickConeRay(relPos, relHeading,
+				Math.PI / 180 * 3);
+		PickInfo pickInfo = obstBG.pickClosest(
+				PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE, pickShape);
+
+		if (pickInfo == null)
+			return 100.0;
+		else
+			return pickInfo.getClosestDistance();
+	}
+	
+	
+	/**
+	 * Gibt Nachricht von aussen, dass sich der Zustand der Welt geaendert hat, 
+	 * an den View weiter
+	 */
+	public void noteChange(){
+		worldView.repaint();
+	}
+	
+	/**
+	 * @return Gibt simpleUniverse zurueck.
+	 */
+	public SimpleUniverse getSimpleUniverse() {
+		return simpleUniverse;
+	}
+
 
 	/**
 	 * Raumt auf, wenn der Simulator beendet wird
@@ -211,7 +427,7 @@ public class World extends Thread {
 				simulTime += baseTimeVirtual / 2;
 				// dann WorldView benachrichtigen,
 				// dass neu gezeichnet werden soll:
-				Controller.getWorldView().reactToChange();
+				worldView.repaint();
 			}
 		}
 	}
@@ -240,45 +456,7 @@ public class World extends Thread {
 		this.simulTime = simulTime;
 	}
 
-	/**
-	 * Liefert die Distanz in Metern zum naechesten Objekt zurueck, das man
-	 * sieht, wenn man von der uebergebenen Position aus in Richtung des
-	 * uebergebenen Vektors schaut.
-	 * 
-	 * @param pos
-	 *            Die Position, von der aus der Seh-Strahl verfolgt wird
-	 * @param heading
-	 *            Die Blickrichtung
-	 * @return Die Distanz zum naechsten Objekt in Metern
-	 */
-	public double watchObstacle(Point3d pos, Vector3d heading) {
-
-		// TODO: liefert immer nur 0 zurueck!
-
-		// TODO: Sehstrahl oeffnet einen Konus mit dem festen Winkel von 3 Grad;
-		// mus an realen IR-Sensor angepasst werden!
-
-		// Falls die Welt verschoben wurde:
-		Point3d relPos = new Point3d(pos);
-		Transform3D transform = new Transform3D();
-		worldView.getWorldTG().getTransform(transform);
-		transform.transform(relPos);
-
-		// oder rotiert:
-		Vector3d relHeading = new Vector3d(heading);
-		transform.transform(relHeading);
-
-		PickShape pickShape = new PickConeRay(relPos, relHeading,
-				Math.PI / 180 * 3);
-		PickInfo pickInfo = worldView.obstBG.pickClosest(
-				PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE, pickShape);
-
-		if (pickInfo == null)
-			return 100.0;
-		else
-			return pickInfo.getClosestDistance();
-	}
-
+	
 	/**
 	 * @return Gibt bots zurueck.
 	 */
