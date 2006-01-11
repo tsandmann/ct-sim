@@ -26,9 +26,9 @@ public class World extends Thread {
 	/** Ein Link auf die Darstellung der Welt */
 	private WorldView worldView;
 
-	/** Ein Link auf den Controller */
+	/** Ein Link auf die Kontroll-Panele */
 	private ControlFrame controlFrame;
-	
+
 	/** Hoehe des Spielfelds in m */
 	public static final short PLAYGROUND_HEIGHT = 1;
 
@@ -50,13 +50,13 @@ public class World extends Thread {
 	/** Liste mit allen Hindernissen, die in dieser Welt stehen */
 	private List obstacles;
 
-	/** Soll der Thread noch laufen */
+	/** Soll der Thread noch laufen? */
 	private boolean run = true;
 
-	/** Soll der Thread kurzzeitig ruhen */
-	
-private boolean haveABreak;
-	
+	/** Soll der Thread kurzzeitig ruhen? */
+
+	private boolean haveABreak;
+
 	/** Interne Zeitbasis in Millisekunden. */
 	private long simulTime = 0;
 
@@ -69,7 +69,7 @@ private boolean haveABreak;
 	}
 
 	/**
-	 * Fügt einen Bot in die Welt ein
+	 * Fuegt einen Bot in die Welt ein
 	 * 
 	 * @param bot
 	 *            Der neue Bot
@@ -77,48 +77,50 @@ private boolean haveABreak;
 	public void addBot(Bot bot) {
 		bots.add(bot);
 		bot.setWorld(this);
-		
 		worldView.addBot(bot.getBotBG());
 	}
 
 	/**
-	 * Prüft, ob ein Bot mit irgendeinem anderen Objekt kollidiert
+	 * Prueft, ob ein Bot mit irgendeinem anderen Objekt kollidiert
 	 * 
-	 * @param pickShape die zu prüfende Form
+	 * @param pickShape
+	 *            die zu pruefende Form
 	 * @return True wenn der Bot sich frei bewegen kann
 	 * @see World#playground
 	 */
-	public synchronized boolean checkCollision(Bounds bounds, Vector3f newPosition) {
-		// Bound an die neue Position
+	public synchronized boolean checkCollision(Bounds bounds,
+			Vector3f newPosition) {
+		// schiebe probehalber Bound an die neue Position
 		Transform3D transform = new Transform3D();
 		transform.setTranslation(newPosition);
 		bounds.transform(transform);
-		
-		// und noch die Welttransformation drauf
-		getWorldView().getWorldTG().getTransform(transform);		
-		bounds.transform(transform);
-				
-		PickBounds pickShape = new PickBounds(bounds);
-		// TODO Obwohl die obstBG gewählt ist, findet er auch andere Bots und den Fussboden
-		// Das sollte noch gelöst werden. Im Moment sind die Bots und der Boden nich Pickable
-        PickInfo pickInfo = worldView.obstBG.pickAny(PickInfo.PICK_BOUNDS,PickInfo.NODE,pickShape);
 
-        if ((pickInfo == null)||(pickInfo.getNode() == null)) 
-	    	return true;
-        else
-        	return false;
-        
+		// und noch die Welttransformation darauf anwenden
+		getWorldView().getWorldTG().getTransform(transform);
+		bounds.transform(transform);
+
+		PickBounds pickShape = new PickBounds(bounds);
+		// TODO: Obwohl nur die Branch Group der Hindernisse obstBG gewaehlt
+		// ist, werden auch Kollisionen mit anderen Bots und dem Fussboden
+		// gefunden
+		// Workaround: Im Moment sind die Bots und der Boden nicht Pickable!
+		// Anregungen zu Loesung:
 		// @see http://www.lems.brown.edu/~wq/projects/cs252.html
 		// @see http://forum.java.sun.com/thread.jspa?threadID=656337&tstart=135
-	    // @see http://java3d.j3d.org/implementation/collision.html
-	    // @see http://java3d.j3d.org/tutorials/
-	    // @see http://code.j3d.org/
-        
+		// @see http://java3d.j3d.org/implementation/collision.html
+		// @see http://java3d.j3d.org/tutorials/
+		// @see http://code.j3d.org/
+		PickInfo pickInfo = worldView.obstBG.pickAny(PickInfo.PICK_BOUNDS,
+				PickInfo.NODE, pickShape);
+
+		if ((pickInfo == null) || (pickInfo.getNode() == null))
+			return true;
+		else
+			return false;
 	}
 
 	/**
-	 * Hier wird aufgeräumt, wenn die Arbeit beendet ist connections auflösen,
-	 * Handler zerstören, usw.
+	 * Raumt auf, wenn der Simulator beendet wird
 	 * 
 	 * @see World#run()
 	 */
@@ -132,7 +134,7 @@ private boolean haveABreak;
 	}
 
 	/**
-	 * Beendet den World-Thread<b>
+	 * Beendet den World-Thread
 	 * 
 	 * @see World#run()
 	 */
@@ -145,145 +147,140 @@ private boolean haveABreak;
 	}
 
 	/**
-	 * @return Returns the baseTimeReal.
+	 * @return Gibt baseTimeReal zurueck.
 	 */
 	public int getBaseTimeReal() {
 		return baseTimeReal;
 	}
 
 	/**
-	 * @return Returns the baseTimeVirtuell.
+	 * @return Gibt baseTimeVirtual zurueck.
 	 */
 	public int getBaseTimeVirtual() {
 		return baseTimeVirtual;
 	}
 
 	/**
-	 * Liefert die Weltzeit (simulTime) zurück<b> Blockiert, bis der nächste
-	 * Simualationschritt gekommen ist.<b> Diese Funktion dient der
-	 * Synhronisation zwischen Bots und Welt
+	 * Liefert die Weltzeit (simulTime) zurueck. Blockiert, bis der naechste
+	 * Simualationschritt gekommen ist. Diese Methode dient der Synchronisation
+	 * zwischen Bots und Welt
 	 * 
 	 * @return Die aktuelle Weltzeit in ms
 	 * @throws InterruptedException
 	 */
 	public long getSimulTime() throws InterruptedException {
 		synchronized (this) {
-			wait(); // Send all threads calling this method to sleep
+			// Alle Threads, die diese Methode aufrufen, werden schlafen gelegt:
+			wait();
 		}
 		return simulTime;
 	}
 
 	/**
-	 * Hier geschieht die Welt-Simulation Und vorallem die Zeitsynchronisation
+	 * Ueberschriebene run()-Methode der Oberklasse Thread. Hier geschieht die
+	 * Welt-Simulation und vor allem auch die Zeitsynchronisation der
+	 * simulierten Bots
 	 * 
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
 		while (run == true) {
-			if (!haveABreak){
-			try {
-				// Halbe baseTime warten,
-				sleep(baseTimeReal / 2);
-			} catch (InterruptedException IEx) {
-				cleanup();
-			}
-			// simulierte Zeit erh�hen,
-			simulTime += baseTimeVirtual / 2;
-			// System.out.println("SimulTime= "+simulTime);
-			// dann alle Bots benachrichtigen,
-			// alle wartenden Threads wieder wecken:
-			synchronized (this) {
-				notifyAll();
-			}
+			// Ist die Pause-Taste in der GUI gedrueckt worden?
+			if (!haveABreak) {
+				try {
+					// halbe baseTime warten,
+					sleep(baseTimeReal / 2);
+				} catch (InterruptedException IEx) {
+					cleanup();
+				}
+				// dann simulierte Zeit erhoehen,
+				simulTime += baseTimeVirtual / 2;
+				// dann alle Bots benachrichtigen, also
+				// alle wartenden Threads wieder wecken:
+				synchronized (this) {
+					notifyAll();
+				}
 
-			try {
-				// Nochmal halbe baseTime warten,
-				sleep(baseTimeReal / 2);
-			} catch (InterruptedException IEx) {
-				cleanup();
-			}
-			// simulierte Zeit erh�hen,
-			simulTime += baseTimeVirtual / 2;
-			// System.out.println("SimulTime= "+simulTime);
-			// dann WorldView benachrichtigen:
-			Controller.getWorldView().reactToChange();
+				try {
+					// nochmal halbe baseTime warten,
+					sleep(baseTimeReal / 2);
+				} catch (InterruptedException IEx) {
+					cleanup();
+				}
+				// simulierte Zeit erhoehen,
+				simulTime += baseTimeVirtual / 2;
+				// dann WorldView benachrichtigen,
+				// dass neu gezeichnet werden soll:
+				Controller.getWorldView().reactToChange();
 			}
 		}
 	}
 
 	/**
 	 * @param baseTimeReal
-	 *            The baseTimeReal to set.
+	 *            Wert fuer baseTimeReal, der gesetzt werden soll.
 	 */
 	public void setBaseTimeReal(int baseTimeReal) {
 		this.baseTimeReal = baseTimeReal;
 	}
 
 	/**
-	 * @param baseTimeVirtuell
-	 *            The baseTimeVirtuell to set.
+	 * @param baseTimeVirtual
+	 *            Wert fuer baseTimeVirtual, der gesetzt werden soll.
 	 */
-	public void setBaseTimeVirtuell(int baseTimeVirtuell) {
-		this.baseTimeVirtual = baseTimeVirtuell;
+	public void setBaseTimeVirtual(int baseTimeVirtual) {
+		this.baseTimeVirtual = baseTimeVirtual;
 	}
 
 	/**
 	 * @param simulTime
-	 *            The simulTime to set.
+	 *            Wert fuer simulTime, der gesetzt werden soll.
 	 */
 	public void setSimulTime(long simulTime) {
 		this.simulTime = simulTime;
 	}
 
 	/**
-	 * Liefert die Distanz in m zum nähesten Objekt zurück, das man sieht,
-	 * wenn man von pos aus in Richtung heading schaut.
+	 * Liefert die Distanz in Metern zum naechesten Objekt zurueck, das man
+	 * sieht, wenn man von der uebergebenen Position aus in Richtung des
+	 * uebergebenen Vektors schaut.
 	 * 
 	 * @param pos
-	 *            Die Position von der aus der Strahl verfolgt wird
+	 *            Die Position, von der aus der Seh-Strahl verfolgt wird
 	 * @param heading
 	 *            Die Blickrichtung
-	 * @return Die Distanz zum nächsten Objekt in m
+	 * @return Die Distanz zum naechsten Objekt in Metern
 	 */
 	public double watchObstacle(Point3d pos, Vector3d heading) {
-		// TODO Check Opening Angle! now fixed 3.0 degrees
 
-		// The world maight be translated
+		// TODO: liefert immer nur 0 zurueck!
+
+		// TODO: Sehstrahl oeffnet einen Konus mit dem festen Winkel von 3 Grad;
+		// mus an realen IR-Sensor angepasst werden!
+
+		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
 		Transform3D transform = new Transform3D();
 		worldView.getWorldTG().getTransform(transform);
 		transform.transform(relPos);
-		
-		// or rotated
+
+		// oder rotiert:
 		Vector3d relHeading = new Vector3d(heading);
 		transform.transform(relHeading);
-		
-        PickShape pickShape = new PickConeRay(relPos,relHeading ,Math.PI/180 * 3);
-        PickInfo pickInfo = worldView.obstBG.pickClosest(PickInfo.PICK_GEOMETRY,PickInfo.CLOSEST_DISTANCE,pickShape);
-	        
-	    if (pickInfo == null) 
-	    	return 100.0;
-	    else 
-	    	return pickInfo.getClosestDistance();
+
+		PickShape pickShape = new PickConeRay(relPos, relHeading,
+				Math.PI / 180 * 3);
+		PickInfo pickInfo = worldView.obstBG.pickClosest(
+				PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE, pickShape);
+
+		if (pickInfo == null)
+			return 100.0;
+		else
+			return pickInfo.getClosestDistance();
 	}
 
 	/**
-	 * @return Returns the obstacles.
-	 */
-	public List getObstacles() {
-		return obstacles;
-	}
-
-	/**
-	 * @param obstacles
-	 *            The obstacles to set.
-	 */
-	public void setObstacles(List obstacles) {
-		this.obstacles = obstacles;
-	}
-
-	/**
-	 * @return Returns the bots.
+	 * @return Gibt bots zurueck.
 	 */
 	public List getBots() {
 		return bots;
@@ -291,38 +288,55 @@ private boolean haveABreak;
 
 	/**
 	 * @param bots
-	 *            The bots to set.
+	 *            Wert fuer bots, der gesetzt werden soll.
 	 */
 	public void setBots(List bots) {
 		this.bots = bots;
 	}
 
 	/**
-	 * @return Returns the worldView.
-	 */
-	public WorldView getWorldView() {
-		return worldView;
-	}
-
-	/**
-	 * @param worldView The worldView to set.
-	 */
-	public void setWorldView(WorldView worldView) {
-		this.worldView = worldView;
-	}
-	
-	/**
-	 * @return Returns the controlFrame.
+	 * @return Gibt controlFrame zurueck.
 	 */
 	public ControlFrame getControlFrame() {
 		return controlFrame;
 	}
 
 	/**
-	 * @param controlFrame The controlFrame to set.
+	 * @param controlFrame
+	 *            Wert fuer controlFrame, der gesetzt werden soll.
 	 */
 	public void setControlFrame(ControlFrame controlFrame) {
 		this.controlFrame = controlFrame;
+	}
+
+	/**
+	 * @return Gibt obstacles zurueck.
+	 */
+	public List getObstacles() {
+		return obstacles;
+	}
+
+	/**
+	 * @param obstacles
+	 *            Wert fuer obstacles, der gesetzt werden soll.
+	 */
+	public void setObstacles(List obstacles) {
+		this.obstacles = obstacles;
+	}
+
+	/**
+	 * @return Gibt worldView zurueck.
+	 */
+	public WorldView getWorldView() {
+		return worldView;
+	}
+
+	/**
+	 * @param worldView
+	 *            Wert fuer worldView, der gesetzt werden soll.
+	 */
+	public void setWorldView(WorldView worldView) {
+		this.worldView = worldView;
 	}
 
 	/**
@@ -333,7 +347,8 @@ private boolean haveABreak;
 	}
 
 	/**
-	 * @param haveABreak Wert fuer haveABreak, der gesetzt werden soll.
+	 * @param haveABreak
+	 *            Wert fuer haveABreak, der gesetzt werden soll.
 	 */
 	public void setHaveABreak(boolean haveABreak) {
 		this.haveABreak = haveABreak;
