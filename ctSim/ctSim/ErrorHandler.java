@@ -1,15 +1,18 @@
 package ctSim;
 
 /**
- * Klasse um Fehler zentral auszugeben
+ * Hilfsklasse, um Fehler zentral auszugeben
+ * 
  * @author Benjamin Benz (bbe@heise.de)
  */
 public class ErrorHandler {
 	/**
 	 * Meldet einen Fehler
-	 * @param code Der Fehler
+	 * 
+	 * @param code
+	 *            der Fehler
 	 */
-	public static void error(String code){
+	public static void error(String code) {
 		System.err.println(code);
 	}
 }
