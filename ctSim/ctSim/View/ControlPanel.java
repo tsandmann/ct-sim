@@ -3,6 +3,7 @@ package ctSim.View;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import java.awt.Dimension;
 import javax.swing.JTextField;
 
 import ctSim.Model.Bot;
@@ -23,9 +24,15 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	public ControlPanel(Bot bot) {
 		super();
 		this.bot = bot;
+		Dimension dim = new Dimension(30, 25);
 		xPosField = new JTextField();
 		yPosField = new JTextField();
 		headField = new JTextField();
+
+		xPosField.setPreferredSize(dim);
+		yPosField.setPreferredSize(dim);
+		headField.setPreferredSize(dim);
+
 	}
 
 	protected abstract void initGUI(); 

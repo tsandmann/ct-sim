@@ -77,8 +77,8 @@ public class Controller {
 	/**
 	 * Gibt der Welt den Hinweis, dass sich ihr Zustand geaendert hat
 	 */
-	public static void noteChange() {
-		world.noteChange();
+	public static void reactToChange() {
+		world.reactToChange();
 	}
 
 	/**

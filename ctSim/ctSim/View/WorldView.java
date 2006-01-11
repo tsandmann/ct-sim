@@ -43,7 +43,6 @@ public class WorldView extends JFrame {
 
 		worldCanvas = new Canvas3D(null);
 		
-
 		this.getContentPane().add(worldCanvas);
 
 	}

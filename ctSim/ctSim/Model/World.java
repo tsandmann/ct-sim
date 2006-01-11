@@ -1,6 +1,5 @@
 package ctSim.Model;
 
-import ctSim.Controller.Controller;
 import ctSim.View.ControlFrame;
 import ctSim.View.WorldView;
 
@@ -11,7 +10,6 @@ import javax.media.j3d.Appearance;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Canvas3D;
 import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.PickBounds;
 import javax.media.j3d.PickConeRay;
@@ -323,7 +321,7 @@ public class World extends Thread {
 	 * Gibt Nachricht von aussen, dass sich der Zustand der Welt geaendert hat, 
 	 * an den View weiter
 	 */
-	public void noteChange(){
+	public void reactToChange(){
 		worldView.repaint();
 	}
 	

@@ -17,16 +17,6 @@ import javax.vecmath.Vector3f;
 import ctSim.Model.CtBot;
 import ctSim.SimUtils;
 
-/**
- * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
- * Builder, which is free for non-commercial use. If Jigloo is being used
- * commercially (ie, by a corporation, company or business for any purpose
- * whatever) then you should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details. Use of Jigloo implies
- * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
- * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
- * ANY CORPORATE OR COMMERCIAL PURPOSE.
- */
 public class CtControlPanel extends ControlPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -361,10 +351,10 @@ public class CtControlPanel extends ControlPanel {
 
 			keyPanel = new JPanel();
 			super.add(keyPanel);
-			keyPanel.setSize(535, 200);
-			keyPanel.setPreferredSize(new java.awt.Dimension(10, 200));
-			keyPanel.setMaximumSize(new java.awt.Dimension(32767, 200));
-			keyPanel.setMinimumSize(new java.awt.Dimension(10, 200));
+	//		keyPanel.setSize(535, 200);
+	//		keyPanel.setPreferredSize(new java.awt.Dimension(10, 200));
+//			keyPanel.setMaximumSize(new java.awt.Dimension(32767, 200));
+	//		keyPanel.setMinimumSize(new java.awt.Dimension(10, 200));
 			{
 				rc5Panel = new JPanel();
 				keyPanel.add(rc5Panel);
@@ -374,7 +364,7 @@ public class CtControlPanel extends ControlPanel {
 				rc5PanelLayout.setColumns(3);
 				rc5PanelLayout.setRows(8);
 				rc5Panel.setLayout(rc5PanelLayout);
-				rc5Panel.setSize(535, 200);
+		//		rc5Panel.setSize(535, 200);
 				rc5Panel.setPreferredSize(new java.awt.Dimension(200, 200));
 				{
 					jButtonOnOff = new JButton();
@@ -596,10 +586,10 @@ public class CtControlPanel extends ControlPanel {
 				{
 					motorLabelL = new JLabel();
 					motPanelL.add(motorLabelL);
-					motorLabelL.setText("left motor speed");
-					motorLabelL.setSize(100, 14);
+					motorLabelL.setText("Motor PWM");
+	//				motorLabelL.setSize(100, 14);
 					motorLabelL
-							.setPreferredSize(new java.awt.Dimension(100, 0));
+							.setPreferredSize(new java.awt.Dimension(100, 25));
 				}
 				{
 					motorValueL = new JTextField();
@@ -607,9 +597,9 @@ public class CtControlPanel extends ControlPanel {
 					motorValueL.setText("0");
 					motorValueL.setEditable(false);
 					motorValueL.setBounds(-66, 14, 265, 25);
-					motorValueL.setSize(100, 41);
+	//				motorValueL.setSize(100, 41);
 					motorValueL
-							.setPreferredSize(new java.awt.Dimension(100, 25));
+							.setPreferredSize(new java.awt.Dimension(50, 25));
 				}
 			}
 			{
@@ -621,9 +611,9 @@ public class CtControlPanel extends ControlPanel {
 				{
 					irLabelL = new JLabel();
 					irPanelL.add(irLabelL);
-					irLabelL.setText("left IR sensor");
-					irLabelL.setSize(100, 14);
-					irLabelL.setPreferredSize(new java.awt.Dimension(100, 0));
+					irLabelL.setText("IR-Sensor");
+	//				irLabelL.setSize(100, 14);
+					irLabelL.setPreferredSize(new java.awt.Dimension(100, 25));
 				}
 				{
 					irValueL = new JTextField();
@@ -683,9 +673,9 @@ public class CtControlPanel extends ControlPanel {
 					{
 						motLabelR = new JLabel();
 						motPanelR.add(motLabelR);
-						motLabelR.setText("right motor speed");
+						motLabelR.setText("Motor PWM");
 						motLabelR.setPreferredSize(new java.awt.Dimension(100,
-								0));
+								25));
 					}
 					{
 						motorValueR = new JTextField();
@@ -693,9 +683,9 @@ public class CtControlPanel extends ControlPanel {
 						motorValueR.setText("0");
 						motorValueR.setEditable(false);
 						motorValueR.setBounds(-180, -3, 180, 20);
-						motorValueR.setSize(100, 25);
+	//					motorValueR.setSize(100, 25);
 						motorValueR.setPreferredSize(new java.awt.Dimension(
-								100, 20));
+								50, 25));
 					}
 				}
 				{
@@ -707,19 +697,19 @@ public class CtControlPanel extends ControlPanel {
 					{
 						irLabelR = new JLabel();
 						irPanelR.add(irLabelR);
-						irLabelR.setText("right IR sensor");
-						irLabelR.setSize(100, 14);
+						irLabelR.setText("IR-Sensor");
+		//				irLabelR.setSize(100, 14);
 						irLabelR
-								.setPreferredSize(new java.awt.Dimension(100, 0));
+								.setPreferredSize(new java.awt.Dimension(100, 25));
 					}
 					{
 						irValueR = new JTextField();
 						irPanelR.add(irValueR);
 						irValueR.setText("0");
 						irValueR.setEditable(false);
-						irValueR.setPreferredSize(new java.awt.Dimension(100,
-								20));
-						irValueR.setSize(100, 25);
+						irValueR.setPreferredSize(new java.awt.Dimension(50,
+								25));
+		//				irValueR.setSize(100, 25);
 					}
 				}
 
@@ -782,7 +772,7 @@ public class CtControlPanel extends ControlPanel {
 			 * Headings aus dem Bot gesetzt:
 			 */
 			if (!head) {
-				headSlider.setValue(SimUtils.vec3fToInt(bot.getHeading()));
+				headSlider.setValue(Math.round(Math.round(SimUtils.vec3fToDouble(bot.getHeading()))));
 			} else {
 				/* Ansonsten bestimmt der Slider den Wert beim Bot: */
 				bot.setHeading(SimUtils.intToVec3f(headSlider.getValue()));
@@ -790,10 +780,8 @@ public class CtControlPanel extends ControlPanel {
 				// super.getHeadField().setText(new Integer(headSlider.getValue()).toString())
 ;			}
 		}
-		// TODO: Fixme!
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
 		super.getHeadField().setText(SimUtils.vec3fToString(bot.getHeading()));
-		
 		
 		// Position:
 
@@ -829,7 +817,7 @@ public class CtControlPanel extends ControlPanel {
 		Integer yApprox = new Integer(Math.round(Math.round(bot.getPos().y * 100)));
 		super.getXPosField().setText(xApprox.toString());
 		super.getYPosField().setText(yApprox.toString());
-
+		
 		// IR-Sensoren:
 
 		if (bot.CAP_SENS_IR) {
@@ -866,6 +854,7 @@ public class CtControlPanel extends ControlPanel {
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
 		motorValueR.setText(Short.toString(bot.getAktMotR()));
 
+		super.repaint();
 		this.repaint();
 	}
 }
