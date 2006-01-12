@@ -89,21 +89,23 @@ abstract public class Bot extends Thread implements Obstacle{
 	
 	/**
 	 * Hier wird aufgeraeumt, wenn die Arbeit beendet ist:
-	 * Connections aufloesen, Handler zerstoeren, usw.
-	 * @see AbstractBot#work()
+	 * Verbindungen zur Welt und zum ControlPanel werden aufgeloest,
+	 * das Panel wird aus dem ControlFrame entfernt
+	 * @see Bot#work()
 	 */
 	protected void cleanup(){
-		world=null;	// Release World
-		panel=null;	// Release Panel	==> panel.die() ???
+		world=null;
+		panel.remove();
+		panel=null;	
 	}
 	
 	/**
-	 * Die Hauptschleife des Threads <br>
-	 * Die run-Methode arbeitet drei Schritte ab: <br>
-	 * 1. init() - initilaisiert alles <br>
-	 * 2. work() - wird in einer Schleife immer wieder aufgerufen <br>
-	 * 3. cleanup() - raeumt auf <br>
-	 * Die Methode die() beendet die Schleife <br>
+	 * Die Hauptschleife des Threads
+	 * Die run-Methode arbeitet drei Schritte ab:
+	 * 1. init() - initilaisiert alles
+	 * 2. work() - wird in einer Schleife immer wieder aufgerufen 
+	 * 3. cleanup() - raeumt auf 
+	 * Die Methode die() beendet die Schleife 
 	 * 
 	 * @see AbstractBot#init()
 	 * @see AbstractBot#work()
@@ -140,8 +142,6 @@ abstract public class Bot extends Thread implements Obstacle{
 	public void die(){
 		run=false;
 		this.interrupt();
-		// TODO Dieing should be done by controller, not by bot!!!
-		world.die();
 	}
 	
 	/**

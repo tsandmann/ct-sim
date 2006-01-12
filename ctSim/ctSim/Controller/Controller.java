@@ -75,12 +75,21 @@ public class Controller {
 	}
 
 	/**
+	 * Beendet die Simulation, wird beim Schliessen des Fensters
+	 * ControlFrame aufgerufen
+	 */
+	public static void endSim(){
+		controlFrame.dispose();
+		world.die();
+	}
+	
+	/**
 	 * Gibt der Welt den Hinweis, dass sich ihr Zustand geaendert hat
 	 */
 	public static void reactToChange() {
 		world.reactToChange();
 	}
-
+	
 	/**
 	 * @return Gibt controlFrame zurueck.
 	 */

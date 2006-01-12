@@ -3,33 +3,21 @@ package ctSim.Model;
 import ctSim.View.ControlFrame;
 import ctSim.View.WorldView;
 
-import java.awt.Color;
 import java.util.*;
 
 import javax.media.j3d.Node;
-import javax.media.j3d.Appearance;
-import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.PickBounds;
 import javax.media.j3d.PickConeRay;
 import javax.media.j3d.PickInfo;
 import javax.media.j3d.PickShape;
-import javax.media.j3d.TexCoordGeneration;
-import javax.media.j3d.Texture;
-import javax.media.j3d.Texture2D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
-import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
-
-import com.sun.j3d.utils.behaviors.picking.PickRotateBehavior;
 import com.sun.j3d.utils.geometry.Box;
-import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
 /**
@@ -116,21 +104,9 @@ public class World extends Thread {
 		// Die Wurzel des Ganzen:
 		BranchGroup objRoot = new BranchGroup();
 		
-//        PickRotateBehavior pickRotate = null;
+		// PickRotateBehavior pickRotate = null;
         Transform3D transform = new Transform3D();
         
-        //        BoundingSphere behaveBounds = new BoundingSphere();
-        
-        // TODO Diesen deprecated Dreh-Code Durch echte Navigation ersetzen. 
-        // TODO Dazu das Packet Navigation Packet von http://code.j3d.org/ verwenden 
-        // Und erlauben es zu drehen
-
-//        pickRotate = new PickRotateBehavior(objRoot, worldView.getWorldCanvas(), behaveBounds);
-//        objRoot.addChild(pickRotate);
-
-		// Alles um einen konstanten z-Wert nach hinten verschieben,
-		// damit die Welt zu sehen ist
-
         transform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));
         worldTG = new TransformGroup(transform);
 
@@ -339,10 +315,17 @@ public class World extends Thread {
 	 */
 	public void die() {
 		run = false;
+		// Unterbricht sich selbst:
 		this.interrupt();
-		// TODO Dieing should be done by controller, not by world!!!
+		// Schliesst das Fenster zur Welt:
 		worldView.dispose();
-		controlFrame.dispose();
+		// Sofern noch bots in der Liste stehen, 
+		// werden sie nacheinander entsorgt: 
+		Iterator it = bots.iterator();
+		while (it.hasNext()){
+			Bot curr = (Bot)it.next();
+			curr.interrupt();
+		}
 	}
 
 	/**

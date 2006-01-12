@@ -42,23 +42,6 @@ abstract public class CtBotSim extends CtBot {
 	}
 
 	/**
-	 * Initialisiere den Bot
-	 * @para, pos die relative Position des Bots 
-	 */
-/*	public BotSim(Point3f pos) {
-		super(pos);
-		// TODO Auto-generated constructor stub
-	}
-*/
-	/**
-	 * Hier wird aufgeräumt, wenn die Arbeit beendet ist
-	 * connections auflösen, Handler zerstören, usw.
-	 * @see BotSim#work()
-	 */
-	protected void cleanup(){		
-	}
-
-	/**
 	 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde
 	 * @param motPWM PWM-Verhältnis
 	 * @return Umdrehungen pro Sekunde

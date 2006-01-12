@@ -85,7 +85,8 @@ private Appearance playgroundAppear;
 	 * Erzeugt die GUI 
 	 */
 	public void initGUI() {
-		try {		
+		try {	
+			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			worldCanvas.setVisible(true);
 			this.setVisible(true);
 			this.pack();

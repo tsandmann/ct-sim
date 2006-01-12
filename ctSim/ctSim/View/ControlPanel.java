@@ -21,6 +21,9 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	// Zu welchem Bot gehört das Panel?
 	private Bot bot;
 
+	// In welchem Rahmen wird das Panel angezeigt?
+	private ControlFrame frame;
+	
 	public ControlPanel(Bot bot) {
 		super();
 		this.bot = bot;
@@ -42,7 +45,7 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	}
 
 	public abstract void reactToChange();
-
+	
 	public JTextField getXPosField() {
 		return xPosField;
 	}
@@ -51,6 +54,14 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 		return yPosField;
 	}
 
+	
+	/**
+	 * Entfernt dieses Panel aus dem ControlFrame
+	 */
+	public void remove(){
+		frame.getControlPanels().remove(this);
+	}
+	
 	/**
 	 * @return Returns the headField.
 	 */
@@ -77,6 +88,20 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	 */
 	public void setYPosField(JTextField posField) {
 		yPosField = posField;
+	}
+
+	/**
+	 * @return Gibt frame zurueck.
+	 */
+	public ControlFrame getFrame() {
+		return frame;
+	}
+
+	/**
+	 * @param frame Wert fuer frame, der gesetzt werden soll.
+	 */
+	public void setFrame(ControlFrame frame) {
+		this.frame = frame;
 	}
 
 }
