@@ -79,7 +79,6 @@ public class Controller {
 	 * ControlFrame aufgerufen
 	 */
 	public static void endSim(){
-		controlFrame.dispose();
 		world.die();
 	}
 	

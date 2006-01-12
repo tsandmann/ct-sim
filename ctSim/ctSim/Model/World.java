@@ -300,9 +300,11 @@ public class World extends Thread {
 	 * @see World#run()
 	 */
 	protected void cleanup() {
-		ListIterator list = bots.listIterator();
-		while (list.hasNext()) {
-			((Bot) list.next()).die();
+		// Unterbricht alle Bots, die sich dann selbst entfernen
+		Iterator it = bots.iterator();
+		while (it.hasNext()){
+			Bot curr = (Bot)it.next();
+			curr.interrupt();
 		}
 		bots.clear();
 		bots = null;
@@ -315,17 +317,11 @@ public class World extends Thread {
 	 */
 	public void die() {
 		run = false;
-		// Unterbricht sich selbst:
-		this.interrupt();
 		// Schliesst das Fenster zur Welt:
 		worldView.dispose();
-		// Sofern noch bots in der Liste stehen, 
-		// werden sie nacheinander entsorgt: 
-		Iterator it = bots.iterator();
-		while (it.hasNext()){
-			Bot curr = (Bot)it.next();
-			curr.interrupt();
-		}
+		// Unterbricht sich selbst, 
+		// interrupt ruft cleanup auf:
+		this.interrupt();
 	}
 
 	/**

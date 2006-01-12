@@ -2,6 +2,7 @@ package ctSim.View;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -33,6 +34,9 @@ public class ControlFrame extends javax.swing.JFrame {
 	}
 	
 	private void initGUI() {
+		
+		Dimension buttDim = new Dimension (20, 70);
+		
 		try {
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			BoxLayout thisLayout = new BoxLayout(
@@ -44,11 +48,12 @@ public class ControlFrame extends javax.swing.JFrame {
 				buttonPanel = new JPanel();
 				BoxLayout panelLayout = new BoxLayout(
 					buttonPanel,
-					javax.swing.BoxLayout.Y_AXIS);
+					javax.swing.BoxLayout.X_AXIS);
 				getContentPane().add(buttonPanel);
 				buttonPanel.setLayout(panelLayout);
 				{
 					pauseButton = new JButton();
+					pauseButton.setPreferredSize(buttDim);
 					buttonPanel.add(pauseButton);
 					if (!haveABreak){
 					pauseButton.setText("Pause");
@@ -71,6 +76,7 @@ public class ControlFrame extends javax.swing.JFrame {
 				}
 				{
 					endButton = new JButton();
+					endButton.setPreferredSize(buttDim);
 					buttonPanel.add(endButton);
 					endButton.setText("Beenden");
 					}
