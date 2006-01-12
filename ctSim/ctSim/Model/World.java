@@ -6,6 +6,7 @@ import ctSim.View.WorldView;
 import java.awt.Color;
 import java.util.*;
 
+import javax.media.j3d.Node;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
@@ -85,7 +86,6 @@ public class World extends Thread {
 	/** Die Klasse SimpleUniverse macht die Handhabung der Welt etwas leichter  */
 	private SimpleUniverse simpleUniverse;
 
-	public static final String WALL_TEXTURE = "textures/rock_wall.jpg";
 
 	
 	/** Erzeugt eine neue Welt */
@@ -116,71 +116,53 @@ public class World extends Thread {
 		// Die Wurzel des Ganzen:
 		BranchGroup objRoot = new BranchGroup();
 		
-        PickRotateBehavior pickRotate = null;
+//        PickRotateBehavior pickRotate = null;
         Transform3D transform = new Transform3D();
-        BoundingSphere behaveBounds = new BoundingSphere();
+        
+        //        BoundingSphere behaveBounds = new BoundingSphere();
         
         // TODO Diesen deprecated Dreh-Code Durch echte Navigation ersetzen. 
         // TODO Dazu das Packet Navigation Packet von http://code.j3d.org/ verwenden 
-		// Alles um einen konstanten z-Wert nach hinten verschieben,
-		// damit die Welt zu sehen ist!!
         // Und erlauben es zu drehen
 
-        pickRotate = new PickRotateBehavior(objRoot, worldView.getWorldCanvas(), behaveBounds);
-        objRoot.addChild(pickRotate);
-        
+//        pickRotate = new PickRotateBehavior(objRoot, worldView.getWorldCanvas(), behaveBounds);
+//        objRoot.addChild(pickRotate);
+
+		// Alles um einen konstanten z-Wert nach hinten verschieben,
+		// damit die Welt zu sehen ist
+
         transform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));
         worldTG = new TransformGroup(transform);
+
         worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
         worldTG.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+        worldTG.setCapability(TransformGroup.ALLOW_PICKABLE_READ);
+        
         worldTG.setPickable(true);
 
         objRoot.addChild(worldTG);
 
-		// Der Boden der Roboterwelt ist hellgrau:
-		ColoringAttributes fieldAppCol = new ColoringAttributes((new Color3f(Color.LIGHT_GRAY)), ColoringAttributes.FASTEST);
-		Appearance fieldApp = new Appearance();
-		fieldApp.setColoringAttributes(fieldAppCol);
-
 		// Der Boden selbst ist ein sehr flacher Quader:
-		Box floor = new Box(PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, (float)0.01, fieldApp);
+		Box floor = new Box(PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, (float)0.01, worldView.getPlaygroundAppear());
 		floor.setPickable(false);		
 		worldTG.addChild(floor);
 		
 		// Die TranformGroup fuer alle Hindernisse:
 		obstBG = new BranchGroup(); 
 		obstBG.setPickable(true);
-
-		// Vier quaderfoermige, dunkelgraue Hindernisse begrenzen die Roboterwelt:
-		ColoringAttributes obstAppCol = new ColoringAttributes((new Color3f(Color.DARK_GRAY)), ColoringAttributes.FASTEST);
-		Appearance obstApp = new Appearance();
-		obstApp.setColoringAttributes(obstAppCol);
-
-		// Textur
-		TexCoordGeneration tcg = new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR,
-				TexCoordGeneration.TEXTURE_COORDINATE_3,
-				new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),
-				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f),
-				new Vector4f(1.0f, 0.0f, 1.0f, 0.0f));
-		obstApp.setTexCoordGeneration(tcg);
-		TextureLoader loader = new TextureLoader(WALL_TEXTURE, worldView.getWorldCanvas());
-		Texture2D texture = (Texture2D)loader.getTexture();
-		texture.setBoundaryModeS(Texture.WRAP);
-		texture.setBoundaryModeT(Texture.WRAP);
-		obstApp.setTexture(texture);		
 		
 		// Die vier Hindernisse:
-		Box north = new Box(PLAYGROUND_WIDTH + (float)0.2, (float)0.1, (float)0.2,obstApp );
+		Box north = new Box(PLAYGROUND_WIDTH + (float)0.2, (float)0.1, (float)0.2, worldView.getObstacleAppear());
 		north.setPickable(true);
-		north.setName("North");
-		Box south = new Box(PLAYGROUND_WIDTH + (float)0.2, (float)0.1, (float)0.2,obstApp);
+		north.setName("North");		
+		Box south = new Box(PLAYGROUND_WIDTH + (float)0.2, (float)0.1, (float)0.2, worldView.getObstacleAppear());
 		south.setPickable(true);
 		south.setName("South");
-		Box east = new Box((float)0.1, PLAYGROUND_HEIGHT + (float)0.2, (float)0.2,obstApp);
+		Box east = new Box((float)0.1, PLAYGROUND_HEIGHT + (float)0.2, (float)0.2, worldView.getObstacleAppear());
 		east.setPickable(true);
 		east.setName("East");
-		Box west = new Box((float)0.1, PLAYGROUND_HEIGHT + (float)0.2, (float)0.2,obstApp);
+		Box west = new Box((float)0.1, PLAYGROUND_HEIGHT + (float)0.2, (float)0.2, worldView.getObstacleAppear());
 		west.setPickable(true);
 		west.setName("West");
 
@@ -214,7 +196,10 @@ public class World extends Thread {
         tg4.setPickable(true);
         tg4.addChild(west);
         obstBG.addChild(tg4);
-                
+
+        obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
+        obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
+        
 		obstBG.compile();
 		
 		// Die Hindernisse der Welt hinzufuegen
