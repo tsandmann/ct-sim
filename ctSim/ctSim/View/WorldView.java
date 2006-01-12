@@ -1,20 +1,16 @@
 package ctSim.View;
 
 import ctSim.Model.World;
-import ctSim.Controller.Controller;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import com.sun.j3d.utils.universe.*;
-import com.sun.j3d.utils.behaviors.picking.PickRotateBehavior;
-import com.sun.j3d.utils.geometry.*;
 import com.sun.j3d.utils.image.TextureLoader;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;
 
 import javax.swing.JFrame;
-
 
 /**
  * Realisiert die Anzeige der Welt mit allen Hindernissen und Robotern
