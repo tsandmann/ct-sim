@@ -39,6 +39,9 @@ public class WorldView extends JFrame {
 	/** Aussehen des Bodens */
 private Appearance playgroundAppear;
 	
+	/** Aussehen der Bots */
+private Appearance botAppear;
+
 	public WorldView(World w) {
 		super("Bot-Playground");
 		
@@ -75,6 +78,10 @@ private Appearance playgroundAppear;
 		texture.setBoundaryModeS(Texture.WRAP);
 		texture.setBoundaryModeT(Texture.WRAP);
 		obstacleAppear.setTexture(texture);		
+
+		// Aussehen der Bots:
+		botAppear = new Appearance();	// Bots sind rot ;-)
+		botAppear.setColoringAttributes(new ColoringAttributes(new Color3f(Color.RED), ColoringAttributes.FASTEST));		
 	}
 
 	/**
@@ -120,6 +127,13 @@ private Appearance playgroundAppear;
 	 */
 	public Appearance getPlaygroundAppear() {
 		return playgroundAppear;
+	}
+
+	/**
+	 * @return Gibt das Erscheinungsbild der Bots zurueck.
+	 */
+	public Appearance getBotAppear() {
+		return botAppear;
 	}
 } 
 

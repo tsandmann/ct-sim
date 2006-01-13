@@ -9,6 +9,7 @@ import javax.media.j3d.*;
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Cylinder;
 
+import ctSim.Controller.Controller;
 import ctSim.View.CtControlPanel;
 
 
@@ -189,15 +190,16 @@ public abstract class CtBot extends Bot {
 
 	public CtBot() {
 		super();
+		world = Controller.getWorld();
 		createBranchGroup();
 	}	
 	
 	public CtBot(Point3f pos, Vector3f head) {
 		super();
+		world = Controller.getWorld();
 		createBranchGroup();		
 		setPos(new Vector3f(pos));
 		setHeading(head);
-	
 	}
 
 	public void providePanel(){
@@ -205,19 +207,17 @@ public abstract class CtBot extends Bot {
 	}
 	
 	/**
-	 *  Erzeugt die 3D-Repräsentatuin eines Bots 
+	 *  Erzeugt die 3D-Repraesentation eines Bots 
 	 */
 	private void createBranchGroup(){
-        // Translationsgruppe für den Bot
+        // Translationsgruppe fuer den Bot
         TransformGroup tg = new TransformGroup();
         Transform3D transform = new Transform3D();
         tg = new TransformGroup(transform);
         tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);               
         
-        
-        
-        // Rotationsgruppe für den Bot
+        // Rotationsgruppe fuer den Bot
         TransformGroup rg = new TransformGroup();
         transform = new Transform3D();
         rg = new TransformGroup(transform);
@@ -230,31 +230,32 @@ public abstract class CtBot extends Bot {
         transform.setRotation(new AxisAngle4f((float)1,(float)0,(float)0,(float)Math.PI/2));
         TransformGroup tmp = new TransformGroup(transform);
         
-        // Montage aus Cylinder
+        // Montage aus Zylinder
         Cylinder cyl = new Cylinder((float)BOT_RADIUS, (float)BOT_HEIGHT);
-		Appearance app = new Appearance();	// Bots sind rot ;-)
-		app.setColoringAttributes(new ColoringAttributes(new Color3f(Color.RED), ColoringAttributes.FASTEST));
-        cyl.setAppearance(app);
+        cyl.setAppearance(world.getWorldView().getBotAppear());
         cyl.setName(getName()+" Cylinder");
-        // TODO with mire than one Bot, this gives us problems
+        // TODO: Bots sind momentan nicht pickable, erkennen sich
+        // daher nicht gegenseitig als Hindernisse. 
+        // Setzt man die Bots pickable, dann stellen sie fortlaufend
+        // Kollisionen mit sich selbst fest.
         cyl.setPickable(false);
         tmp.addChild(cyl);
-        setBounds(tmp.getBounds());
-
         
-        
+        // Die Grenzen (Bounds) des Bots sind wichtig 
+        // fuer die Kollisionserkennung.
+        // Die Grenze des Roboters wird vorlaefig definiert ueber 
+        // eine Sphaere mit Radius der Bot-Grundplatte um die Position des Bot
+        setBounds(new BoundingSphere(new Point3d(super.getPos()), BOT_RADIUS));
         rg.addChild(tmp);
 
-        // Und das Fach
+        // Das Fach vorne im Bot ist derzeit ein Quader, der sich durch 
+        // die gleiche Optik wie der Boden tarnt
         transform = new Transform3D();			
         transform.setTranslation(new Vector3f((float)(BOT_RADIUS-FACH_LENGTH),0f,0f));
         tmp = new TransformGroup(transform);
 
-        app = new Appearance();
-		app.setColoringAttributes(new ColoringAttributes(new Color3f(Color.LIGHT_GRAY), ColoringAttributes.FASTEST));
-        Box box = new Box((float)FACH_LENGTH,(float)FACH_LENGTH,(float)BOT_HEIGHT,app);
+        Box box = new Box((float)FACH_LENGTH,(float)FACH_LENGTH,(float)BOT_HEIGHT,world.getWorldView().getPlaygroundAppear());
         box.setName(getName()+" Fach");
-        // TODO with mire than one Bot, this gives us problems
         box.setPickable(false);
         tmp.addChild(box);        
         rg.addChild(tmp);
@@ -266,8 +267,7 @@ public abstract class CtBot extends Bot {
         
         setTranslationGroup(tg);
         setRotationGroup(rg);
-        setBotBG(bg);
-        			
+        setBotBG(bg);        			
 	}
 	
 	

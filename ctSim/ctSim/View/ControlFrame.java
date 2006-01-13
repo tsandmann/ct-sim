@@ -67,7 +67,7 @@ public class ControlFrame extends javax.swing.JFrame {
 							if (!haveABreak){
 								pauseButton.setText("Pause");
 								} else {
-									pauseButton.setText("Resume");							
+									pauseButton.setText("Weiter");							
 								}
 
 						}

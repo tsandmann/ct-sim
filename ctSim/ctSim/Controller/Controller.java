@@ -20,9 +20,8 @@ public class Controller {
 
 	private static boolean test;
 
-	// TODO Implement dieing
-
 	public static void main(String[] args) {
+		System.out.println("Simulator startet");
 		world = new World();
 		controlFrame = new ControlFrame();
 		controlFrame.setVisible(true);

@@ -235,6 +235,7 @@ public class World extends Thread {
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return true;
 		else
+			System.out.println("Kollision!");
 			return false;
 	}
 
@@ -250,8 +251,6 @@ public class World extends Thread {
 	 * @return Die Distanz zum naechsten Objekt in Metern
 	 */
 	public double watchObstacle(Point3d pos, Vector3d heading) {
-
-		// TODO: liefert immer nur 0 zurueck!
 
 		// TODO: Sehstrahl oeffnet einen Konus mit dem festen Winkel von 3 Grad;
 		// mus an realen IR-Sensor angepasst werden!
