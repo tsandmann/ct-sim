@@ -43,7 +43,7 @@ private Appearance playgroundAppear;
 private Appearance botAppear;
 
 	public WorldView(World w) {
-		super("Bot-Playground");
+		super("c't-Sim");
 		
 		// Welt uebernehmen
 		world = w;

@@ -43,7 +43,7 @@ public class ControlFrame extends javax.swing.JFrame {
 				getContentPane(),
 				javax.swing.BoxLayout.Y_AXIS);
 			getContentPane().setLayout(thisLayout);
-			this.setTitle("Control Panel");
+			this.setTitle("Kontrolltafel");
 			{
 				buttonPanel = new JPanel();
 				BoxLayout panelLayout = new BoxLayout(

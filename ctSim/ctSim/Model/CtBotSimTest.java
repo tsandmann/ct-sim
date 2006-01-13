@@ -68,8 +68,13 @@ public class CtBotSimTest extends CtBotSim {
 					}
 		}
 			
+
 		this.setAktMotL(ll);
 		this.setAktMotR(rr);		
+		
+//		this.setAktMotL((short)10);
+//		this.setAktMotR((short)10);		
+	
 		
 		super.work();
 	}
