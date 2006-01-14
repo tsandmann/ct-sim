@@ -1,6 +1,5 @@
 package ctSim.Model;
 
-import java.util.Random;
 
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;

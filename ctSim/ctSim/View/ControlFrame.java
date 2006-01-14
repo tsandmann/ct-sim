@@ -1,5 +1,5 @@
 package ctSim.View;
-import java.awt.BorderLayout;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Dimension;
@@ -8,15 +8,12 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import javax.swing.WindowConstants;
-
-import ctSim.ErrorHandler;
 import ctSim.Model.*;
 import ctSim.Controller.Controller;
 
 public class ControlFrame extends javax.swing.JFrame {
 	/**
-	 * Bildet den Rahmen, der die ControlPanels für alle Bots enthält. 
+	 * Bildet den Rahmen, der die ControlPanels fï¿½r alle Bots enthï¿½lt. 
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane controlPanels;

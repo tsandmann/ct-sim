@@ -22,7 +22,7 @@ public class WorldView extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	private World world;
+	//private World world;
 	
 	/** Die "Leinwand" fuer die 3D-Welt */
 	private Canvas3D worldCanvas;
@@ -46,7 +46,7 @@ private Appearance botAppear;
 		super("c't-Sim");
 		
 		// Welt uebernehmen
-		world = w;
+//		world = w;
 		
 		getContentPane().setLayout(new BorderLayout());
 		this.setSize(500, 500);

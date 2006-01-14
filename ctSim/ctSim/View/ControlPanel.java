@@ -1,8 +1,5 @@
 package ctSim.View;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
 import java.awt.Dimension;
 import javax.swing.JTextField;
 
@@ -18,7 +15,7 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 
 	private JTextField headField;
 	
-	// Zu welchem Bot gehört das Panel?
+	// Zu welchem Bot gehï¿½rt das Panel?
 	private Bot bot;
 
 	// In welchem Rahmen wird das Panel angezeigt?

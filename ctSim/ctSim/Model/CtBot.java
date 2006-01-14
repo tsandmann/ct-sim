@@ -1,7 +1,6 @@
 package ctSim.Model;
 
 //import java.util.Vector;
-import java.awt.Color;
 
 import javax.vecmath.*;
 import javax.media.j3d.*;
@@ -138,11 +137,11 @@ public abstract class CtBot extends Bot {
 	//Sensoren:
 	
 	/** von IR-Sensoren gemessene Werte, 
-	 * momentan der Abstand zum nächsten Objekt in Millimetern! */
+	 * momentan der Abstand zum nï¿½chsten Objekt in Millimetern! */
 	private Short sensIrL= new Short((short)0);
 
 	/** von IR-Sensoren gemessene Werte, 	 
-	 * momentan der Abstand zum nächsten Objekt in Millimetern! */
+	 * momentan der Abstand zum nï¿½chsten Objekt in Millimetern! */
 
 	private Short sensIrR= new Short((short)0);
 

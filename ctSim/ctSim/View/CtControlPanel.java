@@ -9,8 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import javax.vecmath.Vector3f;
 
@@ -51,7 +49,7 @@ public class CtControlPanel extends ControlPanel {
 
 	private static final int RC5_CODE_PWR = 0x394C; // /< Taste An/Aus
 
-	// Zu welchem Bot gehört das Panel?
+	// Zu welchem Bot gehï¿½rt das Panel?
 	private CtBot bot;
 
 	private JLabel yPosLabel;
@@ -761,7 +759,7 @@ public class CtControlPanel extends ControlPanel {
 	public void reactToChange() {
 
 		/*
-		 * Zuerst wird geprüft, ob die Slider oder der Bot die jeweiligen Werte
+		 * Zuerst wird geprï¿½ft, ob die Slider oder der Bot die jeweiligen Werte
 		 * bestimmten, dann werden die Werte in die Textfelder geschrieben:
 		 */
 
@@ -787,7 +785,7 @@ public class CtControlPanel extends ControlPanel {
 
 		if (bot.CAP_POS) {
 			/*
-			 * Falls Checkbox für X inaktiv ist, wird der Slider auf den Wert
+			 * Falls Checkbox fï¿½r X inaktiv ist, wird der Slider auf den Wert
 			 * der Position aus dem Bot gesetzt:
 			 */
 			if (!xpos) {
@@ -799,7 +797,7 @@ public class CtControlPanel extends ControlPanel {
 			}
 
 			/*
-			 * Falls Checkbox für Y inaktiv ist, wird der Slider auf den Wert
+			 * Falls Checkbox fï¿½r Y inaktiv ist, wird der Slider auf den Wert
 			 * der Position aus dem Bot gesetzt:
 			 */
 			if (!ypos) {
@@ -847,7 +845,7 @@ public class CtControlPanel extends ControlPanel {
 		irValueL.setText(Short.toString(bot.getSensIrL()));
 		irValueR.setText(Short.toString(bot.getSensIrR()));
 
-		// Slider für CtBot.CAP_AKT_MOT sind noch nicht vorgesehen!
+		// Slider fï¿½r CtBot.CAP_AKT_MOT sind noch nicht vorgesehen!
 
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
 		motorValueL.setText(Short.toString(bot.getAktMotL()));
