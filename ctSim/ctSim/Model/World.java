@@ -391,13 +391,14 @@ public class World extends Thread {
 			} catch (InterruptedException IEx) {
 				cleanup();
 			}
-			// dann simulierte Zeit erhoehen,
-			simulTime += baseTimeVirtual / 2;
-			// dann alle Bots benachrichtigen, also
-			// alle wartenden Threads wieder wecken:
 
 			// Ist die Pause-Taste in der GUI gedrueckt worden?
 			if (!haveABreak) {
+
+				// dann simulierte Zeit erhoehen,
+				simulTime += baseTimeVirtual / 2;
+				// dann alle Bots benachrichtigen, also
+				// alle wartenden Threads wieder wecken:
 
 				synchronized (this) {
 					notifyAll();
@@ -410,15 +411,16 @@ public class World extends Thread {
 			} catch (InterruptedException IEx) {
 				cleanup();
 			}
+
 			// Ist die Pause-Taste in der GUI gedrueckt worden?
 			if (!haveABreak) {
-
 				// simulierte Zeit erhoehen,
 				simulTime += baseTimeVirtual / 2;
+				// dann WorldView benachrichtigen,
+				// dass neu gezeichnet werden soll:
 			}
-			// dann WorldView benachrichtigen,
-			// dass neu gezeichnet werden soll:
 			worldView.repaint();
+
 		}
 	}
 
