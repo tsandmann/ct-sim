@@ -30,15 +30,15 @@ public class Controller {
 
 		// Falls true, hoert der Simulator nicht auf TCP/IP, sondern
 		// beguegt sich mit einem Bot vom Typ CtBotSimTest
-		test = true;
+		test = false;//true;
 
 		if (test) {
 			addBot("testbot", "Testbot", new Point3f(0.2f, 0f, 0f),
 					new Vector3f(-1f, 0f, 0f));
 		} else {
 			System.out.println("Initializing Connection to c't-Bot");
-			addBot("BotSimTcp", "BotSimTcp", new Point3f(0.0f, 0.5f, 0f),
-					new Vector3f(1f, 0f, 0f));
+			addBot("BotSimTcp", "BotSimTcp", new Point3f(0.2f, 0.0f, 0f),
+					new Vector3f(-1f, 0f, 0f));
 		}
 	}
 
@@ -56,7 +56,7 @@ public class Controller {
 			bot = new CtBotSimTest(pos, head);
 		}
 
-		// TODO: In späteren Versionen soll hier ein eigener Thread
+		// TODO: In spï¿½teren Versionen soll hier ein eigener Thread
 		// auf weitere Verbindungsversuche anderer Bots lauschen
 		if (type.equalsIgnoreCase("BotSimTcp")) {
 			TcpConnection listener = new TcpConnection();
