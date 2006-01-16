@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator für den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.View;
 
 import ctSim.Model.World;
@@ -15,15 +33,13 @@ import javax.swing.JFrame;
 /**
  * Realisiert die Anzeige der Welt mit allen Hindernissen und Robotern
  * 
- * @author pek (pek@ctmagazin.de)
+ * @author pek (pek@heise.de)
  *
  */
 public class WorldView extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	
-	//private World world;
-	
+		
 	/** Die "Leinwand" fuer die 3D-Welt */
 	private Canvas3D worldCanvas;
 	
@@ -42,11 +58,12 @@ private Appearance playgroundAppear;
 	/** Aussehen der Bots */
 private Appearance botAppear;
 
+	/**
+	 * Erzeugt ein neues Fenster zur Welt
+	 * @param w Die Welt, die das Fenster darstellen soll
+	 */
 	public WorldView(World w) {
 		super("c't-Sim");
-		
-		// Welt uebernehmen
-//		world = w;
 		
 		getContentPane().setLayout(new BorderLayout());
 		this.setSize(500, 500);
@@ -101,14 +118,14 @@ private Appearance botAppear;
 	}
 
 	/**
-	 * @return Gibt worldCanvas zurueck.
+	 * @return Gibt eine Referenz auf worldCanvas zurueck
 	 */
 	public Canvas3D getWorldCanvas() {
 		return worldCanvas;
 	}
 
 	/**
-	 * @param universe Wert fuer universe, der gesetzt werden soll.
+	 * @param universe Referenz auf das Universum, die gesetzt werden soll
 	 */
 	public void setUniverse(SimpleUniverse uni) {
 		this.universe = uni;		
@@ -116,21 +133,21 @@ private Appearance botAppear;
 	}
 
 	/**
-	 * @return Gibt das Erscheinungsbild der Hindernisse zurueck.
+	 * @return Gibt das Erscheinungsbild der Hindernisse zurueck
 	 */
 	public Appearance getObstacleAppear() {
 		return obstacleAppear;
 	}
 
 	/**
-	 * @return Gibt das Erscheinungsbild des Bodens zurueck.
+	 * @return Gibt das Erscheinungsbild des Bodens zurueck
 	 */
 	public Appearance getPlaygroundAppear() {
 		return playgroundAppear;
 	}
 
 	/**
-	 * @return Gibt das Erscheinungsbild der Bots zurueck.
+	 * @return Gibt das Erscheinungsbild der Bots zurueck
 	 */
 	public Appearance getBotAppear() {
 		return botAppear;

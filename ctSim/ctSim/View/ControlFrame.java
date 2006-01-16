@@ -1,3 +1,22 @@
+/*
+ * c't-Sim - Robotersimulator für den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
+
 package ctSim.View;
 
 import java.awt.event.ActionEvent;
@@ -11,10 +30,14 @@ import javax.swing.JTabbedPane;
 import ctSim.Model.*;
 import ctSim.Controller.Controller;
 
+/**
+ * Bildet den Rahmen, der die Kontrolltafeln fuer alle Bots enthaelt.
+ * 
+ * @author pek (pek@heise.de)
+ *
+ */
+
 public class ControlFrame extends javax.swing.JFrame {
-	/**
-	 * Bildet den Rahmen, der die ControlPanels fï¿½r alle Bots enthï¿½lt. 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane controlPanels;
 	private World world;
@@ -23,6 +46,9 @@ public class ControlFrame extends javax.swing.JFrame {
 	private JButton pauseButton;
 	private JButton endButton;
 
+	/**
+	 * Erzeugt einen neuen ControlFrame
+	 */
 	public ControlFrame() {
 		super();
 		haveABreak = false;
@@ -30,6 +56,9 @@ public class ControlFrame extends javax.swing.JFrame {
 		initGUI();
 	}
 	
+	/*
+	 * Startet GUI 
+	 */
 	private void initGUI() {
 		
 		Dimension buttDim = new Dimension (20, 70);
@@ -96,12 +125,11 @@ public class ControlFrame extends javax.swing.JFrame {
 			e.printStackTrace();
 		}
 	}
-	
-	public void dispose (){
-		Controller.endSim();
-		super.dispose();
-	}
-	
+		
+	/**
+	 * Fuegt ein neues ControlPanel fuer einen Bot hinzu
+	 * @param bot Referenz auf den Bot, der ein Panel erhalten soll
+	 */
 	public void addBot(Bot bot){
 		// Ein neues Panel fuer den Bot erzeugen
 		controlPanels.addTab(bot.getBotName(), null, bot.getPanel(), null);
@@ -111,7 +139,7 @@ public class ControlFrame extends javax.swing.JFrame {
 	}
 
 	/**
-	 * @return Gibt controlPanels zurueck.
+	 * @return Gibt das Feld zurueck, das alle ControlPanels enthaelt.
 	 */
 	public JTabbedPane getControlPanels() {
 		return controlPanels;

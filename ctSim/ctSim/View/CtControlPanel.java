@@ -1,3 +1,22 @@
+/*
+ * c't-Sim - Robotersimulator für den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
+
 package ctSim.View;
 
 import java.awt.GridLayout;
@@ -15,6 +34,12 @@ import javax.vecmath.Vector3f;
 import ctSim.Model.CtBot;
 import ctSim.SimUtils;
 
+/**
+ * Ergaenzt das generische, abstrakte ControlPanel um die richtigen Felder 
+ * und Regler fuer c't-Bots  
+ * @author pek (pek@heise.de)
+ *
+ */
 public class CtControlPanel extends ControlPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -49,7 +74,7 @@ public class CtControlPanel extends ControlPanel {
 
 	private static final int RC5_CODE_PWR = 0x394C; // /< Taste An/Aus
 
-	// Zu welchem Bot gehï¿½rt das Panel?
+	// Zu welchem Bot gehoert das Panel?
 	private CtBot bot;
 
 	private JLabel yPosLabel;
@@ -184,6 +209,10 @@ public class CtControlPanel extends ControlPanel {
 
 	private boolean irL, irR, xpos, ypos, head;
 
+	/**
+	 * Der Konstruktor
+	 * @param bot Eine Referenz auf den Bot, zu dem das Panel gehoert
+	 */
 	public CtControlPanel(CtBot bot) {
 		super(bot);
 		this.bot = bot;
@@ -196,6 +225,10 @@ public class CtControlPanel extends ControlPanel {
 		initGUI();
 	}
 
+	/* (non-Javadoc)
+	 * Startet GUI 
+	 * @see ctSim.View.ControlPanel#initGUI()
+	 */
 	protected void initGUI() {
 
 		try {
@@ -349,10 +382,6 @@ public class CtControlPanel extends ControlPanel {
 
 			keyPanel = new JPanel();
 			super.add(keyPanel);
-	//		keyPanel.setSize(535, 200);
-	//		keyPanel.setPreferredSize(new java.awt.Dimension(10, 200));
-//			keyPanel.setMaximumSize(new java.awt.Dimension(32767, 200));
-	//		keyPanel.setMinimumSize(new java.awt.Dimension(10, 200));
 			{
 				rc5Panel = new JPanel();
 				keyPanel.add(rc5Panel);
@@ -362,7 +391,6 @@ public class CtControlPanel extends ControlPanel {
 				rc5PanelLayout.setColumns(3);
 				rc5PanelLayout.setRows(8);
 				rc5Panel.setLayout(rc5PanelLayout);
-		//		rc5Panel.setSize(535, 200);
 				rc5Panel.setPreferredSize(new java.awt.Dimension(200, 200));
 				{
 					jButtonOnOff = new JButton();
@@ -585,7 +613,6 @@ public class CtControlPanel extends ControlPanel {
 					motorLabelL = new JLabel();
 					motPanelL.add(motorLabelL);
 					motorLabelL.setText("Motor PWM");
-	//				motorLabelL.setSize(100, 14);
 					motorLabelL
 							.setPreferredSize(new java.awt.Dimension(100, 25));
 				}
@@ -595,7 +622,6 @@ public class CtControlPanel extends ControlPanel {
 					motorValueL.setText("0");
 					motorValueL.setEditable(false);
 					motorValueL.setBounds(-66, 14, 265, 25);
-	//				motorValueL.setSize(100, 41);
 					motorValueL
 							.setPreferredSize(new java.awt.Dimension(50, 25));
 				}
@@ -610,7 +636,6 @@ public class CtControlPanel extends ControlPanel {
 					irLabelL = new JLabel();
 					irPanelL.add(irLabelL);
 					irLabelL.setText("IR-Sensor");
-	//				irLabelL.setSize(100, 14);
 					irLabelL.setPreferredSize(new java.awt.Dimension(100, 25));
 				}
 				{
@@ -681,7 +706,6 @@ public class CtControlPanel extends ControlPanel {
 						motorValueR.setText("0");
 						motorValueR.setEditable(false);
 						motorValueR.setBounds(-180, -3, 180, 20);
-	//					motorValueR.setSize(100, 25);
 						motorValueR.setPreferredSize(new java.awt.Dimension(
 								50, 25));
 					}
@@ -696,7 +720,6 @@ public class CtControlPanel extends ControlPanel {
 						irLabelR = new JLabel();
 						irPanelR.add(irLabelR);
 						irLabelR.setText("IR-Sensor");
-		//				irLabelR.setSize(100, 14);
 						irLabelR
 								.setPreferredSize(new java.awt.Dimension(100, 25));
 					}
@@ -707,7 +730,6 @@ public class CtControlPanel extends ControlPanel {
 						irValueR.setEditable(false);
 						irValueR.setPreferredSize(new java.awt.Dimension(50,
 								25));
-		//				irValueR.setSize(100, 25);
 					}
 				}
 
@@ -753,17 +775,18 @@ public class CtControlPanel extends ControlPanel {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 * Wird aufgerufen, wenn sich der Zustand des Bot veraendert hat
 	 * @see ctSim.View.ControlPanel#reactToChange()
 	 */
 	public void reactToChange() {
 
 		/*
-		 * Zuerst wird geprï¿½ft, ob die Slider oder der Bot die jeweiligen Werte
-		 * bestimmten, dann werden die Werte in die Textfelder geschrieben:
+		 * Zuerst wird geprueft, ob die Slider oder der Bot die jeweiligen Werte
+		 * bestimmen, dann werden die Werte in die Textfelder geschrieben:
 		 */
 
 		// Blickrichtung:
+
 		if (bot.CAP_HEAD) {
 			/*
 			 * Falls Checkbox inaktiv ist, wird der Slider auf den Wert des
@@ -774,9 +797,7 @@ public class CtControlPanel extends ControlPanel {
 			} else {
 				/* Ansonsten bestimmt der Slider den Wert beim Bot: */
 				bot.setHeading(SimUtils.intToVec3f(headSlider.getValue()));
-				// TODO: Workaround, rausnehmen!!!
-				// super.getHeadField().setText(new Integer(headSlider.getValue()).toString())
-;			}
+			}
 		}
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
 		super.getHeadField().setText(SimUtils.vec3fToString(bot.getHeading()));
@@ -785,7 +806,7 @@ public class CtControlPanel extends ControlPanel {
 
 		if (bot.CAP_POS) {
 			/*
-			 * Falls Checkbox fï¿½r X inaktiv ist, wird der Slider auf den Wert
+			 * Falls Checkbox fuer X inaktiv ist, wird der Slider auf den Wert
 			 * der Position aus dem Bot gesetzt:
 			 */
 			if (!xpos) {
@@ -797,7 +818,7 @@ public class CtControlPanel extends ControlPanel {
 			}
 
 			/*
-			 * Falls Checkbox fï¿½r Y inaktiv ist, wird der Slider auf den Wert
+			 * Falls Checkbox fuer Y inaktiv ist, wird der Slider auf den Wert
 			 * der Position aus dem Bot gesetzt:
 			 */
 			if (!ypos) {
@@ -845,7 +866,7 @@ public class CtControlPanel extends ControlPanel {
 		irValueL.setText(Short.toString(bot.getSensIrL()));
 		irValueR.setText(Short.toString(bot.getSensIrR()));
 
-		// Slider fï¿½r CtBot.CAP_AKT_MOT sind noch nicht vorgesehen!
+		// TODO: Slider fuer CtBot.CAP_AKT_MOT sind noch nicht vorgesehen!
 
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
 		motorValueL.setText(Short.toString(bot.getAktMotL()));

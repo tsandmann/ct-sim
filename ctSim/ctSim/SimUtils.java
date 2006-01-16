@@ -1,3 +1,22 @@
+/*
+ * c't-Sim - Robotersimulator für den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
+
 package ctSim;
 
 import javax.vecmath.Point3d;
@@ -8,7 +27,7 @@ import java.lang.Math;
  * Diese Klasse enthaelt reine Hilfsfunktionen wie Umrechnungsmethoden zwischen
  * verschiedenen Mass-Einheiten etc.
  * 
- * @author pek (pek@ctmagazin.de)
+ * @author pek (pek@heise.de)
  */
 public class SimUtils {
 
@@ -39,6 +58,8 @@ public class SimUtils {
 		Vector3f north = new Vector3f(0f, 1f, 0f);
 		double rad = vec.angle(north);
 		double deg = Math.toDegrees(rad);
+		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
+		// muessen hier zwei Faelle unterschieden werden:
 		if (vec.x >=0)
 			return deg;
 		else return -deg;
