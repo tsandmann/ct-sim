@@ -32,10 +32,10 @@ public abstract class CtBot extends Bot {
 	public static final double FACH_LENGTH = 0.030d;
 	
 	/** maximale Geschwindigkeit als PWM-Wert */
-	public static final short PWM_MAX = 20;
+	public static final short PWM_MAX = 255;
 
 	/** minimale Geschwindigkeit als PWM-Wert */
-	public static final short PWM_MIN = -20;
+	public static final short PWM_MIN = -255;
 
 	/** maximale Geschwindigkeit in Umdrehungen pro Sekunde */
 	public static final float UPS_MAX = (float) 151 / (float) 60;
