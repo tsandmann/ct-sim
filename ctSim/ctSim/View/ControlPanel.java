@@ -25,10 +25,11 @@ import javax.swing.JTextField;
 import ctSim.Model.Bot;
 
 /**
- * Abstrakte Oberklasse fuer Kontrolltafeln simulierter Bots; 
- * muss abgeleitet werden, um instanziiert werden zu koennen 
+ * Abstrakte Oberklasse fuer Kontrolltafeln simulierter Bots; muss abgeleitet
+ * werden, um instanziiert werden zu koennen
+ * 
  * @author pek (pek@heise.de)
- *
+ * 
  */
 public abstract class ControlPanel extends javax.swing.JPanel {
 
@@ -39,16 +40,18 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	private JTextField xPosField;
 
 	private JTextField headField;
-	
+
 	// Zu welchem Bot gehoert das Panel?
 	private Bot bot;
 
 	// In welchem Rahmen wird das Panel angezeigt?
 	private ControlFrame frame;
-	
+
 	/**
 	 * Erzeugt ein neues Panel
-	 * @param bot Referenz auf den Bot, zu dem das Panel gehoert
+	 * 
+	 * @param bot
+	 *            Referenz auf den Bot, zu dem das Panel gehoert
 	 */
 	public ControlPanel(Bot bot) {
 		super();
@@ -67,8 +70,8 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	/**
 	 * Startet GUI
 	 */
-	protected abstract void initGUI(); 
-	
+	protected abstract void initGUI();
+
 	public Bot getBot() {
 		return bot;
 	}
@@ -77,25 +80,25 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	 * Wird aufgerufen, wenn sich der Zustand des Bot veraendert hat
 	 */
 	public abstract void reactToChange();
-	
-	
+
 	/**
 	 * Entfernt dieses Panel aus dem ControlFrame
 	 */
-	public void remove(){
+	public void remove() {
 		frame.getControlPanels().remove(this);
 	}
-	
 
 	/**
-	 * @return Gibt eine Referenz auf den Rahmen zurueck, der dieses Panel enthaelt
+	 * @return Gibt eine Referenz auf den Rahmen zurueck, der dieses Panel
+	 *         enthaelt
 	 */
 	public ControlFrame getFrame() {
 		return frame;
 	}
 
 	/**
-	 * @param frame Der Rahmen, der dieses Panel enthalten soll
+	 * @param frame
+	 *            Der Rahmen, der dieses Panel enthalten soll
 	 */
 	public void setFrame(ControlFrame frame) {
 		this.frame = frame;
@@ -109,7 +112,8 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	}
 
 	/**
-	 * @param headField Referenz auf headField, die gesetzt werden soll
+	 * @param headField
+	 *            Referenz auf headField, die gesetzt werden soll
 	 */
 	public void setHeadField(JTextField headField) {
 		this.headField = headField;
@@ -123,7 +127,8 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	}
 
 	/**
-	 * @param posField Referenz auf xPosField, die gesetzt werden soll
+	 * @param posField
+	 *            Referenz auf xPosField, die gesetzt werden soll
 	 */
 	public void setXPosField(JTextField posField) {
 		xPosField = posField;
@@ -137,14 +142,16 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	}
 
 	/**
-	 * @param posField Referenz auf yPosField, die gesetzt werden soll
+	 * @param posField
+	 *            Referenz auf yPosField, die gesetzt werden soll
 	 */
 	public void setYPosField(JTextField posField) {
 		yPosField = posField;
 	}
 
 	/**
-	 * @param bot Referenz auf den Bot, die gesetzt werden soll
+	 * @param bot
+	 *            Referenz auf den Bot, die gesetzt werden soll
 	 */
 	public void setBot(Bot bot) {
 		this.bot = bot;

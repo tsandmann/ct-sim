@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator für den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.Model;
 
 import ctSim.View.ControlFrame;
@@ -64,37 +82,36 @@ public class World extends Thread {
 	/** Interne Zeitbasis in Millisekunden. */
 	private long simulTime = 0;
 
-	/** Zwei BranchGroups, eine fuer die ganze Welt, 
-	 * die andere fuer die Hindernisse */ 
+	/**
+	 * Zwei BranchGroups, eine fuer die ganze Welt, die andere fuer die
+	 * Hindernisse
+	 */
 	public BranchGroup scene, obstBG;
-	
+
 	/** TransformGroup der gesamten Welt. Hier kommen auch die Bots hinein */
 	private TransformGroup worldTG;
-	
-	/** Die Klasse SimpleUniverse macht die Handhabung der Welt etwas leichter  */
+
+	/** Die Klasse SimpleUniverse macht die Handhabung der Welt etwas leichter */
 	private SimpleUniverse simpleUniverse;
 
-
-	
 	/** Erzeugt eine neue Welt */
 	public World() {
 
 		bots = new LinkedList();
 		obstacles = new LinkedList();
 		haveABreak = false;
-		
+
 		worldView = new WorldView(this);
-		
+
 		simpleUniverse = new SimpleUniverse(worldView.getWorldCanvas());
 		scene = createSceneGraph();
 		simpleUniverse.addBranchGraph(scene);
-		
+
 		worldView.setUniverse(simpleUniverse);
 		worldView.initGUI();
 
 	}
 
-	
 	/**
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
 	 * 
@@ -103,90 +120,98 @@ public class World extends Thread {
 	public BranchGroup createSceneGraph() {
 		// Die Wurzel des Ganzen:
 		BranchGroup objRoot = new BranchGroup();
-		
+
 		// PickRotateBehavior pickRotate = null;
-        Transform3D transform = new Transform3D();
-        
-        transform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));
-        worldTG = new TransformGroup(transform);
+		Transform3D transform = new Transform3D();
 
-        worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-        worldTG.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-        worldTG.setCapability(TransformGroup.ALLOW_PICKABLE_READ);
-        
-        worldTG.setPickable(true);
+		transform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));
+		worldTG = new TransformGroup(transform);
 
-        objRoot.addChild(worldTG);
+		worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		worldTG.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		worldTG.setCapability(TransformGroup.ALLOW_PICKABLE_READ);
+
+		worldTG.setPickable(true);
+
+		objRoot.addChild(worldTG);
 
 		// Der Boden selbst ist ein sehr flacher Quader:
-		Box floor = new Box(PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, (float)0.01, worldView.getPlaygroundAppear());
-		floor.setPickable(false);		
+		Box floor = new Box(PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, (float) 0.01,
+				worldView.getPlaygroundAppear());
+		floor.setPickable(false);
 		worldTG.addChild(floor);
-		
+
 		// Die TranformGroup fuer alle Hindernisse:
-		obstBG = new BranchGroup(); 
+		obstBG = new BranchGroup();
 		obstBG.setPickable(true);
-		
+
 		// Die vier Hindernisse:
-		Box north = new Box(PLAYGROUND_WIDTH + (float)0.2, (float)0.1, (float)0.2, worldView.getObstacleAppear());
+		Box north = new Box(PLAYGROUND_WIDTH + (float) 0.2, (float) 0.1,
+				(float) 0.2, worldView.getObstacleAppear());
 		north.setPickable(true);
-		north.setName("North");		
-		Box south = new Box(PLAYGROUND_WIDTH + (float)0.2, (float)0.1, (float)0.2, worldView.getObstacleAppear());
+		north.setName("North");
+		Box south = new Box(PLAYGROUND_WIDTH + (float) 0.2, (float) 0.1,
+				(float) 0.2, worldView.getObstacleAppear());
 		south.setPickable(true);
 		south.setName("South");
-		Box east = new Box((float)0.1, PLAYGROUND_HEIGHT + (float)0.2, (float)0.2, worldView.getObstacleAppear());
+		Box east = new Box((float) 0.1, PLAYGROUND_HEIGHT + (float) 0.2,
+				(float) 0.2, worldView.getObstacleAppear());
 		east.setPickable(true);
 		east.setName("East");
-		Box west = new Box((float)0.1, PLAYGROUND_HEIGHT + (float)0.2, (float)0.2, worldView.getObstacleAppear());
+		Box west = new Box((float) 0.1, PLAYGROUND_HEIGHT + (float) 0.2,
+				(float) 0.2, worldView.getObstacleAppear());
 		west.setPickable(true);
 		west.setName("West");
 
 		// Hindernisse werden an die richtige Position geschoben:
 		Transform3D translate = new Transform3D();
 
-		translate.set(new Vector3f((float)0, PLAYGROUND_HEIGHT + (float)0.1, (float)0.2));
+		translate.set(new Vector3f((float) 0, PLAYGROUND_HEIGHT + (float) 0.1,
+				(float) 0.2));
 		TransformGroup tg1 = new TransformGroup(translate);
-        tg1.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tg1.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 		tg1.setPickable(true);
 		tg1.addChild(north);
 		obstBG.addChild(tg1);
-		
-		translate.set(new Vector3f((float)0, -(PLAYGROUND_HEIGHT + (float)0.1), (float)0.2));
+
+		translate.set(new Vector3f((float) 0,
+				-(PLAYGROUND_HEIGHT + (float) 0.1), (float) 0.2));
 		TransformGroup tg2 = new TransformGroup(translate);
-        tg2.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-        tg2.setPickable(true);
-        tg2.addChild(south);
+		tg2.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tg2.setPickable(true);
+		tg2.addChild(south);
 		obstBG.addChild(tg2);
 
-		translate.set(new Vector3f(PLAYGROUND_WIDTH + (float)0.1, (float)0, (float)0.2));
+		translate.set(new Vector3f(PLAYGROUND_WIDTH + (float) 0.1, (float) 0,
+				(float) 0.2));
 		TransformGroup tg3 = new TransformGroup(translate);
-        tg3.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-        tg3.setPickable(true);
-        tg3.addChild(east);
+		tg3.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tg3.setPickable(true);
+		tg3.addChild(east);
 		obstBG.addChild(tg3);
 
-		translate.set(new Vector3f(-(PLAYGROUND_WIDTH + (float)0.1), (float)0, (float)0.2));
+		translate.set(new Vector3f(-(PLAYGROUND_WIDTH + (float) 0.1),
+				(float) 0, (float) 0.2));
 		TransformGroup tg4 = new TransformGroup(translate);
-        tg4.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-        tg4.setPickable(true);
-        tg4.addChild(west);
-        obstBG.addChild(tg4);
+		tg4.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tg4.setPickable(true);
+		tg4.addChild(west);
+		obstBG.addChild(tg4);
 
-        obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
-        obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
-        
+		obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
+		obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
+
 		obstBG.compile();
-		
+
 		// Die Hindernisse der Welt hinzufuegen
 		worldTG.addChild(obstBG);
 		// es duerfen noch weitere dazukommen
 		worldTG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		
+
 		return objRoot;
 	}
-	
-	
+
 	/**
 	 * Fuegt einen Bot in die Welt ein
 	 * 
@@ -198,7 +223,7 @@ public class World extends Thread {
 		bot.setWorld(this);
 		worldTG.addChild(bot.getBotBG());
 	}
-	
+
 	/**
 	 * Prueft, ob ein Bot mit irgendeinem anderen Objekt kollidiert
 	 * 
@@ -229,14 +254,14 @@ public class World extends Thread {
 		// @see http://java3d.j3d.org/implementation/collision.html
 		// @see http://java3d.j3d.org/tutorials/
 		// @see http://code.j3d.org/
-		PickInfo pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS,
-				PickInfo.NODE, pickShape);
+		PickInfo pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE,
+				pickShape);
 
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return true;
 		else
 			System.out.println("Kollision!");
-			return false;
+		return false;
 	}
 
 	/**
@@ -267,31 +292,29 @@ public class World extends Thread {
 
 		PickShape pickShape = new PickConeRay(relPos, relHeading,
 				Math.PI / 180 * 3);
-		PickInfo pickInfo = obstBG.pickClosest(
-				PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE, pickShape);
+		PickInfo pickInfo = obstBG.pickClosest(PickInfo.PICK_GEOMETRY,
+				PickInfo.CLOSEST_DISTANCE, pickShape);
 
 		if (pickInfo == null)
 			return 100.0;
 		else
 			return pickInfo.getClosestDistance();
 	}
-	
-	
+
 	/**
-	 * Gibt Nachricht von aussen, dass sich der Zustand der Welt geaendert hat, 
+	 * Gibt Nachricht von aussen, dass sich der Zustand der Welt geaendert hat,
 	 * an den View weiter
 	 */
-	public void reactToChange(){
+	public void reactToChange() {
 		worldView.repaint();
 	}
-	
+
 	/**
 	 * @return Gibt simpleUniverse zurueck.
 	 */
 	public SimpleUniverse getSimpleUniverse() {
 		return simpleUniverse;
 	}
-
 
 	/**
 	 * Raumt auf, wenn der Simulator beendet wird
@@ -301,8 +324,8 @@ public class World extends Thread {
 	protected void cleanup() {
 		// Unterbricht alle Bots, die sich dann selbst entfernen
 		Iterator it = bots.iterator();
-		while (it.hasNext()){
-			Bot curr = (Bot)it.next();
+		while (it.hasNext()) {
+			Bot curr = (Bot) it.next();
 			curr.interrupt();
 		}
 		bots.clear();
@@ -318,7 +341,7 @@ public class World extends Thread {
 		run = false;
 		// Schliesst das Fenster zur Welt:
 		worldView.dispose();
-		// Unterbricht sich selbst, 
+		// Unterbricht sich selbst,
 		// interrupt ruft cleanup auf:
 		this.interrupt();
 	}
@@ -362,34 +385,40 @@ public class World extends Thread {
 	 */
 	public void run() {
 		while (run == true) {
+			try {
+				// halbe baseTime warten,
+				sleep(baseTimeReal / 2);
+			} catch (InterruptedException IEx) {
+				cleanup();
+			}
+			// dann simulierte Zeit erhoehen,
+			simulTime += baseTimeVirtual / 2;
+			// dann alle Bots benachrichtigen, also
+			// alle wartenden Threads wieder wecken:
+
 			// Ist die Pause-Taste in der GUI gedrueckt worden?
 			if (!haveABreak) {
-				try {
-					// halbe baseTime warten,
-					sleep(baseTimeReal / 2);
-				} catch (InterruptedException IEx) {
-					cleanup();
-				}
-				// dann simulierte Zeit erhoehen,
-				simulTime += baseTimeVirtual / 2;
-				// dann alle Bots benachrichtigen, also
-				// alle wartenden Threads wieder wecken:
+
 				synchronized (this) {
 					notifyAll();
 				}
 
-				try {
-					// nochmal halbe baseTime warten,
-					sleep(baseTimeReal / 2);
-				} catch (InterruptedException IEx) {
-					cleanup();
-				}
+			}
+			try {
+				// nochmal halbe baseTime warten,
+				sleep(baseTimeReal / 2);
+			} catch (InterruptedException IEx) {
+				cleanup();
+			}
+			// Ist die Pause-Taste in der GUI gedrueckt worden?
+			if (!haveABreak) {
+
 				// simulierte Zeit erhoehen,
 				simulTime += baseTimeVirtual / 2;
-				// dann WorldView benachrichtigen,
-				// dass neu gezeichnet werden soll:
-				worldView.repaint();
 			}
+			// dann WorldView benachrichtigen,
+			// dass neu gezeichnet werden soll:
+			worldView.repaint();
 		}
 	}
 
@@ -417,7 +446,6 @@ public class World extends Thread {
 		this.simulTime = simulTime;
 	}
 
-	
 	/**
 	 * @return Gibt bots zurueck.
 	 */

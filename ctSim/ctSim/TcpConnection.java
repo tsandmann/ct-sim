@@ -250,8 +250,7 @@ public class TcpConnection {
 	/*
 	 * public synchronized int[] readByte(int length) throws IOException {
 	 * 
-	 * synchronized (dis) { byte data[] = new }
-	 *  }
+	 * synchronized (dis) { byte data[] = new } }
 	 */
 
 	/* if true Thread does not read */

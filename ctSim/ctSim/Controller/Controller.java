@@ -33,14 +33,18 @@ import ctSim.*;
  * @author pek (pek@heise.de)
  * 
  */
-public class Controller {	
+public class Controller {
 	private static World world;
+
 	private static ControlFrame controlFrame;
+
 	private static boolean test;
 
 	/**
 	 * Startet den c't-Sim
-	 * @param args Argumente werden nicht eingelesen
+	 * 
+	 * @param args
+	 *            Argumente werden nicht eingelesen
 	 */
 	public static void main(String[] args) {
 		System.out.println("Simulator startet");
@@ -50,7 +54,7 @@ public class Controller {
 		world.setControlFrame(controlFrame);
 		world.start();
 
-		// Falls true, hoert der Simulator nicht auf TCP/IP-Verbindunen, 
+		// Falls true, hoert der Simulator nicht auf TCP/IP-Verbindunen,
 		// sondern beguegt sich mit einem Bot vom Typ CtBotSimTest
 		test = true;
 
@@ -100,20 +104,21 @@ public class Controller {
 	 * Beendet die Simulation, wird durch den "Beenden"-Knopf des Fensters
 	 * ControlFrame aufgerufen
 	 */
-	public static void endSim(){
+	public static void endSim() {
 		world.die();
 		controlFrame.dispose();
 	}
-	
+
 	/**
 	 * Gibt der Welt den Hinweis, dass sich ihr Zustand geaendert hat
 	 */
 	public static void reactToChange() {
 		world.reactToChange();
 	}
-	
+
 	/**
-	 * @return Gibt eine Referenz auf das Fenster mit den Kontrolltafeln zurueck.
+	 * @return Gibt eine Referenz auf das Fenster mit den Kontrolltafeln
+	 *         zurueck.
 	 */
 	public static ControlFrame getControlFrame() {
 		return controlFrame;

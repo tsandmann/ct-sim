@@ -34,16 +34,22 @@ import ctSim.Controller.Controller;
  * Bildet den Rahmen, der die Kontrolltafeln fuer alle Bots enthaelt.
  * 
  * @author pek (pek@heise.de)
- *
+ * 
  */
 
 public class ControlFrame extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1L;
+
 	private JTabbedPane controlPanels;
+
 	private World world;
+
 	private boolean haveABreak;
+
 	private JPanel buttonPanel;
+
 	private JButton pauseButton;
+
 	private JButton endButton;
 
 	/**
@@ -55,46 +61,44 @@ public class ControlFrame extends javax.swing.JFrame {
 		world = Controller.getWorld();
 		initGUI();
 	}
-	
+
 	/*
-	 * Startet GUI 
+	 * Startet GUI
 	 */
 	private void initGUI() {
-		
-		Dimension buttDim = new Dimension (20, 70);
-		
+
+		Dimension buttDim = new Dimension(20, 70);
+
 		try {
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
-			BoxLayout thisLayout = new BoxLayout(
-				getContentPane(),
-				javax.swing.BoxLayout.Y_AXIS);
+			BoxLayout thisLayout = new BoxLayout(getContentPane(),
+					javax.swing.BoxLayout.Y_AXIS);
 			getContentPane().setLayout(thisLayout);
 			this.setTitle("Kontrolltafel");
 			{
 				buttonPanel = new JPanel();
-				BoxLayout panelLayout = new BoxLayout(
-					buttonPanel,
-					javax.swing.BoxLayout.X_AXIS);
+				BoxLayout panelLayout = new BoxLayout(buttonPanel,
+						javax.swing.BoxLayout.X_AXIS);
 				getContentPane().add(buttonPanel);
 				buttonPanel.setLayout(panelLayout);
 				{
 					pauseButton = new JButton();
 					pauseButton.setPreferredSize(buttDim);
 					buttonPanel.add(pauseButton);
-					if (!haveABreak){
-					pauseButton.setText("Pause");
+					if (!haveABreak) {
+						pauseButton.setText("Pause");
 					} else {
-						pauseButton.setText("Resume");							
+						pauseButton.setText("Resume");
 					}
 					pauseButton.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							haveABreak = !haveABreak;
 							world.setHaveABreak(haveABreak);
-							if (!haveABreak){
+							if (!haveABreak) {
 								pauseButton.setText("Pause");
-								} else {
-									pauseButton.setText("Weiter");							
-								}
+							} else {
+								pauseButton.setText("Weiter");
+							}
 
 						}
 					});
@@ -105,16 +109,15 @@ public class ControlFrame extends javax.swing.JFrame {
 					endButton.setPreferredSize(buttDim);
 					buttonPanel.add(endButton);
 					endButton.setText("Beenden");
-					}
-					endButton.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent evt) {
-							Controller.endSim();							
-						}
-					});
-
 				}
+				endButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						Controller.endSim();
+					}
+				});
 
-			
+			}
+
 			{
 				controlPanels = new JTabbedPane();
 				getContentPane().add(controlPanels);
@@ -125,15 +128,17 @@ public class ControlFrame extends javax.swing.JFrame {
 			e.printStackTrace();
 		}
 	}
-		
+
 	/**
 	 * Fuegt ein neues ControlPanel fuer einen Bot hinzu
-	 * @param bot Referenz auf den Bot, der ein Panel erhalten soll
+	 * 
+	 * @param bot
+	 *            Referenz auf den Bot, der ein Panel erhalten soll
 	 */
-	public void addBot(Bot bot){
+	public void addBot(Bot bot) {
 		// Ein neues Panel fuer den Bot erzeugen
 		controlPanels.addTab(bot.getBotName(), null, bot.getPanel(), null);
-		// Dem Panel anzeigen, wo es dargestellt wird 
+		// Dem Panel anzeigen, wo es dargestellt wird
 		bot.getPanel().setFrame(this);
 		pack();
 	}

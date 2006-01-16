@@ -33,22 +33,21 @@ public class SimUtils {
 
 	/**
 	 * Errechnet aus einem javax.vecmath.Vector3f eine ganzzahlig gerundete
-	 * Gradangabe und gibt sie als String zurück. 
-	 * Diese Methode wird zur Anzeige der Bot-Blickrichtung im
-	 * ControlPanel benutzt.
+	 * Gradangabe und gibt sie als String zurück. Diese Methode wird zur Anzeige
+	 * der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
 	 * @param vec
 	 *            der Eingabevektor
 	 * @return die Gradzahl als String
 	 */
 	public static String vec3fToString(Vector3f vec) {
-		return new Integer(Math.round(Math.round(vec3fToDouble(vec)))).toString();
+		return new Integer(Math.round(Math.round(vec3fToDouble(vec))))
+				.toString();
 	}
 
 	/**
-	 * Errechnet aus einem javax.vecmath.Vector3f eine 
-	 * Gradangabe. Diese Methode wird zur Anzeige der
-	 * Bot-Blickrichtung im ControlPanel benutzt.
+	 * Errechnet aus einem javax.vecmath.Vector3f eine Gradangabe. Diese Methode
+	 * wird zur Anzeige der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
 	 * @param vec
 	 *            der Eingabevektor
@@ -60,9 +59,10 @@ public class SimUtils {
 		double deg = Math.toDegrees(rad);
 		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
 		// muessen hier zwei Faelle unterschieden werden:
-		if (vec.x >=0)
+		if (vec.x >= 0)
 			return deg;
-		else return -deg;
+		else
+			return -deg;
 	}
 
 	/**
