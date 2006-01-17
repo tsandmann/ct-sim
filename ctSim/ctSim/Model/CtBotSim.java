@@ -104,7 +104,9 @@ abstract public class CtBotSim extends CtBot {
 		double turnsR = calculateWheelSpeed(this.getAktMotR());
 		turnsR = turnsR * (float) deltaT / 1000.0f;
 
-		// Encoder-Schritte als Gleitzahl
+		// Encoder-Schritte als Gleitzahl errechnen:
+		// Anzahl der Drehungen mal Anzahl der Markierungen,
+		// dazu der Rest der letzten Runde
 		double tmp = (turnsL * ENCODER_MARKS) + encoderRestL;
 		// Der Bot bekommt nur ganze Schritte zu sehen,
 		short encoderSteps = (short) Math.floor(tmp);
@@ -113,7 +115,9 @@ abstract public class CtBotSim extends CtBot {
 		// und speichern sie.
 		this.setSensEncL((short) (this.getSensEncL() + encoderSteps));
 
-		// Encoder-Schritte als Gleitzahl
+		// Encoder-Schritte als Gleitzahl errechnen:
+		// Anzahl der Drehungen mal Anzahl der Markierungen,
+		// dazu der Rest der letzten Runde
 		tmp = (turnsR * ENCODER_MARKS) + encoderRestR;
 		// Der Bot bekommt nur ganze Schritte zu sehen,
 		encoderSteps = (short) Math.floor(tmp);

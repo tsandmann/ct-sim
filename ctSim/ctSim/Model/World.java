@@ -395,7 +395,7 @@ public class World extends Thread {
 			// Ist die Pause-Taste in der GUI gedrueckt worden?
 			if (!haveABreak) {
 
-				// dann simulierte Zeit erhoehen,
+				// Falls nicht, simulierte Zeit erhoehen,
 				simulTime += baseTimeVirtual / 2;
 				// dann alle Bots benachrichtigen, also
 				// alle wartenden Threads wieder wecken:
@@ -414,11 +414,11 @@ public class World extends Thread {
 
 			// Ist die Pause-Taste in der GUI gedrueckt worden?
 			if (!haveABreak) {
-				// simulierte Zeit erhoehen,
+				// Ansonsten simulierte Zeit erhoehen,
 				simulTime += baseTimeVirtual / 2;
-				// dann WorldView benachrichtigen,
-				// dass neu gezeichnet werden soll:
 			}
+			// Auf jeden Fall WorldView benachrichtigen,
+			// dass neu gezeichnet werden soll:
 			worldView.repaint();
 
 		}

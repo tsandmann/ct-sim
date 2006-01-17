@@ -30,10 +30,10 @@ import javax.vecmath.Vector3f;
  */
 public class CtBotSimTest extends CtBotSim {
 
-	private short ll = 10;
+	private short ll;
+	private short rr;
 
-	private short rr = 11;
-
+	
 	/**
 	 * Erzeugt einen neuen Testbot
 	 * 
@@ -56,13 +56,19 @@ public class CtBotSimTest extends CtBotSim {
 
 	/**
 	 * Diese Methode enthaelt eine einfache Beispielroutine fuer eine
-	 * Robotersteuerung. Dieser Code laesst sich NICHT auf einen echten c't-Bot
+	 * Robotersteuerung. Der Bot faehrt moeglichst schnell, solange der 
+	 * Weg frei ist, wird langsamer, wenn er in die Naehe einer Wand kommt 
+	 * und dreht sich langsam von der Wand weg. Kommt die Wand zu nah, dreht er
+	 * "auf dem Teller", bis der Weg wieder frei ist. <br/>
+	 * Die Steuerung vermeidet in den meisten Faellen die Kollision mit der 
+	 * Wand, fuehrt aber gelegentlich dazu, dass der Bot in einer Ecke haengen bleibt. <br/>
+	 * Dieser Code laesst sich NICHT auf einen echten c't-Bot
 	 * uebertragen, da diese kein Java unterstuetzt.
 	 * 
 	 * @see ctSim.Model.Bot#work()
 	 */
 	public void work() {
-
+		
 		ll = rr = 0;
 
 		int irL = this.getSensIrL();
@@ -74,10 +80,10 @@ public class CtBotSimTest extends CtBotSim {
 
 		// Solange die Wand weit weg ist, wird Stoff gegeben:
 		if (irL >= 500) {
-			ll = 20;
+			ll = 255;
 		}
 		if (irR >= 500) {
-			rr = 20;
+			rr = 255;
 		}
 
 		// Vorsicht, die Wand kommt naeher:
@@ -88,26 +94,26 @@ public class CtBotSimTest extends CtBotSim {
 		// wieder frei:
 		if (irL < 500 && irL >= 200) {
 			if (irL <= irR)
-				ll = 7;
+				ll = 70;
 			else
-				ll = 5;
+				ll = 50;
 		}
 		if (irR < 500 && irR >= 200) {
 			if (irL >= irR)
-				rr = 7;
+				rr = 70;
 			else
-				rr = 5;
+				rr = 50;
 		}
 
 		// Kollision droht: Auf dem Teller rausdrehen!
 		if (irL < 200 || irR < 200) {
 			// Drehung von der Wand weg:
 			if (irL <= irR) {
-				ll = 10;
-				rr = -10;
+				ll = 100;
+				rr = -100;
 			} else {
-				ll = -10;
-				rr = 10;
+				ll = -100;
+				rr = 100;
 			}
 		}
 
