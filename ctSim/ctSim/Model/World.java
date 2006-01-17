@@ -244,16 +244,6 @@ public class World extends Thread {
 		bounds.transform(transform);
 
 		PickBounds pickShape = new PickBounds(bounds);
-		// TODO: Obwohl nur die Branch Group der Hindernisse obstBG gewaehlt
-		// ist, werden auch Kollisionen mit anderen Bots und dem Fussboden
-		// gefunden
-		// Workaround: Im Moment sind die Bots und der Boden nicht Pickable!
-		// Anregungen zu Loesung:
-		// @see http://www.lems.brown.edu/~wq/projects/cs252.html
-		// @see http://forum.java.sun.com/thread.jspa?threadID=656337&tstart=135
-		// @see http://java3d.j3d.org/implementation/collision.html
-		// @see http://java3d.j3d.org/tutorials/
-		// @see http://code.j3d.org/
 		PickInfo pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE,
 				pickShape);
 

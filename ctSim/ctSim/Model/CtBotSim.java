@@ -96,8 +96,6 @@ abstract public class CtBotSim extends CtBot {
 	 */
 	protected void updateStats() {
 
-		// TODO Hier sitzt der Bug bei den Radencodern!!!
-
 		// Anzahl der Umdrehungen der Raeder
 		double turnsL = calculateWheelSpeed(this.getAktMotL());
 		turnsL = turnsL * (float) deltaT / 1000.0f;
@@ -168,9 +166,10 @@ abstract public class CtBotSim extends CtBot {
 
 		// Pruefen, ob Kollision erfolgt
 		if (world.checkCollision(getBounds(), newPos)) {
-			// Wenn nicht, Position und Heading aktualisieren
+			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
 		}
+		// Blickrichtung immer aktualisieren:
 		this.setHeading(newHeading);
 
 		// IR-Abstandssensoren aktualisieren

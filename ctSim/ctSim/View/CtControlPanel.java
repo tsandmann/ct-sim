@@ -21,6 +21,7 @@ package ctSim.View;
 
 import java.awt.GridLayout;
 import java.awt.event.*;
+import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,6 +33,7 @@ import javax.swing.JTextField;
 import javax.vecmath.Vector3f;
 
 import ctSim.Model.CtBot;
+import ctSim.Model.World;
 import ctSim.SimUtils;
 
 /**
@@ -207,6 +209,8 @@ public class CtControlPanel extends ControlPanel {
 
 	private JLabel motorLabelL;
 
+	private Dimension labelDim, fieldDim;
+	
 	private boolean irL, irR, xpos, ypos, head;
 
 	/**
@@ -231,6 +235,9 @@ public class CtControlPanel extends ControlPanel {
 	 */
 	protected void initGUI() {
 
+		labelDim = new Dimension(70, 25);
+		fieldDim = new Dimension(50, 25);
+		
 		try {
 			BoxLayout thisLayout = new BoxLayout(this,
 					javax.swing.BoxLayout.Y_AXIS);
@@ -273,7 +280,7 @@ public class CtControlPanel extends ControlPanel {
 					}
 					{
 						headSliderCheck = new JCheckBox();
-						headSliderPanel.add(headSliderCheck);
+						headPanel.add(headSliderCheck);
 						headSliderCheck.setText("setzen" + "");
 						headSliderCheck.addItemListener(new ItemListener() {
 							public void itemStateChanged(ItemEvent e) {
@@ -308,8 +315,7 @@ public class CtControlPanel extends ControlPanel {
 							xPosSliderPanel, javax.swing.BoxLayout.Y_AXIS);
 					xPosSliderPanel.setLayout(xPosSliderPanelLayout);
 					{
-						xPosSlider = new JSlider(JSlider.HORIZONTAL, -100, 100,
-								0);
+						xPosSlider = new JSlider(JSlider.HORIZONTAL, Math.round(-100*World.PLAYGROUND_WIDTH) , Math.round(100*World.PLAYGROUND_WIDTH), 0);
 						xPosSliderPanel.add(xPosSlider);
 						xPosSlider.setMajorTickSpacing(20);
 						xPosSlider.setMinorTickSpacing(10);
@@ -318,7 +324,7 @@ public class CtControlPanel extends ControlPanel {
 					}
 					{
 						xPosSliderCheck = new JCheckBox();
-						xPosSliderPanel.add(xPosSliderCheck);
+						xPosPanel.add(xPosSliderCheck);
 						xPosSliderCheck.setText("setzen" + "");
 						xPosSliderCheck.addItemListener(new ItemListener() {
 							public void itemStateChanged(ItemEvent e) {
@@ -352,7 +358,7 @@ public class CtControlPanel extends ControlPanel {
 							yPosSliderPanel, javax.swing.BoxLayout.Y_AXIS);
 					yPosSliderPanel.setLayout(yPosSliderPanelLayout);
 					{
-						yPosSlider = new JSlider(JSlider.HORIZONTAL, -100, 100, 0);
+						yPosSlider = new JSlider(JSlider.HORIZONTAL, Math.round(-100*World.PLAYGROUND_HEIGHT), Math.round(100*World.PLAYGROUND_HEIGHT), 0);
 						yPosSliderPanel.add(yPosSlider);
 						yPosSlider.setMajorTickSpacing(20);
 						yPosSlider.setMinorTickSpacing(10);
@@ -361,7 +367,7 @@ public class CtControlPanel extends ControlPanel {
 					}
 					{
 						yPosSliderCheck = new JCheckBox();
-						yPosSliderPanel.add(yPosSliderCheck);
+						yPosPanel.add(yPosSliderCheck);
 						yPosSliderCheck.setText("setzen" + "");
 						yPosSliderCheck.addItemListener(new ItemListener() {
 							public void itemStateChanged(ItemEvent e) {
@@ -389,28 +395,9 @@ public class CtControlPanel extends ControlPanel {
 				rc5PanelLayout.setHgap(5);
 				rc5PanelLayout.setVgap(5);
 				rc5PanelLayout.setColumns(3);
-				rc5PanelLayout.setRows(8);
+				rc5PanelLayout.setRows(7);
 				rc5Panel.setLayout(rc5PanelLayout);
 				rc5Panel.setPreferredSize(new java.awt.Dimension(200, 200));
-				{
-					jButtonOnOff = new JButton();
-					rc5Panel.add(jButtonOnOff);
-					jButtonOnOff.setText("ON / OFF");
-					jButtonOnOff.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent evt) {
-							bot.setSensRc5(RC5_CODE_PWR);
-						}
-					});
-
-				}
-				{
-					dummy10 = new JPanel();
-					rc5Panel.add(dummy10);
-				}
-				{
-					dummy9 = new JPanel();
-					rc5Panel.add(dummy9);
-				}
 				{
 					jButton1 = new JButton();
 					rc5Panel.add(jButton1);
@@ -509,8 +496,15 @@ public class CtControlPanel extends ControlPanel {
 
 				}
 				{
-					dummy1 = new JPanel();
-					rc5Panel.add(dummy1);
+					jButtonOnOff = new JButton();
+					rc5Panel.add(jButtonOnOff);
+					jButtonOnOff.setText("ON / OFF");
+					jButtonOnOff.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							bot.setSensRc5(RC5_CODE_PWR);
+						}
+					});
+
 				}
 				{
 					jButton10 = new JButton();
@@ -614,16 +608,15 @@ public class CtControlPanel extends ControlPanel {
 					motPanelL.add(motorLabelL);
 					motorLabelL.setText("Motor PWM");
 					motorLabelL
-							.setPreferredSize(new java.awt.Dimension(100, 25));
+							.setPreferredSize(labelDim);
 				}
 				{
 					motorValueL = new JTextField();
 					motPanelL.add(motorValueL);
 					motorValueL.setText("0");
 					motorValueL.setEditable(false);
-					motorValueL.setBounds(-66, 14, 265, 25);
 					motorValueL
-							.setPreferredSize(new java.awt.Dimension(50, 25));
+							.setPreferredSize(fieldDim);
 				}
 			}
 			{
@@ -636,14 +629,14 @@ public class CtControlPanel extends ControlPanel {
 					irLabelL = new JLabel();
 					irPanelL.add(irLabelL);
 					irLabelL.setText("IR-Sensor");
-					irLabelL.setPreferredSize(new java.awt.Dimension(100, 25));
+					irLabelL.setPreferredSize(labelDim);
 				}
 				{
 					irValueL = new JTextField();
 					irPanelL.add(irValueL);
 					irValueL.setText("0");
 					irValueL.setEditable(false);
-					irValueL.setBounds(-72, -7, 165, 36);
+					irValueL.setPreferredSize(fieldDim);
 				}
 			}
 
@@ -652,7 +645,7 @@ public class CtControlPanel extends ControlPanel {
 					leftIRSliderPanel = new JPanel();
 					leftPanel.add(leftIRSliderPanel);
 					BoxLayout leftIRSliderPanelLayout = new BoxLayout(
-							leftIRSliderPanel, javax.swing.BoxLayout.Y_AXIS);
+							leftIRSliderPanel, javax.swing.BoxLayout.X_AXIS);
 					leftIRSliderPanel.setLayout(leftIRSliderPanelLayout);
 					{
 						irSliderL = new JSlider(JSlider.VERTICAL, 0,
@@ -697,17 +690,14 @@ public class CtControlPanel extends ControlPanel {
 						motLabelR = new JLabel();
 						motPanelR.add(motLabelR);
 						motLabelR.setText("Motor PWM");
-						motLabelR.setPreferredSize(new java.awt.Dimension(100,
-								25));
+						motLabelR.setPreferredSize(labelDim);
 					}
 					{
 						motorValueR = new JTextField();
 						motPanelR.add(motorValueR);
 						motorValueR.setText("0");
 						motorValueR.setEditable(false);
-						motorValueR.setBounds(-180, -3, 180, 20);
-						motorValueR.setPreferredSize(new java.awt.Dimension(
-								50, 25));
+						motorValueR.setPreferredSize(fieldDim);
 					}
 				}
 				{
@@ -721,15 +711,14 @@ public class CtControlPanel extends ControlPanel {
 						irPanelR.add(irLabelR);
 						irLabelR.setText("IR-Sensor");
 						irLabelR
-								.setPreferredSize(new java.awt.Dimension(100, 25));
+								.setPreferredSize(labelDim);
 					}
 					{
 						irValueR = new JTextField();
 						irPanelR.add(irValueR);
 						irValueR.setText("0");
 						irValueR.setEditable(false);
-						irValueR.setPreferredSize(new java.awt.Dimension(50,
-								25));
+						irValueR.setPreferredSize(fieldDim);
 					}
 				}
 
@@ -739,7 +728,7 @@ public class CtControlPanel extends ControlPanel {
 						rightIRSliderPanel = new JPanel();
 						BoxLayout rightIRSliderPanelLayout = new BoxLayout(
 								rightIRSliderPanel,
-								javax.swing.BoxLayout.Y_AXIS);
+								javax.swing.BoxLayout.X_AXIS);
 						rightIRSliderPanel.setLayout(rightIRSliderPanelLayout);
 						rightPanel.add(rightIRSliderPanel);
 						{

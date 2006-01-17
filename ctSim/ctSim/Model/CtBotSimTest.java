@@ -69,53 +69,48 @@ public class CtBotSimTest extends CtBotSim {
 	 */
 	public void work() {
 		
-		ll = rr = 0;
+		ll = rr = 100;
 
-		int irL = this.getSensIrL();
-		int irR = this.getSensIrR();
-
-		// Ansteuerung fuer die Motoren in Abhaengigkeit vom Input
-		// der IR-Abstandssensoren, welche die Entfernung in mm
-		// zum naechsten Hindernis in Blickrichtung zurueckgeben
-
-		// Solange die Wand weit weg ist, wird Stoff gegeben:
-		if (irL >= 500) {
-			ll = 255;
-		}
-		if (irR >= 500) {
-			rr = 255;
-		}
-
-		// Vorsicht, die Wand kommt naeher:
-		// Jetzt den Motor auf der Seite, die weiter entfernt ist,
-		// langsamer laufen lassen als den auf der anderen Seite
-		// - dann bewegt sich der Bot selbst
-		// bei Wandkollisionen noch etwas und kommt eventuell
-		// wieder frei:
-		if (irL < 500 && irL >= 200) {
-			if (irL <= irR)
-				ll = 70;
-			else
-				ll = 50;
-		}
-		if (irR < 500 && irR >= 200) {
-			if (irL >= irR)
-				rr = 70;
-			else
-				rr = 50;
-		}
-
-		// Kollision droht: Auf dem Teller rausdrehen!
-		if (irL < 200 || irR < 200) {
-			// Drehung von der Wand weg:
-			if (irL <= irR) {
-				ll = 100;
-				rr = -100;
-			} else {
-				ll = -100;
-				rr = 100;
-			}
-		}
+//		int irL = this.getSensIrL();
+//		int irR = this.getSensIrR();
+//
+//		// Ansteuerung fuer die Motoren in Abhaengigkeit vom Input
+//		// der IR-Abstandssensoren, welche die Entfernung in mm
+//		// zum naechsten Hindernis in Blickrichtung zurueckgeben
+//
+//		// Solange die Wand weit weg ist, wird Stoff gegeben:
+//		if (irL >= 500) {
+//			ll = 255;
+//		}
+//		if (irR >= 500) {
+//			rr = 255;
+//		}
+//
+//		// Vorsicht, die Wand kommt naeher:
+//		// Jetzt den Motor auf der Seite, die weiter entfernt ist,
+//		// langsamer laufen lassen als den auf der anderen Seite
+//		// - dann bewegt sich der Bot selbst
+//		// bei Wandkollisionen noch etwas und kommt eventuell
+//		// wieder frei:
+//		if (irL < 500 && irL >= 200) {
+//			if (irL <= irR)
+//				ll = 70;
+//			else
+//				ll = 50;
+//		}
+//		if (irR < 500 && irR >= 200) {
+//			if (irL > irR)
+//				rr = 70;
+//			else
+//				rr = 50;
+//		}
+//
+//		// Kollision droht: Auf dem Teller rausdrehen,
+//		// und zwar immer nach links!
+//		if (irL < 200 || irR < 200) {
+//			ll = -100;
+//			rr = 100;
+//		}
 
 		this.setAktMotL(ll);
 		this.setAktMotR(rr);
