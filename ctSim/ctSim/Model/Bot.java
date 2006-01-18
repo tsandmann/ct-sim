@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator für den c't-Bot
+ * c't-Sim - Robotersimulator fï¿½r den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -88,7 +88,7 @@ abstract public class Bot extends Thread implements Obstacle {
 
 	/**
 	 * Der Aufruf dieser Methode direkt nach dem Erzeugen sorgt dafuer, dass der
-	 * Bot über ein passendes ControlPanel verfuegt
+	 * Bot ï¿½ber ein passendes ControlPanel verfuegt
 	 */
 	abstract public void providePanel();
 
@@ -101,8 +101,8 @@ abstract public class Bot extends Thread implements Obstacle {
 	abstract protected void init();
 
 	/**
-	 * Diese Methode enthält die Routinen, die der Bot während seiner Laufzeit
-	 * immer wieder durchführt. Die Methode darf keine Schleife enthalten!
+	 * Diese Methode enthï¿½lt die Routinen, die der Bot wï¿½hrend seiner Laufzeit
+	 * immer wieder durchfï¿½hrt. Die Methode darf keine Schleife enthalten!
 	 */
 	abstract protected void work();
 
@@ -163,7 +163,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	}
 
 	/**
-	 * @return Die Höhe des Bot in Metern
+	 * @return Die Hï¿½he des Bot in Metern
 	 */
 	abstract public float getHeight();
 
@@ -217,7 +217,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	 * @return Gibt die Grenzen des Bots zurueck
 	 */
 	public Bounds getBounds() {
-		return bounds;
+		return (Bounds)bounds.clone();
 	}
 
 	/**
