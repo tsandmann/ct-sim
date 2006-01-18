@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator für den c't-Bot
+ * c't-Sim - Robotersimulator fuer den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -16,6 +16,7 @@
  * MA 02111-1307, USA.
  * 
  */
+
 package ctSim.Model;
 
 import javax.vecmath.Point3f;
@@ -63,7 +64,8 @@ public class CtBotSimTest extends CtBotSim {
 	 * Die Steuerung vermeidet in den meisten Faellen die Kollision mit der 
 	 * Wand, fuehrt aber gelegentlich dazu, dass der Bot in einer Ecke haengen bleibt. <br/>
 	 * Dieser Code laesst sich NICHT auf einen echten c't-Bot
-	 * uebertragen, da diese kein Java unterstuetzt.
+	 * uebertragen, da diese kein Java unterstuetzt. <br/>
+	 * Diese einfache Implementierung des c't-Bot reagiert NICHT auf Kommandos der Fernbedienung
 	 * 
 	 * @see ctSim.Model.Bot#work()
 	 */
@@ -71,46 +73,46 @@ public class CtBotSimTest extends CtBotSim {
 		
 		ll = rr = 100;
 
-//		int irL = this.getSensIrL();
-//		int irR = this.getSensIrR();
-//
-//		// Ansteuerung fuer die Motoren in Abhaengigkeit vom Input
-//		// der IR-Abstandssensoren, welche die Entfernung in mm
-//		// zum naechsten Hindernis in Blickrichtung zurueckgeben
-//
-//		// Solange die Wand weit weg ist, wird Stoff gegeben:
-//		if (irL >= 500) {
-//			ll = 255;
-//		}
-//		if (irR >= 500) {
-//			rr = 255;
-//		}
-//
-//		// Vorsicht, die Wand kommt naeher:
-//		// Jetzt den Motor auf der Seite, die weiter entfernt ist,
-//		// langsamer laufen lassen als den auf der anderen Seite
-//		// - dann bewegt sich der Bot selbst
-//		// bei Wandkollisionen noch etwas und kommt eventuell
-//		// wieder frei:
-//		if (irL < 500 && irL >= 200) {
-//			if (irL <= irR)
-//				ll = 70;
-//			else
-//				ll = 50;
-//		}
-//		if (irR < 500 && irR >= 200) {
-//			if (irL > irR)
-//				rr = 70;
-//			else
-//				rr = 50;
-//		}
-//
-//		// Kollision droht: Auf dem Teller rausdrehen,
-//		// und zwar immer nach links!
-//		if (irL < 200 || irR < 200) {
-//			ll = -100;
-//			rr = 100;
-//		}
+		int irL = this.getSensIrL();
+		int irR = this.getSensIrR();
+
+		// Ansteuerung fuer die Motoren in Abhaengigkeit vom Input
+		// der IR-Abstandssensoren, welche die Entfernung in mm
+		// zum naechsten Hindernis in Blickrichtung zurueckgeben
+
+		// Solange die Wand weit weg ist, wird Stoff gegeben:
+		if (irL >= 500) {
+			ll = 255;
+		}
+		if (irR >= 500) {
+			rr = 255;
+		}
+
+		// Vorsicht, die Wand kommt naeher:
+		// Jetzt den Motor auf der Seite, die weiter entfernt ist,
+		// langsamer laufen lassen als den auf der anderen Seite
+		// - dann bewegt sich der Bot selbst
+		// bei Wandkollisionen noch etwas und kommt eventuell
+		// wieder frei:
+		if (irL < 500 && irL >= 200) {
+			if (irL <= irR)
+				ll = 70;
+			else
+				ll = 50;
+		}
+		if (irR < 500 && irR >= 200) {
+			if (irL > irR)
+				rr = 70;
+			else
+				rr = 50;
+		}
+
+		// Kollision droht: Auf dem Teller rausdrehen,
+		// und zwar immer nach links!
+		if (irL < 200 || irR < 200) {
+			ll = -100;
+			rr = 100;
+		}
 
 		this.setAktMotL(ll);
 		this.setAktMotR(rr);
