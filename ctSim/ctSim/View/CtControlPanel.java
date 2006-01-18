@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator für den c't-Bot
+ * c't-Sim - Robotersimulator fï¿½r den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -153,8 +153,6 @@ public class CtControlPanel extends ControlPanel {
 
 	private JButton jButton10;
 
-	private JPanel dummy1;
-
 	private JButton jButton9;
 
 	private JButton jButton8;
@@ -164,10 +162,6 @@ public class CtControlPanel extends ControlPanel {
 	private JButton jButton2;
 
 	private JPanel dummy8;
-
-	private JPanel dummy9;
-
-	private JPanel dummy10;
 
 	private JPanel keyPanel;
 
