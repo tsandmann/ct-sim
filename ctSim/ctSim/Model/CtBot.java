@@ -438,7 +438,7 @@ public abstract class CtBot extends Bot {
 	}
 
 	/**
-	 * @param encr
+	 * @param encR
 	 *            Neuer Radencoderstand rechts zu setzen
 	 */
 	public void setSensEncR(short encR) {

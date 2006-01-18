@@ -223,14 +223,13 @@ public class Command {
 	}
 
 	/**
-	 * Liest ein Kommando von einem DataInputStream
+	 * Liest ein Kommando von einer TcpConnection
 	 * 
 	 * @param dis
-	 *            Der Stream zu Lesen
+	 *            Die Verbindung, von der gelesen werden soll
 	 * @return das Ergebnis von validate()
 	 * @throws IOException
 	 * @see Command#validate()
-	 * @see DataInputStream
 	 */
 	public int readCommand(TcpConnection tcpCon) throws IOException {
 		int tmp;

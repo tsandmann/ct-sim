@@ -228,10 +228,11 @@ public class World extends Thread {
 	/**
 	 * Prueft, ob ein Bot mit irgendeinem anderen Objekt kollidiert
 	 * 
-	 * @param pickShape
-	 *            die zu pruefende Form
+	 * @param bounds
+	 *            die Grenzen des Bot 
+	 * @param newPosition 
+	 * 			  die angestrebte neue Position	
 	 * @return True wenn der Bot sich frei bewegen kann
-	 * @see World#playground
 	 */
 	public synchronized boolean checkCollision(Bounds bounds,
 			Vector3f newPosition) {

@@ -132,7 +132,7 @@ public class WorldView extends JFrame {
 	}
 
 	/**
-	 * @param universe
+	 * @param uni
 	 *            Referenz auf das Universum, die gesetzt werden soll
 	 */
 	public void setUniverse(SimpleUniverse uni) {
