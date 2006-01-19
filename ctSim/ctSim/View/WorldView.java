@@ -52,7 +52,7 @@ public class WorldView extends JFrame {
 
 	/** Pfad zu einer Textur fuer die Hindernisse */
 	public static final String OBST_TEXTURE = "textures/rock_wall.jpg";
-
+	
 	/** Aussehen des Bodens */
 	private Appearance playgroundAppear;
 
@@ -67,7 +67,7 @@ public class WorldView extends JFrame {
 	 */
 	public WorldView(World w) {
 		super("c't-Sim");
-
+				
 		getContentPane().setLayout(new BorderLayout());
 		this.setSize(500, 500);
 
@@ -96,7 +96,7 @@ public class WorldView extends JFrame {
 				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f,
 						1.0f, 0.0f));
 		obstacleAppear.setTexCoordGeneration(tcg);
-		TextureLoader loader = new TextureLoader(OBST_TEXTURE, worldCanvas);
+		TextureLoader loader = new TextureLoader(ClassLoader.getSystemResource(OBST_TEXTURE), worldCanvas);
 		Texture2D texture = (Texture2D) loader.getTexture();
 		texture.setBoundaryModeS(Texture.WRAP);
 		texture.setBoundaryModeT(Texture.WRAP);
