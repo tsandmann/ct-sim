@@ -22,7 +22,6 @@ package ctSim.Controller;
 import javax.swing.JOptionPane;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
-import javax.swing.JOptionPane;
 
 import ctSim.Model.*;
 import ctSim.View.*;

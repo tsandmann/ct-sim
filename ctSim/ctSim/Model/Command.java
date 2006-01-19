@@ -225,7 +225,7 @@ public class Command {
 	/**
 	 * Liest ein Kommando von einer TcpConnection
 	 * 
-	 * @param dis
+	 * @param tcpCon
 	 *            Die Verbindung, von der gelesen werden soll
 	 * @return das Ergebnis von validate()
 	 * @throws IOException
