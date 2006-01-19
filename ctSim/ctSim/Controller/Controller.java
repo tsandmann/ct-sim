@@ -17,11 +17,12 @@
  * 
  */
 
-
 package ctSim.Controller;
 
+import javax.swing.JOptionPane;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+import javax.swing.JOptionPane;
 
 import ctSim.Model.*;
 import ctSim.View.*;
@@ -48,22 +49,36 @@ public class Controller {
 	 *            Argumente werden nicht eingelesen
 	 */
 	public static void main(String[] args) {
+
 		System.out.println("Simulator startet");
 		world = new World();
 		controlFrame = new ControlFrame();
+
+		Object[] options = { "externer TCP/IP-Bot", "integrierter Testbot" };
+		int n = JOptionPane.showOptionDialog(null,
+				"Mit welchem Bot-Typ wollen Sie den Simulator betreiben?", "Frage",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+				null, options, options[1]);
+
+		test = true;
+		
+		if (n==0){
+			test= false;
+		}
+				
 		controlFrame.setVisible(true);
 		world.setControlFrame(controlFrame);
 		world.start();
 
+
 		// Falls true, hoert der Simulator nicht auf TCP/IP-Verbindunen,
 		// sondern beguegt sich mit einem Bot vom Typ CtBotSimTest
-		test = true;
 
 		if (test) {
 			addBot("testbot", "Testbot", new Point3f(0.2f, 0f, 0f),
 					new Vector3f(-1f, 0f, 0f));
 		} else {
-			System.out.println("Initializing Connection to c't-Bot");
+			System.out.println("Warte auf Verbindung vom c't-Bot");
 			addBot("BotSimTcp", "BotSimTcp", new Point3f(0.2f, 0.0f, 0f),
 					new Vector3f(-1f, 0f, 0f));
 		}

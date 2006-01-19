@@ -59,6 +59,7 @@ public class ControlFrame extends javax.swing.JFrame {
 		super();
 		haveABreak = false;
 		world = Controller.getWorld();
+
 		initGUI();
 	}
 
