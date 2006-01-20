@@ -25,7 +25,7 @@ import java.lang.Math;
 
 /**
  * Diese Klasse enthaelt reine Hilfsfunktionen wie Umrechnungsmethoden zwischen
- * verschiedenen Mass-Einheiten etc.
+ * verschiedenen Mass-Einheiten usw.
  * 
  * @author pek (pek@heise.de)
  */
