@@ -265,9 +265,11 @@ public class World extends Thread {
 	 *            Die Position, von der aus der Seh-Strahl verfolgt wird
 	 * @param heading
 	 *            Die Blickrichtung
+	 * @param openingAngle
+	 * 			  Der Öffnungswinkel des Blickstrahls           
 	 * @return Die Distanz zum naechsten Objekt in Metern
 	 */
-	public double watchObstacle(Point3d pos, Vector3d heading) {
+	public double watchObstacle(Point3d pos, Vector3d heading, double openingAngle) {
 
 		// TODO: Sehstrahl oeffnet einen Konus mit dem festen Winkel von 3 Grad;
 		// mus an realen IR-Sensor angepasst werden!
@@ -283,7 +285,7 @@ public class World extends Thread {
 		transform.transform(relHeading);
 
 		PickShape pickShape = new PickConeRay(relPos, relHeading,
-				Math.PI / 180 * 3);
+				openingAngle);
 		PickInfo pickInfo = obstBG.pickClosest(PickInfo.PICK_GEOMETRY,
 				PickInfo.CLOSEST_DISTANCE, pickShape);
 

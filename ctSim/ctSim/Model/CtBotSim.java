@@ -177,9 +177,9 @@ abstract public class CtBotSim extends CtBot {
 		// IR-Abstandssensoren aktualisieren
 		if (updateSensIr) {
 			this.setSensIrL(world.watchObstacle(getSensPosition('L'),
-					new Vector3d(newHeading)));
+					new Vector3d(newHeading),SENS_IR_ANGLE));
 			this.setSensIrR(world.watchObstacle(getSensPosition('R'),
-					new Vector3d(newHeading)));
+					new Vector3d(newHeading),SENS_IR_ANGLE));
 		}
 	}
 

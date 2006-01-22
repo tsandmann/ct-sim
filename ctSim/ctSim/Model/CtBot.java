@@ -77,6 +77,8 @@ public abstract class CtBot extends Bot {
 	/** Abstand Zentrum IR-Sensoren in Hochrichtung (Y) [m] */
 	public static final double SENS_IR_ABSTAND_Z = 0.0d;
 
+	/** Oeffnungswinkel der beiden IR-Abstandssensoren [Rad] */
+	public static final double SENS_IR_ANGLE = Math.PI / 180 * 3; 
 	/*
 	 * Capabilities -- Flags, die anzeigen, welche internen Zustaende von
 	 * Sensoren oder Aktuatoren ueber das ControlPanel beeinlussbar sind
@@ -232,7 +234,7 @@ public abstract class CtBot extends Bot {
 
 	/*
 	 * (non-Javadoc) Der Aufruf dieser Methode direkt nach dem Erzeugen sorgt
-	 * dafuer, dass der Bot über ein passendes ControlPanel verfuegt
+	 * dafuer, dass der Bot ï¿½ber ein passendes ControlPanel verfuegt
 	 * 
 	 * @see ctSim.Model.Bot#providePanel()
 	 */
