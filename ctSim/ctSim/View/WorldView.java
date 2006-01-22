@@ -23,6 +23,9 @@ import ctSim.Model.World;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+
 import com.sun.j3d.utils.universe.*;
 import com.sun.j3d.utils.image.TextureLoader;
 
@@ -71,8 +74,14 @@ public class WorldView extends JFrame {
 		getContentPane().setLayout(new BorderLayout());
 		this.setSize(500, 500);
 
-		// Leinwand fuer die Welt erzeugen
-		worldCanvas = new Canvas3D(null);
+		
+        GraphicsConfigTemplate3D template = new GraphicsConfigTemplate3D();
+        GraphicsEnvironment env =
+            GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice dev = env.getDefaultScreenDevice();
+
+        // Leinwand fuer die Welt erzeugen
+		worldCanvas = new Canvas3D(dev.getBestConfiguration(template));
 
 		this.getContentPane().add(worldCanvas);
 
