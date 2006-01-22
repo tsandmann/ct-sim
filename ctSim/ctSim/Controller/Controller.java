@@ -122,6 +122,7 @@ public class Controller {
 	public static void endSim() {
 		world.die();
 		controlFrame.dispose();
+		System.exit(0);
 	}
 
 	/**
