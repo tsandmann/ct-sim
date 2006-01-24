@@ -22,8 +22,9 @@ package ctSim.Model;
 import javax.vecmath.*;
 import javax.media.j3d.*;
 
-import com.sun.j3d.utils.geometry.Box;
-import com.sun.j3d.utils.geometry.Cylinder;
+import java.lang.Math;
+
+import com.sun.j3d.utils.geometry.*;
 
 import ctSim.Controller.Controller;
 import ctSim.View.CtControlPanel;
@@ -48,8 +49,11 @@ public abstract class CtBot extends Bot {
 	public static final double BOT_HEIGHT = 0.100d;
 
 	/** Breite des Faches [m] */
-	public static final double FACH_LENGTH = 0.030d;
-
+	public static final double FACH_LENGTH = 0.060d;
+	
+	/** Tiefe des Faches [m] */
+	public static final double FACH_DEPTH = 0.040d;
+	
 	/** maximale Geschwindigkeit als PWM-Wert */
 	public static final short PWM_MAX = 255;
 
@@ -207,6 +211,9 @@ public abstract class CtBot extends Bot {
 	/** Batterie oder Servofehler */
 	private Integer sensError = new Integer(0);
 
+	/** Körper des Roboters */
+	protected Shape3D botBody;	
+
 	/**
 	 * Einfacher Konstruktor
 	 */
@@ -264,42 +271,24 @@ public abstract class CtBot extends Bot {
 		// Translation
 
 		// Bot erzeugen
-		transform = new Transform3D();
-		transform.setRotation(new AxisAngle4f((float) 1, (float) 0, (float) 0,
-				(float) Math.PI / 2));
-		TransformGroup tmp = new TransformGroup(transform);
-
-		// Grundform ist ein Zylinder
-		Cylinder cyl = new Cylinder((float) BOT_RADIUS, (float) BOT_HEIGHT);
-		cyl.setAppearance(world.getWorldView().getBotAppear());
-		cyl.setName(getName() + " Cylinder");
-		// TODO: Bots sind momentan nicht "pickable", erkennen sich
-		// daher nicht gegenseitig als Hindernisse.
-		// Setzt man die Bots "pickable", dann stellen sie fortlaufend
-		// Kollisionen mit sich selbst fest.
-		cyl.setPickable(false);
-		tmp.addChild(cyl);
-
+		Shape3D realBot = createBotShape();
+		realBot.setAppearance(world.getWorldView().getBotAppear());
+		realBot.setName(getName() + " Body");
+		// Körper "pickable" machen um Kollisionen mit anderen Bots
+		// zu erkennen
+		realBot.setPickable(true);
+		// "Pickable" muss für die eigene Kollisionsabfrage abschaltbar sein
+		realBot.setCapability(Cylinder.ALLOW_PICKABLE_WRITE);
+		// Körper merken um später bei der eigenen Kollisionsabfrage die 
+		// "Pickable"-Eigenschaft ändern zu können
+		botBody = realBot;
+		rg.addChild(realBot);
+		
 		// Die Grenzen (Bounds) des Bots sind wichtig
 		// fuer die Kollisionserkennung.
 		// Die Grenze des Roboters wird vorlaefig definiert ueber
 		// eine Sphaere mit Radius der Bot-Grundplatte um die Position des Bot
 		setBounds(new BoundingSphere(new Point3d(super.getPos()), BOT_RADIUS));
-		rg.addChild(tmp);
-
-		// Das Fach vorne im Bot ist derzeit ein Quader, der sich durch
-		// die gleiche Optik wie der Boden tarnt
-		transform = new Transform3D();
-		transform.setTranslation(new Vector3f(
-				(float) (BOT_RADIUS - FACH_LENGTH), 0f, 0f));
-		tmp = new TransformGroup(transform);
-
-		Box box = new Box((float) FACH_LENGTH, (float) FACH_LENGTH,
-				(float) BOT_HEIGHT, world.getWorldView().getPlaygroundAppear());
-		box.setName(getName() + " Fach");
-		box.setPickable(false);
-		tmp.addChild(box);
-		rg.addChild(tmp);
 
 		// Jetzt wird noch alles nett verpackt
 		BranchGroup bg = new BranchGroup();
@@ -311,6 +300,163 @@ public abstract class CtBot extends Bot {
 		setBotBG(bg);
 	}
 
+	/**
+	 * Baut die 3D-Representation des Bot Körpers aus 2D Polygonen zusammen
+	 *  
+	 * @return Körper des Bots 
+	 */
+	private Shape3D createBotShape() {
+		
+		Shape3D bs = new Shape3D();
+		// Anzahl der Ecken um den Kreis des Bots zu beschreiben.
+		// Mehr sehen besser aus, benötigen aber auch mehr Rechenzeit.
+		int N = 10;
+		// Anzahl der verwendeten Punkte
+		int totalN = 2 * (N + 2);
+		// data muss pro Punkt die Werte x, y und z speichern
+		float[] data = new float[totalN * 3];
+		// zwei Polygone(Deckel und Boden) mit je N+2 Ecken
+		int stripCounts[] = { N + 2, N + 2 };
+		float r = (float) BOT_RADIUS;
+		float h = (float) BOT_HEIGHT / 2;
+		// Zähler
+		int n;
+		// Koordinaten
+		float x, y;
+		// Winkel
+		double alpha = 0.0;
+		
+		// Bot Deckel erzeugen
+		//
+		// Winkel des vollen Kreises (in Bogenmaß)
+		double circle = 2.0 * Math.PI;
+		// halber Winkel der Öffnung des Bots
+		double opening = Math.asin((FACH_LENGTH / 2) / r);
+		
+		// Rand des Deckels erzeugen, beachte dabei die Öffnung
+		for (n = 0; n < N; n++) {
+			alpha = opening + (((circle - 2 * opening) / (N - 1)) * n);
+			x = (float) (r * Math.cos(alpha));
+			y = (float) (r * Math.sin(alpha));
+			data[3 * n] = x;
+			data[3 * n + 1] = y;
+			data[3 * n + 2] = h; // 0
+		}
+		
+		// Fach in die Öffnung des Deckels einbauen
+		data[3 * n] = r - (float) FACH_DEPTH;
+		data[3 * n + 1] = (float) -FACH_LENGTH / 2;
+		data[3 * n + 2] = h; // 2
+		n++;
+		data[3 * n] = r - (float) FACH_DEPTH;
+		data[3 * n + 1] = (float) FACH_LENGTH / 2;
+		data[3 * n + 2] = h; // 2
+		n++;
+		
+		// Bot Deckel als Kopieren um ihn als Boden zu verwenden.
+		for (int i = (N + 2) - 1; i >= 0; i--) {
+			data[3 * n] = data[3 * i];
+			data[3 * n + 1] = data[3 * i + 1];
+			data[3 * n + 2] = -data[3 * i + 2];
+			n++;
+		}
+		
+		// Deckel und Boden in darstellbare Form umwandeln
+		GeometryInfo gi = new GeometryInfo(GeometryInfo.POLYGON_ARRAY);
+		gi.setCoordinates(data);
+		gi.setStripCounts(stripCounts);
+		
+		NormalGenerator ng = new NormalGenerator();
+		ng.generateNormals(gi);
+		gi.recomputeIndices();
+		
+		Stripifier st = new Stripifier();
+		st.stripify(gi);
+		gi.recomputeIndices();
+		
+		// Hinzufügen des Deckels und des Bodens zur Bot-Shape3D 
+		bs.addGeometry(gi.getGeometryArray());
+		
+		
+		// Erzeugen der äußeren Seitenverkleidung
+		TriangleStripArray tsa;
+		Point3f coords[] = new Point3f[N * 2];
+		int stripCountTsa[] = { N * 2 };
+		
+		for (int i = 0; i < (N); i++) {
+			coords[i * 2] = new Point3f(data[i * 3], data[i * 3 + 1],
+					data[i * 3 + 2]);
+			coords[i * 2 + 1] = new Point3f(data[i * 3], data[i * 3 + 1],
+					-data[i * 3 + 2]);
+		}
+		
+		tsa = new TriangleStripArray(2 * N, TriangleStripArray.COORDINATES,
+				stripCountTsa);
+		tsa.setCoordinates(0, coords);
+
+		// Hinzufügen der äußern Seitenverkleidung zur Bot-Shape3D
+		bs.setGeometry(tsa);
+		
+		// Erzeugen der Wände des Faches
+		QuadArray qa;
+		Point3f quadCoords[] = new Point3f[3 * 4];
+		
+		n = N - 1;
+		// aussen rechts
+		quadCoords[0] = new Point3f(data[n * 3], data[n * 3 + 1],
+				data[n * 3 + 2]);
+		quadCoords[1] = new Point3f(data[n * 3], data[n * 3 + 1],
+				-data[n * 3 + 2]);
+		n++;
+		// innen rechts
+		quadCoords[2] = new Point3f(data[n * 3], data[n * 3 + 1],
+				-data[n * 3 + 2]);
+		quadCoords[3] = new Point3f(data[n * 3], data[n * 3 + 1],
+				data[n * 3 + 2]);
+		
+		quadCoords[4] = new Point3f(data[n * 3], data[n * 3 + 1],
+				data[n * 3 + 2]);
+		quadCoords[5] = new Point3f(data[n * 3], data[n * 3 + 1],
+				-data[n * 3 + 2]);
+		n++;
+		// innen links
+		quadCoords[6] = new Point3f(data[n * 3], data[n * 3 + 1],
+				-data[n * 3 + 2]);
+		quadCoords[7] = new Point3f(data[n * 3], data[n * 3 + 1],
+				data[n * 3 + 2]);
+		
+		quadCoords[8] = new Point3f(data[n * 3], data[n * 3 + 1],
+				data[n * 3 + 2]);
+		quadCoords[9] = new Point3f(data[n * 3], data[n * 3 + 1],
+				-data[n * 3 + 2]);
+		n = 0;
+		// aussen links
+		quadCoords[10] = new Point3f(data[n * 3], data[n * 3 + 1],
+				-data[n * 3 + 2]);
+		quadCoords[11] = new Point3f(data[n * 3], data[n * 3 + 1],
+				data[n * 3 + 2]);
+		
+		qa = new QuadArray(3 * 4, QuadArray.COORDINATES);
+		qa.setCoordinates(0, quadCoords);
+		
+		// Hinzufügen der Fachwände zur Bot-Shape3D 
+		bs.addGeometry(qa);
+		
+		// Die folgenden Zeilen führen dazu, das die Hülle des
+		// Bots durchsichtig wird und nur die Wireframe gezeichnet
+		// wird. Weiterhin werden auch die Rückseiten gezeichnet.
+		
+		// PolygonAttributes polyAppear = new PolygonAttributes();
+		// polyAppear.setPolygonMode(PolygonAttributes.POLYGON_LINE);
+		// polyAppear.setCullFace(PolygonAttributes.CULL_NONE);
+		// Appearance twistAppear = new Appearance();
+		// twistAppear.setPolygonAttributes(polyAppear);
+		// bs.setAppearance(twistAppear);
+		
+		return bs;
+	}
+	
+	
 	// Get()- und Set()-Methoden.
 
 	// Alle Set()-Methoden sind gegen konkurrierende Manipulationen geschuetzt.

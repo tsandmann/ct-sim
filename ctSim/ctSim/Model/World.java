@@ -140,7 +140,7 @@ public class World extends Thread {
 		// Der Boden selbst ist ein sehr flacher Quader:
 		Box floor = new Box(PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, (float) 0.01,
 				worldView.getPlaygroundAppear());
-		floor.setPickable(false);
+		floor.setPickable(true);
 		worldTG.addChild(floor);
 
 		// Die TranformGroup fuer alle Hindernisse:
@@ -234,7 +234,7 @@ public class World extends Thread {
 	 * 			  die angestrebte neue Position	
 	 * @return True wenn der Bot sich frei bewegen kann
 	 */
-	public synchronized boolean checkCollision(Bounds bounds,
+	public synchronized boolean checkCollision(Node botBody, Bounds bounds,
 			Vector3f newPosition) {
 		// schiebe probehalber Bound an die neue Position
 		Transform3D transform = new Transform3D();
@@ -246,8 +246,15 @@ public class World extends Thread {
 		bounds.transform(transform);
 
 		PickBounds pickShape = new PickBounds(bounds);
+		
+		// Eigenen Körper des Roboters verstecken
+		botBody.setPickable(false);
+		
 		PickInfo pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE,
 				pickShape);
+		
+		// Eigenen Körper des Roboters wieder pickable machen
+		botBody.setPickable(true);
 
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return true;

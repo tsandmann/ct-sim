@@ -1,4 +1,24 @@
 CHANGELOG fuer c't-Sim
 ======================
 
+2006-01-24  Lasse Schwarten (lasse@schwarten.org) 
+- Die Bots sind jetzt "pickable" und erkennen sich so gegenseitig als 
+  Hindernisse. Damit ein Bot sich nicht fälschlich selber findet, wird 
+  sein Körper versteckt, während seine Kollisionsabfrage durchgeführt 
+  wird. (Der ct-Sim ist somit nun Multibot fähig.)
+- Die ViewPlatform lässt sich nun durch die Maus im Raum verschieben. 
+  Dazu muss in das 3D-Fenster geklickt werden und die Grafik in eine 
+  gewünschte Richtung gezogen werden.
+  -> Die linke Maustaste dreht die Kamera um sich selbst.
+  -> Die rechte Maustaste verschiebt die Kamera parallel zu ihrer Position
+  -> Die mittlere Maustaste(oder die linke + ALT) verschiebt die Kamera 
+     nach vorne und hinten
+  (Anmerkung: Diese Navigation ist bei weitem nicht perfekt und muss 
+              überarbeitet werden. Ich habe das Paket 
+              org.j3d.ui.navigation ausprobiert, konnte aber keine 
+              besseren Ergebnisse erzielen. Der Code hierfür ist noch 
+              im Source enthalten und lediglich auskommentiert.) 
+- Der Bot hat einen neuen Körper bekommen, der aus einzelnen Polygonen 
+  zusammengebaut wird und eine echtes Fach hat.
+
 2006-01-24	Benjamin Benz (bbe@heise.de) Schreibweise des Changelogs nochmal verÃ¤ndert

@@ -73,7 +73,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	TransformGroup rotationGroup;
 
 	/** Position */
-	private Vector3f pos = new Vector3f(0.0f, 0f, getHeight() / 2 + 0.006f);
+	private Vector3f pos = new Vector3f(0.0f, 0f, getHeight() / 2 +0.006f);
 
 	/**
 	 * Blickvektor

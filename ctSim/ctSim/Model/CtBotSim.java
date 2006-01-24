@@ -167,7 +167,7 @@ abstract public class CtBotSim extends CtBot {
 		newHeading.normalize();
 
 		// Pruefen, ob Kollision erfolgt
-		if (world.checkCollision(getBounds(), newPos)) {
+		if (world.checkCollision(botBody ,getBounds(), newPos)) {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
 		}

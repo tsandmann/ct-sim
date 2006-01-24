@@ -27,7 +27,15 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
 import com.sun.j3d.utils.universe.*;
+import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
+import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
+import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
+import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
 import com.sun.j3d.utils.image.TextureLoader;
+
+// Zur Benutzung des org.j3d.ui.naviagtaion Paketes die Kommentarzeichen entfernen
+//import org.j3d.ui.navigation.*;
+//import java.awt.event.MouseEvent;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;
@@ -46,6 +54,13 @@ public class WorldView extends JFrame {
 
 	/** Die "Leinwand" fuer die 3D-Welt */
 	private Canvas3D worldCanvas;
+
+	/** Die TransformGroup fuer den Blickpunkt in die 3D-Welt */
+	private TransformGroup tgViewPlatform;
+	
+//	 Zur Benutzung des org.j3d.ui.naviagtaion Paketes die Kommentarzeichen entfernen
+//	/** Navigations Objekt */
+//	private MouseViewHandler mvh;
 
 	/** Das Universum */
 	private SimpleUniverse universe;
@@ -121,6 +136,57 @@ public class WorldView extends JFrame {
 	 * Erzeugt die GUI
 	 */
 	public void initGUI() {
+
+		/* hole die TransformGroup aus dem SimpleUniverse heraus */
+		tgViewPlatform = universe.getViewingPlatform().getViewPlatformTransform() ;
+		
+//		 Zur Benutzung des org.j3d.ui.naviagtaion Paketes den folgenden Block auskommentieren
+// Start Block	
+		// Create the root of the branch graph
+		BranchGroup objRoot = new BranchGroup();
+        BoundingSphere mouseBounds = null;
+		
+		mouseBounds = new BoundingSphere(new Point3d(), 1000.0);
+
+		MouseRotate myMouseRotate = new MouseRotate(MouseBehavior.INVERT_INPUT);
+        myMouseRotate.setTransformGroup(tgViewPlatform);
+        myMouseRotate.setSchedulingBounds(mouseBounds);
+        myMouseRotate.setFactor(0.001d);
+        objRoot.addChild(myMouseRotate);
+
+        MouseTranslate myMouseTranslate = new MouseTranslate(MouseBehavior.INVERT_INPUT);
+        myMouseTranslate.setTransformGroup(tgViewPlatform);
+        myMouseTranslate.setSchedulingBounds(mouseBounds);
+        myMouseTranslate.setFactor(0.01d);
+        objRoot.addChild(myMouseTranslate);
+
+        MouseZoom myMouseZoom = new MouseZoom(MouseBehavior.INVERT_INPUT);
+        myMouseZoom.setTransformGroup(tgViewPlatform);
+        myMouseZoom.setSchedulingBounds(mouseBounds);
+        myMouseZoom.setFactor(0.1d);
+        objRoot.addChild(myMouseZoom);
+        
+        universe.addBranchGraph(objRoot);
+// End Block
+
+//      Zur Benutzung des org.j3d.ui.naviagtaion Paketes die Kommentarzeichen entfernen
+//		/* erzeuge die Navigationsklasse */ 
+//		mvh  = new MouseViewHandler();
+//		
+//		/* versorge die Navigationsklasse mit allen benötigten Informationen */
+//		mvh.setCanvas(worldCanvas);
+//		mvh.setViewInfo(universe.getViewer().getView(),tgViewPlatform);
+//		
+//		/* verbinde die Mouseevents mit den verschiedenen Bewegungsarten */
+//		mvh.setButtonNavigation(MouseEvent.BUTTON1_MASK, NavigationState.WALK_STATE);
+//		mvh.setButtonNavigation(MouseEvent.BUTTON2_MASK, NavigationState.FLY_STATE);
+//		mvh.setButtonNavigation(MouseEvent.BUTTON3_MASK, NavigationState.EXAMINE_STATE);
+//		mvh.setNavigationSpeed(1.0f);
+//		
+//		BranchGroup bgt = new BranchGroup();
+//		bgt.addChild(mvh.getTimerBehavior());
+//		universe.addBranchGraph(bgt);
+		
 		try {
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			worldCanvas.setVisible(true);

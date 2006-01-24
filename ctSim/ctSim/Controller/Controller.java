@@ -74,11 +74,16 @@ public class Controller {
 		// sondern beguegt sich mit einem Bot vom Typ CtBotSimTest
 
 		if (test) {
-			addBot("testbot", "Testbot", new Point3f(0.2f, 0f, 0f),
+			addBot("testbot", "Testbot", new Point3f(0f, 0f, 0.1f),
+					new Vector3f(1f, 0f, 0f));
+			addBot("testbot", "Testbot2", new Point3f(0f, 0.5f, 0.1f),
+					new Vector3f(-1f, 1f, 0f));
+			addBot("testbot", "Testbot3", new Point3f(0f, -0.5f, 0.1f),
 					new Vector3f(-1f, 0f, 0f));
+			
 		} else {
 			System.out.println("Warte auf Verbindung vom c't-Bot");
-			addBot("BotSimTcp", "BotSimTcp", new Point3f(0.2f, 0.0f, 0f),
+			addBot("BotSimTcp", "BotSimTcp", new Point3f(0.2f, 0.0f, 0.1f),
 					new Vector3f(-1f, 0f, 0f));
 		}
 	}
