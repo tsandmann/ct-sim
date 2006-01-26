@@ -1,6 +1,14 @@
 CHANGELOG fuer c't-Sim
 ======================
 
+2006-01-26 Zeitlupen Modus: Werner (Morphi2k1) hat einen Modus hinzugefügt,
+um den Bot in Zeitlupe zu bewegen. Man kann nun über einen Schieberegler
+den Faktor der Realzeit einstellen. Dabei bedeutet: 
+1 -- keine Zeitlupe 
+10 -- 10fache Zeitverzögerung.
+Intern wird Wert von "baseTimeReal" bei 10-facher Zeitlupe 10 mal höher 
+gesetzt als der Wert der Simulatorzeit "baseTimeVirtual".
+
 2006-01-24  Lasse Schwarten (lasse@schwarten.org) 
 - Die Bots sind jetzt "pickable" und erkennen sich so gegenseitig als 
   Hindernisse. Damit ein Bot sich nicht fälschlich selber findet, wird 

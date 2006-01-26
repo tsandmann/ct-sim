@@ -21,9 +21,15 @@ package ctSim.View;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -45,11 +51,24 @@ public class ControlFrame extends javax.swing.JFrame {
 	private World world;
 
 	private boolean haveABreak;
+	
+	private boolean slowMotion;
 
 	private JPanel buttonPanel;
 
 	private JButton pauseButton;
-
+	
+	/**
+	 * Slow Motion Box
+	 */
+	private JCheckBox slowMotionBox;
+	private JSlider slowMotionSlider;
+	private JPanel slowMotionSliderPanel;
+	private JPanel slowMotionBoxPanel;
+	private JPanel slowMotionPanel;
+	private JTextField slowMotionText;
+	
+	
 	private JButton endButton;
 
 	/**
@@ -105,6 +124,83 @@ public class ControlFrame extends javax.swing.JFrame {
 					});
 
 				}
+				
+				/*
+				 * Slow Motion Box by Werner
+				 */
+				
+				{
+					// erstmal initialisieren und richtiges Layout
+					this.slowMotionPanel = new JPanel();
+					this.slowMotionBoxPanel = new JPanel();
+					this.slowMotionSliderPanel = new JPanel();
+				
+					this.slowMotionPanel.setLayout(new BoxLayout(slowMotionPanel, BoxLayout.Y_AXIS));
+					this.slowMotionSliderPanel.setLayout(new BoxLayout(slowMotionSliderPanel, BoxLayout.X_AXIS));
+
+					slowMotionText = new JTextField();
+					Dimension dim = new Dimension(30, 25);
+					slowMotionText.setPreferredSize( dim );
+					slowMotionText.setEditable(false);
+					slowMotionText.setText("10");
+					slowMotionText.setSize(30, 25);
+					
+					slowMotionBox = new JCheckBox("setzen", false);
+					slowMotionSlider = new JSlider(JSlider.HORIZONTAL, 1, 21, 10);
+					slowMotionSlider.setMajorTickSpacing(5);
+					slowMotionSlider.setMinorTickSpacing(1);
+					slowMotionSlider.setPaintTicks(true);
+					slowMotionSlider.setPaintLabels(true);
+
+					// schließlich zum Panel dazufügen
+					slowMotionBoxPanel.add(new javax.swing.JLabel("Slow Motion (Faktor x):"));
+					slowMotionBoxPanel.add(slowMotionText);
+					slowMotionBoxPanel.add(slowMotionBox);					
+					slowMotionSliderPanel.add(slowMotionSlider);
+					slowMotionPanel.add(slowMotionBoxPanel);
+					slowMotionPanel.add(slowMotionSliderPanel);
+					getContentPane().add(slowMotionPanel);
+				}
+				
+				// und dann die Listener dazuhängen
+				slowMotionBox.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						slowMotion = slowMotionBox.isSelected();
+						world.setSlowMotion(slowMotion);
+						
+						if(slowMotion)
+						{	
+							slowMotionBox.setSelected(true);
+							// unter 1 ist nicht gut
+							int tempValue = slowMotionSlider.getValue();
+							if(tempValue < 1)
+								tempValue = 1;
+							world.setSlowMotionTime(tempValue);	
+						}	
+						else
+						{	
+							slowMotionBox.setSelected(false);
+							// unter 1 ist nicht gut
+							int tempValue = slowMotionSlider.getValue();
+							if(tempValue < 1)
+								tempValue = 1;
+							world.setSlowMotionTime(tempValue);	
+						}	
+					}
+				});
+				
+				slowMotionSlider.addChangeListener(new ChangeListener() {
+					public void stateChanged(ChangeEvent arg0) {
+						// unter 1 ist nicht gut
+						int tempValue = slowMotionSlider.getValue();
+						if(tempValue < 1)
+							tempValue = 1;
+						world.setSlowMotionTime(tempValue);	
+						slowMotionText.setText(Integer.toString(tempValue));
+					}
+					
+				});
+				
 				{
 					endButton = new JButton();
 					endButton.setPreferredSize(buttDim);

@@ -79,6 +79,14 @@ public class World extends Thread {
 	/** Soll der Thread kurzzeitig ruhen? */
 
 	private boolean haveABreak;
+	
+	/** ZeitlupenModus? */
+	
+	private boolean slowMotion;
+	
+	/** Zeitlupen-Simulationswert */
+	
+	private int slowMotionTime = 100;
 
 	/** Interne Zeitbasis in Millisekunden. */
 	private long simulTime = 0;
@@ -101,6 +109,9 @@ public class World extends Thread {
 		bots = new LinkedList();
 		obstacles = new LinkedList();
 		haveABreak = false;
+		
+		// Slow Motion by Werner
+		slowMotion = false;
 
 		worldView = new WorldView(this);
 
@@ -388,7 +399,9 @@ public class World extends Thread {
 		while (run == true) {
 			try {
 				// halbe baseTime warten,
+				
 				sleep(baseTimeReal / 2);
+				
 			} catch (InterruptedException IEx) {
 				cleanup();
 			}
@@ -430,6 +443,11 @@ public class World extends Thread {
 	 *            Wert fuer baseTimeReal, der gesetzt werden soll.
 	 */
 	public void setBaseTimeReal(int baseTimeReal) {
+
+		// wenn slowMotion gesetzt ist schalten wir das mal ab
+		if(slowMotion)
+			slowMotion = !slowMotion;
+			
 		this.baseTimeReal = baseTimeReal;
 	}
 
@@ -522,5 +540,63 @@ public class World extends Thread {
 	 */
 	public void setHaveABreak(boolean haveABreak) {
 		this.haveABreak = haveABreak;
+	}
+
+	/**
+	 * @return true : Slow Motion on
+	 * @author Werner Pirkl (morpheus.the.real@gmx.de)
+	 */
+	public boolean isSlowMotion() {
+		return slowMotion;
+	}
+
+	/**
+	 * @return true if SlowMotionMode is enabled
+	 * @author Werner Pirkl (Morpheus.the.real@gmx.de)
+	 */
+	public boolean getSlowMotion(){
+		return this.slowMotion;
+	}
+	
+	/**
+	 * Slow Motion heiﬂt 10 mal so hohe Zeitbasis
+	 * @param slowMotion true: Slow Motion on
+	 * @author Werner Pirkl (Morpheus.the.real@gmx.de
+	 */
+	public void setSlowMotion(boolean slowMotion) {
+		this.slowMotion = slowMotion;
+		if(slowMotion)
+		{	
+			// in slowMotionTime wird der Wert vom Schieberegler festgehalten
+			this.baseTimeReal = baseTimeVirtual * slowMotionTime;
+			// die Virtuelle also nach auﬂen sichtbare Zeitbasis bleibt jedoch erhalten da ja
+			// nun in 100 ms 10 ms vergehen
+			this.baseTimeVirtual = 10;
+		}	
+		else
+		{	
+			this.baseTimeReal = 10;
+			this.baseTimeVirtual = 10;
+		}	
+	}
+
+	/**
+	 * @return slowMotionTime in ms (Standard: 100ms)
+	 * @author Werner Pirkl (morpheus.the.real@gmx.de)
+	 */
+	public int getSlowMotionTime() {
+		return slowMotionTime;
+	}
+
+	/**
+	 * Setzt slowMotionTime
+	 * @param slowMotionTime in ms (Standard: 100ms)
+	 * @author Werner Pirkl (morpheus.the.real@gmx.de)
+	 */
+	public void setSlowMotionTime(int slowMotionTime) {
+		if(slowMotion){
+			baseTimeReal = baseTimeVirtual * slowMotionTime;
+		}	
+		this.slowMotionTime = slowMotionTime;
 	}
 }
