@@ -57,11 +57,11 @@ public abstract class CtBot extends Bot {
 	/** Bodenfreiheit des Bots [m] */
 	public static final double BOT_GROUND_CLEARANCE = 0.015d;
 	
-	/** Abstand Zentrum Schleifsporns in Achsrichtung (X) [m] */
+	/** Abstand Zentrum Gleitpin in Achsrichtung (X) [m] */
 	public static final double BOT_SKID_X = 0d;
 	
-	/** Abstand Zentrum Schleifsporns in Vorausrichtung (Y) [m] */
-	public static final double BOT_SKID_Y = -0.050d;
+	/** Abstand Zentrum Gleitpin in Vorausrichtung (Y) [m] */
+	public static final double BOT_SKID_Y = -0.054d;
 	
 	/** maximale Geschwindigkeit als PWM-Wert */
 	public static final short PWM_MAX = 255;
@@ -79,7 +79,7 @@ public abstract class CtBot extends Bot {
 	public static final double RAD_UMFANG = Math.PI * 0.050d;
 
 	/** Abstand Mittelpunkt Bot zum Rad [m] */
-	public static final double RAD_ABSTAND = 0.050d;
+	public static final double RAD_ABSTAND = 0.0485d;
 
 	/** Abstand Zentrum IR-Sensoren in Achsrichtung (X)[m] */
 	public static final double SENS_IR_ABSTAND_X = 0.036d;

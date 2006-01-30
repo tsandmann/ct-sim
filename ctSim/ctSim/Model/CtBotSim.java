@@ -193,13 +193,13 @@ abstract public class CtBotSim extends CtBot {
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(Math.toRadians(angle));
 		
-		// Bodenkontakt des Schleifsporns überprüfen
+		// Bodenkontakt des Gleitpins überprüfen
 		Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT/2);
-		// Position des Schleifsporns gemäß der Ausrichtung des Bots anpassen
+		// Position des Gleitpins gemäß der Ausrichtung des Bots anpassen
 		rotation.transform(skidVec);
 		skidVec.add(new Point3d(newPos));
 		if (!world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE, 
-				"Der Schleifsporn von " + this.getBotName())){
+				"Der Gleitpin von " + this.getBotName())){
 			((CtControlPanel)this.getPanel()).stopBot();
 		}
 	
