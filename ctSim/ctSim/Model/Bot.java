@@ -21,6 +21,7 @@ package ctSim.Model;
 
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.AxisAngle4f;
@@ -61,6 +62,9 @@ abstract public class Bot extends Thread implements Obstacle {
 
 	/** Die 3D-Repraesentation eines Bots */
 	BranchGroup botBG;
+	
+	/** Körper des Roboters */
+	protected Shape3D botBody;	
 
 	/**
 	 * Die Transformgruppe der Translation der 3D-Repraesentation eines Bots
@@ -155,7 +159,7 @@ abstract public class Bot extends Thread implements Obstacle {
 		synchronized (pos) {
 			this.pos = pos;
 			Vector3f vec = new Vector3f(pos);
-			// vec.add(new Vector3f(0.0f,0.0f,getHeight()/2));
+			//vec.add(new Vector3f(0.0f,0.0f,getHeight()/2+getGroundClearance()));
 			Transform3D transform = new Transform3D();
 			transform.setTranslation(vec);
 			translationGroup.setTransform(transform);
@@ -167,6 +171,12 @@ abstract public class Bot extends Thread implements Obstacle {
 	 */
 	abstract public float getHeight();
 
+	/**
+	 * @return Die Hï¿½he des Bot in Metern
+	 */
+	abstract public float getGroundClearance();
+
+	
 	/**
 	 * @param heading
 	 *            Die Blickrichtung des Bot, die gesetzt werden soll

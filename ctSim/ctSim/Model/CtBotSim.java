@@ -25,7 +25,11 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import javax.media.j3d.Transform3D;
+
 import ctSim.ErrorHandler;
+import ctSim.View.CtControlPanel;
+import ctSim.SimUtils;
 
 /**
  * Superklasse fuer alle simulierten Bots.</br> Die Klasse ist abstrakt und
@@ -63,6 +67,7 @@ abstract public class CtBotSim extends CtBot {
 
 	/** Soll der IR-Sensor automatisch aktualisert werden? */
 	boolean updateSensIr = true;
+	
 
 	/**
 	 * Erzeugt einen neuen Bot
@@ -97,6 +102,11 @@ abstract public class CtBotSim extends CtBot {
 	 * @see BotSim#deltaT
 	 */
 	protected void updateStats() {
+		
+		// alte Position und Heading merken
+		// (wird später für die Sensorberechnung benötigt)
+		Vector3f oldPos = (Vector3f)this.getPos().clone();
+		Vector3f oldHeading = (Vector3f)this.getHeading().clone();
 
 		// Anzahl der Umdrehungen der Raeder
 		double turnsL = calculateWheelSpeed(this.getAktMotL());
@@ -171,9 +181,42 @@ abstract public class CtBotSim extends CtBot {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
 		}
+		
 		// Blickrichtung immer aktualisieren:
 		this.setHeading(newHeading);
 
+		// Bodenkontakt überprüfen
+		
+		// Winkel des Headings errechnen
+		double angle = SimUtils.vec3fToDouble(newHeading);
+		// Transformations Matrix für die Rotation erstellen
+		Transform3D rotation = new Transform3D();
+		rotation.rotZ(Math.toRadians(angle));
+		
+		// Bodenkontakt des Schleifsporns überprüfen
+		Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT/2);
+		// Position des Schleifsporns gemäß der Ausrichtung des Bots anpassen
+		rotation.transform(skidVec);
+		skidVec.add(new Point3d(newPos));
+		if (!world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE, 
+				"Der Schleifsporn von " + this.getBotName())){
+			((CtControlPanel)this.getPanel()).stopBot();
+		}
+	
+		// Bodenkontakt des linken Reifens überprüfen
+		posRadL.z -= BOT_HEIGHT/2;
+		if (!world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE, 
+				"Das linke Rad von " + this.getBotName())){
+			((CtControlPanel)this.getPanel()).stopBot();
+		}
+
+		// Bodenkontakt des linken Reifens überprüfen
+		posRadR.z -= BOT_HEIGHT/2;
+		if (!world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE, 
+				"Das rechte Rad von " + this.getBotName())){
+			((CtControlPanel)this.getPanel()).stopBot();
+		}
+		
 		// IR-Abstandssensoren aktualisieren
 		if (updateSensIr) {
 			this.setSensIrL(world.watchObstacle(getSensPosition('L'),
@@ -181,6 +224,79 @@ abstract public class CtBotSim extends CtBot {
 			this.setSensIrR(world.watchObstacle(getSensPosition('R'),
 					new Vector3d(newHeading),SENS_IR_ANGLE));
 		}
+		
+		// Maussensor aktualisieren
+		
+		// DeltaX berechnen
+		// alte und neue Position des Maussensors berechnen
+	
+		// TODO Es ist zu prüfen ob die jetzige Maussensorimplementierung 
+		//      sich korrekt verhält. 
+		//Vector3f oldMsPos = calculateMouseSensPosition(oldHeading,oldPos);
+		//Vector3f newMsPos = calculateMouseSensPosition(newHeading,newPos);
+		
+		// Differenz bilden
+		Vector3f vecX = new Vector3f(newPos);
+		vecX.sub(oldPos);
+		// die zurückgelegte Strecke in Dots
+		int deltaX = meter2Dots(vecX.length());
+		this.setSensMouseDX(deltaX);
+		
+		// DeltaY berechnen
+		// Drehung um die eigene Achse berechenen
+		double angleDiff = getRotation(newHeading) - getRotation(oldHeading);
+		// Abstand des Maussensors von Zentrum berechnen
+		Vector3f vecMs = new Vector3f((float)SENS_MOUSE_ABSTAND_X, (float)SENS_MOUSE_ABSTAND_Y, 0f);
+		// Drehung(in rad) mal Radius bestimmt die Länge, die der Maussensor auf einem 
+		// imaginären Kreis um den Mittelpunkt des Bots abgelaufen hat.
+		int deltaY = meter2Dots(angleDiff * vecMs.length());
+		this.setSensMouseDY(deltaY);
+		
+	}
+
+	/**
+	 * Errechnet die Anzahl an Dots die der Maussensor für eine Bewegung 
+	 * der angegebenen Länge zurückmeldet.   
+	 * @param distance
+	 * 			bestimmt die Länge der Strecke
+	 * @return 
+	 */
+	private int meter2Dots(double distance) {
+		// distance gibt die Länge in Meter zurück.
+		// mal 100 macht daraus cm und 2,54 cm sind ein inch
+		// mal der Auflösung des Maussensors
+		return (int)((distance*100/2.54) * SENS_MOUSE_DPI);
+	}
+
+	/**
+	 * Es wird der Winkel zwischen Norden und der angegeben Ausrichtung bestimmt.
+	 * 
+	 * @param heading 
+	 * 			  Gib die Ausrichtung an zu welcher der Winkel berechnet werden soll. 				 
+	 * @return Gibt den Winkel in Rad zurück
+	 */
+	public double getRotation(Vector3f heading){
+		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
+		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
+		// muessen hier zwei Faelle unterschieden werden:
+		if (heading.x >= 0)
+			return angle;
+		else
+			return -angle;
+	}
+	
+	/**
+	 * @param heading Ausrichtung des Bots
+	 * @param pos Position des Bots
+	 * @return Gibt die Position des Maussensors bzgl. der Parameter zurück 
+	 */
+	private Vector3f calculateMouseSensPosition(Vector3f heading, Vector3f pos) {
+		Vector3f msPos = new Vector3f((float)SENS_MOUSE_ABSTAND_X,(float)SENS_IR_ABSTAND_Y,0f);
+		Transform3D rotation = new Transform3D();
+		rotation.rotZ(getRotation(heading));
+		rotation.transform(msPos);
+		msPos.add(pos);
+		return msPos;
 	}
 
 	/**
@@ -213,7 +329,7 @@ abstract public class CtBotSim extends CtBot {
 
 		return new Point3d(pos);
 	}
-
+	
 	/**
 	 * In dieser Methode stehen die Routinen, die der Bot immer wieder
 	 * durchlauft; sie darf keine Schleife enthalten! Die Methode kuemmert sich

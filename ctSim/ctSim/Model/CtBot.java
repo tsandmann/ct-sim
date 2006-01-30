@@ -46,13 +46,22 @@ public abstract class CtBot extends Bot {
 	public static final double BOT_RADIUS = 0.060d;
 
 	/** Hoehe des Bots [m] */
-	public static final double BOT_HEIGHT = 0.100d;
+	public static final double BOT_HEIGHT = 0.120d;
 
 	/** Breite des Faches [m] */
-	public static final double FACH_LENGTH = 0.060d;
+	public static final double FACH_LENGTH = 0.050d;
 	
 	/** Tiefe des Faches [m] */
-	public static final double FACH_DEPTH = 0.040d;
+	public static final double FACH_DEPTH = BOT_RADIUS - 0.015d;
+	
+	/** Bodenfreiheit des Bots [m] */
+	public static final double BOT_GROUND_CLEARANCE = 0.015d;
+	
+	/** Abstand Zentrum Schleifsporns in Achsrichtung (X) [m] */
+	public static final double BOT_SKID_X = 0d;
+	
+	/** Abstand Zentrum Schleifsporns in Vorausrichtung (Y) [m] */
+	public static final double BOT_SKID_Y = -0.050d;
 	
 	/** maximale Geschwindigkeit als PWM-Wert */
 	public static final short PWM_MAX = 255;
@@ -73,16 +82,26 @@ public abstract class CtBot extends Bot {
 	public static final double RAD_ABSTAND = 0.050d;
 
 	/** Abstand Zentrum IR-Sensoren in Achsrichtung (X)[m] */
-	public static final double SENS_IR_ABSTAND_X = 0.045d;
+	public static final double SENS_IR_ABSTAND_X = 0.036d;
 
 	/** Abstand Zentrum IR-Sensoren in Vorausrichtung (Y) [m] */
-	public static final double SENS_IR_ABSTAND_Y = BOT_RADIUS;
+	public static final double SENS_IR_ABSTAND_Y = 0.0554d;
 
 	/** Abstand Zentrum IR-Sensoren in Hochrichtung (Y) [m] */
-	public static final double SENS_IR_ABSTAND_Z = 0.0d;
+	public static final double SENS_IR_ABSTAND_Z = 0.035d - BOT_HEIGHT/2;
 
 	/** Oeffnungswinkel der beiden IR-Abstandssensoren [Rad] */
 	public static final double SENS_IR_ANGLE = Math.PI / 180 * 3; 
+	
+	/** Abstand Zentrum Maussensor in Achsrichtung (X)[m] */
+	public static final double SENS_MOUSE_ABSTAND_X = 0d;
+
+	/** Abstand Zentrum Maussensor in Vorausrichtung (Y) [m] */
+	public static final double SENS_MOUSE_ABSTAND_Y = -0.015d;
+	
+	/** DPI des Maussensors [m] */
+	public static final int SENS_MOUSE_DPI = 400;
+	
 	/*
 	 * Capabilities -- Flags, die anzeigen, welche internen Zustaende von
 	 * Sensoren oder Aktuatoren ueber das ControlPanel beeinlussbar sind
@@ -211,9 +230,6 @@ public abstract class CtBot extends Bot {
 	/** Batterie oder Servofehler */
 	private Integer sensError = new Integer(0);
 
-	/** Körper des Roboters */
-	protected Shape3D botBody;	
-
 	/**
 	 * Einfacher Konstruktor
 	 */
@@ -235,7 +251,9 @@ public abstract class CtBot extends Bot {
 		super();
 		world = Controller.getWorld();
 		createBranchGroup();
-		setPos(new Vector3f(pos));
+		Vector3f vec = new Vector3f(pos);
+		vec.z += getHeight()/2 + getGroundClearance();
+		setPos(vec);
 		setHeading(head);
 	}
 
@@ -490,7 +508,11 @@ public abstract class CtBot extends Bot {
 	 */
 	public void setSensIrL(double distance) {
 		// Intern wird mit der Distanz in mm gearbeitet
-		short irL = (short) (distance * 1000);
+		short irL;
+		if(distance * 1000 > Short.MAX_VALUE)
+			irL = Short.MAX_VALUE;
+		else
+			irL = (short) (distance * 1000);
 		synchronized (sensIrL) {
 			this.sensIrL = new Short(irL);
 		}
@@ -532,7 +554,11 @@ public abstract class CtBot extends Bot {
 	 */
 	public void setSensIrR(double distance) {
 		// Intern wird mit der Distanz in mm gearbeitet
-		short irR = (short) (distance * 1000);
+		short irR;
+		if(distance * 1000 > Short.MAX_VALUE)
+			irR = Short.MAX_VALUE;
+		else
+			irR = (short) (distance * 1000);
 		synchronized (sensIrR) {
 			this.sensIrR = new Short(irR);
 		}
@@ -629,6 +655,13 @@ public abstract class CtBot extends Bot {
 		}
 	}
 
+	/**
+	 * @return Die Bodenfreiheit des Bot in [m]
+	 */
+	public float getGroundClearance() {
+		return (float) BOT_GROUND_CLEARANCE;
+	}
+	
 	/**
 	 * @return Hoehe des Bot in [m]
 	 */

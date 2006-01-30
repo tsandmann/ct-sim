@@ -163,7 +163,7 @@ public class WorldView extends JFrame {
         MouseZoom myMouseZoom = new MouseZoom(MouseBehavior.INVERT_INPUT);
         myMouseZoom.setTransformGroup(tgViewPlatform);
         myMouseZoom.setSchedulingBounds(mouseBounds);
-        myMouseZoom.setFactor(0.1d);
+        myMouseZoom.setFactor(0.05d);
         objRoot.addChild(myMouseZoom);
         
         universe.addBranchGraph(objRoot);

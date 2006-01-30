@@ -1,6 +1,33 @@
 CHANGELOG fuer c't-Sim
 ======================
-
+2006-01-29  Lasse Schwarten (lasse@schwarten.org)
+- Die Welt wurde ein wenig abgeändert.
+  -> Die südliche Wand wurde entfernt.
+  -> Der Boden wurde abgesenkt, so dass er nun bei z=0 liegt.
+- Der Bodenkontakt der beiden Räder und des Schleifsporns wird nun überprüft.
+  Wenn einer der drei Punkte keinen Boden mehr unter sich hat, wird der Bot 
+  gestoppt.
+- Der Maussensor wurde implementiert. Er sitzt mittig 15mm hinter der Achse 
+  unter dem ct-Bot. Es werden DeltaX und DeltaY berechnet. 
+  -> Die Größen werden in Dots pro Simulationsschritt angegeben. 
+  -> Die Konstante CtBot.SENS_MOUSE_DPI = 400 legt die Auflösung des Sensors 
+     fest und bestimmt wie viele Dots pro Inch ausgegeben werden. 
+  -> DeltaX gibt die in Fahrtrichtung zurückgelegte Strecke an. 
+  -> DeltaY hingegen die seitliche Verschiebung, die der Maussensor bei einer 
+     Rotation des Bots abfährt. Bei einer 360° Wendung die innerhalb nur eines 
+     Simulationsschrittes absolviert wird, würde DeltaY 1484 dots betragen.
+      ---
+         2*Pi*1,5cm = 9,42cm
+         9,42cm/2,54cm/in = 3,71in
+         3,71in * 400DPI  = 1484 dots
+      ---
+  -> Dreht sich der Bot nach links ist DeltaY negativ. Dreht er sich hingegen 
+     nach rechts ist DeltaY positiv.
+- Damit das Kontrollfenster auch weiterhin auf Bildschirmen mit einer 
+  vertikalen Auflösung von nur 800 Pixeln komplett zu sehen ist, wurde eine 
+  zweite Spalte hinzugefügt. Diese enthält bis jetzt nur die neuen Maussenseor-
+  daten.
+   
 2006-01-26 Zeitlupen Modus: Werner (Morphi2k1) hat einen Modus hinzugefügt,
 um den Bot in Zeitlupe zu bewegen. Man kann nun über einen Schieberegler
 den Faktor der Realzeit einstellen. Dabei bedeutet: 

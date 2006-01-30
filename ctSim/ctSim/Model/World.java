@@ -31,6 +31,7 @@ import javax.media.j3d.PickBounds;
 import javax.media.j3d.PickConeRay;
 import javax.media.j3d.PickInfo;
 import javax.media.j3d.PickShape;
+import javax.media.j3d.PickRay;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Point3d;
@@ -53,10 +54,10 @@ public class World extends Thread {
 	private ControlFrame controlFrame;
 
 	/** Hoehe des Spielfelds in m */
-	public static final float PLAYGROUND_HEIGHT = 1f;
+	public static final float PLAYGROUND_HEIGHT = 2f;
 
 	/** Breite des Spielfelds in m */
-	public static final float PLAYGROUND_WIDTH = 1f;
+	public static final float PLAYGROUND_WIDTH = 2f;
 
 	/** Zeitbasis in Millisekunden. Realzeit - So oft wird simuliert */
 	public int baseTimeReal = 10;
@@ -92,10 +93,10 @@ public class World extends Thread {
 	private long simulTime = 0;
 
 	/**
-	 * Zwei BranchGroups, eine fuer die ganze Welt, die andere fuer die
-	 * Hindernisse
+	 * Drei BranchGroups, eine fuer die ganze Welt, eine für den Boden und die 
+	 * letzte fuer die Hindernisse
 	 */
-	public BranchGroup scene, obstBG;
+	public BranchGroup scene, terrainBG, obstBG;
 
 	/** TransformGroup der gesamten Welt. Hier kommen auch die Bots hinein */
 	private TransformGroup worldTG;
@@ -148,38 +149,51 @@ public class World extends Thread {
 
 		objRoot.addChild(worldTG);
 
+		// Die Branchgroup für den Boden
+		terrainBG = new BranchGroup();
+		terrainBG.setPickable(true);
+		
 		// Der Boden selbst ist ein sehr flacher Quader:
-		Box floor = new Box(PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, (float) 0.01,
+		Box floor = new Box(PLAYGROUND_WIDTH/2, PLAYGROUND_HEIGHT/2, (float) 0.01,
 				worldView.getPlaygroundAppear());
 		floor.setPickable(true);
-		worldTG.addChild(floor);
+		
+		// schiebe die Box so, das ihre oberfläche genau auf der 
+		// Ebene z = 0 liegt.
+		Transform3D translate = new Transform3D();
+		translate.set(new Vector3d(0d, 0d, -0.01d));
+		TransformGroup tgb1 = new TransformGroup(translate);
+		tgb1.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tgb1.setPickable(true);
+		tgb1.addChild(floor);
+		terrainBG.addChild(tgb1);
+		worldTG.addChild(terrainBG);
 
 		// Die TranformGroup fuer alle Hindernisse:
 		obstBG = new BranchGroup();
 		obstBG.setPickable(true);
 
 		// Die vier Hindernisse:
-		Box north = new Box(PLAYGROUND_WIDTH + (float) 0.2, (float) 0.1,
+		Box north = new Box(PLAYGROUND_WIDTH/2 + (float) 0.2, (float) 0.1,
 				(float) 0.2, worldView.getObstacleAppear());
 		north.setPickable(true);
 		north.setName("North");
-		Box south = new Box(PLAYGROUND_WIDTH + (float) 0.2, (float) 0.1,
+		Box south = new Box(PLAYGROUND_WIDTH/2 + (float) 0.2, (float) 0.1,
 				(float) 0.2, worldView.getObstacleAppear());
 		south.setPickable(true);
 		south.setName("South");
-		Box east = new Box((float) 0.1, PLAYGROUND_HEIGHT + (float) 0.2,
+		Box east = new Box((float) 0.1, PLAYGROUND_HEIGHT/2 + (float) 0.2,
 				(float) 0.2, worldView.getObstacleAppear());
 		east.setPickable(true);
 		east.setName("East");
-		Box west = new Box((float) 0.1, PLAYGROUND_HEIGHT + (float) 0.2,
+		Box west = new Box((float) 0.1, PLAYGROUND_HEIGHT/2 + (float) 0.2,
 				(float) 0.2, worldView.getObstacleAppear());
 		west.setPickable(true);
 		west.setName("West");
 
 		// Hindernisse werden an die richtige Position geschoben:
-		Transform3D translate = new Transform3D();
 
-		translate.set(new Vector3f((float) 0, PLAYGROUND_HEIGHT + (float) 0.1,
+		translate.set(new Vector3f((float) 0, PLAYGROUND_HEIGHT/2 + (float) 0.1,
 				(float) 0.2));
 		TransformGroup tg1 = new TransformGroup(translate);
 		tg1.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
@@ -188,14 +202,14 @@ public class World extends Thread {
 		obstBG.addChild(tg1);
 
 		translate.set(new Vector3f((float) 0,
-				-(PLAYGROUND_HEIGHT + (float) 0.1), (float) 0.2));
+				-(PLAYGROUND_HEIGHT/2 + (float) 0.1), (float) 0.2));
 		TransformGroup tg2 = new TransformGroup(translate);
 		tg2.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 		tg2.setPickable(true);
 		tg2.addChild(south);
-		obstBG.addChild(tg2);
+		//obstBG.addChild(tg2);
 
-		translate.set(new Vector3f(PLAYGROUND_WIDTH + (float) 0.1, (float) 0,
+		translate.set(new Vector3f(PLAYGROUND_WIDTH/2 + (float) 0.1, (float) 0,
 				(float) 0.2));
 		TransformGroup tg3 = new TransformGroup(translate);
 		tg3.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
@@ -203,7 +217,7 @@ public class World extends Thread {
 		tg3.addChild(east);
 		obstBG.addChild(tg3);
 
-		translate.set(new Vector3f(-(PLAYGROUND_WIDTH + (float) 0.1),
+		translate.set(new Vector3f(-(PLAYGROUND_WIDTH/2 + (float) 0.1),
 				(float) 0, (float) 0.2));
 		TransformGroup tg4 = new TransformGroup(translate);
 		tg4.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
@@ -313,6 +327,44 @@ public class World extends Thread {
 			return pickInfo.getClosestDistance();
 	}
 
+	/**
+	 * Prüft ob unter dem angegebene Punkt innerhalb der Bodenfreiheit 
+	 * des Bots noch Boden zu finden ist
+	 * 
+	 * @param pos
+	 *            Die Position von der aus nach unten gemessen wird
+	 * @param groundClearance
+	 * 			  Die als normal anzusehende Bodenfreiheit   
+	 * @param message
+	 * 			  Name des Berührungspunktes, welcher getestet wird
+	 * @return True wenn Bodenkontakt besteht.
+	 */
+	public boolean checkTerrain(Point3d pos, double groundClearance, String message) {
+
+		// Falls die Welt verschoben wurde:
+		Point3d relPos = new Point3d(pos);
+		Transform3D transform = new Transform3D();
+		worldTG.getTransform(transform);
+		transform.transform(relPos);
+
+		// oder rotiert:
+		Vector3d relHeading = new Vector3d(0d,0d,-1d);
+		transform.transform(relHeading);
+		
+		PickShape pickShape = new PickRay(relPos, relHeading);
+		PickInfo pickInfo = terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
+				PickInfo.CLOSEST_DISTANCE, pickShape);
+	
+		if (pickInfo == null) {
+			System.out.println(message + " fällt ins Bodenlose.");
+			return false;
+		} else if(Math.round(pickInfo.getClosestDistance()*1000) != Math.round(groundClearance*1000)) {
+			System.out.println(message + " fällt " + pickInfo.getClosestDistance()*1000 + " mm.");
+			return false;	
+		} else
+			return true;
+	}
+	
 	/**
 	 * Gibt Nachricht von aussen, dass sich der Zustand der Welt geaendert hat,
 	 * an den View weiter
