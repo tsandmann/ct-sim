@@ -162,13 +162,15 @@ public class World extends Thread {
 		// Ebene z = 0 liegt.
 		Transform3D translate = new Transform3D();
 		translate.set(new Vector3d(0d, 0d, -0.01d));
-		TransformGroup tgb1 = new TransformGroup(translate);
-		tgb1.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tgb1.setPickable(true);
-		tgb1.addChild(floor);
-		terrainBG.addChild(tgb1);
+		TransformGroup tgT = new TransformGroup(translate);
+		tgT.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tgT.setPickable(true);
+		tgT.addChild(floor);
+		terrainBG.addChild(tgT);
 		worldTG.addChild(terrainBG);
 
+
+		
 		// Die TranformGroup fuer alle Hindernisse:
 		obstBG = new BranchGroup();
 		obstBG.setPickable(true);
@@ -191,40 +193,51 @@ public class World extends Thread {
 		west.setPickable(true);
 		west.setName("West");
 
-		// Hindernisse werden an die richtige Position geschoben:
+		// Hindernisse werden an die richtige Position geschoben
 
+		// Zuerst werden sie gemeinsam so verschoben, dass ihre Unterkante genau 
+		// buendig mit der Unterkante des Bodens ist:
+		translate.set(new Vector3d(0d, 0d, 0.185d));
+		TransformGroup tgO = new TransformGroup(translate);
+		tgO.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tgO.setPickable(true);
+		obstBG.addChild(tgO);
+		
+		// Danach bekommt jedes Hindernis seine eigene TransformGroup, um es
+		// an den individuellen Platz zu schieben:
+		
 		translate.set(new Vector3f((float) 0, PLAYGROUND_HEIGHT/2 + (float) 0.1,
-				(float) 0.2));
-		TransformGroup tg1 = new TransformGroup(translate);
-		tg1.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tg1.setPickable(true);
-		tg1.addChild(north);
-		obstBG.addChild(tg1);
+				0f));
+		TransformGroup tgN = new TransformGroup(translate);
+		tgN.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tgN.setPickable(true);
+		tgN.addChild(north);
+		tgO.addChild(tgN);
 
 		translate.set(new Vector3f((float) 0,
-				-(PLAYGROUND_HEIGHT/2 + (float) 0.1), (float) 0.2));
-		TransformGroup tg2 = new TransformGroup(translate);
-		tg2.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tg2.setPickable(true);
-		tg2.addChild(south);
-		//obstBG.addChild(tg2);
+				-(PLAYGROUND_HEIGHT/2 + (float) 0.1), 0f));
+		TransformGroup tgS = new TransformGroup(translate);
+		tgS.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tgS.setPickable(true);
+		tgS.addChild(south);
+		//tgO.addChild(tgS);
 
-		translate.set(new Vector3f(PLAYGROUND_WIDTH/2 + (float) 0.1, (float) 0,
-				(float) 0.2));
-		TransformGroup tg3 = new TransformGroup(translate);
-		tg3.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tg3.setPickable(true);
-		tg3.addChild(east);
-		obstBG.addChild(tg3);
+		translate.set(new Vector3f(PLAYGROUND_WIDTH/2 + (float) 0.1, (float) 0,  0f));
+		TransformGroup tgE = new TransformGroup(translate);
+		tgE.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tgE.setPickable(true);
+		tgE.addChild(east);
+		tgO.addChild(tgE);
 
 		translate.set(new Vector3f(-(PLAYGROUND_WIDTH/2 + (float) 0.1),
-				(float) 0, (float) 0.2));
-		TransformGroup tg4 = new TransformGroup(translate);
-		tg4.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tg4.setPickable(true);
-		tg4.addChild(west);
-		obstBG.addChild(tg4);
+				(float) 0, 0f));
+		TransformGroup tgW = new TransformGroup(translate);
+		tgW.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tgW.setPickable(true);
+		tgW.addChild(west);
+		tgO.addChild(tgW);
 
+		
 		obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
 		obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
 
