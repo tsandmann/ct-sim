@@ -58,7 +58,7 @@ public class WorldView extends JFrame {
 	/** Die TransformGroup fuer den Blickpunkt in die 3D-Welt */
 	private TransformGroup tgViewPlatform;
 	
-//	 Zur Benutzung des org.j3d.ui.naviagtaion Paketes die Kommentarzeichen entfernen
+//	 Zur Benutzung des org.j3d.ui.navigation Paketes die Kommentarzeichen entfernen
 //	/** Navigations Objekt */
 //	private MouseViewHandler mvh;
 

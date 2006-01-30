@@ -464,12 +464,12 @@ public abstract class CtBot extends Bot {
 		// Bots durchsichtig wird und nur die Wireframe gezeichnet
 		// wird. Weiterhin werden auch die Rückseiten gezeichnet.
 		
-		// PolygonAttributes polyAppear = new PolygonAttributes();
-		// polyAppear.setPolygonMode(PolygonAttributes.POLYGON_LINE);
-		// polyAppear.setCullFace(PolygonAttributes.CULL_NONE);
-		// Appearance twistAppear = new Appearance();
-		// twistAppear.setPolygonAttributes(polyAppear);
-		// bs.setAppearance(twistAppear);
+//		 PolygonAttributes polyAppear = new PolygonAttributes();
+//		 polyAppear.setPolygonMode(PolygonAttributes.POLYGON_LINE);
+//		 polyAppear.setCullFace(PolygonAttributes.CULL_NONE);
+//		 Appearance twistAppear = new Appearance();
+//		 twistAppear.setPolygonAttributes(polyAppear);
+//		 bs.setAppearance(twistAppear);
 		
 		return bs;
 	}

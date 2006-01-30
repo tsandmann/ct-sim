@@ -210,7 +210,7 @@ abstract public class CtBotSim extends CtBot {
 			((CtControlPanel)this.getPanel()).stopBot();
 		}
 
-		// Bodenkontakt des linken Reifens überprüfen
+		// Bodenkontakt des rechten Reifens überprüfen
 		posRadR.z -= BOT_HEIGHT/2;
 		if (!world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE, 
 				"Das rechte Rad von " + this.getBotName())){

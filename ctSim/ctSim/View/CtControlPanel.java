@@ -937,9 +937,9 @@ public class CtControlPanel extends ControlPanel {
 	 *
 	 */
 	public void stopBot(){
-		if(!xpos)
+		if(bot.CAP_POS && !xpos)
 			xPosSliderCheck.doClick();
-		if(!ypos)
+		if(bot.CAP_POS && !ypos)
 			yPosSliderCheck.doClick();
 	}
 	
