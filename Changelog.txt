@@ -1,5 +1,11 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-01-30 Peter König (pek@heise.de)
+- Die Welt hat im Szenegraphen direkt unter obstBG eine neue Transformationsgruppe 
+  tgO hinzugefügt bekommen. Damit ist es möglich, alle vier Randhindernisse der Welt
+  (north, south, ... ) gemeinsam zu verschieben. Diese Änderung erfolgte zwecks 
+  besserer Darstellbarkeit des Szenegraph-Konzepts im Artikel.
+
 2006-01-29  Lasse Schwarten (lasse@schwarten.org)
 - Die Welt wurde ein wenig abgeändert.
   -> Die südliche Wand wurde entfernt.
