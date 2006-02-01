@@ -259,30 +259,30 @@ abstract public class CtBotSim extends CtBot {
 		// Lichtsensoren aktualisieren
 		if (updateSensLdr) {
 			this.setSensLdrL(world.sensLight(getSensLdrPosition('L'),
-					getSensLdrPosition(newHeading), SENS_LDR_ANGLE));
+					getSensLdrHeading(newHeading), SENS_LDR_ANGLE));
 			this.setSensLdrR(world.sensLight(getSensLdrPosition('R'), 
-					getSensLdrPosition(newHeading), SENS_LDR_ANGLE));
+					getSensLdrHeading(newHeading), SENS_LDR_ANGLE));
 		}
 		
 		// Maussensor aktualisieren
 		if (updateSensMouse) {
-			// DeltaX berechnen
-			// Differenz bilden
-			Vector3f vecX = new Vector3f(this.getPos());
-			vecX.sub(oldPos);
-			// die zurückgelegte Strecke in Dots
-			int deltaX = meter2Dots(vecX.length());
-			this.setSensMouseDX(deltaX);
-			
 			// DeltaY berechnen
+			// Differenz bilden
+			Vector3f vecY = new Vector3f(this.getPos());
+			vecY.sub(oldPos);
+			// die zurückgelegte Strecke in Dots
+			int deltaY = meter2Dots(vecY.length());
+			this.setSensMouseDY(deltaY);
+			
+			// DeltaX berechnen
 			// Drehung um die eigene Achse berechenen
 			double angleDiff = getRotation(newHeading) - getRotation(oldHeading);
 			// Abstand des Maussensors von Zentrum berechnen
 			Vector3f vecMs = new Vector3f((float)SENS_MOUSE_ABSTAND_X, (float)SENS_MOUSE_ABSTAND_Y, 0f);
 			// Drehung(in rad) mal Radius bestimmt die Länge, die der Maussensor auf einem 
 			// imaginären Kreis um den Mittelpunkt des Bots abgelaufen hat.
-			int deltaY = meter2Dots(angleDiff * vecMs.length());
-			this.setSensMouseDY(deltaY);
+			int deltaX = meter2Dots(angleDiff * vecMs.length());
+			this.setSensMouseDX(deltaX);
 		}
 	}
 
@@ -293,7 +293,7 @@ abstract public class CtBotSim extends CtBot {
 	 * 				Blickrichtung des Bots
 	 * @return Gibt die Blickrichtung des Sensors zurück
 	 */
-	private Vector3d getSensLdrPosition(Vector3f newHeading) {
+	private Vector3d getSensLdrHeading(Vector3f newHeading) {
 		if(SENS_LDR_HEADING.z == 1)
 			return SENS_LDR_HEADING;
 		else
