@@ -39,8 +39,10 @@ import ctSim.SimUtils;
 
 /**
  * Ergaenzt das generische, abstrakte ControlPanel um die richtigen Felder 
- * und Regler fuer c't-Bots  
+ * und Regler fuer c't-Bots
+ * 
  * @author pek (pek@heise.de)
+ * @author Lasse Schwarten (lasse@schwarten.org)
  *
  */
 public class CtControlPanel extends ControlPanel {
@@ -215,6 +217,22 @@ public class CtControlPanel extends ControlPanel {
 	private JTextField msDeltaY;
 	private JLabel msLabelX;
 	private JLabel msLabelY;
+	
+	// Anzeige der Liniensensoren
+	private JPanel linePanel;
+	private JLabel lineLabel;
+	private JTextField lineR;
+	private JTextField lineL;
+	private JLabel lineLabelR;
+	private JLabel lineLabelL;
+	
+	// Anzeige der Abgrundsensoren
+	private JPanel borderPanel;
+	private JLabel borderLabel;
+	private JTextField borderR;
+	private JTextField borderL;
+	private JLabel borderLabelR;
+	private JLabel borderLabelL;
 
 	// Aufteilung des Tabs in Linke und rechte Seite
 	private JPanel mainPanelRight;
@@ -258,6 +276,8 @@ public class CtControlPanel extends ControlPanel {
 			mainPanelLeft.setLayout(new BoxLayout(mainPanelLeft, 
 					javax.swing.BoxLayout.Y_AXIS));
 			this.add(mainPanelLeft);
+			
+			this.add(Box.createRigidArea(smallGap));
 			
 			// rechte Spalte initialisieren
 			mainPanelRight = new JPanel();
@@ -383,7 +403,7 @@ public class CtControlPanel extends ControlPanel {
 								yPosSliderPanel, javax.swing.BoxLayout.Y_AXIS);
 						yPosSliderPanel.setLayout(yPosSliderPanelLayout);
 						{
-							yPosSlider = new JSlider(JSlider.HORIZONTAL, Math.round(-110*World.PLAYGROUND_HEIGHT/2), Math.round(100*World.PLAYGROUND_HEIGHT/2), 0);
+							yPosSlider = new JSlider(JSlider.HORIZONTAL, Math.round(-100*World.PLAYGROUND_HEIGHT/2), Math.round(100*World.PLAYGROUND_HEIGHT/2), 0);
 							yPosSliderPanel.add(yPosSlider);
 							yPosSlider.setMajorTickSpacing(20);
 							yPosSlider.setMinorTickSpacing(10);
@@ -810,6 +830,79 @@ public class CtControlPanel extends ControlPanel {
 					msDeltaY.setEditable(false);
 					msDeltaY.setPreferredSize(fieldDim);
 				}
+				
+				mainPanelRight.add(Box.createRigidArea(smallGap));
+				
+				// Liniensensoren
+				lineLabel = new JLabel("Liniensensoren");
+				lineLabel.setPreferredSize(labelDim);
+				mainPanelRight.add(lineLabel);
+				linePanel = new JPanel();
+				mainPanelRight.add(linePanel);
+				linePanel.setLayout(new BoxLayout(linePanel,BoxLayout.X_AXIS));
+				{
+					lineLabelL = new JLabel();
+					linePanel.add(lineLabelL);
+					lineLabelL.setText("links");
+					lineLabelL.setPreferredSize(labelDim);
+				
+					lineL = new JTextField();
+					linePanel.add(lineL);
+					lineL.setText("0");
+					lineL.setEditable(false);
+					lineL.setPreferredSize(fieldDim);
+				
+					linePanel.add(Box.createRigidArea(smallGap));
+					
+					lineLabelR = new JLabel();
+					linePanel.add(lineLabelR);
+					lineLabelR.setText("rechts");
+					lineLabelR.setPreferredSize(labelDim);
+				
+					lineR = new JTextField();
+					linePanel.add(lineR);
+					lineR.setText("0");
+					lineR.setEditable(false);
+					lineR.setPreferredSize(fieldDim);
+				}
+				
+				mainPanelRight.add(Box.createRigidArea(smallGap));
+				
+				// Abgrundsensoren
+				borderLabel = new JLabel("Abgrundsensoren");
+				borderLabel.setPreferredSize(labelDim);
+				mainPanelRight.add(borderLabel);
+				borderPanel = new JPanel();
+				mainPanelRight.add(borderPanel);
+				borderPanel.setLayout(new BoxLayout(borderPanel,BoxLayout.X_AXIS));
+				{
+					borderLabelL = new JLabel();
+					borderPanel.add(borderLabelL);
+					borderLabelL.setText("links");
+					borderLabelL.setPreferredSize(labelDim);
+				
+					borderL = new JTextField();
+					borderPanel.add(borderL);
+					borderL.setText("0");
+					borderL.setEditable(false);
+					borderL.setPreferredSize(fieldDim);
+				
+					borderPanel.add(Box.createRigidArea(smallGap));
+					
+					borderLabelR = new JLabel();
+					borderPanel.add(borderLabelR);
+					borderLabelR.setText("rechts");
+					borderLabelR.setPreferredSize(labelDim);
+				
+					borderR = new JTextField();
+					borderPanel.add(borderR);
+					borderR.setText("0");
+					borderR.setEditable(false);
+					borderR.setPreferredSize(fieldDim);
+				}
+				
+				mainPanelRight.add(Box.createRigidArea(smallGap));
+				
 				// freien Platz füllen
 //				mainPanelRight.add(Box.createHorizontalGlue());
 //				mainPanelRight.add(Box.createRigidArea(new Dimension(0,700)));
@@ -924,9 +1017,17 @@ public class CtControlPanel extends ControlPanel {
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
 		motorValueR.setText(Short.toString(bot.getAktMotR()));
 		
-		// aktuallisiere DeltaX und DeltaY des Maussensors
+		// aktualisiere DeltaX und DeltaY des Maussensors
 		msDeltaX.setText(Integer.toString(bot.getSensMouseDX()));
 		msDeltaY.setText(Integer.toString(bot.getSensMouseDY()));
+		
+		// aktualisiere die Liniensensoren
+		lineL.setText(Integer.toString(bot.getSensLineL()));
+		lineR.setText(Integer.toString(bot.getSensLineR()));
+		
+		// aktualisiere die Abgrundsensoren
+		borderL.setText(Integer.toString(bot.getSensBorderL()));
+		borderR.setText(Integer.toString(bot.getSensBorderR()));
 		
 		super.repaint();
 		this.repaint();

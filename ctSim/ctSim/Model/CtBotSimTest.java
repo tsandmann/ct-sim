@@ -27,6 +27,7 @@ import javax.vecmath.Vector3f;
  * diesen Typs brauchen keine TCP-Verbindung.
  * 
  * @author pek (pek@heise.de)
+ * @author Lasse Schwarten (lasse@schwarten.org)
  * 
  */
 public class CtBotSimTest extends CtBotSim {
@@ -107,9 +108,19 @@ public class CtBotSimTest extends CtBotSim {
 				rr = 50;
 		}
 
-		// Kollision droht: Auf dem Teller rausdrehen,
+		int borderL = getSensBorderL();
+		int borderR = getSensBorderR();
+		if (borderL > borderR) {
+			ll = 100;
+			rr = -100;
+		} else if (borderL < borderR) {
+			ll = -100;
+			rr = 100;
+		}
+		
+		// Kollision oder Abgrund droht: Auf dem Teller rausdrehen,
 		// und zwar immer nach links!
-		if (irL < 200 || irR < 200) {
+		if (irL < 200 || irR < 200 || borderL > 1000 || borderR > 1000) {
 			ll = -100;
 			rr = 100;
 		}

@@ -36,11 +36,12 @@ import ctSim.View.CtControlPanel;
  * 
  * @author Benjamin Benz (bbe@heise.de)
  * @author Peter Koenig (pek@heise.de)
+ * @author Lasse Schwarten (lasse@schwarten.org)
  */
 
 public abstract class CtBot extends Bot {
 
-	// Oeffentliche Konstanten: Wertebereiche fuer Motoren und Sensoren
+	// Oeffentliche Konstanten: Wertebereiche fuer Motoren und Se	nsoren
 
 	/** Abstand Zentrum Aussenkante des Bots [m] */
 	public static final double BOT_RADIUS = 0.060d;
@@ -98,9 +99,43 @@ public abstract class CtBot extends Bot {
 
 	/** Abstand Zentrum Maussensor in Vorausrichtung (Y) [m] */
 	public static final double SENS_MOUSE_ABSTAND_Y = -0.015d;
-	
+		
 	/** DPI des Maussensors [m] */
 	public static final int SENS_MOUSE_DPI = 400;
+	
+	/** Abstand Zentrum Liniensensoren in Achsrichtung (X)[m] */
+	public static final double SENS_LINE_ABSTAND_X = 0.004d;
+
+	/** Abstand Zentrum Liniensensoren in Vorausrichtung (Y) [m] */
+	public static final double SENS_LINE_ABSTAND_Y = 0.009d;
+
+	/** Abstand Zentrum Liniensensoren in Hochrichtung (Y) [m] */
+	public static final double SENS_LINE_ABSTAND_Z = -0.011d - BOT_HEIGHT/2;
+	
+	/** Oeffnungswinkel der beiden Liniensensoren [Rad] */
+	public static final double SENS_LINE_ANGLE = Math.PI / 180 * 80; 
+	
+	/** Anzahl an Strahlen die von den Liniensensoren ausgesendet werden. 
+	 *  Je mehr Strahlen verwendet werden, desto genauer wird das Ergebnis.
+	 *  Mehr Strahlen kosten aber auch mehr Rechenzeit. */
+	public static final short SENS_LINE_PRECISION = 10; 
+
+	/** Abstand Zentrum Abgrundsensoren in Achsrichtung (X)[m] */
+	public static final double SENS_BORDER_ABSTAND_X = 0.036d;
+
+	/** Abstand Zentrum Abgrundsensoren in Vorausrichtung (Y) [m] */
+	public static final double SENS_BORDER_ABSTAND_Y = 0.0384d;
+
+	/** Abstand Zentrum Abgrundsensoren in Hochrichtung (Y) [m] */
+	public static final double SENS_BORDER_ABSTAND_Z = 0d - BOT_HEIGHT/2;
+	
+	/** Oeffnungswinkel der beiden Abgrundsensoren [Rad] */
+	public static final double SENS_BORDER_ANGLE = Math.PI / 180 * 80; 
+	
+	/** Anzahl an Strahlen die von den Abgrundsensoren ausgesendet werden. 
+	 *  Je mehr Strahlen verwendet werden, desto genauer wird das Ergebnis.
+	 *  Mehr Strahlen kosten aber auch mehr Rechenzeit. */
+	public static final short SENS_BORDER_PRECISION = 10;
 	
 	/*
 	 * Capabilities -- Flags, die anzeigen, welche internen Zustaende von

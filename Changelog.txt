@@ -1,5 +1,21 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-01-31  Lasse Schwarten (lasse@schwarten.org)
+- Es wurden Lichtquellen hinzugefügt.
+- Die Liniensensoren wurden implementiert.
+- Die Abgrundsensoren wurden implementiert.
+- Bots werden nun unter die obstBG BranchGroup gehängt.
+- Die Objekte haben Materialangaben bekommen.
+- Die Kamara stellt sich zu Beginn nun automatisch so ein, dass das gesamte
+  Spielfeld des Bots zu sehen ist.
+- Die Fläche wurde vergrößer nd es gibt jetzt einen weiteren Raum im Süden.
+- Die Box die den Boden dargestellt hat wurde durch einen neuen Boden
+  mit einem Loch im südlichen Bereich ersetzt.
+- Linien auf dem Boden hinzugefügt.
+- Hinderniss im südlichen Raum.
+- Überflüssige (float)-Casts in World entfernt.
+- Bot-Steuerung angepasst.
+
 2006-01-30 Peter König (pek@heise.de)
 - Die Welt hat im Szenegraphen direkt unter obstBG eine neue Transformationsgruppe 
   tgO hinzugefügt bekommen. Damit ist es möglich, alle vier Randhindernisse der Welt

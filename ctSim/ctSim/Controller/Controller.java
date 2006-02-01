@@ -74,11 +74,11 @@ public class Controller {
 		// sondern beguegt sich mit einem Bot vom Typ CtBotSimTest
 
 		if (test) {
-			addBot("testbot", "Testbot", new Point3f(0f, 0f, 0f),
+			addBot("testbot", "Testbot", new Point3f(0f, 1.5f, 0f),
 					new Vector3f(1f, 0f, 0f));
-//			addBot("testbot", "Testbot2", new Point3f(0f, 0.5f, 0.1f),
-//					new Vector3f(-1f, 1f, 0f));
-//			addBot("testbot", "Testbot3", new Point3f(0f, -0.5f, 0.1f),
+//			addBot("testbot", "Testbot2", new Point3f(0f, 0f, 0f),
+//					new Vector3f(0f, 1f, 0f));
+//			addBot("testbot", "Testbot3", new Point3f(0f, -1.5f, 0f),
 //					new Vector3f(-1f, 0f, 0f));
 			
 		} else {

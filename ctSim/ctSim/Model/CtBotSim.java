@@ -29,7 +29,6 @@ import javax.media.j3d.Transform3D;
 
 import ctSim.ErrorHandler;
 import ctSim.View.CtControlPanel;
-import ctSim.SimUtils;
 
 /**
  * Superklasse fuer alle simulierten Bots.</br> Die Klasse ist abstrakt und
@@ -40,6 +39,7 @@ import ctSim.SimUtils;
  * 
  * @author Benjamin Benz (bbe@heise.de)
  * @author Peter Koenig (pek@heise.de)
+ * @author Lasse Schwarten (lasse@schwarten.org)
  */
 
 abstract public class CtBotSim extends CtBot {
@@ -65,10 +65,18 @@ abstract public class CtBotSim extends CtBot {
 	 */
 	private double encoderRestR = 0;
 
-	/** Soll der IR-Sensor automatisch aktualisert werden? */
+	/** Sollen die IR-Sensoren automatisch aktualisert werden? */
 	boolean updateSensIr = true;
 	
-
+	/** Soll der Maussensor automatisch aktualisert werden? */
+	boolean updateSensMouse = true;
+	
+	/** Sollen die Liniensensoren automatisch aktualisert werden? */
+	boolean updateSensLine = true;
+	
+	/** Sollen die Abgrundsensoren automatisch aktualisert werden? */
+	boolean updateSensBorder = true;
+	
 	/**
 	 * Erzeugt einen neuen Bot
 	 * 
@@ -188,10 +196,10 @@ abstract public class CtBotSim extends CtBot {
 		// Bodenkontakt überprüfen
 		
 		// Winkel des Headings errechnen
-		double angle = SimUtils.vec3fToDouble(newHeading);
+		double angle = getRotation(newHeading);
 		// Transformations Matrix für die Rotation erstellen
 		Transform3D rotation = new Transform3D();
-		rotation.rotZ(Math.toRadians(angle));
+		rotation.rotZ(angle);
 		
 		// Bodenkontakt des Gleitpins überprüfen
 		Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT/2);
@@ -219,39 +227,107 @@ abstract public class CtBotSim extends CtBot {
 		
 		// IR-Abstandssensoren aktualisieren
 		if (updateSensIr) {
-			this.setSensIrL(world.watchObstacle(getSensPosition('L'),
+			this.setSensIrL(world.watchObstacle(getSensIRPosition('L'),
 					new Vector3d(newHeading),SENS_IR_ANGLE));
-			this.setSensIrR(world.watchObstacle(getSensPosition('R'),
+			this.setSensIrR(world.watchObstacle(getSensIRPosition('R'),
 					new Vector3d(newHeading),SENS_IR_ANGLE));
 		}
 		
-		// Maussensor aktualisieren
+		// Liniensensoren aktualisieren
+		if (updateSensLine) {
+			this.setSensLineL(world.sensGroundReflectionCross(
+					getSensLinePosition('L'), new Vector3d(newHeading), 
+					SENS_LINE_ANGLE, SENS_LINE_PRECISION));
+			this.setSensLineR(world.sensGroundReflectionCross(
+					getSensLinePosition('R'), new Vector3d(newHeading),
+					SENS_LINE_ANGLE, SENS_LINE_PRECISION));
+		}
 		
-		// DeltaX berechnen
+		// Abgrundsensoren aktualisieren
+		if (updateSensBorder) {
+			this.setSensBorderL(world.sensGroundReflectionCross(
+					getSensBorderPosition('L'), new Vector3d(newHeading),
+					SENS_BORDER_ANGLE, SENS_BORDER_PRECISION));
+			this.setSensBorderR(world.sensGroundReflectionCross(
+					getSensBorderPosition('R'), new Vector3d(newHeading),
+					SENS_BORDER_ANGLE, SENS_BORDER_PRECISION));
+		}
+
+		
+		/* TODO Es ist zu prüfen ob die jetzige Maussensorimplementierung 
+		 		sich korrekt verhält.
+		 */ 
 		// alte und neue Position des Maussensors berechnen
-	
-		// TODO Es ist zu prüfen ob die jetzige Maussensorimplementierung 
-		//      sich korrekt verhält. 
 		//Vector3f oldMsPos = calculateMouseSensPosition(oldHeading,oldPos);
 		//Vector3f newMsPos = calculateMouseSensPosition(newHeading,newPos);
-		
-		// Differenz bilden
-		Vector3f vecX = new Vector3f(newPos);
-		vecX.sub(oldPos);
-		// die zurückgelegte Strecke in Dots
-		int deltaX = meter2Dots(vecX.length());
-		this.setSensMouseDX(deltaX);
-		
-		// DeltaY berechnen
-		// Drehung um die eigene Achse berechenen
-		double angleDiff = getRotation(newHeading) - getRotation(oldHeading);
-		// Abstand des Maussensors von Zentrum berechnen
-		Vector3f vecMs = new Vector3f((float)SENS_MOUSE_ABSTAND_X, (float)SENS_MOUSE_ABSTAND_Y, 0f);
-		// Drehung(in rad) mal Radius bestimmt die Länge, die der Maussensor auf einem 
-		// imaginären Kreis um den Mittelpunkt des Bots abgelaufen hat.
-		int deltaY = meter2Dots(angleDiff * vecMs.length());
-		this.setSensMouseDY(deltaY);
-		
+
+		// Maussensor aktualisieren
+		if (updateSensMouse) {
+			// DeltaX berechnen
+			// Differenz bilden
+			Vector3f vecX = new Vector3f(this.getPos());
+			vecX.sub(oldPos);
+			// die zurückgelegte Strecke in Dots
+			int deltaX = meter2Dots(vecX.length());
+			this.setSensMouseDX(deltaX);
+			
+			// DeltaY berechnen
+			// Drehung um die eigene Achse berechenen
+			double angleDiff = getRotation(newHeading) - getRotation(oldHeading);
+			// Abstand des Maussensors von Zentrum berechnen
+			Vector3f vecMs = new Vector3f((float)SENS_MOUSE_ABSTAND_X, (float)SENS_MOUSE_ABSTAND_Y, 0f);
+			// Drehung(in rad) mal Radius bestimmt die Länge, die der Maussensor auf einem 
+			// imaginären Kreis um den Mittelpunkt des Bots abgelaufen hat.
+			int deltaY = meter2Dots(angleDiff * vecMs.length());
+			this.setSensMouseDY(deltaY);
+		}
+	}
+
+	/**
+	 * Liefert die Position eines Liniensensors zurueck
+	 * 
+	 * @param side
+	 *            Welcher Sensor 'L' oder 'R'
+	 * @return Die Position
+	 */
+	private Point3d getSensLinePosition(char side) {
+		double angle = getRotation(getHeading());
+		Transform3D rotation = new Transform3D();
+		rotation.rotZ(angle);
+		Point3d ptLine;
+		if (side == 'L'){
+			ptLine = new Point3d(-SENS_LINE_ABSTAND_X, 
+					SENS_LINE_ABSTAND_Y, SENS_LINE_ABSTAND_Z);
+		} else {
+			ptLine = new Point3d(SENS_LINE_ABSTAND_X, 
+					SENS_LINE_ABSTAND_Y, SENS_LINE_ABSTAND_Z);
+		}
+		rotation.transform(ptLine);
+		ptLine.add(new Point3d(getPos()));
+		return ptLine;
+	}
+	/**
+	 * Liefert die Position eines Abgrundsensors zurueck
+	 * 
+	 * @param side
+	 *            Welcher Sensor 'L' oder 'R'
+	 * @return Die Position
+	 */
+	private Point3d getSensBorderPosition(char side) {
+		double angle = getRotation(getHeading());
+		Transform3D rotation = new Transform3D();
+		rotation.rotZ(angle);
+		Point3d ptBorder;
+		if (side == 'L'){
+			ptBorder = new Point3d(-SENS_BORDER_ABSTAND_X, 
+					SENS_BORDER_ABSTAND_Y, SENS_BORDER_ABSTAND_Z);
+		} else {
+			ptBorder = new Point3d(SENS_BORDER_ABSTAND_X, 
+					SENS_BORDER_ABSTAND_Y, SENS_BORDER_ABSTAND_Z);
+		}
+		rotation.transform(ptBorder);
+		ptBorder.add(new Point3d(getPos()));
+		return ptBorder;
 	}
 
 	/**
@@ -280,9 +356,9 @@ abstract public class CtBotSim extends CtBot {
 		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
 		// muessen hier zwei Faelle unterschieden werden:
 		if (heading.x >= 0)
-			return angle;
-		else
 			return -angle;
+		else
+			return angle;
 	}
 	
 	/**
@@ -306,7 +382,7 @@ abstract public class CtBotSim extends CtBot {
 	 *            Welcher Sensor 'L' oder 'R'
 	 * @return Die Position
 	 */
-	private Point3d getSensPosition(char side) {
+	private Point3d getSensIRPosition(char side) {
 		// Vektor vom Ursprung in Axial-Richtung
 		Vector3f vecX;
 		if (side == 'L')
@@ -356,7 +432,7 @@ abstract public class CtBotSim extends CtBot {
 	}
 
 	/**
-	 * Wird er IRSensor automatisch aktualisert?
+	 * Werden die IR-Sensoren automatisch aktualisert?
 	 * 
 	 * @return true wenn ja
 	 */
@@ -365,12 +441,69 @@ abstract public class CtBotSim extends CtBot {
 	}
 
 	/**
-	 * Soll der IR-Sensor automatisch aktualisiert werden?
+	 * Sollen die IR-Sensoren automatisch aktualisiert werden?
 	 * 
 	 * @param updateSensIr
 	 *            true, wenn automatisch
 	 */
 	public void setUpdateSensIr(boolean updateSensIr) {
 		this.updateSensIr = updateSensIr;
+	}
+
+	/**
+	 * Wird der Maussensor automatisch aktualisert?
+	 * 
+	 * @return true wenn ja
+	 */
+	public boolean isUpdateSensMouse() {
+		return updateSensMouse;
+	}
+
+	/**
+	 * Soll der Maussensor automatisch aktualisiert werden?
+	 * 
+	 * @param updateSensMouse
+	 *            true, wenn automatisch
+	 */
+	public void setUpdateSensMouse(boolean updateSensMouse) {
+		this.updateSensMouse = updateSensMouse;
+	}
+	
+	/**
+	 * Werden die Liniensensoren automatisch aktualisert?
+	 * 
+	 * @return true wenn ja
+	 */
+	public boolean isUpdateSensLine() {
+		return updateSensLine;
+	}
+	
+	/**
+	 * Sollen die Liniensensoren automatisch aktualisiert werden?
+	 * 
+	 * @param updateSensLine
+	 *            true, wenn automatisch
+	 */
+	public void setUpdateSensLine(boolean updateSensLine) {
+		this.updateSensLine = updateSensLine;
+	}
+
+	/**
+	 * Werden die Abgrundsensoren automatisch aktualisert?
+	 * 
+	 * @return true wenn ja
+	 */
+	public boolean isUpdateSensBorder() {
+		return updateSensBorder;
+	}
+
+	/**
+	 * Sollen die Abgrundsensoren automatisch aktualisiert werden?
+	 * 
+	 * @param updateSensBorder
+	 *            true, wenn automatisch
+	 */
+	public void setUpdateSensBorder(boolean updateSensBorder) {
+		this.updateSensBorder = updateSensBorder;
 	}
 }

@@ -46,6 +46,7 @@ import javax.swing.JFrame;
  * Realisiert die Anzeige der Welt mit allen Hindernissen und Robotern
  * 
  * @author pek (pek@heise.de)
+ * @author Lasse Schwarten (lasse@schwarten.org)
  * 
  */
 public class WorldView extends JFrame {
@@ -73,6 +74,9 @@ public class WorldView extends JFrame {
 	
 	/** Aussehen des Bodens */
 	private Appearance playgroundAppear;
+	
+	/** Aussehen der Linien auf dem Boden */
+	private Appearance playgroundLineAppear;
 
 	/** Aussehen der Bots */
 	private Appearance botAppear;
@@ -99,18 +103,40 @@ public class WorldView extends JFrame {
 		worldCanvas = new Canvas3D(dev.getBestConfiguration(template));
 
 		this.getContentPane().add(worldCanvas);
+		
+		// Material für die Lichtreflektionen der Welt definieren
+		// Boden und Bot Material
+		Material mat = new Material();
+		mat.setAmbientColor(new Color3f(Color.LIGHT_GRAY));
+		mat.setDiffuseColor(new Color3f(0.9f,1f,1f));
+		mat.setSpecularColor(new Color3f(0.7f,0.7f,0.7f));
+		
+		// Linien Material
+		Material matLine = new Material();
+		matLine.setAmbientColor(new Color3f(0f,0f,0f));
+		matLine.setDiffuseColor(new Color3f(0.1f,0.1f,0.1f));
+		matLine.setSpecularColor(new Color3f(0.7f,0.7f,0.7f));
 
 		// Aussehen des Bodens -- hellgrau:
 		ColoringAttributes fieldAppCol = new ColoringAttributes((new Color3f(
 				Color.LIGHT_GRAY)), ColoringAttributes.FASTEST);
 		playgroundAppear = new Appearance();
-		playgroundAppear.setColoringAttributes(fieldAppCol);
+		//playgroundAppear.setColoringAttributes(fieldAppCol);
+		playgroundAppear.setMaterial(mat);
+		
+		// Aussehen der Linien auf dem Boden -- dunkelgrau:
+		ColoringAttributes lineAppCol = new ColoringAttributes((new Color3f(
+				Color.DARK_GRAY)), ColoringAttributes.FASTEST);
+		playgroundLineAppear = new Appearance();
+		//playgroundAppear.setColoringAttributes(fieldAppCol);
+		playgroundLineAppear.setMaterial(matLine);
 
 		// Aussehen der Hindernisse -- dunkelgrau:
 		ColoringAttributes obstAppCol = new ColoringAttributes((new Color3f(
 				Color.DARK_GRAY)), ColoringAttributes.FASTEST);
 		obstacleAppear = new Appearance();
 		obstacleAppear.setColoringAttributes(obstAppCol);
+		obstacleAppear.setMaterial(mat);
 
 		// ...und mit einer Textur ueberzogen:
 		TexCoordGeneration tcg = new TexCoordGeneration(
@@ -130,6 +156,7 @@ public class WorldView extends JFrame {
 		botAppear = new Appearance(); // Bots sind rot ;-)
 		botAppear.setColoringAttributes(new ColoringAttributes(new Color3f(
 				Color.RED), ColoringAttributes.FASTEST));
+		botAppear.setMaterial(mat);
 	}
 
 	/**
@@ -212,7 +239,18 @@ public class WorldView extends JFrame {
 	 */
 	public void setUniverse(SimpleUniverse uni) {
 		this.universe = uni;
-		universe.getViewingPlatform().setNominalViewingTransform();
+		// Blickpunkt so weit zurücksetzen, dass alles zu sehen ist.
+
+		double biggerOne;
+		if (World.PLAYGROUND_HEIGHT > World.PLAYGROUND_WIDTH)
+			biggerOne = World.PLAYGROUND_HEIGHT;
+		else
+			biggerOne = World.PLAYGROUND_WIDTH;
+
+		Transform3D translate = new Transform3D();
+		universe.getViewingPlatform().getViewPlatformTransform().getTransform(translate);
+		translate.setTranslation(new Vector3d(0d,0d,(biggerOne/2)/Math.tan(universe.getViewer().getView().getFieldOfView()/2)));
+		universe.getViewingPlatform().getViewPlatformTransform().setTransform(translate);
 	}
 
 	/**
@@ -227,6 +265,13 @@ public class WorldView extends JFrame {
 	 */
 	public Appearance getPlaygroundAppear() {
 		return playgroundAppear;
+	}
+	
+	/**
+	 * @return Gibt das Erscheinungsbild der Linien auf dem Boden zurueck
+	 */
+	public Appearance getPlaygroundLineAppear() {
+		return playgroundLineAppear;
 	}
 
 	/**

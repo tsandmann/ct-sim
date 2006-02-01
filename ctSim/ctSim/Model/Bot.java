@@ -41,6 +41,7 @@ import ctSim.View.ControlPanel;
  * 
  * @author Benjamin Benz (bbe@heise.de)
  * @author Peter Koenig (pek@heise.de)
+ * @author Lasse Schwarten (lasse@schwarten.org)
  */
 
 abstract public class Bot extends Thread implements Obstacle {
