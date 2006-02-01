@@ -43,6 +43,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Color3f;
+
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.NormalGenerator;
@@ -75,6 +76,7 @@ public class World extends Thread {
 	
 	/** Reichweite des Lichtes in m */
 	private static final float LIGHT_SOURCE_REACH = 4f;
+	
 
 	/** Zeitbasis in Millisekunden. Realzeit - So oft wird simuliert */
 	public int baseTimeReal = 10;
@@ -139,7 +141,7 @@ public class World extends Thread {
 
 	/** Erzeugt eine neue Welt */
 	public World() {
-
+		
 		bots = new LinkedList();
 		obstacles = new LinkedList();
 		haveABreak = false;
@@ -589,7 +591,7 @@ public class World extends Thread {
 	 * 			  die angestrebte neue Position	
 	 * @return True wenn der Bot sich frei bewegen kann
 	 */
-	public synchronized boolean checkCollision(Node botBody, Bounds bounds,
+	public boolean checkCollision(Node botBody, Bounds bounds,
 			Vector3f newPosition) {
 		// schiebe probehalber Bound an die neue Position
 		Transform3D transform = new Transform3D();
@@ -601,15 +603,17 @@ public class World extends Thread {
 		bounds.transform(transform);
 
 		PickBounds pickShape = new PickBounds(bounds);
-		
-		// Eigenen Körper des Roboters verstecken
-		botBody.setPickable(false);
-		
-		PickInfo pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE,
-				pickShape);
-		
-		// Eigenen Körper des Roboters wieder pickable machen
-		botBody.setPickable(true);
+		PickInfo pickInfo;
+		synchronized (obstBG) {
+			// Eigenen Körper des Roboters verstecken
+			botBody.setPickable(false);
+			
+			pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE,
+					pickShape);
+			
+			// Eigenen Körper des Roboters wieder pickable machen
+			botBody.setPickable(true);
+		}
 
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return true;
@@ -648,9 +652,11 @@ public class World extends Thread {
 
 		PickShape pickShape = new PickConeRay(relPos, relHeading,
 				openingAngle);
-		PickInfo pickInfo = obstBG.pickClosest(PickInfo.PICK_GEOMETRY,
-				PickInfo.CLOSEST_DISTANCE, pickShape);
-
+		PickInfo pickInfo;
+		synchronized (obstBG) {
+			pickInfo = obstBG.pickClosest(PickInfo.PICK_GEOMETRY,
+					PickInfo.CLOSEST_DISTANCE, pickShape);
+		}
 		if (pickInfo == null)
 			return 100.0;
 		else
@@ -669,7 +675,7 @@ public class World extends Thread {
 	 * 			  Name des Berührungspunktes, welcher getestet wird
 	 * @return True wenn Bodenkontakt besteht.
 	 */
-	public synchronized boolean checkTerrain(Point3d pos, double groundClearance, String message) {
+	public boolean checkTerrain(Point3d pos, double groundClearance, String message) {
 
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
@@ -682,9 +688,11 @@ public class World extends Thread {
 		transform.transform(relHeading);
 		
 		PickShape pickShape = new PickRay(relPos, relHeading);
-		PickInfo pickInfo = terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
-				PickInfo.CLOSEST_DISTANCE, pickShape);
-	
+		PickInfo pickInfo;
+		synchronized (terrainBG) {
+			pickInfo = terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
+					PickInfo.CLOSEST_DISTANCE, pickShape);
+		}
 		if (pickInfo == null) {
 			System.out.println(message + " fällt ins Bodenlose.");
 			return false;
@@ -756,9 +764,11 @@ public class World extends Thread {
 		for(int j = 0; j < rayCount; j++) {
 			// PickRay modifizieren
 			pickRay.set(sensPos, sensHeading);
-			// Picking durchführen
-			pickInfo = terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
-					PickInfo.NODE, pickRay);
+			synchronized (terrainBG) {
+				// Picking durchführen
+				pickInfo = terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
+						PickInfo.NODE, pickRay);
+			}
 			// Boden auswerten
 			if (pickInfo == null) {
 				// kein Boden = 100% des Lichts wird verschluckt
@@ -833,13 +843,17 @@ public class World extends Thread {
 
 		PickShape pickShape = new PickConeRay(relPos, relHeading,
 				openingAngle/2);
-		obstBG.setPickable(false);
-		terrainBG.setPickable(false);
-		PickInfo pickInfo = lightBG.pickClosest(PickInfo.PICK_GEOMETRY,
-				PickInfo.CLOSEST_DISTANCE, pickShape);
-		obstBG.setPickable(true);
-		terrainBG.setPickable(true);
-
+		PickInfo pickInfo;
+		synchronized (terrainBG) {
+			synchronized (obstBG) {	
+				obstBG.setPickable(false);
+				terrainBG.setPickable(false);
+				pickInfo = lightBG.pickClosest(PickInfo.PICK_GEOMETRY,
+						PickInfo.CLOSEST_DISTANCE, pickShape);
+				obstBG.setPickable(true);
+				terrainBG.setPickable(true);
+			}
+		}
 		if (pickInfo == null)
 			return 1023;
 		else {
