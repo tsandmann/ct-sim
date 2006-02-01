@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  c't-Sim - Robotersimulator fuer den c't-Bot
+  
+  This program is free software; you can redistribute it
+  and/or modify it under the terms of the GNU General
+  Public License as published by the Free Software
+  Foundation; either version 2 of the License, or (at your
+  option) any later version. 
+  This program is distributed in the hope that it will be 
+  useful, but WITHOUT ANY WARRANTY; without even the implied
+  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+  PURPOSE. See the GNU General Public License for more details.
+  You should have received a copy of the GNU General Public 
+  License along with this program; if not, write to the Free 
+  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+  MA 02111-1307, USA.
+  
+  Autor: Dominik Kalb (dominik@dkalb.com)
+-->
+
+<project default="build" basedir=".">
+
+	<!--
+	===================================================================
+		Externes environment und externe Ant Properties holen.
+	===================================================================
+	-->
+	<property file=".ant.properties" />
+	<property file="${user.home}/.ant.properties" />
+	<property environment="env" />
+
+	<!--
+	===================================================================
+		ct-Sim Namen und Versionen vergeben
+	===================================================================
+	-->
+	<property name="Name" value="ctSim" />
+	<property name="name" value="ct-Sim" />
+	<property name="version" value="01" />
+	<property name="manifest-version" value="1.0" />
+
+	<!--
+	===================================================================
+		Hier werden alle benötigten Kompilerschalter gesetzt.
+	===================================================================
+	-->
+	<property name="debug" value="true" />
+	<property name="deprecation" value="false" />
+	<property name="optimize" value="true" />
+	<property name="javac.source" value="1.4" />
+	<property name="javac.target" value="1.4" />
+	<property name="compile.option" value="-Xlint:unchecked" />
+	
+	<!--
+	===================================================================
+		Alle benötigten Quell- und Zielnamen vergeben
+	===================================================================
+	-->
+	<property name="src.name" value="ctSim" />
+	<property name="textures.name" value="textures" />
+	
+	<property name="build.name" value="build" />
+	<property name="build.classes.name" value="classes" />
+	<property name="build.lib.name" value="lib" />
+	<property name="build.doc.name" value="docs" />
+	
+	<property name="main.class.name" value="ctSim.Controller.Controller" />
+	
+	<!--
+	===================================================================
+		Die Quellverzeichnisse zuweisen.
+	===================================================================
+	-->
+	<property name="src.dir" location="${src.name}" />
+	<property name="textures.dir" location="${textures.name}" />
+	
+	<!--
+	===================================================================
+		Die Zielverzeichnisse zuweisen.
+		Build Verzeichnisstruktur:
+		
+		build (Build Hauptverzeichnis)
+			classes (Kompilierte Klassen)
+			docs (Javadokumentation)
+			lib (ct-Sim-01.jar Archiv)
+	===================================================================
+	-->
+	<property name="build.dir" location="${build.name}" />
+	<property name="build.classes.dir" location="${build.dir}/${build.classes.name}" />
+	<property name="build.textures.dir" location="${build.classes.dir}/${textures.name}" />
+	<property name="build.lib.dir" location="${build.dir}/${build.lib.name}" />
+	<property name="build.doc.dir" location="${build.dir}/${build.doc.name}" />
+	
+	
+	<!--
+	===================================================================
+		Der Klassenpfad ist leer.
+	===================================================================
+	-->
+	<path id="ctSim.classpath">
+		<!--
+		Hiermit können externe Jar-Archive eingebunden werden:
+		<path location="C:/.../datei.jar" />
+		-->
+		
+		<!--
+		Wenn Java 3D 1.4 extern eingebunden werden soll.
+		<path location="C:/.../j3dcore.jar" />
+		<path location="C:/.../j3dutils.jar" />
+		<path location="C:/.../vecmath.jar" />
+		-->
+		<!--
+		Die folgenden dll's müssen ebenfalls erreichbar sein.
+		z.B. C:/Windows/system32 od. im ct-Sim Verzeichnis od. JAVA_HOME/jre/bin
+		
+		j3dcore-ogl.dll
+		j3dcore-ogl-cg.dll
+		j3dutils.dll
+		j3dcore-d3d.dll
+		-->
+	</path>
+	
+	<!--
+	===================================================================
+		Initialisiert den Ant-Build und überprüft die Java 3D 1.4 API
+	===================================================================
+	-->
+	<target name="init">
+		
+		<!--
+		Sucht nach der Java 3D 1.4 API
+		Wenn beide Klassen (Vector3d und PickInfo) vorhanden sind,
+		handelt es sich um die Java 3D 1.4 API und der java3d.support Schalter
+		wird auf true gesetzt
+		-->
+		<condition property="java3d.support">
+			<and>
+				<available classname="javax.vecmath.Vector3d" 
+					classpathref="ctSim.classpath" />
+				<available classname="javax.media.j3d.PickInfo" 
+					classpathref="ctSim.classpath" />
+			</and>
+		</condition>
+		
+		<!--
+		Bricht ab wenn der java3d.support Schalter von oben nicht gesetzt wurde.
+		Wenn sich die Java 3D 1.4 API ausserhalb von der JDK befindet,
+		müssen dessen Jar Archive in den Klassenpfad eingebunden werden.
+		-->
+		<fail message="Cannot compile, you must install Java3D 1.4 Beta or set the classpath to Java 3D : https://java3d.dev.java.net/binary-builds.html#Stable_builds_1.4.0">
+			<condition>
+				<not>
+					<isset property="java3d.support" />
+				</not>
+			</condition>
+		</fail>
+		
+		<tstamp>
+			<format property="year" pattern="yyyy" />
+		</tstamp>
+
+		<echo message="Java3D 1.4 Beta installed." />		
+		<mkdir dir="${build.dir}" />
+	</target>
+	
+	<!--
+	===================================================================
+		Kompiliert alle Java Quelldateien und kopiert die Texturen
+	===================================================================
+	-->
+	<target name="build"
+		description="--> compiles ct-Sim project"
+		depends="init" >
+		
+		<!--
+		Zielverzeichnis erzeugen
+		-->
+		<mkdir dir="${build.classes.dir}" />
+		
+		<!--
+		Texturen kopieren
+		-->
+		<copy todir="${build.textures.dir}">
+			<fileset dir="${textures.dir}" />
+		</copy>
+		
+		<!--
+		ctSim Kompilieren
+		-->
+		<compile src="${src.dir}" 
+			dest="${build.classes.dir}" 
+			classpath="ctSim.classpath" />
+	</target>
+	
+	<!--
+	===================================================================
+		Erzeugt das ct-Sim-01.jar Archiv
+	===================================================================
+	-->
+	<target name="build-jar"
+		description="--> create jar libaries"
+		depends="build" >
+		
+		<mkdir dir="${build.lib.dir}" />
+		
+		<jar destfile="${build.lib.dir}/${name}-${version}.jar"
+			basedir="${build.classes.dir}">
+		
+			<!--
+			Ausführbare Hauptklasse mit main-Methode setzen
+			-->
+			<manifest>
+				<attribute name="Main-Class" value="${main.class.name}" />
+			</manifest>
+		
+		</jar>
+		
+		
+	</target>
+	
+	<!--
+	===================================================================
+		Erzeugt die Java API Dokumentation zum ctSim Projekt.
+	===================================================================
+	-->
+	<target name="build-docs"
+		description="--> create the Java API documentation"
+		depends="build" >
+		
+		<!--
+		Zielverzeichnis erzeugen.
+		-->
+		<mkdir dir="${build.doc.dir}" />
+		
+		<!--
+		Javadocs generieren
+		-->
+		<javadoc protected="yes"
+			useexternalfile="yes"
+			nodeprecated="yes"
+			nohelp="yes"
+			destdir="${build.doc.dir}"
+			version="true"
+			locale="de"
+			windowtitle="${Name}, Robotersimulator fuer den c't-Bot"
+			doctitle="${Name}">
+
+			<!--
+			Dieses Packet verwenden
+			-->
+			<packageset dir="${src.dir}" />
+			
+			<!--
+			<group title="${Name}" packages="${src.dir}" /> 
+			<header><![CDATA[<img src="http://www.heise.de/ct/icons/ct_logo.gif" boder="0">]]></header>
+			<footer><![CDATA[<img src="http://www.heise.de/ct/icons/ct_logo.gif" boder="0">]]></footer>
+			<bottom>Copyright &#169; 2006-${year}.</bottom>
+			-->
+		</javadoc>
+	</target>
+	
+	<!--
+	===================================================================
+		Startet den Simulator. (ctSim.Controller.Controller)
+	===================================================================
+	-->
+	<target name="run"
+		description="--> runs ctSim (ctSim.Controller.Controller)"
+		depends="build">
+
+		<!--
+		Controller starten
+		-->
+		<java classname="${main.class.name}" fork="true">
+		
+			<classpath>
+				<path refid="ctSim.classpath" />
+				<pathelement location="${build.classes.dir}" />
+			</classpath>
+		</java>
+	</target>
+	
+	<!--
+	===================================================================
+		Löscht alle erzeugten Klassen, Javadocs und Archive
+	===================================================================
+	-->
+	<target name="clean"
+		description="--> clean up" >
+
+		<delete dir="${build.dir}" includeEmptyDirs="true" quiet="true" />
+		
+	</target>
+	
+	<!--
+	===================================================================
+		Erzeugt alle Klassen neu.
+	===================================================================
+	-->
+	<target name="rebuild"
+		description="--> rebuild" 
+		depends="clean, build" />
+	
+	<!--
+	===================================================================
+		Kompiliert alle Klassen, erzeugt Jar-Archiv und Javadocs.
+	===================================================================
+	-->
+	<target name="build-all"
+		description="--> compiles all, create jar-archiv and javadocs" 
+		depends="build-jar, build-docs" />
+	
+	
+	<!--
+	===================================================================
+		Wiederverwendbares Makro zum kompilieren.
+		Aufruf:
+		<compile src="srcFolder" 
+			dest="destFolder" 
+			classpath="classpath" />
+	===================================================================
+	-->	
+	<macrodef name="compile">
+		<!-- Quellverzeichnis -->
+		<attribute name="src" default="needed" />
+		<!-- Zielverzeichnis -->
+		<attribute name="dest" default="needed" />
+		<!-- Klassenpfad verwenden -->
+		<attribute name="classpath" default="needed" />
+		<sequential>
+			
+			<!--
+			Zielverzeichnis erzeugen, wenn nicht vorhanden.
+			-->
+			<mkdir dir="@{dest}" />
+			
+			<!--
+			Kompiler aufrufen.
+			-->
+			<javac srcdir="@{src}"
+				destdir="@{dest}"
+				debug="${debug}"
+				deprecation="${deprecation}"
+				source="${javac.source}"
+				target="${javac.target}"
+				optimize="${optimize}"
+				nowarn="false" >
+				
+				<!--
+				Wenn des Java 1.5 compiler verwendet wird, sollte diese
+				option mit angegeben werden.
+				-->
+				<compilerarg value="${compile.option}" />
+				
+				<!--
+				Diesen Klassenpfad verwenden.
+				-->
+				<classpath>
+					<path refid="@{classpath}" />
+				</classpath>
+			</javac>
+		</sequential>
+	</macrodef>
+
+</project>
