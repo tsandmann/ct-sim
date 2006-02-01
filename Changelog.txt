@@ -1,5 +1,9 @@
 CHANGELOG fuer c't-Sim
 ======================
+
+2006-02-01 XML- und howto-Dateien für Ant Build von Dominik Kalb (dominik@dkalb.com)
+hinzugefügt.
+
 2006-02-01  Lasse Schwarten (lasse@schwarten.org)
 - Bugfix eines Nebenläufigkeitsproblems
   -> Sensor- und Kollisionsabfragen verstecken Teile des Szenengraphen.
