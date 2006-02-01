@@ -136,6 +136,24 @@ public abstract class CtBot extends Bot {
 	 *  Je mehr Strahlen verwendet werden, desto genauer wird das Ergebnis.
 	 *  Mehr Strahlen kosten aber auch mehr Rechenzeit. */
 	public static final short SENS_BORDER_PRECISION = 10;
+
+	/** Abstand Zentrum Lichtsensoren in Achsrichtung (X)[m] */
+	public static final double SENS_LDR_ABSTAND_X = 0.032d;
+
+	/** Abstand Zentrum Lichtsensoren in Vorausrichtung (Y) [m] */
+	public static final double SENS_LDR_ABSTAND_Y = 0.048d;
+
+	/** Abstand Zentrum Lichtsensoren in Hochrichtung (Y) [m] */
+	public static final double SENS_LDR_ABSTAND_Z = 0.060d - BOT_HEIGHT/2;
+
+	/** Ausrichtung der Lichtsensors 
+	 *  (0d,0d,1d) ist nach oben
+	 *  (1d,0d,0d) ist nach vorne
+	 */
+	public static final Vector3d SENS_LDR_HEADING = new Vector3d(1d,0d,0d);
+	
+	/** Oeffnungswinkel der beiden Lichtsensoren [Rad] */
+	public static final double SENS_LDR_ANGLE = Math.PI / 180 * 180; 
 	
 	/*
 	 * Capabilities -- Flags, die anzeigen, welche internen Zustaende von

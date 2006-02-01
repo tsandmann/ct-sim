@@ -46,6 +46,7 @@ import javax.vecmath.Color3f;
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.NormalGenerator;
+import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
@@ -71,6 +72,9 @@ public class World extends Thread {
 	
 	/** Breite des Spielfelds in m */
 	public static final float PLAYGROUND_THICKNESS = 0f;
+	
+	/** Reichweite des Lichtes in m */
+	private static final float LIGHT_SOURCE_REACH = 4f;
 
 	/** Zeitbasis in Millisekunden. Realzeit - So oft wird simuliert */
 	public int baseTimeReal = 10;
@@ -105,12 +109,28 @@ public class World extends Thread {
 	/** Interne Zeitbasis in Millisekunden. */
 	private long simulTime = 0;
 
-	/**
-	 * Drei BranchGroups, eine fuer die ganze Welt, eine für den Boden und die 
-	 * letzte fuer die Hindernisse
+	/*
+	 * Vier BranchGroups, eine fuer die ganze Welt, eine für den Boden, 
+	 * eine für die Lichtquellen und die letzte fuer die Hindernisse
 	 */
-	public BranchGroup scene, terrainBG, obstBG;
+	/**
+	 * BranchGroup fuer die ganze Welt
+	 */
+	public BranchGroup scene;
+	/**
+	 * BranchGroup fuer den Boden
+	 */ 
+	public BranchGroup terrainBG;
+	/**
+	 * BranchGroup fuer die Hindernisse
+	 */
+	public BranchGroup obstBG;
+	/**
+	 * BranchGroup fuer die Lichtquellen
+	 */
+	public BranchGroup lightBG;
 
+	
 	/** TransformGroup der gesamten Welt. Hier kommen auch die Bots hinein */
 	private TransformGroup worldTG;
 
@@ -351,6 +371,11 @@ public class World extends Thread {
     	ambientLightNode.setInfluencingBounds (ambientLightBounds);
     	worldTG.addChild (ambientLightNode);
     	
+    	// Die Branchgroup für die Lichtquellen
+    	lightBG = new BranchGroup();
+    	lightBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+    	lightBG.setPickable(true);
+    	
     	// Lichtpunkte
     	BoundingSphere pointLightBounds = new BoundingSphere(new Point3d(0d,0d,0d),100d);
 		Color3f pointLightColor = new Color3f (1.0f, 1.0f, 0.9f);
@@ -360,10 +385,20 @@ public class World extends Thread {
     	pointLight1.setPosition(PLAYGROUND_WIDTH/2,PLAYGROUND_HEIGHT/2,1.5f);
     	pointLight1.setInfluencingBounds(pointLightBounds);
     	pointLight1.setAttenuation(1.7f,0f,0f);
-    	worldTG.addChild (pointLight1);
+    	lightBG.addChild (pointLight1);
+    	Transform3D lsTranslate = new Transform3D();
+    	lsTranslate.set(new Vector3f(PLAYGROUND_WIDTH/2,PLAYGROUND_HEIGHT/2,1.5f));
+    	TransformGroup lsTg = new TransformGroup(lsTranslate);	
+    	Sphere lightSphere = new Sphere(0.01f);
+    	lightSphere.setAppearance(worldView.getPlaygroundLineAppear());
+    	lightSphere.setPickable(true);
+    	lsTg.addChild(lightSphere);
+    	lightBG.addChild(lsTg);
+    	worldTG.addChild(lightBG);
 		
 		// Die Branchgroup für den Boden
 		terrainBG = new BranchGroup();
+		terrainBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		terrainBG.setPickable(true);
 		
 		// Erzeuge Boden
@@ -401,6 +436,7 @@ public class World extends Thread {
 		obstBG = new BranchGroup();
 		// Damit später Bots hinzugefügt werden können
 		obstBG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		obstBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		// Objekte sind fest
 		obstBG.setPickable(true);
 
@@ -526,6 +562,8 @@ public class World extends Thread {
 		worldTG.addChild(obstBG);
 		// es duerfen noch weitere dazukommen
 		worldTG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		
+		objRoot.compile();
 
 		return objRoot;
 	}
@@ -631,7 +669,7 @@ public class World extends Thread {
 	 * 			  Name des Berührungspunktes, welcher getestet wird
 	 * @return True wenn Bodenkontakt besteht.
 	 */
-	public boolean checkTerrain(Point3d pos, double groundClearance, String message) {
+	public synchronized boolean checkTerrain(Point3d pos, double groundClearance, String message) {
 
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
@@ -770,6 +808,46 @@ public class World extends Thread {
 		return  (short)(absorption/2);
 	}
 	
+	/**
+	 * Liefert die Helligkeit die auf einen Lichtsensor fällt
+	 * 
+	 * @param pos
+	 *            Die Position des Lcihtsensors
+	 * @param heading
+	 *            Die Blickrichtung des Lichtsensors
+	 * @param openingAngle
+	 * 			  Der Öffnungswinkel des Blickstrahls          
+	 * @return Die Dunkelheit um den Sensor herum von 1023(100%) bis 0(0%)
+	 */
+	public int sensLight(Point3d pos, Vector3d heading, double openingAngle) {
+
+		// Falls die Welt verschoben wurde:
+		Point3d relPos = new Point3d(pos);
+		Transform3D transform = new Transform3D();
+		worldTG.getTransform(transform);
+		transform.transform(relPos);
+
+		// oder rotiert:
+		Vector3d relHeading = new Vector3d(heading);
+		transform.transform(relHeading);
+
+		PickShape pickShape = new PickConeRay(relPos, relHeading,
+				openingAngle/2);
+		obstBG.setPickable(false);
+		terrainBG.setPickable(false);
+		PickInfo pickInfo = lightBG.pickClosest(PickInfo.PICK_GEOMETRY,
+				PickInfo.CLOSEST_DISTANCE, pickShape);
+		obstBG.setPickable(true);
+		terrainBG.setPickable(true);
+
+		if (pickInfo == null)
+			return 1023;
+		else {
+			int darkness = (int)((pickInfo.getClosestDistance()/LIGHT_SOURCE_REACH)*1023);
+			if (darkness > 1023) darkness = 1023;
+			return darkness;
+		}
+	}
 	/**
 	 * Gibt Nachricht von aussen, dass sich der Zustand der Welt geaendert hat,
 	 * an den View weiter

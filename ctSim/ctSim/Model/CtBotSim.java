@@ -77,6 +77,9 @@ abstract public class CtBotSim extends CtBot {
 	/** Sollen die Abgrundsensoren automatisch aktualisert werden? */
 	boolean updateSensBorder = true;
 	
+	/** Sollen die Lichtsensoren automatisch aktualisert werden? */
+	boolean updateSensLdr = true;
+	
 	/**
 	 * Erzeugt einen neuen Bot
 	 * 
@@ -253,14 +256,14 @@ abstract public class CtBotSim extends CtBot {
 					SENS_BORDER_ANGLE, SENS_BORDER_PRECISION));
 		}
 
+		// Lichtsensoren aktualisieren
+		if (updateSensLdr) {
+			this.setSensLdrL(world.sensLight(getSensLdrPosition('L'),
+					getSensLdrPosition(newHeading), SENS_LDR_ANGLE));
+			this.setSensLdrR(world.sensLight(getSensLdrPosition('R'), 
+					getSensLdrPosition(newHeading), SENS_LDR_ANGLE));
+		}
 		
-		/* TODO Es ist zu prüfen ob die jetzige Maussensorimplementierung 
-		 		sich korrekt verhält.
-		 */ 
-		// alte und neue Position des Maussensors berechnen
-		//Vector3f oldMsPos = calculateMouseSensPosition(oldHeading,oldPos);
-		//Vector3f newMsPos = calculateMouseSensPosition(newHeading,newPos);
-
 		// Maussensor aktualisieren
 		if (updateSensMouse) {
 			// DeltaX berechnen
@@ -281,6 +284,20 @@ abstract public class CtBotSim extends CtBot {
 			int deltaY = meter2Dots(angleDiff * vecMs.length());
 			this.setSensMouseDY(deltaY);
 		}
+	}
+
+	/**
+	 * Errechnet die Blickrichtung eines Lichtsensors.
+	 * 
+	 * @param newHeading
+	 * 				Blickrichtung des Bots
+	 * @return Gibt die Blickrichtung des Sensors zurück
+	 */
+	private Vector3d getSensLdrPosition(Vector3f newHeading) {
+		if(SENS_LDR_HEADING.z == 1)
+			return SENS_LDR_HEADING;
+		else
+			return new Vector3d(newHeading);
 	}
 
 	/**
@@ -329,6 +346,29 @@ abstract public class CtBotSim extends CtBot {
 		ptBorder.add(new Point3d(getPos()));
 		return ptBorder;
 	}
+	/**
+	 * Liefert die Position eines Lichtsensors zurueck
+	 * 
+	 * @param side
+	 *            Welcher Sensor 'L' oder 'R'
+	 * @return Die Position
+	 */
+	private Point3d getSensLdrPosition(char side) {
+		double angle = getRotation(getHeading());
+		Transform3D rotation = new Transform3D();
+		rotation.rotZ(angle);
+		Point3d ptLdr;
+		if (side == 'L'){
+			ptLdr = new Point3d(-SENS_LDR_ABSTAND_X, 
+					SENS_LDR_ABSTAND_Y, SENS_LDR_ABSTAND_Z);
+		} else {
+			ptLdr = new Point3d(SENS_LDR_ABSTAND_X, 
+					SENS_LDR_ABSTAND_Y, SENS_LDR_ABSTAND_Z);
+		}
+		rotation.transform(ptLdr);
+		ptLdr.add(new Point3d(getPos()));
+		return ptLdr;
+	}
 
 	/**
 	 * Errechnet die Anzahl an Dots die der Maussensor für eine Bewegung 
@@ -359,20 +399,6 @@ abstract public class CtBotSim extends CtBot {
 			return -angle;
 		else
 			return angle;
-	}
-	
-	/**
-	 * @param heading Ausrichtung des Bots
-	 * @param pos Position des Bots
-	 * @return Gibt die Position des Maussensors bzgl. der Parameter zurück 
-	 */
-	private Vector3f calculateMouseSensPosition(Vector3f heading, Vector3f pos) {
-		Vector3f msPos = new Vector3f((float)SENS_MOUSE_ABSTAND_X,(float)SENS_IR_ABSTAND_Y,0f);
-		Transform3D rotation = new Transform3D();
-		rotation.rotZ(getRotation(heading));
-		rotation.transform(msPos);
-		msPos.add(pos);
-		return msPos;
 	}
 
 	/**
@@ -505,5 +531,24 @@ abstract public class CtBotSim extends CtBot {
 	 */
 	public void setUpdateSensBorder(boolean updateSensBorder) {
 		this.updateSensBorder = updateSensBorder;
+	}
+	
+	/**
+	 * Werden die Lichtsensoren automatisch aktualisert?
+	 * 
+	 * @return true wenn ja
+	 */
+	public boolean isUpdateSensLdr() {
+		return updateSensLdr;
+	}
+
+	/**
+	 * Sollen die Lichtsensoren automatisch aktualisiert werden?
+	 * 
+	 * @param updateSensLdr
+	 *            true, wenn automatisch
+	 */
+	public void setUpdateSensLdr(boolean updateSensLdr) {
+		this.updateSensLdr = updateSensLdr;
 	}
 }

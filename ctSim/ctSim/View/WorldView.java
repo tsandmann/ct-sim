@@ -118,15 +118,15 @@ public class WorldView extends JFrame {
 		matLine.setSpecularColor(new Color3f(0.7f,0.7f,0.7f));
 
 		// Aussehen des Bodens -- hellgrau:
-		ColoringAttributes fieldAppCol = new ColoringAttributes((new Color3f(
-				Color.LIGHT_GRAY)), ColoringAttributes.FASTEST);
+//		ColoringAttributes fieldAppCol = new ColoringAttributes((new Color3f(
+//				Color.LIGHT_GRAY)), ColoringAttributes.FASTEST);
 		playgroundAppear = new Appearance();
 		//playgroundAppear.setColoringAttributes(fieldAppCol);
 		playgroundAppear.setMaterial(mat);
 		
 		// Aussehen der Linien auf dem Boden -- dunkelgrau:
-		ColoringAttributes lineAppCol = new ColoringAttributes((new Color3f(
-				Color.DARK_GRAY)), ColoringAttributes.FASTEST);
+//		ColoringAttributes lineAppCol = new ColoringAttributes((new Color3f(
+//				Color.DARK_GRAY)), ColoringAttributes.FASTEST);
 		playgroundLineAppear = new Appearance();
 		//playgroundAppear.setColoringAttributes(fieldAppCol);
 		playgroundLineAppear.setMaterial(matLine);

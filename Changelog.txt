@@ -1,5 +1,20 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-02-01  Lasse Schwarten (lasse@schwarten.org)
+- Positions-Slider auf dem CtControl werden jetzt dynamisch an die Größe des 
+  Spielfeldes angepasst.
+- Die Lichtsensoren wurden implementiert.
+  -> Mit World.LIGHT_SOURCE_REACH läßt sich die Reichweite/Intensität des 
+     Lichtes bestimmen.
+  -> CtBot.SENS_LDR_HEADING bestimmt ob die Lichtsensoren nach vorne oder 
+     oben zeigen.
+- Die Lichtquelle in der Nordöstlichen Ecke hat ein winziges 3D-Objekt 
+  bekommen, damit die Lichtsensoren arbeiten können.
+- Dem CtControllPanel wurden die nötigen Sensoranzeigen hinzugefügt und
+  das Layout gefixt.
+- Die Anfangsposition von CtBots, die über TCP angeschlossen sind wurde 
+  an die neue Welt angepasst.
+
 2006-01-31  Lasse Schwarten (lasse@schwarten.org)
 - Es wurden Lichtquellen hinzugefügt.
 - Die Liniensensoren wurden implementiert.

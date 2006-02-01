@@ -233,6 +233,14 @@ public class CtControlPanel extends ControlPanel {
 	private JTextField borderL;
 	private JLabel borderLabelR;
 	private JLabel borderLabelL;
+	
+	// Anzeige der Lichtsensoren
+	private JPanel ldrPanel;
+	private JLabel ldrLabel;
+	private JTextField ldrR;
+	private JTextField ldrL;
+	private JLabel ldrLabelR;
+	private JLabel ldrLabelL;
 
 	// Aufteilung des Tabs in Linke und rechte Seite
 	private JPanel mainPanelRight;
@@ -362,8 +370,8 @@ public class CtControlPanel extends ControlPanel {
 						{
 							xPosSlider = new JSlider(JSlider.HORIZONTAL, Math.round(-100*World.PLAYGROUND_WIDTH/2) , Math.round(100*World.PLAYGROUND_WIDTH/2), 0);
 							xPosSliderPanel.add(xPosSlider);
-							xPosSlider.setMajorTickSpacing(20);
-							xPosSlider.setMinorTickSpacing(10);
+							xPosSlider.setMajorTickSpacing((int)World.PLAYGROUND_WIDTH*10);
+							xPosSlider.setMinorTickSpacing((int)World.PLAYGROUND_WIDTH*5);
 							xPosSlider.setPaintTicks(true);
 							xPosSlider.setPaintLabels(true);
 						}
@@ -405,8 +413,8 @@ public class CtControlPanel extends ControlPanel {
 						{
 							yPosSlider = new JSlider(JSlider.HORIZONTAL, Math.round(-100*World.PLAYGROUND_HEIGHT/2), Math.round(100*World.PLAYGROUND_HEIGHT/2), 0);
 							yPosSliderPanel.add(yPosSlider);
-							yPosSlider.setMajorTickSpacing(20);
-							yPosSlider.setMinorTickSpacing(10);
+							yPosSlider.setMajorTickSpacing((int)World.PLAYGROUND_HEIGHT*10);
+							yPosSlider.setMinorTickSpacing((int)World.PLAYGROUND_HEIGHT*5);
 							yPosSlider.setPaintTicks(true);
 							yPosSlider.setPaintLabels(true);
 						}
@@ -794,6 +802,11 @@ public class CtControlPanel extends ControlPanel {
 			
 			// rechte Spalte füllen
 			{
+				labelDim = new Dimension(50, 25);
+				Dimension labelDimMax = new Dimension(100, 25);
+				fieldDim = new Dimension(50, 25);
+				Dimension fieldDimMax = new Dimension(100, 25);
+				
 				// Maussensoranzeige
 				msLabel = new JLabel();
 				msLabel.setText("Maussensor");
@@ -810,12 +823,14 @@ public class CtControlPanel extends ControlPanel {
 					msPanel.add(msLabelX);
 					msLabelX.setText("Delta-X");
 					msLabelX.setPreferredSize(labelDim);
+					msLabelX.setMaximumSize(labelDimMax);
 				
 					msDeltaX = new JTextField();
 					msPanel.add(msDeltaX);
 					msDeltaX.setText("0");
 					msDeltaX.setEditable(false);
 					msDeltaX.setPreferredSize(fieldDim);
+					msDeltaX.setMaximumSize(fieldDimMax);
 				
 					msPanel.add(Box.createRigidArea(smallGap));
 					
@@ -823,12 +838,14 @@ public class CtControlPanel extends ControlPanel {
 					msPanel.add(msLabelY);
 					msLabelY.setText("Delta-Y");
 					msLabelY.setPreferredSize(labelDim);
+					msLabelY.setMaximumSize(labelDimMax);
 					
 					msDeltaY = new JTextField();
 					msPanel.add(msDeltaY);
 					msDeltaY.setText("0");
 					msDeltaY.setEditable(false);
 					msDeltaY.setPreferredSize(fieldDim);
+					msDeltaY.setMaximumSize(fieldDimMax);
 				}
 				
 				mainPanelRight.add(Box.createRigidArea(smallGap));
@@ -845,12 +862,14 @@ public class CtControlPanel extends ControlPanel {
 					linePanel.add(lineLabelL);
 					lineLabelL.setText("links");
 					lineLabelL.setPreferredSize(labelDim);
+					lineLabelL.setMaximumSize(labelDimMax);
 				
 					lineL = new JTextField();
 					linePanel.add(lineL);
 					lineL.setText("0");
 					lineL.setEditable(false);
 					lineL.setPreferredSize(fieldDim);
+					lineL.setMaximumSize(fieldDimMax);
 				
 					linePanel.add(Box.createRigidArea(smallGap));
 					
@@ -858,12 +877,14 @@ public class CtControlPanel extends ControlPanel {
 					linePanel.add(lineLabelR);
 					lineLabelR.setText("rechts");
 					lineLabelR.setPreferredSize(labelDim);
+					lineLabelR.setMaximumSize(labelDimMax);
 				
 					lineR = new JTextField();
 					linePanel.add(lineR);
 					lineR.setText("0");
 					lineR.setEditable(false);
 					lineR.setPreferredSize(fieldDim);
+					lineR.setMaximumSize(fieldDimMax);
 				}
 				
 				mainPanelRight.add(Box.createRigidArea(smallGap));
@@ -880,12 +901,14 @@ public class CtControlPanel extends ControlPanel {
 					borderPanel.add(borderLabelL);
 					borderLabelL.setText("links");
 					borderLabelL.setPreferredSize(labelDim);
+					borderLabelL.setMaximumSize(labelDimMax);
 				
 					borderL = new JTextField();
 					borderPanel.add(borderL);
 					borderL.setText("0");
 					borderL.setEditable(false);
 					borderL.setPreferredSize(fieldDim);
+					borderL.setMaximumSize(fieldDimMax);
 				
 					borderPanel.add(Box.createRigidArea(smallGap));
 					
@@ -893,12 +916,53 @@ public class CtControlPanel extends ControlPanel {
 					borderPanel.add(borderLabelR);
 					borderLabelR.setText("rechts");
 					borderLabelR.setPreferredSize(labelDim);
-				
+					borderLabelR.setMaximumSize(labelDimMax);
+					
 					borderR = new JTextField();
 					borderPanel.add(borderR);
 					borderR.setText("0");
 					borderR.setEditable(false);
 					borderR.setPreferredSize(fieldDim);
+					borderR.setMaximumSize(fieldDimMax);
+				}
+				
+				mainPanelRight.add(Box.createRigidArea(smallGap));
+				
+				// Lichtsensoren
+				ldrLabel = new JLabel("Lichtsensoren");
+				ldrLabel.setPreferredSize(labelDim);
+				mainPanelRight.add(ldrLabel);
+				ldrPanel = new JPanel();
+				mainPanelRight.add(ldrPanel);
+				ldrPanel.setLayout(new BoxLayout(ldrPanel,BoxLayout.X_AXIS));
+				{
+					ldrLabelL = new JLabel();
+					ldrPanel.add(ldrLabelL);
+					ldrLabelL.setText("links");
+					ldrLabelL.setPreferredSize(labelDim);
+					ldrLabelL.setMaximumSize(labelDimMax);
+					
+					ldrL = new JTextField();
+					ldrPanel.add(ldrL);
+					ldrL.setText("0");
+					ldrL.setEditable(false);
+					ldrL.setPreferredSize(fieldDim);
+					ldrL.setMaximumSize(fieldDimMax);
+				
+					ldrPanel.add(Box.createRigidArea(smallGap));
+					
+					ldrLabelR = new JLabel();
+					ldrPanel.add(ldrLabelR);
+					ldrLabelR.setText("rechts");
+					ldrLabelR.setPreferredSize(labelDim);
+					ldrLabelR.setMaximumSize(labelDimMax);
+					
+					ldrR = new JTextField();
+					ldrPanel.add(ldrR);
+					ldrR.setText("0");
+					ldrR.setEditable(false);
+					ldrR.setPreferredSize(fieldDim);
+					ldrR.setMaximumSize(fieldDimMax);
 				}
 				
 				mainPanelRight.add(Box.createRigidArea(smallGap));
@@ -908,7 +972,7 @@ public class CtControlPanel extends ControlPanel {
 //				mainPanelRight.add(Box.createRigidArea(new Dimension(0,700)));
 				mainPanelRight.add(new Box.Filler(
 						smallGap,
-						new Dimension(10,1200),
+						new Dimension(10,10),
 						new Dimension(10,Short.MAX_VALUE)));
 			} // Ende der rechten Spalte
 		} catch (Exception e) {
@@ -1028,6 +1092,10 @@ public class CtControlPanel extends ControlPanel {
 		// aktualisiere die Abgrundsensoren
 		borderL.setText(Integer.toString(bot.getSensBorderL()));
 		borderR.setText(Integer.toString(bot.getSensBorderR()));
+		
+		// aktualisiere die Lichtsensoren
+		ldrL.setText(Integer.toString(bot.getSensLdrL()));
+		ldrR.setText(Integer.toString(bot.getSensLdrR()));
 		
 		super.repaint();
 		this.repaint();
