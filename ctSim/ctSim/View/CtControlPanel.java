@@ -1110,6 +1110,8 @@ public class CtControlPanel extends ControlPanel {
 			xPosSliderCheck.doClick();
 		if(bot.CAP_POS && !ypos)
 			yPosSliderCheck.doClick();
+		if(bot.CAP_HEAD && !head)
+			headSliderCheck.doClick();
 	}
 	
 }

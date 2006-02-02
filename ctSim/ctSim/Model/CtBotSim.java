@@ -27,6 +27,7 @@ import javax.vecmath.Vector3f;
 
 import javax.media.j3d.Transform3D;
 
+import ctSim.SimUtils;
 import ctSim.ErrorHandler;
 import ctSim.View.CtControlPanel;
 
@@ -79,6 +80,15 @@ abstract public class CtBotSim extends CtBot {
 	
 	/** Sollen die Lichtsensoren automatisch aktualisert werden? */
 	boolean updateSensLdr = true;
+	
+	/** Ist das normale Aussehen des Bots gesetzt? */
+	boolean isApperance = true;
+	
+	/** Ist das Aussehen nach einer Kollision des Bots gesetzt? */
+	boolean isApperanceCollision = false;
+	
+	/** Ist das Aussehen nach einem Fall des Bots gesetzt? */
+	boolean isApperanceFall = false;
 	
 	/**
 	 * Erzeugt einen neuen Bot
@@ -187,10 +197,22 @@ abstract public class CtBotSim extends CtBot {
 		Vector3f newHeading = new Vector3f(-mid.y, mid.x, 0);
 		newHeading.normalize();
 
-		// Pruefen, ob Kollision erfolgt
-		if (world.checkCollision(botBody ,getBounds(), newPos)) {
+		// Pruefen, ob Kollision erfolgt bei einer Kollision wird
+		// der Bot blau.
+		if (world.checkCollision(botBody ,getBounds(), newPos, getBotName())) {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
+			if (isApperanceCollision) {
+				botBody.setAppearance(world.getWorldView().getBotAppear());
+				isApperance = true;
+				isApperanceCollision = false;
+			}
+		} else {
+			if (isApperance) {
+				botBody.setAppearance(world.getWorldView().getBotAppearCollision());
+				isApperance = false;
+				isApperanceCollision = true;
+			}
 		}
 		
 		// Blickrichtung immer aktualisieren:
@@ -199,7 +221,7 @@ abstract public class CtBotSim extends CtBot {
 		// Bodenkontakt überprüfen
 		
 		// Winkel des Headings errechnen
-		double angle = getRotation(newHeading);
+		double angle = SimUtils.getRotation(newHeading);
 		// Transformations Matrix für die Rotation erstellen
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(angle);
@@ -209,23 +231,41 @@ abstract public class CtBotSim extends CtBot {
 		// Position des Gleitpins gemäß der Ausrichtung des Bots anpassen
 		rotation.transform(skidVec);
 		skidVec.add(new Point3d(newPos));
+		boolean isFalling = false;
 		if (!world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE, 
-				"Der Gleitpin von " + this.getBotName())){
-			((CtControlPanel)this.getPanel()).stopBot();
+				"Der Gleitpin von " + this.getBotName())){		
+			isFalling = true;
 		}
 	
 		// Bodenkontakt des linken Reifens überprüfen
 		posRadL.z -= BOT_HEIGHT/2;
 		if (!world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE, 
 				"Das linke Rad von " + this.getBotName())){
-			((CtControlPanel)this.getPanel()).stopBot();
+			isFalling = true;
 		}
 
 		// Bodenkontakt des rechten Reifens überprüfen
 		posRadR.z -= BOT_HEIGHT/2;
 		if (!world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE, 
 				"Das rechte Rad von " + this.getBotName())){
+			isFalling = true;
+		}
+
+		// Wenn einer der Berührungspunkte keinen Boden mehr unter sich hat
+		// wird der Bot gestopt und Grün gemacht.
+		if (isFalling) {
 			((CtControlPanel)this.getPanel()).stopBot();
+			if (isApperance) {
+				botBody.setAppearance(world.getWorldView().getBotAppearFall());
+				isApperance = false;
+				isApperanceFall = true;
+			}
+		} else {
+			if (isApperanceFall) {
+				botBody.setAppearance(world.getWorldView().getBotAppear());
+				isApperance = true;
+				isApperanceCollision = false;
+			}
 		}
 		
 		// IR-Abstandssensoren aktualisieren
@@ -276,7 +316,7 @@ abstract public class CtBotSim extends CtBot {
 			
 			// DeltaX berechnen
 			// Drehung um die eigene Achse berechenen
-			double angleDiff = getRotation(newHeading) - getRotation(oldHeading);
+			double angleDiff = SimUtils.getRotation(newHeading) - SimUtils.getRotation(oldHeading);
 			// Abstand des Maussensors von Zentrum berechnen
 			Vector3f vecMs = new Vector3f((float)SENS_MOUSE_ABSTAND_X, (float)SENS_MOUSE_ABSTAND_Y, 0f);
 			// Drehung(in rad) mal Radius bestimmt die Länge, die der Maussensor auf einem 
@@ -308,7 +348,7 @@ abstract public class CtBotSim extends CtBot {
 	 * @return Die Position
 	 */
 	private Point3d getSensLinePosition(char side) {
-		double angle = getRotation(getHeading());
+		double angle = SimUtils.getRotation(getHeading());
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(angle);
 		Point3d ptLine;
@@ -331,7 +371,7 @@ abstract public class CtBotSim extends CtBot {
 	 * @return Die Position
 	 */
 	private Point3d getSensBorderPosition(char side) {
-		double angle = getRotation(getHeading());
+		double angle = SimUtils.getRotation(getHeading());
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(angle);
 		Point3d ptBorder;
@@ -354,7 +394,7 @@ abstract public class CtBotSim extends CtBot {
 	 * @return Die Position
 	 */
 	private Point3d getSensLdrPosition(char side) {
-		double angle = getRotation(getHeading());
+		double angle = SimUtils.getRotation(getHeading());
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(angle);
 		Point3d ptLdr;
@@ -382,23 +422,6 @@ abstract public class CtBotSim extends CtBot {
 		// mal 100 macht daraus cm und 2,54 cm sind ein inch
 		// mal der Auflösung des Maussensors
 		return (int)((distance*100/2.54) * SENS_MOUSE_DPI);
-	}
-
-	/**
-	 * Es wird der Winkel zwischen Norden und der angegeben Ausrichtung bestimmt.
-	 * 
-	 * @param heading 
-	 * 			  Gib die Ausrichtung an zu welcher der Winkel berechnet werden soll. 				 
-	 * @return Gibt den Winkel in Rad zurück
-	 */
-	public double getRotation(Vector3f heading){
-		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
-		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
-		// muessen hier zwei Faelle unterschieden werden:
-		if (heading.x >= 0)
-			return -angle;
-		else
-			return angle;
 	}
 
 	/**

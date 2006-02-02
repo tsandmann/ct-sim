@@ -1,6 +1,15 @@
 CHANGELOG fuer c't-Sim
 ======================
 
+2006-02-01  Lasse Schwarten (lasse@schwarten.org)
+- neue Lichtquelle im rechten Durchgang
+- Die Bots ändern nun ihre Farbe, wenn sie einen Unfall haben.
+  -> rote Bots sind gesund
+  -> blaue Bots sind gerade mit etwas zusammen gestoßen
+  -> grüne Bots haben den Boden unter ihren "Füßen" verloren
+- Code Makeup
+- Abfrage hinzugefügt, ob ein oder drei Bots ausgesetzt werden sollen.
+
 2006-02-01 XML- und howto-Dateien für Ant Build von Dominik Kalb (dominik@dkalb.com)
 hinzugefügt.
 

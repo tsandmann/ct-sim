@@ -28,6 +28,7 @@ import java.lang.Math;
  * verschiedenen Mass-Einheiten usw.
  * 
  * @author pek (pek@heise.de)
+ * @author Lasse Schwarten (lasse@schwarten.org)
  */
 public class SimUtils {
 
@@ -82,5 +83,23 @@ public class SimUtils {
 		double y = Math.cos(rad);
 		Vector3f newHead = new Vector3f(new Point3d(x, y, 0d));
 		return newHead;
+	}
+	
+
+	/**
+	 * Es wird der Winkel zwischen Norden und der angegeben Ausrichtung bestimmt.
+	 * 
+	 * @param heading 
+	 * 			  Gib die Ausrichtung an zu welcher der Winkel berechnet werden soll. 				 
+	 * @return Gibt den Winkel in Rad zurück
+	 */
+	public static double getRotation(Vector3f heading){
+		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
+		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
+		// muessen hier zwei Faelle unterschieden werden:
+		if (heading.x >= 0)
+			return -angle;
+		else
+			return angle;
 	}
 }

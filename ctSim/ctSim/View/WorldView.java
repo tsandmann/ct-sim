@@ -78,8 +78,17 @@ public class WorldView extends JFrame {
 	/** Aussehen der Linien auf dem Boden */
 	private Appearance playgroundLineAppear;
 
+	/** Aussehen einer Lcihtquelle */
+	private Appearance lightSourceAppear;
+	
 	/** Aussehen der Bots */
 	private Appearance botAppear;
+
+	/** Aussehen der Bots nach einer Kollision */
+	private Appearance botAppearCollision;
+
+	/** Aussehen der Bots nach einem Fall */
+	private Appearance botAppearFall;
 
 	/**
 	 * Erzeugt ein neues Fenster zur Welt
@@ -108,34 +117,36 @@ public class WorldView extends JFrame {
 		// Boden und Bot Material
 		Material mat = new Material();
 		mat.setAmbientColor(new Color3f(Color.LIGHT_GRAY));
-		mat.setDiffuseColor(new Color3f(0.9f,1f,1f));
-		mat.setSpecularColor(new Color3f(0.7f,0.7f,0.7f));
+		mat.setDiffuseColor(new Color3f(0.8f,1f,1f));
+		mat.setSpecularColor(new Color3f(1f,1f,1f));
 		
 		// Linien Material
 		Material matLine = new Material();
 		matLine.setAmbientColor(new Color3f(0f,0f,0f));
 		matLine.setDiffuseColor(new Color3f(0.1f,0.1f,0.1f));
-		matLine.setSpecularColor(new Color3f(0.7f,0.7f,0.7f));
+		matLine.setSpecularColor(new Color3f(1f,1f,1f));
+		
+		// Lichtquellen Material
+		Material matLight = new Material();
+		matLight.setEmissiveColor(new Color3f(1f,1f,0.7f));
+		matLight.setAmbientColor(new Color3f(1f,1f,0f));
+		matLight.setDiffuseColor(new Color3f(1f,1f,0f));
+		matLight.setSpecularColor(new Color3f(0.7f,0.7f,0.7f));
+		
+		// Aussehen der Lichtquellen
+		lightSourceAppear = new Appearance();
+		lightSourceAppear.setMaterial(matLight);
 
 		// Aussehen des Bodens -- hellgrau:
-//		ColoringAttributes fieldAppCol = new ColoringAttributes((new Color3f(
-//				Color.LIGHT_GRAY)), ColoringAttributes.FASTEST);
 		playgroundAppear = new Appearance();
-		//playgroundAppear.setColoringAttributes(fieldAppCol);
 		playgroundAppear.setMaterial(mat);
 		
 		// Aussehen der Linien auf dem Boden -- dunkelgrau:
-//		ColoringAttributes lineAppCol = new ColoringAttributes((new Color3f(
-//				Color.DARK_GRAY)), ColoringAttributes.FASTEST);
 		playgroundLineAppear = new Appearance();
-		//playgroundAppear.setColoringAttributes(fieldAppCol);
 		playgroundLineAppear.setMaterial(matLine);
 
 		// Aussehen der Hindernisse -- dunkelgrau:
-		ColoringAttributes obstAppCol = new ColoringAttributes((new Color3f(
-				Color.DARK_GRAY)), ColoringAttributes.FASTEST);
 		obstacleAppear = new Appearance();
-		obstacleAppear.setColoringAttributes(obstAppCol);
 		obstacleAppear.setMaterial(mat);
 
 		// ...und mit einer Textur ueberzogen:
@@ -157,6 +168,18 @@ public class WorldView extends JFrame {
 		botAppear.setColoringAttributes(new ColoringAttributes(new Color3f(
 				Color.RED), ColoringAttributes.FASTEST));
 		botAppear.setMaterial(mat);
+
+		// Aussehen der Bots nach einer Kollision:
+		botAppearCollision = new Appearance(); // Bots sind blau ;-)
+		botAppearCollision.setColoringAttributes(new ColoringAttributes(new Color3f(
+				Color.BLUE), ColoringAttributes.FASTEST));
+		botAppearCollision.setMaterial(mat);
+
+		// Aussehen der Bots nach einer Kollision:
+		botAppearFall = new Appearance(); // Bots sind blau ;-)
+		botAppearFall.setColoringAttributes(new ColoringAttributes(new Color3f(
+				Color.GREEN), ColoringAttributes.FASTEST));
+		botAppearFall.setMaterial(mat);
 	}
 
 	/**
@@ -275,9 +298,30 @@ public class WorldView extends JFrame {
 	}
 
 	/**
+	 * @return Gibt das Erscheinungsbild einer Lichtquelle zurueck
+	 */
+	public Appearance getLightSourceAppear() {
+		return lightSourceAppear;
+	}
+	
+	/**
 	 * @return Gibt das Erscheinungsbild der Bots zurueck
 	 */
 	public Appearance getBotAppear() {
 		return botAppear;
+	}
+	
+	/**
+	 * @return Gibt das Erscheinungsbild der Bots nach einer Kollision zurueck
+	 */
+	public Appearance getBotAppearCollision() {
+		return botAppearCollision;
+	}
+	
+	/**
+	 * @return Gibt das Erscheinungsbild der Bots nach einem Fall zurueck
+	 */
+	public Appearance getBotAppearFall() {
+		return botAppearFall;
 	}
 }

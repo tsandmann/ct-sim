@@ -63,6 +63,13 @@ public class Controller {
 		
 		if (n==0){
 			test= false;
+		} else {
+			options[0] = "1 Bot";
+			options[1] = "3 Bots";
+			n = JOptionPane.showOptionDialog(null,
+					"Wieviele Bots sollen gestartet werden?", "Frage",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+					null, options, options[1]);
 		}
 				
 		controlFrame.setVisible(true);
@@ -76,11 +83,12 @@ public class Controller {
 		if (test) {
 			addBot("testbot", "Testbot", new Point3f(0f, 1.5f, 0f),
 					new Vector3f(1f, 0f, 0f));
-			addBot("testbot", "Testbot2", new Point3f(0f, 1f, 0f),
-					new Vector3f(0f, 1f, 0f));
-			addBot("testbot", "Testbot3", new Point3f(0f, -1.5f, 0f),
-					new Vector3f(-1f, 0f, 0f));
-			
+			if (n > 0) {
+				addBot("testbot", "Testbot2", new Point3f(0f, 1f, 0f),
+						new Vector3f(0f, 1f, 0f));
+				addBot("testbot", "Testbot3", new Point3f(0f, -1.5f, 0f),
+						new Vector3f(-1f, 0f, 0f));
+			}
 		} else {
 			System.out.println("Warte auf Verbindung vom c't-Bot");
 			addBot("BotSimTcp", "BotSimTcp", new Point3f(0f, 1.5f, 0f),

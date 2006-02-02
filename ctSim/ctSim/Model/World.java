@@ -75,7 +75,7 @@ public class World extends Thread {
 	public static final float PLAYGROUND_THICKNESS = 0f;
 	
 	/** Reichweite des Lichtes in m */
-	private static final float LIGHT_SOURCE_REACH = 4f;
+	private static final float LIGHT_SOURCE_REACH = 2f;
 	
 
 	/** Zeitbasis in Millisekunden. Realzeit - So oft wird simuliert */
@@ -169,7 +169,7 @@ public class World extends Thread {
 		
 		Shape3D ts = new Shape3D();
 		// Anzahl der verwendeten Punkte
-		int N = 10;
+		int N = 10 + 6 + 9 + 2 + 6;
 		int totalN = N;
 		// data muss pro Punkt die Werte x, y und z speichern
 		float[] data = new float[totalN * 3];
@@ -188,6 +188,98 @@ public class World extends Thread {
 		//2.unten rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = -PLAYGROUND_HEIGHT/2;
+		data[n++] = 0f;
+		//2a.unteresdrittel rechts
+		data[n++] = PLAYGROUND_WIDTH/2;
+		data[n++] = -PLAYGROUND_HEIGHT/6;
+		data[n++] = 0f;
+		//2b.unteresdrittel mitte
+		data[n++] = -PLAYGROUND_WIDTH/2;
+		data[n++] = -PLAYGROUND_HEIGHT/6;
+		data[n++] = 0f;
+		//2c.unteresdrittel rechts
+		data[n++] = PLAYGROUND_WIDTH/2;
+		data[n++] = -PLAYGROUND_HEIGHT/6;
+		data[n++] = 0f;
+		//2a.unteresdrittel rechts
+		data[n++] = PLAYGROUND_WIDTH/2;
+		data[n++] = -PLAYGROUND_HEIGHT/8;
+		data[n++] = 0f;
+		//2b.unteresdrittel mitte
+		data[n++] = -PLAYGROUND_WIDTH/2;
+		data[n++] = -PLAYGROUND_HEIGHT/8;
+		data[n++] = 0f;
+		//2c.unteresdrittel rechts
+		data[n++] = PLAYGROUND_WIDTH/2;
+		data[n++] = -PLAYGROUND_HEIGHT/8;
+		data[n++] = 0f;
+		//I.mitte rechts/Licht2 rechts
+		data[n++] = PLAYGROUND_WIDTH/2;
+		data[n++] = 0f;
+		data[n++] = 0f;
+		//II.Licht2 mitte
+		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
+		data[n++] = 0f;
+		data[n++] = 0f;
+		//III.Licht2 oben
+		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
+		data[n++] = 2f;
+		data[n++] = 0f;
+		//IV.Licht2 mitte
+		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
+		data[n++] = 0f;
+		data[n++] = 0f;
+		//V.Licht2 links
+		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f -1f;
+		data[n++] = 0f;
+		data[n++] = 0f;
+		//V-1.Licht2 links oben
+		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f -1f;
+		data[n++] = 0.2f;
+		data[n++] = 0f;
+		//V-2.Licht2 links
+		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f -1f;
+		data[n++] = 0f;
+		data[n++] = 0f;
+		//VI.Licht2 mitte
+		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
+		data[n++] = 0f;
+		data[n++] = 0f;
+		//VII.Licht2 unten
+		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
+		data[n++] = -2f;
+		data[n++] = 0f;
+		//VIII.Licht2 mitte
+		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
+		data[n++] = 0f;
+		data[n++] = 0f;
+		//IX.mitte rechts/Licht2 rechts
+		data[n++] = PLAYGROUND_WIDTH/2;
+		data[n++] = 0f;
+		data[n++] = 0f;
+		//2d.oberesdrittel rechts
+		data[n++] = PLAYGROUND_WIDTH/2;
+		data[n++] = PLAYGROUND_HEIGHT/8;
+		data[n++] = 0f;
+		//2e.oberesdrittel mitte
+		data[n++] = -PLAYGROUND_WIDTH/2;
+		data[n++] = PLAYGROUND_HEIGHT/8;
+		data[n++] = 0f;
+		//2f.oberesdrittel rechts
+		data[n++] = PLAYGROUND_WIDTH/2;
+		data[n++] = PLAYGROUND_HEIGHT/8;
+		data[n++] = 0f;
+		//2d.oberesdrittel rechts
+		data[n++] = PLAYGROUND_WIDTH/2;
+		data[n++] = PLAYGROUND_HEIGHT/6;
+		data[n++] = 0f;
+		//2e.oberesdrittel mitte
+		data[n++] = -PLAYGROUND_WIDTH/2;
+		data[n++] = PLAYGROUND_HEIGHT/6;
+		data[n++] = 0f;
+		//2f.oberesdrittel rechts
+		data[n++] = PLAYGROUND_WIDTH/2;
+		data[n++] = PLAYGROUND_HEIGHT/6;
 		data[n++] = 0f;
 		//3.oben rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
@@ -237,17 +329,6 @@ public class World extends Thread {
 		
 		// Hinzufügen der Ober- und Unterseite derTerrain-Shape3D 
 		ts.addGeometry(gi.getGeometryArray());
-	
-		// Die folgenden Zeilen führen dazu, das die Hülle des
-		// Bots durchsichtig wird und nur die Wireframe gezeichnet
-		// wird. Weiterhin werden auch die Rückseiten gezeichnet.
-		
-//		 PolygonAttributes polyAppear = new PolygonAttributes();
-//		 polyAppear.setPolygonMode(PolygonAttributes.POLYGON_LINE);
-//		 polyAppear.setCullFace(PolygonAttributes.CULL_NONE);
-//		 Appearance twistAppear = new Appearance();
-//		 twistAppear.setPolygonAttributes(polyAppear);
-//		 ts.setAppearance(twistAppear);
 		
 		return ts;
 	}
@@ -368,9 +449,10 @@ public class World extends Thread {
 		// Lichtquellen einfügen
 		// Ambient light
 		BoundingSphere ambientLightBounds = new BoundingSphere(new Point3d(0d,0d,0d),100d);
-    	Color3f ambientLightColor = new Color3f (0.1f, 0.1f, 0.1f);
+    	Color3f ambientLightColor = new Color3f (0.3f, 0.3f, 0.3f);
     	AmbientLight ambientLightNode = new AmbientLight (ambientLightColor);
     	ambientLightNode.setInfluencingBounds (ambientLightBounds);
+    	ambientLightNode.setEnable(true);
     	worldTG.addChild (ambientLightNode);
     	
     	// Die Branchgroup für die Lichtquellen
@@ -379,23 +461,42 @@ public class World extends Thread {
     	lightBG.setPickable(true);
     	
     	// Lichtpunkte
-    	BoundingSphere pointLightBounds = new BoundingSphere(new Point3d(0d,0d,0d),100d);
+    	BoundingSphere pointLightBounds = new BoundingSphere(new Point3d(0d,0d,0d),10d);
 		Color3f pointLightColor = new Color3f (1.0f, 1.0f, 0.9f);
     	
+		// Lichtquelle oben rechts
 		PointLight pointLight1  = new PointLight();
     	pointLight1.setColor(pointLightColor);
-    	pointLight1.setPosition(PLAYGROUND_WIDTH/2,PLAYGROUND_HEIGHT/2,1.5f);
+    	pointLight1.setPosition(PLAYGROUND_WIDTH/2,PLAYGROUND_HEIGHT/2,0.5f);
     	pointLight1.setInfluencingBounds(pointLightBounds);
-    	pointLight1.setAttenuation(1.7f,0f,0f);
+    	pointLight1.setAttenuation(1f,3f,0f);
     	lightBG.addChild (pointLight1);
     	Transform3D lsTranslate = new Transform3D();
     	lsTranslate.set(new Vector3f(PLAYGROUND_WIDTH/2,PLAYGROUND_HEIGHT/2,1.5f));
-    	TransformGroup lsTg = new TransformGroup(lsTranslate);	
-    	Sphere lightSphere = new Sphere(0.01f);
-    	lightSphere.setAppearance(worldView.getPlaygroundLineAppear());
-    	lightSphere.setPickable(true);
-    	lsTg.addChild(lightSphere);
-    	lightBG.addChild(lsTg);
+    	TransformGroup lsTg1 = new TransformGroup(lsTranslate);	
+    	Sphere lightSphere1 = new Sphere(0.03f);
+    	lightSphere1.setAppearance(worldView.getLightSourceAppear());
+    	lightSphere1.setPickable(true);
+    	lsTg1.addChild(lightSphere1);
+    	lightBG.addChild(lsTg1);
+
+    	// Lichtquelle im rechten Durchgang
+		PointLight pointLight2  = new PointLight();
+    	pointLight2.setColor(pointLightColor);
+    	pointLight2.setPosition(PLAYGROUND_WIDTH/2 - 0.35f, 0f, 0.5f);
+    	pointLight2.setInfluencingBounds(pointLightBounds);
+    	pointLight2.setAttenuation(1f,3f,0f);
+    	pointLight2.setEnable(true);
+    	lightBG.addChild (pointLight2);
+    	lsTranslate = new Transform3D();
+    	lsTranslate.set(new Vector3f(PLAYGROUND_WIDTH/2 - 0.35f, 0f, 0.5f));
+    	TransformGroup lsTg2 = new TransformGroup(lsTranslate);	
+    	Sphere lightSphere2 = new Sphere(0.02f);
+    	lightSphere2.setAppearance(worldView.getLightSourceAppear());
+    	lightSphere2.setPickable(true);
+    	lsTg2.addChild(lightSphere2);
+    	lightBG.addChild(lsTg2);
+
     	worldTG.addChild(lightBG);
 		
 		// Die Branchgroup für den Boden
@@ -591,8 +692,8 @@ public class World extends Thread {
 	 * 			  die angestrebte neue Position	
 	 * @return True wenn der Bot sich frei bewegen kann
 	 */
-	public boolean checkCollision(Node botBody, Bounds bounds,
-			Vector3f newPosition) {
+	public boolean checkCollision(Shape3D botBody, Bounds bounds,
+			Vector3f newPosition, String botName) {
 		// schiebe probehalber Bound an die neue Position
 		Transform3D transform = new Transform3D();
 		transform.setTranslation(newPosition);
@@ -618,7 +719,7 @@ public class World extends Thread {
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return true;
 		else
-			System.out.println("Kollision!");
+			System.out.println(botName + " hatte einen Unfall!");		
 		return false;
 	}
 

@@ -343,6 +343,7 @@ public abstract class CtBot extends Bot {
 
 		// Bot erzeugen
 		Shape3D realBot = createBotShape();
+		realBot.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 		realBot.setAppearance(world.getWorldView().getBotAppear());
 		realBot.setName(getName() + " Body");
 		// Körper "pickable" machen um Kollisionen mit anderen Bots
