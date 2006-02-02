@@ -561,7 +561,7 @@ public class World extends Thread {
 		west.setPickable(true);
 		west.setName("West");
 		
-		// vier Wände
+		// sechs Wände
 		Box wall1 = new Box(0.1f, 0.05f, 0.2f, worldView.getObstacleAppear());
 		wall1.setPickable(true);
 		wall1.setName("Wall1");
@@ -579,7 +579,15 @@ public class World extends Thread {
 		wall4.setPickable(true);
 		wall4.setName("Wall4");
 
+		Box wall5 = new Box(0.4f, 0.025f, 0.2f, worldView.getObstacleAppear());
+		wall5.setPickable(true);
+		wall5.setName("Wall5");
+		
+		Box wall6 = new Box(0.025f, 0.3f, 0.2f, worldView.getObstacleAppear());
+		wall6.setPickable(true);
+		wall6.setName("Wall6");
 
+		
 		// Hindernisse werden an die richtige Position geschoben
 
 		// Zuerst werden sie gemeinsam so verschoben, dass ihre Unterkante genau 
@@ -654,6 +662,22 @@ public class World extends Thread {
 		tgWall4.setPickable(true);
 		tgWall4.addChild(wall4);
 		tgO.addChild(tgWall4);
+
+		translate.set(new Vector3f(0.1f,
+				-0.65f, 0f));
+		TransformGroup tgWall5 = new TransformGroup(translate);
+		tgWall5.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tgWall5.setPickable(true);
+		tgWall5.addChild(wall5);
+		tgO.addChild(tgWall5);
+		
+		translate.set(new Vector3f(-0.1f, -0.35f, 0f));
+		TransformGroup tgWall6 = new TransformGroup(translate);
+		tgWall6.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tgWall6.setPickable(true);
+		tgWall6.addChild(wall6);
+		tgO.addChild(tgWall6);
+
 		
 		
 		obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
