@@ -78,7 +78,7 @@ public class Controller {
 
 
 		// Falls true, hoert der Simulator nicht auf TCP/IP-Verbindunen,
-		// sondern beguegt sich mit einem Bot vom Typ CtBotSimTest
+		// sondern beguegt sich mit Bota vom Typ CtBotSimTest
 
 		if (test) {
 			addBot("testbot", "Testbot", new Point3f(0f, 1.5f, 0f),

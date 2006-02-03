@@ -41,9 +41,9 @@ import ctSim.View.CtControlPanel;
 
 public abstract class CtBot extends Bot {
 
-	// Oeffentliche Konstanten: Wertebereiche fuer Motoren und Se	nsoren
+	// Oeffentliche Konstanten: Wertebereiche fuer Motoren und Sensoren
 
-	/** Abstand Zentrum Aussenkante des Bots [m] */
+	/** Abstand vom Zentrum zur Aussenkante des Bots [m] */
 	public static final double BOT_RADIUS = 0.060d;
 
 	/** Hoehe des Bots [m] */
@@ -88,7 +88,7 @@ public abstract class CtBot extends Bot {
 	/** Abstand Zentrum IR-Sensoren in Vorausrichtung (Y) [m] */
 	public static final double SENS_IR_ABSTAND_Y = 0.0554d;
 
-	/** Abstand Zentrum IR-Sensoren in Hochrichtung (Y) [m] */
+	/** Abstand Zentrum IR-Sensoren in Hochrichtung (Z) [m] */
 	public static final double SENS_IR_ABSTAND_Z = 0.035d - BOT_HEIGHT/2;
 
 	/** Oeffnungswinkel der beiden IR-Abstandssensoren [Rad] */
@@ -100,7 +100,7 @@ public abstract class CtBot extends Bot {
 	/** Abstand Zentrum Maussensor in Vorausrichtung (Y) [m] */
 	public static final double SENS_MOUSE_ABSTAND_Y = -0.015d;
 		
-	/** DPI des Maussensors [m] */
+	/** Aufloesung des Maussensors [DPI] */
 	public static final int SENS_MOUSE_DPI = 400;
 	
 	/** Abstand Zentrum Liniensensoren in Achsrichtung (X)[m] */
@@ -109,13 +109,13 @@ public abstract class CtBot extends Bot {
 	/** Abstand Zentrum Liniensensoren in Vorausrichtung (Y) [m] */
 	public static final double SENS_LINE_ABSTAND_Y = 0.009d;
 
-	/** Abstand Zentrum Liniensensoren in Hochrichtung (Y) [m] */
+	/** Abstand Zentrum Liniensensoren in Hochrichtung (Z) [m] */
 	public static final double SENS_LINE_ABSTAND_Z = -0.011d - BOT_HEIGHT/2;
 	
 	/** Oeffnungswinkel der beiden Liniensensoren [Rad] */
 	public static final double SENS_LINE_ANGLE = Math.PI / 180 * 80; 
 	
-	/** Anzahl an Strahlen die von den Liniensensoren ausgesendet werden. 
+	/** Anzahl Strahlen, die von den Liniensensoren ausgesendet werden. 
 	 *  Je mehr Strahlen verwendet werden, desto genauer wird das Ergebnis.
 	 *  Mehr Strahlen kosten aber auch mehr Rechenzeit. */
 	public static final short SENS_LINE_PRECISION = 10; 
@@ -126,13 +126,13 @@ public abstract class CtBot extends Bot {
 	/** Abstand Zentrum Abgrundsensoren in Vorausrichtung (Y) [m] */
 	public static final double SENS_BORDER_ABSTAND_Y = 0.0384d;
 
-	/** Abstand Zentrum Abgrundsensoren in Hochrichtung (Y) [m] */
+	/** Abstand Zentrum Abgrundsensoren in Hochrichtung (Z) [m] */
 	public static final double SENS_BORDER_ABSTAND_Z = 0d - BOT_HEIGHT/2;
 	
 	/** Oeffnungswinkel der beiden Abgrundsensoren [Rad] */
 	public static final double SENS_BORDER_ANGLE = Math.PI / 180 * 80; 
 	
-	/** Anzahl an Strahlen die von den Abgrundsensoren ausgesendet werden. 
+	/** Anzahl Strahlen, die von den Abgrundsensoren ausgesendet werden. 
 	 *  Je mehr Strahlen verwendet werden, desto genauer wird das Ergebnis.
 	 *  Mehr Strahlen kosten aber auch mehr Rechenzeit. */
 	public static final short SENS_BORDER_PRECISION = 10;
@@ -143,7 +143,7 @@ public abstract class CtBot extends Bot {
 	/** Abstand Zentrum Lichtsensoren in Vorausrichtung (Y) [m] */
 	public static final double SENS_LDR_ABSTAND_Y = 0.048d;
 
-	/** Abstand Zentrum Lichtsensoren in Hochrichtung (Y) [m] */
+	/** Abstand Zentrum Lichtsensoren in Hochrichtung (Z) [m] */
 	public static final double SENS_LDR_ABSTAND_Z = 0.060d - BOT_HEIGHT/2;
 
 	/** Ausrichtung der Lichtsensors 
@@ -230,13 +230,13 @@ public abstract class CtBot extends Bot {
 	// Sensoren:
 
 	/**
-	 * vom linken IR-Sensor gemessener Wert, momentan der Abstand zum naechsten
+	 * vom linken IR-Sensor gemessener Wert, entspricht dem Abstand zum naechsten
 	 * Objekt in Millimetern
 	 */
 	private Short sensIrL = new Short((short) 0);
 
 	/**
-	 * vom rechten IR-Sensor gemessener Wert, momentan der Abstand zum naechsten
+	 * vom rechten IR-Sensor gemessener Wert, entspricht dem Abstand zum naechsten
 	 * Objekt in Millimetern
 	 */
 	private Short sensIrR = new Short((short) 0);
@@ -312,7 +312,7 @@ public abstract class CtBot extends Bot {
 
 	/*
 	 * (non-Javadoc) Der Aufruf dieser Methode direkt nach dem Erzeugen sorgt
-	 * dafuer, dass der Bot ï¿½ber ein passendes ControlPanel verfuegt
+	 * dafuer, dass der Bot ueber ein passendes ControlPanel verfuegt
 	 * 
 	 * @see ctSim.Model.Bot#providePanel()
 	 */
@@ -346,12 +346,12 @@ public abstract class CtBot extends Bot {
 		realBot.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 		realBot.setAppearance(world.getWorldView().getBotAppear());
 		realBot.setName(getName() + " Body");
-		// Körper "pickable" machen um Kollisionen mit anderen Bots
+		// Körper "pickable" machen, um Kollisionen mit anderen Bots
 		// zu erkennen
 		realBot.setPickable(true);
 		// "Pickable" muss für die eigene Kollisionsabfrage abschaltbar sein
 		realBot.setCapability(Cylinder.ALLOW_PICKABLE_WRITE);
-		// Körper merken um später bei der eigenen Kollisionsabfrage die 
+		// Referenz auf Körper merken, um später bei der eigenen Kollisionsabfrage die 
 		// "Pickable"-Eigenschaft ändern zu können
 		botBody = realBot;
 		rg.addChild(realBot);
@@ -373,21 +373,21 @@ public abstract class CtBot extends Bot {
 	}
 
 	/**
-	 * Baut die 3D-Representation des Bot Körpers aus 2D Polygonen zusammen
+	 * Baut die 3D-Repraesentation des Bot Körpers aus 2D-Polygonen zusammen
 	 *  
-	 * @return Körper des Bots 
+	 * @return Koerper des Bots 
 	 */
 	private Shape3D createBotShape() {
 		
 		Shape3D bs = new Shape3D();
-		// Anzahl der Ecken um den Kreis des Bots zu beschreiben.
+		// Anzahl der Ecken, um den Kreis des Bots zu beschreiben.
 		// Mehr sehen besser aus, benötigen aber auch mehr Rechenzeit.
 		int N = 10;
 		// Anzahl der verwendeten Punkte
 		int totalN = 2 * (N + 2);
 		// data muss pro Punkt die Werte x, y und z speichern
 		float[] data = new float[totalN * 3];
-		// zwei Polygone(Deckel und Boden) mit je N+2 Ecken
+		// zwei Polygone (Deckel und Boden) mit je N+2 Ecken
 		int stripCounts[] = { N + 2, N + 2 };
 		float r = (float) BOT_RADIUS;
 		float h = (float) BOT_HEIGHT / 2;
@@ -398,14 +398,14 @@ public abstract class CtBot extends Bot {
 		// Winkel
 		double alpha = 0.0;
 		
-		// Bot Deckel erzeugen
+		// Bot-Deckel erzeugen
 		//
 		// Winkel des vollen Kreises (in Bogenmaß)
 		double circle = 2.0 * Math.PI;
-		// halber Winkel der Öffnung des Bots
+		// halber Winkel der Oeffnung des Bots
 		double opening = Math.asin((FACH_LENGTH / 2) / r);
 		
-		// Rand des Deckels erzeugen, beachte dabei die Öffnung
+		// Rand des Deckels erzeugen, beachte dabei die Oeffnung
 		for (n = 0; n < N; n++) {
 			alpha = opening + (((circle - 2 * opening) / (N - 1)) * n);
 			x = (float) (r * Math.cos(alpha));
@@ -415,7 +415,7 @@ public abstract class CtBot extends Bot {
 			data[3 * n + 2] = h; // 0
 		}
 		
-		// Fach in die Öffnung des Deckels einbauen
+		// Fach in die Oeffnung des Deckels einbauen
 		data[3 * n] = r - (float) FACH_DEPTH;
 		data[3 * n + 1] = (float) -FACH_LENGTH / 2;
 		data[3 * n + 2] = h; // 2
@@ -425,7 +425,7 @@ public abstract class CtBot extends Bot {
 		data[3 * n + 2] = h; // 2
 		n++;
 		
-		// Bot Deckel als Kopieren um ihn als Boden zu verwenden.
+		// Bot-Deckel kopieren, um ihn als Boden zu verwenden
 		for (int i = (N + 2) - 1; i >= 0; i--) {
 			data[3 * n] = data[3 * i];
 			data[3 * n + 1] = data[3 * i + 1];
@@ -450,7 +450,7 @@ public abstract class CtBot extends Bot {
 		bs.addGeometry(gi.getGeometryArray());
 		
 		
-		// Erzeugen der äußeren Seitenverkleidung
+		// Erzeugen der aeusseren Seitenverkleidung
 		TriangleStripArray tsa;
 		Point3f coords[] = new Point3f[N * 2];
 		int stripCountTsa[] = { N * 2 };
@@ -466,10 +466,10 @@ public abstract class CtBot extends Bot {
 				stripCountTsa);
 		tsa.setCoordinates(0, coords);
 
-		// Hinzufügen der äußern Seitenverkleidung zur Bot-Shape3D
+		// Hinzufuegen der aeusseren Seitenverkleidung zur Bot-Shape3D
 		bs.setGeometry(tsa);
 		
-		// Erzeugen der Wände des Faches
+		// Erzeugen der Waende des Faches
 		QuadArray qa;
 		Point3f quadCoords[] = new Point3f[3 * 4];
 		
@@ -511,19 +511,21 @@ public abstract class CtBot extends Bot {
 		qa = new QuadArray(3 * 4, QuadArray.COORDINATES);
 		qa.setCoordinates(0, quadCoords);
 		
-		// Hinzufügen der Fachwände zur Bot-Shape3D 
+		// Hinzufuegen der Fachwaende zur Bot-Shape3D 
 		bs.addGeometry(qa);
 		
-		// Die folgenden Zeilen führen dazu, das die Hülle des
+		// Die folgenden Zeilen fuehren dazu, das die Huelle des
 		// Bots durchsichtig wird und nur die Wireframe gezeichnet
 		// wird. Weiterhin werden auch die Rückseiten gezeichnet.
 		
-//		 PolygonAttributes polyAppear = new PolygonAttributes();
-//		 polyAppear.setPolygonMode(PolygonAttributes.POLYGON_LINE);
-//		 polyAppear.setCullFace(PolygonAttributes.CULL_NONE);
-//		 Appearance twistAppear = new Appearance();
-//		 twistAppear.setPolygonAttributes(polyAppear);
-//		 bs.setAppearance(twistAppear);
+		 /*
+		 PolygonAttributes polyAppear = new PolygonAttributes();
+		 polyAppear.setPolygonMode(PolygonAttributes.POLYGON_LINE);
+		 polyAppear.setCullFace(PolygonAttributes.CULL_NONE);
+		 Appearance twistAppear = new Appearance();
+		 twistAppear.setPolygonAttributes(polyAppear);
+		 bs.setAppearance(twistAppear);
+		 */
 		
 		return bs;
 	}

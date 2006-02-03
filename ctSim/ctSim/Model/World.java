@@ -38,6 +38,8 @@ import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.AmbientLight;
+import javax.media.j3d.PolygonAttributes;
+import javax.media.j3d.Appearance;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -78,7 +80,7 @@ public class World extends Thread {
 	private static final float LIGHT_SOURCE_REACH = 2f;
 	
 
-	/** Zeitbasis in Millisekunden. Realzeit - So oft wird simuliert */
+	/** Zeitbasis in Millisekunden. Realzeit - so oft wird simuliert */
 	public int baseTimeReal = 10;
 
 	/**
@@ -100,7 +102,7 @@ public class World extends Thread {
 
 	private boolean haveABreak;
 	
-	/** ZeitlupenModus? */
+	/** Zeitlupenmodus? */
 	
 	private boolean slowMotion;
 	
@@ -124,7 +126,7 @@ public class World extends Thread {
 	 */ 
 	public BranchGroup terrainBG;
 	/**
-	 * BranchGroup fuer die Hindernisse
+	 * BranchGroup fuer die Hindernisse. Hier kommen auch die Bots hinein
 	 */
 	public BranchGroup obstBG;
 	/**
@@ -133,7 +135,7 @@ public class World extends Thread {
 	public BranchGroup lightBG;
 
 	
-	/** TransformGroup der gesamten Welt. Hier kommen auch die Bots hinein */
+	/** TransformGroup der gesamten Welt */
 	private TransformGroup worldTG;
 
 	/** Die Klasse SimpleUniverse macht die Handhabung der Welt etwas leichter */
@@ -161,7 +163,7 @@ public class World extends Thread {
 	}
 	
 	/**
-	 * Baut die flache 3D-Representation des Terrains 2D Polygonen zusammen
+	 * Baut die 3D-Repraesentation des Bodens aus 2D-Polygonen zusammen
 	 *  
 	 * @return der Boden
 	 */
@@ -173,14 +175,14 @@ public class World extends Thread {
 		int totalN = N;
 		// data muss pro Punkt die Werte x, y und z speichern
 		float[] data = new float[totalN * 3];
-		// zwei Polygone(Deckel und Boden) mit N Ecken
+		// zwei Polygone (Deckel und Boden) mit N Ecken
 		int stripCounts[] = {N};
-		// Zähler
+		// Zaehler
 		int n = 0;
 	
 		// Boden erzeugen
 		//
-		// Umriss des Bodens erzeugen, beachte dabei die Öffnung
+		// Umriss des Bodens erzeugen, beachte dabei die Oeffnung!
 		//1.unten links
 		data[n++] = -PLAYGROUND_WIDTH/2;
 		data[n++] = -PLAYGROUND_HEIGHT/2;
@@ -189,35 +191,35 @@ public class World extends Thread {
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = -PLAYGROUND_HEIGHT/2;
 		data[n++] = 0f;
-		//2a.unteresdrittel rechts
+		//2a.unteres Drittel rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = -PLAYGROUND_HEIGHT/6;
 		data[n++] = 0f;
-		//2b.unteresdrittel mitte
+		//2b.unteres Drittel Mitte
 		data[n++] = -PLAYGROUND_WIDTH/2;
 		data[n++] = -PLAYGROUND_HEIGHT/6;
 		data[n++] = 0f;
-		//2c.unteresdrittel rechts
+		//2c.unteres Drittel rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = -PLAYGROUND_HEIGHT/6;
 		data[n++] = 0f;
-		//2a.unteresdrittel rechts
+		//2a.unteres Drittel rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = -PLAYGROUND_HEIGHT/8;
 		data[n++] = 0f;
-		//2b.unteresdrittel mitte
+		//2b.unteres Drittel Mitte
 		data[n++] = -PLAYGROUND_WIDTH/2;
 		data[n++] = -PLAYGROUND_HEIGHT/8;
 		data[n++] = 0f;
-		//2c.unteresdrittel rechts
+		//2c.unteres Drittel rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = -PLAYGROUND_HEIGHT/8;
 		data[n++] = 0f;
-		//I.mitte rechts/Licht2 rechts
+		//I.Mitte rechts / Licht2 rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = 0f;
 		data[n++] = 0f;
-		//II.Licht2 mitte
+		//II.Licht2 Mitte
 		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
 		data[n++] = 0f;
 		data[n++] = 0f;
@@ -225,7 +227,7 @@ public class World extends Thread {
 		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
 		data[n++] = 2f;
 		data[n++] = 0f;
-		//IV.Licht2 mitte
+		//IV.Licht2 Mitte
 		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
 		data[n++] = 0f;
 		data[n++] = 0f;
@@ -241,7 +243,7 @@ public class World extends Thread {
 		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f -1f;
 		data[n++] = 0f;
 		data[n++] = 0f;
-		//VI.Licht2 mitte
+		//VI.Licht2 Mitte
 		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
 		data[n++] = 0f;
 		data[n++] = 0f;
@@ -249,35 +251,35 @@ public class World extends Thread {
 		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
 		data[n++] = -2f;
 		data[n++] = 0f;
-		//VIII.Licht2 mitte
+		//VIII.Licht2 Mitte
 		data[n++] = PLAYGROUND_WIDTH/2 - 0.35f;
 		data[n++] = 0f;
 		data[n++] = 0f;
-		//IX.mitte rechts/Licht2 rechts
+		//IX.Mitte rechts/Licht2 rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = 0f;
 		data[n++] = 0f;
-		//2d.oberesdrittel rechts
+		//2d.oberes Drittel rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = PLAYGROUND_HEIGHT/8;
 		data[n++] = 0f;
-		//2e.oberesdrittel mitte
+		//2e.oberes Drittel Mitte
 		data[n++] = -PLAYGROUND_WIDTH/2;
 		data[n++] = PLAYGROUND_HEIGHT/8;
 		data[n++] = 0f;
-		//2f.oberesdrittel rechts
+		//2f.oberes Drittel rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = PLAYGROUND_HEIGHT/8;
 		data[n++] = 0f;
-		//2d.oberesdrittel rechts
+		//2d.oberes Drittel rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = PLAYGROUND_HEIGHT/6;
 		data[n++] = 0f;
-		//2e.oberesdrittel mitte
+		//2e.oberes Drittel Mitte
 		data[n++] = -PLAYGROUND_WIDTH/2;
 		data[n++] = PLAYGROUND_HEIGHT/6;
 		data[n++] = 0f;
-		//2f.oberesdrittel rechts
+		//2f.oberes Drittel rechts
 		data[n++] = PLAYGROUND_WIDTH/2;
 		data[n++] = PLAYGROUND_HEIGHT/6;
 		data[n++] = 0f;
@@ -327,15 +329,15 @@ public class World extends Thread {
 		st.stripify(gi);
 		gi.recomputeIndices();
 		
-		// Hinzufügen der Ober- und Unterseite derTerrain-Shape3D 
+		// Hinzufuegen der Ober- und Unterseite des Terrain-Shape3D 
 		ts.addGeometry(gi.getGeometryArray());
 		
 		return ts;
 	}
 	/**
-	 * Baut die Linien 3D-Representation für den Boden aus 2D Polygonen zusammen
+	 * Baut die 3D-Repraesentation der Linien für den Boden aus 2D-Polygonen zusammen
 	 *  
-	 * @return der Boden
+	 * @return die Linie
 	 */
 	private Shape3D createLineShape() {
 		
@@ -345,7 +347,7 @@ public class World extends Thread {
 		int totalN = N;
 		// data muss pro Punkt die Werte x, y und z speichern
 		float[] data = new float[totalN * 3];
-		// zwei Polygone(Deckel und Boden) mit N Ecken
+		// zwei Polygone (Deckel und Boden) mit N Ecken
 		int stripCounts[] = {N};
 		// Zähler
 		int n = 0;
@@ -405,19 +407,21 @@ public class World extends Thread {
 		st.stripify(gi);
 		gi.recomputeIndices();
 		
-		// Hinzufügen der Ober- und Unterseite derTerrain-Shape3D 
+		// Hinzufuegen der Ober- und Unterseite des Linien-Shape3D 
 		ls.addGeometry(gi.getGeometryArray());
 	
 		// Die folgenden Zeilen führen dazu, das die Hülle des
-		// Bots durchsichtig wird und nur die Wireframe gezeichnet
+		// Polygons durchsichtig wird und nur der Wireframe gezeichnet
 		// wird. Weiterhin werden auch die Rückseiten gezeichnet.
 		
-//		 PolygonAttributes polyAppear = new PolygonAttributes();
-//		 polyAppear.setPolygonMode(PolygonAttributes.POLYGON_LINE);
-//		 polyAppear.setCullFace(PolygonAttributes.CULL_NONE);
-//		 Appearance twistAppear = new Appearance();
-//		 twistAppear.setPolygonAttributes(polyAppear);
-//		 ts.setAppearance(twistAppear);
+		 /*
+		 PolygonAttributes polyAppear = new PolygonAttributes();
+		 polyAppear.setPolygonMode(PolygonAttributes.POLYGON_LINE);
+		 polyAppear.setCullFace(PolygonAttributes.CULL_NONE);
+		 Appearance twistAppear = new Appearance();
+		 twistAppear.setPolygonAttributes(polyAppear);
+		 ls.setAppearance(twistAppear);
+		 */
 		
 		return ls;
 	}
@@ -431,7 +435,6 @@ public class World extends Thread {
 		// Die Wurzel des Ganzen:
 		BranchGroup objRoot = new BranchGroup();
 
-		// PickRotateBehavior pickRotate = null;
 		Transform3D transform = new Transform3D();
 
 		transform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));
@@ -446,8 +449,8 @@ public class World extends Thread {
 
 		objRoot.addChild(worldTG);
 		
-		// Lichtquellen einfügen
-		// Ambient light
+		// Lichtquellen einfuegen
+		// Streulicht (ambient light)
 		BoundingSphere ambientLightBounds = new BoundingSphere(new Point3d(0d,0d,0d),100d);
     	Color3f ambientLightColor = new Color3f (0.3f, 0.3f, 0.3f);
     	AmbientLight ambientLightNode = new AmbientLight (ambientLightColor);
@@ -455,7 +458,7 @@ public class World extends Thread {
     	ambientLightNode.setEnable(true);
     	worldTG.addChild (ambientLightNode);
     	
-    	// Die Branchgroup für die Lichtquellen
+    	// Die Branchgroup fuer die Lichtquellen
     	lightBG = new BranchGroup();
     	lightBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
     	lightBG.setPickable(true);
@@ -499,7 +502,7 @@ public class World extends Thread {
 
     	worldTG.addChild(lightBG);
 		
-		// Die Branchgroup für den Boden
+		// Die Branchgroup fuer den Boden
 		terrainBG = new BranchGroup();
 		terrainBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		terrainBG.setPickable(true);
@@ -509,8 +512,8 @@ public class World extends Thread {
 		floor.setAppearance(worldView.getPlaygroundAppear());
 		floor.setPickable(true);
 		
-		// schiebe den Boden so, dass die Oberfläche genau auf der 
-		// Ebene z = 0 liegt.
+		// schiebe den Boden so, dass die Oberflaeche genau auf der 
+		// (relativen) Ebene Z = 0 liegt.
 		Transform3D translate = new Transform3D();
 		translate.set(new Vector3d(0d, 0d, -PLAYGROUND_THICKNESS));
 		TransformGroup tgT = new TransformGroup(translate);
@@ -524,7 +527,7 @@ public class World extends Thread {
 		lineFloor.setAppearance(worldView.getPlaygroundLineAppear());
 		lineFloor.setPickable(true);
 		
-		// Schiebe die Linien knapp über den Boden.
+		// Schiebe die Linien knapp ueber den Boden.
 		translate = new Transform3D();
 		translate.set(new Vector3d(0d, 0d, 0.001d));
 		TransformGroup tgL = new TransformGroup(translate);
@@ -537,13 +540,13 @@ public class World extends Thread {
 		
 		// Die TranformGroup fuer alle Hindernisse:
 		obstBG = new BranchGroup();
-		// Damit später Bots hinzugefügt werden können
+		// Damit spaeter Bots hinzugefügt werden können:
 		obstBG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		obstBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		// Objekte sind fest
 		obstBG.setPickable(true);
 
-		// Die vier Hindernisse:
+		// Die vier Randmauern der Welt:
 		Box north = new Box(PLAYGROUND_WIDTH/2 + 0.2f, 0.1f,
 				0.2f, worldView.getObstacleAppear());
 		north.setPickable(true);
@@ -561,7 +564,7 @@ public class World extends Thread {
 		west.setPickable(true);
 		west.setName("West");
 		
-		// sechs Wände
+		// sechs Zwischenwaende
 		Box wall1 = new Box(0.1f, 0.05f, 0.2f, worldView.getObstacleAppear());
 		wall1.setPickable(true);
 		wall1.setName("Wall1");
@@ -632,7 +635,7 @@ public class World extends Thread {
 		tgW.addChild(west);
 		tgO.addChild(tgW);
 
-		// Trennwände an die richtigen Positionen schieben.
+		// Trennwaende an die richtigen Positionen schieben.
 		translate.set(new Vector3f(-(PLAYGROUND_WIDTH/2) + 0.1f,
 				0f, 0f));
 		TransformGroup tgWall1 = new TransformGroup(translate);
@@ -677,8 +680,6 @@ public class World extends Thread {
 		tgWall6.setPickable(true);
 		tgWall6.addChild(wall6);
 		tgO.addChild(tgWall6);
-
-		
 		
 		obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
 		obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
@@ -718,7 +719,7 @@ public class World extends Thread {
 	 */
 	public boolean checkCollision(Shape3D botBody, Bounds bounds,
 			Vector3f newPosition, String botName) {
-		// schiebe probehalber Bound an die neue Position
+		// schiebe probehalber Bounds an die neue Position
 		Transform3D transform = new Transform3D();
 		transform.setTranslation(newPosition);
 		bounds.transform(transform);
@@ -730,13 +731,13 @@ public class World extends Thread {
 		PickBounds pickShape = new PickBounds(bounds);
 		PickInfo pickInfo;
 		synchronized (obstBG) {
-			// Eigenen Körper des Roboters verstecken
+			// Eigenen Koerper des Roboters verstecken
 			botBody.setPickable(false);
 			
 			pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE,
 					pickShape);
 			
-			// Eigenen Körper des Roboters wieder pickable machen
+			// Eigenen Koerper des Roboters wieder "pickable" machen
 			botBody.setPickable(true);
 		}
 
@@ -757,7 +758,7 @@ public class World extends Thread {
 	 * @param heading
 	 *            Die Blickrichtung
 	 * @param openingAngle
-	 * 			  Der Öffnungswinkel des Blickstrahls           
+	 * 			  Der Oeffnungswinkel des Blickstrahls           
 	 * @return Die Distanz zum naechsten Objekt in Metern
 	 */
 	public double watchObstacle(Point3d pos, Vector3d heading, double openingAngle) {
@@ -789,15 +790,15 @@ public class World extends Thread {
 	}
 
 	/**
-	 * Prüft ob unter dem angegebene Punkt innerhalb der Bodenfreiheit 
+	 * Prueft, ob unter dem angegebenen Punkt innerhalb der Bodenfreiheit 
 	 * des Bots noch Boden zu finden ist
 	 * 
 	 * @param pos
-	 *            Die Position von der aus nach unten gemessen wird
+	 *            Die Position, von der aus nach unten gemessen wird
 	 * @param groundClearance
 	 * 			  Die als normal anzusehende Bodenfreiheit   
 	 * @param message
-	 * 			  Name des Berührungspunktes, welcher getestet wird
+	 * 			  Name des Beruehrungspunktes, welcher getestet wird
 	 * @return True wenn Bodenkontakt besteht.
 	 */
 	public boolean checkTerrain(Point3d pos, double groundClearance, String message) {
@@ -829,13 +830,14 @@ public class World extends Thread {
 	}
 	
 	/**
-	 * Liefert den Grad an Licht der vom Boden vor dem Sensor absorbiert wird.
-	 * Je mehr Licht reflektiert wird, desto niedriger ist der zurückgemeldete
-	 * Wert. Der Wertebereich reicht also von 0 (weiß oder maximale Reflexion) 
+	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den Linien- 
+	 * bzw. Abgrundsensor nicht mehr erreicht.
+	 * Je mehr Licht reflektiert wird, desto niedriger ist der zurückgegebene 
+	 * Wert. Der Wertebereich erstreckt sich von 0 (weiss oder maximale Reflexion) 
 	 * bis 1023 (minimale Reflexion, schwarz oder Loch).
 	 * 
-	 * Es werden rayCount viele Strahlen gleichmäßig ortogonal zum Heading in
-	 * die Szene Geschossen.
+	 * Es werden rayCount viele Strahlen gleichmäßig orthogonal zum Heading in
+	 * die Szene geschossen.
 	 * 
 	 * @param pos
 	 *            Die Position, an der der Sensor angebracht ist
@@ -845,7 +847,7 @@ public class World extends Thread {
 	 * 			  Der Öffnungswinkel des Sensors       
 	 * @param rayCount
 	 * 			  Es werden rayCount viele Strahlen vom Sensor ausgewertet.    
-	 * @return Die Menge an Licht die absorbiert wird von 1023(100%) bis 0(0%)
+	 * @return Die Menge an Licht, die absorbiert wird, von 1023(100%) bis 0(0%)
 	 */
 	public short sensGroundReflectionLine(Point3d pos, Vector3d heading, double openingAngle, short rayCount) {
 		// Sensorposition
@@ -860,7 +862,7 @@ public class World extends Thread {
 		// oder rotiert:
 		transform.transform(sensHeading);
 		
-		// Transformationsgruppen um den Sensorsweep zu machen
+		// Transformationsgruppen, für den Sensorsweep
 		Transform3D transformX = new Transform3D();	
 		
 		// Wenn mehr als ein Strahl ausgesendet werden soll, dann taste
@@ -872,11 +874,11 @@ public class World extends Thread {
 			transformX.set(rotationAxisX);
 			transformX.transform(sensHeading);
 			// arbeite dich nach rechts vor 
-			// sende Strahlen in gleichmässigen Abständen aus
+			// sende Strahlen in gleichmaessigen Abstaenden aus
 			rotationAxisX.set(heading, -(openingAngle/(rayCount-1)));
 			transformX.set(rotationAxisX);
 		} else {
-			// ändere die Blickrichtung NICHT
+			// aendere die Blickrichtung NICHT
 			transformX.setIdentity();
 		}
 		// Variablen und Objekte ausserhalb der Schleife vorbereiten.
@@ -890,7 +892,7 @@ public class World extends Thread {
 			// PickRay modifizieren
 			pickRay.set(sensPos, sensHeading);
 			synchronized (terrainBG) {
-				// Picking durchführen
+				// Picking durchfuehren
 				pickInfo = terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
 						PickInfo.NODE, pickRay);
 			}
@@ -900,26 +902,29 @@ public class World extends Thread {
 				absorption += 1;
 			} else if (pickInfo.getNode() instanceof Shape3D) {
 				shape = (Shape3D) pickInfo.getNode();
-				//shape.getAppearance().getColoringAttributes().getColor(color);
 				shape.getAppearance().getMaterial().getDiffuseColor(color);
-				// Je nach Farbe wird ein Teil des Lichts zurückgeworfen.
-				// Hierzu wird der Durchschnitt der Rot, Grün und Blau Anteile 
+				// Je nach Farbe wird ein Teil des Lichts zurueckgeworfen.
+				// Hierzu wird der Durchschnitt der Rot-, Gruen- und Blau-Anteile 
 				// der Farbe bestimmt.
 				absorption += 1 - (color.x + color.y + color.z)/3;
 			}
 			// Heading anpassen
 			transformX.transform(sensHeading);
-		}// For-Schleife
+		}// Ende for-Schleife
 		return  (short)(absorption*1023/(rayCount));
 	}
 	
 	/**
-	 * Liefert den Grad an Licht der vom Boden vor dem Sensor absorbiert wird.
-	 * Je mehr Licht reflektiert wird, desto niedriger ist der zurückgemeldete
-	 * Wert. Der Wertebereich reicht also von 0 (weiß oder maximale Reflexion) 
+	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den Linien- 
+	 * bzw. Abgrundsensor nicht mehr erreicht.
+	 * Je mehr Licht reflektiert wird, desto niedriger ist der zurückgegebene 
+	 * Wert. Der Wertebereich erstreckt sich von 0 (weiss oder maximale Reflexion) 
 	 * bis 1023 (minimale Reflexion, schwarz oder Loch).
 	 * 
-	 * Es werden rayCount viele Strahlen gleichmäßig in form eines PLUSes in
+	 * Es werden rayCount viele Strahlen gleichmäßig orthogonal zum Heading in
+	 * die Szene geschossen.
+	 * 
+	 * Es werden rayCount viele Strahlen gleichmaessig in Form eines "+" in
 	 * in die Szene Geschossen.
 	 * 
 	 * @param pos
@@ -927,10 +932,10 @@ public class World extends Thread {
 	 * @param heading
 	 *            Die Blickrichtung
 	 * @param openingAngle
-	 * 			  Der Öffnungswinkel des Sensors       
+	 * 			  Der Oeffnungswinkel des Sensors       
 	 * @param rayCount
 	 * 			  Es werden rayCount viele Strahlen vom Sensor ausgewertet.    
-	 * @return Die Menge an Licht die absorbiert wird von 1023(100%) bis 0(0%)
+	 * @return Die Menge an Licht, die absorbiert wird, von 1023(100%) bis 0(0%)
 	 */
 	public short sensGroundReflectionCross(Point3d pos, Vector3d heading, double openingAngle, short rayCount) {
 		double absorption;
@@ -944,15 +949,15 @@ public class World extends Thread {
 	}
 	
 	/**
-	 * Liefert die Helligkeit die auf einen Lichtsensor fällt
+	 * Liefert die Helligkeit, die auf einen Lichtsensor faellt
 	 * 
 	 * @param pos
-	 *            Die Position des Lcihtsensors
+	 *            Die Position des Lichtsensors
 	 * @param heading
 	 *            Die Blickrichtung des Lichtsensors
 	 * @param openingAngle
-	 * 			  Der Öffnungswinkel des Blickstrahls          
-	 * @return Die Dunkelheit um den Sensor herum von 1023(100%) bis 0(0%)
+	 * 			  Der Oeffnungswinkel des Blickstrahls          
+	 * @return Die Dunkelheit um den Sensor herum, von 1023(100%) bis 0(0%)
 	 */
 	public int sensLight(Point3d pos, Vector3d heading, double openingAngle) {
 
@@ -1118,7 +1123,7 @@ public class World extends Thread {
 	 */
 	public void setBaseTimeReal(int baseTimeReal) {
 
-		// wenn slowMotion gesetzt ist schalten wir das mal ab
+		// wenn slowMotion gesetzt ist, schalten wir diese mal ab
 		if(slowMotion)
 			slowMotion = !slowMotion;
 			
@@ -1243,8 +1248,8 @@ public class World extends Thread {
 		{	
 			// in slowMotionTime wird der Wert vom Schieberegler festgehalten
 			this.baseTimeReal = baseTimeVirtual * slowMotionTime;
-			// die Virtuelle also nach außen sichtbare Zeitbasis bleibt jedoch erhalten da ja
-			// nun in 100 ms 10 ms vergehen
+			// die virtuelle  -- also nach aussen sichtbare -- Zeitbasis bleibt 
+			// jedoch erhalten, da ja nun praktisch in 100 ms 10 ms vergehen
 			this.baseTimeVirtual = 10;
 		}	
 		else

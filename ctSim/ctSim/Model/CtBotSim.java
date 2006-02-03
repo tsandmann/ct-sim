@@ -49,8 +49,8 @@ abstract public class CtBotSim extends CtBot {
 	protected long simulTime = 0;
 
 	/**
-	 * Interne Zeitbasis in Millisekunden -- Zeitaenderung seit letzter
-	 * Simulation
+	 * Interne Zeitbasis in Millisekunden -- Zeitaenderung seit letztem
+	 * Simulationschritt
 	 */
 	protected long deltaT = 0;
 
@@ -105,8 +105,10 @@ abstract public class CtBotSim extends CtBot {
 	}
 
 	/*
-	 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde @param
-	 * motPWM PWM-Verhaeltnis @return Umdrehungen pro Sekunde
+	 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde 
+	 * 
+	 * @param motPWM PWM-Verhaeltnis 
+	 * @return Umdrehungen pro Sekunde
 	 */
 	private float calculateWheelSpeed(int motPWM) {
 		float tmp = ((float) motPWM / (float) PWM_MAX);
@@ -125,7 +127,7 @@ abstract public class CtBotSim extends CtBot {
 	protected void updateStats() {
 		
 		// alte Position und Heading merken
-		// (wird später für die Sensorberechnung benötigt)
+		// (wird spaeter für die Sensorberechnung benoetigt)
 		Vector3f oldPos = (Vector3f)this.getPos().clone();
 		Vector3f oldHeading = (Vector3f)this.getHeading().clone();
 
@@ -197,8 +199,8 @@ abstract public class CtBotSim extends CtBot {
 		Vector3f newHeading = new Vector3f(-mid.y, mid.x, 0);
 		newHeading.normalize();
 
-		// Pruefen, ob Kollision erfolgt bei einer Kollision wird
-		// der Bot blau.
+		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
+		// der Bot blau gefaerbt.
 		if (world.checkCollision(botBody ,getBounds(), newPos, getBotName())) {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
@@ -218,17 +220,17 @@ abstract public class CtBotSim extends CtBot {
 		// Blickrichtung immer aktualisieren:
 		this.setHeading(newHeading);
 
-		// Bodenkontakt überprüfen
+		// Bodenkontakt ueberpruefen
 		
-		// Winkel des Headings errechnen
+		// Winkel des heading errechnen
 		double angle = SimUtils.getRotation(newHeading);
-		// Transformations Matrix für die Rotation erstellen
+		// Transformations-Matrix für die Rotation erstellen
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(angle);
 		
-		// Bodenkontakt des Gleitpins überprüfen
+		// Bodenkontakt des Gleitpins ueberprüfen
 		Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT/2);
-		// Position des Gleitpins gemäß der Ausrichtung des Bots anpassen
+		// Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
 		rotation.transform(skidVec);
 		skidVec.add(new Point3d(newPos));
 		boolean isFalling = false;
@@ -237,22 +239,22 @@ abstract public class CtBotSim extends CtBot {
 			isFalling = true;
 		}
 	
-		// Bodenkontakt des linken Reifens überprüfen
+		// Bodenkontakt des linken Reifens ueberpruefen
 		posRadL.z -= BOT_HEIGHT/2;
 		if (!world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE, 
 				"Das linke Rad von " + this.getBotName())){
 			isFalling = true;
 		}
 
-		// Bodenkontakt des rechten Reifens überprüfen
+		// Bodenkontakt des rechten Reifens ueberpruefen
 		posRadR.z -= BOT_HEIGHT/2;
 		if (!world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE, 
 				"Das rechte Rad von " + this.getBotName())){
 			isFalling = true;
 		}
 
-		// Wenn einer der Berührungspunkte keinen Boden mehr unter sich hat
-		// wird der Bot gestopt und Grün gemacht.
+		// Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat,
+		// wird der Bot gestoppt und gruen gefaerbt.
 		if (isFalling) {
 			((CtControlPanel)this.getPanel()).stopBot();
 			if (isApperance) {
@@ -310,7 +312,7 @@ abstract public class CtBotSim extends CtBot {
 			// Differenz bilden
 			Vector3f vecY = new Vector3f(this.getPos());
 			vecY.sub(oldPos);
-			// die zurückgelegte Strecke in Dots
+			// die zurueckgelegte Strecke in Dots
 			int deltaY = meter2Dots(vecY.length());
 			this.setSensMouseDY(deltaY);
 			
@@ -319,8 +321,8 @@ abstract public class CtBotSim extends CtBot {
 			double angleDiff = SimUtils.getRotation(newHeading) - SimUtils.getRotation(oldHeading);
 			// Abstand des Maussensors von Zentrum berechnen
 			Vector3f vecMs = new Vector3f((float)SENS_MOUSE_ABSTAND_X, (float)SENS_MOUSE_ABSTAND_Y, 0f);
-			// Drehung(in rad) mal Radius bestimmt die Länge, die der Maussensor auf einem 
-			// imaginären Kreis um den Mittelpunkt des Bots abgelaufen hat.
+			// Drehung(in rad) * Radius bestimmt die Laenge, die der Maussensor auf einem 
+			// imaginaeren Kreis um den Mittelpunkt des Bots abgelaufen ist.
 			int deltaX = meter2Dots(angleDiff * vecMs.length());
 			this.setSensMouseDX(deltaX);
 		}
@@ -411,16 +413,16 @@ abstract public class CtBotSim extends CtBot {
 	}
 
 	/**
-	 * Errechnet die Anzahl an Dots die der Maussensor für eine Bewegung 
-	 * der angegebenen Länge zurückmeldet.   
-	 * @param distance
-	 * 			bestimmt die Länge der Strecke
+	 * Errechnet die Anzahl an Dots, die der Maussensor für eine Bewegung 
+	 * der angegebenen Laenge zurueckmeldet.   
+	 * @param distance 
+	 * 			die Laenge der Strecke in Metern
 	 * @return 
 	 */
 	private int meter2Dots(double distance) {
-		// distance gibt die Länge in Meter zurück.
-		// mal 100 macht daraus cm und 2,54 cm sind ein inch
-		// mal der Auflösung des Maussensors
+		// distance ist in Metern angegeben, 
+		// * 100 macht daraus cm; 2,54 cm sind ein Inch,
+		// anschließend Multiplikation mit der Aufloesung des Maussensors
 		return (int)((distance*100/2.54) * SENS_MOUSE_DPI);
 	}
 
@@ -457,7 +459,7 @@ abstract public class CtBotSim extends CtBot {
 	
 	/**
 	 * In dieser Methode stehen die Routinen, die der Bot immer wieder
-	 * durchlauft; sie darf keine Schleife enthalten! Die Methode kuemmert sich
+	 * durchlaeuft; sie darf keine Schleife enthalten! Die Methode kuemmert sich
 	 * um das Timing, indem sie world.getSimulTime() aufruft, diese sorgt
 	 * dafuer, dass jeder simulierte Bot pro Runde nur einmal seine
 	 * work()-Methode durchlaufen kann. <br/> Unterklassen sollten diese Methode
@@ -469,8 +471,8 @@ abstract public class CtBotSim extends CtBot {
 	protected void work() {
 		long tmpTime = simulTime;
 		try {
-			simulTime = world.getSimulTime(); // warten bis World den
-												// naechsten Schritt macht
+			simulTime = world.getSimulTime(); 
+			// warten, bis World den naechsten Schritt macht
 			deltaT = simulTime - tmpTime; // aktualisiere deltaT
 			updateStats();
 			this.getPanel().reactToChange();

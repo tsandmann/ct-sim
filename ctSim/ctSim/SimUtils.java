@@ -87,11 +87,12 @@ public class SimUtils {
 	
 
 	/**
-	 * Es wird der Winkel zwischen Norden und der angegeben Ausrichtung bestimmt.
+	 * Errechnet den Winkel zwischen Nordrichtung des Universums (Richtung der 
+	 * positiven Y-Achse) und der angegeben Blickrichtung.
 	 * 
 	 * @param heading 
-	 * 			  Gib die Ausrichtung an zu welcher der Winkel berechnet werden soll. 				 
-	 * @return Gibt den Winkel in Rad zurück
+	 * 			  Gib die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
+	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurück
 	 */
 	public static double getRotation(Vector3f heading){
 		double angle = heading.angle(new Vector3f(0f, 1f, 0f));

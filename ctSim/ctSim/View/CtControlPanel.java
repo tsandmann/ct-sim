@@ -242,7 +242,7 @@ public class CtControlPanel extends ControlPanel {
 	private JLabel ldrLabelR;
 	private JLabel ldrLabelL;
 
-	// Aufteilung des Tabs in Linke und rechte Seite
+	// Aufteilung des Tabs in linke und rechte Seite
 	private JPanel mainPanelRight;
 	private JPanel mainPanelLeft;
 	
@@ -279,7 +279,7 @@ public class CtControlPanel extends ControlPanel {
 					javax.swing.BoxLayout.X_AXIS);
 			this.setLayout(thisLayout);
 			
-			// linke Spalte initialitsieren
+			// linke Spalte initialisieren
 			mainPanelLeft = new JPanel();
 			mainPanelLeft.setLayout(new BoxLayout(mainPanelLeft, 
 					javax.swing.BoxLayout.Y_AXIS));
@@ -293,7 +293,7 @@ public class CtControlPanel extends ControlPanel {
 					javax.swing.BoxLayout.Y_AXIS));
 			this.add(mainPanelRight);
 			
-			// linke Spalte füllen
+			// linke Spalte fuellen
 			{
 				singlesPanel = new JPanel();
 				mainPanelLeft.add(singlesPanel);
@@ -610,7 +610,7 @@ public class CtControlPanel extends ControlPanel {
 					}
 				}
 				
-				// Tastenfeld einfügen
+				// Tastenfeld einfuegen
 				keyPanel = new JPanel();
 				mainPanelLeft.add(keyPanel);
 				{
@@ -800,7 +800,7 @@ public class CtControlPanel extends ControlPanel {
 				} // Ende des Tastenfeldes
 			} // Ende der linken Spalte
 			
-			// rechte Spalte füllen
+			// rechte Spalte fuellen
 			{
 				labelDim = new Dimension(50, 25);
 				Dimension labelDimMax = new Dimension(100, 25);
@@ -967,7 +967,7 @@ public class CtControlPanel extends ControlPanel {
 				
 				mainPanelRight.add(Box.createRigidArea(smallGap));
 				
-				// freien Platz füllen
+				// freien Platz fuellen
 //				mainPanelRight.add(Box.createHorizontalGlue());
 //				mainPanelRight.add(Box.createRigidArea(new Dimension(0,700)));
 				mainPanelRight.add(new Box.Filler(

@@ -64,7 +64,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	/** Die 3D-Repraesentation eines Bots */
 	BranchGroup botBG;
 	
-	/** Körper des Roboters */
+	/** Koerper des Roboters */
 	protected Shape3D botBody;	
 
 	/**
@@ -93,7 +93,7 @@ abstract public class Bot extends Thread implements Obstacle {
 
 	/**
 	 * Der Aufruf dieser Methode direkt nach dem Erzeugen sorgt dafuer, dass der
-	 * Bot ï¿½ber ein passendes ControlPanel verfuegt
+	 * Bot ueber ein passendes ControlPanel verfuegt
 	 */
 	abstract public void providePanel();
 
@@ -106,8 +106,8 @@ abstract public class Bot extends Thread implements Obstacle {
 	abstract protected void init();
 
 	/**
-	 * Diese Methode enthï¿½lt die Routinen, die der Bot wï¿½hrend seiner Laufzeit
-	 * immer wieder durchfï¿½hrt. Die Methode darf keine Schleife enthalten!
+	 * Diese Methode enthaelt die Routinen, die der Bot waehrend seiner Laufzeit
+	 * immer wieder durchfuehrt. Die Methode darf keine Schleife enthalten!
 	 */
 	abstract protected void work();
 
@@ -168,12 +168,12 @@ abstract public class Bot extends Thread implements Obstacle {
 	}
 
 	/**
-	 * @return Die Hï¿½he des Bot in Metern
+	 * @return Die Hoehe des Bot in Metern
 	 */
 	abstract public float getHeight();
 
 	/**
-	 * @return Die Hï¿½he des Bot in Metern
+	 * @return Die Hoehe der Grundplatte des Bot ueber dem Boden in Metern
 	 */
 	abstract public float getGroundClearance();
 

@@ -60,7 +60,8 @@ public class CtBotSimTest extends CtBotSim {
 	 * Diese Methode enthaelt eine einfache Beispielroutine fuer eine
 	 * Robotersteuerung. Der Bot faehrt moeglichst schnell, solange der 
 	 * Weg frei ist, wird langsamer, wenn er in die Naehe einer Wand kommt 
-	 * und dreht sich langsam von der Wand weg. Kommt die Wand zu nah, dreht er
+	 * und dreht sich langsam von der Wand weg. Kommt die Wand zu nah oder
+	 * wird ein Abgrund vor dem Bot gemeldet, dreht er
 	 * "auf dem Teller", bis der Weg wieder frei ist. <br/>
 	 * Die Steuerung vermeidet in den meisten Faellen die Kollision mit der 
 	 * Wand, fuehrt aber gelegentlich dazu, dass der Bot in einer Ecke haengen bleibt. <br/>
@@ -108,6 +109,7 @@ public class CtBotSimTest extends CtBotSim {
 				rr = 50;
 		}
 
+		// Ist ein Absturz zu befürchten?
 		int borderL = getSensBorderL();
 		int borderR = getSensBorderR();
 		if (borderL > borderR) {

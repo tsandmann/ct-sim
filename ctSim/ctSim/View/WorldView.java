@@ -59,7 +59,7 @@ public class WorldView extends JFrame {
 	/** Die TransformGroup fuer den Blickpunkt in die 3D-Welt */
 	private TransformGroup tgViewPlatform;
 	
-//	 Zur Benutzung des org.j3d.ui.navigation Paketes die Kommentarzeichen entfernen
+//	 Zur Benutzung des org.j3d.ui.navigation-Paketes die Kommentarzeichen entfernen
 //	/** Navigations Objekt */
 //	private MouseViewHandler mvh;
 
@@ -78,7 +78,7 @@ public class WorldView extends JFrame {
 	/** Aussehen der Linien auf dem Boden */
 	private Appearance playgroundLineAppear;
 
-	/** Aussehen einer Lcihtquelle */
+	/** Aussehen einer Lichtquelle */
 	private Appearance lightSourceAppear;
 	
 	/** Aussehen der Bots */
@@ -114,19 +114,19 @@ public class WorldView extends JFrame {
 		this.getContentPane().add(worldCanvas);
 		
 		// Material für die Lichtreflektionen der Welt definieren
-		// Boden und Bot Material
+		// Boden- und Bot-Material
 		Material mat = new Material();
 		mat.setAmbientColor(new Color3f(Color.LIGHT_GRAY));
 		mat.setDiffuseColor(new Color3f(0.8f,1f,1f));
 		mat.setSpecularColor(new Color3f(1f,1f,1f));
 		
-		// Linien Material
+		// Linien-Material
 		Material matLine = new Material();
 		matLine.setAmbientColor(new Color3f(0f,0f,0f));
 		matLine.setDiffuseColor(new Color3f(0.1f,0.1f,0.1f));
 		matLine.setSpecularColor(new Color3f(1f,1f,1f));
 		
-		// Lichtquellen Material
+		// Lichtquellen-Material
 		Material matLight = new Material();
 		matLight.setEmissiveColor(new Color3f(1f,1f,0.7f));
 		matLight.setAmbientColor(new Color3f(1f,1f,0f));
@@ -175,8 +175,8 @@ public class WorldView extends JFrame {
 				Color.BLUE), ColoringAttributes.FASTEST));
 		botAppearCollision.setMaterial(mat);
 
-		// Aussehen der Bots nach einer Kollision:
-		botAppearFall = new Appearance(); // Bots sind blau ;-)
+		// Aussehen der Bots beim Kippen:
+		botAppearFall = new Appearance(); // Bots sind gruen ;-)
 		botAppearFall.setColoringAttributes(new ColoringAttributes(new Color3f(
 				Color.GREEN), ColoringAttributes.FASTEST));
 		botAppearFall.setMaterial(mat);
@@ -190,8 +190,8 @@ public class WorldView extends JFrame {
 		/* hole die TransformGroup aus dem SimpleUniverse heraus */
 		tgViewPlatform = universe.getViewingPlatform().getViewPlatformTransform() ;
 		
-//		 Zur Benutzung des org.j3d.ui.naviagtaion Paketes den folgenden Block auskommentieren
-// Start Block	
+		// Zur Benutzung des org.j3d.ui.navigation Paketes den folgenden Block auskommentieren
+		// Start Block	
 		// Create the root of the branch graph
 		BranchGroup objRoot = new BranchGroup();
         BoundingSphere mouseBounds = null;
@@ -217,9 +217,9 @@ public class WorldView extends JFrame {
         objRoot.addChild(myMouseZoom);
         
         universe.addBranchGraph(objRoot);
-// End Block
+        // End Block
 
-//      Zur Benutzung des org.j3d.ui.naviagtaion Paketes die Kommentarzeichen entfernen
+//      Zur Benutzung des org.j3d.ui.navigation-Paketes die Kommentarzeichen entfernen
 //		/* erzeuge die Navigationsklasse */ 
 //		mvh  = new MouseViewHandler();
 //		
@@ -262,7 +262,7 @@ public class WorldView extends JFrame {
 	 */
 	public void setUniverse(SimpleUniverse uni) {
 		this.universe = uni;
-		// Blickpunkt so weit zurücksetzen, dass alles zu sehen ist.
+		// Blickpunkt so weit zuruecksetzen, dass alles zu sehen ist.
 
 		double biggerOne;
 		if (World.PLAYGROUND_HEIGHT > World.PLAYGROUND_WIDTH)

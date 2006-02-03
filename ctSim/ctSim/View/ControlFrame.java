@@ -152,7 +152,7 @@ public class ControlFrame extends javax.swing.JFrame {
 					slowMotionSlider.setPaintTicks(true);
 					slowMotionSlider.setPaintLabels(true);
 
-					// schließlich zum Panel dazufügen
+					// schliesslich zum Panel dazufuegen
 					slowMotionBoxPanel.add(new javax.swing.JLabel("Slow Motion (Faktor x):"));
 					slowMotionBoxPanel.add(slowMotionText);
 					slowMotionBoxPanel.add(slowMotionBox);					
@@ -162,7 +162,7 @@ public class ControlFrame extends javax.swing.JFrame {
 					getContentPane().add(slowMotionPanel);
 				}
 				
-				// und dann die Listener dazuhängen
+				// und dann die Listener dazuhaengen
 				slowMotionBox.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
 						slowMotion = slowMotionBox.isSelected();
@@ -220,6 +220,7 @@ public class ControlFrame extends javax.swing.JFrame {
 				getContentPane().add(controlPanels);
 			}
 			setSize(300, 200);
+			setLocation(500,0);
 			pack();
 		} catch (Exception e) {
 			e.printStackTrace();
