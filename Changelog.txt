@@ -83,8 +83,9 @@ hinzugefügt.
   zweite Spalte hinzugefügt. Diese enthält bis jetzt nur die neuen Maussenseor-
   daten.
    
-2006-01-26 Zeitlupen Modus: Werner (Morphi2k1) hat einen Modus hinzugefügt,
-um den Bot in Zeitlupe zu bewegen. Man kann nun über einen Schieberegler
+2006-01-26 Zeitlupen Modus: Werner Pirkl (Morpheus.the.real@gmx.de)
+ hat einen Modus hinzugefügt, um den Bot in Zeitlupe zu bewegen. 
+Man kann nun über einen Schieberegler
 den Faktor der Realzeit einstellen. Dabei bedeutet: 
 1 -- keine Zeitlupe 
 10 -- 10fache Zeitverzögerung.
