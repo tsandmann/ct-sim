@@ -115,6 +115,11 @@ public class TcpConnection {
 		// this.start();
 	}
 
+	public void connect (Socket socket) throws IOException {
+		this.socket = socket;
+		connect();		
+	}
+	
 	/**
 	 * Stellt eine TCP/IP-Verbindung her
 	 * 

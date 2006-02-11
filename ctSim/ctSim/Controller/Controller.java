@@ -19,6 +19,9 @@
 
 package ctSim.Controller;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
 import javax.swing.JOptionPane;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
@@ -32,6 +35,7 @@ import ctSim.*;
  * Anzeigefenster bereit, kontrolliert den gesamten Ablauf des Simulators.
  * 
  * @author pek (pek@heise.de)
+ * @author crimson (c.grimmer@futurio.de)
  * 
  */
 public class Controller {
@@ -78,10 +82,10 @@ public class Controller {
 
 
 		// Falls true, hoert der Simulator nicht auf TCP/IP-Verbindunen,
-		// sondern beguegt sich mit Bota vom Typ CtBotSimTest
+		// sondern begnuegt sich mit Bots vom Typ CtBotSimTest
 
 		if (test) {
-			addBot("testbot", "Testbot", new Point3f(0f, 1.5f, 0f),
+			addBot("testbot", "Testbot1", new Point3f(0f, 1.5f, 0f),
 					new Vector3f(1f, 0f, 0f));
 			if (n > 0) {
 				addBot("testbot", "Testbot2", new Point3f(0f, 1f, 0f),
@@ -91,9 +95,15 @@ public class Controller {
 			}
 		} else {
 			System.out.println("Warte auf Verbindung vom c't-Bot");
-			addBot("BotSimTcp", "BotSimTcp", new Point3f(0f, 1.5f, 0f),
-					new Vector3f(-1f, 0f, 0f));
 		}
+		
+		/*
+		 * Crimson 2006-02-11: Ich verstehe kein Stück, warum der Sim gar nicht auf die TCP-Verbindung lauschen sollte,
+		 * nur weil es Testbots gibt. Aus diesem Grund baue ich den thread, der auf TCP-Verbindungen lauscht, an dieser
+		 * Stelle ein.
+		 */
+		SocketListener listener = new SocketListener(10001);
+		listener.start();
 	}
 
 	/*
@@ -108,14 +118,6 @@ public class Controller {
 
 		if (type.equalsIgnoreCase("testbot")) {
 			bot = new CtBotSimTest(pos, head);
-		}
-
-		// TODO: In spaeteren Versionen soll hier ein eigener Thread
-		// auf weitere Verbindungsversuche anderer Bots lauschen
-		if (type.equalsIgnoreCase("BotSimTcp")) {
-			TcpConnection listener = new TcpConnection();
-			listener.listen(10001);
-			bot = new CtBotSimTcp(pos, head, listener);
 		}
 
 		if (bot != null) {
@@ -158,5 +160,40 @@ public class Controller {
 	 */
 	public static World getWorld() {
 		return world;
+	}
+}
+
+class SocketListener extends Thread {
+	int port = 0;
+	boolean listen = true;
+	int num = 0;
+
+	public SocketListener(int port) {
+		super();
+		this.port = port;
+	}
+
+	public void run() {
+		try {
+			ServerSocket server = new ServerSocket(port);
+			while (listen) {
+				TcpConnection tcp = new TcpConnection();
+				/*
+				 * Da die Klasse TcpConnection ständig den ServerSocket neu aufbaut und wieder zerstört, umgehe ich die
+				 * eingebaute Methode listen() und übergeben den socket selbst. Da die TcpConncetion den ServerSocket
+				 * aber auch nicht wieder frei gibt, habe ich den Aufruf gänzlich entfernt.
+				 */
+				tcp.connect(server.accept());
+				Bot bot = new CtBotSimTcp(new Point3f(0f,1.5f,0f),new Vector3f(1f,0f,0f),tcp);
+				bot.providePanel();
+				bot.setBotName("TCPBot_" + num++);
+				Controller.getWorld().addBot(bot);
+				Controller.getControlFrame().addBot(bot);
+				bot.start();
+			}
+		} catch (IOException ioe) {
+			System.out.format("Kann nicht an port %d binden.", new Integer(port));
+			System.out.println(ioe.getMessage());
+		}
 	}
 }
