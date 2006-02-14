@@ -323,7 +323,7 @@ public class CtBotSimTcp extends CtBotSim {
 	/**
 	 * Uebertraegt nach dem Aufruf von super.work alle Sensordaten an den Bot
 	 * 
-	 * @see ctSim.Model.BotSim#work()
+	 * @see ctSim.Model.CtBotSim#work()
 	 */
 	protected void work() {
 		super.work();
