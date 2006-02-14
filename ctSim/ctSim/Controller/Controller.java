@@ -35,7 +35,7 @@ import ctSim.*;
  * Anzeigefenster bereit, kontrolliert den gesamten Ablauf des Simulators.
  * 
  * @author pek (pek@heise.de)
- * @author crimson (c.grimmer@futurio.de)
+ * @author Christoph Grimmer (c.grimmer@futurio.de)
  * 
  */
 public class Controller {
@@ -80,10 +80,6 @@ public class Controller {
 		world.setControlFrame(controlFrame);
 		world.start();
 
-
-		// Falls true, hoert der Simulator nicht auf TCP/IP-Verbindunen,
-		// sondern begnuegt sich mit Bots vom Typ CtBotSimTest
-
 		if (test) {
 			addBot("testbot", "Testbot1", new Point3f(0f, 1.5f, 0f),
 					new Vector3f(1f, 0f, 0f));
@@ -93,8 +89,6 @@ public class Controller {
 				addBot("testbot", "Testbot3", new Point3f(0f, -1.5f, 0f),
 						new Vector3f(-1f, 0f, 0f));
 			}
-		} else {
-			System.out.println("Warte auf Verbindung vom c't-Bot");
 		}
 		
 		/*
@@ -102,6 +96,8 @@ public class Controller {
 		 * nur weil es Testbots gibt. Aus diesem Grund baue ich den thread, der auf TCP-Verbindungen lauscht, an dieser
 		 * Stelle ein.
 		 */
+
+		System.out.println("Warte auf Verbindung vom c't-Bot");
 		SocketListener listener = new SocketListener(10001);
 		listener.start();
 	}
@@ -111,6 +107,8 @@ public class Controller {
 	 * 
 	 * Typ ist entweder "Testbot" oder "BotSimTCP"
 	 * 
+	 * Crimson 2006-06-13:
+	 * Wird vorläufig noch für die Testbots verwendet. TCPBots können sich von außer verbinden ohne dass man sie "einladen" muss.
 	 */
 	private static void addBot(String type, String name, Point3f pos,
 			Vector3f head) {
@@ -180,8 +178,8 @@ class SocketListener extends Thread {
 				TcpConnection tcp = new TcpConnection();
 				/*
 				 * Da die Klasse TcpConnection ständig den ServerSocket neu aufbaut und wieder zerstört, umgehe ich die
-				 * eingebaute Methode listen() und übergeben den socket selbst. Da die TcpConncetion den ServerSocket
-				 * aber auch nicht wieder frei gibt, habe ich den Aufruf gänzlich entfernt.
+				 * eingebaute Methode listen() und übergeben den Socket selbst. Da die TcpConncetion den ServerSocket
+				 * aber auch nicht wieder frei gibt, habe ich den ursprünglich vorhandenen Aufruf gänzlich entfernt.
 				 */
 				tcp.connect(server.accept());
 				Bot bot = new CtBotSimTcp(new Point3f(0f,1.5f,0f),new Vector3f(1f,0f,0f),tcp);
