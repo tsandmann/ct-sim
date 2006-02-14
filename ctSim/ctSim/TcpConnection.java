@@ -31,6 +31,7 @@ import mindprod.ledatastream.LEDataOutputStream;
  * Repraesentiert eine TCP-Verbindung
  * 
  * @author Benjamin Benz (bbe@heise.de)
+ * @author Christoph Grimmer (c.grimmer@futurio.de)
  */
 
 public class TcpConnection {
@@ -83,6 +84,7 @@ public class TcpConnection {
 	/**
 	 * Lauscht auf einem Port und initialisiert die Verbindung
 	 * 
+	 * @deprecated Bitte diese Methode nicht mehr verwenden, da Sie ihren Port nicht wieder freigibt.
 	 * @param port
 	 *            Der Port, auf dem gelauscht werden soll
 	 * @return 0 wenn alles ok, sonst -1
@@ -115,6 +117,11 @@ public class TcpConnection {
 		// this.start();
 	}
 
+	/**
+	 * Legt für den übergebenen Socket Little Endian Streams an.
+	 * @param socket Der Socket, über den geschrieben und gelesen wird.
+	 * @throws IOException Wenn es beim Anlegen der beiden Streams zu Problemen kommt.
+	 * */
 	public void connect (Socket socket) throws IOException {
 		this.socket = socket;
 		connect();		
