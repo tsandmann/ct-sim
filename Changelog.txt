@@ -1,6 +1,11 @@
 CHANGELOG fuer c't-Sim
 ======================
 
+2006-02-13 Christoph Grimmer (c.grimmer@futurio.de)
+- Sim lauscht jetzt dauerhaft auf TCP-Verbindungen und nimmt diese an, auch wenn schon simulierte Bots unterwegs sind
+- Erweiterung von TcpConnection
+- Code Makeup
+
 2006-02-01  Lasse Schwarten (lasse@schwarten.org)
 - neue Lichtquelle im rechten Durchgang
 - Die Bots ändern nun ihre Farbe, wenn sie einen Unfall haben.
