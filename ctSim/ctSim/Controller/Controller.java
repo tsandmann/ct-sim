@@ -190,8 +190,11 @@ class SocketListener extends Thread {
 				bot.start();
 			}
 		} catch (IOException ioe) {
-			System.out.format("Kann nicht an port %d binden.", new Integer(port));
-			System.out.println(ioe.getMessage());
+			// Diese Zeile funktioniert nur, wenn die compiler compliance auf 5.0 gesetzt ist
+			//System.err.format("Kann nicht an port %d binden.", new Integer(port));
+			// Sonst
+			System.err.println("Kann nicht an port " + port + "binden.");
+			System.err.println(ioe.getMessage());
 		}
 	}
 }
