@@ -9,13 +9,14 @@ CHANGELOG fuer c't-Sim
 2006-02-01  Lasse Schwarten (lasse@schwarten.org)
 - neue Lichtquelle im rechten Durchgang
 - Die Bots ändern nun ihre Farbe, wenn sie einen Unfall haben.
-  -> rote Bots sind gesund
+  -> rote Bots sind "gesund"
   -> blaue Bots sind gerade mit etwas zusammen gestoßen
-  -> grüne Bots haben den Boden unter ihren "Füßen" verloren
+  -> grüne Bots haben den Boden unter ihren Rädern verloren
 - Code Makeup
 - Abfrage hinzugefügt, ob ein oder drei Bots ausgesetzt werden sollen.
 
-2006-02-01 XML- und howto-Dateien für Ant Build von Dominik Kalb (dominik@dkalb.com)
+2006-02-01 Peter König (pek@ctmagazin.de)
+- XML- und howto-Dateien für Ant Build von Dominik Kalb (dominik@dkalb.com)
 hinzugefügt.
 
 2006-02-01  Lasse Schwarten (lasse@schwarten.org)
@@ -24,18 +25,18 @@ hinzugefügt.
      Bei mehr als einem Bot muss das Picking synchronisiert werden.
 
 2006-02-01  Lasse Schwarten (lasse@schwarten.org)
-- Positions-Slider auf dem CtControl werden jetzt dynamisch an die Größe des 
+- Positions-Slider auf dem CtControlPanel werden jetzt dynamisch an die Größe des 
   Spielfeldes angepasst.
 - Die Lichtsensoren wurden implementiert.
-  -> Mit World.LIGHT_SOURCE_REACH läßt sich die Reichweite/Intensität des 
+  -> Mit World.LIGHT_SOURCE_REACH lässt sich die Reichweite/Intensität des 
      Lichtes bestimmen.
-  -> CtBot.SENS_LDR_HEADING bestimmt ob die Lichtsensoren nach vorne oder 
+  -> CtBot.SENS_LDR_HEADING bestimmt, ob die Lichtsensoren nach vorne oder 
      oben zeigen.
-- Die Lichtquelle in der Nordöstlichen Ecke hat ein winziges 3D-Objekt 
+- Die Lichtquelle in der nordöstlichen Ecke hat ein winziges 3D-Objekt 
   bekommen, damit die Lichtsensoren arbeiten können.
-- Dem CtControllPanel wurden die nötigen Sensoranzeigen hinzugefügt und
+- Dem CtControlPanel wurden die nötigen Sensoranzeigen hinzugefügt und
   das Layout gefixt.
-- Die Anfangsposition von CtBots, die über TCP angeschlossen sind wurde 
+- Die Anfangsposition von CtBots, die über TCP angeschlossen sind, wurde 
   an die neue Welt angepasst.
 
 2006-01-31  Lasse Schwarten (lasse@schwarten.org)
@@ -46,11 +47,11 @@ hinzugefügt.
 - Die Objekte haben Materialangaben bekommen.
 - Die Kamara stellt sich zu Beginn nun automatisch so ein, dass das gesamte
   Spielfeld des Bots zu sehen ist.
-- Die Fläche wurde vergrößer nd es gibt jetzt einen weiteren Raum im Süden.
-- Die Box die den Boden dargestellt hat wurde durch einen neuen Boden
+- Die Fläche der Welt wurde vergrößert und es gibt jetzt einen weiteren Raum im Süden.
+- Die Box, die den Boden dargestellt hat, wurde durch einen neuen Boden
   mit einem Loch im südlichen Bereich ersetzt.
 - Linien auf dem Boden hinzugefügt.
-- Hinderniss im südlichen Raum.
+- Hindernis im südlichen Raum.
 - Überflüssige (float)-Casts in World entfernt.
 - Bot-Steuerung angepasst.
 
@@ -67,7 +68,7 @@ hinzugefügt.
 - Der Bodenkontakt der beiden Räder und des Schleifsporns wird nun überprüft.
   Wenn einer der drei Punkte keinen Boden mehr unter sich hat, wird der Bot 
   gestoppt.
-- Der Maussensor wurde implementiert. Er sitzt mittig 15mm hinter der Achse 
+- Der Maussensor wurde implementiert. Er sitzt mittig 15 mm hinter der Achse 
   unter dem ct-Bot. Es werden DeltaX und DeltaY berechnet. 
   -> Die Größen werden in Dots pro Simulationsschritt angegeben. 
   -> Die Konstante CtBot.SENS_MOUSE_DPI = 400 legt die Auflösung des Sensors 
@@ -81,17 +82,16 @@ hinzugefügt.
          9,42cm/2,54cm/in = 3,71in
          3,71in * 400DPI  = 1484 dots
       ---
-  -> Dreht sich der Bot nach links ist DeltaY negativ. Dreht er sich hingegen 
-     nach rechts ist DeltaY positiv.
+  -> Dreht sich der Bot nach links, ist DeltaY negativ. Dreht er sich hingegen 
+     nach rechts, ist DeltaY positiv.
 - Damit das Kontrollfenster auch weiterhin auf Bildschirmen mit einer 
   vertikalen Auflösung von nur 800 Pixeln komplett zu sehen ist, wurde eine 
-  zweite Spalte hinzugefügt. Diese enthält bis jetzt nur die neuen Maussenseor-
+  zweite Spalte hinzugefügt. Diese enthält bis jetzt nur die neuen Maussensor-
   daten.
    
-2006-01-26 Zeitlupen Modus: Werner Pirkl (Morpheus.the.real@gmx.de)
- hat einen Modus hinzugefügt, um den Bot in Zeitlupe zu bewegen. 
-Man kann nun über einen Schieberegler
-den Faktor der Realzeit einstellen. Dabei bedeutet: 
+2006-01-26 Zeitlupen Modus: 
+Werner Pirkl (Morpheus.the.real@gmx.de) hat einen Modus hinzugefügt, um den Bot in Zeitlupe zu bewegen. 
+Man kann nun über einen Schieberegler den Faktor der Realzeit einstellen. Dabei bedeutet: 
 1 -- keine Zeitlupe 
 10 -- 10fache Zeitverzögerung.
 Intern wird Wert von "baseTimeReal" bei 10-facher Zeitlupe 10 mal höher 
@@ -101,7 +101,7 @@ gesetzt als der Wert der Simulatorzeit "baseTimeVirtual".
 - Die Bots sind jetzt "pickable" und erkennen sich so gegenseitig als 
   Hindernisse. Damit ein Bot sich nicht fälschlich selber findet, wird 
   sein Körper versteckt, während seine Kollisionsabfrage durchgeführt 
-  wird. (Der ct-Sim ist somit nun Multibot fähig.)
+  wird. (Der ct-Sim ist somit nun multi-Bot-fähig.)
 - Die ViewPlatform lässt sich nun durch die Maus im Raum verschieben. 
   Dazu muss in das 3D-Fenster geklickt werden und die Grafik in eine 
   gewünschte Richtung gezogen werden.
@@ -117,4 +117,4 @@ gesetzt als der Wert der Simulatorzeit "baseTimeVirtual".
 - Der Bot hat einen neuen Körper bekommen, der aus einzelnen Polygonen 
   zusammengebaut wird und eine echtes Fach hat.
 
-2006-01-24	Benjamin Benz (bbe@heise.de) Schreibweise des Changelogs nochmal verÃ¤ndert
+2006-01-24	Benjamin Benz (bbe@heise.de) Schreibweise des Changelogs nochmal verändert
