@@ -38,8 +38,6 @@ import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.AmbientLight;
-import javax.media.j3d.PolygonAttributes;
-import javax.media.j3d.Appearance;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -114,8 +112,8 @@ public class World extends Thread {
 	private long simulTime = 0;
 
 	/*
-	 * Vier BranchGroups, eine fuer die ganze Welt, eine für den Boden, 
-	 * eine für die Lichtquellen und die letzte fuer die Hindernisse
+	 * Vier BranchGroups, eine fuer die ganze Welt, eine fï¿½r den Boden, 
+	 * eine fï¿½r die Lichtquellen und die letzte fuer die Hindernisse
 	 */
 	/**
 	 * BranchGroup fuer die ganze Welt
@@ -335,7 +333,7 @@ public class World extends Thread {
 		return ts;
 	}
 	/**
-	 * Baut die 3D-Repraesentation der Linien für den Boden aus 2D-Polygonen zusammen
+	 * Baut die 3D-Repraesentation der Linien fï¿½r den Boden aus 2D-Polygonen zusammen
 	 *  
 	 * @return die Linie
 	 */
@@ -349,7 +347,7 @@ public class World extends Thread {
 		float[] data = new float[totalN * 3];
 		// zwei Polygone (Deckel und Boden) mit N Ecken
 		int stripCounts[] = {N};
-		// Zähler
+		// Zï¿½hler
 		int n = 0;
 	
 		// Linien erzeugen
@@ -410,9 +408,9 @@ public class World extends Thread {
 		// Hinzufuegen der Ober- und Unterseite des Linien-Shape3D 
 		ls.addGeometry(gi.getGeometryArray());
 	
-		// Die folgenden Zeilen führen dazu, das die Hülle des
+		// Die folgenden Zeilen fï¿½hren dazu, das die Hï¿½lle des
 		// Polygons durchsichtig wird und nur der Wireframe gezeichnet
-		// wird. Weiterhin werden auch die Rückseiten gezeichnet.
+		// wird. Weiterhin werden auch die Rï¿½ckseiten gezeichnet.
 		
 		 /*
 		 PolygonAttributes polyAppear = new PolygonAttributes();
@@ -540,7 +538,7 @@ public class World extends Thread {
 		
 		// Die TranformGroup fuer alle Hindernisse:
 		obstBG = new BranchGroup();
-		// Damit spaeter Bots hinzugefügt werden können:
+		// Damit spaeter Bots hinzugefï¿½gt werden kï¿½nnen:
 		obstBG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		obstBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		// Objekte sind fest
@@ -820,10 +818,10 @@ public class World extends Thread {
 					PickInfo.CLOSEST_DISTANCE, pickShape);
 		}
 		if (pickInfo == null) {
-			System.out.println(message + " fällt ins Bodenlose.");
+			System.out.println(message + " fï¿½llt ins Bodenlose.");
 			return false;
 		} else if(Math.round(pickInfo.getClosestDistance()*1000) > Math.round(groundClearance*1000)) {
-			System.out.println(message + " fällt " + pickInfo.getClosestDistance()*1000 + " mm.");
+			System.out.println(message + " fï¿½llt " + pickInfo.getClosestDistance()*1000 + " mm.");
 			return false;	
 		} else
 			return true;
@@ -832,11 +830,11 @@ public class World extends Thread {
 	/**
 	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den Linien- 
 	 * bzw. Abgrundsensor nicht mehr erreicht.
-	 * Je mehr Licht reflektiert wird, desto niedriger ist der zurückgegebene 
+	 * Je mehr Licht reflektiert wird, desto niedriger ist der zurï¿½ckgegebene 
 	 * Wert. Der Wertebereich erstreckt sich von 0 (weiss oder maximale Reflexion) 
 	 * bis 1023 (minimale Reflexion, schwarz oder Loch).
 	 * 
-	 * Es werden rayCount viele Strahlen gleichmäßig orthogonal zum Heading in
+	 * Es werden rayCount viele Strahlen gleichmï¿½ï¿½ig orthogonal zum Heading in
 	 * die Szene geschossen.
 	 * 
 	 * @param pos
@@ -844,7 +842,7 @@ public class World extends Thread {
 	 * @param heading
 	 *            Die Blickrichtung
 	 * @param openingAngle
-	 * 			  Der Öffnungswinkel des Sensors       
+	 * 			  Der ï¿½ffnungswinkel des Sensors       
 	 * @param rayCount
 	 * 			  Es werden rayCount viele Strahlen vom Sensor ausgewertet.    
 	 * @return Die Menge an Licht, die absorbiert wird, von 1023(100%) bis 0(0%)
@@ -862,7 +860,7 @@ public class World extends Thread {
 		// oder rotiert:
 		transform.transform(sensHeading);
 		
-		// Transformationsgruppen, für den Sensorsweep
+		// Transformationsgruppen, fï¿½r den Sensorsweep
 		Transform3D transformX = new Transform3D();	
 		
 		// Wenn mehr als ein Strahl ausgesendet werden soll, dann taste
@@ -917,11 +915,11 @@ public class World extends Thread {
 	/**
 	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den Linien- 
 	 * bzw. Abgrundsensor nicht mehr erreicht.
-	 * Je mehr Licht reflektiert wird, desto niedriger ist der zurückgegebene 
+	 * Je mehr Licht reflektiert wird, desto niedriger ist der zurï¿½ckgegebene 
 	 * Wert. Der Wertebereich erstreckt sich von 0 (weiss oder maximale Reflexion) 
 	 * bis 1023 (minimale Reflexion, schwarz oder Loch).
 	 * 
-	 * Es werden rayCount viele Strahlen gleichmäßig orthogonal zum Heading in
+	 * Es werden rayCount viele Strahlen gleichmï¿½ï¿½ig orthogonal zum Heading in
 	 * die Szene geschossen.
 	 * 
 	 * Es werden rayCount viele Strahlen gleichmaessig in Form eines "+" in
@@ -1238,7 +1236,7 @@ public class World extends Thread {
 	}
 	
 	/**
-	 * Slow Motion heißt 10 mal so hohe Zeitbasis
+	 * Slow Motion heiï¿½t 10 mal so hohe Zeitbasis
 	 * @param slowMotion true: Slow Motion on
 	 * @author Werner Pirkl (Morpheus.the.real@gmx.de
 	 */

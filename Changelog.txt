@@ -1,6 +1,8 @@
 CHANGELOG fuer c't-Sim
 ======================
 
+2006-02-18 Benjamin Benz (bbe@heise.de) Einen Button fÃ¼r Screenshots eingefÃ¼gt
+
 2006-02-13 Christoph Grimmer (c.grimmer@futurio.de)
 - Sim lauscht jetzt dauerhaft auf TCP-Verbindungen und nimmt diese an, auch wenn schon simulierte Bots unterwegs sind
 - Erweiterung von TcpConnection
@@ -8,75 +10,75 @@ CHANGELOG fuer c't-Sim
 
 2006-02-01  Lasse Schwarten (lasse@schwarten.org)
 - neue Lichtquelle im rechten Durchgang
-- Die Bots ändern nun ihre Farbe, wenn sie einen Unfall haben.
+- Die Bots ï¿½ndern nun ihre Farbe, wenn sie einen Unfall haben.
   -> rote Bots sind "gesund"
-  -> blaue Bots sind gerade mit etwas zusammen gestoßen
-  -> grüne Bots haben den Boden unter ihren Rädern verloren
+  -> blaue Bots sind gerade mit etwas zusammen gestoï¿½en
+  -> grï¿½ne Bots haben den Boden unter ihren Rï¿½dern verloren
 - Code Makeup
-- Abfrage hinzugefügt, ob ein oder drei Bots ausgesetzt werden sollen.
+- Abfrage hinzugefï¿½gt, ob ein oder drei Bots ausgesetzt werden sollen.
 
-2006-02-01 Peter König (pek@ctmagazin.de)
-- XML- und howto-Dateien für Ant Build von Dominik Kalb (dominik@dkalb.com)
-hinzugefügt.
+2006-02-01 Peter Kï¿½nig (pek@ctmagazin.de)
+- XML- und howto-Dateien fï¿½r Ant Build von Dominik Kalb (dominik@dkalb.com)
+hinzugefï¿½gt.
 
 2006-02-01  Lasse Schwarten (lasse@schwarten.org)
-- Bugfix eines Nebenläufigkeitsproblems
+- Bugfix eines Nebenlï¿½ufigkeitsproblems
   -> Sensor- und Kollisionsabfragen verstecken Teile des Szenengraphen.
      Bei mehr als einem Bot muss das Picking synchronisiert werden.
 
 2006-02-01  Lasse Schwarten (lasse@schwarten.org)
-- Positions-Slider auf dem CtControlPanel werden jetzt dynamisch an die Größe des 
+- Positions-Slider auf dem CtControlPanel werden jetzt dynamisch an die Grï¿½ï¿½e des 
   Spielfeldes angepasst.
 - Die Lichtsensoren wurden implementiert.
-  -> Mit World.LIGHT_SOURCE_REACH lässt sich die Reichweite/Intensität des 
+  -> Mit World.LIGHT_SOURCE_REACH lï¿½sst sich die Reichweite/Intensitï¿½t des 
      Lichtes bestimmen.
   -> CtBot.SENS_LDR_HEADING bestimmt, ob die Lichtsensoren nach vorne oder 
      oben zeigen.
-- Die Lichtquelle in der nordöstlichen Ecke hat ein winziges 3D-Objekt 
-  bekommen, damit die Lichtsensoren arbeiten können.
-- Dem CtControlPanel wurden die nötigen Sensoranzeigen hinzugefügt und
+- Die Lichtquelle in der nordï¿½stlichen Ecke hat ein winziges 3D-Objekt 
+  bekommen, damit die Lichtsensoren arbeiten kï¿½nnen.
+- Dem CtControlPanel wurden die nï¿½tigen Sensoranzeigen hinzugefï¿½gt und
   das Layout gefixt.
-- Die Anfangsposition von CtBots, die über TCP angeschlossen sind, wurde 
+- Die Anfangsposition von CtBots, die ï¿½ber TCP angeschlossen sind, wurde 
   an die neue Welt angepasst.
 
 2006-01-31  Lasse Schwarten (lasse@schwarten.org)
-- Es wurden Lichtquellen hinzugefügt.
+- Es wurden Lichtquellen hinzugefï¿½gt.
 - Die Liniensensoren wurden implementiert.
 - Die Abgrundsensoren wurden implementiert.
-- Bots werden nun unter die obstBG BranchGroup gehängt.
+- Bots werden nun unter die obstBG BranchGroup gehï¿½ngt.
 - Die Objekte haben Materialangaben bekommen.
 - Die Kamara stellt sich zu Beginn nun automatisch so ein, dass das gesamte
   Spielfeld des Bots zu sehen ist.
-- Die Fläche der Welt wurde vergrößert und es gibt jetzt einen weiteren Raum im Süden.
+- Die Flï¿½che der Welt wurde vergrï¿½ï¿½ert und es gibt jetzt einen weiteren Raum im Sï¿½den.
 - Die Box, die den Boden dargestellt hat, wurde durch einen neuen Boden
-  mit einem Loch im südlichen Bereich ersetzt.
-- Linien auf dem Boden hinzugefügt.
-- Hindernis im südlichen Raum.
-- Überflüssige (float)-Casts in World entfernt.
+  mit einem Loch im sï¿½dlichen Bereich ersetzt.
+- Linien auf dem Boden hinzugefï¿½gt.
+- Hindernis im sï¿½dlichen Raum.
+- ï¿½berflï¿½ssige (float)-Casts in World entfernt.
 - Bot-Steuerung angepasst.
 
-2006-01-30 Peter König (pek@heise.de)
+2006-01-30 Peter Kï¿½nig (pek@heise.de)
 - Die Welt hat im Szenegraphen direkt unter obstBG eine neue Transformationsgruppe 
-  tgO hinzugefügt bekommen. Damit ist es möglich, alle vier Randhindernisse der Welt
-  (north, south, ... ) gemeinsam zu verschieben. Diese Änderung erfolgte zwecks 
+  tgO hinzugefï¿½gt bekommen. Damit ist es mï¿½glich, alle vier Randhindernisse der Welt
+  (north, south, ... ) gemeinsam zu verschieben. Diese ï¿½nderung erfolgte zwecks 
   besserer Darstellbarkeit des Szenegraph-Konzepts im Artikel.
 
 2006-01-29  Lasse Schwarten (lasse@schwarten.org)
-- Die Welt wurde ein wenig abgeändert.
-  -> Die südliche Wand wurde entfernt.
+- Die Welt wurde ein wenig abgeï¿½ndert.
+  -> Die sï¿½dliche Wand wurde entfernt.
   -> Der Boden wurde abgesenkt, so dass er nun bei z=0 liegt.
-- Der Bodenkontakt der beiden Räder und des Schleifsporns wird nun überprüft.
+- Der Bodenkontakt der beiden Rï¿½der und des Schleifsporns wird nun ï¿½berprï¿½ft.
   Wenn einer der drei Punkte keinen Boden mehr unter sich hat, wird der Bot 
   gestoppt.
 - Der Maussensor wurde implementiert. Er sitzt mittig 15 mm hinter der Achse 
   unter dem ct-Bot. Es werden DeltaX und DeltaY berechnet. 
-  -> Die Größen werden in Dots pro Simulationsschritt angegeben. 
-  -> Die Konstante CtBot.SENS_MOUSE_DPI = 400 legt die Auflösung des Sensors 
+  -> Die Grï¿½ï¿½en werden in Dots pro Simulationsschritt angegeben. 
+  -> Die Konstante CtBot.SENS_MOUSE_DPI = 400 legt die Auflï¿½sung des Sensors 
      fest und bestimmt wie viele Dots pro Inch ausgegeben werden. 
-  -> DeltaX gibt die in Fahrtrichtung zurückgelegte Strecke an. 
+  -> DeltaX gibt die in Fahrtrichtung zurï¿½ckgelegte Strecke an. 
   -> DeltaY hingegen die seitliche Verschiebung, die der Maussensor bei einer 
-     Rotation des Bots abfährt. Bei einer 360° Wendung die innerhalb nur eines 
-     Simulationsschrittes absolviert wird, würde DeltaY 1484 dots betragen.
+     Rotation des Bots abfï¿½hrt. Bei einer 360ï¿½ Wendung die innerhalb nur eines 
+     Simulationsschrittes absolviert wird, wï¿½rde DeltaY 1484 dots betragen.
       ---
          2*Pi*1,5cm = 9,42cm
          9,42cm/2,54cm/in = 3,71in
@@ -85,36 +87,36 @@ hinzugefügt.
   -> Dreht sich der Bot nach links, ist DeltaY negativ. Dreht er sich hingegen 
      nach rechts, ist DeltaY positiv.
 - Damit das Kontrollfenster auch weiterhin auf Bildschirmen mit einer 
-  vertikalen Auflösung von nur 800 Pixeln komplett zu sehen ist, wurde eine 
-  zweite Spalte hinzugefügt. Diese enthält bis jetzt nur die neuen Maussensor-
+  vertikalen Auflï¿½sung von nur 800 Pixeln komplett zu sehen ist, wurde eine 
+  zweite Spalte hinzugefï¿½gt. Diese enthï¿½lt bis jetzt nur die neuen Maussensor-
   daten.
    
 2006-01-26 Zeitlupen Modus: 
-Werner Pirkl (Morpheus.the.real@gmx.de) hat einen Modus hinzugefügt, um den Bot in Zeitlupe zu bewegen. 
-Man kann nun über einen Schieberegler den Faktor der Realzeit einstellen. Dabei bedeutet: 
+Werner Pirkl (Morpheus.the.real@gmx.de) hat einen Modus hinzugefï¿½gt, um den Bot in Zeitlupe zu bewegen. 
+Man kann nun ï¿½ber einen Schieberegler den Faktor der Realzeit einstellen. Dabei bedeutet: 
 1 -- keine Zeitlupe 
-10 -- 10fache Zeitverzögerung.
-Intern wird Wert von "baseTimeReal" bei 10-facher Zeitlupe 10 mal höher 
+10 -- 10fache Zeitverzï¿½gerung.
+Intern wird Wert von "baseTimeReal" bei 10-facher Zeitlupe 10 mal hï¿½her 
 gesetzt als der Wert der Simulatorzeit "baseTimeVirtual".
 
 2006-01-24  Lasse Schwarten (lasse@schwarten.org) 
 - Die Bots sind jetzt "pickable" und erkennen sich so gegenseitig als 
-  Hindernisse. Damit ein Bot sich nicht fälschlich selber findet, wird 
-  sein Körper versteckt, während seine Kollisionsabfrage durchgeführt 
-  wird. (Der ct-Sim ist somit nun multi-Bot-fähig.)
-- Die ViewPlatform lässt sich nun durch die Maus im Raum verschieben. 
+  Hindernisse. Damit ein Bot sich nicht fï¿½lschlich selber findet, wird 
+  sein Kï¿½rper versteckt, wï¿½hrend seine Kollisionsabfrage durchgefï¿½hrt 
+  wird. (Der ct-Sim ist somit nun multi-Bot-fï¿½hig.)
+- Die ViewPlatform lï¿½sst sich nun durch die Maus im Raum verschieben. 
   Dazu muss in das 3D-Fenster geklickt werden und die Grafik in eine 
-  gewünschte Richtung gezogen werden.
+  gewï¿½nschte Richtung gezogen werden.
   -> Die linke Maustaste dreht die Kamera um sich selbst.
   -> Die rechte Maustaste verschiebt die Kamera parallel zu ihrer Position
   -> Die mittlere Maustaste(oder die linke + ALT) verschiebt die Kamera 
      nach vorne und hinten
   (Anmerkung: Diese Navigation ist bei weitem nicht perfekt und muss 
-              überarbeitet werden. Ich habe das Paket 
+              ï¿½berarbeitet werden. Ich habe das Paket 
               org.j3d.ui.navigation ausprobiert, konnte aber keine 
-              besseren Ergebnisse erzielen. Der Code hierfür ist noch 
+              besseren Ergebnisse erzielen. Der Code hierfï¿½r ist noch 
               im Source enthalten und lediglich auskommentiert.) 
-- Der Bot hat einen neuen Körper bekommen, der aus einzelnen Polygonen 
+- Der Bot hat einen neuen Kï¿½rper bekommen, der aus einzelnen Polygonen 
   zusammengebaut wird und eine echtes Fach hat.
 
-2006-01-24	Benjamin Benz (bbe@heise.de) Schreibweise des Changelogs nochmal verändert
+2006-01-24	Benjamin Benz (bbe@heise.de) Schreibweise des Changelogs nochmal verï¿½ndert

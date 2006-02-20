@@ -19,12 +19,22 @@
 
 package ctSim.View;
 
+import ctSim.ErrorHandler;
 import ctSim.Model.World;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import com.sun.j3d.utils.universe.*;
 import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
@@ -37,10 +47,13 @@ import com.sun.j3d.utils.image.TextureLoader;
 //import org.j3d.ui.navigation.*;
 //import java.awt.event.MouseEvent;
 
+import javax.imageio.ImageIO;
 import javax.media.j3d.*;
 import javax.vecmath.*;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  * Realisiert die Anzeige der Welt mit allen Hindernissen und Robotern
@@ -51,6 +64,9 @@ import javax.swing.JFrame;
  */
 public class WorldView extends JFrame {
 
+	/** Dateiname fÃ¼r den Screenshot */
+	private static final String SCREENSHOT ="screenshot.jpg";
+	
 	private static final long serialVersionUID = 1L;
 
 	/** Die "Leinwand" fuer die 3D-Welt */
@@ -90,6 +106,9 @@ public class WorldView extends JFrame {
 	/** Aussehen der Bots nach einem Fall */
 	private Appearance botAppearFall;
 
+	/** Internes Objekt zum Screengrabben. Hat rein garbichts mit einem Roboter zu tun!!! */
+	private Robot robot;
+	
 	/**
 	 * Erzeugt ein neues Fenster zur Welt
 	 * 
@@ -113,7 +132,7 @@ public class WorldView extends JFrame {
 
 		this.getContentPane().add(worldCanvas);
 		
-		// Material für die Lichtreflektionen der Welt definieren
+		// Material fï¿½r die Lichtreflektionen der Welt definieren
 		// Boden- und Bot-Material
 		Material mat = new Material();
 		mat.setAmbientColor(new Color3f(Color.LIGHT_GRAY));
@@ -180,6 +199,13 @@ public class WorldView extends JFrame {
 		botAppearFall.setColoringAttributes(new ColoringAttributes(new Color3f(
 				Color.GREEN), ColoringAttributes.FASTEST));
 		botAppearFall.setMaterial(mat);
+		
+		// wird zum ScreenCapture gebraucht
+		try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            throw new RuntimeException(e);
+        }
 	}
 
 	/**
@@ -223,7 +249,7 @@ public class WorldView extends JFrame {
 //		/* erzeuge die Navigationsklasse */ 
 //		mvh  = new MouseViewHandler();
 //		
-//		/* versorge die Navigationsklasse mit allen benötigten Informationen */
+//		/* versorge die Navigationsklasse mit allen benï¿½tigten Informationen */
 //		mvh.setCanvas(worldCanvas);
 //		mvh.setViewInfo(universe.getViewer().getView(),tgViewPlatform);
 //		
@@ -324,4 +350,61 @@ public class WorldView extends JFrame {
 	public Appearance getBotAppearFall() {
 		return botAppearFall;
 	}
+	
+	/**
+	 * Macht einen Screenshot der Roboterwelt und schreibt ihn auf die Platte
+	 * Der Dateiname steht in der Konstanten:
+	 * @see SCREENSHOT
+	 */
+	public void dumpScreen() {
+        BufferedImage image = captureScreen();
+        System.out.println("image " + image);
+        File f = new File(SCREENSHOT);
+        
+        String type = f.getName().substring(f.getName().lastIndexOf('.') + 1);
+        System.out.println("type " + type);
+        try {
+            ImageIO.write(image,type,f);
+        } catch (IOException ioe) {
+        	ErrorHandler.error("Fehler beim Bild sichern: "+ioe);
+        }
+    }
+	
+	/**
+	 * Liefert einen Screenshot der Roboterwelt
+	 * @return das Bild
+	 */
+    public BufferedImage captureScreen() {
+        BufferedImage image = new BufferedImage(getContentPane().getWidth(), getContentPane().getHeight(), BufferedImage.TYPE_INT_RGB);
+        getContentPane().paint(image.createGraphics());
+        if(isVisible()) {
+            dumpAWT(getContentPane(), image);
+        }
+        
+        return image;
+    }
+    
+    /*
+     * Hilfsfunktion, um Bilder zu sichern
+     * @param Container Die ContentPnae des zu sichernden Frames
+     * @param BufferedImage das Zielbild
+     */
+    private void dumpAWT(Container container, BufferedImage image) {
+        for(int i = 0; i < container.getComponentCount(); i++) {
+            Component child = container.getComponent(i);
+            if(!(child instanceof JComponent)) {
+                Rectangle bounds = child.getBounds();
+                Point location = bounds.getLocation();
+                bounds.setLocation(child.getLocationOnScreen());
+                BufferedImage capture = robot.createScreenCapture(bounds);
+                bounds.setLocation(location);
+                SwingUtilities.convertRectangle(child, bounds, getContentPane());
+                image.createGraphics().drawImage(capture, location.x, location.y, this);
+ 
+                if(child instanceof Container) {
+                    dumpAWT(container, image);
+                }
+            }
+        }
+    }
 }
