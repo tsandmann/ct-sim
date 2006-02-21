@@ -92,9 +92,9 @@ public class Controller {
 		}
 		
 		/*
-		 * Crimson 2006-02-11: Ich verstehe kein Stück, warum der Sim gar nicht auf die TCP-Verbindung lauschen sollte,
-		 * nur weil es Testbots gibt. Aus diesem Grund baue ich den thread, der auf TCP-Verbindungen lauscht, an dieser
-		 * Stelle ein.
+		 * Der Sim sollte auch auf die TCP-Verbindung lauschen,
+		 * wenn es Testbots gibt. Aus diesem Grund ist der thread, 
+		 * der auf TCP-Verbindungen lauscht, an dieser Stelle eingebaut.
 		 */
 
 		System.out.println("Warte auf Verbindung vom c't-Bot");
@@ -190,10 +190,7 @@ class SocketListener extends Thread {
 				bot.start();
 			}
 		} catch (IOException ioe) {
-			// Diese Zeile funktioniert nur, wenn die compiler compliance auf 5.0 gesetzt ist
-			//System.err.format("Kann nicht an port %d binden.", new Integer(port));
-			// Sonst
-			System.err.println("Kann nicht an port " + port + "binden.");
+			System.err.format("Kann nicht an port %d binden.", new Integer(port));
 			System.err.println(ioe.getMessage());
 		}
 	}

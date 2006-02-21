@@ -1,7 +1,10 @@
 CHANGELOG fuer c't-Sim
 ======================
 
-2006-02-18 Benjamin Benz (bbe@heise.de) Einen Button für Screenshots eingefügt
+2006-02-21 Peter Koenig (pek@ctmagazin.de)
+- Code ist jetzt auf Java 5.0 umgestellt (List bots in World ist eine List<Bot>); auch das build.xml ist darauf vorbereitet.
+
+2006-02-18 Benjamin Benz (bbe@heise.de) Einen Button fuer Screenshots eingefügt
 
 2006-02-13 Christoph Grimmer (c.grimmer@futurio.de)
 - Sim lauscht jetzt dauerhaft auf TCP-Verbindungen und nimmt diese an, auch wenn schon simulierte Bots unterwegs sind

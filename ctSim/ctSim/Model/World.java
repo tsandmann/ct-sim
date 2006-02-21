@@ -88,7 +88,7 @@ public class World extends Thread {
 	public int baseTimeVirtual = 10;
 
 	/** Liste mit allen Bots, die in dieser Welt leben */
-	private List bots;
+	private List<Bot> bots;
 
 	/** Liste mit allen Hindernissen, die in dieser Welt stehen */
 	private List obstacles;
@@ -112,8 +112,8 @@ public class World extends Thread {
 	private long simulTime = 0;
 
 	/*
-	 * Vier BranchGroups, eine fuer die ganze Welt, eine f�r den Boden, 
-	 * eine f�r die Lichtquellen und die letzte fuer die Hindernisse
+	 * Vier BranchGroups, eine fuer die ganze Welt, eine fuer den Boden, 
+	 * eine fuer die Lichtquellen und die letzte fuer die Hindernisse
 	 */
 	/**
 	 * BranchGroup fuer die ganze Welt
@@ -142,7 +142,7 @@ public class World extends Thread {
 	/** Erzeugt eine neue Welt */
 	public World() {
 		
-		bots = new LinkedList();
+		bots = new LinkedList<Bot> ();
 		obstacles = new LinkedList();
 		haveABreak = false;
 		
@@ -1155,7 +1155,7 @@ public class World extends Thread {
 	 * @param bots
 	 *            Wert fuer bots, der gesetzt werden soll.
 	 */
-	public void setBots(List bots) {
+	public void setBots(List<Bot> bots) {
 		this.bots = bots;
 	}
 
