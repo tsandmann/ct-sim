@@ -210,6 +210,12 @@ public class CtControlPanel extends ControlPanel {
 	
 	private boolean irL, irR, xpos, ypos, head;
 	
+    // LCD Display
+    private JLabel lcdLine1; 
+    private JLabel lcdLine2;
+    private JLabel lcdLine3;
+    private JLabel lcdLine4;
+
 	// Anzeige der Maussensordaten
 	private JPanel msPanel;
 	private JLabel msLabel;
@@ -610,6 +616,18 @@ public class CtControlPanel extends ControlPanel {
 					}
 				}
 				
+				// fï¿½ge Zeilen fï¿½r die LCD Ausgabe ein
+		        lcdLine1 = new JLabel();
+		        lcdLine2 = new JLabel();
+		        lcdLine3 = new JLabel();
+		        lcdLine4 = new JLabel();
+		        mainPanelLeft.add(lcdLine1);
+		        mainPanelLeft.add(lcdLine2);
+		        mainPanelLeft.add(lcdLine3);
+		        mainPanelLeft.add(lcdLine4);
+		        lcdLine1.setMinimumSize(new Dimension(150,1));
+		        // lcdLine1.setBackground(new Color(20,10,10));
+		        
 				// Tastenfeld einfuegen
 				keyPanel = new JPanel();
 				mainPanelLeft.add(keyPanel);
@@ -1097,12 +1115,18 @@ public class CtControlPanel extends ControlPanel {
 		ldrL.setText(Integer.toString(bot.getSensLdrL()));
 		ldrR.setText(Integer.toString(bot.getSensLdrR()));
 		
+		// Hole aktuellen Wert des LCD aus dem Bot und setzt ihn in die Textfelder:
+		lcdLine1.setText(bot.getLcdText(0));
+		lcdLine2.setText(bot.getLcdText(1));
+		lcdLine3.setText(bot.getLcdText(2));
+		lcdLine4.setText(bot.getLcdText(3));
+		
 		super.repaint();
 		this.repaint();
 	}
 	/**
 	 * Halt den Bot an der Stelle auf der er gerade steht, indem die 
-	 * die Werte für die x- und y-Position eingefroren werden.
+	 * die Werte fï¿½r die x- und y-Position eingefroren werden.
 	 *
 	 */
 	public void stopBot(){

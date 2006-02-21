@@ -155,6 +155,12 @@ public abstract class CtBot extends Bot {
 	/** Oeffnungswinkel der beiden Lichtsensoren [Rad] */
 	public static final double SENS_LDR_ANGLE = Math.PI / 180 * 180; 
 	
+	/** Anzahl der Zeilen im LCD */
+	public static final short LCD_LINES = 4;
+	
+	/** Anzahl der Zeichen pro Zeile im LCD */
+	public static final short LCD_CHARS = 20;
+	
 	/*
 	 * Capabilities -- Flags, die anzeigen, welche internen Zustaende von
 	 * Sensoren oder Aktuatoren ueber das ControlPanel beeinlussbar sind
@@ -218,15 +224,27 @@ public abstract class CtBot extends Bot {
 	/** gewuenschte Motorengeschwindigkeit links */
 	private Short aktMotL = new Short((short) 0);
 
-	/** Servo Klappe */
+	/** Position Servo Klappe */
 	private Integer aktDoor;
 
-	/** Reserve Servo */
+	/** Position des Reserve Servo */
 	private Integer aktServo;
 
 	/** Zustand der LEDs */
 	private Integer aktLed;
 
+		
+	/** Zustand der LCD Anzeige */
+	private String[] lcdText = new String[LCD_LINES]; 
+	 
+	/** Cursorposition der LCD Anzeige
+	 * X : vor welchem Zeichen steht der Cursor (0 .. LCD_CHARS-1)
+	 * Y : in welcher Zeile steht der Cursor (0 .. LCD_LINES-1)
+	 */ 
+	private int lcdCursorX = 0;
+	private int lcdCursorY = 0;
+		 
+	
 	// Sensoren:
 
 	/**
@@ -290,8 +308,13 @@ public abstract class CtBot extends Bot {
 		super();
 		world = Controller.getWorld();
 		createBranchGroup();
+		
+		//	 init LCD
+        lcdClear();
 	}
-
+	
+        		
+        		
 	/**
 	 * Alternativer Konstruktor
 	 * 
@@ -346,13 +369,13 @@ public abstract class CtBot extends Bot {
 		realBot.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 		realBot.setAppearance(world.getWorldView().getBotAppear());
 		realBot.setName(getName() + " Body");
-		// Körper "pickable" machen, um Kollisionen mit anderen Bots
+		// Kï¿½rper "pickable" machen, um Kollisionen mit anderen Bots
 		// zu erkennen
 		realBot.setPickable(true);
-		// "Pickable" muss für die eigene Kollisionsabfrage abschaltbar sein
+		// "Pickable" muss fï¿½r die eigene Kollisionsabfrage abschaltbar sein
 		realBot.setCapability(Cylinder.ALLOW_PICKABLE_WRITE);
-		// Referenz auf Körper merken, um später bei der eigenen Kollisionsabfrage die 
-		// "Pickable"-Eigenschaft ändern zu können
+		// Referenz auf Kï¿½rper merken, um spï¿½ter bei der eigenen Kollisionsabfrage die 
+		// "Pickable"-Eigenschaft ï¿½ndern zu kï¿½nnen
 		botBody = realBot;
 		rg.addChild(realBot);
 		
@@ -373,7 +396,7 @@ public abstract class CtBot extends Bot {
 	}
 
 	/**
-	 * Baut die 3D-Repraesentation des Bot Körpers aus 2D-Polygonen zusammen
+	 * Baut die 3D-Repraesentation des Bot Kï¿½rpers aus 2D-Polygonen zusammen
 	 *  
 	 * @return Koerper des Bots 
 	 */
@@ -381,7 +404,7 @@ public abstract class CtBot extends Bot {
 		
 		Shape3D bs = new Shape3D();
 		// Anzahl der Ecken, um den Kreis des Bots zu beschreiben.
-		// Mehr sehen besser aus, benötigen aber auch mehr Rechenzeit.
+		// Mehr sehen besser aus, benï¿½tigen aber auch mehr Rechenzeit.
 		int N = 10;
 		// Anzahl der verwendeten Punkte
 		int totalN = 2 * (N + 2);
@@ -391,7 +414,7 @@ public abstract class CtBot extends Bot {
 		int stripCounts[] = { N + 2, N + 2 };
 		float r = (float) BOT_RADIUS;
 		float h = (float) BOT_HEIGHT / 2;
-		// Zähler
+		// Zï¿½hler
 		int n;
 		// Koordinaten
 		float x, y;
@@ -400,7 +423,7 @@ public abstract class CtBot extends Bot {
 		
 		// Bot-Deckel erzeugen
 		//
-		// Winkel des vollen Kreises (in Bogenmaß)
+		// Winkel des vollen Kreises (in Bogenmaï¿½)
 		double circle = 2.0 * Math.PI;
 		// halber Winkel der Oeffnung des Bots
 		double opening = Math.asin((FACH_LENGTH / 2) / r);
@@ -446,7 +469,7 @@ public abstract class CtBot extends Bot {
 		st.stripify(gi);
 		gi.recomputeIndices();
 		
-		// Hinzufügen des Deckels und des Bodens zur Bot-Shape3D 
+		// Hinzufï¿½gen des Deckels und des Bodens zur Bot-Shape3D 
 		bs.addGeometry(gi.getGeometryArray());
 		
 		
@@ -516,7 +539,7 @@ public abstract class CtBot extends Bot {
 		
 		// Die folgenden Zeilen fuehren dazu, das die Huelle des
 		// Bots durchsichtig wird und nur die Wireframe gezeichnet
-		// wird. Weiterhin werden auch die Rückseiten gezeichnet.
+		// wird. Weiterhin werden auch die Rï¿½ckseiten gezeichnet.
 		
 		 /*
 		 PolygonAttributes polyAppear = new PolygonAttributes();
@@ -918,6 +941,105 @@ public abstract class CtBot extends Bot {
 	 */
 	public void setSensTrans(int sensTrans) {
 		this.sensTrans = new Integer(sensTrans);
+	}
+
+	
+	/**
+	 * @param charPos neue Cursorposition in X-Richtung (0..19)
+	 * @param linePos neue Cursorposition der Zeile (0..3)
+	 * @param text    der Text, der ab der neuen Cursorposition einzutragen ist
+	 */	
+	public void setLcdText(int charPos, int linePos, String text) {
+		setCursor(charPos, linePos);
+		{
+			String pre = "";
+			String post = "";
+			int max = Math.min(text.length(), LCD_CHARS-lcdCursorX-1);
+		
+			// der neue Zeilentext ist der alte bis zur Cursorposition, gefolgt 
+			// vom ï¿½bergebenen Wert text gefolgt von den nicht ï¿½berschriebenen Zeichen, 
+			// wenn die neue X-Position noch vor dem Zeilenende ist.
+			if (lcdCursorX > 0) {
+				pre = new String(lcdText[lcdCursorY].substring(0, lcdCursorX-1));
+			}
+			lcdCursorX += max;
+			if (lcdCursorX < LCD_CHARS-1) {
+				post = new String(lcdText[lcdCursorY].substring(lcdCursorX));
+			}
+			synchronized (lcdText) {
+				lcdText[lcdCursorY] = new String (pre + text + post);
+			}
+		}
+	}
+	
+	
+	public void setLcdText(int linePos, String text) {
+		setLcdText(0, linePos, text);
+	}
+	
+	
+	public void setLcdText(String text) {
+		setLcdText(lcdCursorX, lcdCursorY, text);
+	}
+	
+	/**
+	 * @param X character position
+	 * @param Y Zeilen position
+	 *            Einzutragender Wert CursorPosition
+	 */
+	public void setCursor(int charPos, int linePos) {
+		if (charPos < 0) {
+			charPos = 0;
+		}
+		if (charPos > LCD_CHARS-1) {
+			charPos = LCD_CHARS-1;
+		}
+		if (linePos < 0) {
+			linePos = 0;
+		}
+		if (linePos > LCD_LINES-1) {
+			linePos = LCD_LINES-1;
+		}
+		
+		//synchronized (lcdCursorX) {
+			this.lcdCursorX = charPos;
+		//}
+		//synchronized (lcdCursorY) {
+			this.lcdCursorY = linePos;
+		//}
+	}
+
+	public String getLcdText(int linePos){
+		if (linePos < 0) {
+			linePos = 0;
+		}
+		if (linePos > LCD_LINES-1) {
+			linePos = LCD_LINES-1;
+		}
+		return lcdText[linePos];
+	}
+	
+	/**
+	 * @return Zeilenposition des Cursors
+	 */
+	public int getLcdCursorY() {
+		return lcdCursorY;
+	}
+
+	/**
+	 * @return character position des Cursors
+	 */
+	public int getLcdCursorX() {
+		return lcdCursorX;
+	}
+
+	
+	public void lcdClear() {
+		synchronized (lcdText) {
+			for (int i = 0; i < lcdText.length; i++) {
+				lcdText[i] = new String("                    ");
+			}
+		}
 	}
 
 }

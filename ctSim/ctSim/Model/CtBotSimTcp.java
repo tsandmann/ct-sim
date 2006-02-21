@@ -266,12 +266,27 @@ public class CtBotSimTcp extends CtBotSim {
 			case Command.CMD_AKT_LED:
 				this.setAktLed(command.getDataL());
 				break;
-
+			case Command.CMD_ACT_LCD:
+				switch (command.getSubcommand()) {
+				case Command.SUB_CMD_NORM:
+					this.setLcdText(command.getDataL(), command.getDataR(), command.getDataBytesAsString());
+					break;
+				case Command.SUB_LCD_CURSOR:
+					this.setCursor(command.getDataL(), command.getDataR());
+					break;
+				case Command.SUB_LCD_CLEAR:
+					this.lcdClear();
+					break;
+				case Command.SUB_LCD_DATA:
+					this.setLcdText(command.getDataBytesAsString());
+					break;
+				}
+				break;
 			default:
 				ErrorHandler.error("Unknown Command:" + command.toString());
 				break;
 			}
-			System.out.println("Command: " + command.getCommand());
+			// System.out.println("Command: " + (char)command.getCommand());
 
 			try {
 				// tcpCon.send(answer.getCommandBytes());

@@ -1,5 +1,6 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-02-18	Rolf Ebert (Rolf.Ebert@gmx.net) LCD-Ausgabe kann nun auch im Simulator erscheinen
 
 2006-02-21 Peter Koenig (pek@ctmagazin.de)
 - Code ist jetzt auf Java 5.0 umgestellt (List bots in World ist eine List<Bot>); auch das build.xml ist darauf vorbereitet.

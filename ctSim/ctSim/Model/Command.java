@@ -40,6 +40,9 @@ public class Command {
 
 	/** Steuerung Servo */
 	public static final int CMD_AKT_SERVO = 'S';
+	
+	/** LCD Anzeige */
+	public static final int CMD_ACT_LCD = 'c';
 
 	/** Abgrundsensoren */
 	public static final int CMD_SENS_BORDER = 'B';
@@ -98,6 +101,16 @@ public class Command {
 	/** Nur rechts */
 	public static final int SUB_CMD_RIGHT = 'R';
 
+	/** Subcommandos f�r LCD */
+	/** Subkommando Clear Screen */
+	public static final int SUB_LCD_CLEAR = 'c';     
+	
+	/** Subkommando Text ohne Cursor */
+	public static final int SUB_LCD_DATA = 'D';
+	
+	/** Subkommando Cursorkoordinaten */
+	public static final int SUB_LCD_CURSOR = 'C';
+	
 	/** Markiert den Beginn eines Kommandos */
 	private int startCode = STARTCODE;
 
@@ -112,6 +125,9 @@ public class Command {
 
 	/** Bytes, die dem Kommando noch folgen */
 	private int payload = 0;
+	
+	/** Daten, die dem Kommando folgen */
+	private byte[] dataBytes;
 
 	/** Daten zum Kommando links */
 	private int dataL = 0;
@@ -145,6 +161,7 @@ public class Command {
 		crc = CRCCODE;
 		payload = 0;
 		this.seq = seq;
+		dataBytes = new byte[payload];
 	}
 
 	/**
@@ -167,7 +184,7 @@ public class Command {
 	 * @return byte[] , in dem jeweils ein byte steht
 	 */
 	public byte[] getCommandBytes() {
-		byte data[] = new byte[COMMAND_SIZE];
+		byte data[] = new byte[COMMAND_SIZE+payload];
 
 		int i = 0;
 		data[i++] = STARTCODE;
@@ -183,10 +200,24 @@ public class Command {
 		data[i++] = (byte) (seq & 255);
 		data[i++] = (byte) (seq >> 8);
 		data[i++] = CRCCODE;
-
+		
 		return data;
 	}
 
+	/**
+	 * @return Gib die angeh�ngten Nutzdaten weiter
+	 */
+	public byte[] getDataBytes() {
+		return dataBytes;
+	}
+	
+	/**
+	 * @return gib die Nutzdaten als String zur�ck
+	 */
+	public String getDataBytesAsString() {
+		return new String(dataBytes);
+	}
+	
 	/**
 	 * @return Gibt die Daten zum Kommando links zurueck
 	 */
@@ -233,7 +264,7 @@ public class Command {
 	 */
 	public int readCommand(TcpConnection tcpCon) throws IOException {
 		int tmp;
-
+		
 		startCode = 0;
 		// lese Bytes bis Startcode gefunden wird
 		while (startCode != STARTCODE) {
@@ -253,6 +284,13 @@ public class Command {
 		seq = tcpCon.readShort();
 		crc = tcpCon.readUnsignedByte();
 
+		dataBytes = new byte[payload];
+		
+		for (int i=0; i<payload; i++) {
+			dataBytes[i] = (byte) tcpCon.readUnsignedByte();
+		}
+		System.out.println(toString());
+		
 		return validate();
 	}
 
@@ -262,11 +300,13 @@ public class Command {
 	 * @return Der String
 	 */
 	public String toString() {
-		return "Startcode:\t" + startCode + "\n" + "Command:\t" + command
-				+ "\n" + "Subcommand:\t" + subcommand + "\n" + "Direction:\t"
+		String dataStr = getDataBytesAsString();
+		
+		return "Startcode:\t" + startCode + "\n" + "Command:\t" + (char)command 
+				+ "\n" + "Subcommand:\t" + (char)subcommand + "\n" + "Direction:\t"
 				+ direction + "\n" + "Payload:\t" + payload + "\n"
 				+ "Data:\t\t" + dataL + " " + dataR + "\n" + "Seq:\t\t" + seq
-				+ "\n" + "CRC:\t\t" + crc;
+				+ "\n" + "Data:\t\t'" + dataStr + "'\n" + "CRC:\t\t" + crc;
 	}
 
 	/**
