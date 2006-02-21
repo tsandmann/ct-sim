@@ -1,0 +1,29 @@
+In Übereinkunft mit Peter König möchte ich hiermit eine Liste der bekannten Bugs anlegen.
+Langfristig sollten wir wohl auf einen Bugtracker wie bugzilla umsteigen.
+
+Ich schlage das folgende Format vor:
+
+* [Datum][Status][Gemeldet von][Zugewiesen zu]: Beschreibung, Kommentare etc.
+
+[Datum] in kurzer ISO-Schreibweise YY-MM-DD (06-02-20)
+
+[Status] entweder unconfirmed,open,resolved,closed
+Bei Status closed sollte evtl noch ein Begründung wie double, no bug oder ähnliches dazu.
+(closed (no bug))
+
+[Gemeldet von] Entweder Name (Christoph Grimmer), Nick (Crimson) oder Email (c.grimmer@eunovis.de)
+Das Nick macht nur so lange Sinn, wie wir im kleinen Kreis arbeiten. Für ein System, in das auch die Leser posten, macht die Email-Adresse am meisten Sinn, da sie unique ist.
+
+[Zugewiesen zu] Bezeichner der Person, die sich verantwortlich um den Bug kümmert (s.o.). Wäre ja doof, wenn plötzlich alle den gleichen Bug fixen wollen ;-)
+
+Crimson, 20.02.2006
+-------------------
+
+
+Bugs
+----
+
+
+
+Feature Requests
+----------------
