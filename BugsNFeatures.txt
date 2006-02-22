@@ -23,7 +23,29 @@ Crimson, 20.02.2006
 Bugs
 ----
 
+* [06-02-22][open][pek@heise.de][]: 
+Wird ein ct-Bot-Prozess beendet, bleibt die Hülle des Bot im Simulator drin und wirkt dort als Hindernis.
 
+* [06-02-22]unconfirmed][pek@heise.de][]:
+TCP-Bot wird dem Simulator manchmal an einer Position hinzugefügt, die in einer Wand des Simulators liegt. 
+
+* [06-02-22]unconfirmed][pek@heise.de][pek@heise.de]:
+Die Slider im ControlPanel des Sim fallen manchmal unvermittelt auf den Wert 0; 
+die Textfelder zeigen diesen Wert allerdings nicht an.
 
 Feature Requests
 ----------------
+
+* [06-02-22][open][pek@heise.de][]:
+Die Bots sollten in der grafischen Anzeige im Simulator eine Kennung zugewiesen bekommen, damit man sie 
+voneinander unterscheiden kann.  
+
+* [06-02-22][open][pek@heise.de][]:
+* Der echte Bot verfügt über 8 LED (zwei ganz vorne auf den Spitzen nebem dem Ausschnitt
+auf der oberen Platte, sechs von hinten gesehen auf der linken Seite in Reihe. Die LED 
+vorne sind blau, die in der Reihe von vorne nach hinten rot, orange, gelb, grün, weiß, 
+türkis). Ihr Zustand wird gemeinsam durch eine Ganzzahl bestimmt (in CtBot.java die 
+Variable aktLed), die bitweise ausgelesen werden muss, wie im C-Projekt über die Files 
+led.h und led_pc.c bzw. led_mcu.c festgelegt wird. Der Simulator sollte auch diese LED 
+eingebaut bekommen. 
+
