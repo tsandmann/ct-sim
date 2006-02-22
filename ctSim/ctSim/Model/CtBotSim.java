@@ -127,7 +127,7 @@ abstract public class CtBotSim extends CtBot {
 	protected void updateStats() {
 		
 		// alte Position und Heading merken
-		// (wird spaeter für die Sensorberechnung benoetigt)
+		// (wird spaeter fï¿½r die Sensorberechnung benoetigt)
 		Vector3f oldPos = (Vector3f)this.getPos().clone();
 		Vector3f oldHeading = (Vector3f)this.getHeading().clone();
 
@@ -224,11 +224,11 @@ abstract public class CtBotSim extends CtBot {
 		
 		// Winkel des heading errechnen
 		double angle = SimUtils.getRotation(newHeading);
-		// Transformations-Matrix für die Rotation erstellen
+		// Transformations-Matrix fï¿½r die Rotation erstellen
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(angle);
 		
-		// Bodenkontakt des Gleitpins ueberprüfen
+		// Bodenkontakt des Gleitpins ueberprï¿½fen
 		Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT/2);
 		// Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
 		rotation.transform(skidVec);
@@ -273,9 +273,9 @@ abstract public class CtBotSim extends CtBot {
 		// IR-Abstandssensoren aktualisieren
 		if (updateSensIr) {
 			this.setSensIrL(world.watchObstacle(getSensIRPosition('L'),
-					new Vector3d(newHeading),SENS_IR_ANGLE));
+					new Vector3d(newHeading),SENS_IR_ANGLE,botBody));
 			this.setSensIrR(world.watchObstacle(getSensIRPosition('R'),
-					new Vector3d(newHeading),SENS_IR_ANGLE));
+					new Vector3d(newHeading),SENS_IR_ANGLE,botBody));
 		}
 		
 		// Liniensensoren aktualisieren
@@ -333,7 +333,7 @@ abstract public class CtBotSim extends CtBot {
 	 * 
 	 * @param newHeading
 	 * 				Blickrichtung des Bots
-	 * @return Gibt die Blickrichtung des Sensors zurück
+	 * @return Gibt die Blickrichtung des Sensors zurï¿½ck
 	 */
 	private Vector3d getSensLdrHeading(Vector3f newHeading) {
 		if(SENS_LDR_HEADING.z == 1)
@@ -413,7 +413,7 @@ abstract public class CtBotSim extends CtBot {
 	}
 
 	/**
-	 * Errechnet die Anzahl an Dots, die der Maussensor für eine Bewegung 
+	 * Errechnet die Anzahl an Dots, die der Maussensor fï¿½r eine Bewegung 
 	 * der angegebenen Laenge zurueckmeldet.   
 	 * @param distance 
 	 * 			die Laenge der Strecke in Metern
@@ -422,7 +422,7 @@ abstract public class CtBotSim extends CtBot {
 	private int meter2Dots(double distance) {
 		// distance ist in Metern angegeben, 
 		// * 100 macht daraus cm; 2,54 cm sind ein Inch,
-		// anschließend Multiplikation mit der Aufloesung des Maussensors
+		// anschlieï¿½end Multiplikation mit der Aufloesung des Maussensors
 		return (int)((distance*100/2.54) * SENS_MOUSE_DPI);
 	}
 

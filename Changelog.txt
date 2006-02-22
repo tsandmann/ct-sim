@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-02.22  Peter Koenig (pek@heise.de), Benjamin Benz (bbe@heise.de) Bugfix in watchObstacle()
+
 2006-02-18	Rolf Ebert (Rolf.Ebert@gmx.net) LCD-Ausgabe kann nun auch im Simulator erscheinen
 
 2006-02-21 Peter Koenig (pek@ctmagazin.de)

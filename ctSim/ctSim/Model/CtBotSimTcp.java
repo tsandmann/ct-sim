@@ -254,8 +254,8 @@ public class CtBotSimTcp extends CtBotSim {
 			case Command.CMD_AKT_MOT:
 				this.setAktMotL((short) command.getDataL());
 				this.setAktMotR((short) command.getDataR());
-				System.out.println("MotorL:" + command.getDataL() + " MotorR: "
-						+ command.getDataR());
+//				System.out.println("MotorL:" + command.getDataL() + " MotorR: "
+//						+ command.getDataR());
 				break;
 			case Command.CMD_AKT_SERVO:
 				this.setAktServo(command.getDataL());

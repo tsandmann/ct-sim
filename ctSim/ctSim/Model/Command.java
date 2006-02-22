@@ -289,7 +289,7 @@ public class Command {
 		for (int i=0; i<payload; i++) {
 			dataBytes[i] = (byte) tcpCon.readUnsignedByte();
 		}
-		System.out.println(toString());
+//		System.out.println(toString());
 		
 		return validate();
 	}

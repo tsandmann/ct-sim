@@ -469,8 +469,8 @@ public class World extends Thread {
     	BoundingSphere pointLightBounds = new BoundingSphere(new Point3d(0d,0d,0d),10d);
 		Color3f pointLightColor = new Color3f (1.0f, 1.0f, 0.9f);
     	
-		/* Für den Hinderniss-Parcours brauchen wir 8 Lichtquellen und 8 Säulen.
-    	 * Um nicht jede Lichtquelle von Hand bauen zu müssen, habe ich dass in eine Subroutine ausgelagert.
+		/* Fï¿½r den Hinderniss-Parcours brauchen wir 8 Lichtquellen und 8 Sï¿½ulen.
+    	 * Um nicht jede Lichtquelle von Hand bauen zu mï¿½ssen, habe ich dass in eine Subroutine ausgelagert.
     	 * */
 		
 		for(float[] pos : pillarPositions){
@@ -517,7 +517,7 @@ public class World extends Thread {
 		
 		// Die TranformGroup fuer alle Hindernisse:
 		obstBG = new BranchGroup();
-		// Damit spaeter Bots hinzugefügt werden können:
+		// Damit spaeter Bots hinzugefï¿½gt werden kï¿½nnen:
 		obstBG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		obstBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		// Objekte sind fest
@@ -541,7 +541,7 @@ public class World extends Thread {
 		west.setPickable(true);
 		west.setName("West");
 		
-//		// sechs Zwischenwaende, sind ausgebaut für den neuen Parcours
+//		// sechs Zwischenwaende, sind ausgebaut fï¿½r den neuen Parcours
 //		Box wall1 = new Box(0.1f, 0.05f, 0.2f, worldView.getObstacleAppear());
 //		wall1.setPickable(true);
 //		wall1.setName("Wall1");
@@ -577,7 +577,7 @@ public class World extends Thread {
 		tgO.setPickable(true);
 		obstBG.addChild(tgO);
 
-		/* Zusätzlich zu den Lichtquellen werden 8 kleine Säulen erzeugt.*/
+		/* Zusï¿½tzlich zu den Lichtquellen werden 8 kleine Sï¿½ulen erzeugt.*/
 		
 		for(float[] pos : pillarPositions){
 			createPillar(pillarPositions, tgO,pos[0],pos[1]);
@@ -773,9 +773,11 @@ public class World extends Thread {
 	 *            Die Blickrichtung
 	 * @param openingAngle
 	 * 			  Der Oeffnungswinkel des Blickstrahls           
+	 * @param botBody
+	 * 			  Der Koerper des Roboter, der anfragt
 	 * @return Die Distanz zum naechsten Objekt in Metern
 	 */
-	public double watchObstacle(Point3d pos, Vector3d heading, double openingAngle) {
+	public double watchObstacle(Point3d pos, Vector3d heading, double openingAngle, Shape3D botBody) {
 
 		// TODO: Sehstrahl oeffnet einen Konus mit dem festen Winkel von 3 Grad;
 		// mus an realen IR-Sensor angepasst werden!
@@ -794,8 +796,10 @@ public class World extends Thread {
 				openingAngle);
 		PickInfo pickInfo;
 		synchronized (obstBG) {
+			botBody.setPickable(false);
 			pickInfo = obstBG.pickClosest(PickInfo.PICK_GEOMETRY,
 					PickInfo.CLOSEST_DISTANCE, pickShape);
+			botBody.setPickable(true);
 		}
 		if (pickInfo == null)
 			return 100.0;
