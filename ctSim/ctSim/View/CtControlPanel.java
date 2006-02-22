@@ -1125,8 +1125,8 @@ public class CtControlPanel extends ControlPanel {
 		this.repaint();
 	}
 	/**
-	 * Halt den Bot an der Stelle auf der er gerade steht, indem die 
-	 * die Werte f�r die x- und y-Position eingefroren werden.
+	 * Haelt den Bot an der Stelle, auf der er gerade steht, indem die 
+	 * die Werte fuer die x- und y-Position eingefroren werden.
 	 *
 	 */
 	public void stopBot(){
