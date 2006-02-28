@@ -161,11 +161,11 @@ abstract public class CtBotSim extends CtBot {
 
 		// Zurueckgelegte Strecke linkes Rad als Vector
 		Vector3f vecL = new Vector3f(this.getHeading());
-		vecL.scale((float) (turnsL * RAD_UMFANG), vecL);
+		vecL.scale((float) (turnsL * WHEEL_PERIMETER), vecL);
 
 		// Zurueckgelegte Strecke rechtes Rad als Vector
 		Vector3f vecR = new Vector3f(this.getHeading());
-		vecR.scale((float) (turnsR * RAD_UMFANG), vecR);
+		vecR.scale((float) (turnsR * WHEEL_PERIMETER), vecR);
 
 		// Vektor vom Ursprung zum linken Rad
 		Vector3f vec = new Vector3f((float) -this.getHeading().y, (float) this
