@@ -74,10 +74,10 @@ public abstract class CtBot extends Bot {
 	public static final float UPS_MAX = (float) 151 / (float) 60;
 
 	/** Anzahl an Encoder-Markierungen auf einem Rad */
-	public static final short ENCODER_MARKS = 40;
+	public static final short ENCODER_MARKS = 60;
 
 	/** Umfang eines Rades [m] */
-	public static final double RAD_UMFANG = Math.PI * 0.050d;
+	public static final double WHEEL_PERIMETER = Math.PI * 0.059d;
 
 	/** Abstand Mittelpunkt Bot zum Rad [m] */
 	public static final double RAD_ABSTAND = 0.0485d;
