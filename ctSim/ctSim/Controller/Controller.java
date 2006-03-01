@@ -182,7 +182,7 @@ class SocketListener extends Thread {
 				 * aber auch nicht wieder frei gibt, habe ich den ursprünglich vorhandenen Aufruf gänzlich entfernt.
 				 */
 				tcp.connect(server.accept());
-				Bot bot = new CtBotSimTcp(new Point3f(0f,1.5f,0f),new Vector3f(1f,0f,0f),tcp);
+				Bot bot = new CtBotSimTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);
 				bot.providePanel();
 				bot.setBotName("TCPBot_" + num++);
 				Controller.getWorld().addBot(bot);
