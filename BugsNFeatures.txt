@@ -26,12 +26,16 @@ Bugs
 * [06-02-22][open][pek@heise.de][]: 
 Wird ein ct-Bot-Prozess beendet, bleibt die Hülle des Bot im Simulator drin und wirkt dort als Hindernis.
 
-* [06-02-22]unconfirmed][pek@heise.de][]:
+* [06-02-22][unconfirmed][pek@heise.de][]:
 TCP-Bot wird dem Simulator manchmal an einer Position hinzugefügt, die in einer Wand des Simulators liegt. 
 
-* [06-02-22]unconfirmed][pek@heise.de][pek@heise.de]:
+* [06-02-22][resolved][pek@heise.de][pek@heise.de]:
 Die Slider im ControlPanel des Sim fallen manchmal unvermittelt auf den Wert 0; 
 die Textfelder zeigen diesen Wert allerdings nicht an.
+--> Lag daran, dass die Abstandssensoren gelegentlich die Hülle des Bot als nächstes
+Hindernis detektiert haben. Jetzt ist die Hülle nicht pickable, sobald der Bot seinen 
+Peilstrahl losschickt.
+
 
 Feature Requests
 ----------------
