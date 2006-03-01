@@ -71,7 +71,7 @@ public class World extends Thread {
 	public static final float PLAYGROUND_HEIGHT = 4f;
 
 	/** Breite des Spielfelds in m */
-	public static final float PLAYGROUND_WIDTH = 2f;
+	public static final float PLAYGROUND_WIDTH = 4f;
 	
 	/** Breite des Spielfelds in m */
 	public static final float PLAYGROUND_THICKNESS = 0f;
@@ -432,7 +432,7 @@ public class World extends Thread {
 	 */
 	public BranchGroup createSceneGraph() {
 
-		float[][] pillarPositions = {{-0.3f,-0.5f},{-0.3f,-0.1f},{-0.3f,0.3f},{-0.6f,0.6f},{-0.5f,1},{-0.1f,1},{0.2f,1.3f},{0.6f,1.5f}};
+		float[][] pillarPositions = {{0.2f,-1f},{0.2f,-0.5f},{0.2f,0f},{0.2f,0.5f},{0.05f,0.9f},{-0.48f,1.0f},{-1.0f,1.0f},{-1.35f,0.65f}};
 		//float[][] oldLights = {{PLAYGROUND_WIDTH/2,PLAYGROUND_HEIGHT/2,0.5f},{PLAYGROUND_WIDTH/2 - 0.35f, 0f, 0.5f}};
 		
 		// Die Wurzel des Ganzen:
@@ -935,11 +935,11 @@ public class World extends Thread {
 	/**
 	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den Linien- 
 	 * bzw. Abgrundsensor nicht mehr erreicht.
-	 * Je mehr Licht reflektiert wird, desto niedriger ist der zur�ckgegebene 
+	 * Je mehr Licht reflektiert wird, desto niedriger ist der zurueckgegebene 
 	 * Wert. Der Wertebereich erstreckt sich von 0 (weiss oder maximale Reflexion) 
 	 * bis 1023 (minimale Reflexion, schwarz oder Loch).
 	 * 
-	 * Es werden rayCount viele Strahlen gleichm��ig orthogonal zum Heading in
+	 * Es werden rayCount viele Strahlen gleichmaessig orthogonal zum Heading in
 	 * die Szene geschossen.
 	 * 
 	 * Es werden rayCount viele Strahlen gleichmaessig in Form eines "+" in
