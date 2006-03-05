@@ -19,6 +19,8 @@
 
 package ctSim.View;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.awt.Dimension;
@@ -30,6 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.border.*;
 
 import javax.vecmath.Vector3f;
 
@@ -43,6 +46,7 @@ import ctSim.SimUtils;
  * 
  * @author pek (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
+ * @author Heinrich Peters (heinrich-peters@gmx.net)
  *
  */
 public class CtControlPanel extends ControlPanel {
@@ -78,6 +82,14 @@ public class CtControlPanel extends ControlPanel {
 	private static final int RC5_CODE_RIGHT = 0x2956; // /< Taste Rechts
 
 	private static final int RC5_CODE_PWR = 0x394C; // /< Taste An/Aus
+
+	private static final int RC5_CODE_RED = 0x100B; // /< Taste An/Aus
+
+	private static final int RC5_CODE_GREEN = 0x102E; // /< Taste An/Aus
+
+	private static final int RC5_CODE_YELLOW = 0x1038; // /< Taste An/Aus
+
+	private static final int RC5_CODE_BLUE = 0x1029; // /< Taste An/Aus
 
 	// Zu welchem Bot gehoert das Panel?
 	private CtBot bot;
@@ -210,12 +222,42 @@ public class CtControlPanel extends ControlPanel {
 	
 	private boolean irL, irR, xpos, ypos, head;
 	
+	private JPanel sensorPanel;
+	
     // LCD Display
-    private JLabel lcdLine1; 
+	private JPanel botPanel;
+	private JPanel lcdPanel;
+	private JLabel lcdLabel; 
+	private JLabel lcdLine1; 
     private JLabel lcdLine2;
     private JLabel lcdLine3;
     private JLabel lcdLine4;
-
+    
+    // LEDs
+    private JPanel ledPanel;
+    private JLabel ledLabel;
+	JPanel led1, led2, led3, led4, led5, led6, led7, led8; 
+	private static final Color colLed1 = new Color (137,176,255); 
+	private static final Color colLed1Akt = new Color (0,84,255);	// blaue LED
+	private static final Color colLed2 = new Color (137,176,255);
+	private static final Color colLed2Akt = new Color (0,84,255);	// blaue LED
+	private static final Color colLed3 = new Color (255,137,137);
+	private static final Color colLed3Akt = new Color (255,0,0);	// rote LED
+	private static final Color colLed4 = new Color (255,230,139);
+	private static final Color colLed4Akt = new Color (255,200,0);	// orange LED
+	private static final Color colLed5 = new Color (255,255,159);
+	private static final Color colLed5Akt = new Color (255,255,0);	// gelbe LED
+	private static final Color colLed6 = new Color (170,255,170);
+	private static final Color colLed6Akt = new Color (0,255,0);	// grüne LED
+	private static final Color colLed7 = new Color (200,255,245);
+	private static final Color colLed7Akt = new Color (0,255,210);	// türkise LED
+	private static final Color colLed8 = new Color (245,245,245);
+	private static final Color colLed8Akt = new Color (255,255,255);// weiße LED
+    
+    // Farb-Tasten
+    private JPanel colKeyPanel;
+    private JButton jButtonRed, jButtonGreen, jButtonYellow, jButtonBlue;
+ 
 	// Anzeige der Maussensordaten
 	private JPanel msPanel;
 	private JLabel msLabel;
@@ -615,23 +657,14 @@ public class CtControlPanel extends ControlPanel {
 						}
 					}
 				}
-				
-				// f�ge Zeilen f�r die LCD Ausgabe ein
-		        lcdLine1 = new JLabel();
-		        lcdLine2 = new JLabel();
-		        lcdLine3 = new JLabel();
-		        lcdLine4 = new JLabel();
-		        mainPanelLeft.add(lcdLine1);
-		        mainPanelLeft.add(lcdLine2);
-		        mainPanelLeft.add(lcdLine3);
-		        mainPanelLeft.add(lcdLine4);
-		        lcdLine1.setMinimumSize(new Dimension(150,1));
-		        // lcdLine1.setBackground(new Color(20,10,10));
-		        
+
 				// Tastenfeld einfuegen
 				keyPanel = new JPanel();
 				mainPanelLeft.add(keyPanel);
 				{
+					keyPanel.setLayout(new BoxLayout(keyPanel,BoxLayout.Y_AXIS));
+					
+					// Zahlen- und Pfeiltasten
 					rc5Panel = new JPanel();
 					keyPanel.add(rc5Panel);
 					GridLayout rc5PanelLayout = new GridLayout(1, 1);
@@ -815,173 +848,319 @@ public class CtControlPanel extends ControlPanel {
 						dummy6 = new JPanel();
 						rc5Panel.add(dummy6);
 					}
+					
+					// Farb-Tastenfeld einfuegen
+					colKeyPanel = new JPanel();
+					keyPanel.add(colKeyPanel);
+					colKeyPanel.setLayout(new GridLayout(1,4,5,5));
+					{
+						{
+							jButtonRed = new JButton();
+							colKeyPanel.add(jButtonRed);
+							jButtonRed.setBackground(new Color(255,0,0));
+							jButtonRed.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent evt) {
+									bot.setSensRc5(RC5_CODE_RED);
+									}
+								});
+						}
+						{
+							jButtonGreen = new JButton();
+							colKeyPanel.add(jButtonGreen);
+							jButtonGreen.setBackground(new Color(0,255,0));
+							jButtonGreen.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent evt) {
+									bot.setSensRc5(RC5_CODE_GREEN);
+								}
+							});
+						}
+						{
+							jButtonYellow= new JButton();
+							colKeyPanel.add(jButtonYellow);
+							jButtonYellow.setBackground(new Color(255,255,0));
+							jButtonYellow.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent evt) {
+									bot.setSensRc5(RC5_CODE_YELLOW);
+								}
+							});
+						}
+						{
+							jButtonBlue = new JButton();
+							colKeyPanel.add(jButtonBlue);
+							jButtonBlue.setBackground(new Color(0,0,255));
+							jButtonBlue.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								bot.setSensRc5(RC5_CODE_BLUE);
+								}
+							});
+						}
+					} // Ende des Farb-Tastenfeldes
 				} // Ende des Tastenfeldes
 			} // Ende der linken Spalte
 			
 			// rechte Spalte fuellen
 			{
+				sensorPanel = new JPanel();
+				mainPanelRight.add(sensorPanel);
+				
 				labelDim = new Dimension(50, 25);
 				Dimension labelDimMax = new Dimension(100, 25);
 				fieldDim = new Dimension(50, 25);
 				Dimension fieldDimMax = new Dimension(100, 25);
-				
-				// Maussensoranzeige
-				msLabel = new JLabel();
-				msLabel.setText("Maussensor");
-				msLabel.setPreferredSize(labelDim);
-				mainPanelRight.add(msLabel);
-				
-				msPanel = new JPanel();
-				mainPanelRight.add(msPanel);
-				BoxLayout msPanelLayout = new BoxLayout(msPanel,
-						javax.swing.BoxLayout.X_AXIS);
-				msPanel.setLayout(msPanelLayout);
+			
 				{
-					msLabelX = new JLabel();
-					msPanel.add(msLabelX);
-					msLabelX.setText("Delta-X");
-					msLabelX.setPreferredSize(labelDim);
-					msLabelX.setMaximumSize(labelDimMax);
-				
-					msDeltaX = new JTextField();
-					msPanel.add(msDeltaX);
-					msDeltaX.setText("0");
-					msDeltaX.setEditable(false);
-					msDeltaX.setPreferredSize(fieldDim);
-					msDeltaX.setMaximumSize(fieldDimMax);
-				
-					msPanel.add(Box.createRigidArea(smallGap));
+					sensorPanel.setLayout(new BoxLayout(sensorPanel, BoxLayout.Y_AXIS));
+						
+					// Maussensoranzeige
+					msLabel = new JLabel();
+					msLabel.setText("Maussensor");
+					msLabel.setPreferredSize(labelDim);
+					sensorPanel.add(msLabel);
 					
-					msLabelY = new JLabel();
-					msPanel.add(msLabelY);
-					msLabelY.setText("Delta-Y");
-					msLabelY.setPreferredSize(labelDim);
-					msLabelY.setMaximumSize(labelDimMax);
+					msPanel = new JPanel();
+					sensorPanel.add(msPanel);
+					BoxLayout msPanelLayout = new BoxLayout(msPanel,
+							javax.swing.BoxLayout.X_AXIS);
+					msPanel.setLayout(msPanelLayout);
+					{
+						msLabelX = new JLabel();
+						msPanel.add(msLabelX);
+						msLabelX.setText("Delta-X");
+						msLabelX.setPreferredSize(labelDim);
+						msLabelX.setMaximumSize(labelDimMax);
 					
-					msDeltaY = new JTextField();
-					msPanel.add(msDeltaY);
-					msDeltaY.setText("0");
-					msDeltaY.setEditable(false);
-					msDeltaY.setPreferredSize(fieldDim);
-					msDeltaY.setMaximumSize(fieldDimMax);
-				}
+						msDeltaX = new JTextField();
+						msPanel.add(msDeltaX);
+						msDeltaX.setText("0");
+						msDeltaX.setEditable(false);
+						msDeltaX.setPreferredSize(fieldDim);
+						msDeltaX.setMaximumSize(fieldDimMax);
+					
+						msPanel.add(Box.createRigidArea(smallGap));
+						
+						msLabelY = new JLabel();
+						msPanel.add(msLabelY);
+						msLabelY.setText("Delta-Y");
+						msLabelY.setPreferredSize(labelDim);
+						msLabelY.setMaximumSize(labelDimMax);
+						
+						msDeltaY = new JTextField();
+						msPanel.add(msDeltaY);
+						msDeltaY.setText("0");
+						msDeltaY.setEditable(false);
+						msDeltaY.setPreferredSize(fieldDim);
+						msDeltaY.setMaximumSize(fieldDimMax);
+					}
+					
+					sensorPanel.add(Box.createRigidArea(smallGap));
+					
+					// Liniensensoren
+					lineLabel = new JLabel("Liniensensoren");
+					lineLabel.setPreferredSize(labelDim);
+					sensorPanel.add(lineLabel);
+					linePanel = new JPanel();
+					sensorPanel.add(linePanel);
+					linePanel.setLayout(new BoxLayout(linePanel,BoxLayout.X_AXIS));
+					{
+						lineLabelL = new JLabel();
+						linePanel.add(lineLabelL);
+						lineLabelL.setText("links");
+						lineLabelL.setPreferredSize(labelDim);
+						lineLabelL.setMaximumSize(labelDimMax);
+					
+						lineL = new JTextField();
+						linePanel.add(lineL);
+						lineL.setText("0");
+						lineL.setEditable(false);
+						lineL.setPreferredSize(fieldDim);
+						lineL.setMaximumSize(fieldDimMax);
+					
+						linePanel.add(Box.createRigidArea(smallGap));
+						
+						lineLabelR = new JLabel();
+						linePanel.add(lineLabelR);
+						lineLabelR.setText("rechts");
+						lineLabelR.setPreferredSize(labelDim);
+						lineLabelR.setMaximumSize(labelDimMax);
+					
+						lineR = new JTextField();
+						linePanel.add(lineR);
+						lineR.setText("0");
+						lineR.setEditable(false);
+						lineR.setPreferredSize(fieldDim);
+						lineR.setMaximumSize(fieldDimMax);
+					}
+					
+					sensorPanel.add(Box.createRigidArea(smallGap));
+					
+					// Abgrundsensoren
+					borderLabel = new JLabel("Abgrundsensoren");
+					borderLabel.setPreferredSize(labelDim);
+					sensorPanel.add(borderLabel);
+					borderPanel = new JPanel();
+					sensorPanel.add(borderPanel);
+					borderPanel.setLayout(new BoxLayout(borderPanel,BoxLayout.X_AXIS));
+					{
+						borderLabelL = new JLabel();
+						borderPanel.add(borderLabelL);
+						borderLabelL.setText("links");
+						borderLabelL.setPreferredSize(labelDim);
+						borderLabelL.setMaximumSize(labelDimMax);
+					
+						borderL = new JTextField();
+						borderPanel.add(borderL);
+						borderL.setText("0");
+						borderL.setEditable(false);
+						borderL.setPreferredSize(fieldDim);
+						borderL.setMaximumSize(fieldDimMax);
+					
+						borderPanel.add(Box.createRigidArea(smallGap));
+						
+						borderLabelR = new JLabel();
+						borderPanel.add(borderLabelR);
+						borderLabelR.setText("rechts");
+						borderLabelR.setPreferredSize(labelDim);
+						borderLabelR.setMaximumSize(labelDimMax);
+						
+						borderR = new JTextField();
+						borderPanel.add(borderR);
+						borderR.setText("0");
+						borderR.setEditable(false);
+						borderR.setPreferredSize(fieldDim);
+						borderR.setMaximumSize(fieldDimMax);
+					}
+					
+					sensorPanel.add(Box.createRigidArea(smallGap));
+					
+					// Lichtsensoren
+					ldrLabel = new JLabel("Lichtsensoren");
+					ldrLabel.setPreferredSize(labelDim);
+					sensorPanel.add(ldrLabel);
+					ldrPanel = new JPanel();
+					sensorPanel.add(ldrPanel);
+					ldrPanel.setLayout(new BoxLayout(ldrPanel,BoxLayout.X_AXIS));
+					{
+						ldrLabelL = new JLabel();
+						ldrPanel.add(ldrLabelL);
+						ldrLabelL.setText("links");
+						ldrLabelL.setPreferredSize(labelDim);
+						ldrLabelL.setMaximumSize(labelDimMax);
+						
+						ldrL = new JTextField();
+						ldrPanel.add(ldrL);
+						ldrL.setText("0");
+						ldrL.setEditable(false);
+						ldrL.setPreferredSize(fieldDim);
+						ldrL.setMaximumSize(fieldDimMax);
+					
+						ldrPanel.add(Box.createRigidArea(smallGap));
+						
+						ldrLabelR = new JLabel();
+						ldrPanel.add(ldrLabelR);
+						ldrLabelR.setText("rechts");
+						ldrLabelR.setPreferredSize(labelDim);
+						ldrLabelR.setMaximumSize(labelDimMax);
+						
+						ldrR = new JTextField();
+						ldrPanel.add(ldrR);
+						ldrR.setText("0");
+						ldrR.setEditable(false);
+						ldrR.setPreferredSize(fieldDim);
+						ldrR.setMaximumSize(fieldDimMax);
+					}
+					
+				} // Ende Sensor Panel
 				
 				mainPanelRight.add(Box.createRigidArea(smallGap));
-				
-				// Liniensensoren
-				lineLabel = new JLabel("Liniensensoren");
-				lineLabel.setPreferredSize(labelDim);
-				mainPanelRight.add(lineLabel);
-				linePanel = new JPanel();
-				mainPanelRight.add(linePanel);
-				linePanel.setLayout(new BoxLayout(linePanel,BoxLayout.X_AXIS));
+
+				/* 
+				 * Debug-Ausgaben am Roboter: 
+				 * damit die hier angezeigt werden: Kommentarzeichen in ct-bot.h vor
+				 * "#define DISPLAY_REMOTE_AVAILABLE" entfernen!
+				 */
+				botPanel = new JPanel();
+				mainPanelRight.add(botPanel);
 				{
-					lineLabelL = new JLabel();
-					linePanel.add(lineLabelL);
-					lineLabelL.setText("links");
-					lineLabelL.setPreferredSize(labelDim);
-					lineLabelL.setMaximumSize(labelDimMax);
-				
-					lineL = new JTextField();
-					linePanel.add(lineL);
-					lineL.setText("0");
-					lineL.setEditable(false);
-					lineL.setPreferredSize(fieldDim);
-					lineL.setMaximumSize(fieldDimMax);
-				
-					linePanel.add(Box.createRigidArea(smallGap));
+					botPanel.setLayout(new BoxLayout(botPanel,BoxLayout.Y_AXIS));
+
+					// LCD - Pannel
+					lcdLabel = new JLabel("Display");
+					botPanel.add(lcdLabel);
+
+					lcdPanel = new JPanel();
+					botPanel.add(lcdPanel);
+					{
+						lcdPanel.setLayout(new GridLayout(4, 1,5,5));
+						lcdPanel.setBorder( new EtchedBorder() );
+						lcdPanel.setBackground( new Color(120,150,90));
+						lcdPanel.setPreferredSize(new Dimension(145,85));
+						lcdPanel.setMaximumSize(new Dimension(150,90));
+						
+						Font Display = new Font("Monospaced", Font.BOLD, 12);
 					
-					lineLabelR = new JLabel();
-					linePanel.add(lineLabelR);
-					lineLabelR.setText("rechts");
-					lineLabelR.setPreferredSize(labelDim);
-					lineLabelR.setMaximumSize(labelDimMax);
-				
-					lineR = new JTextField();
-					linePanel.add(lineR);
-					lineR.setText("0");
-					lineR.setEditable(false);
-					lineR.setPreferredSize(fieldDim);
-					lineR.setMaximumSize(fieldDimMax);
-				}
-				
-				mainPanelRight.add(Box.createRigidArea(smallGap));
-				
-				// Abgrundsensoren
-				borderLabel = new JLabel("Abgrundsensoren");
-				borderLabel.setPreferredSize(labelDim);
-				mainPanelRight.add(borderLabel);
-				borderPanel = new JPanel();
-				mainPanelRight.add(borderPanel);
-				borderPanel.setLayout(new BoxLayout(borderPanel,BoxLayout.X_AXIS));
-				{
-					borderLabelL = new JLabel();
-					borderPanel.add(borderLabelL);
-					borderLabelL.setText("links");
-					borderLabelL.setPreferredSize(labelDim);
-					borderLabelL.setMaximumSize(labelDimMax);
-				
-					borderL = new JTextField();
-					borderPanel.add(borderL);
-					borderL.setText("0");
-					borderL.setEditable(false);
-					borderL.setPreferredSize(fieldDim);
-					borderL.setMaximumSize(fieldDimMax);
-				
-					borderPanel.add(Box.createRigidArea(smallGap));
+						// füge Zeilen für die LCD Ausgabe ein
+						lcdLine1 = new JLabel();
+						lcdLine2 = new JLabel();
+						lcdLine3 = new JLabel();
+						lcdLine4 = new JLabel();
+						
+						lcdLine1.setFont(Display);
+						lcdLine2.setFont(Display);
+						lcdLine3.setFont(Display);
+						lcdLine4.setFont(Display);
+
+						lcdPanel.add(lcdLine1);
+						lcdPanel.add(lcdLine2);
+						lcdPanel.add(lcdLine3);
+						lcdPanel.add(lcdLine4);
+					}
 					
-					borderLabelR = new JLabel();
-					borderPanel.add(borderLabelR);
-					borderLabelR.setText("rechts");
-					borderLabelR.setPreferredSize(labelDim);
-					borderLabelR.setMaximumSize(labelDimMax);
+					botPanel.add(Box.createRigidArea(smallGap));
 					
-					borderR = new JTextField();
-					borderPanel.add(borderR);
-					borderR.setText("0");
-					borderR.setEditable(false);
-					borderR.setPreferredSize(fieldDim);
-					borderR.setMaximumSize(fieldDimMax);
-				}
-				
-				mainPanelRight.add(Box.createRigidArea(smallGap));
-				
-				// Lichtsensoren
-				ldrLabel = new JLabel("Lichtsensoren");
-				ldrLabel.setPreferredSize(labelDim);
-				mainPanelRight.add(ldrLabel);
-				ldrPanel = new JPanel();
-				mainPanelRight.add(ldrPanel);
-				ldrPanel.setLayout(new BoxLayout(ldrPanel,BoxLayout.X_AXIS));
-				{
-					ldrLabelL = new JLabel();
-					ldrPanel.add(ldrLabelL);
-					ldrLabelL.setText("links");
-					ldrLabelL.setPreferredSize(labelDim);
-					ldrLabelL.setMaximumSize(labelDimMax);
+					// LED Panel
+					ledLabel = new JLabel("LEDs");
+					ledLabel.setPreferredSize(labelDim);
+					ledLabel.setMaximumSize(labelDimMax);
 					
-					ldrL = new JTextField();
-					ldrPanel.add(ldrL);
-					ldrL.setText("0");
-					ldrL.setEditable(false);
-					ldrL.setPreferredSize(fieldDim);
-					ldrL.setMaximumSize(fieldDimMax);
-				
-					ldrPanel.add(Box.createRigidArea(smallGap));
+					botPanel.add(ledLabel);
 					
-					ldrLabelR = new JLabel();
-					ldrPanel.add(ldrLabelR);
-					ldrLabelR.setText("rechts");
-					ldrLabelR.setPreferredSize(labelDim);
-					ldrLabelR.setMaximumSize(labelDimMax);
-					
-					ldrR = new JTextField();
-					ldrPanel.add(ldrR);
-					ldrR.setText("0");
-					ldrR.setEditable(false);
-					ldrR.setPreferredSize(fieldDim);
-					ldrR.setMaximumSize(fieldDimMax);
-				}
+					ledPanel = new JPanel();
+					botPanel.add(ledPanel);
+					{
+						ledPanel.setMaximumSize(new Dimension(175,25));
+						Dimension ledDim = new Dimension(15,15);
+
+						ledPanel.setLayout(new GridLayout(1,8,5,5));
+
+						led1 = new JPanel(); 
+						led2 = new JPanel();
+						led3 = new JPanel(); 
+						led4 = new JPanel(); 
+						led5 = new JPanel(); 
+						led6 = new JPanel(); 
+						led7 = new JPanel(); 
+						led8 = new JPanel(); 
+
+						// Größe und Farbe der LEDs setzen
+						led1.setMaximumSize(ledDim); led1.setBackground(colLed1);
+						led2.setMaximumSize(ledDim); led2.setBackground(colLed2);
+						led3.setMaximumSize(ledDim); led3.setBackground(colLed3);
+						led3.setMaximumSize(ledDim); led4.setBackground(colLed4);
+						led5.setMaximumSize(ledDim); led5.setBackground(colLed5);
+						led6.setMaximumSize(ledDim); led6.setBackground(colLed6);
+						led7.setMaximumSize(ledDim); led7.setBackground(colLed7);
+						led8.setMaximumSize(ledDim); led8.setBackground(colLed8);
+						
+						ledPanel.add(led1);
+						ledPanel.add(led2);
+						ledPanel.add(led3);
+						ledPanel.add(led4);
+						ledPanel.add(led5);
+						ledPanel.add(led6);
+						ledPanel.add(led7);
+						ledPanel.add(led8);
+					} // LED-Panel ENDE 
+				} // Bot-Panel ENDE
 				
 				mainPanelRight.add(Box.createRigidArea(smallGap));
 				
@@ -1115,12 +1294,21 @@ public class CtControlPanel extends ControlPanel {
 		ldrL.setText(Integer.toString(bot.getSensLdrL()));
 		ldrR.setText(Integer.toString(bot.getSensLdrR()));
 		
-		// Hole aktuellen Wert des LCD aus dem Bot und setzt ihn in die Textfelder:
+		// Anzeige der Debugdaten des Bots (Display und LEDs). 
 		lcdLine1.setText(bot.getLcdText(0));
 		lcdLine2.setText(bot.getLcdText(1));
 		lcdLine3.setText(bot.getLcdText(2));
 		lcdLine4.setText(bot.getLcdText(3));
-		
+
+		// Hole den Status der LEDs
+		String ledStat = Integer.toBinaryString(bot.getAktLed()); // Integerwert in eine binäre Zahl umwandel, als String speichern
+		if (ledStat.length() <=8 ) { for (int i=ledStat.length();i<8;i++){ ledStat = "0" + ledStat; } }  // auf 8 Stellen auffüllen, falls kürzer
+		else { ledStat=ledStat.substring((ledStat.length()-8),ledStat.length()); } // falls länger als 8 Stellen -> abschneiden
+
+		for (int i = 7; i >= 0; i--) {	// bei jede der 8 LEDs den Status im Simulator aktualisieren
+			setLed(8-i, (int) ledStat.charAt(i) - 48); // die 48 kommt durch die Typenumwandlung zustande
+		}
+
 		super.repaint();
 		this.repaint();
 	}
@@ -1136,6 +1324,53 @@ public class CtControlPanel extends ControlPanel {
 			yPosSliderCheck.doClick();
 		if(bot.CAP_HEAD && !head)
 			headSliderCheck.doClick();
+	}
+	
+	/**
+	 * Aktualiesiert die LEDs
+	 * 
+	 * @param _led		welche LED soll geändert werden (1...8)
+	 * @param _state	an (1) oder aus (0)
+	 */
+	private void setLed(int _led, int _state){
+		switch (_led) {
+		case 1:
+			if (_state == 1){ led1.setBackground(colLed1Akt); }
+			else {led1.setBackground(colLed1); }
+			break;
+		case 2:
+			if (_state == 1){ led2.setBackground(colLed2Akt); }
+			else {led2.setBackground(colLed2); }
+			break;
+		case 3:
+			if (_state == 1){ led3.setBackground(colLed3Akt); }
+			else {led3.setBackground(colLed3); }
+			break;
+		case 4:
+			if (_state == 1){ led4.setBackground(colLed4Akt); }
+			else {led4.setBackground(colLed4); }
+			break;
+		case 5:
+			if (_state == 1){ led5.setBackground(colLed5Akt); }
+			else {led5.setBackground(colLed5); }
+			break;
+
+		case 6:
+			if (_state == 1){ led6.setBackground(colLed6Akt); }
+			else {led6.setBackground(colLed6); }
+			break;
+
+		case 7:
+			if (_state == 1){ led7.setBackground(colLed7Akt); }
+			else {led7.setBackground(colLed7); }
+			break;
+		case 8:
+			if (_state == 1){ led8.setBackground(colLed8Akt); }
+			else {led8.setBackground(colLed8); }
+			break;
+		default:
+			break;
+		}
 	}
 	
 }

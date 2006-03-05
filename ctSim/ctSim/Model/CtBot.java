@@ -231,9 +231,8 @@ public abstract class CtBot extends Bot {
 	private Integer aktServo;
 
 	/** Zustand der LEDs */
-	private Integer aktLed;
+	private Integer aktLed = new Integer((int) 0);
 
-		
 	/** Zustand der LCD Anzeige */
 	private String[] lcdText = new String[LCD_LINES]; 
 	 
