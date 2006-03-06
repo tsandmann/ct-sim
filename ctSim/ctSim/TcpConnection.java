@@ -34,15 +34,10 @@ import mindprod.ledatastream.LEDataOutputStream;
  * @author Christoph Grimmer (c.grimmer@futurio.de)
  */
 
-public class TcpConnection {
+public class TcpConnection extends Connection {
 	/** Der Socket */
 	private Socket socket = null;
 
-	/** Ein Input-Stream */
-	private LEDataInputStream dis = null;
-
-	/** Ein Ausgabe-Stream */
-	private LEDataOutputStream dos = null;
 
 	// private BufferedReader br = null;
 
@@ -52,33 +47,6 @@ public class TcpConnection {
 
 	public TcpConnection() {
 		super();
-	}
-
-	/**
-	 * Liest ein Byte
-	 * 
-	 * @return das Byte
-	 */
-	public int readUnsignedByte() throws IOException {
-		int data;
-		synchronized (dis) {
-			data = dis.readUnsignedByte();
-		}
-		return data;
-	}
-
-	/**
-	 * Liest einen 16-Bit-Ganzzahlwert (short)
-	 * 
-	 * @return das Datum
-	 */
-	public short readShort() throws IOException {
-		short data = 0;
-		synchronized (dis) {
-			data = dis.readShort();
-		}
-
-		return data;
 	}
 
 	/**
@@ -104,27 +72,20 @@ public class TcpConnection {
 		return 0;
 	}
 
-	/* Interne Hilfsmethode für die Verbindung */
+	/* Interne Hilfsmethode fuer die Verbindung */
 	private void connect() throws IOException {
-		// Erzeugt gepufferten Datenstrom vom XPort zu PC:
-		// br = new BufferedReader(new
-		// InputStreamReader(socket.getInputStream()));
-		dis = new LEDataInputStream(socket.getInputStream());
-
-		// Erzeugt gepufferten Datenstrom vom PC zum XPort:
-		dos = new LEDataOutputStream(socket.getOutputStream());
-
-		// this.start();
+		setDis(new LEDataInputStream(socket.getInputStream()));
+		setDos(new LEDataOutputStream(socket.getOutputStream()));
 	}
 
 	/**
-	 * Legt für den übergebenen Socket Little Endian Streams an.
-	 * @param socket Der Socket, über den geschrieben und gelesen wird.
+	 * Legt fuer den uebergebenen Socket Little Endian Streams an.
+	 * @param socket Der Socket, ueber den geschrieben und gelesen wird.
 	 * @throws IOException Wenn es beim Anlegen der beiden Streams zu Problemen kommt.
 	 * */
 	public void connect (Socket socket) throws IOException {
 		this.socket = socket;
-		connect();		
+		connect();
 	}
 	
 	/**
@@ -183,55 +144,11 @@ public class TcpConnection {
 	 * @throws Exception
 	 */
 	public synchronized void disconnect() throws IOException, Exception {
+		super.disconnect();
 		try {
-			dis.close(); // close input and output stream
-			// br.close();
-			dos.close();
 			socket.close(); // as well as the socket
-		} catch (IOException IOEx) {
-			throw IOEx;
 		} catch (Exception Ex) {
 			throw Ex;
-		}
-	}
-
-	/**
-	 * Schickt einen String
-	 * 
-	 * @param sendString
-	 *            der String, der gesendet werden soll
-	 * @throws IOException
-	 *             falls etwas mit DataOutputStream.writeBytes oder flush schief
-	 *             gegangen ist
-	 */
-	public void send(String sendString) throws IOException {
-
-		try {
-			synchronized (dos) {
-				dos.writeBytes(sendString);
-				dos.flush(); // write dos
-			}
-
-		} catch (IOException iOEx) {
-			throw iOEx;
-		}
-	}
-
-	/**
-	 * Uebertraegt Daten
-	 * 
-	 * @param sendByte
-	 *            Nutzdaten (einzelne Bytes in einem int-Array)
-	 * @throws IOException
-	 */
-	public void send(byte sendByte[]) throws IOException {
-		try {
-			synchronized (dos) {
-				dos.write(sendByte);
-				dos.flush(); // write dos
-			}
-		} catch (IOException iOEx) {
-			throw iOEx;
 		}
 	}
 }

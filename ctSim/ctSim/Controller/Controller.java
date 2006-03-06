@@ -44,6 +44,7 @@ public class Controller {
 	private static ControlFrame controlFrame;
 
 	private static boolean test;
+	private static boolean serial;
 
 	/**
 	 * Startet den c't-Sim
@@ -64,6 +65,7 @@ public class Controller {
 				null, options, options[1]);
 
 		test = true;
+		serial=false;
 		
 		if (n==0){
 			test= false;
@@ -91,6 +93,7 @@ public class Controller {
 			}
 		}
 		
+		
 		/*
 		 * Der Sim sollte auch auf die TCP-Verbindung lauschen,
 		 * wenn es Testbots gibt. Aus diesem Grund ist der thread, 
@@ -100,6 +103,38 @@ public class Controller {
 		System.out.println("Warte auf Verbindung vom c't-Bot");
 		SocketListener listener = new SocketListener(10001);
 		listener.start();
+
+		if (serial){
+			Bot bot = null;
+			JD2xxConnection com=new JD2xxConnection();
+
+			try {
+				com.connect();
+				
+				bot = new CtBotRealTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),com);
+				System.out.print("Real Bot at COM comming up");
+			} catch (Exception ex) {
+				ErrorHandler
+				.error("Serial Connection not possible: "+ ex);
+			}
+			
+			if (bot != null){		
+				bot.providePanel();
+				bot.setBotName(bot.getClass().getName());
+				Controller.getWorld().addBot(bot);
+				Controller.getControlFrame().addBot(bot);
+				bot.start();
+			} else
+				try {
+					com.disconnect();
+				}catch (Exception ex) {}
+
+
+		}
+	
+	
+	
+	
 	}
 
 	/*
@@ -108,7 +143,7 @@ public class Controller {
 	 * Typ ist entweder "Testbot" oder "BotSimTCP"
 	 * 
 	 * Crimson 2006-06-13:
-	 * Wird vorläufig noch für die Testbots verwendet. TCPBots können sich von außer verbinden ohne dass man sie "einladen" muss.
+	 * Wird vorlï¿½ufig noch fï¿½r die Testbots verwendet. TCPBots kï¿½nnen sich von auï¿½er verbinden ohne dass man sie "einladen" muss.
 	 */
 	private static void addBot(String type, String name, Point3f pos,
 			Vector3f head) {
@@ -172,22 +207,55 @@ class SocketListener extends Thread {
 	}
 
 	public void run() {
+		Bot bot = null;
+		TcpConnection tcp=null;
 		try {
 			ServerSocket server = new ServerSocket(port);
 			while (listen) {
-				TcpConnection tcp = new TcpConnection();
+				bot=null;
+				tcp = new TcpConnection();
 				/*
-				 * Da die Klasse TcpConnection ständig den ServerSocket neu aufbaut und wieder zerstört, umgehe ich die
-				 * eingebaute Methode listen() und übergeben den Socket selbst. Da die TcpConncetion den ServerSocket
-				 * aber auch nicht wieder frei gibt, habe ich den ursprünglich vorhandenen Aufruf gänzlich entfernt.
+				 * Da die Klasse TcpConnection staendig den ServerSocket neu aufbaut und wieder zerstoert, umgehe ich die
+				 * eingebaute Methode listen() und uebergeben den Socket selbst. Da die TcpConncetion den ServerSocket
+				 * aber auch nicht wieder frei gibt, habe ich den urspruenglich vorhandenen Aufruf gaenzlich entfernt.
 				 */
 				tcp.connect(server.accept());
-				Bot bot = new CtBotSimTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);
-				bot.providePanel();
-				bot.setBotName("TCPBot_" + num++);
-				Controller.getWorld().addBot(bot);
-				Controller.getControlFrame().addBot(bot);
-				bot.start();
+				
+				Command cmd = new Command();
+				try {
+					while (bot==null){
+						if (cmd.readCommand(tcp) ==0) {
+							System.out.print("Seq: "+cmd.getSeq()+" CMD: "+cmd.getCommand()+"SUB: "+cmd.getSubcommand()+"\n");
+							if (cmd.getCommand() == Command.CMD_WELCOME)
+								if (cmd.getSubcommand() == Command.SUB_WELCOME_REAL){
+									bot = new CtBotRealTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);
+									System.out.print("Real Bot comming up");
+								}else{
+									bot = new CtBotSimTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);
+									System.out.print("Virtual Bot comming up");
+								}
+							else
+								System.out.print("Non-Welcome-Command found: \n"+cmd.toString()+"\n");
+						} else
+							System.out.print("Broken Command found: \n");
+							
+					}
+				} catch (IOException ex) {
+					ErrorHandler
+					.error("TCPConnection broken - not possibple to connect: "+ ex);
+				}
+				
+				if (bot != null){		
+					bot.providePanel();
+					bot.setBotName(bot.getClass().getName()+"_" + num++);
+					Controller.getWorld().addBot(bot);
+					Controller.getControlFrame().addBot(bot);
+					bot.start();
+				} else
+					try {
+						tcp.disconnect();
+					}catch (Exception ex) {}
+					
 			}
 		} catch (IOException ioe) {
 			System.err.format("Kann nicht an port %d binden.", new Integer(port));

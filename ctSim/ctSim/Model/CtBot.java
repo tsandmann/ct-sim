@@ -571,6 +571,7 @@ public abstract class CtBot extends Bot {
 	 * @see ctSim.Model.Bot#work()
 	 */
 	protected void work() {
+		this.getPanel().reactToChange();		
 	}
 
 	/**

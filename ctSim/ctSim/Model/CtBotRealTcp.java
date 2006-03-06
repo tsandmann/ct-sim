@@ -23,17 +23,21 @@ package ctSim.Model;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
+import ctSim.Connection;
 import ctSim.ErrorHandler;
-import ctSim.TcpConnection;
 
 /**
  * Die Oberklasse fuer Repraesentationen aller Bots, die ausserhalb der Grenzen
  * des Simulators existieren und mit diesem ueber TCP kommunizieren.
  */
-public class CtBotRealTcp extends CtBotReal {
+public class CtBotRealTcp extends CtBotReal implements TcpBot {
 
-	private TcpConnection tcpCon;
+	/** Die TCP-Verbindung */
+	private Connection con;
 
+	/** Der "Anrufbeantworter" fuer eingehende Kommandos */
+	private AnsweringMachine answeringMachine;
+	
 	/**
 	 * Erzeugt einen neuen Bot
 	 * 
@@ -44,9 +48,10 @@ public class CtBotRealTcp extends CtBotReal {
 	 * @param tc
 	 *            Kommunikationsverbindung
 	 */
-	public CtBotRealTcp(Point3f pos, Vector3f head, TcpConnection tc) {
+	public CtBotRealTcp(Point3f pos, Vector3f head, Connection tc) {
 		super(pos, head);
-		tcpCon = tc;
+		con = tc;
+		answeringMachine = new AnsweringMachine(this, con);		
 	}
 
 	/*
@@ -55,29 +60,132 @@ public class CtBotRealTcp extends CtBotReal {
 	 * @see ctSim.Model.Bot#work()
 	 */
 	public void work() {
+		super.work();
 		// TODO noch zu implementieren
-		ErrorHandler.error("BotRealTcp.run is missing");
+		//ErrorHandler.error("BotRealTcp.work is missing");
 	}
-
-	/*
-	 * (non-Javadoc)
+	
+	/**
+	 * Wertet ein empfangenes Kommando aus
 	 * 
-	 * @see ctSim.Model.Bot#init()
+	 * @param command
+	 *            Das Kommando
 	 */
-	protected void init() {
-		// TODO noch zu implementieren
+	public void evaluate_command(Command command) {
+//		Command answer = new Command();
+
+		if (command.getDirection() == Command.DIR_REQUEST) {
+//			System.out.print(command.toString());
+			switch (command.getCommand()) {
+			case Command.CMD_SENS_IR:
+				setSensIrL(command.getDataL());
+				setSensIrR(command.getDataR());
+				break;
+			case Command.CMD_SENS_ENC:
+				setSensEncL((short)command.getDataL());
+				setSensEncR((short)command.getDataR());
+				break;
+			case Command.CMD_SENS_BORDER:
+				setSensBorderL(command.getDataL());
+				setSensBorderR(command.getDataR());
+				break;
+			case Command.CMD_SENS_DOOR:
+				setSensDoor(command.getDataL());
+				break;
+			case Command.CMD_SENS_LDR:
+				setSensLdrL(command.getDataL());
+				setSensLdrR(command.getDataR());
+				break;
+			case Command.CMD_SENS_LINE:
+				setSensLineL(command.getDataL());
+				setSensLineR(command.getDataR());
+				break;
+			case Command.CMD_SENS_MOUSE:
+				setSensMouseDX(command.getDataL());
+				setSensMouseDY(command.getDataR());
+				break;
+			case Command.CMD_SENS_TRANS:
+				setSensTrans(command.getDataL());
+				break;
+			case Command.CMD_SENS_RC5:
+				setSensRc5(command.getDataL());
+				break;
+			case Command.CMD_SENS_ERROR:
+				setSensError(command.getDataL());
+				break;
+
+			case Command.CMD_AKT_MOT:
+				setAktMotL((short)command.getDataL());
+				setAktMotR((short)command.getDataR());
+				break;
+			case Command.CMD_AKT_SERVO:
+				setAktServo(command.getDataL());
+				break;
+			case Command.CMD_AKT_DOOR:
+				setAktDoor(command.getDataL());
+				break;
+			case Command.CMD_AKT_LED:
+				setAktLed(command.getDataL());
+				break;
+			case Command.CMD_ACT_LCD:
+				switch (command.getSubcommand()) {
+				case Command.SUB_CMD_NORM:
+					setLcdText(command.getDataL(), command.getDataR(), command.getDataBytesAsString());
+					break;
+				case Command.SUB_LCD_CURSOR:
+					setCursor(command.getDataL(), command.getDataR());
+					break;
+				case Command.SUB_LCD_CLEAR:
+					lcdClear();
+					break;
+				case Command.SUB_LCD_DATA:
+					setLcdText(command.getDataBytesAsString());
+					break;
+				}
+				break;
+			default:
+				ErrorHandler.error("Unknown Command:" + command.toString());
+				break;
+			}
+			// System.out.println("Command: " + (char)command.getCommand());
+
+			try {
+				// tcpCon.send(answer.getCommandBytes());
+			} catch (Exception ex) {
+				ErrorHandler.error("Sending answer failed");
+			}
+
+		} else {
+			// TODO: Antworten werden noch nicht gegeben
+		}
+	}
+	
+	
+	
+	/**
+	 * Startet den Bot und den Thread fuer eingehende Kommandos
+	 * 
+	 * @see java.lang.Thread#start()
+	 */
+	public synchronized void start() {
+		super.start();
+		answeringMachine.start();
 
 	}
-
+	
 	/*
-	 * (non-Javadoc)
+	 * Aufraeumen
 	 * 
 	 * @see ctSim.Model.Bot#cleanup()
 	 */
 	protected void cleanup() {
+		super.cleanup();
 		try {
-			if (tcpCon != null)
-				tcpCon.disconnect();
+			if (con != null)
+				con.disconnect();
+			if (answeringMachine != null)
+				answeringMachine.die();
+			super.cleanup();
 		} catch (Exception ex) {
 		}
 	}

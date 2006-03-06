@@ -469,13 +469,14 @@ abstract public class CtBotSim extends CtBot {
 	 * @see ctSim.Model.World#getSimulTime()
 	 */
 	protected void work() {
+		super.work();
 		long tmpTime = simulTime;
 		try {
 			simulTime = world.getSimulTime(); 
 			// warten, bis World den naechsten Schritt macht
 			deltaT = simulTime - tmpTime; // aktualisiere deltaT
 			updateStats();
-			this.getPanel().reactToChange();
+//			this.getPanel().reactToChange();
 		} catch (InterruptedException e) {
 			ErrorHandler.error("Bot: " + getBotName() + " dies " + e);
 			die();

@@ -32,73 +32,13 @@ import ctSim.TcpConnection;
  * 
  * @author Benjamin Benz (bbe@heise.de)
  */
-public class CtBotSimTcp extends CtBotSim {
-
-	/**
-	 * Kuemmert sich um die Beantwortung eingehender Kommanods
-	 * 
-	 * @author Benjamin Benz (bbe@heise.de)
-	 */
-	private class AnsweringMachine extends Thread {
-
-		/** Soll der Thread noch laufen */
-		private boolean run = true;
-
-		/**
-		 * Beendet den Thread<b>
-		 * 
-		 * @see AbstractBot#work()
-		 */
-		public void die() {
-			run = false;
-			this.interrupt();
-			CtBotSimTcp.this.die(); // Alles muss sterben
-		}
-
-		/**
-		 * Kuemmert sich um die Beantwortung eingehender Kommanods
-		 * 
-		 * @see java.lang.Thread#run()
-		 */
-		public void run() {
-			super.run();
-			Command command = new Command();
-			int valid = 0;
-			while (run) {
-				try {
-					valid = command.readCommand(tcpCon);
-					if (valid == 0) {// Kommando ist in Ordnung
-						evaluate_command(command);
-					} else
-						System.out.println("Invalid Command");
-				} catch (IOException ex) {
-					ErrorHandler
-							.error("TCPConnection broken - BotSimTcp dies: "
-									+ ex);
-					die();
-				}
-			}
-			die();
-		}
-	}
+public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 	/** Die TCP-Verbindung */
 	private TcpConnection tcpCon;
 
 	/** Der "Anrufbeantworter" fuer eingehende Kommandos */
 	private AnsweringMachine answeringMachine;
-
-	/**
-	 * Erzeugt einen neuen Bot
-	 * 
-	 * @param pos
-	 *            initiale Position
-	 * @param head
-	 *            initiale Blickrichtung
-	 */
-	public CtBotSimTcp(Point3f pos, Vector3f head) {
-		super(pos, head);
-	}
 
 	/**
 	 * Erzeugt einen neuen BotSimTcp mit einer schon bestehenden Verbindung
@@ -109,7 +49,7 @@ public class CtBotSimTcp extends CtBotSim {
 	public CtBotSimTcp(Point3f pos, Vector3f head, TcpConnection tc) {
 		super(pos, head);
 		tcpCon = (TcpConnection) tc;
-		answeringMachine = new AnsweringMachine();
+		answeringMachine = new AnsweringMachine(this, tcpCon);
 	}
 
 	/** Sequenznummer der TCP-Pakete */
@@ -196,7 +136,7 @@ public class CtBotSimTcp extends CtBotSim {
 	 * @param command
 	 *            Das Kommando
 	 */
-	private void evaluate_command(Command command) {
+	public void evaluate_command(Command command) {
 		Command answer = new Command();
 
 		if (command.getDirection() == Command.DIR_REQUEST) {
@@ -297,14 +237,6 @@ public class CtBotSimTcp extends CtBotSim {
 		} else {
 			// TODO: Antworten werden noch nicht gegeben
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ctSim.Model.Bot#init()
-	 */
-	protected void init() {
 	}
 
 	/*

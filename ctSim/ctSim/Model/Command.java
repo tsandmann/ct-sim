@@ -21,7 +21,7 @@ package ctSim.Model;
 
 import java.io.IOException;
 
-import ctSim.TcpConnection;
+import ctSim.Connection;
 
 /**
  * Realisiert Kommandos zwischen Bot und Simulator
@@ -110,6 +110,15 @@ public class Command {
 	
 	/** Subkommando Cursorkoordinaten */
 	public static final int SUB_LCD_CURSOR = 'C';
+	
+	/** Kommando zum Hallo-Sagen  */
+	public static final int CMD_WELCOME ='W';
+	
+	/** Subkommando Cursorkoordinaten */
+	public static final int SUB_WELCOME_REAL ='R';
+	
+	/** Subkommando Cursorkoordinaten */
+	public static final int SUB_WELCOME_SIM ='S';
 	
 	/** Markiert den Beginn eines Kommandos */
 	private int startCode = STARTCODE;
@@ -262,32 +271,32 @@ public class Command {
 	 * @throws IOException
 	 * @see Command#validate()
 	 */
-	public int readCommand(TcpConnection tcpCon) throws IOException {
+	public int readCommand(Connection con) throws IOException {
 		int tmp;
 		
 		startCode = 0;
 		// lese Bytes bis Startcode gefunden wird
 		while (startCode != STARTCODE) {
-			startCode = tcpCon.readUnsignedByte();
+			startCode = con.readUnsignedByte();
 		}
 
-		command = tcpCon.readUnsignedByte();
+		command = con.readUnsignedByte();
 
-		tmp = tcpCon.readUnsignedByte();
+		tmp = con.readUnsignedByte();
 
 		subcommand = tmp & 127;
 		direction = tmp >> 7 & 1;
 
-		payload = tcpCon.readUnsignedByte();
-		dataL = tcpCon.readShort();
-		dataR = tcpCon.readShort();
-		seq = tcpCon.readShort();
-		crc = tcpCon.readUnsignedByte();
+		payload = con.readUnsignedByte();
+		dataL = con.readShort();
+		dataR = con.readShort();
+		seq = con.readShort();
+		crc = con.readUnsignedByte();
 
 		dataBytes = new byte[payload];
 		
 		for (int i=0; i<payload; i++) {
-			dataBytes[i] = (byte) tcpCon.readUnsignedByte();
+			dataBytes[i] = (byte) con.readUnsignedByte();
 		}
 //		System.out.println(toString());
 		
