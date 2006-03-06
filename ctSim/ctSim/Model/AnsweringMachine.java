@@ -79,9 +79,7 @@ import ctSim.ErrorHandler;
 					} else
 						System.out.println("Invalid Command");
 				} catch (IOException ex) {
-					ErrorHandler
-							.error("TCPConnection broken - BotSimTcp dies: "
-									+ ex);
+					ErrorHandler.error("Connection broken - Bot dies: "									+ ex);
 					die();
 				}
 			}

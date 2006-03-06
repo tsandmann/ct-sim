@@ -112,7 +112,7 @@ public class Controller {
 				com.connect();
 				
 				bot = new CtBotRealTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),com);
-				System.out.print("Real Bot at COM comming up");
+				System.out.println("Real Bot at COM comming up");
 			} catch (Exception ex) {
 				ErrorHandler
 				.error("Serial Connection not possible: "+ ex);
@@ -226,7 +226,7 @@ class SocketListener extends Thread {
 					while (bot==null){
 						if (cmd.readCommand(tcp) ==0) {
 							System.out.print("Seq: "+cmd.getSeq()+" CMD: "+cmd.getCommand()+"SUB: "+cmd.getSubcommand()+"\n");
-							if (cmd.getCommand() == Command.CMD_WELCOME)
+							if (cmd.getCommand() == Command.CMD_WELCOME){
 								if (cmd.getSubcommand() == Command.SUB_WELCOME_REAL){
 									bot = new CtBotRealTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);
 									System.out.print("Real Bot comming up");
@@ -234,9 +234,12 @@ class SocketListener extends Thread {
 									bot = new CtBotSimTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);
 									System.out.print("Virtual Bot comming up");
 								}
-							else
-								System.out.print("Non-Welcome-Command found: \n"+cmd.toString()+"\n");
-						} else
+							}else {
+								System.out.print("Non-Welcome-Command found: \n"+cmd.toString()+"\n ==> Bot is already running or deprecated bot \nDefaulting to virtual Bot\n");
+								// TODO Strenger pruefen und alle nicht ordentlich angemeldeten Bots abweisen!
+								bot = new CtBotSimTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);								
+							} 
+						}else
 							System.out.print("Broken Command found: \n");
 							
 					}

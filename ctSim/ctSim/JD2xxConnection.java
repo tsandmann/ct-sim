@@ -10,11 +10,25 @@ public class JD2xxConnection extends Connection {
 
 	private JD2XX jd = new JD2XX();
 
+	private int list() throws IOException{
+		int count=0;
+		Object[] devs= jd.listDevicesByDescription();
+		for (int i=0; i<devs.length; i++){
+			System.out.println(devs[i]);
+			count++;
+		}
+		return count;
+	}
+	
 	public void connect() throws IOException {
 		try {
-			jd.open(0);
+			if (list() ==0){
+				ErrorHandler.error("No FT232 found - deinstalling Virtual comport might help");
+				throw new IOException("No FT232 found - deinstalling Virtual comport might help");
+			}
 			
-			jd.setBaudRate(9500);
+			jd.open(0);
+			jd.setBaudRate(9600);
 			jd.setDataCharacteristics(  8, JD2XX.STOP_BITS_1, JD2XX.PARITY_NONE	);
 			jd.setFlowControl( JD2XX.FLOW_NONE, 0, 0);
 			jd.setTimeouts(1000, 1000);

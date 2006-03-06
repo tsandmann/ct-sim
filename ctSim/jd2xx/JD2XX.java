@@ -503,7 +503,7 @@ public class JD2XX implements Runnable {
 	protected Thread notifier = null;
 
 	static {
-		System.loadLibrary("JD2XX");
+		System.loadLibrary("jd2xx");
 	}
 
 	/** Create a new unopened JD2XX object */
