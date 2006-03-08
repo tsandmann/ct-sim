@@ -31,7 +31,7 @@ public class JD2xxConnection extends Connection {
 			jd.setBaudRate(9600);
 			jd.setDataCharacteristics(  8, JD2XX.STOP_BITS_1, JD2XX.PARITY_NONE	);
 			jd.setFlowControl( JD2XX.FLOW_NONE, 0, 0);
-			jd.setTimeouts(1000, 1000);
+			jd.setTimeouts(60000, 60000);
 		
 			setDis(new LEDataInputStream(new JD2XXInputStream(jd)));
 			setDos(new LEDataOutputStream( new JD2XXOutputStream(jd)));
