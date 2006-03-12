@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-03-12 Benjamin Benz (bbe@heise.de) ParcoursLoader begonnen
+
 2006-03-12 Benjamin Benz (bbe@heise.de) Grosse Aufraeumaktion zwischen World, WorldView und Controller. World braucht keine Referenz auf WorldView mehr. Alles Vorbereitet, damit Views auch extern laufen koennen.
 
 2006-03-12 Benjamin Benz (bbe@heise.de) CommConnection wieder entfernt

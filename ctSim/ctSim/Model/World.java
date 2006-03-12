@@ -729,7 +729,7 @@ public class World extends Thread {
 		tgW.setPickable(true);
 		tgW.addChild(west);
 		tgO.addChild(tgW);
-
+		
 //		// Trennwaende an die richtigen Positionen schieben.
 //		translate.set(new Vector3f(-(PLAYGROUND_WIDTH/2) + 0.1f,
 //				0f, 0f));
@@ -776,9 +776,19 @@ public class World extends Thread {
 //		tgWall6.addChild(wall6);
 //		tgO.addChild(tgWall6);
 		
+/*
+		ParcoursLoader pL = new ParcoursLoader();
+		pL.setWallAppear(obstacleAppear);
+		pL.insertSceneGraph(tgO);
+*/
+		
 		sceneLight.getObstBG().setCapability(Node.ENABLE_PICK_REPORTING);
 		sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
-
+		
+		
+		
+		
+		
 //		obstBG.compile();
 
 		// Die Hindernisse der Welt hinzufuegen
