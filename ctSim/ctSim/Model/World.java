@@ -19,11 +19,15 @@
 
 package ctSim.Model;
 
+import ctSim.Controller.Controller;
 import ctSim.View.ControlFrame;
-import ctSim.View.WorldView;
 
+import java.awt.Color;
 import java.util.*;
 
+import javax.media.j3d.Appearance;
+import javax.media.j3d.ColoringAttributes;
+import javax.media.j3d.Material;
 import javax.media.j3d.PointLight;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Node;
@@ -35,6 +39,9 @@ import javax.media.j3d.PickInfo;
 import javax.media.j3d.PickShape;
 import javax.media.j3d.PickRay;
 import javax.media.j3d.Shape3D;
+import javax.media.j3d.TexCoordGeneration;
+import javax.media.j3d.Texture;
+import javax.media.j3d.Texture2D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.AmbientLight;
@@ -43,6 +50,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Color3f;
+import javax.vecmath.Vector4f;
 
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Cylinder;
@@ -50,7 +58,7 @@ import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.geometry.Stripifier;
-import com.sun.j3d.utils.universe.SimpleUniverse;
+import com.sun.j3d.utils.image.TextureLoader;
 
 /**
  * Welt-Modell, kuemmert sich um die globale Simulation und das Zeitmanagement
@@ -61,9 +69,10 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
  * @author Christoph Grimmer (c.grimmer@futurio.de)
  */
 public class World extends Thread {
-	/** Ein Link auf die Darstellung der Welt */
-	private WorldView worldView;
 
+	/** Ein Link auf den zugehörigen Controller */
+	private Controller controller;
+	
 	/** Ein Link auf die Kontroll-Panele */
 	private ControlFrame controlFrame;
 
@@ -119,7 +128,20 @@ public class World extends Thread {
 	/**
 	 * BranchGroup fuer die ganze Welt
 	 */
-	public BranchGroup scene;
+	//private BranchGroup scene;
+
+	/** Eine abgespeckte Version des Szenegraphen
+	 * enthaelt die aktive Arbeitsversion
+	 */ 
+	private SceneLight sceneLight;
+
+	/* Ein noch nicht compilierter Backup des aktiven Scenelight.
+	 * Er wird mit upttodate gehalten.
+	 * Kann zur Darstellung exportiert werden
+	 * Darf nicht direkt verwendet (aktiviert) werden, da sonst später kein cloneTree() mehr moeglich ist 
+	 */
+	private SceneLight sceneLightBackup;
+
 	/**
 	 * BranchGroup fuer den Boden
 	 */ 
@@ -127,7 +149,7 @@ public class World extends Thread {
 	/**
 	 * BranchGroup fuer die Hindernisse. Hier kommen auch die Bots hinein
 	 */
-	public BranchGroup obstBG;
+//	public BranchGroup obstBG;
 	/**
 	 * BranchGroup fuer die Lichtquellen
 	 */
@@ -137,12 +159,35 @@ public class World extends Thread {
 	/** TransformGroup der gesamten Welt */
 	private TransformGroup worldTG;
 
-	/** Die Klasse SimpleUniverse macht die Handhabung der Welt etwas leichter */
-	private SimpleUniverse simpleUniverse;
+	/** Aussehen von Hindernissen */
+	private Appearance obstacleAppear;
+
+	/** Pfad zu einer Textur fuer die Hindernisse */
+	public static final String OBST_TEXTURE = "textures/rock_wall.jpg";
+	
+	/** Aussehen des Bodens */
+	private Appearance playgroundAppear;
+	
+	/** Aussehen der Linien auf dem Boden */
+	private Appearance playgroundLineAppear;
+
+	/** Aussehen einer Lichtquelle */
+	private Appearance lightSourceAppear;
+	
+	/** Aussehen der Bots */
+	private Appearance botAppear;
+
+	/** Aussehen der Bots nach einer Kollision */
+	private Appearance botAppearCollision;
+
+	/** Aussehen der Bots nach einem Fall */
+	private Appearance botAppearFall;
 
 	/** Erzeugt eine neue Welt */
-	public World() {
+	public World(Controller controller) {
+		super();
 		
+		this.controller=controller;
 		bots = new LinkedList<Bot> ();
 		obstacles = new LinkedList();
 		haveABreak = false;
@@ -150,15 +195,10 @@ public class World extends Thread {
 		// Slow Motion by Werner
 		slowMotion = false;
 
-		worldView = new WorldView(this);
-
-		simpleUniverse = new SimpleUniverse(worldView.getWorldCanvas());
-		scene = createSceneGraph();
-		simpleUniverse.addBranchGraph(scene);
-
-		worldView.setUniverse(simpleUniverse);
-		worldView.initGUI();
-
+		/* erstelle und sichere die Szene */
+		sceneLight = new SceneLight();
+		sceneLight.setScene(createSceneGraph()); 
+		sceneLightBackup = sceneLight.clone();
 	}
 	
 	/**
@@ -425,6 +465,78 @@ public class World extends Thread {
 		return ls;
 	}
 
+	private void createAppearance(){
+		// Material f�r die Lichtreflektionen der Welt definieren
+		// Boden- und Bot-Material
+		Material mat = new Material();
+		mat.setAmbientColor(new Color3f(Color.LIGHT_GRAY));
+		mat.setDiffuseColor(new Color3f(0.8f,1f,1f));
+		mat.setSpecularColor(new Color3f(1f,1f,1f));
+		
+		// Linien-Material
+		Material matLine = new Material();
+		matLine.setAmbientColor(new Color3f(0f,0f,0f));
+		matLine.setDiffuseColor(new Color3f(0.1f,0.1f,0.1f));
+		matLine.setSpecularColor(new Color3f(1f,1f,1f));
+		
+		// Lichtquellen-Material
+		Material matLight = new Material();
+		matLight.setEmissiveColor(new Color3f(1f,1f,0.7f));
+		matLight.setAmbientColor(new Color3f(1f,1f,0f));
+		matLight.setDiffuseColor(new Color3f(1f,1f,0f));
+		matLight.setSpecularColor(new Color3f(0.7f,0.7f,0.7f));
+		
+		// Aussehen der Lichtquellen
+		lightSourceAppear = new Appearance();
+		lightSourceAppear.setMaterial(matLight);
+
+		// Aussehen des Bodens -- hellgrau:
+		playgroundAppear = new Appearance();
+		playgroundAppear.setMaterial(mat);
+		
+		// Aussehen der Linien auf dem Boden -- dunkelgrau:
+		playgroundLineAppear = new Appearance();
+		playgroundLineAppear.setMaterial(matLine);
+
+		// Aussehen der Hindernisse -- dunkelgrau:
+		obstacleAppear = new Appearance();
+		obstacleAppear.setMaterial(mat);
+
+		// ...und mit einer Textur ueberzogen:
+		TexCoordGeneration tcg = new TexCoordGeneration(
+				TexCoordGeneration.OBJECT_LINEAR,
+				TexCoordGeneration.TEXTURE_COORDINATE_3, new Vector4f(1.0f,
+						1.0f, 0.0f, 0.0f),
+				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f,
+						1.0f, 0.0f));
+		obstacleAppear.setTexCoordGeneration(tcg);
+//		TextureLoader loader = new TextureLoader(ClassLoader.getSystemResource(OBST_TEXTURE), worldView.getWorldCanvas());
+		TextureLoader loader = new TextureLoader(ClassLoader.getSystemResource(OBST_TEXTURE),null);
+		Texture2D texture = (Texture2D) loader.getTexture();
+		texture.setBoundaryModeS(Texture.WRAP);
+		texture.setBoundaryModeT(Texture.WRAP);
+		obstacleAppear.setTexture(texture);
+
+		// Aussehen der Bots:
+		botAppear = new Appearance(); // Bots sind rot ;-)
+		botAppear.setColoringAttributes(new ColoringAttributes(new Color3f(
+				Color.RED), ColoringAttributes.FASTEST));
+		botAppear.setMaterial(mat);
+
+		// Aussehen der Bots nach einer Kollision:
+		botAppearCollision = new Appearance(); // Bots sind blau ;-)
+		botAppearCollision.setColoringAttributes(new ColoringAttributes(new Color3f(
+				Color.BLUE), ColoringAttributes.FASTEST));
+		botAppearCollision.setMaterial(mat);
+
+		// Aussehen der Bots beim Kippen:
+		botAppearFall = new Appearance(); // Bots sind gruen ;-)
+		botAppearFall.setColoringAttributes(new ColoringAttributes(new Color3f(
+				Color.GREEN), ColoringAttributes.FASTEST));
+		botAppearFall.setMaterial(mat);		
+
+	}
+	
 	/**
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
 	 * 
@@ -435,6 +547,7 @@ public class World extends Thread {
 		float[][] pillarPositions = {{0.2f,-1f},{0.2f,-0.5f},{0.2f,0f},{0.2f,0.5f},{0.05f,0.9f},{-0.48f,1.0f},{-1.0f,1.0f},{-1.35f,0.65f}};
 		//float[][] oldLights = {{PLAYGROUND_WIDTH/2,PLAYGROUND_HEIGHT/2,0.5f},{PLAYGROUND_WIDTH/2 - 0.35f, 0f, 0.5f}};
 		
+		createAppearance();
 		// Die Wurzel des Ganzen:
 		BranchGroup objRoot = new BranchGroup();
 
@@ -486,7 +599,7 @@ public class World extends Thread {
 		
 		// Erzeuge Boden
 		Shape3D floor = createTerrainShape();
-		floor.setAppearance(worldView.getPlaygroundAppear());
+		floor.setAppearance(getPlaygroundAppear());
 		floor.setPickable(true);
 		
 		// schiebe den Boden so, dass die Oberflaeche genau auf der 
@@ -501,7 +614,7 @@ public class World extends Thread {
 		
 		// Erzeuge Linien auf dem Boden
 		Shape3D lineFloor = createLineShape();
-		lineFloor.setAppearance(worldView.getPlaygroundLineAppear());
+		lineFloor.setAppearance(getPlaygroundLineAppear());
 		lineFloor.setPickable(true);
 		
 		// Schiebe die Linien knapp ueber den Boden.
@@ -516,28 +629,28 @@ public class World extends Thread {
 		worldTG.addChild(terrainBG);
 		
 		// Die TranformGroup fuer alle Hindernisse:
-		obstBG = new BranchGroup();
+		sceneLight.setObstBG(new BranchGroup());
 		// Damit spaeter Bots hinzugef�gt werden k�nnen:
-		obstBG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		obstBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		sceneLight.getObstBG().setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		// Objekte sind fest
-		obstBG.setPickable(true);
+		sceneLight.getObstBG().setPickable(true);
 
 		// Die vier Randmauern der Welt:
 		Box north = new Box(PLAYGROUND_WIDTH/2 + 0.2f, 0.1f,
-				0.2f, worldView.getObstacleAppear());
+				0.2f, getObstacleAppear());
 		north.setPickable(true);
 		north.setName("North");
 		Box south = new Box(PLAYGROUND_WIDTH/2 + 0.2f, 0.1f,
-				0.2f, worldView.getObstacleAppear());
+				0.2f, getObstacleAppear());
 		south.setPickable(true);
 		south.setName("South");
 		Box east = new Box(0.1f, PLAYGROUND_HEIGHT/2 + 0.2f,
-				0.2f, worldView.getObstacleAppear());
+				0.2f, getObstacleAppear());
 		east.setPickable(true);
 		east.setName("East");
 		Box west = new Box(0.1f, PLAYGROUND_HEIGHT/2 + 0.2f,
-				0.2f, worldView.getObstacleAppear());
+				0.2f, getObstacleAppear());
 		west.setPickable(true);
 		west.setName("West");
 		
@@ -575,7 +688,7 @@ public class World extends Thread {
 		TransformGroup tgO = new TransformGroup(translate);
 		tgO.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 		tgO.setPickable(true);
-		obstBG.addChild(tgO);
+		sceneLight.getObstBG().addChild(tgO);
 
 		/* Zus�tzlich zu den Lichtquellen werden 8 kleine S�ulen erzeugt.*/
 		
@@ -663,23 +776,23 @@ public class World extends Thread {
 //		tgWall6.addChild(wall6);
 //		tgO.addChild(tgWall6);
 		
-		obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
-		obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
+		sceneLight.getObstBG().setCapability(Node.ENABLE_PICK_REPORTING);
+		sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
 
-		obstBG.compile();
+//		obstBG.compile();
 
 		// Die Hindernisse der Welt hinzufuegen
-		worldTG.addChild(obstBG);
+		worldTG.addChild(sceneLight.getObstBG());
 		// es duerfen noch weitere dazukommen
 		worldTG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		
-		objRoot.compile();
+//		objRoot.compile();
 
 		return objRoot;
 	}
 
 	private void createPillar(float[][] pillarPositions, TransformGroup tgO,float xpos, float ypos) {
-		Cylinder pillar = new Cylinder (0.05f,0.5f,worldView.getObstacleAppear());
+		Cylinder pillar = new Cylinder (0.05f,0.5f,getObstacleAppear());
 		pillar.setPickable(true);
 		Transform3D transformer = new Transform3D();
 		transformer.rotX(0.5 * Math.PI);
@@ -704,7 +817,7 @@ public class World extends Thread {
     	lsTranslate.set(new Vector3f(xpos,ypos,zpos));
     	TransformGroup lsTransformGroup = new TransformGroup(lsTranslate);	
     	Sphere lightSphere = new Sphere(0.02f);
-    	lightSphere.setAppearance(worldView.getLightSourceAppear());
+    	lightSphere.setAppearance(getLightSourceAppear());
     	lightSphere.setPickable(true);
     	lsTransformGroup.addChild(lightSphere);
     	lightBG.addChild(lsTransformGroup);
@@ -719,7 +832,15 @@ public class World extends Thread {
 	public void addBot(Bot bot) {
 		bots.add(bot);
 		bot.setWorld(this);
-		obstBG.addChild(bot.getBotBG());
+		BranchGroup bg =bot.getBotBG();
+
+		// sichere den neuen Bot in sceneLight 
+		sceneLight.addBot(bot.getBotName(),bot.getTranslationGroup(),bot.getRotationGroup());
+		// Benachrichtige den Controller uber neue Bots
+		controller.addBotToView(bot.getBotName(),bot.getTranslationGroup(),bot.getRotationGroup(),bg);
+
+		sceneLight.getObstBG().addChild(bg);
+
 	}
 
 	/**
@@ -744,11 +865,11 @@ public class World extends Thread {
 
 		PickBounds pickShape = new PickBounds(bounds);
 		PickInfo pickInfo;
-		synchronized (obstBG) {
+		synchronized (sceneLight.getObstBG()) {
 			// Eigenen Koerper des Roboters verstecken
 			botBody.setPickable(false);
 			
-			pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE,
+			pickInfo = sceneLight.getObstBG().pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE,
 					pickShape);
 			
 			// Eigenen Koerper des Roboters wieder "pickable" machen
@@ -795,9 +916,9 @@ public class World extends Thread {
 		PickShape pickShape = new PickConeRay(relPos, relHeading,
 				openingAngle);
 		PickInfo pickInfo;
-		synchronized (obstBG) {
+		synchronized (sceneLight.getObstBG()) {
 			botBody.setPickable(false);
-			pickInfo = obstBG.pickClosest(PickInfo.PICK_GEOMETRY,
+			pickInfo = sceneLight.getObstBG().pickClosest(PickInfo.PICK_GEOMETRY,
 					PickInfo.CLOSEST_DISTANCE, pickShape);
 			botBody.setPickable(true);
 		}
@@ -993,12 +1114,12 @@ public class World extends Thread {
 				openingAngle/2);
 		PickInfo pickInfo;
 		synchronized (terrainBG) {
-			synchronized (obstBG) {	
-				obstBG.setPickable(false);
+			synchronized (sceneLight.getObstBG()) {	
+				sceneLight.getObstBG().setPickable(false);
 				terrainBG.setPickable(false);
 				pickInfo = lightBG.pickClosest(PickInfo.PICK_GEOMETRY,
 						PickInfo.CLOSEST_DISTANCE, pickShape);
-				obstBG.setPickable(true);
+				sceneLight.getObstBG().setPickable(true);
 				terrainBG.setPickable(true);
 			}
 		}
@@ -1015,15 +1136,15 @@ public class World extends Thread {
 	 * an den View weiter
 	 */
 	public void reactToChange() {
-		worldView.repaint();
+		controller.update();
 	}
 
 	/**
 	 * @return Gibt simpleUniverse zurueck.
 	 */
-	public SimpleUniverse getSimpleUniverse() {
-		return simpleUniverse;
-	}
+//	public SimpleUniverse getSimpleUniverse() {
+//		return simpleUniverse;
+//	}
 
 	/**
 	 * Raumt auf, wenn der Simulator beendet wird
@@ -1049,7 +1170,7 @@ public class World extends Thread {
 	public void die() {
 		run = false;
 		// Schliesst das Fenster zur Welt:
-		worldView.dispose();
+//		controller.die();
 		// Unterbricht sich selbst,
 		// interrupt ruft cleanup auf:
 		this.interrupt();
@@ -1130,8 +1251,7 @@ public class World extends Thread {
 			}
 			// Auf jeden Fall WorldView benachrichtigen,
 			// dass neu gezeichnet werden soll:
-			worldView.repaint();
-
+			reactToChange();
 		}
 	}
 
@@ -1208,22 +1328,7 @@ public class World extends Thread {
 	public void setObstacles(List obstacles) {
 		this.obstacles = obstacles;
 	}
-
-	/**
-	 * @return Gibt worldView zurueck.
-	 */
-	public WorldView getWorldView() {
-		return worldView;
-	}
-
-	/**
-	 * @param worldView
-	 *            Wert fuer worldView, der gesetzt werden soll.
-	 */
-	public void setWorldView(WorldView worldView) {
-		this.worldView = worldView;
-	}
-
+	
 	/**
 	 * @return Gibt haveABreak zurueck.
 	 */
@@ -1296,4 +1401,76 @@ public class World extends Thread {
 		}	
 		this.slowMotionTime = slowMotionTime;
 	}
+	
+	/**
+	 * Exportiert den internen Szenegraphen zum darstellen
+	 * Achtung, das geht nur solange dieser nicht alive ist
+	 * @return
+	 */
+	public SceneLight exportSceneGraph(){
+		// Haben wir schon eine Sicherheitskopie
+		if (sceneLightBackup != null){
+			//Wenn ja, dann clone einfach diese
+			return sceneLightBackup.clone();
+		} else
+			return null;
+	}
+	
+	/**
+	 * @return Gibt das Erscheinungsbild der Hindernisse zurueck
+	 */
+	public Appearance getObstacleAppear() {
+		return obstacleAppear;
+	}
+
+	/**
+	 * @return Gibt das Erscheinungsbild des Bodens zurueck
+	 */
+	public Appearance getPlaygroundAppear() {
+		return playgroundAppear;
+	}
+	
+	/**
+	 * @return Gibt das Erscheinungsbild der Linien auf dem Boden zurueck
+	 */
+	public Appearance getPlaygroundLineAppear() {
+		return playgroundLineAppear;
+	}
+
+	/**
+	 * @return Gibt das Erscheinungsbild einer Lichtquelle zurueck
+	 */
+	public Appearance getLightSourceAppear() {
+		return lightSourceAppear;
+	}
+	
+	/**
+	 * @return Gibt das Erscheinungsbild der Bots zurueck
+	 */
+	public Appearance getBotAppear() {
+		return botAppear;
+	}
+	
+	/**
+	 * @return Gibt das Erscheinungsbild der Bots nach einer Kollision zurueck
+	 */
+	public Appearance getBotAppearCollision() {
+		return botAppearCollision;
+	}
+	
+	/**
+	 * @return Gibt das Erscheinungsbild der Bots nach einem Fall zurueck
+	 */
+	public Appearance getBotAppearFall() {
+		return botAppearFall;
+	}
+
+	/**
+	 * @return Gibt eine Referenz auf sceneLight zurueck
+	 * @return Gibt den Wert von sceneLight zurueck
+	 */
+	public SceneLight getSceneLight() {
+		return sceneLight;
+	}
+
 }

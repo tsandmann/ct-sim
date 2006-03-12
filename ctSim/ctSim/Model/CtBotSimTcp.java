@@ -26,6 +26,7 @@ import javax.vecmath.Vector3f;
 
 import ctSim.ErrorHandler;
 import ctSim.TcpConnection;
+import ctSim.Controller.Controller;
 
 /**
  * Simulierter Bot, der Daten per TCP/IP- empfaengt und ausliefert
@@ -46,8 +47,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 * @param tc
 	 *            Die Verbindung fuer den Bot
 	 */
-	public CtBotSimTcp(Point3f pos, Vector3f head, TcpConnection tc) {
-		super(pos, head);
+	public CtBotSimTcp(Controller controller, Point3f pos, Vector3f head, TcpConnection tc) {
+		super(controller, pos, head);
 		tcpCon = (TcpConnection) tc;
 		answeringMachine = new AnsweringMachine(this, tcpCon);
 	}

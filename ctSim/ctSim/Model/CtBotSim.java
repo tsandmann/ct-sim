@@ -29,6 +29,7 @@ import javax.media.j3d.Transform3D;
 
 import ctSim.SimUtils;
 import ctSim.ErrorHandler;
+import ctSim.Controller.Controller;
 import ctSim.View.CtControlPanel;
 
 /**
@@ -98,8 +99,8 @@ abstract public class CtBotSim extends CtBot {
 	 * @param head
 	 *            initiale Blickrichtung
 	 */
-	public CtBotSim(Point3f pos, Vector3f head) {
-		super(pos, head);
+	public CtBotSim(Controller controller, Point3f pos, Vector3f head) {
+		super(controller, pos, head);
 		/* Die IR-Sensoren koennen ueber den Simulator beeinflusst werden */
 		CAP_SENS_IR = true;
 	}
@@ -205,13 +206,13 @@ abstract public class CtBotSim extends CtBot {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
 			if (isApperanceCollision) {
-				botBody.setAppearance(world.getWorldView().getBotAppear());
+				botBody.setAppearance(world.getBotAppear());
 				isApperance = true;
 				isApperanceCollision = false;
 			}
 		} else {
 			if (isApperance) {
-				botBody.setAppearance(world.getWorldView().getBotAppearCollision());
+				botBody.setAppearance(world.getBotAppearCollision());
 				isApperance = false;
 				isApperanceCollision = true;
 			}
@@ -258,13 +259,13 @@ abstract public class CtBotSim extends CtBot {
 		if (isFalling) {
 			((CtControlPanel)this.getPanel()).stopBot();
 			if (isApperance) {
-				botBody.setAppearance(world.getWorldView().getBotAppearFall());
+				botBody.setAppearance(world.getBotAppearFall());
 				isApperance = false;
 				isApperanceFall = true;
 			}
 		} else {
 			if (isApperanceFall) {
-				botBody.setAppearance(world.getWorldView().getBotAppear());
+				botBody.setAppearance(world.getBotAppear());
 				isApperance = true;
 				isApperanceCollision = false;
 			}

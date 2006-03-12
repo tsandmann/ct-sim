@@ -29,6 +29,7 @@ import javax.vecmath.AxisAngle4f;
 // import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3f;
 
+import ctSim.Controller.Controller;
 import ctSim.View.ControlPanel;
 
 /**
@@ -57,6 +58,9 @@ abstract public class Bot extends Thread implements Obstacle {
 
 	/** Steuerpanel des Bots */
 	private ControlPanel panel;
+
+	/** Verweis auf den zugehörigen Controller */
+	private Controller controller;
 
 	/** Zeiger auf die Welt, in der der Bot lebt */
 	protected World world;
@@ -87,8 +91,11 @@ abstract public class Bot extends Thread implements Obstacle {
 
 	/**
 	 * Initialisierung des Bots
+	 * @param controller Verweis auf den zugehoerigen Controller
 	 */
-	public Bot() {
+	public Bot(Controller controller) {
+		super();
+		this.controller=controller;
 	}
 
 	/**
@@ -148,6 +155,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	 * @see Bot#work()
 	 */
 	public void die() {
+		controller.removeBotFromView(botName);
 		run = false;
 		this.interrupt();
 	}
@@ -312,6 +320,14 @@ abstract public class Bot extends Thread implements Obstacle {
 	 */
 	public Vector3f getPos() {
 		return pos;
+	}
+
+	/**
+	 * @return Gibt eine Referenz auf controller zurueck
+	 * @return Gibt den Wert von controller zurueck
+	 */
+	public Controller getController() {
+		return controller;
 	}
 
 }

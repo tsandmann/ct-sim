@@ -22,6 +22,8 @@ package ctSim.Model;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
+import ctSim.Controller.Controller;
+
 /**
  * Die abstrakte Oberklasse fuer Repraesentationen aller Bots, die ausserhalb
  * der Grenzen des Simulators existieren.
@@ -30,8 +32,8 @@ import javax.vecmath.Vector3f;
 
 abstract public class CtBotReal extends CtBot {
 
-	public CtBotReal(Point3f pos, Vector3f head) {
-		super(pos, head);
+	public CtBotReal(Controller controller, Point3f pos, Vector3f head) {
+		super(controller, pos, head);
 	}
 
 }

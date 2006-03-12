@@ -21,7 +21,12 @@ package ctSim.Controller;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.TransformGroup;
 import javax.swing.JOptionPane;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
@@ -39,13 +44,136 @@ import ctSim.*;
  * 
  */
 public class Controller {
-	private static World world;
+	/** Das Modell der Welt */
+	private World world;
+	
+	private WorldView worldView;
+	
+	private ControlFrame controlFrame;
 
-	private static ControlFrame controlFrame;
+	/** Eine Liste aller verbundenen Remote-Views */
+	private List<RemoteView> remoteViews;
+	
+	/** 
+	 * Benachrichtige alle Views, dass sich Daten geändert haben
+	 */
+	public void update(){
+		List<RemoteView> toRemove = null; 
+		
+		SceneUpdate sU = new SceneUpdate (world.getSceneLight());
+		
+		Iterator it = remoteViews.iterator();
+		while (it.hasNext()) {
+			RemoteView rV = (RemoteView) it.next();
+			try {
+				rV.update(sU);
+			} catch (IOException ex){
+				ErrorHandler.error("Remote View gestorben");
+				
+				// Alle Views merken, die wir entfernen muessen
+				if (toRemove == null)
+					toRemove = new LinkedList<RemoteView> ();
+				toRemove.add(rV);
+			}
+		}		
 
-	private static boolean test;
-	private static boolean serial;
+		// Views entfernen, die tot sind
+		if (toRemove != null){
+			it = toRemove.iterator();
+			while (it.hasNext()) {
+				removeView ((RemoteView) it.next());
+			}
+		}
+		
+//		sc.update(world.getSceneLight().getBots());
 
+		
+		worldView.repaint();
+	}
+
+	/**
+	 * Frage nach der Betriebsart
+	 * @return 0 = TCP/Bots; 1= Test-Bots
+	 */
+	private int askMode(){
+		Object[] options = { "externer TCP/IP-Bot", "integrierter Testbot", "realer Bot via USB" };
+		return JOptionPane.showOptionDialog(null,
+				"Mit welchem Bot-Typ wollen Sie den Simulator betreiben?", "Frage",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+				null, options, options[1]);
+		
+	}
+
+	private int askTestBots(){
+		Object[] options= {"1 Bot", "3 Bots"};
+		int n= JOptionPane.showOptionDialog(null,
+				"Wieviele Bots sollen gestartet werden?", "Frage",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+				null, options, options[1]);
+		if (n==0)
+			return 1;
+		else 
+			return 3;
+	}
+	
+//	private SceneLight sc;
+	
+	/*
+	 * Initilaisiert das gesamte Framework
+	 */
+	private void init(){
+		int testBots=0;
+		remoteViews = new LinkedList<RemoteView> ();
+
+		world = new World(this);
+
+		controlFrame = new ControlFrame(this);
+
+//		sc= world.exportSceneGraph();
+			
+		/* Eine lokale Worldview brauchen wir */
+		worldView = new WorldView();		
+		worldView.setScene(world.getSceneLight().getScene());
+		worldView.initGUI();
+
+/*		WorldView worldView2 = new WorldView();		
+		worldView2.setScene(sc.getScene());
+		worldView2.initGUI();		
+*/
+
+		
+		int mode= askMode();
+		if (mode != 0) 
+			testBots=askTestBots();
+		
+		controlFrame.setVisible(true);
+		world.setControlFrame(controlFrame);
+		world.start();
+
+		if (mode==1){
+			for (int i=0; i<testBots; i++)
+				addBot("testbot", "Testbot"+i, new Point3f(0f, (float)(1.5 - 0.5*i), 0f),
+					new Vector3f(1f, 0f, 0f));
+		} else if (mode==2)
+			addBot("CtBotRealTcp", "Real Bot", new Point3f(0.5f, 0f, 0f),
+					new Vector3f(1f, 0f, 0f));
+			
+		/*
+		 * Der Sim sollte auch auf die TCP-Verbindung lauschen,
+		 * wenn es Testbots gibt. Aus diesem Grund ist der thread, 
+		 * der auf TCP-Verbindungen lauscht, an dieser Stelle eingebaut.
+		 */
+
+		System.out.println("Warte auf Verbindung vom c't-Bot (Port 10001)");
+		SocketListener BotListener = new BotSocketListener(10001);
+		BotListener.start();
+		
+		System.out.println("Warte auf Verbindung von View-Clients (Port 10002)");
+		SocketListener ViewListener = new ViewSocketListener(10002);
+		ViewListener.start();
+		
+	}
+	
 	/**
 	 * Startet den c't-Sim
 	 * 
@@ -53,106 +181,72 @@ public class Controller {
 	 *            Argumente werden nicht eingelesen
 	 */
 	public static void main(String[] args) {
-
 		System.out.println("Simulator startet");
-		world = new World();
-		controlFrame = new ControlFrame();
-
-		Object[] options = { "externer TCP/IP-Bot", "integrierter Testbot" };
-		int n = JOptionPane.showOptionDialog(null,
-				"Mit welchem Bot-Typ wollen Sie den Simulator betreiben?", "Frage",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, options, options[1]);
-
-		test = true;
-		serial=false;
 		
-		if (n==0){
-			test= false;
-		} else {
-			options[0] = "1 Bot";
-			options[1] = "3 Bots";
-			n = JOptionPane.showOptionDialog(null,
-					"Wieviele Bots sollen gestartet werden?", "Frage",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-					null, options, options[1]);
+		Controller controller=new Controller();
+		controller.init();
+	}
+
+	
+	/**
+	 * Fuegt einen Bot in alle Views ein
+	 * @param id
+	 * @param tg
+	 * @param rg
+	 * @param bg
+	 */
+	public void addBotToView(String id, TransformGroup tg, TransformGroup rg, BranchGroup bg){
+		Iterator it = remoteViews.iterator();
+		while (it.hasNext()) {
+			RemoteView rV = (RemoteView) it.next();
+			rV.addBotToView(id,  tg, rg, bg);
 		}
-				
-		controlFrame.setVisible(true);
-		world.setControlFrame(controlFrame);
-		world.start();
+	}
 
-		if (test) {
-			addBot("testbot", "Testbot1", new Point3f(0f, 1.5f, 0f),
-					new Vector3f(1f, 0f, 0f));
-			if (n > 0) {
-				addBot("testbot", "Testbot2", new Point3f(0f, 1f, 0f),
-						new Vector3f(0f, 1f, 0f));
-				addBot("testbot", "Testbot3", new Point3f(0f, -1.5f, 0f),
-						new Vector3f(-1f, 0f, 0f));
-			}
+	/**
+	 * Entfernt einen Bot aus allen Views
+	 * @param id
+	 */
+	public void removeBotFromView(String id){
+		Iterator it = remoteViews.iterator();
+		while (it.hasNext()) {
+			RemoteView rV = (RemoteView) it.next();
+			rV.removeBot(id);
 		}
-		
-		
-		/*
-		 * Der Sim sollte auch auf die TCP-Verbindung lauschen,
-		 * wenn es Testbots gibt. Aus diesem Grund ist der thread, 
-		 * der auf TCP-Verbindungen lauscht, an dieser Stelle eingebaut.
-		 */
+		ErrorHandler.error("removeBotFromView nicht vollstaendig implementiert");
+		// TODO Was ist mit der lokalen View?
+		// TODO Was ist mit den Panels
+	}
+	
+	/*
+	 * Fuegt der Welt einen neuen Bot des gewuenschten Typs hinzu
+	 * 
+	 * Typ ist entweder "Testbot" oder "CtBotRealTcp"
+	 * 
+	 * Crimson 2006-06-13:
+	 * Wird vorlaeufig noch fuer die Testbots und Serialbots verwendet. 
+	 * TCPBots koennen sich von ausser verbinden ohne dass man sie "einladen" muss.
+	 */
+	private void addBot(String type, String name, Point3f pos,
+			Vector3f head) {
+		Bot bot = null;
 
-		System.out.println("Warte auf Verbindung vom c't-Bot");
-		SocketListener listener = new SocketListener(10001);
-		listener.start();
+		if (type.equalsIgnoreCase("testbot")) {
+			bot = new CtBotSimTest(this, pos, head);
+		}
 
-		if (serial){
-			Bot bot = null;
+		if (type.equalsIgnoreCase("CtBotRealTcp")) {
 			JD2xxConnection com=new JD2xxConnection();
-
 			try {
 				com.connect();
-				
-				bot = new CtBotRealTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),com);
+				bot = new CtBotRealTcp(this, new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),com);
 				System.out.println("Real Bot at COM comming up");
 			} catch (Exception ex) {
 				ErrorHandler
 				.error("Serial Connection not possible: "+ ex);
 			}
-			
-			if (bot != null){		
-				bot.providePanel();
-				bot.setBotName(bot.getClass().getName());
-				Controller.getWorld().addBot(bot);
-				Controller.getControlFrame().addBot(bot);
-				bot.start();
-			} else
-				try {
-					com.disconnect();
-				}catch (Exception ex) {}
-
-
 		}
-	
-	
-	
-	
-	}
-
-	/*
-	 * Fuegt der Welt einen neuen Bot des gewuenschten Typs hinzu
-	 * 
-	 * Typ ist entweder "Testbot" oder "BotSimTCP"
-	 * 
-	 * Crimson 2006-06-13:
-	 * Wird vorl�ufig noch f�r die Testbots verwendet. TCPBots k�nnen sich von au�er verbinden ohne dass man sie "einladen" muss.
-	 */
-	private static void addBot(String type, String name, Point3f pos,
-			Vector3f head) {
-		Bot bot = null;
-
-		if (type.equalsIgnoreCase("testbot")) {
-			bot = new CtBotSimTest(pos, head);
-		}
-
+		
 		if (bot != null) {
 			bot.providePanel();
 			bot.setBotName(name);
@@ -164,19 +258,35 @@ public class Controller {
 	}
 
 	/**
+	 * Entfernt eine View aus der Liste
+	 * @param remoteView
+	 */
+	public void removeView(RemoteView remoteView){
+		remoteViews.remove(remoteView);
+	}
+	
+	/**
 	 * Beendet die Simulation, wird durch den "Beenden"-Knopf des Fensters
 	 * ControlFrame aufgerufen
 	 */
-	public static void endSim() {
+	public void endSim() {
 		world.die();
 		controlFrame.dispose();
+		
+		// Alle Views schliessen
+		Iterator it = remoteViews.iterator();
+		while (it.hasNext()) {
+			RemoteView rV = (RemoteView) it.next();
+			rV.die();
+		}
+		
 		System.exit(0);
 	}
 
 	/**
 	 * Gibt der Welt den Hinweis, dass sich ihr Zustand geaendert hat
 	 */
-	public static void reactToChange() {
+	public void reactToChange() {
 		world.reactToChange();
 	}
 
@@ -184,28 +294,52 @@ public class Controller {
 	 * @return Gibt eine Referenz auf das Fenster mit den Kontrolltafeln
 	 *         zurueck.
 	 */
-	public static ControlFrame getControlFrame() {
+	public ControlFrame getControlFrame() {
 		return controlFrame;
 	}
 
 	/**
 	 * @return Gibt eine Referenz auf die simulierte Welt zurueck.
 	 */
-	public static World getWorld() {
+	public World getWorld() {
 		return world;
 	}
-}
 
-class SocketListener extends Thread {
+/**
+ * Basisklasse, die auf einem TCP-Port lauscht  
+ * @author bbe (bbe@heise.de)
+ *
+ */
+private abstract class SocketListener extends Thread {
 	int port = 0;
 	boolean listen = true;
 	int num = 0;
 
+	/**
+	 * Eroeffnet einen neuen Lauscher
+	 * @param port Port zum Lauschen
+	 */
 	public SocketListener(int port) {
 		super();
 		this.port = port;
 	}
 
+	/**
+	 * run kuemmert sich um die Bearbeitung eingehnder Requests 
+	 */
+	public abstract void run();
+}
+
+/**
+ * Lauscht auf einem Port und instanzieert dann einen Bot
+ * @author bbe (bbe@heise.de)
+ *
+ */
+private class BotSocketListener extends SocketListener{
+	public BotSocketListener(int port) {
+		super(port);
+	}
+	
 	public void run() {
 		Bot bot = null;
 		TcpConnection tcp=null;
@@ -228,16 +362,16 @@ class SocketListener extends Thread {
 							System.out.print("Seq: "+cmd.getSeq()+" CMD: "+cmd.getCommand()+"SUB: "+cmd.getSubcommand()+"\n");
 							if (cmd.getCommand() == Command.CMD_WELCOME){
 								if (cmd.getSubcommand() == Command.SUB_WELCOME_REAL){
-									bot = new CtBotRealTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);
+									bot = new CtBotRealTcp(Controller.this, new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);
 									System.out.print("Real Bot comming up");
 								}else{
-									bot = new CtBotSimTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);
+									bot = new CtBotSimTcp(Controller.this, new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);
 									System.out.print("Virtual Bot comming up");
 								}
 							}else {
 								System.out.print("Non-Welcome-Command found: \n"+cmd.toString()+"\n ==> Bot is already running or deprecated bot \nDefaulting to virtual Bot\n");
 								// TODO Strenger pruefen und alle nicht ordentlich angemeldeten Bots abweisen!
-								bot = new CtBotSimTcp(new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);								
+								bot = new CtBotSimTcp(Controller.this, new Point3f(0.5f,0f,0f),new Vector3f(1.0f,-0.5f,0f),tcp);								
 							} 
 						}else
 							System.out.print("Broken Command found: \n");
@@ -251,8 +385,8 @@ class SocketListener extends Thread {
 				if (bot != null){		
 					bot.providePanel();
 					bot.setBotName(bot.getClass().getName()+"_" + num++);
-					Controller.getWorld().addBot(bot);
-					Controller.getControlFrame().addBot(bot);
+					world.addBot(bot);
+					Controller.this.controlFrame.addBot(bot);
 					bot.start();
 				} else
 					try {
@@ -265,4 +399,43 @@ class SocketListener extends Thread {
 			System.err.println(ioe.getMessage());
 		}
 	}
+
+}
+
+/**
+ * Lauscht auf einem Port und versorgt dann eine View mit den initialen Daten
+ * @author bbe (bbe@heise.de) *
+ */
+private class ViewSocketListener extends SocketListener{
+	/**
+	 * Instanziiere den Listener
+	 * @param port
+	 */
+	public ViewSocketListener(int port) {
+		super(port);
+	}
+
+	/**
+	 * Lauscht auf eine eingehende Verbindung.
+	 */
+	public void run() {
+		TcpConnection tcp=null;
+		try {
+			ServerSocket server = new ServerSocket(port);
+			while (listen) {
+				tcp = new TcpConnection();
+				tcp.connect(server.accept());
+				
+				RemoteView rm = new RemoteView(tcp);
+				rm.init(world.exportSceneGraph());
+				remoteViews.add(rm);
+				
+			}
+		} catch (IOException ioe) {
+			System.err.format("Kann nicht an port %d binden.", new Integer(port));
+			System.err.println(ioe.getMessage());
+		}
+	}
+}
+
 }

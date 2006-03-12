@@ -30,6 +30,11 @@ package jd2xx;
 
 public class JD2XXEvent extends java.util.EventObject {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/* Events */
 	public static final int
 		EVENT_RXCHAR = 1<<0,

@@ -25,6 +25,7 @@ import javax.vecmath.Vector3f;
 
 import ctSim.Connection;
 import ctSim.ErrorHandler;
+import ctSim.Controller.Controller;
 
 /**
  * Die Oberklasse fuer Repraesentationen aller Bots, die ausserhalb der Grenzen
@@ -48,8 +49,8 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 	 * @param tc
 	 *            Kommunikationsverbindung
 	 */
-	public CtBotRealTcp(Point3f pos, Vector3f head, Connection tc) {
-		super(pos, head);
+	public CtBotRealTcp(Controller controller, Point3f pos, Vector3f head, Connection tc) {
+		super(controller, pos, head);
 		con = tc;
 		answeringMachine = new AnsweringMachine(this, con);		
 	}

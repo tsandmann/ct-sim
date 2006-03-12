@@ -24,7 +24,6 @@ import ctSim.Model.World;
 
 import java.awt.AWTException;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.GraphicsDevice;
@@ -41,7 +40,6 @@ import com.sun.j3d.utils.behaviors.mouse.MouseBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
-import com.sun.j3d.utils.image.TextureLoader;
 
 // Zur Benutzung des org.j3d.ui.naviagtaion Paketes die Kommentarzeichen entfernen
 //import org.j3d.ui.navigation.*;
@@ -82,29 +80,6 @@ public class WorldView extends JFrame {
 	/** Das Universum */
 	private SimpleUniverse universe;
 
-	/** Aussehen von Hindernissen */
-	private Appearance obstacleAppear;
-
-	/** Pfad zu einer Textur fuer die Hindernisse */
-	public static final String OBST_TEXTURE = "textures/rock_wall.jpg";
-	
-	/** Aussehen des Bodens */
-	private Appearance playgroundAppear;
-	
-	/** Aussehen der Linien auf dem Boden */
-	private Appearance playgroundLineAppear;
-
-	/** Aussehen einer Lichtquelle */
-	private Appearance lightSourceAppear;
-	
-	/** Aussehen der Bots */
-	private Appearance botAppear;
-
-	/** Aussehen der Bots nach einer Kollision */
-	private Appearance botAppearCollision;
-
-	/** Aussehen der Bots nach einem Fall */
-	private Appearance botAppearFall;
 
 	/** Internes Objekt zum Screengrabben. Hat rein garbichts mit einem Roboter zu tun!!! */
 	private Robot robot;
@@ -115,16 +90,14 @@ public class WorldView extends JFrame {
 	 * @param w
 	 *            Die Welt, die das Fenster darstellen soll
 	 */
-	public WorldView(World w) {
+	public WorldView() {
 		super("c't-Sim");
 				
 		getContentPane().setLayout(new BorderLayout());
 		this.setSize(500, 500);
 
-		
         GraphicsConfigTemplate3D template = new GraphicsConfigTemplate3D();
-        GraphicsEnvironment env =
-            GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice dev = env.getDefaultScreenDevice();
 
         // Leinwand fuer die Welt erzeugen
@@ -132,73 +105,6 @@ public class WorldView extends JFrame {
 
 		this.getContentPane().add(worldCanvas);
 		
-		// Material f�r die Lichtreflektionen der Welt definieren
-		// Boden- und Bot-Material
-		Material mat = new Material();
-		mat.setAmbientColor(new Color3f(Color.LIGHT_GRAY));
-		mat.setDiffuseColor(new Color3f(0.8f,1f,1f));
-		mat.setSpecularColor(new Color3f(1f,1f,1f));
-		
-		// Linien-Material
-		Material matLine = new Material();
-		matLine.setAmbientColor(new Color3f(0f,0f,0f));
-		matLine.setDiffuseColor(new Color3f(0.1f,0.1f,0.1f));
-		matLine.setSpecularColor(new Color3f(1f,1f,1f));
-		
-		// Lichtquellen-Material
-		Material matLight = new Material();
-		matLight.setEmissiveColor(new Color3f(1f,1f,0.7f));
-		matLight.setAmbientColor(new Color3f(1f,1f,0f));
-		matLight.setDiffuseColor(new Color3f(1f,1f,0f));
-		matLight.setSpecularColor(new Color3f(0.7f,0.7f,0.7f));
-		
-		// Aussehen der Lichtquellen
-		lightSourceAppear = new Appearance();
-		lightSourceAppear.setMaterial(matLight);
-
-		// Aussehen des Bodens -- hellgrau:
-		playgroundAppear = new Appearance();
-		playgroundAppear.setMaterial(mat);
-		
-		// Aussehen der Linien auf dem Boden -- dunkelgrau:
-		playgroundLineAppear = new Appearance();
-		playgroundLineAppear.setMaterial(matLine);
-
-		// Aussehen der Hindernisse -- dunkelgrau:
-		obstacleAppear = new Appearance();
-		obstacleAppear.setMaterial(mat);
-
-		// ...und mit einer Textur ueberzogen:
-		TexCoordGeneration tcg = new TexCoordGeneration(
-				TexCoordGeneration.OBJECT_LINEAR,
-				TexCoordGeneration.TEXTURE_COORDINATE_3, new Vector4f(1.0f,
-						1.0f, 0.0f, 0.0f),
-				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f,
-						1.0f, 0.0f));
-		obstacleAppear.setTexCoordGeneration(tcg);
-		TextureLoader loader = new TextureLoader(ClassLoader.getSystemResource(OBST_TEXTURE), worldCanvas);
-		Texture2D texture = (Texture2D) loader.getTexture();
-		texture.setBoundaryModeS(Texture.WRAP);
-		texture.setBoundaryModeT(Texture.WRAP);
-		obstacleAppear.setTexture(texture);
-
-		// Aussehen der Bots:
-		botAppear = new Appearance(); // Bots sind rot ;-)
-		botAppear.setColoringAttributes(new ColoringAttributes(new Color3f(
-				Color.RED), ColoringAttributes.FASTEST));
-		botAppear.setMaterial(mat);
-
-		// Aussehen der Bots nach einer Kollision:
-		botAppearCollision = new Appearance(); // Bots sind blau ;-)
-		botAppearCollision.setColoringAttributes(new ColoringAttributes(new Color3f(
-				Color.BLUE), ColoringAttributes.FASTEST));
-		botAppearCollision.setMaterial(mat);
-
-		// Aussehen der Bots beim Kippen:
-		botAppearFall = new Appearance(); // Bots sind gruen ;-)
-		botAppearFall.setColoringAttributes(new ColoringAttributes(new Color3f(
-				Color.GREEN), ColoringAttributes.FASTEST));
-		botAppearFall.setMaterial(mat);
 		
 		// wird zum ScreenCapture gebraucht
 		try {
@@ -282,6 +188,12 @@ public class WorldView extends JFrame {
 		return worldCanvas;
 	}
 
+	public void setScene(BranchGroup scene){
+		SimpleUniverse simpleUniverse = new SimpleUniverse(getWorldCanvas());
+		setUniverse(simpleUniverse);
+		simpleUniverse.addBranchGraph(scene);
+	}
+	
 	/**
 	 * @param uni
 	 *            Referenz auf das Universum, die gesetzt werden soll
@@ -302,54 +214,6 @@ public class WorldView extends JFrame {
 		universe.getViewingPlatform().getViewPlatformTransform().setTransform(translate);
 	}
 
-	/**
-	 * @return Gibt das Erscheinungsbild der Hindernisse zurueck
-	 */
-	public Appearance getObstacleAppear() {
-		return obstacleAppear;
-	}
-
-	/**
-	 * @return Gibt das Erscheinungsbild des Bodens zurueck
-	 */
-	public Appearance getPlaygroundAppear() {
-		return playgroundAppear;
-	}
-	
-	/**
-	 * @return Gibt das Erscheinungsbild der Linien auf dem Boden zurueck
-	 */
-	public Appearance getPlaygroundLineAppear() {
-		return playgroundLineAppear;
-	}
-
-	/**
-	 * @return Gibt das Erscheinungsbild einer Lichtquelle zurueck
-	 */
-	public Appearance getLightSourceAppear() {
-		return lightSourceAppear;
-	}
-	
-	/**
-	 * @return Gibt das Erscheinungsbild der Bots zurueck
-	 */
-	public Appearance getBotAppear() {
-		return botAppear;
-	}
-	
-	/**
-	 * @return Gibt das Erscheinungsbild der Bots nach einer Kollision zurueck
-	 */
-	public Appearance getBotAppearCollision() {
-		return botAppearCollision;
-	}
-	
-	/**
-	 * @return Gibt das Erscheinungsbild der Bots nach einem Fall zurueck
-	 */
-	public Appearance getBotAppearFall() {
-		return botAppearFall;
-	}
 	
 	/**
 	 * Macht einen Screenshot der Roboterwelt und schreibt ihn auf die Platte

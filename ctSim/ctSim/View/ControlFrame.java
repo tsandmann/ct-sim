@@ -50,6 +50,9 @@ public class ControlFrame extends javax.swing.JFrame {
 
 	private World world;
 
+	/** Verweis auf den zugehörigen Controller */
+	private Controller controller;
+	
 	private boolean haveABreak;
 	
 	private boolean slowMotion;
@@ -72,15 +75,16 @@ public class ControlFrame extends javax.swing.JFrame {
 	private JButton endButton;
 
 	/** Knopf um einen Screenshot zu machen */
-	private JButton captureButton;
+//	private JButton captureButton;
 	
 	/**
 	 * Erzeugt einen neuen ControlFrame
 	 */
-	public ControlFrame() {
+	public ControlFrame(Controller controller) {
 		super();
+		this.controller=controller;
 		haveABreak = false;
-		world = Controller.getWorld();
+		world = controller.getWorld();
 
 		initGUI();
 	}
@@ -212,22 +216,23 @@ public class ControlFrame extends javax.swing.JFrame {
 				}
 				endButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
-						Controller.endSim();
+						controller.endSim();
 					}
 				});
 
 				// Button um einen Screenshot zu machen
-				{	captureButton = new JButton();
-					captureButton.setPreferredSize(buttDim);
-					buttonPanel.add(captureButton);
-					captureButton.setText("Screenshot");
-				}
-				captureButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						world.getWorldView().dumpScreen();
-					}
-				});
-				
+//				{	captureButton = new JButton();
+//					captureButton.setPreferredSize(buttDim);
+//					buttonPanel.add(captureButton);
+//					captureButton.setText("Screenshot");
+//				}
+
+//				captureButton.addActionListener(new ActionListener() {
+//					public void actionPerformed(ActionEvent evt) {
+//						world.getWorldView().dumpScreen();
+//					}
+//				});
+//				
 				
 				// TODO remove me!!!
 				

@@ -1,5 +1,13 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-03-12 Benjamin Benz (bbe@heise.de) Grosse Aufraeumaktion zwischen World, WorldView und Controller. World braucht keine Referenz auf WorldView mehr. Alles Vorbereitet, damit Views auch extern laufen koennen.
+
+2006-03-12 Benjamin Benz (bbe@heise.de) CommConnection wieder entfernt
+
+2006-03-12 Benjamin Benz (bbe@heise.de) Button fuer Screenshots wieder entfernt
+
+2006-03-09 Benjamin Benz (bbe@heise.de) Reale TCPBots eingefuehrt, Connections umstrukturiert
+
 2006-03-03	Heinrich Peters (Heinrich-Peters@gmx.net)
 - LCD-Ausgabe überarbeitet
 - LEDs werden jetzt im Simulator angezeigt

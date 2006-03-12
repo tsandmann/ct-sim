@@ -151,4 +151,12 @@ public class TcpConnection extends Connection {
 			throw Ex;
 		}
 	}
+
+	/**
+	 * @return Gibt eine Referenz auf socket zurueck
+	 * @return Gibt den Wert von socket zurueck
+	 */
+	public Socket getSocket() {
+		return socket;
+	}
 }

@@ -303,9 +303,9 @@ public abstract class CtBot extends Bot {
 	/**
 	 * Einfacher Konstruktor
 	 */
-	public CtBot() {
-		super();
-		world = Controller.getWorld();
+	public CtBot(Controller controller) {
+		super(controller);
+		world = getController().getWorld();
 		createBranchGroup();
 		
 		//	 init LCD
@@ -322,9 +322,9 @@ public abstract class CtBot extends Bot {
 	 * @param head
 	 *            Die initiale Blickrichtung
 	 */
-	public CtBot(Point3f pos, Vector3f head) {
-		super();
-		world = Controller.getWorld();
+	public CtBot(Controller controller, Point3f pos, Vector3f head) {
+		super(controller);
+		world = getController().getWorld();
 		createBranchGroup();
 		Vector3f vec = new Vector3f(pos);
 		vec.z += getHeight()/2 + getGroundClearance();
@@ -366,7 +366,7 @@ public abstract class CtBot extends Bot {
 		// Bot erzeugen
 		Shape3D realBot = createBotShape();
 		realBot.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
-		realBot.setAppearance(world.getWorldView().getBotAppear());
+		realBot.setAppearance(world.getBotAppear());
 		realBot.setName(getName() + " Body");
 		// K�rper "pickable" machen, um Kollisionen mit anderen Bots
 		// zu erkennen
@@ -387,7 +387,7 @@ public abstract class CtBot extends Bot {
 		// Jetzt wird noch alles nett verpackt
 		BranchGroup bg = new BranchGroup();
 		bg.addChild(tg);
-		bg.compile();
+//		bg.compile();
 
 		setTranslationGroup(tg);
 		setRotationGroup(rg);

@@ -22,8 +22,10 @@ package ctSim.Model;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
+import ctSim.Controller.Controller;
+
 /**
- * Klasse fuer Testbots, die ausschließlich zum Test des Simulators dienen; Bots
+ * Klasse fuer Testbots, die ausschlieï¿½lich zum Test des Simulators dienen; Bots
  * diesen Typs brauchen keine TCP-Verbindung.
  * 
  * @author pek (pek@heise.de)
@@ -44,8 +46,8 @@ public class CtBotSimTest extends CtBotSim {
 	 * @param head
 	 *            initiale Blickrichtung
 	 */
-	public CtBotSimTest(Point3f pos, Vector3f head) {
-		super(pos, head);
+	public CtBotSimTest(Controller controller, Point3f pos, Vector3f head) {
+		super(controller, pos, head);
 	}
 
 	/*
@@ -109,7 +111,7 @@ public class CtBotSimTest extends CtBotSim {
 				rr = 50;
 		}
 
-		// Ist ein Absturz zu befürchten?
+		// Ist ein Absturz zu befï¿½rchten?
 		int borderL = getSensBorderL();
 		int borderR = getSensBorderR();
 		if (borderL > borderR) {
