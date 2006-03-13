@@ -47,6 +47,8 @@ public class ParcoursLoader {
 			"XX XXXXXXX  X"
 		};
 	
+	private char[][] parcours = null;
+	
 	/**
 	 * Erzeugt einen Wandquader
 	 * Alle Postionen sind nicht in Welt-koordinaten, sondern in ganzen Einheiten, wie sie aus dem ASCII-File kommen
@@ -91,5 +93,12 @@ public class ParcoursLoader {
 
 	public void setWallAppear(Appearance wallAppear) {
 		this.wallAppear = wallAppear;
+	}
+	
+	/** 
+	 * Laedt den Default-Testparcours 
+	 */
+	public void load(){
+		parcours = new char[test[0].length()][test.length];
 	}
 }
