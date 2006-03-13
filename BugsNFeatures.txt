@@ -23,11 +23,29 @@ Crimson, 20.02.2006
 Bugs
 ----
 
+* [06-02-22][open][pek@heise.de][]:
+TCP-Bot wird dem Simulator manchmal an einer Position hinzugefügt, die in einer Wand des Simulators oder sogar
+jenseits des Spielfelds liegt. Kurz danach springt der Bot an die eigentlich gewünschte Position. Das Problem 
+scheint vor allem bei Bots aufzutreten, die sofort ab dem Moment ihrer Erzeugung fahren; bleiben sie erstmal 
+stehen, tritt das Problem nicht auf.  
+
+* [06-03-05][open][Torsten Evers]:
+Ich habe, da ich gerade an einem Algorithmus zur Linienverfolgung sitze, im 
+Sim den Linien die Dicke 20 gegeben, damit sie beide Liniensensoren abdecken.
+Für die Liniensensensoren kommen da auch brauchbare Werte raus (0x22 
+ausserhalb der Linie und 0x1CC). Zwar sind die Werte beim realen Bot noch 
+höher aber damit kann man leben. Die Abgrundsensoren jedoch, die eigentlich 
+bei demselben Untergrund auch dieselben Werte anzeigen sollten, zeigen 
+ausserhalb der Linie 0x22 (der Wert scheint ok zu sein) aber wenn sie über 
+der Linie sind nur 0xCE. Bei meinem realen Bot verhalten sich Linien- und 
+Abgrundsensoren bei gleichem Untergrund auch gleich.
+
 * [06-02-22][open][pek@heise.de][]: 
 Wird ein ct-Bot-Prozess beendet, bleibt die Hülle des Bot im Simulator drin und wirkt dort als Hindernis.
 
-* [06-02-22][unconfirmed][pek@heise.de][]:
-TCP-Bot wird dem Simulator manchmal an einer Position hinzugefügt, die in einer Wand des Simulators liegt. 
+
+Gelöst:
+-------
 
 * [06-02-22][resolved][pek@heise.de][pek@heise.de]:
 Die Slider im ControlPanel des Sim fallen manchmal unvermittelt auf den Wert 0; 
@@ -40,16 +58,12 @@ Peilstrahl losschickt.
 Feature Requests
 ----------------
 
-* [06-02-22][open][pek@heise.de][]:
+* [06-02-22][open][pek@heise.de][oeffentlich ausgeschrieben]:
 Die Bots sollten in der grafischen Anzeige im Simulator eine Kennung zugewiesen bekommen, damit man sie 
 voneinander unterscheiden kann.  
 
-* [06-02-22][open][pek@heise.de][]:
-* Der echte Bot verfügt über 8 LED (zwei ganz vorne auf den Spitzen nebem dem Ausschnitt
-auf der oberen Platte, sechs von hinten gesehen auf der linken Seite in Reihe. Die LED 
-vorne sind blau, die in der Reihe von vorne nach hinten rot, orange, gelb, grün, weiß, 
-türkis). Ihr Zustand wird gemeinsam durch eine Ganzzahl bestimmt (in CtBot.java die 
-Variable aktLed), die bitweise ausgelesen werden muss, wie im C-Projekt über die Files 
-led.h und led_pc.c bzw. led_mcu.c festgelegt wird. Der Simulator sollte auch diese LED 
-eingebaut bekommen. 
+* [06-03-13][open][pek@heise.de][oeffentlich ausgeschrieben]:
+Das Layout der Kontrolltafel könnte eine Optimierung vertragen, insbesondere 
+waere es schoen, wenn der gesamte Simulator auch bei einer Bildschirmaufloesung 
+von 1024x768 Pixeln angezeigt werden kann. 
 
