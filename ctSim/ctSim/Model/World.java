@@ -1093,7 +1093,7 @@ public class World extends Thread {
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(Math.PI/2);
 		rotation.transform(xHeading);
-		absorption = sensGroundReflectionLine(pos,xHeading,openingAngle,(short)(rayCount/2));
+		absorption += sensGroundReflectionLine(pos,xHeading,openingAngle,(short)(rayCount/2));
 		return  (short)(absorption/2);
 	}
 	
