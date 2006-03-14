@@ -168,10 +168,10 @@ public class Controller {
 		SocketListener BotListener = new BotSocketListener(10001);
 		BotListener.start();
 		
-		System.out.println("Warte auf Verbindung von View-Clients (Port 10002)");
+/*		System.out.println("Warte auf Verbindung von View-Clients (Port 10002)");
 		SocketListener ViewListener = new ViewSocketListener(10002);
 		ViewListener.start();
-		
+*/		
 	}
 	
 	/**
