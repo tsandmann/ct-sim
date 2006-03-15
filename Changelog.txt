@@ -1,5 +1,9 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-03-12 Peter Koenig (pek@heise.de) Bugfix in World.sensGroundReflectionCross (Zeile 1096): 
+Der Wert von absorption wird nicht neu gesetzt, sondern zum alten dazuaddiert
+('absorption += ...' statt 'absorption = ...')
+
 2006-03-12 Benjamin Benz (bbe@heise.de) ParcoursLoader begonnen
 
 2006-03-12 Benjamin Benz (bbe@heise.de) Grosse Aufraeumaktion zwischen World, WorldView und Controller. World braucht keine Referenz auf WorldView mehr. Alles Vorbereitet, damit Views auch extern laufen koennen.
