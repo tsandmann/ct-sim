@@ -42,6 +42,7 @@ import ctSim.View.CtControlPanel;
  * @author Benjamin Benz (bbe@heise.de)
  * @author Peter Koenig (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
+ * @author Stefan Geuken (mail@stefan-geuken.de)
  */
 
 abstract public class CtBotSim extends CtBot {
@@ -327,6 +328,66 @@ abstract public class CtBotSim extends CtBot {
 			int deltaX = meter2Dots(angleDiff * vecMs.length());
 			this.setSensMouseDX(deltaX);
 		}
+        
+        this.updateLcdText();
+	}
+    
+    /**
+     * Aktualisiert den Text, der auf dem LCDisplay angezeigt wird anhand der aktuellen
+     * Sensordaten.
+     */
+    protected void updateLcdText()
+    {
+      // display_printf("P=%03X %03X D=%03d %03d ",sensLDRL,sensLDRR,sensDistL,sensDistR);
+      this.setLcdText(0, 0, 
+        "P=" + formatNumberStr(Integer.toHexString(this.getSensLdrL()).toUpperCase(), 3) + " "  + formatNumberStr(Integer.toHexString(this.getSensLdrR()).toUpperCase(), 3) + 
+        " D=" + formatNumberStr(Integer.toString(this.getSensIrL()), 3) + " "   + formatNumberStr(Integer.toString(this.getSensIrR()), 3));
+
+      // display_printf("B=%03X %03X L=%03X %03X ",sensBorderL,sensBorderR,sensLineL,sensLineR);
+      this.setLcdText(0, 1, 
+        "B=" + formatNumberStr(Integer.toHexString(this.getSensBorderL()).toUpperCase(), 3) + " "  + formatNumberStr(Integer.toHexString(this.getSensBorderR()).toUpperCase(), 3) + 
+        " L=" + formatNumberStr(Integer.toHexString(this.getSensLineL()).toUpperCase(), 3) + " "   + formatNumberStr(Integer.toHexString(this.getSensLineR()).toUpperCase(), 3));        
+
+      // display_printf("R=%2d %2d F=%d K=%d T=%d ",sensEncL % 10,sensEncR %10,sensError,sensDoor,sensTrans);
+      String sensEncL = String.valueOf(this.getSensEncL() % 10);
+      if (this.getSensEncL() >= 0)
+        sensEncL = " " + sensEncL;
+      String sensEncR = String.valueOf(this.getSensEncR() % 10);
+      if (this.getSensEncR() >= 0)
+        sensEncR = " " + sensEncR;
+      
+      this.setLcdText(0, 2, 
+        "R=" + sensEncL + " "  + sensEncR + 
+        " F=" + Integer.toString(this.getSensError()) + 
+        " K=" + Integer.toString(this.getSensDoor()) +
+        " T=" + Integer.toString(this.getSensTrans()));
+
+      // display_printf("I=%04X M=%05d %05d",RC5_Code,sensMouseX,sensMouseY);
+      this.setLcdText(0, 3, 
+        "I=" + formatNumberStr(Integer.toHexString(this.getSensRc5()).toUpperCase(), 4) + 
+        " M="  + formatNumberStr(Integer.toString(this.getSensMouseDX()), 5) + " " + formatNumberStr(Integer.toString(this.getSensMouseDY()), 5));
+    }
+    
+    /**
+     * Hilfsroutine, die einen String abschneidet oder mit Nullen (0) auffüllt
+     * bis die übergebene konstante Länge erreicht ist.
+     * @param numberStr
+     *              Der String, der gekürzt/verlängert werden soll.
+     * @param length
+     *              Die Ziellänge des Ergebnisstrings
+     * @return
+     */
+    private static String formatNumberStr(String numberStr, int length)
+    {
+      if (numberStr == null)
+        return null;
+     
+      if (numberStr.length() < length)
+        return "0000000000".substring(0,length-numberStr.length()) + numberStr;
+      else if (numberStr.length() > length)
+        return numberStr.substring(numberStr.length()-length, numberStr.length());
+      else
+        return numberStr;
 	}
 
 	/**

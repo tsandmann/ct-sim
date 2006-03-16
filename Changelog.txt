@@ -1,5 +1,10 @@
 CHANGELOG fuer c't-Sim
 ======================
+
+2006-03-16  Stefan Geuken (mail@stefan-geuken.de)
+- Bugfix: Einer der CtBot-Konstruktoren hat das Display nicht initialisiert
+- Der integrierte Testbot zeigt seine Daten auf dem Display an
+
 2006-03-12 Peter Koenig (pek@heise.de) Bugfix in World.sensGroundReflectionCross (Zeile 1096): 
 Der Wert von absorption wird nicht neu gesetzt, sondern zum alten dazuaddiert
 ('absorption += ...' statt 'absorption = ...')

@@ -323,9 +323,7 @@ public abstract class CtBot extends Bot {
 	 *            Die initiale Blickrichtung
 	 */
 	public CtBot(Controller controller, Point3f pos, Vector3f head) {
-		super(controller);
-		world = getController().getWorld();
-		createBranchGroup();
+		this(controller);
 		Vector3f vec = new Vector3f(pos);
 		vec.z += getHeight()/2 + getGroundClearance();
 		setPos(vec);
