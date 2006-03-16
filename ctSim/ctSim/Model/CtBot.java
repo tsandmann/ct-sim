@@ -51,19 +51,19 @@ public abstract class CtBot extends Bot {
 
 	/** Breite des Faches [m] */
 	public static final double FACH_LENGTH = 0.050d;
-	
+
 	/** Tiefe des Faches [m] */
 	public static final double FACH_DEPTH = BOT_RADIUS - 0.015d;
-	
+
 	/** Bodenfreiheit des Bots [m] */
 	public static final double BOT_GROUND_CLEARANCE = 0.015d;
-	
+
 	/** Abstand Zentrum Gleitpin in Achsrichtung (X) [m] */
 	public static final double BOT_SKID_X = 0d;
-	
+
 	/** Abstand Zentrum Gleitpin in Vorausrichtung (Y) [m] */
 	public static final double BOT_SKID_Y = -0.054d;
-	
+
 	/** maximale Geschwindigkeit als PWM-Wert */
 	public static final short PWM_MAX = 255;
 
@@ -89,20 +89,20 @@ public abstract class CtBot extends Bot {
 	public static final double SENS_IR_ABSTAND_Y = 0.0554d;
 
 	/** Abstand Zentrum IR-Sensoren in Hochrichtung (Z) [m] */
-	public static final double SENS_IR_ABSTAND_Z = 0.035d - BOT_HEIGHT/2;
+	public static final double SENS_IR_ABSTAND_Z = 0.035d - BOT_HEIGHT / 2;
 
 	/** Oeffnungswinkel der beiden IR-Abstandssensoren [Rad] */
-	public static final double SENS_IR_ANGLE = Math.PI / 180 * 3; 
-	
+	public static final double SENS_IR_ANGLE = Math.PI / 180 * 3;
+
 	/** Abstand Zentrum Maussensor in Achsrichtung (X)[m] */
 	public static final double SENS_MOUSE_ABSTAND_X = 0d;
 
 	/** Abstand Zentrum Maussensor in Vorausrichtung (Y) [m] */
 	public static final double SENS_MOUSE_ABSTAND_Y = -0.015d;
-		
+
 	/** Aufloesung des Maussensors [DPI] */
 	public static final int SENS_MOUSE_DPI = 400;
-	
+
 	/** Abstand Zentrum Liniensensoren in Achsrichtung (X)[m] */
 	public static final double SENS_LINE_ABSTAND_X = 0.004d;
 
@@ -110,15 +110,15 @@ public abstract class CtBot extends Bot {
 	public static final double SENS_LINE_ABSTAND_Y = 0.009d;
 
 	/** Abstand Zentrum Liniensensoren in Hochrichtung (Z) [m] */
-	public static final double SENS_LINE_ABSTAND_Z = -0.011d - BOT_HEIGHT/2;
-	
+	public static final double SENS_LINE_ABSTAND_Z = -0.011d - BOT_HEIGHT / 2;
+
 	/** Oeffnungswinkel der beiden Liniensensoren [Rad] */
-	public static final double SENS_LINE_ANGLE = Math.PI / 180 * 80; 
-	
+	public static final double SENS_LINE_ANGLE = Math.PI / 180 * 80;
+
 	/** Anzahl Strahlen, die von den Liniensensoren ausgesendet werden. 
 	 *  Je mehr Strahlen verwendet werden, desto genauer wird das Ergebnis.
 	 *  Mehr Strahlen kosten aber auch mehr Rechenzeit. */
-	public static final short SENS_LINE_PRECISION = 10; 
+	public static final short SENS_LINE_PRECISION = 10;
 
 	/** Abstand Zentrum Abgrundsensoren in Achsrichtung (X)[m] */
 	public static final double SENS_BORDER_ABSTAND_X = 0.036d;
@@ -127,11 +127,11 @@ public abstract class CtBot extends Bot {
 	public static final double SENS_BORDER_ABSTAND_Y = 0.0384d;
 
 	/** Abstand Zentrum Abgrundsensoren in Hochrichtung (Z) [m] */
-	public static final double SENS_BORDER_ABSTAND_Z = 0d - BOT_HEIGHT/2;
-	
+	public static final double SENS_BORDER_ABSTAND_Z = 0d - BOT_HEIGHT / 2;
+
 	/** Oeffnungswinkel der beiden Abgrundsensoren [Rad] */
-	public static final double SENS_BORDER_ANGLE = Math.PI / 180 * 80; 
-	
+	public static final double SENS_BORDER_ANGLE = Math.PI / 180 * 80;
+
 	/** Anzahl Strahlen, die von den Abgrundsensoren ausgesendet werden. 
 	 *  Je mehr Strahlen verwendet werden, desto genauer wird das Ergebnis.
 	 *  Mehr Strahlen kosten aber auch mehr Rechenzeit. */
@@ -144,23 +144,23 @@ public abstract class CtBot extends Bot {
 	public static final double SENS_LDR_ABSTAND_Y = 0.048d;
 
 	/** Abstand Zentrum Lichtsensoren in Hochrichtung (Z) [m] */
-	public static final double SENS_LDR_ABSTAND_Z = 0.060d - BOT_HEIGHT/2;
+	public static final double SENS_LDR_ABSTAND_Z = 0.060d - BOT_HEIGHT / 2;
 
 	/** Ausrichtung der Lichtsensors 
-	 *  (0d,0d,1d) ist nach oben
-	 *  (1d,0d,0d) ist nach vorne
+	 *  (0d,0d,1d) ==> nach oben
+	 *  (1d,0d,0d) ==> nach vorne
 	 */
-	public static final Vector3d SENS_LDR_HEADING = new Vector3d(1d,0d,0d);
-	
+	public static final Vector3d SENS_LDR_HEADING = new Vector3d(1d, 0d, 0d);
+
 	/** Oeffnungswinkel der beiden Lichtsensoren [Rad] */
-	public static final double SENS_LDR_ANGLE = Math.PI / 180 * 180; 
-	
+	public static final double SENS_LDR_ANGLE = Math.PI / 180 * 180;
+
 	/** Anzahl der Zeilen im LCD */
 	public static final short LCD_LINES = 4;
-	
+
 	/** Anzahl der Zeichen pro Zeile im LCD */
 	public static final short LCD_CHARS = 20;
-	
+
 	/*
 	 * Capabilities -- Flags, die anzeigen, welche internen Zustaende von
 	 * Sensoren oder Aktuatoren ueber das ControlPanel beeinlussbar sind
@@ -227,23 +227,23 @@ public abstract class CtBot extends Bot {
 	/** Position Servo Klappe */
 	private Integer aktDoor;
 
-	/** Position des Reserve Servo */
+	/** Position des Reserve-Servo */
 	private Integer aktServo;
 
 	/** Zustand der LEDs */
 	private Integer aktLed = new Integer((int) 0);
 
-	/** Zustand der LCD Anzeige */
-	private String[] lcdText = new String[LCD_LINES]; 
-	 
-	/** Cursorposition der LCD Anzeige
+	/** Zustand des LCD */
+	private String[] lcdText = new String[LCD_LINES];
+
+	/** Cursorposition des LCD
 	 * X : vor welchem Zeichen steht der Cursor (0 .. LCD_CHARS-1)
 	 * Y : in welcher Zeile steht der Cursor (0 .. LCD_LINES-1)
-	 */ 
+	 */
 	private int lcdCursorX = 0;
+
 	private int lcdCursorY = 0;
-		 
-	
+
 	// Sensoren:
 
 	/**
@@ -307,13 +307,10 @@ public abstract class CtBot extends Bot {
 		super(controller);
 		world = getController().getWorld();
 		createBranchGroup();
-		
-		//	 init LCD
-        lcdClear();
+		//	 LCD initialisieren
+		lcdClear();
 	}
-	
-        		
-        		
+
 	/**
 	 * Alternativer Konstruktor
 	 * 
@@ -323,9 +320,10 @@ public abstract class CtBot extends Bot {
 	 *            Die initiale Blickrichtung
 	 */
 	public CtBot(Controller controller, Point3f pos, Vector3f head) {
+		// Einfachen Konstruktor aufrufen:
 		this(controller);
 		Vector3f vec = new Vector3f(pos);
-		vec.z += getHeight()/2 + getGroundClearance();
+		vec.z += getHeight() / 2 + getGroundClearance();
 		setPos(vec);
 		setHeading(head);
 	}
@@ -366,16 +364,16 @@ public abstract class CtBot extends Bot {
 		realBot.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 		realBot.setAppearance(world.getBotAppear());
 		realBot.setName(getName() + " Body");
-		// K�rper "pickable" machen, um Kollisionen mit anderen Bots
+		// Koerper "pickable" setzen, um Kollisionen mit anderen Bots
 		// zu erkennen
 		realBot.setPickable(true);
-		// "Pickable" muss f�r die eigene Kollisionsabfrage abschaltbar sein
+		// "Pickable" muss fuer die eigene Kollisionsabfrage abschaltbar sein
 		realBot.setCapability(Cylinder.ALLOW_PICKABLE_WRITE);
-		// Referenz auf K�rper merken, um sp�ter bei der eigenen Kollisionsabfrage die 
-		// "Pickable"-Eigenschaft �ndern zu k�nnen
+		// Referenz auf Koerper merken, um spaeter bei der eigenen Kollisionsabfrage die 
+		// "Pickable"-Eigenschaft aendern zu koennen
 		botBody = realBot;
 		rg.addChild(realBot);
-		
+
 		// Die Grenzen (Bounds) des Bots sind wichtig
 		// fuer die Kollisionserkennung.
 		// Die Grenze des Roboters wird vorlaefig definiert ueber
@@ -385,7 +383,6 @@ public abstract class CtBot extends Bot {
 		// Jetzt wird noch alles nett verpackt
 		BranchGroup bg = new BranchGroup();
 		bg.addChild(tg);
-//		bg.compile();
 
 		setTranslationGroup(tg);
 		setRotationGroup(rg);
@@ -393,15 +390,15 @@ public abstract class CtBot extends Bot {
 	}
 
 	/**
-	 * Baut die 3D-Repraesentation des Bot K�rpers aus 2D-Polygonen zusammen
+	 * Baut die 3D-Repraesentation des Bot-Koerpers aus 2D-Polygonen zusammen
 	 *  
 	 * @return Koerper des Bots 
 	 */
 	private Shape3D createBotShape() {
-		
+
 		Shape3D bs = new Shape3D();
 		// Anzahl der Ecken, um den Kreis des Bots zu beschreiben.
-		// Mehr sehen besser aus, ben�tigen aber auch mehr Rechenzeit.
+		// Mehr sehen besser aus, benoetigen aber auch mehr Rechenzeit.
 		int N = 10;
 		// Anzahl der verwendeten Punkte
 		int totalN = 2 * (N + 2);
@@ -411,20 +408,20 @@ public abstract class CtBot extends Bot {
 		int stripCounts[] = { N + 2, N + 2 };
 		float r = (float) BOT_RADIUS;
 		float h = (float) BOT_HEIGHT / 2;
-		// Z�hler
+		// Zaehler
 		int n;
 		// Koordinaten
 		float x, y;
 		// Winkel
 		double alpha = 0.0;
-		
+
 		// Bot-Deckel erzeugen
 		//
-		// Winkel des vollen Kreises (in Bogenma�)
+		// Winkel des vollen Kreises (im Bogenmass)
 		double circle = 2.0 * Math.PI;
 		// halber Winkel der Oeffnung des Bots
 		double opening = Math.asin((FACH_LENGTH / 2) / r);
-		
+
 		// Rand des Deckels erzeugen, beachte dabei die Oeffnung
 		for (n = 0; n < N; n++) {
 			alpha = opening + (((circle - 2 * opening) / (N - 1)) * n);
@@ -434,7 +431,7 @@ public abstract class CtBot extends Bot {
 			data[3 * n + 1] = y;
 			data[3 * n + 2] = h; // 0
 		}
-		
+
 		// Fach in die Oeffnung des Deckels einbauen
 		data[3 * n] = r - (float) FACH_DEPTH;
 		data[3 * n + 1] = (float) -FACH_LENGTH / 2;
@@ -444,7 +441,7 @@ public abstract class CtBot extends Bot {
 		data[3 * n + 1] = (float) FACH_LENGTH / 2;
 		data[3 * n + 2] = h; // 2
 		n++;
-		
+
 		// Bot-Deckel kopieren, um ihn als Boden zu verwenden
 		for (int i = (N + 2) - 1; i >= 0; i--) {
 			data[3 * n] = data[3 * i];
@@ -452,47 +449,46 @@ public abstract class CtBot extends Bot {
 			data[3 * n + 2] = -data[3 * i + 2];
 			n++;
 		}
-		
+
 		// Deckel und Boden in darstellbare Form umwandeln
 		GeometryInfo gi = new GeometryInfo(GeometryInfo.POLYGON_ARRAY);
 		gi.setCoordinates(data);
 		gi.setStripCounts(stripCounts);
-		
+
 		NormalGenerator ng = new NormalGenerator();
 		ng.generateNormals(gi);
 		gi.recomputeIndices();
-		
+
 		Stripifier st = new Stripifier();
 		st.stripify(gi);
 		gi.recomputeIndices();
-		
-		// Hinzuf�gen des Deckels und des Bodens zur Bot-Shape3D 
+
+		// Hinzufuegen des Deckels und des Bodens zur Bot-Shape3D 
 		bs.addGeometry(gi.getGeometryArray());
-		
-		
+
 		// Erzeugen der aeusseren Seitenverkleidung
 		TriangleStripArray tsa;
 		Point3f coords[] = new Point3f[N * 2];
 		int stripCountTsa[] = { N * 2 };
-		
+
 		for (int i = 0; i < (N); i++) {
 			coords[i * 2] = new Point3f(data[i * 3], data[i * 3 + 1],
 					data[i * 3 + 2]);
 			coords[i * 2 + 1] = new Point3f(data[i * 3], data[i * 3 + 1],
 					-data[i * 3 + 2]);
 		}
-		
+
 		tsa = new TriangleStripArray(2 * N, TriangleStripArray.COORDINATES,
 				stripCountTsa);
 		tsa.setCoordinates(0, coords);
 
 		// Hinzufuegen der aeusseren Seitenverkleidung zur Bot-Shape3D
 		bs.setGeometry(tsa);
-		
+
 		// Erzeugen der Waende des Faches
 		QuadArray qa;
 		Point3f quadCoords[] = new Point3f[3 * 4];
-		
+
 		n = N - 1;
 		// aussen rechts
 		quadCoords[0] = new Point3f(data[n * 3], data[n * 3 + 1],
@@ -505,7 +501,7 @@ public abstract class CtBot extends Bot {
 				-data[n * 3 + 2]);
 		quadCoords[3] = new Point3f(data[n * 3], data[n * 3 + 1],
 				data[n * 3 + 2]);
-		
+
 		quadCoords[4] = new Point3f(data[n * 3], data[n * 3 + 1],
 				data[n * 3 + 2]);
 		quadCoords[5] = new Point3f(data[n * 3], data[n * 3 + 1],
@@ -516,7 +512,7 @@ public abstract class CtBot extends Bot {
 				-data[n * 3 + 2]);
 		quadCoords[7] = new Point3f(data[n * 3], data[n * 3 + 1],
 				data[n * 3 + 2]);
-		
+
 		quadCoords[8] = new Point3f(data[n * 3], data[n * 3 + 1],
 				data[n * 3 + 2]);
 		quadCoords[9] = new Point3f(data[n * 3], data[n * 3 + 1],
@@ -527,30 +523,16 @@ public abstract class CtBot extends Bot {
 				-data[n * 3 + 2]);
 		quadCoords[11] = new Point3f(data[n * 3], data[n * 3 + 1],
 				data[n * 3 + 2]);
-		
+
 		qa = new QuadArray(3 * 4, QuadArray.COORDINATES);
 		qa.setCoordinates(0, quadCoords);
-		
+
 		// Hinzufuegen der Fachwaende zur Bot-Shape3D 
 		bs.addGeometry(qa);
-		
-		// Die folgenden Zeilen fuehren dazu, das die Huelle des
-		// Bots durchsichtig wird und nur die Wireframe gezeichnet
-		// wird. Weiterhin werden auch die R�ckseiten gezeichnet.
-		
-		 /*
-		 PolygonAttributes polyAppear = new PolygonAttributes();
-		 polyAppear.setPolygonMode(PolygonAttributes.POLYGON_LINE);
-		 polyAppear.setCullFace(PolygonAttributes.CULL_NONE);
-		 Appearance twistAppear = new Appearance();
-		 twistAppear.setPolygonAttributes(polyAppear);
-		 bs.setAppearance(twistAppear);
-		 */
-		
+
 		return bs;
 	}
-	
-	
+
 	// Get()- und Set()-Methoden.
 
 	// Alle Set()-Methoden sind gegen konkurrierende Manipulationen geschuetzt.
@@ -569,7 +551,7 @@ public abstract class CtBot extends Bot {
 	 * @see ctSim.Model.Bot#work()
 	 */
 	protected void work() {
-		this.getPanel().reactToChange();		
+		this.getPanel().reactToChange();
 	}
 
 	/**
@@ -586,7 +568,7 @@ public abstract class CtBot extends Bot {
 	public void setSensIrL(double distance) {
 		// Intern wird mit der Distanz in mm gearbeitet
 		short irL;
-		if(distance * 1000 > Short.MAX_VALUE)
+		if (distance * 1000 > Short.MAX_VALUE)
 			irL = Short.MAX_VALUE;
 		else
 			irL = (short) (distance * 1000);
@@ -632,7 +614,7 @@ public abstract class CtBot extends Bot {
 	public void setSensIrR(double distance) {
 		// Intern wird mit der Distanz in mm gearbeitet
 		short irR;
-		if(distance * 1000 > Short.MAX_VALUE)
+		if (distance * 1000 > Short.MAX_VALUE)
 			irR = Short.MAX_VALUE;
 		else
 			irR = (short) (distance * 1000);
@@ -738,7 +720,7 @@ public abstract class CtBot extends Bot {
 	public float getGroundClearance() {
 		return (float) BOT_GROUND_CLEARANCE;
 	}
-	
+
 	/**
 	 * @return Hoehe des Bot in [m]
 	 */
@@ -941,97 +923,108 @@ public abstract class CtBot extends Bot {
 		this.sensTrans = new Integer(sensTrans);
 	}
 
-	
 	/**
-	 * @param charPos neue Cursorposition in X-Richtung (0..19)
-	 * @param linePos neue Cursorposition der Zeile (0..3)
-	 * @param text    der Text, der ab der neuen Cursorposition einzutragen ist
-	 */	
+	 * Setzt Text an eine bestimmte Position im LCD.
+	 * 
+	 * @param charPos Neue Cursorposition (Spalte 0..19)
+	 * @param linePos Neue Cursorposition (Zeile 0..3)
+	 * @param text    Der Text, der ab der neuen Cursorposition einzutragen ist
+	 */
 	public void setLcdText(int charPos, int linePos, String text) {
 		setCursor(charPos, linePos);
 		{
 			String pre = "";
 			String post = "";
-			int max = Math.min(text.length(), LCD_CHARS-lcdCursorX-1);
-		
-			// der neue Zeilentext ist der alte bis zur Cursorposition, gefolgt 
-			// vom �bergebenen Wert text gefolgt von den nicht �berschriebenen Zeichen, 
-			// wenn die neue X-Position noch vor dem Zeilenende ist.
+			int max = Math.min(text.length(), LCD_CHARS - lcdCursorX - 1);
+
+			// Der neue Zeilentext ist der alte bis zur Cursorposition, gefolgt 
+			// vom uebergebenen String 'text' gefolgt von den nicht ueberschriebenen Zeichen, 
+			// wenn sich die neue X-Position noch vor dem Zeilenende befindet.
 			if (lcdCursorX > 0) {
-				pre = new String(lcdText[lcdCursorY].substring(0, lcdCursorX-1));
+				pre = new String(lcdText[lcdCursorY].substring(0,
+						lcdCursorX - 1));
 			}
 			lcdCursorX += max;
-			if (lcdCursorX < LCD_CHARS-1) {
+			if (lcdCursorX < LCD_CHARS - 1) {
 				post = new String(lcdText[lcdCursorY].substring(lcdCursorX));
 			}
 			synchronized (lcdText) {
-				lcdText[lcdCursorY] = new String (pre + text + post);
+				lcdText[lcdCursorY] = new String(pre + text + post);
 			}
 		}
 	}
-	
-	
+
+	/**
+	 * Setzt Text in eine bestimmte Zeile im LCD.
+	 * 
+	 * @param linePos Neue Cursorposition (Zeile 0..3)
+	 * @param text    Der Text, der ab der neuen Cursorposition einzutragen ist
+	 */
 	public void setLcdText(int linePos, String text) {
 		setLcdText(0, linePos, text);
 	}
-	
-	
+
+	/**
+	 * Setzt Text ins LCD.
+	 * 
+	 * @param text Der Text, der ab der neuen Cursorposition einzutragen ist	
+	 */
 	public void setLcdText(String text) {
 		setLcdText(lcdCursorX, lcdCursorY, text);
 	}
-	
+
 	/**
-	 * @param X character position
-	 * @param Y Zeilen position
-	 *            Einzutragender Wert CursorPosition
+	 * Setzt den Cursor an eine bestimmte Position im LCD 
+	 * @param charPos Neue Cursorposition (Spalte 0..19)
+	 * @param linePos Neue Cursorposition (Zeile 0..3)
 	 */
 	public void setCursor(int charPos, int linePos) {
 		if (charPos < 0) {
 			charPos = 0;
 		}
-		if (charPos > LCD_CHARS-1) {
-			charPos = LCD_CHARS-1;
+		if (charPos > LCD_CHARS - 1) {
+			charPos = LCD_CHARS - 1;
 		}
 		if (linePos < 0) {
 			linePos = 0;
 		}
-		if (linePos > LCD_LINES-1) {
-			linePos = LCD_LINES-1;
+		if (linePos > LCD_LINES - 1) {
+			linePos = LCD_LINES - 1;
 		}
-		
-		//synchronized (lcdCursorX) {
-			this.lcdCursorX = charPos;
-		//}
-		//synchronized (lcdCursorY) {
-			this.lcdCursorY = linePos;
-		//}
+
+		this.lcdCursorX = charPos;
+		this.lcdCursorY = linePos;
 	}
 
-	public String getLcdText(int linePos){
+	/**
+	 * Liest eine Zeile aus dem LCD
+	 * @param linePos Zeilennummer (0..3)
+	 * @return Die Zeile aus dem Display
+	 */
+	public String getLcdText(int linePos) {
 		if (linePos < 0) {
 			linePos = 0;
 		}
-		if (linePos > LCD_LINES-1) {
-			linePos = LCD_LINES-1;
+		if (linePos > LCD_LINES - 1) {
+			linePos = LCD_LINES - 1;
 		}
 		return lcdText[linePos];
 	}
-	
+
 	/**
-	 * @return Zeilenposition des Cursors
+	 * @return Zeilenposition des LCD-Cursors
 	 */
 	public int getLcdCursorY() {
 		return lcdCursorY;
 	}
 
 	/**
-	 * @return character position des Cursors
+	 * @return Spaltenposition des LCD-Cursors
 	 */
 	public int getLcdCursorX() {
 		return lcdCursorX;
 	}
 
-	
 	public void lcdClear() {
 		synchronized (lcdText) {
 			for (int i = 0; i < lcdText.length; i++) {

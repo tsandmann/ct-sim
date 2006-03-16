@@ -38,7 +38,6 @@ public class TcpConnection extends Connection {
 	/** Der Socket */
 	private Socket socket = null;
 
-
 	// private BufferedReader br = null;
 
 	/**
@@ -52,7 +51,8 @@ public class TcpConnection extends Connection {
 	/**
 	 * Lauscht auf einem Port und initialisiert die Verbindung
 	 * 
-	 * @deprecated Bitte diese Methode nicht mehr verwenden, da Sie ihren Port nicht wieder freigibt.
+	 * @deprecated Bitte diese Methode nicht mehr verwenden, da sie
+	 * ihren Port nicht wieder freigibt.
 	 * @param port
 	 *            Der Port, auf dem gelauscht werden soll
 	 * @return 0 wenn alles ok, sonst -1
@@ -83,11 +83,11 @@ public class TcpConnection extends Connection {
 	 * @param socket Der Socket, ueber den geschrieben und gelesen wird.
 	 * @throws IOException Wenn es beim Anlegen der beiden Streams zu Problemen kommt.
 	 * */
-	public void connect (Socket socket) throws IOException {
+	public void connect(Socket socket) throws IOException {
 		this.socket = socket;
 		connect();
 	}
-	
+
 	/**
 	 * Stellt eine TCP/IP-Verbindung her
 	 * 

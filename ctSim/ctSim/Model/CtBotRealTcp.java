@@ -17,7 +17,6 @@
  * 
  */
 
-
 package ctSim.Model;
 
 import javax.vecmath.Point3f;
@@ -38,7 +37,7 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 
 	/** Der "Anrufbeantworter" fuer eingehende Kommandos */
 	private AnsweringMachine answeringMachine;
-	
+
 	/**
 	 * Erzeugt einen neuen Bot
 	 * 
@@ -49,10 +48,11 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 	 * @param tc
 	 *            Kommunikationsverbindung
 	 */
-	public CtBotRealTcp(Controller controller, Point3f pos, Vector3f head, Connection tc) {
+	public CtBotRealTcp(Controller controller, Point3f pos, Vector3f head,
+			Connection tc) {
 		super(controller, pos, head);
 		con = tc;
-		answeringMachine = new AnsweringMachine(this, con);		
+		answeringMachine = new AnsweringMachine(this, con);
 	}
 
 	/*
@@ -63,9 +63,9 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 	public void work() {
 		super.work();
 		// TODO noch zu implementieren
-		//ErrorHandler.error("BotRealTcp.work is missing");
+		// ErrorHandler.error("BotRealTcp.work is missing");
 	}
-	
+
 	/**
 	 * Wertet ein empfangenes Kommando aus
 	 * 
@@ -73,18 +73,17 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 	 *            Das Kommando
 	 */
 	public void evaluate_command(Command command) {
-//		Command answer = new Command();
 
 		if (command.getDirection() == Command.DIR_REQUEST) {
-//			System.out.print(command.toString());
+
 			switch (command.getCommand()) {
 			case Command.CMD_SENS_IR:
 				setSensIrL(command.getDataL());
 				setSensIrR(command.getDataR());
 				break;
 			case Command.CMD_SENS_ENC:
-				setSensEncL((short)command.getDataL());
-				setSensEncR((short)command.getDataR());
+				setSensEncL((short) command.getDataL());
+				setSensEncR((short) command.getDataR());
 				break;
 			case Command.CMD_SENS_BORDER:
 				setSensBorderL(command.getDataL());
@@ -116,8 +115,8 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 				break;
 
 			case Command.CMD_AKT_MOT:
-				setAktMotL((short)command.getDataL());
-				setAktMotR((short)command.getDataR());
+				setAktMotL((short) command.getDataL());
+				setAktMotR((short) command.getDataR());
 				break;
 			case Command.CMD_AKT_SERVO:
 				setAktServo(command.getDataL());
@@ -131,7 +130,8 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 			case Command.CMD_ACT_LCD:
 				switch (command.getSubcommand()) {
 				case Command.SUB_CMD_NORM:
-					setLcdText(command.getDataL(), command.getDataR(), command.getDataBytesAsString());
+					setLcdText(command.getDataL(), command.getDataR(), command
+							.getDataBytesAsString());
 					break;
 				case Command.SUB_LCD_CURSOR:
 					setCursor(command.getDataL(), command.getDataR());
@@ -160,9 +160,7 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 			// TODO: Antworten werden noch nicht gegeben
 		}
 	}
-	
-	
-	
+
 	/**
 	 * Startet den Bot und den Thread fuer eingehende Kommandos
 	 * 
@@ -173,7 +171,7 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 		answeringMachine.start();
 
 	}
-	
+
 	/*
 	 * Aufraeumen
 	 * 

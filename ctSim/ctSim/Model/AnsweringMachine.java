@@ -24,65 +24,65 @@ import java.io.IOException;
 import ctSim.Connection;
 import ctSim.ErrorHandler;
 
+/**
+ * Kuemmert sich um die Beantwortung eingehender Kommanods
+ * 
+ * @author Benjamin Benz (bbe@heise.de)
+ */
+public class AnsweringMachine extends Thread {
+
+	/** Soll der Thread noch laufen? */
+	private boolean run = true;
+
+	/** Verweis auf den zugehoerigen Bot*/
+	private TcpBot bot = null;
+
+	/** Die TCP-Verbindung */
+	private Connection con;
+
+	/**
+	 * Erzeugt einen neuen Anrufbeantworter
+	 * @param bot Der zugehoerige Bot
+	 * @param con Die Verbindung
+	 */
+	public AnsweringMachine(TcpBot bot, Connection con) {
+		super();
+		this.bot = bot;
+		this.con = con;
+	}
+
+	/**
+	 * Beendet den Thread<b>
+	 * 
+	 * @see Bot#work()
+	 */
+	public void die() {
+		run = false;
+		this.interrupt();
+		bot.die(); // Alles muss sterben
+	}
+
 	/**
 	 * Kuemmert sich um die Beantwortung eingehender Kommanods
 	 * 
-	 * @author Benjamin Benz (bbe@heise.de)
+	 * @see java.lang.Thread#run()
 	 */
-	public class AnsweringMachine extends Thread {
-
-		/** Soll der Thread noch laufen */
-		private boolean run = true;
-
-		/** Verweis auf den zugehoerigen Bot*/
-		private TcpBot bot = null;
-		
-		/** Die TCP-Verbindung */
-		private Connection con;
-		
-		/**
-		 * Erzeugt einen neuen Anrufbeantworter
-		 * @param bot Der zugehoerige Bot
-		 * @param tcpCon Die Verbindung
-		 */
-		public AnsweringMachine(TcpBot bot, Connection con) {
-			super();
-			this.bot = bot;
-			this.con = con;
-		}
-
-		/**
-		 * Beendet den Thread<b>
-		 * 
-		 * @see AbstractBot#work()
-		 */
-		public void die() {
-			run = false;
-			this.interrupt();
-			bot.die(); // Alles muss sterben
-		}
-
-		/**
-		 * Kuemmert sich um die Beantwortung eingehender Kommanods
-		 * 
-		 * @see java.lang.Thread#run()
-		 */
-		public void run() {
-			super.run();
-			Command command = new Command();
-			int valid = 0;
-			while (run) {
-				try {
-					valid = command.readCommand(con);
-					if (valid == 0) {// Kommando ist in Ordnung
-						bot.evaluate_command(command);
-					} else
-						System.out.println("Invalid Command");
-				} catch (IOException ex) {
-					ErrorHandler.error("Connection broken - Bot dies: "									+ ex);
-					die();
-				}
+	public void run() {
+		super.run();
+		Command command = new Command();
+		int valid = 0;
+		while (run) {
+			try {
+				valid = command.readCommand(con);
+				if (valid == 0) {// Kommando ist in Ordnung
+					bot.evaluate_command(command);
+				} else
+					System.out.println("Invalid Command");
+			} catch (IOException ex) {
+				ErrorHandler.error("Connection broken - Bot dies: " + ex);
+				die();
 			}
-			die();
 		}
+		die();
 	}
+}

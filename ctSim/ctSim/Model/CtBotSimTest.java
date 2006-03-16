@@ -25,7 +25,7 @@ import javax.vecmath.Vector3f;
 import ctSim.Controller.Controller;
 
 /**
- * Klasse fuer Testbots, die ausschlie�lich zum Test des Simulators dienen; Bots
+ * Klasse fuer Testbots, die ausschliesslich zum Test des Simulators dienen; Bots
  * diesen Typs brauchen keine TCP-Verbindung.
  * 
  * @author pek (pek@heise.de)
@@ -35,9 +35,9 @@ import ctSim.Controller.Controller;
 public class CtBotSimTest extends CtBotSim {
 
 	private short ll;
+
 	private short rr;
 
-	
 	/**
 	 * Erzeugt einen neuen Testbot
 	 * 
@@ -74,7 +74,7 @@ public class CtBotSimTest extends CtBotSim {
 	 * @see ctSim.Model.Bot#work()
 	 */
 	public void work() {
-		
+
 		ll = rr = 100;
 
 		int irL = this.getSensIrL();
@@ -111,7 +111,7 @@ public class CtBotSimTest extends CtBotSim {
 				rr = 50;
 		}
 
-		// Ist ein Absturz zu bef�rchten?
+		// Ist ein Absturz zu befuerchten?
 		int borderL = getSensBorderL();
 		int borderR = getSensBorderR();
 		if (borderL > borderR) {
@@ -121,7 +121,7 @@ public class CtBotSimTest extends CtBotSim {
 			ll = -100;
 			rr = 100;
 		}
-		
+
 		// Kollision oder Abgrund droht: Auf dem Teller rausdrehen,
 		// und zwar immer nach links!
 		if (irL < 200 || irR < 200 || borderL > 1000 || borderR > 1000) {

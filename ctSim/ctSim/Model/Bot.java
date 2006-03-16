@@ -59,7 +59,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	/** Steuerpanel des Bots */
 	private ControlPanel panel;
 
-	/** Verweis auf den zugehörigen Controller */
+	/** Verweis auf den zugehoerigen Controller */
 	private Controller controller;
 
 	/** Zeiger auf die Welt, in der der Bot lebt */
@@ -67,9 +67,9 @@ abstract public class Bot extends Thread implements Obstacle {
 
 	/** Die 3D-Repraesentation eines Bots */
 	BranchGroup botBG;
-	
+
 	/** Koerper des Roboters */
-	protected Shape3D botBody;	
+	protected Shape3D botBody;
 
 	/**
 	 * Die Transformgruppe der Translation der 3D-Repraesentation eines Bots
@@ -82,7 +82,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	TransformGroup rotationGroup;
 
 	/** Position */
-	private Vector3f pos = new Vector3f(0.0f, 0f, getHeight() / 2 +0.006f);
+	private Vector3f pos = new Vector3f(0.0f, 0f, getHeight() / 2 + 0.006f);
 
 	/**
 	 * Blickvektor
@@ -95,7 +95,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	 */
 	public Bot(Controller controller) {
 		super();
-		this.controller=controller;
+		this.controller = controller;
 	}
 
 	/**
@@ -185,7 +185,6 @@ abstract public class Bot extends Thread implements Obstacle {
 	 */
 	abstract public float getGroundClearance();
 
-	
 	/**
 	 * @param heading
 	 *            Die Blickrichtung des Bot, die gesetzt werden soll
@@ -218,7 +217,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	}
 
 	/**
-	 * @return Gibt botName zurueck
+	 * @return Gibt den Namen des Bot (botName) zurueck
 	 */
 	public String getBotName() {
 		return botName;
@@ -226,7 +225,7 @@ abstract public class Bot extends Thread implements Obstacle {
 
 	/**
 	 * @param botName
-	 *            String fuer botName, der gesetzt werden soll
+	 *            Der Name des Bot (botName), der gesetzt werden soll
 	 */
 	public void setBotName(String botName) {
 		this.botName = botName;
@@ -236,7 +235,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	 * @return Gibt die Grenzen des Bots zurueck
 	 */
 	public Bounds getBounds() {
-		return (Bounds)bounds.clone();
+		return (Bounds) bounds.clone();
 	}
 
 	/**
@@ -248,7 +247,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	}
 
 	/**
-	 * @return Gibt ControlPanel des Bot zurueck
+	 * @return Gibt das ControlPanel des Bot zurueck
 	 */
 	public ControlPanel getPanel() {
 		return panel;

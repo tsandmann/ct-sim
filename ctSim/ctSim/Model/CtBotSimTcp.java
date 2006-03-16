@@ -47,7 +47,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 * @param tc
 	 *            Die Verbindung fuer den Bot
 	 */
-	public CtBotSimTcp(Controller controller, Point3f pos, Vector3f head, TcpConnection tc) {
+	public CtBotSimTcp(Controller controller, Point3f pos, Vector3f head,
+			TcpConnection tc) {
 		super(controller, pos, head);
 		tcpCon = (TcpConnection) tc;
 		answeringMachine = new AnsweringMachine(this, tcpCon);
@@ -195,8 +196,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			case Command.CMD_AKT_MOT:
 				this.setAktMotL((short) command.getDataL());
 				this.setAktMotR((short) command.getDataR());
-//				System.out.println("MotorL:" + command.getDataL() + " MotorR: "
-//						+ command.getDataR());
+				// System.out.println("MotorL:" + command.getDataL() + " MotorR:
+				// "
+				// + command.getDataR());
 				break;
 			case Command.CMD_AKT_SERVO:
 				this.setAktServo(command.getDataL());
@@ -210,7 +212,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			case Command.CMD_ACT_LCD:
 				switch (command.getSubcommand()) {
 				case Command.SUB_CMD_NORM:
-					this.setLcdText(command.getDataL(), command.getDataR(), command.getDataBytesAsString());
+					this.setLcdText(command.getDataL(), command.getDataR(),
+							command.getDataBytesAsString());
 					break;
 				case Command.SUB_LCD_CURSOR:
 					this.setCursor(command.getDataL(), command.getDataR());

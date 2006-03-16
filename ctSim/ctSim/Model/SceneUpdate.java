@@ -27,8 +27,8 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 
 /**
- * Die ist ein Container-Objekt für alle Aenderungen an einem Szenegraphen  
- * @author bbe (bbe@heise.de) *
+ * Die ist ein Container-Objekt fuer alle Aenderungen an einem Szenegraphen  
+ * @author bbe (bbe@heise.de) 
  */
 public class SceneUpdate {
 	/** Liste mit allen Bots, die in dieser Welt leben */
@@ -55,7 +55,6 @@ public class SceneUpdate {
 
 	/**
 	 * @return Gibt eine Referenz auf bots zurueck
-	 * @return Gibt den Wert von bots zurueck
 	 */
 	public List<ViewBotUpdate> getBots() {
 		return bots;
@@ -64,7 +63,6 @@ public class SceneUpdate {
 
 
 	/**
-	 * @return Gibt eine Referenz auf id zurueck
 	 * @return Gibt den Wert von id zurueck
 	 */
 	public String getId() {
@@ -75,7 +73,6 @@ public class SceneUpdate {
 
 	/**
 	 * @return Gibt eine Referenz auf rg zurueck
-	 * @return Gibt den Wert von rg zurueck
 	 */
 	public TransformGroup getRg() {
 		return rg;
@@ -85,7 +82,6 @@ public class SceneUpdate {
 
 	/**
 	 * @return Gibt eine Referenz auf tg zurueck
-	 * @return Gibt den Wert von tg zurueck
 	 */
 	public TransformGroup getTg() {
 		return tg;

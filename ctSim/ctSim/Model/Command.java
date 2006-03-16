@@ -40,7 +40,7 @@ public class Command {
 
 	/** Steuerung Servo */
 	public static final int CMD_AKT_SERVO = 'S';
-	
+
 	/** LCD Anzeige */
 	public static final int CMD_ACT_LCD = 'c';
 
@@ -101,25 +101,25 @@ public class Command {
 	/** Nur rechts */
 	public static final int SUB_CMD_RIGHT = 'R';
 
-	/** Subcommandos f�r LCD */
+	/** Subcommandos fuer LCD */
 	/** Subkommando Clear Screen */
-	public static final int SUB_LCD_CLEAR = 'c';     
-	
+	public static final int SUB_LCD_CLEAR = 'c';
+
 	/** Subkommando Text ohne Cursor */
 	public static final int SUB_LCD_DATA = 'D';
-	
+
 	/** Subkommando Cursorkoordinaten */
 	public static final int SUB_LCD_CURSOR = 'C';
-	
+
 	/** Kommando zum Hallo-Sagen  */
-	public static final int CMD_WELCOME ='W';
-	
+	public static final int CMD_WELCOME = 'W';
+
 	/** Subkommando Cursorkoordinaten */
-	public static final int SUB_WELCOME_REAL ='R';
-	
+	public static final int SUB_WELCOME_REAL = 'R';
+
 	/** Subkommando Cursorkoordinaten */
-	public static final int SUB_WELCOME_SIM ='S';
-	
+	public static final int SUB_WELCOME_SIM = 'S';
+
 	/** Markiert den Beginn eines Kommandos */
 	private int startCode = STARTCODE;
 
@@ -134,7 +134,7 @@ public class Command {
 
 	/** Bytes, die dem Kommando noch folgen */
 	private int payload = 0;
-	
+
 	/** Daten, die dem Kommando folgen */
 	private byte[] dataBytes;
 
@@ -153,9 +153,9 @@ public class Command {
 	/**
 	 * Erzeugt ein Kommando zum Abschicken (direction=DIR_REQUEST)
 	 * 
-	 * @param command
-	 * @param dataL
-	 * @param dataR
+	 * @param command Kommando
+	 * @param dataL Datum links
+	 * @param dataR Datum rechts
 	 * @param seq
 	 *            Die Sequenznummer des Packetes
 	 */
@@ -190,10 +190,10 @@ public class Command {
 	/**
 	 * Liefert das Kommando als Array von Bytes zurueck
 	 * 
-	 * @return byte[] , in dem jeweils ein byte steht
+	 * @return byte[], in dem jeweils ein byte steht
 	 */
 	public byte[] getCommandBytes() {
-		byte data[] = new byte[COMMAND_SIZE+payload];
+		byte data[] = new byte[COMMAND_SIZE + payload];
 
 		int i = 0;
 		data[i++] = STARTCODE;
@@ -209,24 +209,24 @@ public class Command {
 		data[i++] = (byte) (seq & 255);
 		data[i++] = (byte) (seq >> 8);
 		data[i++] = CRCCODE;
-		
+
 		return data;
 	}
 
 	/**
-	 * @return Gib die angeh�ngten Nutzdaten weiter
+	 * @return Gib die angehaengten Nutzdaten weiter
 	 */
 	public byte[] getDataBytes() {
 		return dataBytes;
 	}
-	
+
 	/**
-	 * @return gib die Nutzdaten als String zur�ck
+	 * @return Gibt die Nutzdaten als String zurueck
 	 */
 	public String getDataBytesAsString() {
 		return new String(dataBytes);
 	}
-	
+
 	/**
 	 * @return Gibt die Daten zum Kommando links zurueck
 	 */
@@ -265,7 +265,7 @@ public class Command {
 	/**
 	 * Liest ein Kommando von einer TcpConnection
 	 * 
-	 * @param tcpCon
+	 * @param con
 	 *            Die Verbindung, von der gelesen werden soll
 	 * @return das Ergebnis von validate()
 	 * @throws IOException
@@ -273,7 +273,7 @@ public class Command {
 	 */
 	public int readCommand(Connection con) throws IOException {
 		int tmp;
-		
+
 		startCode = 0;
 		// lese Bytes bis Startcode gefunden wird
 		while (startCode != STARTCODE) {
@@ -294,12 +294,11 @@ public class Command {
 		crc = con.readUnsignedByte();
 
 		dataBytes = new byte[payload];
-		
-		for (int i=0; i<payload; i++) {
+
+		for (int i = 0; i < payload; i++) {
 			dataBytes[i] = (byte) con.readUnsignedByte();
 		}
-//		System.out.println(toString());
-		
+
 		return validate();
 	}
 
@@ -310,12 +309,13 @@ public class Command {
 	 */
 	public String toString() {
 		String dataStr = getDataBytesAsString();
-		
-		return "Startcode:\t" + startCode + "\n" + "Command:\t" + (char)command 
-				+ "\n" + "Subcommand:\t" + (char)subcommand + "\n" + "Direction:\t"
-				+ direction + "\n" + "Payload:\t" + payload + "\n"
-				+ "Data:\t\t" + dataL + " " + dataR + "\n" + "Seq:\t\t" + seq
-				+ "\n" + "Data:\t\t'" + dataStr + "'\n" + "CRC:\t\t" + crc;
+
+		return "Startcode:\t" + startCode + "\n" + "Command:\t"
+				+ (char) command + "\n" + "Subcommand:\t" + (char) subcommand
+				+ "\n" + "Direction:\t" + direction + "\n" + "Payload:\t"
+				+ payload + "\n" + "Data:\t\t" + dataL + " " + dataR + "\n"
+				+ "Seq:\t\t" + seq + "\n" + "Data:\t\t'" + dataStr + "'\n"
+				+ "CRC:\t\t" + crc;
 	}
 
 	/**

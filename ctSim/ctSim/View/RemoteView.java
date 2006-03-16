@@ -30,20 +30,20 @@ import ctSim.Model.SceneLight;
 import ctSim.Model.SceneUpdate;
 
 /**
- * Dies ist die Verwaltungsstation fuer Remote-Views. 
- * Es geht also hier um den Server und noicht den Anzeigeteil
+ * Verwaltungsstation fuer Remote-Views auf Server-Seite. 
  * @author bbe (bbe@heise.de)
  *
  */
 public class RemoteView {
-	/** Die Verbindung an der das View haengt*/
+	/** Die Verbindung, an der die View haengt*/
 	private TcpConnection connection; 
 	
 	/** Datenstrom */
 	private ObjectOutputStream oos = null;
 	
 	/**
-	 * @param connection
+	 * Der Konstruktor
+	 * @param connection Die Verbindung
 	 */
 	public RemoteView(TcpConnection connection) throws IOException{
 		super();
@@ -52,8 +52,8 @@ public class RemoteView {
 	}
 
 	/**
-	 * Uebertraegt alle aenderungen in sceneLight an das entfernte View
-	 * @param sceneLight
+	 * Uebertraegt alle Aenderungen in SceneLight an die entfernte View
+	 * @param sceneUpdate Die Aenderungen
 	 */
 	public void update(SceneUpdate sceneUpdate) throws IOException{
 		oos.writeObject(sceneUpdate);
@@ -63,7 +63,7 @@ public class RemoteView {
 	}
 	
 	/**
-	 * Uebertraegt den initialen Scenegraphen an die Remote View
+	 * Uebertraegt den initialen SceneGraph an die Remote View
 	 * @param sceneLight
 	 */
 	public void init(SceneLight sceneLight) throws IOException{

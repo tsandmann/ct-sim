@@ -45,7 +45,6 @@ public abstract class Connection {
 		// TODO Auto-generated constructor stub
 	}
 
-	
 	/**
 	 * Liest ein Byte
 	 * 
@@ -58,7 +57,7 @@ public abstract class Connection {
 		}
 		return data;
 	}
-	
+
 	/**
 	 * Liest einen 16-Bit-Ganzzahlwert (short)
 	 * 
@@ -72,7 +71,7 @@ public abstract class Connection {
 
 		return data;
 	}
-	
+
 	/**
 	 * Beendet die laufende Verbindung
 	 * 
@@ -90,7 +89,7 @@ public abstract class Connection {
 			throw Ex;
 		}
 	}
-	
+
 	/**
 	 * Schickt einen String
 	 * 
@@ -131,10 +130,8 @@ public abstract class Connection {
 		}
 	}
 
-	
 	/**
 	 * @return Gibt eine Referenz auf dis zurueck
-	 * @return Gibt den Wert von dis zurueck
 	 */
 	public LEDataInputStream getDis() {
 		return dis;
@@ -142,7 +139,6 @@ public abstract class Connection {
 
 	/**
 	 * @param dis Referenz auf dis, die gesetzt werden soll
-	 * @param dis Der Wert von dis, der gesetzt werden soll
 	 */
 	public void setDis(LEDataInputStream dis) {
 		this.dis = dis;
@@ -150,7 +146,6 @@ public abstract class Connection {
 
 	/**
 	 * @return Gibt eine Referenz auf dos zurueck
-	 * @return Gibt den Wert von dos zurueck
 	 */
 	public LEDataOutputStream getDos() {
 		return dos;
@@ -158,11 +153,9 @@ public abstract class Connection {
 
 	/**
 	 * @param dos Referenz auf dos, die gesetzt werden soll
-	 * @param dos Der Wert von dos, der gesetzt werden soll
 	 */
 	public void setDos(LEDataOutputStream dos) {
 		this.dos = dos;
 	}
 
-	
 }

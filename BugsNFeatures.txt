@@ -1,4 +1,4 @@
-In Übereinkunft mit Peter König möchte ich hiermit eine Liste der bekannten Bugs anlegen.
+In Uebereinkunft mit Peter Koenig möchte ich hiermit eine Liste der bekannten Bugs anlegen.
 Langfristig sollten wir wohl auf einen Bugtracker wie bugzilla umsteigen.
 
 Ich schlage das folgende Format vor:
@@ -7,14 +7,15 @@ Ich schlage das folgende Format vor:
 
 [Datum] in kurzer ISO-Schreibweise YY-MM-DD (06-02-20)
 
-[Status] entweder unconfirmed,open,resolved,closed
-Bei Status closed sollte evtl noch ein Begründung wie double, no bug oder ähnliches dazu.
-(closed (no bug))
+[Status] entweder unconfirmed, open, resolved, closed, closed (no bug)
+Bei Status closed sollte evtl. noch ein Begruendung wie double, no bug oder ähnliches dazu.
 
 [Gemeldet von] Entweder Name (Christoph Grimmer), Nick (Crimson) oder Email (c.grimmer@eunovis.de)
-Das Nick macht nur so lange Sinn, wie wir im kleinen Kreis arbeiten. Für ein System, in das auch die Leser posten, macht die Email-Adresse am meisten Sinn, da sie unique ist.
+Das Nick macht nur so lange Sinn, wie wir im kleinen Kreis arbeiten. Für ein System, in das auch die Leser posten, 
+macht die Email-Adresse am meisten Sinn, da sie unique ist.
 
-[Zugewiesen zu] Bezeichner der Person, die sich verantwortlich um den Bug kümmert (s.o.). Wäre ja doof, wenn plötzlich alle den gleichen Bug fixen wollen ;-)
+[Zugewiesen zu] Bezeichner der Person, die sich verantwortlich um den Bug kuemmert (s.o.). Waere ja doof, 
+wenn plötzlich alle den gleichen Bug fixen wollen ;-)
 
 Crimson, 20.02.2006
 -------------------
@@ -24,46 +25,50 @@ Bugs
 ----
 
 * [06-02-22][open][pek@heise.de][]:
-TCP-Bot wird dem Simulator manchmal an einer Position hinzugefügt, die in einer Wand des Simulators oder sogar
-jenseits des Spielfelds liegt. Kurz danach springt der Bot an die eigentlich gewünschte Position. Das Problem 
+TCP-Bot wird dem Simulator manchmal an einer Position hinzugefuegt, die in einer Wand des Simulators oder sogar
+jenseits des Spielfelds liegt. Kurz danach springt der Bot an die eigentlich gewuenschte Position, alle Checkboxes
+"setzen" sind markiert, da der Bot kurzzeitig keinen Boden unter den Fuessen hatte. Das Problem 
 scheint vor allem bei Bots aufzutreten, die sofort ab dem Moment ihrer Erzeugung fahren; bleiben sie erstmal 
 stehen, tritt das Problem nicht auf.  
 
-* [06-03-05][open][Torsten Evers]:
+* [06-03-05][open][Torsten Evers][pek@heise.de]:
 Ich habe, da ich gerade an einem Algorithmus zur Linienverfolgung sitze, im 
 Sim den Linien die Dicke 20 gegeben, damit sie beide Liniensensoren abdecken.
 Für die Liniensensensoren kommen da auch brauchbare Werte raus (0x22 
 ausserhalb der Linie und 0x1CC). Zwar sind die Werte beim realen Bot noch 
-höher aber damit kann man leben. Die Abgrundsensoren jedoch, die eigentlich 
+hoeher aber damit kann man leben. Die Abgrundsensoren jedoch, die eigentlich 
 bei demselben Untergrund auch dieselben Werte anzeigen sollten, zeigen 
 ausserhalb der Linie 0x22 (der Wert scheint ok zu sein) aber wenn sie über 
 der Linie sind nur 0xCE. Bei meinem realen Bot verhalten sich Linien- und 
 Abgrundsensoren bei gleichem Untergrund auch gleich.
 
 * [06-02-22][open][pek@heise.de][]: 
-Wird ein ct-Bot-Prozess beendet, bleibt die Hülle des Bot im Simulator drin und wirkt dort als Hindernis.
+Wird ein ct-Bot-Prozess beendet, bleibt die Huelle des Bot im Simulator drin und wirkt dort als Hindernis.
 
-
-Gelöst:
--------
-
-* [06-02-22][resolved][pek@heise.de][pek@heise.de]:
-Die Slider im ControlPanel des Sim fallen manchmal unvermittelt auf den Wert 0; 
-die Textfelder zeigen diesen Wert allerdings nicht an.
---> Lag daran, dass die Abstandssensoren gelegentlich die Hülle des Bot als nächstes
-Hindernis detektiert haben. Jetzt ist die Hülle nicht pickable, sobald der Bot seinen 
-Peilstrahl losschickt.
 
 
 Feature Requests
 ----------------
+
+* [06-03-16][open][pek@heise.de][]:
+Aller Sensoren im Sim sollten realistische Messwerte zurueckgeben und realistische Kennlinen aufweisen
 
 * [06-02-22][open][pek@heise.de][oeffentlich ausgeschrieben]:
 Die Bots sollten in der grafischen Anzeige im Simulator eine Kennung zugewiesen bekommen, damit man sie 
 voneinander unterscheiden kann.  
 
 * [06-03-13][open][pek@heise.de][oeffentlich ausgeschrieben]:
-Das Layout der Kontrolltafel könnte eine Optimierung vertragen, insbesondere 
+Das Layout der Kontrolltafel koennte eine Optimierung vertragen, insbesondere 
 waere es schoen, wenn der gesamte Simulator auch bei einer Bildschirmaufloesung 
 von 1024x768 Pixeln angezeigt werden kann. 
 
+
+Erledigt:
+---------
+
+* [06-02-22][resolved][pek@heise.de][pek@heise.de]:
+Die Slider im ControlPanel des Sim fallen manchmal unvermittelt auf den Wert 0; 
+die Textfelder zeigen diesen Wert allerdings nicht an.
+--> Lag daran, dass die Abstandssensoren gelegentlich die Huelle des Bot als naechstes
+Hindernis detektiert haben. Jetzt ist die Huelle nicht pickable, sobald der Bot seinen 
+Peilstrahl losschickt.

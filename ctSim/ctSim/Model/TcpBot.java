@@ -19,8 +19,8 @@
 
 package ctSim.Model;
 
-/** Interface für alle Bots, die per TCP/IP kommunizieren */
-public interface TcpBot {	
+/** Interface fuer alle Bots, die per TCP/IP kommunizieren */
+public interface TcpBot {
 	/**
 	 * Wertet ein empfangenes Kommando aus
 	 * 
@@ -28,5 +28,6 @@ public interface TcpBot {
 	 *            Das Kommando
 	 */
 	public void evaluate_command(Command command);
+
 	public void die();
 }

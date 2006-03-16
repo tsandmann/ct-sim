@@ -56,13 +56,13 @@ import javax.swing.SwingUtilities;
 /**
  * Realisiert die Anzeige der Welt mit allen Hindernissen und Robotern
  * 
- * @author pek (pek@heise.de)
+ * @author Peter Koenig (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
- * 
+ * @author Benjamin Benz (bbe@heise.de)
  */
 public class WorldView extends JFrame {
 
-	/** Dateiname für den Screenshot */
+	/** Dateiname fuer den Screenshot */
 	private static final String SCREENSHOT ="screenshot.jpg";
 	
 	private static final long serialVersionUID = 1L;
@@ -81,14 +81,12 @@ public class WorldView extends JFrame {
 	private SimpleUniverse universe;
 
 
-	/** Internes Objekt zum Screengrabben. Hat rein garbichts mit einem Roboter zu tun!!! */
+	/** Internes Objekt zum Grabben des Screen. 
+	 * Hat rein garnichts mit einem Roboter zu tun!!! */
 	private Robot robot;
 	
 	/**
-	 * Erzeugt ein neues Fenster zur Welt
-	 * 
-	 * @param w
-	 *            Die Welt, die das Fenster darstellen soll
+	 * Erzeugt ein neues Fenster zur Welt	  
 	 */
 	public WorldView() {
 		super("c't-Sim");
@@ -119,7 +117,7 @@ public class WorldView extends JFrame {
 	 */
 	public void initGUI() {
 
-		/* hole die TransformGroup aus dem SimpleUniverse heraus */
+		/* Hole die TransformGroup aus dem SimpleUniverse heraus */
 		tgViewPlatform = universe.getViewingPlatform().getViewPlatformTransform() ;
 		
 		// Zur Benutzung des org.j3d.ui.navigation Paketes den folgenden Block auskommentieren
@@ -218,7 +216,6 @@ public class WorldView extends JFrame {
 	/**
 	 * Macht einen Screenshot der Roboterwelt und schreibt ihn auf die Platte
 	 * Der Dateiname steht in der Konstanten:
-	 * @see SCREENSHOT
 	 */
 	public void dumpScreen() {
         BufferedImage image = captureScreen();
@@ -230,7 +227,7 @@ public class WorldView extends JFrame {
         try {
             ImageIO.write(image,type,f);
         } catch (IOException ioe) {
-        	ErrorHandler.error("Fehler beim Bild sichern: "+ioe);
+        	ErrorHandler.error("Fehler beim Sichern des Bilds: "+ioe);
         }
     }
 	
@@ -250,7 +247,7 @@ public class WorldView extends JFrame {
     
     /*
      * Hilfsfunktion, um Bilder zu sichern
-     * @param Container Die ContentPnae des zu sichernden Frames
+     * @param Container Die ContentPane des zu sichernden Frames
      * @param BufferedImage das Zielbild
      */
     private void dumpAWT(Container container, BufferedImage image) {

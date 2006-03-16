@@ -17,7 +17,6 @@
  * 
  */
 
-
 package ctSim.Model;
 
 import javax.vecmath.Point3d;
@@ -70,28 +69,28 @@ abstract public class CtBotSim extends CtBot {
 
 	/** Sollen die IR-Sensoren automatisch aktualisert werden? */
 	boolean updateSensIr = true;
-	
+
 	/** Soll der Maussensor automatisch aktualisert werden? */
 	boolean updateSensMouse = true;
-	
+
 	/** Sollen die Liniensensoren automatisch aktualisert werden? */
 	boolean updateSensLine = true;
-	
+
 	/** Sollen die Abgrundsensoren automatisch aktualisert werden? */
 	boolean updateSensBorder = true;
-	
+
 	/** Sollen die Lichtsensoren automatisch aktualisert werden? */
 	boolean updateSensLdr = true;
-	
+
 	/** Ist das normale Aussehen des Bots gesetzt? */
 	boolean isApperance = true;
-	
+
 	/** Ist das Aussehen nach einer Kollision des Bots gesetzt? */
 	boolean isApperanceCollision = false;
-	
+
 	/** Ist das Aussehen nach einem Fall des Bots gesetzt? */
 	boolean isApperanceFall = false;
-	
+
 	/**
 	 * Erzeugt einen neuen Bot
 	 * 
@@ -127,11 +126,11 @@ abstract public class CtBotSim extends CtBot {
 	 * @see BotSim#deltaT
 	 */
 	protected void updateStats() {
-		
+
 		// alte Position und Heading merken
-		// (wird spaeter fï¿½r die Sensorberechnung benoetigt)
-		Vector3f oldPos = (Vector3f)this.getPos().clone();
-		Vector3f oldHeading = (Vector3f)this.getHeading().clone();
+		// (wird spaeter fuer die Sensorberechnung benoetigt)
+		Vector3f oldPos = (Vector3f) this.getPos().clone();
+		Vector3f oldHeading = (Vector3f) this.getHeading().clone();
 
 		// Anzahl der Umdrehungen der Raeder
 		double turnsL = calculateWheelSpeed(this.getAktMotL());
@@ -203,7 +202,7 @@ abstract public class CtBotSim extends CtBot {
 
 		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 		// der Bot blau gefaerbt.
-		if (world.checkCollision(botBody ,getBounds(), newPos, getBotName())) {
+		if (world.checkCollision(botBody, getBounds(), newPos, getBotName())) {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
 			if (isApperanceCollision) {
@@ -218,47 +217,47 @@ abstract public class CtBotSim extends CtBot {
 				isApperanceCollision = true;
 			}
 		}
-		
+
 		// Blickrichtung immer aktualisieren:
 		this.setHeading(newHeading);
 
 		// Bodenkontakt ueberpruefen
-		
+
 		// Winkel des heading errechnen
 		double angle = SimUtils.getRotation(newHeading);
-		// Transformations-Matrix fï¿½r die Rotation erstellen
+		// Transformations-Matrix fuer die Rotation erstellen
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(angle);
-		
-		// Bodenkontakt des Gleitpins ueberprï¿½fen
-		Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT/2);
+
+		// Bodenkontakt des Gleitpins ueberpruefen
+		Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT / 2);
 		// Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
 		rotation.transform(skidVec);
 		skidVec.add(new Point3d(newPos));
 		boolean isFalling = false;
-		if (!world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE, 
-				"Der Gleitpin von " + this.getBotName())){		
+		if (!world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE,
+				"Der Gleitpin von " + this.getBotName())) {
 			isFalling = true;
 		}
-	
+
 		// Bodenkontakt des linken Reifens ueberpruefen
-		posRadL.z -= BOT_HEIGHT/2;
-		if (!world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE, 
-				"Das linke Rad von " + this.getBotName())){
+		posRadL.z -= BOT_HEIGHT / 2;
+		if (!world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE,
+				"Das linke Rad von " + this.getBotName())) {
 			isFalling = true;
 		}
 
 		// Bodenkontakt des rechten Reifens ueberpruefen
-		posRadR.z -= BOT_HEIGHT/2;
-		if (!world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE, 
-				"Das rechte Rad von " + this.getBotName())){
+		posRadR.z -= BOT_HEIGHT / 2;
+		if (!world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE,
+				"Das rechte Rad von " + this.getBotName())) {
 			isFalling = true;
 		}
 
 		// Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat,
 		// wird der Bot gestoppt und gruen gefaerbt.
 		if (isFalling) {
-			((CtControlPanel)this.getPanel()).stopBot();
+			((CtControlPanel) this.getPanel()).stopBot();
 			if (isApperance) {
 				botBody.setAppearance(world.getBotAppearFall());
 				isApperance = false;
@@ -271,25 +270,25 @@ abstract public class CtBotSim extends CtBot {
 				isApperanceCollision = false;
 			}
 		}
-		
+
 		// IR-Abstandssensoren aktualisieren
 		if (updateSensIr) {
 			this.setSensIrL(world.watchObstacle(getSensIRPosition('L'),
-					new Vector3d(newHeading),SENS_IR_ANGLE,botBody));
+					new Vector3d(newHeading), SENS_IR_ANGLE, botBody));
 			this.setSensIrR(world.watchObstacle(getSensIRPosition('R'),
-					new Vector3d(newHeading),SENS_IR_ANGLE,botBody));
+					new Vector3d(newHeading), SENS_IR_ANGLE, botBody));
 		}
-		
+
 		// Liniensensoren aktualisieren
 		if (updateSensLine) {
 			this.setSensLineL(world.sensGroundReflectionCross(
-					getSensLinePosition('L'), new Vector3d(newHeading), 
+					getSensLinePosition('L'), new Vector3d(newHeading),
 					SENS_LINE_ANGLE, SENS_LINE_PRECISION));
 			this.setSensLineR(world.sensGroundReflectionCross(
 					getSensLinePosition('R'), new Vector3d(newHeading),
 					SENS_LINE_ANGLE, SENS_LINE_PRECISION));
 		}
-		
+
 		// Abgrundsensoren aktualisieren
 		if (updateSensBorder) {
 			this.setSensBorderL(world.sensGroundReflectionCross(
@@ -304,10 +303,10 @@ abstract public class CtBotSim extends CtBot {
 		if (updateSensLdr) {
 			this.setSensLdrL(world.sensLight(getSensLdrPosition('L'),
 					getSensLdrHeading(newHeading), SENS_LDR_ANGLE));
-			this.setSensLdrR(world.sensLight(getSensLdrPosition('R'), 
+			this.setSensLdrR(world.sensLight(getSensLdrPosition('R'),
 					getSensLdrHeading(newHeading), SENS_LDR_ANGLE));
 		}
-		
+
 		// Maussensor aktualisieren
 		if (updateSensMouse) {
 			// DeltaY berechnen
@@ -317,77 +316,96 @@ abstract public class CtBotSim extends CtBot {
 			// die zurueckgelegte Strecke in Dots
 			int deltaY = meter2Dots(vecY.length());
 			this.setSensMouseDY(deltaY);
-			
+
 			// DeltaX berechnen
 			// Drehung um die eigene Achse berechenen
-			double angleDiff = SimUtils.getRotation(newHeading) - SimUtils.getRotation(oldHeading);
+			double angleDiff = SimUtils.getRotation(newHeading)
+					- SimUtils.getRotation(oldHeading);
 			// Abstand des Maussensors von Zentrum berechnen
-			Vector3f vecMs = new Vector3f((float)SENS_MOUSE_ABSTAND_X, (float)SENS_MOUSE_ABSTAND_Y, 0f);
+			Vector3f vecMs = new Vector3f((float) SENS_MOUSE_ABSTAND_X,
+					(float) SENS_MOUSE_ABSTAND_Y, 0f);
 			// Drehung(in rad) * Radius bestimmt die Laenge, die der Maussensor auf einem 
 			// imaginaeren Kreis um den Mittelpunkt des Bots abgelaufen ist.
 			int deltaX = meter2Dots(angleDiff * vecMs.length());
 			this.setSensMouseDX(deltaX);
 		}
-        
-        this.updateLcdText();
+
+		// LCD aktualisieren
+		this.updateLcdText();
 	}
-    
-    /**
-     * Aktualisiert den Text, der auf dem LCDisplay angezeigt wird anhand der aktuellen
-     * Sensordaten.
-     */
-    protected void updateLcdText()
-    {
-      // display_printf("P=%03X %03X D=%03d %03d ",sensLDRL,sensLDRR,sensDistL,sensDistR);
-      this.setLcdText(0, 0, 
-        "P=" + formatNumberStr(Integer.toHexString(this.getSensLdrL()).toUpperCase(), 3) + " "  + formatNumberStr(Integer.toHexString(this.getSensLdrR()).toUpperCase(), 3) + 
-        " D=" + formatNumberStr(Integer.toString(this.getSensIrL()), 3) + " "   + formatNumberStr(Integer.toString(this.getSensIrR()), 3));
 
-      // display_printf("B=%03X %03X L=%03X %03X ",sensBorderL,sensBorderR,sensLineL,sensLineR);
-      this.setLcdText(0, 1, 
-        "B=" + formatNumberStr(Integer.toHexString(this.getSensBorderL()).toUpperCase(), 3) + " "  + formatNumberStr(Integer.toHexString(this.getSensBorderR()).toUpperCase(), 3) + 
-        " L=" + formatNumberStr(Integer.toHexString(this.getSensLineL()).toUpperCase(), 3) + " "   + formatNumberStr(Integer.toHexString(this.getSensLineR()).toUpperCase(), 3));        
+	/**
+	 * Aktualisiert den Text, der auf dem LCDisplay angezeigt wird anhand der aktuellen
+	 * Sensordaten.
+	 */
+	protected void updateLcdText() {
+		// entspricht: display_printf("P=%03X %03X D=%03d %03d ",sensLDRL,sensLDRR,sensDistL,sensDistR);
+		this.setLcdText(0, 0, "P="
+				+ formatNumberStr(Integer.toHexString(this.getSensLdrL())
+						.toUpperCase(), 3)
+				+ " "
+				+ formatNumberStr(Integer.toHexString(this.getSensLdrR())
+						.toUpperCase(), 3) + " D="
+				+ formatNumberStr(Integer.toString(this.getSensIrL()), 3) + " "
+				+ formatNumberStr(Integer.toString(this.getSensIrR()), 3));
 
-      // display_printf("R=%2d %2d F=%d K=%d T=%d ",sensEncL % 10,sensEncR %10,sensError,sensDoor,sensTrans);
-      String sensEncL = String.valueOf(this.getSensEncL() % 10);
-      if (this.getSensEncL() >= 0)
-        sensEncL = " " + sensEncL;
-      String sensEncR = String.valueOf(this.getSensEncR() % 10);
-      if (this.getSensEncR() >= 0)
-        sensEncR = " " + sensEncR;
-      
-      this.setLcdText(0, 2, 
-        "R=" + sensEncL + " "  + sensEncR + 
-        " F=" + Integer.toString(this.getSensError()) + 
-        " K=" + Integer.toString(this.getSensDoor()) +
-        " T=" + Integer.toString(this.getSensTrans()));
+		// entspricht: display_printf("B=%03X %03X L=%03X %03X ",sensBorderL,sensBorderR,sensLineL,sensLineR);
+		this.setLcdText(0, 1, "B="
+				+ formatNumberStr(Integer.toHexString(this.getSensBorderL())
+						.toUpperCase(), 3)
+				+ " "
+				+ formatNumberStr(Integer.toHexString(this.getSensBorderR())
+						.toUpperCase(), 3)
+				+ " L="
+				+ formatNumberStr(Integer.toHexString(this.getSensLineL())
+						.toUpperCase(), 3)
+				+ " "
+				+ formatNumberStr(Integer.toHexString(this.getSensLineR())
+						.toUpperCase(), 3));
 
-      // display_printf("I=%04X M=%05d %05d",RC5_Code,sensMouseX,sensMouseY);
-      this.setLcdText(0, 3, 
-        "I=" + formatNumberStr(Integer.toHexString(this.getSensRc5()).toUpperCase(), 4) + 
-        " M="  + formatNumberStr(Integer.toString(this.getSensMouseDX()), 5) + " " + formatNumberStr(Integer.toString(this.getSensMouseDY()), 5));
-    }
-    
-    /**
-     * Hilfsroutine, die einen String abschneidet oder mit Nullen (0) auffüllt
-     * bis die übergebene konstante Länge erreicht ist.
-     * @param numberStr
-     *              Der String, der gekürzt/verlängert werden soll.
-     * @param length
-     *              Die Ziellänge des Ergebnisstrings
-     * @return
-     */
-    private static String formatNumberStr(String numberStr, int length)
-    {
-      if (numberStr == null)
-        return null;
-     
-      if (numberStr.length() < length)
-        return "0000000000".substring(0,length-numberStr.length()) + numberStr;
-      else if (numberStr.length() > length)
-        return numberStr.substring(numberStr.length()-length, numberStr.length());
-      else
-        return numberStr;
+		// entspricht: display_printf("R=%2d %2d F=%d K=%d T=%d ",sensEncL % 10,sensEncR %10,sensError,sensDoor,sensTrans);
+		String sensEncL = String.valueOf(this.getSensEncL() % 10);
+		if (this.getSensEncL() >= 0)
+			sensEncL = " " + sensEncL;
+		String sensEncR = String.valueOf(this.getSensEncR() % 10);
+		if (this.getSensEncR() >= 0)
+			sensEncR = " " + sensEncR;
+
+		this.setLcdText(0, 2, "R=" + sensEncL + " " + sensEncR + " F="
+				+ Integer.toString(this.getSensError()) + " K="
+				+ Integer.toString(this.getSensDoor()) + " T="
+				+ Integer.toString(this.getSensTrans()));
+
+		// entspricht: display_printf("I=%04X M=%05d %05d",RC5_Code,sensMouseX,sensMouseY);
+		this.setLcdText(0, 3, "I="
+				+ formatNumberStr(Integer.toHexString(this.getSensRc5())
+						.toUpperCase(), 4) + " M="
+				+ formatNumberStr(Integer.toString(this.getSensMouseDX()), 5)
+				+ " "
+				+ formatNumberStr(Integer.toString(this.getSensMouseDY()), 5));
+	}
+
+	/**
+	 * Hilfsroutine, die einen String abschneidet oder mit Nullen (0) auffuellt
+	 * bis die uebergebene konstante Laenge erreicht ist.
+	 * @param numberStr
+	 *              Der String, der gekuerzt/verlaengert werden soll.
+	 * @param length
+	 *              Die Ziellaenge des Ergebnisstrings
+	 * @return
+	 */
+	private static String formatNumberStr(String numberStr, int length) {
+		if (numberStr == null)
+			return null;
+
+		if (numberStr.length() < length)
+			return "0000000000".substring(0, length - numberStr.length())
+					+ numberStr;
+		else if (numberStr.length() > length)
+			return numberStr.substring(numberStr.length() - length, numberStr
+					.length());
+		else
+			return numberStr;
 	}
 
 	/**
@@ -395,10 +413,10 @@ abstract public class CtBotSim extends CtBot {
 	 * 
 	 * @param newHeading
 	 * 				Blickrichtung des Bots
-	 * @return Gibt die Blickrichtung des Sensors zurï¿½ck
+	 * @return Gibt die Blickrichtung des Sensors zurueck
 	 */
 	private Vector3d getSensLdrHeading(Vector3f newHeading) {
-		if(SENS_LDR_HEADING.z == 1)
+		if (SENS_LDR_HEADING.z == 1)
 			return SENS_LDR_HEADING;
 		else
 			return new Vector3d(newHeading);
@@ -416,17 +434,18 @@ abstract public class CtBotSim extends CtBot {
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(angle);
 		Point3d ptLine;
-		if (side == 'L'){
-			ptLine = new Point3d(-SENS_LINE_ABSTAND_X, 
-					SENS_LINE_ABSTAND_Y, SENS_LINE_ABSTAND_Z);
+		if (side == 'L') {
+			ptLine = new Point3d(-SENS_LINE_ABSTAND_X, SENS_LINE_ABSTAND_Y,
+					SENS_LINE_ABSTAND_Z);
 		} else {
-			ptLine = new Point3d(SENS_LINE_ABSTAND_X, 
-					SENS_LINE_ABSTAND_Y, SENS_LINE_ABSTAND_Z);
+			ptLine = new Point3d(SENS_LINE_ABSTAND_X, SENS_LINE_ABSTAND_Y,
+					SENS_LINE_ABSTAND_Z);
 		}
 		rotation.transform(ptLine);
 		ptLine.add(new Point3d(getPos()));
 		return ptLine;
 	}
+
 	/**
 	 * Liefert die Position eines Abgrundsensors zurueck
 	 * 
@@ -439,17 +458,18 @@ abstract public class CtBotSim extends CtBot {
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(angle);
 		Point3d ptBorder;
-		if (side == 'L'){
-			ptBorder = new Point3d(-SENS_BORDER_ABSTAND_X, 
+		if (side == 'L') {
+			ptBorder = new Point3d(-SENS_BORDER_ABSTAND_X,
 					SENS_BORDER_ABSTAND_Y, SENS_BORDER_ABSTAND_Z);
 		} else {
-			ptBorder = new Point3d(SENS_BORDER_ABSTAND_X, 
+			ptBorder = new Point3d(SENS_BORDER_ABSTAND_X,
 					SENS_BORDER_ABSTAND_Y, SENS_BORDER_ABSTAND_Z);
 		}
 		rotation.transform(ptBorder);
 		ptBorder.add(new Point3d(getPos()));
 		return ptBorder;
 	}
+
 	/**
 	 * Liefert die Position eines Lichtsensors zurueck
 	 * 
@@ -462,12 +482,12 @@ abstract public class CtBotSim extends CtBot {
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(angle);
 		Point3d ptLdr;
-		if (side == 'L'){
-			ptLdr = new Point3d(-SENS_LDR_ABSTAND_X, 
-					SENS_LDR_ABSTAND_Y, SENS_LDR_ABSTAND_Z);
+		if (side == 'L') {
+			ptLdr = new Point3d(-SENS_LDR_ABSTAND_X, SENS_LDR_ABSTAND_Y,
+					SENS_LDR_ABSTAND_Z);
 		} else {
-			ptLdr = new Point3d(SENS_LDR_ABSTAND_X, 
-					SENS_LDR_ABSTAND_Y, SENS_LDR_ABSTAND_Z);
+			ptLdr = new Point3d(SENS_LDR_ABSTAND_X, SENS_LDR_ABSTAND_Y,
+					SENS_LDR_ABSTAND_Z);
 		}
 		rotation.transform(ptLdr);
 		ptLdr.add(new Point3d(getPos()));
@@ -475,7 +495,7 @@ abstract public class CtBotSim extends CtBot {
 	}
 
 	/**
-	 * Errechnet die Anzahl an Dots, die der Maussensor fï¿½r eine Bewegung 
+	 * Errechnet die Anzahl an Dots, die der Maussensor fuer eine Bewegung 
 	 * der angegebenen Laenge zurueckmeldet.   
 	 * @param distance 
 	 * 			die Laenge der Strecke in Metern
@@ -484,8 +504,8 @@ abstract public class CtBotSim extends CtBot {
 	private int meter2Dots(double distance) {
 		// distance ist in Metern angegeben, 
 		// * 100 macht daraus cm; 2,54 cm sind ein Inch,
-		// anschlieï¿½end Multiplikation mit der Aufloesung des Maussensors
-		return (int)((distance*100/2.54) * SENS_MOUSE_DPI);
+		// anschliessend Multiplikation mit der Aufloesung des Maussensors
+		return (int) ((distance * 100 / 2.54) * SENS_MOUSE_DPI);
 	}
 
 	/**
@@ -518,7 +538,7 @@ abstract public class CtBotSim extends CtBot {
 
 		return new Point3d(pos);
 	}
-	
+
 	/**
 	 * In dieser Methode stehen die Routinen, die der Bot immer wieder
 	 * durchlaeuft; sie darf keine Schleife enthalten! Die Methode kuemmert sich
@@ -534,11 +554,10 @@ abstract public class CtBotSim extends CtBot {
 		super.work();
 		long tmpTime = simulTime;
 		try {
-			simulTime = world.getSimulTime(); 
+			simulTime = world.getSimulTime();
 			// warten, bis World den naechsten Schritt macht
 			deltaT = simulTime - tmpTime; // aktualisiere deltaT
 			updateStats();
-//			this.getPanel().reactToChange();
 		} catch (InterruptedException e) {
 			ErrorHandler.error("Bot: " + getBotName() + " dies " + e);
 			die();
@@ -558,7 +577,7 @@ abstract public class CtBotSim extends CtBot {
 	 * Sollen die IR-Sensoren automatisch aktualisiert werden?
 	 * 
 	 * @param updateSensIr
-	 *            true, wenn automatisch
+	 *            true wenn automatisch
 	 */
 	public void setUpdateSensIr(boolean updateSensIr) {
 		this.updateSensIr = updateSensIr;
@@ -577,12 +596,12 @@ abstract public class CtBotSim extends CtBot {
 	 * Soll der Maussensor automatisch aktualisiert werden?
 	 * 
 	 * @param updateSensMouse
-	 *            true, wenn automatisch
+	 *            true wenn automatisch
 	 */
 	public void setUpdateSensMouse(boolean updateSensMouse) {
 		this.updateSensMouse = updateSensMouse;
 	}
-	
+
 	/**
 	 * Werden die Liniensensoren automatisch aktualisert?
 	 * 
@@ -591,12 +610,12 @@ abstract public class CtBotSim extends CtBot {
 	public boolean isUpdateSensLine() {
 		return updateSensLine;
 	}
-	
+
 	/**
 	 * Sollen die Liniensensoren automatisch aktualisiert werden?
 	 * 
 	 * @param updateSensLine
-	 *            true, wenn automatisch
+	 *            true wenn automatisch
 	 */
 	public void setUpdateSensLine(boolean updateSensLine) {
 		this.updateSensLine = updateSensLine;
@@ -615,12 +634,12 @@ abstract public class CtBotSim extends CtBot {
 	 * Sollen die Abgrundsensoren automatisch aktualisiert werden?
 	 * 
 	 * @param updateSensBorder
-	 *            true, wenn automatisch
+	 *            true wenn automatisch
 	 */
 	public void setUpdateSensBorder(boolean updateSensBorder) {
 		this.updateSensBorder = updateSensBorder;
 	}
-	
+
 	/**
 	 * Werden die Lichtsensoren automatisch aktualisert?
 	 * 
@@ -634,7 +653,7 @@ abstract public class CtBotSim extends CtBot {
 	 * Sollen die Lichtsensoren automatisch aktualisiert werden?
 	 * 
 	 * @param updateSensLdr
-	 *            true, wenn automatisch
+	 *            true wenn automatisch
 	 */
 	public void setUpdateSensLdr(boolean updateSensLdr) {
 		this.updateSensLdr = updateSensLdr;

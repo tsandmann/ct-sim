@@ -39,8 +39,8 @@ import ctSim.Controller.Controller;
 /**
  * Bildet den Rahmen, der die Kontrolltafeln fuer alle Bots enthaelt.
  * 
- * @author pek (pek@heise.de)
- * 
+ * @author Peter Koenig (pek@heise.de)
+ * @author Werner Pirkl (morpheus.the.real@gmx.de)
  */
 
 public class ControlFrame extends javax.swing.JFrame {
@@ -50,39 +50,40 @@ public class ControlFrame extends javax.swing.JFrame {
 
 	private World world;
 
-	/** Verweis auf den zugehörigen Controller */
+	/** Verweis auf den zugehoerigen Controller */
 	private Controller controller;
-	
+
 	private boolean haveABreak;
-	
+
 	private boolean slowMotion;
 
 	private JPanel buttonPanel;
 
 	private JButton pauseButton;
-	
+
 	/**
 	 * Slow Motion Box
 	 */
 	private JCheckBox slowMotionBox;
+
 	private JSlider slowMotionSlider;
+
 	private JPanel slowMotionSliderPanel;
+
 	private JPanel slowMotionBoxPanel;
+
 	private JPanel slowMotionPanel;
+
 	private JTextField slowMotionText;
-	
-	
+
 	private JButton endButton;
 
-	/** Knopf um einen Screenshot zu machen */
-//	private JButton captureButton;
-	
 	/**
 	 * Erzeugt einen neuen ControlFrame
 	 */
 	public ControlFrame(Controller controller) {
 		super();
-		this.controller=controller;
+		this.controller = controller;
 		haveABreak = false;
 		world = controller.getWorld();
 
@@ -131,83 +132,80 @@ public class ControlFrame extends javax.swing.JFrame {
 					});
 
 				}
-				
-				/*
-				 * Slow Motion Box by Werner
-				 */
-				
+
 				{
 					// erstmal initialisieren und richtiges Layout
 					this.slowMotionPanel = new JPanel();
 					this.slowMotionBoxPanel = new JPanel();
 					this.slowMotionSliderPanel = new JPanel();
-				
-					this.slowMotionPanel.setLayout(new BoxLayout(slowMotionPanel, BoxLayout.Y_AXIS));
-					this.slowMotionSliderPanel.setLayout(new BoxLayout(slowMotionSliderPanel, BoxLayout.X_AXIS));
+
+					this.slowMotionPanel.setLayout(new BoxLayout(
+							slowMotionPanel, BoxLayout.Y_AXIS));
+					this.slowMotionSliderPanel.setLayout(new BoxLayout(
+							slowMotionSliderPanel, BoxLayout.X_AXIS));
 
 					slowMotionText = new JTextField();
 					Dimension dim = new Dimension(30, 25);
-					slowMotionText.setPreferredSize( dim );
+					slowMotionText.setPreferredSize(dim);
 					slowMotionText.setEditable(false);
 					slowMotionText.setText("10");
 					slowMotionText.setSize(30, 25);
-					
+
 					slowMotionBox = new JCheckBox("setzen", false);
-					slowMotionSlider = new JSlider(JSlider.HORIZONTAL, 1, 21, 10);
+					slowMotionSlider = new JSlider(JSlider.HORIZONTAL, 1, 21,
+							10);
 					slowMotionSlider.setMajorTickSpacing(5);
 					slowMotionSlider.setMinorTickSpacing(1);
 					slowMotionSlider.setPaintTicks(true);
 					slowMotionSlider.setPaintLabels(true);
 
 					// schliesslich zum Panel dazufuegen
-					slowMotionBoxPanel.add(new javax.swing.JLabel("Slow Motion (Faktor x):"));
+					slowMotionBoxPanel.add(new javax.swing.JLabel(
+							"Slow Motion (Faktor x):"));
 					slowMotionBoxPanel.add(slowMotionText);
-					slowMotionBoxPanel.add(slowMotionBox);					
+					slowMotionBoxPanel.add(slowMotionBox);
 					slowMotionSliderPanel.add(slowMotionSlider);
 					slowMotionPanel.add(slowMotionBoxPanel);
 					slowMotionPanel.add(slowMotionSliderPanel);
 					getContentPane().add(slowMotionPanel);
 				}
-				
+
 				// und dann die Listener dazuhaengen
 				slowMotionBox.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
 						slowMotion = slowMotionBox.isSelected();
 						world.setSlowMotion(slowMotion);
-						
-						if(slowMotion)
-						{	
+
+						if (slowMotion) {
 							slowMotionBox.setSelected(true);
 							// unter 1 ist nicht gut
 							int tempValue = slowMotionSlider.getValue();
-							if(tempValue < 1)
+							if (tempValue < 1)
 								tempValue = 1;
-							world.setSlowMotionTime(tempValue);	
-						}	
-						else
-						{	
+							world.setSlowMotionTime(tempValue);
+						} else {
 							slowMotionBox.setSelected(false);
 							// unter 1 ist nicht gut
 							int tempValue = slowMotionSlider.getValue();
-							if(tempValue < 1)
+							if (tempValue < 1)
 								tempValue = 1;
-							world.setSlowMotionTime(tempValue);	
-						}	
+							world.setSlowMotionTime(tempValue);
+						}
 					}
 				});
-				
+
 				slowMotionSlider.addChangeListener(new ChangeListener() {
 					public void stateChanged(ChangeEvent arg0) {
 						// unter 1 ist nicht gut
 						int tempValue = slowMotionSlider.getValue();
-						if(tempValue < 1)
+						if (tempValue < 1)
 							tempValue = 1;
-						world.setSlowMotionTime(tempValue);	
+						world.setSlowMotionTime(tempValue);
 						slowMotionText.setText(Integer.toString(tempValue));
 					}
-					
+
 				});
-				
+
 				{
 					endButton = new JButton();
 					endButton.setPreferredSize(buttDim);
@@ -220,24 +218,6 @@ public class ControlFrame extends javax.swing.JFrame {
 					}
 				});
 
-				// Button um einen Screenshot zu machen
-//				{	captureButton = new JButton();
-//					captureButton.setPreferredSize(buttDim);
-//					buttonPanel.add(captureButton);
-//					captureButton.setText("Screenshot");
-//				}
-
-//				captureButton.addActionListener(new ActionListener() {
-//					public void actionPerformed(ActionEvent evt) {
-//						world.getWorldView().dumpScreen();
-//					}
-//				});
-//				
-				
-				// TODO remove me!!!
-				
-
-
 			}
 
 			{
@@ -245,7 +225,7 @@ public class ControlFrame extends javax.swing.JFrame {
 				getContentPane().add(controlPanels);
 			}
 			setSize(300, 200);
-			setLocation(500,0);
+			setLocation(500, 0);
 			pack();
 		} catch (Exception e) {
 			e.printStackTrace();

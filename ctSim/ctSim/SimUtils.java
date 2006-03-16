@@ -84,7 +84,6 @@ public class SimUtils {
 		Vector3f newHead = new Vector3f(new Point3d(x, y, 0d));
 		return newHead;
 	}
-	
 
 	/**
 	 * Errechnet den Winkel zwischen Nordrichtung des Universums (Richtung der 
@@ -94,7 +93,7 @@ public class SimUtils {
 	 * 			  Gib die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
 	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurück
 	 */
-	public static double getRotation(Vector3f heading){
+	public static double getRotation(Vector3f heading) {
 		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
 		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
 		// muessen hier zwei Faelle unterschieden werden:
