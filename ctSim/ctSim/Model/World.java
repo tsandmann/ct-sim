@@ -827,7 +827,7 @@ public class World extends Thread {
 		Transform3D lsTranslate = new Transform3D();
 		lsTranslate.set(new Vector3f(xpos, ypos, zpos));
 		TransformGroup lsTransformGroup = new TransformGroup(lsTranslate);
-		Sphere lightSphere = new Sphere(0.02f);
+		Sphere lightSphere = new Sphere(0.07f);
 		lightSphere.setAppearance(getLightSourceAppear());
 		lightSphere.setPickable(true);
 		lsTransformGroup.addChild(lightSphere);

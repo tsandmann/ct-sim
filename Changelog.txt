@@ -2,6 +2,9 @@ CHANGELOG fuer c't-Sim
 ======================
 
 2006-03-16 Peter Koenig (pek@heise.de)
+Lampen vergroessert (verbessert die Erkennung der Saeulen)
+
+2006-03-16 Peter Koenig (pek@heise.de)
 Umlaute entfernt, Kommentare ergaenzt und Formatierungen geaendert
 
 2006-03-16  Stefan Geuken (mail@stefan-geuken.de)
