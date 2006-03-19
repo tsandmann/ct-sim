@@ -28,7 +28,7 @@ import java.util.*;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.Material;
-import javax.media.j3d.PointLight;
+//import javax.media.j3d.PointLight;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Node;
 import javax.media.j3d.Bounds;
@@ -53,10 +53,10 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Vector4f;
 
 import com.sun.j3d.utils.geometry.Box;
-import com.sun.j3d.utils.geometry.Cylinder;
+//import com.sun.j3d.utils.geometry.Cylinder;
 import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.NormalGenerator;
-import com.sun.j3d.utils.geometry.Sphere;
+//import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.image.TextureLoader;
 
@@ -415,7 +415,7 @@ public class World extends Thread {
 		data[n++] = -0.71f;
 		data[n++] = -1.71f;
 		data[n++] = 0f;
-		// 16
+		// 16 -----
 		data[n++] = -0.7f;
 		data[n++] = -1.71f;
 		data[n++] = 0f;
@@ -535,9 +535,9 @@ public class World extends Thread {
 	 */
 	public BranchGroup createSceneGraph() {
 
-		float[][] pillarPositions = { { 0.2f, -1f }, { 0.2f, -0.5f },
-				{ 0.2f, 0f }, { 0.2f, 0.5f }, { 0.05f, 0.9f },
-				{ -0.48f, 1.0f }, { -1.0f, 1.0f }, { -1.35f, 0.65f } };
+//		float[][] pillarPositions = { { 0.2f, -1f }, { 0.2f, -0.5f },
+//				{ 0.2f, 0f }, { 0.2f, 0.5f }, { 0.05f, 0.9f },
+//				{ -0.48f, 1.0f }, { -1.0f, 1.0f }, { -1.35f, 0.65f } };
 
 		// Die Lichtquellen aus Version 0.2 des Simulators
 		// float[][] oldLights =
@@ -576,20 +576,20 @@ public class World extends Thread {
 		lightBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		lightBG.setPickable(true);
 
-		// Lichtpunkte
-		BoundingSphere pointLightBounds = new BoundingSphere(new Point3d(0d,
-				0d, 0d), 10d);
-		Color3f pointLightColor = new Color3f(1.0f, 1.0f, 0.9f);
-
+//		// Lichtpunkte
+//		BoundingSphere pointLightBounds = new BoundingSphere(new Point3d(0d,
+//				0d, 0d), 10d);
+//		Color3f pointLightColor = new Color3f(1.0f, 1.0f, 0.9f);
+//
 		/*
 		 * Fuer den Hindernis-Parcours brauchen wir 8 Lichtquellen und 8
 		 * Saeulen. Um nicht jede Lichtquelle von Hand bauen zu muessen, 
 		 * wurde alles in eine Subroutine ausgelagert.
 		 */
 
-		for (float[] pos : pillarPositions) {
-			createLight(pointLightBounds, pointLightColor, pos[0], pos[1], 0.5f);
-		}
+//		for (float[] pos : pillarPositions) {
+//			createLight(pointLightBounds, pointLightColor, pos[0], pos[1], 0.5f);
+//		}
 
 		worldTG.addChild(lightBG);
 
@@ -599,9 +599,9 @@ public class World extends Thread {
 		terrainBG.setPickable(true);
 
 		// Erzeuge Boden
-		Shape3D floor = createTerrainShape();
-		floor.setAppearance(getPlaygroundAppear());
-		floor.setPickable(true);
+//		Shape3D floor = createTerrainShape();
+//		floor.setAppearance(getPlaygroundAppear());
+//		floor.setPickable(true);
 
 		// Schiebe den Boden so, dass die Oberflaeche genau auf der
 		// (relativen) Ebene Z = 0 liegt.
@@ -610,9 +610,9 @@ public class World extends Thread {
 		TransformGroup tgT = new TransformGroup(translate);
 		tgT.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 		tgT.setPickable(true);
-		tgT.addChild(floor);
+//		tgT.addChild(floor);
 		terrainBG.addChild(tgT);
-
+/*
 		// Erzeuge Linien auf dem Boden
 		Shape3D lineFloor = createLineShape();
 		lineFloor.setAppearance(getPlaygroundLineAppear());
@@ -626,7 +626,7 @@ public class World extends Thread {
 		tgL.setPickable(true);
 		tgL.addChild(lineFloor);
 		tgT.addChild(tgL);
-
+*/
 		worldTG.addChild(terrainBG);
 
 		// Die TranformGroup fuer alle Hindernisse:
@@ -656,37 +656,6 @@ public class World extends Thread {
 		west.setPickable(true);
 		west.setName("West");
 
-		// sechs Zwischenwaende aus Version 0.2, sind ausgebaut fuer den neuen Parcours
-		// Box wall1 = new Box(0.1f, 0.05f, 0.2f,
-		// worldView.getObstacleAppear());
-		// wall1.setPickable(true);
-		// wall1.setName("Wall1");
-		//		
-		// Box wall2 = new Box(PLAYGROUND_WIDTH/2 - 0.45f, 0.05f, 0.2f,
-		// worldView.getObstacleAppear());
-		// wall2.setPickable(true);
-		// wall2.setName("Wall2");
-		//		
-		// Box wall3 = new Box(0.1f, 0.05f, 0.2f,
-		// worldView.getObstacleAppear());
-		// wall3.setPickable(true);
-		// wall3.setName("Wall3");
-		//		
-		// Box wall4 = new Box(0.2f, 0.025f, 0.2f,
-		// worldView.getObstacleAppear());
-		// wall4.setPickable(true);
-		// wall4.setName("Wall4");
-		//
-		// Box wall5 = new Box(0.4f, 0.025f, 0.2f,
-		// worldView.getObstacleAppear());
-		// wall5.setPickable(true);
-		// wall5.setName("Wall5");
-		//		
-		// Box wall6 = new Box(0.025f, 0.3f, 0.2f,
-		// worldView.getObstacleAppear());
-		// wall6.setPickable(true);
-		// wall6.setName("Wall6");
-
 		// Hindernisse werden an die richtige Position geschoben
 
 		// Zuerst werden sie gemeinsam so verschoben, dass ihre Unterkante genau
@@ -699,9 +668,9 @@ public class World extends Thread {
 
 		/* Zusaetzlich zu den Lichtquellen werden 8 kleine Saeulen erzeugt. */
 
-		for (float[] pos : pillarPositions) {
-			createPillar(pillarPositions, tgO, pos[0], pos[1]);
-		}
+//		for (float[] pos : pillarPositions) {
+//			createPillar(pillarPositions, tgO, pos[0], pos[1]);
+//		}
 
 		// Danach bekommt jedes Hindernis seine eigene TransformGroup, um es
 		// an den individuellen Platz zu schieben:
@@ -734,57 +703,10 @@ public class World extends Thread {
 		tgW.addChild(west);
 		tgO.addChild(tgW);
 
-		// Trennwaende aus Version 0.2 an die richtigen Positionen schieben:
-		// translate.set(new Vector3f(-(PLAYGROUND_WIDTH/2) + 0.1f,
-		// 0f, 0f));
-		// TransformGroup tgWall1 = new TransformGroup(translate);
-		// tgWall1.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		// tgWall1.setPickable(true);
-		// tgWall1.addChild(wall1);
-		// tgO.addChild(tgWall1);
-		//		
-		// translate.set(new Vector3f(-0.05f, 0f, 0f));
-		// TransformGroup tgWall2 = new TransformGroup(translate);
-		// tgWall2.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		// tgWall2.setPickable(true);
-		// tgWall2.addChild(wall2);
-		// tgO.addChild(tgWall2);
-		//		
-		// translate.set(new Vector3f((PLAYGROUND_WIDTH/2) - 0.1f,
-		// 0f, 0f));
-		// TransformGroup tgWall3 = new TransformGroup(translate);
-		// tgWall3.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		// tgWall3.setPickable(true);
-		// tgWall3.addChild(wall3);
-		// tgO.addChild(tgWall3);
-		//		
-		// translate.set(new Vector3f(0.6f, -1f, 0f));
-		// TransformGroup tgWall4 = new TransformGroup(translate);
-		// tgWall4.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		// tgWall4.setPickable(true);
-		// tgWall4.addChild(wall4);
-		// tgO.addChild(tgWall4);
-		//
-		// translate.set(new Vector3f(0.1f,
-		// -0.65f, 0f));
-		// TransformGroup tgWall5 = new TransformGroup(translate);
-		// tgWall5.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		// tgWall5.setPickable(true);
-		// tgWall5.addChild(wall5);
-		// tgO.addChild(tgWall5);
-		//		
-		// translate.set(new Vector3f(-0.1f, -0.35f, 0f));
-		// TransformGroup tgWall6 = new TransformGroup(translate);
-		// tgWall6.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		// tgWall6.setPickable(true);
-		// tgWall6.addChild(wall6);
-		// tgO.addChild(tgWall6);
-
-		/*
-		 * ParcoursLoader pL = new ParcoursLoader();
-		 * pL.setWallAppear(obstacleAppear); pL.insertSceneGraph(tgO);
-		 */
-
+		ParcoursLoader pL = new ParcoursLoader();
+		pL.load_file("parcours/testline.txt");
+		pL.insertSceneGraph(tgO,lightBG,terrainBG);
+		
 		sceneLight.getObstBG().setCapability(Node.ENABLE_PICK_REPORTING);
 		sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
 
@@ -800,39 +722,39 @@ public class World extends Thread {
 		return objRoot;
 	}
 
-	private void createPillar(float[][] pillarPositions, TransformGroup tgO,
-			float xpos, float ypos) {
-		Cylinder pillar = new Cylinder(0.05f, 0.5f, getObstacleAppear());
-		pillar.setPickable(true);
-		Transform3D transformer = new Transform3D();
-		transformer.rotX(0.5 * Math.PI);
-		transformer.setTranslation(new Vector3f(xpos, ypos, 0));
-		TransformGroup tg = new TransformGroup(transformer);
-		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tg.setPickable(true);
-		tg.addChild(pillar);
-		tgO.addChild(tg);
-	}
-
-	private void createLight(BoundingSphere pointLightBounds,
-			Color3f pointLightColor, float xpos, float ypos, float zpos) {
-		PointLight pointLight = new PointLight();
-		pointLight.setColor(pointLightColor);
-		pointLight.setPosition(xpos, ypos, zpos);
-		pointLight.setInfluencingBounds(pointLightBounds);
-		pointLight.setAttenuation(1f, 3f, 0f);
-		pointLight.setEnable(true);
-		lightBG.addChild(pointLight);
-
-		Transform3D lsTranslate = new Transform3D();
-		lsTranslate.set(new Vector3f(xpos, ypos, zpos));
-		TransformGroup lsTransformGroup = new TransformGroup(lsTranslate);
-		Sphere lightSphere = new Sphere(0.07f);
-		lightSphere.setAppearance(getLightSourceAppear());
-		lightSphere.setPickable(true);
-		lsTransformGroup.addChild(lightSphere);
-		lightBG.addChild(lsTransformGroup);
-	}
+//	private void createPillar(float[][] pillarPositions, TransformGroup tgO,
+//			float xpos, float ypos) {
+//		Cylinder pillar = new Cylinder(0.05f, 0.5f, getObstacleAppear());
+//		pillar.setPickable(true);
+//		Transform3D transformer = new Transform3D();
+//		transformer.rotX(0.5 * Math.PI);
+//		transformer.setTranslation(new Vector3f(xpos, ypos, 0));
+//		TransformGroup tg = new TransformGroup(transformer);
+//		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+//		tg.setPickable(true);
+//		tg.addChild(pillar);
+//		tgO.addChild(tg);
+//	}
+//
+//	private void createLight(BoundingSphere pointLightBounds,
+//			Color3f pointLightColor, float xpos, float ypos, float zpos) {
+//		PointLight pointLight = new PointLight();
+//		pointLight.setColor(pointLightColor);
+//		pointLight.setPosition(xpos, ypos, zpos);
+//		pointLight.setInfluencingBounds(pointLightBounds);
+//		pointLight.setAttenuation(1f, 3f, 0f);
+//		pointLight.setEnable(true);
+//		lightBG.addChild(pointLight);
+//
+//		Transform3D lsTranslate = new Transform3D();
+//		lsTranslate.set(new Vector3f(xpos, ypos, zpos));
+//		TransformGroup lsTransformGroup = new TransformGroup(lsTranslate);
+//		Sphere lightSphere = new Sphere(0.07f);
+//		lightSphere.setAppearance(getLightSourceAppear());
+//		lightSphere.setPickable(true);
+//		lsTransformGroup.addChild(lightSphere);
+//		lightBG.addChild(lsTransformGroup);
+//	}
 
 	/**
 	 * Fuegt einen Bot in die Welt ein

@@ -1,5 +1,8 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-03-19 Benjamin Benz (bbe@heise.de) ParcoursLoader fast fertig
+
+2006-03-19 Benjamin Benz (bbe@heise.de) updatelcdText in botsimtest verschoben
 
 2006-03-16 Peter Koenig (pek@heise.de)
 Lampen vergroessert (verbessert die Erkennung der Saeulen)
