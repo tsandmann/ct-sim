@@ -50,7 +50,7 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 
 import javax.swing.JComponent;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -60,7 +60,11 @@ import javax.swing.SwingUtilities;
  * @author Lasse Schwarten (lasse@schwarten.org)
  * @author Benjamin Benz (bbe@heise.de)
  */
-public class WorldView extends JFrame {
+ /* Markus Lang 2006-03-17:
+ * WorldView erweitert nun die JPanel Klasse, da es kein
+ * eigenständiges Fenster mehr ist.
+ */
+public class WorldView extends JPanel {
 
 	/** Dateiname fuer den Screenshot */
 	private static final String SCREENSHOT ="screenshot.jpg";
@@ -89,10 +93,7 @@ public class WorldView extends JFrame {
 	 * Erzeugt ein neues Fenster zur Welt	  
 	 */
 	public WorldView() {
-		super("c't-Sim");
-				
-		getContentPane().setLayout(new BorderLayout());
-		this.setSize(500, 500);
+		this.setLayout(new BorderLayout());
 
         GraphicsConfigTemplate3D template = new GraphicsConfigTemplate3D();
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -100,9 +101,7 @@ public class WorldView extends JFrame {
 
         // Leinwand fuer die Welt erzeugen
 		worldCanvas = new Canvas3D(dev.getBestConfiguration(template));
-
-		this.getContentPane().add(worldCanvas);
-		
+		this.add(worldCanvas);
 		
 		// wird zum ScreenCapture gebraucht
 		try {
@@ -168,10 +167,8 @@ public class WorldView extends JFrame {
 //		universe.addBranchGraph(bgt);
 		
 		try {
-			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			worldCanvas.setVisible(true);
 			this.setVisible(true);
-			this.pack();
 			this.repaint();
 
 		} catch (Exception e) {
@@ -236,12 +233,11 @@ public class WorldView extends JFrame {
 	 * @return das Bild
 	 */
     public BufferedImage captureScreen() {
-        BufferedImage image = new BufferedImage(getContentPane().getWidth(), getContentPane().getHeight(), BufferedImage.TYPE_INT_RGB);
-        getContentPane().paint(image.createGraphics());
+        BufferedImage image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        this.paint(image.createGraphics());
         if(isVisible()) {
-            dumpAWT(getContentPane(), image);
+            dumpAWT(this, image);
         }
-        
         return image;
     }
     
@@ -259,7 +255,7 @@ public class WorldView extends JFrame {
                 bounds.setLocation(child.getLocationOnScreen());
                 BufferedImage capture = robot.createScreenCapture(bounds);
                 bounds.setLocation(location);
-                SwingUtilities.convertRectangle(child, bounds, getContentPane());
+                SwingUtilities.convertRectangle(child, bounds, this);
                 image.createGraphics().drawImage(capture, location.x, location.y, this);
  
                 if(child instanceof Container) {

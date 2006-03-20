@@ -43,7 +43,12 @@ import ctSim.Controller.Controller;
  * @author Werner Pirkl (morpheus.the.real@gmx.de)
  */
 
-public class ControlFrame extends javax.swing.JFrame {
+/* Markus Lang 2006-03-17:
+ * ControlFrame erweitert nun die JPanel Klasse, da es kein
+ * eingenständiges Fenster mehr ist. Somit ist der Name
+ * ControlFrame eigentlich missverständlich.
+ */
+public class ControlFrame extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private JTabbedPane controlPanels;
@@ -77,6 +82,11 @@ public class ControlFrame extends javax.swing.JFrame {
 	private JTextField slowMotionText;
 
 	private JButton endButton;
+	
+	/* Markus Lang 2006-03-17:
+	 * Instanzen für das JSplitPane Hauptfenster
+	 */
+	private CtSimFrame ctSimFrame;
 
 	/**
 	 * Erzeugt einen neuen ControlFrame
@@ -98,16 +108,13 @@ public class ControlFrame extends javax.swing.JFrame {
 		Dimension buttDim = new Dimension(20, 70);
 
 		try {
-			setDefaultCloseOperation(EXIT_ON_CLOSE);
-			BoxLayout thisLayout = new BoxLayout(getContentPane(),
-					javax.swing.BoxLayout.Y_AXIS);
-			getContentPane().setLayout(thisLayout);
-			this.setTitle("Kontrolltafel");
+			BoxLayout thisLayout = new BoxLayout(this, javax.swing.BoxLayout.Y_AXIS);
+			this.setLayout(thisLayout);
 			{
 				buttonPanel = new JPanel();
 				BoxLayout panelLayout = new BoxLayout(buttonPanel,
 						javax.swing.BoxLayout.X_AXIS);
-				getContentPane().add(buttonPanel);
+				this.add(buttonPanel);
 				buttonPanel.setLayout(panelLayout);
 				{
 					pauseButton = new JButton();
@@ -167,7 +174,7 @@ public class ControlFrame extends javax.swing.JFrame {
 					slowMotionSliderPanel.add(slowMotionSlider);
 					slowMotionPanel.add(slowMotionBoxPanel);
 					slowMotionPanel.add(slowMotionSliderPanel);
-					getContentPane().add(slowMotionPanel);
+					this.add(slowMotionPanel);
 				}
 
 				// und dann die Listener dazuhaengen
@@ -222,11 +229,8 @@ public class ControlFrame extends javax.swing.JFrame {
 
 			{
 				controlPanels = new JTabbedPane();
-				getContentPane().add(controlPanels);
+				this.add(controlPanels);
 			}
-			setSize(300, 200);
-			setLocation(500, 0);
-			pack();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -243,7 +247,11 @@ public class ControlFrame extends javax.swing.JFrame {
 		controlPanels.addTab(bot.getBotName(), null, bot.getPanel(), null);
 		// Dem Panel anzeigen, wo es dargestellt wird
 		bot.getPanel().setFrame(this);
-		pack();
+		/* Markus Lang 2006-03-06:
+		 * JSplitPlane über die Größenänderung informieren
+		 * (Ersatz für den alten pack() Aufruf der JFrame Klasse)
+		 */
+		this.ctSimFrame.updateSliderPosition();
 	}
 
 	/**
@@ -252,4 +260,14 @@ public class ControlFrame extends javax.swing.JFrame {
 	public JTabbedPane getControlPanels() {
 		return controlPanels;
 	}
+	
+	/** Markus Lang 2006-03-17:
+	 * Diese Methode setzt die interne CtSimFrame Instanz
+	 * 
+	 * @param ctSimFrame die neue CtSimFrame Instanz
+	 * @author Markus Lang
+	 */
+	public void setCtSimFrameInstance(CtSimFrame ctSimFrame) {
+		this.ctSimFrame = ctSimFrame;
+ 	}
 }

@@ -51,6 +51,11 @@ public class Controller {
 	private WorldView worldView;
 
 	private ControlFrame controlFrame;
+	
+	/* Markus Lang 2006-03-17:
+	 * Instanzen für das JSplitPane Hauptfenster
+	 */
+	private CtSimFrame ctSimFrame;
 
 	/** Eine Liste aller verbundenen Remote-Views */
 	private List<RemoteView> remoteViews;
@@ -137,6 +142,13 @@ public class Controller {
 		worldView = new WorldView();
 		worldView.setScene(world.getSceneLight().getScene());
 		worldView.initGUI();
+		
+		/* Markus Lang 2006-03-17:
+		 * Hauptfenster erstellen mit den bereits vorhandenen 
+		 * ControlFRame und WoldView Instanzen.
+		 */
+		this.ctSimFrame = new CtSimFrame(controlFrame, this.worldView);
+		this.controlFrame.setCtSimFrameInstance(ctSimFrame);
 
 		/*
 		 * WorldView worldView2 = new WorldView();
@@ -280,7 +292,10 @@ public class Controller {
 	 */
 	public void endSim() {
 		world.die();
-		controlFrame.dispose();
+		/* Markus Lang 2006-03-17:
+		 * dispose() wird jetzt auf der ctSimFrame Klasse ausgeführt
+		 */
+		ctSimFrame.dispose();
 
 		// Alle Views schliessen
 		Iterator it = remoteViews.iterator();
