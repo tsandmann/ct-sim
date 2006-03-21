@@ -1,6 +1,11 @@
 CHANGELOG fuer c't-Sim
 ======================
 
+2006-03-21 Peter Koenig (pek@heise.de)
+Konstanten in CtBot konsequent englisch umbenannt, Patch für die 
+korrekte Positionsberechnung von Fabian Recktenwald (Fabian.Recktenwald@ct-bot.teschpfad.de)
+eingepflegt, ebenso den darauf aufbauenden Maus-Patch
+
 2006-03-20 Markus Lang (lang@repulse.de)
 Kontrollfenster und World-Fenster mittels einer SplitPane zu einem 
 großen c't-Sim Hauptfenster zusammengefügt. Weniger Fensterwald :)

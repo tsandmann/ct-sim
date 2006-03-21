@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
 /** 
- * Die Haupt-View-Klasse des c't-Sim welche die ControlPanels und die
- * WorldView Klasse in einer großen JSplitPane zusammen führt.
+ * Die Haupt-View-Klasse des c't-Sim, welche die ControlPanels und die
+ * WorldView-Klasse in einem grossen JSplitPane zusammen fuehrt.
  * 
  * @author Markus Lang (lang@repulse.de)
  * @version 2006-03-06
@@ -24,25 +24,25 @@ public class CtSimFrame extends JFrame implements WindowStateListener {
 	private ControlFrame controlFrame;
 	
 	/**
-	 * Constructor: Erzeugt ein neues ctSimFrame Hauptfenster
+	 * Konstruktor: Erzeugt ein neues CtSimFrame-Hauptfenster
 	 * 
-	 * @param controlFrame die ControlFrame Instanz (leftComponent)
-	 * @param worldView  the WorldView Instanz (rightComponent)
+	 * @param controlFrame die ControlFrame-Instanz (leftComponent)
+	 * @param worldView  die WorldView-Instanz (rightComponent)
 	 */
 	public CtSimFrame(ControlFrame controlFrame, WorldView worldView) {
-		// super constructor aufrufen
+		// Super-Konstructor aufrufen
 		super();
-		// gui elemente laden
+		// GUI-Elemente laden
 		this.controlFrame = controlFrame;
 		this.initGUI(worldView);
-		// eventListener registrieren
+		// EventListener registrieren
 		this.addWindowStateListener(this);
-		// fenstergröße festlegen
+		// Fenstergroesse festlegen
 		Dimension dimension = new Dimension(1024, 700);
 		this.setMinimumSize(dimension);
 		this.setPreferredSize(dimension);
 		this.setSize(dimension);
-		// fenster positionieren
+		// Fenster positionieren
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setBounds(
 				(screenSize.width / 2) - (dimension.width / 2),
@@ -53,22 +53,22 @@ public class CtSimFrame extends JFrame implements WindowStateListener {
 	}
 	
 	/**
-	 * Initialisierung der GUI Elemente
+	 * Initialisierung der GUI-Elemente
 	 *  
-	 * @param worldView  the WorldView Instanz (rightComponent)
+	 * @param worldView  die WorldView-Instanz (rightComponent)
 	 */
 	private void initGUI(WorldView worldView) {
-		// layout definieren
+		// Layout definieren
 		this.setTitle("c't-Sim");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		BoxLayout thisLayout = new BoxLayout(getContentPane(),
 				javax.swing.BoxLayout.Y_AXIS);
 		this.getContentPane().setLayout(thisLayout);
-		// min & max größe des controlFrame setzen
+		// min- & max-Groesse des controlFrame setzen
 		Dimension preferedSize = this.controlFrame.getPreferredSize();
 		this.controlFrame.setMinimumSize(preferedSize);
 		this.controlFrame.setMaximumSize(preferedSize);
-		// splitpane erstellen
+		// SplitPane erstellen
 		this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.controlFrame, worldView); 
 		this.splitPane.setContinuousLayout(false); 
 		this.splitPane.setOneTouchExpandable(true);
@@ -80,10 +80,10 @@ public class CtSimFrame extends JFrame implements WindowStateListener {
 	 * Beim Aufruf dieser Methode wird die Slider-Position neu bestimmt
 	 */
 	public void updateSliderPosition() {
-		// min & max größe des controlFrame setzen
-		Dimension preferedSize = this.controlFrame.getPreferredSize();
-		this.controlFrame.setMinimumSize(preferedSize);
-		this.controlFrame.setMaximumSize(preferedSize);
+		// min- & max-Groesse des ControlFrame setzen
+		Dimension preferredSize = this.controlFrame.getPreferredSize();
+		this.controlFrame.setMinimumSize(preferredSize);
+		this.controlFrame.setMaximumSize(preferredSize);
 		this.controlFrame.revalidate();
 		// splitPane Divider positionieren
 		this.splitPane.setDividerLocation(
@@ -91,9 +91,9 @@ public class CtSimFrame extends JFrame implements WindowStateListener {
 	}
 	
 	/**
-	 * Implementierte Methode des WindowStateListener Interfaces
-	 * Wird dazu genutzt bei Minimieren/Maximieren des Fensters die 
-	 * Divider Position der SplitPlane zu aktualisieren.
+	 * Implementierte Methode des WindowStateListener-Interfaces.
+	 * Wird dazu genutzt, beim Minimieren/Maximieren des Fensters die 
+	 * Divider-Position der SplitPlane zu aktualisieren.
 	 * 
 	 * @see java.awt.event.WindowStateListener#windowStateChanged(java.awt.event.WindowEvent)
 	 */

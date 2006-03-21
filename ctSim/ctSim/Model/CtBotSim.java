@@ -106,10 +106,9 @@ abstract public class CtBotSim extends CtBot {
 	}
 
 	/*
-	 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde 
+	 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde
 	 * 
-	 * @param motPWM PWM-Verhaeltnis 
-	 * @return Umdrehungen pro Sekunde
+	 * @param motPWM PWM-Verhaeltnis @return Umdrehungen pro Sekunde
 	 */
 	private float calculateWheelSpeed(int motPWM) {
 		float tmp = ((float) motPWM / (float) PWM_MAX);
@@ -160,45 +159,74 @@ abstract public class CtBotSim extends CtBot {
 		// und speichern sie.
 		this.setSensEncR((short) (this.getSensEncR() + encoderSteps));
 
-		// Zurueckgelegte Strecke linkes Rad als Vector
-		Vector3f vecL = new Vector3f(this.getHeading());
-		vecL.scale((float) (turnsL * WHEEL_PERIMETER), vecL);
+		/*
+		 * // Zurueckgelegte Strecke linkes Rad als Vector Vector3f vecL = new
+		 * Vector3f(this.getHeading()); vecL.scale((float) (turnsL *
+		 * WHEEL_PERIMETER), vecL);
+		 *  // Zurueckgelegte Strecke rechtes Rad als Vector Vector3f vecR = new
+		 * Vector3f(this.getHeading()); vecR.scale((float) (turnsR *
+		 * WHEEL_PERIMETER), vecR);
+		 *  // Vektor vom Ursprung zum linken Rad Vector3f vec = new
+		 * Vector3f((float) -this.getHeading().y, (float) this .getHeading().x,
+		 * 0f); vec.scale((float) RAD_ABSTAND, vec);
+		 *  // neue Position linkes Rad Vector3f posRadL = new
+		 * Vector3f(this.getPos()); posRadL.add(vec); posRadL.add(vecL);
+		 *  // Vektor vom Ursprung zum rechten Rad vec = new Vector3f((float)
+		 * this.getHeading().y, (float) -this .getHeading().x, 0f);
+		 * vec.scale((float) RAD_ABSTAND, vec);
+		 *  // neue Position rechtes Rad Vector3f posRadR = new
+		 * Vector3f(this.getPos()); posRadR.add(vec); posRadR.add(vecR);
+		 *  // Neue Position berechnen Vector3f mid = new Vector3f(posRadR); //
+		 * fange rechts an mid.sub(posRadL); // ziehe linke Position ab
+		 * mid.scale(0.5f, mid); // bilde relative Mitte
+		 * 
+		 * Vector3f newPos = new Vector3f(posRadR); // und berechne die absolute
+		 * newPos.sub(mid);
+		 */
 
-		// Zurueckgelegte Strecke rechtes Rad als Vector
-		Vector3f vecR = new Vector3f(this.getHeading());
-		vecR.scale((float) (turnsR * WHEEL_PERIMETER), vecR);
+		// Für ausführliche Erläuterung der Positionsberechnung siehe pdf
+		// Absolut zurückgelegte Strecke pro Rad berechnen
+		double s_l = turnsL * WHEEL_PERIMETER;
+		double s_r = turnsR * WHEEL_PERIMETER;
 
-		// Vektor vom Ursprung zum linken Rad
-		Vector3f vec = new Vector3f((float) -this.getHeading().y, (float) this
-				.getHeading().x, 0f);
-		vec.scale((float) RAD_ABSTAND, vec);
+		// halben Drehwinkel berechnen
+		double _gamma = (s_l - s_r) / (4.0 * WHEEL_DIST);
 
-		// neue Position linkes Rad
-		Vector3f posRadL = new Vector3f(this.getPos());
-		posRadL.add(vec);
-		posRadL.add(vecL);
+		/*
+		 * // Jetzt fehlt noch die neue Blickrichtung Vector3f newHeading = new
+		 * Vector3f(-mid.y, mid.x, 0);
+		 */
 
-		// Vektor vom Ursprung zum rechten Rad
-		vec = new Vector3f((float) this.getHeading().y, (float) -this
-				.getHeading().x, 0f);
-		vec.scale((float) RAD_ABSTAND, vec);
+		// neue Blickrichtung berechnen
+		// ergibt sich aus Rotation der Blickrichtung um 2*_gamma
+		Vector3f _hd = this.getHeading();
+		double _s2g = Math.sin(2 * _gamma);
+		double _c2g = Math.cos(2 * _gamma);
+		Vector3f newHeading = new Vector3f(
+				(float) (_hd.x * _c2g + _hd.y * _s2g),
+				(float) (-_hd.x * _s2g + _hd.y * _c2g), 0f);
 
-		// neue Position rechtes Rad
-		Vector3f posRadR = new Vector3f(this.getPos());
-		posRadR.add(vec);
-		posRadR.add(vecR);
-
-		// Neue Position berechnen
-		Vector3f mid = new Vector3f(posRadR); // fange rechts an
-		mid.sub(posRadL); // ziehe linke Position ab
-		mid.scale(0.5f, mid); // bilde relative Mitte
-
-		Vector3f newPos = new Vector3f(posRadR); // und berechne die absolute
-		newPos.sub(mid);
-
-		// Jetzt fehlt noch die neue Blickrichtung
-		Vector3f newHeading = new Vector3f(-mid.y, mid.x, 0);
 		newHeading.normalize();
+
+		// Neue Position bestimmen
+		Vector3f newPos = new Vector3f(this.getPos());
+		double _sg = Math.sin(_gamma);
+		double _cg = Math.cos(_gamma);
+		double moveDistance;
+		if (_gamma == 0) {
+			// Bewegung geradeaus
+			moveDistance = s_l; // = s_r
+		} else {
+			// anderfalls die Distanz laut Formel berechnen
+			moveDistance = 0.5 * (s_l + s_r) * Math.sin(_gamma) / _gamma;
+		}
+		// Den Bewegungsvektor berechnen ...
+		Vector3f moveDirection = new Vector3f((float) (_hd.x * _cg + _hd.y
+				* _sg), (float) (-_hd.x * _sg + _hd.y * _cg), 0f);
+		moveDirection.normalize();
+		moveDirection.scale((float) moveDistance);
+		// ... und die alte Position entsprechend verändern.
+		newPos.add(moveDirection);
 
 		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 		// der Bot blau gefaerbt.
@@ -211,6 +239,9 @@ abstract public class CtBotSim extends CtBot {
 				isApperanceCollision = false;
 			}
 		} else {
+
+			moveDistance = 0; // Wird später noch für den Maussensor benötigt
+
 			if (isApperance) {
 				botBody.setAppearance(world.getBotAppearCollision());
 				isApperance = false;
@@ -222,6 +253,22 @@ abstract public class CtBotSim extends CtBot {
 		this.setHeading(newHeading);
 
 		// Bodenkontakt ueberpruefen
+
+		// Vektor vom Ursprung zum linken Rad
+		Vector3f vecL = new Vector3f((float) newHeading.y,
+				(float) newHeading.x, 0f);
+		vecL.scale((float) WHEEL_DIST);
+		// neue Position linkes Rad
+		Vector3f posRadL = new Vector3f(this.getPos());
+		posRadL.add(vecL);
+
+		// Vektor vom Ursprung zum rechten Rad
+		Vector3f vecR = new Vector3f((float) newHeading.y,
+				(float) -newHeading.x, 0f);
+		vecR.scale((float) WHEEL_DIST);
+		// neue Position rechtes Rad
+		Vector3f posRadR = new Vector3f(this.getPos());
+		posRadR.add(vecR);
 
 		// Winkel des heading errechnen
 		double angle = SimUtils.getRotation(newHeading);
@@ -310,35 +357,49 @@ abstract public class CtBotSim extends CtBot {
 		// Maussensor aktualisieren
 		if (updateSensMouse) {
 			// DeltaY berechnen
-			// Differenz bilden
-			Vector3f vecY = new Vector3f(this.getPos());
-			vecY.sub(oldPos);
-			// die zurueckgelegte Strecke in Dots
-			int deltaY = meter2Dots(vecY.length());
+
+			/*
+			 * // Differenz bilden Vector3f vecY = new Vector3f(this.getPos());
+			 * vecY.sub(oldPos); // die zurueckgelegte Strecke in Dots int
+			 * deltaY = meter2Dots(vecY.length());
+			 */
+
+			int deltaY = meter2Dots(moveDistance);
+
 			this.setSensMouseDY(deltaY);
 
 			// DeltaX berechnen
-			// Drehung um die eigene Achse berechenen
-			double angleDiff = SimUtils.getRotation(newHeading)
-					- SimUtils.getRotation(oldHeading);
+			/*
+			 * // Drehung um die eigene Achse berechenen double angleDiff =
+			 * SimUtils.getRotation(newHeading) -
+			 * SimUtils.getRotation(oldHeading);
+			 */
+
 			// Abstand des Maussensors von Zentrum berechnen
-			Vector3f vecMs = new Vector3f((float) SENS_MOUSE_ABSTAND_X,
-					(float) SENS_MOUSE_ABSTAND_Y, 0f);
-			// Drehung(in rad) * Radius bestimmt die Laenge, die der Maussensor auf einem 
+			/*
+			 * Vector3f vecMs = new Vector3f((float) SENS_MOUSE_DIST_X, (float)
+			 * SENS_MOUSE_DIST_Y, 0f); // Drehung(in rad) * Radius bestimmt die
+			 * Laenge, die der Maussensor auf einem
+			 */
+
+			// Drehung(in rad) * SENS_MOUSE_DIST_Y bestimmt die Laenge, die der
+			// Maussensor auf einem
 			// imaginaeren Kreis um den Mittelpunkt des Bots abgelaufen ist.
-			int deltaX = meter2Dots(angleDiff * vecMs.length());
+			/*
+			 * int deltaX = meter2Dots(angleDiff * vecMs.length());
+			 */
+			// !!Dies ist nur korrekt solange SENS_MOUSE_ABSTAND_X==0 gilt
+			int deltaX = meter2Dots(2 * _gamma * SENS_MOUSE_DIST_Y);
 			this.setSensMouseDX(deltaX);
 		}
 
 	}
 
-
-
 	/**
 	 * Errechnet die Blickrichtung eines Lichtsensors.
 	 * 
 	 * @param newHeading
-	 * 				Blickrichtung des Bots
+	 *            Blickrichtung des Bots
 	 * @return Gibt die Blickrichtung des Sensors zurueck
 	 */
 	private Vector3d getSensLdrHeading(Vector3f newHeading) {
@@ -361,11 +422,11 @@ abstract public class CtBotSim extends CtBot {
 		rotation.rotZ(angle);
 		Point3d ptLine;
 		if (side == 'L') {
-			ptLine = new Point3d(-SENS_LINE_ABSTAND_X, SENS_LINE_ABSTAND_Y,
-					SENS_LINE_ABSTAND_Z);
+			ptLine = new Point3d(-SENS_LINE_DIST_X, SENS_LINE_DIST_Y,
+					SENS_LINE_DIST_Z);
 		} else {
-			ptLine = new Point3d(SENS_LINE_ABSTAND_X, SENS_LINE_ABSTAND_Y,
-					SENS_LINE_ABSTAND_Z);
+			ptLine = new Point3d(SENS_LINE_DIST_X, SENS_LINE_DIST_Y,
+					SENS_LINE_DIST_Z);
 		}
 		rotation.transform(ptLine);
 		ptLine.add(new Point3d(getPos()));
@@ -385,11 +446,11 @@ abstract public class CtBotSim extends CtBot {
 		rotation.rotZ(angle);
 		Point3d ptBorder;
 		if (side == 'L') {
-			ptBorder = new Point3d(-SENS_BORDER_ABSTAND_X,
-					SENS_BORDER_ABSTAND_Y, SENS_BORDER_ABSTAND_Z);
+			ptBorder = new Point3d(-SENS_BORDER_DIST_X, SENS_BORDER_DIST_Y,
+					SENS_BORDER_DIST_Z);
 		} else {
-			ptBorder = new Point3d(SENS_BORDER_ABSTAND_X,
-					SENS_BORDER_ABSTAND_Y, SENS_BORDER_ABSTAND_Z);
+			ptBorder = new Point3d(SENS_BORDER_DIST_X, SENS_BORDER_DIST_Y,
+					SENS_BORDER_DIST_Z);
 		}
 		rotation.transform(ptBorder);
 		ptBorder.add(new Point3d(getPos()));
@@ -409,11 +470,11 @@ abstract public class CtBotSim extends CtBot {
 		rotation.rotZ(angle);
 		Point3d ptLdr;
 		if (side == 'L') {
-			ptLdr = new Point3d(-SENS_LDR_ABSTAND_X, SENS_LDR_ABSTAND_Y,
-					SENS_LDR_ABSTAND_Z);
+			ptLdr = new Point3d(-SENS_LDR_DIST_X, SENS_LDR_DIST_Y,
+					SENS_LDR_DIST_Z);
 		} else {
-			ptLdr = new Point3d(SENS_LDR_ABSTAND_X, SENS_LDR_ABSTAND_Y,
-					SENS_LDR_ABSTAND_Z);
+			ptLdr = new Point3d(SENS_LDR_DIST_X, SENS_LDR_DIST_Y,
+					SENS_LDR_DIST_Z);
 		}
 		rotation.transform(ptLdr);
 		ptLdr.add(new Point3d(getPos()));
@@ -421,14 +482,15 @@ abstract public class CtBotSim extends CtBot {
 	}
 
 	/**
-	 * Errechnet die Anzahl an Dots, die der Maussensor fuer eine Bewegung 
-	 * der angegebenen Laenge zurueckmeldet.   
-	 * @param distance 
-	 * 			die Laenge der Strecke in Metern
-	 * @return 
+	 * Errechnet die Anzahl an Dots, die der Maussensor fuer eine Bewegung der
+	 * angegebenen Laenge zurueckmeldet.
+	 * 
+	 * @param distance
+	 *            die Laenge der Strecke in Metern
+	 * @return
 	 */
 	private int meter2Dots(double distance) {
-		// distance ist in Metern angegeben, 
+		// distance ist in Metern angegeben,
 		// * 100 macht daraus cm; 2,54 cm sind ein Inch,
 		// anschliessend Multiplikation mit der Aufloesung des Maussensors
 		return (int) ((distance * 100 / 2.54) * SENS_MOUSE_DPI);
@@ -446,16 +508,16 @@ abstract public class CtBotSim extends CtBot {
 		Vector3f vecX;
 		if (side == 'L')
 			vecX = new Vector3f(-this.getHeading().y, this.getHeading().x,
-					(float) (BOT_HEIGHT / 2 + SENS_IR_ABSTAND_Z));
+					(float) (BOT_HEIGHT / 2 + SENS_IR_DIST_Z));
 		else
 			vecX = new Vector3f(this.getHeading().y, -this.getHeading().x,
-					(float) (BOT_HEIGHT / 2 + SENS_IR_ABSTAND_Z));
+					(float) (BOT_HEIGHT / 2 + SENS_IR_DIST_Z));
 
-		vecX.scale((float) SENS_IR_ABSTAND_X, vecX);
+		vecX.scale((float) SENS_IR_DIST_X, vecX);
 
 		// Vektor vom Ursprung in Voraus-Richtung
 		Vector3f vecY = new Vector3f(this.getHeading());
-		vecY.scale((float) SENS_IR_ABSTAND_Y, vecY);
+		vecY.scale((float) SENS_IR_DIST_Y, vecY);
 
 		// Ursprung
 		Vector3f pos = new Vector3f(this.getPos());

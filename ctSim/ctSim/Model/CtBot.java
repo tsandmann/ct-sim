@@ -50,10 +50,10 @@ public abstract class CtBot extends Bot {
 	public static final double BOT_HEIGHT = 0.120d;
 
 	/** Breite des Faches [m] */
-	public static final double FACH_LENGTH = 0.050d;
+	public static final double POCKET_LENGTH = 0.050d;
 
 	/** Tiefe des Faches [m] */
-	public static final double FACH_DEPTH = BOT_RADIUS - 0.015d;
+	public static final double POCKET_DEPTH = BOT_RADIUS - 0.015d;
 
 	/** Bodenfreiheit des Bots [m] */
 	public static final double BOT_GROUND_CLEARANCE = 0.015d;
@@ -80,37 +80,37 @@ public abstract class CtBot extends Bot {
 	public static final double WHEEL_PERIMETER = Math.PI * 0.059d;
 
 	/** Abstand Mittelpunkt Bot zum Rad [m] */
-	public static final double RAD_ABSTAND = 0.0485d;
+	public static final double WHEEL_DIST = 0.0485d;
 
 	/** Abstand Zentrum IR-Sensoren in Achsrichtung (X)[m] */
-	public static final double SENS_IR_ABSTAND_X = 0.036d;
+	public static final double SENS_IR_DIST_X = 0.036d;
 
 	/** Abstand Zentrum IR-Sensoren in Vorausrichtung (Y) [m] */
-	public static final double SENS_IR_ABSTAND_Y = 0.0554d;
+	public static final double SENS_IR_DIST_Y = 0.0554d;
 
 	/** Abstand Zentrum IR-Sensoren in Hochrichtung (Z) [m] */
-	public static final double SENS_IR_ABSTAND_Z = 0.035d - BOT_HEIGHT / 2;
+	public static final double SENS_IR_DIST_Z = 0.035d - BOT_HEIGHT / 2;
 
 	/** Oeffnungswinkel der beiden IR-Abstandssensoren [Rad] */
 	public static final double SENS_IR_ANGLE = Math.PI / 180 * 3;
 
 	/** Abstand Zentrum Maussensor in Achsrichtung (X)[m] */
-	public static final double SENS_MOUSE_ABSTAND_X = 0d;
+	public static final double SENS_MOUSE_DIST_X = 0d;
 
 	/** Abstand Zentrum Maussensor in Vorausrichtung (Y) [m] */
-	public static final double SENS_MOUSE_ABSTAND_Y = -0.015d;
+	public static final double SENS_MOUSE_DIST_Y = -0.015d;
 
 	/** Aufloesung des Maussensors [DPI] */
 	public static final int SENS_MOUSE_DPI = 400;
 
 	/** Abstand Zentrum Liniensensoren in Achsrichtung (X)[m] */
-	public static final double SENS_LINE_ABSTAND_X = 0.004d;
+	public static final double SENS_LINE_DIST_X = 0.004d;
 
 	/** Abstand Zentrum Liniensensoren in Vorausrichtung (Y) [m] */
-	public static final double SENS_LINE_ABSTAND_Y = 0.009d;
+	public static final double SENS_LINE_DIST_Y = 0.009d;
 
 	/** Abstand Zentrum Liniensensoren in Hochrichtung (Z) [m] */
-	public static final double SENS_LINE_ABSTAND_Z = -0.011d - BOT_HEIGHT / 2;
+	public static final double SENS_LINE_DIST_Z = -0.011d - BOT_HEIGHT / 2;
 
 	/** Oeffnungswinkel der beiden Liniensensoren [Rad] */
 	public static final double SENS_LINE_ANGLE = Math.PI / 180 * 80;
@@ -121,13 +121,13 @@ public abstract class CtBot extends Bot {
 	public static final short SENS_LINE_PRECISION = 10;
 
 	/** Abstand Zentrum Abgrundsensoren in Achsrichtung (X)[m] */
-	public static final double SENS_BORDER_ABSTAND_X = 0.036d;
+	public static final double SENS_BORDER_DIST_X = 0.036d;
 
 	/** Abstand Zentrum Abgrundsensoren in Vorausrichtung (Y) [m] */
-	public static final double SENS_BORDER_ABSTAND_Y = 0.0384d;
+	public static final double SENS_BORDER_DIST_Y = 0.0384d;
 
 	/** Abstand Zentrum Abgrundsensoren in Hochrichtung (Z) [m] */
-	public static final double SENS_BORDER_ABSTAND_Z = 0d - BOT_HEIGHT / 2;
+	public static final double SENS_BORDER_DIST_Z = 0d - BOT_HEIGHT / 2;
 
 	/** Oeffnungswinkel der beiden Abgrundsensoren [Rad] */
 	public static final double SENS_BORDER_ANGLE = Math.PI / 180 * 80;
@@ -138,13 +138,13 @@ public abstract class CtBot extends Bot {
 	public static final short SENS_BORDER_PRECISION = 10;
 
 	/** Abstand Zentrum Lichtsensoren in Achsrichtung (X)[m] */
-	public static final double SENS_LDR_ABSTAND_X = 0.032d;
+	public static final double SENS_LDR_DIST_X = 0.032d;
 
 	/** Abstand Zentrum Lichtsensoren in Vorausrichtung (Y) [m] */
-	public static final double SENS_LDR_ABSTAND_Y = 0.048d;
+	public static final double SENS_LDR_DIST_Y = 0.048d;
 
 	/** Abstand Zentrum Lichtsensoren in Hochrichtung (Z) [m] */
-	public static final double SENS_LDR_ABSTAND_Z = 0.060d - BOT_HEIGHT / 2;
+	public static final double SENS_LDR_DIST_Z = 0.060d - BOT_HEIGHT / 2;
 
 	/** Ausrichtung der Lichtsensors 
 	 *  (0d,0d,1d) ==> nach oben
@@ -420,7 +420,7 @@ public abstract class CtBot extends Bot {
 		// Winkel des vollen Kreises (im Bogenmass)
 		double circle = 2.0 * Math.PI;
 		// halber Winkel der Oeffnung des Bots
-		double opening = Math.asin((FACH_LENGTH / 2) / r);
+		double opening = Math.asin((POCKET_LENGTH / 2) / r);
 
 		// Rand des Deckels erzeugen, beachte dabei die Oeffnung
 		for (n = 0; n < N; n++) {
@@ -433,12 +433,12 @@ public abstract class CtBot extends Bot {
 		}
 
 		// Fach in die Oeffnung des Deckels einbauen
-		data[3 * n] = r - (float) FACH_DEPTH;
-		data[3 * n + 1] = (float) -FACH_LENGTH / 2;
+		data[3 * n] = r - (float) POCKET_DEPTH;
+		data[3 * n + 1] = (float) -POCKET_LENGTH / 2;
 		data[3 * n + 2] = h; // 2
 		n++;
-		data[3 * n] = r - (float) FACH_DEPTH;
-		data[3 * n + 1] = (float) FACH_LENGTH / 2;
+		data[3 * n] = r - (float) POCKET_DEPTH;
+		data[3 * n + 1] = (float) POCKET_LENGTH / 2;
 		data[3 * n + 2] = h; // 2
 		n++;
 
