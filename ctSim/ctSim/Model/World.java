@@ -39,26 +39,15 @@ import javax.media.j3d.PickInfo;
 import javax.media.j3d.PickShape;
 import javax.media.j3d.PickRay;
 import javax.media.j3d.Shape3D;
-import javax.media.j3d.TexCoordGeneration;
-import javax.media.j3d.Texture;
-import javax.media.j3d.Texture2D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.AmbientLight;
+import javax.swing.JFileChooser;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Color3f;
-import javax.vecmath.Vector4f;
-
-import com.sun.j3d.utils.geometry.Box;
-//import com.sun.j3d.utils.geometry.Cylinder;
-import com.sun.j3d.utils.geometry.GeometryInfo;
-import com.sun.j3d.utils.geometry.NormalGenerator;
-//import com.sun.j3d.utils.geometry.Sphere;
-import com.sun.j3d.utils.geometry.Stripifier;
-import com.sun.j3d.utils.image.TextureLoader;
 
 /**
  * Welt-Modell, kuemmert sich um die globale Simulation und das Zeitmanagement
@@ -164,19 +153,19 @@ public class World extends Thread {
 	private TransformGroup worldTG;
 
 	/** Aussehen von Hindernissen */
-	private Appearance obstacleAppear;
+//	private Appearance obstacleAppear;
 
 	/** Pfad zu einer Textur fuer die Hindernisse */
 	public static final String OBST_TEXTURE = "textures/rock_wall.jpg";
 
 	/** Aussehen des Bodens */
-	private Appearance playgroundAppear;
+//	private Appearance playgroundAppear;
 
 	/** Aussehen der Linien auf dem Boden */
-	private Appearance playgroundLineAppear;
+//	private Appearance playgroundLineAppear;
 
 	/** Aussehen einer Lichtquelle */
-	private Appearance lightSourceAppear;
+//	private Appearance lightSourceAppear;
 
 	/** Aussehen der Bots */
 	private Appearance botAppear;
@@ -200,180 +189,181 @@ public class World extends Thread {
 		sceneLight = new SceneLight();
 		sceneLight.setScene(createSceneGraph());
 		sceneLightBackup = sceneLight.clone();
+		sceneLight.getScene().compile();
 	}
 
-	/**
-	 * Baut die 3D-Repraesentation des Bodens aus 2D-Polygonen zusammen
-	 * 
-	 * @return der Boden
-	 */
-	private Shape3D createTerrainShape() {
-
-		Shape3D ts = new Shape3D();
-		// Anzahl der verwendeten Punkte
-		int N = 10 + 6 + 9 + 2 + 6;
-		int totalN = N;
-		// data muss pro Punkt die Werte x, y und z speichern
-		float[] data = new float[totalN * 3];
-		// zwei Polygone (Deckel und Boden) mit N Ecken
-		int stripCounts[] = { N };
-		// Zaehler
-		int n = 0;
-
-		// Boden erzeugen
-		//
-		// Umriss des Bodens erzeugen, beachte dabei die Oeffnung!
-		// 1.unten links
-		data[n++] = -PLAYGROUND_WIDTH / 2;
-		data[n++] = -PLAYGROUND_HEIGHT / 2;
-		data[n++] = 0f;
-		// 2.unten rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = -PLAYGROUND_HEIGHT / 2;
-		data[n++] = 0f;
-		// 2a.unteres Drittel rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = -PLAYGROUND_HEIGHT / 6;
-		data[n++] = 0f;
-		// 2b.unteres Drittel Mitte
-		data[n++] = -PLAYGROUND_WIDTH / 2;
-		data[n++] = -PLAYGROUND_HEIGHT / 6;
-		data[n++] = 0f;
-		// 2c.unteres Drittel rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = -PLAYGROUND_HEIGHT / 6;
-		data[n++] = 0f;
-		// 2a.unteres Drittel rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = -PLAYGROUND_HEIGHT / 8;
-		data[n++] = 0f;
-		// 2b.unteres Drittel Mitte
-		data[n++] = -PLAYGROUND_WIDTH / 2;
-		data[n++] = -PLAYGROUND_HEIGHT / 8;
-		data[n++] = 0f;
-		// 2c.unteres Drittel rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = -PLAYGROUND_HEIGHT / 8;
-		data[n++] = 0f;
-		// I.Mitte rechts / Licht2 rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = 0f;
-		data[n++] = 0f;
-		// II.Licht2 Mitte
-		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-		data[n++] = 0f;
-		data[n++] = 0f;
-		// III.Licht2 oben
-		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-		data[n++] = 2f;
-		data[n++] = 0f;
-		// IV.Licht2 Mitte
-		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-		data[n++] = 0f;
-		data[n++] = 0f;
-		// V.Licht2 links
-		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f - 1f;
-		data[n++] = 0f;
-		data[n++] = 0f;
-		// V-1.Licht2 links oben
-		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f - 1f;
-		data[n++] = 0.2f;
-		data[n++] = 0f;
-		// V-2.Licht2 links
-		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f - 1f;
-		data[n++] = 0f;
-		data[n++] = 0f;
-		// VI.Licht2 Mitte
-		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-		data[n++] = 0f;
-		data[n++] = 0f;
-		// VII.Licht2 unten
-		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-		data[n++] = -2f;
-		data[n++] = 0f;
-		// VIII.Licht2 Mitte
-		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-		data[n++] = 0f;
-		data[n++] = 0f;
-		// IX.Mitte rechts/Licht2 rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = 0f;
-		data[n++] = 0f;
-		// 2d.oberes Drittel rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = PLAYGROUND_HEIGHT / 8;
-		data[n++] = 0f;
-		// 2e.oberes Drittel Mitte
-		data[n++] = -PLAYGROUND_WIDTH / 2;
-		data[n++] = PLAYGROUND_HEIGHT / 8;
-		data[n++] = 0f;
-		// 2f.oberes Drittel rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = PLAYGROUND_HEIGHT / 8;
-		data[n++] = 0f;
-		// 2d.oberes Drittel rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = PLAYGROUND_HEIGHT / 6;
-		data[n++] = 0f;
-		// 2e.oberes Drittel Mitte
-		data[n++] = -PLAYGROUND_WIDTH / 2;
-		data[n++] = PLAYGROUND_HEIGHT / 6;
-		data[n++] = 0f;
-		// 2f.oberes Drittel rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = PLAYGROUND_HEIGHT / 6;
-		data[n++] = 0f;
-		// 3.oben rechts
-		data[n++] = PLAYGROUND_WIDTH / 2;
-		data[n++] = PLAYGROUND_HEIGHT / 2;
-		data[n++] = 0f;
-		// 4.oben links
-		data[n++] = -PLAYGROUND_WIDTH / 2;
-		data[n++] = PLAYGROUND_HEIGHT / 2;
-		data[n++] = 0f;
-		// 5.R2m links
-		data[n++] = -PLAYGROUND_WIDTH / 2;
-		data[n++] = -1.0f;
-		data[n++] = 0f;
-		// 6.R2 Loch OR
-		data[n++] = -0.3f;
-		data[n++] = -1.0f;
-		data[n++] = 0f;
-		// 7.R2 Loch UR
-		data[n++] = -0.3f;
-		data[n++] = -1.5f;
-		data[n++] = 0f;
-		// 8.R2 Loch UL
-		data[n++] = -0.8f;
-		data[n++] = -1.5f;
-		data[n++] = 0f;
-		// 9.R2 Loch OL
-		data[n++] = -0.8f;
-		data[n++] = -1.0f;
-		data[n++] = 0f;
-		// 10.R2m links
-		data[n++] = -PLAYGROUND_WIDTH / 2;
-		data[n++] = -1.0f;
-		data[n++] = 0f;
-
-		// Polygone in darstellbare Form umwandeln
-		GeometryInfo gi = new GeometryInfo(GeometryInfo.POLYGON_ARRAY);
-		gi.setCoordinates(data);
-		gi.setStripCounts(stripCounts);
-
-		NormalGenerator ng = new NormalGenerator();
-		ng.generateNormals(gi);
-		gi.recomputeIndices();
-
-		Stripifier st = new Stripifier();
-		st.stripify(gi);
-		gi.recomputeIndices();
-
-		// Hinzufuegen der Ober- und Unterseite des Terrain-Shape3D
-		ts.addGeometry(gi.getGeometryArray());
-
-		return ts;
-	}
+//	/**
+//	 * Baut die 3D-Repraesentation des Bodens aus 2D-Polygonen zusammen
+//	 * 
+//	 * @return der Boden
+//	 */
+//	private Shape3D createTerrainShape() {
+//
+//		Shape3D ts = new Shape3D();
+//		// Anzahl der verwendeten Punkte
+//		int N = 10 + 6 + 9 + 2 + 6;
+//		int totalN = N;
+//		// data muss pro Punkt die Werte x, y und z speichern
+//		float[] data = new float[totalN * 3];
+//		// zwei Polygone (Deckel und Boden) mit N Ecken
+//		int stripCounts[] = { N };
+//		// Zaehler
+//		int n = 0;
+//
+//		// Boden erzeugen
+//		//
+//		// Umriss des Bodens erzeugen, beachte dabei die Oeffnung!
+//		// 1.unten links
+//		data[n++] = -PLAYGROUND_WIDTH / 2;
+//		data[n++] = -PLAYGROUND_HEIGHT / 2;
+//		data[n++] = 0f;
+//		// 2.unten rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = -PLAYGROUND_HEIGHT / 2;
+//		data[n++] = 0f;
+//		// 2a.unteres Drittel rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = -PLAYGROUND_HEIGHT / 6;
+//		data[n++] = 0f;
+//		// 2b.unteres Drittel Mitte
+//		data[n++] = -PLAYGROUND_WIDTH / 2;
+//		data[n++] = -PLAYGROUND_HEIGHT / 6;
+//		data[n++] = 0f;
+//		// 2c.unteres Drittel rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = -PLAYGROUND_HEIGHT / 6;
+//		data[n++] = 0f;
+//		// 2a.unteres Drittel rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = -PLAYGROUND_HEIGHT / 8;
+//		data[n++] = 0f;
+//		// 2b.unteres Drittel Mitte
+//		data[n++] = -PLAYGROUND_WIDTH / 2;
+//		data[n++] = -PLAYGROUND_HEIGHT / 8;
+//		data[n++] = 0f;
+//		// 2c.unteres Drittel rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = -PLAYGROUND_HEIGHT / 8;
+//		data[n++] = 0f;
+//		// I.Mitte rechts / Licht2 rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = 0f;
+//		data[n++] = 0f;
+//		// II.Licht2 Mitte
+//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
+//		data[n++] = 0f;
+//		data[n++] = 0f;
+//		// III.Licht2 oben
+//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
+//		data[n++] = 2f;
+//		data[n++] = 0f;
+//		// IV.Licht2 Mitte
+//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
+//		data[n++] = 0f;
+//		data[n++] = 0f;
+//		// V.Licht2 links
+//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f - 1f;
+//		data[n++] = 0f;
+//		data[n++] = 0f;
+//		// V-1.Licht2 links oben
+//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f - 1f;
+//		data[n++] = 0.2f;
+//		data[n++] = 0f;
+//		// V-2.Licht2 links
+//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f - 1f;
+//		data[n++] = 0f;
+//		data[n++] = 0f;
+//		// VI.Licht2 Mitte
+//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
+//		data[n++] = 0f;
+//		data[n++] = 0f;
+//		// VII.Licht2 unten
+//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
+//		data[n++] = -2f;
+//		data[n++] = 0f;
+//		// VIII.Licht2 Mitte
+//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
+//		data[n++] = 0f;
+//		data[n++] = 0f;
+//		// IX.Mitte rechts/Licht2 rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = 0f;
+//		data[n++] = 0f;
+//		// 2d.oberes Drittel rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = PLAYGROUND_HEIGHT / 8;
+//		data[n++] = 0f;
+//		// 2e.oberes Drittel Mitte
+//		data[n++] = -PLAYGROUND_WIDTH / 2;
+//		data[n++] = PLAYGROUND_HEIGHT / 8;
+//		data[n++] = 0f;
+//		// 2f.oberes Drittel rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = PLAYGROUND_HEIGHT / 8;
+//		data[n++] = 0f;
+//		// 2d.oberes Drittel rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = PLAYGROUND_HEIGHT / 6;
+//		data[n++] = 0f;
+//		// 2e.oberes Drittel Mitte
+//		data[n++] = -PLAYGROUND_WIDTH / 2;
+//		data[n++] = PLAYGROUND_HEIGHT / 6;
+//		data[n++] = 0f;
+//		// 2f.oberes Drittel rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = PLAYGROUND_HEIGHT / 6;
+//		data[n++] = 0f;
+//		// 3.oben rechts
+//		data[n++] = PLAYGROUND_WIDTH / 2;
+//		data[n++] = PLAYGROUND_HEIGHT / 2;
+//		data[n++] = 0f;
+//		// 4.oben links
+//		data[n++] = -PLAYGROUND_WIDTH / 2;
+//		data[n++] = PLAYGROUND_HEIGHT / 2;
+//		data[n++] = 0f;
+//		// 5.R2m links
+//		data[n++] = -PLAYGROUND_WIDTH / 2;
+//		data[n++] = -1.0f;
+//		data[n++] = 0f;
+//		// 6.R2 Loch OR
+//		data[n++] = -0.3f;
+//		data[n++] = -1.0f;
+//		data[n++] = 0f;
+//		// 7.R2 Loch UR
+//		data[n++] = -0.3f;
+//		data[n++] = -1.5f;
+//		data[n++] = 0f;
+//		// 8.R2 Loch UL
+//		data[n++] = -0.8f;
+//		data[n++] = -1.5f;
+//		data[n++] = 0f;
+//		// 9.R2 Loch OL
+//		data[n++] = -0.8f;
+//		data[n++] = -1.0f;
+//		data[n++] = 0f;
+//		// 10.R2m links
+//		data[n++] = -PLAYGROUND_WIDTH / 2;
+//		data[n++] = -1.0f;
+//		data[n++] = 0f;
+//
+//		// Polygone in darstellbare Form umwandeln
+//		GeometryInfo gi = new GeometryInfo(GeometryInfo.POLYGON_ARRAY);
+//		gi.setCoordinates(data);
+//		gi.setStripCounts(stripCounts);
+//
+//		NormalGenerator ng = new NormalGenerator();
+//		ng.generateNormals(gi);
+//		gi.recomputeIndices();
+//
+//		Stripifier st = new Stripifier();
+//		st.stripify(gi);
+//		gi.recomputeIndices();
+//
+//		// Hinzufuegen der Ober- und Unterseite des Terrain-Shape3D
+//		ts.addGeometry(gi.getGeometryArray());
+//
+//		return ts;
+//	}
 
 	/**
 	 * Baut die 3D-Repraesentation der Linien fuer den Boden aus 2D-Polygonen
@@ -381,79 +371,79 @@ public class World extends Thread {
 	 * 
 	 * @return die Linie
 	 */
-	private Shape3D createLineShape() {
-
-		Shape3D ls = new Shape3D();
-		// Anzahl der verwendeten Punkte
-		int N = 10;
-		int totalN = N;
-		// data muss pro Punkt die Werte x, y und z speichern
-		float[] data = new float[totalN * 3];
-		// zwei Polygone (Deckel und Boden) mit N Ecken
-		int stripCounts[] = { N };
-		// Zaehler
-		int n = 0;
-
-		// Linien erzeugen
-		// 11
-		data[n++] = -0.71f;
-		data[n++] = -1.71f;
-		data[n++] = 0f;
-		// 12
-		data[n++] = 0.71f;
-		data[n++] = -1.71f;
-		data[n++] = 0f;
-		// 13
-		data[n++] = 0.71f;
-		data[n++] = 1.71f;
-		data[n++] = 0f;
-		// 14
-		data[n++] = -0.71f;
-		data[n++] = 1.71f;
-		data[n++] = 0f;
-		// 15
-		data[n++] = -0.71f;
-		data[n++] = -1.71f;
-		data[n++] = 0f;
-		// 16 -----
-		data[n++] = -0.7f;
-		data[n++] = -1.71f;
-		data[n++] = 0f;
-		// 17
-		data[n++] = -0.7f;
-		data[n++] = 1.7f;
-		data[n++] = 0f;
-		// 18
-		data[n++] = 0.7f;
-		data[n++] = 1.7f;
-		data[n++] = 0f;
-		// 19
-		data[n++] = 0.7f;
-		data[n++] = -1.7f;
-		data[n++] = 0f;
-		// 20
-		data[n++] = -0.71f;
-		data[n++] = -1.7f;
-		data[n++] = 0f;
-
-		// Polygone in darstellbare Form umwandeln
-		GeometryInfo gi = new GeometryInfo(GeometryInfo.POLYGON_ARRAY);
-		gi.setCoordinates(data);
-		gi.setStripCounts(stripCounts);
-
-		NormalGenerator ng = new NormalGenerator();
-		ng.generateNormals(gi);
-		gi.recomputeIndices();
-
-		Stripifier st = new Stripifier();
-		st.stripify(gi);
-		gi.recomputeIndices();
-
-		// Hinzufuegen der Ober- und Unterseite des Linien-Shape3D
-		ls.addGeometry(gi.getGeometryArray());
-
-		return ls;
-	}
+//	private Shape3D createLineShape() {
+//
+//		Shape3D ls = new Shape3D();
+//		// Anzahl der verwendeten Punkte
+//		int N = 10;
+//		int totalN = N;
+//		// data muss pro Punkt die Werte x, y und z speichern
+//		float[] data = new float[totalN * 3];
+//		// zwei Polygone (Deckel und Boden) mit N Ecken
+//		int stripCounts[] = { N };
+//		// Zaehler
+//		int n = 0;
+//
+//		// Linien erzeugen
+//		// 11
+//		data[n++] = -0.71f;
+//		data[n++] = -1.71f;
+//		data[n++] = 0f;
+//		// 12
+//		data[n++] = 0.71f;
+//		data[n++] = -1.71f;
+//		data[n++] = 0f;
+//		// 13
+//		data[n++] = 0.71f;
+//		data[n++] = 1.71f;
+//		data[n++] = 0f;
+//		// 14
+//		data[n++] = -0.71f;
+//		data[n++] = 1.71f;
+//		data[n++] = 0f;
+//		// 15
+//		data[n++] = -0.71f;
+//		data[n++] = -1.71f;
+//		data[n++] = 0f;
+//		// 16 -----
+//		data[n++] = -0.7f;
+//		data[n++] = -1.71f;
+//		data[n++] = 0f;
+//		// 17
+//		data[n++] = -0.7f;
+//		data[n++] = 1.7f;
+//		data[n++] = 0f;
+//		// 18
+//		data[n++] = 0.7f;
+//		data[n++] = 1.7f;
+//		data[n++] = 0f;
+//		// 19
+//		data[n++] = 0.7f;
+//		data[n++] = -1.7f;
+//		data[n++] = 0f;
+//		// 20
+//		data[n++] = -0.71f;
+//		data[n++] = -1.7f;
+//		data[n++] = 0f;
+//
+//		// Polygone in darstellbare Form umwandeln
+//		GeometryInfo gi = new GeometryInfo(GeometryInfo.POLYGON_ARRAY);
+//		gi.setCoordinates(data);
+//		gi.setStripCounts(stripCounts);
+//
+//		NormalGenerator ng = new NormalGenerator();
+//		ng.generateNormals(gi);
+//		gi.recomputeIndices();
+//
+//		Stripifier st = new Stripifier();
+//		st.stripify(gi);
+//		gi.recomputeIndices();
+//
+//		// Hinzufuegen der Ober- und Unterseite des Linien-Shape3D
+//		ls.addGeometry(gi.getGeometryArray());
+//
+//		return ls;
+//	}
 
 	private void createAppearance() {
 		// Material fuer die Lichtreflektionen der Welt definieren
@@ -463,50 +453,50 @@ public class World extends Thread {
 		mat.setDiffuseColor(new Color3f(0.8f, 1f, 1f));
 		mat.setSpecularColor(new Color3f(1f, 1f, 1f));
 
-		// Linien-Material
-		Material matLine = new Material();
-		matLine.setAmbientColor(new Color3f(0f, 0f, 0f));
-		matLine.setDiffuseColor(new Color3f(0.1f, 0.1f, 0.1f));
-		matLine.setSpecularColor(new Color3f(1f, 1f, 1f));
+//		// Linien-Material
+//		Material matLine = new Material();
+//		matLine.setAmbientColor(new Color3f(0f, 0f, 0f));
+//		matLine.setDiffuseColor(new Color3f(0.1f, 0.1f, 0.1f));
+//		matLine.setSpecularColor(new Color3f(1f, 1f, 1f));
+//
+//		// Lichtquellen-Material
+//		Material matLight = new Material();
+//		matLight.setEmissiveColor(new Color3f(1f, 1f, 0.7f));
+//		matLight.setAmbientColor(new Color3f(1f, 1f, 0f));
+//		matLight.setDiffuseColor(new Color3f(1f, 1f, 0f));
+//		matLight.setSpecularColor(new Color3f(0.7f, 0.7f, 0.7f));
 
-		// Lichtquellen-Material
-		Material matLight = new Material();
-		matLight.setEmissiveColor(new Color3f(1f, 1f, 0.7f));
-		matLight.setAmbientColor(new Color3f(1f, 1f, 0f));
-		matLight.setDiffuseColor(new Color3f(1f, 1f, 0f));
-		matLight.setSpecularColor(new Color3f(0.7f, 0.7f, 0.7f));
-
-		// Aussehen der Lichtquellen
-		lightSourceAppear = new Appearance();
-		lightSourceAppear.setMaterial(matLight);
-
-		// Aussehen des Bodens -- hellgrau:
-		playgroundAppear = new Appearance();
-		playgroundAppear.setMaterial(mat);
-
-		// Aussehen der Linien auf dem Boden -- dunkelgrau:
-		playgroundLineAppear = new Appearance();
-		playgroundLineAppear.setMaterial(matLine);
+//		// Aussehen der Lichtquellen
+//		lightSourceAppear = new Appearance();
+//		lightSourceAppear.setMaterial(matLight);
+//
+//		// Aussehen des Bodens -- hellgrau:
+//		playgroundAppear = new Appearance();
+//		playgroundAppear.setMaterial(mat);
+//
+//		// Aussehen der Linien auf dem Boden -- dunkelgrau:
+//		playgroundLineAppear = new Appearance();
+//		playgroundLineAppear.setMaterial(matLine);
 
 		// Aussehen der Hindernisse -- dunkelgrau:
-		obstacleAppear = new Appearance();
-		obstacleAppear.setMaterial(mat);
-
-		// ...und mit einer Textur ueberzogen:
-		TexCoordGeneration tcg = new TexCoordGeneration(
-				TexCoordGeneration.OBJECT_LINEAR,
-				TexCoordGeneration.TEXTURE_COORDINATE_3, new Vector4f(1.0f,
-						1.0f, 0.0f, 0.0f),
-				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f,
-						1.0f, 0.0f));
-		obstacleAppear.setTexCoordGeneration(tcg);
-
-		TextureLoader loader = new TextureLoader(ClassLoader
-				.getSystemResource(OBST_TEXTURE), null);
-		Texture2D texture = (Texture2D) loader.getTexture();
-		texture.setBoundaryModeS(Texture.WRAP);
-		texture.setBoundaryModeT(Texture.WRAP);
-		obstacleAppear.setTexture(texture);
+//		obstacleAppear = new Appearance();
+//		obstacleAppear.setMaterial(mat);
+//
+//		// ...und mit einer Textur ueberzogen:
+//		TexCoordGeneration tcg = new TexCoordGeneration(
+//				TexCoordGeneration.OBJECT_LINEAR,
+//				TexCoordGeneration.TEXTURE_COORDINATE_3, new Vector4f(1.0f,
+//						1.0f, 0.0f, 0.0f),
+//				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f,
+//						1.0f, 0.0f));
+//		obstacleAppear.setTexCoordGeneration(tcg);
+//
+//		TextureLoader loader = new TextureLoader(ClassLoader
+//				.getSystemResource(OBST_TEXTURE), null);
+//		Texture2D texture = (Texture2D) loader.getTexture();
+//		texture.setBoundaryModeS(Texture.WRAP);
+//		texture.setBoundaryModeT(Texture.WRAP);
+//		obstacleAppear.setTexture(texture);
 
 		// Aussehen der Bots:
 		botAppear = new Appearance(); // Bots sind rot ;-)
@@ -534,15 +524,6 @@ public class World extends Thread {
 	 * @return der Szenegraph
 	 */
 	public BranchGroup createSceneGraph() {
-
-//		float[][] pillarPositions = { { 0.2f, -1f }, { 0.2f, -0.5f },
-//				{ 0.2f, 0f }, { 0.2f, 0.5f }, { 0.05f, 0.9f },
-//				{ -0.48f, 1.0f }, { -1.0f, 1.0f }, { -1.35f, 0.65f } };
-
-		// Die Lichtquellen aus Version 0.2 des Simulators
-		// float[][] oldLights =
-		// {{PLAYGROUND_WIDTH/2,PLAYGROUND_HEIGHT/2,0.5f},{PLAYGROUND_WIDTH/2 -
-		// 0.35f, 0f, 0.5f}};
 
 		createAppearance();
 		// Die Wurzel des Ganzen:
@@ -575,149 +556,53 @@ public class World extends Thread {
 		lightBG = new BranchGroup();
 		lightBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		lightBG.setPickable(true);
-
-//		// Lichtpunkte
-//		BoundingSphere pointLightBounds = new BoundingSphere(new Point3d(0d,
-//				0d, 0d), 10d);
-//		Color3f pointLightColor = new Color3f(1.0f, 1.0f, 0.9f);
-//
-		/*
-		 * Fuer den Hindernis-Parcours brauchen wir 8 Lichtquellen und 8
-		 * Saeulen. Um nicht jede Lichtquelle von Hand bauen zu muessen, 
-		 * wurde alles in eine Subroutine ausgelagert.
-		 */
-
-//		for (float[] pos : pillarPositions) {
-//			createLight(pointLightBounds, pointLightColor, pos[0], pos[1], 0.5f);
-//		}
-
 		worldTG.addChild(lightBG);
 
 		// Die Branchgroup fuer den Boden
 		terrainBG = new BranchGroup();
 		terrainBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		terrainBG.setPickable(true);
-
-		// Erzeuge Boden
-//		Shape3D floor = createTerrainShape();
-//		floor.setAppearance(getPlaygroundAppear());
-//		floor.setPickable(true);
-
-		// Schiebe den Boden so, dass die Oberflaeche genau auf der
-		// (relativen) Ebene Z = 0 liegt.
-		Transform3D translate = new Transform3D();
-		translate.set(new Vector3d(0d, 0d, -PLAYGROUND_THICKNESS));
-		TransformGroup tgT = new TransformGroup(translate);
-		tgT.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tgT.setPickable(true);
-//		tgT.addChild(floor);
-		terrainBG.addChild(tgT);
-/*
-		// Erzeuge Linien auf dem Boden
-		Shape3D lineFloor = createLineShape();
-		lineFloor.setAppearance(getPlaygroundLineAppear());
-		lineFloor.setPickable(true);
-
-		// Schiebe die Linien knapp ueber den Boden.
-		translate = new Transform3D();
-		translate.set(new Vector3d(0d, 0d, 0.001d));
-		TransformGroup tgL = new TransformGroup(translate);
-		tgL.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tgL.setPickable(true);
-		tgL.addChild(lineFloor);
-		tgT.addChild(tgL);
-*/
 		worldTG.addChild(terrainBG);
 
 		// Die TranformGroup fuer alle Hindernisse:
 		sceneLight.setObstBG(new BranchGroup());
 		// Damit spaeter Bots hinzugefuegt werden koennen:
 		sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		sceneLight.getObstBG().setCapability(
-				TransformGroup.ALLOW_PICKABLE_WRITE);
+		sceneLight.getObstBG().setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
 		// Objekte sind fest
 		sceneLight.getObstBG().setPickable(true);
-
-		// Die vier Randmauern der Welt:
-		Box north = new Box(PLAYGROUND_WIDTH / 2 + 0.2f, 0.1f, 0.2f,
-				getObstacleAppear());
-		north.setPickable(true);
-		north.setName("North");
-		Box south = new Box(PLAYGROUND_WIDTH / 2 + 0.2f, 0.1f, 0.2f,
-				getObstacleAppear());
-		south.setPickable(true);
-		south.setName("South");
-		Box east = new Box(0.1f, PLAYGROUND_HEIGHT / 2 + 0.2f, 0.2f,
-				getObstacleAppear());
-		east.setPickable(true);
-		east.setName("East");
-		Box west = new Box(0.1f, PLAYGROUND_HEIGHT / 2 + 0.2f, 0.2f,
-				getObstacleAppear());
-		west.setPickable(true);
-		west.setName("West");
 
 		// Hindernisse werden an die richtige Position geschoben
 
 		// Zuerst werden sie gemeinsam so verschoben, dass ihre Unterkante genau
 		// buendig mit der Unterkante des Bodens ist:
+		Transform3D translate = new Transform3D();
 		translate.set(new Vector3d(0d, 0d, 0.2d - PLAYGROUND_THICKNESS));
 		TransformGroup tgO = new TransformGroup(translate);
 		tgO.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 		tgO.setPickable(true);
 		sceneLight.getObstBG().addChild(tgO);
 
-		/* Zusaetzlich zu den Lichtquellen werden 8 kleine Saeulen erzeugt. */
 
-//		for (float[] pos : pillarPositions) {
-//			createPillar(pillarPositions, tgO, pos[0], pos[1]);
-//		}
+		String filename= "parcours/testline.txt";
 
-		// Danach bekommt jedes Hindernis seine eigene TransformGroup, um es
-		// an den individuellen Platz zu schieben:
-
-		translate.set(new Vector3f(0f, PLAYGROUND_HEIGHT / 2 + 0.1f, 0f));
-		TransformGroup tgN = new TransformGroup(translate);
-		tgN.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tgN.setPickable(true);
-		tgN.addChild(north);
-		tgO.addChild(tgN);
-
-		translate.set(new Vector3f(0f, -(PLAYGROUND_HEIGHT / 2 + 0.1f), 0f));
-		TransformGroup tgS = new TransformGroup(translate);
-		tgS.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tgS.setPickable(true);
-		tgS.addChild(south);
-		tgO.addChild(tgS);
-
-		translate.set(new Vector3f(PLAYGROUND_WIDTH / 2 + 0.1f, 0f, 0f));
-		TransformGroup tgE = new TransformGroup(translate);
-		tgE.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tgE.setPickable(true);
-		tgE.addChild(east);
-		tgO.addChild(tgE);
-
-		translate.set(new Vector3f(-(PLAYGROUND_WIDTH / 2 + 0.1f), 0f, 0f));
-		TransformGroup tgW = new TransformGroup(translate);
-		tgW.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tgW.setPickable(true);
-		tgW.addChild(west);
-		tgO.addChild(tgW);
-
+		// Nach einem Parcours fragen
+		JFileChooser fc = new JFileChooser();
+		if (fc.showOpenDialog( null ) == JFileChooser.APPROVE_OPTION)
+			filename = fc.getSelectedFile().getAbsolutePath();
+		
+		// Den Parcours Laden
 		ParcoursLoader pL = new ParcoursLoader();
-		pL.load_file("parcours/testline.txt");
+		pL.load_file(filename);
 		pL.insertSceneGraph(tgO,lightBG,terrainBG);
 		
 		sceneLight.getObstBG().setCapability(Node.ENABLE_PICK_REPORTING);
 		sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
 
-		// obstBG.compile();
-
 		// Die Hindernisse der Welt hinzufuegen
 		worldTG.addChild(sceneLight.getObstBG());
 		// es duerfen noch weitere dazukommen
 		worldTG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-
-		// objRoot.compile();
 
 		return objRoot;
 	}
@@ -1357,30 +1242,30 @@ public class World extends Thread {
 	/**
 	 * @return Gibt das Erscheinungsbild der Hindernisse zurueck
 	 */
-	public Appearance getObstacleAppear() {
-		return obstacleAppear;
-	}
+//	public Appearance getObstacleAppear() {
+//		return obstacleAppear;
+//	}
 
-	/**
-	 * @return Gibt das Erscheinungsbild des Bodens zurueck
-	 */
-	public Appearance getPlaygroundAppear() {
-		return playgroundAppear;
-	}
-
-	/**
-	 * @return Gibt das Erscheinungsbild der Linien auf dem Boden zurueck
-	 */
-	public Appearance getPlaygroundLineAppear() {
-		return playgroundLineAppear;
-	}
+//	/**
+//	 * @return Gibt das Erscheinungsbild des Bodens zurueck
+//	 */
+//	public Appearance getPlaygroundAppear() {
+//		return playgroundAppear;
+//	}
+//
+//	/**
+//	 * @return Gibt das Erscheinungsbild der Linien auf dem Boden zurueck
+//	 */
+//	public Appearance getPlaygroundLineAppear() {
+//		return playgroundLineAppear;
+//	}
 
 	/**
 	 * @return Gibt das Erscheinungsbild einer Lichtquelle zurueck
 	 */
-	public Appearance getLightSourceAppear() {
-		return lightSourceAppear;
-	}
+//	public Appearance getLightSourceAppear() {
+//		return lightSourceAppear;
+//	}
 
 	/**
 	 * @return Gibt das Erscheinungsbild der Bots zurueck

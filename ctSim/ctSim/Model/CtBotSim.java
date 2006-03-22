@@ -128,8 +128,8 @@ abstract public class CtBotSim extends CtBot {
 
 		// alte Position und Heading merken
 		// (wird spaeter fuer die Sensorberechnung benoetigt)
-		Vector3f oldPos = (Vector3f) this.getPos().clone();
-		Vector3f oldHeading = (Vector3f) this.getHeading().clone();
+//		Vector3f oldPos = (Vector3f) this.getPos().clone();
+//		Vector3f oldHeading = (Vector3f) this.getHeading().clone();
 
 		// Anzahl der Umdrehungen der Raeder
 		double turnsL = calculateWheelSpeed(this.getAktMotL());
@@ -184,8 +184,8 @@ abstract public class CtBotSim extends CtBot {
 		 * newPos.sub(mid);
 		 */
 
-		// Für ausführliche Erläuterung der Positionsberechnung siehe pdf
-		// Absolut zurückgelegte Strecke pro Rad berechnen
+		// Fï¿½r ausfï¿½hrliche Erlï¿½uterung der Positionsberechnung siehe pdf
+		// Absolut zurï¿½ckgelegte Strecke pro Rad berechnen
 		double s_l = turnsL * WHEEL_PERIMETER;
 		double s_r = turnsR * WHEEL_PERIMETER;
 
@@ -225,7 +225,7 @@ abstract public class CtBotSim extends CtBot {
 				* _sg), (float) (-_hd.x * _sg + _hd.y * _cg), 0f);
 		moveDirection.normalize();
 		moveDirection.scale((float) moveDistance);
-		// ... und die alte Position entsprechend verändern.
+		// ... und die alte Position entsprechend verï¿½ndern.
 		newPos.add(moveDirection);
 
 		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
@@ -240,7 +240,7 @@ abstract public class CtBotSim extends CtBot {
 			}
 		} else {
 
-			moveDistance = 0; // Wird später noch für den Maussensor benötigt
+			moveDistance = 0; // Wird spï¿½ter noch fï¿½r den Maussensor benï¿½tigt
 
 			if (isApperance) {
 				botBody.setAppearance(world.getBotAppearCollision());

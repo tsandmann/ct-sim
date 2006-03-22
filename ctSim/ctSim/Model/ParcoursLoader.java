@@ -508,6 +508,9 @@ public class ParcoursLoader {
     	tg = new TransformGroup();
     	tg.setTransform(translate);
     	tg.addChild(parcours.getTerrainBG());
+		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tg.setPickable(true);
+		
     	terrainRoot.addChild(tg);
 
 	}
