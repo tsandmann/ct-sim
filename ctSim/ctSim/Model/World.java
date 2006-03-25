@@ -33,6 +33,7 @@ import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Node;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.NodeReferenceTable;
 import javax.media.j3d.PickBounds;
 import javax.media.j3d.PickConeRay;
 import javax.media.j3d.PickInfo;
@@ -587,9 +588,9 @@ public class World extends Thread {
 		String filename= "parcours/testline.txt";
 
 		// Nach einem Parcours fragen
-		JFileChooser fc = new JFileChooser();
-		if (fc.showOpenDialog( null ) == JFileChooser.APPROVE_OPTION)
-			filename = fc.getSelectedFile().getAbsolutePath();
+//		JFileChooser fc = new JFileChooser();
+//		if (fc.showOpenDialog( null ) == JFileChooser.APPROVE_OPTION)
+//			filename = fc.getSelectedFile().getAbsolutePath();
 		
 		// Den Parcours Laden
 		ParcoursLoader pL = new ParcoursLoader();
@@ -652,15 +653,39 @@ public class World extends Thread {
 		bot.setWorld(this);
 		BranchGroup bg = bot.getBotBG();
 
-		// Sichere den neuen Bot in sceneLight
-		sceneLight.addBot(bot.getBotName(), bot.getTranslationGroup(), bot
-				.getRotationGroup());
-		// Benachrichtige den Controller uber neue Bots
-		controller.addBotToView(bot.getBotName(), bot.getTranslationGroup(),
-				bot.getRotationGroup(), bg);
+		
+		
+		NodeReferenceTable nr = new NodeReferenceTable();
+/*
+		sc.setScene((BranchGroup) scene.cloneTree(nr));
+		sc.setObstBG((BranchGroup) nr.getNewObjectReference(getObstBG()));
 
+		Iterator it = map.entrySet().iterator(); 
+		while (it.hasNext()) {
+			Map.Entry entry =(Map.Entry) it.next();
+			String key = (String) entry.getKey();
+			Node value = (Node) entry.getValue();
+			sc.map.put(key,nr.getNewObjectReference(value));
+		}
+	*/	
+		
+		
+		
+		
+		
+		
+		// Sichere den neuen Bot in sceneLight
+		sceneLight.addBot(bot.getBotName(), bot.getTransformGroup());
+		// Benachrichtige den Controller uber neue Bots
+		controller.addBotToView(bot.getBotName(), bot.getTransformGroup(),bg);
+
+		
+		bg.cloneTree();
+		
 		sceneLight.getObstBG().addChild(bg);
 
+		
+		
 	}
 
 	/**

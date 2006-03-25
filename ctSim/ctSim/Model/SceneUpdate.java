@@ -18,8 +18,6 @@
  */
 package ctSim.Model;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.media.j3d.BranchGroup;
@@ -94,13 +92,13 @@ public class SceneUpdate {
 	 */
 	public SceneUpdate(SceneLight sceneLight) {
 		super();
-		bots= new LinkedList<ViewBotUpdate>();
-
-		Iterator it = sceneLight.getBots().iterator();
-		while (it.hasNext()) {
-			ViewBot vBot = (ViewBot) it.next();
-			bots.add(new ViewBotUpdate(vBot.id,vBot.tg,vBot.rg));
-		}
+//		bots= new LinkedList<ViewBotUpdate>();
+//
+//		Iterator it = sceneLight.getBots().iterator();
+//		while (it.hasNext()) {
+//			ViewBot vBot = (ViewBot) it.next();
+//			bots.add(new ViewBotUpdate(vBot.id,vBot.tg,vBot.rg));
+//		}
 		// TODO Auto-generated constructor stub
 	}
 

@@ -45,8 +45,8 @@ import ctSim.Controller.Controller;
 
 /* Markus Lang 2006-03-17:
  * ControlFrame erweitert nun die JPanel Klasse, da es kein
- * eingenständiges Fenster mehr ist. Somit ist der Name
- * ControlFrame eigentlich missverständlich.
+ * eingenstaendiges Fenster mehr ist. Somit ist der Name
+ * ControlFrame eigentlich missverstaendlich.
  */
 public class ControlFrame extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -84,7 +84,7 @@ public class ControlFrame extends JPanel {
 	private JButton endButton;
 	
 	/* Markus Lang 2006-03-17:
-	 * Instanzen für das JSplitPane Hauptfenster
+	 * Instanzen fï¿½r das JSplitPane Hauptfenster
 	 */
 	private CtSimFrame ctSimFrame;
 
@@ -248,8 +248,8 @@ public class ControlFrame extends JPanel {
 		// Dem Panel anzeigen, wo es dargestellt wird
 		bot.getPanel().setFrame(this);
 		/* Markus Lang 2006-03-06:
-		 * JSplitPlane über die Größenänderung informieren
-		 * (Ersatz für den alten pack() Aufruf der JFrame Klasse)
+		 * JSplitPlane ï¿½ber die Grï¿½ï¿½enï¿½nderung informieren
+		 * (Ersatz fï¿½r den alten pack() Aufruf der JFrame Klasse)
 		 */
 		this.ctSimFrame.updateSliderPosition();
 	}

@@ -350,12 +350,12 @@ public abstract class CtBot extends Bot {
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 
 		// Rotationsgruppe fuer den Bot
-		TransformGroup rg = new TransformGroup();
-		transform = new Transform3D();
-		rg = new TransformGroup(transform);
-		rg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		rg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-		tg.addChild(rg);
+//		TransformGroup rg = new TransformGroup();
+//		transform = new Transform3D();
+//		rg = new TransformGroup(transform);
+//		rg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+//		rg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+//		tg.addChild(rg);
 		// Die Rotation haengt im Baum des Szenegraphen unterhalb der
 		// Translation
 
@@ -372,7 +372,7 @@ public abstract class CtBot extends Bot {
 		// Referenz auf Koerper merken, um spaeter bei der eigenen Kollisionsabfrage die 
 		// "Pickable"-Eigenschaft aendern zu koennen
 		botBody = realBot;
-		rg.addChild(realBot);
+		tg.addChild(realBot);
 
 		// Die Grenzen (Bounds) des Bots sind wichtig
 		// fuer die Kollisionserkennung.
@@ -384,8 +384,9 @@ public abstract class CtBot extends Bot {
 		BranchGroup bg = new BranchGroup();
 		bg.addChild(tg);
 
-		setTranslationGroup(tg);
-		setRotationGroup(rg);
+//		setTranslationGroup(tg);
+//		setRotationGroup(rg);
+		setTransformGroup(tg);
 		setBotBG(bg);
 	}
 

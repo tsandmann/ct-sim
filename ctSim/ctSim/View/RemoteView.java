@@ -19,7 +19,6 @@
 package ctSim.View;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.TransformGroup;
@@ -37,10 +36,7 @@ import ctSim.Model.SceneUpdate;
 public class RemoteView {
 	/** Die Verbindung, an der die View haengt*/
 	private TcpConnection connection; 
-	
-	/** Datenstrom */
-	private ObjectOutputStream oos = null;
-	
+		
 	/**
 	 * Der Konstruktor
 	 * @param connection Die Verbindung
@@ -48,7 +44,6 @@ public class RemoteView {
 	public RemoteView(TcpConnection connection) throws IOException{
 		super();
 		this.connection = connection;
-		oos = new ObjectOutputStream(connection.getSocket().getOutputStream());
 	}
 
 	/**
@@ -56,7 +51,7 @@ public class RemoteView {
 	 * @param sceneUpdate Die Aenderungen
 	 */
 	public void update(SceneUpdate sceneUpdate) throws IOException{
-		oos.writeObject(sceneUpdate);
+//		oos.writeObject(sceneUpdate);
 //		oos.writeChars("Update");
 //		ErrorHandler.error("RemoteView.update() not implemented yet");
 		// TODO implement RemoteView.update();
@@ -67,8 +62,7 @@ public class RemoteView {
 	 * @param sceneLight
 	 */
 	public void init(SceneLight sceneLight) throws IOException{
-		oos.writeObject(sceneLight);
-		
+		sceneLight.writeStream(connection.getSocket().getOutputStream());
 //		ErrorHandler.error("RemoteView.init() not implemented yet");
 		// TODO implement RemoteView.init();
 	}
@@ -80,7 +74,7 @@ public class RemoteView {
 	 * @param rg
 	 * @param bg
 	 */
-	public void addBotToView(String id, TransformGroup tg, TransformGroup rg, BranchGroup bg){
+	public void addBotToView(String id, TransformGroup tg, BranchGroup bg){
 		ErrorHandler.error("RemoteView.addBotToView() not implemented yet");
 		// TODO implement RemoteView.addBotToView();
 	}

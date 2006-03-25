@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-03-19 Benjamin Benz (bbe@heise.de) ClientViews eingefuehrt (angefangen)
+
 2006-03-19 Benjamin Benz (bbe@heise.de) Boden-Bug beseitigt, FileChooser eingebaut, Code aufgeraeumt, viel altes auskommentiert
 
 2006-03-21 Peter Koenig (pek@heise.de)

@@ -53,7 +53,7 @@ public class Controller {
 	private ControlFrame controlFrame;
 	
 	/* Markus Lang 2006-03-17:
-	 * Instanzen für das JSplitPane Hauptfenster
+	 * Instanzen fuer das JSplitPane Hauptfenster
 	 */
 	private CtSimFrame ctSimFrame;
 
@@ -152,7 +152,8 @@ public class Controller {
 
 		/*
 		 * WorldView worldView2 = new WorldView();
-		 * worldView2.setScene(sc.getScene()); worldView2.initGUI();
+		 * worldView2.setScene(sc.getScene()); 
+		 * worldView2.initGUI();
 		 */
 
 		int mode = askMode();
@@ -171,6 +172,12 @@ public class Controller {
 			addBot("CtBotRealTcp", "Real Bot", new Point3f(0.5f, 0f, 0f),
 					new Vector3f(1f, 0f, 0f));
 
+		System.out.println("Warte auf Verbindung von View-Clients (Port * 10002)"); 
+		SocketListener ViewListener = new
+		ViewSocketListener(10002); 
+		ViewListener.start();
+		
+		
 		/*
 		 * Der Sim sollte auch auf die TCP-Verbindung lauschen, wenn es Testbots
 		 * gibt. Aus diesem Grund ist der thread, der auf TCP-Verbindungen
@@ -181,11 +188,14 @@ public class Controller {
 		SocketListener BotListener = new BotSocketListener(10001);
 		BotListener.start();
 
-		/*
-		 * System.out.println("Warte auf Verbindung von View-Clients (Port
-		 * 10002)"); SocketListener ViewListener = new
-		 * ViewSocketListener(10002); ViewListener.start();
-		 */
+		
+		
+		
+//		try {
+//			ClientView clientView = new ClientView("localhost",10002);
+//		} catch (Exception ex){
+//			ErrorHandler.error("Fehler beim oeffnen der ClientView "+ex);
+//		}
 	}
 
 	/**
@@ -213,12 +223,11 @@ public class Controller {
 	 * @param bg
 	 *            BranchGroup
 	 */
-	public void addBotToView(String id, TransformGroup tg, TransformGroup rg,
-			BranchGroup bg) {
+	public void addBotToView(String id, TransformGroup tg, BranchGroup bg) {
 		Iterator it = remoteViews.iterator();
 		while (it.hasNext()) {
 			RemoteView rV = (RemoteView) it.next();
-			rV.addBotToView(id, tg, rg, bg);
+			rV.addBotToView(id, tg, bg);
 		}
 	}
 
@@ -293,7 +302,7 @@ public class Controller {
 	public void endSim() {
 		world.die();
 		/* Markus Lang 2006-03-17:
-		 * dispose() wird jetzt auf der ctSimFrame Klasse ausgeführt
+		 * dispose() wird jetzt auf der ctSimFrame Klasse ausgefï¿½hrt
 		 */
 		ctSimFrame.dispose();
 

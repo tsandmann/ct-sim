@@ -249,14 +249,14 @@ public class ParcoursLoader {
 						1.0f, 0.0f, 0.0f),
 				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f,
 						1.0f, 0.0f));
-		wallAppear.setTexCoordGeneration(tcg);
+//		wallAppear.setTexCoordGeneration(tcg);
 
 		TextureLoader loader = new TextureLoader(ClassLoader
 				.getSystemResource(World.OBST_TEXTURE), null);
 		Texture2D texture = (Texture2D) loader.getTexture();
 		texture.setBoundaryModeS(Texture.WRAP);
 		texture.setBoundaryModeT(Texture.WRAP);
-		wallAppear.setTexture(texture);
+//		wallAppear.setTexture(texture);
 
 		// Linien-Material
 		mat = new Material();

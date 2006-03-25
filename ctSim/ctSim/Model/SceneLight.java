@@ -18,14 +18,24 @@
  */
 package ctSim.Model;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Node;
 import javax.media.j3d.NodeReferenceTable;
-import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+
+import com.sun.j3d.utils.scenegraph.io.NamedObjectException;
+import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
+import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
+
+import ctSim.ErrorHandler;
 
 /**
  * Dies ist ein Container-Objekt fuer einen Szenegraphen und alle Hooks, die man
@@ -35,24 +45,17 @@ import javax.media.j3d.TransformGroup;
  * 
  */
 public class SceneLight {
-
-	// private static final long serialVersionUID = 8381732842937148198L;
-
+	/** Sammelt Einsprungpunkte in den Szenegraphen */
+	HashMap map = new HashMap();
+	
 	/** Der eigentliche Szenegraph */
 	private BranchGroup scene;
-
-	/** Liste mit allen Bots, die in dieser Welt leben */
-	private List<ViewBot> bots;
-
-	/** Node unter dem alle Bots haengen */
-	private BranchGroup obstBG;
 
 	/**
 	 * Initialisiere das Objekt
 	 */
 	public SceneLight() {
 		super();
-		bots = new LinkedList<ViewBot>();
 		scene = null;
 	}
 
@@ -64,7 +67,6 @@ public class SceneLight {
 	 */
 	public SceneLight(BranchGroup scene) {
 		super();
-		bots = new LinkedList<ViewBot>();
 		this.scene = scene;
 	}
 
@@ -93,8 +95,9 @@ public class SceneLight {
 	 * @param rg
 	 *            Rotationsgruppe des Bot
 	 */
-	public void addBot(String botId, TransformGroup tg, TransformGroup rg) {
-		bots.add(new ViewBot(botId, tg, rg));
+	@SuppressWarnings("unchecked")
+	public void addBot(String botId, TransformGroup tg) {
+		map.put(botId+"TG",tg);
 	}
 
 	/**
@@ -110,23 +113,14 @@ public class SceneLight {
 	 * @param bg
 	 *            Branchgruppe des Originalbot
 	 */
-	public void addBot(String botId, TransformGroup tg, TransformGroup rg,
-			BranchGroup bg) {
+	public void addBot(String botId, TransformGroup tg, BranchGroup bg) {
 		NodeReferenceTable nr = new NodeReferenceTable();
 		BranchGroup newBg = (BranchGroup) bg.cloneTree(nr);
+		((BranchGroup)map.get("obstBG")).addChild(newBg);
 
-		bots.add(new ViewBot(botId, (TransformGroup) nr
-				.getNewObjectReference(tg), (TransformGroup) nr
-				.getNewObjectReference(rg)));
-		obstBG.addChild(newBg);
+		addBot(botId,(TransformGroup) nr.getNewObjectReference(tg));
 	}
 
-	/**
-	 * @return Gibt eine Referenz auf bots zurueck
-	 */
-	public List<ViewBot> getBots() {
-		return bots;
-	}
 
 	/**
 	 * Suche einen ViewBot aus der Liste
@@ -135,15 +129,15 @@ public class SceneLight {
 	 *            Name des ViewBots
 	 * @return Verweis auf den Bot
 	 */
-	private ViewBot findViewBot(String id) {
-		Iterator it = bots.iterator();
-		while (it.hasNext()) {
-			ViewBot intern = (ViewBot) it.next();
-			if (intern.id.equals(id))
-				return intern;
-		}
-		return null;
-	}
+//	private ViewBot findViewBot(String id) {
+//		Iterator it = bots.iterator();
+//		while (it.hasNext()) {
+//			ViewBot intern = (ViewBot) it.next();
+//			if (intern.id.equals(id))
+//				return intern;
+//		}
+//		return null;
+//	}
 
 	/**
 	 * Gleicht die Positionen der internen Bots an die in der Liste an
@@ -153,58 +147,85 @@ public class SceneLight {
 	 * 
 	 */
 	public void update(List<ViewBot> list) {
-		Iterator it = list.iterator();
-		while (it.hasNext()) {
-			ViewBot extern = (ViewBot) it.next();
-			ViewBot intern = findViewBot(extern.id);
-			if (intern != null) {
-				Transform3D trans = new Transform3D();
-				extern.tg.getTransform(trans);
-				intern.tg.setTransform(trans);
-
-				extern.rg.getTransform(trans);
-				intern.rg.setTransform(trans);
-			}
-
-		}
+//		Iterator it = list.iterator();
+//		while (it.hasNext()) {
+//			ViewBot extern = (ViewBot) it.next();
+//			ViewBot intern = findViewBot(extern.id);
+//			if (intern != null) {
+//				Transform3D trans = new Transform3D();
+//				extern.tg.getTransform(trans);
+//				intern.tg.setTransform(trans);
+//
+//				extern.rg.getTransform(trans);
+//				intern.rg.setTransform(trans);
+//			}
+//
+//		}
 	}
 
 	/**
 	 * @param obstBG
 	 *            Referenz auf obstBG, die gesetzt werden soll
 	 */
+	@SuppressWarnings("unchecked")
 	public void setObstBG(BranchGroup obstBG) {
-		this.obstBG = obstBG;
+		map.put("obstBG",obstBG);
 	}
 
 	/**
 	 * Erstellt einen kompletten Klon des Objektes Achtung, das Ursprungsobjekt
 	 * darf nicht compiliert oder aktiv sein!
 	 */
+	@SuppressWarnings("unchecked")
 	public SceneLight clone() {
-		// Baue alles neu auf
+		// der Clone
 		SceneLight sc = new SceneLight();
+		
 		NodeReferenceTable nr = new NodeReferenceTable();
 
 		sc.setScene((BranchGroup) scene.cloneTree(nr));
-		sc.setObstBG((BranchGroup) nr.getNewObjectReference(obstBG));
+		sc.setObstBG((BranchGroup) nr.getNewObjectReference(getObstBG()));
 
-		Iterator it = bots.iterator();
+		Iterator it = map.entrySet().iterator(); 
 		while (it.hasNext()) {
-			Bot curr = (Bot) it.next();
-			sc.addBot(curr.getBotName(), (TransformGroup) nr
-					.getNewObjectReference(curr.getTranslationGroup()),
-					(TransformGroup) nr.getNewObjectReference(curr
-							.getRotationGroup()));
+			Map.Entry entry =(Map.Entry) it.next();
+			String key = (String) entry.getKey();
+			Node value = (Node) entry.getValue();
+			sc.map.put(key,nr.getNewObjectReference(value));
 		}
 		return sc;
-
 	}
 
 	/**
 	 * @return Gibt eine Referenz auf obstBG zurueck
 	 */
 	public BranchGroup getObstBG() {
-		return obstBG;
+		return ((BranchGroup)map.get("obstBG"));
 	}
+	
+	/**
+	 * Schreibt das SceneLight-Objekt auf den Datenstrom
+	 * @param os Der OutputStream
+	 * @throws IOException
+	 */
+	public void writeStream(OutputStream os) throws IOException{
+		SceneGraphStreamWriter writer = new SceneGraphStreamWriter(os);
+		try {
+			writer.writeBranchGraph(scene,map);
+		} catch (NamedObjectException ex){
+			ErrorHandler.error("Fehler beim Schreiben von SceneLight "+ex);
+		}
+		writer.close();
+	}
+
+	/**
+	 * Liest ein SceneLight Objekt vom Datenstrom ein
+	 * @param is Der InputStream
+	 * @throws IOException
+	 */
+	public void readStream(InputStream is) throws IOException{
+		SceneGraphStreamReader reader = new SceneGraphStreamReader(is);
+		scene=reader.readBranchGraph(map);
+	}
+
 }

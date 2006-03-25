@@ -74,13 +74,15 @@ abstract public class Bot extends Thread implements Obstacle {
 	/**
 	 * Die Transformgruppe der Translation der 3D-Repraesentation eines Bots
 	 */
-	TransformGroup translationGroup;
+//	private TransformGroup translationGroup;
 
 	/**
 	 * Die Transformgruppe der Rotation der 3D-Repraesentation eines Bots
 	 */
-	TransformGroup rotationGroup;
+//	private TransformGroup rotationGroup;
 
+	private TransformGroup transformGroup;
+	
 	/** Position */
 	private Vector3f pos = new Vector3f(0.0f, 0f, getHeight() / 2 + 0.006f);
 
@@ -169,9 +171,15 @@ abstract public class Bot extends Thread implements Obstacle {
 			this.pos = pos;
 			Vector3f vec = new Vector3f(pos);
 			//vec.add(new Vector3f(0.0f,0.0f,getHeight()/2+getGroundClearance()));
+//			Transform3D transform = new Transform3D();
+//			transform.setTranslation(vec);
+//			translationGroup.setTransform(transform);
+			
 			Transform3D transform = new Transform3D();
+			transformGroup.getTransform(transform);
 			transform.setTranslation(vec);
-			translationGroup.setTransform(transform);
+			transformGroup.setTransform(transform);
+			
 		}
 	}
 
@@ -196,8 +204,13 @@ abstract public class Bot extends Thread implements Obstacle {
 			if (heading.y < 0)
 				angle = -angle;
 			Transform3D transform = new Transform3D();
+
+			transformGroup.getTransform(transform);
+			
 			transform.setRotation(new AxisAngle4f(0f, 0f, 1f, angle));
-			rotationGroup.setTransform(transform);
+			
+			transformGroup.setTransform(transform);
+//			rotationGroup.setTransform(transform);
 		}
 	}
 
@@ -261,36 +274,36 @@ abstract public class Bot extends Thread implements Obstacle {
 		this.panel = panel;
 	}
 
-	/**
-	 * @return Gibt die RotationGroup des Bot zurueck
-	 */
-	public TransformGroup getRotationGroup() {
-		return rotationGroup;
-	}
+//	/**
+//	 * @return Gibt die RotationGroup des Bot zurueck
+//	 */
+//	public TransformGroup getRotationGroup() {
+//		return rotationGroup;
+//	}
+//
+//	/**
+//	 * @param rotationGroup
+//	 *            Referenz auf die RotationGroup, die fuer den Bot gesetzt
+//	 *            werden soll
+//	 */
+//	public void setRotationGroup(TransformGroup rotationGroup) {
+//		this.rotationGroup = rotationGroup;
+//	}
 
-	/**
-	 * @param rotationGroup
-	 *            Referenz auf die RotationGroup, die fuer den Bot gesetzt
-	 *            werden soll
-	 */
-	public void setRotationGroup(TransformGroup rotationGroup) {
-		this.rotationGroup = rotationGroup;
-	}
-
-	/**
-	 * @return Gibt die TranslationGroup des Bot zurueck
-	 */
-	public TransformGroup getTranslationGroup() {
-		return translationGroup;
-	}
+//	/**
+//	 * @return Gibt die TranslationGroup des Bot zurueck
+//	 */
+//	public TransformGroup getTranslationGroup() {
+//		return translationGroup;
+//	}
 
 	/**
 	 * @param translationGroup
 	 *            Referenz auf die TranslationGroup, die der Bot erhalten soll
 	 */
-	public void setTranslationGroup(TransformGroup translationGroup) {
-		this.translationGroup = translationGroup;
-	}
+//	public void setTranslationGroup(TransformGroup translationGroup) {
+//		this.translationGroup = translationGroup;
+//	}
 
 	/**
 	 * @return Gibt Referenz auf die Welt zurueck
@@ -327,6 +340,14 @@ abstract public class Bot extends Thread implements Obstacle {
 	 */
 	public Controller getController() {
 		return controller;
+	}
+
+	public TransformGroup getTransformGroup() {
+		return transformGroup;
+	}
+
+	public void setTransformGroup(TransformGroup transformGroup) {
+		this.transformGroup = transformGroup;
 	}
 
 }
