@@ -129,8 +129,8 @@ public class CtBotSimTest extends CtBotSim {
 			rr = 100;
 		}
 
-		this.setAktMotL(ll);
-		this.setAktMotR(rr);
+		this.setActMotL(ll);
+		this.setActMotR(rr);
 
 		super.work();
 	}

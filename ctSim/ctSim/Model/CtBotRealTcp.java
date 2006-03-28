@@ -115,17 +115,17 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 				break;
 
 			case Command.CMD_AKT_MOT:
-				setAktMotL((short) command.getDataL());
-				setAktMotR((short) command.getDataR());
+				setActMotL((short) command.getDataL());
+				setActMotR((short) command.getDataR());
 				break;
 			case Command.CMD_AKT_SERVO:
-				setAktServo(command.getDataL());
+				setActServo(command.getDataL());
 				break;
 			case Command.CMD_AKT_DOOR:
-				setAktDoor(command.getDataL());
+				setActDoor(command.getDataL());
 				break;
 			case Command.CMD_AKT_LED:
-				setAktLed(command.getDataL());
+				setActLed(command.getDataL());
 				break;
 			case Command.CMD_ACT_LCD:
 				switch (command.getSubcommand()) {

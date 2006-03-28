@@ -1370,9 +1370,9 @@ public class CtControlPanel extends ControlPanel {
 		// TODO: Slider fuer CtBot.CAP_AKT_MOT sind noch nicht vorgesehen!
 
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
-		motorValueL.setText(Short.toString(bot.getAktMotL()));
+		motorValueL.setText(Short.toString(bot.getActMotL()));
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
-		motorValueR.setText(Short.toString(bot.getAktMotR()));
+		motorValueR.setText(Short.toString(bot.getActMotR()));
 
 		// aktualisiere DeltaX und DeltaY des Maussensors
 		msDeltaX.setText(Integer.toString(bot.getSensMouseDX()));
@@ -1397,7 +1397,7 @@ public class CtControlPanel extends ControlPanel {
 		lcdLine4.setText(bot.getLcdText(3));
 
 		// Hole den Status der LEDs
-		String ledStat = Integer.toBinaryString(bot.getAktLed()); // Integerwert
+		String ledStat = Integer.toBinaryString(bot.getActLed()); // Integerwert
 																	// in eine
 																	// binäre
 																	// Zahl

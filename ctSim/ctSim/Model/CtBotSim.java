@@ -132,9 +132,9 @@ abstract public class CtBotSim extends CtBot {
 //		Vector3f oldHeading = (Vector3f) this.getHeading().clone();
 
 		// Anzahl der Umdrehungen der Raeder
-		double turnsL = calculateWheelSpeed(this.getAktMotL());
+		double turnsL = calculateWheelSpeed(this.getActMotL());
 		turnsL = turnsL * (float) deltaT / 1000.0f;
-		double turnsR = calculateWheelSpeed(this.getAktMotR());
+		double turnsR = calculateWheelSpeed(this.getActMotR());
 		turnsR = turnsR * (float) deltaT / 1000.0f;
 
 		// Encoder-Schritte als Gleitzahl errechnen:

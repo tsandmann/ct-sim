@@ -24,7 +24,15 @@ Crimson, 20.02.2006
 Bugs
 ----
 
-* [06-02-22][open][pek@heise.de][]:
+* [06-03-26][Torsten Evers][unconfirmed][]:
+Beim Testen ist mir noch etwas bzgl. des Sims aufgefallen. Ich habe in letzter 
+Zeit häufiger die Situation, dass der Sim erst beim 2. oder 3. Start korrekt 
+initialisiert wird. Bei den anderen Starts dreht sich der Bot wie er gerade 
+lustig ist oder fährt einfach vorwärts oder rückwärts los. Da dies unabhängig 
+vom Verhalten ist, denke ich, dass da etwas schief ist. Wenn ich genaueres 
+über die Umstände oder den Grund rausfinde, sage ich Bescheid.
+
+* [06-02-22][open][pek@heise.de][open][]:
 TCP-Bot wird dem Simulator manchmal an einer Position hinzugefuegt, die in einer Wand des Simulators oder sogar
 jenseits des Spielfelds liegt. Kurz danach springt der Bot an die eigentlich gewuenschte Position, alle Checkboxes
 "setzen" sind markiert, da der Bot kurzzeitig keinen Boden unter den Fuessen hatte. Das Problem 

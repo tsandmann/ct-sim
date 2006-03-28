@@ -194,20 +194,20 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				break;
 
 			case Command.CMD_AKT_MOT:
-				this.setAktMotL((short) command.getDataL());
-				this.setAktMotR((short) command.getDataR());
+				this.setActMotL((short) command.getDataL());
+				this.setActMotR((short) command.getDataR());
 				// System.out.println("MotorL:" + command.getDataL() + " MotorR:
 				// "
 				// + command.getDataR());
 				break;
 			case Command.CMD_AKT_SERVO:
-				this.setAktServo(command.getDataL());
+				this.setActServo(command.getDataL());
 				break;
 			case Command.CMD_AKT_DOOR:
-				this.setAktDoor(command.getDataL());
+				this.setActDoor(command.getDataL());
 				break;
 			case Command.CMD_AKT_LED:
-				this.setAktLed(command.getDataL());
+				this.setActLed(command.getDataL());
 				break;
 			case Command.CMD_ACT_LCD:
 				switch (command.getSubcommand()) {

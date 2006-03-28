@@ -1,5 +1,8 @@
 CHANGELOG fuer c't-Sim
 ======================
+
+2006-03-28 Peter Koenig (pek@heise.de) Konstanten nach Code-Richtlinien umbenannt ('akt' für Aktuator wurde zu englisch Actuator und daher 'act')
+
 2006-03-19 Benjamin Benz (bbe@heise.de) ClientViews eingefuehrt (angefangen)
 
 2006-03-19 Benjamin Benz (bbe@heise.de) Boden-Bug beseitigt, FileChooser eingebaut, Code aufgeraeumt, viel altes auskommentiert

@@ -197,16 +197,16 @@ public abstract class CtBot extends Bot {
 	public boolean CAP_SENS_TRANS = true;
 
 	/** Kann der Zustand der Motoren beeinflusst werden? */
-	public boolean CAP_AKT_MOT = false;
+	public boolean CAP_ACT_MOT = false;
 
 	/** Kann der Zustande der LEDs beeinflusst werden? */
-	public boolean CAP_AKT_LED = false;
+	public boolean CAP_ACT_LED = false;
 
 	/** Kann der Aktuator fuer die Klappe beeinflusst werden? */
-	public boolean CAP_AKT_DOOR = false;
+	public boolean CAP_ACT_DOOR = false;
 
 	/** Kann der Reserve-Servo beeinflusst werden? */
-	public boolean CAP_AKT_SERVO = false;
+	public boolean CAP_ACT_SERVO = false;
 
 	/** Kann die Richtung des Bots beeinflusst werden? */
 	public boolean CAP_HEAD = true;
@@ -219,19 +219,19 @@ public abstract class CtBot extends Bot {
 	// Aktuatoren:
 
 	/** gewuenschte Motorengeschwindigkeit rechts */
-	private Short aktMotR = new Short((short) 0);
+	private Short actMotR = new Short((short) 0);
 
 	/** gewuenschte Motorengeschwindigkeit links */
-	private Short aktMotL = new Short((short) 0);
+	private Short actMotL = new Short((short) 0);
 
 	/** Position Servo Klappe */
-	private Integer aktDoor;
+	private Integer actDoor;
 
 	/** Position des Reserve-Servo */
-	private Integer aktServo;
+	private Integer actServo;
 
 	/** Zustand der LEDs */
-	private Integer aktLed = new Integer((int) 0);
+	private Integer actLed = new Integer((int) 0);
 
 	/** Zustand des LCD */
 	private String[] lcdText = new String[LCD_LINES];
@@ -581,23 +581,23 @@ public abstract class CtBot extends Bot {
 	/**
 	 * @return Aktuelle Motorgeschwindigkeit links in PWM
 	 */
-	public short getAktMotL() {
-		return aktMotL.shortValue();
+	public short getActMotL() {
+		return actMotL.shortValue();
 	}
 
 	/**
 	 * @param speedL
 	 *            Einzutragender Wert fuer speedL
 	 */
-	public void setAktMotL(short speedL) {
+	public void setActMotL(short speedL) {
 		if (speedL >= PWM_MAX) {
 			speedL = PWM_MAX;
 		}
 		if (speedL <= PWM_MIN) {
 			speedL = PWM_MIN;
 		}
-		synchronized (aktMotL) {
-			this.aktMotL = new Short(speedL);
+		synchronized (actMotL) {
+			this.actMotL = new Short(speedL);
 		}
 	}
 
@@ -627,23 +627,23 @@ public abstract class CtBot extends Bot {
 	/**
 	 * @return Aktuelle Motorgeschwindigkeit rechts in PWM
 	 */
-	public short getAktMotR() {
-		return aktMotR.shortValue();
+	public short getActMotR() {
+		return actMotR.shortValue();
 	}
 
 	/**
 	 * @param speedR
 	 *            Einzutragender Wert fuer speedR
 	 */
-	public void setAktMotR(short speedR) {
+	public void setActMotR(short speedR) {
 		if (speedR >= PWM_MAX) {
 			speedR = PWM_MAX;
 		}
 		if (speedR <= PWM_MIN) {
 			speedR = PWM_MIN;
 		}
-		synchronized (aktMotR) {
-			this.aktMotR = new Short(speedR);
+		synchronized (actMotR) {
+			this.actMotR = new Short(speedR);
 		}
 	}
 
@@ -730,48 +730,48 @@ public abstract class CtBot extends Bot {
 	}
 
 	/**
-	 * @return Gibt den Wert von aktDoor zurueck
+	 * @return Gibt den Wert von actDoor zurueck
 	 */
-	public int getAktDoor() {
-		return aktDoor.intValue();
+	public int getActDoor() {
+		return actDoor.intValue();
 	}
 
 	/**
-	 * @param aktDoor
-	 *            Der Wert von aktDoor, der gesetzt werden soll
+	 * @param actDoor
+	 *            Der Wert von actDoor, der gesetzt werden soll
 	 */
-	public void setAktDoor(int aktDoor) {
-		this.aktDoor = new Integer(aktDoor);
+	public void setActDoor(int actDoor) {
+		this.actDoor = new Integer(actDoor);
 	}
 
 	/**
-	 * @return Gibt den Wert von aktLed zurueck
+	 * @return Gibt den Wert von actLed zurueck
 	 */
-	public int getAktLed() {
-		return aktLed.intValue();
+	public int getActLed() {
+		return actLed.intValue();
 	}
 
 	/**
-	 * @param aktLed
-	 *            Der Wert von aktLed, der gesetzt werden soll
+	 * @param actLed
+	 *            Der Wert von actLed, der gesetzt werden soll
 	 */
-	public void setAktLed(int aktLed) {
-		this.aktLed = new Integer(aktLed);
+	public void setActLed(int actLed) {
+		this.actLed = new Integer(actLed);
 	}
 
 	/**
-	 * @return Gibt den Wert von aktServo zurueck
+	 * @return Gibt den Wert von actServo zurueck
 	 */
-	public int getAktServo() {
-		return aktServo.intValue();
+	public int getActServo() {
+		return actServo.intValue();
 	}
 
 	/**
-	 * @param aktServo
-	 *            Der Wert von aktServo, der gesetzt werden soll
+	 * @param actServo
+	 *            Der Wert von actServo, der gesetzt werden soll
 	 */
-	public void setAktServo(int aktServo) {
-		this.aktServo = new Integer(aktServo);
+	public void setActServo(int actServo) {
+		this.actServo = new Integer(actServo);
 	}
 
 	/**
