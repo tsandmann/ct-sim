@@ -24,13 +24,18 @@ Crimson, 20.02.2006
 Bugs
 ----
 
-* [06-03-26][Torsten Evers][unconfirmed][]:
+* [06-03-26][Torsten Evers][open][]:
 Beim Testen ist mir noch etwas bzgl. des Sims aufgefallen. Ich habe in letzter 
 Zeit häufiger die Situation, dass der Sim erst beim 2. oder 3. Start korrekt 
 initialisiert wird. Bei den anderen Starts dreht sich der Bot wie er gerade 
-lustig ist oder fährt einfach vorwärts oder rückwärts los. Da dies unabhängig 
-vom Verhalten ist, denke ich, dass da etwas schief ist. Wenn ich genaueres 
-über die Umstände oder den Grund rausfinde, sage ich Bescheid.
+lustig ist oder faehrt einfach vorwaerts oder rueckwaerts los. Da dies unabhaengig 
+vom Verhalten ist, denke ich, dass da etwas schief ist. 
+Es scheint vom Startup des Sims abzuhaengen. Wenn ich das Verhalten z.b. 
+über eine Fernbedienungstaste aktiviere, was ja erst geht, wenn der Sim 
+wirklich komplett gestartet ist, passiert das so gut wie nie. Ich vermute 
+also, dass die Verhalten, wenn sie per ACTIVE-Flag in bot_behave_init() 
+gestartet werden, zu frueh starten und noch nicht alles korrekt initialisiert 
+ist. Besonders gut zu merken auf aelteren/langsameren PCs.
 
 * [06-02-22][open][pek@heise.de][open][]:
 TCP-Bot wird dem Simulator manchmal an einer Position hinzugefuegt, die in einer Wand des Simulators oder sogar
@@ -57,6 +62,11 @@ Wird ein ct-Bot-Prozess beendet, bleibt die Huelle des Bot im Simulator drin und
 
 Feature Requests
 ----------------
+
+* [06-04-04][open][pek@heise.de][]:
+Wird eine Welt ueber den ParcoursLoader geladen, werden die Konstanten WORLD_HEIGHT und 
+_WIDTH nicht automatisch angepasst, daher passen die Slider auf dem ControlPanel nicht 
+echten Weltgroesse.
 
 * [06-03-16][open][pek@heise.de][]:
 Aller Sensoren im Sim sollten realistische Messwerte zurueckgeben und realistische Kennlinen aufweisen
