@@ -184,8 +184,8 @@ abstract public class CtBotSim extends CtBot {
 		 * newPos.sub(mid);
 		 */
 
-		// F�r ausf�hrliche Erl�uterung der Positionsberechnung siehe pdf
-		// Absolut zur�ckgelegte Strecke pro Rad berechnen
+		// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe pdf
+		// Absolut zurueckgelegte Strecke pro Rad berechnen
 		double s_l = turnsL * WHEEL_PERIMETER;
 		double s_r = turnsR * WHEEL_PERIMETER;
 

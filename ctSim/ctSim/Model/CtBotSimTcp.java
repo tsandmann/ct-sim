@@ -226,6 +226,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 					break;
 				}
 				break;
+			case Command.CMD_LOG:
+				this.setLog(command.getDataBytesAsString());
+				break;
 			default:
 				ErrorHandler.error("Unknown Command:" + command.toString());
 				break;

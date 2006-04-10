@@ -1,20 +1,21 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-04-10 Andreas Merkle (mail@blue-andi.de) Der c't-Sim kann nun auch Log-Informationen darstellen
 
-2006-03-28 Peter Koenig (pek@heise.de) Konstanten nach Code-Richtlinien umbenannt ('akt' für Aktuator wurde zu englisch Actuator und daher 'act')
+2006-03-28 Peter Koenig (pek@heise.de) Konstanten nach Code-Richtlinien umbenannt ('akt' fï¿½r Aktuator wurde zu englisch Actuator und daher 'act')
 
 2006-03-19 Benjamin Benz (bbe@heise.de) ClientViews eingefuehrt (angefangen)
 
 2006-03-19 Benjamin Benz (bbe@heise.de) Boden-Bug beseitigt, FileChooser eingebaut, Code aufgeraeumt, viel altes auskommentiert
 
 2006-03-21 Peter Koenig (pek@heise.de)
-Konstanten in CtBot konsequent englisch umbenannt, Patch fï¿½r die 
+Konstanten in CtBot konsequent englisch umbenannt, Patch fuer die 
 korrekte Positionsberechnung von Fabian Recktenwald (Fabian.Recktenwald@ct-bot.teschpfad.de)
 eingepflegt, ebenso den darauf aufbauenden Maus-Patch
 
 2006-03-20 Markus Lang (lang@repulse.de)
 Kontrollfenster und World-Fenster mittels einer SplitPane zu einem 
-groï¿½en c't-Sim Hauptfenster zusammengefï¿½gt. Weniger Fensterwald :)
+grossen c't-Sim Hauptfenster zusammengefuegt. Weniger Fensterwald :)
 
 2006-03-19 Benjamin Benz (bbe@heise.de) ParcoursLoader fast fertig
 
@@ -77,7 +78,7 @@ sobald der Bot seinen Peilstrahl losschickt.
 - Code Makeup
 - Abfrage hinzugefuegt, ob ein oder drei Bots ausgesetzt werden sollen.
 
-2006-02-01 Peter Kï¿½nig (pek@ctmagazin.de)
+2006-02-01 Peter Koenig (pek@ctmagazin.de)
 - XML- und howto-Dateien fuer Ant Build von Dominik Kalb (dominik@dkalb.com)
 hinzugefuegt.
 

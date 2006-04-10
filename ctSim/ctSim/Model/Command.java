@@ -74,6 +74,9 @@ public class Command {
 	/** Ueberwachung Transportfach */
 	public static final int CMD_SENS_TRANS = 'T';
 
+	/** Kommando fuer Logausgaben */
+	public static final int CMD_LOG = 'O';
+	
 	/** Laenge eines Kommandos in Byte */
 	public static final int COMMAND_SIZE = 11;
 

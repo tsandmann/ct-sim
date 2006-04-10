@@ -244,6 +244,9 @@ public abstract class CtBot extends Bot {
 
 	private int lcdCursorY = 0;
 
+	/** Puffer fuer Logausgaben */
+	public StringBuffer logBuffer = new StringBuffer("");
+	
 	// Sensoren:
 
 	/**
@@ -348,7 +351,7 @@ public abstract class CtBot extends Bot {
 		tg = new TransformGroup(transform);
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-
+		
 		// Rotationsgruppe fuer den Bot
 //		TransformGroup rg = new TransformGroup();
 //		transform = new Transform3D();
@@ -1034,4 +1037,30 @@ public abstract class CtBot extends Bot {
 		}
 	}
 
+	/**
+	 * Schreibt Logausgabe in den Puffer.
+	 * @param str String fuer die Ausgabe
+	 */
+	public void setLog(String str) {
+		synchronized(logBuffer) {
+			logBuffer.append(str + "\n");
+		}
+	}
+	
+	/**
+	 * Liefert Puffer fuer die Logausgabe.
+	 * @return Logausgabe
+	 */
+	public StringBuffer getLog() {
+		StringBuffer tempBuffer = new StringBuffer("");
+		
+		synchronized(logBuffer) {
+			
+			/* Puffer kopieren und leeren*/
+			tempBuffer.append(logBuffer.toString());
+			logBuffer.delete(0, logBuffer.length());
+		}
+		
+		return tempBuffer;
+	}
 }

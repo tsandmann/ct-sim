@@ -39,6 +39,7 @@ import javax.vecmath.Vector3f;
 import ctSim.Model.CtBot;
 import ctSim.Model.World;
 import ctSim.SimUtils;
+import ctSim.View.LogFrame;
 
 /**
  * Ergaenzt das generische, abstrakte ControlPanel um die richtigen Felder und
@@ -287,6 +288,11 @@ public class CtControlPanel extends ControlPanel {
 
 	private JButton jButtonRed, jButtonGreen, jButtonYellow, jButtonBlue;
 
+//	 Anzeigen von Loggings
+	private JPanel jPanelLog;
+	private JButton jButtonLog;
+	private LogFrame logFrame;
+	
 	// Anzeige der Maussensordaten
 	private JPanel msPanel;
 
@@ -1247,6 +1253,24 @@ public class CtControlPanel extends ControlPanel {
 					} // LED-Panel ENDE
 				} // Bot-Panel ENDE
 
+				// Anzeigen von Loggings
+				logFrame = new LogFrame();
+				jPanelLog = new JPanel();
+				jButtonLog = new JButton("Log anzeigen");
+				jPanelLog.add(jButtonLog);
+				jButtonLog.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						
+						if (false == logFrame.isVisible()) {
+							logFrame.setVisible(true);
+						}
+						else {
+							logFrame.setVisible(false);
+						}
+					}
+				});
+				mainPanelRight.add(jPanelLog);
+				
 				mainPanelRight.add(Box.createRigidArea(smallGap));
 
 				// freien Platz fuellen
@@ -1423,6 +1447,12 @@ public class CtControlPanel extends ControlPanel {
 															// zustande
 		}
 
+		// Anzeigen der Loggings
+		String temp = bot.getLog().toString();
+		if (temp.length() > 0) {
+			logFrame.setLog(temp);
+		}
+		
 		super.repaint();
 		this.repaint();
 	}
