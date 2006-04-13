@@ -23,12 +23,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
 import javax.media.j3d.NodeReferenceTable;
+import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 
 import com.sun.j3d.utils.scenegraph.io.NamedObjectException;
@@ -36,6 +36,7 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 
 import ctSim.ErrorHandler;
+import ctSim.View.ViewBotUpdate;
 
 /**
  * Dies ist ein Container-Objekt fuer einen Szenegraphen und alle Hooks, die man
@@ -146,21 +147,22 @@ public class SceneLight {
 	 *            Liste der Bots
 	 * 
 	 */
-	public void update(List<ViewBot> list) {
-//		Iterator it = list.iterator();
-//		while (it.hasNext()) {
-//			ViewBot extern = (ViewBot) it.next();
-//			ViewBot intern = findViewBot(extern.id);
-//			if (intern != null) {
-//				Transform3D trans = new Transform3D();
-//				extern.tg.getTransform(trans);
-//				intern.tg.setTransform(trans);
-//
-//				extern.rg.getTransform(trans);
-//				intern.rg.setTransform(trans);
-//			}
-//
-//		}
+	public void update(SceneUpdate sceneUpdate) {
+
+		
+		Iterator it = sceneUpdate.getBots().iterator();
+		while (it.hasNext()) {
+			ViewBotUpdate extern = (ViewBotUpdate) it.next();
+
+//			Map.Entry entry =(Map.Entry) it.next();
+			
+			Object o = map.get(extern.getId());
+			
+			TransformGroup tg = (TransformGroup) o;
+			Transform3D trans = new Transform3D();
+			trans.set(extern.getTransformMatrix());
+			tg.setTransform(trans);
+		}
 	}
 
 	/**
@@ -226,6 +228,10 @@ public class SceneLight {
 	public void readStream(InputStream is) throws IOException{
 		SceneGraphStreamReader reader = new SceneGraphStreamReader(is);
 		scene=reader.readBranchGraph(map);
+	}
+
+	public HashMap getMap() {
+		return map;
 	}
 
 }

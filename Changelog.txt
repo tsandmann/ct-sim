@@ -1,5 +1,9 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-04-13 Benjamin Benz (bbe@heise.de) ParcoursLoader aufgeraumt und besser in world integriert. Welt steht jetzt nicht mehr um den Ursprungspunkt herum. World.java ausgemistet. Bots starten jetzt auf ihren Startplätzen.
+
+2006-04-11 Benjamin (bbe@heise.de) Der Code fuer Client-Views scheitert noch an einem java3d-Bug in SceneGraphStreamWriter und Co., sowie an Texturen
+
 2006-04-10 Andreas Merkle (mail@blue-andi.de) Der c't-Sim kann nun auch Log-Informationen darstellen
 
 2006-03-28 Peter Koenig (pek@heise.de) Konstanten nach Code-Richtlinien umbenannt ('akt' f�r Aktuator wurde zu englisch Actuator und daher 'act')

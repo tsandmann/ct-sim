@@ -31,7 +31,7 @@ import javax.swing.JSplitPane;
  * Ein Fenster fuer den ctSimClient
  * @author Benjamin Benz (bbe@heise.de)
  */
-public class clientFrame extends JFrame {
+public class ClientFrame extends JFrame {
 
 	/**
 	 * 
@@ -39,7 +39,7 @@ public class clientFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JSplitPane splitPane;
 
-	public clientFrame(WorldView worldView) throws HeadlessException {
+	public ClientFrame(WorldView worldView) throws HeadlessException {
 		super();
 		this.initGUI(worldView);
 		// Fenstergroesse festlegen

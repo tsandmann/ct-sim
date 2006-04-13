@@ -18,36 +18,41 @@
  */
 package ctSim.Model;
 
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Transform3D;
+import javax.media.j3d.Node;
 import javax.media.j3d.TransformGroup;
+import ctSim.View.ViewBotUpdate;
 
 /**
  * Die ist ein Container-Objekt fuer alle Aenderungen an einem Szenegraphen  
  * @author bbe (bbe@heise.de) 
  */
-public class SceneUpdate {
+public class SceneUpdate implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	/** Liste mit allen Bots, die in dieser Welt leben */
 	private List<ViewBotUpdate> bots = null;
 
 	/** ID fuer einen neuen Bot */
-	private String id = null;
+//	private String id = null;
 	/** TransfromGroup fuer einen neuen Bot */
-	private TransformGroup tg = null;
-	/** TransfromGroup fuer einen neuen Bot */
-	private TransformGroup rg = null;
+//	private TransformGroup tg = null;
 	/** BranchGroup fuer einen neuen Bot */
-	private BranchGroup bg = null;
+//	private BranchGroup bg = null;
 
 	/**
 	 * @return Gibt eine Referenz auf bg zurueck
 	 * @return Gibt den Wert von bg zurueck
 	 */
-	public BranchGroup getBg() {
-		return bg;
-	}
+//	public BranchGroup getBg() {
+//		return bg;
+//	}
 
 
 
@@ -63,87 +68,35 @@ public class SceneUpdate {
 	/**
 	 * @return Gibt den Wert von id zurueck
 	 */
-	public String getId() {
-		return id;
-	}
-
-
-
-	/**
-	 * @return Gibt eine Referenz auf rg zurueck
-	 */
-	public TransformGroup getRg() {
-		return rg;
-	}
-
-
+//	public String getId() {
+//		return id;
+//	}
 
 	/**
 	 * @return Gibt eine Referenz auf tg zurueck
 	 */
-	public TransformGroup getTg() {
-		return tg;
-	}
-
-
+//	public TransformGroup getTg() {
+//		return tg;
+//	}
 
 	/**
 	 * Erzeugt ein Update aus den vorhandenen Bots 
 	 */
 	public SceneUpdate(SceneLight sceneLight) {
 		super();
-//		bots= new LinkedList<ViewBotUpdate>();
-//
-//		Iterator it = sceneLight.getBots().iterator();
-//		while (it.hasNext()) {
-//			ViewBot vBot = (ViewBot) it.next();
-//			bots.add(new ViewBotUpdate(vBot.id,vBot.tg,vBot.rg));
-//		}
-		// TODO Auto-generated constructor stub
-	}
-
-	
-	
-	/**
-	 * Hilfsklasse, die zu jedem Bot nur noch die Updates enthaelt
-	 * @author bbe (bbe@heise.de)
-	 */
-	private class ViewBotUpdate{
-		String id;
-		Transform3D translation;
-		Transform3D rotation;
-		/**
-		 * @param id
-		 * @param rotation
-		 * @param translation
-		 */
-		public ViewBotUpdate(String id, TransformGroup rotation, TransformGroup translation) {
-			super();
-			// TODO Auto-generated constructor stub
-			this.id = id;
+		
+		bots= new LinkedList<ViewBotUpdate>();
+		
+		// Einmal alle Bots durchgehen
+		Iterator it = sceneLight.getMap().entrySet().iterator(); 
+		while (it.hasNext()) {
+			Map.Entry entry =(Map.Entry) it.next();
+			String key = (String) entry.getKey();
+			Node value = (Node) entry.getValue();
 			
-			this.rotation = new Transform3D();
-			rotation.getTransform(this.rotation);
-			
-			this.translation = new Transform3D();
-			translation.getTransform(this.translation);
+			if (!key.equals("obstBG")){
+				bots.add(new ViewBotUpdate(key,(TransformGroup)value));				
+			}
 		}
-	}
-
-
-
-	/**
-	 * @param bg
-	 * @param id
-	 * @param rg
-	 * @param tg
-	 */
-	public SceneUpdate(BranchGroup bg, String id, TransformGroup rg, TransformGroup tg) {
-		super();
-		// TODO Auto-generated constructor stub
-		this.bg = bg;
-		this.id = id;
-		this.rg = rg;
-		this.tg = tg;
 	}
 }

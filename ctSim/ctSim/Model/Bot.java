@@ -242,6 +242,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	 */
 	public void setBotName(String botName) {
 		this.botName = botName;
+		getTransformGroup().setName(botName+"_TG");
 	}
 
 	/**

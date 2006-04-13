@@ -112,7 +112,7 @@ public class Controller {
 	}
 
 	private int askTestBots() {
-		Object[] options = { "1 Bot", "3 Bots" };
+		Object[] options = { "1 Bot", "2 Bots" };
 		int n = JOptionPane.showOptionDialog(null,
 				"Wieviele Bots sollen gestartet werden?", "Frage",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -120,7 +120,7 @@ public class Controller {
 		if (n == 0)
 			return 1;
 		else
-			return 3;
+			return 2;
 	}
 
 	// private SceneLight sc;
@@ -140,7 +140,7 @@ public class Controller {
 
 		/* Eine lokale WorldView braucht man */
 		worldView = new WorldView();
-		worldView.setScene(world.getSceneLight().getScene());
+		worldView.setScene(world.getSceneLight().getScene(),world.getPlaygroundDimX(),world.getPlaygroundDimY());
 		worldView.initGUI();
 		
 		/* Markus Lang 2006-03-17:

@@ -225,7 +225,7 @@ abstract public class CtBotSim extends CtBot {
 				* _sg), (float) (-_hd.x * _sg + _hd.y * _cg), 0f);
 		moveDirection.normalize();
 		moveDirection.scale((float) moveDistance);
-		// ... und die alte Position entsprechend ver�ndern.
+		// ... und die alte Position entsprechend veraendern.
 		newPos.add(moveDirection);
 
 		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
@@ -240,7 +240,7 @@ abstract public class CtBotSim extends CtBot {
 			}
 		} else {
 
-			moveDistance = 0; // Wird sp�ter noch f�r den Maussensor ben�tigt
+			moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt
 
 			if (isApperance) {
 				botBody.setAppearance(world.getBotAppearCollision());

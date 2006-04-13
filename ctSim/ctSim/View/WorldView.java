@@ -62,7 +62,7 @@ import javax.swing.SwingUtilities;
  */
  /* Markus Lang 2006-03-17:
  * WorldView erweitert nun die JPanel Klasse, da es kein
- * eigenständiges Fenster mehr ist.
+ * eigenstaendiges Fenster mehr ist.
  */
 public class WorldView extends JPanel {
 
@@ -147,24 +147,6 @@ public class WorldView extends JPanel {
         
         universe.addBranchGraph(objRoot);
         // End Block
-
-//      Zur Benutzung des org.j3d.ui.navigation-Paketes die Kommentarzeichen entfernen
-//		/* erzeuge die Navigationsklasse */ 
-//		mvh  = new MouseViewHandler();
-//		
-//		/* versorge die Navigationsklasse mit allen benï¿½tigten Informationen */
-//		mvh.setCanvas(worldCanvas);
-//		mvh.setViewInfo(universe.getViewer().getView(),tgViewPlatform);
-//		
-//		/* verbinde die Mouseevents mit den verschiedenen Bewegungsarten */
-//		mvh.setButtonNavigation(MouseEvent.BUTTON1_MASK, NavigationState.WALK_STATE);
-//		mvh.setButtonNavigation(MouseEvent.BUTTON2_MASK, NavigationState.FLY_STATE);
-//		mvh.setButtonNavigation(MouseEvent.BUTTON3_MASK, NavigationState.EXAMINE_STATE);
-//		mvh.setNavigationSpeed(1.0f);
-//		
-//		BranchGroup bgt = new BranchGroup();
-//		bgt.addChild(mvh.getTimerBehavior());
-//		universe.addBranchGraph(bgt);
 		
 		try {
 			worldCanvas.setVisible(true);
@@ -183,9 +165,9 @@ public class WorldView extends JPanel {
 		return worldCanvas;
 	}
 
-	public void setScene(BranchGroup scene){
+	public void setScene(BranchGroup scene, float dimX, float dimY){
 		SimpleUniverse simpleUniverse = new SimpleUniverse(getWorldCanvas());
-		setUniverse(simpleUniverse);
+		setUniverse(simpleUniverse, dimX,dimY);
 		simpleUniverse.addBranchGraph(scene);
 	}
 	
@@ -193,19 +175,19 @@ public class WorldView extends JPanel {
 	 * @param uni
 	 *            Referenz auf das Universum, die gesetzt werden soll
 	 */
-	public void setUniverse(SimpleUniverse uni) {
+	public void setUniverse(SimpleUniverse uni, float dimX, float dimY) {
 		this.universe = uni;
 		// Blickpunkt so weit zuruecksetzen, dass alles zu sehen ist.
 
 		double biggerOne;
-		if (World.PLAYGROUND_HEIGHT > World.PLAYGROUND_WIDTH)
-			biggerOne = World.PLAYGROUND_HEIGHT;
+		if (dimX > dimY)
+			biggerOne = dimX;
 		else
-			biggerOne = World.PLAYGROUND_WIDTH;
+			biggerOne = dimY;
 
 		Transform3D translate = new Transform3D();
 		universe.getViewingPlatform().getViewPlatformTransform().getTransform(translate);
-		translate.setTranslation(new Vector3d(0d,0d,(biggerOne/2)/Math.tan(universe.getViewer().getView().getFieldOfView()/2)));
+		translate.setTranslation(new Vector3d(dimX/2,dimY/2,(biggerOne/2)/Math.tan(universe.getViewer().getView().getFieldOfView()/2)));
 		universe.getViewingPlatform().getViewPlatformTransform().setTransform(translate);
 	}
 

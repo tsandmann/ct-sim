@@ -19,6 +19,7 @@
 package ctSim.View;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.TransformGroup;
@@ -51,10 +52,13 @@ public class RemoteView {
 	 * @param sceneUpdate Die Aenderungen
 	 */
 	public void update(SceneUpdate sceneUpdate) throws IOException{
-//		oos.writeObject(sceneUpdate);
-//		oos.writeChars("Update");
-//		ErrorHandler.error("RemoteView.update() not implemented yet");
-		// TODO implement RemoteView.update();
+		try{
+			ObjectOutputStream oos = new ObjectOutputStream(connection.getSocket().getOutputStream());
+			oos.writeObject(sceneUpdate);
+		} catch (IOException ex){
+			ErrorHandler.error("Probleme beim Uebertragen des SceneUpdates "+ex);
+		}
+//		write(ConvertData.objectToBytes(sceneUpdate));
 	}
 	
 	/**
@@ -63,8 +67,6 @@ public class RemoteView {
 	 */
 	public void init(SceneLight sceneLight) throws IOException{
 		sceneLight.writeStream(connection.getSocket().getOutputStream());
-//		ErrorHandler.error("RemoteView.init() not implemented yet");
-		// TODO implement RemoteView.init();
 	}
 	
 	/**

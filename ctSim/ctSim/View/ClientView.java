@@ -18,9 +18,13 @@
  */
 package ctSim.View;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 import ctSim.ErrorHandler;
 import ctSim.TcpConnection;
 import ctSim.Model.SceneLight;
+import ctSim.Model.SceneUpdate;
 
 /**
  * Verwaltungsstation fuer Remote-Views auf Server-Seite. 
@@ -48,10 +52,11 @@ public class ClientView {
 		sc.readStream(connection.getSocket().getInputStream());
 		
 		worldView = new WorldView();
-		worldView.setScene(sc.getScene());
+		// TODO echte Abmessungen der Welt ermitteln 
+		worldView.setScene(sc.getScene(),5.0f,5.0f);
 		worldView.initGUI();
 		
-		clientFrame clientFrame=new clientFrame(worldView);
+		ClientFrame clientFrame=new ClientFrame(worldView);
 	}
 	
 	
@@ -64,17 +69,51 @@ public class ClientView {
 		// TODO Auto-generated constructor stub
 		this.connection = connection;
 	}
+	
+	public void update(SceneUpdate sceneUpdate){
+		sc.update(sceneUpdate);
+	}
+	
+	/**
+	 * Liest eine SceneUpdate-Nachricht ein
+	 * @return
+	 * @throws IOException
+	 */
+	public SceneUpdate getUpdate() throws IOException{
+		SceneUpdate sU = null;
+//		byte [] data = new byte[10000];
+		
+		ObjectInputStream ois = new ObjectInputStream(connection.getSocket().getInputStream());
+		
+		try {
+			sU= (SceneUpdate) ois.readObject();
+//			sU = (SceneUpdate)ConvertData.bytesToObject(data);
+		} catch (ClassNotFoundException ex){
+			ErrorHandler.error("Klasse konnte nicht gefunden werden "+ex);
+		}
+		ois.close();
+		
+		return sU;
+	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		ClientView clientView = null;
 		try {
-			ClientView clientView = new ClientView("localhost",10002);
+			clientView = new ClientView("localhost",10002);
+
+			while (true){
+				clientView.update(clientView.getUpdate());
+			}
+
+		
 		} catch (Exception ex){
 			ErrorHandler.error("Fehler beim oeffnen der ClientView "+ex);
 		}
+		
 	}
 	
 	

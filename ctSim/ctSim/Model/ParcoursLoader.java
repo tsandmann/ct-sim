@@ -163,6 +163,7 @@ public class ParcoursLoader {
 	
 	private int[][] parcoursMap = null;
 
+	/** Der eigentliche Parcours */
 	private Parcours parcours;
 
 	/** Erscheinungsbild von Lichtquellen */
@@ -249,14 +250,14 @@ public class ParcoursLoader {
 						1.0f, 0.0f, 0.0f),
 				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f,
 						1.0f, 0.0f));
-//		wallAppear.setTexCoordGeneration(tcg);
+		wallAppear.setTexCoordGeneration(tcg);
 
 		TextureLoader loader = new TextureLoader(ClassLoader
 				.getSystemResource(World.OBST_TEXTURE), null);
 		Texture2D texture = (Texture2D) loader.getTexture();
 		texture.setBoundaryModeS(Texture.WRAP);
 		texture.setBoundaryModeT(Texture.WRAP);
-//		wallAppear.setTexture(texture);
+		wallAppear.setTexture(texture);
 
 		// Linien-Material
 		mat = new Material();
@@ -280,7 +281,7 @@ public class ParcoursLoader {
 	 * @param lengthX Laenge der Wand in Y-Richtung
 	 */
 	private void createWall(int x, int y, int lengthX, int lengthY) {
-		Box box = new Box(Parcours.GRID / 2 * lengthX, Parcours.GRID / 2* lengthY, 0.2f, wallAppear);
+		Box box = new Box(parcours.getGrid() / 2 * lengthX, parcours.getGrid() / 2* lengthY, 0.2f, wallAppear);
 		parcours.addObstacle(box,(float)x+lengthX/2.0f,(float)y+lengthY/2.0f);
 	}
 
@@ -298,7 +299,7 @@ public class ParcoursLoader {
 	 */
 	@SuppressWarnings("unused")
 	private void createFloor(int x, int y, int lengthX, int lengthY, Appearance app) {
-		Box box = new Box(Parcours.GRID / 2 * lengthX, Parcours.GRID / 2* lengthY, World.PLAYGROUND_THICKNESS, app);
+		Box box = new Box(parcours.getGrid() / 2 * lengthX, parcours.getGrid() / 2* lengthY, World.PLAYGROUND_THICKNESS, app);
 		parcours.addFloor(box,x+lengthX/2.0f,(float)y+lengthY/2.0f, -World.PLAYGROUND_THICKNESS+0.001f);
 	}	
 
@@ -312,7 +313,7 @@ public class ParcoursLoader {
 	 * @param app Aussehen des Bodens
 	 */
 	private void createFloor(int x, int y, Appearance app) {
-		Box box = new Box(Parcours.GRID *0.5f , Parcours.GRID  *0.5f, World.PLAYGROUND_THICKNESS, app);
+		Box box = new Box(parcours.getGrid() *0.5f , parcours.getGrid()  *0.5f, World.PLAYGROUND_THICKNESS, app);
 		parcours.addFloor(box,x+0.5f,y+0.5f, -World.PLAYGROUND_THICKNESS+0.001f);
 	}	
 
@@ -333,7 +334,7 @@ public class ParcoursLoader {
 		int n = 0;
 
 		for (n=0; n< points.length; n++)
-			p[n]=points[n]*Parcours.GRID;
+			p[n]=points[n]*parcours.getGrid();
 		
 	    createFloor(x, y,normalFloorAppear);
 
@@ -392,7 +393,7 @@ public class ParcoursLoader {
 		// Lichter bestehen aus dem echten Licht
 		PointLight pointLight = new PointLight();
 		pointLight.setColor(pointLightColor);
-		pointLight.setPosition((x+0.5f)*Parcours.GRID, (y+0.5f)*Parcours.GRID, LIGHTZ);
+		pointLight.setPosition((x+0.5f)*parcours.getGrid(), (y+0.5f)*parcours.getGrid(), LIGHTZ);
 		pointLight.setInfluencingBounds(pointLightBounds);
 		pointLight.setAttenuation(1f, 3f, 0f);
 		pointLight.setEnable(true);
@@ -407,13 +408,11 @@ public class ParcoursLoader {
 	
 	
 	/**
-	 * Fuegt in die uebergebene TransformGroup das geladene ein
-	 * 
-	 * @param root
-	 *            Die Gruppe zu der alles hinzugefuegt wird
+	 * Liest die parcourMap ein und baut daraus einen Parcour zusammen
 	 */
-	public void insertSceneGraph(TransformGroup obstRoot, BranchGroup lightRoot, BranchGroup terrainRoot) {
-    	int l;
+//	public void insertSceneGraph(TransformGroup obstRoot_, BranchGroup lightRoot_, BranchGroup terrainRoot_) {
+	public void parse(){
+	int l;
     	int d;
 
     	if (parcoursMap != null){
@@ -424,25 +423,25 @@ public class ParcoursLoader {
 							createWall(x, y,1 ,1);
 							break;
 					    case '=':
-					    	l=0;
-					    	d=x;
-					    	// ermittle die Laenge der zusammenhaengenden Wand
-					    	while ((d< parcours.getDimX()) && (parcoursMap[d][y] == '=')){
-					    		parcoursMap[d][y] = 'O';  // Feld ist schon bearbeitet
-					    		l++; // Laenge hochzaeheln
-					    		d++;
-					    	}
+						    	l=0;
+						    	d=x;
+						    	// ermittle die Laenge der zusammenhaengenden Wand
+						    	while ((d< parcours.getDimX()) && (parcoursMap[d][y] == '=')){
+						    		parcoursMap[d][y] = 'O';  // Feld ist schon bearbeitet
+						    		l++; // Laenge hochzaeheln
+						    		d++;
+						    	}
 							createWall(x, y, l, 1);
 							break;
 					    case '#':
-					    	l=0;
-					    	d=y;
-					    	// ermittle die Laenge der zusammenhaengenden Wand
-					    	while ((d< parcours.getDimY()) && (parcoursMap[x][d] == '#')){
-					    		parcoursMap[x][d] = 'O';  // Feld ist schon bearbeitet
-					    		l++; // Laenge hochzaeheln
-					    		d++;
-					    	}
+						    	l=0;
+						    	d=y;
+						    	// ermittle die Laenge der zusammenhaengenden Wand
+						    	while ((d< parcours.getDimY()) && (parcoursMap[x][d] == '#')){
+						    		parcoursMap[x][d] = 'O';  // Feld ist schon bearbeitet
+						    		l++; // Laenge hochzaeheln
+						    		d++;
+						    	}
 							createWall(x, y, 1, l);
 							break;
 					    case '*':
@@ -453,7 +452,7 @@ public class ParcoursLoader {
 							createFloor(x, y,whiteFloorAppear);
 							break;
 					    case ' ':
-					    	createFloor(x, y,normalFloorAppear);
+					    		createFloor(x, y,normalFloorAppear);
 							break;							
 					    case '1':
 							parcours.setStartPosition(1,x,y);
@@ -491,29 +490,9 @@ public class ParcoursLoader {
 				    	
 				    	
 			}
-    	}
-    	
-    	Transform3D translate = new Transform3D();
-    	translate.setTranslation(new Vector3f(-parcours.getDimX()/2*Parcours.GRID,-parcours.getDimY()/2*Parcours.GRID,0f));
-    	TransformGroup tg = new TransformGroup();
-    	tg.setTransform(translate);
-    	tg.addChild(parcours.getObstBG());
-    	obstRoot.addChild(tg);
+       }
+	}    	
 
-    	tg = new TransformGroup();
-    	tg.setTransform(translate);
-    	tg.addChild(parcours.getLightBG());
-    	lightRoot.addChild(tg);
-    	
-    	tg = new TransformGroup();
-    	tg.setTransform(translate);
-    	tg.addChild(parcours.getTerrainBG());
-		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tg.setPickable(true);
-		
-    	terrainRoot.addChild(tg);
-
-	}
 	
 	/**
 	 * Laedt den Default-Testparcours
@@ -558,8 +537,10 @@ public class ParcoursLoader {
 		    in.close();
 		    
 		    parcours.setDimY(y+1);	
-    		parcours.setDimX(xmax);
+    			parcours.setDimX(xmax);
 
+    			parse();		// Parcours Zusammenbauen
+    			
 		} catch (IOException ex){
 			ErrorHandler.error("Probleme beim Lesen der Datei: "+filename+" "+ex);
 		}
@@ -581,6 +562,12 @@ public class ParcoursLoader {
 				parcoursMap[x][y]=	line[x];
 		}
 		
+		parse();		// Parcours Zusammenbauen
+		
+	}
+
+	public Parcours getParcours() {
+		return parcours;
 	}
 
 	

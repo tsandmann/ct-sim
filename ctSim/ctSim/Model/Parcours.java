@@ -34,7 +34,7 @@ import javax.vecmath.Vector3f;
  */
 public class Parcours {
 	/** Raster des Parcours-Gitters */
-	public static float GRID = (float) (CtBot.BOT_RADIUS * 2 * 2);
+	private float grid = (float) (CtBot.BOT_RADIUS * 2 * 2);
 
 	/** Anzahl der Startpositionen für Bots. Dir Position 0 ist die Default Position, ab 1 für die Wettkampfbots.*/
 	public static int BOTS = 3; 
@@ -145,8 +145,9 @@ public class Parcours {
 		Transform3D translate = new Transform3D();
 
 		node.setPickable(true);
+//		node.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 		
-		translate.set(new Vector3f(x * GRID, y* GRID, z));
+		translate.set(new Vector3f(x * grid, y* grid, z));
 
 		TransformGroup tg = new TransformGroup(translate);
 		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
@@ -187,11 +188,37 @@ public class Parcours {
 	
 	
 	public BranchGroup getLightBG() {
+/*		Transform3D translate = new Transform3D();
+		translate.setTranslation(new Vector3f(-getDimX()/2*grid,-getDimY()/2*grid,0f));
+		TransformGroup tg = new TransformGroup();
+		tg.setTransform(translate);
+		tg.addChild(lightBG);*/
+
 		return lightBG;
 	}
 
 	public BranchGroup getObstBG() {
+//		Transform3D translate = new Transform3D();
+//		translate.setTranslation(new Vector3f(-getDimX()/2*grid,-getDimY()/2*grid,0f));
+//   		TransformGroup tg = new TransformGroup();
+//    		tg.setTransform(translate);
+//    		tg.addChild(obstBG);
+//    		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+//    		tg.setPickable(true);
+		
 		return obstBG;
+	}
+	
+	public BranchGroup getTerrainBG() {
+/*		Transform3D translate = new Transform3D();
+		translate.setTranslation(new Vector3f(-getDimX()/2*grid,-getDimY()/2*grid,0f));
+		TransformGroup tg = new TransformGroup();
+		tg.setTransform(translate);
+		tg.addChild(terrainBG);
+		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+    		tg.setPickable(true);
+*/    		
+		return terrainBG;
 	}
 	
 	/**
@@ -203,9 +230,23 @@ public class Parcours {
 	public void setStartPosition(int bot, int x, int y){
 		if (bot <= BOTS-1){
 			startPositions[bot][0]=x;
-			startPositions[bot][0]=y;
+			startPositions[bot][1]=y;
 		}
 	}
+	
+	/**
+	 * Liefert die Startposition eines Bots
+	 * @param bot
+	 * @return
+	 */
+	public Vector3f getStartPosition(int bot){
+		Vector3f pos = null;
+		if (bot < BOTS)
+			pos= new Vector3f(startPositions[bot][0]*grid + grid/2,startPositions[bot][1]*grid + grid/2,0.0f);
+		
+		return pos;
+	}
+	
 	/**
 	 * Legt die Zielposition fest
 	 * @param x
@@ -216,7 +257,9 @@ public class Parcours {
 		finishPosition[0]=y;
 	}
 
-	public BranchGroup getTerrainBG() {
-		return terrainBG;
+	public float getGrid() {
+		return grid;
 	}
+
+
 }

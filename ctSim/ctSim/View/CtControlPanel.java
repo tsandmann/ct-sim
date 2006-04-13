@@ -476,16 +476,17 @@ public class CtControlPanel extends ControlPanel {
 						{
 							xPosSlider = new JSlider(
 									JSlider.HORIZONTAL,
-									Math.round(-100 * World.PLAYGROUND_WIDTH
-											/ 2),
-									Math
-											.round(100 * World.PLAYGROUND_WIDTH / 2),
+//									Math.round(-100 * bot.getWorld().getPlaygroundDimX() / 2),
+//									Math.round(100 * bot.getWorld().getPlaygroundDimX() / 2),
+									Math.round(0),
+									Math.round(100 * bot.getWorld().getPlaygroundDimX()),
 									0);
+							
 							xPosSliderPanel.add(xPosSlider);
 							xPosSlider
-									.setMajorTickSpacing((int) World.PLAYGROUND_WIDTH * 10);
+									.setMajorTickSpacing((int) bot.getWorld().getPlaygroundDimX() * 10);
 							xPosSlider
-									.setMinorTickSpacing((int) World.PLAYGROUND_WIDTH * 5);
+									.setMinorTickSpacing((int) bot.getWorld().getPlaygroundDimX() * 5);
 							xPosSlider.setPaintTicks(true);
 							xPosSlider.setPaintLabels(true);
 						}
@@ -527,16 +528,16 @@ public class CtControlPanel extends ControlPanel {
 						{
 							yPosSlider = new JSlider(
 									JSlider.HORIZONTAL,
-									Math.round(-100 * World.PLAYGROUND_HEIGHT
-											/ 2),
-									Math
-											.round(100 * World.PLAYGROUND_HEIGHT / 2),
+									Math.round(0),
+									Math.round(100 * bot.getWorld().getPlaygroundDimY()),
+//									Math.round(-100 * bot.getWorld().getPlaygroundDimY()/ 2),
+//									Math.round(100 * bot.getWorld().getPlaygroundDimY() / 2),
 									0);
 							yPosSliderPanel.add(yPosSlider);
 							yPosSlider
-									.setMajorTickSpacing((int) World.PLAYGROUND_HEIGHT * 10);
+									.setMajorTickSpacing((int) bot.getWorld().getPlaygroundDimY() * 10);
 							yPosSlider
-									.setMinorTickSpacing((int) World.PLAYGROUND_HEIGHT * 5);
+									.setMinorTickSpacing((int) bot.getWorld().getPlaygroundDimY() * 5);
 							yPosSlider.setPaintTicks(true);
 							yPosSlider.setPaintLabels(true);
 						}

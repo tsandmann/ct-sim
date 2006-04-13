@@ -68,10 +68,10 @@ public class World extends Thread {
 	private ControlFrame controlFrame;
 
 	/** Hoehe des Spielfelds in m */
-	public static final float PLAYGROUND_HEIGHT = 4f;
+	private float playgroundDimY = 0f;
 
 	/** Breite des Spielfelds in m */
-	public static final float PLAYGROUND_WIDTH = 4f;
+	private float playgroundDimX = 0f;
 
 	/** Breite des Spielfelds in m */
 	public static final float PLAYGROUND_THICKNESS = 0f;
@@ -177,6 +177,9 @@ public class World extends Thread {
 	/** Aussehen der Bots nach einem Fall */
 	private Appearance botAppearFall;
 
+	/** Der Parcours in dem sich der Bot bewegt */
+	private Parcours parcours;
+	
 	/** Erzeugt eine neue Welt */
 	public World(Controller controller) {
 		super();
@@ -193,259 +196,6 @@ public class World extends Thread {
 		sceneLight.getScene().compile();
 	}
 
-//	/**
-//	 * Baut die 3D-Repraesentation des Bodens aus 2D-Polygonen zusammen
-//	 * 
-//	 * @return der Boden
-//	 */
-//	private Shape3D createTerrainShape() {
-//
-//		Shape3D ts = new Shape3D();
-//		// Anzahl der verwendeten Punkte
-//		int N = 10 + 6 + 9 + 2 + 6;
-//		int totalN = N;
-//		// data muss pro Punkt die Werte x, y und z speichern
-//		float[] data = new float[totalN * 3];
-//		// zwei Polygone (Deckel und Boden) mit N Ecken
-//		int stripCounts[] = { N };
-//		// Zaehler
-//		int n = 0;
-//
-//		// Boden erzeugen
-//		//
-//		// Umriss des Bodens erzeugen, beachte dabei die Oeffnung!
-//		// 1.unten links
-//		data[n++] = -PLAYGROUND_WIDTH / 2;
-//		data[n++] = -PLAYGROUND_HEIGHT / 2;
-//		data[n++] = 0f;
-//		// 2.unten rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = -PLAYGROUND_HEIGHT / 2;
-//		data[n++] = 0f;
-//		// 2a.unteres Drittel rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = -PLAYGROUND_HEIGHT / 6;
-//		data[n++] = 0f;
-//		// 2b.unteres Drittel Mitte
-//		data[n++] = -PLAYGROUND_WIDTH / 2;
-//		data[n++] = -PLAYGROUND_HEIGHT / 6;
-//		data[n++] = 0f;
-//		// 2c.unteres Drittel rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = -PLAYGROUND_HEIGHT / 6;
-//		data[n++] = 0f;
-//		// 2a.unteres Drittel rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = -PLAYGROUND_HEIGHT / 8;
-//		data[n++] = 0f;
-//		// 2b.unteres Drittel Mitte
-//		data[n++] = -PLAYGROUND_WIDTH / 2;
-//		data[n++] = -PLAYGROUND_HEIGHT / 8;
-//		data[n++] = 0f;
-//		// 2c.unteres Drittel rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = -PLAYGROUND_HEIGHT / 8;
-//		data[n++] = 0f;
-//		// I.Mitte rechts / Licht2 rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = 0f;
-//		data[n++] = 0f;
-//		// II.Licht2 Mitte
-//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-//		data[n++] = 0f;
-//		data[n++] = 0f;
-//		// III.Licht2 oben
-//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-//		data[n++] = 2f;
-//		data[n++] = 0f;
-//		// IV.Licht2 Mitte
-//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-//		data[n++] = 0f;
-//		data[n++] = 0f;
-//		// V.Licht2 links
-//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f - 1f;
-//		data[n++] = 0f;
-//		data[n++] = 0f;
-//		// V-1.Licht2 links oben
-//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f - 1f;
-//		data[n++] = 0.2f;
-//		data[n++] = 0f;
-//		// V-2.Licht2 links
-//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f - 1f;
-//		data[n++] = 0f;
-//		data[n++] = 0f;
-//		// VI.Licht2 Mitte
-//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-//		data[n++] = 0f;
-//		data[n++] = 0f;
-//		// VII.Licht2 unten
-//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-//		data[n++] = -2f;
-//		data[n++] = 0f;
-//		// VIII.Licht2 Mitte
-//		data[n++] = PLAYGROUND_WIDTH / 2 - 0.35f;
-//		data[n++] = 0f;
-//		data[n++] = 0f;
-//		// IX.Mitte rechts/Licht2 rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = 0f;
-//		data[n++] = 0f;
-//		// 2d.oberes Drittel rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = PLAYGROUND_HEIGHT / 8;
-//		data[n++] = 0f;
-//		// 2e.oberes Drittel Mitte
-//		data[n++] = -PLAYGROUND_WIDTH / 2;
-//		data[n++] = PLAYGROUND_HEIGHT / 8;
-//		data[n++] = 0f;
-//		// 2f.oberes Drittel rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = PLAYGROUND_HEIGHT / 8;
-//		data[n++] = 0f;
-//		// 2d.oberes Drittel rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = PLAYGROUND_HEIGHT / 6;
-//		data[n++] = 0f;
-//		// 2e.oberes Drittel Mitte
-//		data[n++] = -PLAYGROUND_WIDTH / 2;
-//		data[n++] = PLAYGROUND_HEIGHT / 6;
-//		data[n++] = 0f;
-//		// 2f.oberes Drittel rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = PLAYGROUND_HEIGHT / 6;
-//		data[n++] = 0f;
-//		// 3.oben rechts
-//		data[n++] = PLAYGROUND_WIDTH / 2;
-//		data[n++] = PLAYGROUND_HEIGHT / 2;
-//		data[n++] = 0f;
-//		// 4.oben links
-//		data[n++] = -PLAYGROUND_WIDTH / 2;
-//		data[n++] = PLAYGROUND_HEIGHT / 2;
-//		data[n++] = 0f;
-//		// 5.R2m links
-//		data[n++] = -PLAYGROUND_WIDTH / 2;
-//		data[n++] = -1.0f;
-//		data[n++] = 0f;
-//		// 6.R2 Loch OR
-//		data[n++] = -0.3f;
-//		data[n++] = -1.0f;
-//		data[n++] = 0f;
-//		// 7.R2 Loch UR
-//		data[n++] = -0.3f;
-//		data[n++] = -1.5f;
-//		data[n++] = 0f;
-//		// 8.R2 Loch UL
-//		data[n++] = -0.8f;
-//		data[n++] = -1.5f;
-//		data[n++] = 0f;
-//		// 9.R2 Loch OL
-//		data[n++] = -0.8f;
-//		data[n++] = -1.0f;
-//		data[n++] = 0f;
-//		// 10.R2m links
-//		data[n++] = -PLAYGROUND_WIDTH / 2;
-//		data[n++] = -1.0f;
-//		data[n++] = 0f;
-//
-//		// Polygone in darstellbare Form umwandeln
-//		GeometryInfo gi = new GeometryInfo(GeometryInfo.POLYGON_ARRAY);
-//		gi.setCoordinates(data);
-//		gi.setStripCounts(stripCounts);
-//
-//		NormalGenerator ng = new NormalGenerator();
-//		ng.generateNormals(gi);
-//		gi.recomputeIndices();
-//
-//		Stripifier st = new Stripifier();
-//		st.stripify(gi);
-//		gi.recomputeIndices();
-//
-//		// Hinzufuegen der Ober- und Unterseite des Terrain-Shape3D
-//		ts.addGeometry(gi.getGeometryArray());
-//
-//		return ts;
-//	}
-
-	/**
-	 * Baut die 3D-Repraesentation der Linien fuer den Boden aus 2D-Polygonen
-	 * zusammen
-	 * 
-	 * @return die Linie
-	 */
-//	private Shape3D createLineShape() {
-//
-//		Shape3D ls = new Shape3D();
-//		// Anzahl der verwendeten Punkte
-//		int N = 10;
-//		int totalN = N;
-//		// data muss pro Punkt die Werte x, y und z speichern
-//		float[] data = new float[totalN * 3];
-//		// zwei Polygone (Deckel und Boden) mit N Ecken
-//		int stripCounts[] = { N };
-//		// Zaehler
-//		int n = 0;
-//
-//		// Linien erzeugen
-//		// 11
-//		data[n++] = -0.71f;
-//		data[n++] = -1.71f;
-//		data[n++] = 0f;
-//		// 12
-//		data[n++] = 0.71f;
-//		data[n++] = -1.71f;
-//		data[n++] = 0f;
-//		// 13
-//		data[n++] = 0.71f;
-//		data[n++] = 1.71f;
-//		data[n++] = 0f;
-//		// 14
-//		data[n++] = -0.71f;
-//		data[n++] = 1.71f;
-//		data[n++] = 0f;
-//		// 15
-//		data[n++] = -0.71f;
-//		data[n++] = -1.71f;
-//		data[n++] = 0f;
-//		// 16 -----
-//		data[n++] = -0.7f;
-//		data[n++] = -1.71f;
-//		data[n++] = 0f;
-//		// 17
-//		data[n++] = -0.7f;
-//		data[n++] = 1.7f;
-//		data[n++] = 0f;
-//		// 18
-//		data[n++] = 0.7f;
-//		data[n++] = 1.7f;
-//		data[n++] = 0f;
-//		// 19
-//		data[n++] = 0.7f;
-//		data[n++] = -1.7f;
-//		data[n++] = 0f;
-//		// 20
-//		data[n++] = -0.71f;
-//		data[n++] = -1.7f;
-//		data[n++] = 0f;
-//
-//		// Polygone in darstellbare Form umwandeln
-//		GeometryInfo gi = new GeometryInfo(GeometryInfo.POLYGON_ARRAY);
-//		gi.setCoordinates(data);
-//		gi.setStripCounts(stripCounts);
-//
-//		NormalGenerator ng = new NormalGenerator();
-//		ng.generateNormals(gi);
-//		gi.recomputeIndices();
-//
-//		Stripifier st = new Stripifier();
-//		st.stripify(gi);
-//		gi.recomputeIndices();
-//
-//		// Hinzufuegen der Ober- und Unterseite des Linien-Shape3D
-//		ls.addGeometry(gi.getGeometryArray());
-//
-//		return ls;
-//	}
-
 	private void createAppearance() {
 		// Material fuer die Lichtreflektionen der Welt definieren
 		// Boden- und Bot-Material
@@ -453,51 +203,6 @@ public class World extends Thread {
 		mat.setAmbientColor(new Color3f(Color.LIGHT_GRAY));
 		mat.setDiffuseColor(new Color3f(0.8f, 1f, 1f));
 		mat.setSpecularColor(new Color3f(1f, 1f, 1f));
-
-//		// Linien-Material
-//		Material matLine = new Material();
-//		matLine.setAmbientColor(new Color3f(0f, 0f, 0f));
-//		matLine.setDiffuseColor(new Color3f(0.1f, 0.1f, 0.1f));
-//		matLine.setSpecularColor(new Color3f(1f, 1f, 1f));
-//
-//		// Lichtquellen-Material
-//		Material matLight = new Material();
-//		matLight.setEmissiveColor(new Color3f(1f, 1f, 0.7f));
-//		matLight.setAmbientColor(new Color3f(1f, 1f, 0f));
-//		matLight.setDiffuseColor(new Color3f(1f, 1f, 0f));
-//		matLight.setSpecularColor(new Color3f(0.7f, 0.7f, 0.7f));
-
-//		// Aussehen der Lichtquellen
-//		lightSourceAppear = new Appearance();
-//		lightSourceAppear.setMaterial(matLight);
-//
-//		// Aussehen des Bodens -- hellgrau:
-//		playgroundAppear = new Appearance();
-//		playgroundAppear.setMaterial(mat);
-//
-//		// Aussehen der Linien auf dem Boden -- dunkelgrau:
-//		playgroundLineAppear = new Appearance();
-//		playgroundLineAppear.setMaterial(matLine);
-
-		// Aussehen der Hindernisse -- dunkelgrau:
-//		obstacleAppear = new Appearance();
-//		obstacleAppear.setMaterial(mat);
-//
-//		// ...und mit einer Textur ueberzogen:
-//		TexCoordGeneration tcg = new TexCoordGeneration(
-//				TexCoordGeneration.OBJECT_LINEAR,
-//				TexCoordGeneration.TEXTURE_COORDINATE_3, new Vector4f(1.0f,
-//						1.0f, 0.0f, 0.0f),
-//				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f,
-//						1.0f, 0.0f));
-//		obstacleAppear.setTexCoordGeneration(tcg);
-//
-//		TextureLoader loader = new TextureLoader(ClassLoader
-//				.getSystemResource(OBST_TEXTURE), null);
-//		Texture2D texture = (Texture2D) loader.getTexture();
-//		texture.setBoundaryModeS(Texture.WRAP);
-//		texture.setBoundaryModeT(Texture.WRAP);
-//		obstacleAppear.setTexture(texture);
 
 		// Aussehen der Bots:
 		botAppear = new Appearance(); // Bots sind rot ;-)
@@ -579,13 +284,13 @@ public class World extends Thread {
 		// buendig mit der Unterkante des Bodens ist:
 		Transform3D translate = new Transform3D();
 		translate.set(new Vector3d(0d, 0d, 0.2d - PLAYGROUND_THICKNESS));
-		TransformGroup tgO = new TransformGroup(translate);
-		tgO.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		tgO.setPickable(true);
-		sceneLight.getObstBG().addChild(tgO);
+		TransformGroup obstTG = new TransformGroup(translate);
+		obstTG.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		obstTG.setPickable(true);
+		sceneLight.getObstBG().addChild(obstTG);
 
 
-		String filename= "parcours/testline.txt";
+		String filename= "parcours/testparcours.txt";
 
 		// Nach einem Parcours fragen
 //		JFileChooser fc = new JFileChooser();
@@ -595,7 +300,15 @@ public class World extends Thread {
 		// Den Parcours Laden
 		ParcoursLoader pL = new ParcoursLoader();
 		pL.load_file(filename);
-		pL.insertSceneGraph(tgO,lightBG,terrainBG);
+//		pL.insertSceneGraph(tgO,lightBG,terrainBG);
+		parcours= pL.getParcours();
+		
+	    	obstTG.addChild(parcours.getObstBG());
+	    	lightBG.addChild(parcours.getLightBG());
+	    	terrainBG.addChild(parcours.getTerrainBG());		
+	    
+	    playgroundDimX=parcours.getDimX() * parcours.getGrid();
+	    playgroundDimY=parcours.getDimY() * parcours.getGrid();
 		
 		sceneLight.getObstBG().setCapability(Node.ENABLE_PICK_REPORTING);
 		sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
@@ -608,39 +321,7 @@ public class World extends Thread {
 		return objRoot;
 	}
 
-//	private void createPillar(float[][] pillarPositions, TransformGroup tgO,
-//			float xpos, float ypos) {
-//		Cylinder pillar = new Cylinder(0.05f, 0.5f, getObstacleAppear());
-//		pillar.setPickable(true);
-//		Transform3D transformer = new Transform3D();
-//		transformer.rotX(0.5 * Math.PI);
-//		transformer.setTranslation(new Vector3f(xpos, ypos, 0));
-//		TransformGroup tg = new TransformGroup(transformer);
-//		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-//		tg.setPickable(true);
-//		tg.addChild(pillar);
-//		tgO.addChild(tg);
-//	}
-//
-//	private void createLight(BoundingSphere pointLightBounds,
-//			Color3f pointLightColor, float xpos, float ypos, float zpos) {
-//		PointLight pointLight = new PointLight();
-//		pointLight.setColor(pointLightColor);
-//		pointLight.setPosition(xpos, ypos, zpos);
-//		pointLight.setInfluencingBounds(pointLightBounds);
-//		pointLight.setAttenuation(1f, 3f, 0f);
-//		pointLight.setEnable(true);
-//		lightBG.addChild(pointLight);
-//
-//		Transform3D lsTranslate = new Transform3D();
-//		lsTranslate.set(new Vector3f(xpos, ypos, zpos));
-//		TransformGroup lsTransformGroup = new TransformGroup(lsTranslate);
-//		Sphere lightSphere = new Sphere(0.07f);
-//		lightSphere.setAppearance(getLightSourceAppear());
-//		lightSphere.setPickable(true);
-//		lsTransformGroup.addChild(lightSphere);
-//		lightBG.addChild(lsTransformGroup);
-//	}
+
 
 	/**
 	 * Fuegt einen Bot in die Welt ein
@@ -654,25 +335,17 @@ public class World extends Thread {
 		BranchGroup bg = bot.getBotBG();
 
 		
-		
-		NodeReferenceTable nr = new NodeReferenceTable();
-/*
-		sc.setScene((BranchGroup) scene.cloneTree(nr));
-		sc.setObstBG((BranchGroup) nr.getNewObjectReference(getObstBG()));
-
-		Iterator it = map.entrySet().iterator(); 
-		while (it.hasNext()) {
-			Map.Entry entry =(Map.Entry) it.next();
-			String key = (String) entry.getKey();
-			Node value = (Node) entry.getValue();
-			sc.map.put(key,nr.getNewObjectReference(value));
+		Vector3f pos = parcours.getStartPosition(bots.size());
+		if (pos != null) {
+			pos.z = bot.getPos().z;	// Achtung die Bots stehen etwas ueber der Spielflaeche
+			bot.setPos(pos);
 		}
-	*/	
 		
-		
-		
-		
-		
+		// Erzeuge einen Clone des Bots fuers Backup
+		NodeReferenceTable nr = new NodeReferenceTable();
+		BranchGroup newBg = (BranchGroup)bg.cloneTree(nr);
+		TransformGroup newTg = (TransformGroup) nr.getNewObjectReference(bot.getTransformGroup());
+		sceneLightBackup.addBot(bot.getBotName(),newTg,newBg);
 		
 		// Sichere den neuen Bot in sceneLight
 		sceneLight.addBot(bot.getBotName(), bot.getTransformGroup());
@@ -1319,6 +992,18 @@ public class World extends Thread {
 	 */
 	public SceneLight getSceneLight() {
 		return sceneLight;
+	}
+
+	public Parcours getParcours() {
+		return parcours;
+	}
+
+	public float getPlaygroundDimX() {
+		return playgroundDimX;
+	}
+
+	public float getPlaygroundDimY() {
+		return playgroundDimY;
 	}
 
 }
