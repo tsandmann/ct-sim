@@ -1,51 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE collection SYSTEM "parcours.dtd">
 
 <world>
 	<description>
 		Dieses ist ein Testparcours fuer ein Labyrinth fuer zwei Bots
 	</description>
-	<optics>
-		<appearance name="wall">
-			<texture>rock_wall.jpg</texture>
-			<color>#999999</color>
-		</appearance>
-		
-		<appearance name="entranceFloor">
-			<color>#FFFFFF</color>
-		</appearance>
-		
-		<appearance name="normalFloor">
-			<color>#606060</color>
-		</appearance>
-		
-		<appearance name="start1Floor">
-			<color>990000</color>
-		</appearance>
-		
-		<appearance name="start2Floor">
-			<color>#000099</color>
-		</appearance>
-		
-		<appearance name="start2Floor">
-			<color>#000099</color>
-		</appearance>
-		
-		<appearance name="finishFloor">
-			<color>#66FF00</color>
-		</appearance>
-	
-		<appearance name="light">
-			<color>#FFFF00</color>
-		</appearance>
-	</optics>
 		
 	<parcours>
 		<line>======Z=====#</line>
-		<line>#LL#     #LL#</line>
-		<line>#  #     #  #</line>
-		<line>#  #X   X#  #</line>
-		<line>#           #</line>
+		<line>#LL#  |  #LL#</line>
+		<line>#  #  |  #  #</line>
+		<line>#  #X | X#  #</line>
+		<line>#     |     #</line>
 		<line>#X         X#</line>
 		<line>#     *     #</line>
 		<line>#  =======  #</line>
@@ -61,4 +27,97 @@
 		<line>#==1=====2==#</line>
 	    <line>LL===LLL===LL</line>
 	</parcours>
+
+	<optics>
+		<appearance type="X">
+			<description>quadratische Wand</description>
+			<texture>textures/rock_wall.jpg</texture>
+			<color>#999999</color>
+		</appearance>
+		<appearance type="#">
+			<description>senkrechte Wand</description>
+			<clone>X</clone>
+		</appearance>
+		<appearance type="=">
+			<description>wagrechte Wand</description>
+			<clone>X</clone>
+		</appearance>
+
+		
+		<appearance type="."> 
+			<description>Fussboden im Eingangsbereich</description>
+			<color type="ambient">#FFFFFF</color>
+			<color type="diffuse">#CCFFFF</color>
+		</appearance>
+		
+		<appearance type=" "> 
+			<description>Fussboden im Labyrinth</description>
+			<color type="ambient">#606060</color>
+			<color type="diffuse">#CCFFFF</color>
+		</appearance>
+		
+		<appearance type="1"> 
+			<description>Fussboden des Startfeldes 1</description>
+			<color type="ambient">990000</color>
+			<color type="diffuse">#CCFFFF</color>
+		</appearance>
+		
+		<appearance type="2"> 
+			<description>Fussboden des Startfeldes 2</description>
+			<color type="ambient">#000099</color>
+			<color type="diffuse">#CCFFFF</color>
+		</appearance>
+
+		<appearance type="0"> 
+			<description>Fussboden des Default-Startfeldes</description>
+			<color type="ambient">#FFFFFF</color>
+			<color type="diffuse">#CCFFFF</color>
+		</appearance>
+		
+		<appearance type="Z"> 
+			<description>Fussboden des Zielfeldes 0</description>
+			<color type="ambient">#66FF00</color>
+			<color type="diffuse">#CCFFFF</color>
+		</appearance>
+	
+		<appearance type="*"> 
+			<description>Lichtkugel</description>
+			<color type="emmissive">#FFFF90</color>
+		</appearance>
+		
+		<appearance type="-"> 
+			<description>Linie</description>
+			<color type="ambient">#000000</color>
+			<color type="diffuse">#000000</color>
+			<color type="specular">#000000</color>
+			<color type="emmissive">#000000</color>
+		</appearance>
+
+		<appearance type="|"> 
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+
+		<appearance type="/"> 
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+
+		<appearance type="\"> 
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+
+		<appearance type="+"> 
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+
+		<appearance type="~"> 
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+		
+	</optics>
+
 </world>

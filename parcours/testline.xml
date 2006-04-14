@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE collection SYSTEM "parcours.dtd">
+
 <world>
 	<description>
-		Dieses ist ein Testparcours fuer ein Labyrinth mit Linie
+		Dieses ist ein Testparcours fuer ein Labyrinth fuer zwei Bots
 	</description>
+		
 	<parcours>
 		<line>============#</line>
 		<line>#/---\X/-\#O#</line>
@@ -14,4 +17,89 @@
 		<line># /-~ X X | #</line>
 		<line>==Z=======12#</line>
 	</parcours>
+
+	<optics>
+		<appearance type="X">
+			<description>quadratische Wand</description>
+			<texture>textures/rock_wall.jpg</texture>
+			<color>#999999</color>
+		</appearance>
+		<appearance type="#">
+			<description>senkrechte Wand</description>
+			<clone>X</clone>
+		</appearance>
+		<appearance type="=">
+			<description>wagrechte Wand</description>
+			<clone>X</clone>
+		</appearance>
+
+		
+		<appearance type="."> 
+			<description>Fussboden im Eingangsbereich</description>
+			<color>#FFFFFF</color>
+		</appearance>
+		
+		<appearance type=" "> 
+			<description>Fussboden im Labyrinth</description>
+			<color>#606060</color>
+		</appearance>
+		
+		<appearance type="1"> 
+			<description>Fussboden des Startfeldes 1</description>
+			<color>990000</color>
+		</appearance>
+		
+		<appearance type="2"> 
+			<description>Fussboden des Startfeldes 2</description>
+			<color>#000099</color>
+		</appearance>
+
+		<appearance type="0"> 
+			<description>Fussboden des Default-Startfeldes</description>
+			<color>#FFFFFF</color>
+		</appearance>
+		
+		<appearance type="Z"> 
+			<description>Fussboden des Zielfeldes 0</description>
+			<color>#66FF00</color>
+		</appearance>
+	
+		<appearance type="*"> 
+			<description>Lichtkugel</description>
+			<color>#FFFF00</color>
+		</appearance>
+
+		<appearance type="-"> 
+			<description>Linie</description>
+			<color>#000000</color>
+		</appearance>
+
+		<appearance type="|"> 
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+
+		<appearance type="/"> 
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+
+		<appearance type="\"> 
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+
+		<appearance type="+"> 
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+
+		<appearance type="~"> 
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+
+
+	</optics>
+
 </world>

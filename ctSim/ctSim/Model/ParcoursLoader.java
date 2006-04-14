@@ -24,6 +24,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BoundingSphere;
@@ -108,72 +113,14 @@ public class ParcoursLoader {
 													  0f +LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,  // lange Linie nach links
 													  0f +LINEWIDTH/2 , 0.5f			   ,0f,  // lange Linie nach oben
 	};
-	/** Aussehen von Hindernissen */
-	private Appearance wallAppear;
-
-	/** Aussehen von weißem Fußboden */
-	private Appearance whiteFloorAppear;
-
-	/** Aussehen von normalem Fußboden */
-	private Appearance normalFloorAppear;	
-
-	/** Aussehen des Startfeldes Bot1*/
-	private Appearance start1FloorAppear;	
-
-	/** Aussehen des Startfeldes Bot2*/
-	private Appearance start2FloorAppear;	
 	
-	/** Aussehen des Ziels*/
-	private Appearance finishFloorAppear;		
-
-	/** Aussehen der Linien*/
-	private Appearance lineAppear;		
-	
-	
-	String[] test = { 
-			"============#", 
-			"#     X   #O#", 
-			"#   X   * # #", 
-			"# *   === # #",
-			"# =====     #", 
-			"#     *  ===#", 
-			"#=== ==     #", 
-			"#     X X   #",
-			"==Z=======12#" };
-
-	
-/*	String[] test = { 
-			"    .        ", 
-			"    *        ", 
-			"    X        " };
-*/	
-/*
-
-	String[] test = { 
-			"XXXXXXXXXXXXX", 
-			"X   X       X", 
-			"X X   XXXX  X",
-			"X XXXXX     X", 
-			"X     X  XXXX", 
-			"XXXX XX     X", 
-			"X  *  X X   X",
-			"XX XXXXXXX  X" };
-*/
-/*	String[] test = { 
-			"==           ", 
-			"===          ", 
-			"===========  ", 			
-			"============ ", 
-			"XXXXXXXXXXXXX" };
-*/	
+	/** Verwaltet alle Aussehen */
+	HashMap appearances = new HashMap();
 	
 	private int[][] parcoursMap = null;
 
 	/** Der eigentliche Parcours */
 	private Parcours parcours;
-
-	/** Erscheinungsbild von Lichtquellen */
-	private Appearance lightSourceAppear; 
 	
 	/**
 	 * Neuen ParcoursLoader instantiieren
@@ -181,99 +128,6 @@ public class ParcoursLoader {
 	public ParcoursLoader() {
 		super();
 		parcours = new Parcours();
-		
-		// Weißer-Boden-Material
-		Material mat = new Material();
-		mat.setAmbientColor(new Color3f(1f, 1f, 1f));
-		mat.setDiffuseColor(new Color3f(1f, 1f, 1f));
-		mat.setSpecularColor(new Color3f(1f, 1f, 1f));
-		// Aussehen des Bodens
-		whiteFloorAppear = new Appearance();
-		whiteFloorAppear.setMaterial(mat);
-
-		// Normaler-Boden-Material
-		mat = new Material();
-		mat.setAmbientColor(new Color3f(Color.GRAY));
-		mat.setDiffuseColor(new Color3f(0.8f, 1f, 1f));
-		mat.setSpecularColor(new Color3f(1f, 1f, 1f));
-		// Aussehen des Bodens
-		normalFloorAppear= new Appearance();
-		normalFloorAppear.setMaterial(mat);
-		
-		// Start1-Boden-Material
-		mat = new Material();
-		mat.setAmbientColor(new Color3f(Color.RED));
-		mat.setDiffuseColor(new Color3f(0.8f, 1f, 1f));
-		mat.setSpecularColor(new Color3f(1f, 1f, 1f));
-		// Aussehen des Bodens
-		start1FloorAppear= new Appearance();
-		start1FloorAppear.setMaterial(mat);
-		
-		// Start1-Boden-Material
-		mat = new Material();
-		mat.setAmbientColor(new Color3f(Color.BLUE));
-		mat.setDiffuseColor(new Color3f(0.8f, 1f, 1f));
-		mat.setSpecularColor(new Color3f(1f, 1f, 1f));
-		// Aussehen des Bodens
-		start2FloorAppear= new Appearance();
-		start2FloorAppear.setMaterial(mat);
-
-		// Ziel-Boden-Material
-		mat = new Material();
-		mat.setAmbientColor(new Color3f(Color.YELLOW));
-		mat.setDiffuseColor(new Color3f(0.8f, 1f, 1f));
-		mat.setSpecularColor(new Color3f(1f, 1f, 1f));
-		// Aussehen des Bodens
-		finishFloorAppear= new Appearance();
-		finishFloorAppear.setMaterial(mat);
-		
-		
-		// Lichtquellen-Material
-		mat = new Material();
-		mat.setEmissiveColor(new Color3f(1f, 1f, 0.7f));
-		mat.setAmbientColor(new Color3f(1f, 1f, 0f));
-		mat.setDiffuseColor(new Color3f(1f, 1f, 0f));
-		mat.setSpecularColor(new Color3f(0.7f, 0.7f, 0.7f));
-
-		// Aussehen der Lichtquellen
-		lightSourceAppear = new Appearance();
-		lightSourceAppear.setMaterial(mat);
-		
-		// Wand-Material
-		mat = new Material();
-		mat.setAmbientColor(new Color3f(Color.LIGHT_GRAY));
-		mat.setDiffuseColor(new Color3f(0.8f, 1f, 1f));
-		mat.setSpecularColor(new Color3f(1f, 1f, 1f));
-		
-		// Aussehen der Hindernisse -- dunkelgrau:
-		wallAppear = new Appearance();
-		wallAppear.setMaterial(mat);
-
-		// ...und mit einer Textur ueberzogen:
-		TexCoordGeneration tcg = new TexCoordGeneration(
-				TexCoordGeneration.OBJECT_LINEAR,
-				TexCoordGeneration.TEXTURE_COORDINATE_3, new Vector4f(1.0f,
-						1.0f, 0.0f, 0.0f),
-				new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f,
-						1.0f, 0.0f));
-		wallAppear.setTexCoordGeneration(tcg);
-
-		TextureLoader loader = new TextureLoader(ClassLoader
-				.getSystemResource(World.OBST_TEXTURE), null);
-		Texture2D texture = (Texture2D) loader.getTexture();
-		texture.setBoundaryModeS(Texture.WRAP);
-		texture.setBoundaryModeT(Texture.WRAP);
-		wallAppear.setTexture(texture);
-
-		// Linien-Material
-		mat = new Material();
-		mat.setAmbientColor(new Color3f(Color.RED));
-		mat.setDiffuseColor(new Color3f(0.8f, 1f, 1f));
-		mat.setSpecularColor(new Color3f(1f, 1f, 1f));
-		// Aussehen des Bodens
-		lineAppear= new Appearance();
-		lineAppear.setMaterial(mat);
-		
 	}
 
 	/**
@@ -286,11 +140,10 @@ public class ParcoursLoader {
 	 * @param lengthX Laenge der Wand in X-Richtung
 	 * @param lengthX Laenge der Wand in Y-Richtung
 	 */
-	private void createWall(int x, int y, int lengthX, int lengthY) {
-		Box box = new Box(parcours.getGrid() / 2 * lengthX, parcours.getGrid() / 2* lengthY, 0.2f, wallAppear);
+	private void createWall(int x, int y, int lengthX, int lengthY, Appearance appearance) {
+		Box box = new Box(parcours.getGrid() / 2 * lengthX, parcours.getGrid() / 2* lengthY, 0.2f, appearance);
 		parcours.addObstacle(box,(float)x+lengthX/2.0f,(float)y+lengthY/2.0f);
 	}
-
 	
 	/**
 	 * Erzeugt ein Stück Fußboden 
@@ -332,7 +185,7 @@ public class ParcoursLoader {
 	 * @param y  Position in X-Richtung
 	 * @param type Art der Linie
 	 */
-	private void createLine(int x, int y, float[] points) {
+	private void createLine(int x, int y, float[] points, Appearance appearance) {
 		// zwei Polygone (Deckel und Boden) mit N Ecken
 		float[] p = new float[points.length];
 		int stripCounts[] = { points.length/3 };
@@ -342,7 +195,7 @@ public class ParcoursLoader {
 		for (n=0; n< points.length; n++)
 			p[n]=points[n]*parcours.getGrid();
 		
-	    createFloor(x, y,normalFloorAppear);
+	    createFloor(x, y,getAppearance(' '));
 
 		// Polygone in darstellbare Form umwandeln
 		GeometryInfo gi = new GeometryInfo(GeometryInfo.POLYGON_ARRAY);
@@ -361,7 +214,7 @@ public class ParcoursLoader {
 		Shape3D ls = new Shape3D();
 		ls.addGeometry(gi.getGeometryArray());
 		
-		ls.setAppearance(lineAppear);
+		ls.setAppearance(appearance);
 
 		parcours.addFloor(ls,x+0.5f,y+0.5f, 0.002f);
 	}	
@@ -373,8 +226,8 @@ public class ParcoursLoader {
 	 * @param y Y-Koordinate
 	 * @return eine Transformgroup, die die Sauele enthaelt
 	 */
-	private void createPillar(int x, int y){
-		Cylinder pillar = new Cylinder(0.05f, 0.5f, wallAppear);
+	private void createPillar(int x, int y,Appearance wallAppearance, Appearance lightAppearance){
+		Cylinder pillar = new Cylinder(0.05f, 0.5f, wallAppearance);
 		pillar.setPickable(true);
 
 		Transform3D translate = new Transform3D();
@@ -385,7 +238,7 @@ public class ParcoursLoader {
 		
 		parcours.addObstacle(tg,x+0.5f,y+0.5f);
 		createLight(new BoundingSphere(new Point3d(0d,
-				0d, 0d), 10d),new Color3f(1.0f, 1.0f, 0.9f),x,y);
+				0d, 0d), 10d),new Color3f(1.0f, 1.0f, 0.9f),x,y, lightAppearance);
 	}
 	
 	/**
@@ -395,7 +248,7 @@ public class ParcoursLoader {
 	 * @param x
 	 * @param y
 	 */
-	private void createLight(BoundingSphere pointLightBounds,Color3f pointLightColor, int x, int y) {
+	private void createLight(BoundingSphere pointLightBounds,Color3f pointLightColor, int x, int y,Appearance appearance) {
 		// Lichter bestehen aus dem echten Licht
 		PointLight pointLight = new PointLight();
 		pointLight.setColor(pointLightColor);
@@ -407,7 +260,7 @@ public class ParcoursLoader {
 
 		//Und einer gelben Kugel, um es zu visulaisieren
 		Sphere lightSphere = new Sphere(0.07f);
-		lightSphere.setAppearance(lightSourceAppear);
+		lightSphere.setAppearance(appearance);
 		parcours.addLight(lightSphere,x+0.5f,y+0.5f,0.5f);
 	}
 
@@ -438,7 +291,6 @@ public class ParcoursLoader {
 	/**
 	 * Liest die parcourMap ein und baut daraus einen Parcour zusammen
 	 */
-//	public void insertSceneGraph(TransformGroup obstRoot_, BranchGroup lightRoot_, BranchGroup terrainRoot_) {
 	public void parse(){
 	int l;
     	int d;
@@ -448,7 +300,7 @@ public class ParcoursLoader {
 				for (int x = 0; x < parcours.getDimX(); x++) 
 					switch (parcoursMap[x][y]) {
 						case 'X':
-							createWall(x, y,1 ,1);
+							createWall(x, y,1 ,1,getAppearance(parcoursMap[x][y]));
 							break;
 					    case '=':
 						    	l=0;
@@ -459,7 +311,7 @@ public class ParcoursLoader {
 						    		l++; // Laenge hochzaeheln
 						    		d++;
 						    	}
-							createWall(x, y, l, 1);
+							createWall(x, y, l, 1,getAppearance('='));
 							break;
 					    case '#':
 						    	l=0;
@@ -470,57 +322,57 @@ public class ParcoursLoader {
 						    		l++; // Laenge hochzaeheln
 						    		d++;
 						    	}
-							createWall(x, y, 1, l);
+							createWall(x, y, 1, l,getAppearance('#'));
 							break;
 					    case '*':
-							createPillar(x, y);
+							createPillar(x, y,getAppearance('X'),getAppearance('*'));
 							// Sind wir im Startbereich
 							if (checkNeighbours(x,y,'.') != 0)
-								createFloor(x, y,whiteFloorAppear);
+								createFloor(x, y,getAppearance('.'));
 							else
-								createFloor(x, y,normalFloorAppear);
+								createFloor(x, y,getAppearance(' '));
 							break;
 					    case '.':
-							createFloor(x, y,whiteFloorAppear);
+							createFloor(x, y,getAppearance(parcoursMap[x][y]));
 							break;
 					    case ' ':
-					    		createFloor(x, y,normalFloorAppear);
+					    		createFloor(x, y,getAppearance(parcoursMap[x][y]));
 							break;
 							
 					    case '0':
 							parcours.setStartPosition(0,x,y);
-							createFloor(x, y,whiteFloorAppear);
+							createFloor(x, y,getAppearance(parcoursMap[x][y]));
 							break;
 					    case '1':
 							parcours.setStartPosition(1,x,y);
-							createFloor(x, y,start1FloorAppear);
+							createFloor(x, y,getAppearance(parcoursMap[x][y]));
 							break;
 					    case '2':
 							parcours.setStartPosition(2,x,y);
-							createFloor(x, y,start2FloorAppear);
+							createFloor(x, y,getAppearance(parcoursMap[x][y]));
 							break;
 					    case 'Z':
 							parcours.setFinishPosition(x,y);
-							createFloor(x, y,finishFloorAppear);
+							createFloor(x, y,getAppearance(parcoursMap[x][y]));
 							break;
 							
 					    case '-':
-							createLine(x,y,LINE_HORIZ);
+							createLine(x,y,LINE_HORIZ,getAppearance(parcoursMap[x][y]));
 							break;
 					    case '|':
-							createLine(x,y,LINE_VERT);
+							createLine(x,y,LINE_VERT,getAppearance(parcoursMap[x][y]));
 							break;
 					    case '/':
-							createLine(x,y,LINE_CORNER_NE);
+							createLine(x,y,LINE_CORNER_SE,getAppearance(parcoursMap[x][y]));
 							break;
 					    case '\\':
-							createLine(x,y,LINE_CORNER_NW);
+							createLine(x,y,LINE_CORNER_SW,getAppearance(parcoursMap[x][y]));
 							break;
 					    case '+':
-							createLine(x,y,LINE_CORNER_SE);
+							createLine(x,y,LINE_CORNER_NE,getAppearance(parcoursMap[x][y]));
 							break;
 					    case '~':
-							createLine(x,y,LINE_CORNER_SW);
+							createLine(x,y,LINE_CORNER_NW,getAppearance(parcoursMap[x][y]));
 							break;
 
 						
@@ -530,80 +382,7 @@ public class ParcoursLoader {
 			}
        }
 	}    	
-
 	
-	/**
-	 * Laedt den Default-Testparcours
-	 */
-	public void load() {
-	}
-	
-	/**
-	 * Lädt einen Parcours aus einer Datei in parcours
-	 * @param filename
-	 */
-	public void load_file(String filename){
-		File inputFile = new File(filename);
-
-		// TODO Map nur so groß machen, wie wir sie auch brauchen
-		parcoursMap = new int[100][100];
-
-		
-		int c;
-		int x=0;
-		int y=0;
-		int xmax=0;
-		
-		try {
-			FileReader in = new FileReader(inputFile);
-			//Lesen, bis nix mehr da ist
-		    while ((c = in.read()) != -1){
-		    	switch (c){
-		    		case '\n':
-			    		y++;
-			    		if (x>xmax)
-			    			xmax=x;
-			    		x=0;
-			    		break;
-		    		case '\r':
-		    			break;
-		    		default:
-			    		parcoursMap[x][y]=c;
-		    			x++;
-		    	}
-		    }
-		    in.close();
-		    
-		    parcours.setDimY(y+1);	
-    			parcours.setDimX(xmax);
-
-    			parse();		// Parcours Zusammenbauen
-    			
-		} catch (IOException ex){
-			ErrorHandler.error("Probleme beim Lesen der Datei: "+filename+" "+ex);
-		}
-	}
-
-	/**
-	 * Lädt den Test-Parcours in parcours
-	 */
-	public void load_test(){
-		char[] line = new char[test[0].length()];
-
-		parcours.setDimX(test[0].length());
-		parcours.setDimY(test.length);
-		parcoursMap = new int[parcours.getDimX()][parcours.getDimY()];
-		
-		for (int y=0; y< parcours.getDimY(); y++){
-			test[y].getChars(0, test[y].length(), line, 0);
-			for (int x=0; x< parcours.getDimX(); x++)
-				parcoursMap[x][y]=	line[x];
-		}
-		
-		parse();		// Parcours Zusammenbauen
-		
-	}
-
 	/**
 	 * Liefert das soeben aufgebaute Parcours-Objekt zurueck
 	 * @return
@@ -612,6 +391,7 @@ public class ParcoursLoader {
 		return parcours;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void load_xml_file(String filename){
 		// Ein DOMParser liest ein XML-File ein
 		DOMParser parser = new DOMParser();
@@ -625,12 +405,9 @@ public class ParcoursLoader {
 			
 			//als erster suchen wir uns den Parcours-Block
 			Node n = doc.getDocumentElement().getFirstChild();
-			while ((n != null)&& (!n.getNodeName().equals("parcours"))){
-				print(n,System.out);
+			while ((n != null)&& (!n.getNodeName().equals("parcours")))
 				n=n.getNextSibling();
-			}
 			// jetzt haben wir ihn
-			// TODO hier koennte man die Attribute des Parcours verwenden
 
 			int y=0;	// Anzahl der Zeilen im File
 			int x=0;	// Anzahl der Spalten im File
@@ -658,7 +435,7 @@ public class ParcoursLoader {
 
 			x=0; y=0;
 			//	ParcoursMap aufbauen
-	        for (int i=0; i<children.getLength(); i++){
+	        for (int i=children.getLength()-1; i>=0; i--){
 	        		Node child =children.item(i);
 	        		if (child.getNodeName().equals("line")){	        			
 	        			char c[] = child.getChildNodes().item(0).getNodeValue().toCharArray();
@@ -670,10 +447,41 @@ public class ParcoursLoader {
 		
 	        // ********** Appearances aus dem Document lesen 
 	        
-	        
-	        
-	        
-	        
+			//suchen wir uns den Otptics-Block
+			n = doc.getDocumentElement().getFirstChild();
+			while ((n != null)&& (!n.getNodeName().equals("optics")))
+				n=n.getNextSibling();
+			// jetzt haben wir ihn
+
+			//	Eine Liste aller Kinder des Parcours-Eitnrags organsisieren
+			children=n.getChildNodes();	
+			
+			//	HashMap mit den Apearances aufbauen
+	        for (int i=0; i<children.getLength()-1; i++){
+	        		Node appearance =children.item(i);
+	        		if (appearance.getNodeName().equals("appearance")){
+	        			// Zuerst den Type extrahieren
+	        			char item = appearance.getAttributes().getNamedItem("type").getNodeValue().toCharArray()[0];
+	        			
+	        			String texture = null;
+	        			String clone = null;
+	        			
+	        			HashMap colors = new HashMap();
+	        			
+	        			NodeList features = appearance.getChildNodes();
+	        			for (int j=0; j< features.getLength(); j++){
+	        				if (features.item(j).getNodeName().equals("texture"))
+	        					texture= features.item(j).getChildNodes().item(0).getNodeValue();
+	        				if (features.item(j).getNodeName().equals("color"))
+	        					colors.put(features.item(j).getAttributes().getNamedItem("type").getNodeValue(),features.item(j).getChildNodes().item(0).getNodeValue());
+	        				if (features.item(j).getNodeName().equals("clone"))
+	        					clone= features.item(j).getChildNodes().item(0).getNodeValue();
+	        			}
+	        				   
+	        			
+	        			addAppearance(item, colors, texture, clone);
+	        		}
+	        }
 	        
 			// Soweit fertig.
 			parse();		// Parcours Zusammenbauen
@@ -681,6 +489,76 @@ public class ParcoursLoader {
 		} catch (Exception ex) {
 			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex);
 		}
+	}
+	
+	private Appearance getAppearance(int key) {
+		Appearance app= (Appearance)appearances.get((char)key);
+		if (app == null)
+			ErrorHandler.error("Appearance fuer '"+(char)key+"' nicht gefunden!");
+		return app;
+	}
+	
+	/**
+	 * Erzeugt eine Appearnace und fuegt die der Liste hinzu
+	 * @param item Der Key, iunter dem diese Apperance abgelegt wird
+	 * @param colors HashMap mit je Farbtyp und ASCII-Represenation der Farbe
+	 * @param textureFile Der Name des Texture-Files
+	 * @param clone Referenz auf einen schon bestehenden Eintrag, der geclonet werden soll
+	 */
+	@SuppressWarnings("unchecked")
+	private void addAppearance(char item, HashMap colors, String textureFile, String clone){
+
+		if (clone != null){
+			appearances.put(item, appearances.get(clone.toCharArray()[0]));
+			return;
+		}
+		
+		Appearance appearance = new Appearance();
+		
+		if (colors != null){
+			Material mat = new Material();
+
+			Iterator it = colors.keySet().iterator();
+			while (it.hasNext()) {
+				String colorType = (String)it.next();
+				String colorName = (String)colors.get(colorType);
+
+				if (colorType.equals("ambient"))
+					mat.setAmbientColor(new Color3f(Color.decode(colorName)));
+				if (colorType.equals("diffuse"))
+					mat.setDiffuseColor(new Color3f(Color.decode(colorName)));
+				if (colorType.equals("specular"))
+					mat.setSpecularColor(new Color3f(Color.decode(colorName)));
+				if (colorType.equals("emmissive"))
+					mat.setEmissiveColor(new Color3f(Color.decode(colorName)));
+			}
+			appearance.setMaterial(mat);
+
+			
+		}
+				
+		if (textureFile != null){
+			TexCoordGeneration tcg = new TexCoordGeneration(
+					TexCoordGeneration.OBJECT_LINEAR,
+					TexCoordGeneration.TEXTURE_COORDINATE_3, 
+					new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),
+					new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), 
+					new Vector4f(1.0f, 0.0f, 1.0f, 0.0f));
+			appearance.setTexCoordGeneration(tcg);
+
+			try {
+				TextureLoader loader = new TextureLoader(ClassLoader.getSystemResource(textureFile), null);
+				Texture2D texture = (Texture2D) loader.getTexture();
+				texture.setBoundaryModeS(Texture.WRAP);
+				texture.setBoundaryModeT(Texture.WRAP);
+				appearance.setTexture(texture);
+			} catch (Exception ex) {
+				ErrorHandler.error("Textur: "+textureFile+"nicht gefunden "+ex);
+			}
+			
+		}
+		
+		appearances.put(item,appearance);
 	}
 	
 	  static void print(Node node, PrintStream out) {

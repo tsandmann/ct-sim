@@ -291,6 +291,7 @@ public class World extends Thread {
 
 
 		String filename= "parcours/testparcours2.xml";
+//		String filename= "parcours/testline.xml";
 
 		// Nach einem Parcours fragen
 //		JFileChooser fc = new JFileChooser();
