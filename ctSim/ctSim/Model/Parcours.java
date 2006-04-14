@@ -85,18 +85,49 @@ public class Parcours {
 		startPositions[0][1] =0;
 	}
 
+	/**
+	 * Liefert die Parcursbreite zurück in Gittereinheiten
+	 * @return
+	 */
 	public int getDimX() {
 		return dimX;
 	}
 
+	/**
+	 * Setzt die Parcursbreite in Gittereinheiten
+	 * @param dimX Breite in Gittereinheiten
+	 */
 	public void setDimX(int dimX) {
 		this.dimX = dimX;
 	}
 
+	/**
+	 * Liefert die Parcurshoehe zurück in Gittereinheiten
+	 * @return
+	 */
 	public int getDimY() {
 		return dimY;
 	}
 
+	/**
+	 * Liefert die Breite (X) des Parcours in mm zurueck
+	 * @return
+	 */
+	public float getWidth(){
+		return dimX* grid;
+	}
+
+	/**
+	 * Liefert die Hoehe (Y) des Parcours in mm zurueck
+	 * @return
+	 */
+	public float getHeight(){
+		return dimY* grid;
+	}
+	/**
+	 * Setzt die Parcurshoehe in Gittereinheiten
+	 * @param dimX Hoehe in Gittereinheiten
+	 */
 	public void setDimY(int dimY) {
 		this.dimY = dimY;
 	}
@@ -186,38 +217,27 @@ public class Parcours {
 	}
 	
 	
-	
+	/**
+	 * Liefert die Licht-Branchgroup zurück
+	 * @return
+	 */
 	public BranchGroup getLightBG() {
-/*		Transform3D translate = new Transform3D();
-		translate.setTranslation(new Vector3f(-getDimX()/2*grid,-getDimY()/2*grid,0f));
-		TransformGroup tg = new TransformGroup();
-		tg.setTransform(translate);
-		tg.addChild(lightBG);*/
-
 		return lightBG;
 	}
 
+	/**
+	 * Liefert die Hinderniss-Branchgroup zurück
+	 * @return
+	 */
 	public BranchGroup getObstBG() {
-//		Transform3D translate = new Transform3D();
-//		translate.setTranslation(new Vector3f(-getDimX()/2*grid,-getDimY()/2*grid,0f));
-//   		TransformGroup tg = new TransformGroup();
-//    		tg.setTransform(translate);
-//    		tg.addChild(obstBG);
-//    		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-//    		tg.setPickable(true);
-		
 		return obstBG;
 	}
 	
+	/**
+	 * Liefert die Boden-Branchgroup zurück
+	 * @return
+	 */
 	public BranchGroup getTerrainBG() {
-/*		Transform3D translate = new Transform3D();
-		translate.setTranslation(new Vector3f(-getDimX()/2*grid,-getDimY()/2*grid,0f));
-		TransformGroup tg = new TransformGroup();
-		tg.setTransform(translate);
-		tg.addChild(terrainBG);
-		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-    		tg.setPickable(true);
-*/    		
 		return terrainBG;
 	}
 	
@@ -257,6 +277,10 @@ public class Parcours {
 		finishPosition[0]=y;
 	}
 
+	/** 
+	 * Liefert die Gitterbreite in mm zurueck
+	 * @return
+	 */
 	public float getGrid() {
 		return grid;
 	}

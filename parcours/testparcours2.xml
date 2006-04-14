@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<world>
+	<description>
+		Dieses ist ein Testparcours fuer ein Labyrinth fuer zwei Bots
+	</description>
+	<appearance name="wall" texture="rock_wall.jpg"/>
+	<appearance name="entranceFloor" color="#FFFFFF"/>
+	<appearance name="normalFloor" color="#606060"/>
+	<appearance name="start1Floor" color="#990000"/>
+	<appearance name="start2Floor" color="#000099"/>
+	<appearance name="start2Floor" color="#000099"/>
+	<appearance name="finishFloor" color="#66FF00"/>
+		
+	<parcours>
+		<line>======Z=====#</line>
+		<line>#LL#     #LL#</line>
+		<line>#  #     #  #</line>
+		<line>#  #X   X#  #</line>
+		<line>#           #</line>
+		<line>#X         X#</line>
+		<line>#     *     #</line>
+		<line>#  =======  #</line>
+		<line>#     *     #</line>
+		<line>#           #</line>
+		<line>#====...====#</line>
+		<line>#...........#</line>
+		<line>#...........#</line>
+		<line>#..*=====*..#</line>
+		<line>#.....#.....#</line>
+		<line>#.....#.....#</line>
+		<line>#....0#.....#</line>
+		<line>#==1=====2==#</line>
+	    <line>LL===LLL===LL</line>
+	</parcours>
+</world>

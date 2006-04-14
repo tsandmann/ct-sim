@@ -23,10 +23,10 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BoundingSphere;
-import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Material;
 import javax.media.j3d.PointLight;
 import javax.media.j3d.Shape3D;
@@ -37,8 +37,13 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
-import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Cylinder;
@@ -47,6 +52,7 @@ import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.image.TextureLoader;
+import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import ctSim.ErrorHandler;
 
@@ -405,7 +411,29 @@ public class ParcoursLoader {
 		parcours.addLight(lightSphere,x+0.5f,y+0.5f,0.5f);
 	}
 
-	
+	/**
+	 * Prueft die angrenzenden Felder (ohne diagonalen), ob mindestens eines davon den uebergebenen Wert hat
+	 * @param x X-Koordinate des mittelfeldes 
+	 * @param y Y-Koordinate des mittelfeldes
+	 * @param c Der zu suchende Feldtyp
+	 * 
+	 * @return 0 wenn kein Feld den Wert hat
+	 */
+	private int checkNeighbours(int x, int y, char c){
+		if ((x>0) && (parcoursMap[x-1][y] == c))
+				return 1;
+		if ((x<parcours.getDimX()-1) && (parcoursMap[x+1][y] == c))
+			return 1;		
+		if ((y>0) && (parcoursMap[x][y-1] == c))
+			return 1;
+		if ((y<parcours.getDimY()-1) && (parcoursMap[x][y+1] == c))
+			return 1;		
+		
+		
+		return 0;
+	}
+		
+		
 	
 	/**
 	 * Liest die parcourMap ein und baut daraus einen Parcour zusammen
@@ -446,14 +474,23 @@ public class ParcoursLoader {
 							break;
 					    case '*':
 							createPillar(x, y);
-							createFloor(x, y,normalFloorAppear);
+							// Sind wir im Startbereich
+							if (checkNeighbours(x,y,'.') != 0)
+								createFloor(x, y,whiteFloorAppear);
+							else
+								createFloor(x, y,normalFloorAppear);
 							break;
 					    case '.':
 							createFloor(x, y,whiteFloorAppear);
 							break;
 					    case ' ':
 					    		createFloor(x, y,normalFloorAppear);
-							break;							
+							break;
+							
+					    case '0':
+							parcours.setStartPosition(0,x,y);
+							createFloor(x, y,whiteFloorAppear);
+							break;
 					    case '1':
 							parcours.setStartPosition(1,x,y);
 							createFloor(x, y,start1FloorAppear);
@@ -466,6 +503,7 @@ public class ParcoursLoader {
 							parcours.setFinishPosition(x,y);
 							createFloor(x, y,finishFloorAppear);
 							break;
+							
 					    case '-':
 							createLine(x,y,LINE_HORIZ);
 							break;
@@ -478,10 +516,10 @@ public class ParcoursLoader {
 					    case '\\':
 							createLine(x,y,LINE_CORNER_NW);
 							break;
-					    case '<':
+					    case '+':
 							createLine(x,y,LINE_CORNER_SE);
 							break;
-					    case '>':
+					    case '~':
 							createLine(x,y,LINE_CORNER_SW);
 							break;
 
@@ -566,10 +604,113 @@ public class ParcoursLoader {
 		
 	}
 
+	/**
+	 * Liefert das soeben aufgebaute Parcours-Objekt zurueck
+	 * @return
+	 */
 	public Parcours getParcours() {
 		return parcours;
 	}
 
+	public void load_xml_file(String filename){
+		// Ein DOMParser liest ein XML-File ein
+		DOMParser parser = new DOMParser();
+		try {
+			// einlesen
+			parser.parse(filename);
+			// umwandeln in ein Document
+			Document doc = parser.getDocument();
+			
+			// Und Anfangen mit dem abarbeiten
+			
+			//als erster suchen wir uns den Parcours-Block
+			Node n = doc.getDocumentElement().getFirstChild();
+			while ((n != null)&& (!n.getNodeName().equals("parcours"))){
+				print(n,System.out);
+				n=n.getNextSibling();
+			}
+			// jetzt haben wir ihn
+			// TODO hier koennte man die Attribute des Parcours verwenden
+
+			int y=0;	// Anzahl der Zeilen im File
+			int x=0;	// Anzahl der Spalten im File
+			
+			
+			//	Eine Liste aller Kinder des Parcours-Eitnrags organsisieren
+			NodeList children=n.getChildNodes();	
 	
+			//	Anzahl der Zeilen und spalten bestimmen
+	        for (int i=0; i<children.getLength(); i++){
+	        		Node child =children.item(i);
+	        		if (child.getNodeName().equals("line")){	        			
+	        			y++;
+	        			if (x < child.getChildNodes().item(0).getNodeValue().length())
+	        				x = child.getChildNodes().item(0).getNodeValue().length();
+	        		}
+	        }
+			
+	        // Parcors vorbereiten
+			parcours.setDimX(x);
+			parcours.setDimY(y);
+
+			// Und eine Map anlegen
+			parcoursMap = new int[x][y];
+
+			x=0; y=0;
+			//	ParcoursMap aufbauen
+	        for (int i=0; i<children.getLength(); i++){
+	        		Node child =children.item(i);
+	        		if (child.getNodeName().equals("line")){	        			
+	        			char c[] = child.getChildNodes().item(0).getNodeValue().toCharArray();
+	        			for (x=0; x<c.length; x++)
+	        				parcoursMap[x][y]= c[x];
+	        			y++;
+	        		}
+	        }
+		
+			// Soweit fertig.
+			parse();		// Parcours Zusammenbauen
+			
+		} catch (Exception ex) {
+			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex);
+		}
+	}
 	
+	  static void print(Node node, PrintStream out) {
+		    int type = node.getNodeType();
+		    switch (type) {
+		      case Node.ELEMENT_NODE:
+		        out.print("<" + node.getNodeName());
+		        NamedNodeMap attrs = node.getAttributes();
+		        int len = attrs.getLength();
+		        for (int i=0; i<len; i++) {
+		            Attr attr = (Attr)attrs.item(i);
+		            out.print(" " + attr.getNodeName() + "=\"" +
+		                      attr.getNodeValue() + "\"");
+		        }
+		        out.print('>');
+		        NodeList children = node.getChildNodes();
+		        len = children.getLength();
+		        for (int i=0; i<len; i++)
+		          print(children.item(i), out);
+		        out.print("</" + node.getNodeName() + ">");
+		        break;
+		      case Node.ENTITY_REFERENCE_NODE:
+		        out.print("&" + node.getNodeName() + ";");
+		        break;
+		      case Node.CDATA_SECTION_NODE:
+		        out.print("<![CDATA[" + node.getNodeValue() + "]]>");
+		        break;
+		      case Node.TEXT_NODE:
+		        out.print(node.getNodeValue());
+		        break;
+		      case Node.PROCESSING_INSTRUCTION_NODE:
+		        out.print("<?" + node.getNodeName());
+		        String data = node.getNodeValue();
+		        if (data!=null && data.length()>0)
+		           out.print(" " + data);
+		        out.println("?>");
+		        break;
+		    }
+		  }
 }

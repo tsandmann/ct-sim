@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<world>
+	<description>
+		Dieses ist ein Testparcours fuer ein Labyrinth fuer zwei Bots
+	</description>
+	<parcours>
+		<line>===== Z ====#</line>
+		<line>#     X   #O#</line>
+		<line>#   X   * # #</line>
+		<line># *   === # #</line>
+		<line># =====     #</line>
+		<line>#     *  ===#</line>
+		<line>#=== ==     #</line>
+		<line>#     X X   #</line>
+		<line>==1=======2=#</line>
+	</parcours>
+</world>

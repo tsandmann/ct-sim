@@ -290,7 +290,7 @@ public class World extends Thread {
 		sceneLight.getObstBG().addChild(obstTG);
 
 
-		String filename= "parcours/testparcours.txt";
+		String filename= "parcours/testparcours2.xml";
 
 		// Nach einem Parcours fragen
 //		JFileChooser fc = new JFileChooser();
@@ -299,16 +299,17 @@ public class World extends Thread {
 		
 		// Den Parcours Laden
 		ParcoursLoader pL = new ParcoursLoader();
-		pL.load_file(filename);
-//		pL.insertSceneGraph(tgO,lightBG,terrainBG);
+//		pL.load_file(filename);
+		pL.load_xml_file(filename);
+		//		pL.insertSceneGraph(tgO,lightBG,terrainBG);
 		parcours= pL.getParcours();
 		
 	    	obstTG.addChild(parcours.getObstBG());
 	    	lightBG.addChild(parcours.getLightBG());
 	    	terrainBG.addChild(parcours.getTerrainBG());		
 	    
-	    playgroundDimX=parcours.getDimX() * parcours.getGrid();
-	    playgroundDimY=parcours.getDimY() * parcours.getGrid();
+	    playgroundDimX=parcours.getWidth();
+	    playgroundDimY=parcours.getHeight();
 		
 		sceneLight.getObstBG().setCapability(Node.ENABLE_PICK_REPORTING);
 		sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
