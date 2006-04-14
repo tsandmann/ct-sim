@@ -1,0 +1,11 @@
+<!ELEMENT world (description?, optics?, parcours)>
+	<!ELEMENT description (#PCDATA)>
+
+	<!ELEMENT optics (appearance*)>
+		<!ELEMENT appearance (texture | color)>
+			<!ATTLIST appearance name CDATA #REQUIRED>
+			<!ELEMENT texture (#PCDATA)>
+			<!ELEMENT color (#PCDATA)>
+	<!ELEMENT parcours (line+)>
+		<!ELEMENT line (#PCDATA)>
+
