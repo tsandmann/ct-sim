@@ -668,6 +668,13 @@ public class ParcoursLoader {
 	        		}
 	        }
 		
+	        // ********** Appearances aus dem Document lesen 
+	        
+	        
+	        
+	        
+	        
+	        
 			// Soweit fertig.
 			parse();		// Parcours Zusammenbauen
 			

@@ -3,13 +3,40 @@
 	<description>
 		Dieses ist ein Testparcours fuer ein Labyrinth fuer zwei Bots
 	</description>
-	<appearance name="wall" texture="rock_wall.jpg"/>
-	<appearance name="entranceFloor" color="#FFFFFF"/>
-	<appearance name="normalFloor" color="#606060"/>
-	<appearance name="start1Floor" color="#990000"/>
-	<appearance name="start2Floor" color="#000099"/>
-	<appearance name="start2Floor" color="#000099"/>
-	<appearance name="finishFloor" color="#66FF00"/>
+	<optics>
+		<appearance name="wall">
+			<texture>rock_wall.jpg</texture>
+			<color>#999999</color>
+		</appearance>
+		
+		<appearance name="entranceFloor">
+			<color>#FFFFFF</color>
+		</appearance>
+		
+		<appearance name="normalFloor">
+			<color>#606060</color>
+		</appearance>
+		
+		<appearance name="start1Floor">
+			<color>990000</color>
+		</appearance>
+		
+		<appearance name="start2Floor">
+			<color>#000099</color>
+		</appearance>
+		
+		<appearance name="start2Floor">
+			<color>#000099</color>
+		</appearance>
+		
+		<appearance name="finishFloor">
+			<color>#66FF00</color>
+		</appearance>
+	
+		<appearance name="light">
+			<color>#FFFF00</color>
+		</appearance>
+	</optics>
 		
 	<parcours>
 		<line>======Z=====#</line>
