@@ -56,7 +56,7 @@ public class ClientView {
 		worldView.setScene(sc.getScene(),5.0f,5.0f);
 		worldView.initGUI();
 		
-		ClientFrame clientFrame=new ClientFrame(worldView);
+		new ClientFrame(worldView);
 	}
 	
 	

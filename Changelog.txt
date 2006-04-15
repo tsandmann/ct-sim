@@ -1,6 +1,8 @@
 CHANGELOG fuer c't-Sim
 ======================
-2006-03-19 Benjamin Benz (bbe@heise.de) ParcoursLoader liest nun auch die Farben aus der XML-Datei
+2006-04-15 Benjamin Benz (bbe@heise.de) Controller aufgeraeumt. Es gibt jetzt keine Fragen mehr beim Bot-Start, dafuer zwei neue Knoepfe, um Bots hinzuzufuegen. Bots Starten jetzt mit dem Gesicht zum Eingangsbereich. Bots lesen ihre Appearance aus der xml-Config. Bots werden automatishc bennant.
+
+2006-04-14 Benjamin Benz (bbe@heise.de) ParcoursLoader liest nun auch die Farben aus der XML-Datei
 
 2006-04-13 Benjamin Benz (bbe@heise.de) ParcoursLoader aufgeraumt und besser in world integriert. Welt steht jetzt nicht mehr um den Ursprungspunkt herum. World.java ausgemistet. Bots starten jetzt auf ihren Startplätzen.
 

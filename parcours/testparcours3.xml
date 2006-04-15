@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE collection SYSTEM "parcours.dtd">
 
 <world>
@@ -7,15 +7,41 @@
 	</description>
 		
 	<parcours>
-		<line>============#</line>
-		<line>#/---\X/-\#O#</line>
-		<line>#|  X+-~#|# #</line>
-		<line>#|*   ===|# #</line>
-		<line>#|===== /~  #</line>
-		<line>#+--\ * |===#</line>
-		<line>#===|== +-\ #</line>
-		<line># /-~ X X | #</line>
-		<line>==Z=======12#</line>
+		<line>*======Z==================*</line>
+		<line>#                      00 #</line>
+		<line>#         #     X         #</line>
+		<line>#======   #   X          =#</line>
+		<line>#         #               #</line>
+		<line>#         #   0   #       #</line>
+		<line>#         #        #      #</line>
+		<line>#  X      #    =========  #</line>
+		<line>#                         #</line>
+		<line>#      #==========        #</line>
+		<line>#      #         =====  ==#</line>
+		<line>#      ##                 #</line>
+		<line>#       #    X      00    #</line>
+		<line>#       ##                #</line>
+		<line>#        ##               #</line>
+		<line>#=====    #    ===  ======#</line>
+		<line>#                         #</line>
+		<line>#  =========000=== ====== #</line>
+		<line>#           000           #</line>
+		<line>#       X                 #</line>
+		<line>#          #====  ====#   #</line>
+		<line>#          #          #   #</line>
+		<line>#=   ==================   #</line>
+		<line>#             #           #</line>
+		<line>#             #     00    #</line>
+		<line>#                         #</line>
+		<line>*===========...===========*</line>
+		<line>LLLLLLLLLL##X..##</line>
+		<line>LLLLLLLLLL##...##</line>
+		<line>LLLLLLLLLL##...##</line>
+		<line>LLLLLLLLLL##..X##</line>
+		<line>LLLLLLLLLL##...##</line>
+		<line>LLLLLLLLLL#.....#</line>
+		<line>LLLLLLLLLL#.===.#</line>
+		<line>LLLLLLLLLL#1===2#</line>
 	</parcours>
 
 	<optics>
@@ -109,6 +135,5 @@
 		</appearance>
 		
 	</optics>
-
 
 </world>

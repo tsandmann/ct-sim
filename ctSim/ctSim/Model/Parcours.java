@@ -24,6 +24,8 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3f;
 
+import ctSim.ErrorHandler;
+
 /**
  * Repraesentiert einen Parcouts fuer die Bots
  * Wird zum Laden eines solchen benoetigt. 
@@ -56,6 +58,10 @@ public class Parcours {
 	/** Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots), zweite Dimension X, Y*/
 	private int[][] startPositions = new int[BOTS][2];
 
+	/** Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots), zweite Dimension X, Y*/
+	private int[][] startHeadings = new int[BOTS][2];
+	
+	
 	/** Zielposition */
 	private int[] finishPosition = new int[2];
 
@@ -253,9 +259,43 @@ public class Parcours {
 			startPositions[bot][1]=y;
 		}
 	}
+
+	/**
+	 * Legt die Startrichtung eines Bots fest
+	 * @param bot Nummer des Bots (fängt bei 0 an zu zählen)
+	 * @param dir Richtung in Grad. 0 entspricht (x=1, y=0) dann im Uhrzeigersinn
+	 */
+	public void setStartHeading(int bot, int dir){
+		if (bot <= BOTS-1){
+			switch (dir) {
+			case 0:
+				startHeadings[bot][0]=1;
+				startHeadings[bot][1]=0;
+				break;
+			case 90:
+				startHeadings[bot][0]=0;
+				startHeadings[bot][1]=-1;
+				break;
+			case 180:
+				startHeadings[bot][0]=-1;
+				startHeadings[bot][1]=0;
+				break;
+			case 270:
+				startHeadings[bot][0]=0;
+				startHeadings[bot][1]=1;
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * Liefert die Startposition eines Bots
+	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
 	 * @param bot
 	 * @return
 	 */
@@ -263,9 +303,35 @@ public class Parcours {
 		Vector3f pos = null;
 		if (bot < BOTS)
 			pos= new Vector3f(startPositions[bot][0]*grid + grid/2,startPositions[bot][1]*grid + grid/2,0.0f);
+		else
+			pos= new Vector3f(startPositions[0][0]*grid + grid/2,startPositions[0][1]*grid + grid/2,0.0f);
 		
 		return pos;
 	}
+
+	/**
+	 * Liefert die Startrichtung eines Bots
+	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
+	 * @param bot
+	 * @return
+	 */
+	public Vector3f getStartHeading(int bot){
+		Vector3f pos = null;
+		if (bot < BOTS)
+			pos= new Vector3f(startHeadings[bot][0],startHeadings[bot][1],0.0f);
+		else  // sonst leifer die Default-Richtung
+			pos= new Vector3f(startHeadings[0][0],startHeadings[0][1],0.0f);
+			
+		if (pos.length()==0){
+			pos.x=1.0f;
+			ErrorHandler.error("getStartHeading wurde nach einer noch nicht gesetzten Heading gefragt. Setze Default");
+		}
+		
+		pos.normalize();
+		
+		return pos;
+	}
+	
 	
 	/**
 	 * Legt die Zielposition fest

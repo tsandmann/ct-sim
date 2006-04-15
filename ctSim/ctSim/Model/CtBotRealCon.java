@@ -28,9 +28,9 @@ import ctSim.Controller.Controller;
 
 /**
  * Die Oberklasse fuer Repraesentationen aller Bots, die ausserhalb der Grenzen
- * des Simulators existieren und mit diesem ueber TCP kommunizieren.
+ * des Simulators existieren und mit diesem ueber eine Connection kommunizieren.
  */
-public class CtBotRealTcp extends CtBotReal implements TcpBot {
+public class CtBotRealCon extends CtBotReal implements TcpBot {
 
 	/** Die TCP-Verbindung */
 	private Connection con;
@@ -48,7 +48,7 @@ public class CtBotRealTcp extends CtBotReal implements TcpBot {
 	 * @param tc
 	 *            Kommunikationsverbindung
 	 */
-	public CtBotRealTcp(Controller controller, Point3f pos, Vector3f head,
+	public CtBotRealCon(Controller controller, Point3f pos, Vector3f head,
 			Connection tc) {
 		super(controller, pos, head);
 		con = tc;

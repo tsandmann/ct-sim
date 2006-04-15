@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
 import javax.media.j3d.TransformGroup;
 import ctSim.View.ViewBotUpdate;

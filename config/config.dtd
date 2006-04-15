@@ -1,0 +1,15 @@
+<!ELEMENT ct-sim (description?, bots?)>
+	<!ELEMENT description (#PCDATA)>
+
+	<!ELEMENT bots (bot*)>
+		<!ELEMENT bot (appearance*)>
+			<!ATTLIST bot name CDATA #REQUIRED>
+
+
+			<!ELEMENT appearance (description, (texture | color |clone))>
+				<!ATTLIST appearance type CDATA #REQUIRED>
+				<!ELEMENT texture (#PCDATA)>
+				<!ELEMENT color (#PCDATA)>
+					<!ATTLIST color type (ambient| diffuse | specular| emmissive) "ambient">
+				<!ELEMENT clone (#PCDATA)>
+

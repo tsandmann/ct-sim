@@ -22,13 +22,8 @@ package ctSim.Model;
 import ctSim.Controller.Controller;
 import ctSim.View.ControlFrame;
 
-import java.awt.Color;
 import java.util.*;
 
-import javax.media.j3d.Appearance;
-import javax.media.j3d.ColoringAttributes;
-import javax.media.j3d.Material;
-//import javax.media.j3d.PointLight;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Node;
 import javax.media.j3d.Bounds;
@@ -66,12 +61,6 @@ public class World extends Thread {
 
 	/** Ein Link auf die Kontroll-Panele */
 	private ControlFrame controlFrame;
-
-	/** Hoehe des Spielfelds in m */
-	private float playgroundDimY = 0f;
-
-	/** Breite des Spielfelds in m */
-	private float playgroundDimX = 0f;
 
 	/** Breite des Spielfelds in m */
 	public static final float PLAYGROUND_THICKNESS = 0f;
@@ -113,14 +102,11 @@ public class World extends Thread {
 	private long simulTime = 0;
 
 	/*
-	 * Vier BranchGroups, eine fuer die ganze Welt, eine fuer den Boden, eine
-	 * fuer die Lichtquellen und die letzte fuer die Hindernisse
+	 * BranchGroups, eine fuer die ganze Welt (steckt in sceneLight), 
+	 * eine fuer den Boden, eine
+	 * fuer die Lichtquellen und die letzte fuer die Hindernisse (steckt in sceneLight)
 	 */
-
-	/*
-	 * BranchGroup fuer die ganze Welt
-	 */
-	// private BranchGroup scene;
+	
 	/**
 	 * Eine abgespeckte Version des Szenegraphen, enthaelt die aktive
 	 * Arbeitsversion
@@ -141,10 +127,6 @@ public class World extends Thread {
 	 */
 	public BranchGroup terrainBG;
 
-	/*
-	 * BranchGroup fuer die Hindernisse. Hier kommen auch die Bots hinein
-	 */
-	// public BranchGroup obstBG;
 	/**
 	 * BranchGroup fuer die Lichtquellen
 	 */
@@ -152,30 +134,6 @@ public class World extends Thread {
 
 	/** TransformGroup der gesamten Welt */
 	private TransformGroup worldTG;
-
-	/** Aussehen von Hindernissen */
-//	private Appearance obstacleAppear;
-
-	/** Pfad zu einer Textur fuer die Hindernisse */
-	public static final String OBST_TEXTURE = "textures/rock_wall.jpg";
-
-	/** Aussehen des Bodens */
-//	private Appearance playgroundAppear;
-
-	/** Aussehen der Linien auf dem Boden */
-//	private Appearance playgroundLineAppear;
-
-	/** Aussehen einer Lichtquelle */
-//	private Appearance lightSourceAppear;
-
-	/** Aussehen der Bots */
-	private Appearance botAppear;
-
-	/** Aussehen der Bots nach einer Kollision */
-	private Appearance botAppearCollision;
-
-	/** Aussehen der Bots nach einem Fall */
-	private Appearance botAppearFall;
 
 	/** Der Parcours in dem sich der Bot bewegt */
 	private Parcours parcours;
@@ -196,34 +154,6 @@ public class World extends Thread {
 		sceneLight.getScene().compile();
 	}
 
-	private void createAppearance() {
-		// Material fuer die Lichtreflektionen der Welt definieren
-		// Boden- und Bot-Material
-		Material mat = new Material();
-		mat.setAmbientColor(new Color3f(Color.LIGHT_GRAY));
-		mat.setDiffuseColor(new Color3f(0.8f, 1f, 1f));
-		mat.setSpecularColor(new Color3f(1f, 1f, 1f));
-
-		// Aussehen der Bots:
-		botAppear = new Appearance(); // Bots sind rot ;-)
-		botAppear.setColoringAttributes(new ColoringAttributes(new Color3f(
-				Color.RED), ColoringAttributes.FASTEST));
-		botAppear.setMaterial(mat);
-
-		// Aussehen der Bots nach einer Kollision:
-		botAppearCollision = new Appearance(); // Bots sind blau ;-)
-		botAppearCollision.setColoringAttributes(new ColoringAttributes(
-				new Color3f(Color.BLUE), ColoringAttributes.FASTEST));
-		botAppearCollision.setMaterial(mat);
-
-		// Aussehen der Bots beim Kippen:
-		botAppearFall = new Appearance(); // Bots sind gruen ;-)
-		botAppearFall.setColoringAttributes(new ColoringAttributes(new Color3f(
-				Color.GREEN), ColoringAttributes.FASTEST));
-		botAppearFall.setMaterial(mat);
-
-	}
-
 	/**
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
 	 * 
@@ -231,7 +161,6 @@ public class World extends Thread {
 	 */
 	public BranchGroup createSceneGraph() {
 
-		createAppearance();
 		// Die Wurzel des Ganzen:
 		BranchGroup objRoot = new BranchGroup();
 
@@ -308,9 +237,6 @@ public class World extends Thread {
 	    	obstTG.addChild(parcours.getObstBG());
 	    	lightBG.addChild(parcours.getLightBG());
 	    	terrainBG.addChild(parcours.getTerrainBG());		
-	    
-	    playgroundDimX=parcours.getWidth();
-	    playgroundDimY=parcours.getHeight();
 		
 		sceneLight.getObstBG().setCapability(Node.ENABLE_PICK_REPORTING);
 		sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
@@ -342,6 +268,13 @@ public class World extends Thread {
 			pos.z = bot.getPos().z;	// Achtung die Bots stehen etwas ueber der Spielflaeche
 			bot.setPos(pos);
 		}
+
+		Vector3f head = parcours.getStartHeading(bots.size());
+		if (head != null) {
+			bot.setHeading(head);
+		}
+
+		
 		
 		// Erzeuge einen Clone des Bots fuers Backup
 		NodeReferenceTable nr = new NodeReferenceTable();
@@ -551,7 +484,7 @@ public class World extends Thread {
 		PickInfo pickInfo;
 		Shape3D shape;
 		Color3f color = new Color3f();
-		;
+		
 		// Variable zur Auswertung der Absorption/Reflexion
 		float absorption = 0f;
 		for (int j = 0; j < rayCount; j++) {
@@ -967,26 +900,26 @@ public class World extends Thread {
 //		return lightSourceAppear;
 //	}
 
-	/**
-	 * @return Gibt das Erscheinungsbild der Bots zurueck
-	 */
-	public Appearance getBotAppear() {
-		return botAppear;
-	}
-
-	/**
-	 * @return Gibt das Erscheinungsbild der Bots nach einer Kollision zurueck
-	 */
-	public Appearance getBotAppearCollision() {
-		return botAppearCollision;
-	}
-
-	/**
-	 * @return Gibt das Erscheinungsbild der Bots nach einem Fall zurueck
-	 */
-	public Appearance getBotAppearFall() {
-		return botAppearFall;
-	}
+//	/**
+//	 * @return Gibt das Erscheinungsbild der Bots zurueck
+//	 */
+//	public Appearance getBotAppear() {
+//		return botAppear;
+//	}
+//
+//	/**
+//	 * @return Gibt das Erscheinungsbild der Bots nach einer Kollision zurueck
+//	 */
+//	public Appearance getBotAppearCollision() {
+//		return botAppearCollision;
+//	}
+//
+//	/**
+//	 * @return Gibt das Erscheinungsbild der Bots nach einem Fall zurueck
+//	 */
+//	public Appearance getBotAppearFall() {
+//		return botAppearFall;
+//	}
 
 	/**
 	 * @return Gibt eine Referenz auf sceneLight zurueck
@@ -996,16 +929,28 @@ public class World extends Thread {
 		return sceneLight;
 	}
 
+	/**
+	 * Liefert das Parcours-Objekt zurueck
+	 * @return
+	 */
 	public Parcours getParcours() {
 		return parcours;
 	}
 
+	/**
+	 * X-Dimension des Spielfldes im mm
+	 * @return
+	 */
 	public float getPlaygroundDimX() {
-		return playgroundDimX;
+		return parcours.getWidth();
 	}
 
+	/**
+	 * Y-Dimension des Spielfldes im mm
+	 * @return
+	 */
 	public float getPlaygroundDimY() {
-		return playgroundDimY;
+		return parcours.getHeight();
 	}
 
 }

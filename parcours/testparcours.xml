@@ -14,4 +14,6 @@
 		<line>#     X X   #</line>
 		<line>==1=======2=#</line>
 	</parcours>
+	
+	<xi:include href="parcours/defaultoptics.xml" parse "text"/>
 </world>

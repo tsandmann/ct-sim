@@ -20,7 +20,6 @@
 package ctSim.View;
 
 import ctSim.ErrorHandler;
-import ctSim.Model.World;
 
 import java.awt.AWTException;
 import java.awt.BorderLayout;

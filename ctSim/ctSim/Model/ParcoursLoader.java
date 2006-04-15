@@ -20,15 +20,9 @@
 package ctSim.Model;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BoundingSphere;
@@ -270,20 +264,21 @@ public class ParcoursLoader {
 	 * @param y Y-Koordinate des mittelfeldes
 	 * @param c Der zu suchende Feldtyp
 	 * 
-	 * @return 0 wenn kein Feld den Wert hat
+	 * @return -1 wenn kein Feld den Wert hat. Wenn er einen Nachbarn findet dann die Richtung in Grad.
+	 * 0 = (x=1, y=0) ab da im Uhrzeigersinn
 	 */
 	private int checkNeighbours(int x, int y, char c){
-		if ((x>0) && (parcoursMap[x-1][y] == c))
-				return 1;
 		if ((x<parcours.getDimX()-1) && (parcoursMap[x+1][y] == c))
-			return 1;		
+			return 0;		
 		if ((y>0) && (parcoursMap[x][y-1] == c))
-			return 1;
+			return 90;
+		if ((x>0) && (parcoursMap[x-1][y] == c))
+				return 180;
 		if ((y<parcours.getDimY()-1) && (parcoursMap[x][y+1] == c))
-			return 1;		
+			return 270;		
 		
 		
-		return 0;
+		return -1;
 	}
 		
 		
@@ -327,7 +322,7 @@ public class ParcoursLoader {
 					    case '*':
 							createPillar(x, y,getAppearance('X'),getAppearance('*'));
 							// Sind wir im Startbereich
-							if (checkNeighbours(x,y,'.') != 0)
+							if (checkNeighbours(x,y,'.') != -1)
 								createFloor(x, y,getAppearance('.'));
 							else
 								createFloor(x, y,getAppearance(' '));
@@ -345,10 +340,12 @@ public class ParcoursLoader {
 							break;
 					    case '1':
 							parcours.setStartPosition(1,x,y);
+							parcours.setStartHeading(1,checkNeighbours(x,y,'.'));
 							createFloor(x, y,getAppearance(parcoursMap[x][y]));
 							break;
 					    case '2':
 							parcours.setStartPosition(2,x,y);
+							parcours.setStartHeading(2,checkNeighbours(x,y,'.'));
 							createFloor(x, y,getAppearance(parcoursMap[x][y]));
 							break;
 					    case 'Z':
@@ -391,6 +388,10 @@ public class ParcoursLoader {
 		return parcours;
 	}
 
+	/**
+	 * Laedt einen Oarcours aus einer XML-Datei
+	 * @param filename
+	 */
 	@SuppressWarnings("unchecked")
 	public void load_xml_file(String filename){
 		// Ein DOMParser liest ein XML-File ein
@@ -491,6 +492,11 @@ public class ParcoursLoader {
 		}
 	}
 	
+	/**
+	 * Liefert eine Appearance aus der Liste zurueck
+	 * @param key Der Schluessel mit dem sie abgelegt wurde
+	 * @return 
+	 */
 	private Appearance getAppearance(int key) {
 		Appearance app= (Appearance)appearances.get((char)key);
 		if (app == null)

@@ -352,20 +352,12 @@ public abstract class CtBot extends Bot {
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		
-		// Rotationsgruppe fuer den Bot
-//		TransformGroup rg = new TransformGroup();
-//		transform = new Transform3D();
-//		rg = new TransformGroup(transform);
-//		rg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-//		rg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-//		tg.addChild(rg);
-		// Die Rotation haengt im Baum des Szenegraphen unterhalb der
-		// Translation
-
 		// Bot erzeugen
 		Shape3D realBot = createBotShape();
 		realBot.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
-		realBot.setAppearance(world.getBotAppear());
+		realBot.setAppearance(getAppearance("normal"));
+				
+				//world.getBotAppear());
 		realBot.setName(getName() + " Body");
 		// Koerper "pickable" setzen, um Kollisionen mit anderen Bots
 		// zu erkennen

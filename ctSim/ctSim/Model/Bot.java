@@ -19,6 +19,9 @@
 
 package ctSim.Model;
 
+import java.util.HashMap;
+
+import javax.media.j3d.Appearance;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Shape3D;
@@ -72,15 +75,8 @@ abstract public class Bot extends Thread implements Obstacle {
 	protected Shape3D botBody;
 
 	/**
-	 * Die Transformgruppe der Translation der 3D-Repraesentation eines Bots
+	 * Die Transformgruppe der 3D-Repraesentation eines Bots
 	 */
-//	private TransformGroup translationGroup;
-
-	/**
-	 * Die Transformgruppe der Rotation der 3D-Repraesentation eines Bots
-	 */
-//	private TransformGroup rotationGroup;
-
 	private TransformGroup transformGroup;
 	
 	/** Position */
@@ -91,6 +87,9 @@ abstract public class Bot extends Thread implements Obstacle {
 	 */
 	private Vector3f heading = new Vector3f(1f, 0f, 0f);
 
+	/** Liste mit den verschiedenen Aussehen eines Bots */
+	private HashMap appearances;
+	
 	/**
 	 * Initialisierung des Bots
 	 * @param controller Verweis auf den zugehoerigen Controller
@@ -349,6 +348,24 @@ abstract public class Bot extends Thread implements Obstacle {
 
 	public void setTransformGroup(TransformGroup transformGroup) {
 		this.transformGroup = transformGroup;
+	}
+
+	/**
+	 * Sucht ein Erscheinungsbild des Bots aus der Liste heraus
+	 * @param key
+	 * @return
+	 */
+	public Appearance getAppearance(String key) {
+		Appearance app = null;
+		if (appearances != null)
+			app =(Appearance) appearances.get(key);
+		
+		return app;
+	}
+
+	public void setAppearances(HashMap appearances) {
+		this.appearances = appearances;
+		botBody.setAppearance(getAppearance("normal"));
 	}
 
 }

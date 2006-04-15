@@ -234,7 +234,7 @@ abstract public class CtBotSim extends CtBot {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
 			if (isApperanceCollision) {
-				botBody.setAppearance(world.getBotAppear());
+				botBody.setAppearance(getAppearance("normal"));//world.getBotAppear());
 				isApperance = true;
 				isApperanceCollision = false;
 			}
@@ -243,7 +243,7 @@ abstract public class CtBotSim extends CtBot {
 			moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt
 
 			if (isApperance) {
-				botBody.setAppearance(world.getBotAppearCollision());
+				botBody.setAppearance(getAppearance("collision"));//world.getBotAppearCollision());
 				isApperance = false;
 				isApperanceCollision = true;
 			}
@@ -306,13 +306,13 @@ abstract public class CtBotSim extends CtBot {
 		if (isFalling) {
 			((CtControlPanel) this.getPanel()).stopBot();
 			if (isApperance) {
-				botBody.setAppearance(world.getBotAppearFall());
+				botBody.setAppearance(getAppearance("falling"));//world.getBotAppearFall());
 				isApperance = false;
 				isApperanceFall = true;
 			}
 		} else {
 			if (isApperanceFall) {
-				botBody.setAppearance(world.getBotAppear());
+				botBody.setAppearance(getAppearance("normal"));//world.getBotAppear());
 				isApperance = true;
 				isApperanceCollision = false;
 			}

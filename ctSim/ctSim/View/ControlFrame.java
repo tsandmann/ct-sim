@@ -66,6 +66,12 @@ public class ControlFrame extends JPanel {
 
 	private JButton pauseButton;
 
+	private JButton endButton;
+
+	private JButton addTestBotButton;
+	
+	private JButton addJD2XXBotButton;
+
 	/**
 	 * Slow Motion Box
 	 */
@@ -81,10 +87,9 @@ public class ControlFrame extends JPanel {
 
 	private JTextField slowMotionText;
 
-	private JButton endButton;
 	
 	/* Markus Lang 2006-03-17:
-	 * Instanzen f�r das JSplitPane Hauptfenster
+	 * Instanzen fuer das JSplitPane Hauptfenster
 	 */
 	private CtSimFrame ctSimFrame;
 
@@ -100,46 +105,91 @@ public class ControlFrame extends JPanel {
 		initGUI();
 	}
 
+	/**
+	 * Erzeugt die Buttons im Hauptfenster
+	 */
+	private void makeMainButtons(){
+		Dimension buttDim = new Dimension(120, 50);
+		
+		buttonPanel = new JPanel();
+		buttonPanel.setPreferredSize(new Dimension(480,50));
+		BoxLayout panelLayout = new BoxLayout(buttonPanel,
+				javax.swing.BoxLayout.X_AXIS);
+		this.add(buttonPanel);
+		buttonPanel.setLayout(panelLayout);
+
+		// ********* Pause-Button ********************
+		pauseButton = new JButton();
+		pauseButton.setPreferredSize(buttDim);
+		buttonPanel.add(pauseButton);
+		if (!haveABreak) {
+			pauseButton.setText("Pause");
+		} else {
+			pauseButton.setText("Resume");
+		}
+		pauseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				haveABreak = !haveABreak;
+				world.setHaveABreak(haveABreak);
+				if (!haveABreak) {
+					pauseButton.setText("Pause");
+				} else {
+					pauseButton.setText("Weiter");
+				}
+
+			}
+		});
+
+		// ********* End-Button ********************
+		endButton = new JButton();
+		endButton.setPreferredSize(buttDim);
+		buttonPanel.add(endButton);
+		endButton.setText("Beenden");
+		endButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				controller.endSim();
+			}
+		});
+
+		// ********* addTestBotButton-Button ********************
+		addTestBotButton = new JButton();
+		addTestBotButton.setPreferredSize(buttDim);
+		buttonPanel.add(addTestBotButton);
+		addTestBotButton.setText("Neuer TestBot");
+		addTestBotButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				controller.addBot("CtBotSimTest");
+			}
+		});
+
+		// ********* addJD2XXBotButton ********************
+		addJD2XXBotButton = new JButton();
+		addJD2XXBotButton.setPreferredSize(buttDim);
+		buttonPanel.add(addJD2XXBotButton);
+		addJD2XXBotButton.setText("Neuer JD2XX-Bot");
+		addJD2XXBotButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				controller.addBot("CtBotRealJD2XX");
+			}
+		});
+	}
+	
 	/*
 	 * Startet GUI
 	 */
 	private void initGUI() {
 
-		Dimension buttDim = new Dimension(20, 70);
 
 		try {
 			BoxLayout thisLayout = new BoxLayout(this, javax.swing.BoxLayout.Y_AXIS);
 			this.setLayout(thisLayout);
+			
+			makeMainButtons();
 			{
-				buttonPanel = new JPanel();
-				BoxLayout panelLayout = new BoxLayout(buttonPanel,
-						javax.swing.BoxLayout.X_AXIS);
-				this.add(buttonPanel);
-				buttonPanel.setLayout(panelLayout);
-				{
-					pauseButton = new JButton();
-					pauseButton.setPreferredSize(buttDim);
-					buttonPanel.add(pauseButton);
-					if (!haveABreak) {
-						pauseButton.setText("Pause");
-					} else {
-						pauseButton.setText("Resume");
-					}
-					pauseButton.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent evt) {
-							haveABreak = !haveABreak;
-							world.setHaveABreak(haveABreak);
-							if (!haveABreak) {
-								pauseButton.setText("Pause");
-							} else {
-								pauseButton.setText("Weiter");
-							}
 
-						}
-					});
-
-				}
-
+				
+				
+				
 				{
 					// erstmal initialisieren und richtiges Layout
 					this.slowMotionPanel = new JPanel();
@@ -213,18 +263,7 @@ public class ControlFrame extends JPanel {
 
 				});
 
-				{
-					endButton = new JButton();
-					endButton.setPreferredSize(buttDim);
-					buttonPanel.add(endButton);
-					endButton.setText("Beenden");
-				}
-				endButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						controller.endSim();
-					}
-				});
-
+				
 			}
 
 			{

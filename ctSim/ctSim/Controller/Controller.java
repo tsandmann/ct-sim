@@ -19,17 +19,33 @@
 
 package ctSim.Controller;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.ColoringAttributes;
+import javax.media.j3d.Material;
+import javax.media.j3d.TexCoordGeneration;
+import javax.media.j3d.Texture;
+import javax.media.j3d.Texture2D;
 import javax.media.j3d.TransformGroup;
-import javax.swing.JOptionPane;
+import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.sun.j3d.utils.image.TextureLoader;
+import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import ctSim.Model.*;
 import ctSim.View.*;
@@ -60,6 +76,12 @@ public class Controller {
 	/** Eine Liste aller verbundenen Remote-Views */
 	private List<RemoteView> remoteViews;
 
+	/**
+	 * Anzahl der Bots im System
+	 */
+	private HashMap numberBots = new HashMap();
+
+	
 	/**
 	 * Benachrichtige alle Views, dass sich Daten geaendert haben
 	 */
@@ -96,40 +118,61 @@ public class Controller {
 		worldView.repaint();
 	}
 
-	/**
-	 * Frage nach der Betriebsart
-	 * 
-	 * @return 0 = TCP/Bots; 1= Test-Bots
-	 */
-	private int askMode() {
-		Object[] options = { "externer TCP/IP-Bot", "integrierter Testbot",
-				"realer Bot via USB" };
-		return JOptionPane.showOptionDialog(null,
-				"Mit welchem Bot-Typ wollen Sie den Simulator betreiben?",
-				"Frage", JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+//	/**
+//	 * Frage nach der Betriebsart
+//	 * 
+//	 * @return 0 = TCP/Bots; 1= Test-Bots
+//	 */
+//	private int askMode() {
+//		Object[] options = { "externer TCP/IP-Bot",
+//				"realer Bot via USB" };
+//		return JOptionPane.showOptionDialog(null,
+//				"Mit welchem Bot-Typ wollen Sie den Simulator betreiben?",
+//				"Frage", JOptionPane.YES_NO_OPTION,
+//				JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+//
+//	}
 
-	}
-
-	private int askTestBots() {
-		Object[] options = { "1 Bot", "2 Bots" };
-		int n = JOptionPane.showOptionDialog(null,
-				"Wieviele Bots sollen gestartet werden?", "Frage",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-				options, options[1]);
-		if (n == 0)
-			return 1;
-		else
-			return 2;
-	}
+//	private int askTestBots() {
+//		Object[] options = { "1 Bot", "2 Bots" };
+//		int n = JOptionPane.showOptionDialog(null,
+//				"Wieviele Bots sollen gestartet werden?", "Frage",
+//				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+//				options, options[1]);
+//		if (n == 0)
+//			return 1;
+//		else
+//			return 2;
+//	}
 
 	// private SceneLight sc;
 
+	/**
+	 * Bennent einen neuen Bot
+	 * @param type
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private String getNewBotName(String type){
+		// Schaue nach, wieviele Bots von der Sorte wir schon haben
+		Integer bots = (Integer) numberBots.get(type);
+		if (bots == null){
+			bots = new Integer(0);
+		}
+
+		String name=type +"_"+ bots.intValue();
+
+		bots = new Integer(bots.intValue()+1);	// erhoehen
+		numberBots.put(type, bots);				// sichern
+		
+		return name;
+		
+	}
+	
 	/*
 	 * Initilaisiert das gesamte Framework
 	 */
 	private void init() {
-		int testBots = 0;
 		remoteViews = new LinkedList<RemoteView>();
 
 		world = new World(this);
@@ -156,21 +199,10 @@ public class Controller {
 		 * worldView2.initGUI();
 		 */
 
-		int mode = askMode();
-		if (mode != 0)
-			testBots = askTestBots();
 
 		controlFrame.setVisible(true);
 		world.setControlFrame(controlFrame);
 		world.start();
-
-		if (mode == 1) {
-			for (int i = 0; i < testBots; i++)
-				addBot("testbot", "Testbot" + i, new Point3f(0f,
-						(float) (1.5 - 0.5 * i), 0f), new Vector3f(1f, 0f, 0f));
-		} else if (mode == 2)
-			addBot("CtBotRealTcp", "Real Bot", new Point3f(0.5f, 0f, 0f),
-					new Vector3f(1f, 0f, 0f));
 
 		System.out.println("Warte auf Verbindung von View-Clients (Port * 10002)"); 
 		SocketListener ViewListener = new
@@ -249,43 +281,83 @@ public class Controller {
 		// TODO Was ist mit den Panels ?
 	}
 
-	/*
-	 * Fuegt der Welt einen neuen Bot des gewuenschten Typs hinzu
-	 * 
-	 * Typ ist entweder "Testbot" oder "CtBotRealTcp"
-	 * 
-	 * Crimson 2006-06-13: Wird vorlaeufig noch fuer die Testbots und "serial
-	 * bots" verwendet. TCPBots koennen sich immer von aussen verbinden
+	/**
+	 * Fuegt einen Bot in die Welt ein
+	 * @param bot
+	 * @param name
 	 */
-	private void addBot(String type, String name, Point3f pos, Vector3f head) {
-		Bot bot = null;
-
-		if (type.equalsIgnoreCase("testbot")) {
-			bot = new CtBotSimTest(this, pos, head);
-		}
-
-		if (type.equalsIgnoreCase("CtBotRealTcp")) {
-			JD2xxConnection com = new JD2xxConnection();
-			try {
-				com.connect();
-				bot = new CtBotRealTcp(this, new Point3f(0.5f, 0f, 0f),
-						new Vector3f(1.0f, -0.5f, 0f), com);
-				System.out.println("Real Bot at COM comming up");
-			} catch (Exception ex) {
-				ErrorHandler.error("Serial Connection not possible: " + ex);
-			}
-		}
-
+	private void addBot(Bot bot){
 		if (bot != null) {
 			bot.providePanel();
+			String name= getNewBotName(bot.getClass().getName());
+			
 			bot.setBotName(name);
+			
+			// TODO Sinnvolle Zuordnung von Bot-Name zu Konfig
+			HashMap botConfig = getBotConfig("config/ct-sim.xml",name);
+			if (botConfig == null){
+				ErrorHandler.error("Keine BotConfig fuer: "+name+" in der XML-Config-Datei gefunden. Lade Defaults.");
+				botConfig = getBotConfig("config/ct-sim.xml","default");
+			}
+			
+			if (botConfig == null){
+				ErrorHandler.error("Keine Default-BotConfig in der XML-Config-Datei gefunden. Starte ohne.");
+			}
+
+			bot.setAppearances(botConfig);
+			
 			world.addBot(bot);
 			controlFrame.addBot(bot);
 			// Dann wird der eigene Bot-Thread gestartet:
 			bot.start();
+		}		
+	}
+	
+
+	/**
+	 * Fuegt der Welt einen neuen Bot des gewuenschten Typs hinzu
+	 * 
+	 * Typ ist entweder "CtBotSimTest" oder "CtBotRealJD2XX"
+	 * 
+	 * Crimson 2006-06-13: Wird vorlaeufig noch fuer die Testbots und "serial
+	 * bots" verwendet. TCPBots koennen sich immer von aussen verbinden
+	 * 
+	 * @param type	Was fuer ein Bot (testbot CtBotRealTcp)
+	 * @param name Name des Bots
+	 */
+	public void addBot(String type) {
+		Bot bot = null;
+
+		if (type.equalsIgnoreCase("CtBotSimTest")) {
+			bot = new CtBotSimTest(this, new Point3f(), new Vector3f());
 		}
+
+		if (type.equalsIgnoreCase("CtBotRealJD2XX")) {
+			Connection com = waitForJD2XX();
+			if (com != null) {
+				bot = new CtBotRealCon(this, new Point3f(), new Vector3f(), com);
+				System.out.println("Real Bot via JD2XX startet");
+			}
+		}
+		addBot(bot);
 	}
 
+	/**
+	 * Wartet auf eine eingehende JD2XX-Verbindung
+	 * @return
+	 */
+	private Connection waitForJD2XX(){
+		JD2xxConnection com = new JD2xxConnection();
+		try {
+			com.connect();
+			System.out.println("JD2XX-Connection aufgebaut");
+			return com;
+		} catch (Exception ex) {
+			ErrorHandler.error("JD2XX Connection nicht moeglich: " + ex);
+			return null;
+		}
+	}
+	
 	/**
 	 * Entfernt eine View aus der Liste
 	 * 
@@ -338,6 +410,145 @@ public class Controller {
 		return world;
 	}
 
+	/**
+	 * Liefert die Config zu einem Bot zurueck
+	 * @param filename
+	 * @param botId
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private HashMap getBotConfig(String filename, String botId){
+		boolean found = false;
+		
+		HashMap botConfig = new HashMap();
+		
+		// Ein DOMParser liest ein XML-File ein
+		DOMParser parser = new DOMParser();
+		try {
+			// einlesen
+			parser.parse(filename);
+			// umwandeln in ein Document
+			Document doc = parser.getDocument();
+			
+			// Und Anfangen mit dem abarbeiten
+			
+			//als erster suchen wir uns den Parcours-Block
+			Node n = doc.getDocumentElement().getFirstChild();
+			while ((n != null)&& (!n.getNodeName().equals("bots")))
+				n=n.getNextSibling();
+
+			//	Eine Liste aller Kinder des Parcours-Eitnrags organsisieren
+			NodeList bots=n.getChildNodes();	
+	
+			for(int b=0; b<bots.getLength()-1;b++){
+				Node botSection = bots.item(b);
+				// Ist das ueberhaupt ein Bot-Eintrag?
+				if (botSection.getNodeName().equals("bot"))
+					// Und ist es auch der gesuchte
+					if (botSection.getAttributes().getNamedItem("name").getNodeValue().equals(botId)){
+						found=true;
+						NodeList children = botSection.getChildNodes();
+						
+						//	HashMap mit den Apearances aufbauen
+				        for (int i=0; i<children.getLength()-1; i++){
+				        		Node appearance =children.item(i);
+				        		if (appearance.getNodeName().equals("appearance")){
+				        			// Zuerst den Type extrahieren
+				        			String item = appearance.getAttributes().getNamedItem("type").getNodeValue();
+				        			
+				        			String texture = null;
+				        			String clone = null;
+				        			
+				        			HashMap colors = new HashMap();
+				        			
+				        			NodeList features = appearance.getChildNodes();
+				        			for (int j=0; j< features.getLength(); j++){
+				        				if (features.item(j).getNodeName().equals("texture"))
+				        					texture= features.item(j).getChildNodes().item(0).getNodeValue();
+//				        				 // TODO wir nutzen nur noch eine farbe, daher kann die auflistung von ambient und Co entfallen				        				
+				        				if (features.item(j).getNodeName().equals("color"))
+				        					colors.put(features.item(j).getAttributes().getNamedItem("type").getNodeValue(),features.item(j).getChildNodes().item(0).getNodeValue());
+				        				if (features.item(j).getNodeName().equals("clone"))
+				        					clone= features.item(j).getChildNodes().item(0).getNodeValue();
+				        			}
+				        				   
+				        			addAppearance(botConfig, item, colors, texture, clone);
+				        		}
+				        }
+				}
+			}
+		} catch (Exception ex) {
+			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex);
+		}
+		
+		if (found == true)
+			return botConfig;
+		else 
+			return null;
+	}
+
+	/**
+	 * Erzeugt eine Appearnace und fuegt die der Liste hinzu
+	 * @param appearances Die Hashmap in der das Pappearance eingetragen wird
+	 * @param item Der Key, iunter dem diese Apperance abgelegt wird
+	 * @param colors HashMap mit je Farbtyp und ASCII-Represenation der Farbe
+	 * @param textureFile Der Name des Texture-Files
+	 * @param clone Referenz auf einen schon bestehenden Eintrag, der geclonet werden soll
+	 */
+	@SuppressWarnings("unchecked")
+	private void addAppearance(HashMap appearances, String item, HashMap colors, String textureFile, String clone){
+		
+		if (clone != null){
+			appearances.put(item, appearances.get(clone));
+			return;
+		}
+		
+		Appearance appearance = new Appearance();
+		
+		if (colors != null){
+			Material mat = new Material();
+
+			Iterator it = colors.keySet().iterator();
+			while (it.hasNext()) {
+				String colorType = (String)it.next();
+				String colorName = (String)colors.get(colorType);
+
+				// TODO wir nutzen nur noch eine farbe, daher kann die auflistung von ambient und Co entfallen
+				if (colorType.equals("ambient"))
+					appearance.setColoringAttributes(new ColoringAttributes(new Color3f(Color.decode(colorName)), ColoringAttributes.FASTEST));
+			}
+			appearance.setMaterial(mat);
+
+			
+		}
+				
+		if (textureFile != null){
+			TexCoordGeneration tcg = new TexCoordGeneration(
+					TexCoordGeneration.OBJECT_LINEAR,
+					TexCoordGeneration.TEXTURE_COORDINATE_3, 
+					new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),
+					new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), 
+					new Vector4f(1.0f, 0.0f, 1.0f, 0.0f));
+			appearance.setTexCoordGeneration(tcg);
+
+			try {
+				TextureLoader loader = new TextureLoader(ClassLoader.getSystemResource(textureFile), null);
+				Texture2D texture = (Texture2D) loader.getTexture();
+				texture.setBoundaryModeS(Texture.WRAP);
+				texture.setBoundaryModeT(Texture.WRAP);
+				appearance.setTexture(texture);
+			} catch (Exception ex) {
+				ErrorHandler.error("Textur: "+textureFile+"nicht gefunden "+ex);
+			}
+			
+		}
+		
+		appearances.put(item,appearance);
+	}
+
+	
+	
+	
 	/**
 	 * Basisklasse, die auf einem TCP-Port lauscht
 	 * 
@@ -406,7 +617,7 @@ public class Controller {
 										+ cmd.getSubcommand() + "\n");
 								if (cmd.getCommand() == Command.CMD_WELCOME) {
 									if (cmd.getSubcommand() == Command.SUB_WELCOME_REAL) {
-										bot = new CtBotRealTcp(Controller.this,
+										bot = new CtBotRealCon(Controller.this,
 												new Point3f(0.5f, 0f, 0f),
 												new Vector3f(1.0f, -0.5f, 0f),
 												tcp);
@@ -440,12 +651,9 @@ public class Controller {
 										+ ex);
 					}
 
+					
 					if (bot != null) {
-						bot.providePanel();
-						bot.setBotName(bot.getClass().getName() + "_" + num++);
-						world.addBot(bot);
-						Controller.this.controlFrame.addBot(bot);
-						bot.start();
+						addBot(bot);
 					} else
 						try {
 							tcp.disconnect();
