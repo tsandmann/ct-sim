@@ -393,7 +393,7 @@ public class ParcoursLoader {
 	 * @param filename
 	 */
 	@SuppressWarnings("unchecked")
-	public void load_xml_file(String filename){
+	public void load_xml_file(String filename) throws Exception{
 		// Ein DOMParser liest ein XML-File ein
 		DOMParser parser = new DOMParser();
 		try {
@@ -488,7 +488,8 @@ public class ParcoursLoader {
 			parse();		// Parcours Zusammenbauen
 			
 		} catch (Exception ex) {
-			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex);
+			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+filename+" : "+ex);
+			throw ex;
 		}
 	}
 	

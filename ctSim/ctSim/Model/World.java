@@ -38,7 +38,6 @@ import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.AmbientLight;
-import javax.swing.JFileChooser;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -139,7 +138,7 @@ public class World extends Thread {
 	private Parcours parcours;
 	
 	/** Erzeugt eine neue Welt */
-	public World(Controller controller) {
+	public World(Controller controller, String parcoursFile) throws Exception {
 		super();
 
 		this.controller = controller;
@@ -149,17 +148,17 @@ public class World extends Thread {
 		slowMotion = false;
 		/* erstelle und sichere die Szene */
 		sceneLight = new SceneLight();
-		sceneLight.setScene(createSceneGraph());
+		sceneLight.setScene(createSceneGraph(parcoursFile));
 		sceneLightBackup = sceneLight.clone();
 		sceneLight.getScene().compile();
 	}
 
 	/**
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
-	 * 
+	 * @param parcoursFile Dateinamen des Parcours
 	 * @return der Szenegraph
 	 */
-	public BranchGroup createSceneGraph() {
+	public BranchGroup createSceneGraph(String parcoursFile) throws Exception {
 
 		// Die Wurzel des Ganzen:
 		BranchGroup objRoot = new BranchGroup();
@@ -207,8 +206,11 @@ public class World extends Thread {
 		// Objekte sind fest
 		sceneLight.getObstBG().setPickable(true);
 
+		loadParcours(parcoursFile);
+
 		// Hindernisse werden an die richtige Position geschoben
 
+		
 		// Zuerst werden sie gemeinsam so verschoben, dass ihre Unterkante genau
 		// buendig mit der Unterkante des Bodens ist:
 		Transform3D translate = new Transform3D();
@@ -218,22 +220,6 @@ public class World extends Thread {
 		obstTG.setPickable(true);
 		sceneLight.getObstBG().addChild(obstTG);
 
-
-		String filename= "parcours/testparcours2.xml";
-//		String filename= "parcours/testline.xml";
-
-		// Nach einem Parcours fragen
-//		JFileChooser fc = new JFileChooser();
-//		if (fc.showOpenDialog( null ) == JFileChooser.APPROVE_OPTION)
-//			filename = fc.getSelectedFile().getAbsolutePath();
-		
-		// Den Parcours Laden
-		ParcoursLoader pL = new ParcoursLoader();
-//		pL.load_file(filename);
-		pL.load_xml_file(filename);
-		//		pL.insertSceneGraph(tgO,lightBG,terrainBG);
-		parcours= pL.getParcours();
-		
 	    	obstTG.addChild(parcours.getObstBG());
 	    	lightBG.addChild(parcours.getLightBG());
 	    	terrainBG.addChild(parcours.getTerrainBG());		
@@ -249,7 +235,17 @@ public class World extends Thread {
 		return objRoot;
 	}
 
-
+	/**
+	 * Laedt einen Parcours aus einer XML-Datei
+	 * @param parcoursFile
+	 * @throws Exception
+	 */
+	private void loadParcours(String parcoursFile) throws Exception{
+		// Den Parcours Laden
+		ParcoursLoader pL = new ParcoursLoader();
+		pL.load_xml_file(parcoursFile);
+		parcours= pL.getParcours();
+	}
 
 	/**
 	 * Fuegt einen Bot in die Welt ein

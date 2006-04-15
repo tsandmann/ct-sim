@@ -1,4 +1,4 @@
-In Uebereinkunft mit Peter Koenig möchte ich hiermit eine Liste der bekannten Bugs anlegen.
+In Uebereinkunft mit Peter Koenig moechte ich hiermit eine Liste der bekannten Bugs anlegen.
 Langfristig sollten wir wohl auf einen Bugtracker wie bugzilla umsteigen.
 
 Ich schlage das folgende Format vor:
@@ -8,14 +8,14 @@ Ich schlage das folgende Format vor:
 [Datum] in kurzer ISO-Schreibweise YY-MM-DD (06-02-20)
 
 [Status] entweder unconfirmed, open, resolved, closed, closed (no bug)
-Bei Status closed sollte evtl. noch ein Begruendung wie double, no bug oder ähnliches dazu.
+Bei Status closed sollte evtl. noch ein Begruendung wie double, no bug oder aehnliches dazu.
 
 [Gemeldet von] Entweder Name (Christoph Grimmer), Nick (Crimson) oder Email (c.grimmer@eunovis.de)
-Das Nick macht nur so lange Sinn, wie wir im kleinen Kreis arbeiten. Für ein System, in das auch die Leser posten, 
+Das Nick macht nur so lange Sinn, wie wir im kleinen Kreis arbeiten. Fuer ein System, in das auch die Leser posten, 
 macht die Email-Adresse am meisten Sinn, da sie unique ist.
 
 [Zugewiesen zu] Bezeichner der Person, die sich verantwortlich um den Bug kuemmert (s.o.). Waere ja doof, 
-wenn plötzlich alle den gleichen Bug fixen wollen ;-)
+wenn ploetzlich alle den gleichen Bug fixen wollen ;-)
 
 Crimson, 20.02.2006
 -------------------
@@ -26,12 +26,12 @@ Bugs
 
 * [06-03-26][Torsten Evers][open][]:
 Beim Testen ist mir noch etwas bzgl. des Sims aufgefallen. Ich habe in letzter 
-Zeit häufiger die Situation, dass der Sim erst beim 2. oder 3. Start korrekt 
+Zeit haeufiger die Situation, dass der Sim erst beim 2. oder 3. Start korrekt 
 initialisiert wird. Bei den anderen Starts dreht sich der Bot wie er gerade 
 lustig ist oder faehrt einfach vorwaerts oder rueckwaerts los. Da dies unabhaengig 
 vom Verhalten ist, denke ich, dass da etwas schief ist. 
 Es scheint vom Startup des Sims abzuhaengen. Wenn ich das Verhalten z.b. 
-über eine Fernbedienungstaste aktiviere, was ja erst geht, wenn der Sim 
+ueber eine Fernbedienungstaste aktiviere, was ja erst geht, wenn der Sim 
 wirklich komplett gestartet ist, passiert das so gut wie nie. Ich vermute 
 also, dass die Verhalten, wenn sie per ACTIVE-Flag in bot_behave_init() 
 gestartet werden, zu frueh starten und noch nicht alles korrekt initialisiert 
@@ -47,11 +47,11 @@ stehen, tritt das Problem nicht auf.
 * [06-03-05][open][Torsten Evers][pek@heise.de]:
 Ich habe, da ich gerade an einem Algorithmus zur Linienverfolgung sitze, im 
 Sim den Linien die Dicke 20 gegeben, damit sie beide Liniensensoren abdecken.
-Für die Liniensensensoren kommen da auch brauchbare Werte raus (0x22 
+Fuer die Liniensensensoren kommen da auch brauchbare Werte raus (0x22 
 ausserhalb der Linie und 0x1CC). Zwar sind die Werte beim realen Bot noch 
 hoeher aber damit kann man leben. Die Abgrundsensoren jedoch, die eigentlich 
 bei demselben Untergrund auch dieselben Werte anzeigen sollten, zeigen 
-ausserhalb der Linie 0x22 (der Wert scheint ok zu sein) aber wenn sie über 
+ausserhalb der Linie 0x22 (der Wert scheint ok zu sein) aber wenn sie ueber 
 der Linie sind nur 0xCE. Bei meinem realen Bot verhalten sich Linien- und 
 Abgrundsensoren bei gleichem Untergrund auch gleich.
 
@@ -62,18 +62,11 @@ Wird ein ct-Bot-Prozess beendet, bleibt die Huelle des Bot im Simulator drin und
 
 Feature Requests
 ----------------
+* [15-04-2006] [open] [Benjamin Benz] []: Button zum starten von simulierten C-Bots einfÃ¼gen
 
-* [06-04-04][open][pek@heise.de][]:
-Wird eine Welt ueber den ParcoursLoader geladen, werden die Konstanten WORLD_HEIGHT und 
-_WIDTH nicht automatisch angepasst, daher passen die Slider auf dem ControlPanel nicht 
-echten Weltgroesse.
 
 * [06-03-16][open][pek@heise.de][]:
 Aller Sensoren im Sim sollten realistische Messwerte zurueckgeben und realistische Kennlinen aufweisen
-
-* [06-02-22][open][pek@heise.de][oeffentlich ausgeschrieben]:
-Die Bots sollten in der grafischen Anzeige im Simulator eine Kennung zugewiesen bekommen, damit man sie 
-voneinander unterscheiden kann.  
 
 * [06-03-13][open][pek@heise.de][oeffentlich ausgeschrieben]:
 Das Layout der Kontrolltafel koennte eine Optimierung vertragen, insbesondere 
@@ -90,3 +83,12 @@ die Textfelder zeigen diesen Wert allerdings nicht an.
 --> Lag daran, dass die Abstandssensoren gelegentlich die Huelle des Bot als naechstes
 Hindernis detektiert haben. Jetzt ist die Huelle nicht pickable, sobald der Bot seinen 
 Peilstrahl losschickt.
+
+* [06-04-04][resolved][pek@heise.de][bbe@heise.de]:
+Wird eine Welt ueber den ParcoursLoader geladen, werden die Konstanten WORLD_HEIGHT und 
+_WIDTH nicht automatisch angepasst, daher passen die Slider auf dem ControlPanel nicht 
+echten Weltgroesse.
+
+* [06-02-22][resolved][pek@heise.de][bbe@heise.de]:
+Die Bots sollten in der grafischen Anzeige im Simulator eine Kennung zugewiesen bekommen, damit man sie 
+voneinander unterscheiden kann.  

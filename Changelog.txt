@@ -1,6 +1,10 @@
 CHANGELOG fuer c't-Sim
 ======================
-2006-04-15 Benjamin Benz (bbe@heise.de) Controller aufgeraeumt. Es gibt jetzt keine Fragen mehr beim Bot-Start, dafuer zwei neue Knoepfe, um Bots hinzuzufuegen. Bots Starten jetzt mit dem Gesicht zum Eingangsbereich. Bots lesen ihre Appearance aus der xml-Config. Bots werden automatishc bennant. Jeder Bot kann nun sein eigenes Aussehen haben.
+2006-04-15 Benjamin Benz (bbe@heise.de) C't-Sim kann nun auch C-Bots starten
+
+2006-04-15 Benjamin Benz (bbe@heise.de) C't-Sim liest nun alle wesentlichen Parameter aus der Config datei
+
+2006-04-15 Benjamin Benz (bbe@heise.de) Controller aufgeraeumt. Es gibt jetzt keine Fragen mehr beim Bot-Start, dafuer zwei neue Knoepfe, um Bots hinzuzufuegen. Bots Starten jetzt mit dem Gesicht zum Eingangsbereich., an im Parcours definierten Positionen, die alten Uewbergabeparameter (pos, head) werden ignoriert Bots lesen ihre Appearance aus der xml-Config. Bots werden automatisch bennant. Jeder Bot kann nun sein eigenes Aussehen haben.
 
 2006-04-14 Benjamin Benz (bbe@heise.de) ParcoursLoader liest nun auch die Farben aus der XML-Datei
 

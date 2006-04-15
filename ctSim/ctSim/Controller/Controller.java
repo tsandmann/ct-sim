@@ -20,6 +20,7 @@
 package ctSim.Controller;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.HashMap;
@@ -35,6 +36,8 @@ import javax.media.j3d.TexCoordGeneration;
 import javax.media.j3d.Texture;
 import javax.media.j3d.Texture2D;
 import javax.media.j3d.TransformGroup;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
@@ -61,6 +64,8 @@ import ctSim.*;
  * 
  */
 public class Controller {
+	private static final String CONFIGFILE = "config/ct-sim.xml";
+
 	/** Das Modell der Welt */
 	private World world;
 
@@ -81,6 +86,43 @@ public class Controller {
 	 */
 	private HashMap numberBots = new HashMap();
 
+	/**
+	 * Enthaelt die gesamten Einzelparameter der Konfiguration 
+	 */
+	private HashMap config = new HashMap();
+	
+	/**
+	 * Liest die Konfiguration des Sims ein
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	private void parseConfig() throws Exception{
+		// Ein DOMParser liest ein XML-File ein
+		DOMParser parser = new DOMParser();
+		try {
+			// einlesen
+			parser.parse(CONFIGFILE);
+			// umwandeln in ein Document
+			Document doc = parser.getDocument();
+			
+			// Und Anfangen mit dem abarbeiten
+			
+			//als erster suchen wir uns den Parameter-Block
+			Node n = doc.getDocumentElement().getFirstChild();
+			while (n != null){
+				if (n.getNodeName().equals("parameter")){
+					String name = n.getAttributes().getNamedItem("name").getNodeValue();
+					String value = n.getAttributes().getNamedItem("value").getNodeValue();
+					config.put(name,value);
+				}
+				n=n.getNextSibling();
+			}
+		} catch (Exception ex) {
+			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex);
+			throw ex;
+		}
+		
+	}
 	
 	/**
 	 * Benachrichtige alle Views, dass sich Daten geaendert haben
@@ -118,35 +160,6 @@ public class Controller {
 		worldView.repaint();
 	}
 
-//	/**
-//	 * Frage nach der Betriebsart
-//	 * 
-//	 * @return 0 = TCP/Bots; 1= Test-Bots
-//	 */
-//	private int askMode() {
-//		Object[] options = { "externer TCP/IP-Bot",
-//				"realer Bot via USB" };
-//		return JOptionPane.showOptionDialog(null,
-//				"Mit welchem Bot-Typ wollen Sie den Simulator betreiben?",
-//				"Frage", JOptionPane.YES_NO_OPTION,
-//				JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-//
-//	}
-
-//	private int askTestBots() {
-//		Object[] options = { "1 Bot", "2 Bots" };
-//		int n = JOptionPane.showOptionDialog(null,
-//				"Wieviele Bots sollen gestartet werden?", "Frage",
-//				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-//				options, options[1]);
-//		if (n == 0)
-//			return 1;
-//		else
-//			return 2;
-//	}
-
-	// private SceneLight sc;
-
 	/**
 	 * Bennent einen neuen Bot
 	 * @param type
@@ -174,8 +187,43 @@ public class Controller {
 	 */
 	private void init() {
 		remoteViews = new LinkedList<RemoteView>();
-
-		world = new World(this);
+		
+		try {
+			parseConfig();
+		} catch (Exception ex){
+			ErrorHandler.error("Einlesen der c't-Sim-Konfiguration nicht moeglich. Abburch!");
+			return;
+		}
+		
+		String parcours = (String)config.get("parcours");
+		if (parcours==null){
+			
+			// Nach einem Parcours fragen
+			JFileChooser fc = new JFileChooser();
+			fc.setDialogTitle("Bitte einen Parcours waehlen");
+	        fc.setFileFilter(new FileFilter() {
+                public boolean accept(File f) {
+                    return f.getName().toLowerCase().endsWith(".xml") || f.isDirectory();
+                }
+                public String getDescription() {
+                		return "XML-Dateien (*.xml)";
+                }
+            });
+	        if (fc.showOpenDialog( null ) == JFileChooser.APPROVE_OPTION)
+				parcours = fc.getSelectedFile().getAbsolutePath();
+		}
+		
+		if (parcours==null) {
+			ErrorHandler.error("Kein Parcours gewaehlt. Abburch!");
+			return;			
+		}
+		
+		try {
+			world = new World(this,parcours);
+		} catch (Exception ex){
+			ErrorHandler.error("Probleme beim Aufbau der Welt. Abburch!");
+			return;
+		}
 
 		controlFrame = new ControlFrame(this);
 
@@ -204,10 +252,21 @@ public class Controller {
 		world.setControlFrame(controlFrame);
 		world.start();
 
-		System.out.println("Warte auf Verbindung von View-Clients (Port * 10002)"); 
-		SocketListener ViewListener = new
-		ViewSocketListener(10002); 
-		ViewListener.start();
+		String port = (String)config.get("viewport");
+		if (port != null){
+			try {
+				int p = new Integer(port).intValue();
+				
+				System.out.println("Warte auf Verbindung von View-Clients auf Port "+p); 
+				SocketListener ViewListener = new
+				ViewSocketListener(p); 
+				ViewListener.start();
+				
+			} catch (Exception ex) {
+				ErrorHandler.error("Kann den ViewPort ("+port+ ") nicht dekodieren");
+			}
+		}
+		
 		
 		
 		/*
@@ -216,11 +275,21 @@ public class Controller {
 		 * lauscht, an dieser Stelle eingebaut.
 		 */
 
-		System.out.println("Warte auf Verbindung vom c't-Bot (Port 10001)");
-		SocketListener BotListener = new BotSocketListener(10001);
-		BotListener.start();
-
-		
+		port = (String)config.get("botport");
+		if (port != null){
+			try {
+				int p = new Integer(port).intValue();
+				
+				System.out.println("Warte auf Verbindung vom c't-Bot auf Port "+p);
+				SocketListener BotListener = new BotSocketListener(p);
+				BotListener.start();
+				
+			} catch (Exception ex) {
+				ErrorHandler.error("Kann den botPort ("+port+ ") nicht dekodieren");
+			}
+		} else {
+			ErrorHandler.error("Kein botPort in der Config-Datei gefunden. Es wird nicht auf Bots gelauscht!");			
+		}
 		
 		
 //		try {
@@ -355,6 +424,42 @@ public class Controller {
 		} catch (Exception ex) {
 			ErrorHandler.error("JD2XX Connection nicht moeglich: " + ex);
 			return null;
+		}
+	}
+	
+	/**
+	 * Startet den Standard externen Bot, falls vorhanden, fragt sonst nach
+	 */
+	public void invokeBot(){
+		String filename = (String)config.get("botbinary");
+		
+		if (filename==null){
+			
+			// Nach einem Parcours fragen
+			JFileChooser fc = new JFileChooser();
+			fc.setDialogTitle("Bitte einen Bot waehlen");
+	        if (fc.showOpenDialog( null ) == JFileChooser.APPROVE_OPTION)
+	        		filename = fc.getSelectedFile().getAbsolutePath();
+		}
+
+		if (filename!=null)
+			invokeBot(filename);
+		else
+			ErrorHandler.error("Kein BotBinary definiert oder gewaehlt");
+	}	
+	
+	
+	/**
+	 * Startet einen externen Bot
+	 * @param filename Pfad zum Binary des Bots
+	 */
+	public void invokeBot(String filename){
+		System.out.println("Starte externen Bot: "+filename);
+		CmdExec executor = new CmdExec();
+		try {
+			executor.exec(filename);
+		} catch (Exception ex){
+			ErrorHandler.error("Kann Bot: "+filename+" nicht ausfuehren: "+ex);
 		}
 	}
 	

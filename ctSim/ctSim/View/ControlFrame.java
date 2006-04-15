@@ -62,8 +62,6 @@ public class ControlFrame extends JPanel {
 
 	private boolean slowMotion;
 
-	private JPanel buttonPanel;
-
 	private JButton pauseButton;
 
 	private JButton endButton;
@@ -71,6 +69,8 @@ public class ControlFrame extends JPanel {
 	private JButton addTestBotButton;
 	
 	private JButton addJD2XXBotButton;
+
+	private JButton addSimBotButton;
 
 	/**
 	 * Slow Motion Box
@@ -109,10 +109,12 @@ public class ControlFrame extends JPanel {
 	 * Erzeugt die Buttons im Hauptfenster
 	 */
 	private void makeMainButtons(){
-		Dimension buttDim = new Dimension(120, 50);
+		JPanel buttonPanel;
+
+		Dimension buttDim = new Dimension(100, 50);
 		
 		buttonPanel = new JPanel();
-		buttonPanel.setPreferredSize(new Dimension(480,50));
+		buttonPanel.setPreferredSize(new Dimension(400,50));
 		BoxLayout panelLayout = new BoxLayout(buttonPanel,
 				javax.swing.BoxLayout.X_AXIS);
 		this.add(buttonPanel);
@@ -138,8 +140,8 @@ public class ControlFrame extends JPanel {
 				}
 
 			}
-		});
-
+		});		
+		
 		// ********* End-Button ********************
 		endButton = new JButton();
 		endButton.setPreferredSize(buttDim);
@@ -151,6 +153,15 @@ public class ControlFrame extends JPanel {
 			}
 		});
 
+		
+		buttonPanel = new JPanel();
+//		buttonPanel.setPreferredSize(new Dimension(500,50));
+		panelLayout = new BoxLayout(buttonPanel,
+				javax.swing.BoxLayout.X_AXIS);
+		this.add(buttonPanel);
+		buttonPanel.setLayout(panelLayout);
+
+		
 		// ********* addTestBotButton-Button ********************
 		addTestBotButton = new JButton();
 		addTestBotButton.setPreferredSize(buttDim);
@@ -172,6 +183,19 @@ public class ControlFrame extends JPanel {
 				controller.addBot("CtBotRealJD2XX");
 			}
 		});
+		
+		
+		// ********* addJD2XXBotButton ********************
+		addSimBotButton = new JButton();
+		addSimBotButton.setPreferredSize(buttDim);
+		buttonPanel.add(addSimBotButton);
+		addSimBotButton.setText("Starte C-Bot");
+		addSimBotButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				controller.invokeBot();
+			}
+		});
+		
 	}
 	
 	/*
