@@ -248,7 +248,7 @@ abstract public class CtBotSim extends CtBot {
 				isApperanceCollision = true;
 			}
 		}
-
+		
 		// Blickrichtung immer aktualisieren:
 		this.setHeading(newHeading);
 
@@ -317,7 +317,7 @@ abstract public class CtBotSim extends CtBot {
 				isApperanceCollision = false;
 			}
 		}
-
+		
 		// IR-Abstandssensoren aktualisieren
 		if (updateSensIr) {
 			this.setSensIrL(world.watchObstacle(getSensIRPosition('L'),

@@ -1,7 +1,4 @@
-In Uebereinkunft mit Peter Koenig moechte ich hiermit eine Liste der bekannten Bugs anlegen.
-Langfristig sollten wir wohl auf einen Bugtracker wie bugzilla umsteigen.
-
-Ich schlage das folgende Format vor:
+Format dieser Datei: 
 
 * [Datum][Status][Gemeldet von][Zugewiesen zu]: Beschreibung, Kommentare etc.
 
@@ -10,15 +7,10 @@ Ich schlage das folgende Format vor:
 [Status] entweder unconfirmed, open, resolved, closed, closed (no bug)
 Bei Status closed sollte evtl. noch ein Begruendung wie double, no bug oder aehnliches dazu.
 
-[Gemeldet von] Entweder Name (Christoph Grimmer), Nick (Crimson) oder Email (c.grimmer@eunovis.de)
-Das Nick macht nur so lange Sinn, wie wir im kleinen Kreis arbeiten. Fuer ein System, in das auch die Leser posten, 
-macht die Email-Adresse am meisten Sinn, da sie unique ist.
+[Gemeldet von] Name und email 
 
 [Zugewiesen zu] Bezeichner der Person, die sich verantwortlich um den Bug kuemmert (s.o.). Waere ja doof, 
 wenn ploetzlich alle den gleichen Bug fixen wollen ;-)
-
-Crimson, 20.02.2006
--------------------
 
 
 Bugs
@@ -62,7 +54,8 @@ Wird ein ct-Bot-Prozess beendet, bleibt die Huelle des Bot im Simulator drin und
 
 Feature Requests
 ----------------
-* [15-04-2006] [open] [Benjamin Benz] []: Button zum starten von simulierten C-Bots einfügen
+* [15-04-2006] [open] [Benjamin Benz] []: c't-Sim sollte den Bots ein definiertes Startsignal geben
+* [15-04-2006] [open] [Benjamin Benz] []: Werden C-Bots gestartet, koennte man deren Ausgaben in LogFrames sammeln 
 
 
 * [06-03-16][open][pek@heise.de][]:
@@ -76,6 +69,9 @@ von 1024x768 Pixeln angezeigt werden kann.
 
 Erledigt:
 ---------
+* [15-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: Button zum starten von simulierten C-Bots einfügen
+* [15-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: c't-Sim sollte prüfen, ob ein Bot das Zielfeld erreicht
+* [15-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: c't-Sim sollte die Zeit stoppen, bis ein Bot das Zielfeld erreicht
 
 * [06-02-22][resolved][pek@heise.de][pek@heise.de]:
 Die Slider im ControlPanel des Sim fallen manchmal unvermittelt auf den Wert 0; 

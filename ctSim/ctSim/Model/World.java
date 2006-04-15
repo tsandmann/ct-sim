@@ -20,6 +20,7 @@
 package ctSim.Model;
 
 import ctSim.Controller.Controller;
+import ctSim.Model.Rules.Judge;
 import ctSim.View.ControlFrame;
 
 import java.util.*;
@@ -137,6 +138,10 @@ public class World extends Thread {
 	/** Der Parcours in dem sich der Bot bewegt */
 	private Parcours parcours;
 	
+	// TODO Schiedsrichter in eigenen Thread auslagern 
+	/** Der Schiedsrichter, der die Wettkaempfe ueberwacht */
+	private Judge judge = null;
+	
 	/** Erzeugt eine neue Welt */
 	public World(Controller controller, String parcoursFile) throws Exception {
 		super();
@@ -153,6 +158,15 @@ public class World extends Thread {
 		sceneLight.getScene().compile();
 	}
 
+	
+	/**
+	 * Prueft, ob ein Punkt auf dem Zielfeld liegt
+	 * @return
+	 */
+	public boolean finishReached(Vector3f pos){
+		return parcours.finishReached(pos);
+	}
+	
 	/**
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
 	 * @param parcoursFile Dateinamen des Parcours
@@ -662,6 +676,15 @@ public class World extends Thread {
 	}
 
 	/**
+	 * Liefert die Weltzeit (simulTime) zurueck. Blockiert, nicht
+	 * 
+	 * @return Die aktuelle Weltzeit in ms
+	 */
+	public long getSimulTimeUnblocking(){
+		return simulTime;
+	}
+	
+	/**
 	 * Ueberschriebene run()-Methode der Oberklasse Thread. Hier geschieht die
 	 * Welt-Simulation und vor allem auch die Zeitsynchronisation der
 	 * simulierten Bots
@@ -679,6 +702,10 @@ public class World extends Thread {
 				cleanup();
 			}
 
+			// TODO Schiedsrichter in eigenen Thread auslagern
+			if (judge != null)
+				judge.check();
+			
 			// Ist die Pause-Taste in der GUI gedrueckt worden?
 			if (!haveABreak) {
 
@@ -947,6 +974,16 @@ public class World extends Thread {
 	 */
 	public float getPlaygroundDimY() {
 		return parcours.getHeight();
+	}
+
+
+	public Judge getJudge() {
+		return judge;
+	}
+
+
+	public void setJudge(Judge judge) {
+		this.judge = judge;
 	}
 
 }

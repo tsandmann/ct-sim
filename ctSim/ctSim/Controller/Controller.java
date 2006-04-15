@@ -51,6 +51,7 @@ import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import ctSim.Model.*;
+import ctSim.Model.Rules.Judge;
 import ctSim.View.*;
 import ctSim.*;
 
@@ -252,6 +253,11 @@ public class Controller {
 		world.setControlFrame(controlFrame);
 		world.start();
 
+		// Schiedsrichter setze
+		// TODO Schiedsrichter in eigenen Thread auslagern
+		Judge judge = new Judge(this);
+		world.setJudge(judge);
+		
 		String port = (String)config.get("viewport");
 		if (port != null){
 			try {
@@ -478,9 +484,6 @@ public class Controller {
 	 */
 	public void endSim() {
 		world.die();
-		/* Markus Lang 2006-03-17:
-		 * dispose() wird jetzt auf der ctSimFrame Klasse ausgef�hrt
-		 */
 		ctSimFrame.dispose();
 
 		// Alle Views schliessen

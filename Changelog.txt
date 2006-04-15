@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-04-15 Benjamin Benz (bbe@heise.de) rudimentaeren Schiedsrichter eingefuehrt
+
 2006-04-15 Benjamin Benz (bbe@heise.de) C't-Sim kann nun auch C-Bots starten
 
 2006-04-15 Benjamin Benz (bbe@heise.de) C't-Sim liest nun alle wesentlichen Parameter aus der Config datei
@@ -14,7 +16,7 @@ CHANGELOG fuer c't-Sim
 
 2006-04-10 Andreas Merkle (mail@blue-andi.de) Der c't-Sim kann nun auch Log-Informationen darstellen
 
-2006-03-28 Peter Koenig (pek@heise.de) Konstanten nach Code-Richtlinien umbenannt ('akt' f�r Aktuator wurde zu englisch Actuator und daher 'act')
+2006-03-28 Peter Koenig (pek@heise.de) Konstanten nach Code-Richtlinien umbenannt ('akt' fuer Aktuator wurde zu englisch Actuator und daher 'act')
 
 2006-03-19 Benjamin Benz (bbe@heise.de) ClientViews eingefuehrt (angefangen)
 

@@ -340,7 +340,7 @@ public class Parcours {
 	 */
 	public void setFinishPosition(int x, int y){
 		finishPosition[0]=x;
-		finishPosition[0]=y;
+		finishPosition[1]=y;
 	}
 
 	/** 
@@ -351,5 +351,21 @@ public class Parcours {
 		return grid;
 	}
 
-
+	/**
+	 * Prueft, ob ein Punkt innerhalb des Zielfeldes liegt
+	 * @param pos
+	 * @return
+	 */
+	public boolean finishReached(Vector3f pos){
+		float minX = finishPosition[0]*grid ;
+		float maxX = finishPosition[0]*grid + grid;
+		float minY = finishPosition[1]*grid ;
+		float maxY = finishPosition[1]*grid + grid;
+		
+		if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
+			return true;
+		else
+			return false;
+	}
+	
 }
