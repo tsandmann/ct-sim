@@ -52,7 +52,6 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import ctSim.Model.*;
 import ctSim.Model.Rules.Judge;
-import ctSim.Model.Rules.LabyrinthJudge;
 import ctSim.View.*;
 import ctSim.*;
 
@@ -263,15 +262,12 @@ public class Controller {
 			} catch (ClassNotFoundException e) {
 				ErrorHandler.error("Die Judge-Klasse wurde nicht gefunden: "+e);
 			} catch (Exception e) {
-				ErrorHandler.error("Probleme beim instantieeren der Judge-Klasse: "+e);
+				ErrorHandler.error("Probleme beim instantiieren der Judge-Klasse: "+e);
 			}
 
-			
-			// Schiedsrichter setze
-			// TODO Schiedsrichter in eigenen Thread auslagern
-			judge = new LabyrinthJudge(this);
+			judge.setController(this);
 			judge.start();
-			controlFrame.setHaveABreak(true);
+			controlFrame.addJudge(judge);
 		}
 		
 		String port = (String)config.get("viewport");

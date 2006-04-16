@@ -540,11 +540,7 @@ public abstract class CtBot extends Bot {
 		
 		return bs;
 	}
-
-	// Get()- und Set()-Methoden.
-
-	// Alle Set()-Methoden sind gegen konkurrierende Manipulationen geschuetzt.
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

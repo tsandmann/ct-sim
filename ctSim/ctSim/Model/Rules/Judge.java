@@ -21,6 +21,7 @@ package ctSim.Model.Rules;
 import ctSim.ErrorHandler;
 import ctSim.Controller.Controller;
 import ctSim.Model.World;
+import ctSim.View.JudgePanel;
 
 /**
  * Abstrakte Superklasse fuer alle Judges, die pruefent, 
@@ -67,13 +68,17 @@ public abstract class Judge extends Thread {
 	 */
 	private int delay = 100; 
 	
+	/** Die Anzeige des Judges */
+	private JudgePanel panel;
+	
 	/**
 	 * Erzeuge neuen Judge
 	 * @param controller Verweis auf den zugehoerigen Controller
 	 */
-	public Judge(Controller controller) {
+	public Judge() {
 		super();
-		this.controller= controller;
+		panel = new JudgePanel(this);
+		setName(this.getClass().getName());
 	}	
 	
 
@@ -102,7 +107,8 @@ public abstract class Judge extends Thread {
 	/**
 	 * Erledigt die Arbeit
 	 */
-	public void run() {		
+	public void run() {
+		init();
 		takeStartTime();
 		while (run == true) {
 			try {
@@ -119,6 +125,10 @@ public abstract class Judge extends Thread {
 		}
 	}
 	
+	/** Hier kommt alles rein, was vor dem Start ausgefuehrt werden muss*/
+	abstract protected void init();
+
+
 	/**
 	 * Versetzt die Welt in einen Dornroeschenschlaf, oder erweckt sie
 	 * @param sleep true, wenn die Welt einschlafen soll, false wenn sie aufwachen soll
@@ -170,5 +180,15 @@ public abstract class Judge extends Thread {
 	/** Lege die Geschwindigkeit des Judges fest */ 
 	public void setDelay(int delay) {
 		this.delay = delay;
+	}
+
+
+	public JudgePanel getPanel() {
+		return panel;
+	}
+
+
+	public void setController(Controller controller) {
+		this.controller = controller;
 	}
 }

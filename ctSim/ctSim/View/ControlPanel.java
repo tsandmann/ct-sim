@@ -19,9 +19,6 @@
 
 package ctSim.View;
 
-import java.awt.Dimension;
-import javax.swing.JTextField;
-
 import ctSim.Model.Bot;
 
 /**
@@ -31,21 +28,11 @@ import ctSim.Model.Bot;
  * @author pek (pek@heise.de)
  * 
  */
-public abstract class ControlPanel extends javax.swing.JPanel {
+public abstract class ControlPanel extends SimPanel {
 
-	private static final long serialVersionUID = 1L;
-
-	private JTextField yPosField;
-
-	private JTextField xPosField;
-
-	private JTextField headField;
 
 	// Zu welchem Bot gehoert das Panel?
 	private Bot bot;
-
-	// In welchem Rahmen wird das Panel angezeigt?
-	private ControlFrame frame;
 
 	/**
 	 * Erzeugt ein neues Panel
@@ -56,97 +43,14 @@ public abstract class ControlPanel extends javax.swing.JPanel {
 	public ControlPanel(Bot bot) {
 		super();
 		this.bot = bot;
-		Dimension dim = new Dimension(30, 25);
-		xPosField = new JTextField();
-		yPosField = new JTextField();
-		headField = new JTextField();
-
-		xPosField.setPreferredSize(dim);
-		yPosField.setPreferredSize(dim);
-		headField.setPreferredSize(dim);
+		initGUI();
 
 	}
 
-	/**
-	 * Startet GUI
-	 */
-	protected abstract void initGUI();
 
+	/** liefert den zugehoerigen Bot zurueck */
 	public Bot getBot() {
 		return bot;
-	}
-
-	/**
-	 * Wird aufgerufen, wenn sich der Zustand des Bot veraendert hat
-	 */
-	public abstract void reactToChange();
-
-	/**
-	 * Entfernt dieses Panel aus dem ControlFrame
-	 */
-	public void remove() {
-		frame.getControlPanels().remove(this);
-	}
-
-	/**
-	 * @return Gibt eine Referenz auf den Rahmen zurueck, der dieses Panel
-	 *         enthaelt
-	 */
-	public ControlFrame getFrame() {
-		return frame;
-	}
-
-	/**
-	 * @param frame
-	 *            Der Rahmen, der dieses Panel enthalten soll
-	 */
-	public void setFrame(ControlFrame frame) {
-		this.frame = frame;
-	}
-
-	/**
-	 * @return Gibt eine Referenz auf headField zurueck
-	 */
-	public JTextField getHeadField() {
-		return headField;
-	}
-
-	/**
-	 * @param headField
-	 *            Referenz auf headField, die gesetzt werden soll
-	 */
-	public void setHeadField(JTextField headField) {
-		this.headField = headField;
-	}
-
-	/**
-	 * @return Gibt eine Referenz auf xPosField zurueck
-	 */
-	public JTextField getXPosField() {
-		return xPosField;
-	}
-
-	/**
-	 * @param posField
-	 *            Referenz auf xPosField, die gesetzt werden soll
-	 */
-	public void setXPosField(JTextField posField) {
-		xPosField = posField;
-	}
-
-	/**
-	 * @return Gibt eine Referenz auf yPosField zurueck
-	 */
-	public JTextField getYPosField() {
-		return yPosField;
-	}
-
-	/**
-	 * @param posField
-	 *            Referenz auf yPosField, die gesetzt werden soll
-	 */
-	public void setYPosField(JTextField posField) {
-		yPosField = posField;
 	}
 
 	/**

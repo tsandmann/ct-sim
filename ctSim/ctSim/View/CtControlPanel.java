@@ -90,10 +90,13 @@ public class CtControlPanel extends ControlPanel {
 	private static final int RC5_CODE_YELLOW = 0x1038; // /< Taste An/Aus
 
 	private static final int RC5_CODE_BLUE = 0x1029; // /< Taste An/Aus
+	
+	private JTextField yPosField;
 
-	// Zu welchem Bot gehoert das Panel?
-	private CtBot bot;
+	private JTextField xPosField;
 
+	private JTextField headField;
+	
 	private JLabel yPosLabel;
 
 	private JLabel xPosLabel;
@@ -218,9 +221,12 @@ public class CtControlPanel extends ControlPanel {
 
 	private JLabel motorLabelL;
 
-	private Dimension labelDim, fieldDim, smallGap;
 
-	private boolean irL, irR, xpos, ypos, head;
+	private boolean irL=false;
+	private boolean irR=false;
+	private boolean xpos= false;
+	private boolean ypos=false;
+	private boolean head= false;
 
 	private JPanel sensorPanel;
 
@@ -357,14 +363,8 @@ public class CtControlPanel extends ControlPanel {
 	 */
 	public CtControlPanel(CtBot bot) {
 		super(bot);
-		this.bot = bot;
-		irL = false;
-		irR = false;
-		xpos = false;
-		ypos = false;
-		head = false;
 
-		initGUI();
+		//initGUI();
 	}
 
 	/*
@@ -373,11 +373,22 @@ public class CtControlPanel extends ControlPanel {
 	 * @see ctSim.View.ControlPanel#initGUI()
 	 */
 	protected void initGUI() {
-
+		Dimension labelDim, fieldDim, smallGap;
+		
 		labelDim = new Dimension(70, 25);
 		fieldDim = new Dimension(50, 25);
 		smallGap = new Dimension(5, 5);
 
+		yPosField= new JTextField();
+		xPosField= new JTextField();
+		headField= new JTextField();
+
+		
+		xPosField.setPreferredSize(fieldDim);
+		yPosField.setPreferredSize(fieldDim);
+		headField.setPreferredSize(fieldDim);
+
+		
 		try {
 			// Das Tab wird in zwei Spalten augeteilt
 			BoxLayout thisLayout = new BoxLayout(this,
@@ -414,13 +425,13 @@ public class CtControlPanel extends ControlPanel {
 						headLabel.setText("Richtung");
 					}
 					{
-						headPanel.add(super.getHeadField());
-						super.getHeadField().setText("0");
-						super.getHeadField().setEditable(false);
+						headPanel.add(getHeadField());
+						getHeadField().setText("0");
+						getHeadField().setEditable(false);
 					}
 				}
 
-				if (bot.CAP_HEAD) {
+				if (    ((CtBot)getBot()).CAP_HEAD   ) {
 					{
 						headSliderPanel = new JPanel();
 						singlesPanel.add(headSliderPanel);
@@ -459,13 +470,13 @@ public class CtControlPanel extends ControlPanel {
 					}
 					{
 
-						xPosPanel.add(super.getXPosField());
-						super.getXPosField().setEditable(false);
-						super.getXPosField().setText("0");
+						xPosPanel.add(getXPosField());
+						getXPosField().setEditable(false);
+						getXPosField().setText("0");
 					}
 
 				}
-				if (bot.CAP_POS) {
+				if (((CtBot)getBot()).CAP_POS) {
 					{
 						xPosSliderPanel = new JPanel();
 						singlesPanel.add(xPosSliderPanel);
@@ -478,14 +489,14 @@ public class CtControlPanel extends ControlPanel {
 //									Math.round(-100 * bot.getWorld().getPlaygroundDimX() / 2),
 //									Math.round(100 * bot.getWorld().getPlaygroundDimX() / 2),
 									Math.round(0),
-									Math.round(100 * bot.getWorld().getPlaygroundDimX()),
+									Math.round(100 * getBot().getWorld().getPlaygroundDimX()),
 									0);
 							
 							xPosSliderPanel.add(xPosSlider);
 							xPosSlider
-									.setMajorTickSpacing((int) bot.getWorld().getPlaygroundDimX() * 10);
+									.setMajorTickSpacing((int) getBot().getWorld().getPlaygroundDimX() * 10);
 							xPosSlider
-									.setMinorTickSpacing((int) bot.getWorld().getPlaygroundDimX() * 5);
+									.setMinorTickSpacing((int) getBot().getWorld().getPlaygroundDimX() * 5);
 							xPosSlider.setPaintTicks(true);
 							xPosSlider.setPaintLabels(true);
 						}
@@ -511,13 +522,13 @@ public class CtControlPanel extends ControlPanel {
 						yPosLabel.setText("Y Position");
 					}
 					{
-						yPosPanel.add(super.getYPosField());
-						super.getYPosField().setText("0");
-						super.getYPosField().setEditable(false);
+						yPosPanel.add(getYPosField());
+						getYPosField().setText("0");
+						getYPosField().setEditable(false);
 					}
 				}
 
-				if (bot.CAP_POS) {
+				if (((CtBot)getBot()).CAP_POS) {
 					{
 						yPosSliderPanel = new JPanel();
 						singlesPanel.add(yPosSliderPanel);
@@ -528,15 +539,15 @@ public class CtControlPanel extends ControlPanel {
 							yPosSlider = new JSlider(
 									JSlider.HORIZONTAL,
 									Math.round(0),
-									Math.round(100 * bot.getWorld().getPlaygroundDimY()),
+									Math.round(100 * getBot().getWorld().getPlaygroundDimY()),
 //									Math.round(-100 * bot.getWorld().getPlaygroundDimY()/ 2),
 //									Math.round(100 * bot.getWorld().getPlaygroundDimY() / 2),
 									0);
 							yPosSliderPanel.add(yPosSlider);
 							yPosSlider
-									.setMajorTickSpacing((int) bot.getWorld().getPlaygroundDimY() * 10);
+									.setMajorTickSpacing((int) getBot().getWorld().getPlaygroundDimY() * 10);
 							yPosSlider
-									.setMinorTickSpacing((int) bot.getWorld().getPlaygroundDimY() * 5);
+									.setMinorTickSpacing((int) getBot().getWorld().getPlaygroundDimY() * 5);
 							yPosSlider.setPaintTicks(true);
 							yPosSlider.setPaintLabels(true);
 						}
@@ -613,7 +624,7 @@ public class CtControlPanel extends ControlPanel {
 					}
 				}
 
-				if (bot.CAP_SENS_IR) {
+				if (((CtBot)getBot()).CAP_SENS_IR) {
 					{
 						leftIRSliderPanel = new JPanel();
 						leftPanel.add(leftIRSliderPanel);
@@ -695,7 +706,7 @@ public class CtControlPanel extends ControlPanel {
 						}
 					}
 
-					if (bot.CAP_SENS_IR) {
+					if (((CtBot)getBot()).CAP_SENS_IR) {
 
 						{
 							rightIRSliderPanel = new JPanel();
@@ -754,7 +765,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton1.setText("1");
 						jButton1.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_1);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_1);
 							}
 						});
 					}
@@ -764,7 +775,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton2.setText("2");
 						jButton2.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_2);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_2);
 							}
 						});
 					}
@@ -774,7 +785,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton3.setText("3");
 						jButton3.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_3);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_3);
 							}
 						});
 					}
@@ -784,7 +795,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton4.setText("4");
 						jButton4.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_4);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_4);
 							}
 						});
 					}
@@ -794,7 +805,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton5.setText("5");
 						jButton5.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_5);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_5);
 							}
 						});
 					}
@@ -804,7 +815,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton6.setText("6");
 						jButton6.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_6);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_6);
 							}
 						});
 					}
@@ -814,7 +825,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton7.setText("7");
 						jButton7.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_7);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_7);
 							}
 						});
 					}
@@ -824,7 +835,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton8.setText("8");
 						jButton8.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_8);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_8);
 							}
 						});
 					}
@@ -834,7 +845,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton9.setText("9");
 						jButton9.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_9);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_9);
 							}
 						});
 					}
@@ -844,7 +855,7 @@ public class CtControlPanel extends ControlPanel {
 						jButtonOnOff.setText("ON / OFF");
 						jButtonOnOff.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_PWR);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_PWR);
 							}
 						});
 					}
@@ -854,7 +865,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton10.setText("0");
 						jButton10.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_0);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_0);
 							}
 						});
 					}
@@ -872,7 +883,7 @@ public class CtControlPanel extends ControlPanel {
 						jButtonUp.setText("UP");
 						jButtonUp.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_UP);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_UP);
 							}
 						});
 					}
@@ -886,7 +897,7 @@ public class CtControlPanel extends ControlPanel {
 						jButtonLeft.setText("LEFT");
 						jButtonLeft.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_LEFT);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_LEFT);
 							}
 						});
 					}
@@ -900,7 +911,7 @@ public class CtControlPanel extends ControlPanel {
 						jButtonRight.setText("RIGHT");
 						jButtonRight.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_RIGHT);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_RIGHT);
 							}
 						});
 					}
@@ -914,7 +925,7 @@ public class CtControlPanel extends ControlPanel {
 						jButtonDown.setText("DOWN");
 						jButtonDown.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								bot.setSensRc5(RC5_CODE_DOWN);
+								((CtBot)getBot()).setSensRc5(RC5_CODE_DOWN);
 							}
 						});
 					}
@@ -934,7 +945,7 @@ public class CtControlPanel extends ControlPanel {
 							jButtonRed.setBackground(new Color(255, 0, 0));
 							jButtonRed.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent evt) {
-									bot.setSensRc5(RC5_CODE_RED);
+									((CtBot)getBot()).setSensRc5(RC5_CODE_RED);
 								}
 							});
 						}
@@ -946,7 +957,7 @@ public class CtControlPanel extends ControlPanel {
 									.addActionListener(new ActionListener() {
 										public void actionPerformed(
 												ActionEvent evt) {
-											bot.setSensRc5(RC5_CODE_GREEN);
+											((CtBot)getBot()).setSensRc5(RC5_CODE_GREEN);
 										}
 									});
 						}
@@ -958,7 +969,7 @@ public class CtControlPanel extends ControlPanel {
 									.addActionListener(new ActionListener() {
 										public void actionPerformed(
 												ActionEvent evt) {
-											bot.setSensRc5(RC5_CODE_YELLOW);
+											((CtBot)getBot()).setSensRc5(RC5_CODE_YELLOW);
 										}
 									});
 						}
@@ -968,7 +979,7 @@ public class CtControlPanel extends ControlPanel {
 							jButtonBlue.setBackground(new Color(0, 0, 255));
 							jButtonBlue.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent evt) {
-									bot.setSensRc5(RC5_CODE_BLUE);
+									((CtBot)getBot()).setSensRc5(RC5_CODE_BLUE);
 								}
 							});
 						}
@@ -1299,35 +1310,35 @@ public class CtControlPanel extends ControlPanel {
 		 */
 
 		// Blickrichtung:
-		if (bot.CAP_HEAD) {
+		if (((CtBot)getBot()).CAP_HEAD) {
 			/*
 			 * Falls Checkbox inaktiv ist, wird der Slider auf den Wert des
 			 * Headings aus dem Bot gesetzt:
 			 */
 			if (!head) {
 				headSlider.setValue(Math.round(Math.round(SimUtils
-						.vec3fToDouble(bot.getHeading()))));
+						.vec3fToDouble(((CtBot)getBot()).getHeading()))));
 			} else {
 				/* Ansonsten bestimmt der Slider den Wert beim Bot: */
-				bot.setHeading(SimUtils.intToVec3f(headSlider.getValue()));
+				((CtBot)getBot()).setHeading(SimUtils.intToVec3f(headSlider.getValue()));
 			}
 		}
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
-		super.getHeadField().setText(SimUtils.vec3fToString(bot.getHeading()));
+		getHeadField().setText(SimUtils.vec3fToString(((CtBot)getBot()).getHeading()));
 
 		// Position:
 
-		if (bot.CAP_POS) {
+		if (((CtBot)getBot()).CAP_POS) {
 			/*
 			 * Falls Checkbox fuer X inaktiv ist, wird der Slider auf den Wert
 			 * der Position aus dem Bot gesetzt:
 			 */
 			if (!xpos) {
-				xPosSlider.setValue(Math.round(bot.getPos().x * 100));
+				xPosSlider.setValue(Math.round(getBot().getPos().x * 100));
 			} else {
 				/* Ansonsten bestimmt der Slider den Wert bei Bot und Panel: */
-				bot.setPos(new Vector3f((float) xPosSlider.getValue() / 100f,
-						bot.getPos().y, bot.getPos().z));
+				getBot().setPos(new Vector3f((float) xPosSlider.getValue() / 100f,
+						getBot().getPos().y, getBot().getPos().z));
 			}
 
 			/*
@@ -1335,32 +1346,32 @@ public class CtControlPanel extends ControlPanel {
 			 * der Position aus dem Bot gesetzt:
 			 */
 			if (!ypos) {
-				yPosSlider.setValue(Math.round(bot.getPos().y * 100));
+				yPosSlider.setValue(Math.round(getBot().getPos().y * 100));
 			} else {
 				/* Ansonsten bestimmt der Slider den Wert beim Bot: */
-				bot.setPos(new Vector3f(bot.getPos().x, (float) yPosSlider
-						.getValue() / 100f, bot.getPos().z));
+				getBot().setPos(new Vector3f(getBot().getPos().x, (float) yPosSlider
+						.getValue() / 100f, getBot().getPos().z));
 			}
 		}
 
 		// Hole aktuelle Werte aus dem Bot und setze sie in die Textfelder,
 		// aber runde sie vorher:
 		Integer xApprox = new Integer(Math.round(Math
-				.round(bot.getPos().x * 100)));
+				.round(getBot().getPos().x * 100)));
 		Integer yApprox = new Integer(Math.round(Math
-				.round(bot.getPos().y * 100)));
-		super.getXPosField().setText(xApprox.toString());
-		super.getYPosField().setText(yApprox.toString());
+				.round(getBot().getPos().y * 100)));
+		getXPosField().setText(xApprox.toString());
+		getYPosField().setText(yApprox.toString());
 
 		// IR-Sensoren:
 
-		if (bot.CAP_SENS_IR) {
+		if (((CtBot)getBot()).CAP_SENS_IR) {
 			/*
 			 * Falls Checkbox inaktiv ist, wird der Slider auf den Wert des
 			 * Sensors aus dem Bot gesetzt:
 			 */
 			if (!irL) {
-				irSliderL.setValue(bot.getSensIrL());
+				irSliderL.setValue(((CtBot)getBot()).getSensIrL());
 			} else {
 				/*
 				 * Ansonsten bestimmt der Slider den Wert beim Bot:
@@ -1368,7 +1379,7 @@ public class CtControlPanel extends ControlPanel {
 				 * erwartet!)
 				 */
 
-				bot.setSensIrL((double) irSliderL.getValue() / 1000d);
+				((CtBot)getBot()).setSensIrL((double) irSliderL.getValue() / 1000d);
 			}
 
 			/*
@@ -1376,52 +1387,52 @@ public class CtControlPanel extends ControlPanel {
 			 * Sensors aus dem Bot gesetzt:
 			 */
 			if (!irR) {
-				irSliderR.setValue(bot.getSensIrR());
+				irSliderR.setValue(((CtBot)getBot()).getSensIrR());
 			} else {
 				/*
 				 * Ansonsten bestimmt der Slider den Wert beim Bot:
 				 * (Multiplikation mit 1000, da setSensIr Angabe in Metern
 				 * erwartet!)
 				 */
-				bot.setSensIrR((double) irSliderR.getValue() / 1000d);
+				((CtBot)getBot()).setSensIrR((double) irSliderR.getValue() / 1000d);
 			}
 		}
 
 		// Hole aktuelle Werte aus dem Bot und setze sie in die Textfelder:
-		irValueL.setText(Short.toString(bot.getSensIrL()));
-		irValueR.setText(Short.toString(bot.getSensIrR()));
+		irValueL.setText(Short.toString(((CtBot)getBot()).getSensIrL()));
+		irValueR.setText(Short.toString(((CtBot)getBot()).getSensIrR()));
 
 		// TODO: Slider fuer CtBot.CAP_AKT_MOT sind noch nicht vorgesehen!
 
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
-		motorValueL.setText(Short.toString(bot.getActMotL()));
+		motorValueL.setText(Short.toString(((CtBot)getBot()).getActMotL()));
 		// Hole aktuellen Wert aus dem Bot und setzt ihn ins Textfeld:
-		motorValueR.setText(Short.toString(bot.getActMotR()));
+		motorValueR.setText(Short.toString(((CtBot)getBot()).getActMotR()));
 
 		// aktualisiere DeltaX und DeltaY des Maussensors
-		msDeltaX.setText(Integer.toString(bot.getSensMouseDX()));
-		msDeltaY.setText(Integer.toString(bot.getSensMouseDY()));
+		msDeltaX.setText(Integer.toString(((CtBot)getBot()).getSensMouseDX()));
+		msDeltaY.setText(Integer.toString(((CtBot)getBot()).getSensMouseDY()));
 
 		// aktualisiere die Liniensensoren
-		lineL.setText(Integer.toString(bot.getSensLineL()));
-		lineR.setText(Integer.toString(bot.getSensLineR()));
+		lineL.setText(Integer.toString(((CtBot)getBot()).getSensLineL()));
+		lineR.setText(Integer.toString(((CtBot)getBot()).getSensLineR()));
 
 		// aktualisiere die Abgrundsensoren
-		borderL.setText(Integer.toString(bot.getSensBorderL()));
-		borderR.setText(Integer.toString(bot.getSensBorderR()));
+		borderL.setText(Integer.toString(((CtBot)getBot()).getSensBorderL()));
+		borderR.setText(Integer.toString(((CtBot)getBot()).getSensBorderR()));
 
 		// aktualisiere die Lichtsensoren
-		ldrL.setText(Integer.toString(bot.getSensLdrL()));
-		ldrR.setText(Integer.toString(bot.getSensLdrR()));
+		ldrL.setText(Integer.toString(((CtBot)getBot()).getSensLdrL()));
+		ldrR.setText(Integer.toString(((CtBot)getBot()).getSensLdrR()));
 
 		// Anzeige der Debugdaten des Bots (Display und LEDs).
-		lcdLine1.setText(bot.getLcdText(0));
-		lcdLine2.setText(bot.getLcdText(1));
-		lcdLine3.setText(bot.getLcdText(2));
-		lcdLine4.setText(bot.getLcdText(3));
+		lcdLine1.setText(((CtBot)getBot()).getLcdText(0));
+		lcdLine2.setText(((CtBot)getBot()).getLcdText(1));
+		lcdLine3.setText(((CtBot)getBot()).getLcdText(2));
+		lcdLine4.setText(((CtBot)getBot()).getLcdText(3));
 
 		// Hole den Status der LEDs
-		String ledStat = Integer.toBinaryString(bot.getActLed()); // Integerwert
+		String ledStat = Integer.toBinaryString(((CtBot)getBot()).getActLed()); // Integerwert
 																	// in eine
 																	// binäre
 																	// Zahl
@@ -1448,7 +1459,7 @@ public class CtControlPanel extends ControlPanel {
 		}
 
 		// Anzeigen der Loggings
-		String temp = bot.getLog().toString();
+		String temp = ((CtBot)getBot()).getLog().toString();
 		if (temp.length() > 0) {
 			logFrame.setLog(temp);
 		}
@@ -1463,11 +1474,11 @@ public class CtControlPanel extends ControlPanel {
 	 * 
 	 */
 	public void stopBot() {
-		if (bot.CAP_POS && !xpos)
+		if (((CtBot)getBot()).CAP_POS && !xpos)
 			xPosSliderCheck.doClick();
-		if (bot.CAP_POS && !ypos)
+		if (((CtBot)getBot()).CAP_POS && !ypos)
 			yPosSliderCheck.doClick();
-		if (bot.CAP_HEAD && !head)
+		if (((CtBot)getBot()).CAP_HEAD && !head)
 			headSliderCheck.doClick();
 	}
 
@@ -1543,5 +1554,48 @@ public class CtControlPanel extends ControlPanel {
 			break;
 		}
 	}
+	/**
+	 * @return Gibt eine Referenz auf headField zurueck
+	 */
+	public JTextField getHeadField() {
+		return headField;
+	}
 
+	/**
+	 * @param headField
+	 *            Referenz auf headField, die gesetzt werden soll
+	 */
+	public void setHeadField(JTextField headField) {
+		this.headField = headField;
+	}
+
+	/**
+	 * @return Gibt eine Referenz auf xPosField zurueck
+	 */
+	public JTextField getXPosField() {
+		return xPosField;
+	}
+
+	/**
+	 * @param posField
+	 *            Referenz auf xPosField, die gesetzt werden soll
+	 */
+	public void setXPosField(JTextField posField) {
+		xPosField = posField;
+	}
+
+	/**
+	 * @return Gibt eine Referenz auf yPosField zurueck
+	 */
+	public JTextField getYPosField() {
+		return yPosField;
+	}
+
+	/**
+	 * @param posField
+	 *            Referenz auf yPosField, die gesetzt werden soll
+	 */
+	public void setYPosField(JTextField posField) {
+		yPosField = posField;
+	}
 }

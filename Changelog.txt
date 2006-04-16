@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-04-15 Benjamin Benz (bbe@heise.de) Judges haben nun ein eigenes Tab fuer die Ergebnisse
+
 2006-04-15 Benjamin Benz (bbe@heise.de) Judge wird nun generisch von einem Klassennamen aus der Config-Datei geladen 
 
 2006-04-15 Benjamin Benz (bbe@heise.de) Bots sterben nun sauber unt entfernen sich auch wieder aus der Welt

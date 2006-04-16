@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import ctSim.Model.*;
+import ctSim.Model.Rules.Judge;
 import ctSim.Controller.Controller;
 
 /**
@@ -310,6 +311,15 @@ public class ControlFrame extends JPanel {
 		this.ctSimFrame.updateSliderPosition();
 	}
 
+	/**
+	 * Fuegt einen Schiedsrichter hinzu
+	 * @param judge
+	 */
+	public void addJudge(Judge judge){
+		controlPanels.addTab(judge.getName(),null,judge.getPanel(),null);
+		judge.getPanel().setFrame(this);
+	}
+	
 	/**
 	 * @return Gibt das Feld zurueck, das alle ControlPanels enthaelt.
 	 */

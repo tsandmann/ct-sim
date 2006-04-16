@@ -21,7 +21,6 @@ package ctSim.Model.Rules;
 import java.util.Iterator;
 import java.util.List;
 
-import ctSim.Controller.Controller;
 import ctSim.Model.Bot;
 import ctSim.Model.World;
 
@@ -39,12 +38,9 @@ public class LabyrinthJudge extends Judge{
 	/** Anzahl der Teilnehmer am Rennen */
 	int participants = 2;
 	
-	/**
-	 * @param controller
-	 */
-	public LabyrinthJudge(Controller controller) {
-		super(controller);
-		suspendWorld(true);
+	
+	public LabyrinthJudge(){
+		super();
 	}
 
 	/**
@@ -66,20 +62,26 @@ public class LabyrinthJudge extends Judge{
 			if (bots.size() == participants){
 				suspendWorld(false);	
 				takeStartTime();
+				raceStartet= true;
 			}
 		} else {	// Wir sind im Rennen
 			Iterator it = bots.iterator();
 			while (it.hasNext()) {
 				Bot bot = (Bot) it.next();
 				// Puefen, ob Ziel erreicht
+				
 				if (world.finishReached(bot.getPos())){
-						System.out.println("Bot: "+bot.getBotName()+" hat das Ziel nach: "+getRunTime()+" ms erreicht");
+						getPanel().addResult("Zieleinlauf "+bot.getBotName()+" nach "+getRunTime()+" ms");
 						bot.die();
 				}
 			}
 		}
 	}
 
+	protected void init(){
+		suspendWorld(true);
+	}
+	
 	/**
 	 * Hier geschieht die eigentliche Arbeit des judges
 	 */
