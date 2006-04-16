@@ -47,13 +47,11 @@ ausserhalb der Linie 0x22 (der Wert scheint ok zu sein) aber wenn sie ueber
 der Linie sind nur 0xCE. Bei meinem realen Bot verhalten sich Linien- und 
 Abgrundsensoren bei gleichem Untergrund auch gleich.
 
-* [06-02-22][open][pek@heise.de][]: 
-Wird ein ct-Bot-Prozess beendet, bleibt die Huelle des Bot im Simulator drin und wirkt dort als Hindernis.
-
 
 
 Feature Requests
 ----------------
+* [16-04-2006] [open] [Benjamin Benz] []: Die CtControlPanel sind mies gecoded, bitte aufraeumen
 * [16-04-2006] [open] [Benjamin Benz] []: Parcoursloader sollte unbedingt effizienter arbeiten und z.B. Bodenkacheln zusammenfassen
 * [15-04-2006] [open] [Benjamin Benz] []: Werden C-Bots gestartet, koennte man deren Ausgaben in LogFrames sammeln 
 
@@ -72,6 +70,9 @@ Erledigt:
 * [15-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: Button zum starten von simulierten C-Bots einfügen
 * [15-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: c't-Sim sollte prüfen, ob ein Bot das Zielfeld erreicht
 * [15-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: c't-Sim sollte die Zeit stoppen, bis ein Bot das Zielfeld erreicht
+
+* [06-02-22][resolved][pek@heise.de][bbe@heise.de]: 
+Wird ein ct-Bot-Prozess beendet, bleibt die Huelle des Bot im Simulator drin und wirkt dort als Hindernis.
 
 * [06-02-22][resolved][pek@heise.de][pek@heise.de]:
 Die Slider im ControlPanel des Sim fallen manchmal unvermittelt auf den Wert 0; 

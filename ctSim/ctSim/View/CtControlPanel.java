@@ -1284,6 +1284,16 @@ public class CtControlPanel extends ControlPanel {
 				
 				mainPanelRight.add(Box.createRigidArea(smallGap));
 
+				JButton dieButton = new JButton("Bot töten");
+				dieButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						getBot().die();
+					}
+				});
+				mainPanelRight.add(dieButton);
+
+				
+				
 				// freien Platz fuellen
 				// mainPanelRight.add(Box.createHorizontalGlue());
 				// mainPanelRight.add(Box.createRigidArea(new
