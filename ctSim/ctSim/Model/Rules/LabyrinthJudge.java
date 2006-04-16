@@ -18,6 +18,7 @@
  */
 package ctSim.Model.Rules;
 
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -65,14 +66,19 @@ public class LabyrinthJudge extends Judge{
 				raceStartet= true;
 			}
 		} else {	// Wir sind im Rennen
+			
 			Iterator it = bots.iterator();
 			while (it.hasNext()) {
 				Bot bot = (Bot) it.next();
 				// Puefen, ob Ziel erreicht
 				
 				if (world.finishReached(bot.getPos())){
-						getPanel().addResult("Zieleinlauf "+bot.getBotName()+" nach "+getRunTime()+" ms");
-						bot.die();
+					Calendar cal = Calendar.getInstance();
+					cal.setTimeInMillis(getRunTime());
+					String timeString= (cal.get(Calendar.HOUR)-1)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND)+":"+cal.get(Calendar.MILLISECOND);
+	
+					getPanel().addResult("Zieleinlauf "+bot.getBotName()+" nach "+timeString);
+					bot.die();
 				}
 			}
 		}

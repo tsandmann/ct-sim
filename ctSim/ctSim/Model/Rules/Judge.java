@@ -120,6 +120,7 @@ public abstract class Judge extends Thread {
 
 			time=controller.getWorld().getSimulTimeUnblocking();
 			runTime = time - startTime;
+			panel.setRunTime(getRunTime());
 			
 			work();
 		}

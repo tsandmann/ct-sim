@@ -54,7 +54,7 @@ Wird ein ct-Bot-Prozess beendet, bleibt die Huelle des Bot im Simulator drin und
 
 Feature Requests
 ----------------
-* [15-04-2006] [open] [Benjamin Benz] []: c't-Sim sollte den Bots ein definiertes Startsignal geben
+* [16-04-2006] [open] [Benjamin Benz] []: Parcoursloader sollte unbedingt effizienter arbeiten und z.B. Bodenkacheln zusammenfassen
 * [15-04-2006] [open] [Benjamin Benz] []: Werden C-Bots gestartet, koennte man deren Ausgaben in LogFrames sammeln 
 
 

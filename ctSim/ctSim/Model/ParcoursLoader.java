@@ -290,6 +290,7 @@ public class ParcoursLoader {
 	int l;
     	int d;
 
+    	
     	if (parcoursMap != null){
 			for (int y = 0; y < parcours.getDimY(); y++){
 				for (int x = 0; x < parcours.getDimX(); x++) 
@@ -328,9 +329,11 @@ public class ParcoursLoader {
 								createFloor(x, y,getAppearance(' '));
 							break;
 					    case '.':
-							createFloor(x, y,getAppearance(parcoursMap[x][y]));
+					    		//	TODO Boden optimieren, kacheln zusammenfassen
+					    		createFloor(x, y,getAppearance(parcoursMap[x][y]));
 							break;
 					    case ' ':
+					    		//	TODO Boden optimieren, kacheln zusammenfassen
 					    		createFloor(x, y,getAppearance(parcoursMap[x][y]));
 							break;
 							

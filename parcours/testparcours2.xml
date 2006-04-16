@@ -7,15 +7,16 @@
 	</description>
 		
 	<parcours>
-		<line>======Z=====#</line>
+		<line>============#</line>
+		<line>#  #  Z  #  #</line>
 		<line>#  #  |  #  #</line>
 		<line>#  #  |  #  #</line>
 		<line>#  #X | X#  #</line>
 		<line>#     |     #</line>
 		<line>#X    |    X#</line>
-		<line>#    L*L    #</line>
+		<line>#    LLL    #</line>
 		<line>#  =======  #</line>
-		<line>#    L*L    #</line>
+		<line>#     *     #</line>
 		<line>#           #</line>
 		<line>#====...====#</line>
 		<line>#...........#</line>

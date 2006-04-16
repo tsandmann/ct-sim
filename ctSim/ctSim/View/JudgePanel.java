@@ -18,6 +18,7 @@
 package ctSim.View;
 
 import java.awt.Dimension;
+import java.util.Calendar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -52,7 +53,7 @@ public class JudgePanel extends SimPanel {
 
 	protected void initGUI() {
 		Dimension fieldDim;
-		fieldDim = new Dimension(50, 25);
+		fieldDim = new Dimension(100, 25);
 
 		this.setLayout(new BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
@@ -93,11 +94,19 @@ public class JudgePanel extends SimPanel {
 
 	/** Setzt die Laufzeit */
 	public void setRunTime(long time){
-		runTimeField.setText(time+" ms");
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		
+		runTimeField.setText((cal.get(Calendar.HOUR)-1)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND)+":"+cal.get(Calendar.MILLISECOND));
+
+		super.repaint();
+		this.repaint();
 	}
 	
 	/** Erweitert die Ergebnissliste */
 	public void addResult(String result){
 		resultField.setText(resultField.getText()+"\n"+result);
+		super.repaint();
+		this.repaint();
 	}
 }
