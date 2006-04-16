@@ -214,44 +214,63 @@ public abstract class CtBot extends Bot {
 	/** Kann die Position des Bots beeinflusst werden? */
 	public boolean CAP_POS = true;
 
-	
-	public static final int RC5_CODE_0 = 0x3940; // /< Taste 0
 
-	public static final int RC5_CODE_1 = 0x3941; // /< Taste 1
+	/** RC5-Taste 0*/
+	public static final int RC5_CODE_0 = 0x3940; 
 
-	public static final int RC5_CODE_2 = 0x3942; // /< Taste 2
+	/** RC5-Taste 1*/
+	public static final int RC5_CODE_1 = 0x3941; 
 
-	public static final int RC5_CODE_3 = 0x3943; // /< Taste 3
+	/** RC5-Taste 2*/
+	public static final int RC5_CODE_2 = 0x3942; 
 
-	public static final int RC5_CODE_4 = 0x3944; // /< Taste 4
+	/** RC5-Taste 3*/
+	public static final int RC5_CODE_3 = 0x3943; 
 
-	public static final int RC5_CODE_5 = 0x3945; // /< Taste 5
+	/** RC5-Taste 4*/
+	public static final int RC5_CODE_4 = 0x3944; 
 
-	public static final int RC5_CODE_6 = 0x3946; // /< Taste 6
+	/** RC5-Taste 5*/
+	public static final int RC5_CODE_5 = 0x3945; 
 
-	public static final int RC5_CODE_7 = 0x3947; // /< Taste 7
+	/** RC5-Taste 6*/
+	public static final int RC5_CODE_6 = 0x3946; 
 
-	public static final int RC5_CODE_8 = 0x3948; // /< Taste 8
+	/** RC5-Taste 7*/
+	public static final int RC5_CODE_7 = 0x3947; 
 
-	public static final int RC5_CODE_9 = 0x3949; // /< Taste 9
+	/** RC5-Taste 8*/
+	public static final int RC5_CODE_8 = 0x3948; 
 
-	public static final int RC5_CODE_UP = 0x2950; // /< Taste Hoch
+	/** RC5-Taste 9*/
+	public static final int RC5_CODE_9 = 0x3949; 
 
-	public static final int RC5_CODE_DOWN = 0x2951; // /< Taste Runter
+	/** RC5-Taste Up*/
+	public static final int RC5_CODE_UP = 0x2950; 
 
-	public static final int RC5_CODE_LEFT = 0x2955; // /< Taste Links
+	/** RC5-Taste down*/
+	public static final int RC5_CODE_DOWN = 0x2951; 
 
-	public static final int RC5_CODE_RIGHT = 0x2956; // /< Taste Rechts
+	/** RC5-Taste left*/
+	public static final int RC5_CODE_LEFT = 0x2955; 
 
-	public static final int RC5_CODE_PWR = 0x394C; // /< Taste An/Aus
+	/** RC5-Taste right*/
+	public static final int RC5_CODE_RIGHT = 0x2956;
 
-	public static final int RC5_CODE_RED = 0x100B; // /< Taste An/Aus
+	/** RC5-Taste PWR*/
+	public static final int RC5_CODE_PWR = 0x394C; 
 
-	public static final int RC5_CODE_GREEN = 0x102E; // /< Taste An/Aus
+	/** RC5-Taste RED*/
+	public static final int RC5_CODE_RED = 0x100B; 
 
-	public static final int RC5_CODE_YELLOW = 0x1038; // /< Taste An/Aus
+	/** RC5-Taste GREEN*/
+	public static final int RC5_CODE_GREEN = 0x102E; 
 
-	public static final int RC5_CODE_BLUE = 0x1029; // /< Taste An/Aus
+	/** RC5-Taste YELLOW*/
+	public static final int RC5_CODE_YELLOW = 0x1038; 
+
+	/** RC5-Taste BLUE*/
+	public static final int RC5_CODE_BLUE = 0x1029; 
 
 	
 	// Felder fuer den Zustand des Roboters:
