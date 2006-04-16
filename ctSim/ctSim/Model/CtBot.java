@@ -351,13 +351,13 @@ public abstract class CtBot extends Bot {
 		tg = new TransformGroup(transform);
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		tg.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
 		
 		// Bot erzeugen
 		Shape3D realBot = createBotShape();
 		realBot.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 		realBot.setAppearance(getAppearance("normal"));
 				
-				//world.getBotAppear());
 		realBot.setName(getName() + " Body");
 		// Koerper "pickable" setzen, um Kollisionen mit anderen Bots
 		// zu erkennen
@@ -367,8 +367,9 @@ public abstract class CtBot extends Bot {
 		// Referenz auf Koerper merken, um spaeter bei der eigenen Kollisionsabfrage die 
 		// "Pickable"-Eigenschaft aendern zu koennen
 		botBody = realBot;
-		tg.addChild(realBot);
-
+		tg.addChild(botBody);
+		
+			
 		// Die Grenzen (Bounds) des Bots sind wichtig
 		// fuer die Kollisionserkennung.
 		// Die Grenze des Roboters wird vorlaefig definiert ueber
@@ -377,10 +378,10 @@ public abstract class CtBot extends Bot {
 
 		// Jetzt wird noch alles nett verpackt
 		BranchGroup bg = new BranchGroup();
+		bg.setCapability(BranchGroup.ALLOW_DETACH);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
 		bg.addChild(tg);
 
-//		setTranslationGroup(tg);
-//		setRotationGroup(rg);
 		setTransformGroup(tg);
 		setBotBG(bg);
 	}
@@ -478,6 +479,10 @@ public abstract class CtBot extends Bot {
 				stripCountTsa);
 		tsa.setCoordinates(0, coords);
 
+		tsa.setCapability(BranchGroup.ALLOW_DETACH);
+		tsa.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+
+		
 		// Hinzufuegen der aeusseren Seitenverkleidung zur Bot-Shape3D
 		bs.setGeometry(tsa);
 
@@ -523,9 +528,16 @@ public abstract class CtBot extends Bot {
 		qa = new QuadArray(3 * 4, QuadArray.COORDINATES);
 		qa.setCoordinates(0, quadCoords);
 
+		qa.setCapability(BranchGroup.ALLOW_DETACH);
+		qa.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+
+		
 		// Hinzufuegen der Fachwaende zur Bot-Shape3D 
 		bs.addGeometry(qa);
 
+		bs.setCapability(BranchGroup.ALLOW_DETACH);
+		bs.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		
 		return bs;
 	}
 

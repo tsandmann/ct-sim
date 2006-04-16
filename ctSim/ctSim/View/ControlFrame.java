@@ -131,14 +131,7 @@ public class ControlFrame extends JPanel {
 		}
 		pauseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				haveABreak = !haveABreak;
-				world.setHaveABreak(haveABreak);
-				if (!haveABreak) {
-					pauseButton.setText("Pause");
-				} else {
-					pauseButton.setText("Weiter");
-				}
-
+				setHaveABreak(!haveABreak);
 			}
 		});		
 		
@@ -185,7 +178,7 @@ public class ControlFrame extends JPanel {
 		});
 		
 		
-		// ********* addJD2XXBotButton ********************
+		// ********* addSimBotButton ********************
 		addSimBotButton = new JButton();
 		addSimBotButton.setPreferredSize(buttDim);
 		buttonPanel.add(addSimBotButton);
@@ -311,8 +304,8 @@ public class ControlFrame extends JPanel {
 		// Dem Panel anzeigen, wo es dargestellt wird
 		bot.getPanel().setFrame(this);
 		/* Markus Lang 2006-03-06:
-		 * JSplitPlane �ber die Gr��en�nderung informieren
-		 * (Ersatz f�r den alten pack() Aufruf der JFrame Klasse)
+		 * JSplitPlane ueber die Groessenaenderung informieren
+		 * (Ersatz fuer den alten pack() Aufruf der JFrame Klasse)
 		 */
 		this.ctSimFrame.updateSliderPosition();
 	}
@@ -333,4 +326,16 @@ public class ControlFrame extends JPanel {
 	public void setCtSimFrameInstance(CtSimFrame ctSimFrame) {
 		this.ctSimFrame = ctSimFrame;
  	}
+
+	/** Setzt den Pausenmodus von aussen */
+	public void setHaveABreak(boolean haveABreak) {
+		this.haveABreak = haveABreak;
+		world.setHaveABreak(haveABreak);
+		if (!haveABreak) {
+			pauseButton.setText("Pause");
+		} else {
+			pauseButton.setText("Weiter");
+		}
+
+	}
 }

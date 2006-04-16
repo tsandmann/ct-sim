@@ -127,6 +127,9 @@ abstract public class Bot extends Thread implements Obstacle {
 	 * @see Bot#work()
 	 */
 	protected void cleanup() {
+		botBG.detach();
+		world.removeBot(this);
+		controller.removeBotFromView(botName);
 		world = null;
 		panel.remove();
 		panel = null;
@@ -156,7 +159,6 @@ abstract public class Bot extends Thread implements Obstacle {
 	 * @see Bot#work()
 	 */
 	public void die() {
-		controller.removeBotFromView(botName);
 		run = false;
 		this.interrupt();
 	}

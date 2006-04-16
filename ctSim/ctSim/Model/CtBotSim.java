@@ -547,8 +547,7 @@ abstract public class CtBotSim extends CtBot {
 			deltaT = simulTime - tmpTime; // aktualisiere deltaT
 			updateStats();
 		} catch (InterruptedException e) {
-			ErrorHandler.error("Bot: " + getBotName() + " dies " + e);
-			die();
+			ErrorHandler.error("Bot: " + getBotName() + " wurde unterbrochen");
 		}
 	}
 

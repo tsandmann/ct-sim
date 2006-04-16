@@ -52,6 +52,7 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import ctSim.Model.*;
 import ctSim.Model.Rules.Judge;
+import ctSim.Model.Rules.LabyrinthJudge;
 import ctSim.View.*;
 import ctSim.*;
 
@@ -91,6 +92,9 @@ public class Controller {
 	 * Enthaelt die gesamten Einzelparameter der Konfiguration 
 	 */
 	private HashMap config = new HashMap();
+	
+	/** Der Schiedsrichter, falls vorhanden */
+	private Judge judge= null; 
 	
 	/**
 	 * Liest die Konfiguration des Sims ein
@@ -253,10 +257,22 @@ public class Controller {
 		world.setControlFrame(controlFrame);
 		world.start();
 
-		// Schiedsrichter setze
-		// TODO Schiedsrichter in eigenen Thread auslagern
-		Judge judge = new Judge(this);
-		world.setJudge(judge);
+		if (config.get("judge")!= null) {
+			try {
+				judge = (Judge) Class.forName((String)config.get("judge")).newInstance();
+			} catch (ClassNotFoundException e) {
+				ErrorHandler.error("Die Judge-Klasse wurde nicht gefunden: "+e);
+			} catch (Exception e) {
+				ErrorHandler.error("Probleme beim instantieeren der Judge-Klasse: "+e);
+			}
+
+			
+			// Schiedsrichter setze
+			// TODO Schiedsrichter in eigenen Thread auslagern
+			judge = new LabyrinthJudge(this);
+			judge.start();
+			controlFrame.setHaveABreak(true);
+		}
 		
 		String port = (String)config.get("viewport");
 		if (port != null){
@@ -350,6 +366,7 @@ public class Controller {
 			RemoteView rV = (RemoteView) it.next();
 			rV.removeBot(id);
 		}
+		
 		ErrorHandler
 				.error("removeBotFromView nicht vollstaendig implementiert");
 		// TODO Was ist mit der lokalen View?
@@ -486,6 +503,9 @@ public class Controller {
 		world.die();
 		ctSimFrame.dispose();
 
+		if (judge != null)
+			judge.die();
+		
 		// Alle Views schliessen
 		Iterator it = remoteViews.iterator();
 		while (it.hasNext()) {

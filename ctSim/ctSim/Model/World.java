@@ -20,7 +20,6 @@
 package ctSim.Model;
 
 import ctSim.Controller.Controller;
-import ctSim.Model.Rules.Judge;
 import ctSim.View.ControlFrame;
 
 import java.util.*;
@@ -140,7 +139,7 @@ public class World extends Thread {
 	
 	// TODO Schiedsrichter in eigenen Thread auslagern 
 	/** Der Schiedsrichter, der die Wettkaempfe ueberwacht */
-	private Judge judge = null;
+	//private Judge judge = null;
 	
 	/** Erzeugt eine neue Welt */
 	public World(Controller controller, String parcoursFile) throws Exception {
@@ -216,7 +215,11 @@ public class World extends Thread {
 		sceneLight.setObstBG(new BranchGroup());
 		// Damit spaeter Bots hinzugefuegt werden koennen:
 		sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		sceneLight.getObstBG().setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_DETACH);
+		sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_PICKABLE_WRITE);
+
+		
 		// Objekte sind fest
 		sceneLight.getObstBG().setPickable(true);
 
@@ -261,6 +264,15 @@ public class World extends Thread {
 		parcours= pL.getParcours();
 	}
 
+	/**
+	 * Entfernt einen Bot wieder
+	 * @param bot
+	 */
+	public void removeBot(Bot bot){
+		bots.remove(bot);
+//		ErrorHandler	.error("world.removeBot nicht implementiert");
+	}
+	
 	/**
 	 * Fuegt einen Bot in die Welt ein
 	 * 
@@ -701,10 +713,6 @@ public class World extends Thread {
 			} catch (InterruptedException IEx) {
 				cleanup();
 			}
-
-			// TODO Schiedsrichter in eigenen Thread auslagern
-			if (judge != null)
-				judge.check();
 			
 			// Ist die Pause-Taste in der GUI gedrueckt worden?
 			if (!haveABreak) {
@@ -975,15 +983,4 @@ public class World extends Thread {
 	public float getPlaygroundDimY() {
 		return parcours.getHeight();
 	}
-
-
-	public Judge getJudge() {
-		return judge;
-	}
-
-
-	public void setJudge(Judge judge) {
-		this.judge = judge;
-	}
-
 }
