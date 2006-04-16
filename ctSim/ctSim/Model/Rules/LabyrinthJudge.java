@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ctSim.Model.Bot;
+import ctSim.Model.CtBot;
 import ctSim.Model.World;
 
 /**
@@ -64,6 +65,11 @@ public class LabyrinthJudge extends Judge{
 				suspendWorld(false);	
 				takeStartTime();
 				raceStartet= true;
+				Iterator it = bots.iterator();
+				while (it.hasNext()) {
+					Bot bot = (Bot) it.next();
+					((CtBot)bot).setSensRc5(CtBot.RC5_CODE_5);
+				}
 			}
 		} else {	// Wir sind im Rennen
 			

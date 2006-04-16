@@ -52,44 +52,6 @@ import ctSim.View.LogFrame;
 public class CtControlPanel extends ControlPanel {
 
 	private static final long serialVersionUID = 1L;
-
-	private static final int RC5_CODE_0 = 0x3940; // /< Taste 0
-
-	private static final int RC5_CODE_1 = 0x3941; // /< Taste 1
-
-	private static final int RC5_CODE_2 = 0x3942; // /< Taste 2
-
-	private static final int RC5_CODE_3 = 0x3943; // /< Taste 3
-
-	private static final int RC5_CODE_4 = 0x3944; // /< Taste 4
-
-	private static final int RC5_CODE_5 = 0x3945; // /< Taste 5
-
-	private static final int RC5_CODE_6 = 0x3946; // /< Taste 6
-
-	private static final int RC5_CODE_7 = 0x3947; // /< Taste 7
-
-	private static final int RC5_CODE_8 = 0x3948; // /< Taste 8
-
-	private static final int RC5_CODE_9 = 0x3949; // /< Taste 9
-
-	private static final int RC5_CODE_UP = 0x2950; // /< Taste Hoch
-
-	private static final int RC5_CODE_DOWN = 0x2951; // /< Taste Runter
-
-	private static final int RC5_CODE_LEFT = 0x2955; // /< Taste Links
-
-	private static final int RC5_CODE_RIGHT = 0x2956; // /< Taste Rechts
-
-	private static final int RC5_CODE_PWR = 0x394C; // /< Taste An/Aus
-
-	private static final int RC5_CODE_RED = 0x100B; // /< Taste An/Aus
-
-	private static final int RC5_CODE_GREEN = 0x102E; // /< Taste An/Aus
-
-	private static final int RC5_CODE_YELLOW = 0x1038; // /< Taste An/Aus
-
-	private static final int RC5_CODE_BLUE = 0x1029; // /< Taste An/Aus
 	
 	private JTextField yPosField;
 
@@ -765,7 +727,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton1.setText("1");
 						jButton1.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_1);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_1);
 							}
 						});
 					}
@@ -775,7 +737,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton2.setText("2");
 						jButton2.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_2);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_2);
 							}
 						});
 					}
@@ -785,7 +747,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton3.setText("3");
 						jButton3.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_3);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_3);
 							}
 						});
 					}
@@ -795,7 +757,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton4.setText("4");
 						jButton4.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_4);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_4);
 							}
 						});
 					}
@@ -805,7 +767,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton5.setText("5");
 						jButton5.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_5);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_5);
 							}
 						});
 					}
@@ -815,7 +777,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton6.setText("6");
 						jButton6.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_6);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_6);
 							}
 						});
 					}
@@ -825,7 +787,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton7.setText("7");
 						jButton7.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_7);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_7);
 							}
 						});
 					}
@@ -835,7 +797,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton8.setText("8");
 						jButton8.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_8);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_8);
 							}
 						});
 					}
@@ -845,7 +807,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton9.setText("9");
 						jButton9.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_9);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_9);
 							}
 						});
 					}
@@ -855,7 +817,7 @@ public class CtControlPanel extends ControlPanel {
 						jButtonOnOff.setText("ON / OFF");
 						jButtonOnOff.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_PWR);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_PWR);
 							}
 						});
 					}
@@ -865,7 +827,7 @@ public class CtControlPanel extends ControlPanel {
 						jButton10.setText("0");
 						jButton10.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_0);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_0);
 							}
 						});
 					}
@@ -883,7 +845,7 @@ public class CtControlPanel extends ControlPanel {
 						jButtonUp.setText("UP");
 						jButtonUp.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_UP);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_UP);
 							}
 						});
 					}
@@ -897,7 +859,7 @@ public class CtControlPanel extends ControlPanel {
 						jButtonLeft.setText("LEFT");
 						jButtonLeft.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_LEFT);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_LEFT);
 							}
 						});
 					}
@@ -911,7 +873,7 @@ public class CtControlPanel extends ControlPanel {
 						jButtonRight.setText("RIGHT");
 						jButtonRight.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_RIGHT);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_RIGHT);
 							}
 						});
 					}
@@ -925,7 +887,7 @@ public class CtControlPanel extends ControlPanel {
 						jButtonDown.setText("DOWN");
 						jButtonDown.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								((CtBot)getBot()).setSensRc5(RC5_CODE_DOWN);
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_DOWN);
 							}
 						});
 					}
@@ -945,7 +907,7 @@ public class CtControlPanel extends ControlPanel {
 							jButtonRed.setBackground(new Color(255, 0, 0));
 							jButtonRed.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent evt) {
-									((CtBot)getBot()).setSensRc5(RC5_CODE_RED);
+									((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_RED);
 								}
 							});
 						}
@@ -957,7 +919,7 @@ public class CtControlPanel extends ControlPanel {
 									.addActionListener(new ActionListener() {
 										public void actionPerformed(
 												ActionEvent evt) {
-											((CtBot)getBot()).setSensRc5(RC5_CODE_GREEN);
+											((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_GREEN);
 										}
 									});
 						}
@@ -969,7 +931,7 @@ public class CtControlPanel extends ControlPanel {
 									.addActionListener(new ActionListener() {
 										public void actionPerformed(
 												ActionEvent evt) {
-											((CtBot)getBot()).setSensRc5(RC5_CODE_YELLOW);
+											((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_YELLOW);
 										}
 									});
 						}
@@ -979,7 +941,7 @@ public class CtControlPanel extends ControlPanel {
 							jButtonBlue.setBackground(new Color(0, 0, 255));
 							jButtonBlue.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent evt) {
-									((CtBot)getBot()).setSensRc5(RC5_CODE_BLUE);
+									((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_BLUE);
 								}
 							});
 						}
