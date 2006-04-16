@@ -268,14 +268,14 @@ public class ParcoursLoader {
 	 * 0 = (x=1, y=0) ab da im Uhrzeigersinn
 	 */
 	private int checkNeighbours(int x, int y, char c){
-		if ((x<parcours.getDimX()-1) && (parcoursMap[x+1][y] == c))
-			return 0;		
 		if ((y>0) && (parcoursMap[x][y-1] == c))
 			return 90;
-		if ((x>0) && (parcoursMap[x-1][y] == c))
-				return 180;
 		if ((y<parcours.getDimY()-1) && (parcoursMap[x][y+1] == c))
 			return 270;		
+		if ((x>0) && (parcoursMap[x-1][y] == c))
+				return 180;
+		if ((x<parcours.getDimX()-1) && (parcoursMap[x+1][y] == c))
+			return 0;		
 		
 		
 		return -1;
