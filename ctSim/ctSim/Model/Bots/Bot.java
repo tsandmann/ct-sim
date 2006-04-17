@@ -31,7 +31,6 @@ import javax.vecmath.Vector3f;
 import ctSim.ErrorHandler;
 import ctSim.Controller.Controller;
 import ctSim.Model.AliveObstacle;
-import ctSim.Model.World;
 import ctSim.View.ControlPanel;
 
 /**
@@ -92,7 +91,7 @@ abstract public class Bot extends AliveObstacle{
 	protected void cleanup() {
 		super.cleanup();
 		
-		controller.removeBotFromView(getName());
+		controller.removeFromView(getName());
 		panel.remove();
 		panel = null;
 	}
@@ -139,20 +138,7 @@ abstract public class Bot extends AliveObstacle{
 		this.panel = panel;
 	}
 
-	/**
-	 * @return Gibt Referenz auf die Welt zurueck
-	 */
-	public World getWorld() {
-		return world;
-	}
 
-	/**
-	 * @param world
-	 *            Referenz auf die Welt, die gesetzt werden soll
-	 */
-	public void setWorld(World world) {
-		this.world = world;
-	}
 
 	/**
 	 * @return Gibt die Blickrichtung zurueck

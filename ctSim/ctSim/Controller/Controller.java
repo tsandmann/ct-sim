@@ -346,7 +346,7 @@ public class Controller {
 	 * @param bg Branchgruppe des Bot
 	 * @param map Liste mit Einstiegspunkten
 	 */
-	public void addBotToView(String id, HashMap map) {
+	public void addToView(String id, HashMap map) {
 		Iterator it = remoteViews.iterator();
 		while (it.hasNext()) {
 			RemoteView rV = (RemoteView) it.next();
@@ -360,7 +360,7 @@ public class Controller {
 	 * @param id
 	 *            Bezeichner des Bot
 	 */
-	public void removeBotFromView(String id) {
+	public void removeFromView(String id) {
 		Iterator it = remoteViews.iterator();
 		while (it.hasNext()) {
 			RemoteView rV = (RemoteView) it.next();

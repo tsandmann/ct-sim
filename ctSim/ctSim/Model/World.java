@@ -332,7 +332,7 @@ public class World extends Thread {
 		// in den aktuellen Zweig nur die neuen Referenzen
 		sceneLight.addBotRefs(bot.getName(),bot.getNodeMap());
 		// Benachrichtige den Controller uber neue Bots
-		controller.addBotToView(bot.getName(), newMap);
+		controller.addToView(bot.getName(), newMap);
 
 		
 		bg.cloneTree();

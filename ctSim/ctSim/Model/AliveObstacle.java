@@ -184,5 +184,18 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	public void setBounds(Bounds bounds) {
 		this.bounds = bounds;
 	}
+	/**
+	 * @return Gibt Referenz auf die Welt zurueck
+	 */
+	public World getWorld() {
+		return world;
+	}
 
+	/**
+	 * @param world
+	 *            Referenz auf die Welt, die gesetzt werden soll
+	 */
+	public void setWorld(World world) {
+		this.world = world;
+	}
 }
