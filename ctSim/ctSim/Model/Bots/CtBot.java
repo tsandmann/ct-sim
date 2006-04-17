@@ -403,6 +403,7 @@ public abstract class CtBot extends Bot {
 	/**
 	 * Erzeugt die 3D-Repraesentation eines Bots
 	 */
+	@SuppressWarnings("unchecked")
 	private void createBranchGroup() {
 		// Translationsgruppe fuer den Bot
 		TransformGroup tg = new TransformGroup();
@@ -415,7 +416,7 @@ public abstract class CtBot extends Bot {
 		// Bot erzeugen
 		Shape3D realBot = createBotShape();
 		realBot.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
-		realBot.setAppearance(getAppearance("normal"));
+		setAppearance("normal");
 				
 		realBot.setName(getName() + " Body");
 		// Koerper "pickable" setzen, um Kollisionen mit anderen Bots
@@ -425,9 +426,10 @@ public abstract class CtBot extends Bot {
 		realBot.setCapability(Cylinder.ALLOW_PICKABLE_WRITE);
 		// Referenz auf Koerper merken, um spaeter bei der eigenen Kollisionsabfrage die 
 		// "Pickable"-Eigenschaft aendern zu koennen
-		botBody = realBot;
-		tg.addChild(botBody);
+		tg.addChild(realBot);
 		
+		// Referenz im Bot ablegen
+		addNodeReference(BOTBODY,realBot);
 			
 		// Die Grenzen (Bounds) des Bots sind wichtig
 		// fuer die Kollisionserkennung.
@@ -441,8 +443,9 @@ public abstract class CtBot extends Bot {
 		bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
 		bg.addChild(tg);
 
-		setTransformGroup(tg);
-		setBotBG(bg);
+		// Referenz im Bot ablegen
+		addNodeReference(BOTTG,tg);
+		addNodeReference(BOTBG,bg);
 	}
 
 	/**

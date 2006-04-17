@@ -54,15 +54,22 @@ import ctSim.ErrorHandler;
 
 	@SuppressWarnings("unchecked")
 	private void reconstructMap(Group scene, HashMap map){
+		if (scene == null){
+			ErrorHandler.error("Keine Group empfangen!");
+			return;
+		}
+		
+			
 		Iterator it = map.keySet().iterator();
 		
 		while (it.hasNext()){
 			String name = (String)it.next();
 			SceneGraphObject so = findInScenegraph(scene,name);
-			if (so != null)
+			if (so != null){
 				map.put(name,so);
-			else
-				ErrorHandler.error("Key "+name+" konnte nach der uebertragung nicht rekontruiert werden");
+				System.out.println("Key "+name+" rekonstruiert");
+			}else
+				ErrorHandler.error("Key "+name+" konnte nach der Uebertragung nicht rekonstruiert werden");
 		}
 	}
 

@@ -56,6 +56,9 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 			String name = (String)it.next();
 			SceneGraphObject so = (SceneGraphObject)map.get(name);
 			so.setUserData(new String(name));
+			
+			System.out.println("Key "+name+" vorbereitet");
+
 		}
 	}
 }

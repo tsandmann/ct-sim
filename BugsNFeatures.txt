@@ -36,21 +36,14 @@ jenseits des Spielfelds liegt. Kurz danach springt der Bot an die eigentlich gew
 scheint vor allem bei Bots aufzutreten, die sofort ab dem Moment ihrer Erzeugung fahren; bleiben sie erstmal 
 stehen, tritt das Problem nicht auf.  
 
-* [06-03-05][open][Torsten Evers][pek@heise.de]:
-Ich habe, da ich gerade an einem Algorithmus zur Linienverfolgung sitze, im 
-Sim den Linien die Dicke 20 gegeben, damit sie beide Liniensensoren abdecken.
-Fuer die Liniensensensoren kommen da auch brauchbare Werte raus (0x22 
-ausserhalb der Linie und 0x1CC). Zwar sind die Werte beim realen Bot noch 
-hoeher aber damit kann man leben. Die Abgrundsensoren jedoch, die eigentlich 
-bei demselben Untergrund auch dieselben Werte anzeigen sollten, zeigen 
-ausserhalb der Linie 0x22 (der Wert scheint ok zu sein) aber wenn sie ueber 
-der Linie sind nur 0xCE. Bei meinem realen Bot verhalten sich Linien- und 
-Abgrundsensoren bei gleichem Untergrund auch gleich.
-
-
 
 Feature Requests
 ----------------
+* [17-04-2006] [open] [Benjamin Benz] []: Namensvergabe (Controller.getNewBotName) der Bots sollte die Namen verstorbener Bots neu Vergeben
+* [17-04-2006] [open] [Benjamin Benz] []: Bot-Hierarchie erweitern: Obstacle -> MovableObstacle -> AliveObstacle -> Bot
+* [17-04-2006] [open] [Benjamin Benz] []: ClientViews bekommen noch keine Infos über Farbänderungen
+* [17-04-2006] [open] [Benjamin Benz] []: Netzwerkprotokoll zwischen Sim und ClientView optimieren
+* [17-04-2006] [open] [Benjamin Benz] []: Erzeugung der Diff-Daten für ClientView optimieren
 * [17-04-2006] [open] [Benjamin Benz] []: Die ganzen Panel sind in keiner sinnvollen Vererbungshierarchie und Bennenungsschema
 * [16-04-2006] [open] [Benjamin Benz] []: Die CtControlPanel sind mies gecoded, bitte aufraeumen
 * [16-04-2006] [open] [Benjamin Benz] []: Parcoursloader sollte unbedingt effizienter arbeiten und z.B. Bodenkacheln zusammenfassen
@@ -68,6 +61,8 @@ von 1024x768 Pixeln angezeigt werden kann.
 
 Erledigt:
 ---------
+* [17-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: ClientViews bekommen noch keine neue Bots, gestorbene Bots
+* [17-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: Scenegraphen der ClientViews um alle pickable und co Capabilities bereinigen
 * [15-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: Button zum starten von simulierten C-Bots einfügen
 * [15-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: c't-Sim sollte prüfen, ob ein Bot das Zielfeld erreicht
 * [15-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: c't-Sim sollte die Zeit stoppen, bis ein Bot das Zielfeld erreicht
@@ -90,3 +85,14 @@ echten Weltgroesse.
 * [06-02-22][resolved][pek@heise.de][bbe@heise.de]:
 Die Bots sollten in der grafischen Anzeige im Simulator eine Kennung zugewiesen bekommen, damit man sie 
 voneinander unterscheiden kann.  
+
+* [06-03-05][resolved][Torsten Evers][bbe@heise.de]:
+Ich habe, da ich gerade an einem Algorithmus zur Linienverfolgung sitze, im 
+Sim den Linien die Dicke 20 gegeben, damit sie beide Liniensensoren abdecken.
+Fuer die Liniensensensoren kommen da auch brauchbare Werte raus (0x22 
+ausserhalb der Linie und 0x1CC). Zwar sind die Werte beim realen Bot noch 
+hoeher aber damit kann man leben. Die Abgrundsensoren jedoch, die eigentlich 
+bei demselben Untergrund auch dieselben Werte anzeigen sollten, zeigen 
+ausserhalb der Linie 0x22 (der Wert scheint ok zu sein) aber wenn sie ueber 
+der Linie sind nur 0xCE. Bei meinem realen Bot verhalten sich Linien- und 
+Abgrundsensoren bei gleichem Untergrund auch gleich.

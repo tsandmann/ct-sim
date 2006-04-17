@@ -24,6 +24,7 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 
 import ctSim.SimUtils;
@@ -230,11 +231,11 @@ abstract public class CtBotSim extends CtBot {
 
 		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 		// der Bot blau gefaerbt.
-		if (world.checkCollision(botBody, getBounds(), newPos, getBotName())) {
+		if (world.checkCollision((Shape3D)getNodeReference(BOTBODY), getBounds(), newPos, getBotName())) {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
 			if (isApperanceCollision) {
-				botBody.setAppearance(getAppearance("normal"));//world.getBotAppear());
+				setAppearance("normal");
 				isApperance = true;
 				isApperanceCollision = false;
 			}
@@ -243,7 +244,7 @@ abstract public class CtBotSim extends CtBot {
 			moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt
 
 			if (isApperance) {
-				botBody.setAppearance(getAppearance("collision"));//world.getBotAppearCollision());
+				setAppearance("collision");
 				isApperance = false;
 				isApperanceCollision = true;
 			}
@@ -306,13 +307,13 @@ abstract public class CtBotSim extends CtBot {
 		if (isFalling) {
 			((CtControlPanel) this.getPanel()).stopBot();
 			if (isApperance) {
-				botBody.setAppearance(getAppearance("falling"));//world.getBotAppearFall());
+				setAppearance("falling");//world.getBotAppearFall());
 				isApperance = false;
 				isApperanceFall = true;
 			}
 		} else {
 			if (isApperanceFall) {
-				botBody.setAppearance(getAppearance("normal"));//world.getBotAppear());
+				setAppearance("normal");//world.getBotAppear());
 				isApperance = true;
 				isApperanceCollision = false;
 			}
@@ -321,9 +322,9 @@ abstract public class CtBotSim extends CtBot {
 		// IR-Abstandssensoren aktualisieren
 		if (updateSensIr) {
 			this.setSensIrL(world.watchObstacle(getSensIRPosition('L'),
-					new Vector3d(newHeading), SENS_IR_ANGLE, botBody));
+					new Vector3d(newHeading), SENS_IR_ANGLE, (Shape3D)getNodeReference(BOTBODY)));
 			this.setSensIrR(world.watchObstacle(getSensIRPosition('R'),
-					new Vector3d(newHeading), SENS_IR_ANGLE, botBody));
+					new Vector3d(newHeading), SENS_IR_ANGLE, (Shape3D)getNodeReference(BOTBODY)));
 		}
 
 		// Liniensensoren aktualisieren

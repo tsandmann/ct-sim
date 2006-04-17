@@ -24,6 +24,7 @@ import java.util.HashMap;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
@@ -32,6 +33,7 @@ import javax.vecmath.AxisAngle4f;
 // import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3f;
 
+import ctSim.ErrorHandler;
 import ctSim.Controller.Controller;
 import ctSim.Model.Obstacle;
 import ctSim.Model.World;
@@ -58,7 +60,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	/** Die Grenzen des Roboters */
 	private Bounds bounds = null;
 
-	/** Name des Bots */
+	/** Name des Bots NUR LESEN!!!! */
 	private String botName;
 
 	/** Steuerpanel des Bots */
@@ -69,18 +71,8 @@ abstract public class Bot extends Thread implements Obstacle {
 
 	/** Zeiger auf die Welt, in der der Bot lebt */
 	protected World world;
-
-	/** Die 3D-Repraesentation eines Bots */
-	BranchGroup botBG;
-
-	/** Koerper des Roboters */
-	protected Shape3D botBody;
-
-	/**
-	 * Die Transformgruppe der 3D-Repraesentation eines Bots
-	 */
-	private TransformGroup transformGroup;
 	
+	// TODO nach Obstacle verschieben
 	/** Position */
 	private Vector3f pos = new Vector3f(0.0f, 0f, getHeight() / 2 + 0.006f);
 
@@ -91,6 +83,27 @@ abstract public class Bot extends Thread implements Obstacle {
 
 	/** Liste mit den verschiedenen Aussehen eines Bots */
 	private HashMap appearances;
+
+	/** Die 3D-Repraesentation eines Bots */
+//	BranchGroup botBG;
+
+	/** Koerper des Roboters */
+//	protected Shape3D botBody;
+
+	/**
+	 * Die Transformgruppe der 3D-Repraesentation eines Bots
+	 */
+//	private TransformGroup transformGroup;
+
+	/** Liste mit allen Einsprungspunkten in den Szenegraphen */
+	private HashMap nodeMap = new HashMap();
+
+	/** Konstanten fuer die Noderefernces */
+	public static final String BOTBODY = "botBody";
+	/** Konstanten fuer die Noderefernces */
+	public static final String BOTBG = "botBG";
+	/** Konstanten fuer die Noderefernces */
+	public static final String BOTTG = "botTG";
 	
 	/**
 	 * Initialisierung des Bots
@@ -99,6 +112,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	public Bot(Controller controller) {
 		super();
 		this.controller = controller;
+		botName = controller.getNewBotName(getClass().getName());
 	}
 
 	/**
@@ -129,7 +143,7 @@ abstract public class Bot extends Thread implements Obstacle {
 	 * @see Bot#work()
 	 */
 	protected void cleanup() {
-		botBG.detach();
+		((BranchGroup)getNodeReference(BOTBG)).detach();
 		world.removeBot(this);
 		controller.removeBotFromView(botName);
 		world = null;
@@ -179,9 +193,9 @@ abstract public class Bot extends Thread implements Obstacle {
 //			translationGroup.setTransform(transform);
 			
 			Transform3D transform = new Transform3D();
-			transformGroup.getTransform(transform);
+			((TransformGroup)getNodeReference(BOTTG)).getTransform(transform);
 			transform.setTranslation(vec);
-			transformGroup.setTransform(transform);
+			((TransformGroup)getNodeReference(BOTTG)).setTransform(transform);
 			
 		}
 	}
@@ -208,11 +222,11 @@ abstract public class Bot extends Thread implements Obstacle {
 				angle = -angle;
 			Transform3D transform = new Transform3D();
 
-			transformGroup.getTransform(transform);
+			((TransformGroup)getNodeReference(BOTTG)).getTransform(transform);
 			
 			transform.setRotation(new AxisAngle4f(0f, 0f, 1f, angle));
 			
-			transformGroup.setTransform(transform);
+			((TransformGroup)getNodeReference(BOTTG)).setTransform(transform);
 //			rotationGroup.setTransform(transform);
 		}
 	}
@@ -220,32 +234,23 @@ abstract public class Bot extends Thread implements Obstacle {
 	/**
 	 * @return Gibt eine Referenz auf die BranchGroup des Bot zurueck
 	 */
-	public BranchGroup getBotBG() {
-		return botBG;
-	}
+//	public BranchGroup getBotBG() {
+//		return botBG;
+//	}
 
 	/**
 	 * @param botBG
 	 *            Referenz auf die BranchGroup, die der Bot erhalten soll
 	 */
-	public void setBotBG(BranchGroup botBG) {
-		this.botBG = botBG;
-	}
+//	public void setBotBG(BranchGroup botBG) {
+//		this.botBG = botBG;
+//	}
 
 	/**
 	 * @return Gibt den Namen des Bot (botName) zurueck
 	 */
 	public String getBotName() {
 		return botName;
-	}
-
-	/**
-	 * @param botName
-	 *            Der Name des Bot (botName), der gesetzt werden soll
-	 */
-	public void setBotName(String botName) {
-		this.botName = botName;
-		getTransformGroup().setName(botName+"_TG");
 	}
 
 	/**
@@ -346,20 +351,20 @@ abstract public class Bot extends Thread implements Obstacle {
 		return controller;
 	}
 
-	public TransformGroup getTransformGroup() {
-		return transformGroup;
-	}
-
-	public void setTransformGroup(TransformGroup transformGroup) {
-		this.transformGroup = transformGroup;
-	}
+//	public TransformGroup getTransformGroup() {
+//		return transformGroup;
+//	}
+//
+//	public void setTransformGroup(TransformGroup transformGroup) {
+//		this.transformGroup = transformGroup;
+//	}
 
 	/**
 	 * Sucht ein Erscheinungsbild des Bots aus der Liste heraus
 	 * @param key
 	 * @return
 	 */
-	public Appearance getAppearance(String key) {
+	private Appearance getAppearance(String key) {
 		Appearance app = null;
 		if (appearances != null)
 			app =(Appearance) appearances.get(key);
@@ -367,9 +372,48 @@ abstract public class Bot extends Thread implements Obstacle {
 		return app;
 	}
 
+	/** Lagert die Erscheinungsbilder des Bots ein
+	 * 
+	 * @param appearances
+	 */
 	public void setAppearances(HashMap appearances) {
 		this.appearances = appearances;
-		botBody.setAppearance(getAppearance("normal"));
+		setAppearance("normal");
+		//((Shape3D)nodeMap.get(BOTBODY)).setAppearance(getAppearance("normal"));
 	}
 
+	/**
+	 * Setzt das erscheinungsbild des Bots auf einenWert, zu dem bereits eine Appearance ind er Liste vorliegt
+	 * @param key
+	 */
+	public void setAppearance(String key) {
+		Shape3D botBody = (Shape3D) getNodeReference(BOTBODY);
+		if (botBody != null)
+			botBody.setAppearance(getAppearance(key));
+		else
+			ErrorHandler.error("Fehler beim Versuch eine Appearance zu setzen: botBody == null");
+	}
+	
+	/**
+	 * Gibt alle Referenzen auf den Szenegraphen zurück
+	 * @return
+	 */
+	public HashMap getNodeMap() {
+		return nodeMap;
+	}
+	
+	public SceneGraphObject getNodeReference(String key){
+		if (key.contains(botName))
+			return	(SceneGraphObject) nodeMap.get(key);
+		else
+			return	(SceneGraphObject) nodeMap.get(botName+"_"+key);
+	}
+
+	/** Fuegt eine Referenz ein */
+	@SuppressWarnings("unchecked")
+	public void addNodeReference(String key, SceneGraphObject so){
+		nodeMap.put(botName+"_"+key,so);
+	}
+
+	
 }

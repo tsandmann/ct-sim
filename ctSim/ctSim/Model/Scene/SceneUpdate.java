@@ -26,6 +26,8 @@ import java.util.Map;
 
 import javax.media.j3d.Node;
 import javax.media.j3d.TransformGroup;
+
+import ctSim.Model.Bots.Bot;
 import ctSim.View.ViewBotUpdate;
 
 /**
@@ -35,25 +37,22 @@ import ctSim.View.ViewBotUpdate;
 public class SceneUpdate implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/** Es ist ein normales Update mit neune TG-Werten usw. */
+	public static final int TYPE_UPDATE = 0;
+	/** Es ist ein Bot dazu gekommen */
+	public static final int TYPE_ADDBOT = 1;
+	/** Es muss ein Bot sterben */
+	public static final int TYPE_REMOVEBOT = 2;	
+	/**
+	 * Speichert, was das für ein Update-Packet ist. siehe TYPE_-Konstanten
+	 */
+	private int type = TYPE_UPDATE;
+	
+	/** Name des Bots, der zu loeschen ist */
+	private String botToKill = null;
+	
 	/** Liste mit allen Bots, die in dieser Welt leben */
 	private List<ViewBotUpdate> bots = null;
-
-	/** ID fuer einen neuen Bot */
-//	private String id = null;
-	/** TransfromGroup fuer einen neuen Bot */
-//	private TransformGroup tg = null;
-	/** BranchGroup fuer einen neuen Bot */
-//	private BranchGroup bg = null;
-
-	/**
-	 * @return Gibt eine Referenz auf bg zurueck
-	 * @return Gibt den Wert von bg zurueck
-	 */
-//	public BranchGroup getBg() {
-//		return bg;
-//	}
-
-
 
 	/**
 	 * @return Gibt eine Referenz auf bots zurueck
@@ -62,40 +61,65 @@ public class SceneUpdate implements Serializable {
 		return bots;
 	}
 
-
-
 	/**
-	 * @return Gibt den Wert von id zurueck
+	 * Erzeugt ein leeres Update  
 	 */
-//	public String getId() {
-//		return id;
-//	}
-
+	public SceneUpdate(){
+		super();
+	}
+	
 	/**
-	 * @return Gibt eine Referenz auf tg zurueck
-	 */
-//	public TransformGroup getTg() {
-//		return tg;
-//	}
-
-	/**
-	 * Erzeugt ein Update aus den vorhandenen Bots 
+	 * Erzeugt ein Update aus einer Scene 
+	 * @param sceneLight
 	 */
 	public SceneUpdate(SceneLight sceneLight) {
 		super();
 		
 		bots= new LinkedList<ViewBotUpdate>();
 		
-		// Einmal alle Bots durchgehen
+		// Einmal alle Eintraege in der Map durchgehen
 		Iterator it = sceneLight.getMap().entrySet().iterator(); 
 		while (it.hasNext()) {
 			Map.Entry entry =(Map.Entry) it.next();
+			
 			String key = (String) entry.getKey();
 			Node value = (Node) entry.getValue();
 			
-			if (!key.equals("obstBG")){
+			if (key.contains(Bot.BOTTG)){
 				bots.add(new ViewBotUpdate(key,(TransformGroup)value));				
 			}
 		}
+	}
+
+	/**
+	 * @return Gibt eine Referenz auf type zurueck
+	 * @return Gibt den Wert von type zurueck
+	 */
+	public int getType() {
+		return type;
+	}
+
+	/**
+	 * @param type Referenz auf type, die gesetzt werden soll
+	 * @param type Der Wert von type, der gesetzt werden soll
+	 */
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	/**
+	 * @return Gibt eine Referenz auf botToKill zurueck
+	 * @return Gibt den Wert von botToKill zurueck
+	 */
+	public String getBotToKill() {
+		return botToKill;
+	}
+
+	/**
+	 * @param botToKill Referenz auf botToKill, die gesetzt werden soll
+	 * @param botToKill Der Wert von botToKill, der gesetzt werden soll
+	 */
+	public void setBotToKill(String botToKill) {
+		this.botToKill = botToKill;
 	}
 }

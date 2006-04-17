@@ -29,13 +29,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.media.j3d.Appearance;
-import javax.media.j3d.BranchGroup;
 import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.Material;
 import javax.media.j3d.TexCoordGeneration;
 import javax.media.j3d.Texture;
 import javax.media.j3d.Texture2D;
-import javax.media.j3d.TransformGroup;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.vecmath.Color3f;
@@ -139,9 +137,12 @@ public class Controller {
 	public void update() {
 		List<RemoteView> toRemove = null;
 
-		SceneUpdate sU = new SceneUpdate(world.getSceneLight());
-
+		SceneUpdate sU= null ;
+		
 		Iterator it = remoteViews.iterator();
+		if (it.hasNext())
+			sU = new SceneUpdate(world.getSceneLight());
+
 		while (it.hasNext()) {
 			RemoteView rV = (RemoteView) it.next();
 			try {
@@ -171,11 +172,14 @@ public class Controller {
 
 	/**
 	 * Bennent einen neuen Bot
+	 * Achtung, die Namensvergabe wird nicht zurueckgesetzt, wenn ein bot stirbt
 	 * @param type
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private String getNewBotName(String type){
+	public String getNewBotName(String type){
+		// TODO Namensvergabe sollte die Namen von gestorbenen Bots neu verteilen
+
 		// Schaue nach, wieviele Bots von der Sorte wir schon haben
 		Integer bots = (Integer) numberBots.get(type);
 		if (bots == null){
@@ -338,20 +342,15 @@ public class Controller {
 	/**
 	 * Fuegt einen Bot in alle Views ein
 	 * 
-	 * @param id
-	 *            Bezeichner des Bot
-	 * @param tg
-	 *            Translationsgruppe des Bot
-	 * @param rg
-	 *            Rotationsgruppe des Bot
-	 * @param bg
-	 *            BranchGroup
+	 * @param id Bezeichner des Bot
+	 * @param bg Branchgruppe des Bot
+	 * @param map Liste mit Einstiegspunkten
 	 */
-	public void addBotToView(String id, TransformGroup tg, BranchGroup bg) {
+	public void addBotToView(String id, HashMap map) {
 		Iterator it = remoteViews.iterator();
 		while (it.hasNext()) {
 			RemoteView rV = (RemoteView) it.next();
-			rV.addBotToView(id, tg, bg);
+			rV.addBotToView(id, map);
 		}
 	}
 
@@ -368,8 +367,7 @@ public class Controller {
 			rV.removeBot(id);
 		}
 		
-		ErrorHandler
-				.error("removeBotFromView nicht vollstaendig implementiert");
+		ErrorHandler	.error("removeBotFromView nicht vollstaendig implementiert");
 		// TODO Was ist mit der lokalen View?
 		// TODO Was ist mit den Panels ?
 	}
@@ -382,14 +380,11 @@ public class Controller {
 	private void addBot(Bot bot){
 		if (bot != null) {
 			bot.providePanel();
-			String name= getNewBotName(bot.getClass().getName());
-			
-			bot.setBotName(name);
 			
 			// TODO Sinnvolle Zuordnung von Bot-Name zu Konfig
-			HashMap botConfig = getBotConfig("config/ct-sim.xml",name);
+			HashMap botConfig = getBotConfig("config/ct-sim.xml",bot.getBotName());
 			if (botConfig == null){
-				ErrorHandler.error("Keine BotConfig fuer: "+name+" in der XML-Config-Datei gefunden. Lade Defaults.");
+				ErrorHandler.error("Keine BotConfig fuer: "+bot.getBotName()+" in der XML-Config-Datei gefunden. Lade Defaults.");
 				botConfig = getBotConfig("config/ct-sim.xml","default");
 			}
 			
@@ -826,9 +821,9 @@ public class Controller {
 					tcp = new TcpConnection();
 					tcp.connect(server.accept());
 
-					RemoteView rm = new RemoteView(tcp);
-					rm.init(world.exportSceneGraph());
-					remoteViews.add(rm);
+					RemoteView rV = new RemoteView(tcp);
+					rV.init(world.exportSceneGraph());
+					remoteViews.add(rV);
 
 				}
 			} catch (IOException ioe) {

@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.media.j3d.BranchGroup;
@@ -36,6 +38,7 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 
 import ctSim.ErrorHandler;
+import ctSim.Model.Bots.Bot;
 import ctSim.View.ViewBotUpdate;
 
 /**
@@ -52,6 +55,10 @@ public class SceneLight {
 	/** Der eigentliche Szenegraph */
 	private BranchGroup scene;
 
+	/** Konstanten fuer die Noderefernces */
+	public static final String OBSTBG = "obstBG";
+
+	
 	/**
 	 * Initialisiere das Objekt
 	 */
@@ -89,17 +96,13 @@ public class SceneLight {
 	/**
 	 * Fuegt einen Bot hinzu, der schon im Szenegraphen ist
 	 * 
-	 * @param botId
-	 *            Name des Bot
-	 * @param tg
-	 *            Translationsgruppe des Bot
-	 * @param rg
-	 *            Rotationsgruppe des Bot
+	 * @param botId Name des Bot
+	 * @param tg Transformgruppe des Bot
 	 */
-	@SuppressWarnings("unchecked")
-	public void addBot(String botId, TransformGroup tg) {
-		map.put(botId+"TG",tg);
-	}
+//	@SuppressWarnings("unchecked")
+//	public void addBot_(String botId, TransformGroup tg) {
+//		map.put(botId+"TG",tg);
+//	}
 
 	/**
 	 * Fuegt einen Bot zur Laufzeit hinzu, der noch nicht im Szenegraphen ist
@@ -109,20 +112,65 @@ public class SceneLight {
 	 *            Name des Bot
 	 * @param tg
 	 *            Translationsgruppe des Originalbot
-	 * @param rg
-	 *            Rotationsgruppe des Originalbot
 	 * @param bg
 	 *            Branchgruppe des Originalbot
 	 */
-	public void addBot(String botId, TransformGroup tg, BranchGroup bg) {
-		NodeReferenceTable nr = new NodeReferenceTable();
-		BranchGroup newBg = (BranchGroup) bg.cloneTree(nr);
-		((BranchGroup)map.get("obstBG")).addChild(newBg);
+//	public void addBot(String botId, TransformGroup tg, BranchGroup bg) {
+//		// Kopie erzeugen
+//		NodeReferenceTable nr = new NodeReferenceTable();
+//		BranchGroup newBg = (BranchGroup) bg.cloneTree(nr);
+//		
+//		// Kopie in die Szene einfuegen
+//		((BranchGroup)map.get("obstBG")).addChild(newBg);
+//
+//		addBot(botId,(TransformGroup) nr.getNewObjectReference(tg));
+//	}
 
-		addBot(botId,(TransformGroup) nr.getNewObjectReference(tg));
+
+	/**
+	 * Nimmt einen Bot in Scenelight auf
+	 * @param name Der Name des Bots
+	 * @param newMap Alle noetigen Referenzen
+	 */
+	public void addBot(String name, HashMap newMap){
+		// Zuerst muessen wir die Root-Branchgroup des Bots finden
+		// Wir wissen lediglich, dass sie mit der Zeichenkette Bot.BOTBG endet
+		BranchGroup bg = null;
+		String key = null;
+		
+		Iterator it = newMap.keySet().iterator();
+		while (it.hasNext()){
+			key = (String)it.next(); 
+			if (key.contains(Bot.BOTBG))
+				bg=(BranchGroup)newMap.get(key);
+		}
+		
+		// Bot einfuegen
+		((BranchGroup)map.get(OBSTBG)).addChild(bg);
+		
+		addBotRefs(name,newMap);
+
 	}
 
+	
+	/**
+	 * Fuegt nur die Referenzen des Bots in die Scenelight ein
+	 * @param name Der Name des Bots
+	 * @param newMap Alle noetigen Referenzen
+	 */
+	@SuppressWarnings("unchecked")
+	public void addBotRefs(String name, HashMap newMap){
+		// Alle Eintraege aus der Map uebertragen
+		// Alle Referenzen aktualisieren
+		Iterator it = newMap.keySet().iterator();
+		while (it.hasNext()){
+			String key = (String) it.next();
+			Object ref = newMap.get(key);
+			map.put(key,ref);
+		}		
+	}
 
+	
 	/**
 	 * Suche einen ViewBot aus der Liste
 	 * 
@@ -153,26 +201,56 @@ public class SceneLight {
 		Iterator it = sceneUpdate.getBots().iterator();
 		while (it.hasNext()) {
 			ViewBotUpdate extern = (ViewBotUpdate) it.next();
-
-//			Map.Entry entry =(Map.Entry) it.next();
 			
 			Object o = map.get(extern.getId());
-			
-			TransformGroup tg = (TransformGroup) o;
-			Transform3D trans = new Transform3D();
-//			Transform3D trans = extern.getTrans();
-			trans.set(extern.getTransformMatrix());
-			tg.setTransform(trans);
+			// Handelt es sich um eine Transformgroup?
+			if (o instanceof TransformGroup){
+				TransformGroup tg = (TransformGroup) o;
+				Transform3D trans = new Transform3D();
+				trans.set(extern.getTransformMatrix());
+				tg.setTransform(trans);
+			}
 		}
 	}
 
+	/**
+	 * Entfernt einen Bot restlos
+	 * @param sceneUpdate Alle infos uerbe den zu loeschenden Bot 
+	 */
+	@SuppressWarnings("unchecked")
+	public void removeBot(String name) {
+		List tmp = new LinkedList<String>();
+		
+		Iterator it = map.keySet().iterator();
+		while (it.hasNext()) {
+			String key = (String) it.next();
+			
+			if (key.contains(name)){
+			
+				if (key.contains(Bot.BOTBG)){
+					((BranchGroup) map.get(key)).detach();
+				}
+				// zum loeschen vormerken
+				tmp.add(key);
+			}			
+		}
+		
+		// Jetzt alles loeschen
+		it = tmp.iterator();
+		while (it.hasNext()) {
+			String key = (String) it.next();
+			map.remove(key);
+		}
+	}
+	
+	
 	/**
 	 * @param obstBG
 	 *            Referenz auf obstBG, die gesetzt werden soll
 	 */
 	@SuppressWarnings("unchecked")
 	public void setObstBG(BranchGroup obstBG) {
-		map.put("obstBG",obstBG);
+		map.put(OBSTBG,obstBG);
 	}
 
 	/**
@@ -203,7 +281,7 @@ public class SceneLight {
 	 * @return Gibt eine Referenz auf obstBG zurueck
 	 */
 	public BranchGroup getObstBG() {
-		return ((BranchGroup)map.get("obstBG"));
+		return ((BranchGroup)map.get(OBSTBG));
 	}
 	
 	/**
@@ -232,16 +310,6 @@ public class SceneLight {
 	}
 
 
-
-	
-	
-
-	
-	
-	public void traverseSceneGraph(){
-		
-	}
-	
 	public HashMap getMap() {
 		return map;
 	}

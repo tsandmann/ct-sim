@@ -27,7 +27,6 @@ public class ViewBotUpdate implements Serializable{
 	 */
 	public ViewBotUpdate(String id, TransformGroup tg) {
 		super();
-		// TODO Auto-generated constructor stub
 		this.id = id;
 		
 		Transform3D trans = new Transform3D();
@@ -36,6 +35,16 @@ public class ViewBotUpdate implements Serializable{
 		transformMatrix = new Matrix4d();
 		trans.get(transformMatrix);
 	}
+	
+	/**
+	 * Nur den Namen des Bots setzen
+	 * @param id
+	 */
+	public ViewBotUpdate(String id) {
+		super();
+		this.id = id;
+	}
+	
 	public String getId() {
 		return id;
 	}

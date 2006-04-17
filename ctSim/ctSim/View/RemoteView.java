@@ -20,12 +20,16 @@ package ctSim.View;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.TransformGroup;
+
+import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 
 import ctSim.ErrorHandler;
 import ctSim.TcpConnection;
+import ctSim.Model.Bots.Bot;
+import ctSim.Model.Scene.SceneGraphStreamWriterFixed;
 import ctSim.Model.Scene.SceneLight;
 import ctSim.Model.Scene.SceneUpdate;
 
@@ -45,6 +49,8 @@ public class RemoteView {
 	public RemoteView(TcpConnection connection) throws IOException{
 		super();
 		this.connection = connection;
+		
+		System.out.println("Neue ClientView hat sich angemeldet von: "+connection.getSocket().getInetAddress().getHostName()+" auf Port "+connection.getSocket().getLocalPort());
 	}
 
 	/**
@@ -57,6 +63,7 @@ public class RemoteView {
 			oos.writeObject(sceneUpdate);
 		} catch (IOException ex){
 			ErrorHandler.error("Probleme beim Uebertragen des SceneUpdates "+ex);
+			throw ex;
 		}
 //		write(ConvertData.objectToBytes(sceneUpdate));
 	}
@@ -72,14 +79,24 @@ public class RemoteView {
 	
 	/**
 	 * Fuegt einen neuen Bot in eine Remote View ein
-	 * @param id
-	 * @param tg
-	 * @param rg
-	 * @param bg
+	 * @param name Name des Bots
+	 * @param map Die Hashmap mit Referenzen
 	 */
-	public void addBotToView(String id, TransformGroup tg, BranchGroup bg){
-		ErrorHandler.error("RemoteView.addBotToView() not implemented yet");
-		// TODO implement RemoteView.addBotToView();
+	public void addBotToView(String name, HashMap map){
+		try {
+			// Zuerst den neune Bot ankuendigen
+			SceneUpdate sU = new SceneUpdate();
+			sU.setType(SceneUpdate.TYPE_ADDBOT);
+			update(sU);
+			
+			// Dann uebertragen
+			SceneGraphStreamWriter writer = new SceneGraphStreamWriterFixed(connection.getSocket().getOutputStream());
+			BranchGroup bg = (BranchGroup)map.get(name+"_"+Bot.BOTBG);
+			writer.writeBranchGraph(bg,map);
+			writer.close();
+		} catch (Exception ex){
+			ErrorHandler.error("Fehler beim Uebertragen eines neuen Bots: "+ex);
+		}
 	}
 
 	/**
@@ -87,8 +104,15 @@ public class RemoteView {
 	 * @param id
 	 */
 	public void removeBot(String id){
-		ErrorHandler.error("RemoteView.removeBot() not implemented yet");
-		// TODO implement RemoteView.removeBot();
+		SceneUpdate sU = new SceneUpdate();
+		sU.setType(SceneUpdate.TYPE_REMOVEBOT);
+		sU.setBotToKill(id);
+		
+		try {
+			update(sU);
+		} catch (Exception ex){
+			ErrorHandler.error("Fehler beim Loeschen eines Bots: "+ex);
+		}
 	}
 	
 	/**

@@ -26,6 +26,7 @@ import java.util.Iterator;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.ImageComponent;
 import javax.media.j3d.Material;
 import javax.media.j3d.PointLight;
 import javax.media.j3d.Shape3D;
@@ -561,9 +562,18 @@ public class ParcoursLoader {
 				Texture2D texture = (Texture2D) loader.getTexture();
 				texture.setBoundaryModeS(Texture.WRAP);
 				texture.setBoundaryModeT(Texture.WRAP);
+
+				// Mache die textur lesbar
+				texture.setCapability(Texture.ALLOW_IMAGE_READ);
+				ImageComponent[] imgs = texture.getImages();
+				for (int i=0; i< imgs.length; i++)
+					imgs[i].setCapability(ImageComponent.ALLOW_IMAGE_READ);
+				
 				appearance.setTexture(texture);
+				appearance.setCapability(Appearance.ALLOW_TEXTURE_READ);
+				
 			} catch (Exception ex) {
-				ErrorHandler.error("Textur: "+textureFile+"nicht gefunden "+ex);
+				ErrorHandler.error("Probleme beim Laden der Textur: "+textureFile+" :"+ex);
 			}
 			
 		}

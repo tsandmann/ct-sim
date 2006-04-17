@@ -19,10 +19,20 @@
 package ctSim.View;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.util.Enumeration;
+import java.util.HashMap;
+
+import javax.media.j3d.Group;
+import javax.media.j3d.Node;
+import javax.media.j3d.SceneGraphObject;
+
+import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 
 import ctSim.ErrorHandler;
 import ctSim.TcpConnection;
+import ctSim.Model.Scene.SceneGraphStreamReaderFixed;
 import ctSim.Model.Scene.SceneLight;
 import ctSim.Model.Scene.SceneUpdate;
 
@@ -50,6 +60,8 @@ public class ClientView {
 		System.out.println("ClientView connected");
 		sc=new SceneLight();
 		sc.readStream(connection.getSocket().getInputStream());
+	
+		cleanupSceneGraph(sc.getScene());
 		
 		worldView = new WorldView();
 		// TODO echte Abmessungen der Welt ermitteln 
@@ -69,9 +81,17 @@ public class ClientView {
 		// TODO Auto-generated constructor stub
 		this.connection = connection;
 	}
-	
+
+	/**
+	 * Reiche das Update weiter an das Scenelight-Objekt
+	 * @param sceneUpdate
+	 */
 	public void update(SceneUpdate sceneUpdate){
 		sc.update(sceneUpdate);
+	}
+
+	public void removeBot(SceneUpdate sceneUpdate){
+		sc.removeBot(sceneUpdate.getBotToKill());
 	}
 	
 	/**
@@ -96,6 +116,45 @@ public class ClientView {
 		return sU;
 	}
 
+	
+	/**
+	 * Entfernt alles aus dem Scenegraphen, was fuer ClientViews nicht noetig ist
+	 * Unter anderem Pickable-Flags
+	 * @param group
+	 */
+	public void cleanupSceneGraph(Group group){	
+		Enumeration en = group.getAllChildren();
+		while (en.hasMoreElements()){
+			SceneGraphObject so = (SceneGraphObject) en.nextElement();
+			// Ist das eine Gruppe? Wenn ja, durchsuchen
+			if (so instanceof Node)
+				((Node)so).setPickable(false);
+			
+			if (so instanceof Group){
+				// rekursion
+				cleanupSceneGraph((Group)so);
+			}
+		}
+		return;
+	}
+	
+	public void addBot(){
+		HashMap newMap = new HashMap();
+		try {
+			InputStream is = connection.getSocket().getInputStream();
+			SceneGraphStreamReader reader = new SceneGraphStreamReaderFixed(is);
+			reader.readBranchGraph(newMap);
+			
+			sc.addBot(null,newMap);
+		} catch (IOException e) {
+			ErrorHandler.error("Problemem beim lesen empfangen eines neuen Bots "+e);
+		}
+
+		
+	
+	}
+	
+	
 	/**
 	 * @param args
 	 */
@@ -106,14 +165,30 @@ public class ClientView {
 			clientView = new ClientView("localhost",10002);
 
 			while (true){
-				clientView.update(clientView.getUpdate());
+				SceneUpdate sU = clientView.getUpdate();
+				switch (sU.getType()) {
+					case SceneUpdate.TYPE_UPDATE:
+						clientView.update(sU);
+						break;
+					case SceneUpdate.TYPE_ADDBOT:
+						clientView.addBot();
+						break;
+	
+					case SceneUpdate.TYPE_REMOVEBOT:
+						clientView.removeBot(sU);
+
+					default:
+						break;
+				}
 			}
 
 		
 		} catch (Exception ex){
-			ErrorHandler.error("Fehler beim oeffnen der ClientView "+ex);
+			ErrorHandler.error("Fehler in der ClientView "+ex);
+			ex.printStackTrace();
+			
 		}
-		
+		System.exit(0);
 	}
 	
 	

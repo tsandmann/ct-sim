@@ -36,6 +36,7 @@ import javax.media.j3d.PickConeRay;
 import javax.media.j3d.PickInfo;
 import javax.media.j3d.PickShape;
 import javax.media.j3d.PickRay;
+import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
@@ -274,6 +275,8 @@ public class World extends Thread {
 	 */
 	public void removeBot(Bot bot){
 		bots.remove(bot);
+		sceneLight.removeBot(bot.getBotName());
+		sceneLightBackup.removeBot(bot.getBotName());
 //		ErrorHandler	.error("world.removeBot nicht implementiert");
 	}
 	
@@ -283,10 +286,11 @@ public class World extends Thread {
 	 * @param bot
 	 *            Der neue Bot
 	 */
+	@SuppressWarnings("unchecked")
 	public void addBot(Bot bot) {
 		bots.add(bot);
 		bot.setWorld(this);
-		BranchGroup bg = bot.getBotBG();
+		BranchGroup bg = (BranchGroup)bot.getNodeReference(Bot.BOTBG);
 
 		
 		Vector3f pos = parcours.getStartPosition(bots.size());
@@ -304,14 +308,28 @@ public class World extends Thread {
 		
 		// Erzeuge einen Clone des Bots fuers Backup
 		NodeReferenceTable nr = new NodeReferenceTable();
-		BranchGroup newBg = (BranchGroup)bg.cloneTree(nr);
-		TransformGroup newTg = (TransformGroup) nr.getNewObjectReference(bot.getTransformGroup());
-		sceneLightBackup.addBot(bot.getBotName(),newTg,newBg);
+		// das resultat von clone brauchen wir nicht, da alle Infos auch in nr stehen
+		bg.cloneTree(nr);
 		
-		// Sichere den neuen Bot in sceneLight
-		sceneLight.addBot(bot.getBotName(), bot.getTransformGroup());
+		HashMap newMap = new HashMap();
+		
+		// Alle Referenzen aktualisieren
+		Iterator it = bot.getNodeMap().keySet().iterator();
+		while (it.hasNext()){
+			String key = (String) it.next();
+			SceneGraphObject ref = bot.getNodeReference(key);
+			
+			Object newRef= nr.getNewObjectReference(ref);
+			
+			newMap.put(key,newRef);
+		}
+		
+		// In den Backup fuegen wir den ganzenm Bot ein
+		sceneLightBackup.addBot(bot.getBotName(),newMap);
+		// in den aktuellen Zweig nur die neuen Referenzen
+		sceneLight.addBotRefs(bot.getBotName(),bot.getNodeMap());
 		// Benachrichtige den Controller uber neue Bots
-		controller.addBotToView(bot.getBotName(), bot.getTransformGroup(),bg);
+		controller.addBotToView(bot.getBotName(), newMap);
 
 		
 		bg.cloneTree();
