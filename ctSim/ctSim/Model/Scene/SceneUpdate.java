@@ -85,7 +85,7 @@ public class SceneUpdate implements Serializable {
 			String key = (String) entry.getKey();
 			Node value = (Node) entry.getValue();
 			
-			if (key.contains(Bot.BOTTG)){
+			if (key.contains(Bot.TG)){
 				bots.add(new ViewBotUpdate(key,(TransformGroup)value));				
 			}
 		}

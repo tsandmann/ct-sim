@@ -54,7 +54,7 @@ public class LabyrinthJudge extends Judge{
 		if (world== null)
 			return;
 
-		List bots = world.getBots();
+		List bots = world.getAliveObstacles();
 		
 		if (bots== null)
 			return;
@@ -83,7 +83,7 @@ public class LabyrinthJudge extends Judge{
 					cal.setTimeInMillis(getRunTime());
 					String timeString= (cal.get(Calendar.HOUR)-1)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND)+":"+cal.get(Calendar.MILLISECOND);
 	
-					getPanel().addResult("Zieleinlauf "+bot.getBotName()+" nach "+timeString);
+					getPanel().addResult("Zieleinlauf "+bot.getName()+" nach "+timeString);
 					bot.die();
 				}
 			}

@@ -40,7 +40,6 @@ stehen, tritt das Problem nicht auf.
 Feature Requests
 ----------------
 * [17-04-2006] [open] [Benjamin Benz] []: Namensvergabe (Controller.getNewBotName) der Bots sollte die Namen verstorbener Bots neu Vergeben
-* [17-04-2006] [open] [Benjamin Benz] []: Bot-Hierarchie erweitern: Obstacle -> MovableObstacle -> AliveObstacle -> Bot
 * [17-04-2006] [open] [Benjamin Benz] []: ClientViews bekommen noch keine Infos über Farbänderungen
 * [17-04-2006] [open] [Benjamin Benz] []: Netzwerkprotokoll zwischen Sim und ClientView optimieren
 * [17-04-2006] [open] [Benjamin Benz] []: Erzeugung der Diff-Daten für ClientView optimieren
@@ -61,6 +60,7 @@ von 1024x768 Pixeln angezeigt werden kann.
 
 Erledigt:
 ---------
+* [17-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: Bot-Hierarchie erweitern: Obstacle -> MovableObstacle -> AliveObstacle -> Bot
 * [17-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: ClientViews bekommen noch keine neue Bots, gestorbene Bots
 * [17-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: Scenegraphen der ClientViews um alle pickable und co Capabilities bereinigen
 * [15-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: Button zum starten von simulierten C-Bots einfügen

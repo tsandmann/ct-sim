@@ -302,7 +302,7 @@ public class ControlFrame extends JPanel {
 	 */
 	public void addBot(Bot bot) {
 		// Ein neues Panel fuer den Bot erzeugen
-		controlPanels.addTab(bot.getBotName(), null, bot.getPanel(), null);
+		controlPanels.addTab(bot.getName(), null, bot.getPanel(), null);
 		// Dem Panel anzeigen, wo es dargestellt wird
 		bot.getPanel().setFrame(this);
 		/* Markus Lang 2006-03-06:

@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-04-17 Benjamin Benz (bbe@heise.de) Verebungshierarchie von Bot umgekrempelt, so dass es jetzt AliveObstacles gibt
+
 2006-04-17 Benjamin Benz (bbe@heise.de) Alle Hooks in die Szenegraphen werden nun generisch verwaltet. keine festen Variablen mehr
 
 2006-04-17 Benjamin Benz (bbe@heise.de) RemoteViews beherschen nun hinzufuegen und loeschen von Bots

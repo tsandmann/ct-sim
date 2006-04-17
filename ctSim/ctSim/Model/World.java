@@ -80,7 +80,7 @@ public class World extends Thread {
 	public int baseTimeVirtual = 10;
 
 	/** Liste mit allen Bots, die in dieser Welt leben */
-	private List<Bot> bots;
+	private List<AliveObstacle> aliveObstacles;
 
 	/** Liste mit allen Hindernissen, die in dieser Welt stehen */
 	private List obstacles;
@@ -149,7 +149,7 @@ public class World extends Thread {
 		super();
 
 		this.controller = controller;
-		bots = new LinkedList<Bot>();
+		aliveObstacles = new LinkedList<AliveObstacle>();
 		obstacles = new LinkedList();
 		haveABreak = false;
 		slowMotion = false;
@@ -273,11 +273,14 @@ public class World extends Thread {
 	 * Entfernt einen Bot wieder
 	 * @param bot
 	 */
-	public void removeBot(Bot bot){
-		bots.remove(bot);
-		sceneLight.removeBot(bot.getBotName());
-		sceneLightBackup.removeBot(bot.getBotName());
-//		ErrorHandler	.error("world.removeBot nicht implementiert");
+	public void remove(AliveObstacle obst){
+		aliveObstacles.remove(obst);
+		sceneLight.removeBot(obst.getName());
+		sceneLightBackup.removeBot(obst.getName());
+	}
+	
+	public void addAliveObstacle(AliveObstacle obst){
+		
 	}
 	
 	/**
@@ -288,18 +291,18 @@ public class World extends Thread {
 	 */
 	@SuppressWarnings("unchecked")
 	public void addBot(Bot bot) {
-		bots.add(bot);
+		aliveObstacles.add(bot);
 		bot.setWorld(this);
-		BranchGroup bg = (BranchGroup)bot.getNodeReference(Bot.BOTBG);
+		BranchGroup bg = (BranchGroup)bot.getNodeReference(Bot.BG);
 
 		
-		Vector3f pos = parcours.getStartPosition(bots.size());
+		Vector3f pos = parcours.getStartPosition(aliveObstacles.size());
 		if (pos != null) {
 			pos.z = bot.getPos().z;	// Achtung die Bots stehen etwas ueber der Spielflaeche
 			bot.setPos(pos);
 		}
 
-		Vector3f head = parcours.getStartHeading(bots.size());
+		Vector3f head = parcours.getStartHeading(aliveObstacles.size());
 		if (head != null) {
 			bot.setHeading(head);
 		}
@@ -325,11 +328,11 @@ public class World extends Thread {
 		}
 		
 		// In den Backup fuegen wir den ganzenm Bot ein
-		sceneLightBackup.addBot(bot.getBotName(),newMap);
+		sceneLightBackup.addBot(bot.getName(),newMap);
 		// in den aktuellen Zweig nur die neuen Referenzen
-		sceneLight.addBotRefs(bot.getBotName(),bot.getNodeMap());
+		sceneLight.addBotRefs(bot.getName(),bot.getNodeMap());
 		// Benachrichtige den Controller uber neue Bots
-		controller.addBotToView(bot.getBotName(), newMap);
+		controller.addBotToView(bot.getName(), newMap);
 
 		
 		bg.cloneTree();
@@ -656,13 +659,13 @@ public class World extends Thread {
 	 */
 	protected void cleanup() {
 		// Unterbricht alle Bots, die sich dann selbst entfernen
-		Iterator it = bots.iterator();
+		Iterator it = aliveObstacles.iterator();
 		while (it.hasNext()) {
 			Bot curr = (Bot) it.next();
 			curr.interrupt();
 		}
-		bots.clear();
-		bots = null;
+		aliveObstacles.clear();
+		aliveObstacles = null;
 	}
 
 	/**
@@ -797,18 +800,18 @@ public class World extends Thread {
 	}
 
 	/**
-	 * @return Gibt bots zurueck.
+	 * @return Gibt aliveObstacles zurueck.
 	 */
-	public List getBots() {
-		return bots;
+	public List getAliveObstacles() {
+		return aliveObstacles;
 	}
 
 	/**
-	 * @param bots
-	 *            Wert fuer bots, der gesetzt werden soll.
+	 * @param aliveObstacles
+	 *            Wert fuer aliveObstacles, der gesetzt werden soll.
 	 */
-	public void setBots(List<Bot> bots) {
-		this.bots = bots;
+	public void setBots(List<AliveObstacle> bots) {
+		this.aliveObstacles = bots;
 	}
 
 	/**

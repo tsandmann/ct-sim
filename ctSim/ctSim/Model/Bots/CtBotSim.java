@@ -231,7 +231,7 @@ abstract public class CtBotSim extends CtBot {
 
 		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 		// der Bot blau gefaerbt.
-		if (world.checkCollision((Shape3D)getNodeReference(BOTBODY), getBounds(), newPos, getBotName())) {
+		if (world.checkCollision((Shape3D)getNodeReference(BOTBODY), getBounds(), newPos, getName())) {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
 			if (isApperanceCollision) {
@@ -284,21 +284,21 @@ abstract public class CtBotSim extends CtBot {
 		skidVec.add(new Point3d(newPos));
 		boolean isFalling = false;
 		if (!world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE,
-				"Der Gleitpin von " + this.getBotName())) {
+				"Der Gleitpin von " + this.getName())) {
 			isFalling = true;
 		}
 
 		// Bodenkontakt des linken Reifens ueberpruefen
 		posRadL.z -= BOT_HEIGHT / 2;
 		if (!world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE,
-				"Das linke Rad von " + this.getBotName())) {
+				"Das linke Rad von " + this.getName())) {
 			isFalling = true;
 		}
 
 		// Bodenkontakt des rechten Reifens ueberpruefen
 		posRadR.z -= BOT_HEIGHT / 2;
 		if (!world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE,
-				"Das rechte Rad von " + this.getBotName())) {
+				"Das rechte Rad von " + this.getName())) {
 			isFalling = true;
 		}
 
@@ -548,7 +548,7 @@ abstract public class CtBotSim extends CtBot {
 			deltaT = simulTime - tmpTime; // aktualisiere deltaT
 			updateStats();
 		} catch (InterruptedException e) {
-			ErrorHandler.error("Bot: " + getBotName() + " wurde unterbrochen");
+			ErrorHandler.error("Bot: " + getName() + " wurde unterbrochen");
 		}
 	}
 

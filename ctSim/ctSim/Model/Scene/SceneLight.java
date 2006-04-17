@@ -134,14 +134,14 @@ public class SceneLight {
 	 */
 	public void addBot(String name, HashMap newMap){
 		// Zuerst muessen wir die Root-Branchgroup des Bots finden
-		// Wir wissen lediglich, dass sie mit der Zeichenkette Bot.BOTBG endet
+		// Wir wissen lediglich, dass sie mit der Zeichenkette Bot.BG endet
 		BranchGroup bg = null;
 		String key = null;
 		
 		Iterator it = newMap.keySet().iterator();
 		while (it.hasNext()){
 			key = (String)it.next(); 
-			if (key.contains(Bot.BOTBG))
+			if (key.contains(Bot.BG))
 				bg=(BranchGroup)newMap.get(key);
 		}
 		
@@ -227,7 +227,7 @@ public class SceneLight {
 			
 			if (key.contains(name)){
 			
-				if (key.contains(Bot.BOTBG)){
+				if (key.contains(Bot.BG)){
 					((BranchGroup) map.get(key)).detach();
 				}
 				// zum loeschen vormerken

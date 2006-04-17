@@ -444,8 +444,8 @@ public abstract class CtBot extends Bot {
 		bg.addChild(tg);
 
 		// Referenz im Bot ablegen
-		addNodeReference(BOTTG,tg);
-		addNodeReference(BOTBG,bg);
+		addNodeReference(TG,tg);
+		addNodeReference(BG,bg);
 	}
 
 	/**

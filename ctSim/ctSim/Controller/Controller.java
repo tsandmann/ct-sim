@@ -382,9 +382,9 @@ public class Controller {
 			bot.providePanel();
 			
 			// TODO Sinnvolle Zuordnung von Bot-Name zu Konfig
-			HashMap botConfig = getBotConfig("config/ct-sim.xml",bot.getBotName());
+			HashMap botConfig = getBotConfig("config/ct-sim.xml",bot.getName());
 			if (botConfig == null){
-				ErrorHandler.error("Keine BotConfig fuer: "+bot.getBotName()+" in der XML-Config-Datei gefunden. Lade Defaults.");
+				ErrorHandler.error("Keine BotConfig fuer: "+bot.getName()+" in der XML-Config-Datei gefunden. Lade Defaults.");
 				botConfig = getBotConfig("config/ct-sim.xml","default");
 			}
 			

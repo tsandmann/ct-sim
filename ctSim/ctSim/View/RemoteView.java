@@ -91,7 +91,7 @@ public class RemoteView {
 			
 			// Dann uebertragen
 			SceneGraphStreamWriter writer = new SceneGraphStreamWriterFixed(connection.getSocket().getOutputStream());
-			BranchGroup bg = (BranchGroup)map.get(name+"_"+Bot.BOTBG);
+			BranchGroup bg = (BranchGroup)map.get(name+"_"+Bot.BG);
 			writer.writeBranchGraph(bg,map);
 			writer.close();
 		} catch (Exception ex){
