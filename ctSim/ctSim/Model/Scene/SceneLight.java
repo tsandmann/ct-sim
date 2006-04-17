@@ -16,7 +16,7 @@
  * MA 02111-1307, USA.
  * 
  */
-package ctSim.Model;
+package ctSim.Model.Scene;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -160,6 +160,7 @@ public class SceneLight {
 			
 			TransformGroup tg = (TransformGroup) o;
 			Transform3D trans = new Transform3D();
+//			Transform3D trans = extern.getTrans();
 			trans.set(extern.getTransformMatrix());
 			tg.setTransform(trans);
 		}
@@ -211,7 +212,7 @@ public class SceneLight {
 	 * @throws IOException
 	 */
 	public void writeStream(OutputStream os) throws IOException{
-		SceneGraphStreamWriter writer = new SceneGraphStreamWriter(os);
+		SceneGraphStreamWriter writer = new SceneGraphStreamWriterFixed(os);
 		try {
 			writer.writeBranchGraph(scene,map);
 		} catch (NamedObjectException ex){
@@ -219,17 +220,28 @@ public class SceneLight {
 		}
 		writer.close();
 	}
-
+	
 	/**
 	 * Liest ein SceneLight Objekt vom Datenstrom ein
 	 * @param is Der InputStream
 	 * @throws IOException
 	 */
 	public void readStream(InputStream is) throws IOException{
-		SceneGraphStreamReader reader = new SceneGraphStreamReader(is);
+		SceneGraphStreamReader reader = new SceneGraphStreamReaderFixed(is);
 		scene=reader.readBranchGraph(map);
 	}
 
+
+
+	
+	
+
+	
+	
+	public void traverseSceneGraph(){
+		
+	}
+	
 	public HashMap getMap() {
 		return map;
 	}

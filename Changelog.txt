@@ -1,10 +1,14 @@
 CHANGELOG fuer c't-Sim
 ======================
-2006-04-15 Benjamin Benz (bbe@heise.de) RC5-Tastendefinitionen in CtBot umgezogen
+2006-04-17 Benjamin Benz (bbe@heise.de) RemoteViews in Betrieb genommen, noch rudimentaer (keine Farb-wechsel)
 
-2006-04-15 Benjamin Benz (bbe@heise.de) Es gibt jetzt auch einen Knopf, um Bots wieder zu entfernen
+2006-04-17 Benjamin Benz (bbe@heise.de) Package-Struktur aufgeraeumt, gefixte Version von SceneGraphStreamReader/Writer eingebaut
 
-2006-04-15 Benjamin Benz (bbe@heise.de) Judges haben nun ein eigenes Tab fuer die Ergebnisse
+2006-04-16 Benjamin Benz (bbe@heise.de) RC5-Tastendefinitionen in CtBot umgezogen
+
+2006-04-16 Benjamin Benz (bbe@heise.de) Es gibt jetzt auch einen Knopf, um Bots wieder zu entfernen
+
+2006-04-16 Benjamin Benz (bbe@heise.de) Judges haben nun ein eigenes Tab fuer die Ergebnisse
 
 2006-04-15 Benjamin Benz (bbe@heise.de) Judge wird nun generisch von einem Klassennamen aus der Config-Datei geladen 
 

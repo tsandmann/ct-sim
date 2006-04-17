@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
-import javax.vecmath.Matrix3d;
+import javax.vecmath.Matrix4d;
+//import javax.vecmath.Matrix3d;
 
 
 /**
@@ -17,7 +18,8 @@ public class ViewBotUpdate implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private String id;
-	private Matrix3d transformMatrix;
+	private Matrix4d transformMatrix;
+//	private Transform3D trans = new Transform3D();
 	/**
 	 * @param id
 	 * @param rotation
@@ -31,7 +33,7 @@ public class ViewBotUpdate implements Serializable{
 		Transform3D trans = new Transform3D();
 		tg.getTransform(trans);
 		
-		transformMatrix = new Matrix3d();
+		transformMatrix = new Matrix4d();
 		trans.get(transformMatrix);
 	}
 	public String getId() {
@@ -40,10 +42,10 @@ public class ViewBotUpdate implements Serializable{
 	public void setId(String id) {
 		this.id = id;
 	}
-	public Matrix3d getTransformMatrix() {
+	public Matrix4d getTransformMatrix() {
 		return transformMatrix;
 	}
-	public void setTransformMatrix(Matrix3d transformMatrix) {
+	public void setTransformMatrix(Matrix4d transformMatrix) {
 		this.transformMatrix = transformMatrix;
 	}
 }

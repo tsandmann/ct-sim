@@ -17,7 +17,7 @@
  * 
  */
 
-package ctSim.Model;
+package ctSim.Model.Bots;
 
 import java.io.IOException;
 
@@ -27,6 +27,7 @@ import javax.vecmath.Vector3f;
 import ctSim.ErrorHandler;
 import ctSim.TcpConnection;
 import ctSim.Controller.Controller;
+import ctSim.Model.Command;
 
 /**
  * Simulierter Bot, der Daten per TCP/IP- empfaengt und ausliefert

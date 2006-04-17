@@ -26,8 +26,8 @@ import javax.media.j3d.TransformGroup;
 
 import ctSim.ErrorHandler;
 import ctSim.TcpConnection;
-import ctSim.Model.SceneLight;
-import ctSim.Model.SceneUpdate;
+import ctSim.Model.Scene.SceneLight;
+import ctSim.Model.Scene.SceneUpdate;
 
 /**
  * Verwaltungsstation fuer Remote-Views auf Server-Seite. 
@@ -67,6 +67,7 @@ public class RemoteView {
 	 */
 	public void init(SceneLight sceneLight) throws IOException{
 		sceneLight.writeStream(connection.getSocket().getOutputStream());
+//		sceneLight.writeFile();
 	}
 	
 	/**

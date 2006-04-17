@@ -17,12 +17,13 @@
  * 
  */
 
-package ctSim.Model;
+package ctSim.Model.Bots;
 
 import java.io.IOException;
 
 import ctSim.Connection;
 import ctSim.ErrorHandler;
+import ctSim.Model.Command;
 
 /**
  * Kuemmert sich um die Beantwortung eingehender Kommanods

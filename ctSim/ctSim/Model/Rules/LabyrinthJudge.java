@@ -22,9 +22,9 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
-import ctSim.Model.Bot;
-import ctSim.Model.CtBot;
+import ctSim.Model.Bots.Bot;
 import ctSim.Model.World;
+import ctSim.Model.Bots.CtBot;
 
 /**
  * Prueft, ob die Regeln eingehalten werden

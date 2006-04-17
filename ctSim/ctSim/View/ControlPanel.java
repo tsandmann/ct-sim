@@ -19,7 +19,7 @@
 
 package ctSim.View;
 
-import ctSim.Model.Bot;
+import ctSim.Model.Bots.Bot;
 
 /**
  * Abstrakte Oberklasse fuer Kontrolltafeln simulierter Bots; muss abgeleitet

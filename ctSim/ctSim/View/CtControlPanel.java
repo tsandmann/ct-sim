@@ -36,7 +36,7 @@ import javax.swing.border.*;
 
 import javax.vecmath.Vector3f;
 
-import ctSim.Model.CtBot;
+import ctSim.Model.Bots.CtBot;
 import ctSim.SimUtils;
 import ctSim.View.LogFrame;
 

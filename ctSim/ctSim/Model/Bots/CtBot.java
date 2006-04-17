@@ -17,7 +17,7 @@
  * 
  */
 
-package ctSim.Model;
+package ctSim.Model.Bots;
 
 import javax.vecmath.*;
 import javax.media.j3d.*;

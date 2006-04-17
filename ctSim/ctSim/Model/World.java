@@ -20,6 +20,8 @@
 package ctSim.Model;
 
 import ctSim.Controller.Controller;
+import ctSim.Model.Bots.Bot;
+import ctSim.Model.Scene.SceneLight;
 import ctSim.View.ControlFrame;
 
 import java.util.*;
@@ -175,7 +177,9 @@ public class World extends Thread {
 
 		// Die Wurzel des Ganzen:
 		BranchGroup objRoot = new BranchGroup();
-
+		objRoot.setName("paul");
+		objRoot.setUserData(new String("paul"));
+		
 		Transform3D transform = new Transform3D();
 
 		transform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));

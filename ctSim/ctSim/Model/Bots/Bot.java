@@ -17,7 +17,7 @@
  * 
  */
 
-package ctSim.Model;
+package ctSim.Model.Bots;
 
 import java.util.HashMap;
 
@@ -33,6 +33,8 @@ import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Vector3f;
 
 import ctSim.Controller.Controller;
+import ctSim.Model.Obstacle;
+import ctSim.Model.World;
 import ctSim.View.ControlPanel;
 
 /**

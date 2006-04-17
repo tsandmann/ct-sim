@@ -16,7 +16,7 @@
  * MA 02111-1307, USA.
  * 
  */
-package ctSim.Model;
+package ctSim.Model.Scene;
 
 import java.io.Serializable;
 import java.util.Iterator;

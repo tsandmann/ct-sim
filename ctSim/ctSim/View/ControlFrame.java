@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import ctSim.Model.*;
+import ctSim.Model.Bots.Bot;
 import ctSim.Model.Rules.Judge;
 import ctSim.Controller.Controller;
 

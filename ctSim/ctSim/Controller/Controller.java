@@ -51,7 +51,12 @@ import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import ctSim.Model.*;
+import ctSim.Model.Bots.Bot;
+import ctSim.Model.Bots.CtBotRealCon;
+import ctSim.Model.Bots.CtBotSimTcp;
+import ctSim.Model.Bots.CtBotSimTest;
 import ctSim.Model.Rules.Judge;
+import ctSim.Model.Scene.SceneUpdate;
 import ctSim.View.*;
 import ctSim.*;
 

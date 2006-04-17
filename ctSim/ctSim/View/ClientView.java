@@ -23,8 +23,8 @@ import java.io.ObjectInputStream;
 
 import ctSim.ErrorHandler;
 import ctSim.TcpConnection;
-import ctSim.Model.SceneLight;
-import ctSim.Model.SceneUpdate;
+import ctSim.Model.Scene.SceneLight;
+import ctSim.Model.Scene.SceneUpdate;
 
 /**
  * Verwaltungsstation fuer Remote-Views auf Server-Seite. 
@@ -91,7 +91,7 @@ public class ClientView {
 		} catch (ClassNotFoundException ex){
 			ErrorHandler.error("Klasse konnte nicht gefunden werden "+ex);
 		}
-		ois.close();
+//		ois.close();
 		
 		return sU;
 	}

@@ -15,7 +15,7 @@
 	
 		
 	<bots>         
-		<bot name="ctSim.Model.CtBotSimTest_0">
+		<bot name="ctSim.Model.Bots.CtBotSimTest_0">
 			<appearance type="normal">
 				<description>Standard Aussehen des TestBots 1</description>
 				<color>#FF0000</color>
@@ -29,7 +29,7 @@
 				<color>#5000FF</color>
 			</appearance>
 		</bot>
-		<bot name="ctSim.Model.CtBotSimTest_1">
+		<bot name="ctSim.Model.Bots.CtBotSimTest_1">
 			<appearance type="normal">
 				<description>Standard Aussehen des TestBots 2</description>
 				<color>#00FF00</color>
@@ -44,7 +44,7 @@
 			</appearance>
 		</bot>
 
-		<bot name="ctSim.Model.CtBotSimTcp_0">
+		<bot name="ctSim.Model.Bots.CtBotSimTcp_0">
 			<appearance type="normal">
 				<description>Standard Aussehen des simulierten Bots 1</description>
 				<color>#800000</color>
@@ -59,7 +59,7 @@
 			</appearance>
 		</bot>
 
-		<bot name="ctSim.Model.CtBotSimTcp_1">
+		<bot name="ctSim.Model.Bots.CtBotSimTcp_1">
 			<appearance type="normal">
 				<description>Standard Aussehen des  simulierten Bots 2</description>
 				<color>#800000</color>

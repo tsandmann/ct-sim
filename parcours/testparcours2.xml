@@ -31,7 +31,7 @@
 		<optics>
 			<appearance type="X">
 				<description>quadratische Wand</description>
-				<texture>textures/rock_wall.jpg</texture>
+				<texture1>textures/rock_wall.jpg</texture1>
 				<color>#999999</color>
 			</appearance>
 			<appearance type="#">

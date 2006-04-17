@@ -17,7 +17,9 @@
  * 
  */
 
-package ctSim.Model;
+package ctSim.Model.Bots;
+
+import ctSim.Model.Command;
 
 /** Interface fuer alle Bots, die per TCP/IP kommunizieren */
 public interface TcpBot {

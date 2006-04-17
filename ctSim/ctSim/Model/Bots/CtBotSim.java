@@ -17,7 +17,7 @@
  * 
  */
 
-package ctSim.Model;
+package ctSim.Model.Bots;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;

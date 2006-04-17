@@ -51,6 +51,7 @@ Abgrundsensoren bei gleichem Untergrund auch gleich.
 
 Feature Requests
 ----------------
+* [17-04-2006] [open] [Benjamin Benz] []: Die ganzen Panel sind in keiner sinnvollen Vererbungshierarchie und Bennenungsschema
 * [16-04-2006] [open] [Benjamin Benz] []: Die CtControlPanel sind mies gecoded, bitte aufraeumen
 * [16-04-2006] [open] [Benjamin Benz] []: Parcoursloader sollte unbedingt effizienter arbeiten und z.B. Bodenkacheln zusammenfassen
 * [15-04-2006] [open] [Benjamin Benz] []: Werden C-Bots gestartet, koennte man deren Ausgaben in LogFrames sammeln 
