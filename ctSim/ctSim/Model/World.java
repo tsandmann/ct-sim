@@ -279,36 +279,12 @@ public class World extends Thread {
 		sceneLightBackup.removeBot(obst.getName());
 	}
 	
-	public void addAliveObstacle(AliveObstacle obst){
-		
-	}
-	
-	/**
-	 * Fuegt einen Bot in die Welt ein
-	 * 
-	 * @param bot
-	 *            Der neue Bot
-	 */
 	@SuppressWarnings("unchecked")
-	public void addBot(Bot bot) {
-		aliveObstacles.add(bot);
-		bot.setWorld(this);
-		BranchGroup bg = (BranchGroup)bot.getNodeReference(Bot.BG);
-
-		
-		Vector3f pos = parcours.getStartPosition(aliveObstacles.size());
-		if (pos != null) {
-			pos.z = bot.getPos().z;	// Achtung die Bots stehen etwas ueber der Spielflaeche
-			bot.setPos(pos);
-		}
-
-		Vector3f head = parcours.getStartHeading(aliveObstacles.size());
-		if (head != null) {
-			bot.setHeading(head);
-		}
-
-		
-		
+	public void add(AliveObstacle obst){
+		aliveObstacles.add(obst);
+		obst.setWorld(this);
+		BranchGroup bg = (BranchGroup)obst.getNodeReference(Bot.BG);
+	
 		// Erzeuge einen Clone des Bots fuers Backup
 		NodeReferenceTable nr = new NodeReferenceTable();
 		// das resultat von clone brauchen wir nicht, da alle Infos auch in nr stehen
@@ -317,10 +293,10 @@ public class World extends Thread {
 		HashMap newMap = new HashMap();
 		
 		// Alle Referenzen aktualisieren
-		Iterator it = bot.getNodeMap().keySet().iterator();
+		Iterator it = obst.getNodeMap().keySet().iterator();
 		while (it.hasNext()){
 			String key = (String) it.next();
-			SceneGraphObject ref = bot.getNodeReference(key);
+			SceneGraphObject ref = obst.getNodeReference(key);
 			
 			Object newRef= nr.getNewObjectReference(ref);
 			
@@ -328,16 +304,46 @@ public class World extends Thread {
 		}
 		
 		// In den Backup fuegen wir den ganzenm Bot ein
-		sceneLightBackup.addBot(bot.getName(),newMap);
+		sceneLightBackup.addBot(obst.getName(),newMap);
 		// in den aktuellen Zweig nur die neuen Referenzen
-		sceneLight.addBotRefs(bot.getName(),bot.getNodeMap());
-		// Benachrichtige den Controller uber neue Bots
-		controller.addToView(bot.getName(), newMap);
+		sceneLight.addBotRefs(obst.getName(),obst.getNodeMap());
 
+		// Benachrichtige den Controller uber neue Bots
+		controller.addToView(obst.getName(), newMap);
 		
 		bg.cloneTree();
 		
 		sceneLight.getObstBG().addChild(bg);
+	}
+	
+	/**
+	 * Fuegt einen Bot in die Welt ein
+	 * 
+	 * @param bot
+	 *            Der neue Bot
+	 */
+	
+	public void addBot(Bot bot) {
+		
+		
+		
+		
+		Vector3f pos = parcours.getStartPosition(aliveObstacles.size()+1);
+		if (pos != null) {
+			pos.z = bot.getPos().z;	// Achtung die Bots stehen etwas ueber der Spielflaeche
+			bot.setPos(pos);
+		}
+
+		Vector3f head = parcours.getStartHeading(aliveObstacles.size()+1);
+		if (head != null) {
+			bot.setHeading(head);
+		}
+
+		
+		add((AliveObstacle)bot);
+
+		
+
 
 		
 		

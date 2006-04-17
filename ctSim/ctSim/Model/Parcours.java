@@ -325,7 +325,7 @@ public class Parcours {
 			
 		if (pos.length()==0){
 			pos.x=1.0f;
-			ErrorHandler.error("getStartHeading wurde nach einer noch nicht gesetzten Heading gefragt. Setze Default");
+			ErrorHandler.error("getStartHeading wurde nach einer noch nicht gesetzten Heading gefragt ("+bot+"). Setze Default");
 		}
 		
 		pos.normalize();
