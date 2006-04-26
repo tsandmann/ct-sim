@@ -60,21 +60,42 @@ public class MousePicture {
 	}
 
 	/**
+	 * betrachtet ein byte als unsigned Byte
+	 * @param value
+	 * @return
+	 */
+	private static int toUnsignedInt(byte value){
+		return (value & 0x7F) + (value < 0 ? 128 : 0);
+	}
+	
+	/**
 	 * Fuegt Daten zum Maussensor-Bild hinzu
 	 * @param start Nummer des ersten Pixels in data
 	 * @param data Nutzdaten
 	 */
-	public void addPixels(int start, byte[] data){
+	public void addPixels(int start, byte[] in){
 		int i;
 		if (start==1)	// Anfang des Frames ?
 			complete = false;
 		
-		for (i=0; i< data.length; i++)
-			this.data[i+start-1]=data[i];
-		
+		for (i=0; i< in.length; i++){
+			int tmp= toUnsignedInt(in[i]);
+			tmp &=0x3F;	// Statusinfos ausblenden
+			tmp = tmp << 2;	// verbleibende Bits auf den normalen Farbraum ausdehnen
+			
+			
+			data[i+start-1]=tmp ;
+			data[i+start-1] += tmp <<8; 
+			data[i+start-1] += tmp <<16 ;
+			data[i+start-1] += 255 <<24 ;
+			
+//			System.out.println("tmp= "+tmp);
+		}
 		// Genug Daten empfangen?
-		if ((i+start-1) == (dimX*dimY))
+		if ((i+start-1) == (dimX*dimY)) {
 			complete=true;
+			System.out.println("Bild vollständig");
+		}
 	}
 
 	/**
@@ -111,9 +132,28 @@ public class MousePicture {
 	 * @return
 	 */
 	public Image getImage(int width, int height){
+		int w = dimX;
+		int h = dimY;
+		int pix[] = new int[w * h];
+		int index = 0;
+		for (int y = 0; y < h; y++) {
+		    int red = (y * 255) / (h - 1);
+		    for (int x = 0; x < w; x++) {
+			int blue = (x * 255) / (w - 1);
+			pix[index++] = (255 << 24) | (red << 16) | blue;
+		    }
+		}
+		
+		
+		
+		
+		
+		
+		
 		Image image = Toolkit.getDefaultToolkit().createImage(
 		                new MemoryImageSource(dimX, dimY,
 		                data, 0, dimX));
+	//     	            pix, 0, dimX));
 		
 	    ImageFilter replicate = new ReplicateScaleFilter
 	           (width, height);

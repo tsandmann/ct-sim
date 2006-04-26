@@ -1139,15 +1139,17 @@ public abstract class CtBot extends Bot {
 	public static final int MOUSE_PIXEL = MOUSE_PIXEL_X * MOUSE_PIXEL_Y; 
 
 	/** Ein Bild vom Maussensor */
-	private MousePicture mousePicture = new MousePicture(MOUSE_PIXEL_X,MOUSE_PIXEL_Y);
+	//private MousePicture mousePicture = new MousePicture(MOUSE_PIXEL_X,MOUSE_PIXEL_Y);
 	
+	
+	private MousePicture mousePicture = new MousePicture(MOUSE_PIXEL_X,MOUSE_PIXEL_Y);
 	/**
 	 * Liefert das aktuelle Bild des Maussensors, so es fertig ist, somst Null
 	 * @return Gibt eine Referenz auf mousePicture zurueck
 	 */
 	public Image getMousePicture() {
 		if (mousePicture.isComplete())
-			return mousePicture.getImage(18*5,18*5);
+			return mousePicture.getImage(18*6,18*6);
 		else 
 			return null;
 	}
@@ -1160,4 +1162,6 @@ public abstract class CtBot extends Bot {
 		mousePicture.addPixels(start,data);
 	}	
 
+	/** Fordert ein Maussensorbild beim Bot an */
+	abstract public void requestMousePicture();
 }

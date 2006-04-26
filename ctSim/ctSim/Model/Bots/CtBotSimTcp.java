@@ -42,6 +42,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	/** Der "Anrufbeantworter" fuer eingehende Kommandos */
 	private AnsweringMachine answeringMachine;
 
+	/** Sequenznummer der TCP-Pakete */
+	int seq = 0;
+
 	/**
 	 * Erzeugt einen neuen BotSimTcp mit einer schon bestehenden Verbindung
 	 * 
@@ -54,10 +57,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		tcpCon = (TcpConnection) tc;
 		answeringMachine = new AnsweringMachine(this, tcpCon);
 	}
-
-	/** Sequenznummer der TCP-Pakete */
-	int seq = 0;
-
+	
 	/**
 	 * Leite Sensordaten an den Bot weiter
 	 */
@@ -230,6 +230,12 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			case Command.CMD_LOG:
 				this.setLog(command.getDataBytesAsString());
 				break;
+				
+			case Command.CMD_SENS_MOUSE_PICTURE:
+				// Empfangen eine Bildes
+				setMousePicture(command.getDataL(),command.getDataBytes());
+				break;
+	
 			default:
 				ErrorHandler.error("Unknown Command:" + command.toString());
 				break;
@@ -283,5 +289,18 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	protected void work() {
 		super.work();
 		transmitSensors();
+	}
+
+	/* Fordert ein MaussensorBild an
+	 * @see ctSim.Model.Bots.CtBot#requestMousePicture()
+	 */
+	public void requestMousePicture() {
+		Command command = new Command(Command.CMD_SENS_MOUSE_PICTURE, 0, 0, seq++);
+		try {
+			System.out.println("Frage nach Bild");
+			tcpCon.send(command.getCommandBytes());
+		} catch (IOException e) {
+			ErrorHandler.error("Probleme bei der Bitte um ein neues Maussesnorbil: "+e);
+		}
 	}
 }

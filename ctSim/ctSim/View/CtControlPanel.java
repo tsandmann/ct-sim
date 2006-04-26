@@ -1266,7 +1266,7 @@ public class CtControlPanel extends ControlPanel {
 				
 				mousePicture.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
-						//((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_1);
+						((CtBot)getBot()).requestMousePicture();
 					}
 				});
 				mainPanelRight.add(mousePicture);

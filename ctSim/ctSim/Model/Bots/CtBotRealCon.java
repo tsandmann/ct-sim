@@ -19,6 +19,8 @@
 
 package ctSim.Model.Bots;
 
+import java.io.IOException;
+
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
@@ -38,6 +40,9 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 
 	/** Der "Anrufbeantworter" fuer eingehende Kommandos */
 	private AnsweringMachine answeringMachine;
+
+	/** Sequenznummer der TCP-Pakete */
+	int seq = 0;
 
 	/**
 	 * Erzeugt einen neuen Bot
@@ -177,6 +182,18 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 
 	}
 
+	/* Fordert ein MaussensorBild an
+	 * @see ctSim.Model.Bots.CtBot#requestMousePicture()
+	 */
+	public void requestMousePicture() {
+		Command command = new Command(Command.CMD_SENS_MOUSE_PICTURE, 0, 0, seq++);
+		try {
+			con.send(command.getCommandBytes());
+		} catch (IOException e) {
+			ErrorHandler.error("Probleme bei der Bitte um ein neues Maussesnorbil: "+e);
+		}
+	}
+	
 	/*
 	 * Aufraeumen
 	 * 

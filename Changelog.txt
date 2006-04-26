@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-04-26 Benjamin Benz (bbe@heise.de) Anzeige fuer Mauskamerabilder entkaefert
+
 2006-04-26 Benjamin Benz (bbe@heise.de) Anzeige fuer Mauskamerabilder eingefuehrt
 
 2006-04-18 Torsten Evers (tevers@onlinehome.de) maze.xml dazugefuegt
