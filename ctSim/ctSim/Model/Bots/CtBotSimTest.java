@@ -56,6 +56,15 @@ public class CtBotSimTest extends CtBotSim {
 	 * @see ctSim.Model.Bot#init()
 	 */
 	protected void init() {
+		byte[] data = new byte[18*9];
+		
+		byte z =0;
+		for (byte x=0; x<18; x++)
+			for (byte y=0; y<9; y++)
+				data[x+y*18] = z++ ;
+		
+		setMousePicture(1,data);
+		setMousePicture(18*9+1,data);
 	}
 
 	/**

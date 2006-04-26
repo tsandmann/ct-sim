@@ -131,8 +131,8 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 			case Command.CMD_ACT_LCD:
 				switch (command.getSubcommand()) {
 				case Command.SUB_CMD_NORM:
-					setLcdText(command.getDataL(), command.getDataR(), command
-							.getDataBytesAsString());
+					setLcdText(command.getDataL(), command.getDataR(), 
+							command.getDataBytesAsString());
 					break;
 				case Command.SUB_LCD_CURSOR:
 					setCursor(command.getDataL(), command.getDataR());
@@ -144,6 +144,10 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 					setLcdText(command.getDataBytesAsString());
 					break;
 				}
+				break;
+			case Command.CMD_SENS_MOUSE_PICTURE:
+				// Empfangen eine Bildes
+				setMousePicture(command.getDataL(),command.getDataBytes());
 				break;
 			default:
 				ErrorHandler.error("Unknown Command:" + command.toString());

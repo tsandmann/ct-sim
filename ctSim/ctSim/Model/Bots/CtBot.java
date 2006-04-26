@@ -22,11 +22,13 @@ package ctSim.Model.Bots;
 import javax.vecmath.*;
 import javax.media.j3d.*;
 
+import java.awt.Image;
 import java.lang.Math;
 
 import com.sun.j3d.utils.geometry.*;
 
 import ctSim.Controller.Controller;
+import ctSim.Model.MousePicture;
 import ctSim.View.CtControlPanel;
 
 /**
@@ -1125,4 +1127,37 @@ public abstract class CtBot extends Bot {
 		
 		return tempBuffer;
 	}
+	
+	
+	/** Anzahl der Pixel des Maussensors */
+	public static final int MOUSE_PIXEL_X = 18; 
+
+	/** Anzahl der Pixel des Maussensors */
+	public static final int MOUSE_PIXEL_Y = 18; 
+
+	/** Anzahl der Pixel des Maussensors */
+	public static final int MOUSE_PIXEL = MOUSE_PIXEL_X * MOUSE_PIXEL_Y; 
+
+	/** Ein Bild vom Maussensor */
+	private MousePicture mousePicture = new MousePicture(MOUSE_PIXEL_X,MOUSE_PIXEL_Y);
+	
+	/**
+	 * Liefert das aktuelle Bild des Maussensors, so es fertig ist, somst Null
+	 * @return Gibt eine Referenz auf mousePicture zurueck
+	 */
+	public Image getMousePicture() {
+		if (mousePicture.isComplete())
+			return mousePicture.getImage(18*5,18*5);
+		else 
+			return null;
+	}
+	/**
+	 * Fuegt Daten zum Maussensor-Bild hinzu
+	 * @param start Nummer des ersten Pixels in data
+	 * @param data Nutzdaten
+	 */
+	public void setMousePicture(int start, byte[] data){
+		mousePicture.addPixels(start,data);
+	}	
+
 }

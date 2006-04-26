@@ -16,24 +16,40 @@
  * MA 02111-1307, USA.
  * 
  */
+package ctSim.View;
 
-package ctSim.Model.Bots;
 
-
-import javax.vecmath.Point3f;
-import javax.vecmath.Vector3f;
-
-import ctSim.Controller.Controller;
+import ctSim.Model.Bots.CtBot;
 
 /**
- * Die abstrakte Oberklasse fuer Repraesentationen aller Bots, die ausserhalb
- * der Grenzen des Simulators existieren.
- * 
+ * Panel fuer einen Realen Bot
+ * @author bbe (bbe@heise.de)
+ *
  */
+public class CtBotRealPanel extends CtControlPanel {
 
-abstract public class CtBotReal extends CtBot {
-	public CtBotReal(Controller controller, Point3f pos, Vector3f head) {
-		super(controller, pos, head);
+	private static final long serialVersionUID = 1L;
+
+	
+	public CtBotRealPanel(CtBot bot) {
+		super(bot);
+	}
+
+	/* Initialisiert die GUI
+	 * @see ctSim.View.CtControlPanel#initGUI()
+	 */
+	protected void initGUI() {
+		super.initGUI();
+		
+
+	}
+
+	/* Aktualisiert das Panel
+	 * @see ctSim.View.CtControlPanel#reactToChange()
+	 */
+	public void reactToChange() {
+		super.reactToChange();
+		
 	}
 
 	

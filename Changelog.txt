@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-04-26 Benjamin Benz (bbe@heise.de) Anzeige fuer Mauskamerabilder eingefuehrt
+
 2006-04-18 Torsten Evers (tevers@onlinehome.de) maze.xml dazugefuegt
 
 2006-04-17 Benjamin Benz (bbe@heise.de) Vererbungshierarchie von Bot umgekrempelt, so dass es jetzt AliveObstacles gibt

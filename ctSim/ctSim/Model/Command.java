@@ -74,6 +74,9 @@ public class Command {
 	/** Ueberwachung Transportfach */
 	public static final int CMD_SENS_TRANS = 'T';
 
+	/** Uebertragung eines Bildes vom Maussensor */
+	public static final int CMD_SENS_MOUSE_PICTURE = 'P';
+	
 	/** Kommando fuer Logausgaben */
 	public static final int CMD_LOG = 'O';
 	

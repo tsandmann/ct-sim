@@ -22,10 +22,12 @@ package ctSim.View;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.*;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -317,6 +319,10 @@ public class CtControlPanel extends ControlPanel {
 
 	private JPanel mainPanelLeft;
 
+	
+	/** Knopf mit dem Mausbild */
+	private JButton mousePicture;
+	
 	/**
 	 * Der Konstruktor
 	 * 
@@ -1255,6 +1261,16 @@ public class CtControlPanel extends ControlPanel {
 				mainPanelRight.add(dieButton);
 
 				
+				// Maus-Bild
+				mousePicture = new JButton();
+				
+				mousePicture.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						//((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_1);
+					}
+				});
+				mainPanelRight.add(mousePicture);
+				
 				
 				// freien Platz fuellen
 				// mainPanelRight.add(Box.createHorizontalGlue());
@@ -1435,6 +1451,12 @@ public class CtControlPanel extends ControlPanel {
 		if (temp.length() > 0) {
 			logFrame.setLog(temp);
 		}
+
+		// Mausbild aktualisieren
+		Image image = ((CtBot)getBot()).getMousePicture();
+		if (image != null) 
+			mousePicture.setIcon(new ImageIcon(image));
+
 		
 		super.repaint();
 		this.repaint();
