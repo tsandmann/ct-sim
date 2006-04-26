@@ -9,8 +9,8 @@
 	<parameter name="parcours" value="parcours/testparcours2.xml"/>
 	<parameter name="viewport" value="10002"/>
 	<parameter name="botport" value="10001"/>
-	<parameter name="botbinary1" value="/home/cttest/.eclipse/ct-Bot/Debug-Linux/ct-Bot.elf"/>
-	<parameter name="botbinary" value="/home/bbe/.eclipse/ct-Bot/Debug-Linux/ct-Bot.elf"/>
+	<parameter name="botbinary" value="/home/cttest/.eclipse/ct-Bot/Debug-Linux/ct-Bot.elf"/>
+	<parameter name="botbinary1" value="/home/bbe/.eclipse/ct-Bot/Debug-Linux/ct-Bot.elf"/>
 
 	<parameter name="judge" value="ctSim.Model.Rules.LabyrinthJudge"/>
 	

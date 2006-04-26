@@ -152,6 +152,7 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 				break;
 			case Command.CMD_SENS_MOUSE_PICTURE:
 				// Empfangen eine Bildes
+				System.out.println("Mausteilbild empfangen");
 				setMousePicture(command.getDataL(),command.getDataBytes());
 				break;
 			default:
@@ -188,6 +189,7 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 	public void requestMousePicture() {
 		Command command = new Command(Command.CMD_SENS_MOUSE_PICTURE, 0, 0, seq++);
 		try {
+			System.out.println("Frage nach Bild");
 			con.send(command.getCommandBytes());
 		} catch (IOException e) {
 			ErrorHandler.error("Probleme bei der Bitte um ein neues Maussesnorbil: "+e);
