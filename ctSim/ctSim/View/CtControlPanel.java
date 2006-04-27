@@ -1263,6 +1263,7 @@ public class CtControlPanel extends ControlPanel {
 				
 				// Maus-Bild
 				mousePicture = new JButton();
+				mousePicture.setText("Hole Mausbild");
 				
 				mousePicture.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
