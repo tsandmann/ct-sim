@@ -731,28 +731,31 @@ public class Controller {
 					 * gaenzlich entfernt.
 					 */
 					tcp.connect(server.accept());
-
+					System.out.println("Incomming Connection on Bot-Port");
+					
 					Command cmd = new Command();
 					try {
 						while (bot == null) {
+							System.out.println("Waiting for Welcome-String...");
+							
 							if (cmd.readCommand(tcp) == 0) {
 								System.out.print("Seq: " + cmd.getSeq()
 										+ " CMD: " + cmd.getCommand() + "SUB: "
 										+ cmd.getSubcommand() + "\n");
+								
 								if (cmd.getCommand() == Command.CMD_WELCOME) {
 									if (cmd.getSubcommand() == Command.SUB_WELCOME_REAL) {
 										bot = new CtBotRealCon(Controller.this,
 												new Point3f(0.5f, 0f, 0f),
 												new Vector3f(1.0f, -0.5f, 0f),
 												tcp);
-										System.out.print("Real Bot comming up");
+										System.out.println("Real Bot comming up");
 									} else {
 										bot = new CtBotSimTcp(Controller.this,
 												new Point3f(0.5f, 0f, 0f),
 												new Vector3f(1.0f, -0.5f, 0f),
 												tcp);
-										System.out
-												.print("Virtual Bot comming up");
+										System.out.println("Virtual Bot comming up");
 									}
 								} else {
 									System.out
