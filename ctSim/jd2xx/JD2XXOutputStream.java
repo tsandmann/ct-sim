@@ -62,7 +62,10 @@ public class JD2XXOutputStream extends OutputStream {
 	public void write(int b) throws IOException {
 		byte[] c = new byte[1];
 		c[0] = (byte)b;
-		while (jd2xx.write(c) != 0) ;
+		int result =jd2xx.write(c);
+		
+//		while (jd2xx.write(c) != 0) ;
+		//jd2xx.write(c);
 	}
 
 	public void write(byte[] b) throws IOException {
