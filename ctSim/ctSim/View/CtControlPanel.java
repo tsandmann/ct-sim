@@ -1455,8 +1455,10 @@ public class CtControlPanel extends ControlPanel {
 
 		// Mausbild aktualisieren
 		Image image = ((CtBot)getBot()).getMousePicture();
-		if (image != null) 
+		if (image != null) {
 			mousePicture.setIcon(new ImageIcon(image));
+			mousePicture.setText(null);
+		}
 
 		
 		super.repaint();
