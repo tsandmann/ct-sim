@@ -150,6 +150,15 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 					break;
 				}
 				break;
+			
+			case Command.CMD_WELCOME:
+				if (command.getSubcommand() != Command.SUB_WELCOME_REAL){
+					ErrorHandler.error("Ich bin kein Realer-Bot! Sterbe vor Schreck ;-)");
+					die();
+				}
+				break;
+
+				
 			case Command.CMD_SENS_MOUSE_PICTURE:
 				// Empfangen eine Bildes
 				System.out.println("Mausteilbild empfangen");

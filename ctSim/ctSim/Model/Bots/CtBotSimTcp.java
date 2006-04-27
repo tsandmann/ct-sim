@@ -236,6 +236,13 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				setMousePicture(command.getDataL(),command.getDataBytes());
 				break;
 	
+			case Command.CMD_WELCOME:
+				if (command.getSubcommand() != Command.SUB_WELCOME_SIM){
+					ErrorHandler.error("Ich bin kein Sim-Bot! Sterbe vor Schreck ;-)");
+					die();
+				}
+				break;
+				
 			default:
 				ErrorHandler.error("Unknown Command:" + command.toString());
 				break;
