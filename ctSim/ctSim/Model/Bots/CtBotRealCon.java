@@ -84,8 +84,8 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 
 			switch (command.getCommand()) {
 			case Command.CMD_SENS_IR:
-				setSensIrL(command.getDataL());
-				setSensIrR(command.getDataR());
+				setSensIrL( ((double)command.getDataL())/1000);
+				setSensIrR( ((double)command.getDataR())/1000);
 				break;
 			case Command.CMD_SENS_ENC:
 				setSensEncL((short) command.getDataL());
@@ -150,6 +150,10 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 					break;
 				}
 				break;
+				
+			case Command.CMD_LOG:
+				this.setLog(command.getDataBytesAsString());
+				break;				
 			
 			case Command.CMD_WELCOME:
 				if (command.getSubcommand() != Command.SUB_WELCOME_REAL){

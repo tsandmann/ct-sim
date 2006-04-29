@@ -151,8 +151,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 			switch (command.getCommand()) {
 			case Command.CMD_SENS_IR:
-				answer.setDataL(this.getSensIrL());
-				answer.setDataR(this.getSensIrR());
+				setSensIrL( ((double)command.getDataL())/1000);
+				setSensIrR( ((double)command.getDataR())/1000);
 				break;
 			case Command.CMD_SENS_ENC:
 				answer.setDataL(this.getSensEncL());
