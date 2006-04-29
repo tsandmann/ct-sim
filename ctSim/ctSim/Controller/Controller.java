@@ -108,7 +108,7 @@ public class Controller {
 		DOMParser parser = new DOMParser();
 		try {
 			// einlesen
-			parser.parse(CONFIGFILE);
+			parser.parse(ClassLoader.getSystemResource(CONFIGFILE).toString());
 			// umwandeln in ein Document
 			Document doc = parser.getDocument();
 			
@@ -208,7 +208,7 @@ public class Controller {
 			return;
 		}
 		
-		String parcours = (String)config.get("parcours");
+		String parcours = ClassLoader.getSystemResource((String)config.get("parcours")).toString();
 		if (parcours==null){
 			
 			// Nach einem Parcours fragen
