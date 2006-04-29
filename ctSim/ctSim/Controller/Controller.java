@@ -735,13 +735,15 @@ public class Controller {
 					
 					Command cmd = new Command();
 					try {
+						// Hallo sagen
+						tcp.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
 						while (bot == null) {
 							System.out.println("Waiting for Welcome-String...");
 							
 							if (cmd.readCommand(tcp) == 0) {
-								System.out.print("Seq: " + cmd.getSeq()
-										+ " CMD: " + cmd.getCommand() + "SUB: "
-										+ cmd.getSubcommand() + "\n");
+//								System.out.print("Seq: " + cmd.getSeq()
+//										+ " CMD: " + cmd.getCommand() + "SUB: "
+//										+ cmd.getSubcommand() + "\n");
 								
 								if (cmd.getCommand() == Command.CMD_WELCOME) {
 									if (cmd.getSubcommand() == Command.SUB_WELCOME_REAL) {
@@ -758,24 +760,19 @@ public class Controller {
 										System.out.println("Virtual Bot comming up");
 									}
 								} else {
-									System.out
-											.print("Non-Welcome-Command found: \n"
-													+ cmd.toString()
-													+ "\n ==> Bot is already running or deprecated bot \nDefaulting to virtual Bot\n");
-									// TODO Strenger pruefen und alle nicht
-									// ordentlich angemeldeten Bots abweisen!
-									bot = new CtBotSimTcp(Controller.this,
-											new Point3f(0.5f, 0f, 0f),
-											new Vector3f(1.0f, -0.5f, 0f), tcp);
+									System.out.print("Non-Welcome-Command found: \n"
+													+ cmd.toString()+ "\n"+
+													" ==> Bot is already running or deprecated bot \n"+
+													"Sending Welcome again\n");
+									// Hallo sagen
+									tcp.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
 								}
 							} else
 								System.out.print("Broken Command found: \n");
 
 						}
 					} catch (IOException ex) {
-						ErrorHandler
-								.error("TCPConnection broken - not possibple to connect: "
-										+ ex);
+						ErrorHandler.error("TCPConnection broken - not possibple to connect: " + ex);
 					}
 
 					

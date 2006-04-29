@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-04-26 Benjamin Benz (bbe@heise.de) Sim schickt nun auch ein "Welcome" an den Bot und nimmt nur noch sauber angemeldete Bots an
+
 2006-04-26 Benjamin Benz (bbe@heise.de) Bug aus der Anzeige von IR-Sensordaten entfernt
 
 2006-04-26 Benjamin Benz (bbe@heise.de) BugsNFeatures erweitert, TODO entfernt
