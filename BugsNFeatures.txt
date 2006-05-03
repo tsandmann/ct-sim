@@ -24,6 +24,9 @@ wenn ploetzlich alle den gleichen Bug fixen wollen ;-)
 Bugs
 ----
 
+* [06-05-03][Benjamin Benz][open][]:
+Parcours zeigt nur die ersten acht Lichtquellen als leuchtend an.
+
 * [06-03-26][Torsten Evers][open][]:
 Beim Testen ist mir noch etwas bzgl. des Sims aufgefallen. Ich habe in letzter 
 Zeit haeufiger die Situation, dass der Sim erst beim 2. oder 3. Start korrekt 
