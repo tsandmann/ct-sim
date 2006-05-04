@@ -290,7 +290,7 @@ public class Controller {
 				ViewListener.start();
 				
 			} catch (Exception ex) {
-				ErrorHandler.error("Kann den ViewPort ("+port+ ") nicht dekodieren");
+				ErrorHandler.error("Kann den ViewPort ("+port+ ") nicht dekodieren: "+ex);
 			}
 		}
 		
@@ -312,7 +312,7 @@ public class Controller {
 				BotListener.start();
 				
 			} catch (Exception ex) {
-				ErrorHandler.error("Kann den botPort ("+port+ ") nicht dekodieren");
+				ErrorHandler.error("Kann den botPort ("+port+ ") nicht dekodieren "+ex);
 			}
 		} else {
 			ErrorHandler.error("Kein botPort in der Config-Datei gefunden. Es wird nicht auf Bots gelauscht!");			
