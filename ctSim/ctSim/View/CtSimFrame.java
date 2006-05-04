@@ -27,6 +27,7 @@ import java.awt.event.WindowStateListener;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
+import javax.swing.JScrollPane;
 
 /** 
  * Die Haupt-View-Klasse des c't-Sim, welche die ControlPanels und die
@@ -86,10 +87,15 @@ public class CtSimFrame extends JFrame implements WindowStateListener {
 		Dimension preferedSize = this.controlFrame.getPreferredSize();
 		this.controlFrame.setMinimumSize(preferedSize);
 		this.controlFrame.setMaximumSize(preferedSize);
+		// scrollpane erstellen
+		JScrollPane controlScrollPane = new JScrollPane(this.controlFrame);
+		controlScrollPane.setMinimumSize(new Dimension(200,0));
 		// SplitPane erstellen
-		this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.controlFrame, worldView); 
+		this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, controlScrollPane, worldView); 
 		this.splitPane.setContinuousLayout(false); 
 		this.splitPane.setOneTouchExpandable(true);
+		this.splitPane.setResizeWeight(0.5);
+		worldView.setMinimumSize(new Dimension(200,0));
 		
 		this.getContentPane().add(this.splitPane, BorderLayout.CENTER); 
 	}
