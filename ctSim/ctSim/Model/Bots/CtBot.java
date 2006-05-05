@@ -273,6 +273,9 @@ public abstract class CtBot extends Bot {
 
 	/** RC5-Taste BLUE*/
 	public static final int RC5_CODE_BLUE = 0x1029; 
+	
+	/** RC5-Taste CODE VIEW */
+	public static final int RC5_CODE_VIEW = 0x000F; 
 
 	
 	// Felder fuer den Zustand des Roboters:

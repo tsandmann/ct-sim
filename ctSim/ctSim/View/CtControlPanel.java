@@ -124,6 +124,8 @@ public class CtControlPanel extends ControlPanel {
 	private JButton jButtonRight;
 
 	private JButton jButtonOnOff;
+	
+	private JButton jButtonView;
 
 	private JButton jButtonLeft;
 
@@ -838,9 +840,20 @@ public class CtControlPanel extends ControlPanel {
 						});
 					}
 					{
+						jButtonView = new JButton();
+						rc5Panel.add(jButtonView);
+						jButtonView.setText("View");
+						jButtonView.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_VIEW);
+							}
+						});
+					}
+/*					{
 						dummy2 = new JPanel();
 						rc5Panel.add(dummy2);
 					}
+					*/
 					{
 						dummy3 = new JPanel();
 						rc5Panel.add(dummy3);

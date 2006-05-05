@@ -1,5 +1,9 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-04-28 Achim Pankalla (achim.pankalla@gmx.de) 
+		   View Taste für die Umschaltung des Verhaltenscreens integriert. Siehe auch: select-behaviours.txt
+		   unter ct-bot->Documentation.
+	
 2006-04-27 Fabian Recktenwald (fabian.recktenwald@ct-bot.teschpfad.de) Dem Controlfenster wurde ein ScrollPane hinzugefuegt.
 
 2006-04-26 Benjamin Benz (bbe@heise.de) Sim schickt nun auch ein "Welcome" an den Bot und nimmt nur noch sauber angemeldete Bots an
