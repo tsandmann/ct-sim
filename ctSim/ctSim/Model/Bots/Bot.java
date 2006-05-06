@@ -147,7 +147,7 @@ abstract public class Bot extends AliveObstacle{
 	private void createViewingPlatform(){
 		TransformGroup tg = new TransformGroup();
 		Transform3D translate = new Transform3D();
-//		transform.setTranslation(new Vector3f(0f,0f,.6f));
+//		translate.setTranslation(new Vector3f(0f,0f,1f));
 		tg.setTransform(translate);
 
 		TransformGroup rg = new TransformGroup();
