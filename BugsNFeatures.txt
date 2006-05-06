@@ -50,7 +50,9 @@ stehen, tritt das Problem nicht auf.
 
 Feature Requests
 ----------------
-* [29-04-2006] [open] [Benjamin Benz] []: Der ParcoursLoader koennte auch Kameras platzieren
+* [06-05-2006] [open] [Benjamin Benz] []: Es waere schick zusaetzliche 3D-View-Fenster oeffnen zu koennen
+* [06-05-2006] [open] [Benjamin Benz] []: Man koennte auch jedem Bot noch eine zweite Kamera aus Vogelperspektive zuordnen, die immer ueber ihm schwebt
+* [06-05-2006] [open] [Benjamin Benz] []: Der ParcoursLoader koennte auch Kameras platzieren
 * [29-04-2006] [open] [Benjamin Benz] []: Eine eigene von JPanel abgeleitete Klasse für die Fernbedienung erstellen und die Default FB nachbauen.
 * [17-04-2006] [open] [Benjamin Benz] []: Namensvergabe (Controller.getNewBotName) der Bots sollte die Namen verstorbener Bots neu Vergeben
 * [17-04-2006] [open] [Benjamin Benz] []: ClientViews bekommen noch keine Infos über Farbänderungen
