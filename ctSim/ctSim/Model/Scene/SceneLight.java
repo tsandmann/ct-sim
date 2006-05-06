@@ -30,12 +30,14 @@ import java.util.Map;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
 import javax.media.j3d.NodeReferenceTable;
+import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 
 import com.sun.j3d.utils.scenegraph.io.NamedObjectException;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
+import com.sun.j3d.utils.universe.ViewingPlatform;
 
 import ctSim.ErrorHandler;
 import ctSim.Model.Bots.Bot;
@@ -50,7 +52,7 @@ import ctSim.View.ViewBotUpdate;
  */
 public class SceneLight {
 	/** Sammelt Einsprungpunkte in den Szenegraphen */
-	HashMap map = new HashMap();
+	HashMap<String,SceneGraphObject> map = new HashMap<String,SceneGraphObject>();
 	
 	/** Der eigentliche Szenegraph */
 	private BranchGroup scene;
@@ -99,7 +101,6 @@ public class SceneLight {
 	 * @param botId Name des Bot
 	 * @param tg Transformgruppe des Bot
 	 */
-//	@SuppressWarnings("unchecked")
 //	public void addBot_(String botId, TransformGroup tg) {
 //		map.put(botId+"TG",tg);
 //	}
@@ -132,7 +133,7 @@ public class SceneLight {
 	 * @param name Der Name des Bots
 	 * @param newMap Alle noetigen Referenzen
 	 */
-	public void addBot(String name, HashMap newMap){
+	public void addBot(String name, HashMap<String,SceneGraphObject> newMap){
 		// Zuerst muessen wir die Root-Branchgroup des Bots finden
 		// Wir wissen lediglich, dass sie mit der Zeichenkette Bot.BG endet
 		BranchGroup bg = null;
@@ -159,14 +160,13 @@ public class SceneLight {
 	 * @param newMap Alle noetigen Referenzen
 	 */
 	@SuppressWarnings("unchecked")
-	public void addBotRefs(String name, HashMap newMap){
+	public void addBotRefs(String name, HashMap<String,SceneGraphObject> newMap){
 		// Alle Eintraege aus der Map uebertragen
 		// Alle Referenzen aktualisieren
 		Iterator it = newMap.keySet().iterator();
 		while (it.hasNext()){
 			String key = (String) it.next();
-			Object ref = newMap.get(key);
-			map.put(key,ref);
+			map.put(key,newMap.get(key));
 		}		
 	}
 
@@ -248,7 +248,6 @@ public class SceneLight {
 	 * @param obstBG
 	 *            Referenz auf obstBG, die gesetzt werden soll
 	 */
-	@SuppressWarnings("unchecked")
 	public void setObstBG(BranchGroup obstBG) {
 		map.put(OBSTBG,obstBG);
 	}
@@ -257,7 +256,6 @@ public class SceneLight {
 	 * Erstellt einen kompletten Klon des Objektes Achtung, das Ursprungsobjekt
 	 * darf nicht compiliert oder aktiv sein!
 	 */
-	@SuppressWarnings("unchecked")
 	public SceneLight clone() {
 		// der Clone
 		SceneLight sc = new SceneLight();
@@ -309,9 +307,37 @@ public class SceneLight {
 		scene=reader.readBranchGraph(map);
 	}
 
-
-	public HashMap getMap() {
+	/**
+	 * Liefert die Liste mit allen Referenzen
+	 * @return
+	 */
+	public HashMap<String,SceneGraphObject> getMap() {
 		return map;
 	}
 
+	
+	public HashMap<String,SceneGraphObject> getReferences(String partialKey){
+		HashMap<String,SceneGraphObject> h = new HashMap<String,SceneGraphObject>();
+		
+		Iterator it = map.entrySet().iterator(); 
+		while (it.hasNext()){
+			Map.Entry entry =(Map.Entry) it.next();
+			String key = (String) entry.getKey();
+			if (key.contains(partialKey))
+					h.put(key,map.get(key));
+		}
+		
+		return h;
+	}
+
+	/**
+	 * Fuegt eine Referenz in die Map ein
+	 * @param key
+	 * @param so
+	 */
+	public void addReference(String key, SceneGraphObject so) {
+		map.put(key,so);
+		
+	}
+	
 }

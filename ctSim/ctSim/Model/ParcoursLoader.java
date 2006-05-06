@@ -396,7 +396,6 @@ public class ParcoursLoader {
 	 * Laedt einen Oarcours aus einer XML-Datei
 	 * @param filename
 	 */
-	@SuppressWarnings("unchecked")
 	public void load_xml_file(String filename) throws Exception{
 		// Ein DOMParser liest ein XML-File ein
 		DOMParser parser = new DOMParser();
@@ -471,7 +470,7 @@ public class ParcoursLoader {
 	        			String texture = null;
 	        			String clone = null;
 	        			
-	        			HashMap colors = new HashMap();
+	        			HashMap<String,String> colors = new HashMap<String,String>();
 	        			
 	        			NodeList features = appearance.getChildNodes();
 	        			for (int j=0; j< features.getLength(); j++){

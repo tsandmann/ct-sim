@@ -133,8 +133,6 @@ public class CtControlPanel extends ControlPanel {
 
 	private JPanel dummy3;
 
-	private JPanel dummy2;
-
 	private JButton jButton10;
 
 	private JButton jButton9;

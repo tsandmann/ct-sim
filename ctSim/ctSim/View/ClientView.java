@@ -139,7 +139,7 @@ public class ClientView {
 	}
 	
 	public void addBot(){
-		HashMap newMap = new HashMap();
+		HashMap<String,SceneGraphObject> newMap = new HashMap<String,SceneGraphObject>();
 		try {
 			InputStream is = connection.getSocket().getInputStream();
 			SceneGraphStreamReader reader = new SceneGraphStreamReaderFixed(is);

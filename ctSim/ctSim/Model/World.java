@@ -278,8 +278,11 @@ public class World extends Thread {
 		sceneLight.removeBot(obst.getName());
 		sceneLightBackup.removeBot(obst.getName());
 	}
-	
-	@SuppressWarnings("unchecked")
+
+	/**
+	 * Fuegt ein AliveObstacle wie z.B. einen Bot zur Welt dazu
+	 * @param obst
+	 */
 	public void add(AliveObstacle obst){
 		aliveObstacles.add(obst);
 		obst.setWorld(this);
@@ -290,17 +293,14 @@ public class World extends Thread {
 		// das resultat von clone brauchen wir nicht, da alle Infos auch in nr stehen
 		bg.cloneTree(nr);
 		
-		HashMap newMap = new HashMap();
+		HashMap<String,SceneGraphObject> newMap = new HashMap<String,SceneGraphObject>();
 		
 		// Alle Referenzen aktualisieren
 		Iterator it = obst.getNodeMap().keySet().iterator();
 		while (it.hasNext()){
 			String key = (String) it.next();
 			SceneGraphObject ref = obst.getNodeReference(key);
-			
-			Object newRef= nr.getNewObjectReference(ref);
-			
-			newMap.put(key,newRef);
+			newMap.put(key,nr.getNewObjectReference(ref));
 		}
 		
 		// In den Backup fuegen wir den ganzenm Bot ein

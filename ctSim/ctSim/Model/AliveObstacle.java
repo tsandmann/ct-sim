@@ -27,6 +27,8 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3f;
 
+import ctSim.Controller.Controller;
+
 /**
  * Klasse fuer alle Hindernisse die sich selbst bewegn können
  * 
@@ -42,17 +44,21 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	public static final String TG = "TG";
 
 	/** Liste mit allen Einsprungspunkten in den Szenegraphen */
-	private HashMap nodeMap = new HashMap();
+	private HashMap<String,SceneGraphObject> nodeMap = new HashMap<String,SceneGraphObject>();
 	
 	/** Soll die Simulation noch laufen? */
 	private boolean run = true;
 
 	/** Zeiger auf die Welt, in der der Bot lebt */
-	protected World world;
+	private World world;
 	
 	/** Position */
 	private Vector3f pos = new Vector3f(0.0f, 0f, getHeight() / 2 + 0.006f);
 
+	/** Verweis auf den zugehoerigen Controller */
+	private Controller controller;
+
+	
 	/**
 	 * @return Die Hoehe des Objektes in Metern
 	 */
@@ -138,9 +144,16 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 		world = null;
 	}
 
-	
-	public AliveObstacle() {
+	/**
+	 * Erzeugt ein neues Objekt mit einem zugeordneten Controller
+	 * @param controller
+	 */
+	public AliveObstacle(Controller controller) {
 		super();
+		this.controller =controller;
+		world = controller.getWorld();
+	 	setName(controller.getNewBotName(getClass().getName()));
+		createBranchGroup();
 	}
 
 	
@@ -148,7 +161,7 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	 * Gibt alle Referenzen auf den Szenegraphen zurück
 	 * @return
 	 */
-	public HashMap getNodeMap() {
+	public HashMap<String,SceneGraphObject> getNodeMap() {
 		return nodeMap;
 	}
 
@@ -165,7 +178,6 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	}
 
 	/** Fuegt eine Referenz ein */
-	@SuppressWarnings("unchecked")
 	public void addNodeReference(String key, SceneGraphObject so){
 		nodeMap.put(getName()+"_"+key,so);
 	}
@@ -198,4 +210,13 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	public void setWorld(World world) {
 		this.world = world;
 	}
+	
+	/**
+	 * @return Gibt eine Referenz auf controller zurueck
+	 * @return Gibt den Wert von controller zurueck
+	 */
+	public Controller getController() {
+		return controller;
+	}
+	
 }

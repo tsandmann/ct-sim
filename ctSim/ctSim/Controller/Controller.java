@@ -31,9 +31,14 @@ import java.util.List;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.Material;
+import javax.media.j3d.PhysicalBody;
+import javax.media.j3d.PhysicalEnvironment;
+import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.TexCoordGeneration;
 import javax.media.j3d.Texture;
 import javax.media.j3d.Texture2D;
+import javax.media.j3d.View;
+import javax.media.j3d.ViewPlatform;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.vecmath.Color3f;
@@ -88,12 +93,12 @@ public class Controller {
 	/**
 	 * Anzahl der Bots im System
 	 */
-	private HashMap numberBots = new HashMap();
+	private HashMap<String,Integer> numberBots = new HashMap<String,Integer>();
 
 	/**
 	 * Enthaelt die gesamten Einzelparameter der Konfiguration 
 	 */
-	private HashMap config = new HashMap();
+	private HashMap<String,String> config = new HashMap<String,String>();
 	
 	/** Der Schiedsrichter, falls vorhanden */
 	private Judge judge= null; 
@@ -102,7 +107,6 @@ public class Controller {
 	 * Liest die Konfiguration des Sims ein
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	private void parseConfig() throws Exception{
 		// Ein DOMParser liest ein XML-File ein
 		DOMParser parser = new DOMParser();
@@ -176,7 +180,6 @@ public class Controller {
 	 * @param type
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public String getNewBotName(String type){
 		// TODO Namensvergabe sollte die Namen von gestorbenen Bots neu verteilen
 
@@ -246,6 +249,8 @@ public class Controller {
 		worldView = new WorldView();
 		worldView.setScene(world.getSceneLight().getScene(),world.getPlaygroundDimX(),world.getPlaygroundDimY());
 		worldView.initGUI();
+		// TODO folgende Zeile gehoert hier eigentlich nicht her, sondern viel eher in world. das zieht aber einiges an aenderungen nach sich
+		world.getSceneLight().addReference("World_TG",worldView.getUniverse().getViewingPlatform());  
 		
 		/* Markus Lang 2006-03-17:
 		 * Hauptfenster erstellen mit den bereits vorhandenen 
@@ -398,6 +403,17 @@ public class Controller {
 			controlFrame.addBot(bot);
 			// Dann wird der eigene Bot-Thread gestartet:
 			bot.start();
+			
+			
+			// TODO --- Experimental VIEW CODE
+//			View view= worldView.getUniverse().getViewingPlatform().getViewers()[0].getView();
+//			view.attachViewPlatform((ViewPlatform)bot.getNodeReference(Bot.VP));
+//			view.setPhysicalBody(new PhysicalBody());
+//			view.setPhysicalEnvironment(new PhysicalEnvironment());
+//			view.setFrontClipDistance(0.01);
+//			
+//			HashMap<String,SceneGraphObject> h = world.getSceneLight().getReferences("_"+Bot.TG);
+//			System.out.println(h);
 		}		
 	}
 	
@@ -583,7 +599,7 @@ public class Controller {
 				        			String texture = null;
 				        			String clone = null;
 				        			
-				        			HashMap colors = new HashMap();
+				        			HashMap<String,String> colors = new HashMap<String,String>();
 				        			
 				        			NodeList features = appearance.getChildNodes();
 				        			for (int j=0; j< features.getLength(); j++){
@@ -619,8 +635,7 @@ public class Controller {
 	 * @param textureFile Der Name des Texture-Files
 	 * @param clone Referenz auf einen schon bestehenden Eintrag, der geclonet werden soll
 	 */
-	@SuppressWarnings("unchecked")
-	private void addAppearance(HashMap appearances, String item, HashMap colors, String textureFile, String clone){
+	private void addAppearance(HashMap<String,Appearance> appearances, String item, HashMap colors, String textureFile, String clone){
 		
 		if (clone != null){
 			appearances.put(item, appearances.get(clone));
@@ -832,6 +847,14 @@ public class Controller {
 				System.err.println(ioe.getMessage());
 			}
 		}
+	}
+
+	/**
+	 * @return Gibt eine Referenz auf worldView zurueck
+	 * @return Gibt den Wert von worldView zurueck
+	 */
+	public WorldView getWorldView() {
+		return worldView;
 	}
 
 }

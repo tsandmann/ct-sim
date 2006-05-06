@@ -1,7 +1,11 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-05-05 Jeder Bot traegt jetzt eine ViewPlatform mit sich rum, man kann also bald auch die Kameras wechseln
+
+2006-05-05 Benjamin Benz (bbe@heise.de) Viele der HashMaps typisiert 
+
 2006-04-28 Achim Pankalla (achim.pankalla@gmx.de) 
-		   View Taste für die Umschaltung des Verhaltenscreens integriert. Siehe auch: select-behaviours.txt
+		   View Taste fuer die Umschaltung des Verhaltenscreens integriert. Siehe auch: select-behaviours.txt
 		   unter ct-bot->Documentation.
 	
 2006-04-27 Fabian Recktenwald (fabian.recktenwald@ct-bot.teschpfad.de) Dem Controlfenster wurde ein ScrollPane hinzugefuegt.

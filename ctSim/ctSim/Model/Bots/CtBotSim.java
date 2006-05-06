@@ -231,7 +231,7 @@ abstract public class CtBotSim extends CtBot {
 
 		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 		// der Bot blau gefaerbt.
-		if (world.checkCollision((Shape3D)getNodeReference(BOTBODY), getBounds(), newPos, getName())) {
+		if (getWorld().checkCollision((Shape3D)getNodeReference(BOTBODY), getBounds(), newPos, getName())) {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
 			if (isApperanceCollision) {
@@ -283,21 +283,21 @@ abstract public class CtBotSim extends CtBot {
 		rotation.transform(skidVec);
 		skidVec.add(new Point3d(newPos));
 		boolean isFalling = false;
-		if (!world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE,
+		if (!getWorld().checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE,
 				"Der Gleitpin von " + this.getName())) {
 			isFalling = true;
 		}
 
 		// Bodenkontakt des linken Reifens ueberpruefen
 		posRadL.z -= BOT_HEIGHT / 2;
-		if (!world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE,
+		if (!getWorld().checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE,
 				"Das linke Rad von " + this.getName())) {
 			isFalling = true;
 		}
 
 		// Bodenkontakt des rechten Reifens ueberpruefen
 		posRadR.z -= BOT_HEIGHT / 2;
-		if (!world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE,
+		if (!getWorld().checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE,
 				"Das rechte Rad von " + this.getName())) {
 			isFalling = true;
 		}
@@ -321,37 +321,37 @@ abstract public class CtBotSim extends CtBot {
 		
 		// IR-Abstandssensoren aktualisieren
 		if (updateSensIr) {
-			this.setSensIrL(world.watchObstacle(getSensIRPosition('L'),
+			this.setSensIrL(getWorld().watchObstacle(getSensIRPosition('L'),
 					new Vector3d(newHeading), SENS_IR_ANGLE, (Shape3D)getNodeReference(BOTBODY)));
-			this.setSensIrR(world.watchObstacle(getSensIRPosition('R'),
+			this.setSensIrR(getWorld().watchObstacle(getSensIRPosition('R'),
 					new Vector3d(newHeading), SENS_IR_ANGLE, (Shape3D)getNodeReference(BOTBODY)));
 		}
 
 		// Liniensensoren aktualisieren
 		if (updateSensLine) {
-			this.setSensLineL(world.sensGroundReflectionCross(
+			this.setSensLineL(getWorld().sensGroundReflectionCross(
 					getSensLinePosition('L'), new Vector3d(newHeading),
 					SENS_LINE_ANGLE, SENS_LINE_PRECISION));
-			this.setSensLineR(world.sensGroundReflectionCross(
+			this.setSensLineR(getWorld().sensGroundReflectionCross(
 					getSensLinePosition('R'), new Vector3d(newHeading),
 					SENS_LINE_ANGLE, SENS_LINE_PRECISION));
 		}
 
 		// Abgrundsensoren aktualisieren
 		if (updateSensBorder) {
-			this.setSensBorderL(world.sensGroundReflectionCross(
+			this.setSensBorderL(getWorld().sensGroundReflectionCross(
 					getSensBorderPosition('L'), new Vector3d(newHeading),
 					SENS_BORDER_ANGLE, SENS_BORDER_PRECISION));
-			this.setSensBorderR(world.sensGroundReflectionCross(
+			this.setSensBorderR(getWorld().sensGroundReflectionCross(
 					getSensBorderPosition('R'), new Vector3d(newHeading),
 					SENS_BORDER_ANGLE, SENS_BORDER_PRECISION));
 		}
 
 		// Lichtsensoren aktualisieren
 		if (updateSensLdr) {
-			this.setSensLdrL(world.sensLight(getSensLdrPosition('L'),
+			this.setSensLdrL(getWorld().sensLight(getSensLdrPosition('L'),
 					getSensLdrHeading(newHeading), SENS_LDR_ANGLE));
-			this.setSensLdrR(world.sensLight(getSensLdrPosition('R'),
+			this.setSensLdrR(getWorld().sensLight(getSensLdrPosition('R'),
 					getSensLdrHeading(newHeading), SENS_LDR_ANGLE));
 		}
 
@@ -543,7 +543,7 @@ abstract public class CtBotSim extends CtBot {
 		super.work();
 		long tmpTime = simulTime;
 		try {
-			simulTime = world.getSimulTime();
+			simulTime = getWorld().getSimulTime();
 			// warten, bis World den naechsten Schritt macht
 			deltaT = simulTime - tmpTime; // aktualisiere deltaT
 			updateStats();

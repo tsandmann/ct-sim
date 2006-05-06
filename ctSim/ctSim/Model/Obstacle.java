@@ -33,4 +33,10 @@ public interface Obstacle {
 	 * @return Liefert die Grenzen des Hindernisses zurueck
 	 */
 	abstract public Bounds getBounds();
+	
+	/**
+	 * Erzeugt die 3D-Repraesentation eines Objektes
+	 */
+	abstract void createBranchGroup();
+
 }

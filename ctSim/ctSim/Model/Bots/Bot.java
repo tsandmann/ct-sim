@@ -25,6 +25,8 @@ import javax.media.j3d.Appearance;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.media.j3d.ViewPlatform;
+import javax.vecmath.AxisAngle4d;
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Vector3f;
 
@@ -51,9 +53,6 @@ abstract public class Bot extends AliveObstacle{
 	/** Steuerpanel des Bots */
 	private ControlPanel panel;
 
-	/** Verweis auf den zugehoerigen Controller */
-	private Controller controller;
-
 	/**
 	 * Blickvektor
 	 */
@@ -61,18 +60,22 @@ abstract public class Bot extends AliveObstacle{
 
 	/** Liste mit den verschiedenen Aussehen eines Bots */
 	private HashMap appearances;
-
+	
 	/** Konstanten fuer die Noderefernces */
 	public static final String BOTBODY = "botBody";
+	
+	/** Konstanten fuer die ViewingPlatform */
+	public static final String VP = "VP";
 	
 	/**
 	 * Initialisierung des Bots
 	 * @param controller Verweis auf den zugehoerigen Controller
 	 */
 	public Bot(Controller controller) {
-		super();
-		this.controller = controller;
-	 	setName( controller.getNewBotName(getClass().getName()));
+		super(controller);
+	 	
+	 	// Zu diesem Zeitpunkt ist die ganze 3D-Repraesentation bereits aufgebaut
+		createViewingPlatform();
 	}
 
 	/**
@@ -91,7 +94,7 @@ abstract public class Bot extends AliveObstacle{
 	protected void cleanup() {
 		super.cleanup();
 		
-		controller.removeFromView(getName());
+		getController().removeFromView(getName());
 		panel.remove();
 		panel = null;
 	}
@@ -101,15 +104,16 @@ abstract public class Bot extends AliveObstacle{
 	 * @return Die Hoehe der Grundplatte des Bot ueber dem Boden in Metern
 	 */
 	abstract public float getGroundClearance();
-
+	
 	/**
 	 * @param heading
 	 *            Die Blickrichtung des Bot, die gesetzt werden soll
 	 */
 	public void setHeading(Vector3f heading) {
+		float angle;
 		synchronized (heading) {
 			this.heading = heading;
-			float angle = heading.angle(new Vector3f(1f, 0f, 0f));
+			angle = heading.angle(new Vector3f(1f, 0f, 0f));
 			if (heading.y < 0)
 				angle = -angle;
 			Transform3D transform = new Transform3D();
@@ -119,9 +123,52 @@ abstract public class Bot extends AliveObstacle{
 			transform.setRotation(new AxisAngle4f(0f, 0f, 1f, angle));
 			
 			((TransformGroup)getNodeReference(TG)).setTransform(transform);
+			
+			
 		}
-	}
 
+/*//		Vector3f p= new Vector3f(getPos());
+		Vector3f p= new Vector3f(0f,0f,0f);
+//		p.sub(new Vector3f(0f,0.3f,1.8f)); 
+		
+		Transform3D transform = new Transform3D();
+		//controller.getWorldView().getUniverse().getViewingPlatform().getViewPlatformTransform().getTransform(transform);
+		
+		transform.setTranslation(p);
+		
+		transform.rotX(Math.PI/2);
+		transform.rotY(Math.PI/2);
+		transform.rotZ(0);
+		getController().getWorldView().getUniverse().getViewingPlatform().getViewPlatformTransform().setTransform(transform);
+*/
+	}
+	
+	/** Fuegt eine Kameraplatform fuer den Bot ein */
+	private void createViewingPlatform(){
+		TransformGroup tg = new TransformGroup();
+		Transform3D translate = new Transform3D();
+//		transform.setTranslation(new Vector3f(0f,0f,.6f));
+		tg.setTransform(translate);
+
+		TransformGroup rg = new TransformGroup();
+		Transform3D rotate = new Transform3D();
+		Transform3D tmp= new Transform3D();
+		
+		rotate.setRotation(new AxisAngle4d(0d, 0d, 1d, -Math.PI/2));
+		tmp.rotX(Math.PI/2);
+		rotate.mul(tmp);
+		
+		rg.setTransform(rotate);
+		tg.addChild(rg);
+		
+	 	ViewPlatform  viewPlatform = new ViewPlatform();	// Erzeuge eine neue Platform
+	 	rg.addChild(viewPlatform);
+	 	
+	 	((TransformGroup)getNodeReference(TG)).addChild(tg); // Fuege sie ein
+	 	addNodeReference(VP,viewPlatform);	// Trage sie in die Map ein
+	 	
+	}
+	
 
 	/**
 	 * @return Gibt das ControlPanel des Bot zurueck
@@ -145,15 +192,6 @@ abstract public class Bot extends AliveObstacle{
 	 */
 	public Vector3f getHeading() {
 		return heading;
-	}
-
-
-	/**
-	 * @return Gibt eine Referenz auf controller zurueck
-	 * @return Gibt den Wert von controller zurueck
-	 */
-	public Controller getController() {
-		return controller;
 	}
 
 	/**

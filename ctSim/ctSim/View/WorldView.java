@@ -164,6 +164,7 @@ public class WorldView extends JPanel {
 		return worldCanvas;
 	}
 
+	/** Legt die Scene Fest, die dieses Objekt anzeigen soll */
 	public void setScene(BranchGroup scene, float dimX, float dimY){
 		SimpleUniverse simpleUniverse = new SimpleUniverse(getWorldCanvas());
 		setUniverse(simpleUniverse, dimX,dimY);
@@ -190,7 +191,7 @@ public class WorldView extends JPanel {
 		universe.getViewingPlatform().getViewPlatformTransform().setTransform(translate);
 	}
 
-	
+		
 	/**
 	 * Macht einen Screenshot der Roboterwelt und schreibt ihn auf die Platte
 	 * Der Dateiname steht in der Konstanten:
@@ -245,4 +246,12 @@ public class WorldView extends JPanel {
             }
         }
     }
+
+	/**
+	 * @return Gibt eine Referenz auf universe zurueck
+	 * @return Gibt den Wert von universe zurueck
+	 */
+	public SimpleUniverse getUniverse() {
+		return universe;
+	}
 }

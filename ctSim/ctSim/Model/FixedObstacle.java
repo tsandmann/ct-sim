@@ -27,7 +27,7 @@ import javax.media.j3d.*;
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
 
-public class FixedObstacle implements Obstacle {
+public abstract class FixedObstacle implements Obstacle {
 
 	/** Die Grenzen des Objektes */
 	private Bounds bounds;

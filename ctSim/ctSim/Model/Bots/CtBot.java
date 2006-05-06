@@ -372,8 +372,6 @@ public abstract class CtBot extends Bot {
 	 */
 	public CtBot(Controller controller) {
 		super(controller);
-		world = getController().getWorld();
-		createBranchGroup();
 		//	 LCD initialisieren
 		lcdClear();
 	}
@@ -407,9 +405,9 @@ public abstract class CtBot extends Bot {
 
 	/**
 	 * Erzeugt die 3D-Repraesentation eines Bots
+	 * Nicht von aussen aufrufen!
 	 */
-	@SuppressWarnings("unchecked")
-	private void createBranchGroup() {
+	public void createBranchGroup() {
 		// Translationsgruppe fuer den Bot
 		TransformGroup tg = new TransformGroup();
 		Transform3D transform = new Transform3D();
