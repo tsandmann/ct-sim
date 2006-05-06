@@ -250,7 +250,7 @@ public class Controller {
 		worldView.setScene(world.getSceneLight().getScene(),world.getPlaygroundDimX(),world.getPlaygroundDimY());
 		worldView.initGUI();
 		// TODO folgende Zeile gehoert hier eigentlich nicht her, sondern viel eher in world. das zieht aber einiges an aenderungen nach sich
-		world.getSceneLight().addReference("World_TG",worldView.getUniverse().getViewingPlatform());  
+		world.getSceneLight().addReference("World_"+Bot.VP,worldView.getUniverse().getViewingPlatform().getViewPlatform());  
 		
 		/* Markus Lang 2006-03-17:
 		 * Hauptfenster erstellen mit den bereits vorhandenen 
@@ -366,6 +366,8 @@ public class Controller {
 	 *            Bezeichner des Bot
 	 */
 	public void removeFromView(String id) {
+		controlFrame.removeViewItem(id);
+		
 		Iterator it = remoteViews.iterator();
 		while (it.hasNext()) {
 			RemoteView rV = (RemoteView) it.next();
@@ -404,16 +406,7 @@ public class Controller {
 			// Dann wird der eigene Bot-Thread gestartet:
 			bot.start();
 			
-			
-			// TODO --- Experimental VIEW CODE
-//			View view= worldView.getUniverse().getViewingPlatform().getViewers()[0].getView();
-//			view.attachViewPlatform((ViewPlatform)bot.getNodeReference(Bot.VP));
-//			view.setPhysicalBody(new PhysicalBody());
-//			view.setPhysicalEnvironment(new PhysicalEnvironment());
-//			view.setFrontClipDistance(0.01);
-//			
-//			HashMap<String,SceneGraphObject> h = world.getSceneLight().getReferences("_"+Bot.TG);
-//			System.out.println(h);
+			controlFrame.addViewItem(bot.getName());
 		}		
 	}
 	
@@ -855,6 +848,17 @@ public class Controller {
 	 */
 	public WorldView getWorldView() {
 		return worldView;
+	}
+
+	public void changeView(String selectedView) {
+		View view= worldView.getUniverse().getViewingPlatform().getViewers()[0].getView();
+		view.attachViewPlatform((ViewPlatform)world.getSceneLight().getNodeReference(selectedView+"_"+Bot.VP));
+//		view.setPhysicalBody(new PhysicalBody());
+//		view.setPhysicalEnvironment(new PhysicalEnvironment());
+		view.setFrontClipDistance(0.01);
+		
+		HashMap<String,SceneGraphObject> h = world.getSceneLight().getReferences("_"+Bot.TG);
+		System.out.println("Changing ViewPlatform to: "+selectedView+"_VP");		
 	}
 
 }

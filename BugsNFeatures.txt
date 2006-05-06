@@ -50,7 +50,7 @@ stehen, tritt das Problem nicht auf.
 
 Feature Requests
 ----------------
-* [29-04-2006] [open] [Benjamin Benz] []: Der Sim sollte beim Starten eine Welcome-NAchricht an den Bot schicken
+* [29-04-2006] [open] [Benjamin Benz] []: Der ParcoursLoader koennte auch Kameras platzieren
 * [29-04-2006] [open] [Benjamin Benz] []: Eine eigene von JPanel abgeleitete Klasse für die Fernbedienung erstellen und die Default FB nachbauen.
 * [17-04-2006] [open] [Benjamin Benz] []: Namensvergabe (Controller.getNewBotName) der Bots sollte die Namen verstorbener Bots neu Vergeben
 * [17-04-2006] [open] [Benjamin Benz] []: ClientViews bekommen noch keine Infos über Farbänderungen
@@ -73,6 +73,7 @@ von 1024x768 Pixeln angezeigt werden kann.
 
 Erledigt:
 ---------
+* [29-04-2006] [done] [Benjamin Benz] [Benjamin Benz]: Der Sim sollte beim Starten eine Welcome-Nachricht an den Bot schicken
 * [17-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: Bot-Hierarchie erweitern: Obstacle -> MovableObstacle -> AliveObstacle -> Bot
 * [17-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: ClientViews bekommen noch keine neue Bots, gestorbene Bots
 * [17-04-2006] [resolved] [Benjamin Benz] [bbe@heise.de]: Scenegraphen der ClientViews um alle pickable und co Capabilities bereinigen

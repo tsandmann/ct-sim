@@ -28,6 +28,7 @@ import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JPanel;
@@ -74,6 +75,8 @@ public class ControlFrame extends JPanel {
 
 	private JButton addSimBotButton;
 
+	private JComboBox viewBox; 
+	
 	/**
 	 * Slow Motion Box
 	 */
@@ -147,6 +150,20 @@ public class ControlFrame extends JPanel {
 				controller.endSim();
 			}
 		});
+		
+		String[] list = new String[1];
+		// TODO folgende Zeile gehoert hier eigentlich nicht her
+		list[0]="World";
+		viewBox = new JComboBox(list);
+		viewBox.setPreferredSize(new Dimension(50,20));
+		viewBox.setSize(new Dimension(50,20));
+		viewBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				controller.changeView((String)viewBox.getSelectedItem());
+			}
+		});		
+		buttonPanel.add(viewBox);
+		
 
 		
 		buttonPanel = new JPanel();
@@ -348,5 +365,21 @@ public class ControlFrame extends JPanel {
 			pauseButton.setText("Weiter");
 		}
 
+	}
+	
+	/**
+	 * Fuegt ein Element in die Auswahlliste ein
+	 * @param item
+	 */
+	public void addViewItem(String item){
+		viewBox.addItem(item);
+	}
+
+	/**
+	 * Entfernt ein Element aus der Auswahlliste 
+	 * @param item
+	 */
+	public void removeViewItem(String item){
+		viewBox.removeItem(item);
 	}
 }

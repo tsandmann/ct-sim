@@ -33,6 +33,7 @@ import javax.media.j3d.NodeReferenceTable;
 import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.media.j3d.ViewPlatform;
 
 import com.sun.j3d.utils.scenegraph.io.NamedObjectException;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
@@ -338,6 +339,15 @@ public class SceneLight {
 	public void addReference(String key, SceneGraphObject so) {
 		map.put(key,so);
 		
+	}
+
+	/**
+	 * Liefert einen Eintrag aus der Map zurueck
+	 * @param key
+	 * @return
+	 */
+	public SceneGraphObject getNodeReference(String key) {
+		return map.get(key);
 	}
 	
 }
