@@ -33,12 +33,10 @@ import javax.media.j3d.NodeReferenceTable;
 import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
-import javax.media.j3d.ViewPlatform;
 
 import com.sun.j3d.utils.scenegraph.io.NamedObjectException;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
-import com.sun.j3d.utils.universe.ViewingPlatform;
 
 import ctSim.ErrorHandler;
 import ctSim.Model.Bots.Bot;
@@ -140,6 +138,8 @@ public class SceneLight {
 		BranchGroup bg = null;
 		String key = null;
 		
+		System.out.println("Fuege Bot "+name+" hinzu");
+		
 		Iterator it = newMap.keySet().iterator();
 		while (it.hasNext()){
 			key = (String)it.next(); 
@@ -167,7 +167,12 @@ public class SceneLight {
 		Iterator it = newMap.keySet().iterator();
 		while (it.hasNext()){
 			String key = (String) it.next();
-			map.put(key,newMap.get(key));
+			Object obj=newMap.get(key);
+			try {
+				map.put(key,(SceneGraphObject)obj);
+			} catch (ClassCastException ex){
+				ErrorHandler.error("Probleme beim Typecasting aus der Map ("+key+"): "+ex);
+			}
 		}		
 	}
 
