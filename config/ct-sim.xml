@@ -9,11 +9,7 @@
 	<parameter name="parcours" value="parcours/testparcours2.xml"/>
 	<parameter name="viewport" value="10002"/>
 	<parameter name="botport" value="10001"/>
-	<parameter name="botbinary" value="C:\Dokumente und Einstellungen\pek\Eigene Dateien\ctSim_2006\workspace\anonymous_ct-Bot\Debug-W32\ct-bot.exe"/>
-	<parameter name="botbinary1" value="C:\Dokumente und Einstellungen\pek\Eigene Dateien\ctSim_2006\workspace\anonymous_ct-Bot\Debug-W32\ct-bot.exe"/>
-
-	<parameter name="judge" value="ctSim.Model.Rules.LabyrinthJudge"/>
-	
+	<parameter name="botbinary" value="..\ct-Bot\Debug-W32\ct-bot.exe"/>
 		
 	<bots>         
 		<bot name="ctSim.Model.Bots.CtBotSimTest_0">
@@ -23,7 +19,7 @@
 			</appearance>
 			<appearance type="collision">
 				<description>Aussehen des TestBots 1 bei Kollision</description>
-				<color>#FF00FF</color>
+				<color>#800000</color>
 			</appearance>
 			<appearance type="falling">
 				<description>Aussehen des TestBots 1 bei Absturz</description>
@@ -37,7 +33,7 @@
 			</appearance>
 			<appearance type="collision">
 				<description>Aussehen des TestBots 2 bei Kollision</description>
-				<color>#00FFFF</color>
+				<color>#008000</color>
 			</appearance>
 			<appearance type="falling">
 				<description>Aussehen des TestBots 2 bei Absturz</description>
