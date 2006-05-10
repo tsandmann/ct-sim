@@ -302,14 +302,15 @@ public class World extends Thread {
 			SceneGraphObject ref = obst.getNodeReference(key);
 			newMap.put(key,nr.getNewObjectReference(ref));
 		}
-		
-		// In den Backup fuegen wir den ganzenm Bot ein
+
+		// Benachrichtige den Controller uber neue Bots
+		controller.addToView(obst.getName(), newMap);
+
+		// In den Backup fuegen wir den ganzen Bot ein
 		sceneLightBackup.addBot(obst.getName(),newMap);
 		// in den aktuellen Zweig nur die neuen Referenzen
 		sceneLight.addBotRefs(obst.getName(),obst.getNodeMap());
 
-		// Benachrichtige den Controller uber neue Bots
-		controller.addToView(obst.getName(), newMap);
 		
 		bg.cloneTree();
 		
