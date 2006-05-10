@@ -112,7 +112,10 @@ public class Controller {
 		DOMParser parser = new DOMParser();
 		try {
 			// einlesen
-			parser.parse(ClassLoader.getSystemResource(CONFIGFILE).toString());
+			String configFile= ClassLoader.getSystemResource(CONFIGFILE).toString();
+			System.out.println("Loading Config: "+configFile);
+			
+			parser.parse(configFile);
 			// umwandeln in ein Document
 			Document doc = parser.getDocument();
 			
@@ -559,7 +562,10 @@ public class Controller {
 		DOMParser parser = new DOMParser();
 		try {
 			// einlesen
-			parser.parse(filename);
+			String configFile= ClassLoader.getSystemResource(filename).toString();
+			System.out.println("Lade Bot-Aussehen aus: "+configFile);
+
+			parser.parse(configFile);
 			// umwandeln in ein Document
 			Document doc = parser.getDocument();
 			
