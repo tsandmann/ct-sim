@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Group;
@@ -59,7 +60,8 @@ import ctSim.ErrorHandler;
 			return;
 		}
 		
-			
+		Vector toKill = new Vector();
+		
 		Iterator it = map.keySet().iterator();
 		
 		while (it.hasNext()){
@@ -68,8 +70,17 @@ import ctSim.ErrorHandler;
 			if (so != null){
 				map.put(name,so);
 				System.out.println("Key "+name+" rekonstruiert");
-			}else
+			}else {
 				ErrorHandler.error("Key "+name+" konnte nach der Uebertragung nicht rekonstruiert werden");
+				toKill.add(name);
+			}
+		}
+		
+		// Entferne alle Listeneintraege, die nicht korrekt uebertragen wurden
+		it=toKill.iterator();
+		while (it.hasNext()){
+			String name = (String)it.next();
+			map.remove(name);
 		}
 	}
 
