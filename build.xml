@@ -60,6 +60,9 @@
 	-->
 	<property name="src.name" value="ctSim" />
 	<property name="textures.name" value="textures" />
+	<!-- missing propeperty config,parcours -->
+	<property name="config.name" value="config" />
+	<property name="parcours.name" value="parcours"/>	
 	
 	<property name="build.name" value="build" />
 	<property name="build.classes.name" value="classes" />
@@ -75,6 +78,10 @@
 	-->
 	<property name="src.dir" location="${src.name}" />
 	<property name="textures.dir" location="${textures.name}" />
+	<!-- missing dir config,parcours -->
+	<property name="config.dir" location="${config.name}"/>
+    <property name="parcours.dir" location="${parcours.name}"/>
+
 	
 	<!--
 	===================================================================
@@ -90,6 +97,9 @@
 	<property name="build.dir" location="${build.name}" />
 	<property name="build.classes.dir" location="${build.dir}/${build.classes.name}" />
 	<property name="build.textures.dir" location="${build.classes.dir}/${textures.name}" />
+	<!-- missing build.dir config.parcours -->
+	<property name="build.config.dir" location="${build.classes.dir}/${config.name}" />
+	<property name="build.parcours.dir" location="${build.classes.dir}/${parcours.name}" />
 	<property name="build.lib.dir" location="${build.dir}/${build.lib.name}" />
 	<property name="build.doc.dir" location="${build.dir}/${build.doc.name}" />
 	
@@ -184,6 +194,19 @@
 		-->
 		<copy todir="${build.textures.dir}">
 			<fileset dir="${textures.dir}" />
+		</copy>
+		<!-- missing copy config,parcour -->
+		<!--
+		Config kopieren
+		-->
+		<copy todir="${build.config.dir}">
+			<fileset dir="${config.dir}" />
+		</copy>
+		<!--
+		Parcour kopieren
+		-->
+		<copy todir="${build.parcours.dir}">
+			<fileset dir="${parcours.dir}" />
 		</copy>
 		
 		<!--
