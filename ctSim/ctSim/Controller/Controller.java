@@ -31,8 +31,6 @@ import java.util.List;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.Material;
-import javax.media.j3d.PhysicalBody;
-import javax.media.j3d.PhysicalEnvironment;
 import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.TexCoordGeneration;
 import javax.media.j3d.Texture;
@@ -863,7 +861,7 @@ public class Controller {
 //		view.setPhysicalEnvironment(new PhysicalEnvironment());
 		view.setFrontClipDistance(0.01);
 		
-		HashMap<String,SceneGraphObject> h = world.getSceneLight().getReferences("_"+Bot.TG);
+		@SuppressWarnings("unused") HashMap<String,SceneGraphObject> h = world.getSceneLight().getReferences("_"+Bot.TG);
 		System.out.println("Changing ViewPlatform to: "+selectedView+"_VP");		
 	}
 
