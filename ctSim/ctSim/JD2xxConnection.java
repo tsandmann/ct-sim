@@ -1,5 +1,6 @@
 package ctSim;
 
+
 import java.io.IOException;
 
 import mindprod.ledatastream.LEDataInputStream;
@@ -10,6 +11,7 @@ public class JD2xxConnection extends Connection {
 
 	private JD2XX jd = new JD2XX();
 
+	
 	private int list() throws IOException{
 		int count=0;
 		Object[] devs= jd.listDevicesByDescription();
@@ -43,7 +45,7 @@ public class JD2xxConnection extends Connection {
 		
 	}	
 
-	/**
+	/*
 	 * Beendet die laufende Verbindung
 	 * 
 	 * @throws IOException
@@ -62,5 +64,6 @@ public class JD2xxConnection extends Connection {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
 
 }

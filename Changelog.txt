@@ -1,5 +1,12 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-05-12 Benjamin Benz (bbe@heise.de) RXTX-Bibliothek in den Source-Tree mit aufgenommen. Binaries in contrib/rxtx
+
+2006-05-12 Benjamin Benz (bbe@heise.de) DTD der Confog-Datei korrigiert
+
+2006-05-12 Benjamin Benz (bbe@heise.de) Initialisierung der Bots aufgeraeumt, RXTX-Kommunikation eingebaut
+
+2006-05-20 Max Odendahl (maximilian.odendahl@rwth-aachen.de) GUI Buttons und Klasse ComConnection hinzugefgt, Verbindung zu realen Bots ueber seriellen Port moeglich
 
 2006-05-15 Holger Schiller (h.schiller@online.de) build.xml fuer config und parcours ergaenzt
 

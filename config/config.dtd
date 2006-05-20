@@ -1,6 +1,6 @@
-<!ELEMENT ct-sim (description?, bots?, parcours?)>
+<!ELEMENT ct-sim (description?, parameter*, bots?)>
 	<!ELEMENT description (#PCDATA)>
-	<!ELEMENT parameter (EMPTY)>
+	<!ELEMENT parameter EMPTY>
 		<!ATTLIST parameter 
 			name CDATA #REQUIRED
 			value CDATA #REQUIRED

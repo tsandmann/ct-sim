@@ -72,6 +72,8 @@ public class ControlFrame extends JPanel {
 	private JButton addTestBotButton;
 	
 	private JButton addJD2XXBotButton;
+	
+	private JButton addSerialBotButton;
 
 	private JButton addSimBotButton;
 
@@ -119,7 +121,7 @@ public class ControlFrame extends JPanel {
 		Dimension buttDim = new Dimension(100, 50);
 		
 		buttonPanel = new JPanel();
-		buttonPanel.setPreferredSize(new Dimension(400,50));
+		buttonPanel.setPreferredSize(new Dimension(500,50));
 		BoxLayout panelLayout = new BoxLayout(buttonPanel,
 				javax.swing.BoxLayout.X_AXIS);
 		this.add(buttonPanel);
@@ -193,6 +195,17 @@ public class ControlFrame extends JPanel {
 		addJD2XXBotButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				controller.addBot("CtBotRealJD2XX");
+			}
+		});
+		
+//		 ********* addSerialButton ********************
+		addSerialBotButton = new JButton();
+		addSerialBotButton.setPreferredSize(buttDim);
+		buttonPanel.add(addSerialBotButton);
+		addSerialBotButton.setText("Neuer Serial-Bot");
+		addSerialBotButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				controller.addBot("CtBotSerial");
 			}
 		});
 		

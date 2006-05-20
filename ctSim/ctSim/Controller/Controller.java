@@ -380,6 +380,62 @@ public class Controller {
 		// TODO Was ist mit den Panels ?
 	}
 
+	/** 
+	 * Fuegt einen Bot dazu, sobald die Connection steht
+	 * @param con Die Verbindung
+	 */
+	public void addBot(Connection con) {
+		Bot bot = null;
+		Command cmd = new Command();
+		try {
+			// Hallo sagen
+			con.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
+			// TODO Timeout einfuegen
+			while (bot == null) {
+				System.out.println("Waiting for Welcome-String...");
+				
+				if (cmd.readCommand(con) == 0) {
+					
+					if (cmd.getCommand() == Command.CMD_WELCOME) {
+						if (cmd.getSubcommand() == Command.SUB_WELCOME_REAL) {
+							bot = new CtBotRealCon(this,
+									new Point3f(0.5f, 0f, 0f),
+									new Vector3f(1.0f, -0.5f, 0f),
+									con);
+							System.out.println("Real Bot comming up");
+						} else {
+							bot = new CtBotSimTcp(this,
+									new Point3f(0.5f, 0f, 0f),
+									new Vector3f(1.0f, -0.5f, 0f),
+									con);
+							System.out.println("Virtual Bot comming up");
+						}
+					} else {
+						System.out.print("Non-Welcome-Command found: \n"
+										+ cmd.toString()+ "\n"+
+										" ==> Bot is already running or deprecated bot \n"+
+										"Sending Welcome again\n");
+						// Hallo sagen
+						con.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
+					}
+				} else
+					System.out.print("Broken Command found: \n");
+
+			}
+		} catch (IOException ex) {
+			ErrorHandler.error("TCPConnection broken - not possible to connect: " + ex);
+		}
+		
+		if (bot != null) {
+			addBot(bot);
+		} else
+			try {
+				con.disconnect();
+			} catch (Exception ex) {
+			}
+	}
+	
+	
 	/**
 	 * Fuegt einen Bot in die Welt ein
 	 * @param bot
@@ -425,20 +481,46 @@ public class Controller {
 	 */
 	public void addBot(String type) {
 		Bot bot = null;
-
+		Connection con =null;
+		
 		if (type.equalsIgnoreCase("CtBotSimTest")) {
 			bot = new CtBotSimTest(this, new Point3f(), new Vector3f());
+			addBot(bot);
 		}
 
 		if (type.equalsIgnoreCase("CtBotRealJD2XX")) {
-			Connection com = waitForJD2XX();
-			if (com != null) {
-				bot = new CtBotRealCon(this, new Point3f(), new Vector3f(), com);
-				System.out.println("Real Bot via JD2XX startet");
+			con = waitForJD2XX();
+		}
+
+		if (type.equalsIgnoreCase("CtBotSerial")) {
+			con = waitForSerial();
+		}
+
+		if (con != null) {
+			addBot(con);
+		} 
+	}
+
+
+		/**
+		 * Wartet auf eine eingehende Serial-Verbindung
+		 * @author Max Odendahl
+		 * @return
+		 */
+		private Connection waitForSerial(){
+			ComConnection com = new ComConnection();
+			try {
+				String port = (String)config.get("serialport");
+				String tmp = (String)config.get("serialportBaudrate");
+				int baudrate = new Integer(tmp).intValue();
+				com.connect(port,baudrate);
+				System.out.println("Serial-Connection aufgebaut");
+				return com;
+			} catch (Exception ex) {
+				ErrorHandler.error("Serial Connection nicht moeglich: " + ex);
+				return null;
 			}
 		}
-		addBot(bot);
-	}
 
 	/**
 	 * Wartet auf eine eingehende JD2XX-Verbindung
@@ -727,12 +809,10 @@ public class Controller {
 		}
 
 		public void run() {
-			Bot bot = null;
 			TcpConnection tcp = null;
 			try {
 				ServerSocket server = new ServerSocket(port);
 				while (listen) {
-					bot = null;
 					tcp = new TcpConnection();
 					/*
 					 * Da die Klasse TcpConnection staendig den ServerSocket neu
@@ -745,57 +825,7 @@ public class Controller {
 					tcp.connect(server.accept());
 					System.out.println("Incomming Connection on Bot-Port");
 					
-					Command cmd = new Command();
-					try {
-						// Hallo sagen
-						tcp.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
-						while (bot == null) {
-							System.out.println("Waiting for Welcome-String...");
-							
-							if (cmd.readCommand(tcp) == 0) {
-//								System.out.print("Seq: " + cmd.getSeq()
-//										+ " CMD: " + cmd.getCommand() + "SUB: "
-//										+ cmd.getSubcommand() + "\n");
-								
-								if (cmd.getCommand() == Command.CMD_WELCOME) {
-									if (cmd.getSubcommand() == Command.SUB_WELCOME_REAL) {
-										bot = new CtBotRealCon(Controller.this,
-												new Point3f(0.5f, 0f, 0f),
-												new Vector3f(1.0f, -0.5f, 0f),
-												tcp);
-										System.out.println("Real Bot comming up");
-									} else {
-										bot = new CtBotSimTcp(Controller.this,
-												new Point3f(0.5f, 0f, 0f),
-												new Vector3f(1.0f, -0.5f, 0f),
-												tcp);
-										System.out.println("Virtual Bot comming up");
-									}
-								} else {
-									System.out.print("Non-Welcome-Command found: \n"
-													+ cmd.toString()+ "\n"+
-													" ==> Bot is already running or deprecated bot \n"+
-													"Sending Welcome again\n");
-									// Hallo sagen
-									tcp.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
-								}
-							} else
-								System.out.print("Broken Command found: \n");
-
-						}
-					} catch (IOException ex) {
-						ErrorHandler.error("TCPConnection broken - not possibple to connect: " + ex);
-					}
-
-					
-					if (bot != null) {
-						addBot(bot);
-					} else
-						try {
-							tcp.disconnect();
-						} catch (Exception ex) {
-						}
-
+					addBot(tcp);
 				}
 			} catch (IOException ioe) {
 				System.err.format("Kann nicht an port %d binden.", new Integer(

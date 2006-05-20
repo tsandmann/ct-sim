@@ -24,6 +24,7 @@ import java.io.IOException;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
+import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.TcpConnection;
 import ctSim.Controller.Controller;
@@ -52,7 +53,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 *            Die Verbindung fuer den Bot
 	 */
 	public CtBotSimTcp(Controller controller, Point3f pos, Vector3f head,
-			TcpConnection tc) {
+			Connection tc) {
 		super(controller, pos, head);
 		tcpCon = (TcpConnection) tc;
 		answeringMachine = new AnsweringMachine(this, tcpCon);
