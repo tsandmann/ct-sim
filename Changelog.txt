@@ -1,11 +1,13 @@
 CHANGELOG fuer c't-Sim
 ======================
 
-2006-05-15 Holger Schiller (h.schiller@online.de) build.xml für config und parcours ergänzt
+2006-05-15 Holger Schiller (h.schiller@online.de) build.xml fuer config und parcours ergaenzt
 
 2006-05-06 Benjamin Benz (bbe@heise.de) Man kann nun auswaehlen, ob man die Welt aus der Vogelperspektive oder aus der Sicht der Bots sehen will
 
 2006-05-05 Benjamin Benz (bbe@heise.de) Jeder Bot traegt jetzt eine ViewPlatform mit sich rum, man kann also bald auch die Kameras wechseln
+
+2006-05-12 Benjamin Benz (bbe@heise.de) Release fuer c't 11/06 rausgespiegelt
 
 2006-05-05 Benjamin Benz (bbe@heise.de) Viele der HashMaps typisiert 
 
