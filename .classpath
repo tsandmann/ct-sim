@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="ctSim"/>
-	<classpathentry excluding="ctSim/" kind="src" path=""/>
+	<classpathentry excluding="ctSim/|lib/" kind="src" path=""/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib"/>
+	<classpathentry kind="lib" path="lib/rxtx.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

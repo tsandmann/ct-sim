@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-05-12 Benjamin Benz (bbe@heise.de) RXTX-Bibliothek umgestellt als jar-Datei ==> weniger Warnings
+
 2006-05-12 Benjamin Benz (bbe@heise.de) Code bereinigt
 
 2006-05-12 Benjamin Benz (bbe@heise.de) RXTX-Bibliothek in den Source-Tree mit aufgenommen. Binaries in contrib/rxtx
