@@ -121,7 +121,7 @@ public class CtSimFrame extends JFrame implements WindowStateListener {
 	 * 
 	 * @see java.awt.event.WindowStateListener#windowStateChanged(java.awt.event.WindowEvent)
 	 */
-	public void windowStateChanged(WindowEvent arg0) {
+	public void windowStateChanged(@SuppressWarnings("unused") WindowEvent arg0) {
 		this.updateSliderPosition();
 	}
 }

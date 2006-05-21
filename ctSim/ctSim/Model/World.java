@@ -310,7 +310,7 @@ public class World extends Thread {
 		// In den Backup fuegen wir den ganzen Bot ein
 		sceneLightBackup.addBot(obst.getName(),newMap);
 		// in den aktuellen Zweig nur die neuen Referenzen
-		sceneLight.addBotRefs(obst.getName(),obst.getNodeMap());
+		sceneLight.addBotRefs(obst.getNodeMap());
 
 		
 		bg.cloneTree();

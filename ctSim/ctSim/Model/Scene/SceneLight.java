@@ -150,7 +150,7 @@ public class SceneLight {
 		// Bot einfuegen
 		((BranchGroup)map.get(OBSTBG)).addChild(bg);
 		
-		addBotRefs(name,newMap);
+		addBotRefs(newMap);
 
 	}
 
@@ -161,7 +161,7 @@ public class SceneLight {
 	 * @param newMap Alle noetigen Referenzen
 	 */
 	@SuppressWarnings("unchecked")
-	public void addBotRefs(String name, HashMap<String,SceneGraphObject> newMap){
+	public void addBotRefs(HashMap<String,SceneGraphObject> newMap){
 		// Alle Eintraege aus der Map uebertragen
 		// Alle Referenzen aktualisieren
 		Iterator it = newMap.keySet().iterator();

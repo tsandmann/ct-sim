@@ -46,10 +46,9 @@ public class RemoteView {
 	 * Der Konstruktor
 	 * @param connection Die Verbindung
 	 */
-	public RemoteView(TcpConnection connection) throws IOException{
+	public RemoteView(TcpConnection connection) {
 		super();
 		this.connection = connection;
-		
 		System.out.println("Neue ClientView hat sich angemeldet von: "+connection.getSocket().getInetAddress().getHostName()+" auf Port "+connection.getSocket().getLocalPort());
 	}
 

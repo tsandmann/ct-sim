@@ -154,7 +154,8 @@ public class LEDataInputStream implements DataInput {
      * @deprecated This method does not properly convert bytes to characters.
      *             Use a Reader instead with a little-endian encoding.
      */
-    public final String readLine () throws IOException
+    @Deprecated
+	public final String readLine () throws IOException
         {
         return d.readLine();
         }
@@ -176,7 +177,7 @@ public class LEDataInputStream implements DataInput {
             | (long) ( w[ 3 ] & 0xff ) << 24
             | (long) ( w[ 2 ] & 0xff ) << 16
             | (long) ( w[ 1 ] & 0xff ) << 8
-            | (long) ( w[ 0 ] & 0xff );
+            |         ( w[ 0 ] & 0xff );
         }
 
     // L I T T L E E N D I A N R E A D E R S

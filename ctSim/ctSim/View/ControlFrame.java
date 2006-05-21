@@ -134,7 +134,7 @@ public class ControlFrame extends JPanel {
 			pauseButton.setText("Resume");
 		}
 		pauseButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 				setHaveABreak(!haveABreak);
 			}
 		});		
@@ -145,7 +145,7 @@ public class ControlFrame extends JPanel {
 		buttonPanel.add(endButton);
 		endButton.setText("Beenden");
 		endButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 				controller.endSim();
 			}
 		});
@@ -157,7 +157,7 @@ public class ControlFrame extends JPanel {
 		viewBox.setPreferredSize(new Dimension(50,20));
 		viewBox.setSize(new Dimension(50,20));
 		viewBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 				controller.changeView((String)viewBox.getSelectedItem());
 			}
 		});		
@@ -179,7 +179,7 @@ public class ControlFrame extends JPanel {
 		buttonPanel.add(addTestBotButton);
 		addTestBotButton.setText("Neuer TestBot");
 		addTestBotButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 				controller.addBot("CtBotSimTest");
 			}
 		});
@@ -190,7 +190,7 @@ public class ControlFrame extends JPanel {
 		buttonPanel.add(addJD2XXBotButton);
 		addJD2XXBotButton.setText("Neuer JD2XX-Bot");
 		addJD2XXBotButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 				controller.addBot("CtBotRealJD2XX");
 			}
 		});
@@ -201,7 +201,7 @@ public class ControlFrame extends JPanel {
 		buttonPanel.add(addSerialBotButton);
 		addSerialBotButton.setText("Neuer Serial-Bot");
 		addSerialBotButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+			public void actionPerformed(@SuppressWarnings({"unused","unused"}) ActionEvent evt) {
 				controller.addBot("CtBotSerial");
 			}
 		});
@@ -213,7 +213,7 @@ public class ControlFrame extends JPanel {
 		buttonPanel.add(addSimBotButton);
 		addSimBotButton.setText("Starte C-Bot");
 		addSimBotButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
+			public void actionPerformed(@SuppressWarnings({"unused","unused"}) ActionEvent evt) {
 				controller.invokeBot();
 			}
 		});
@@ -275,7 +275,7 @@ public class ControlFrame extends JPanel {
 
 				// und dann die Listener dazuhaengen
 				slowMotionBox.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
+					public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 						slowMotion = slowMotionBox.isSelected();
 						world.setSlowMotion(slowMotion);
 
@@ -298,7 +298,7 @@ public class ControlFrame extends JPanel {
 				});
 
 				slowMotionSlider.addChangeListener(new ChangeListener() {
-					public void stateChanged(ChangeEvent arg0) {
+					public void stateChanged(@SuppressWarnings("unused") ChangeEvent arg0) {
 						// unter 1 ist nicht gut
 						int tempValue = slowMotionSlider.getValue();
 						if (tempValue < 1)

@@ -734,7 +734,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButton1);
 						jButton1.setText("1");
 						jButton1.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_1);
 							}
 						});
@@ -744,7 +744,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButton2);
 						jButton2.setText("2");
 						jButton2.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_2);
 							}
 						});
@@ -754,7 +754,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButton3);
 						jButton3.setText("3");
 						jButton3.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_3);
 							}
 						});
@@ -764,7 +764,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButton4);
 						jButton4.setText("4");
 						jButton4.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_4);
 							}
 						});
@@ -774,7 +774,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButton5);
 						jButton5.setText("5");
 						jButton5.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_5);
 							}
 						});
@@ -784,7 +784,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButton6);
 						jButton6.setText("6");
 						jButton6.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_6);
 							}
 						});
@@ -794,7 +794,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButton7);
 						jButton7.setText("7");
 						jButton7.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_7);
 							}
 						});
@@ -804,7 +804,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButton8);
 						jButton8.setText("8");
 						jButton8.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_8);
 							}
 						});
@@ -814,7 +814,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButton9);
 						jButton9.setText("9");
 						jButton9.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_9);
 							}
 						});
@@ -824,7 +824,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButtonOnOff);
 						jButtonOnOff.setText("ON / OFF");
 						jButtonOnOff.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_PWR);
 							}
 						});
@@ -834,7 +834,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButton10);
 						jButton10.setText("0");
 						jButton10.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_0);
 							}
 						});
@@ -844,7 +844,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButtonView);
 						jButtonView.setText("View");
 						jButtonView.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_VIEW);
 							}
 						});
@@ -863,7 +863,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButtonUp);
 						jButtonUp.setText("UP");
 						jButtonUp.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_UP);
 							}
 						});
@@ -877,7 +877,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButtonLeft);
 						jButtonLeft.setText("LEFT");
 						jButtonLeft.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_LEFT);
 							}
 						});
@@ -891,7 +891,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButtonRight);
 						jButtonRight.setText("RIGHT");
 						jButtonRight.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_RIGHT);
 							}
 						});
@@ -905,7 +905,7 @@ public class CtControlPanel extends ControlPanel {
 						rc5Panel.add(jButtonDown);
 						jButtonDown.setText("DOWN");
 						jButtonDown.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
+							public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 								((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_DOWN);
 							}
 						});
@@ -925,7 +925,7 @@ public class CtControlPanel extends ControlPanel {
 							colKeyPanel.add(jButtonRed);
 							jButtonRed.setBackground(new Color(255, 0, 0));
 							jButtonRed.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent evt) {
+								public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 									((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_RED);
 								}
 							});
@@ -937,7 +937,7 @@ public class CtControlPanel extends ControlPanel {
 							jButtonGreen
 									.addActionListener(new ActionListener() {
 										public void actionPerformed(
-												ActionEvent evt) {
+												@SuppressWarnings("unused") ActionEvent evt) {
 											((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_GREEN);
 										}
 									});
@@ -949,7 +949,7 @@ public class CtControlPanel extends ControlPanel {
 							jButtonYellow
 									.addActionListener(new ActionListener() {
 										public void actionPerformed(
-												ActionEvent evt) {
+												@SuppressWarnings("unused") ActionEvent evt) {
 											((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_YELLOW);
 										}
 									});
@@ -959,7 +959,7 @@ public class CtControlPanel extends ControlPanel {
 							colKeyPanel.add(jButtonBlue);
 							jButtonBlue.setBackground(new Color(0, 0, 255));
 							jButtonBlue.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent evt) {
+								public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 									((CtBot)getBot()).setSensRc5(CtBot.RC5_CODE_BLUE);
 								}
 							});
@@ -1251,7 +1251,7 @@ public class CtControlPanel extends ControlPanel {
 				jButtonLog = new JButton("Log anzeigen");
 				jPanelLog.add(jButtonLog);
 				jButtonLog.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
+					public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 						
 						if (false == logFrame.isVisible()) {
 							logFrame.setVisible(true);
@@ -1267,7 +1267,7 @@ public class CtControlPanel extends ControlPanel {
 
 				JButton dieButton = new JButton("Bot t\u00F6ten");
 				dieButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
+					public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 						getBot().die();
 					}
 				});
@@ -1279,7 +1279,7 @@ public class CtControlPanel extends ControlPanel {
 				mousePicture.setText("Hole Mausbild");
 				
 				mousePicture.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
+					public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 						((CtBot)getBot()).requestMousePicture();
 					}
 				});
