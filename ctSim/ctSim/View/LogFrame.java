@@ -29,6 +29,8 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 
 /**
  * Fenster fuer die Anzeige von Loggings.
@@ -71,8 +73,8 @@ public class LogFrame extends javax.swing.JFrame implements ActionListener {
 		jTextAreaLog.setFont(new Font("Courier New", Font.PLAIN, 12));
 		/* Mit Scrollbalken */
 		jScrollPane = new JScrollPane(	jTextAreaLog,
-		              					JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-		              					JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		              					ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+		              					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		
 		/* Layout */
 		getContentPane().setLayout(new BorderLayout(5,5));
@@ -80,7 +82,7 @@ public class LogFrame extends javax.swing.JFrame implements ActionListener {
 		getContentPane().add(BorderLayout.CENTER, jScrollPane);
 		
 		/* Beim Schliessen des Fensters auch das Programm beenden */
-		setDefaultCloseOperation(javax.swing.JFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		
 		/* Fenster an Position schieben */
 		setLocation(200, 200);

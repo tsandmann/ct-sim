@@ -57,6 +57,7 @@ public class TcpConnection extends Connection {
 	 *            Der Port, auf dem gelauscht werden soll
 	 * @return 0 wenn alles ok, sonst -1
 	 */
+	@Deprecated
 	public int listen(int port) {
 		try {
 			ServerSocket server = new ServerSocket(port);
@@ -143,6 +144,7 @@ public class TcpConnection extends Connection {
 	 * @throws IOException
 	 * @throws Exception
 	 */
+	@Override
 	public synchronized void disconnect() throws IOException, Exception {
 		super.disconnect();
 		try {

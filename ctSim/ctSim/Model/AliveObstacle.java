@@ -113,6 +113,7 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	 * @see AliveObstacle#work()
 	 * @see AliveObstacle#cleanup()
 	 */
+	@Override
 	final public void run() {
 		init();
 		while (run == true) {
@@ -172,9 +173,9 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	 */
 	public SceneGraphObject getNodeReference(String key){
 		if (key.contains(getName()))
-			return	(SceneGraphObject) nodeMap.get(key);
-		else
-			return	(SceneGraphObject) nodeMap.get(getName()+"_"+key);
+			return	 nodeMap.get(key);
+		
+		return	nodeMap.get(getName()+"_"+key);
 	}
 
 	/** Fuegt eine Referenz ein */

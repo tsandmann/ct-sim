@@ -38,6 +38,7 @@ public class CtBotRealPanel extends CtControlPanel {
 	/* Initialisiert die GUI
 	 * @see ctSim.View.CtControlPanel#initGUI()
 	 */
+	@Override
 	protected void initGUI() {
 		super.initGUI();
 		
@@ -47,6 +48,7 @@ public class CtBotRealPanel extends CtControlPanel {
 	/* Aktualisiert das Panel
 	 * @see ctSim.View.CtControlPanel#reactToChange()
 	 */
+	@Override
 	public void reactToChange() {
 		super.reactToChange();
 		

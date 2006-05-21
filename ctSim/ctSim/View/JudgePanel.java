@@ -51,6 +51,7 @@ public class JudgePanel extends SimPanel {
 		initGUI();
 	}
 
+	@Override
 	protected void initGUI() {
 		Dimension fieldDim;
 		fieldDim = new Dimension(100, 25);
@@ -83,6 +84,7 @@ public class JudgePanel extends SimPanel {
 				
 	}
 
+	@Override
 	public void reactToChange() {
 		// TODO Auto-generated method stub
 

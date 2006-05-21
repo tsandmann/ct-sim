@@ -73,8 +73,7 @@ import ctSim.*;
 public class Controller {
 	private static final String CONFIGFILE = "config/ct-sim.xml";
 
-	/** Das Modell der Welt */
-	private World world;
+	World world;
 
 	private WorldView worldView;
 
@@ -85,8 +84,7 @@ public class Controller {
 	 */
 	private CtSimFrame ctSimFrame;
 
-	/** Eine Liste aller verbundenen Remote-Views */
-	private List<RemoteView> remoteViews;
+	List<RemoteView> remoteViews;
 
 	/**
 	 * Anzahl der Bots im System
@@ -185,7 +183,7 @@ public class Controller {
 		// TODO Namensvergabe sollte die Namen von gestorbenen Bots neu verteilen
 
 		// Schaue nach, wieviele Bots von der Sorte wir schon haben
-		Integer bots = (Integer) numberBots.get(type);
+		Integer bots = numberBots.get(type);
 		if (bots == null){
 			bots = new Integer(0);
 		}
@@ -212,17 +210,19 @@ public class Controller {
 			return;
 		}
 		
-		String parcours = ClassLoader.getSystemResource((String)config.get("parcours")).toString();
+		String parcours = ClassLoader.getSystemResource(config.get("parcours")).toString();
 		if (parcours==null){
 			
 			// Nach einem Parcours fragen
 			JFileChooser fc = new JFileChooser();
 			fc.setDialogTitle("Bitte einen Parcours waehlen");
 	        fc.setFileFilter(new FileFilter() {
-                public boolean accept(File f) {
+                @Override
+				public boolean accept(File f) {
                     return f.getName().toLowerCase().endsWith(".xml") || f.isDirectory();
                 }
-                public String getDescription() {
+                @Override
+				public String getDescription() {
                 		return "XML-Dateien (*.xml)";
                 }
             });
@@ -273,7 +273,7 @@ public class Controller {
 
 		if (config.get("judge")!= null) {
 			try {
-				judge = (Judge) Class.forName((String)config.get("judge")).newInstance();
+				judge = (Judge) Class.forName(config.get("judge")).newInstance();
 			} catch (ClassNotFoundException e) {
 				ErrorHandler.error("Die Judge-Klasse wurde nicht gefunden: "+e);
 			} catch (Exception e) {
@@ -285,7 +285,7 @@ public class Controller {
 			controlFrame.addJudge(judge);
 		}
 		
-		String port = (String)config.get("viewport");
+		String port = config.get("viewport");
 		if (port != null){
 			try {
 				int p = new Integer(port).intValue();
@@ -308,7 +308,7 @@ public class Controller {
 		 * lauscht, an dieser Stelle eingebaut.
 		 */
 
-		port = (String)config.get("botport");
+		port = config.get("botport");
 		if (port != null){
 			try {
 				int p = new Integer(port).intValue();
@@ -432,6 +432,7 @@ public class Controller {
 			try {
 				con.disconnect();
 			} catch (Exception ex) {
+				// Wenn jetzt noch was schief geht interessiert es uns nicht mehr
 			}
 	}
 	
@@ -510,8 +511,8 @@ public class Controller {
 		private Connection waitForSerial(){
 			ComConnection com = new ComConnection();
 			try {
-				String port = (String)config.get("serialport");
-				String tmp = (String)config.get("serialportBaudrate");
+				String port = config.get("serialport");
+				String tmp = config.get("serialportBaudrate");
 				int baudrate = new Integer(tmp).intValue();
 				com.connect(port,baudrate);
 				System.out.println("Serial-Connection aufgebaut");
@@ -542,7 +543,7 @@ public class Controller {
 	 * Startet den Standard externen Bot, falls vorhanden, fragt sonst nach
 	 */
 	public void invokeBot(){
-		String filename = (String)config.get("botbinary");
+		String filename = config.get("botbinary");
 		
 		if (filename==null){
 			
@@ -702,8 +703,8 @@ public class Controller {
 		
 		if (found == true)
 			return botConfig;
-		else 
-			return null;
+		 
+		return null;
 	}
 
 	/**
@@ -794,6 +795,7 @@ public class Controller {
 		/**
 		 * Kuemmert sich um die Bearbeitung eingehnder Requests
 		 */
+		@Override
 		public abstract void run();
 	}
 
@@ -808,6 +810,7 @@ public class Controller {
 			super(port);
 		}
 
+		@Override
 		public void run() {
 			TcpConnection tcp = null;
 			try {
@@ -855,6 +858,7 @@ public class Controller {
 		/**
 		 * Lauscht auf eine eingehende Verbindung.
 		 */
+		@Override
 		public void run() {
 			TcpConnection tcp = null;
 			try {
@@ -891,7 +895,7 @@ public class Controller {
 //		view.setPhysicalEnvironment(new PhysicalEnvironment());
 		view.setFrontClipDistance(0.01);
 		
-		@SuppressWarnings("unused") HashMap<String,SceneGraphObject> h = world.getSceneLight().getReferences("_"+Bot.TG);
+		@SuppressWarnings("unused") HashMap<String,SceneGraphObject> h = world.getSceneLight().getReferences("_"+AliveObstacle.TG);
 		System.out.println("Changing ViewPlatform to: "+selectedView+"_VP");		
 	}
 

@@ -295,7 +295,7 @@ public abstract class CtBot extends Bot {
 	private Integer actServo;
 
 	/** Zustand der LEDs */
-	private Integer actLed = new Integer((int) 0);
+	private Integer actLed = new Integer(0);
 
 	/** Zustand des LCD */
 	private String[] lcdText = new String[LCD_LINES];
@@ -399,6 +399,7 @@ public abstract class CtBot extends Bot {
 	 * 
 	 * @see ctSim.Model.Bot#providePanel()
 	 */
+	@Override
 	public void providePanel() {
 		this.setPanel(new CtControlPanel(this));
 	}
@@ -414,7 +415,7 @@ public abstract class CtBot extends Bot {
 		tg = new TransformGroup(transform);
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-		tg.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+		tg.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		
 		// Bot erzeugen
 		Shape3D realBot = createBotShape();
@@ -426,7 +427,7 @@ public abstract class CtBot extends Bot {
 		// zu erkennen
 		realBot.setPickable(true);
 		// "Pickable" muss fuer die eigene Kollisionsabfrage abschaltbar sein
-		realBot.setCapability(Cylinder.ALLOW_PICKABLE_WRITE);
+		realBot.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		// Referenz auf Koerper merken, um spaeter bei der eigenen Kollisionsabfrage die 
 		// "Pickable"-Eigenschaft aendern zu koennen
 		tg.addChild(realBot);
@@ -443,7 +444,7 @@ public abstract class CtBot extends Bot {
 		// Jetzt wird noch alles nett verpackt
 		BranchGroup bg = new BranchGroup();
 		bg.setCapability(BranchGroup.ALLOW_DETACH);
-		bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		bg.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		bg.addChild(tg);
 
 		// Referenz im Bot ablegen
@@ -540,12 +541,12 @@ public abstract class CtBot extends Bot {
 					-data[i * 3 + 2]);
 		}
 
-		tsa = new TriangleStripArray(2 * N, TriangleStripArray.COORDINATES,
+		tsa = new TriangleStripArray(2 * N, GeometryArray.COORDINATES,
 				stripCountTsa);
 		tsa.setCoordinates(0, coords);
 
 		tsa.setCapability(BranchGroup.ALLOW_DETACH);
-		tsa.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		tsa.setCapability(Group.ALLOW_CHILDREN_WRITE);
 
 		
 		// Hinzufuegen der aeusseren Seitenverkleidung zur Bot-Shape3D
@@ -590,18 +591,18 @@ public abstract class CtBot extends Bot {
 		quadCoords[11] = new Point3f(data[n * 3], data[n * 3 + 1],
 				data[n * 3 + 2]);
 
-		qa = new QuadArray(3 * 4, QuadArray.COORDINATES);
+		qa = new QuadArray(3 * 4, GeometryArray.COORDINATES);
 		qa.setCoordinates(0, quadCoords);
 
 		qa.setCapability(BranchGroup.ALLOW_DETACH);
-		qa.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		qa.setCapability(Group.ALLOW_CHILDREN_WRITE);
 
 		
 		// Hinzufuegen der Fachwaende zur Bot-Shape3D 
 		bs.addGeometry(qa);
 
 		bs.setCapability(BranchGroup.ALLOW_DETACH);
-		bs.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		bs.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		
 		return bs;
 	}
@@ -611,7 +612,9 @@ public abstract class CtBot extends Bot {
 	 * 
 	 * @see ctSim.Model.Bot#init()
 	 */
+	@Override
 	protected void init() {
+		// Nichts zu tun
 	}
 
 	/*
@@ -619,6 +622,7 @@ public abstract class CtBot extends Bot {
 	 * 
 	 * @see ctSim.Model.Bot#work()
 	 */
+	@Override
 	protected void work() {
 		this.getPanel().reactToChange();
 	}
@@ -786,6 +790,7 @@ public abstract class CtBot extends Bot {
 	/**
 	 * @return Die Bodenfreiheit des Bot in [m]
 	 */
+	@Override
 	public float getGroundClearance() {
 		return (float) BOT_GROUND_CLEARANCE;
 	}
@@ -793,6 +798,7 @@ public abstract class CtBot extends Bot {
 	/**
 	 * @return Hoehe des Bot in [m]
 	 */
+	@Override
 	public float getHeight() {
 		return (float) BOT_HEIGHT;
 	}
@@ -1151,8 +1157,7 @@ public abstract class CtBot extends Bot {
 	public Image getMousePicture() {
 		if (mousePicture.isComplete())
 			return mousePicture.getImage(18*6,18*6);
-		else 
-			return null;
+		return null;
 	}
 	/**
 	 * Fuegt Daten zum Maussensor-Bild hinzu

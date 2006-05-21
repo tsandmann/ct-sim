@@ -107,6 +107,7 @@ public abstract class Judge extends Thread {
 	/**
 	 * Erledigt die Arbeit
 	 */
+	@Override
 	public void run() {
 		init();
 		takeStartTime();

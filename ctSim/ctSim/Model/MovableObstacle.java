@@ -25,5 +25,5 @@ package ctSim.Model;
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
 public interface MovableObstacle extends Obstacle{
-
+	// TODO Was muessen MovableObstacle koennen?
 }

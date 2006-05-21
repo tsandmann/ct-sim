@@ -57,6 +57,7 @@ public class ComConnection extends Connection {
 	 * @throws IOException
 	 * @throws Exception
 	 */
+	@Override
 	public synchronized void disconnect() throws IOException, Exception {
 		super.disconnect();
 		try {

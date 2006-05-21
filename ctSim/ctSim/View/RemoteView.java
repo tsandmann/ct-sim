@@ -28,7 +28,7 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 
 import ctSim.ErrorHandler;
 import ctSim.TcpConnection;
-import ctSim.Model.Bots.Bot;
+import ctSim.Model.AliveObstacle;
 import ctSim.Model.Scene.SceneGraphStreamWriterFixed;
 import ctSim.Model.Scene.SceneLight;
 import ctSim.Model.Scene.SceneUpdate;
@@ -91,7 +91,7 @@ public class RemoteView {
 			
 			// Dann uebertragen
 			SceneGraphStreamWriter writer = new SceneGraphStreamWriterFixed(connection.getSocket().getOutputStream());
-			BranchGroup bg = (BranchGroup)map.get(name+"_"+Bot.BG);
+			BranchGroup bg = (BranchGroup)map.get(name+"_"+AliveObstacle.BG);
 			writer.writeBranchGraph(bg,map);
 			writer.close();
 		} catch (Exception ex){
@@ -121,6 +121,8 @@ public class RemoteView {
 	public void die(){
 		try{
 			connection.disconnect();
-		} catch (Exception ex){}
+		} catch (Exception ex){
+			// Wenn noch was schiefgeht, isses auch egal
+		}
 	}
 }

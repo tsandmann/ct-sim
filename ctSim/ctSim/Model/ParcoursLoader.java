@@ -137,7 +137,7 @@ public class ParcoursLoader {
 	 */
 	private void createWall(int x, int y, int lengthX, int lengthY, Appearance appearance) {
 		Box box = new Box(parcours.getGrid() / 2 * lengthX, parcours.getGrid() / 2* lengthY, 0.2f, appearance);
-		parcours.addObstacle(box,(float)x+lengthX/2.0f,(float)y+lengthY/2.0f);
+		parcours.addObstacle(box,x+lengthX/2.0f,y+lengthY/2.0f);
 	}
 	
 	/**
@@ -154,7 +154,7 @@ public class ParcoursLoader {
 	@SuppressWarnings("unused")
 	private void createFloor(int x, int y, int lengthX, int lengthY, Appearance app) {
 		Box box = new Box(parcours.getGrid() / 2 * lengthX, parcours.getGrid() / 2* lengthY, World.PLAYGROUND_THICKNESS, app);
-		parcours.addFloor(box,x+lengthX/2.0f,(float)y+lengthY/2.0f, -World.PLAYGROUND_THICKNESS+0.001f);
+		parcours.addFloor(box,x+lengthX/2.0f,y+lengthY/2.0f, -World.PLAYGROUND_THICKNESS+0.001f);
 	}	
 
 	/**
@@ -228,7 +228,7 @@ public class ParcoursLoader {
 		Transform3D translate = new Transform3D();
 		translate.rotX(0.5 * Math.PI);
 		TransformGroup tg = new TransformGroup(translate);
-		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tg.setCapability(javax.media.j3d.Node.ENABLE_PICK_REPORTING);
 		tg.addChild(pillar);
 		
 		parcours.addObstacle(tg,x+0.5f,y+0.5f);

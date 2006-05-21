@@ -68,6 +68,7 @@ public class AnsweringMachine extends Thread {
 	 * 
 	 * @see java.lang.Thread#run()
 	 */
+	@Override
 	public void run() {
 		super.run();
 		Command command = new Command();

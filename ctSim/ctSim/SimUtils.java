@@ -34,7 +34,7 @@ public class SimUtils {
 
 	/**
 	 * Errechnet aus einem javax.vecmath.Vector3f eine ganzzahlig gerundete
-	 * Gradangabe und gibt sie als String zurück. Diese Methode wird zur Anzeige
+	 * Gradangabe und gibt sie als String zurï¿½ck. Diese Methode wird zur Anzeige
 	 * der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
 	 * @param vec
@@ -60,10 +60,11 @@ public class SimUtils {
 		double deg = Math.toDegrees(rad);
 		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
 		// muessen hier zwei Faelle unterschieden werden:
-		if (vec.x >= 0)
-			return deg;
-		else
-			return -deg;
+		
+		if (vec.x < 0)
+			deg =-deg;
+		
+		return deg;
 	}
 
 	/**
@@ -78,7 +79,7 @@ public class SimUtils {
 	public static Vector3f intToVec3f(int deg) {
 		double rad = Math.toRadians(deg);
 		// Sinus und Cosinus sind hier vertauscht, weil
-		// 0° in Richtung der positiven Y-Achse zeigen soll!
+		// 0ï¿½ in Richtung der positiven Y-Achse zeigen soll!
 		double x = Math.sin(rad);
 		double y = Math.cos(rad);
 		Vector3f newHead = new Vector3f(new Point3d(x, y, 0d));
@@ -91,7 +92,7 @@ public class SimUtils {
 	 * 
 	 * @param heading 
 	 * 			  Gib die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
-	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurück
+	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurï¿½ck
 	 */
 	public static double getRotation(Vector3f heading) {
 		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
@@ -99,7 +100,7 @@ public class SimUtils {
 		// muessen hier zwei Faelle unterschieden werden:
 		if (heading.x >= 0)
 			return -angle;
-		else
-			return angle;
+		
+		return angle;
 	}
 }

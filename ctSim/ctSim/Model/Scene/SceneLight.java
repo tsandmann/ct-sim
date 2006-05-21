@@ -39,7 +39,7 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 
 import ctSim.ErrorHandler;
-import ctSim.Model.Bots.Bot;
+import ctSim.Model.AliveObstacle;
 import ctSim.View.ViewBotUpdate;
 
 /**
@@ -143,7 +143,7 @@ public class SceneLight {
 		Iterator it = newMap.keySet().iterator();
 		while (it.hasNext()){
 			key = (String)it.next(); 
-			if (key.contains(Bot.BG))
+			if (key.contains(AliveObstacle.BG))
 				bg=(BranchGroup)newMap.get(key);
 		}
 		
@@ -233,7 +233,7 @@ public class SceneLight {
 			
 			if (key.contains(name)){
 			
-				if (key.contains(Bot.BG)){
+				if (key.contains(AliveObstacle.BG)){
 					((BranchGroup) map.get(key)).detach();
 				}
 				// zum loeschen vormerken
@@ -262,6 +262,7 @@ public class SceneLight {
 	 * Erstellt einen kompletten Klon des Objektes Achtung, das Ursprungsobjekt
 	 * darf nicht compiliert oder aktiv sein!
 	 */
+	@Override
 	public SceneLight clone() {
 		// der Clone
 		SceneLight sc = new SceneLight();

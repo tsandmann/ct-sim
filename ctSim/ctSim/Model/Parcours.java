@@ -73,17 +73,17 @@ public class Parcours {
 		super();
 		// Die Branchgroup fuer die Hindernisse
 		obstBG = new BranchGroup();
-		obstBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		obstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		obstBG.setPickable(true);
 		
 		// Die Branchgroup fuer die Lichtquellen
 		lightBG = new BranchGroup();
-		lightBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		lightBG.setPickable(true);
 
 		// Die Branchgroup fuer die Lichtquellen
 		terrainBG = new BranchGroup();
-		terrainBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		terrainBG.setPickable(true);
 
 		
@@ -188,7 +188,7 @@ public class Parcours {
 		translate.set(new Vector3f(x * grid, y* grid, z));
 
 		TransformGroup tg = new TransformGroup(translate);
-		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tg.setCapability(Node.ENABLE_PICK_REPORTING);
 		tg.setPickable(true);
 		tg.addChild(node);
 		bg.addChild(tg);
@@ -365,8 +365,8 @@ public class Parcours {
 		
 		if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
 			return true;
-		else
-			return false;
+		
+		return false;
 	}
 	
 }

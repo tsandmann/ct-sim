@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.*;
 
 import javax.vecmath.Vector3f;
@@ -186,11 +187,11 @@ public class CtControlPanel extends ControlPanel {
 	private JLabel motorLabelL;
 
 
-	private boolean irL=false;
-	private boolean irR=false;
-	private boolean xpos= false;
-	private boolean ypos=false;
-	private boolean head= false;
+	boolean irL=false;
+	boolean irR=false;
+	boolean xpos= false;
+	boolean ypos=false;
+	boolean head= false;
 
 	private JPanel sensorPanel;
 
@@ -260,7 +261,7 @@ public class CtControlPanel extends ControlPanel {
 //	 Anzeigen von Loggings
 	private JPanel jPanelLog;
 	private JButton jButtonLog;
-	private LogFrame logFrame;
+	LogFrame logFrame;
 	
 	// Anzeige der Maussensordaten
 	private JPanel msPanel;
@@ -340,6 +341,7 @@ public class CtControlPanel extends ControlPanel {
 	 * 
 	 * @see ctSim.View.ControlPanel#initGUI()
 	 */
+	@Override
 	protected void initGUI() {
 		Dimension labelDim, fieldDim, smallGap;
 		
@@ -407,7 +409,7 @@ public class CtControlPanel extends ControlPanel {
 								headSliderPanel, javax.swing.BoxLayout.Y_AXIS);
 						headSliderPanel.setLayout(headSliderPanelLayout);
 						{
-							headSlider = new JSlider(JSlider.HORIZONTAL, -180,
+							headSlider = new JSlider(SwingConstants.HORIZONTAL, -180,
 									180, 0);
 							headSliderPanel.add(headSlider);
 							headSlider.setMajorTickSpacing(45);
@@ -453,7 +455,7 @@ public class CtControlPanel extends ControlPanel {
 						xPosSliderPanel.setLayout(xPosSliderPanelLayout);
 						{
 							xPosSlider = new JSlider(
-									JSlider.HORIZONTAL,
+									SwingConstants.HORIZONTAL,
 //									Math.round(-100 * bot.getWorld().getPlaygroundDimX() / 2),
 //									Math.round(100 * bot.getWorld().getPlaygroundDimX() / 2),
 									Math.round(0),
@@ -505,7 +507,7 @@ public class CtControlPanel extends ControlPanel {
 						yPosSliderPanel.setLayout(yPosSliderPanelLayout);
 						{
 							yPosSlider = new JSlider(
-									JSlider.HORIZONTAL,
+									SwingConstants.HORIZONTAL,
 									Math.round(0),
 									Math.round(100 * getBot().getWorld().getPlaygroundDimY()),
 //									Math.round(-100 * bot.getWorld().getPlaygroundDimY()/ 2),
@@ -600,7 +602,7 @@ public class CtControlPanel extends ControlPanel {
 								leftIRSliderPanel, javax.swing.BoxLayout.X_AXIS);
 						leftIRSliderPanel.setLayout(leftIRSliderPanelLayout);
 						{
-							irSliderL = new JSlider(JSlider.VERTICAL, 0, 1000,
+							irSliderL = new JSlider(SwingConstants.VERTICAL, 0, 1000,
 									0);
 							leftIRSliderPanel.add(irSliderL);
 							irSliderL.setMajorTickSpacing(200);
@@ -685,7 +687,7 @@ public class CtControlPanel extends ControlPanel {
 									.setLayout(rightIRSliderPanelLayout);
 							rightPanel.add(rightIRSliderPanel);
 							{
-								irSliderR = new JSlider(JSlider.VERTICAL, 0,
+								irSliderR = new JSlider(SwingConstants.VERTICAL, 0,
 										1000, 0);
 								rightIRSliderPanel.add(irSliderR);
 								irSliderR.setMajorTickSpacing(200);
@@ -1302,6 +1304,7 @@ public class CtControlPanel extends ControlPanel {
 	 * 
 	 * @see ctSim.View.ControlPanel#reactToChange()
 	 */
+	@Override
 	public void reactToChange() {
 
 		/*
@@ -1337,7 +1340,7 @@ public class CtControlPanel extends ControlPanel {
 				xPosSlider.setValue(Math.round(getBot().getPos().x * 100));
 			} else {
 				/* Ansonsten bestimmt der Slider den Wert bei Bot und Panel: */
-				getBot().setPos(new Vector3f((float) xPosSlider.getValue() / 100f,
+				getBot().setPos(new Vector3f( xPosSlider.getValue() / 100f,
 						getBot().getPos().y, getBot().getPos().z));
 			}
 
@@ -1349,8 +1352,7 @@ public class CtControlPanel extends ControlPanel {
 				yPosSlider.setValue(Math.round(getBot().getPos().y * 100));
 			} else {
 				/* Ansonsten bestimmt der Slider den Wert beim Bot: */
-				getBot().setPos(new Vector3f(getBot().getPos().x, (float) yPosSlider
-						.getValue() / 100f, getBot().getPos().z));
+				getBot().setPos(new Vector3f(getBot().getPos().x,  yPosSlider.getValue() / 100f, getBot().getPos().z));
 			}
 		}
 
@@ -1379,7 +1381,7 @@ public class CtControlPanel extends ControlPanel {
 				 * erwartet!)
 				 */
 
-				((CtBot)getBot()).setSensIrL((double) irSliderL.getValue() / 1000d);
+				((CtBot)getBot()).setSensIrL(irSliderL.getValue() / 1000d);
 			}
 
 			/*
@@ -1394,7 +1396,7 @@ public class CtControlPanel extends ControlPanel {
 				 * (Multiplikation mit 1000, da setSensIr Angabe in Metern
 				 * erwartet!)
 				 */
-				((CtBot)getBot()).setSensIrR((double) irSliderR.getValue() / 1000d);
+				((CtBot)getBot()).setSensIrR(irSliderR.getValue() / 1000d);
 			}
 		}
 
@@ -1452,7 +1454,7 @@ public class CtControlPanel extends ControlPanel {
 
 		for (int i = 7; i >= 0; i--) { // bei jede der 8 LEDs den Status im
 										// Simulator aktualisieren
-			setLed(8 - i, (int) ledStat.charAt(i) - 48); // die 48 kommt
+			setLed(8 - i, ledStat.charAt(i) - 48); // die 48 kommt
 															// durch die
 															// Typenumwandlung
 															// zustande

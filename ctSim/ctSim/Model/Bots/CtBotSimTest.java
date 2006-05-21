@@ -55,6 +55,7 @@ public class CtBotSimTest extends CtBotSim {
 	 * 
 	 * @see ctSim.Model.Bot#init()
 	 */
+	@Override
 	protected void init() {
 		byte w= 18;
 		byte h= 18;
@@ -84,6 +85,7 @@ public class CtBotSimTest extends CtBotSim {
 	 * 
 	 * @see ctSim.Model.Bot#work()
 	 */
+	@Override
 	public void work() {
 
 		ll = rr = 100;
@@ -228,6 +230,7 @@ public class CtBotSimTest extends CtBotSim {
 	 * 
 	 * @see BotSim#deltaT
 	 */
+	@Override
 	protected void updateStats() {
 		super.updateStats();
 	
@@ -237,6 +240,7 @@ public class CtBotSimTest extends CtBotSim {
 
 
 	/** Dummy-Funktion ohne Wirkung */
+	@Override
 	public void requestMousePicture() {
 		System.out.println("Frage nach Maussbild");
 	}

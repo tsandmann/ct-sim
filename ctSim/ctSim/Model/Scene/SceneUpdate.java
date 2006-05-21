@@ -27,7 +27,7 @@ import java.util.Map;
 import javax.media.j3d.Node;
 import javax.media.j3d.TransformGroup;
 
-import ctSim.Model.Bots.Bot;
+import ctSim.Model.AliveObstacle;
 import ctSim.View.ViewBotUpdate;
 
 /**
@@ -85,7 +85,7 @@ public class SceneUpdate implements Serializable {
 			String key = (String) entry.getKey();
 			Node value = (Node) entry.getValue();
 			
-			if (key.contains(Bot.TG)){
+			if (key.contains(AliveObstacle.TG)){
 				bots.add(new ViewBotUpdate(key,(TransformGroup)value));				
 			}
 		}

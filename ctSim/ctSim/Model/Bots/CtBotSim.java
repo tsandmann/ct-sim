@@ -134,9 +134,9 @@ abstract public class CtBotSim extends CtBot {
 
 		// Anzahl der Umdrehungen der Raeder
 		double turnsL = calculateWheelSpeed(this.getActMotL());
-		turnsL = turnsL * (float) deltaT / 1000.0f;
+		turnsL = turnsL * deltaT / 1000.0f;
 		double turnsR = calculateWheelSpeed(this.getActMotR());
-		turnsR = turnsR * (float) deltaT / 1000.0f;
+		turnsR = turnsR * deltaT / 1000.0f;
 
 		// Encoder-Schritte als Gleitzahl errechnen:
 		// Anzahl der Drehungen mal Anzahl der Markierungen,
@@ -256,16 +256,14 @@ abstract public class CtBotSim extends CtBot {
 		// Bodenkontakt ueberpruefen
 
 		// Vektor vom Ursprung zum linken Rad
-		Vector3f vecL = new Vector3f((float) newHeading.y,
-				(float) newHeading.x, 0f);
+		Vector3f vecL = new Vector3f(newHeading.y,newHeading.x, 0f);
 		vecL.scale((float) WHEEL_DIST);
 		// neue Position linkes Rad
 		Vector3f posRadL = new Vector3f(this.getPos());
 		posRadL.add(vecL);
 
 		// Vektor vom Ursprung zum rechten Rad
-		Vector3f vecR = new Vector3f((float) newHeading.y,
-				(float) -newHeading.x, 0f);
+		Vector3f vecR = new Vector3f(newHeading.y, -newHeading.x, 0f);
 		vecR.scale((float) WHEEL_DIST);
 		// neue Position rechtes Rad
 		Vector3f posRadR = new Vector3f(this.getPos());
@@ -406,8 +404,7 @@ abstract public class CtBotSim extends CtBot {
 	private Vector3d getSensLdrHeading(Vector3f newHeading) {
 		if (SENS_LDR_HEADING.z == 1)
 			return SENS_LDR_HEADING;
-		else
-			return new Vector3d(newHeading);
+		return new Vector3d(newHeading);
 	}
 
 	/**
@@ -539,6 +536,7 @@ abstract public class CtBotSim extends CtBot {
 	 * @see ctSim.Model.Bot#work()
 	 * @see ctSim.Model.World#getSimulTime()
 	 */
+	@Override
 	protected void work() {
 		super.work();
 		long tmpTime = simulTime;

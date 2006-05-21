@@ -27,7 +27,11 @@ import java.io.InputStream;
  */
 public class CmdExec {
 
+	/**
+	 * Constructor
+	 */
 	public CmdExec() {
+		super();
 	}
 
 	/**

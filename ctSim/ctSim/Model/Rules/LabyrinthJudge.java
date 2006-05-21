@@ -90,6 +90,7 @@ public class LabyrinthJudge extends Judge{
 		}
 	}
 
+	@Override
 	protected void init(){
 		suspendWorld(true);
 	}
@@ -97,6 +98,7 @@ public class LabyrinthJudge extends Judge{
 	/**
 	 * Hier geschieht die eigentliche Arbeit des judges
 	 */
+	@Override
 	protected void work() {
 		// TODO Auto-generated method stub
 		check();

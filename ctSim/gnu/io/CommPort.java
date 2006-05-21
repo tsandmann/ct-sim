@@ -69,7 +69,7 @@ public abstract class CommPort extends Object {
 		catch (NoSuchPortException e)
 		{
 		}
-	};
+	}
 
 	public abstract InputStream getInputStream() throws IOException;
 	public abstract OutputStream getOutputStream() throws IOException;

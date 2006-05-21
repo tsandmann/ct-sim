@@ -27,6 +27,7 @@ import ctSim.View.ControlFrame;
 import java.util.*;
 
 import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.Group;
 import javax.media.j3d.Node;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
@@ -188,8 +189,8 @@ public class World extends Thread {
 
 		worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-		worldTG.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		worldTG.setCapability(TransformGroup.ALLOW_PICKABLE_READ);
+		worldTG.setCapability(Node.ENABLE_PICK_REPORTING);
+		worldTG.setCapability(Node.ALLOW_PICKABLE_READ);
 		worldTG.setPickable(true);
 
 		objRoot.addChild(worldTG);
@@ -206,23 +207,23 @@ public class World extends Thread {
 
 		// Die Branchgroup fuer die Lichtquellen
 		lightBG = new BranchGroup();
-		lightBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		lightBG.setPickable(true);
 		worldTG.addChild(lightBG);
 
 		// Die Branchgroup fuer den Boden
 		terrainBG = new BranchGroup();
-		terrainBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		terrainBG.setPickable(true);
 		worldTG.addChild(terrainBG);
 
 		// Die TranformGroup fuer alle Hindernisse:
 		sceneLight.setObstBG(new BranchGroup());
 		// Damit spaeter Bots hinzugefuegt werden koennen:
-		sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		sceneLight.getObstBG().setCapability(Group.ALLOW_CHILDREN_EXTEND);
 		sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_DETACH);
-		sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-		sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_PICKABLE_WRITE);
+		sceneLight.getObstBG().setCapability(Group.ALLOW_CHILDREN_WRITE);
+		sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_WRITE);
 
 		
 		// Objekte sind fest
@@ -238,7 +239,7 @@ public class World extends Thread {
 		Transform3D translate = new Transform3D();
 		translate.set(new Vector3d(0d, 0d, 0.2d - PLAYGROUND_THICKNESS));
 		TransformGroup obstTG = new TransformGroup(translate);
-		obstTG.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		obstTG.setCapability(Node.ENABLE_PICK_REPORTING);
 		obstTG.setPickable(true);
 		sceneLight.getObstBG().addChild(obstTG);
 
@@ -252,7 +253,7 @@ public class World extends Thread {
 		// Die Hindernisse der Welt hinzufuegen
 		worldTG.addChild(sceneLight.getObstBG());
 		// es duerfen noch weitere dazukommen
-		worldTG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		worldTG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 
 		return objRoot;
 	}
@@ -286,7 +287,7 @@ public class World extends Thread {
 	public void add(AliveObstacle obst){
 		aliveObstacles.add(obst);
 		obst.setWorld(this);
-		BranchGroup bg = (BranchGroup)obst.getNodeReference(Bot.BG);
+		BranchGroup bg = (BranchGroup)obst.getNodeReference(AliveObstacle.BG);
 	
 		// Erzeuge einen Clone des Bots fuers Backup
 		NodeReferenceTable nr = new NodeReferenceTable();
@@ -341,7 +342,7 @@ public class World extends Thread {
 		}
 
 		
-		add((AliveObstacle)bot);
+		add(bot);
 
 		
 
@@ -385,8 +386,8 @@ public class World extends Thread {
 
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return true;
-		else
-			System.out.println(botName + " hatte einen Unfall!");
+		
+		System.out.println(botName + " hatte einen Unfall!");
 		return false;
 	}
 
@@ -432,8 +433,8 @@ public class World extends Thread {
 		}
 		if (pickInfo == null)
 			return 100.0;
-		else
-			return pickInfo.getClosestDistance();
+		
+		return pickInfo.getClosestDistance();
 	}
 
 	/**
@@ -641,14 +642,16 @@ public class World extends Thread {
 				terrainBG.setPickable(true);
 			}
 		}
+
 		if (pickInfo == null)
 			return 1023;
-		else {
-			int darkness = (int) ((pickInfo.getClosestDistance() / LIGHT_SOURCE_REACH) * 1023);
-			if (darkness > 1023)
-				darkness = 1023;
-			return darkness;
-		}
+		
+
+		int darkness = (int) ((pickInfo.getClosestDistance() / LIGHT_SOURCE_REACH) * 1023);
+		if (darkness > 1023)
+			darkness = 1023;
+		return darkness;
+		
 	}
 
 	/**
@@ -735,6 +738,7 @@ public class World extends Thread {
 	 * 
 	 * @see java.lang.Thread#run()
 	 */
+	@Override
 	public void run() {
 		while (run == true) {
 			try {
@@ -931,8 +935,8 @@ public class World extends Thread {
 		if (sceneLightBackup != null) {
 			// Wenn ja, dann clone einfach diese
 			return sceneLightBackup.clone();
-		} else
-			return null;
+		} 
+		return null;
 	}
 
 	/**

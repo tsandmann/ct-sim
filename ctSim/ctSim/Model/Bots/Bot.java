@@ -91,6 +91,7 @@ abstract public class Bot extends AliveObstacle{
 	 * 
 	 * @see Bot#work()
 	 */
+	@Override
 	protected void cleanup() {
 		super.cleanup();
 		

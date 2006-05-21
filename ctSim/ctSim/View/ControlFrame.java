@@ -33,6 +33,7 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 import ctSim.Model.*;
 import ctSim.Model.Bots.Bot;
@@ -56,14 +57,13 @@ public class ControlFrame extends JPanel {
 
 	private JTabbedPane controlPanels;
 
-	private World world;
+	World world;
 
-	/** Verweis auf den zugehoerigen Controller */
-	private Controller controller;
+	Controller controller;
 
-	private boolean haveABreak;
+	boolean haveABreak;
 
-	private boolean slowMotion;
+	boolean slowMotion;
 
 	private JButton pauseButton;
 
@@ -77,14 +77,11 @@ public class ControlFrame extends JPanel {
 
 	private JButton addSimBotButton;
 
-	private JComboBox viewBox; 
+	JComboBox viewBox; 
 	
-	/**
-	 * Slow Motion Box
-	 */
-	private JCheckBox slowMotionBox;
+	JCheckBox slowMotionBox;
 
-	private JSlider slowMotionSlider;
+	JSlider slowMotionSlider;
 
 	private JPanel slowMotionSliderPanel;
 
@@ -92,7 +89,7 @@ public class ControlFrame extends JPanel {
 
 	private JPanel slowMotionPanel;
 
-	private JTextField slowMotionText;
+	JTextField slowMotionText;
 
 	
 	/* Markus Lang 2006-03-17:
@@ -258,7 +255,7 @@ public class ControlFrame extends JPanel {
 					slowMotionText.setSize(30, 25);
 
 					slowMotionBox = new JCheckBox("setzen", false);
-					slowMotionSlider = new JSlider(JSlider.HORIZONTAL, 1, 21,
+					slowMotionSlider = new JSlider(SwingConstants.HORIZONTAL, 1, 21,
 							10);
 					slowMotionSlider.setMajorTickSpacing(5);
 					slowMotionSlider.setMinorTickSpacing(1);

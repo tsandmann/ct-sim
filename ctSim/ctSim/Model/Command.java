@@ -313,6 +313,7 @@ public class Command {
 	 * 
 	 * @return Der String
 	 */
+	@Override
 	public String toString() {
 		String dataStr = getDataBytesAsString();
 
@@ -332,8 +333,8 @@ public class Command {
 	private int validate() {
 		if ((startCode == STARTCODE) && (crc == CRCCODE))
 			return 0;
-		else
-			return -1;
+		
+		return -1;
 	}
 
 	/**

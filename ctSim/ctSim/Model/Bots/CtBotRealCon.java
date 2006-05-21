@@ -66,6 +66,7 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 	 * 
 	 * @see ctSim.Model.Bot#work()
 	 */
+	@Override
 	public void work() {
 		super.work();
 		// TODO noch zu implementieren
@@ -190,6 +191,7 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 	 * 
 	 * @see java.lang.Thread#start()
 	 */
+	@Override
 	public synchronized void start() {
 		super.start();
 		answeringMachine.start();
@@ -199,6 +201,7 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 	/* Fordert ein MaussensorBild an
 	 * @see ctSim.Model.Bots.CtBot#requestMousePicture()
 	 */
+	@Override
 	public void requestMousePicture() {
 		Command command = new Command(Command.CMD_SENS_MOUSE_PICTURE, 0, 0, seq++);
 		try {
@@ -214,6 +217,7 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 	 * 
 	 * @see ctSim.Model.Bot#cleanup()
 	 */
+	@Override
 	protected void cleanup() {
 		super.cleanup();
 		try {
@@ -223,6 +227,7 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 				answeringMachine.die();
 			super.cleanup();
 		} catch (Exception ex) {
+			// Wenn jetzt noch was daneben geht ist uns das egal
 		}
 	}
 }
