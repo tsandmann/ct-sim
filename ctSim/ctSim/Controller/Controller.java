@@ -177,7 +177,7 @@ public class Controller {
 	 * Bennent einen neuen Bot
 	 * Achtung, die Namensvergabe wird nicht zurueckgesetzt, wenn ein bot stirbt
 	 * @param type
-	 * @return
+	 * @return Name des neuen Bots
 	 */
 	public String getNewBotName(String type){
 		// TODO Namensvergabe sollte die Namen von gestorbenen Bots neu verteilen
@@ -197,7 +197,7 @@ public class Controller {
 		
 	}
 	
-	/*
+	/**
 	 * Initilaisiert das gesamte Framework
 	 */
 	private void init() {
@@ -349,7 +349,6 @@ public class Controller {
 	 * Fuegt einen Bot in alle Views ein
 	 * 
 	 * @param id Bezeichner des Bot
-	 * @param bg Branchgruppe des Bot
 	 * @param map Liste mit Einstiegspunkten
 	 */
 	public void addToView(String id, HashMap map) {
@@ -440,7 +439,6 @@ public class Controller {
 	/**
 	 * Fuegt einen Bot in die Welt ein
 	 * @param bot
-	 * @param name
 	 */
 	private void addBot(Bot bot){
 		if (bot != null) {
@@ -478,7 +476,6 @@ public class Controller {
 	 * bots" verwendet. TCPBots koennen sich immer von aussen verbinden
 	 * 
 	 * @param type	Was fuer ein Bot (testbot CtBotRealTcp)
-	 * @param name Name des Bots
 	 */
 	public void addBot(String type) {
 		Bot bot = null;
@@ -506,7 +503,7 @@ public class Controller {
 		/**
 		 * Wartet auf eine eingehende Serial-Verbindung
 		 * @author Max Odendahl
-		 * @return
+		 * @return Die Verbindung
 		 */
 		private Connection waitForSerial(){
 			ComConnection com = new ComConnection();
@@ -525,7 +522,7 @@ public class Controller {
 
 	/**
 	 * Wartet auf eine eingehende JD2XX-Verbindung
-	 * @return
+	 * @return Die Verbindung
 	 */
 	private Connection waitForJD2XX(){
 		JD2xxConnection com = new JD2xxConnection();
@@ -631,7 +628,7 @@ public class Controller {
 	 * Liefert die Config zu einem Bot zurueck
 	 * @param filename
 	 * @param botId
-	 * @return
+	 * @return Map mit der Config
 	 */
 	@SuppressWarnings("unchecked")
 	private HashMap getBotConfig(String filename, String botId){
@@ -806,10 +803,17 @@ public class Controller {
 	 * 
 	 */
 	private class BotSocketListener extends SocketListener {
+		/**
+		 * Konstruktor
+		 * @param port Der TCP-Port auf dem er horcht
+		 */
 		public BotSocketListener(int port) {
 			super(port);
 		}
 
+		/**
+		 * Diese Routine wartet auf Bots
+		 */
 		@Override
 		public void run() {
 			TcpConnection tcp = null;
@@ -882,12 +886,15 @@ public class Controller {
 
 	/**
 	 * @return Gibt eine Referenz auf worldView zurueck
-	 * @return Gibt den Wert von worldView zurueck
 	 */
 	public WorldView getWorldView() {
 		return worldView;
 	}
 
+	/**
+	 * Wechselt die ViewingPlatform
+	 * @param selectedView Kennung der neuen ViewingPlatform im Szenegraphen
+	 */
 	public void changeView(String selectedView) {
 		View view= worldView.getUniverse().getViewingPlatform().getViewers()[0].getView();
 		view.attachViewPlatform((ViewPlatform)world.getSceneLight().getNodeReference(selectedView+"_"+Bot.VP));

@@ -39,6 +39,11 @@ public class ClientFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JSplitPane splitPane;
 
+	/**
+	 * Kinstruktor
+	 * @param worldView
+	 * @throws HeadlessException
+	 */
 	public ClientFrame(WorldView worldView) throws HeadlessException {
 		super();
 		this.initGUI(worldView);

@@ -7,10 +7,14 @@ import mindprod.ledatastream.LEDataInputStream;
 import mindprod.ledatastream.LEDataOutputStream;
 import jd2xx.*;
 
+/**
+ * Verbindung zum Bot per D2XX-Treiber
+ * @author bbe (bbe@heise.de)
+ *
+ */
 public class JD2xxConnection extends Connection {
 
 	private JD2XX jd = new JD2XX();
-
 	
 	private int list() throws IOException{
 		int count=0;
@@ -22,6 +26,11 @@ public class JD2xxConnection extends Connection {
 		return count;
 	}
 	
+	/**
+	 * Stellt die Verbindung her
+	 * Baudrate und Co sind fest kodiert
+	 * @throws IOException
+	 */
 	public void connect() throws IOException {
 		try {
 			if (list() ==0){
@@ -45,7 +54,7 @@ public class JD2xxConnection extends Connection {
 		
 	}	
 
-	/*
+	/**
 	 * Beendet die laufende Verbindung
 	 * 
 	 * @throws IOException
@@ -61,6 +70,9 @@ public class JD2xxConnection extends Connection {
 		}
 	}	
 	
+	/**
+	 * Konstruktor
+	 */
 	public JD2xxConnection() {
 		super();
 		// TODO Auto-generated constructor stub

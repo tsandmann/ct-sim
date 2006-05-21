@@ -50,7 +50,9 @@ public class ClientView {
 	
 	/**
 	 * Oeffnet eine ClientView zu einem gegebenn Rechner
-	 * @param connection
+	 * @param ip IP-Adresse oder Hostname
+	 * @param port TCP-Port
+	 * @throws Exception
 	 */
 	public ClientView(String ip, int port) throws Exception{
 		super();
@@ -90,28 +92,29 @@ public class ClientView {
 		sc.update(sceneUpdate);
 	}
 
+	/**
+	 * Entfernt einen Bot
+	 * @param sceneUpdate
+	 */
 	public void removeBot(SceneUpdate sceneUpdate){
 		sc.removeBot(sceneUpdate.getBotToKill());
 	}
 	
 	/**
 	 * Liest eine SceneUpdate-Nachricht ein
-	 * @return
+	 * @return Das Update
 	 * @throws IOException
 	 */
 	public SceneUpdate getUpdate() throws IOException{
 		SceneUpdate sU = null;
-//		byte [] data = new byte[10000];
 		
 		ObjectInputStream ois = new ObjectInputStream(connection.getSocket().getInputStream());
 		
 		try {
 			sU= (SceneUpdate) ois.readObject();
-//			sU = (SceneUpdate)ConvertData.bytesToObject(data);
 		} catch (ClassNotFoundException ex){
 			ErrorHandler.error("Klasse konnte nicht gefunden werden "+ex);
 		}
-//		ois.close();
 		
 		return sU;
 	}
@@ -138,6 +141,9 @@ public class ClientView {
 		return;
 	}
 	
+	/**
+	 * Fuegt einen Bot ein
+	 */
 	public void addBot(){
 		HashMap<String,SceneGraphObject> newMap = new HashMap<String,SceneGraphObject>();
 		try {

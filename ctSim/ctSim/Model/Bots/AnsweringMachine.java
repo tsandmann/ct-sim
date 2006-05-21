@@ -53,9 +53,7 @@ public class AnsweringMachine extends Thread {
 	}
 
 	/**
-	 * Beendet den Thread<b>
-	 * 
-	 * @see Bot#work()
+	 * Beendet den Thread
 	 */
 	public void die() {
 		run = false;

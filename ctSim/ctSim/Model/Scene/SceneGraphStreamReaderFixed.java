@@ -41,11 +41,22 @@ import ctSim.ErrorHandler;
  *
  */public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 
+	/**
+	 * Konstruktor
+	 * @param arg0
+	 * @throws IOException
+	 */
 	public SceneGraphStreamReaderFixed(InputStream arg0) throws IOException {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Behebt ein Problem der Superklasse
+	 * @param map Platz zum Ablegen der Map
+	 * @return die Branchgroup
+	 * @throws IOException
+	 */
 	@Override
 	public BranchGroup readBranchGraph(HashMap map) throws IOException {
 		BranchGroup bg = super.readBranchGraph(map);

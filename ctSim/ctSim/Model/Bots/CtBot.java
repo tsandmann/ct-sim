@@ -369,6 +369,7 @@ public abstract class CtBot extends Bot {
 
 	/**
 	 * Einfacher Konstruktor
+	 * @param controller
 	 */
 	public CtBot(Controller controller) {
 		super(controller);
@@ -378,11 +379,9 @@ public abstract class CtBot extends Bot {
 
 	/**
 	 * Alternativer Konstruktor
-	 * 
-	 * @param pos
-	 *            Die initiale Position
-	 * @param head
-	 *            Die initiale Blickrichtung
+	 * @param controller
+	 * @param pos Die initiale Position
+	 * @param head Die initiale Blickrichtung
 	 */
 	public CtBot(Controller controller, Point3f pos, Vector3f head) {
 		// Einfachen Konstruktor aufrufen:
@@ -393,11 +392,11 @@ public abstract class CtBot extends Bot {
 		setHeading(head);
 	}
 
-	/*
-	 * (non-Javadoc) Der Aufruf dieser Methode direkt nach dem Erzeugen sorgt
+	/**
+	 * Der Aufruf dieser Methode direkt nach dem Erzeugen sorgt
 	 * dafuer, dass der Bot ueber ein passendes ControlPanel verfuegt
 	 * 
-	 * @see ctSim.Model.Bot#providePanel()
+	 * @see Bot#providePanel()
 	 */
 	@Override
 	public void providePanel() {
@@ -1100,6 +1099,10 @@ public abstract class CtBot extends Bot {
 		return lcdCursorX;
 	}
 
+	/**
+	 * Loesche das Display
+	 *
+	 */
 	public void lcdClear() {
 		synchronized (lcdText) {
 			for (int i = 0; i < lcdText.length; i++) {

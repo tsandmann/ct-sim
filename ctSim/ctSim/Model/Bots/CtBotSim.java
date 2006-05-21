@@ -94,7 +94,7 @@ abstract public class CtBotSim extends CtBot {
 
 	/**
 	 * Erzeugt einen neuen Bot
-	 * 
+	 * @param controller
 	 * @param pos
 	 *            initiale Position
 	 * @param head
@@ -106,10 +106,11 @@ abstract public class CtBotSim extends CtBot {
 		CAP_SENS_IR = true;
 	}
 
-	/*
+	/**
 	 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde
 	 * 
-	 * @param motPWM PWM-Verhaeltnis @return Umdrehungen pro Sekunde
+	 * @param motPWM PWM-Verhaeltnis 
+	 * @return Umdrehungen pro Sekunde
 	 */
 	private float calculateWheelSpeed(int motPWM) {
 		float tmp = ((float) motPWM / (float) PWM_MAX);
@@ -123,7 +124,6 @@ abstract public class CtBotSim extends CtBot {
 	 * der Intelligenz des Simulators.<br/> Dabei wird alles relativ zu deltaT
 	 * berechnet.
 	 * 
-	 * @see BotSim#deltaT
 	 */
 	protected void updateStats() {
 
@@ -485,7 +485,7 @@ abstract public class CtBotSim extends CtBot {
 	 * 
 	 * @param distance
 	 *            die Laenge der Strecke in Metern
-	 * @return
+	 * @return Anzahl der Dots
 	 */
 	private int meter2Dots(double distance) {
 		// distance ist in Metern angegeben,
@@ -533,7 +533,7 @@ abstract public class CtBotSim extends CtBot {
 	 * work()-Methode durchlaufen kann. <br/> Unterklassen sollten diese Methode
 	 * ueberschreiben, aber zu deren Beginn super.work() aufrufen
 	 * 
-	 * @see ctSim.Model.Bot#work()
+	 * @see Bot#work()
 	 * @see ctSim.Model.World#getSimulTime()
 	 */
 	@Override

@@ -45,6 +45,10 @@ public class JudgePanel extends SimPanel {
 	/** Hier kommen die Ergebnisse rein */
 	JTextArea resultField;
 
+	/**
+	 * Konstruktor
+	 * @param judge
+	 */
 	public JudgePanel(Judge judge) {
 		super();
 		this.judge = judge;
@@ -84,17 +88,27 @@ public class JudgePanel extends SimPanel {
 				
 	}
 
+	/**
+	 * Nix zu tun hier 
+	 */
 	@Override
 	public void reactToChange() {
 		// TODO Auto-generated method stub
-
 	}
 
+	/** 
+	 * liefert den Judge zureuck
+	 * 
+	 * @return Der Judge
+	 */
 	public Judge getJudge() {
 		return judge;
 	}
 
-	/** Setzt die Laufzeit */
+	/** 
+	 * Setzt die Laufzeit 
+	 * @param time
+	 */
 	public void setRunTime(long time){
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time);
@@ -105,7 +119,9 @@ public class JudgePanel extends SimPanel {
 		this.repaint();
 	}
 	
-	/** Erweitert die Ergebnissliste */
+	/** Erweitert die Ergebnisliste
+	 * @param result
+	 */
 	public void addResult(String result){
 		resultField.setText(resultField.getText()+"\n"+result);
 		super.repaint();

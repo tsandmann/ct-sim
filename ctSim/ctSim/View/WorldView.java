@@ -164,7 +164,12 @@ public class WorldView extends JPanel {
 		return worldCanvas;
 	}
 
-	/** Legt die Scene Fest, die dieses Objekt anzeigen soll */
+	/**
+	 * Legt die Scene Fest, die dieses Objekt anzeigen soll
+	 * @param scene
+	 * @param dimX
+	 * @param dimY
+	 */
 	public void setScene(BranchGroup scene, float dimX, float dimY){
 		SimpleUniverse simpleUniverse = new SimpleUniverse(getWorldCanvas());
 		setUniverse(simpleUniverse, dimX,dimY);
@@ -172,8 +177,9 @@ public class WorldView extends JPanel {
 	}
 	
 	/**
-	 * @param uni
-	 *            Referenz auf das Universum, die gesetzt werden soll
+	 * @param uni Referenz auf das Universum, die gesetzt werden soll
+	 * @param dimX Ausdehnung in X-Richtung
+	 * @param dimY Ausdehnung in Y-Richtung
 	 */
 	public void setUniverse(SimpleUniverse uni, float dimX, float dimY) {
 		this.universe = uni;
@@ -249,7 +255,6 @@ public class WorldView extends JPanel {
 
 	/**
 	 * @return Gibt eine Referenz auf universe zurueck
-	 * @return Gibt den Wert von universe zurueck
 	 */
 	public SimpleUniverse getUniverse() {
 		return universe;

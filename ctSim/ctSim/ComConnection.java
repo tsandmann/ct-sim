@@ -67,6 +67,10 @@ public class ComConnection extends Connection {
 		}
 	}	
 	
+	/**
+	 * Konstruktor
+	 *
+	 */
 	public ComConnection() {
 		super();
 		// TODO Auto-generated constructor stub

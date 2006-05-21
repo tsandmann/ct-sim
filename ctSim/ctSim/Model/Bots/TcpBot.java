@@ -31,5 +31,8 @@ public interface TcpBot {
 	 */
 	public void evaluate_command(Command command);
 
+	/**
+	 * Bots sollten sauber sterben koennen
+	 */
 	public void die();
 }

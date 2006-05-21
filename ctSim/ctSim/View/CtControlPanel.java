@@ -1298,9 +1298,8 @@ public class CtControlPanel extends ControlPanel {
 		}
 	}
 
-	/*
-	 * (non-Javadoc) Wird aufgerufen, wenn sich der Zustand des Bot veraendert
-	 * hat
+	/**
+	 * Wird aufgerufen, wenn sich der Zustand des Bot veraendert hat
 	 * 
 	 * @see ctSim.View.ControlPanel#reactToChange()
 	 */

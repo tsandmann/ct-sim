@@ -20,10 +20,11 @@ public class ViewBotUpdate implements Serializable{
 	private String id;
 	private Matrix4d transformMatrix;
 //	private Transform3D trans = new Transform3D();
+
 	/**
-	 * @param id
-	 * @param rotation
-	 * @param translation
+	 * Konstruktor
+	 * @param id ID des Bots
+	 * @param tg Transformgruppe des Bots
 	 */
 	public ViewBotUpdate(String id, TransformGroup tg) {
 		super();
@@ -45,15 +46,34 @@ public class ViewBotUpdate implements Serializable{
 		this.id = id;
 	}
 	
+	/**
+	 * Liefer ID zuruek
+	 * @return ID
+	 */
 	public String getId() {
 		return id;
 	}
+	
+	/**
+	 * Setze ID
+	 * @param id
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	/**
+	 * Die Matrix enthalet Translation und Rotation
+	 * @return Die Matrix
+	 */
 	public Matrix4d getTransformMatrix() {
 		return transformMatrix;
 	}
+	
+	/**
+	 * Die Matrix enthalet Translation und Rotation
+	 * @param transformMatrix
+	 */
 	public void setTransformMatrix(Matrix4d transformMatrix) {
 		this.transformMatrix = transformMatrix;
 	}

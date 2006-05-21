@@ -198,7 +198,7 @@ abstract public class Bot extends AliveObstacle{
 	/**
 	 * Sucht ein Erscheinungsbild des Bots aus der Liste heraus
 	 * @param key
-	 * @return
+	 * @return Die Appearance
 	 */
 	private Appearance getAppearance(String key) {
 		Appearance app = null;

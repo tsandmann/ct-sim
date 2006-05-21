@@ -48,9 +48,10 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 	/**
 	 * Erzeugt einen neuen BotSimTcp mit einer schon bestehenden Verbindung
-	 * 
-	 * @param tc
-	 *            Die Verbindung fuer den Bot
+	 * @param controller
+	 * @param pos
+	 * @param head
+	 * @param tc Die Verbindung fuer den Bot
 	 */
 	public CtBotSimTcp(Controller controller, Point3f pos, Vector3f head,
 			Connection tc) {
@@ -295,7 +296,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	/**
 	 * Uebertraegt nach dem Aufruf von super.work alle Sensordaten an den Bot
 	 * 
-	 * @see ctSim.Model.CtBotSim#work()
+	 * @see CtBotSim#work()
 	 */
 	@Override
 	protected void work() {
@@ -303,8 +304,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		transmitSensors();
 	}
 
-	/* Fordert ein MaussensorBild an
-	 * @see ctSim.Model.Bots.CtBot#requestMousePicture()
+	/**
+	 * Fordert ein MaussensorBild an
+	 * @see CtBot#requestMousePicture()
 	 */
 	@Override
 	public void requestMousePicture() {

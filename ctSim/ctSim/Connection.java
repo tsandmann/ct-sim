@@ -49,6 +49,7 @@ public abstract class Connection {
 	 * Liest ein Byte
 	 * 
 	 * @return das Byte
+	 * @throws IOException
 	 */
 	public int readUnsignedByte() throws IOException {
 		int data;
@@ -62,6 +63,7 @@ public abstract class Connection {
 	 * Liest einen 16-Bit-Ganzzahlwert (short)
 	 * 
 	 * @return das Datum
+	 * @throws IOException
 	 */
 	public short readShort() throws IOException {
 		short data = 0;

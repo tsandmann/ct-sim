@@ -96,6 +96,7 @@ public class LogFrame extends javax.swing.JFrame implements ActionListener {
 	
 	/**
 	 * Diese Methode wertet Events von den Buttons aus.
+	 * @param evt
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		

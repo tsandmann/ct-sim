@@ -30,12 +30,15 @@ public class CtBotRealPanel extends CtControlPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	
+	/**
+	 * Konstruktor
+	 * @param bot
+	 */
 	public CtBotRealPanel(CtBot bot) {
 		super(bot);
 	}
 
-	/* Initialisiert die GUI
+	/** Initialisiert die GUI
 	 * @see ctSim.View.CtControlPanel#initGUI()
 	 */
 	@Override
@@ -45,7 +48,7 @@ public class CtBotRealPanel extends CtControlPanel {
 
 	}
 
-	/* Aktualisiert das Panel
+	/** Aktualisiert das Panel
 	 * @see ctSim.View.CtControlPanel#reactToChange()
 	 */
 	@Override

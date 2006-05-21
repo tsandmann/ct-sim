@@ -140,12 +140,12 @@ public class World extends Thread {
 
 	/** Der Parcours in dem sich der Bot bewegt */
 	private Parcours parcours;
-	
-	// TODO Schiedsrichter in eigenen Thread auslagern 
-	/** Der Schiedsrichter, der die Wettkaempfe ueberwacht */
-	//private Judge judge = null;
-	
-	/** Erzeugt eine neue Welt */
+		
+	/** Erzeugt eine neue Welt
+	 * @param controller
+	 * @param parcoursFile
+	 * @throws Exception
+	 */
 	public World(Controller controller, String parcoursFile) throws Exception {
 		super();
 
@@ -164,7 +164,8 @@ public class World extends Thread {
 	
 	/**
 	 * Prueft, ob ein Punkt auf dem Zielfeld liegt
-	 * @return
+	 * @param pos Der Punkt
+	 * @return true, wenn der Punkt im Zielfeld liegt
 	 */
 	public boolean finishReached(Vector3f pos){
 		return parcours.finishReached(pos);
@@ -174,6 +175,7 @@ public class World extends Thread {
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
 	 * @param parcoursFile Dateinamen des Parcours
 	 * @return der Szenegraph
+	 * @throws Exception
 	 */
 	public BranchGroup createSceneGraph(String parcoursFile) throws Exception {
 
@@ -271,8 +273,8 @@ public class World extends Thread {
 	}
 
 	/**
-	 * Entfernt einen Bot wieder
-	 * @param bot
+	 * Entfernt ein Obstacle wieder
+	 * @param obst
 	 */
 	public void remove(AliveObstacle obst){
 		aliveObstacles.remove(obst);
@@ -353,11 +355,10 @@ public class World extends Thread {
 
 	/**
 	 * Prueft, ob ein Bot mit irgendeinem anderen Objekt kollidiert
-	 * 
-	 * @param bounds
-	 *            die Grenzen des Bot
-	 * @param newPosition
-	 *            die angestrebte neue Position
+	 * @param botBody Koerpeer des Bots
+	 * @param bounds die Grenzen des Bot
+	 * @param newPosition die angestrebte neue Position
+	 * @param botName Name des Bots
 	 * @return True wenn der Bot sich frei bewegen kann
 	 */
 	public boolean checkCollision(Shape3D botBody, Bounds bounds,
@@ -818,11 +819,11 @@ public class World extends Thread {
 	}
 
 	/**
-	 * @param aliveObstacles
-	 *            Wert fuer aliveObstacles, der gesetzt werden soll.
+	 * Befuellt die Liste der Bots
+	 * @param aliveObstacles 
 	 */
-	public void setBots(List<AliveObstacle> bots) {
-		this.aliveObstacles = bots;
+	public void setBots(List<AliveObstacle> aliveObstacles) {
+		this.aliveObstacles = aliveObstacles;
 	}
 
 	/**
@@ -940,57 +941,7 @@ public class World extends Thread {
 	}
 
 	/**
-	 * @return Gibt das Erscheinungsbild der Hindernisse zurueck
-	 */
-//	public Appearance getObstacleAppear() {
-//		return obstacleAppear;
-//	}
-
-//	/**
-//	 * @return Gibt das Erscheinungsbild des Bodens zurueck
-//	 */
-//	public Appearance getPlaygroundAppear() {
-//		return playgroundAppear;
-//	}
-//
-//	/**
-//	 * @return Gibt das Erscheinungsbild der Linien auf dem Boden zurueck
-//	 */
-//	public Appearance getPlaygroundLineAppear() {
-//		return playgroundLineAppear;
-//	}
-
-	/**
-	 * @return Gibt das Erscheinungsbild einer Lichtquelle zurueck
-	 */
-//	public Appearance getLightSourceAppear() {
-//		return lightSourceAppear;
-//	}
-
-//	/**
-//	 * @return Gibt das Erscheinungsbild der Bots zurueck
-//	 */
-//	public Appearance getBotAppear() {
-//		return botAppear;
-//	}
-//
-//	/**
-//	 * @return Gibt das Erscheinungsbild der Bots nach einer Kollision zurueck
-//	 */
-//	public Appearance getBotAppearCollision() {
-//		return botAppearCollision;
-//	}
-//
-//	/**
-//	 * @return Gibt das Erscheinungsbild der Bots nach einem Fall zurueck
-//	 */
-//	public Appearance getBotAppearFall() {
-//		return botAppearFall;
-//	}
-
-	/**
 	 * @return Gibt eine Referenz auf sceneLight zurueck
-	 * @return Gibt den Wert von sceneLight zurueck
 	 */
 	public SceneLight getSceneLight() {
 		return sceneLight;
@@ -998,7 +949,7 @@ public class World extends Thread {
 
 	/**
 	 * Liefert das Parcours-Objekt zurueck
-	 * @return
+	 * @return Der Parcours
 	 */
 	public Parcours getParcours() {
 		return parcours;
@@ -1006,7 +957,7 @@ public class World extends Thread {
 
 	/**
 	 * X-Dimension des Spielfldes im mm
-	 * @return
+	 * @return die X-Dimension
 	 */
 	public float getPlaygroundDimX() {
 		return parcours.getWidth();
@@ -1014,7 +965,7 @@ public class World extends Thread {
 
 	/**
 	 * Y-Dimension des Spielfldes im mm
-	 * @return
+	 * @return die Y-Dimension
 	 */
 	public float getPlaygroundDimY() {
 		return parcours.getHeight();

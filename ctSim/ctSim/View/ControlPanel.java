@@ -48,7 +48,9 @@ public abstract class ControlPanel extends SimPanel {
 	}
 
 
-	/** liefert den zugehoerigen Bot zurueck */
+	/** liefert den zugehoerigen Bot zurueck 
+	 * @return der Bot
+	 */
 	public Bot getBot() {
 		return bot;
 	}

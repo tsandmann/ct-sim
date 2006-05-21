@@ -93,14 +93,12 @@ public class SceneUpdate implements Serializable {
 
 	/**
 	 * @return Gibt eine Referenz auf type zurueck
-	 * @return Gibt den Wert von type zurueck
 	 */
 	public int getType() {
 		return type;
 	}
 
 	/**
-	 * @param type Referenz auf type, die gesetzt werden soll
 	 * @param type Der Wert von type, der gesetzt werden soll
 	 */
 	public void setType(int type) {
@@ -109,7 +107,6 @@ public class SceneUpdate implements Serializable {
 
 	/**
 	 * @return Gibt eine Referenz auf botToKill zurueck
-	 * @return Gibt den Wert von botToKill zurueck
 	 */
 	public String getBotToKill() {
 		return botToKill;
@@ -117,7 +114,6 @@ public class SceneUpdate implements Serializable {
 
 	/**
 	 * @param botToKill Referenz auf botToKill, die gesetzt werden soll
-	 * @param botToKill Der Wert von botToKill, der gesetzt werden soll
 	 */
 	public void setBotToKill(String botToKill) {
 		this.botToKill = botToKill;

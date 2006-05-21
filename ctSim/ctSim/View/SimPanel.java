@@ -19,6 +19,11 @@ package ctSim.View;
 
 import javax.swing.JPanel;
 
+/**
+ * Superklasse fuer Panels
+ * @author bbe (bbe@heise.de)
+ *
+ */
 public abstract class SimPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 

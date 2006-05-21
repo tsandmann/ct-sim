@@ -46,7 +46,7 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 
 	/**
 	 * Erzeugt einen neuen Bot
-	 * 
+	 * @param controller Der zugehoerige Controller
 	 * @param pos
 	 *            initiale Position
 	 * @param head
@@ -59,18 +59,6 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 		super(controller, pos, head);
 		con = tc;
 		answeringMachine = new AnsweringMachine(this, con);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ctSim.Model.Bot#work()
-	 */
-	@Override
-	public void work() {
-		super.work();
-		// TODO noch zu implementieren
-		// ErrorHandler.error("BotRealTcp.work is missing");
 	}
 
 	/**
@@ -198,8 +186,9 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 
 	}
 
-	/* Fordert ein MaussensorBild an
-	 * @see ctSim.Model.Bots.CtBot#requestMousePicture()
+	/**
+	 * Fordert ein MaussensorBild an
+	 * @see CtBot#requestMousePicture()
 	 */
 	@Override
 	public void requestMousePicture() {

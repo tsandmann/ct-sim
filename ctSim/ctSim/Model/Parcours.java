@@ -94,7 +94,7 @@ public class Parcours {
 
 	/**
 	 * Liefert die Parcursbreite zurück in Gittereinheiten
-	 * @return
+	 * @return Parcursbreite
 	 */
 	public int getDimX() {
 		return dimX;
@@ -110,7 +110,7 @@ public class Parcours {
 
 	/**
 	 * Liefert die Parcurshoehe zurück in Gittereinheiten
-	 * @return
+	 * @return Parcurshoehe
 	 */
 	public int getDimY() {
 		return dimY;
@@ -118,7 +118,7 @@ public class Parcours {
 
 	/**
 	 * Liefert die Breite (X) des Parcours in mm zurueck
-	 * @return
+	 * @return Breite
 	 */
 	public float getWidth(){
 		return dimX* grid;
@@ -126,14 +126,14 @@ public class Parcours {
 
 	/**
 	 * Liefert die Hoehe (Y) des Parcours in mm zurueck
-	 * @return
+	 * @return Hoehe
 	 */
 	public float getHeight(){
 		return dimY* grid;
 	}
 	/**
 	 * Setzt die Parcurshoehe in Gittereinheiten
-	 * @param dimX Hoehe in Gittereinheiten
+	 * @param dimY Hoehe in Gittereinheiten
 	 */
 	public void setDimY(int dimY) {
 		this.dimY = dimY;
@@ -177,7 +177,7 @@ public class Parcours {
 	 * @param x X-Achse im Parcours-Gitter
 	 * @param y Y-Achse im Parcours-Gitter
 	 * @param z Z-Achse absolut
-	 * @param branchGroup Gruppe in die das Objekt rein soll
+	 * @param bg Gruppe in die das Objekt rein soll
 	 */
 	public void addNode(Node node, float x, float y,float z,BranchGroup bg) {
 		Transform3D translate = new Transform3D();
@@ -199,7 +199,7 @@ public class Parcours {
 	 * @param node Die Node
 	 * @param x X-Achse im Parcours-Gitter
 	 * @param y Y-Achse im Parcours-Gitter
-	 * @param branchGroup Gruppe in die das Objekt rein soll
+	 * @param bg Gruppe in die das Objekt rein soll
 	 */
 	public void addNode(Node node, float x, float y,BranchGroup bg) {
 		addNode(node,x,y,0.0f,bg);
@@ -210,6 +210,7 @@ public class Parcours {
 	 * @param light Die Lichtquelle
 	 * @param x X-Achse im Parcours-Gitter
 	 * @param y Y-Achse im Parcours-Gitter
+	 * @param z z-Achse Weltkoordinaten
 	 */
 	public void addLight(Node light, float x, float y, float z) {
 		addNode(light,x,y,z,lightBG);
@@ -226,7 +227,7 @@ public class Parcours {
 	
 	/**
 	 * Liefert die Licht-Branchgroup zurück
-	 * @return
+	 * @return die Branchgroup
 	 */
 	public BranchGroup getLightBG() {
 		return lightBG;
@@ -234,7 +235,7 @@ public class Parcours {
 
 	/**
 	 * Liefert die Hinderniss-Branchgroup zurück
-	 * @return
+	 * @return die Branchgroup
 	 */
 	public BranchGroup getObstBG() {
 		return obstBG;
@@ -242,7 +243,7 @@ public class Parcours {
 	
 	/**
 	 * Liefert die Boden-Branchgroup zurück
-	 * @return
+	 * @return Boden-Branchgroup
 	 */
 	public BranchGroup getTerrainBG() {
 		return terrainBG;
@@ -298,7 +299,7 @@ public class Parcours {
 	 * Liefert die Startposition eines Bots
 	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
 	 * @param bot
-	 * @return
+	 * @return Die Position
 	 */
 	public Vector3f getStartPosition(int bot){
 		Vector3f pos = null;
@@ -314,7 +315,7 @@ public class Parcours {
 	 * Liefert die Startrichtung eines Bots
 	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
 	 * @param bot
-	 * @return
+	 * @return Die Richtung
 	 */
 	public Vector3f getStartHeading(int bot){
 		Vector3f pos = null;
@@ -346,7 +347,7 @@ public class Parcours {
 
 	/** 
 	 * Liefert die Gitterbreite in mm zurueck
-	 * @return
+	 * @return Gitterbreite 
 	 */
 	public float getGrid() {
 		return grid;
@@ -355,7 +356,7 @@ public class Parcours {
 	/**
 	 * Prueft, ob ein Punkt innerhalb des Zielfeldes liegt
 	 * @param pos
-	 * @return
+	 * @return true, wenn der Punkt im Zielfeld liegt
 	 */
 	public boolean finishReached(Vector3f pos){
 		float minX = finishPosition[0]*grid ;

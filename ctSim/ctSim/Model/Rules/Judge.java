@@ -73,7 +73,6 @@ public abstract class Judge extends Thread {
 	
 	/**
 	 * Erzeuge neuen Judge
-	 * @param controller Verweis auf den zugehoerigen Controller
 	 */
 	public Judge() {
 		super();
@@ -96,6 +95,7 @@ public abstract class Judge extends Thread {
 	 * Diese Routine muss den Judge-Thread in einen Schlaf-Modus versetzen.
 	 * Sie kann von Unterklassen überschrieben werden, oder sie setzen einfach 
 	 * das Feld delay auf einen anderen Wert!  
+	 * @throws InterruptedException
 	 */
 	protected void delay() throws InterruptedException{
 		sleep(delay);
@@ -151,7 +151,7 @@ public abstract class Judge extends Thread {
 
 	/**
 	 * Laufzeit seit dem setzen der StartTime
-	 * @return
+	 * @return die Zeit
 	 */
 	public long getRunTime() {
 		return runTime;
@@ -159,7 +159,7 @@ public abstract class Judge extends Thread {
 
 	/**
 	 * Liefert die Startzeit des Wettlampfes zurueck
-	 * @return
+	 * @return die Zeit
 	 */
 	public long getStartTime() {
 		return startTime;
@@ -167,29 +167,39 @@ public abstract class Judge extends Thread {
 
 	/**
 	 * Liefert die aktuelle Zeit zurueck
-	 * @return
+	 * @return die Zeit
 	 */
 	public long getTime() {
 		return time;
 	}
 
-	/** Der zugehoerige Controller */
+	/** Der zugehoerige Controller 
+	 *  @return der Controller 
+	 */
 	public Controller getController() {
 		return controller;
 	}
 
 
-	/** Lege die Geschwindigkeit des Judges fest */ 
+	/** Lege die Geschwindigkeit des Judges fest 
+	 * @param delay verzoegerung
+	 */ 
 	public void setDelay(int delay) {
 		this.delay = delay;
 	}
 
-
+	/**
+	 * Liefert das zugehoerige Panel
+	 * @return das Panel
+	 */
 	public JudgePanel getPanel() {
 		return panel;
 	}
 
-
+	/**
+	 * Setze den Controller
+	 * @param controller
+	 */
 	public void setController(Controller controller) {
 		this.controller = controller;
 	}

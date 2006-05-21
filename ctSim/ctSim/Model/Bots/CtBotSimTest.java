@@ -40,20 +40,18 @@ public class CtBotSimTest extends CtBotSim {
 
 	/**
 	 * Erzeugt einen neuen Testbot
-	 * 
-	 * @param pos
-	 *            initiale Position
-	 * @param head
-	 *            initiale Blickrichtung
+	 * @param controller
+	 * @param pos initiale Position
+	 * @param head initiale Blickrichtung
 	 */
 	public CtBotSimTest(Controller controller, Point3f pos, Vector3f head) {
 		super(controller, pos, head);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Initialisiere den Testbot
 	 * 
-	 * @see ctSim.Model.Bot#init()
+	 * @see Bot#init()
 	 */
 	@Override
 	protected void init() {
@@ -83,7 +81,7 @@ public class CtBotSimTest extends CtBotSim {
 	 * uebertragen, da diese kein Java unterstuetzt. <br/>
 	 * Diese einfache Implementierung des c't-Bot reagiert NICHT auf Kommandos der Fernbedienung
 	 * 
-	 * @see ctSim.Model.Bot#work()
+	 * @see Bot#work()
 	 */
 	@Override
 	public void work() {
@@ -155,7 +153,7 @@ public class CtBotSimTest extends CtBotSim {
 	 *              Der String, der gekuerzt/verlaengert werden soll.
 	 * @param length
 	 *              Die Ziellaenge des Ergebnisstrings
-	 * @return
+	 * @return Der String
 	 */
 	private static String formatNumberStr(String numberStr, int length) {
 		if (numberStr == null)
@@ -228,7 +226,6 @@ public class CtBotSimTest extends CtBotSim {
 	 * der Intelligenz des Simulators.<br/> Dabei wird alles relativ zu deltaT
 	 * berechnet.
 	 * 
-	 * @see BotSim#deltaT
 	 */
 	@Override
 	protected void updateStats() {

@@ -62,7 +62,7 @@ public class MousePicture {
 	/**
 	 * betrachtet ein byte als unsigned Byte
 	 * @param value
-	 * @return
+	 * @return der wert als unsigned Byte
 	 */
 	private static int toUnsignedInt(byte value){
 		return (value & 0x7F) + (value < 0 ? 128 : 0);
@@ -71,7 +71,7 @@ public class MousePicture {
 	/**
 	 * Fuegt Daten zum Maussensor-Bild hinzu
 	 * @param start Nummer des ersten Pixels in data
-	 * @param data Nutzdaten
+	 * @param in Nutzdaten
 	 */
 	public void addPixels(int start, byte[] in){
 		int i;
@@ -100,7 +100,6 @@ public class MousePicture {
 
 	/**
 	 * @return Gibt eine Referenz auf dimX zurueck
-	 * @return Gibt den Wert von dimX zurueck
 	 */
 	public int getDimX() {
 		return dimX;
@@ -109,7 +108,6 @@ public class MousePicture {
 
 	/**
 	 * @return Gibt eine Referenz auf dimY zurueck
-	 * @return Gibt den Wert von dimY zurueck
 	 */
 	public int getDimY() {
 		return dimY;
@@ -118,7 +116,6 @@ public class MousePicture {
 
 	/**
 	 * @return Gibt eine Referenz auf complete zurueck
-	 * @return Gibt den Wert von complete zurueck
 	 */
 	public boolean isComplete() {
 		return complete;
@@ -129,7 +126,7 @@ public class MousePicture {
 	 * Liefert das Mausbild als Image zurueck
 	 * @param width gewuenschte Breite
 	 * @param height gewuenschte Hoehe
-	 * @return
+	 * @return Das Image
 	 */
 	public Image getImage(int width, int height){
 		int w = dimX;

@@ -36,19 +36,37 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
  * 
  * @author bbe (bbe@heise.de)
  *
- */public class SceneGraphStreamWriterFixed extends SceneGraphStreamWriter {
+ */
+public class SceneGraphStreamWriterFixed extends SceneGraphStreamWriter {
 
+	 /**
+	  * Konstruktor
+	  * @param arg0
+	  * @throws IOException
+	  */
 	public SceneGraphStreamWriterFixed(OutputStream arg0) throws IOException {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Uebertrage einen Branchgroup 
+	 * @param bg
+	 * @param map
+	 * @throws IOException
+	 * @throws DanglingReferenceException
+	 * @throws NamedObjectException
+	 */
 	@Override
 	public void writeBranchGraph(BranchGroup bg, HashMap map) throws IOException, DanglingReferenceException, NamedObjectException {
 		prepareMap(map);
 		super.writeBranchGraph(bg, map);
 	}
 
+	/**
+	 * Hilfsroutine, die die Map zur Uebertragung vorbereitet. Hier drin steckt der Workaround fuer den Bug der Superklasse
+	 * @param map
+	 */
 	private void prepareMap(HashMap map){
 		Iterator it = map.keySet().iterator();
 		

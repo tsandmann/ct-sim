@@ -55,6 +55,7 @@ public class RemoteView {
 	/**
 	 * Uebertraegt alle Aenderungen in SceneLight an die entfernte View
 	 * @param sceneUpdate Die Aenderungen
+	 * @throws IOException
 	 */
 	public void update(SceneUpdate sceneUpdate) throws IOException{
 		try{
@@ -64,12 +65,12 @@ public class RemoteView {
 			ErrorHandler.error("Probleme beim Uebertragen des SceneUpdates "+ex);
 			throw ex;
 		}
-//		write(ConvertData.objectToBytes(sceneUpdate));
 	}
 	
 	/**
 	 * Uebertraegt den initialen SceneGraph an die Remote View
 	 * @param sceneLight
+	 * @throws IOException
 	 */
 	public void init(SceneLight sceneLight) throws IOException{
 		sceneLight.writeStream(connection.getSocket().getOutputStream());

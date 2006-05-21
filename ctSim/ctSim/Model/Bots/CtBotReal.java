@@ -32,6 +32,12 @@ import ctSim.Controller.Controller;
  */
 
 abstract public class CtBotReal extends CtBot {
+	/**
+	 * Konstruktor
+	 * @param controller
+	 * @param pos
+	 * @param head
+	 */
 	public CtBotReal(Controller controller, Point3f pos, Vector3f head) {
 		super(controller, pos, head);
 	}

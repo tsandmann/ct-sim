@@ -40,7 +40,7 @@ public class LabyrinthJudge extends Judge{
 	/** Anzahl der Teilnehmer am Rennen */
 	int participants = 2;
 	
-	
+	/** Konstruktor */
 	public LabyrinthJudge(){
 		super();
 	}
@@ -104,10 +104,18 @@ public class LabyrinthJudge extends Judge{
 		check();
 	}
 
+	/**
+	 * liefert die Anzahl der Teilnehmer am Rennen
+	 * @return Teilnehmer
+	 */
 	public int getParticipants() {
 		return participants;
 	}
 
+	/**
+	 * Setze die Anzahl der Teilnehmer am Rennen
+	 * @param participants Teilnehmer
+	 */
 	public void setParticipants(int participants) {
 		this.participants = participants;
 	}

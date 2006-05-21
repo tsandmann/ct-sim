@@ -65,19 +65,22 @@ public class ParcoursLoader {
 	/** Z-Koorndinate der Lampen */
 	public static final float LIGHTZ = 0.5f;
 	
-	public static final float LINEWIDTH = 0.1f;
+	/** Breite einer Linie */
+	public static final float LINEWIDTH = 0.1f;	
 	
+	/** Linie horizontal */
 	public static final float[] LINE_HORIZ = 	{ -0.5f, 0f - LINEWIDTH/2,0f, 
 													   0.5f, 0f - LINEWIDTH/2,0f, 
 													   0.5f, 0f + LINEWIDTH/2,0f,
 													  -0.5f, 0f + LINEWIDTH/2,0f,
 													  -0.5f, 0f - LINEWIDTH/2,0f}; 
+	/** Linie vertikal */
 	public static final float[] LINE_VERT =  	{ 0f - LINEWIDTH/2,-0.5f,0f,  // Start unten links 
 													  0f + LINEWIDTH/2,-0.5f,0f,  // kurze Linie nach rechts
 													  0f + LINEWIDTH/2, 0.5f,0f,  // Lange Linie hoch  
 													  0f - LINEWIDTH/2, 0.5f,0f,  // kurze Linie nach links   
 													  0f - LINEWIDTH/2,-0.5f,0f}; // lange Linie runter
-	
+	/** Linie mit Ecke SE */
 	public static final float[] LINE_CORNER_SE = { 0f - LINEWIDTH/2,-0.5f               ,0f,  // Start unten links
 													  0f + LINEWIDTH/2,-0.5f               ,0f,  // kurze Linie nach rechts   
 													  0f + LINEWIDTH/2, 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie hoch 
@@ -85,6 +88,7 @@ public class ParcoursLoader {
 													  0.5f			  , 0.0f + LINEWIDTH/2 ,0f,  // kurze Linie hoch
 													  0f -LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,  // Lange Linie nach links
 													  0f - LINEWIDTH/2,-0.5f               ,0f};  // Lange Linie nach unten 
+	/** Linie mit Ecke SW */
 	public static final float[] LINE_CORNER_SW = { 0f - LINEWIDTH/2,-0.5f               ,0f,  // Start unten links
 													  0f + LINEWIDTH/2,-0.5f               ,0f,  // kurze Linie nach rechts   
 													  0f + LINEWIDTH/2, 0.0f + LINEWIDTH/2 ,0f,  // Lange Linie hoch 
@@ -92,6 +96,7 @@ public class ParcoursLoader {
 													 -0.5f			  , 0.0f - LINEWIDTH/2 ,0f,  // kurze Linie runter
 													  0f -LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie nach links
 													  0f - LINEWIDTH/2,-0.5f               ,0f};  // Lange Linie nach unten
+	/** Linie mit Ecke NW */
 	public static final float[] LINE_CORNER_NW ={ -0.5f			  , 0.0f + LINEWIDTH/2 ,0f,  // Start Links oben
 													 -0.5f			  , 0.0f - LINEWIDTH/2 ,0f,  // kurze Linie runter
 													  0f +LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie nach rechts
@@ -99,7 +104,7 @@ public class ParcoursLoader {
 													  0f -LINEWIDTH/2 , 0.5f               ,0f,  // kurze Linie nach links
 													  0f -LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,  // lange Linie nach unten
 													 -0.5f			  , 0.0f + LINEWIDTH/2 ,0f};  // Lange Linie nach links	
-	
+	/** Linie mit Ecke NE */
 	public static final float[] LINE_CORNER_NE = { 0f +LINEWIDTH/2 , 0.5f               ,0f,  // Start oben rechts
 												      0f -LINEWIDTH/2 , 0.5f               ,0f,  // kurze Linie nach links
 													  0f -LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,  // lange Linie nach unten
@@ -133,7 +138,8 @@ public class ParcoursLoader {
 	 * @param x  Position in X-Richtung
 	 * @param y  Position in X-Richtung
 	 * @param lengthX Laenge der Wand in X-Richtung
-	 * @param lengthX Laenge der Wand in Y-Richtung
+	 * @param lengthY Laenge der Wand in Y-Richtung
+	 * @param appearance
 	 */
 	private void createWall(int x, int y, int lengthX, int lengthY, Appearance appearance) {
 		Box box = new Box(parcours.getGrid() / 2 * lengthX, parcours.getGrid() / 2* lengthY, 0.2f, appearance);
@@ -178,7 +184,8 @@ public class ParcoursLoader {
 	 * 
 	 * @param x  Position in X-Richtung
 	 * @param y  Position in X-Richtung
-	 * @param type Art der Linie
+	 * @param points Liste mit punkten entlang der
+	 * @param appearance
 	 */
 	private void createLine(int x, int y, float[] points, Appearance appearance) {
 		// zwei Polygone (Deckel und Boden) mit N Ecken
@@ -219,7 +226,8 @@ public class ParcoursLoader {
 	 * Erzeugt eine Sauele mit Lichtquelle obendrauf
 	 * @param x X-Koordinate
 	 * @param y Y-Koordinate
-	 * @return eine Transformgroup, die die Sauele enthaelt
+	 * @param lightAppearance Erscheinungsbild des Lichtes
+	 * @param wallAppearance Erscheinungsbild der Säule
 	 */
 	private void createPillar(int x, int y,Appearance wallAppearance, Appearance lightAppearance){
 		Cylinder pillar = new Cylinder(0.05f, 0.5f, wallAppearance);
@@ -242,6 +250,7 @@ public class ParcoursLoader {
 	 * @param pointLightColor
 	 * @param x
 	 * @param y
+	 * @param appearance
 	 */
 	private void createLight(BoundingSphere pointLightBounds,Color3f pointLightColor, int x, int y,Appearance appearance) {
 		// Lichter bestehen aus dem echten Licht
@@ -386,7 +395,7 @@ public class ParcoursLoader {
 	
 	/**
 	 * Liefert das soeben aufgebaute Parcours-Objekt zurueck
-	 * @return
+	 * @return  Parcours-Objekt
 	 */
 	public Parcours getParcours() {
 		return parcours;
@@ -395,6 +404,7 @@ public class ParcoursLoader {
 	/**
 	 * Laedt einen Oarcours aus einer XML-Datei
 	 * @param filename
+	 * @throws Exception
 	 */
 	public void load_xml_file(String filename) throws Exception{
 		// Ein DOMParser liest ein XML-File ein
@@ -499,7 +509,7 @@ public class ParcoursLoader {
 	/**
 	 * Liefert eine Appearance aus der Liste zurueck
 	 * @param key Der Schluessel mit dem sie abgelegt wurde
-	 * @return 
+	 * @return Die Appearance
 	 */
 	private Appearance getAppearance(int key) {
 		Appearance app= (Appearance)appearances.get((char)key);

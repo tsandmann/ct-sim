@@ -99,6 +99,7 @@ public class ControlFrame extends JPanel {
 
 	/**
 	 * Erzeugt einen neuen ControlFrame
+	 * @param controller
 	 */
 	public ControlFrame(Controller controller) {
 		super();
@@ -365,7 +366,9 @@ public class ControlFrame extends JPanel {
 		this.ctSimFrame = ctSimFrame;
  	}
 
-	/** Setzt den Pausenmodus von aussen */
+	/** Setzt den Pausenmodus von aussen
+	 * @param haveABreak 
+	 */
 	public void setHaveABreak(boolean haveABreak) {
 		this.haveABreak = haveABreak;
 		world.setHaveABreak(haveABreak);

@@ -160,7 +160,7 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	
 	/**
 	 * Gibt alle Referenzen auf den Szenegraphen zurück
-	 * @return
+	 * @return Die Referenzen
 	 */
 	public HashMap<String,SceneGraphObject> getNodeMap() {
 		return nodeMap;
@@ -169,7 +169,7 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	/** Liefert eine einzelne Referenz auf ein Szenegraph-Objekt
 	 * 
 	 * @param key
-	 * @return
+	 * @return Das Objekt
 	 */
 	public SceneGraphObject getNodeReference(String key){
 		if (key.contains(getName()))
@@ -178,7 +178,11 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 		return	nodeMap.get(getName()+"_"+key);
 	}
 
-	/** Fuegt eine Referenz ein */
+	/**
+	 * Fuegt eine Referenz ein 
+	 * @param key
+	 * @param so
+	 */
 	public void addNodeReference(String key, SceneGraphObject so){
 		nodeMap.put(getName()+"_"+key,so);
 	}
@@ -214,7 +218,6 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	
 	/**
 	 * @return Gibt eine Referenz auf controller zurueck
-	 * @return Gibt den Wert von controller zurueck
 	 */
 	public Controller getController() {
 		return controller;

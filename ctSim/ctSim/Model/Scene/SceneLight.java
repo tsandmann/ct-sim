@@ -157,7 +157,6 @@ public class SceneLight {
 	
 	/**
 	 * Fuegt nur die Referenzen des Bots in die Scenelight ein
-	 * @param name Der Name des Bots
 	 * @param newMap Alle noetigen Referenzen
 	 */
 	@SuppressWarnings("unchecked")
@@ -176,29 +175,10 @@ public class SceneLight {
 		}		
 	}
 
-	
-	/**
-	 * Suche einen ViewBot aus der Liste
-	 * 
-	 * @param id
-	 *            Name des ViewBots
-	 * @return Verweis auf den Bot
-	 */
-//	private ViewBot findViewBot(String id) {
-//		Iterator it = bots.iterator();
-//		while (it.hasNext()) {
-//			ViewBot intern = (ViewBot) it.next();
-//			if (intern.id.equals(id))
-//				return intern;
-//		}
-//		return null;
-//	}
-
 	/**
 	 * Gleicht die Positionen der internen Bots an die in der Liste an
 	 * 
-	 * @param list
-	 *            Liste der Bots
+	 * @param sceneUpdate Das Update
 	 * 
 	 */
 	public void update(SceneUpdate sceneUpdate) {
@@ -221,7 +201,7 @@ public class SceneLight {
 
 	/**
 	 * Entfernt einen Bot restlos
-	 * @param sceneUpdate Alle infos uerbe den zu loeschenden Bot 
+	 * @param name ID des Bots
 	 */
 	@SuppressWarnings("unchecked")
 	public void removeBot(String name) {
@@ -261,6 +241,7 @@ public class SceneLight {
 	/**
 	 * Erstellt einen kompletten Klon des Objektes Achtung, das Ursprungsobjekt
 	 * darf nicht compiliert oder aktiv sein!
+	 * @return der Klone
 	 */
 	@Override
 	public SceneLight clone() {
@@ -316,13 +297,17 @@ public class SceneLight {
 
 	/**
 	 * Liefert die Liste mit allen Referenzen
-	 * @return
+	 * @return die Liste
 	 */
 	public HashMap<String,SceneGraphObject> getMap() {
 		return map;
 	}
 
-	
+	/**
+	 * liefert alle Referenzen zu einem Teilschluessel
+	 * @param partialKey Zeichenfolge mit dem Teilschluessel
+	 * @return Hashmap mit den Referenzen
+	 */
 	public HashMap<String,SceneGraphObject> getReferences(String partialKey){
 		HashMap<String,SceneGraphObject> h = new HashMap<String,SceneGraphObject>();
 		
@@ -350,7 +335,7 @@ public class SceneLight {
 	/**
 	 * Liefert einen Eintrag aus der Map zurueck
 	 * @param key
-	 * @return
+	 * @return Der Eintrag
 	 */
 	public SceneGraphObject getNodeReference(String key) {
 		return map.get(key);
