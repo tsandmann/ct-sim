@@ -1,0 +1,34 @@
+drop table level;
+drop table game;
+drop table bot;
+drop table team;
+
+CREATE TABLE level (
+	level int PRIMARY KEY, 
+	parcours char(20), 
+	sceduled datetime
+);  
+
+CREATE TABLE game (
+	level int references level, 
+	game int, 
+	bot1 int references bot, 
+	bot2 int references bot, 
+	sceduled datetime, 
+	finishtime time, 
+	state char(10) default 'not init', 
+	winner int references bot, 
+	screenshot char(20),
+	primary key (level, game)
+);
+
+CREATE TABLE bot (
+	bot int PRIMARY KEY, 
+	team int references team, 
+	bin char(20)
+);
+
+CREATE TABLE team (
+	team char(20) PRIMARY KEY, 
+	email char(30)
+);
