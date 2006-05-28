@@ -114,16 +114,18 @@ public class ControlFrame extends JPanel {
 	 * Erzeugt die Buttons im Hauptfenster
 	 */
 	private void makeMainButtons(){
+
 		JPanel buttonPanel;
 
-		Dimension buttDim = new Dimension(100, 50);
+		Dimension buttDim = new Dimension(100, 30);
+		Dimension panelDim = new Dimension(500, 30);
 		
 		buttonPanel = new JPanel();
-		buttonPanel.setPreferredSize(new Dimension(500,50));
+		buttonPanel.setPreferredSize(panelDim);
 		BoxLayout panelLayout = new BoxLayout(buttonPanel,
 				javax.swing.BoxLayout.X_AXIS);
-		this.add(buttonPanel);
 		buttonPanel.setLayout(panelLayout);
+		this.add(buttonPanel);
 
 		// ********* Pause-Button ********************
 		pauseButton = new JButton();
@@ -155,19 +157,21 @@ public class ControlFrame extends JPanel {
 		// TODO folgende Zeile gehoert hier eigentlich nicht her
 		list[0]="World";
 		viewBox = new JComboBox(list);
-		viewBox.setPreferredSize(new Dimension(50,20));
-		viewBox.setSize(new Dimension(50,20));
+		//viewBox.setPreferredSize(new Dimension(50,1));
+		//viewBox.setSize(new Dimension(50,1));
+		//viewBox.setBounds(1,1,50,10);
 		viewBox.addActionListener(new ActionListener() {
 			public void actionPerformed(@SuppressWarnings("unused") ActionEvent evt) {
 				controller.changeView((String)viewBox.getSelectedItem());
 			}
 		});		
+		viewBox.setMaximumSize(new Dimension(300,25));
 		buttonPanel.add(viewBox);
 		
-
+		
 		
 		buttonPanel = new JPanel();
-//		buttonPanel.setPreferredSize(new Dimension(500,50));
+		buttonPanel.setPreferredSize(panelDim);
 		panelLayout = new BoxLayout(buttonPanel,
 				javax.swing.BoxLayout.X_AXIS);
 		this.add(buttonPanel);
@@ -196,7 +200,7 @@ public class ControlFrame extends JPanel {
 			}
 		});
 		
-//		 ********* addSerialButton ********************
+		// ********* addSerialButton ********************
 		addSerialBotButton = new JButton();
 		addSerialBotButton.setPreferredSize(buttDim);
 		buttonPanel.add(addSerialBotButton);
@@ -233,10 +237,6 @@ public class ControlFrame extends JPanel {
 			
 			makeMainButtons();
 			{
-
-				
-				
-				
 				{
 					// erstmal initialisieren und richtiges Layout
 					this.slowMotionPanel = new JPanel();
@@ -262,7 +262,7 @@ public class ControlFrame extends JPanel {
 					slowMotionSlider.setMinorTickSpacing(1);
 					slowMotionSlider.setPaintTicks(true);
 					slowMotionSlider.setPaintLabels(true);
-
+				
 					// schliesslich zum Panel dazufuegen
 					slowMotionBoxPanel.add(new javax.swing.JLabel(
 							"Slow Motion (Faktor x):"));
