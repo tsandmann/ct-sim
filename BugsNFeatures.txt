@@ -48,6 +48,12 @@ scheint vor allem bei Bots aufzutreten, die sofort ab dem Moment ihrer Erzeugung
 stehen, tritt das Problem nicht auf.  
 
 
+TODO Wettkampf:
+* LabyrinthContestJudge braucht ein Panel, in dem man die wichtigsten Dinge des Gameplans sieht
+* LabyrinthContestJudge muss Wettkaepmpfe abbrechen, die zu lange laufen und den SIeger anders ermitteln (Distan zum Zielfeld)
+* LabyrinthContestJudge ausgiebig testen
+* LabyrinthContestJudge muss Logs produzieren, damit auf heise online alles angezeigt werden kann
+
 Feature Requests
 ----------------
 * [06-05-2006] [open] [Benjamin Benz] []: Es waere schick zusaetzliche 3D-View-Fenster oeffnen zu koennen

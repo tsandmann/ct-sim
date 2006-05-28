@@ -59,9 +59,10 @@ public class LabyrinthJudge extends Judge{
 		if (bots== null)
 			return;
 		
+		Bot finishCrossed = null;
 		
 		if (raceStartet==false) { 
-			if (bots.size() == participants){
+			if (getActiveParticipants() == participants){
 				suspendWorld(false);	
 				takeStartTime();
 				raceStartet= true;
@@ -75,21 +76,39 @@ public class LabyrinthJudge extends Judge{
 			
 			Iterator it = bots.iterator();
 			while (it.hasNext()) {
-				Bot bot = (Bot) it.next();
-				// Puefen, ob Ziel erreicht
-				
-				if (world.finishReached(bot.getPos())){
-					Calendar cal = Calendar.getInstance();
-					cal.setTimeInMillis(getRunTime());
-					String timeString= (cal.get(Calendar.HOUR)-1)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND)+":"+cal.get(Calendar.MILLISECOND);
-	
-					getPanel().addResult("Zieleinlauf "+bot.getName()+" nach "+timeString);
-					bot.die();
+				Object obj = it.next();
+				if (obj instanceof Bot){
+					Bot bot = (Bot) obj; 
+					// Puefen, ob Ziel erreicht
+					
+					if (world.finishReached(bot.getPos())){
+						finishCrossed= bot;
+						break;
+					}
 				}
+			}
+
+			if (finishCrossed != null){
+				kissArrivingBot(finishCrossed,getRunTime());
+				finishCrossed=null;
 			}
 		}
 	}
 
+	/**
+	 * Diese Routine wird aufgerufen, wenn ein Bot ueber die Ziellinie kommt
+	 * @param bot Der Bot, der gerade ankommt
+	 * @param time Die Zeit, die der Bot gebraucht hat
+	 */
+	protected void kissArrivingBot(Bot bot, long time){
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		String timeString= (cal.get(Calendar.HOUR)-1)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND)+":"+cal.get(Calendar.MILLISECOND);
+
+		getPanel().addResult("Zieleinlauf "+bot.getName()+" nach "+timeString);
+		bot.die();
+	}
+	
 	@Override
 	protected void init(){
 		suspendWorld(true);
@@ -120,6 +139,39 @@ public class LabyrinthJudge extends Judge{
 		this.participants = participants;
 	}
 
+	/**
+	 * Liefert die Anzahl der im Rennen befindlichen Bots zurueck
+	 * @return Anzahl der im Rennen befindlichen Bots
+	 */
+	public int getActiveParticipants(){
+		int count=0;
+		List bots =getController().getWorld().getAliveObstacles();
+		
+		if (bots== null) 
+			return 0;
+		
+		Iterator it = bots.iterator();
+		while (it.hasNext()){
+			Object obst = it.next();
+			if (obst instanceof Bot)
+				count++;
+		}
+		return count;
+	}
+
+	/**
+	 * @return Gibt eine Referenz auf raceStartet zurueck
+	 */
+	public boolean isRaceStartet() {
+		return raceStartet;
+	}
+
+	/**
+	 * @param raceStartet Referenz auf raceStartet, die gesetzt werden soll
+	 */
+	public void setRaceStartet(boolean raceStartet) {
+		this.raceStartet = raceStartet;
+	}
 
 
 }
