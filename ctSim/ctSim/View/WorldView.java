@@ -171,7 +171,14 @@ public class WorldView extends JPanel {
 	 * @param dimY
 	 */
 	public void setScene(BranchGroup scene, float dimX, float dimY){
+		
+		if (universe != null){
+			universe.cleanup();
+		}	
+
 		SimpleUniverse simpleUniverse = new SimpleUniverse(getWorldCanvas());
+			
+		
 		setUniverse(simpleUniverse, dimX,dimY);
 		simpleUniverse.addBranchGraph(scene);
 	}

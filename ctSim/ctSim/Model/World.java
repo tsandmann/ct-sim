@@ -161,6 +161,20 @@ public class World extends Thread {
 		sceneLight.getScene().compile();
 	}
 
+	/**
+	 * Wechselt den Parcours in einer Welt
+	 * Achtung, die WorldViews bekommen davon erstnal nix mit!!!
+	 * @param parcoursFile
+	 * @throws Exception
+	 */
+	public void changeParcours(String parcoursFile) throws Exception {
+		// TODO Alle Bots toeten
+		
+		sceneLight = new SceneLight();
+		sceneLight.setScene(createSceneGraph(parcoursFile));
+		sceneLightBackup = sceneLight.clone();
+		sceneLight.getScene().compile();
+	}
 	
 	/**
 	 * Prueft, ob ein Punkt auf dem Zielfeld liegt
@@ -388,7 +402,7 @@ public class World extends Thread {
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return true;
 		
-		System.out.println(botName + " hatte einen Unfall!");
+		//System.out.println(botName + " hatte einen Unfall!");
 		return false;
 	}
 
