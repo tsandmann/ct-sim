@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE collection SYSTEM "parcours.dtd">
+<!DOCTYPE world SYSTEM "parcours.dtd">
 
 <world>
 	<description>
@@ -26,8 +26,8 @@
 		<line>#....0#.....#</line>
 		<line>#==1.===.2==#</line>
 	    <line>LL====L====LL</line>
-	
 	</parcours>
+		
 		<optics>
 			<appearance type="X">
 				<description>quadratische Wand</description>
@@ -118,6 +118,7 @@
 			</appearance>
 			
 		</optics>
+
 
 	
 
