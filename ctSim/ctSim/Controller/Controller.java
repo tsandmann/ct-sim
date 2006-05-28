@@ -99,6 +99,12 @@ public class Controller {
 	/** Der Schiedsrichter, falls vorhanden */
 	private Judge judge= null; 
 	
+	/** Puffer fuer den naechsten BotNamen. 
+	 * Wird von invokeBot(Name, file) gesetzt und dann von
+	 * getNewBotName() zugewiesen
+	 */
+	private String nextBotName= null; 
+	
 	/**
 	 * Liest die Konfiguration des Sims ein
 	 * @throws Exception
@@ -180,6 +186,13 @@ public class Controller {
 	 * @return Name des neuen Bots
 	 */
 	public String getNewBotName(String type){
+		String name;
+		if (nextBotName != null){
+			name=nextBotName;
+			nextBotName=null;
+			return name;
+		}
+		
 		// TODO Namensvergabe sollte die Namen von gestorbenen Bots neu verteilen
 
 		// Schaue nach, wieviele Bots von der Sorte wir schon haben
@@ -188,7 +201,7 @@ public class Controller {
 			bots = new Integer(0);
 		}
 
-		String name=type +"_"+ bots.intValue();
+		name=type +"_"+ bots.intValue();
 
 		bots = new Integer(bots.intValue()+1);	// erhoehen
 		numberBots.put(type, bots);				// sichern
@@ -332,6 +345,27 @@ public class Controller {
 //		}
 	}
 
+	/**
+	 * Wechselt einen Parcours
+	 * @param parcoursFile
+	 * @throws Exception
+	 */
+	public void changeParcours(String parcoursFile) throws Exception{
+		ErrorHandler.error("changeParcours ist noch nicht vollstaendig getestet");
+		try {
+			world.changeParcours(parcoursFile);
+		} catch (Exception e) {
+			ErrorHandler.error("Fehler beim wechseln des Parcours"+e);
+			throw e;
+		}
+		
+		worldView.setScene(world.getSceneLight().getScene(),world.getPlaygroundDimX(),world.getPlaygroundDimY());
+		worldView.initGUI();
+		// TODO folgende Zeile gehoert hier eigentlich nicht her, sondern viel eher in world. das zieht aber einiges an aenderungen nach sich
+		world.getSceneLight().addReference("World_"+Bot.VP,worldView.getUniverse().getViewingPlatform().getViewPlatform());  
+
+	}
+	
 	/**
 	 * Startet den c't-Sim
 	 * 
@@ -571,6 +605,16 @@ public class Controller {
 			ErrorHandler.error("Kann Bot: "+filename+" nicht ausfuehren: "+ex);
 		}
 	}
+
+	/**
+	 * Startet einen externen Bot
+	 * @param botName Name, den der neue Bot bekommen soll
+	 * @param filename Pfad zum Binary des Bots
+	 */
+	public void invokeBot(String botName, String filename){
+		nextBotName=new String(botName);
+		invokeBot(filename);
+	}	
 	
 	/**
 	 * Entfernt eine View aus der Liste
