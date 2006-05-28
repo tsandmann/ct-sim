@@ -1,5 +1,11 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-05-27 Benjamin Benz (bbe@heise.de) Judge fuer den Labyrinthcontest weitgehend fertiggestellt (inkl. Anbindung an mysql)
+
+2006-05-27 Benjamin Benz (bbe@heise.de) Man kann nun auch den Namen der Bots im Vorfeld festlegen
+
+2006-05-27 Benjamin Benz (bbe@heise.de) Der Controller kann nun Parcours wechseln
+
 2006-05-12 Benjamin Benz (bbe@heise.de) Kommentare aktualisiert
 
 2006-05-12 Benjamin Benz (bbe@heise.de) RXTX-Bibliothek umgestellt als jar-Datei ==> weniger Warnings
