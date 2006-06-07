@@ -51,33 +51,73 @@ stehen, tritt das Problem nicht auf.
 TODO Wettkampf:
 * LabyrinthContestJudge braucht ein Panel, in dem man die wichtigsten Dinge des Gameplans sieht
 * LabyrinthContestJudge muss Wettkaepmpfe abbrechen, die zu lange laufen und den SIeger anders ermitteln (Distan zum Zielfeld)
-* LabyrinthContestJudge ausgiebig testen
+* LabyrinthContestJudge ausgiebig testen!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 * LabyrinthContestJudge muss Logs produzieren, damit auf heise online alles angezeigt werden kann
+* Erzeugzung von Screenshots
+* Positionen Loggen
+* Recovery nach Crashes
+* Klären, was geschieht, wenn Binaries defekt sind und bots nicht starten
 
 Feature Requests
 ----------------
-* [06-05-2006] [open] [Benjamin Benz] []: Es waere schick zusaetzliche 3D-View-Fenster oeffnen zu koennen
-* [06-05-2006] [open] [Benjamin Benz] []: Man koennte auch jedem Bot noch eine zweite Kamera aus Vogelperspektive zuordnen, die immer ueber ihm schwebt
-* [06-05-2006] [open] [Benjamin Benz] []: Der ParcoursLoader koennte auch Kameras platzieren
-* [29-04-2006] [open] [Benjamin Benz] []: Eine eigene von JPanel abgeleitete Klasse für die Fernbedienung erstellen und die Default FB nachbauen.
-* [17-04-2006] [open] [Benjamin Benz] []: Namensvergabe (Controller.getNewBotName) der Bots sollte die Namen verstorbener Bots neu Vergeben
-* [17-04-2006] [open] [Benjamin Benz] []: ClientViews bekommen noch keine Infos über Farbänderungen
-* [17-04-2006] [open] [Benjamin Benz] []: Netzwerkprotokoll zwischen Sim und ClientView optimieren
-* [17-04-2006] [open] [Benjamin Benz] []: Erzeugung der Diff-Daten für ClientView optimieren
-* [17-04-2006] [open] [Benjamin Benz] []: Die ganzen Panel sind in keiner sinnvollen Vererbungshierarchie und Bennenungsschema
-* [16-04-2006] [open] [Benjamin Benz] []: Die CtControlPanel sind mies gecoded, bitte aufraeumen
-* [16-04-2006] [open] [Benjamin Benz] []: Parcoursloader sollte unbedingt effizienter arbeiten und z.B. Bodenkacheln zusammenfassen
-* [15-04-2006] [open] [Benjamin Benz] []: Werden C-Bots gestartet, koennte man deren Ausgaben in LogFrames sammeln 
 
-
-* [06-03-16][open][pek@heise.de][]:
-Aller Sensoren im Sim sollten realistische Messwerte zurueckgeben und realistische Kennlinen aufweisen
-
+GUI:
 * [06-03-13][open][pek@heise.de][oeffentlich ausgeschrieben]:
 Das Layout der Kontrolltafel koennte eine Optimierung vertragen, insbesondere 
 waere es schoen, wenn der gesamte Simulator auch bei einer Bildschirmaufloesung 
 von 1024x768 Pixeln angezeigt werden kann. 
+* [16-04-2006] [open] [Benjamin Benz] []: Die CtControlPanel sind mies gecoded, bitte aufraeumen
+* [15-04-2006] [open] [Benjamin Benz] []: Werden C-Bots gestartet, koennte man deren Ausgaben in LogFrames sammeln 
+* [29-04-2006] [open] [Benjamin Benz] []: Eine eigene von JPanel abgeleitete Klasse für die Fernbedienung erstellen und die Default FB nachbauen.
+* [06-05-2006] [open] [Benjamin Benz] []: Es waere schick zusaetzliche 3D-View-Fenster oeffnen zu koennen
+* [17-04-2006] [open] [Benjamin Benz] []: Die ganzen Panel sind in keiner sinnvollen Vererbungshierarchie und Bennenungsschema
+* Parcoursgenerator einbinden
+* Bots verschiebbar per Maus
+* Obstacles verschiebbar per Maus
+* Parcours wählbar machen
 
+Parcours-Loader:
+* [06-05-2006] [open] [Benjamin Benz] []: Der ParcoursLoader koennte auch Kameras platzieren
+* [16-04-2006] [open] [Benjamin Benz] []: Parcoursloader sollte unbedingt effizienter arbeiten und z.B. Bodenkacheln zusammenfassen
+* runde/schräge Wände
+* neue Hindernisse: Kugeln, Kegel
+* VRML-Import
+
+Sensoren/Bot:
+* [06-05-2006] [open] [Benjamin Benz] []: Man koennte auch jedem Bot noch eine zweite Kamera aus Vogelperspektive zuordnen, die immer ueber ihm schwebt
+* [06-03-16][open][pek@heise.de][]: Aller Sensoren im Sim sollten realistische Messwerte zurueckgeben und realistische Kennlinen aufweisen
+* Aufbau der Bots generalisieren (XML-Datei mit Geometrie und Sensorpositionen)
+* Movable Obstacles einführen
+* Bounds des Bot präzisieren
+* Design des Bot präzisieren
+* Fachsensor
+* IR-Sensor mit realer Kennlinie versehen
+
+Physics:
+* Multi Ebenen Welten
+* Steigungen
+* Reibung
+
+Connection/Command
+* Protokoll Bot-Sim generalisieren
+
+Controller:
+* [17-04-2006] [open] [Benjamin Benz] []: Namensvergabe (Controller.getNewBotName) der Bots sollte die Namen verstorbener Bots neu Vergeben
+
+ClientViews:
+* [17-04-2006] [open] [Benjamin Benz] []: ClientViews bekommen noch keine Infos über Farbänderungen
+* [17-04-2006] [open] [Benjamin Benz] []: Netzwerkprotokoll zwischen Sim und ClientView optimieren
+* [17-04-2006] [open] [Benjamin Benz] []: Erzeugung der Diff-Daten für ClientView optimieren
+
+Dokumentation:
+* API dokumentieren
+
+Tuning:
+* Engpässe suchen
+* Einzelnbe Sensoren zuschaltbar machen
+
+Sonstiges:
+* View und Server komplett trennen
 
 Erledigt:
 ---------
