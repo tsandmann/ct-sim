@@ -34,7 +34,7 @@ public class SimUtils {
 
 	/**
 	 * Errechnet aus einem javax.vecmath.Vector3f eine ganzzahlig gerundete
-	 * Gradangabe und gibt sie als String zur�ck. Diese Methode wird zur Anzeige
+	 * Gradangabe und gibt sie als String zurueck. Diese Methode wird zur Anzeige
 	 * der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
 	 * @param vec
