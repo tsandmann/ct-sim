@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Iterator;
 
+import javax.vecmath.Vector3f;
+
 import ctSim.ErrorHandler;
 import ctSim.Model.Bots.Bot;
 
@@ -29,6 +31,9 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 	int runningGame;
 	String runningParcours;
 	
+	Bot bot1 = null;
+	Bot bot2 = null;
+	
 	/**
 	 * Konstruktor
 	 *
@@ -51,7 +56,6 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 							long ms= sceduled.getTime()-now.getTimeInMillis();
 							if (ms >0){
 								try {
-									
 									System.out.println(now.getTime()+": Warte "+ms/1000+" s auf naechsten Wettkampf ("+sceduled+")");
 									sleep(ms);
 								} catch (InterruptedException e) {
@@ -75,6 +79,7 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 					
 				case STATE_GAME_RUNNING:
 						check();
+						log();
 					break;
 
 				case STATE_DONE:		
@@ -89,6 +94,34 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 		}
 
 		
+	}
+
+	/**
+	 * Macht einen Log-Eintrag in die Datenbank
+	 */
+	private void log() {
+		try {
+			Vector3f pos1 = bot1.getPos();
+			Vector3f head1 = bot1.getHeading();
+			Vector3f pos2 = bot2.getPos();
+			Vector3f head2 = bot1.getHeading();
+			
+			Statement statement;
+			statement = databaseConnection.createStatement();
+			statement.executeUpdate(
+					"INSERT INTO log" +
+					"(logtime, game, pos1x, pos1y, head1, pos2x, pos2y, head2)" +
+					"VALUES ( "+
+					    getRunTime()+ ", " + runningGame + ", " +
+					    pos1.x + ", " + pos1.y +", " + head1.x + ", " + head1.y + ", " +
+					    pos2.x + ", " + pos2.y +", " + head2.x + ", " + head2.y + ", " +
+					" )" 
+					);
+			
+		} catch (SQLException e) {
+			ErrorHandler.error("Probleme beim loggen "+e);
+			e.printStackTrace();
+		} 		
 	}
 
 	@Override
@@ -136,6 +169,8 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 			System.out.println("Warte bis alle Bots gestorben sind!");
 		}
 		
+		bot1=null;
+		bot2=null;
 		// Rennen laueft nicht mehr
 		setRaceStartet(false);
 	}
@@ -148,8 +183,8 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 	private void startGame(ResultSet game) throws Exception {
 		setRaceStartet(false);
 		
-		String bot1 = game.getString("bot1");
-		String bot2 = game.getString("bot2");
+		String bot1Name = game.getString("bot1");
+		String bot2Name = game.getString("bot2");
 		
 		runningGame = game.getInt("game");
 		runningLevel= game.getInt("level");
@@ -163,7 +198,7 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 		level.next();
 		String newParcours = level.getString("parcours");
 
-		System.out.println("Starte Level="+ runningLevel +" Game="+runningGame+" Bot1="+bot1+" Bot2="+bot2+ " Parcours="+newParcours);
+		System.out.println("Starte Level="+ runningLevel +" Game="+runningGame+" Bot1="+bot1Name+" Bot2="+bot2Name+ " Parcours="+newParcours);
 		
 		if (!newParcours.equals(runningParcours)){
 			System.out.println("Muss den Parcours wechseln!");
@@ -184,31 +219,33 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 		ResultSet bots= statement.executeQuery(
 				"SELECT * " +
 				"FROM bot " +
-				"WHERE bot = '"+bot1+"'");
+				"WHERE bot = '"+bot1Name+"'");
 		bots.next();
 		String bin=bots.getString("bin");
-		getController().invokeBot(bot1,bin);
+		getController().invokeBot(bot1Name,bin);
 
 		
 		while (getActiveParticipants() != 1){
 			sleep(100);
-			System.out.println("Warte auf Bot: "+bot1+" ("+bin+")");
+			System.out.println("Warte auf Bot: "+bot1Name+" ("+bin+")");
 		}
-
+		bot1= (Bot) getController().getWorld().getAliveObstacle(bot1Name);
+		
 		
 		bots= statement.executeQuery(
 				"SELECT * " +
 				"FROM bot " +
-				"WHERE bot = '"+bot2+"'");
+				"WHERE bot = '"+bot2Name+"'");
 		bots.next();
-		getController().invokeBot(bot2,bots.getString("bin"));
+		getController().invokeBot(bot2Name,bots.getString("bin"));
 
 		// Eigentlich koennte man hier auf den 2. Bot warten, aber das ist egal, da check() das macht
-/*		while (getActiveParticipants() != 1){
+		while (getActiveParticipants() != 1){
 			sleep(100);
 			System.out.println("Warte auf Bot: "+bot2+" ("+bin+")");
 		}
-*/	}
+		bot2=(Bot) getController().getWorld().getAliveObstacle(bot2Name);
+	}
 
 	/**
 	 * Erzeugt ein paar Testdaten

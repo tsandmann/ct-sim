@@ -145,7 +145,7 @@ public class LabyrinthJudge extends Judge{
 	 */
 	public int getActiveParticipants(){
 		int count=0;
-		List bots =getController().getWorld().getAliveObstacles();
+		List bots = getController().getWorld().getAliveObstacles();
 		
 		if (bots== null) 
 			return 0;

@@ -833,6 +833,25 @@ public class World extends Thread {
 	}
 
 	/**
+	 * Liefert das AliveObstacle mit dem gegebenen Namen zurueck
+	 * @param name Der Name
+	 * @return Das Obstacle
+	 */
+	public AliveObstacle getAliveObstacle(String name){
+		AliveObstacle aObst =null;
+		
+		Iterator it = aliveObstacles.iterator();
+		
+		while (it.hasNext()){
+			aObst = (AliveObstacle) it.next();
+			if (aObst.getName().equals(name))
+				return aObst;
+		}
+			
+		return null;
+	}
+	
+	/**
 	 * Befuellt die Liste der Bots
 	 * @param aliveObstacles 
 	 */
