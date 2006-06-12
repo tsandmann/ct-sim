@@ -42,5 +42,5 @@ CREATE TABLE log (
 	head1 float,
 	pos2x float,
 	pos2y float,
-	head1 float,
+	head2 float
 );
