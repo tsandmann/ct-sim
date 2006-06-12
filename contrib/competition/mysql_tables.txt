@@ -8,6 +8,7 @@ CREATE TABLE level (
 
 drop table game;
 CREATE TABLE game (
+	id int not null  auto_increment,
 	level int references level, 
 	game int, 
 	bot1 char(20) references bot, 
@@ -17,7 +18,7 @@ CREATE TABLE game (
 	state char(20) default 'not init', 
 	winner char(20) references bot, 
 	screenshot char(20),
-	primary key (level, game)
+	primary key (id)
 );
 
 drop table bot;
