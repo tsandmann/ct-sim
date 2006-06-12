@@ -32,3 +32,15 @@ CREATE TABLE team (
 	team char(20) PRIMARY KEY, 
 	email char(30)
 );
+
+drop table log;
+CREATE TABLE log (
+	game int references game,
+	logtime int,
+	pos1x float,
+	pos1y float,
+	head1 float,
+	pos2x float,
+	pos2y float,
+	head1 float,
+);
