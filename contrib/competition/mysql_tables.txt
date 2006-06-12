@@ -36,12 +36,16 @@ CREATE TABLE team (
 
 drop table log;
 CREATE TABLE log (
+	id int not null  auto_increment,
 	game int references game,
 	logtime int,
 	pos1x float,
 	pos1y float,
-	head1 float,
+	head1x float,
+	head1y float,
 	pos2x float,
 	pos2y float,
-	head2 float
+	head2x float,
+	head2y float, 
+	primary key (id)
 );

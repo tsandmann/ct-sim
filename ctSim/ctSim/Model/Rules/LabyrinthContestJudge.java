@@ -110,7 +110,7 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 			statement = databaseConnection.createStatement();
 			statement.executeUpdate(
 					"INSERT INTO log" +
-					"(logtime, game, pos1x, pos1y, head1, pos2x, pos2y, head2)" +
+					" ( logtime, game, pos1x, pos1y, head1x, head1y, pos2x, pos2y, head2x, head2y ) " +
 					"VALUES ( "+
 					    getRunTime()+ ", " + runningGame + ", " +
 					    pos1.x + ", " + pos1.y +", " + head1.x + ", " + head1.y + ", " +
@@ -240,7 +240,7 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 		getController().invokeBot(bot2Name,bots.getString("bin"));
 
 		// Eigentlich koennte man hier auf den 2. Bot warten, aber das ist egal, da check() das macht
-		while (getActiveParticipants() != 1){
+		while (getActiveParticipants() != 2){
 			sleep(100);
 			System.out.println("Warte auf Bot: "+bot2+" ("+bin+")");
 		}
