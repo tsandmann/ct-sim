@@ -84,13 +84,13 @@ abstract public class CtBotSim extends CtBot {
 	boolean updateSensLdr = true;
 
 	/** Ist das normale Aussehen des Bots gesetzt? */
-	boolean isApperance = true;
+//	boolean isApperance = true;
 
 	/** Ist das Aussehen nach einer Kollision des Bots gesetzt? */
-	boolean isApperanceCollision = false;
+//	boolean isApperanceCollision = false;
 
 	/** Ist das Aussehen nach einem Fall des Bots gesetzt? */
-	boolean isApperanceFall = false;
+//	boolean isApperanceFall = false;
 
 	/**
 	 * Erzeugt einen neuen Bot
@@ -242,7 +242,8 @@ abstract public class CtBotSim extends CtBot {
 		} else {
 
 			moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt
-
+			setObstState(getObstState() )
+			
 			if (isApperance) {
 				setAppearance("collision");
 				isApperance = false;

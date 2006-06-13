@@ -35,6 +35,9 @@ import ctSim.Controller.Controller;
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
 public abstract class AliveObstacle extends Thread implements MovableObstacle {
+	
+	private int obstState= OBST_STATE_NORMAL;
+	
 	/** Die Grenzen des Roboters */
 	private Bounds bounds = null;
 	
@@ -188,7 +191,7 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	}
 	
 	/**
-	 * @return Gibt die Grenzen des Bots zurueck
+	 * @return Gibt die Grenzen des Obstacles zurueck
 	 */
 	public Bounds getBounds() {
 		return (Bounds) bounds.clone();
@@ -221,6 +224,23 @@ public abstract class AliveObstacle extends Thread implements MovableObstacle {
 	 */
 	public Controller getController() {
 		return controller;
+	}
+
+	
+	/**
+	 * Liefert den Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
+	 * Zustaende sind ein Bitmaske aus den OBST_STATE_ Konstanten
+	 */
+	public int getObstState() {
+		return obstState;
+	}
+
+	/**
+	 * Setztden Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
+	 * Zustaende sind ein Bitmaske aus den OBST_STATE_ Konstanten
+	 */
+	public void setObstState(int state) {
+		this.obstState = state;
 	}
 	
 }

@@ -78,8 +78,8 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 					break;
 					
 				case STATE_GAME_RUNNING:
-						check();
-						log();
+					log();
+					check();
 					break;
 
 				case STATE_DONE:		
@@ -106,15 +106,20 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 			Vector3f pos2 = bot2.getPos();
 			Vector3f head2 = bot1.getHeading();
 			
+			int state1 =bot1.getObstState();
+			int state2 =bot2.getObstState();
+			
 			Statement statement;
 			statement = databaseConnection.createStatement();
 			statement.executeUpdate(
 					"INSERT INTO log" +
-					" ( logtime, game, pos1x, pos1y, head1x, head1y, pos2x, pos2y, head2x, head2y ) " +
+					" ( logtime, game, " +
+					"   pos1x, pos1y, head1x, head1y, state1, " +
+					"   pos2x, pos2y, head2x, head2y, state2 ) " +
 					"VALUES ( "+
 					    getRunTime()+ ", " + runningGame + ", " +
-					    pos1.x + ", " + pos1.y +", " + head1.x + ", " + head1.y + ", " +
-					    pos2.x + ", " + pos2.y +", " + head2.x + ", " + head2.y + ", " +
+					    pos1.x + ", " + pos1.y +", " + head1.x + ", " + head1.y + ", " + state1 + ", " +
+					    pos2.x + ", " + pos2.y +", " + head2.x + ", " + head2.y + ", " + state2 + " " +
 					" )" 
 					);
 			
@@ -173,6 +178,7 @@ public class LabyrinthContestJudge extends LabyrinthJudge {
 		bot2=null;
 		// Rennen laueft nicht mehr
 		setRaceStartet(false);
+		state=STATE_WAIT_FOR_GAME;
 	}
 
 	/**

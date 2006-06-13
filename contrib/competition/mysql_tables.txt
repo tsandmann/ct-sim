@@ -43,9 +43,11 @@ CREATE TABLE log (
 	pos1y float,
 	head1x float,
 	head1y float,
+	state1 int,
 	pos2x float,
 	pos2y float,
 	head2x float,
 	head2y float, 
+	state2 int,
 	primary key (id)
 );
