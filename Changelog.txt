@@ -1,5 +1,9 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-06-13 Benjamin Benz (bbe@heise.de) LabyrinthcontestJudge kann nun loggen
+
+2006-06-13 Benjamin Benz (bbe@heise.de) Alle Obstacle haben nun einen State
+
 2006-05-27 Benjamin Benz (bbe@heise.de) Judge fuer den Labyrinthcontest weitgehend fertiggestellt (inkl. Anbindung an mysql)
 
 2006-05-27 Benjamin Benz (bbe@heise.de) Man kann nun auch den Namen der Bots im Vorfeld festlegen
