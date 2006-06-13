@@ -163,7 +163,7 @@ abstract public class CtBotSim extends CtBot {
 		/*
 		 * // Zurueckgelegte Strecke linkes Rad als Vector Vector3f vecL = new
 		 * Vector3f(this.getHeading()); vecL.scale((float) (turnsL *
-		 * WHEEL_PERIMETER), vecL);
+		 * WHEEL_PERIMETER), vecL);1
 		 *  // Zurueckgelegte Strecke rechtes Rad als Vector Vector3f vecR = new
 		 * Vector3f(this.getHeading()); vecR.scale((float) (turnsR *
 		 * WHEEL_PERIMETER), vecR);
@@ -300,9 +300,9 @@ abstract public class CtBotSim extends CtBot {
 		// Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat,
 		// wird der Bot gestoppt und gruen gefaerbt.
 		if (isFalling) 
-			setObstState(oldState | OBST_STATE_FALLING);
+			setObstState(getObstState() | OBST_STATE_FALLING);
 		else 
-			setObstState(oldState & ~OBST_STATE_FALLING);
+			setObstState(getObstState() & ~OBST_STATE_FALLING);
 		
 		// Update Appearance
 		int newState=getObstState();
