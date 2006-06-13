@@ -229,28 +229,23 @@ abstract public class CtBotSim extends CtBot {
 		// ... und die alte Position entsprechend veraendern.
 		newPos.add(moveDirection);
 
+		
+		int oldState =getObstState(); 
 		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 		// der Bot blau gefaerbt.
 		if (getWorld().checkCollision((Shape3D)getNodeReference(BOTBODY), getBounds(), newPos, getName())) {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
-			if (isApperanceCollision) {
-				setAppearance("normal");
-				isApperance = true;
-				isApperanceCollision = false;
-			}
+			// Zustand setzen
+			setObstState( oldState & ~OBST_STATE_COLLISION);
 		} else {
-
 			moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt
-			setObstState(getObstState() )
 			
-			if (isApperance) {
-				setAppearance("collision");
-				isApperance = false;
-				isApperanceCollision = true;
-			}
+			// Zustand setzen
+			setObstState( oldState| OBST_STATE_COLLISION);
 		}
 		
+
 		// Blickrichtung immer aktualisieren:
 		this.setHeading(newHeading);
 
@@ -281,6 +276,7 @@ abstract public class CtBotSim extends CtBot {
 		// Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
 		rotation.transform(skidVec);
 		skidVec.add(new Point3d(newPos));
+		
 		boolean isFalling = false;
 		if (!getWorld().checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE,
 				"Der Gleitpin von " + this.getName())) {
@@ -303,20 +299,21 @@ abstract public class CtBotSim extends CtBot {
 
 		// Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat,
 		// wird der Bot gestoppt und gruen gefaerbt.
-		if (isFalling) {
-			((CtControlPanel) this.getPanel()).stopBot();
-			if (isApperance) {
-				setAppearance("falling");//world.getBotAppearFall());
-				isApperance = false;
-				isApperanceFall = true;
-			}
-		} else {
-			if (isApperanceFall) {
-				setAppearance("normal");//world.getBotAppear());
-				isApperance = true;
-				isApperanceCollision = false;
-			}
-		}
+		if (isFalling) 
+			setObstState(oldState | OBST_STATE_FALLING);
+		else 
+			setObstState(oldState & ~OBST_STATE_FALLING);
+		
+		// Update Appearance
+		int newState=getObstState();
+		if (newState == oldState){
+		} else if (newState == OBST_STATE_NORMAL)
+			setAppearance("normal");
+		else if ((newState & OBST_STATE_FALLING) != 0)
+			setAppearance("falling");
+		else if ((newState & OBST_STATE_COLLISION) != 0)
+			setAppearance("collision");
+		
 		
 		// IR-Abstandssensoren aktualisieren
 		if (updateSensIr) {
