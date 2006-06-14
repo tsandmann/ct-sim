@@ -6,7 +6,7 @@
 			<!ATTLIST appearance type CDATA #REQUIRED>
 			<!ELEMENT texture (#PCDATA)>
 			<!ELEMENT color (#PCDATA)>
-				<!ATTLIST color type (ambient| diffuse | specular| emmissive) "ambient">
+				<!ATTLIST color type (ambient | diffuse | specular | emmissive) "ambient">
 			<!ELEMENT clone (#PCDATA)>
 	<!ELEMENT parcours (line+)>
 		<!ELEMENT line (#PCDATA)>

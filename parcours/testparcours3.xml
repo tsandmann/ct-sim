@@ -5,7 +5,7 @@
 	<description>
 		Dieses ist ein Testparcours fuer ein Labyrinth fuer zwei Bots
 	</description>
-		
+
 	<parcours>
 		<line>*======Z==================*</line>
 		<line>#                      00 #</line>
