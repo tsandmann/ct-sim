@@ -15,6 +15,9 @@
 
 	<parameter name="botbinary" value="..\ct-Bot\Debug-W32\ct-bot.exe"/>
 	<parameter name="botbinary" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
+
+<!-- LabyrinthJudge wickelt einen Zweikampf ab, LabyrinthContestJudge ein komplettes Roboterturnier mit vielen Teilnehmern -->
+
 	<parameter name="judge" value="ctSim.Model.Rules.LabyrinthContestJudge"/>
 	
 	<bots>         
