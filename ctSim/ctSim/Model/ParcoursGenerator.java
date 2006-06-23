@@ -37,6 +37,10 @@ public class ParcoursGenerator {
 	public static final char WHITE = '.';
 
 	public static final char WALL = 'X';
+	
+	public static final char WALLH = '='; // horizontale Wand
+
+	public static final char WALLV = '#'; // vertikale Wand
 
 	public static final char HOLE = '0';
 
@@ -77,7 +81,10 @@ public class ParcoursGenerator {
 	private int twirling;
 
 	// Hindernisdichte an der Wand; klein = rauh
-	private int roughness;
+	private int wallRoughness;
+	
+	// Verhaeltnis der Hindernismenge an der Wand zu solchen in der Mitte
+	private int innerRoughness; // TODO: einbauen!
 	
 	// Lochanteil; jedes n-te Wandstück wird durch Loch ersetzt
 	private int perforation;
@@ -117,7 +124,7 @@ public class ParcoursGenerator {
 	public void generateParc(int wi, int he, int ro, int tw, int pe) {
 		width = wi;
 		height = he;
-		roughness = ro;
+		wallRoughness = ro;
 		twirling = tw;
 		perforation = pe;
 		
@@ -164,13 +171,13 @@ public class ParcoursGenerator {
 
 		// Nord- und Suedwand:
 		for (int c = 1; c < width; c++) {
-			halfmap[0][c] = WALL;
-			halfmap[height - 1][c] = WALL;
+			halfmap[0][c] = WALLH;
+			halfmap[height - 1][c] = WALLH;
 		}
 
 		// Westwand:
 		for (int r = 1; r < height - 1; r++) {
-			halfmap[r][0] = WALL;
+			halfmap[r][0] = WALLV;
 		}
 
 		// Die Lampen in die Ecken:
@@ -184,20 +191,30 @@ public class ParcoursGenerator {
 
 	/**
 	 * Fuegt Hindernisse an die Waende an, so dass der Weg an der Wand entlang
-	 * auf jeden Fall laenger ist als der kuerzeste Weg.
+	 * auf jeden Fall laenger ist als der kuerzeste Weg. Die Methode sorgt auch fuer 
+	 * Hindernisse, die ueber die Mittellinie hinausgehen.
 	 */
 	private void roughenWalls() {
 		// Die Anzahl der Hindernisse an der Wand berechnet sich durch 
-		// Lange / roughness
+		// Laenge / roughness
 
-		// Zuerst Westwand moeblieren:
-		int obstNum = height/roughness;
+		// Zuerst Ostwand moeblieren
+		// (=Hindernisse in der Mitte)
+
+		int obstNum = height/wallRoughness;
+		// TODO: Von weiterem Parameter abhaengig machen!!
+		for (int i = 0; i < obstNum; i++) {
+			addWallObstacle('E');
+		}
+		
+		// Dann Westwand moeblieren:
+		obstNum = height/wallRoughness;
 		for (int i = 0; i < obstNum; i++) {
 			addWallObstacle('W');
 		}
 		
 		// Dann Nord- und Suedwand moeblieren:
-		obstNum = width/roughness;
+		obstNum = width/wallRoughness;
 		for (int i = 0; i < obstNum; i++) {
 			addWallObstacle('N');			
 			addWallObstacle('S');
@@ -209,7 +226,7 @@ public class ParcoursGenerator {
 	 * Fuegt ein neues Hindernis direkt an der Wand hinzu
 	 * 
 	 * @param wall
-	 *            Die Wand, die ein Hindernis erhalten soll (N, S, W)
+	 *            Die Wand, die ein Hindernis erhalten soll (N, S, W, E)
 	 */
 	private void addWallObstacle(char wall) {
 
@@ -239,6 +256,15 @@ public class ParcoursGenerator {
 			col = 0;
 			generateTwirl(row, col, 1, twirling);
 			break;
+		case 'E':
+			// Reihe ist Zufall, haelt aber Sicherheitsabstand von der Ecke:
+			row = rand.nextInt(height - 6) + 3;
+			// letzte Spalte  
+			col = width-1;
+			halfmap[row][col] = WALL;
+			generateTwirl(row, col, 3, twirling);
+			break;
+
 		default:
 			return;
 		}
@@ -391,13 +417,14 @@ public class ParcoursGenerator {
 			default:
 				result = false;
 			}
-		} catch (RuntimeException e) {
-			System.out.println("Wahrscheinlich ArrayOutOfBounds");
-			// e.printStackTrace();
-			
-			// TODO: Wirft zu oft mit Exceptions und verhindert Hindernisse ueber die Mittelachse! 
-			
+		} catch (ArrayIndexOutOfBoundsException e) {
+
+			// Pruefung freier Felder hat Grenzen des Parcours ueberschritten,
+			// daher ist nicht genuegend Platz!
 			result = false;
+						
+			// TODO: Verhindert Hindernisse ueber die Mittelachse?
+			
 		}
 		return result;
 	}
@@ -438,7 +465,7 @@ public class ParcoursGenerator {
 
 	private void generateFreeObstacles(){
 		// Anzahl haengt von Dimension des Parcours und roughness ab:
-		int obstNum = 2*Math.max(width, height)/roughness;
+		int obstNum = 2*Math.max(width, height)/wallRoughness;
 		int row, col;
 		for(int i=0; i<obstNum; i++){
 			row = rand.nextInt(height);
@@ -489,7 +516,7 @@ public class ParcoursGenerator {
 	 * @param parc Der Parcours
 	 * 		           
 	 */
-	public void printParc(String step, char[][]parc) {
+	private void printParc(String step, char[][]parc) {
 		System.out.println("\n" + step + "\n");
 		System.out.println(parc2String(parc));
 	}
