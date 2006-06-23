@@ -24,6 +24,18 @@ wenn ploetzlich alle den gleichen Bug fixen wollen ;-)
 Bugs
 ----
 
+* [06-06-22][Torsten Evers][open][]:
+Um gescheite Ergebnisse fuer den Maussensor zu erhalten, muﬂ man in bot-lokal.h 
+folgendes anpassen:
+
+#define MOUSE_CPI			395		/*!< CPI-Wert aus Kalibrierung */
+#define MOUSE_FULL_TURN		1379	/*!< Mausaenderung in X-Richtung fuer einen 
+vollen Kreis */
+
+...damit die Messungen ok sind. Rechnerisch sollte der Sim mit 
+400 CPI und 1484 mouse counts f¸r eine 360∞-Drehung richtige Ergebnisse liefern,
+tut das aber nicht.
+
 * [06-05-03][Benjamin Benz][open][]:
 Parcours zeigt nur die ersten acht Lichtquellen als leuchtend an.
 
