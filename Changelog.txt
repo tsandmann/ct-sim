@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-06-23 Peter Koenig (pek@heise.de) ParcoursGenerator verwendet jetzt auch die richtigen Zeichen und baut senkrechte und waagerechte Waende
+
 2006-06-22 Peter Koenig (pek@heise.de) Erste Version des Parcours-Generators eingebaut, schreibt noch kein XML
 
 2006-06-14 Benjamin Benz (bbe@heise.de) DTD und xml-files angepasst

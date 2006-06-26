@@ -29,8 +29,6 @@ import java.util.Random;
  */
 
 public class ParcoursGenerator {
-
-	// TODO: performantere Waende einsetzen!!!
 	
 	public static final char FLOOR = ' ';
 
@@ -42,11 +40,11 @@ public class ParcoursGenerator {
 
 	public static final char WALLV = '#'; // vertikale Wand
 
-	public static final char HOLE = '0';
+	public static final char HOLE = 'L';
 
 	public static final char LAMP = '*';
 
-	public static final char GOAL = 'G';
+	public static final char GOAL = 'Z';
 
 	public static final char START1 = '1';
 
@@ -199,13 +197,13 @@ public class ParcoursGenerator {
 		// Laenge / roughness
 
 		// Zuerst Ostwand moeblieren
-		// (=Hindernisse in der Mitte)
+		// (= Hindernisse in die Mitte einfuegen)
 
 		int obstNum = height/wallRoughness;
-		// TODO: Von weiterem Parameter abhaengig machen!!
-		for (int i = 0; i < obstNum; i++) {
+		// TODO: Menge von Parametern abhaenging machen!!
+		// for (int i = 0; i < obstNum; i++) {
 			addWallObstacle('E');
-		}
+		// }
 		
 		// Dann Westwand moeblieren:
 		obstNum = height/wallRoughness;
@@ -261,7 +259,7 @@ public class ParcoursGenerator {
 			row = rand.nextInt(height - 6) + 3;
 			// letzte Spalte  
 			col = width-1;
-			halfmap[row][col] = WALL;
+			halfmap[row][col] = WALLH;
 			generateTwirl(row, col, 3, twirling);
 			break;
 
@@ -318,7 +316,11 @@ public class ParcoursGenerator {
 			// erreicht ist:
 			while (testNextFields(row, col, dir, 3) && desL > 0) {
 				newC = getNextCoordinate(row, col, dir);
-				halfmap[newC[0]][newC[1]] = WALL;
+				if (dir%2==0) {
+					halfmap[newC[0]][newC[1]] = WALLV;
+				} else {
+					halfmap[newC[0]][newC[1]] = WALLH;
+				}
 				row = newC[0];
 				col = newC[1];
 				desL--;
@@ -339,18 +341,7 @@ public class ParcoursGenerator {
 			else return;				
 		}			
 	}
-	/**
-	 * "Verschnoerkelt" ein Hindernis in zufaellige Richtung.
-	 * 
-	 * @param row
-	 *            Zeile der Startkoordinate
-	 * @param col
-	 *            Spalte der Startkoordinate
-	 *            
-	 * @param twirlsLeft Wie viele weitere Segmente noch folgen duerfen
-	 */
 	
-	// TODO: Maximale Rekursionstiefe festlegen?
 	
 
 	/**
@@ -501,7 +492,7 @@ public class ParcoursGenerator {
 	private void perforate(){
 		for (int r = 1; r < height-1; r++) {
 			for (int c = 1; c < width-1; c++) {
-				if ((halfmap[r][c]==WALL)&&(rand.nextInt(perforation)==0)){
+				if (((halfmap[r][c]==WALL)||(halfmap[r][c]==WALLH)||(halfmap[r][c]==WALLV))&&(rand.nextInt(perforation)==0)){
 					halfmap[r][c]=HOLE;
 				}
 			}
