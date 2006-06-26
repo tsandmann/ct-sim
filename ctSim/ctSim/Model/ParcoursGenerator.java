@@ -30,76 +30,127 @@ import java.util.Random;
 
 public class ParcoursGenerator {
 
-	public static final char FLOOR = ' ';
+	/*
+	 * Zeichen fuer normalen Boden
+	 */
+	private static final char FLOOR = ' ';
 
-	public static final char WHITE = '.';
+	/*
+	 * Zeichen fuer hellen Boden
+	 */
+	private static final char WHITE = '.';
 
-	public static final char WALL = 'X';
+	/*
+	 * Zeichen fuer einzelnes Wandstueck
+	 */
+	private static final char WALL = 'X';
 
-	public static final char WALLH = '='; // horizontale Wand
+	/*
+	 * Zeichen fuer horizontales Wandstueck	  
+	 */
+	private static final char WALLH = '=';
 
-	public static final char WALLV = '#'; // vertikale Wand
+	/*
+	 * Zeichen fuer vertikales Wandstueck
+	 */
+	private static final char WALLV = '#';
 
-	public static final char HOLE = 'L';
+	/*
+	 * Zeichen fuer Loch
+	 */
+	private static final char HOLE = 'L';
 
-	public static final char LAMP = '*';
+	/*
+	 * Zeichen fuer Lampe
+	 */
+	private static final char LAMP = '*';
 
-	public static final char GOAL = 'Z';
+	/*
+	 * Zeichen fuer Zielfeld
+	 */
+	private static final char GOAL = 'Z';
 
-	public static final char START1 = '1';
+	/*
+	 * Zeichen fuer linkes Startfeld
+	 */
+	private static final char START1 = '1';
 
-	public static final char START2 = '2';
+	/*
+	 * Zeichen fuer rechtes Startfeld
+	 */
+	private static final char START2 = '2';
 
-	public static final String xmlHead = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE world SYSTEM \"parcours.dtd\"><world><description>Dieses ist ein automatisch generierter Beispielparcours fuer den c't-Sim-Wettbewerb.</description><parcours>";
+	/*
+	 * XML-String -- Anfang der Parcours-Datei
+	 * TODO: Zeilenumbrueche
+	 */
+	private static final String xmlHead = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE world SYSTEM \"parcours.dtd\"><world><description>Dieses ist ein automatisch generierter Beispielparcours fuer den c't-Sim-Wettbewerb.</description><parcours>";
 
-	public static final String xmlTail = "</parcours><optics><appearance type=\"X\"><description>quadratische Wand</description><texture>textures/rock_wall.jpg</texture><color>#999999</color></appearance><appearance type=\"#\"><description>senkrechte Wand</description><clone>X</clone></appearance><appearance type=\"=\"><description>wagrechte Wand</description><clone>X</clone></appearance><appearance type=\".\"><description>Fussboden im Eingangsbereich</description><color type=\"ambient\">#FFFFFF</color><color type=\"diffuse\">#FFFFFF</color></appearance><appearance type=\" \"><description>Fussboden im Labyrinth</description><color type=\"ambient\">#606060</color><color type=\"diffuse\">#606060</color></appearance><appearance type=\"1\"><description>Fussboden des Startfeldes 1</description><color type=\"ambient\">#993030</color><color type=\"diffuse\">#993030</color></appearance><appearance type=\"2\"><description>Fussboden des Startfeldes 2</description><color type=\"ambient\">#000099</color><color type=\"diffuse\">#000099</color></appearance><appearance type=\"0\"><description>Fussboden des Default-Startfeldes</description><clone>.</clone></appearance><appearance type=\"Z\"><description>Fussboden des Zielfeldes 0</description><color type=\"ambient\">#66FF00</color><color type=\"diffuse\">#66FF00</color></appearance><appearance type=\"*\"><description>Lichtkugel</description><color type=\"emmissive\">#FFFF90</color></appearance><appearance type=\"-\"><description>Linie</description><color type=\"ambient\">#000000</color><color type=\"diffuse\">#000000</color><color type=\"specular\">#000000</color><color type=\"emmissive\">#000000</color></appearance><appearance type=\"|\"><description>Linie</description><clone>-</clone></appearance><appearance type=\"/\"><description>Linie</description><clone>-</clone></appearance><appearance type=\" \\\"><description>Linie</description><clone>-</clone></appearance><appearance type=\"+\"><description>Linie</description><clone>-</clone></appearance><appearance type=\"~\"><description>Linie</description><clone>-</clone></appearance></optics></world>";
+	/*
+	 * XML-String -- Ende der Parcours-Datei
+	 * TODO: Zeilenumbrueche
+	 */
+	private static final String xmlTail = "</parcours><optics><appearance type=\"X\"><description>quadratische Wand</description><texture>textures/rock_wall.jpg</texture><color>#999999</color></appearance><appearance type=\"#\"><description>senkrechte Wand</description><clone>X</clone></appearance><appearance type=\"=\"><description>wagrechte Wand</description><clone>X</clone></appearance><appearance type=\".\"><description>Fussboden im Eingangsbereich</description><color type=\"ambient\">#FFFFFF</color><color type=\"diffuse\">#FFFFFF</color></appearance><appearance type=\" \"><description>Fussboden im Labyrinth</description><color type=\"ambient\">#606060</color><color type=\"diffuse\">#606060</color></appearance><appearance type=\"1\"><description>Fussboden des Startfeldes 1</description><color type=\"ambient\">#993030</color><color type=\"diffuse\">#993030</color></appearance><appearance type=\"2\"><description>Fussboden des Startfeldes 2</description><color type=\"ambient\">#000099</color><color type=\"diffuse\">#000099</color></appearance><appearance type=\"0\"><description>Fussboden des Default-Startfeldes</description><clone>.</clone></appearance><appearance type=\"Z\"><description>Fussboden des Zielfeldes 0</description><color type=\"ambient\">#66FF00</color><color type=\"diffuse\">#66FF00</color></appearance><appearance type=\"*\"><description>Lichtkugel</description><color type=\"emmissive\">#FFFF90</color></appearance><appearance type=\"-\"><description>Linie</description><color type=\"ambient\">#000000</color><color type=\"diffuse\">#000000</color><color type=\"specular\">#000000</color><color type=\"emmissive\">#000000</color></appearance><appearance type=\"|\"><description>Linie</description><clone>-</clone></appearance><appearance type=\"/\"><description>Linie</description><clone>-</clone></appearance><appearance type=\" \\\"><description>Linie</description><clone>-</clone></appearance><appearance type=\"+\"><description>Linie</description><clone>-</clone></appearance><appearance type=\"~\"><description>Linie</description><clone>-</clone></appearance></optics></world>";
 
-	/**
+	/*
 	 * Die Karte ist ein char-Array, erste Dimension die Zeilennummer, die
 	 * zweite die Spaltennummer:
 	 */
-
 	private char[][] map;
 
-	// Generiert wird die Karte allerdings nur zur Haelfte:
-
+	/*
+	 * Die Karte wird allerdings zurerst nur zur Haelfte generiert, 
+	 * ebenfalls als char-Array, erste Dimension die Zeilennummer, die
+	 * zweite die Spaltennummer:
+	 */
 	private char[][] halfmap;
 
-	/**
-	 * Die Groesse des Labyrinths in Feldern, wegen Symmetrie wird bei der
-	 * Breite nur die Hälfte angegeben
+	/*
+	 * Die Groesse des Labyrinths in Feldern; 
+	 * die Breite ist die Breite der halben Karte!
 	 */
-
 	private int width;
 
 	private int height;
 
+	/*
+	 * Zufallszahlengenerator 
+	 */
 	private Random rand;
 
-	// Parameter fuer die Erzeugung:
-
-	// Verschnoerkelungsfaktor; Anzahl der angestrebten
-	// Segmente pro Hindernis
+	/*
+	 * Parameter fuer die Erzeugung: 
+	 * Verschnoerkelungsfaktor; Anzahl der angestrebten
+	 * Segmente pro Hindernis */
 	private int twirling;
 
-	// Hindernisdichte an der Wand; klein = rauh
+	/* 
+	 * Hindernisdichte an der Wand; klein = rauh
+	 */
 	private int wallRoughness;
 
-	// Verhaeltnis der Hindernismenge an der Wand zu solchen in der Mitte
+	/*
+	 * Verhaeltnis der Hindernismenge an der Wand zu solchen in der Mitte
+	 */
 	private int innerRoughness; // TODO: einbauen!
 
-	// Lochanteil; jedes n-te Wandstück wird durch Loch ersetzt
+	/* 
+	 * Lochanteil; jedes n-te Wandstück wird durch Loch ersetzt
+	 */
 	private int perforation;
 
-	// Konstruktor ist sehr simpel:
+	/**
+	 * Der Konstruktor 
+	 */
 	public ParcoursGenerator() {
 		rand = new Random();
 	}
 
 	/**
-	 * Main-Methode nur fuers Debugging
+	 * Diese main-Methode dient nur dem Debugging. Sie generiert 20 Parcours
+	 * mit zufaelligen Parametern und gibt sie auf der Konsole aus.
 	 * 
-	 * @param args
+	 * @param args Keine Argumente
 	 */
 	public static void main(String[] args) {
 		for (int i = 0; i < 20; i++) {
@@ -110,34 +161,58 @@ public class ParcoursGenerator {
 
 	/**
 	 * Diese Methode generiert das eigentliche Labyrinth. Parameter werden
-	 * zufällig gesetzt.
+	 * innerhalb fester Grenzen zufaellig gesetzt:
+	 * Breite zwischen 12 und 30 Feldern
+	 * Hoehe zwischen 12 und 30 Feldern
+	 * wallRoughness = 5
+	 * innerRoughness = 5
+	 * twirling = 3
+	 * perforation = 10
+	 * 
+	 * @return Der Parcours als XML-String
 	 */
 	public String generateParc() {
-		int w, h, r, t, p;
+		// Generiere zufaellige Werte fuer die Parameter:
+		int w, h, wr, ir, t, p;		
 		w = rand.nextInt(10) + 6; // Breite zwischen 12 und 30 Felder
 		h = rand.nextInt(19) + 12; // Hoehe zwischen 12 und 30 Felder
-		r = 5; // TODO: zufällig variieren
+		wr = 5; // TODO: zufällig variieren
+		ir = 5; // TODO: zufällig variieren
 		t = 3; // TODO: zufällig variieren
 		p = 10; // TODO: zufällig variieren
-		return generateParc(w, h, r, t, p);
+		// Rufe Methode mit den Parametern auf:
+		return generateParc(w, h, ir, wr, t, p);
 	}
 
-	public String generateParc(int wi, int he, int ro, int tw, int pe) {
+	/**
+	 * Diese Methode generiert das eigentliche Labyrinth. 
+	 * 
+	 * @param wi Halbe Breite des Parcours in Feldern
+	 * @param he Hoehe des Parcours in Feldern
+	 * @param wr Hindernisdichte an der Wand; klein = rauh
+	 * @param ir Verhaeltnis der Hindernismenge an der Wand zu solchen in der Mitte
+	 * @param tw Verschnoerkelungsfaktor; Anzahl der angestrebten Segmente pro Hindernis 
+	 * @param pe Lochanteil; jedes n-te Wandstück wird durch Loch ersetzt
+	 * @return Der Parcours als XML-String
+	 */
+	public String generateParc(int wi, int he, int wr, int ir, int tw, int pe) {
 		width = wi;
 		height = he;
-		wallRoughness = ro;
+		wallRoughness = wr;
+		innerRoughness = ir;
 		twirling = tw;
 		perforation = pe;
 
-		// Zunaechst wird nur die halbe Karte gebaut.
-
-		// Erste Dimension ist die Zeilennummer und
-		// zweite die Spaltennummer, daher erst Hoehe
-		// und dann Breite:
+		/* Zunaechst wird nur die halbe Karte gebaut.
+		 *
+		* Erste Dimension ist die Zeilennummer und
+		* zweite die Spaltennummer, daher erst Hoehe
+		* und dann Breite:
+		*/
 
 		halfmap = new char[height][width];
 
-		// Mit Space fuellen:
+		// Mit Leerzeichen fuellen:
 		for (int r = 0; r < height; r++) {
 			for (int c = 0; c < width; c++) {
 				halfmap[r][c] = FLOOR;
@@ -146,24 +221,20 @@ public class ParcoursGenerator {
 
 		// Dann die Einfassung bauen:
 		buildEnclosure();
-		// printParc("Einfriedung:", halfmap);
-		// Dann Hindernisse am linken Rand anfuegen:
+		// Dann Hindernisse an den Waenden anfuegen:
 		roughenWalls();
-		// printParc("Aufrauen:", halfmap);
+		// Dann freie Hindernisse bauen:
 		generateFreeObstacles();
-		// printParc("Freie Hindernisse:" halfmap);
 		// Einzelne Hindernisse durch Loecher ersetzen:
 		perforate();
 		// Fehlende Haelfte rekonstruieren:
 		mirror();
-		// printParc("Gespiegelt:", map);
 		// Startfelder einbauen:
 		generateStart();
-		printParc("Fertig!!", map);
-
+		// Einmal ausgeben:
+		printParc("", map); // TODO: Ausgabe entfernen!!
 		// Parcours in XML packen:
 		return parc2XML(map);
-
 	}
 
 	/**
@@ -197,17 +268,19 @@ public class ParcoursGenerator {
 	 * fuer Hindernisse, die ueber die Mittellinie hinausgehen.
 	 */
 	private void roughenWalls() {
-		// Die Anzahl der Hindernisse an der Wand berechnet sich durch
-		// Laenge / roughness
-
-		// Zuerst Ostwand moeblieren
-		// (= Hindernisse in die Mitte einfuegen)
-
-		int obstNum = height / wallRoughness;
-		// TODO: Menge von Parametern abhaenging machen!!
-		// for (int i = 0; i < obstNum; i++) {
-		addWallObstacle('E');
-		// }
+		/* Die Anzahl der Hindernisse an der Wand berechnet sich durch
+		* Laenge / wallRoughness, allerdings im Osten durch
+		* Laenge / (wallRoughness/innerRoughness), weil im Inneren
+		* des Labyrinths weniger Hindernisse als am Rand vorkommen
+		* sollen. 
+		* 
+		* Zuerst Ostwand moeblieren
+		* (= Hindernisse in die Mitte einfuegen):
+		*/
+		int obstNum = height / (wallRoughness/innerRoughness); // TODO: Ist das foo?
+			for (int i = 0; i < obstNum; i++) {
+				addWallObstacle('E');
+			}
 
 		// Dann Westwand moeblieren:
 		obstNum = height / wallRoughness;
@@ -225,7 +298,9 @@ public class ParcoursGenerator {
 	}
 
 	/**
-	 * Fuegt ein neues Hindernis direkt an der Wand hinzu
+	 * Fuegt ein neues Hindernis an einen zufaelligen Ort
+	 * direkt an der betreffenden Wand hinzu, sofern dort 
+	 * Platz genug vorhanden ist.
 	 * 
 	 * @param wall
 	 *            Die Wand, die ein Hindernis erhalten soll (N, S, W, E)
@@ -273,7 +348,8 @@ public class ParcoursGenerator {
 	}
 
 	/**
-	 * "Verschnoerkelt" ein Hindernis in zufaellige Richtung.
+	 * "Verschnoerkelt" ein Hindernis in zufaellige Richtung. 
+	 * Die Methode ruft sich rekursiv selbst auf. 
 	 * 
 	 * @param row
 	 *            Zeile der Startkoordinate
@@ -281,19 +357,21 @@ public class ParcoursGenerator {
 	 *            Spalte der Startkoordinate
 	 * 
 	 * @param twirlsLeft
-	 *            Wie viele weitere Segmente noch folgen duerfen
+	 *            Wie viele weitere Segmente (rekursive Methodenaufrufe) noch folgen (duerfen)
 	 */
 
 	private void generateTwirl(int row, int col, int twirlsLeft) {
-		// Zufaellige Richtung: 0 = nach Norden 1 = nach Osten 2 = nach Sueden 3
-		// =
-		// nach Westen
+		// Zufaellige Richtung: 0 = nach Norden 1 = nach Osten 
+		// 2 = nach Sueden 3= nach Westen
 		int dir = rand.nextInt(4);
+		// Dann Methode mit diesen Parametern aufrufen:
 		generateTwirl(row, col, dir, twirlsLeft);
 	}
 
 	/**
-	 * "Verschnoerkelt" ein Hindernis in vorgegebene Richtung.
+	 * "Verschnoerkelt" ein Hindernis in zufaellige Richtung. 
+	 * Die Methode ruft sich rekursiv selbst auf. 
+	 * 
 	 * 
 	 * @param row
 	 *            Zeile der Startkoordinate
@@ -302,17 +380,17 @@ public class ParcoursGenerator {
 	 * @param dir
 	 *            Richtung (0=N, 1=O, 2=S, 3=W)
 	 * @param twirlsLeft
-	 *            Wie viele weitere Segmente noch folgen duerfen
+	 *            Wie viele weitere Segmente (rekursive Methodenaufrufe) noch folgen (duerfen)
 	 * 
 	 */
 	private void generateTwirl(int row, int col, int dir, int twirlsLeft) {
 		twirlsLeft--;
 		if (twirlsLeft < 0)
 			return;
-		// Der Schnoerkel wird segmentweise gebaut. Segmente haben eine
-		// zufaellig bestimmte Wunschlaenge, die mindestens 3 betraegt
-		// und auch von den Parcours-Dimensionen abhaengt:
-
+		/* Der Schnoerkel wird segmentweise gebaut. Segmente haben eine
+		* zufaellig bestimmte Wunschlaenge, die mindestens 3 betraegt
+		* und auch von den Parcours-Dimensionen abhaengt:
+		*/
 		int desL = rand
 				.nextInt(Math.min(halfmap[0].length, halfmap.length) / 4) + 3;
 		int[] newC = new int[2];
@@ -429,11 +507,12 @@ public class ParcoursGenerator {
 		} catch (ArrayIndexOutOfBoundsException e) {
 
 			// Pruefung freier Felder hat Grenzen des Parcours ueberschritten,
-			// daher ist nicht genuegend Platz!
+			// damit ist definitiv nicht genuegend Platz!
 			result = false;
 
-			// TODO: Verhindert Hindernisse ueber die Mittelachse?
-
+			// TODO: Das verhindert Hindernisse ueber die Mittelachse, evt. nochmal 
+			// Fallunterscheidung einfuegen und Hindernisse nach Osten bis zum Rand 
+			// fortsetzen.
 		}
 		return result;
 	}
@@ -476,7 +555,13 @@ public class ParcoursGenerator {
 		return result;
 	}
 
+	/**
+	 * Fuegt dem Parcours Hindernisse ohne Wandkontakt hinzu. 
+	 * Hindernisse bauen garantiert keine Wege zu und halten 
+	 * Abstand von allen vorhandenen Hindernissen.
+	 */
 	private void generateFreeObstacles() {
+		// TODO: von innerRoughness abhaengig machen!!
 		// Anzahl haengt von Dimension des Parcours und roughness ab:
 		int obstNum = 2 * Math.max(width, height) / wallRoughness;
 		int row, col;
@@ -485,11 +570,15 @@ public class ParcoursGenerator {
 			col = rand.nextInt(width);
 			// Ist das gefundene Feld leer und von freiem Raum umgeben?
 			if ((halfmap[row][col] == FLOOR) && testNextFields(row, col, 2)) {
+				// Dann einfach mit extra langen Schnoerkeln anfangen, 
 				generateTwirl(row, col, twirling + 3);
 			}
 		}
 	}
 
+	/**
+	 * Fuegt die Startfelder hinzu.
+	 */
 	private void generateStart() {
 		int offset = rand.nextInt(width - 3) + 2;
 		int row = height - 2;
@@ -497,8 +586,16 @@ public class ParcoursGenerator {
 		map[row][offset - 1] = WHITE;
 		map[row][2 * width - 1 - offset] = START2;
 		map[row][2 * width - offset] = WHITE;
+		// Sicherheitsabstand einhalten:
+		map[row-1][offset] = FLOOR;
+		map[row-1][offset - 1] = FLOOR;
+		map[row-1][2 * width - 1 - offset] = FLOOR;
+		map[row-1][2 * width - offset] = FLOOR;
 	}
 
+	/**
+	 * Spiegelt den halben Parcours aus halfmap in map
+	 */
 	private void mirror() {
 
 		map = new char[height][width * 2];
@@ -511,11 +608,14 @@ public class ParcoursGenerator {
 		}
 	}
 
+	/**
+	 * Ersetzt je nach Faktor perforation jedes n-te Wandfeld durch ein Loch
+	 */
 	private void perforate() {
 		for (int r = 1; r < height - 1; r++) {
 			for (int c = 1; c < width - 1; c++) {
-				if (((halfmap[r][c] == WALL) || (halfmap[r][c] == WALLH) || (halfmap[r][c] == WALLV))
-						&& (rand.nextInt(perforation) == 0)) {
+				// Es gibt so viele Sorten von Waenden... 8-)
+				if ((rand.nextInt(perforation) == 0)&&((halfmap[r][c] == WALL) || (halfmap[r][c] == WALLH) || (halfmap[r][c] == WALLV))) {
 					halfmap[r][c] = HOLE;
 				}
 			}
@@ -542,7 +642,7 @@ public class ParcoursGenerator {
 	 * @param parc
 	 *            Der Parcours
 	 * 
-	 * @return Der String
+	 * @return Der Ausgabestring
 	 */
 	private String parc2String(char[][] parc) {
 		StringBuffer result = new StringBuffer();
@@ -555,10 +655,14 @@ public class ParcoursGenerator {
 		return result.toString();
 	}
 
+	/**
+	 * Schreibt einen Parcours in einen XML-String
+	 * @param parc Der Parcours
+	 * @return Der XML-String
+	 */
 	private String parc2XML(char[][] parc) {
 		StringBuffer result = new StringBuffer();
 		result.append(xmlHead);
-		result.append("<line>");
 		for (int r = 0; r < parc.length; r++) {
 			result.append("<line>");
 			for (int c = 0; c < parc[r].length; c++) {
