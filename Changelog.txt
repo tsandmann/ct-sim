@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-06-26 Peter Koenig (pek@heise.de) ParcoursGenerator gibt jetzt einen korrekten XML-String zurueck.
+
 2006-06-26 Peter Koenig (pek@heise.de) ParcoursGenerator gibt jetzt einen XML-String zurueck.
 
 2006-06-23 Peter Koenig (pek@heise.de) ParcoursGenerator verwendet jetzt auch die richtigen Zeichen und baut senkrechte und waagerechte Waende
