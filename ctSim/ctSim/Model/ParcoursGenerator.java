@@ -91,6 +91,7 @@ public class ParcoursGenerator {
 
 	/*
 	 * XML-String -- Ende der Parcours-Datei
+	 * TODO: Boden bleibt leer, irgendwas geht mit dem Leerzeichen schief... 
 	 */
 	private static final String xmlTail = "	</parcours>\n"
 			+ "	<optics>\n"
