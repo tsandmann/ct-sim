@@ -30,57 +30,57 @@ import java.util.Random;
 
 public class ParcoursGenerator {
 
-	/*
+	/**
 	 * Zeichen fuer normalen Boden
 	 */
 	private static final char FLOOR = ' ';
 
-	/*
+	/**
 	 * Zeichen fuer hellen Boden
 	 */
 	private static final char WHITE = '.';
 
-	/*
+	/**
 	 * Zeichen fuer einzelnes Wandstueck
 	 */
 	private static final char WALL = 'X';
 
-	/*
+	/**
 	 * Zeichen fuer horizontales Wandstueck
 	 */
 	private static final char WALLH = '=';
 
-	/*
+	/**
 	 * Zeichen fuer vertikales Wandstueck
 	 */
 	private static final char WALLV = '#';
 
-	/*
+	/**
 	 * Zeichen fuer Loch
 	 */
 	private static final char HOLE = 'L';
 
-	/*
+	/**
 	 * Zeichen fuer Lampe
 	 */
 	private static final char LAMP = '*';
 
-	/*
+	/**
 	 * Zeichen fuer Zielfeld
 	 */
 	private static final char GOAL = 'Z';
 
-	/*
+	/**
 	 * Zeichen fuer linkes Startfeld
 	 */
 	private static final char START1 = '1';
 
-	/*
+	/**
 	 * Zeichen fuer rechtes Startfeld
 	 */
 	private static final char START2 = '2';
 
-	/*
+	/**
 	 * XML-String -- Anfang der Parcours-Datei
 	 */
 	private static final String xmlHead = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -150,7 +150,7 @@ public class ParcoursGenerator {
 			+ "			<clone>-</clone>\n" + "		</appearance>\n"
 			+ "		<appearance type=\"/\">\n"
 			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"
-			+ "		</appearance>\n" + "		<appearance type=\" \\\">\n"
+			+ "		</appearance>\n" + "		<appearance type=\"\\\">\n"
 			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"
 			+ "		</appearance>\n" + "		<appearance type=\"+\">\n"
 			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"
@@ -347,8 +347,8 @@ public class ParcoursGenerator {
 		 * 
 		 * Zuerst Ostwand moeblieren (= Hindernisse in die Mitte einfuegen):
 		 */
-		int obstNum = height / (wallRoughness / innerRoughness); // TODO: Ist
-																	// das foo?
+		int obstNum = height / (wallRoughness / innerRoughness); 
+		// TODO: Hier passiert irgendwo Mist!
 		for (int i = 0; i < obstNum; i++) {
 			addWallObstacle('E');
 		}
@@ -746,7 +746,7 @@ public class ParcoursGenerator {
 			for (int c = 0; c < parc[r].length; c++) {
 				result.append(parc[r][c]);
 			}
-			result.append("</line>");
+			result.append("</line>\n");
 		}
 		result.append(xmlTail);
 		return result.toString();
