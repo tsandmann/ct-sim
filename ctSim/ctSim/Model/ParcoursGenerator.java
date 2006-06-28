@@ -91,7 +91,6 @@ public class ParcoursGenerator {
 
 	/*
 	 * XML-String -- Ende der Parcours-Datei
-	 * TODO: Boden bleibt leer, irgendwas geht mit dem Leerzeichen schief... 
 	 */
 	private static final String xmlTail = "	</parcours>\n"
 			+ "	<optics>\n"
@@ -158,49 +157,57 @@ public class ParcoursGenerator {
 			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"
 			+ "		</appearance>\n" + "	</optics>\n" + "</world>\n";
 
-	/*
+	/**
 	 * Die Karte ist ein char-Array, erste Dimension die Zeilennummer, die
 	 * zweite die Spaltennummer:
 	 */
 	private char[][] map;
 
-	/*
+	/**
 	 * Die Karte wird allerdings zurerst nur zur Haelfte generiert, ebenfalls
 	 * als char-Array, erste Dimension die Zeilennummer, die zweite die
 	 * Spaltennummer:
 	 */
 	private char[][] halfmap;
 
-	/*
+	/**
 	 * Die Groesse des Labyrinths in Feldern; die Breite ist die Breite der
 	 * halben Karte!
 	 */
 	private int width;
 
+	
+	/**
+	 * Die Hoehe:
+	 */
 	private int height;
 
-	/*
+	/**
 	 * Zufallszahlengenerator
 	 */
 	private Random rand;
 
-	/*
+	/**
 	 * Parameter fuer die Erzeugung: Verschnoerkelungsfaktor; Anzahl der
 	 * angestrebten Segmente pro Hindernis
 	 */
 	private int twirling;
 
-	/*
+	/**
 	 * Hindernisdichte an der Wand; klein = rauh
+	 * Es wird Wandlange/wallRoughness oft versucht,
+	 * der Wand ein Hindernis hinzuzufuegen
 	 */
 	private int wallRoughness;
 
-	/*
-	 * Verhaeltnis der Hindernismenge an der Wand zu solchen in der Mitte
+	/**
+	 * Hindernisdichte im Inneren des Labyrinths klein = viele
+	 * Es wird Wandlange/wallRoughness oft versucht,
+	 * der Wand ein Hindernis hinzuzufuegen
 	 */
-	private int innerRoughness; // TODO: einbauen!
+	private int innerRoughness;
 
-	/*
+	/**
 	 * Lochanteil; jedes n-te Wandstück wird durch Loch ersetzt
 	 */
 	private int perforation;
@@ -222,7 +229,7 @@ public class ParcoursGenerator {
 	public static void main(String[] args) {
 		for (int i = 0; i < 20; i++) {
 			ParcoursGenerator parcGen = new ParcoursGenerator();
-			System.out.println(parcGen.generateParc());
+			parcGen.generateParc();
 		}
 	}
 
@@ -239,10 +246,10 @@ public class ParcoursGenerator {
 		int w, h, wr, ir, t, p;
 		w = rand.nextInt(10) + 6; // Breite zwischen 12 und 30 Felder
 		h = rand.nextInt(19) + 12; // Hoehe zwischen 12 und 30 Felder
-		wr = 5; // TODO: zufällig variieren
-		ir = 5; // TODO: zufällig variieren
-		t = 3; // TODO: zufällig variieren
-		p = 10; // TODO: zufällig variieren
+		wr = rand.nextInt(5) + 2; // zwischen 2 und 6; 
+		ir = rand.nextInt(6) + 5; // zwischen 5 und 10;
+		t = rand.nextInt(4) + 2; // zwischen 2 und 5;
+		p = rand.nextInt(15) + 6; // zwischen 6 und 20;
 		// Rufe Methode mit den Parametern auf:
 		return generateParc(w, h, ir, wr, t, p);
 	}
@@ -267,12 +274,13 @@ public class ParcoursGenerator {
 	 * @return Der Parcours als XML-String
 	 */
 	public String generateParc(int wi, int he, int wr, int ir, int tw, int pe) {
-		width = wi;
-		height = he;
-		wallRoughness = wr;
-		innerRoughness = ir;
-		twirling = tw;
-		perforation = pe;
+		// Alle Werte sind groesser als 0: 
+		width = Math.max(wi, 1);
+		height = Math.max(he, 1); 
+		wallRoughness = Math.max(wr, 1);
+		innerRoughness = Math.max(ir, 1);
+		twirling = Math.max(tw, 1);
+		perforation = Math.max(pe, 1);
 
 		/*
 		 * Zunaechst wird nur die halbe Karte gebaut.
@@ -302,8 +310,6 @@ public class ParcoursGenerator {
 		mirror();
 		// Startfelder einbauen:
 		generateStart();
-		// Einmal ausgeben:
-		printParc("", map); // TODO: Ausgabe entfernen!!
 		// Parcours in XML packen:
 		return parc2XML(map);
 	}
@@ -341,20 +347,11 @@ public class ParcoursGenerator {
 	private void roughenWalls() {
 		/*
 		 * Die Anzahl der Hindernisse an der Wand berechnet sich durch Laenge /
-		 * wallRoughness, allerdings im Osten durch Laenge /
-		 * (wallRoughness/innerRoughness), weil im Inneren des Labyrinths
-		 * weniger Hindernisse als am Rand vorkommen sollen.
-		 * 
-		 * Zuerst Ostwand moeblieren (= Hindernisse in die Mitte einfuegen):
+		 * xxxRoughness -- im Osten innerRoughness, sonst wallRoughness
 		 */
-		int obstNum = height / (wallRoughness / innerRoughness); 
-		// TODO: Hier passiert irgendwo Mist!
-		for (int i = 0; i < obstNum; i++) {
-			addWallObstacle('E');
-		}
-
-		// Dann Westwand moeblieren:
-		obstNum = height / wallRoughness;
+		
+		// Zuerst Westwand moeblieren:
+		int obstNum = height / wallRoughness;
 		for (int i = 0; i < obstNum; i++) {
 			addWallObstacle('W');
 		}
@@ -366,6 +363,14 @@ public class ParcoursGenerator {
 			addWallObstacle('S');
 		}
 
+		/*
+		 * Zuletzt Ostwand moeblieren (= Hindernisse einfuegen, die 
+		 * ueber die Mittelline gehen):
+		 */
+		obstNum = height / innerRoughness; 
+		for (int i = 0; i < obstNum; i++) {
+			addWallObstacle('E');
+		}		
 	}
 
 	/**
@@ -408,8 +413,11 @@ public class ParcoursGenerator {
 			row = rand.nextInt(height - 6) + 3;
 			// letzte Spalte
 			col = width - 1;
-			halfmap[row][col] = WALLH;
-			generateTwirl(row, col, 3, twirling);
+			// Freien Raum nur nach Westen prüfen:
+			if (testNextFields(row, col, 3, 3)){ 
+				halfmap[row][col] = WALLH;
+				generateTwirl(row, col, 3, twirling);
+			}
 			break;
 
 		default:
@@ -582,12 +590,6 @@ public class ParcoursGenerator {
 			// Pruefung freier Felder hat Grenzen des Parcours ueberschritten,
 			// damit ist definitiv nicht genuegend Platz!
 			result = false;
-
-			// TODO: Das verhindert Hindernisse ueber die Mittelachse, evt.
-			// nochmal
-			// Fallunterscheidung einfuegen und Hindernisse nach Osten bis zum
-			// Rand
-			// fortsetzen.
 		}
 		return result;
 	}
@@ -633,12 +635,11 @@ public class ParcoursGenerator {
 	/**
 	 * Fuegt dem Parcours Hindernisse ohne Wandkontakt hinzu. Hindernisse bauen
 	 * garantiert keine Wege zu und halten Abstand von allen vorhandenen
-	 * Hindernissen.
+	 * Hindernissen -- allerdings auch von der Mittelachse des Parcours. 
 	 */
 	private void generateFreeObstacles() {
-		// TODO: von innerRoughness abhaengig machen!!
-		// Anzahl haengt von Dimension des Parcours und roughness ab:
-		int obstNum = 2 * Math.max(width, height) / wallRoughness;
+		// Anzahl haengt von Dimension des Parcours und innerRoughness ab:
+		int obstNum = 2* Math.max(width, height) / innerRoughness;
 		int row, col;
 		for (int i = 0; i < obstNum; i++) {
 			row = rand.nextInt(height);
