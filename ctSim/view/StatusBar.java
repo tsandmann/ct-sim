@@ -1,0 +1,143 @@
+package ctSim.view;
+
+import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.NumberFormatter;
+
+public class StatusBar extends Box {
+	
+	private static final int MIN_TICK_RATE = 0;
+	private static final int INIT_TICK_RATE = 500;
+	private static final int MAX_TICK_RATE = 1000;
+	
+	private CtSimFrame parent;
+	
+//	private DateFormat timeFormatter;
+	private final long TIME_TO_SUB = 1000*60*60; // Eine Stunde abziehen für Anzeige
+	
+//	private JTextField timeField;
+	private JLabel timeLabel;
+	
+	private JFormattedTextField tickRateField;
+	private JSlider tickRateSlider;
+	
+	StatusBar(CtSimFrame par) {
+		
+		super(BoxLayout.LINE_AXIS);
+		
+		this.parent = par;
+		
+//		this.timeFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
+		
+		initTickRateSlider();
+		initTickRateField();
+		
+//		this.timeField = new JTextField("Time: 0", 5);
+//		this.timeField.setMaximumSize(new Dimension(50, 22));
+		
+		//this.timeLabel = new JLabel("Time: "+this.timeFormatter.format(new Date(-TIME_TO_SUB)));
+		this.timeLabel = new JLabel("Zeit: "+String.format("%tT.%<tL", new Date(-TIME_TO_SUB)));
+		
+		this.add(Box.createRigidArea(new Dimension(10, 0)));
+		//this.add(this.timeField);
+		this.add(this.timeLabel);
+		
+		this.add(Box.createHorizontalGlue());
+		
+		JTextField tr = new JTextField("TR:");
+		tr.setHorizontalAlignment(JTextField.CENTER);
+		tr.setEditable(false);
+		//tr.setEnabled(false);
+		tr.setBorder(BorderFactory.createEtchedBorder());
+		tr.setMinimumSize(new Dimension(30, 22));
+		tr.setPreferredSize(new Dimension(30, 22));
+		tr.setMaximumSize(new Dimension(30, 23));
+		
+		this.add(tr);
+		this.add(this.tickRateField);
+		this.add(Box.createRigidArea(new Dimension(1,1)));
+		this.add(this.tickRateSlider);
+	}
+	
+	void initTickRateSlider() {
+		
+		this.tickRateSlider = new JSlider(
+				StatusBar.MIN_TICK_RATE,
+				StatusBar.MAX_TICK_RATE,
+				StatusBar.INIT_TICK_RATE);
+		
+		this.tickRateSlider.addChangeListener(new ChangeListener() {
+
+			public void stateChanged(ChangeEvent e) {
+				
+				if(tickRateSlider.getValueIsAdjusting()) {
+					tickRateField.setText(String.valueOf(tickRateSlider.getValue()));
+				} else {
+					tickRateField.setValue(tickRateSlider.getValue());
+					parent.setTickRate(tickRateSlider.getValue());
+				}
+			}
+		});
+		
+		this.tickRateSlider.setMajorTickSpacing(100);
+		this.tickRateSlider.setPaintTicks(true);
+		//this.tickRateSlider.setPaintLabels(true);
+		this.tickRateSlider.setPreferredSize(new Dimension(150, 22));
+		this.tickRateSlider.setBorder(BorderFactory.createEtchedBorder());
+	}
+	
+	void initTickRateField() {
+		
+		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
+		formatter.setMinimum(StatusBar.MIN_TICK_RATE);
+		formatter.setMaximum(StatusBar.MAX_TICK_RATE);
+		
+		this.tickRateField = new JFormattedTextField(formatter);
+		this.tickRateField.setValue(StatusBar.INIT_TICK_RATE);
+		this.tickRateField.setColumns(3);
+		this.tickRateField.setHorizontalAlignment(JTextField.CENTER);
+		this.tickRateField.setMinimumSize(new Dimension(44, 22));
+		this.tickRateField.setMaximumSize(new Dimension(44, 22));
+		this.tickRateField.setPreferredSize(new Dimension(44, 22));
+		System.out.println(this.tickRateField.getPreferredSize());
+		
+		this.tickRateField.addPropertyChangeListener(new PropertyChangeListener() {
+
+			public void propertyChange(PropertyChangeEvent evt) {
+				
+				if("value".equals(evt.getPropertyName())) {
+					tickRateSlider.setValue((Integer)tickRateField.getValue());
+				}
+			}
+		});
+	}
+	
+	public void updateTime(long time) {
+		
+//		this.timeField.setText("Time: "+time);
+		
+		//this.timeLabel.setText("Time: "+this.timeFormatter.format(new Date(time-TIME_TO_SUB)));
+		this.timeLabel.setText("Zeit: "+String.format("%tT.%<tL", new Date(time-TIME_TO_SUB)));
+	}
+	
+	protected void reinit() {
+		
+		this.tickRateField.setValue(StatusBar.INIT_TICK_RATE);
+	}
+}
