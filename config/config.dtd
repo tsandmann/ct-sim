@@ -1,0 +1,20 @@
+<!ELEMENT ct-sim (description?, bots?, parcours?)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT parameter (EMPTY)>
+		<!ATTLIST parameter 
+			name CDATA #REQUIRED
+			value CDATA #REQUIRED
+		>		
+		
+	<!ELEMENT bots (bot*)>
+		<!ELEMENT bot (appearance*)>
+			<!ATTLIST bot name CDATA #REQUIRED>
+
+
+			<!ELEMENT appearance (description, (texture | color |clone))>
+				<!ATTLIST appearance type CDATA #REQUIRED>
+				<!ELEMENT texture (#PCDATA)>
+				<!ELEMENT color (#PCDATA)>
+					<!ATTLIST color type (ambient| diffuse | specular| emmissive) "ambient">
+				<!ELEMENT clone (#PCDATA)>
+
