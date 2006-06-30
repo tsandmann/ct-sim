@@ -1,0 +1,4 @@
+Changelog fuer c't-Sim
+======================
+
+2006-06-30	Peter Koenig [pek@heise.de]: Changelog hinzugefuegt
