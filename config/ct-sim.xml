@@ -6,7 +6,7 @@
 		Dieses ist die zentreale Konfigurationsdatei für den c't-Sim
 	</description>
 
-	<parameter name="parcours" value="parcours/contest03.xml"/>
+	<parameter name="parcours" value="parcours/contest01.xml"/>
 	<parameter name="viewport" value="10002"/>
 	<parameter name="botport" value="10001"/>
 

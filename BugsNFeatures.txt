@@ -24,6 +24,9 @@ wenn ploetzlich alle den gleichen Bug fixen wollen ;-)
 Bugs
 ----
 
+* [06-06-30][Peter Koenig][open][]:
+CtBotSim.updateStats() wechselt bei einem Bot ueber dem Abgrund nur die Farbe, stoppt ihn aber nicht!!!
+
 * [06-06-22][Torsten Evers][open][]:
 Um gescheite Ergebnisse fuer den Maussensor zu erhalten, muﬂ man in bot-lokal.h 
 folgendes anpassen:

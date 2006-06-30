@@ -304,6 +304,8 @@ abstract public class CtBotSim extends CtBot {
 		else 
 			setObstState(getObstState() & ~OBST_STATE_FALLING);
 		
+		// TODO: Bot stoppen, wenn er faellt!!!
+		
 		// Update Appearance
 		int newState=getObstState();
 		if (newState == oldState){
