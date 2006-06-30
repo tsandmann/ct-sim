@@ -1,6 +1,9 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-06-30	Peter Koenig [pek@heise.de]: Kennlinien werden jetzt aus Strings gelesen, deren Eintraege durch ; getrennt sind, Textfelder werden uebersprungen
+
 2006-06-30	Peter Koenig [pek@heise.de]: Klasse fuer Kennlinie hinzugefuegt
 
 2006-06-30	Peter Koenig [pek@heise.de]: Changelog hinzugefuegt
+

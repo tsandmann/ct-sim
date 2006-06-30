@@ -17,7 +17,7 @@
  * 
  */
 
-package ctSim.model.bots.components.sensors;
+package ctSim.model.bots.components;
 
 import java.io.*;
 import java.util.*;
@@ -83,23 +83,24 @@ public class Characteristic {
 	 *            Sensordatum fuer Messgroessen ausserhalb der Kennlinie
 	 */
 	public Characteristic(String filename, float inf) {
+		// Wert ausserhalb des Messbereichs:
 		INF = inf;
-
-		// TODO: Kennlinie noch aus einer Textdatei einlesen!
-		// BufferedReader in;
-		// try {
-		// in = new BufferedReader(new FileReader(path));
-		// } catch (FileNotFoundException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// Vector vec = new Vector();
-		//			 
-		// Vorlaeufig hart gecodete Kennlinie fuer Testzwecke
-		characteristic = new float[] { 8, 538, 9, 543, 10, 525, 11, 493, 12,
-				470, 14, 412, 16, 364, 18, 323, 20, 298, 22, 276, 26, 240, 30,
-				206, 34, 189, 38, 175, 44, 160, 50, 145, 56, 135, 64, 128, 72,
-				119, 80, 110 };
+		// String mit der Kennlinie
+		String c;
+		
+		// TODO: c aus File lesen
+		// c = readFile(filename)			 
+		
+		// Vorlaeufig hart gecodeter String fuer Testzwecke
+		
+		c = "Messwerte Distanzsensoren; Abstand cm; Sensordatum; 8; 538;9; 543; 10; 525; 11; 493; 12; 470; 14; 412; 16; 364; 18; 323;  80; 110 ";		
+		Number[] charac = csv2array(c); 
+		// Numbers in primitive floats verwandeln:
+		characteristic = new float[charac.length]; 
+		for (int i=0; i<charac.length; i++){
+			characteristic[i] = charac[i].floatValue();
+		}
+		
 		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
 		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
 		// den 0-Index:
@@ -202,35 +203,30 @@ public class Characteristic {
 	}
 
 	/**
-	 * Diese Funktion zerlegt einen uebergebenen String und schreibt ihn
-	 * zeilenweise in ein String-Array, das zurueckgegeben wird. Dazu wird ein
-	 * String-Tokenizer verwendet, der als Trennzeichen den 'newline'-character
-	 * \n uebergeben bekommt.
-	 * 
+	 * Zerlegt einen CSV-String und schreibt alle gefundenen Zahlenwerte in ein Array.
 	 * @param input
-	 *            Der zu zerlegende String
-	 * @return Das String-Array mit den Zeilen
+	 *            Der zu zerlegende String, Einzelteile durch ; getrennt
+	 * @return Das Array
 	 */
-	private static String[] breakIntoLines(String input) {
+	private static Number[] csv2array(String input) {
 
-		StringTokenizer st = new StringTokenizer(input, "\n");
-
-		/*
-		 * Das String-Array lines bekommt eine Laenge zugewiesen, die genau der
-		 * Zahl der Zeilen des Strings (= Anzahl der durch \n getrennten Tokens
-		 * in diesem String) entspricht.
-		 */
-
-		String[] lines = new String[st.countTokens()];
-		int i = 0;
-
-		/* Der String input wird dann zeilenweise in lines geschrieben. */
-
+		StringTokenizer st = new StringTokenizer(input, ";");
+		Vector<Number> num = new Vector<Number>();
+		Number curr;
 		while (st.hasMoreTokens()) {
-			lines[i] = st.nextToken();
-			i++;
+			try {
+				curr = new Double(st.nextToken());
+				num.add(curr);
+			} catch (NumberFormatException e) {
+				// Alles auslassen, was keine Zahl ist 
+			}
 		}
-		return lines;
+		
+		Number[] result = new Number[num.size()];
+		for (int i = 0; i<num.size(); i++){
+			result[i] = num.elementAt(i);
+		}
+		return result;
 	}
 
 	/**
