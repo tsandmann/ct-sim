@@ -1,5 +1,7 @@
 CHANGELOG fuer c't-Sim
 ======================
+2006-06-28 Peter Koenig (pek@heise.de) ParcoursGenerator gibt jetzt regelkonforme Labyrinthe aus.
+
 2006-06-26 Peter Koenig (pek@heise.de) ParcoursGenerator gibt jetzt einen korrekten XML-String zurueck.
 
 2006-06-26 Peter Koenig (pek@heise.de) ParcoursGenerator gibt jetzt einen XML-String zurueck.
