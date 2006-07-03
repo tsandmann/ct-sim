@@ -57,7 +57,7 @@ public class Characteristic {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Characteristic charac = new Characteristic("kennlinie.txt", 999f);
+		Characteristic charac = new Characteristic(new File("..\\devel_ct-Sim-V2\\characteristics\\gp2d12Left.txt"), 999f);
 		System.out.println("Performante Werte");
 		for (float f = -2f; f < 100; f = f + 0.25f) {
 			System.out.println(f + "\t" + charac.lookup(f));
@@ -74,26 +74,33 @@ public class Characteristic {
 	 * kompletten Lookup-Table mit Zwischenwerten fuer alle ganzzahligen
 	 * Messgroessen im Bereich der Kennlinie
 	 * 
-	 * @param filename
-	 *            Name der Textdatei mit der Stuetzwerttabelle 
+	 * @param file
+	 *            Eine Textdatei mit der Stuetzwerttabelle 
 	 *            Format:
 	 *            Messgroesse (int>=0) \t resultierendes Sensordatum (float) \n)
 	 *            Messgroessen aufsteigend, aber nicht zwingend lueckenlos
 	 * @param inf
 	 *            Sensordatum fuer Messgroessen ausserhalb der Kennlinie
 	 */
-	public Characteristic(String filename, float inf) {
+	public Characteristic(File file, float inf) {
 		// Wert ausserhalb des Messbereichs:
 		INF = inf;
 		// String mit der Kennlinie
-		String c;
-		
-		// TODO: c aus File lesen
-		// c = readFile(filename)			 
+		String c = new String();
+		try {
+			c = readFile(file);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}			 
 		
 		// Vorlaeufig hart gecodeter String fuer Testzwecke
 		
-		c = "Messwerte Distanzsensoren; Abstand cm; Sensordatum; 8; 538;9; 543; 10; 525; 11; 493; 12; 470; 14; 412; 16; 364; 18; 323;  80; 110 ";		
+		// c = "Messwerte Distanzsensoren; Abstand cm; Sensordatum; 8; 538;9; 543; 10; 525; 11; 493; 12; 470; 14; 412; 16; 364; 18; 323;  80; 110 ";		
+
 		Number[] charac = csv2array(c); 
 		// Numbers in primitive floats verwandeln:
 		characteristic = new float[charac.length]; 
@@ -232,17 +239,17 @@ public class Characteristic {
 	/**
 	 * Liest den Inhalt einer Datei und gibt ihn als String zurueck.
 	 * 
-	 * @param fileName
-	 *            Der Dateiname
+	 * @param file
+	 *            Die Datei
 	 * @return Der String mit dem Inhalt der Datei
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	public static String readFile(String fileName) throws IOException,
+	public static String readFile(File file) throws IOException,
 			FileNotFoundException {
 
 		StringBuffer input = new StringBuffer();
-		FileInputStream stream = new FileInputStream(fileName);
+		FileInputStream stream = new FileInputStream(file);
 		int c = 0;
 		while (c != -1) {
 			c = stream.read();
