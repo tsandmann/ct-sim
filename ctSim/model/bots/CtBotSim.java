@@ -237,6 +237,9 @@ abstract public class CtBotSim extends CtBot {
 		int oldState =getObstState(); 
 		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 		// der Bot blau gefaerbt.
+		
+		// TODO: Hier fehlt die Pruefung, ob der Bot gerade faellt!!!
+		
 		if (getWorld().checkCollision((Shape3D)getNodeReference(BOTBODY), getBounds(), newPos, getName())) {
 			// Wenn nicht, Position aktualisieren
 			this.setPos(newPos);
