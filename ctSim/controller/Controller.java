@@ -34,6 +34,7 @@ import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.JD2xxConnection;
 import ctSim.TcpConnection;
+import ctSim.model.bots.CtBot;
 import ctSim.model.Command;
 import ctSim.model.bots.CtBotSimTcp;
 import ctSim.model.bots.CtBotRealCon;
@@ -171,6 +172,8 @@ public class Controller implements Runnable {
 		
 		for(Bot b : this.botsToStart) {
 			b.start();
+			// TODO:
+			((CtBot)b).setSensRc5(CtBot.RC5_CODE_RED);
 			System.out.println("Bot gestartet: "+b.getName());
 		}
 		
