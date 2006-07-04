@@ -173,7 +173,7 @@ public class Controller implements Runnable {
 		for(Bot b : this.botsToStart) {
 			b.start();
 			// TODO:
-			((CtBot)b).setSensRc5(CtBot.RC5_CODE_RED);
+			((CtBot)b).setSensRc5(CtBot.RC5_CODE_5);
 			System.out.println("Bot gestartet: "+b.getName());
 		}
 		
