@@ -27,7 +27,8 @@ import java.util.*;
  * Messgroessen, die einen bestimmten Sensor-Output ausloesen, muessen in ganzen
  * Zahlen angegeben werden, deshalb sollten sie in einer Einheit angegeben
  * werden, die hinreichend fein ist (Distanzsensoren in cm, Abgrundsensoren
- * vielleicht in mm). Die Sensor-Output-Daten duerfen Gleitkommazahlen sein.
+ * vielleicht in mm). Die Sensor-Output-Daten duerfen in Gleitkommazahlen angegeben
+ * werden (allerdings liefern viele Sensoren natuerlich ebenfalls ganzzahlige Werte).
  * 
  * @author p-king
  * 
@@ -46,18 +47,21 @@ public class Characteristic {
 	// hier uebernimmt der Array-Index die Funktion der Mx-Werte.
 	// Diese sind hier lueckenlos, Zwischenwerte werden extrapoliert.
 	private float[] lookup;
+	
+	// Kopie des Lookup-Tables, der auf ganze Zahlen gerundete Sensorwerte 
+	// zurueckgibt
+	private int[] intLookup;
 
 	// Sensordatum fuer alle Messgroessen ausserhalb der Kennlinie
-	private float INF;
-
+	private float INF;	
+	
 	/**
 	 * Main-Methode nur zum Testen
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Characteristic charac = new Characteristic(new File("..\\devel_ct-Sim-V2\\characteristics\\gp2d12Left.txt"), 999f);
+		Characteristic charac = new Characteristic(new File("..\\ct-Sim_V2\\characteristics\\gp2d12Left.txt"), 999f);
 		System.out.println("Performante Werte");
 		for (float f = -2f; f < 100; f = f + 0.25f) {
 			System.out.println(f + "\t" + charac.lookup(f));
@@ -80,7 +84,7 @@ public class Characteristic {
 	 *            Messgroesse (int>=0) \t resultierendes Sensordatum (float) \n)
 	 *            Messgroessen aufsteigend, aber nicht zwingend lueckenlos
 	 * @param inf
-	 *            Sensordatum fuer Messgroessen ausserhalb der Kennlinie
+	 *            Sensordatum fuer Messgroessen ausserhalb der Kennlinie	  
 	 */
 	public Characteristic(File file, float inf) {
 		// Wert ausserhalb des Messbereichs:
@@ -90,17 +94,11 @@ public class Characteristic {
 		try {
 			c = readFile(file);
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			System.err.println("Kennlinien-Datei nicht gefunden");
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			System.err.println("I/O-Fehler");
 		}			 
 		
-		// Vorlaeufig hart gecodeter String fuer Testzwecke
-		
-		// c = "Messwerte Distanzsensoren; Abstand cm; Sensordatum; 8; 538;9; 543; 10; 525; 11; 493; 12; 470; 14; 412; 16; 364; 18; 323;  80; 110 ";		
-
 		Number[] charac = csv2array(c); 
 		// Numbers in primitive floats verwandeln:
 		characteristic = new float[charac.length]; 
@@ -145,35 +143,69 @@ public class Characteristic {
 				// Tja, das war wohl zu weit 8-)
 			}
 		}
+
+		// Es wird ein zweiter Lookup-Table erstellt, fuer Sensorwerte, die 
+		// nur aus ganzen Zahlen bestehen:
+		intLookup = new int[lookup.length]; 
+		for (int i = 0; i<lookup.length; i++){
+				intLookup[i] = Math.round(lookup[i]);
+			}
 		printLookup();
 	}
 
 	/**
 	 * Gibt zur uebergebenen Messgroesse den passenden Sensorwert zurueck.
-	 * Performante Funktion, die Messgroessen auf ganze Zahlen rundet.
+	 * Performante Funktion, die ganzzahlige Messgroessen erwartet und Sensorwerte 
+	 * auf ganze Zahlen rundet. 
 	 * 
 	 * @param measurement
 	 *            Die Messgroesse, aufgrund derer der Sensor seinen Wert erzeugt
 	 *            (z.B. die Distanz bei Distanzsensoren)
 	 * @return Das Sensordatum laut Kennlinie
 	 */
-	public float lookup(float measurement) {
-		float data;
+	public int lookup(int measurement) {
+		int data;
 		// Liegt der Wert innerhalb der Tabelle?
-		if (measurement >= 0 && measurement <= lookup.length - 1) {
-			int index = Math.round(Math.round(Math.floor(measurement)));
-			data = lookup[index];
+		if (measurement >= 0 && measurement <= intLookup.length - 1) {
+			data = intLookup[measurement];
 		} else {
 			// Sonst INF zurueckgeben:
-			data = INF;
+			data = Math.round(INF);
 		}
 		return data;
 	}
 
 	/**
 	 * Gibt zur uebergebenen Messgroesse den passenden Sensorwert zurueck.
+	 * Rundet die Messgroesse auf ganze Zahlen.
+	 * Performante Funktion, die Messgroessen und Sensorwerte auf ganze Zahlen rundet. 
+	 * Sollte nur benutzt werden, wenn Messgroessen auch Gleitkommazahlen sein
+	 * koennen.
+	 * 
+	 * @param measurement
+	 *            Die Messgroesse, aufgrund derer der Sensor seinen Wert erzeugt
+	 *            (z.B. die Distanz bei Distanzsensoren)
+	 * @return Das Sensordatum laut Kennlinie
+	 */
+	public int lookup(float measurement) {
+		int data;
+		// Liegt der Wert innerhalb der Tabelle?
+		if (measurement >= 0 && measurement <= intLookup.length - 1) {
+			int index = Math.round(Math.round(Math.floor(measurement)));
+			data = intLookup[index];
+		} else {
+			// Sonst INF zurueckgeben:
+			data = Math.round(INF);
+		}
+		return data;
+	}
+
+	
+	/**
+	 * Gibt zur uebergebenen Messgroesse den passenden Sensorwert zurueck.
 	 * Praezise Funktion, die bei Messgroessen zwischen ganzen Zahlen weitere
-	 * Zwischenwerte berechnet.
+	 * Zwischenwerte berechnet. Nur sinnvoll bei Sensoren, die nicht nur ganzzahlige
+	 * Messwerte liefern
 	 * 
 	 * @param measurement
 	 *            Die Messgroesse, aufgrund derer der Sensor seinen Wert erzeugt
@@ -200,12 +232,12 @@ public class Characteristic {
 	}
 
 	/**
-	 * Schreibt den Lookup-Table zum Debuggen auf die Konsole
+	 * Schreibt die Lookup-Tables zum Debuggen auf die Konsole
 	 */
 	private void printLookup() {
 		System.out.println("Lookup-Table");
 		for (int i = 0; i < lookup.length; i++) {
-			System.out.println("Zeile\t" + i + "\t" + lookup[i]);
+			System.out.println("Zeile\t" + i + "\t" + lookup[i]+ "\t" + intLookup[i]);
 		}
 	}
 
