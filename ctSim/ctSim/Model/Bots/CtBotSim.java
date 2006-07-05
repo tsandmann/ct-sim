@@ -230,12 +230,10 @@ abstract public class CtBotSim extends CtBot {
 		newPos.add(moveDirection);
 
 		
-		int oldState =getObstState(); 
+		int oldState = getObstState(); 
 		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 		// der Bot blau gefaerbt.
 		if (getWorld().checkCollision((Shape3D)getNodeReference(BOTBODY), getBounds(), newPos, getName())) {
-			// Wenn nicht, Position aktualisieren
-			this.setPos(newPos);
 			// Zustand setzen
 			setObstState( oldState & ~OBST_STATE_COLLISION);
 		} else {
@@ -245,7 +243,6 @@ abstract public class CtBotSim extends CtBot {
 			setObstState( oldState| OBST_STATE_COLLISION);
 		}
 		
-
 		// Blickrichtung immer aktualisieren:
 		this.setHeading(newHeading);
 
@@ -304,7 +301,10 @@ abstract public class CtBotSim extends CtBot {
 		else 
 			setObstState(getObstState() & ~OBST_STATE_FALLING);
 		
-		// TODO: Bot stoppen, wenn er faellt!!!
+		// Wenn der Bot nicht kollidiert oder ueber einem Abgrund steht Position aktualisieren
+		if ((getObstState() & (OBST_STATE_COLLISION | OBST_STATE_FALLING)) == 0 )
+			this.setPos(newPos);
+
 		
 		// Update Appearance
 		int newState=getObstState();
