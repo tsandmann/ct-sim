@@ -27,30 +27,32 @@ import javax.media.j3d.*;
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
 
-public abstract class FixedObstacle implements Obstacle {
+public interface FixedObstacle extends Obstacle {
 
-	/** Die Grenzen des Objektes */
-	private Bounds bounds;
-
-	/**
-	 * Konstruktor
-	 */
-	public FixedObstacle() {
-		bounds = null;
-	}
-
-	/**
-	 * @return Liefert die Grenzen des Hindernisses zurueck
-	 */
-	public Bounds getBounds() {
-		return bounds;
-	}
-
-	/**
-	 * @param bounds
-	 *            Die gewuenschten Grenzen des Objekts
-	 */
-	public void setBounds(Bounds bounds) {
-		this.bounds = bounds;
-	}
+	
+	
+//	/** Die Grenzen des Objektes */
+//	private Bounds bounds;
+//
+//	/**
+//	 * Konstruktor
+//	 */
+//	public FixedObstacle() {
+//		bounds = null;
+//	}
+//
+//	/**
+//	 * @return Liefert die Grenzen des Hindernisses zurueck
+//	 */
+//	public Bounds getBounds() {
+//		return bounds;
+//	}
+//
+//	/**
+//	 * @param bounds
+//	 *            Die gewuenschten Grenzen des Objekts
+//	 */
+//	public void setBounds(Bounds bounds) {
+//		this.bounds = bounds;
+//	}
 }

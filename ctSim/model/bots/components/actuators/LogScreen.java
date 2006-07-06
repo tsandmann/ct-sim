@@ -3,15 +3,18 @@ package ctSim.model.bots.components.actuators;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import ctSim.model.bots.components.Actuator;
 import ctSim.view.actuators.ActuatorGroupGUI;
 import ctSim.view.actuators.Actuators;
 
 public abstract class LogScreen extends Actuator<String> {
 	
-	public LogScreen(String name, String relativePosition, double relativeHeading) {
+	public LogScreen(String name, Point3d relPos, Vector3d relHead) {
 		
-		super(name, relativePosition, relativeHeading);
+		super(name, relPos, relHead);
 	}
 	
 	@Override

@@ -19,7 +19,10 @@
 
 package ctSim;
 
+import javax.media.j3d.Transform3D;
+import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import java.lang.Math;
 
@@ -93,13 +96,37 @@ public class SimUtils {
 	 * 			  Gib die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
 	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurück
 	 */
-	public static double getRotation(Vector3f heading) {
-		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
-		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
-		// muessen hier zwei Faelle unterschieden werden:
-		if (heading.x >= 0)
-			return -angle;
-		else
-			return angle;
+//	public static double getRotation(Vector3f heading) {
+//		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
+//		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
+//		// muessen hier zwei Faelle unterschieden werden:
+//		if (heading.x >= 0)
+//			return -angle;
+//		else
+//			return angle;
+//	}
+	// TODO: Allgemeiner!? Ref-Vector auslagern...
+	public static double getRotation(Vector3d heading) {
+		
+		double angle = heading.angle(new Vector3d(0d, 1d, 0d));
+		
+		if(heading.y < 0)
+			angle = -angle;
+		
+		return angle;
+	}
+	
+	// TODO: Allgemeiner!?
+	public static Transform3D getTransform(Point3d pos, Vector3d head) {
+		
+		Transform3D transform = new Transform3D();
+		
+		transform.setTranslation(new Vector3d(pos));
+		
+		double angle = getRotation(head);
+		
+		transform.setRotation(new AxisAngle4d(0d, 0d, 1d, angle));
+		
+		return transform;
 	}
 }

@@ -1,13 +1,17 @@
 package ctSim.model.bots.components.actuators;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import ctSim.model.bots.components.Actuator;
 
-public class Governor extends SimpleActuator<Double> {
+// TODO: anpassen... nicht abstract
+public abstract class Governor extends SimpleActuator<Double> {
 	
 	private Double val;
 	
-	Governor(String name, String relativePosition, double relativeHeading) {
-		super(name, relativePosition, relativeHeading);
+	Governor(String name, Point3d relPos, Vector3d relHead) {
+		super(name, relPos, relHead);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -43,10 +47,10 @@ public class Governor extends SimpleActuator<Double> {
 	// Testfälle:
 	
 	// Testfall 1:
-	public static Actuator getTestActuator1(String name) {
-		
-		Actuator act1 = new Governor("Test:Actuator:Governor - "+name, "blubb", 0.342d);
-		
-		return act1;
-	}
+//	public static Actuator getTestActuator1(String name) {
+//		
+//		Actuator act1 = new Governor("Test:Actuator:Governor - "+name, "blubb", 0.342d);
+//		
+//		return act1;
+//	}
 }

@@ -14,7 +14,7 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
-import ctSim.model.scene.SceneUpdate;
+//import ctSim.model.scene.SceneUpdate;
 
 public class WorldPanel extends JPanel {
 	
@@ -40,13 +40,15 @@ public class WorldPanel extends JPanel {
 		
 		this.view.init();
 		
-		this.view.setScene(this.world.getSceneLight().getScene(),
+		this.view.setScene(//this.world.getSceneLight().getScene(),
+						   this.world.getScene(),
 						   this.world.getPlaygroundDimX(),
 						   this.world.getPlaygroundDimY());
 		this.view.initGUI();
 		
 		// TODO: ???
-		this.world.getSceneLight().addReference("World_"+Bot.VP,this.view.getUniverse().getViewingPlatform().getViewPlatform());
+		//this.world.getSceneLight().addReference("World_"+Bot.VP,this.view.getUniverse().getViewingPlatform().getViewPlatform());
+		this.world.addViewPlatform(this.view.getUniverse().getViewingPlatform().getViewPlatform());
 		
 		//this.world.start();
 		// TODO: ...
@@ -54,7 +56,8 @@ public class WorldPanel extends JPanel {
 	
 	protected void update() {
 		
-		SceneUpdate su = new SceneUpdate(this.world.getSceneLight());
+		// TODO: ???
+		//SceneUpdate su = new SceneUpdate(this.world.getSceneLight());
 		
 		// RemoteViews benachrichtigen (siehe alter Controller.update())
 		

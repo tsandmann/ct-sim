@@ -24,6 +24,7 @@ import java.io.IOException;
 import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.model.Command;
+import ctSim.model.bots.ctbot.TcpBot;
 
 /**
  * Kuemmert sich um die Beantwortung eingehender Kommanods

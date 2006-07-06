@@ -2,6 +2,9 @@ package ctSim.model.bots.components.actuators;
 
 import java.awt.Color;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import ctSim.model.bots.components.Actuator;
 import ctSim.view.actuators.ActuatorGroupGUI;
 import ctSim.view.actuators.Actuators;
@@ -15,8 +18,8 @@ public abstract class Indicator extends Actuator<Boolean> {
 	private Color off;
 	private Color on;
 	
-	public Indicator(String name, String relativePosition, double relativeHeading, Color off, Color on) {
-		super(name, relativePosition, relativeHeading);
+	public Indicator(String name, Point3d relPos, Vector3d relHead, Color off, Color on) {
+		super(name, relPos, relHead);
 		// TODO Auto-generated constructor stub
 		
 		this.off = off;

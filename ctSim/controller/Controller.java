@@ -37,8 +37,8 @@ import javax.media.j3d.Texture2D;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.vecmath.Color3f;
-import javax.vecmath.Point3f;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4f;
 
 import org.w3c.dom.Document;
@@ -53,13 +53,13 @@ import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.JD2xxConnection;
 import ctSim.TcpConnection;
-import ctSim.model.bots.CtBot;
+import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.Command;
-import ctSim.model.bots.CtBotSimTcp;
-import ctSim.model.bots.CtBotRealCon;
-import ctSim.model.bots.CtBotSimTest;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
+//import ctSim.model.bots.ctbot.CtBotRealCon;
+//import ctSim.model.bots.ctbot.CtBotSimTcp;
+import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.view.BotInfo;
 import ctSim.view.CtSimFrame;
 import ctSim.view.DefBotPanel;
@@ -68,7 +68,7 @@ import ctSim.view.DefBotPanel;
  * Zentrale Controller-Klasse des c't-Sim
  *
  */
-public class Controller implements Runnable {
+public final class Controller implements Runnable {
 	
 	private Thread ctrlThread;
 	private volatile boolean pause;
@@ -174,9 +174,11 @@ public class Controller implements Runnable {
 	private synchronized void cleanup() {
 		
 		for(Bot b : this.botList)
-			b.interrupt();
+			//b.interrupt();
+			b.stop();
 		
-		this.world.cleanup();
+		// TODO:
+		//this.world.cleanup();
 	}
 	
 	public void setTickRate(long rate) {
@@ -196,7 +198,7 @@ public class Controller implements Runnable {
 		for(Bot b : this.botsToStart) {
 			b.start();
 			// TODO:
-			((CtBot)b).setSensRc5(CtBot.RC5_CODE_5);
+			//((CtBot)b).setSensRc5(CtBot.RC5_CODE_5);
 			System.out.println("Bot gestartet: "+b.getName());
 		}
 		
@@ -355,17 +357,18 @@ public class Controller implements Runnable {
 					
 					if (cmd.getCommand() == Command.CMD_WELCOME) {
 						if (cmd.getSubcommand() == Command.SUB_WELCOME_REAL) {
-							bot = new CtBotRealCon(
-									new Point3f(0.5f, 0f, 0f),
-									new Vector3f(1.0f, -0.5f, 0f),
-									con);
-							System.out.println("Real Bot comming up");
+//							bot = new CtBotRealCon(
+//									new Point3f(0.5f, 0f, 0f),
+//									new Vector3f(1.0f, -0.5f, 0f),
+//									con);
+//							System.out.println("Real Bot comming up");
 						} else {
-							bot = new CtBotSimTcp(
-									new Point3f(0.5f, 0f, 0f),
-									new Vector3f(1.0f, -0.5f, 0f),
-									con);
+//							bot = new CtBotSimTcp(
+//									new Point3f(0.5f, 0f, 0f),
+//									new Vector3f(1.0f, -0.5f, 0f),
+//									con);
 							System.out.println("Virtual Bot comming up");
+							System.exit(0);  // <<------------------------ !!!!!!!!!!!!
 						}
 					} else {
 						System.out.print("Non-Welcome-Command found: \n"
@@ -411,16 +414,17 @@ public class Controller implements Runnable {
 		Bot bot = null;
 		
 		if (type.equalsIgnoreCase("CtBotSimTest")) {
-			bot = new CtBotSimTest(new Point3f(), new Vector3f());
+			//bot = new CtBotSimTest(new Point3f(), new Vector3f());
+			bot = new CtBotSimTest(this.world, "Test", new Point3d(0d, 0d, 0.075d), new Vector3d());
 		}
 		
-		if (type.equalsIgnoreCase("CtBotRealJD2XX")) {
-			Connection com = waitForJD2XX();
-			if (com != null) {
-				bot = new CtBotRealCon(new Point3f(), new Vector3f(), com);
-				System.out.println("Real Bot via JD2XX startet");
-			}
-		}
+//		if (type.equalsIgnoreCase("CtBotRealJD2XX")) {
+//			Connection com = waitForJD2XX();
+//			if (com != null) {
+//				bot = new CtBotRealCon(new Point3f(), new Vector3f(), com);
+//				System.out.println("Real Bot via JD2XX startet");
+//			}
+//		}
 		return addBot(bot);
 	}
 	
@@ -452,7 +456,8 @@ public class Controller implements Runnable {
 			if (botConfig == null){
 				ErrorHandler.error("Keine Default-BotConfig in der XML-Config-Datei gefunden. Starte ohne.");
 			}
-
+			
+			// TODO:
 			bot.setAppearances(botConfig);
 			
 			this.world.addBot(bot);
@@ -463,6 +468,7 @@ public class Controller implements Runnable {
 			this.botsToStart.add(bot);
 			
 			bot.setController(this);
+			bot.setWorld(this.world);
 			
 			return bot;
 			

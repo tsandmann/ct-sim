@@ -3,6 +3,9 @@
  */
 package ctSim.model.bots.components;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import ctSim.view.positions.PositionGroupGUI;
 
 
@@ -13,22 +16,17 @@ import ctSim.view.positions.PositionGroupGUI;
 public abstract class Position<E> extends BotComponent {
 
 	/**
-	 * @param name
-	 * @param relativePosition
-	 * @param relativeHeading
-	 */
-	public Position(String name, String relativePosition, double relativeHeading) {
+//	 * @param name
+//	 * @param relativePosition
+//	 * @param relativeHeading
+//	 */
+	public Position(String name, Point3d relativePosition, Vector3d relativeHeading) {
 		super(name, relativePosition, relativeHeading);
 		// TODO Auto-generated constructor stub
 	}
-
-	/**
-	 * @param name
-	 * @param relativePosition
-	 * @param relativeHeading
-	 */
+	
 	public Position() {
-		super("keiner", "", 0d);
+		super("keiner", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d));
 		// TODO Auto-generated constructor stub
 	}
 	

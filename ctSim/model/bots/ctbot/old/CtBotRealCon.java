@@ -17,7 +17,7 @@
  * 
  */
 
-package ctSim.model.bots;
+package ctSim.model.bots.ctbot.old;
 
 import java.io.IOException;
 
@@ -27,6 +27,7 @@ import javax.vecmath.Vector3f;
 import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.model.Command;
+import ctSim.model.bots.AnsweringMachine;
 
 /**
  * Die Oberklasse fuer Repraesentationen aller Bots, die ausserhalb der Grenzen

@@ -1,10 +1,13 @@
 package ctSim.model.bots.components;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import ctSim.view.actuators.ActuatorGroupGUI;
 
 public abstract class Actuator<E> extends BotComponent {
 	
-	public Actuator(String name, String relativePosition, double relativeHeading) {
+	public Actuator(String name, Point3d relativePosition, Vector3d relativeHeading) {
 		super(name, relativePosition, relativeHeading);
 		// TODO Auto-generated constructor stub
 	}

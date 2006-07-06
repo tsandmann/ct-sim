@@ -25,7 +25,7 @@ import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3f;
 
 import ctSim.ErrorHandler;
-import ctSim.model.bots.CtBot;
+import ctSim.model.bots.ctbot.CtBot;
 
 /**
  * Repraesentiert einen Parcouts fuer die Bots

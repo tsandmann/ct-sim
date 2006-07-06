@@ -17,7 +17,7 @@
  * 
  */
 
-package ctSim.model.bots;
+package ctSim.model.bots.ctbot.old;
 
 import javax.vecmath.*;
 import javax.media.j3d.*;
@@ -29,6 +29,7 @@ import java.lang.Math;
 import com.sun.j3d.utils.geometry.*;
 
 import ctSim.model.MousePicture;
+import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.actuators.Display;
 import ctSim.model.bots.components.actuators.Indicator;
 import ctSim.model.bots.components.actuators.LogScreen;
@@ -45,7 +46,7 @@ import ctSim.model.bots.components.sensors.SimpleSensor;
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
 
-public abstract class CtBot extends Bot {
+public abstract class CtBot_old extends Bot {
 
 	private static final Color[] cols = {
 		new Color(137, 176, 255), // blau
@@ -421,7 +422,7 @@ public abstract class CtBot extends Bot {
 //		initSensors();
 //		initActuators();
 //	}
-	public CtBot(Point3f pos, Vector3f head) {
+	public CtBot_old(Point3f pos, Vector3f head) {
 		// Einfachen Konstruktor aufrufen:
 		Vector3f vec = new Vector3f(pos);
 		vec.z += getHeight() / 2 + getGroundClearance();

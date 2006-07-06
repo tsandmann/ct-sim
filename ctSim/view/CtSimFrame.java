@@ -490,9 +490,9 @@ public class CtSimFrame extends JFrame {
 		
 		// TODO: Exception-Handling, ...
 		try {
-			//this.world = World.parseWorldFile(file);
 			// TODO: Wenn kein DTD-file gegeben, besser Fehlermeldung!
-			this.world = new World(file.getAbsolutePath());
+			this.world = World.parseWorldFile(file);
+			//this.world = new World(file.getAbsolutePath());
 			
 			// TODO:
 			this.worldPanel.setWorld(this.world);
@@ -541,8 +541,8 @@ public class CtSimFrame extends JFrame {
 			
 			// TODO: kopiert von openWorld:
 			
-			//this.world = World.parseWorldFile(file);
-			this.world = new World(this.tmpParcoursFile.getAbsolutePath());
+			this.world = World.parseWorldFile(this.tmpParcoursFile);
+			//this.world = new World(this.tmpParcoursFile.getAbsolutePath());
 			
 			// TODO:
 			this.worldPanel.setWorld(this.world);

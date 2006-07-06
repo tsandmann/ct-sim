@@ -20,21 +20,23 @@
 package ctSim.model;
 
 import javax.media.j3d.Bounds;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 /**
  * Klasse fuer alle Hindernisse bewegt werden kÃ¶nnen
  * 
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
-public interface MovableObstacle extends Obstacle{
+public interface MovableObstacle extends Obstacle {
+	
 	// TODO Was muessen MovableObstacle koennen?
 	/** Mit dem Obstacle ist alles in Ordnung */
-	public static final int OBST_STATE_NORMAL = 0;
+	public static final int OBST_STATE_NORMAL    = 0;
 	/** Das Obstacle hat eine Kollision */
 	public static final int OBST_STATE_COLLISION = 1;
 	/** Das Obstacle faellt */
-	public static final int OBST_STATE_FALLING = 2;
+	public static final int OBST_STATE_FALLING   = 2;
 
 	/**
 	 * Liefert den Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
@@ -49,15 +51,15 @@ public interface MovableObstacle extends Obstacle{
 	public void setObstState(int state);
 	
 	/**
-	 * @return Gibt die Position zurueck
-	 */
-	public Vector3f getPos() ;
-	
-	/**
 	 * @param pos
 	 *            Die Position, an die der Bot gesetzt werden soll
 	 */
-	public void setPos(Vector3f pos);
+	/* TODO: über? (wenn man getPos vorgibt, ist setPos wohl über oder wer sollte die Pose setzen)
+	 *       Wieso steht in der Doku was von "Bot", wenn wir doch in MoveObst sind?
+	 */
+	public void setPosition(Point3d pos);
+	
+	public void setHeading(Vector3d head);
 	
 	/**
 	 * @return Gibt die Grenzen des Obstacles zurueck

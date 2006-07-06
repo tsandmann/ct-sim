@@ -20,6 +20,9 @@
 package ctSim.model;
 
 import javax.media.j3d.Bounds;
+import javax.media.j3d.BranchGroup;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 /**
  * Interface fuer Hindernisse aller Art in der Bot-Welt
@@ -27,16 +30,24 @@ import javax.media.j3d.Bounds;
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
 
-public interface Obstacle {
+public abstract interface Obstacle {
 
 	/**
 	 * @return Liefert die Grenzen des Hindernisses zurueck
 	 */
-	abstract public Bounds getBounds();
+	public abstract Bounds getBounds();
+	
+	/**
+	 * @return Gibt die Position zurueck
+	 */
+	public abstract Point3d getPosition() ;
+	
+	public abstract Vector3d getHeading();
 	
 	/**
 	 * Erzeugt die 3D-Repraesentation eines Objektes
 	 */
-	abstract void createBranchGroup();
-
+	//public abstract void createBranchGroup();
+	
+	public abstract BranchGroup getBranchGroup();
 }

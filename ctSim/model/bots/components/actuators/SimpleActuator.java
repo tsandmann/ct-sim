@@ -2,6 +2,9 @@ package ctSim.model.bots.components.actuators;
 
 import java.util.Set;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import ctSim.model.bots.components.Actuator;
 import ctSim.view.actuators.ActuatorGroupGUI;
 import ctSim.view.actuators.Actuators;
@@ -12,8 +15,8 @@ public abstract class SimpleActuator<E extends Number> extends Actuator<E> {
 	
 	//private SimpleActuatorGroupGUI groupGUI = new SimpleActuatorGroupGUI();
 	
-	public SimpleActuator(String name, String relativePosition, double relativeHeading) {
-		super(name, relativePosition, relativeHeading);
+	public SimpleActuator(String name, Point3d relPos, Vector3d relHead) {
+		super(name, relPos, relHead);
 		// TODO Auto-generated constructor stub
 	}
 	

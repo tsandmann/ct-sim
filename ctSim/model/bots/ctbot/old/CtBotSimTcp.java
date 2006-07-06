@@ -17,7 +17,7 @@
  * 
  */
 
-package ctSim.model.bots;
+package ctSim.model.bots.ctbot.old;
 
 import java.io.IOException;
 
@@ -27,9 +27,8 @@ import javax.vecmath.Vector3f;
 import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.TcpConnection;
-import ctSim.model.bots.CtBot;
-import ctSim.model.bots.CtBotSim;
 import ctSim.model.bots.AnsweringMachine;
+import ctSim.model.bots.ctbot.CtBotSim;
 import ctSim.model.Command;
 
 /**
