@@ -1,3 +1,22 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
+
 package ctSim.view;
 
 import java.awt.Frame;
@@ -6,8 +25,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -17,6 +34,11 @@ import javax.swing.filechooser.FileFilter;
 import ctSim.controller.Controller;
 import ctSim.model.bots.Bot;
 
+/**
+ * Dialog zur Auswahl von Bots verschiedenen Typs
+ * 
+ * @author Felix Beckwermert
+ */
 public class BotChooser extends JDialog {
 	
 	private JButton testBot, cBot;
@@ -25,6 +47,11 @@ public class BotChooser extends JDialog {
 	
 	private Bot bot;
 	
+	/**
+	 * Der Konstruktor
+	 * @param own Der Frame, in dem der Chooser laeuft
+	 * @param ctrl Die Controller-Instanz
+	 */
 	BotChooser(Frame own, Controller ctrl) {
 		
 		super(own, "Bot wählen...", true);
@@ -56,6 +83,9 @@ public class BotChooser extends JDialog {
 		
 		this.testBot.addActionListener(new ActionListener() {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				addTestBotClicked();
@@ -63,6 +93,9 @@ public class BotChooser extends JDialog {
 		});
 		this.cBot.addActionListener(new ActionListener() {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				addCBotClicked();
@@ -107,6 +140,12 @@ public class BotChooser extends JDialog {
 		return this.bot;
 	}
 	
+	/**
+	 * Zeigt den Bot-Auswahldialog
+	 * @param parent Der Frame, in dem der Dialog laeuft
+	 * @param ctrl Die betreffende Controller-Instanz
+	 * @return Der ausgewaehlte Bot
+	 */
 	public static Bot showBotChooserDialog(Frame parent, Controller ctrl) {
 		
 		BotChooser bc = new BotChooser(parent, ctrl);

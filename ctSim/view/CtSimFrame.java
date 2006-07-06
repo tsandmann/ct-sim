@@ -1,20 +1,34 @@
-/**
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
  * 
  */
+
 package ctSim.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,15 +43,12 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
-import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileFilter;
 
 import org.xml.sax.SAXException;
@@ -48,7 +59,9 @@ import ctSim.model.World;
 import ctSim.model.bots.Bot;
 
 /**
- * @author FelixB
+ * Die GUI-Hauptklasse fuer den c't-Sim
+ * 
+ * @author Felix Beckwermert
  *
  */
 public class CtSimFrame extends JFrame {
@@ -103,6 +116,10 @@ public class CtSimFrame extends JFrame {
 	private File tmpParcoursFile;
 	
 	
+	/**
+	 * Der Konstruktor
+	 * @param title Die Titelzeile des Fensters
+	 */
 	public CtSimFrame(String title) {
 		
 		// TODO: Titel setzen (?)
@@ -115,6 +132,9 @@ public class CtSimFrame extends JFrame {
 		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter() {
 			
+			/* (non-Javadoc)
+			 * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
+			 */
 			public void windowClosing(WindowEvent e) {
 				
 				cmdExitClicked();
@@ -266,6 +286,9 @@ public class CtSimFrame extends JFrame {
 		this.openWorld = new AbstractAction("Öffnen...",
 				new ImageIcon(this.openImg)) {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdOpenWorldClicked();
@@ -274,6 +297,9 @@ public class CtSimFrame extends JFrame {
 		this.randomWorld = new AbstractAction("Generieren...",
 				new ImageIcon(this.randomImg)) {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdRandomWorldClicked();
@@ -282,6 +308,9 @@ public class CtSimFrame extends JFrame {
 		this.closeWorld = new AbstractAction("Schließen",
 				new ImageIcon(this.closeImg)) {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdCloseWorldClicked();
@@ -290,6 +319,9 @@ public class CtSimFrame extends JFrame {
 		this.saveWorld = new AbstractAction("Speichern als...",
 				new ImageIcon(this.saveImg)) {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdSaveWorldClicked();
@@ -300,6 +332,9 @@ public class CtSimFrame extends JFrame {
 		// Bot-Actions
 		this.selectJudge = new AbstractAction("Schiedsrichter wählen...") {
 			
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdSetJudgeClicked();
@@ -307,6 +342,9 @@ public class CtSimFrame extends JFrame {
 		};
 		this.addBot = new AbstractAction("Bot hinzufügen...") {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdAddBotClicked();
@@ -314,6 +352,9 @@ public class CtSimFrame extends JFrame {
 		};
 		this.configBots = new AbstractAction("Bots konfigurieren...") {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdConfigureBotsClicked();
@@ -325,6 +366,9 @@ public class CtSimFrame extends JFrame {
 		this.start = new AbstractAction("Start",
 				new ImageIcon(this.playImg)) {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdStartClicked();
@@ -333,6 +377,9 @@ public class CtSimFrame extends JFrame {
 		this.stop = new AbstractAction("Stop",
 				new ImageIcon(this.stopImg)) {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdStopClicked();
@@ -341,6 +388,9 @@ public class CtSimFrame extends JFrame {
 		this.pause = new AbstractAction("Pause",
 				new ImageIcon(this.pauseImg)) {
 
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdPauseClicked();
@@ -702,11 +752,17 @@ public class CtSimFrame extends JFrame {
 		Debug.out.println("Welt wurde geschlossen.");
 	}
 	
+	/**
+	 * @param rate Die neue Taktrate fuer den Simulator
+	 */
 	protected void setTickRate(long rate) {
 		
 		this.controller.setTickRate(rate);
 	}
 	
+	/**
+	 * Aktualisiert die GUI
+	 */
 	public void update() {
 		
 		// TODO: Größe sichern...
@@ -724,6 +780,10 @@ public class CtSimFrame extends JFrame {
 		this.worldPanel.update();
 	}
 	
+	/**
+	 * Aktualisiert die GUI 
+	 * @param time Die Zeit, die zur Simulatorzeit hinzugezaehlt wird
+	 */
 	public void update(long time) {
 		
 		// TODO: alles ganz hässlich:
@@ -733,6 +793,10 @@ public class CtSimFrame extends JFrame {
 	
 	
 	// TODO:
+	/**
+	 * Fuegt einen neuen Bot hinzu
+	 * @param botInfo Die Informationen rund um den neuen Bot
+	 */
 	public void addBot(BotInfo botInfo) {
 		
 		this.controlBar.addBot(botInfo);
@@ -747,7 +811,8 @@ public class CtSimFrame extends JFrame {
 	}
 	
 	/**
-	 * @param args
+	 * Hauptmethode
+	 * @param args bleibt leer
 	 */
 	public static void main(String[] args) {
 		
@@ -777,16 +842,12 @@ public class CtSimFrame extends JFrame {
 			}
 			*/
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -800,7 +861,7 @@ public class CtSimFrame extends JFrame {
 	}
 	
 	//////////////////////////////////////////////////////////////////////
-	// TestfÃ¤lle:
+	// Testfaelle:
 	
 	// Testfall 1:
 //	public static void testfall1(CtSimFrame simFrame) {
