@@ -38,6 +38,12 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	@Override
 	public void initGUI() {
 		
+		// Panel mit GridLayout: links 4 Labels mit X,Y,Z,H; rechts die Spinner, die dann aufrufen:
+		//this.position.setPos(  -- Point3d --  );
+		//this.position.setHead(  --  Vector3d  --  );
+		// Am besten im Pause-Modus testen (da die Werte ansonsten -- vielleicht -- nicht genommen werden
+		// (aber hoffentlich im Pause-Modus))
+		
 		this.setBorder(new TitledBorder(new EtchedBorder(), "Position/Heading"));
 		
 		this.columns.add("Koordinate");

@@ -45,4 +45,8 @@ public abstract class BotPosition extends BotComponent {
 	public abstract Point3d getAbsPosition();
 	
 	public abstract Vector3d getAbsHeading();
+	
+	public abstract void setPos(Point3d pos);
+	
+	public abstract void setHead(Vector3d head);
 }

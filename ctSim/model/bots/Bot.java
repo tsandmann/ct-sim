@@ -132,6 +132,18 @@ public abstract class Bot extends AliveObstacle{
 				// TODO Auto-generated method stub
 				return this.getRelHeading();
 			}
+
+			@Override
+			public void setPos(Point3d pos) {
+				
+				setPosition(pos);
+			}
+
+			@Override
+			public void setHead(Vector3d head) {
+				
+				setHeading(head);
+			}
 		};
 		
 		this.acts = new ArrayList<Actuator>();
