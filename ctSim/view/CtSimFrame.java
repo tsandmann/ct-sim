@@ -427,7 +427,7 @@ public class CtSimFrame extends JFrame {
 		worldMenu.add(this.closeWorld);
 		worldMenu.add(this.saveWorld);
 		
-		JMenu botMenu = new JMenu("Bearbeiten");
+		JMenu botMenu = new JMenu("Hinzufuegen");
 		//botMenu.getPopupMenu().setLightWeightPopupEnabled(false);
 		botMenu.add(this.selectJudge);
 		botMenu.addSeparator();

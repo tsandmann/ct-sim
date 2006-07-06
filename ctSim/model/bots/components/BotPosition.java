@@ -7,6 +7,7 @@ import javax.vecmath.Vector3d;
 import ctSim.view.ComponentGroupGUI;
 import ctSim.view.PositionGUI;
 
+
 public abstract class BotPosition extends BotComponent {
 
 	public BotPosition(String name, Point3d pos, Vector3d head) {

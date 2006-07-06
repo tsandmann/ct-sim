@@ -36,7 +36,7 @@ import java.lang.Math;
 public class SimUtils {
 
 	/**
-	 * Errechnet aus einem javax.vecmath.Vector3f eine ganzzahlig gerundete
+	 * Errechnet aus einem javax.vecmath.Vector3d eine ganzzahlig gerundete
 	 * Gradangabe und gibt sie als String zurück. Diese Methode wird zur Anzeige
 	 * der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
@@ -44,21 +44,21 @@ public class SimUtils {
 	 *            der Eingabevektor
 	 * @return die Gradzahl als String
 	 */
-	public static String vec3fToString(Vector3f vec) {
-		return new Integer(Math.round(Math.round(vec3fToDouble(vec))))
+	public static String vec3dToString(Vector3d vec) {
+		return new Integer(Math.round(Math.round(vec3dToDouble(vec))))
 				.toString();
 	}
 
 	/**
-	 * Errechnet aus einem javax.vecmath.Vector3f eine Gradangabe. Diese Methode
+	 * Errechnet aus einem javax.vecmath.Vector3d eine Gradangabe. Diese Methode
 	 * wird zur Anzeige der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
 	 * @param vec
 	 *            der Eingabevektor
 	 * @return die (gerundete) Gradzahl als int-Wert
 	 */
-	public static double vec3fToDouble(Vector3f vec) {
-		Vector3f north = new Vector3f(0f, 1f, 0f);
+	public static double vec3dToDouble(Vector3d vec) {
+		Vector3d north = new Vector3d(0d, 1d, 0d);
 		double rad = vec.angle(north);
 		double deg = Math.toDegrees(rad);
 		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
@@ -71,20 +71,20 @@ public class SimUtils {
 
 	/**
 	 * Erzeugt aus einer Grad-Angabe einen normalisierten
-	 * javax.vecmath.Vector3f. Diese Methode wird zum Setzen der
+	 * javax.vecmath.Vector3d. Diese Methode wird zum Setzen der
 	 * Bot-Blickrichtung ueber das ControlPanel benutzt.
 	 * 
 	 * @param deg
 	 *            der Winkel in Grad
 	 * @return der neue Blickvektor
 	 */
-	public static Vector3f intToVec3f(int deg) {
+	public static Vector3d intToVec3d(int deg) {
 		double rad = Math.toRadians(deg);
 		// Sinus und Cosinus sind hier vertauscht, weil
 		// 0° in Richtung der positiven Y-Achse zeigen soll!
 		double x = Math.sin(rad);
 		double y = Math.cos(rad);
-		Vector3f newHead = new Vector3f(new Point3d(x, y, 0d));
+		Vector3d newHead = new Vector3d(new Point3d(x, y, 0d));
 		return newHead;
 	}
 
