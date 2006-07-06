@@ -6,6 +6,9 @@ import mindprod.ledatastream.LEDataInputStream;
 import mindprod.ledatastream.LEDataOutputStream;
 import jd2xx.*;
 
+/**
+ * Verbindet einen Bot ueber JD2XX-Verbindung mit dem Simulator
+ */
 public class JD2xxConnection extends Connection {
 
 	private JD2XX jd = new JD2XX();
@@ -20,6 +23,11 @@ public class JD2xxConnection extends Connection {
 		return count;
 	}
 	
+	/**
+	 * Stellt die Verbindung her
+	 * 
+	 * @throws IOException
+	 */
 	public void connect() throws IOException {
 		try {
 			if (list() ==0){
@@ -46,6 +54,7 @@ public class JD2xxConnection extends Connection {
 	/**
 	 * Beendet die laufende Verbindung
 	 * 
+	 * @Override CtSim.connection.disconnect
 	 * @throws IOException
 	 * @throws Exception
 	 */
@@ -58,9 +67,11 @@ public class JD2xxConnection extends Connection {
 		}
 	}	
 	
+	/**
+	 * Der Konstruktor
+	 */
 	public JD2xxConnection() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

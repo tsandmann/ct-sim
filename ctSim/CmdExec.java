@@ -27,9 +27,6 @@ import java.io.InputStream;
  */
 public class CmdExec {
 
-	public CmdExec() {
-	}
-
 	/**
 	 * Fuehrt ein externes Programm aus
 	 * @param cmdline

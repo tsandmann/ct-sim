@@ -26,8 +26,9 @@ import mindprod.ledatastream.LEDataOutputStream;
 
 /**
  * Repraesentiert eine Verbindung
+ * 
  * @author bbe (bbe@heise.de)
- *
+ * 
  */
 public abstract class Connection {
 
@@ -42,13 +43,13 @@ public abstract class Connection {
 	 */
 	public Connection() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * Liest ein Byte
 	 * 
 	 * @return das Byte
+	 * @throws IOException
 	 */
 	public int readUnsignedByte() throws IOException {
 		int data;
@@ -62,6 +63,7 @@ public abstract class Connection {
 	 * Liest einen 16-Bit-Ganzzahlwert (short)
 	 * 
 	 * @return das Datum
+	 * @throws IOException
 	 */
 	public short readShort() throws IOException {
 		short data = 0;
@@ -138,10 +140,11 @@ public abstract class Connection {
 	}
 
 	/**
-	 * @param dis Referenz auf dis, die gesetzt werden soll
+	 * @param disIn
+	 *            Referenz auf dis, die gesetzt werden soll
 	 */
-	public void setDis(LEDataInputStream dis) {
-		this.dis = dis;
+	public void setDis(LEDataInputStream disIn) {
+		this.dis = disIn;
 	}
 
 	/**
@@ -152,10 +155,11 @@ public abstract class Connection {
 	}
 
 	/**
-	 * @param dos Referenz auf dos, die gesetzt werden soll
+	 * @param dosIn
+	 *            Referenz auf dos, die gesetzt werden soll
 	 */
-	public void setDos(LEDataOutputStream dos) {
-		this.dos = dos;
+	public void setDos(LEDataOutputStream dosIn) {
+		this.dos = dosIn;
 	}
 
 }

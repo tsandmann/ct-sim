@@ -51,7 +51,7 @@ public class TcpConnection extends Connection {
 	/**
 	 * Lauscht auf einem Port und initialisiert die Verbindung
 	 * 
-	 * @deprecated Bitte diese Methode nicht mehr verwenden, da sie
+	 * @Deprecated Bitte diese Methode nicht mehr verwenden, da sie
 	 * ihren Port nicht wieder freigibt.
 	 * @param port
 	 *            Der Port, auf dem gelauscht werden soll
@@ -143,6 +143,7 @@ public class TcpConnection extends Connection {
 	 * 
 	 * @throws IOException
 	 * @throws Exception
+	 * @Override CtSim.Connection.disconnect()
 	 */
 	public synchronized void disconnect() throws IOException, Exception {
 		super.disconnect();
