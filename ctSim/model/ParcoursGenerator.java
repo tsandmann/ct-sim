@@ -235,9 +235,13 @@ public class ParcoursGenerator {
 
 	/**
 	 * Diese Methode generiert das eigentliche Labyrinth. Parameter werden
-	 * innerhalb fester Grenzen zufaellig gesetzt: Breite zwischen 12 und 30
-	 * Feldern Hoehe zwischen 12 und 30 Feldern wallRoughness = 5 innerRoughness =
-	 * 5 twirling = 3 perforation = 10
+	 * innerhalb fester Grenzen zufaellig gesetzt: 
+	 * Breite zwischen 12 und 30 Feldern; 
+	 * Hoehe zwischen 12 und 30 Feldern; 
+	 * wallRoughness zwischen 2 und 6;
+	 * innerRoughness zwischen 7 und 12;
+	 * twirling zwischen 2 und 5;
+	 * perforation zwischen 6 und 20
 	 * 
 	 * @return Der Parcours als XML-String
 	 */
@@ -247,7 +251,7 @@ public class ParcoursGenerator {
 		w = rand.nextInt(10) + 6; // Breite zwischen 12 und 30 Felder
 		h = rand.nextInt(19) + 12; // Hoehe zwischen 12 und 30 Felder
 		wr = rand.nextInt(5) + 2; // zwischen 2 und 6; 
-		ir = rand.nextInt(6) + 5; // zwischen 5 und 10;
+		ir = rand.nextInt(6) + 7; // zwischen 7 und 12;
 		t = rand.nextInt(4) + 2; // zwischen 2 und 5;
 		p = rand.nextInt(15) + 6; // zwischen 6 und 20;
 		// Rufe Methode mit den Parametern auf:

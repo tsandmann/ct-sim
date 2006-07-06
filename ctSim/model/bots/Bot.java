@@ -36,7 +36,11 @@ import ctSim.ErrorHandler;
 import ctSim.controller.Controller;
 import ctSim.model.AliveObstacle;
 import ctSim.model.bots.components.Actuator;
+import ctSim.model.bots.components.Position;
 import ctSim.model.bots.components.Sensor;
+import ctSim.model.bots.components.sensors.SimpleSensor;
+import ctSim.model.bot.components.positions.*;
+import ctSim.SimUtils;
 
 /**
  * Superklasse fuer alle Bots, unabhaengig davon, ob sie real oder simuliert
@@ -53,6 +57,7 @@ import ctSim.model.bots.components.Sensor;
 
 abstract public class Bot extends AliveObstacle{
 	
+	private List<Position> pos;
 	private List<Actuator> acts;
 	private List<Sensor> sens;
 	
@@ -93,6 +98,97 @@ abstract public class Bot extends AliveObstacle{
 		
 		this.acts = new ArrayList<Actuator>();
 		this.sens = new ArrayList<Sensor>();
+		this.pos = new ArrayList<Position>();
+		initPosition();
+	}
+	
+	private void initPosition(){
+		// X-Position
+		this.addPosition(new SimplePosition<Float>("X-Position", "", 0.0) {
+
+			@Override
+			public Float getValue() {
+				return new Float(getPos().x);
+			}
+
+			@Override
+			public void setValue(Float value) {
+				setPos (new Vector3f(value.floatValue(), getPos().y, getGroundClearance() + getHeight()/2));
+				// TODO: stimmt z-Wert ?
+			}
+
+			@Override
+			public String getType() {
+				
+				return "Metrisch";
+			}
+
+			@Override
+			public String getDescription() {
+				
+				return "Position im Parcours";
+			}
+		});
+
+		// TODO: Positionen und Winkel stimmen nicht mehr und lassen sich 
+		// noch nicht setzen
+		
+		// Y-Position
+		this.addPosition(new SimplePosition<Float>("Y-Position", "", 0.0) {
+
+			@Override
+			public Float getValue() {
+				return new Float(getPos().y);
+			}
+
+			@Override
+			public void setValue(Float value) {
+				setPos (new Vector3f(getPos().x, value.floatValue(), getGroundClearance() + getHeight()/2));
+				// TODO: korrekter z-Wert fehlt noch!!!
+			}
+
+			@Override
+			public String getType() {
+				
+				return "Metrisch";
+			}
+
+			@Override
+			public String getDescription() {
+				
+				return "Position im Parcours";
+			}
+		});
+
+
+		// Blickrichtung
+		this.addPosition(new SimplePosition<Double>("Blickrichtung", "", 0.0) {
+
+			@Override
+			public Double getValue() {
+				return new Double(SimUtils.vec3fToDouble(getPos()));
+			}
+
+			@Override
+			public void setValue(Double value) {
+
+				// TODO: echten Wert rausgeben
+
+			}
+
+			@Override
+			public String getType() {
+				
+				return "Winkel in Grad";
+			}
+
+			@Override
+			public String getDescription() {
+				
+				return "Blickrichtung des Bot";
+			}
+		});
+
 	}
 	
 	public final List<Actuator> getActuators() {
@@ -104,6 +200,12 @@ abstract public class Bot extends AliveObstacle{
 		
 		return this.sens;
 	}
+
+	public final List<Position> getPositions() {
+		
+		return this.pos;
+	}
+
 	
 	protected final void addActuator(Actuator act) {
 		
@@ -114,6 +216,12 @@ abstract public class Bot extends AliveObstacle{
 		
 		this.sens.add(sens);
 	}
+
+	protected final void addPosition(Position posi) {
+		
+		this.pos.add(posi);
+	}
+
 	
 	/**
 	 * Der Aufruf dieser Methode direkt nach dem Erzeugen sorgt dafuer, dass der

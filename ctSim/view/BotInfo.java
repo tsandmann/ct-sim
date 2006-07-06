@@ -5,6 +5,7 @@ import java.util.List;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.Sensor;
+import ctSim.model.bots.components.Position;
 
 public final class BotInfo {
 	
@@ -54,6 +55,11 @@ public final class BotInfo {
 	public List<Actuator> getActuators() {
 		
 		return this.bot.getActuators();
+	}
+
+	public List<Position> getPositions() {
+		
+		return this.bot.getPositions();
 	}
 	
 	public List<Sensor> getSensors() {

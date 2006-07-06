@@ -30,7 +30,7 @@ import javax.vecmath.Vector3f;
 import ctSim.controller.Controller;
 
 /**
- * Klasse fuer alle Hindernisse die sich selbst bewegn können
+ * Klasse fuer alle Hindernisse die sich selbst bewegen koennen
  * 
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
