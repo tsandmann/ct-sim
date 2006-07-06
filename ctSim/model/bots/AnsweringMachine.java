@@ -24,7 +24,7 @@ import java.io.IOException;
 import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.model.Command;
-import ctSim.model.bots.ctbot.TcpBot;
+import ctSim.model.bots.TcpBot;
 
 /**
  * Kuemmert sich um die Beantwortung eingehender Kommanods
@@ -76,7 +76,7 @@ public class AnsweringMachine extends Thread {
 		while (run) {
 			try {
 				valid = command.readCommand(con);
-				System.out.println("incoming command");
+				//System.out.println("incoming command");
 				if (valid == 0) {// Kommando ist in Ordnung
 					bot.evaluate_command(command);
 				} else

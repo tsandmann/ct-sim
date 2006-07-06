@@ -38,6 +38,7 @@ import com.sun.j3d.utils.geometry.Cylinder;
 
 import ctSim.SimUtils;
 import ctSim.controller.Controller;
+import ctSim.view.Debug;
 
 /**
  * Klasse fuer alle Hindernisse die sich selbst bewegen koennen
@@ -389,6 +390,7 @@ public abstract class AliveObstacle
 		} catch(InterruptedException ie) {
 			// nothing...
 		}
+		Debug.out.println(this.getName()+" stirbt...");
 		// TODO: ???
 		//cleanup();
 	}

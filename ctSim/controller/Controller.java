@@ -54,6 +54,7 @@ import ctSim.ErrorHandler;
 import ctSim.JD2xxConnection;
 import ctSim.TcpConnection;
 import ctSim.model.bots.ctbot.CtBot;
+import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.Command;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
@@ -363,12 +364,12 @@ public final class Controller implements Runnable {
 //									con);
 //							System.out.println("Real Bot comming up");
 						} else {
-//							bot = new CtBotSimTcp(
-//									new Point3f(0.5f, 0f, 0f),
-//									new Vector3f(1.0f, -0.5f, 0f),
-//									con);
+							bot = new CtBotSimTcp(this.world, "Test C-Bot",
+									new Point3d(0.5f, 0f, 0f),
+									new Vector3d(1.0f, -0.5f, 0f),
+									con);
 							System.out.println("Virtual Bot comming up");
-							System.exit(0);  // <<------------------------ !!!!!!!!!!!!
+							//System.exit(0);  // <<------------------------ !!!!!!!!!!!!
 						}
 					} else {
 						System.out.print("Non-Welcome-Command found: \n"

@@ -38,9 +38,10 @@ public abstract class BotComponent {
 	}
 	
 	public String getName() {
+
 		return name;
 	}
-
+	
 	public Point3d getRelPosition() {
 		
 		return this.relPos;

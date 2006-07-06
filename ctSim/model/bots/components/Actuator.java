@@ -20,7 +20,7 @@ public abstract class Actuator<E> extends BotComponent {
 //		return gui;
 //	}
 	
-	protected abstract void setValue(E value);
+	public abstract void setValue(E value);
 	
 	public abstract E getValue();
 }

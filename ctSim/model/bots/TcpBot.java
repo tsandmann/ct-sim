@@ -17,7 +17,7 @@
  * 
  */
 
-package ctSim.model.bots.ctbot.old;
+package ctSim.model.bots;
 
 import ctSim.model.Command;
 

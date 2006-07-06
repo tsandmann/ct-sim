@@ -684,17 +684,17 @@ public class World {
 		// TODO: Wieder rein??
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
-		System.out.println(relPos);
+//		System.out.println(relPos);
 		Transform3D transform = new Transform3D();
 		worldTG.getTransform(transform);
 		transform.transform(relPos);
-		System.out.println(relPos);
+//		System.out.println(relPos);
 
 		// oder rotiert:
 		Vector3d relHeading = new Vector3d(heading);
-		System.out.println(relHeading);
+//		System.out.println(relHeading);
 		transform.transform(relHeading);
-		System.out.println(relHeading);
+//		System.out.println(relHeading);
 		
 //		Point3d relPos = pos;
 //		Vector3d relHeading = heading;
