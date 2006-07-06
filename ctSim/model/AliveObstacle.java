@@ -24,20 +24,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.media.j3d.Appearance;
-import javax.media.j3d.BoundingSphere;
-import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
-import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.ViewPlatform;
 import javax.vecmath.AxisAngle4d;
-import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.geometry.Cylinder;
 
@@ -98,6 +93,11 @@ public abstract class AliveObstacle
 //		initBG();
 //	}
 	
+	/**
+	 * Der Konstruktor
+	 * @param position Position des Objekts
+	 * @param heading Blickrichtung des Objekts
+	 */
 	public AliveObstacle(Point3d position, Vector3d heading) {
 		
 		this.pos = position;
@@ -143,11 +143,17 @@ public abstract class AliveObstacle
 //		addNodeReference(BG,bg);
 	}
 	
+	/**
+	 * @return Die 3D-Gestalt des Objekts
+	 */
 	public final Shape3D getShape() {
 		
 		return this.shape;
 	}
 	
+	/**
+	 * @param shape 3D-Gestalt, die das Objekt erhalten soll
+	 */
 	public final void setShape(Shape3D shape) {
 		
 		// TODO: Test: Reicht auch einfach "this.shape"-Referenz anzupassen?
@@ -175,20 +181,33 @@ public abstract class AliveObstacle
 		this.shape.setAppearance(it.next());
 	}
 	
+	/**
+	 * @param ctrl Referenz auf den Controller, die gesetzt werden soll
+	 */
 	public final void setController(Controller ctrl) {
 		
 		this.controller = ctrl;
 	}
 	
+	/**
+	 * @param world Referenz auf die Welt, die gesetzt werden soll
+	 */
 	public void setWorld(World world) {
 		this.world = world;
 	}
 	
+	/* (non-Javadoc)
+	 * @see ctSim.model.Obstacle#getBranchGroup()
+	 */
 	public final BranchGroup getBranchGroup() {
 		
 		return this.branchgrp;
 	}
 	
+	/**
+	 * @param relTrans
+	 * @param comp
+	 */
 	public final void addBranchComponent(Transform3D relTrans, Node comp) {
 		
 		TransformGroup tg = new TransformGroup();
@@ -198,6 +217,9 @@ public abstract class AliveObstacle
 		this.transformgrp.addChild(tg);
 	}
 	
+	/**
+	 * @param relTrans
+	 */
 	public final void addViewingPlatform(Transform3D relTrans) {
 		
 		ViewPlatform view = new ViewPlatform();
@@ -208,13 +230,16 @@ public abstract class AliveObstacle
 	}
 	
 	// TODO: Besser Set oder Iterator/Enumerator (dann nicht mehr veränderlich?)
+	/**
+	 * @return
+	 */
 	public final List<ViewPlatform> getViewingPlatforms() {
 		
 		return this.views;
 	}
 	
-	/* Startet den Bot (bzw. dessen Thread).
-	 * 
+	/**
+	 * Startet den Bot (bzw. dessen Thread).
 	 */
 	public final void start() {
 		
@@ -223,8 +248,8 @@ public abstract class AliveObstacle
 		this.thrd.start();
 	}
 	
-	/* Stoppt den Bot (bzw. dessen Thread).
-	 * 
+	/**
+	 *  Stoppt den Bot (bzw. dessen Thread).
 	 */
 	public final void stop() {
 		
@@ -233,8 +258,8 @@ public abstract class AliveObstacle
 		dummy.interrupt();
 	}
 	
-	/* Gibt den Namen des Objektes zurück.
-	 * 
+	/**
+	 * @return Gibt den Namen des Objektes zurück.  
 	 */
 	abstract public String getName();
 	
@@ -267,11 +292,17 @@ public abstract class AliveObstacle
 	}
 	
 	// TODO: Vorischt: Heading ist relativ zur Welt!
+	/* (non-Javadoc)
+	 * @see ctSim.model.Obstacle#getHeading()
+	 */
 	public final Vector3d getHeading() {
 		
 		return this.head;
 	}
 	
+	/**
+	 * @return
+	 */
 	public final Transform3D getTransform() {
 		
 //		Transform3D transform = new Transform3D();
@@ -308,6 +339,9 @@ public abstract class AliveObstacle
 		//}
 	}
 	
+	/* (non-Javadoc)
+	 * @see ctSim.model.MovableObstacle#setHeading(javax.vecmath.Vector3d)
+	 */
 	public final synchronized void setHeading(Vector3d vec) {
 		
 		this.head = vec;
@@ -340,7 +374,6 @@ public abstract class AliveObstacle
 	 * 
 	 * @see AliveObstacle#init()
 	 * @see AliveObstacle#work()
-	 * @see AliveObstacle#cleanup()
 	 */
 	public final void run() {
 		
@@ -467,6 +500,8 @@ public abstract class AliveObstacle
 	/**
 	 * Liefert den Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
 	 * Zustaende sind ein Bitmaske aus den OBST_STATE_ Konstanten
+	 * 
+	 * @return Der Zustand des Objekts
 	 */
 	public int getObstState() {
 		return obstState;
@@ -475,6 +510,8 @@ public abstract class AliveObstacle
 	/**
 	 * Setztden Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
 	 * Zustaende sind ein Bitmaske aus den OBST_STATE_ Konstanten
+	 * 
+	 * @param state Der Zustand, der gesetzt werden soll
 	 */
 	public void setObstState(int state) {
 		this.obstState = state;

@@ -41,8 +41,6 @@ public class BorderSensor extends SimpleSensor<Short> {
 
 	/**
 	 * Baut die 3D-Repraesentation des Bot-Koerpers aus 2D-Polygonen zusammen
-	 *  
-	 * @return Koerper des Bots 
 	 */
 	// TODO: Testshape vom Bot
 	private void initShape() {

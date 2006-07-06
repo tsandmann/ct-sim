@@ -42,6 +42,9 @@ public abstract interface Obstacle {
 	 */
 	public abstract Point3d getPosition() ;
 	
+	/**
+	 * @return Gibt die Blickrichtung zurueck
+	 */
 	public abstract Vector3d getHeading();
 	
 	/**
@@ -49,5 +52,8 @@ public abstract interface Obstacle {
 	 */
 	//public abstract void createBranchGroup();
 	
+	/**
+	 * @return die 3D-Repraesentation eines Objektes
+	 */
 	public abstract BranchGroup getBranchGroup();
 }

@@ -99,7 +99,6 @@ public class MousePicture {
 	}
 
 	/**
-	 * @return Gibt eine Referenz auf dimX zurueck
 	 * @return Gibt den Wert von dimX zurueck
 	 */
 	public int getDimX() {
@@ -108,7 +107,6 @@ public class MousePicture {
 
 
 	/**
-	 * @return Gibt eine Referenz auf dimY zurueck
 	 * @return Gibt den Wert von dimY zurueck
 	 */
 	public int getDimY() {
@@ -117,7 +115,6 @@ public class MousePicture {
 
 
 	/**
-	 * @return Gibt eine Referenz auf complete zurueck
 	 * @return Gibt den Wert von complete zurueck
 	 */
 	public boolean isComplete() {

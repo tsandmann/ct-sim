@@ -84,6 +84,9 @@ public class World {
 	
 	private Set<ViewPlatform> views;
 	
+	/**
+	 * Der Konstruktor
+	 */
 	public World() {
 		
 		this.aliveObsts = new HashSet<AliveObstacle>();
@@ -96,6 +99,10 @@ public class World {
 //		this.sceneLightBackup = this.sceneLight.clone();
 	}
 	
+	/**
+	 * Alternativer Konstruktor 
+	 * @param parcours Der Parcours, den die Welt enthalten soll
+	 */
 	public World(Parcours parcours) {
 		
 		this.aliveObsts = new HashSet<AliveObstacle>();
@@ -355,7 +362,7 @@ public class World {
 	 * zwischen Bots und Welt
 	 * 
 	 * @return Die aktuelle Weltzeit in ms
-	 * @throws InterruptedException
+	 * @Throws InterruptedException
 	 */
 	public long getSimulTime() {
 		return simulTime;

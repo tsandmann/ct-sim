@@ -41,12 +41,16 @@ public interface MovableObstacle extends Obstacle {
 	/**
 	 * Liefert den Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
 	 * Zustaende sind ein Bitmaske aus den OBST_STATE_ Konstanten
+	 *
+	 *@return Der Zustand des Objekts
 	 */
 	public int getObstState();
 	
 	/**
-	 * Setztden Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
+	 * Setzt den Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
 	 * Zustaende sind ein Bitmaske aus den OBST_STATE_ Konstanten
+	 * 
+	 * @param state Der Zustand, der gesetzt werden soll
 	 */
 	public void setObstState(int state);
 	
@@ -59,6 +63,9 @@ public interface MovableObstacle extends Obstacle {
 	 */
 	public void setPosition(Point3d pos);
 	
+	/**
+	 * @param head Die Blickrichtung, die gesetzt werden soll
+	 */
 	public void setHeading(Vector3d head);
 	
 	/**

@@ -151,7 +151,7 @@ public class LEDataInputStream implements DataInput {
      * @return a rough approximation of the 8-bit stream as a 16-bit unicode
      *         string
      * @throws IOException
-     * @deprecated This method does not properly convert bytes to characters.
+     * @Deprecated This method does not properly convert bytes to characters.
      *             Use a Reader instead with a little-endian encoding.
      */
     public final String readLine () throws IOException

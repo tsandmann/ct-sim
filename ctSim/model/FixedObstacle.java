@@ -19,8 +19,6 @@
 
 package ctSim.model;
 
-import javax.media.j3d.*;
-
 /**
  * Ein festes Hindernis in der Welt der Bots.
  * 

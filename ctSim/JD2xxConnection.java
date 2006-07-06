@@ -54,7 +54,7 @@ public class JD2xxConnection extends Connection {
 	/**
 	 * Beendet die laufende Verbindung
 	 * 
-	 * @Override CtSim.connection.disconnect
+	 * @override CtSim.connection.disconnect
 	 * @throws IOException
 	 * @throws Exception
 	 */

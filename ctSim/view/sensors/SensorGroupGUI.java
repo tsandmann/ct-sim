@@ -66,11 +66,11 @@ public abstract class SensorGroupGUI<E extends Sensor> extends ComponentGroupGUI
 	
 	/**
 	 * Fuegt einen Sensor hinzu
-	 * @param act Der Sensor
+	 * @param sens Der Sensor
 	 */
-	public void addSensor(E act) {
+	public void addSensor(E sens) {
 		
-		this.sensors.add(act);
+		this.sensors.add(sens);
 	}
 	
 	/**
