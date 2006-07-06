@@ -277,6 +277,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			// ... und die alte Position entsprechend veraendern.
 			newPos.add(moveDirection);
 			
+			// TODO: Pos nur setzen, wenn Status o.k. -> s.u.
 			this.setPosition(new Point3d(newPos));
 			this.setHeading(newHeading);
 			

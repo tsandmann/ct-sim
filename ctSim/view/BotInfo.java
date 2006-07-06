@@ -22,8 +22,9 @@ import java.util.List;
 
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
+import ctSim.model.bots.components.BotComponent;
+import ctSim.model.bots.components.BotPosition;
 import ctSim.model.bots.components.Sensor;
-import ctSim.model.bots.components.Position;
 
 /**
  * Buendelt Informationen zum Bot
@@ -104,13 +105,13 @@ public final class BotInfo {
 		return this.bot.getActuators();
 	}
 
-	/**
-	 * @return die Liste aller Positionsanzeiger des Bot
-	 */
-	public List<Position> getPositions() {
-		
-		return this.bot.getPositions();
-	}
+//	/**
+//	 * @return die Liste aller Positionsanzeiger des Bot
+//	 */
+//	public List<Position> getPositions() {
+//		
+//		return this.bot.getPositions();
+//	}
 	
 	/**
 	 * @return die Liste aller Sensoren des Bot
@@ -119,4 +120,14 @@ public final class BotInfo {
 		
 		return this.bot.getSensors();
 	}
+	
+	public BotPosition getBotPosition() {
+		
+		return this.bot.getBotPosition();
+	}
+	
+//	public List<BotComponent> getBotComponents() {
+//		
+//		return this.bot.getComponents();
+//	}
 }

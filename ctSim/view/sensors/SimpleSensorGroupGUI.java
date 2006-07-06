@@ -55,7 +55,15 @@ private Vector<String> columns = new Vector<String>();
 		this.columns.add("Sensor");
 		this.columns.add("Wert");
 		
-		this.tabData = new DefaultTableModel(columns, this.getAllSensors().size());
+		this.tabData = new DefaultTableModel(columns, this.getAllSensors().size()) {
+			
+			public boolean isCellEditable(int row, int col) {
+				
+				if(col == 0)
+					return false;
+				return true;
+			}
+		};
 		
 		Iterator<E> it = this.getAllSensors().iterator();
 		for(int i=0; it.hasNext(); i++) {

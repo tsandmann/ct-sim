@@ -55,7 +55,15 @@ public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGr
 		this.columns.add("Aktuator");
 		this.columns.add("Wert");
 		
-		this.tabData = new DefaultTableModel(columns, this.getAllActuators().size());
+		this.tabData = new DefaultTableModel(columns, this.getAllActuators().size()) {
+			
+			public boolean isCellEditable(int row, int col) {
+				
+				if(col == 0)
+					return false;
+				return true;
+			}
+		};
 		
 		Iterator<E> it = this.getAllActuators().iterator();
 		for(int i=0; it.hasNext(); i++) {

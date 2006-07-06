@@ -41,7 +41,4 @@ public abstract class Position<E> extends BotComponent {
 	public abstract E getValue();
 	
 	public abstract void setValue(E value);
-
-	
-	
 }

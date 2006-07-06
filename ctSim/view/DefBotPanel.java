@@ -26,10 +26,8 @@ import java.util.List;
 import javax.swing.BoxLayout;
 
 import ctSim.model.bots.components.Actuator;
-import ctSim.model.bots.components.Position;
 import ctSim.model.bots.components.Sensor;
 import ctSim.view.actuators.ActuatorGroupGUI;
-import ctSim.view.positions.PositionGroupGUI;
 import ctSim.view.sensors.SensorGroupGUI;
 
 /**
@@ -59,22 +57,22 @@ public class DefBotPanel extends BotPanel {
 	 */
 	protected void initGUI() {
 		
-		List<PositionGroupGUI> posList = new ArrayList<PositionGroupGUI>();		
+//		List<PositionGroupGUI> posList = new ArrayList<PositionGroupGUI>();		
 		List<ActuatorGroupGUI> actsList = new ArrayList<ActuatorGroupGUI>();
 		List<SensorGroupGUI>   sensList = new ArrayList<SensorGroupGUI>();
 
-		for(Position p : this.getBotInfo().getPositions()) {
-			
-			PositionGroupGUI gGUI = p.getPositionGroupGUI();
-			
-			int idx = posList.indexOf(gGUI);
-			
-			if(idx < 0) {
-				posList.add(gGUI);
-			} else {
-				posList.get(idx).join(gGUI);
-			}
-		}
+//		for(Position p : this.getBotInfo().getPositions()) {
+//			
+//			PositionGroupGUI gGUI = p.getPositionGroupGUI();
+//			
+//			int idx = posList.indexOf(gGUI);
+//			
+//			if(idx < 0) {
+//				posList.add(gGUI);
+//			} else {
+//				posList.get(idx).join(gGUI);
+//			}
+//		}
 
 		
 		for(Actuator a : this.getBotInfo().getActuators()) {
@@ -104,7 +102,8 @@ public class DefBotPanel extends BotPanel {
 		}
 		
 		this.compList = new ArrayList<ComponentGroupGUI>();
-		this.compList.addAll(posList);
+//		this.compList.addAll(posList);
+		this.compList.add(this.getBotInfo().getBotPosition().getGUI());
 		this.compList.addAll(actsList);
 		this.compList.addAll(sensList);
 		Collections.sort(this.compList, new Comparator<ComponentGroupGUI>() {

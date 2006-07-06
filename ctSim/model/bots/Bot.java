@@ -38,7 +38,8 @@ import ctSim.ErrorHandler;
 import ctSim.controller.Controller;
 import ctSim.model.AliveObstacle;
 import ctSim.model.bots.components.Actuator;
-import ctSim.model.bots.components.Position;
+import ctSim.model.bots.components.BotComponent;
+import ctSim.model.bots.components.BotPosition;
 import ctSim.model.bots.components.Sensor;
 import ctSim.model.bots.components.sensors.SimpleSensor;
 import ctSim.model.bot.components.positions.*;
@@ -63,7 +64,9 @@ import ctSim.SimUtils;
  */
 public abstract class Bot extends AliveObstacle{
 	
-	private List<Position> pos;
+	private BotPosition posHead;
+	
+//	private List<Position> pos;
 	private List<Actuator> acts;
 	private List<Sensor> sens;
 	
@@ -104,14 +107,41 @@ public abstract class Bot extends AliveObstacle{
 	 	// Zu diesem Zeitpunkt ist die ganze 3D-Repraesentation bereits aufgebaut
 //		createViewingPlatform();
 		
+		this.posHead = new BotPosition(this.getName(), this.getPosition(), this.getHeading()) {
+
+			@Override
+			public Point3d getRelPosition() {
+				
+				return getPosition();
+			}
+
+			@Override
+			public Vector3d getRelHeading() {
+				// TODO Auto-generated method stub
+				return getHeading();
+			}
+
+			@Override
+			public Point3d getAbsPosition() {
+				// TODO Auto-generated method stub
+				return this.getRelPosition();
+			}
+
+			@Override
+			public Vector3d getAbsHeading() {
+				// TODO Auto-generated method stub
+				return this.getRelHeading();
+			}
+		};
+		
 		this.acts = new ArrayList<Actuator>();
 		this.sens = new ArrayList<Sensor>();
-		this.pos = new ArrayList<Position>();
-		initPosition();
+//		this.pos = new ArrayList<Position>();
+//		initPosition();
 	}
 	
-	private void initPosition(){
-		// X-Position
+//	private void initPosition(){
+//		// X-Position
 //		this.addPosition(new SimplePosition<Float>("X-Position", "", 0.0) {
 //
 //			@Override
@@ -196,8 +226,8 @@ public abstract class Bot extends AliveObstacle{
 //				return "Blickrichtung des Bot";
 //			}
 //		});
-
-	}
+//
+//	}
 	
 	public final List<Actuator> getActuators() {
 		
@@ -208,12 +238,27 @@ public abstract class Bot extends AliveObstacle{
 		
 		return this.sens;
 	}
-
-	public final List<Position> getPositions() {
+	
+	public final BotPosition getBotPosition() {
 		
-		return this.pos;
+		return this.posHead;
 	}
-
+	
+//	public final List<BotComponent> getComponents() {
+//		
+//		List<BotComponent> comps = new ArrayList<BotComponent>(this.sens.size()+this.acts.size()+1);
+//		
+//		comps.add(this.posHead);
+//		comps.addAll(this.sens);
+//		comps.addAll(this.acts);
+//		
+//		return comps;
+//	}
+	
+//	public final List<Position> getPositions() {
+//		
+//		return this.pos;
+//	}
 	
 	protected final void addActuator(Actuator act) {
 		
@@ -242,10 +287,10 @@ public abstract class Bot extends AliveObstacle{
 //		}
 	}
 
-	protected final void addPosition(Position posi) {
-		
-		this.pos.add(posi);
-	}
+//	protected final void addPosition(Position posi) {
+//		
+//		this.pos.add(posi);
+//	}
 
 	
 	/**
