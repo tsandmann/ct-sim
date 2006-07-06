@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.view;
 
 import java.awt.Dimension;
@@ -20,6 +38,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
+/**
+ * Zeigt Statusinformationen zum Simulator an
+ * 
+ * @author Felix Beckwermert
+ *
+ */
 public class StatusBar extends Box {
 	
 	private static final int MIN_TICK_RATE = 0;
@@ -37,6 +61,10 @@ public class StatusBar extends Box {
 	private JFormattedTextField tickRateField;
 	private JSlider tickRateSlider;
 	
+	/**
+	 * Konstruktor
+	 * @param par Referenz auf den Frame, in dem die StatusBar angezeigt wird
+	 */
 	StatusBar(CtSimFrame par) {
 		
 		super(BoxLayout.LINE_AXIS);
@@ -75,6 +103,9 @@ public class StatusBar extends Box {
 		this.add(this.tickRateSlider);
 	}
 	
+	/**
+	 * Erzeugt einen Schieberegler fuer den Simulatortakt
+	 */
 	void initTickRateSlider() {
 		
 		this.tickRateSlider = new JSlider(
@@ -102,6 +133,9 @@ public class StatusBar extends Box {
 		this.tickRateSlider.setBorder(BorderFactory.createEtchedBorder());
 	}
 	
+	/**
+	 * Erzeugt ein Anzeigefeld fuer den Simulatortakt
+	 */
 	void initTickRateField() {
 		
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
@@ -128,6 +162,9 @@ public class StatusBar extends Box {
 		});
 	}
 	
+	/**
+	 * @param time Zeitspanne, um die Simulatorzeit erhoeht werden soll
+	 */
 	public void updateTime(long time) {
 		
 //		this.timeField.setText("Time: "+time);
@@ -136,6 +173,9 @@ public class StatusBar extends Box {
 		this.timeLabel.setText("Zeit: "+String.format("%tT.%<tL", new Date(time-TIME_TO_SUB)));
 	}
 	
+	/**
+	 * Setzt den Simulatortakt auf den initialen Wert zurueck
+	 */
 	protected void reinit() {
 		
 		this.tickRateField.setValue(StatusBar.INIT_TICK_RATE);

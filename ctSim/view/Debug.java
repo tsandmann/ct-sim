@@ -75,6 +75,9 @@ public class Debug {
 		this.win = win;
 	}
 	
+	/**
+	 * @param str
+	 */
 	public synchronized void print(String str) {
 		
 		if(this.isNewLine)
@@ -98,6 +101,9 @@ public class Debug {
 			this.isNewLine = false;
 	}
 	
+	/**
+	 * @param str
+	 */
 	public synchronized void println(String str) {
 		
 		str = this.timeFormatter.format(new Date()) + str;
@@ -121,6 +127,9 @@ public class Debug {
 		this.isNewLine = true;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
 	protected void finalize() throws Throwable {
 		
 		try {
@@ -131,6 +140,9 @@ public class Debug {
 		}
 	}
 	
+	/**
+	 * @param win
+	 */
 	public static void registerDebugWindow(DebugWindow win) {
 		
 		Debug.out.setDebugWindow(win);

@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.view;
 
 import java.awt.BorderLayout;
@@ -16,11 +34,19 @@ import ctSim.model.World;
 import ctSim.model.bots.Bot;
 //import ctSim.model.scene.SceneUpdate;
 
+/**
+ * Packt den Blick auf die Roboterwelt in ein Panel
+ * @author Felix Beckwermert
+ *
+ */
 public class WorldPanel extends JPanel {
 	
 	private WorldView view;
 	private World world;
 	
+	/**
+	 * Der Konstruktor
+	 */
 	WorldPanel() {
 		
 		super();
@@ -34,6 +60,9 @@ public class WorldPanel extends JPanel {
 		//this.setPreferredSize(new Dimension(800, 500));
 	}
 	
+	/**
+	 * @param world Die Welt, auf die eine Referenz gesetzt werden soll
+	 */
 	protected void setWorld(World world) {
 		
 		this.world = world;
@@ -54,6 +83,9 @@ public class WorldPanel extends JPanel {
 		// TODO: ...
 	}
 	
+	/**
+	 * Aktualisiert die GUI
+	 */
 	protected void update() {
 		
 		// TODO: ???

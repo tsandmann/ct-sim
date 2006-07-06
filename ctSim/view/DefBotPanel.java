@@ -1,17 +1,28 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.view;
 
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 
 import ctSim.model.bots.components.Actuator;
@@ -19,14 +30,19 @@ import ctSim.model.bots.components.Position;
 import ctSim.model.bots.components.Sensor;
 import ctSim.view.actuators.ActuatorGroupGUI;
 import ctSim.view.positions.PositionGroupGUI;
-import ctSim.view.positions.Positions;
 import ctSim.view.sensors.SensorGroupGUI;
-import ctSim.view.sensors.Sensors;
 
+/**
+ * @author Felix Beckwermert
+ *
+ */
 public class DefBotPanel extends BotPanel {
 	
 	private List<ComponentGroupGUI> compList;
 	
+	/**
+	 * Der Konstruktor
+	 */
 	public DefBotPanel() {
 		
 		// Leerer Konstruktor automatisch:
@@ -37,7 +53,10 @@ public class DefBotPanel extends BotPanel {
 	
 	// do not call this function directly!
 	// call 'init' instead
-	@SuppressWarnings("unchecked")
+	/* (non-Javadoc)
+	 * @see ctSim.view.BotPanel#initGUI()
+	 * 	@SuppressWarnings("unchecked")
+	 */
 	protected void initGUI() {
 		
 		List<PositionGroupGUI> posList = new ArrayList<PositionGroupGUI>();		
@@ -114,6 +133,9 @@ public class DefBotPanel extends BotPanel {
 	
 	// do not call this function directly!
 	// call 'update' instead
+	/* (non-Javadoc)
+	 * @see ctSim.view.BotPanel#updateGUI()
+	 */
 	protected void updateGUI() {
 		
 		for(ComponentGroupGUI gui : this.compList) {
