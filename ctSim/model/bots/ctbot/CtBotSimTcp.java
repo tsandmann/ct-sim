@@ -48,6 +48,12 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	/** Abstand Mittelpunkt Bot zum Rad [m] */
 	public static final double WHEEL_DIST = 0.0485d;
 	
+	/** Abstand Zentrum Maussensor in Vorausrichtung (Y) [m] */
+	public static final double SENS_MOUSE_DIST_Y = -0.015d;
+	
+	/** Aufloesung des Maussensors [DPI] */
+	public static final int SENS_MOUSE_DPI = 400;
+	
 	/**
 	 * Interne Zeitbasis in Millisekunden -- Zeitaenderung seit letztem
 	 * Simulationschritt
@@ -63,6 +69,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	// TODO: weg
 	private World world;
+	
+	private int  mouseX, mouseY;
 	
 	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR, encL, encR;
 	
@@ -96,6 +104,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		
 		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
 		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		
 		
 		this.addSensor(this.encL);
 		this.addSensor(this.encR);
@@ -137,6 +146,21 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	}
 	
 	/**
+	 * Errechnet die Anzahl an Dots, die der Maussensor fuer eine Bewegung der
+	 * angegebenen Laenge zurueckmeldet.
+	 * 
+	 * @param distance
+	 *            die Laenge der Strecke in Metern
+	 * @return Anzahl der Dots
+	 */
+	private int meter2Dots(double distance) {
+		// distance ist in Metern angegeben,
+		// * 100 macht daraus cm; 2,54 cm sind ein Inch,
+		// anschliessend Multiplikation mit der Aufloesung des Maussensors
+		return (int) ((distance * 100 / 2.54) * SENS_MOUSE_DPI);
+	}
+	
+	/**
 	 * Leite Sensordaten an den Bot weiter
 	 */
 	private synchronized void transmitSensors() {
@@ -163,11 +187,12 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setSeq(seq++);
 			this.connection.send(command.getCommandBytes());
 			
-//			command.setCommand(Command.CMD_SENS_DOOR);
-//			command.setDataL(getSensDoor());
-//			command.setDataR(0);
-//			command.setSeq(seq++);
-//			this.connection.send(command.getCommandBytes());
+			// TODO
+			command.setCommand(Command.CMD_SENS_DOOR);
+			command.setDataL(0);
+			command.setDataR(0);
+			command.setSeq(seq++);
+			this.connection.send(command.getCommandBytes());
 
 			command.setCommand(Command.CMD_SENS_LDR);
 			command.setDataL((Integer)this.lightL.getValue());
@@ -181,11 +206,11 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setSeq(seq++);
 			this.connection.send(command.getCommandBytes());
 			
-//			command.setCommand(Command.CMD_SENS_MOUSE);
-//			command.setDataL(getSensMouseDX());
-//			command.setDataR(getSensMouseDY());
-//			command.setSeq(seq++);
-//			this.connection.send(command.getCommandBytes());
+			command.setCommand(Command.CMD_SENS_MOUSE);
+			command.setDataL(this.mouseX);
+			command.setDataR(this.mouseY);
+			command.setSeq(seq++);
+			this.connection.send(command.getCommandBytes());
 //
 //			command.setCommand(Command.CMD_SENS_TRANS);
 //			command.setDataL(getSensTrans());
@@ -204,24 +229,33 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //			}
 			
 			// TODO: sehr hässlich: Bot-Verhalten "Wandverfolgung" starten
-			first++;
-			if(first==5) {
+//			first++;
+//			if(first==10) {
 				
 				int RC5_CODE_5 = 0x3945;
+				Integer i = new Integer(RC5_CODE_5);
 				command.setCommand(Command.CMD_SENS_RC5);
-				command.setDataL(RC5_CODE_5);
+				command.setDataL(i.intValue());
 				command.setDataR(42);
 				command.setSeq(seq++);
 				this.connection.send(command.getCommandBytes());
+				System.out.println("Raus: "+i);
 				//setSensRc5(0);
-			}
+//			}
 //
 //			command.setCommand(Command.CMD_SENS_ERROR);
 //			command.setDataL(getSensError());
 //			command.setDataR(0);
 //			command.setSeq(seq++);
 //			this.connection.send(command.getCommandBytes());
-			
+		} catch (IOException IoEx) {
+			ErrorHandler.error("Error during sending Sensor data, dieing: "
+					+ IoEx);
+			die();
+		}
+	}
+	
+	private void calcPos() {
 			
 			////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////
@@ -281,8 +315,12 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			this.setPosition(new Point3d(newPos));
 			this.setHeading(newHeading);
 			
-			System.out.println(" -->  "+newPos+"   |   "+newHeading);
+			//System.out.println(" -->  "+newPos+"   |   "+newHeading);
 			
+			
+			// TODO: nach unten!
+			this.mouseX = meter2Dots(2 * _gamma * SENS_MOUSE_DIST_Y);
+			this.mouseY = meter2Dots(moveDistance);
 			
 //			int oldState =getObstState(); 
 //			// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
@@ -364,12 +402,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //				setAppearance("falling");
 //			else if ((newState & OBST_STATE_COLLISION) != 0)
 //				setAppearance("collision");
-
-		} catch (IOException IoEx) {
-			ErrorHandler.error("Error during sending Sensor data, dieing: "
-					+ IoEx);
-			die();
-		}
 	}
 
 	/**
@@ -443,20 +475,23 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				break;
 			case Command.CMD_AKT_SERVO:
 //				this.setActServo(command.getDataL());
-//				break;
+				break;
 			case Command.CMD_AKT_DOOR:
 //				this.setActDoor(command.getDataL());
-//				break;
+				break;
 			case Command.CMD_AKT_LED:
+				command.getDataL();
 				command.getDataL();
 //				this.setActLed(command.getDataL());
 				break;
 			case Command.CMD_ACT_LCD:
 				switch (command.getSubcommand()) {
 				case Command.SUB_CMD_NORM:
+					command.getDataL();
+					command.getDataR();
 //					this.setLcdText(command.getDataL(), command.getDataR(),
 //							command.getDataBytesAsString());
-//					break;
+					break;
 				case Command.SUB_LCD_CURSOR:
 //					this.setCursor(command.getDataL(), command.getDataR());
 //					break;
@@ -488,8 +523,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				ErrorHandler.error("Unknown Command:" + command.toString());
 				break;
 			}
-			System.out.println("////////////////////////////////////////////////////////////////");
-			System.out.println("Command: "+command);
+			//System.out.println("////////////////////////////////////////////////////////////////");
+			System.out.println("Command: "+(char)command.getCommand()+"  -  "+(char)command.getSubcommand());
 			
 			try {
 				// tcpCon.send(answer.getCommandBytes());
@@ -511,6 +546,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	@Override
 	protected void work() {
 		
+		calcPos();
 		super.work();
 		transmitSensors();
 	}

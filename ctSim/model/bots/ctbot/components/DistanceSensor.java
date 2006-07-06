@@ -221,7 +221,7 @@ public class DistanceSensor extends SimpleSensor<Double> {
 	@Override
 	public Double updateValue() {
 		
-		Debug.out.println("Robbi steht an: "+this.bot.getPosition()+" | "+this.bot.getHeading());
+//		Debug.out.println("Robbi steht an: "+this.bot.getPosition()+" | "+this.bot.getHeading());
 //		Debug.out.println("Sensor ist an relativer Pos.: "+this.getRelPosition()+ " | "+this.getRelHeading());
 //		Debug.out.println("Summe ist: "+this.getAbsPosition(this.bot.getPosition(), this.bot.getHeading())
 //				+ " | "+this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()));

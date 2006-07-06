@@ -131,7 +131,7 @@ public final class Controller implements Runnable {
 			try {
 				//System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				this.doneSignal.await();
-				//System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
+				System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				CountDownLatch startSig = this.startSignal;
 				
 				// Update World
@@ -365,7 +365,7 @@ public final class Controller implements Runnable {
 //							System.out.println("Real Bot comming up");
 						} else {
 							bot = new CtBotSimTcp(this.world, "Test C-Bot",
-									new Point3d(0.5f, 0f, 0f),
+									new Point3d(0.5d, 0d, 0.075d),
 									new Vector3d(1.0f, -0.5f, 0f),
 									con);
 							System.out.println("Virtual Bot comming up");

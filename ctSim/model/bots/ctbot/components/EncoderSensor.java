@@ -112,7 +112,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 		// und speichern sie.
 		//this.setSensEncL((short) (this.getSensEncL() + encoderSteps));
 		
-		System.out.println(encoderSteps);
+		//System.out.println(encoderSteps);
 		
 		// TODO: Achtung! Value kann 'null' sein
 		//return this.getValue()+encoderSteps;

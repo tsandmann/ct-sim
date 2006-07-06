@@ -31,6 +31,8 @@ import javax.swing.SpinnerNumberModel;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import javax.swing.border.EtchedBorder;
@@ -80,11 +82,12 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		
 		return 0;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see ctSim.view.ComponentGroupGUI#initGUI()
-	 * 	@Override
+	 * 
 	 */
+	@Override
 	public void initGUI() {
 				
 		this.setBorder(new TitledBorder(new EtchedBorder(), "Position"));
@@ -110,12 +113,13 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 //		this.tabData.setValueAt("H:", 3, 0);
 //		
 // 			JTable tab = new JTable(this.tabData);
-
+		
 		JPanel tab = new JPanel(new GridLayout(4,2));
 					
 		// Hart gecodete Grenzwerte orientiern sich an den 
 		// maximalen Parcoursgroessen aus dem ParcoursGenerator
 		// Angepasst an die Welt waere in X-Richtung:
+	
 		// 		Math.round(-100 * World.getPlaygroundDimX() / 2),
 		// 		Math.round(100 * World.getPlaygroundDimX() / 2),
 		// aber woher sollte der Bot die Welt kennen 8-)
@@ -125,34 +129,34 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		zSpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().z, -1d, 1d, 0.1d));
 		hSpin = new JSpinner(new SpinnerNumberModel(SimUtils.vec3dToDouble(position.getRelHeading()), -180, 180, 1));
 		
-		xSpin.addChangeListener(new JSpinner.NumberEditor(xSpin) {
-			public void actionPerformed(ActionEvent evt) {
+		xSpin.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
 				double x = new Double(xSpin.getValue().toString());
 				position.setPos(new Point3d(x, position.getRelPosition().y, position.getRelPosition().z));
 			}
 		});				
-
-		ySpin.addChangeListener(new JSpinner.NumberEditor(ySpin) {
-			public void actionPerformed(ActionEvent evt) {
+		
+		ySpin.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
 				double y = new Double(ySpin.getValue().toString());
 				position.setPos(new Point3d(position.getRelPosition().x, y, position.getRelPosition().z));
 			}
 		});				
-
-		zSpin.addChangeListener(new JSpinner.NumberEditor(zSpin) {
-			public void actionPerformed(ActionEvent evt) {
+		
+		zSpin.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
 				double z = new Double(zSpin.getValue().toString());
 				position.setPos(new Point3d(position.getRelPosition().x, position.getRelPosition().y, z));
 			}
 		});				
-
-		hSpin.addChangeListener(new JSpinner.NumberEditor(xSpin) {
-			public void actionPerformed(ActionEvent evt) {
+		
+		hSpin.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
 				int x = new Integer(hSpin.getValue().toString());
 				position.setHead(SimUtils.intToVec3d(x));
 			}
 		});				
-
+		
 		// TODO: Irgendwie kommen die Werte noch nicht durch....
 		
 		tab.add(new JLabel("X-Position"));
@@ -170,11 +174,12 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		
 		this.add(scroll);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see ctSim.view.ComponentGroupGUI#updateGUI()
-	 * 	@Override
+	 * 
 	 */
+	@Override
 	public void updateGUI() {
 		
 // Tabellendarstellung ohne JSpinner:
