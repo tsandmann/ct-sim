@@ -76,9 +76,9 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	@Override
 	public void updateGUI() {
 		
-		this.tabData.setValueAt(this.position.getRelPosition().x, 0, 1);
-		this.tabData.setValueAt(this.position.getRelPosition().y, 1, 1);
-		this.tabData.setValueAt(this.position.getRelPosition().z, 2, 1);
+		this.tabData.setValueAt(String.format("%.2f", this.position.getRelPosition().x), 0, 1);
+		this.tabData.setValueAt(String.format("%.2f", this.position.getRelPosition().y), 1, 1);
+		this.tabData.setValueAt(String.format("%.2f", this.position.getRelPosition().z), 2, 1);
 		this.tabData.setValueAt(String.format("%.2f", SimUtils.getRotation(this.position.getRelHeading())), 3, 1);
 	}
 }
