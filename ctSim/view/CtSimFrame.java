@@ -12,8 +12,12 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -487,6 +491,7 @@ public class CtSimFrame extends JFrame {
 		// TODO: Exception-Handling, ...
 		try {
 			//this.world = World.parseWorldFile(file);
+			// TODO: Wenn kein DTD-file gegeben, besser Fehlermeldung!
 			this.world = new World(file.getAbsolutePath());
 			
 			// TODO:
@@ -587,8 +592,41 @@ public class CtSimFrame extends JFrame {
 				}
 			}
 			
-			Debug.out.println("  !!! Funktioniert noch nicht !!!");
-			//Debug.out.println("Welt wurde gespeichert als \""+file.getName()+"\".");
+			// TODO: Hässlich!
+			// XML-Stream zwischenspeichern und in Datei schreiben; keine tmp-Dateien mehr (?)
+			try {
+				FileInputStream fin = new FileInputStream(this.tmpParcoursFile);
+				FileOutputStream fout = new FileOutputStream(file);
+				
+				BufferedInputStream bin = new BufferedInputStream(fin);
+				BufferedOutputStream bout = new BufferedOutputStream(fout);
+				
+				for(int b = bin.read(); b != -1; b = bin.read()) {
+					bout.write(b);
+				}
+//				byte[] b = new byte[bin.available()];
+//				
+//				bin.read(b);
+//				bout.write(b);
+				
+				bout.flush();
+				
+				bin.close();
+				bout.close();
+				
+				fin.close();
+				fout.close();
+				
+			} catch(Exception e) {
+				
+				Debug.out.println("Fehler: Datei konnte nicht gespeichert werden!");
+				e.printStackTrace();
+				return;
+			}
+			
+			
+			//Debug.out.println("  !!! Funktioniert noch nicht !!!");
+			Debug.out.println("Welt wurde gespeichert als \""+file.getName()+"\".");
 			
 			// TODO: XML-Geblubber schreiben, bzw. Datei kopieren (siehe randomWorld)...
 		}
