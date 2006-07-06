@@ -382,7 +382,7 @@ public class CtSimFrame extends JFrame {
 		botMenu.add(this.selectJudge);
 		botMenu.addSeparator();
 		botMenu.add(this.addBot);
-		botMenu.add(this.configBots);
+		// botMenu.add(this.configBots);
 		
 		JMenu controlMenu = new JMenu("Ansicht");
 		//controlMenu.getPopupMenu().setLightWeightPopupEnabled(false);
