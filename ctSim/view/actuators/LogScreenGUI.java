@@ -1,7 +1,22 @@
-package ctSim.view.actuators;
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */package ctSim.view.actuators;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,14 +28,20 @@ import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import ctSim.model.bots.components.actuators.Display;
 import ctSim.model.bots.components.actuators.LogScreen;
 
+/**
+ * Klasse für grafische Anzeige von LogScreens
+ * @author Felix Beckwermert
+ */
 public class LogScreenGUI extends ActuatorGroupGUI<LogScreen> {
 	
 	private List<JTextArea> lcds;
 	
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#initGUI()	
+	 * @Override
+	 */
 	public void initGUI() {
 		
 		this.setBorder(new TitledBorder(new EtchedBorder(), "LogScreens"));
@@ -59,7 +80,10 @@ public class LogScreenGUI extends ActuatorGroupGUI<LogScreen> {
 		this.add(tab);
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#updateGUI()
+	 * 	@Override
+	 */
 	public void updateGUI() {
 		
 		Iterator<LogScreen> it = this.getAllActuators().iterator();
@@ -75,9 +99,11 @@ public class LogScreenGUI extends ActuatorGroupGUI<LogScreen> {
 		}
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#getSortId()
+	 * 	@Override
+	 */
 	public int getSortId() {
-		// TODO Auto-generated method stub
 		return 80;
 	}
 }

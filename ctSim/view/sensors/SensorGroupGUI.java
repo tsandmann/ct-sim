@@ -30,7 +30,7 @@ import ctSim.view.ComponentGroupGUI;
 /**
  * Abstrakte Klasse für grafische Anzeige von Sensorgruppen
  * @author Felix Beckwermert
- * @param <E>
+ * @param <E> Der Datentyp der Sensoren
  */
 public abstract class SensorGroupGUI<E extends Sensor> extends ComponentGroupGUI<E> {
 	

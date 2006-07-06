@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.view.actuators;
 
 import java.awt.Color;
@@ -14,11 +32,18 @@ import javax.swing.border.TitledBorder;
 
 import ctSim.model.bots.components.actuators.Indicator;
 
+/**
+ * Klasse für grafische Anzeige von Indikatorgruppen
+ * @author Felix Beckwermert
+ */
 public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 	
 	private ArrayList<JPanel> leds;
 	
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#initGUI()
+	 * 	@Override
+	 */
 	public void initGUI() {
 		
 		//System.out.println("Indicator: "+this.getAllActuators().size());
@@ -45,10 +70,12 @@ public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 		this.add(ledPanel);
 	}
 	
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#updateGUI()
+	 * @Override
+	 */	
 	public void updateGUI() {
 		// TODO
-		
 		//System.out.println("Indicator: "+this.getAllActuators().size());
 		Iterator<Indicator> it = this.getAllActuators().iterator();
 		for(int i=0; it.hasNext(); i++) {
@@ -57,9 +84,11 @@ public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 		}
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#getSortId()
+	 * 	@Override
+	 */
 	public int getSortId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 }

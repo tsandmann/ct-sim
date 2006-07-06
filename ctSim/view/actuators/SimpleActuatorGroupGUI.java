@@ -1,3 +1,22 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
+
 package ctSim.view.actuators;
 
 import java.util.Iterator;
@@ -8,20 +27,26 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.actuators.SimpleActuator;
 
+/**
+ * GUI fuer eine Gruppe einfacher Akuatoren
+ * @author Felix Beckwermert
+ * @param <E> Typ der Aktuatoren
+ */
 public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGroupGUI<E> {
 	
 	private Vector<String> columns = new Vector<String>();
 	
 	private TableModel tabData;
 	
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#initGUI()
+	 * @Override
+	 */
 	public void initGUI() {
 		
 		this.setBorder(new TitledBorder(new EtchedBorder(), "Aktuatoren"));
@@ -46,7 +71,10 @@ public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGr
 		this.add(scroll);
 	}
 	
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#updateGUI()	
+	 * @Override
+	 */
 	public void updateGUI() {
 		
 		//System.out.println("Simple: "+this.getAllActuators().size());
@@ -65,9 +93,11 @@ public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGr
 		}
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#getSortId()	
+	 * @Override
+	 */
 	public int getSortId() {
-		// TODO Auto-generated method stub
 		return 10;
 	}
 }
