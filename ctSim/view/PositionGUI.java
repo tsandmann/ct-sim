@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.view;
 
 import java.util.Iterator;
@@ -25,16 +43,28 @@ import javax.vecmath.Point3d;
 import ctSim.SimUtils;
 import ctSim.model.bots.components.BotPosition;
 
+/**
+ * GUI-Klasse fuer Gruppen von Positionsanzeigern
+ * 
+ * @author Felix Beckwermert
+ *
+ * @param <E> Typ der Positionsanzeiger
+ */
 public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	
 	private BotPosition position;
 	
 	private Vector<String> columns = new Vector<String>();
 	
-	private TableModel tabData;
+	// private TableModel tabData;
 	
 	private JSpinner xSpin, ySpin, zSpin, hSpin;
 	
+	/**
+	 * Der Konstruktor
+	 * 
+	 * @param pos Referenz auf eine Bot-Position, die Zugriff auf den Bot ermoeglicht
+	 */
 	public PositionGUI(BotPosition pos) {
 		
 		super(BoxLayout.PAGE_AXIS);
@@ -42,27 +72,28 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		this.position = pos;
 	}
 	
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#getSortId()
+	 * @Override
+	 */
 	public int getSortId() {
 		
 		return 0;
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#initGUI()
+	 * 	@Override
+	 */
 	public void initGUI() {
-		
-		// Panel mit GridLayout: links 4 Labels mit X,Y,Z,H; rechts die Spinner, die dann aufrufen:
-		//this.position.setPos(  -- Point3d --  );
-		//this.position.setHead(  --  Vector3d  --  );
-		// Am besten im Pause-Modus testen (da die Werte ansonsten -- vielleicht -- nicht genommen werden
-		// (aber hoffentlich im Pause-Modus))
-		
+				
 		this.setBorder(new TitledBorder(new EtchedBorder(), "Position"));
 		
 		this.columns.add("Koordinate");
 		this.columns.add("Wert");
 		
 		
+//		 Tabellendarstellung ohne JSpinner:
 //		this.tabData = new DefaultTableModel(columns, 4) {
 //			
 //			public boolean isCellEditable(int row, int col) {
@@ -82,13 +113,15 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 
 		JPanel tab = new JPanel(new GridLayout(4,2));
 					
-		// TODO: Vernuenftige Grenzwerte einbauen
-		// Fuer X:
+		// Hart gecodete Grenzwerte orientiern sich an den 
+		// maximalen Parcoursgroessen aus dem ParcoursGenerator
+		// Angepasst an die Welt waere in X-Richtung:
 		// 		Math.round(-100 * World.getPlaygroundDimX() / 2),
 		// 		Math.round(100 * World.getPlaygroundDimX() / 2),
+		// aber woher sollte der Bot die Welt kennen 8-)
 				
-		xSpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().x, -3d, 3d, 0.1d));
-		ySpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().y, -3d, 3d, 0.1d));
+		xSpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().x, -7d, 7d, 0.1d));
+		ySpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().y, -7d, 7d, 0.1d));
 		zSpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().z, -1d, 1d, 0.1d));
 		hSpin = new JSpinner(new SpinnerNumberModel(SimUtils.vec3dToDouble(position.getRelHeading()), -180, 180, 1));
 		
@@ -138,9 +171,13 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		this.add(scroll);
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see ctSim.view.ComponentGroupGUI#updateGUI()
+	 * 	@Override
+	 */
 	public void updateGUI() {
 		
+// Tabellendarstellung ohne JSpinner:
 //		this.tabData.setValueAt(this.position.getRelPosition().x, 0, 1);
 //		this.tabData.setValueAt(this.position.getRelPosition().y, 1, 1);
 //		this.tabData.setValueAt(this.position.getRelPosition().z, 2, 1);
