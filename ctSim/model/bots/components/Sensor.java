@@ -73,7 +73,7 @@ public abstract class Sensor<E> extends BotComponent {
 		// TODO: Äußerst hässlich:
 		if(this.characteristic != null) {
 			
-			this.value = (E)((Double)((Integer)this.characteristic.lookup(((Number)this.value).intValue())).doubleValue());
+			this.value = (E)((Double)((Integer)this.characteristic.lookup((((Number)this.value).intValue())/10)).doubleValue());
 		}
 	}
 	
