@@ -1,5 +1,6 @@
 package ctSim.model.bots.ctbot;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.media.j3d.Shape3D;
@@ -17,6 +18,7 @@ import ctSim.model.World;
 import ctSim.model.bots.AnsweringMachine;
 import ctSim.model.bots.TcpBot;
 import ctSim.model.bots.components.Actuator;
+import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.Sensor;
 import ctSim.model.bots.ctbot.components.BorderSensor;
 import ctSim.model.bots.ctbot.components.DistanceSensor;
@@ -96,6 +98,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		
 		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d));
 		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d));
+		this.irL.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Left.txt"), 100f));
+		this.irR.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Right.txt"), 100f));
 		
 		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
 		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
@@ -325,8 +329,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			newPos.add(moveDirection);
 			
 			// TODO: Pos nur setzen, wenn Status o.k. -> s.u.
-			this.setPosition(new Point3d(newPos));
-			this.setHeading(newHeading);
+			//this.setPosition(new Point3d(newPos));
+			//this.setHeading(newHeading);
 			
 			//System.out.println(" -->  "+newPos+"   |   "+newHeading);
 			
@@ -335,78 +339,89 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			this.mouseX = meter2Dots(2 * _gamma * SENS_MOUSE_DIST_Y);
 			this.mouseY = meter2Dots(moveDistance);
 			
-//			int oldState =getObstState(); 
-//			// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
-//			// der Bot blau gefaerbt.
-//			if (getWorld().checkCollision((Shape3D)getNodeReference(BOTBODY), getBounds(), newPos, getName())) {
-//				// Wenn nicht, Position aktualisieren
-//				this.setPos(newPos);
-//				// Zustand setzen
-//				setObstState( oldState & ~OBST_STATE_COLLISION);
-//			} else {
-//				moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt
-//				
-//				// Zustand setzen
-//				setObstState( oldState| OBST_STATE_COLLISION);
-//			}
-//			
-//			
-//			// Bodenkontakt ueberpruefen
-//
-//			// Vektor vom Ursprung zum linken Rad
-//			Vector3f vecL = new Vector3f(newHeading.y,newHeading.x, 0f);
-//			vecL.scale((float) WHEEL_DIST);
-//			// neue Position linkes Rad
-//			Vector3f posRadL = new Vector3f(this.getPos());
-//			posRadL.add(vecL);
-//
-//			// Vektor vom Ursprung zum rechten Rad
-//			Vector3f vecR = new Vector3f(newHeading.y, -newHeading.x, 0f);
-//			vecR.scale((float) WHEEL_DIST);
-//			// neue Position rechtes Rad
-//			Vector3f posRadR = new Vector3f(this.getPos());
-//			posRadR.add(vecR);
-//
-//			// Winkel des heading errechnen
-//			double angle = SimUtils.getRotation(newHeading);
-//			// Transformations-Matrix fuer die Rotation erstellen
-//			Transform3D rotation = new Transform3D();
-//			rotation.rotZ(angle);
-//
-//			// Bodenkontakt des Gleitpins ueberpruefen
-//			Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT / 2);
-//			// Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
-//			rotation.transform(skidVec);
-//			skidVec.add(new Point3d(newPos));
-//			
-//			boolean isFalling = false;
-//			if (!getWorld().checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE,
-//					"Der Gleitpin von " + this.getName())) {
-//				isFalling = true;
-//			}
-//
-//			// Bodenkontakt des linken Reifens ueberpruefen
-//			posRadL.z -= BOT_HEIGHT / 2;
-//			if (!getWorld().checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE,
-//					"Das linke Rad von " + this.getName())) {
-//				isFalling = true;
-//			}
-//
-//			// Bodenkontakt des rechten Reifens ueberpruefen
-//			posRadR.z -= BOT_HEIGHT / 2;
-//			if (!getWorld().checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE,
-//					"Das rechte Rad von " + this.getName())) {
-//				isFalling = true;
-//			}
-//
-//			// Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat,
-//			// wird der Bot gestoppt und gruen gefaerbt.
-//			if (isFalling) 
-//				setObstState(getObstState() | OBST_STATE_FALLING);
-//			else 
-//				setObstState(getObstState() & ~OBST_STATE_FALLING);
-//			
-//			// Update Appearance
+			
+			int oldState = this.getObstState(); 
+			// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
+			// der Bot blau gefaerbt.
+			if (this.world.checkCollision(this, newPos)) {
+				// Zustand setzen
+				setObstState( oldState & ~OBST_STATE_COLLISION);
+			} else {
+				moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt
+				
+				// Zustand setzen
+				setObstState( oldState| OBST_STATE_COLLISION);
+			}
+			
+			// Blickrichtung immer aktualisieren:
+			this.setHeading(newHeading);
+
+			// Bodenkontakt ueberpruefen
+
+			// Vektor vom Ursprung zum linken Rad
+			Vector3d vecL = new Vector3d(newHeading.y,newHeading.x, 0f);
+			vecL.scale((float) WHEEL_DIST);
+			// neue Position linkes Rad
+			Vector3d posRadL = new Vector3d(this.getPosition());
+			posRadL.add(vecL);
+
+			// Vektor vom Ursprung zum rechten Rad
+			Vector3d vecR = new Vector3d(newHeading.y, -newHeading.x, 0f);
+			vecR.scale((float) WHEEL_DIST);
+			// neue Position rechtes Rad
+			Vector3d posRadR = new Vector3d(this.getPosition());
+			posRadR.add(vecR);
+
+			// Winkel des heading errechnen
+			double angle = SimUtils.getRotation(newHeading);
+			// Transformations-Matrix fuer die Rotation erstellen
+			Transform3D rotation = new Transform3D();
+			rotation.rotZ(angle);
+			
+			/** Abstand Zentrum Gleitpin in Achsrichtung (X) [m] */
+			double BOT_SKID_X = 0d;
+
+			/** Abstand Zentrum Gleitpin in Vorausrichtung (Y) [m] */
+			double BOT_SKID_Y = -0.054d;
+			
+			// Bodenkontakt des Gleitpins ueberpruefen
+			Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT / 2);
+			// Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
+			rotation.transform(skidVec);
+			skidVec.add(new Point3d(newPos));
+			
+			boolean isFalling = false;
+			if (!this.world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE,
+					"Der Gleitpin von " + this.getName())) {
+				isFalling = true;
+			}
+			
+			// Bodenkontakt des linken Reifens ueberpruefen
+			posRadL.z -= BOT_HEIGHT / 2;
+			if (!this.world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE,
+					"Das linke Rad von " + this.getName())) {
+				isFalling = true;
+			}
+			
+			// Bodenkontakt des rechten Reifens ueberpruefen
+			posRadR.z -= BOT_HEIGHT / 2;
+			if (!this.world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE,
+					"Das rechte Rad von " + this.getName())) {
+				isFalling = true;
+			}
+			
+			// Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat,
+			// wird der Bot gestoppt und gruen gefaerbt.
+			if (isFalling) 
+				setObstState(getObstState() | OBST_STATE_FALLING);
+			else 
+				setObstState(getObstState() & ~OBST_STATE_FALLING);
+			
+			// Wenn der Bot nicht kollidiert oder ueber einem Abgrund steht Position aktualisieren
+			if ((getObstState() & (OBST_STATE_COLLISION | OBST_STATE_FALLING)) == 0 )
+				this.setPosition(new Point3d(newPos));
+			
+			// Update Appearance
 //			int newState=getObstState();
 //			if (newState == oldState){
 //			} else if (newState == OBST_STATE_NORMAL)

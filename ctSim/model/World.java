@@ -411,7 +411,7 @@ public class World {
 	 */
 	// TODO: Überarbeiten?
 	public boolean checkCollision(AliveObstacle obst, //Shape3D botBody, Bounds bounds,
-			Vector3f newPosition) { //, String botName) {
+			Vector3d newPosition) { //, String botName) {
 		
 		Shape3D botBody = obst.getShape();
 		Bounds bounds = obst.getBounds();

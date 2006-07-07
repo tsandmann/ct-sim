@@ -39,7 +39,7 @@ import ctSim.model.bots.components.sensors.SimpleSensor;
  */
 public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI<E> {
 	
-private Vector<String> columns = new Vector<String>();
+	private Vector<String> columns = new Vector<String>();
 	
 	private TableModel tabData;
 	

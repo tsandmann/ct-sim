@@ -551,6 +551,8 @@ public class CtSimFrame extends JFrame {
 			
 			this.validate();
 			
+			this.tmpParcoursFile = file;
+			
 			Debug.out.println("Neue Welt geöffnet.");
 			
 		} catch (SAXException e) {

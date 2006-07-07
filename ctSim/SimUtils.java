@@ -87,6 +87,25 @@ public class SimUtils {
 		Vector3d newHead = new Vector3d(new Point3d(x, y, 0d));
 		return newHead;
 	}
+	
+	/**
+	 * Erzeugt aus einer Grad-Angabe einen normalisierten
+	 * javax.vecmath.Vector3d. Diese Methode wird zum Setzen der
+	 * Bot-Blickrichtung ueber das ControlPanel benutzt.
+	 * 
+	 * @param deg
+	 *            der Winkel in Grad
+	 * @return der neue Blickvektor
+	 */
+	public static Vector3d doubleToVec3d(double deg) {
+		double rad = Math.toRadians(deg);
+		// Sinus und Cosinus sind hier vertauscht, weil
+		// 0° in Richtung der positiven Y-Achse zeigen soll!
+		double x = Math.sin(rad);
+		double y = Math.cos(rad);
+		Vector3d newHead = new Vector3d(new Point3d(x, y, 0d));
+		return newHead;
+	}
 
 	/**
 	 * Errechnet den Winkel zwischen Nordrichtung des Universums (Richtung der 

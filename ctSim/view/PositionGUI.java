@@ -18,9 +18,11 @@
  */
 package ctSim.view;
 
+import java.util.EventObject;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,16 +30,23 @@ import javax.swing.JSpinner;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.SpinnerNumberModel;
+
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
 
 import javax.vecmath.Point3d;
@@ -58,9 +67,11 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	
 	private Vector<String> columns = new Vector<String>();
 	
-	// private TableModel tabData;
+	private TableModel tabData;
 	
-	private JSpinner xSpin, ySpin, zSpin, hSpin;
+	private boolean noupdate = false;
+	
+	//private JSpinner xSpin, ySpin, zSpin, hSpin;
 	
 	/**
 	 * Der Konstruktor
@@ -96,85 +107,81 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		this.columns.add("Wert");
 		
 		
-//		 Tabellendarstellung ohne JSpinner:
-//		this.tabData = new DefaultTableModel(columns, 4) {
-//			
-//			public boolean isCellEditable(int row, int col) {
-//				
-//				if(col == 0)
-//					return false;
-//				return true;
-//			}
-//		};
-//		
-//		this.tabData.setValueAt("X:", 0, 0);
-//		this.tabData.setValueAt("Y:", 1, 0);
-//		this.tabData.setValueAt("Z:", 2, 0);
-//		this.tabData.setValueAt("H:", 3, 0);
-//		
-// 			JTable tab = new JTable(this.tabData);
-		
-		JPanel tab = new JPanel(new GridLayout(4,2));
-					
-		// Hart gecodete Grenzwerte orientiern sich an den 
-		// maximalen Parcoursgroessen aus dem ParcoursGenerator
-		// Angepasst an die Welt waere in X-Richtung:
-	
-		// 		Math.round(-100 * World.getPlaygroundDimX() / 2),
-		// 		Math.round(100 * World.getPlaygroundDimX() / 2),
-		// aber woher sollte der Bot die Welt kennen 8-)
-		
-		// TODO: SpinnerModel speichern, nicht Spinner
-		// Außerdem: Editor benutzen (Posen * 10(0), damit "vernünftige Koordinaten ohne Komma)
-		// Noch besser: Gleich Tabelle mit Editor
-		xSpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().x, -7d, 7d, 0.1d));
-		ySpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().y, -7d, 7d, 0.1d));
-		zSpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().z, -1d, 1d, 0.1d));
-		hSpin = new JSpinner(new SpinnerNumberModel((int)Math.round(SimUtils.vec3dToDouble(position.getRelHeading())), -180, 180, 1));
-		
-		
-		// TODO: ChangeListener ändern: werden auch gefeurt, wenn der Bot die GUI ändert
-		xSpin.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				double x = new Double(xSpin.getValue().toString());
-//				position.setPos(new Point3d(x, position.getRelPosition().y, position.getRelPosition().z));
-			}
-		});				
-		
-		ySpin.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
+		// Tabellendarstellung ohne JSpinner:
+		this.tabData = new DefaultTableModel(columns, 4) {
+			
+			public boolean isCellEditable(int row, int col) {
 				
-				double y = new Double(ySpin.getValue().toString());
-//				position.setPos(new Point3d(position.getRelPosition().x, y, position.getRelPosition().z));
+				if(col == 0)
+					return false;
+				return true;
 			}
-		});				
+		};
 		
-		zSpin.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
+		this.tabData.setValueAt("X:", 0, 0);
+		this.tabData.setValueAt("Y:", 1, 0);
+		this.tabData.setValueAt("Z:", 2, 0);
+		this.tabData.setValueAt("H:", 3, 0);
+		
+		this.tabData.addTableModelListener(new TableModelListener() {
+			
+			public void tableChanged(TableModelEvent e) {
 				
-				double z = new Double(zSpin.getValue().toString());
-//				position.setPos(new Point3d(position.getRelPosition().x, position.getRelPosition().y, z));
-			}
-		});				
-		
-		hSpin.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
+				int column = e.getColumn();
+		        
+				if(column != 1 || noupdate)
+		        	return;
+		        
+				System.out.println("soweit so gut");
 				
-				Double x = new Double(hSpin.getValue().toString());
-//				position.setHead(SimUtils.intToVec3d(x.intValue()));
+		        int row = e.getFirstRow();
+		        TableModel model = (TableModel)e.getSource();
+		        
+		        if(model.getValueAt(row, column) == null)
+		        	return;
+		        
+		        double val = (Double)model.getValueAt(row, column);
+		        //val /= 1000;
+		        
+		        switch(row) {
+		        case 0:
+		        	position.setPos(
+		        			new Point3d(
+		        					val,
+		        					position.getRelPosition().y,
+		        					position.getRelPosition().z));
+		        	break;
+		        case 1:
+		        	position.setPos(
+		        			new Point3d(
+		        					position.getRelPosition().x,
+		        					val,
+		        					position.getRelPosition().z));
+		        	break;
+		        case 2:
+		        	position.setPos(
+		        			new Point3d(
+		        					position.getRelPosition().x,
+		        					position.getRelPosition().y,
+		        					val));
+		        	break;
+		        case 3:
+		        	position.setHead(SimUtils.doubleToVec3d((Double)model.getValueAt(row, column)));
+		        	break;
+		        }
 			}
-		});				
+		});
 		
-		// TODO: Irgendwie kommen die Werte noch nicht durch....
-		
-		tab.add(new JLabel(" X-Position"));
-		tab.add(xSpin);
-		tab.add(new JLabel(" Y-Position"));
-		tab.add(ySpin);
-		tab.add(new JLabel(" Z-Position"));
-		tab.add(zSpin);
-		tab.add(new JLabel(" Blickrichtung"));
-		tab.add(hSpin);
+ 		JTable tab = new JTable(this.tabData);
+ 		
+ 		tab.getColumnModel().getColumn(1).setCellEditor(new SpinnerCellEditor());
+ 		tab.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+ 			
+ 			public void setValue(Object value) {
+ 		        
+ 		        setText((value == null) ? "" : String.format("%.1f", value));
+ 		    }
+ 		});
 		
 		JScrollPane scroll = new JScrollPane(tab);
 		
@@ -190,16 +197,54 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	@Override
 	public void updateGUI() {
 		
-// Tabellendarstellung ohne JSpinner:
-//		this.tabData.setValueAt(this.position.getRelPosition().x, 0, 1);
-//		this.tabData.setValueAt(this.position.getRelPosition().y, 1, 1);
-//		this.tabData.setValueAt(this.position.getRelPosition().z, 2, 1);
-//		this.tabData.setValueAt(String.format("%.2f", SimUtils.getRotation(this.position.getRelHeading())), 3, 1);
-
-	this.xSpin.setValue(this.position.getRelPosition().x);
-	this.ySpin.setValue(this.position.getRelPosition().y);
-	this.zSpin.setValue(this.position.getRelPosition().z);
-	this.hSpin.setValue(SimUtils.vec3dToDouble(this.position.getRelHeading()));
+		this.noupdate = true;
+		
+		// Tabellendarstellung ohne JSpinner:
+		this.tabData.setValueAt(this.position.getRelPosition().x, 0, 1);
+		this.tabData.setValueAt(this.position.getRelPosition().y, 1, 1);
+		this.tabData.setValueAt(this.position.getRelPosition().z, 2, 1);
+		this.tabData.setValueAt(SimUtils.vec3dToDouble(this.position.getRelHeading()), 3, 1);
+		
+		this.noupdate = false;
+	}
 	
+	private class SpinnerCellEditor extends AbstractCellEditor implements TableCellEditor {
+		
+		private JSpinner spinner;
+		private SpinnerNumberModel model;
+		
+		SpinnerCellEditor() {
+			
+			this.model = new SpinnerNumberModel(0d, -180d, 1000d, 0.1d);
+			
+			this.spinner = new JSpinner(this.model);
+			
+			this.spinner.setEditor(new JSpinner.NumberEditor(this.spinner, "0.0"));
+		}
+		
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+			
+			if(row == 3) {
+				this.model.setMinimum(-180d);
+				this.model.setMaximum(180d);
+				this.model.setStepSize(0.5d);
+			} else {
+				this.model.setMinimum(0d);
+				this.model.setMaximum(1000d);
+				this.model.setStepSize(0.1d);
+			}
+			
+			if(value != null)
+				this.model.setValue(value);
+			else
+				this.model.setValue(0d);
+			
+			return this.spinner;
+		}
+		
+		public Object getCellEditorValue() {
+			
+			return this.model.getValue();
+		}
 	}
 }

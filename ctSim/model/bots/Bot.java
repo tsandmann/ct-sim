@@ -42,7 +42,6 @@ import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotPosition;
 import ctSim.model.bots.components.Sensor;
 import ctSim.model.bots.components.sensors.SimpleSensor;
-import ctSim.model.bot.components.positions.*;
 import ctSim.SimUtils;
 
 /**
