@@ -138,34 +138,34 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		
 		ySpin.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				double y = new Double(ySpin.getValue().toString());
+				double y = (new Double(ySpin.getValue().toString())).doubleValue();
 				position.setPos(new Point3d(position.getRelPosition().x, y, position.getRelPosition().z));
 			}
 		});				
 		
 		zSpin.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				double z = new Double(zSpin.getValue().toString());
+				double z = (new Double(zSpin.getValue().toString())).doubleValue();
 				position.setPos(new Point3d(position.getRelPosition().x, position.getRelPosition().y, z));
 			}
 		});				
 		
 		hSpin.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				int x = new Integer(hSpin.getValue().toString());
+				int x = Math.round(Math.round((new Double(hSpin.getValue().toString())).doubleValue()));
 				position.setHead(SimUtils.intToVec3d(x));
 			}
 		});				
 		
 		// TODO: Irgendwie kommen die Werte noch nicht durch....
 		
-		tab.add(new JLabel("X-Position"));
+		tab.add(new JLabel(" X-Position"));
 		tab.add(xSpin);
-		tab.add(new JLabel("Y-Position"));
+		tab.add(new JLabel(" Y-Position"));
 		tab.add(ySpin);
-		tab.add(new JLabel("Z-Position"));
+		tab.add(new JLabel(" Z-Position"));
 		tab.add(zSpin);
-		tab.add(new JLabel("Blickrichtung"));
+		tab.add(new JLabel(" Blickrichtung"));
 		tab.add(hSpin);
 		
 		JScrollPane scroll = new JScrollPane(tab);
