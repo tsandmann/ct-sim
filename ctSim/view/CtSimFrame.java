@@ -748,7 +748,7 @@ public class CtSimFrame extends JFrame {
 		
 		//this.world.die();
 		
-		// TODO: ganz hässliche!
+		// TODO: ganz hässlich!
 		//this.split.remove(this.worldPanel);
 		this.consoleSplit.remove(this.worldPanel);
 		this.world = null;
@@ -760,6 +760,9 @@ public class CtSimFrame extends JFrame {
 		this.consoleSplit.setTopComponent(this.worldPanel);
 		this.split.resetToPreferredSizes();
 		//this.consoleSplit.resetToPreferredSizes();
+		
+		this.controller.stop();
+		this.controller = null;
 		
 		Debug.out.println("Welt wurde geschlossen.");
 	}
