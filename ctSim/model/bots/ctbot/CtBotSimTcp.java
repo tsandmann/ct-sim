@@ -98,8 +98,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		
 		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d));
 		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d));
-		this.irL.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Left.txt"), 100f));
-		this.irR.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Right.txt"), 100f));
+		this.irL.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Left.txt"), 999f));
+		this.irR.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Right.txt"), 999f));
 		
 		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
 		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
