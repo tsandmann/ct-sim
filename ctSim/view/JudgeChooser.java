@@ -20,6 +20,8 @@ package ctSim.view;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -37,11 +39,17 @@ import ctSim.model.rules.Judge;
  * 
  * @author Felix Beckwermert
  */
-public class JudgeChooser extends JDialog {
+public class JudgeChooser extends JDialog implements ActionListener {
 	
-	private Judge judge;
+	private String judge;
 	
-	private JRadioButton defJudge, contestJudge, labyJudge;
+	private JButton ok;
+	
+	private Box buttons;
+	//private JRadioButton defJudge, contestJudge, labyJudge;
+	
+	// Add Judges here; first one should be default:
+	private final String[] judges = new String[] {"ctSim.model.rules.DefaultJudge", "ctSim.model.rules.LabyrinthJudge"}; // "LabyrinthContestJudge"
 	
 	/**
 	 * Der Konstruktor
@@ -55,20 +63,23 @@ public class JudgeChooser extends JDialog {
 		
 		this.setLayout(new BorderLayout());
 		
-		Box buttons = new Box(BoxLayout.PAGE_AXIS);
+		buttons = new Box(BoxLayout.PAGE_AXIS);
 		
 		buttons.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
 		
+		buttons.add(new JLabel("Wählen Sie einen Schiedsrichter:"));
+		
 		initRadioButtons();
 		
-		buttons.add(new JLabel("Wählen Sie einen Schiedsrichter:"));
-		buttons.add(this.defJudge);
-		buttons.add(this.labyJudge);
+		//buttons.add(this.defJudge);
+		//buttons.add(this.labyJudge);
 		//buttons.add(this.contestJudge);
 		
+		this.ok = new JButton("Ok");
+		this.ok.addActionListener(this);
 		
 		this.add(buttons, BorderLayout.CENTER);
-		this.add(new JButton("Ok"), BorderLayout.SOUTH);
+		this.add(ok, BorderLayout.SOUTH);
 		
 		this.setLocationRelativeTo(own);
 		
@@ -78,19 +89,41 @@ public class JudgeChooser extends JDialog {
 	
 	private void initRadioButtons() {
 		
-		this.defJudge = new JRadioButton("DefaultJudge", true);
-		this.labyJudge = new JRadioButton("LabyrinthJudge");
-		this.contestJudge = new JRadioButton("LabyrinthContestJudge");
+		boolean first = true;
 		
 		ButtonGroup grp = new ButtonGroup();
-		grp.add(defJudge);
-		grp.add(labyJudge);
-		grp.add(contestJudge);
+		
+		for(String s : this.judges) {
+			
+			JRadioButton but = new JRadioButton(s);
+			but.setActionCommand(s);
+			but.addActionListener(this);
+			
+			if(first) {
+				but.setSelected(true);
+				this.judge = s;
+				
+				first = false;
+			}
+			
+			grp.add(but);
+			this.buttons.add(but);
+		}
 	}
 	
-	private Judge getJudge() {
+	private String getJudge() {
 		
 		return this.judge;
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getSource() == this.ok) {
+			this.dispose();
+			return;
+		}
+		
+	    this.judge = e.getActionCommand();
 	}
 	
 	/**
@@ -98,7 +131,7 @@ public class JudgeChooser extends JDialog {
 	 * @param parent Der Frame, in dem der Auswahldialog laeuft
 	 * @return Der Schiedsrichter
 	 */
-	public static Judge showJudgeChooserDialog(Frame parent) {
+	public static String showJudgeChooserDialog(Frame parent) {
 		
 		JudgeChooser jc = new JudgeChooser(parent);
 		

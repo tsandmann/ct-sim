@@ -123,37 +123,45 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		// 		Math.round(-100 * World.getPlaygroundDimX() / 2),
 		// 		Math.round(100 * World.getPlaygroundDimX() / 2),
 		// aber woher sollte der Bot die Welt kennen 8-)
-				
+		
+		// TODO: SpinnerModel speichern, nicht Spinner
+		// Außerdem: Editor benutzen (Posen * 10(0), damit "vernünftige Koordinaten ohne Komma)
+		// Noch besser: Gleich Tabelle mit Editor
 		xSpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().x, -7d, 7d, 0.1d));
 		ySpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().y, -7d, 7d, 0.1d));
 		zSpin = new JSpinner(new SpinnerNumberModel(position.getRelPosition().z, -1d, 1d, 0.1d));
-		hSpin = new JSpinner(new SpinnerNumberModel(SimUtils.vec3dToDouble(position.getRelHeading()), -180, 180, 1));
+		hSpin = new JSpinner(new SpinnerNumberModel((int)Math.round(SimUtils.vec3dToDouble(position.getRelHeading())), -180, 180, 1));
 		
+		
+		// TODO: ChangeListener ändern: werden auch gefeurt, wenn der Bot die GUI ändert
 		xSpin.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				double x = new Double(xSpin.getValue().toString());
-				position.setPos(new Point3d(x, position.getRelPosition().y, position.getRelPosition().z));
+//				position.setPos(new Point3d(x, position.getRelPosition().y, position.getRelPosition().z));
 			}
 		});				
 		
 		ySpin.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				double y = (new Double(ySpin.getValue().toString())).doubleValue();
-				position.setPos(new Point3d(position.getRelPosition().x, y, position.getRelPosition().z));
+				
+				double y = new Double(ySpin.getValue().toString());
+//				position.setPos(new Point3d(position.getRelPosition().x, y, position.getRelPosition().z));
 			}
 		});				
 		
 		zSpin.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				double z = (new Double(zSpin.getValue().toString())).doubleValue();
-				position.setPos(new Point3d(position.getRelPosition().x, position.getRelPosition().y, z));
+				
+				double z = new Double(zSpin.getValue().toString());
+//				position.setPos(new Point3d(position.getRelPosition().x, position.getRelPosition().y, z));
 			}
 		});				
 		
 		hSpin.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				int x = Math.round(Math.round((new Double(hSpin.getValue().toString())).doubleValue()));
-				position.setHead(SimUtils.intToVec3d(x));
+				
+				Double x = new Double(hSpin.getValue().toString());
+//				position.setHead(SimUtils.intToVec3d(x.intValue()));
 			}
 		});				
 		

@@ -21,6 +21,8 @@ package ctSim.controller;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +63,8 @@ import ctSim.model.bots.Bot;
 //import ctSim.model.bots.ctbot.CtBotRealCon;
 //import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.CtBotSimTest;
+import ctSim.model.rules.DefaultJudge;
+import ctSim.model.rules.Judge;
 import ctSim.view.BotInfo;
 import ctSim.view.CtSimFrame;
 import ctSim.view.DefBotPanel;
@@ -71,6 +75,15 @@ import ctSim.view.DefBotPanel;
  */
 public final class Controller implements Runnable {
 	
+	/**
+	 * Enthaelt die gesamten Einzelparameter der Konfiguration 
+	 */
+	private HashMap<String,String> config = new HashMap<String,String>();
+	
+	private static final String CONFIGFILE = "config/ct-sim.xml";
+	
+	
+	
 	private Thread ctrlThread;
 	private volatile boolean pause;
 	private boolean run = true;
@@ -78,6 +91,7 @@ public final class Controller implements Runnable {
 	// TODO: CyclicBarrier (?)
 	private CountDownLatch startSignal, doneSignal;
 	
+	private Judge judge;
 	private CtSimFrame ctSim;
 	private World world;
 	private List<Bot> botList, botsToStart;
@@ -91,9 +105,67 @@ public final class Controller implements Runnable {
 		
 		this.pause = true;
 		this.tickRate = 500;
+		
+		init();
+	}
+	
+	private void init() {
+		
+		try {
+			parseConfig();
+			
+		} catch (Exception ex){
+			ErrorHandler.error("Einlesen der c't-Sim-Konfiguration nicht moeglich. Abburch!");
+			return;
+		}
+		
+		try {
+			
+			Class<?> cl = Class.forName(config.get("judge"));
+			
+			Constructor<?> c = cl.getConstructor(this.getClass(), this.world.getClass());
+			
+			this.judge = (Judge) c.newInstance(this, this.world);
+			
+			//judge = (Judge) Class.forName(config.get("judge")).newInstance();
+			//judge.setController(this);
+			//judge.start();
+			//controlFrame.addJudge(judge);
+			
+		} catch(ClassNotFoundException e) {
+			ErrorHandler.error("Die Judge-Klasse wurde nicht gefunden: "+e);
+		} catch(SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(NoClassDefFoundError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(Exception e) {
+			ErrorHandler.error("Probleme beim instantiieren der Judge-Klasse: "+e);
+		}
 	}
 	
 	private void start() {
+		
+		if(this.judge == null) {
+			
+			this.judge = new DefaultJudge(this, this.world);
+		}
 		
 		this.ctrlThread = new Thread(this, "Controller");
 		
@@ -131,9 +203,11 @@ public final class Controller implements Runnable {
 			try {
 				//System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				this.doneSignal.await();
-				System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
+				//System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				CountDownLatch startSig = this.startSignal;
 				
+				// Judge prüfen:
+				this.judge.update(t);
 				// Update World
 				// TODO: ganz dirty!
 				this.ctSim.update(t);
@@ -222,11 +296,57 @@ public final class Controller implements Runnable {
 	}
 	
 	public synchronized void unpause() {
-		
-		if(this.pause) {
+		System.out.println("Da bin ich doch...");
+		if(this.pause && this.judge.isStartAllowed()) {
 			this.pause = false;
 			this.notify();
 		}
+	}
+	
+	public boolean setJudge(String judgeClass) {
+		
+		try {
+			Class<?> cl = Class.forName(judgeClass);
+			Constructor<?> c = cl.getConstructor(this.getClass(), this.world.getClass());
+			
+			return this.setJudge((Judge) c.newInstance(this, this.world));
+			
+		} catch(ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(NoClassDefFoundError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public boolean setJudge(Judge judge) {
+		
+		if(this.judge == null || this.judge.getTime() == 0) {
+			this.judge = judge;
+			return true;
+		}
+		return false;
 	}
 	
 	// TODO:
@@ -243,20 +363,19 @@ public final class Controller implements Runnable {
 		 * lauscht, an dieser Stelle eingebaut.
 		 */
 
-		//port = config.get("botport");
 		int p = 10001;
 		
-		//if (port != null){
-			try {
-				//int p = new Integer(port).intValue();
-				
-				System.out.println("Warte auf Verbindung vom c't-Bot auf Port "+p);
-				SocketListener BotListener = new BotSocketListener(p);
-				BotListener.start();
-				
-			} catch (Exception ex) {
-				ErrorHandler.error("Kann den botPort ("+p+ ") nicht dekodieren "+ex);
-			}
+		try {
+			String port = config.get("botport");
+			p = new Integer(port).intValue();
+		} catch(NumberFormatException nfe) {
+			nfe.printStackTrace();
+		}
+		
+		System.out.println("Warte auf Verbindung vom c't-Bot auf Port "+p);
+		SocketListener BotListener = new BotSocketListener(p);
+		BotListener.start();
+		
 		//} else {
 		//	ErrorHandler.error("Kein botPort in der Config-Datei gefunden. Es wird nicht auf Bots gelauscht!");			
 		//}
@@ -340,6 +459,11 @@ public final class Controller implements Runnable {
 		}
 	}
 	
+	public int getParticipants() {
+		
+		return this.botList.size()+this.botsToStart.size();
+	}
+	
 	/** 
 	 * Fuegt einen Bot dazu, sobald die Connection steht
 	 * @param con Die Verbindung
@@ -387,7 +511,7 @@ public final class Controller implements Runnable {
 			ErrorHandler.error("TCPConnection broken - not possible to connect: " + ex);
 		}
 		
-		if (bot != null) {
+		if (bot != null && this.judge.isAddAllowed()) {
 			// TODO:
 			addBot(bot);
 			this.ctSim.addBot(new BotInfo("Test"+Math.round(Math.random()*10), "CTest", bot, new DefBotPanel()));
@@ -434,6 +558,7 @@ public final class Controller implements Runnable {
 	 * @param filename Pfad zum Binary des Bots
 	 */
 	public void invokeBot(String filename){
+		
 		System.out.println("Starte externen Bot: "+filename);
 		CmdExec executor = new CmdExec();
 		try {
@@ -445,7 +570,7 @@ public final class Controller implements Runnable {
 	
 	private synchronized Bot addBot(Bot bot){
 		
-		if (bot != null) {
+		if (bot != null && this.judge.isAddAllowed()) {
 			
 			// TODO Sinnvolle Zuordnung von Bot-Name zu Konfig
 			HashMap botConfig = getBotConfig("config/ct-sim.xml",bot.getName());
@@ -495,6 +620,40 @@ public final class Controller implements Runnable {
 		} catch (Exception ex) {
 			ErrorHandler.error("JD2XX Connection nicht moeglich: " + ex);
 			return null;
+		}
+	}
+	
+	/**
+	 * Liest die Konfiguration des Sims ein
+	 * @throws Exception
+	 */
+	private void parseConfig() throws Exception{
+		// Ein DOMParser liest ein XML-File ein
+		DOMParser parser = new DOMParser();
+		try {
+			// einlesen
+			String configFile= ClassLoader.getSystemResource(CONFIGFILE).toString();
+			System.out.println("Loading Config: "+configFile);
+			
+			parser.parse(configFile);
+			// umwandeln in ein Document
+			Document doc = parser.getDocument();
+			
+			// Und Anfangen mit dem abarbeiten
+			
+			//als erster suchen wir uns den Parameter-Block
+			Node n = doc.getDocumentElement().getFirstChild();
+			while (n != null){
+				if (n.getNodeName().equals("parameter")){
+					String name = n.getAttributes().getNamedItem("name").getNodeValue();
+					String value = n.getAttributes().getNamedItem("value").getNodeValue();
+					config.put(name,value);
+				}
+				n=n.getNextSibling();
+			}
+		} catch (Exception ex) {
+			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex);
+			throw ex;
 		}
 	}
 	

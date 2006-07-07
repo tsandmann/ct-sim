@@ -184,6 +184,12 @@ public class Command {
 	 */
 	public Command() {
 		super();
+		this.subcommand = SUB_CMD_NORM;
+		direction = DIR_REQUEST;
+		startCode = STARTCODE;
+		crc = CRCCODE;
+		payload = 0;
+		dataBytes = new byte[payload];
 	}
 
 	/**

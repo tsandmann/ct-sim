@@ -288,6 +288,11 @@ public class World {
 		this.obstBG.addChild(obst.getBranchGroup());
 	}
 	
+	public Set<AliveObstacle> getAliveObstacles() {
+		
+		return this.aliveObsts;
+	}
+	
 	// TODO:
 //	public void removeObstacle() {
 //		
@@ -391,7 +396,7 @@ public class World {
 	 * Prueft, ob ein Punkt auf dem Zielfeld liegt
 	 * @return
 	 */
-	public boolean finishReached(Vector3f pos){
+	public boolean finishReached(Vector3d pos){
 		return parcours.finishReached(pos);
 	}
 	
@@ -680,21 +685,21 @@ public class World {
 
 		// TODO: Sehstrahl oeffnet einen Konus mit dem festen Winkel von 3 Grad;
 		// muss an realen IR-Sensor angepasst werden!
-		
+//		System.out.println("--------------------------------------------------");
 		// TODO: Wieder rein??
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
-//		System.out.println(relPos);
+//		System.out.println(Math.floor(relPos.x*1000)+" | "+Math.floor(relPos.y*1000)+" | "+Math.floor(relPos.z*1000));
 		Transform3D transform = new Transform3D();
 		worldTG.getTransform(transform);
 		transform.transform(relPos);
-//		System.out.println(relPos);
+//		System.out.println(Math.floor(relPos.x*1000)+" | "+Math.floor(relPos.y*1000)+" | "+Math.floor(relPos.z*1000));
 
 		// oder rotiert:
 		Vector3d relHeading = new Vector3d(heading);
-//		System.out.println(relHeading);
+//		System.out.println(Math.floor(relHeading.angle(new Vector3d(0d, 1d, 0d))*100));
 		transform.transform(relHeading);
-//		System.out.println(relHeading);
+//		System.out.println(Math.floor(relHeading.angle(new Vector3d(0d, 1d, 0d))*100));
 		
 //		Point3d relPos = pos;
 //		Vector3d relHeading = heading;
@@ -710,7 +715,10 @@ public class World {
 		}
 		if (pickInfo == null)
 			return 100.0;
-		else
-			return pickInfo.getClosestDistance();
+		else {
+			double d = pickInfo.getClosestDistance();
+//			System.out.println("IR: "+Math.floor(d*1000));
+			return d;
+		}
 	}
 }

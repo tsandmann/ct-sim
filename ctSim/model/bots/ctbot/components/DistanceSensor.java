@@ -217,7 +217,52 @@ public class DistanceSensor extends SimpleSensor<Double> {
 		// TODO Auto-generated method stub
 		return "Infrarot Abstands-Sensor: "+this.getName();
 	}
+	
+	/**
+	 * Liefert die Position eines IR-Sensors zurueck
+	 * 
+	 * @param side
+	 *            Welcher Sensor 'L' oder 'R'
+	 * @return Die Position
+	 */
+	// TODO: Alte IR-Pos-Berechnugn...
+	private Point3d getSensIRPosition(String side) {
+		
+		/** Hoehe des Bots [m] */
+		double BOT_HEIGHT = 0.120d;
+		
+		/** Abstand Zentrum IR-Sensoren in Achsrichtung (X)[m] */
+		double SENS_IR_DIST_X = 0.036d;
 
+		/** Abstand Zentrum IR-Sensoren in Vorausrichtung (Y) [m] */
+		double SENS_IR_DIST_Y = 0.0554d;
+
+		/** Abstand Zentrum IR-Sensoren in Hochrichtung (Z) [m] */
+		double SENS_IR_DIST_Z = 0.035d - BOT_HEIGHT / 2;
+		
+		// Vektor vom Ursprung in Axial-Richtung
+		Vector3d vecX;
+		if (side.equals("IrL"))
+			vecX = new Vector3d(-this.bot.getHeading().y, this.bot.getHeading().x,
+					(float) (BOT_HEIGHT / 2 + SENS_IR_DIST_Z));
+		else
+			vecX = new Vector3d(this.bot.getHeading().y, -this.bot.getHeading().x,
+					(float) (BOT_HEIGHT / 2 + SENS_IR_DIST_Z));
+
+		vecX.scale((float) SENS_IR_DIST_X, vecX);
+
+		// Vektor vom Ursprung in Voraus-Richtung
+		Vector3d vecY = new Vector3d(this.bot.getHeading());
+		vecY.scale((float) SENS_IR_DIST_Y, vecY);
+
+		// Ursprung
+		Vector3d pos = new Vector3d(this.bot.getPosition());
+		pos.add(vecX); // Versatz nach links
+		pos.add(vecY); // Versatz nach vorne
+
+		return new Point3d(pos);
+	}
+	
 	@Override
 	public Double updateValue() {
 		
@@ -228,10 +273,12 @@ public class DistanceSensor extends SimpleSensor<Double> {
 		
 		// TODO: Richtig so?
 		
-		return this.world.watchObstacle(
-				this.getAbsPosition(this.bot.getPosition(), this.bot.getHeading()),
+		double dist = this.world.watchObstacle(
+				//this.getAbsPosition(this.bot.getPosition(), this.bot.getHeading()),
+				this.getSensIRPosition(this.getName()),
 				//this.bot.getPosition(),
-				this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()),
+				//this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()),
+				this.bot.getHeading(),
 				//this.bot.getHeading(),
 				// TODO: (in Radius)
 				this.angle,
@@ -239,6 +286,10 @@ public class DistanceSensor extends SimpleSensor<Double> {
 				//(Shape3D)this.bot.getNodeReference(BOTBODY));
 				this.bot.getShape());
 				//(Shape3D)this.bot.getNodeReference(Bot.BOTBODY));
+		
+		// TODO: Meter -> Millimeter; Obergrenze beachten?
+//		System.out.println(this.getName()+" :  "+dist+" -> "+dist*1000);
+		return dist*1000;
 		
 		/* TODO:
 		 * 

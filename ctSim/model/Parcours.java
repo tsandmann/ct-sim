@@ -22,7 +22,7 @@ import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 import ctSim.ErrorHandler;
 import ctSim.model.bots.ctbot.CtBot;
@@ -185,7 +185,7 @@ public class Parcours {
 		node.setPickable(true);
 //		node.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 		
-		translate.set(new Vector3f(x * grid, y* grid, z));
+		translate.set(new Vector3d(x * grid, y* grid, z));
 
 		TransformGroup tg = new TransformGroup(translate);
 		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
@@ -300,12 +300,12 @@ public class Parcours {
 	 * @param bot
 	 * @return
 	 */
-	public Vector3f getStartPosition(int bot){
-		Vector3f pos = null;
+	public Vector3d getStartPosition(int bot){
+		Vector3d pos = null;
 		if (bot < BOTS)
-			pos= new Vector3f(startPositions[bot][0]*grid + grid/2,startPositions[bot][1]*grid + grid/2,0.0f);
+			pos= new Vector3d(startPositions[bot][0]*grid + grid/2,startPositions[bot][1]*grid + grid/2,0.0f);
 		else
-			pos= new Vector3f(startPositions[0][0]*grid + grid/2,startPositions[0][1]*grid + grid/2,0.0f);
+			pos= new Vector3d(startPositions[0][0]*grid + grid/2,startPositions[0][1]*grid + grid/2,0.0f);
 		
 		return pos;
 	}
@@ -316,12 +316,12 @@ public class Parcours {
 	 * @param bot
 	 * @return
 	 */
-	public Vector3f getStartHeading(int bot){
-		Vector3f pos = null;
+	public Vector3d getStartHeading(int bot){
+		Vector3d pos = null;
 		if (bot < BOTS)
-			pos= new Vector3f(startHeadings[bot][0],startHeadings[bot][1],0.0f);
+			pos= new Vector3d(startHeadings[bot][0],startHeadings[bot][1],0.0f);
 		else  // sonst leifer die Default-Richtung
-			pos= new Vector3f(startHeadings[0][0],startHeadings[0][1],0.0f);
+			pos= new Vector3d(startHeadings[0][0],startHeadings[0][1],0.0f);
 			
 		if (pos.length()==0){
 			pos.x=1.0f;
@@ -357,7 +357,7 @@ public class Parcours {
 	 * @param pos
 	 * @return
 	 */
-	public boolean finishReached(Vector3f pos){
+	public boolean finishReached(Vector3d pos){
 		float minX = finishPosition[0]*grid ;
 		float maxX = finishPosition[0]*grid + grid;
 		float minY = finishPosition[1]*grid ;

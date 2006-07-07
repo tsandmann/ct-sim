@@ -88,13 +88,14 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		initSensors();
 	}
 	
+	
 	private void initSensors() {
 		
 		this.encL = new EncoderSensor(this.world, this, "EncL", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govL);
 		this.encR = new EncoderSensor(this.world, this, "EncR", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govR);
 		
-		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0.035d-BOT_HEIGHT/2), new Vector3d(0d, 1d, 0d));
-		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0.035d-BOT_HEIGHT/2), new Vector3d(0d, 1d, 0d));
+		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d));
+		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d));
 		
 		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
 		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
@@ -165,8 +166,15 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 */
 	private synchronized void transmitSensors() {
 		try {
+//			Command command = new Command(Command.CMD_SENS_IR,
+//			1000,
+//			1000, seq++);
+//			this.connection.send(command.getCommandBytes());
+			
 			Command command = new Command();
 			command.setCommand(Command.CMD_SENS_IR);
+//			command.setDataL(1000);
+//			command.setDataR(1000);
 			command.setDataL(((Double)this.irL.getValue()).intValue());
 			command.setDataR(((Double)this.irL.getValue()).intValue());
 			command.setSeq(seq++);
@@ -211,14 +219,15 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setDataR(this.mouseY);
 			command.setSeq(seq++);
 			this.connection.send(command.getCommandBytes());
-//
-//			command.setCommand(Command.CMD_SENS_TRANS);
-//			command.setDataL(getSensTrans());
-//			command.setDataR(0);
-//			command.setSeq(seq++);
-//			this.connection.send(command.getCommandBytes());
-//
-//			
+			
+			// TODO: nur für real-bot
+			command.setCommand(Command.CMD_SENS_TRANS);
+			command.setDataL(0);
+			command.setDataR(0);
+			command.setSeq(seq++);
+			this.connection.send(command.getCommandBytes());
+
+			
 //			if (getSensRc5() != 0) {
 //				command.setCommand(Command.CMD_SENS_RC5);
 //				command.setDataL(getSensRc5());
@@ -229,8 +238,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //			}
 			
 			// TODO: sehr hässlich: Bot-Verhalten "Wandverfolgung" starten
-//			first++;
-//			if(first==10) {
+			first++;
+			if(first==1) {
 				
 				int RC5_CODE_5 = 0x3945;
 				Integer i = new Integer(RC5_CODE_5);
@@ -239,15 +248,17 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				command.setDataR(42);
 				command.setSeq(seq++);
 				this.connection.send(command.getCommandBytes());
-				System.out.println("Raus: "+i);
+				//System.out.println("Raus: "+i);
+				//System.out.println(command.toString());
 				//setSensRc5(0);
-//			}
-//
-//			command.setCommand(Command.CMD_SENS_ERROR);
-//			command.setDataL(getSensError());
-//			command.setDataR(0);
-//			command.setSeq(seq++);
-//			this.connection.send(command.getCommandBytes());
+			}
+
+			// TODO: nur für real-bot
+			command.setCommand(Command.CMD_SENS_ERROR);
+			command.setDataL(0);
+			command.setDataR(0);
+			command.setSeq(seq++);
+			this.connection.send(command.getCommandBytes());
 		} catch (IOException IoEx) {
 			ErrorHandler.error("Error during sending Sensor data, dieing: "
 					+ IoEx);
@@ -266,6 +277,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			turnsL = turnsL * deltaT / 1000.0f;
 			double turnsR = calculateWheelSpeed((Integer)this.govR.getValue());
 			turnsR = turnsR * deltaT / 1000.0f;
+//			System.out.println(this.govL.getValue()+" -> "+turnsL);
+//			System.out.println(this.govR.getValue()+" -> "+turnsR);
 			
 			// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe pdf
 			// Absolut zurueckgelegte Strecke pro Rad berechnen
@@ -288,9 +301,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			Vector3d newHeading = new Vector3d(
 					(double) (_hd.x * _c2g + _hd.y * _s2g),
 					(double) (-_hd.x * _s2g + _hd.y * _c2g), 0f);
-
+			
 			newHeading.normalize();
-
+			
 			// Neue Position bestimmen
 			Vector3d newPos = new Vector3d(this.getPosition());
 			double _sg = Math.sin(_gamma);
@@ -470,8 +483,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				//this.setActMotR((short) command.getDataR());
 				this.govL.setValue(command.getDataL());
 				this.govR.setValue(command.getDataR());
-				System.out.println("Angekommen");
-				System.exit(-1);
 				break;
 			case Command.CMD_AKT_SERVO:
 //				this.setActServo(command.getDataL());
@@ -524,7 +535,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				break;
 			}
 			//System.out.println("////////////////////////////////////////////////////////////////");
-			System.out.println("Command: "+(char)command.getCommand()+"  -  "+(char)command.getSubcommand());
+			//System.out.println("Command: "+(char)command.getCommand()+"  -  "+(char)command.getSubcommand());
 			
 			try {
 				// tcpCon.send(answer.getCommandBytes());

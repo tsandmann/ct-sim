@@ -3,6 +3,7 @@ package ctSim.model.bots.ctbot.components;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.QuadArray;
 import javax.media.j3d.Shape3D;
+import javax.media.j3d.Transform3D;
 import javax.media.j3d.TriangleStripArray;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
@@ -12,6 +13,7 @@ import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Stripifier;
 
+import ctSim.SimUtils;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.sensors.SimpleSensor;
@@ -215,7 +217,45 @@ public class LightSensor extends SimpleSensor<Integer> {
 		// TODO: Lichtsensor?
 		return "Infrarot Licht-Sensor: "+this.getName();
 	}
+	
+	/**
+	 * Liefert die Position eines Lichtsensors zurueck
+	 * 
+	 * @param side
+	 *            Welcher Sensor 'L' oder 'R'
+	 * @return Die Position
+	 */
+	// Altlast...
+	private Point3d getSensLdrPosition(String side) {
+		
+		/** Hoehe des Bots [m] */
+		double BOT_HEIGHT = 0.120d;
+		
+		/** Abstand Zentrum Lichtsensoren in Achsrichtung (X)[m] */
+		double SENS_LDR_DIST_X = 0.032d;
 
+		/** Abstand Zentrum Lichtsensoren in Vorausrichtung (Y) [m] */
+		double SENS_LDR_DIST_Y = 0.048d;
+
+		/** Abstand Zentrum Lichtsensoren in Hochrichtung (Z) [m] */
+		double SENS_LDR_DIST_Z = 0.060d - BOT_HEIGHT / 2;
+		
+		double angle = SimUtils.getRotation(this.bot.getHeading());
+		Transform3D rotation = new Transform3D();
+		rotation.rotZ(angle);
+		Point3d ptLdr;
+		if (side == "LightL") {
+			ptLdr = new Point3d(-SENS_LDR_DIST_X, SENS_LDR_DIST_Y,
+					SENS_LDR_DIST_Z);
+		} else {
+			ptLdr = new Point3d(SENS_LDR_DIST_X, SENS_LDR_DIST_Y,
+					SENS_LDR_DIST_Z);
+		}
+		rotation.transform(ptLdr);
+		ptLdr.add(new Point3d(this.bot.getPosition()));
+		return ptLdr;
+	}
+	
 	@Override
 	public Integer updateValue() {
 		
@@ -226,8 +266,11 @@ public class LightSensor extends SimpleSensor<Integer> {
 		
 		// TODO: Richtig so?
 		return this.world.sensLight(
-				this.getAbsPosition(this.bot.getPosition(), this.bot.getHeading()),
-				this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()),
+				// TODO: Hässlich:
+				//this.getAbsPosition(this.bot.getPosition(), this.bot.getHeading()),
+				this.getSensLdrPosition(this.getName()),
+				//this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()),
+				this.bot.getHeading(),
 				this.angle);
 		
 		/* TODO:

@@ -35,7 +35,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	 * Nach der letzten Simulation noch nicht verarbeitete Teil-Encoder-Schritte
 	 * (links)
 	 */
-	private double encoderRest = 0;
+	private double encoderRest = 0d;
 	
 	/** Anzahl an Encoder-Markierungen auf einem Rad */
 	public static final short ENCODER_MARKS = 60;
@@ -112,7 +112,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 		// und speichern sie.
 		//this.setSensEncL((short) (this.getSensEncL() + encoderSteps));
 		
-		//System.out.println(encoderSteps);
+//		System.out.println(this.getName()+":  "+encoderSteps);
 		
 		// TODO: Achtung! Value kann 'null' sein
 		//return this.getValue()+encoderSteps;

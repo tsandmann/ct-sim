@@ -684,7 +684,17 @@ public class CtSimFrame extends JFrame {
 	
 	private void cmdSetJudgeClicked() {
 		
-		JudgeChooser.showJudgeChooserDialog(this);
+		if(this.controller == null) {
+			Debug.out.println("Fehler: Noch keine Welt geladen.");
+			return;
+		}
+		
+		String judge = JudgeChooser.showJudgeChooserDialog(this);
+		
+		if(this.controller.setJudge(judge)) {
+			
+			Debug.out.println("Judge \""+judge+"\" wurde gewählt.");
+		}
 	}
 	
 	private void cmdAddBotClicked() {
