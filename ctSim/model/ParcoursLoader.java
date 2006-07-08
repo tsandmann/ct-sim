@@ -143,14 +143,14 @@ public class ParcoursLoader {
 	}
 	
 	/**
-	 * Erzeugt ein Stück Fußboden 
+	 * Erzeugt ein Stueck Fussboden 
 	 * Alle Postionen sind keine Weltkoordinaten,
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
 	 * 
 	 * @param x  Position in X-Richtung
 	 * @param y  Position in X-Richtung
-	 * @param lengthX Länge der Fläche in X-Richtung
-	 * @param lengthY Länge der Fläche in Y-Richtung
+	 * @param lengthX Laenge der Flaeche in X-Richtung
+	 * @param lengthY Laenge der Flaeche in Y-Richtung
 	 * @param app Aussehen des Bodens
 	 */
 	@SuppressWarnings("unused")
@@ -160,7 +160,7 @@ public class ParcoursLoader {
 	}	
 
 	/**
-	 * Erzeugt ein Stück Fußboden 
+	 * Erzeugt ein Stueck Fussboden 
 	 * Alle Postionen sind keine Weltkoordinaten,
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
 	 * 
@@ -221,7 +221,6 @@ public class ParcoursLoader {
 	 * Erzeugt eine Sauele mit Lichtquelle obendrauf
 	 * @param x X-Koordinate
 	 * @param y Y-Koordinate
-	 * @return eine Transformgroup, die die Sauele enthaelt
 	 */
 	private void createPillar(int x, int y,Appearance wallAppearance, Appearance lightAppearance){
 		Cylinder pillar = new Cylinder(0.05f, 0.5f, wallAppearance);
@@ -387,15 +386,14 @@ public class ParcoursLoader {
 	}    	
 	
 	/**
-	 * Liefert das soeben aufgebaute Parcours-Objekt zurueck
-	 * @return
+	 * @return Liefert das soeben aufgebaute Parcours-Objekt zurueck
 	 */
 	public Parcours getParcours() {
 		return parcours;
 	}
 
 	/**
-	 * Laedt einen Oarcours aus einer XML-Datei
+	 * Laedt einen Parcours aus einer XML-Datei
 	 * @param filename
 	 * @throws SAXException 
 	 * @throws IOException 
