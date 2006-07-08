@@ -157,8 +157,10 @@ public final class Controller implements Runnable {
 		} catch(NoClassDefFoundError e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch(NullPointerException e) {
+			ErrorHandler.error("Kein Schiedsrichter vorgesehen.");				
 		} catch(Exception e) {
-			ErrorHandler.error("Probleme beim instantiieren der Judge-Klasse: "+e);
+			ErrorHandler.error("Probleme beim Instantiieren der Judge-Klasse: "+e);
 		}
 	}
 	
@@ -460,7 +462,7 @@ public final class Controller implements Runnable {
 					try {
 					server.setSoTimeout(1000);
 					tcp.connect(server.accept());
-					System.out.println("Incomming Connection on Bot-Port");
+					System.out.println("Eingehende Verbindung auf dem Bot-Port");
 					
 					addBot(tcp);
 					} catch(SocketTimeoutException e) {
@@ -492,7 +494,7 @@ public final class Controller implements Runnable {
 			con.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
 			// TODO Timeout einfuegen!!
 			while (bot == null) {
-				System.out.println("Waiting for Welcome-String...");
+				System.out.println("Warte auf Willkommen...");
 				
 				if (cmd.readCommand(con) == 0) {
 					
@@ -508,23 +510,23 @@ public final class Controller implements Runnable {
 									new Point3d(0.5d, 0d, 0.075d),
 									new Vector3d(1.0f, -0.5f, 0f),
 									con);
-							System.out.println("Virtual Bot comming up");
+							System.out.println("Virtueller Bot nimmt Verbindung auf");
 							//System.exit(0);  // <<------------------------ !!!!!!!!!!!!
 						}
 					} else {
-						System.out.print("Non-Welcome-Command found: \n"
+						System.out.print("Bot ist nicht willkommen: \n"
 										+ cmd.toString()+ "\n"+
-										" ==> Bot is already running or deprecated bot \n"+
-										"Sending Welcome again\n");
+										" ==> Bot laeuft schon oder ist veraltet \n"+
+										"Schicke Willkommen nochmals\n");
 						// Hallo sagen
 						con.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
 					}
 				} else
-					System.out.print("Broken Command found: \n");
+					System.out.print("Fehlerhaftes Kommando gefunden: \n");
 
 			}
 		} catch (IOException ex) {
-			ErrorHandler.error("TCPConnection broken - not possible to connect: " + ex);
+			ErrorHandler.error("TCPConnection unterbrochen - Verbindung nicht moeglich: " + ex);
 		}
 		
 		if (bot != null && this.judge.isAddAllowed()) {
@@ -631,10 +633,10 @@ public final class Controller implements Runnable {
 		JD2xxConnection com = new JD2xxConnection();
 		try {
 			com.connect();
-			System.out.println("JD2XX-Connection aufgebaut");
+			System.out.println("JD2XX-Verbindung aufgebaut");
 			return com;
 		} catch (Exception ex) {
-			ErrorHandler.error("JD2XX Connection nicht moeglich: " + ex);
+			ErrorHandler.error("JD2XX-Verbindung nicht moeglich: " + ex);
 			return null;
 		}
 	}
@@ -649,7 +651,7 @@ public final class Controller implements Runnable {
 		try {
 			// einlesen
 			String configFile= ClassLoader.getSystemResource(CONFIGFILE).toString();
-			System.out.println("Loading Config: "+configFile);
+			System.out.println("Lade Konfiguration aus: "+configFile);
 			
 			parser.parse(configFile);
 			// umwandeln in ein Document
