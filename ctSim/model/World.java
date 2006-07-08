@@ -410,22 +410,28 @@ public class World {
 	 * @return True wenn der Bot sich frei bewegen kann
 	 */
 	// TODO: Überarbeiten?
-	public boolean checkCollision(AliveObstacle obst, //Shape3D botBody, Bounds bounds,
+	public boolean checkCollision(AliveObstacle obst, /*Shape3D botBody,*/ Bounds bounds,
 			Vector3d newPosition) { //, String botName) {
 		
 		Shape3D botBody = obst.getShape();
-		Bounds bounds = obst.getBounds();
+//		Bounds bounds = obst.getBounds();
 		String botName = obst.getName();
+		
+//		System.out.println(bounds.toString());
 		
 		// schiebe probehalber Bounds an die neue Position
 		Transform3D transform = new Transform3D();
 		transform.setTranslation(newPosition);
 		bounds.transform(transform);
-
+		
+//		System.out.println(bounds.toString());
+		
 		// und noch die Welttransformation darauf anwenden
 		worldTG.getTransform(transform);
 		bounds.transform(transform);
-
+		
+//		System.out.println(bounds.toString());
+		
 		PickBounds pickShape = new PickBounds(bounds);
 		PickInfo pickInfo;
 		synchronized (this.obstBG) {
@@ -441,10 +447,12 @@ public class World {
 
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return true;
-		else
+		else {
 			//System.out.println(botName + " hatte einen Unfall!");
-			Debug.out.println(botName + " hatte einen Unfall!");
-		return false;
+			Debug.out.println("Bot \""+botName + "\" hatte einen Unfall!");
+			//obst.stop();
+			return false;
+		}
 	}
 	
 	/**
@@ -480,11 +488,11 @@ public class World {
 					PickInfo.CLOSEST_DISTANCE, pickShape);
 		}
 		if (pickInfo == null) {
-			System.out.println(message + " faellt ins Bodenlose.");
+			Debug.out.println(message + " faellt ins Bodenlose.");
 			return false;
 		} else if (Math.round(pickInfo.getClosestDistance() * 1000) > Math
 				.round(groundClearance * 1000)) {
-			System.out.println(message + " faellt "
+			Debug.out.println(message + " faellt "
 					+ pickInfo.getClosestDistance() * 1000 + " mm.");
 			return false;
 		} else

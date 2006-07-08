@@ -3,6 +3,7 @@ package ctSim.model.bots.ctbot;
 import java.io.File;
 import java.io.IOException;
 
+import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Point3d;
@@ -218,6 +219,10 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setSeq(seq++);
 			this.connection.send(command.getCommandBytes());
 			
+			if(this.getObstState() != OBST_STATE_NORMAL) {
+				this.mouseX = 0;
+				this.mouseY = 0;
+			}
 			command.setCommand(Command.CMD_SENS_MOUSE);
 			command.setDataL(this.mouseX);
 			command.setDataR(this.mouseY);
@@ -263,6 +268,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setDataR(0);
 			command.setSeq(seq++);
 			this.connection.send(command.getCommandBytes());
+			
 		} catch (IOException IoEx) {
 			ErrorHandler.error("Error during sending Sensor data, dieing: "
 					+ IoEx);
@@ -343,7 +349,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			int oldState = this.getObstState(); 
 			// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 			// der Bot blau gefaerbt.
-			if (this.world.checkCollision(this, newPos)) {
+			//System.out.println(this.world.checkCollision(this, newPos));
+			if (this.world.checkCollision(this, new BoundingSphere(new Point3d(0d, 0d, 0d), BOT_RADIUS), newPos)) {
 				// Zustand setzen
 				setObstState( oldState & ~OBST_STATE_COLLISION);
 			} else {

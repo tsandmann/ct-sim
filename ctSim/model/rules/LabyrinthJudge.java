@@ -72,6 +72,8 @@ public class LabyrinthJudge extends Judge {
 			
 			if(this.world.finishReached(new Vector3d(obst.getPosition()))) {
 				
+				//Debug.out.println("Bot \""+obst.getName()+"\" erreicht nach "+this.getTime()+" ms als erster das Ziel!");
+				//Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "+ this.getTime()+" ms.");
 				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "+ SimUtils.millis2time(this.getTime()));
 				
 				return false;

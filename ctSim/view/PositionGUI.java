@@ -18,6 +18,7 @@
  */
 package ctSim.view;
 
+import java.util.EventListener;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.Vector;
@@ -179,7 +180,7 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
  			
  			public void setValue(Object value) {
  		        
- 		        setText((value == null) ? "" : String.format("%.1f", value));
+ 		        setText((value == null) ? "" : String.format("%.2f", value));
  		    }
  		});
 		
@@ -219,7 +220,7 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			
 			this.spinner = new JSpinner(this.model);
 			
-			this.spinner.setEditor(new JSpinner.NumberEditor(this.spinner, "0.0"));
+			this.spinner.setEditor(new JSpinner.NumberEditor(this.spinner, "0.00"));
 		}
 		
 		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
@@ -227,7 +228,7 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			if(row == 3) {
 				this.model.setMinimum(-180d);
 				this.model.setMaximum(180d);
-				this.model.setStepSize(0.5d);
+				this.model.setStepSize(1.0d);
 			} else {
 				this.model.setMinimum(0d);
 				this.model.setMaximum(1000d);

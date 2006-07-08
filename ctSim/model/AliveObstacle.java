@@ -390,7 +390,7 @@ public abstract class AliveObstacle
 		} catch(InterruptedException ie) {
 			// nothing...
 		}
-		Debug.out.println(this.getName()+" stirbt...");
+		Debug.out.println("Bot \""+this.getName()+"\" stirbt...");
 		// TODO: ???
 		//cleanup();
 	}
