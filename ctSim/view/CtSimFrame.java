@@ -603,17 +603,17 @@ public class CtSimFrame extends JFrame {
 			
 			this.validate();
 			
-			Debug.out.println("Zufällige Welt wurde generiert..");
+			Debug.out.println("Labyrinth generiert");
 			
 		} catch (SAXException e) {
-			Debug.out.println("Fehler beim Öffnen der Welt-Datei.");
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
 			e.printStackTrace();
 		} catch (IOException e) {
-			Debug.out.println("Fehler beim Öffnen der Welt-Datei.");
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
 			e.printStackTrace();
 		} catch (Exception e) {
-			Debug.out.println("Fehler beim Öffnen der Welt-Datei.");
-			// TODO: Über?
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
+			// TODO: Ueber?
 			e.printStackTrace();
 		}
 	}
