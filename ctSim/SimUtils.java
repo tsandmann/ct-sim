@@ -148,4 +148,17 @@ public class SimUtils {
 		
 		return transform;
 	}
+	
+	/**
+	 * Wandelt Millisekunden in die Anzeige h:m:s:ms um
+	 * @param millis Die Zeit in Millisekunden
+	 * @return Die Zeit als Text
+	 */
+	public static String millis2time(long millis){
+		long hours = millis / 360000;
+		long minutes = (millis % 360000) / 60000;
+		long seconds = (millis % 60000) / 1000;
+		long rest = millis % 1000;
+		return new String (hours+":"+minutes+":"+seconds+":"+rest);
+	}	
 }
