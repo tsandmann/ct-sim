@@ -235,7 +235,8 @@ public abstract class CtBot extends Bot {
 	
 	public Bounds getBounds() {
 		
-		return this.bounds;
+		//return this.bounds;
+		return new BoundingSphere(new Point3d(this.getPosition()), BOT_RADIUS);
 	}
 	
 	/**

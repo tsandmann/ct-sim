@@ -21,9 +21,11 @@ package ctSim.controller;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.lang.Thread.State;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -82,7 +84,7 @@ public final class Controller implements Runnable {
 	
 	private static final String CONFIGFILE = "config/ct-sim.xml";
 	
-	
+	private SocketListener botListener;
 	
 	private Thread ctrlThread;
 	private volatile boolean pause;
@@ -186,9 +188,13 @@ public final class Controller implements Runnable {
 	
 	public void stop() {
 		
+		if(this.botListener != null && !this.botListener.equals(State.TERMINATED))
+			this.botListener.die();
+		
 		Thread dummy = this.ctrlThread;
 		this.ctrlThread = null;
-		dummy.interrupt();
+		while(!dummy.getState().equals(State.TERMINATED))
+			dummy.interrupt();
 	}
 	
 	public void run() {
@@ -296,7 +302,7 @@ public final class Controller implements Runnable {
 	}
 	
 	public synchronized void unpause() {
-		System.out.println("Da bin ich doch...");
+//		System.out.println("Da bin ich doch...");
 		if(this.pause && this.judge.isStartAllowed()) {
 			this.pause = false;
 			this.notify();
@@ -373,8 +379,8 @@ public final class Controller implements Runnable {
 		}
 		
 		System.out.println("Warte auf Verbindung vom c't-Bot auf Port "+p);
-		SocketListener BotListener = new BotSocketListener(p);
-		BotListener.start();
+		botListener = new BotSocketListener(p);
+		botListener.start();
 		
 		//} else {
 		//	ErrorHandler.error("Kein botPort in der Config-Datei gefunden. Es wird nicht auf Bots gelauscht!");			
@@ -410,6 +416,11 @@ public final class Controller implements Runnable {
 		 */
 		@Override
 		public abstract void run();
+		
+		public void die() {
+			this.listen = false;
+			//this.interrupt();
+		}
 	}
 	
 	/**
@@ -446,10 +457,15 @@ public final class Controller implements Runnable {
 					 * frei gibt, wurde der urspruenglich vorhandene Aufruf
 					 * gaenzlich entfernt.
 					 */
+					try {
+					server.setSoTimeout(1000);
 					tcp.connect(server.accept());
 					System.out.println("Incomming Connection on Bot-Port");
 					
 					addBot(tcp);
+					} catch(SocketTimeoutException e) {
+						
+					}
 				}
 			} catch (IOException ioe) {
 				System.err.format("Kann nicht an port %d binden.", new Integer(

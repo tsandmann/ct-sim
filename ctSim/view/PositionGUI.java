@@ -132,7 +132,7 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 				if(column != 1 || noupdate)
 		        	return;
 		        
-				System.out.println("soweit so gut");
+//				System.out.println("soweit so gut");
 				
 		        int row = e.getFirstRow();
 		        TableModel model = (TableModel)e.getSource();
