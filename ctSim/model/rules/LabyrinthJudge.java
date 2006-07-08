@@ -10,6 +10,7 @@ import ctSim.controller.Controller;
 import ctSim.model.AliveObstacle;
 import ctSim.model.World;
 import ctSim.view.Debug;
+import ctSim.SimUtils;
 
 public class LabyrinthJudge extends Judge {
 	
@@ -71,7 +72,7 @@ public class LabyrinthJudge extends Judge {
 			
 			if(this.world.finishReached(new Vector3d(obst.getPosition()))) {
 				
-				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "+ this.getTime());
+				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "+ SimUtils.millis2time(this.getTime()));
 				
 				return false;
 			}
