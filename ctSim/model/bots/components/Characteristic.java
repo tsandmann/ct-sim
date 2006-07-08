@@ -150,7 +150,7 @@ public class Characteristic {
 		for (int i = 0; i<lookup.length; i++){
 				intLookup[i] = Math.round(lookup[i]);
 			}
-		printLookup();
+		// printLookup();
 	}
 
 	/**
