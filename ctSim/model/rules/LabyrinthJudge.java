@@ -31,7 +31,7 @@ public class LabyrinthJudge extends Judge {
 	@Override
 	public boolean isAddAllowed() {
 		
-		// TODO: Bot-Anzahl prüfen
+		// TODO: Bot-Anzahl pruefen
 		if(this.controller.getParticipants() == this.participants) {
 			Debug.out.println("Fehler: Es sind schon "+this.participants+" Bots auf der Karte.");
 			return false;
@@ -45,7 +45,7 @@ public class LabyrinthJudge extends Judge {
 		
 		// TODO: Bot-Anzahl prüfen
 		if(this.controller.getParticipants() != this.participants) {
-			Debug.out.println("Fehler: Noch nicht genügend Bots auf der Karte.");
+			Debug.out.println("Fehler: Noch nicht genuegend Bots auf der Karte.");
 			return false;
 		}
 		
@@ -71,7 +71,7 @@ public class LabyrinthJudge extends Judge {
 			
 			if(this.world.finishReached(new Vector3d(obst.getPosition()))) {
 				
-				Debug.out.println("Bot \""+obst.getName()+"\" erreicht nach "+this.getTime()+"\" als erster das Ziel!");
+				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "+ this.getTime());
 				
 				return false;
 			}

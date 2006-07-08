@@ -83,9 +83,9 @@ public abstract class Judge {
 //	}
 	
 	/** 
-	 * Wie oft soll der Judge das System prüfen?
+	 * Wie oft soll der Judge das System pruefen?
 	 * Diese Routine muss den Judge-Thread in einen Schlaf-Modus versetzen.
-	 * Sie kann von Unterklassen überschrieben werden, oder sie setzen einfach 
+	 * Sie kann von Unterklassen ueberschrieben werden, oder sie setzen einfach 
 	 * das Feld delay auf einen anderen Wert!  
 	 * @throws InterruptedException
 	 */
