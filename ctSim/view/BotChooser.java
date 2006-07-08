@@ -54,7 +54,7 @@ public class BotChooser extends JDialog {
 	 */
 	BotChooser(Frame own, Controller ctrl) {
 		
-		super(own, "Bot wählen...", true);
+		super(own, "Bot waehlen...", true);
 		
 		this.controller = ctrl;
 		
