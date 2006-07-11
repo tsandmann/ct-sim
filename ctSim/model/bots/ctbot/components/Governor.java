@@ -19,7 +19,7 @@ public class Governor extends SimpleActuator<Integer> {
 		this.val = 0;
 	}
 	
-	// TODO: Überflüssig?
+	// TODO: Ueberfluessig?
 	@Override
 	public String getType() {
 		

@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Group;
 import javax.media.j3d.Node;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
@@ -122,7 +123,7 @@ public abstract class AliveObstacle
 		this.transformgrp = new TransformGroup();
 		this.transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		this.transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-		this.transformgrp.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+		this.transformgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		
 		// Referenz im Bot ablegen
 //		addNodeReference(BOTBODY,realBot);
@@ -136,7 +137,7 @@ public abstract class AliveObstacle
 		// Jetzt wird noch alles nett verpackt
 		this.branchgrp = new BranchGroup();
 		this.branchgrp.setCapability(BranchGroup.ALLOW_DETACH);
-		this.branchgrp.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		this.branchgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		this.branchgrp.addChild(this.transformgrp);
 
 		// Referenz im Bot ablegen
@@ -153,25 +154,28 @@ public abstract class AliveObstacle
 	}
 	
 	/**
-	 * @param shape 3D-Gestalt, die das Objekt erhalten soll
+	 * @param shape1 3D-Gestalt, die das Objekt erhalten soll
 	 */
-	public final void setShape(Shape3D shape) {
+	public final void setShape(Shape3D shape1) {
 		
 		// TODO: Test: Reicht auch einfach "this.shape"-Referenz anzupassen?
 		
 		if(this.shape != null)
 			this.transformgrp.removeChild(this.shape);
 		
-		this.shape = shape;
+		this.shape = shape1;
 		this.shape.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 		//this.shape.setName(getName() + " Body");
 		this.shape.setPickable(true);
-		this.shape.setCapability(Cylinder.ALLOW_PICKABLE_WRITE);
+		this.shape.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		
 		this.transformgrp.addChild(this.shape);
 	}
 	
-	// TODO: Altlast: anders lösen...
+	// TODO: Altlast: anders loesen...
+	/**
+	 * @param map
+	 */
 	public final void setAppearances(HashMap<String, Appearance> map) {
 		
 		if(map.isEmpty())
@@ -191,10 +195,10 @@ public abstract class AliveObstacle
 	}
 	
 	/**
-	 * @param world Referenz auf die Welt, die gesetzt werden soll
+	 * @param world1 Referenz auf die Welt, die gesetzt werden soll
 	 */
-	public void setWorld(World world) {
-		this.world = world;
+	public void setWorld(World world1) {
+		this.world = world1;
 	}
 	
 	/* (non-Javadoc)
@@ -230,7 +234,7 @@ public abstract class AliveObstacle
 		this.views.add(view);
 	}
 	
-	// TODO: Besser Set oder Iterator/Enumerator (dann nicht mehr veränderlich?)
+	// TODO: Besser Set oder Iterator/Enumerator (dann nicht mehr veraenderlich?)
 	/**
 	 * @return
 	 */
@@ -260,7 +264,7 @@ public abstract class AliveObstacle
 	}
 	
 	/**
-	 * @return Gibt den Namen des Objektes zurück.  
+	 * @return Gibt den Namen des Objektes zurueck.  
 	 */
 	abstract public String getName();
 	
@@ -292,7 +296,7 @@ public abstract class AliveObstacle
 		return this.pos;
 	}
 	
-	// TODO: Vorischt: Heading ist relativ zur Welt!
+	// TODO: Vorsicht: Heading ist relativ zur Welt!
 	/* (non-Javadoc)
 	 * @see ctSim.model.Obstacle#getHeading()
 	 */
@@ -302,7 +306,7 @@ public abstract class AliveObstacle
 	}
 	
 	/**
-	 * @return
+	 * @return Die Transformation
 	 */
 	public final Transform3D getTransform() {
 		
@@ -322,16 +326,16 @@ public abstract class AliveObstacle
 	}
 	
 	/**
-	 * @param pos
+	 * @param pos1
 	 *            Die Position, an die der Bot gesetzt werden soll
 	 */
-	public final synchronized void setPosition(Point3d pos) {
+	public final synchronized void setPosition(Point3d pos1) {
 		
-		// TODO: synchron ist schön, aber wird eine Pose über die GUI denn überhaupt verwendet?
+		// TODO: synchron ist schoen, aber wird eine Pose über die GUI denn ueberhaupt verwendet?
 		//synchronized (this) {
 			
-			this.pos = pos;
-			Vector3d vec = new Vector3d(pos);
+			this.pos = pos1;
+			Vector3d vec = new Vector3d(pos1);
 			
 			Transform3D transform = new Transform3D();
 			this.transformgrp.getTransform(transform);
@@ -390,7 +394,7 @@ public abstract class AliveObstacle
 		} catch(InterruptedException ie) {
 			// nothing...
 		}
-		Debug.out.println("Bot \""+this.getName()+"\" stirbt...");
+		Debug.out.println("Bot \""+this.getName()+"\" stirbt..."); //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO: ???
 		//cleanup();
 	}

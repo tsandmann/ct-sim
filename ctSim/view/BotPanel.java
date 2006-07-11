@@ -61,7 +61,7 @@ public abstract class BotPanel extends JPanel {
 		if(botInfo.getBotPanel() != this)
 			return;
 		
-		// Überflüssig: (?)
+		// Ueberfluessig: (?)
 		if(!updated)
 			this.botInfo = botInfo;
 		

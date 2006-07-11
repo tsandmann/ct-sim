@@ -4,7 +4,7 @@ import ctSim.controller.Controller;
 import ctSim.model.World;
 import ctSim.view.Debug;
 
-/* Das ist der "Ich-mache-nix"-Judge für den "Normal-Betrieb"...
+/* Das ist der "Ich-mache-nix"-Judge fuer den "Normal-Betrieb"...
  * 
  */
 public class DefaultJudge extends Judge {

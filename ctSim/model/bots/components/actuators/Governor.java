@@ -15,7 +15,7 @@ public abstract class Governor extends SimpleActuator<Double> {
 		// TODO Auto-generated constructor stub
 	}
 	
-	// TODO: Überflüssig?
+	// TODO: Ueberfluessig?
 	@Override
 	public String getType() {
 		

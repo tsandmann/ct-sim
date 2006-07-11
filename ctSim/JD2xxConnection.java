@@ -31,8 +31,8 @@ public class JD2xxConnection extends Connection {
 	public void connect() throws IOException {
 		try {
 			if (list() ==0){
-				ErrorHandler.error("No FT232 found - deinstalling Virtual comport might help");
-				throw new IOException("No FT232 found - deinstalling Virtual comport might help");
+				ErrorHandler.error("No FT232 found - deinstalling Virtual comport might help"); //$NON-NLS-1$
+				throw new IOException("No FT232 found - deinstalling Virtual comport might help"); //$NON-NLS-1$
 			}
 			
 			jd.open(0);
@@ -45,7 +45,7 @@ public class JD2xxConnection extends Connection {
 			setDos(new LEDataOutputStream( new JD2XXOutputStream(jd)));
 		} catch (IOException ex) {
 			jd.close();
-			ErrorHandler.error("Error while creating Streams "+ex);
+			ErrorHandler.error("Error while creating Streams "+ex); //$NON-NLS-1$
 			throw ex;			
 		}
 		
@@ -54,10 +54,11 @@ public class JD2xxConnection extends Connection {
 	/**
 	 * Beendet die laufende Verbindung
 	 * 
-	 * @override CtSim.connection.disconnect
+	 * @Override CtSim.connection.disconnect 
 	 * @throws IOException
 	 * @throws Exception
 	 */
+	@Override 
 	public synchronized void disconnect() throws IOException, Exception {
 		super.disconnect();
 		try {

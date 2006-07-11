@@ -57,7 +57,7 @@ import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.JD2xxConnection;
 import ctSim.TcpConnection;
-import ctSim.model.bots.ctbot.CtBot;
+// import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.Command;
 import ctSim.model.World;
@@ -82,13 +82,13 @@ public final class Controller implements Runnable {
 	 */
 	private HashMap<String,String> config = new HashMap<String,String>();
 	
-	private static final String CONFIGFILE = "config/ct-sim.xml";
+	private static final String CONFIGFILE = "config/ct-sim.xml"; //$NON-NLS-1$
 	
 	private SocketListener botListener;
 	
 	private Thread ctrlThread;
 	private volatile boolean pause;
-	private boolean run = true;
+	//private boolean run = true;
 	private long tickRate;
 	// TODO: CyclicBarrier (?)
 	private CountDownLatch startSignal, doneSignal;
@@ -98,10 +98,10 @@ public final class Controller implements Runnable {
 	private World world;
 	private List<Bot> botList, botsToStart;
 	
-	private Controller(CtSimFrame ctSim, World world) {
+	private Controller(CtSimFrame ctS, World w) {
 		
-		this.ctSim = ctSim;
-		this.world = world;
+		this.ctSim = ctS;
+		this.world = w;
 		this.botList = new ArrayList<Bot>();
 		this.botsToStart = new ArrayList<Bot>();
 		
@@ -117,13 +117,13 @@ public final class Controller implements Runnable {
 			parseConfig();
 			
 		} catch (Exception ex){
-			ErrorHandler.error("Einlesen der c't-Sim-Konfiguration nicht moeglich. Abburch!");
+			ErrorHandler.error("Einlesen der c't-Sim-Konfiguration nicht moeglich. Abburch!"); //$NON-NLS-1$
 			return;
 		}
 		
 		try {
 			
-			Class<?> cl = Class.forName(config.get("judge"));
+			Class<?> cl = Class.forName(config.get("judge")); //$NON-NLS-1$
 			
 			Constructor<?> c = cl.getConstructor(this.getClass(), this.world.getClass());
 			
@@ -135,7 +135,7 @@ public final class Controller implements Runnable {
 			//controlFrame.addJudge(judge);
 			
 		} catch(ClassNotFoundException e) {
-			ErrorHandler.error("Die Judge-Klasse wurde nicht gefunden: "+e);
+			ErrorHandler.error("Die Judge-Klasse wurde nicht gefunden: "+e); //$NON-NLS-1$
 		} catch(SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -158,9 +158,9 @@ public final class Controller implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch(NullPointerException e) {
-			ErrorHandler.error("Kein Schiedsrichter vorgesehen.");				
+			ErrorHandler.error("Kein Schiedsrichter vorgesehen.");				 //$NON-NLS-1$
 		} catch(Exception e) {
-			ErrorHandler.error("Probleme beim Instantiieren der Judge-Klasse: "+e);
+			ErrorHandler.error("Probleme beim Instantiieren der Judge-Klasse: "+e); //$NON-NLS-1$
 		}
 	}
 	
@@ -171,11 +171,17 @@ public final class Controller implements Runnable {
 			this.judge = new DefaultJudge(this, this.world);
 		}
 		
-		this.ctrlThread = new Thread(this, "Controller");
+		this.ctrlThread = new Thread(this, "Controller"); //$NON-NLS-1$
 		
 		this.ctrlThread.start();
 	}
 	
+	/**
+	 * Startet den Controller
+	 * @param frame Der Rahmen zur Anzeige der Simulator-GUI
+	 * @param world Die Welt
+	 * @return Der Controller
+	 */
 	public static Controller start(CtSimFrame frame, World world) {
 		
 		Controller ctrl = new Controller(frame, world);
@@ -188,6 +194,9 @@ public final class Controller implements Runnable {
 		return ctrl;
 	}
 	
+	/**
+	 * Haelt den Controller an
+	 */
 	public void stop() {
 		
 		if(this.botListener != null && !this.botListener.equals(State.TERMINATED))
@@ -199,6 +208,9 @@ public final class Controller implements Runnable {
 			dummy.interrupt();
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	public void run() {
 		Thread thisThread = Thread.currentThread();
 		
@@ -214,7 +226,7 @@ public final class Controller implements Runnable {
 				//System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				CountDownLatch startSig = this.startSignal;
 				
-				// Judge prüfen:
+				// Judge pruefen:
 				this.judge.update(t);
 				// Update World
 				// TODO: ganz dirty!
@@ -264,6 +276,9 @@ public final class Controller implements Runnable {
 		//this.world.cleanup();
 	}
 	
+	/**
+	 * @param rate Der Simulatortakt zu setzen
+	 */
 	public void setTickRate(long rate) {
 		
 		this.tickRate = rate;
@@ -282,12 +297,15 @@ public final class Controller implements Runnable {
 			b.start();
 			// TODO:
 			//((CtBot)b).setSensRc5(CtBot.RC5_CODE_5);
-			System.out.println("Bot gestartet: "+b.getName());
+			System.out.println("Bot gestartet: "+b.getName()); //$NON-NLS-1$
 		}
 		
 		this.botsToStart = new ArrayList<Bot>();
 	}
 	
+	/**	 
+	 * @throws InterruptedException
+	 */
 	public void waitOnController() throws InterruptedException {
 		
 		CountDownLatch doneSig = this.doneSignal;
@@ -298,11 +316,17 @@ public final class Controller implements Runnable {
 		startSig.await();
 	}
 	
+	/**
+	 * Laesst Controller pausieren
+	 */
 	public void pause() {
 		
 		this.pause = true;
 	}
 	
+	/**
+	 * Beendet die Pause
+	 */	
 	public synchronized void unpause() {
 //		System.out.println("Da bin ich doch...");
 		if(this.pause && this.judge.isStartAllowed()) {
@@ -311,6 +335,10 @@ public final class Controller implements Runnable {
 		}
 	}
 	
+	/**
+	 * @param judgeClass Die Art des Schiedrichters zu setzen
+	 * @return true, falls alles geklappt hat
+	 */
 	public boolean setJudge(String judgeClass) {
 		
 		try {
@@ -348,10 +376,14 @@ public final class Controller implements Runnable {
 		return false;
 	}
 	
-	public boolean setJudge(Judge judge) {
+	/**
+	 * @param j Der Schiedsrichter zu setzen
+	 * @return true, wenn alles geklappt hat
+	 */
+	public boolean setJudge(Judge j) {
 		
 		if(this.judge == null || this.judge.getTime() == 0) {
-			this.judge = judge;
+			this.judge = j;
 			return true;
 		}
 		return false;
@@ -374,13 +406,13 @@ public final class Controller implements Runnable {
 		int p = 10001;
 		
 		try {
-			String port = config.get("botport");
+			String port = config.get("botport"); //$NON-NLS-1$
 			p = new Integer(port).intValue();
 		} catch(NumberFormatException nfe) {
 			nfe.printStackTrace();
 		}
 		
-		System.out.println("Warte auf Verbindung vom c't-Bot auf Port "+p);
+		System.out.println("Warte auf Verbindung vom c't-Bot auf Port "+p); //$NON-NLS-1$
 		botListener = new BotSocketListener(p);
 		botListener.start();
 		
@@ -405,12 +437,12 @@ public final class Controller implements Runnable {
 		/**
 		 * Eroeffnet einen neuen Lauscher
 		 * 
-		 * @param port
+		 * @param p
 		 *            Port zum Lauschen
 		 */
-		public SocketListener(int port) {
+		public SocketListener(int p) {
 			super();
-			this.port = port;
+			this.port = p;
 		}
 
 		/**
@@ -419,6 +451,9 @@ public final class Controller implements Runnable {
 		@Override
 		public abstract void run();
 		
+		/**
+		 * Laesst den Controller "sterben"
+		 */
 		public void die() {
 			this.listen = false;
 			//this.interrupt();
@@ -434,10 +469,10 @@ public final class Controller implements Runnable {
 	private class BotSocketListener extends SocketListener {
 		/**
 		 * Konstruktor
-		 * @param port Der TCP-Port auf dem er horcht
+		 * @param p Der TCP-Port auf dem er horcht
 		 */
-		public BotSocketListener(int port) {
-			super(port);
+		public BotSocketListener(int p) {
+			super(p);
 		}
 
 		/**
@@ -462,21 +497,24 @@ public final class Controller implements Runnable {
 					try {
 					server.setSoTimeout(1000);
 					tcp.connect(server.accept());
-					System.out.println("Eingehende Verbindung auf dem Bot-Port");
+					System.out.println("Eingehende Verbindung auf dem Bot-Port"); //$NON-NLS-1$
 					
 					addBot(tcp);
 					} catch(SocketTimeoutException e) {
-						
+						// Noch nicht implementiert
 					}
 				}
 			} catch (IOException ioe) {
-				System.err.format("Kann nicht an port %d binden.", new Integer(
+				System.err.format("Kann nicht an port %d binden.", new Integer( //$NON-NLS-1$
 						port));
 				System.err.println(ioe.getMessage());
 			}
 		}
 	}
 	
+	/**
+	 * @return Die Anzahl der Bots
+	 */
 	public int getParticipants() {
 		
 		return this.botList.size()+this.botsToStart.size();
@@ -494,7 +532,7 @@ public final class Controller implements Runnable {
 			con.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
 			// TODO Timeout einfuegen!!
 			while (bot == null) {
-				System.out.println("Warte auf Willkommen...");
+				System.out.println("Warte auf Willkommen..."); //$NON-NLS-1$
 				
 				if (cmd.readCommand(con) == 0) {
 					
@@ -506,33 +544,33 @@ public final class Controller implements Runnable {
 //									con);
 //							System.out.println("Real Bot comming up");
 						} else {
-							bot = new CtBotSimTcp(this.world, "Test C-Bot",
+							bot = new CtBotSimTcp(this.world, "Test C-Bot", //$NON-NLS-1$
 									new Point3d(0.5d, 0d, 0.075d),
 									new Vector3d(1.0f, -0.5f, 0f),
 									con);
-							System.out.println("Virtueller Bot nimmt Verbindung auf");
+							System.out.println("Virtueller Bot nimmt Verbindung auf"); //$NON-NLS-1$
 							//System.exit(0);  // <<------------------------ !!!!!!!!!!!!
 						}
 					} else {
-						System.out.print("Bot ist nicht willkommen: \n"
-										+ cmd.toString()+ "\n"+
-										" ==> Bot laeuft schon oder ist veraltet \n"+
-										"Schicke Willkommen nochmals\n");
+						System.out.print("Bot ist nicht willkommen: \n" //$NON-NLS-1$
+										+ cmd.toString()+ "\n"+ //$NON-NLS-1$
+										" ==> Bot laeuft schon oder ist veraltet \n"+ //$NON-NLS-1$
+										"Schicke Willkommen nochmals\n"); //$NON-NLS-1$
 						// Hallo sagen
 						con.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
 					}
 				} else
-					System.out.print("Fehlerhaftes Kommando gefunden: \n");
+					System.out.print("Fehlerhaftes Kommando gefunden: \n"); //$NON-NLS-1$
 
 			}
 		} catch (IOException ex) {
-			ErrorHandler.error("TCPConnection unterbrochen - Verbindung nicht moeglich: " + ex);
+			ErrorHandler.error("TCPConnection unterbrochen - Verbindung nicht moeglich: " + ex); //$NON-NLS-1$
 		}
 		
 		if (bot != null && this.judge.isAddAllowed()) {
 			// TODO:
 			addBot(bot);
-			this.ctSim.addBot(new BotInfo("Test"+Math.round(Math.random()*10), "CTest", bot, new DefBotPanel()));
+			this.ctSim.addBot(new BotInfo("Test"+Math.round(Math.random()*10), "CTest", bot, new DefBotPanel()));  //$NON-NLS-1$//$NON-NLS-2$
 		} else
 			try {
 				con.disconnect();
@@ -550,15 +588,15 @@ public final class Controller implements Runnable {
 	 * bots" verwendet. TCPBots koennen sich immer von aussen verbinden
 	 * 
 	 * @param type	Was fuer ein Bot (testbot CtBotRealTcp)
-	 * @param name Name des Bots
+	 * @return Der Bot
 	 */
 	public Bot addBot(String type) {
 		
 		Bot bot = null;
 		
-		if (type.equalsIgnoreCase("CtBotSimTest")) {
+		if (type.equalsIgnoreCase("CtBotSimTest")) { //$NON-NLS-1$
 			//bot = new CtBotSimTest(new Point3f(), new Vector3f());
-			bot = new CtBotSimTest(this.world, "Test", new Point3d(0d, 0d, 0.075d), new Vector3d());
+			bot = new CtBotSimTest(this.world, "Test", new Point3d(0d, 0d, 0.075d), new Vector3d()); //$NON-NLS-1$
 		}
 		
 //		if (type.equalsIgnoreCase("CtBotRealJD2XX")) {
@@ -577,12 +615,12 @@ public final class Controller implements Runnable {
 	 */
 	public void invokeBot(String filename){
 		
-		System.out.println("Starte externen Bot: "+filename);
+		System.out.println("Starte externen Bot: "+filename); //$NON-NLS-1$
 		CmdExec executor = new CmdExec();
 		try {
 			executor.exec(filename);
 		} catch (Exception ex){
-			ErrorHandler.error("Kann Bot: "+filename+" nicht ausfuehren: "+ex);
+			ErrorHandler.error("Kann Bot: "+filename+" nicht ausfuehren: "+ex);  //$NON-NLS-1$//$NON-NLS-2$
 		}
 	}
 	
@@ -591,14 +629,14 @@ public final class Controller implements Runnable {
 		if (bot != null && this.judge.isAddAllowed()) {
 			
 			// TODO Sinnvolle Zuordnung von Bot-Name zu Konfig
-			HashMap botConfig = getBotConfig("config/ct-sim.xml",bot.getName());
+			HashMap botConfig = getBotConfig("config/ct-sim.xml",bot.getName()); //$NON-NLS-1$
 			if (botConfig == null){
-				ErrorHandler.error("Keine BotConfig fuer: "+bot.getName()+" in der XML-Config-Datei gefunden. Lade Defaults.");
-				botConfig = getBotConfig("config/ct-sim.xml","default");
+				ErrorHandler.error("Keine BotConfig fuer: "+bot.getName()+" in der XML-Config-Datei gefunden. Lade Defaults.");  //$NON-NLS-1$//$NON-NLS-2$
+				botConfig = getBotConfig("config/ct-sim.xml","default");  //$NON-NLS-1$//$NON-NLS-2$
 			}
 			
 			if (botConfig == null){
-				ErrorHandler.error("Keine Default-BotConfig in der XML-Config-Datei gefunden. Starte ohne.");
+				ErrorHandler.error("Keine Default-BotConfig in der XML-Config-Datei gefunden. Starte ohne."); //$NON-NLS-1$
 			}
 			
 			// TODO:
@@ -633,10 +671,10 @@ public final class Controller implements Runnable {
 		JD2xxConnection com = new JD2xxConnection();
 		try {
 			com.connect();
-			System.out.println("JD2XX-Verbindung aufgebaut");
+			System.out.println("JD2XX-Verbindung aufgebaut"); //$NON-NLS-1$
 			return com;
 		} catch (Exception ex) {
-			ErrorHandler.error("JD2XX-Verbindung nicht moeglich: " + ex);
+			ErrorHandler.error("JD2XX-Verbindung nicht moeglich: " + ex); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -651,7 +689,7 @@ public final class Controller implements Runnable {
 		try {
 			// einlesen
 			String configFile= ClassLoader.getSystemResource(CONFIGFILE).toString();
-			System.out.println("Lade Konfiguration aus: "+configFile);
+			System.out.println("Lade Konfiguration aus: "+configFile); //$NON-NLS-1$
 			
 			parser.parse(configFile);
 			// umwandeln in ein Document
@@ -662,15 +700,15 @@ public final class Controller implements Runnable {
 			//als erster suchen wir uns den Parameter-Block
 			Node n = doc.getDocumentElement().getFirstChild();
 			while (n != null){
-				if (n.getNodeName().equals("parameter")){
-					String name = n.getAttributes().getNamedItem("name").getNodeValue();
-					String value = n.getAttributes().getNamedItem("value").getNodeValue();
+				if (n.getNodeName().equals("parameter")){ //$NON-NLS-1$
+					String name = n.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$
+					String value = n.getAttributes().getNamedItem("value").getNodeValue(); //$NON-NLS-1$
 					config.put(name,value);
 				}
 				n=n.getNextSibling();
 			}
 		} catch (Exception ex) {
-			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex);
+			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex); //$NON-NLS-1$
 			throw ex;
 		}
 	}
@@ -693,7 +731,7 @@ public final class Controller implements Runnable {
 		try {
 			// einlesen
 			String configFile= ClassLoader.getSystemResource(filename).toString();
-			System.out.println("Lade Bot-Aussehen aus: "+configFile);
+			System.out.println("Lade Bot-Aussehen aus: "+configFile); //$NON-NLS-1$
 
 			parser.parse(configFile);
 			// umwandeln in ein Document
@@ -703,8 +741,9 @@ public final class Controller implements Runnable {
 			
 			//als erster suchen wir uns den Parcours-Block
 			Node n = doc.getDocumentElement().getFirstChild();
-			while ((n != null)&& (!n.getNodeName().equals("bots")))
+			while ((n != null)&& (!n.getNodeName().equals("bots"))) {
 				n=n.getNextSibling();
+			}
 
 			//	Eine Liste aller Kinder des Parcours-Eitnrags organsisieren
 			NodeList bots=n.getChildNodes();	
@@ -712,18 +751,18 @@ public final class Controller implements Runnable {
 			for(int b=0; b<bots.getLength()-1;b++){
 				Node botSection = bots.item(b);
 				// Ist das ueberhaupt ein Bot-Eintrag?
-				if (botSection.getNodeName().equals("bot"))
+				if (botSection.getNodeName().equals("bot")) //$NON-NLS-1$
 					// Und ist es auch der gesuchte
-					if (botSection.getAttributes().getNamedItem("name").getNodeValue().equals(botId)){
+					if (botSection.getAttributes().getNamedItem("name").getNodeValue().equals(botId)){ //$NON-NLS-1$
 						found=true;
 						NodeList children = botSection.getChildNodes();
 						
 						//	HashMap mit den Apearances aufbauen
 				        for (int i=0; i<children.getLength()-1; i++){
 				        		Node appearance =children.item(i);
-				        		if (appearance.getNodeName().equals("appearance")){
+				        		if (appearance.getNodeName().equals("appearance")){ //$NON-NLS-1$
 				        			// Zuerst den Type extrahieren
-				        			String item = appearance.getAttributes().getNamedItem("type").getNodeValue();
+				        			String item = appearance.getAttributes().getNamedItem("type").getNodeValue(); //$NON-NLS-1$
 				        			
 				        			String texture = null;
 				        			String clone = null;
@@ -732,12 +771,12 @@ public final class Controller implements Runnable {
 				        			
 				        			NodeList features = appearance.getChildNodes();
 				        			for (int j=0; j< features.getLength(); j++){
-				        				if (features.item(j).getNodeName().equals("texture"))
+				        				if (features.item(j).getNodeName().equals("texture")) //$NON-NLS-1$
 				        					texture= features.item(j).getChildNodes().item(0).getNodeValue();
 //				        				 // TODO wir nutzen nur noch eine farbe, daher kann die auflistung von ambient und Co entfallen				        				
-				        				if (features.item(j).getNodeName().equals("color"))
-				        					colors.put(features.item(j).getAttributes().getNamedItem("type").getNodeValue(),features.item(j).getChildNodes().item(0).getNodeValue());
-				        				if (features.item(j).getNodeName().equals("clone"))
+				        				if (features.item(j).getNodeName().equals("color")) //$NON-NLS-1$
+				        					colors.put(features.item(j).getAttributes().getNamedItem("type").getNodeValue(),features.item(j).getChildNodes().item(0).getNodeValue()); //$NON-NLS-1$
+				        				if (features.item(j).getNodeName().equals("clone")) //$NON-NLS-1$
 				        					clone= features.item(j).getChildNodes().item(0).getNodeValue();
 				        			}
 				        				   
@@ -747,13 +786,12 @@ public final class Controller implements Runnable {
 				}
 			}
 		} catch (Exception ex) {
-			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex);
+			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex); //$NON-NLS-1$
 		}
 		
 		if (found == true)
 			return botConfig;
-		else 
-			return null;
+		return null;
 	}
 	
 	/*
@@ -782,7 +820,7 @@ public final class Controller implements Runnable {
 				String colorName = (String)colors.get(colorType);
 
 				// TODO wir nutzen nur noch eine farbe, daher kann die auflistung von ambient und Co entfallen
-				if (colorType.equals("ambient"))
+				if (colorType.equals("ambient")) //$NON-NLS-1$
 					appearance.setColoringAttributes(new ColoringAttributes(new Color3f(Color.decode(colorName)), ColoringAttributes.FASTEST));
 			}
 			appearance.setMaterial(mat);
@@ -806,7 +844,7 @@ public final class Controller implements Runnable {
 				texture.setBoundaryModeT(Texture.WRAP);
 				appearance.setTexture(texture);
 			} catch (Exception ex) {
-				ErrorHandler.error("Textur: "+textureFile+"nicht gefunden "+ex);
+				ErrorHandler.error("Textur: "+textureFile+"nicht gefunden "+ex); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			
 		}
@@ -814,6 +852,10 @@ public final class Controller implements Runnable {
 		appearances.put(item,appearance);
 	}
 	
+	/**
+	 * Hauptmethode
+	 * @param args keine Argumente
+	 */
 	public static void main(String[] args) {
 		
 		// TODO:
@@ -853,7 +895,7 @@ public final class Controller implements Runnable {
 		
 		//JFrame.setDefaultLookAndFeelDecorated(true);
 		
-		CtSimFrame ctSim = new CtSimFrame("CtSim");
+		CtSimFrame ctSim = new CtSimFrame("CtSim"); //$NON-NLS-1$
 		
 		ctSim.setVisible(true);
 	}

@@ -23,7 +23,6 @@ import javax.media.j3d.Transform3D;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 import java.lang.Math;
 
 /**
@@ -37,7 +36,7 @@ public class SimUtils {
 
 	/**
 	 * Errechnet aus einem javax.vecmath.Vector3d eine ganzzahlig gerundete
-	 * Gradangabe und gibt sie als String zurück. Diese Methode wird zur Anzeige
+	 * Gradangabe und gibt sie als String zurueck. Diese Methode wird zur Anzeige
 	 * der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
 	 * @param vec
@@ -113,7 +112,7 @@ public class SimUtils {
 	 * 
 	 * @param heading 
 	 * 			  Gib die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
-	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurück
+	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurueck
 	 */
 //	public static double getRotation(Vector3f heading) {
 //		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
@@ -136,6 +135,12 @@ public class SimUtils {
 	}
 	
 	// TODO: Allgemeiner!?
+	/**
+	 * Fuehrt eine Transformation durch 
+	 * @param pos Position 
+	 * @param head Blickrichtung
+	 * @return Die Transformation
+	 */
 	public static Transform3D getTransform(Point3d pos, Vector3d head) {
 		
 		Transform3D transform = new Transform3D();
@@ -159,6 +164,6 @@ public class SimUtils {
 		long minutes = (millis % 360000) / 60000;
 		long seconds = (millis % 60000) / 1000;
 		long rest = millis % 1000;
-		return new String (hours+":"+minutes+":"+seconds+":"+rest);
+		return new String (hours+":"+minutes+":"+seconds+":"+rest);  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 	}	
 }

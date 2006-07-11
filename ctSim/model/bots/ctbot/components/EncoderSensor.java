@@ -50,7 +50,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	private World world;
 	private Bot bot;
 	
-	// TODO: als Bogenmaﬂ / in Radiant
+
 	//private double angle = Math.PI / 180 * 180;  // 180∞
 	
 	private Shape3D shape;

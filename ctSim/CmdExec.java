@@ -39,7 +39,7 @@ public class CmdExec {
 
 			return p.getInputStream();
 		} catch (Exception err) {
-			ErrorHandler.error("Probleme beim ausfuehren von: "+cmdline+" :"+err);
+			ErrorHandler.error("Probleme beim ausfuehren von: "+cmdline+" :"+err); //$NON-NLS-1$ //$NON-NLS-2$
 			throw err;
 		}
 	}

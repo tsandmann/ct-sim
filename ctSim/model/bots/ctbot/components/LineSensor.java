@@ -22,7 +22,7 @@ public class LineSensor extends SimpleSensor<Short> {
 	private World world;
 	private Bot bot;
 	
-	// TODO: übergeben; als Bogenmaß / in Radiant
+
 	private double angle = Math.PI / 180 * 80;  // 80°
 	private short precision = 10;
 	
@@ -242,11 +242,11 @@ public class LineSensor extends SimpleSensor<Short> {
 		 * Wert aus Welt bestimmen:
 		 *     Pos, Heading reicht (nicht!?)
 		 *     -> Wert an Bot geben
-		 *     -> Welcher Sensor muß wie gesendet werden?
-		 *     -> über Namen?
-		 * Wert über Bot bestimmen:
-		 *     über Namen (?)
-		 *     -> Bot-Command (o.ä.)
+ss
+		 *     -> ueber Namen?
+		 * Wert ueber Bot bestimmen:
+		 *     ueber Namen (?)
+		 *     -> Bot-Command (o.ae.)
 		 *     -> ... (gleiches Problem wie beim Senden -> s.o.)
 		 * 
 		 * -> Kommando in XML-Datei angeben?

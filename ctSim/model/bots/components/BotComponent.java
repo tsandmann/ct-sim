@@ -113,6 +113,6 @@ public abstract class BotComponent {
 	
 	public abstract String getDescription();
 	
-	// TODO: weg, dafür getBranchGroup?
+	// TODO: weg, dafuer getBranchGroup?
 	public abstract Shape3D getShape();
 }

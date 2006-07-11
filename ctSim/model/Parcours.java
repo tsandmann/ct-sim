@@ -73,17 +73,17 @@ public class Parcours {
 		super();
 		// Die Branchgroup fuer die Hindernisse
 		obstBG = new BranchGroup();
-		obstBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		obstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		obstBG.setPickable(true);
 		
 		// Die Branchgroup fuer die Lichtquellen
 		lightBG = new BranchGroup();
-		lightBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		lightBG.setPickable(true);
 
 		// Die Branchgroup fuer die Lichtquellen
 		terrainBG = new BranchGroup();
-		terrainBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		terrainBG.setPickable(true);
 
 		
@@ -102,41 +102,41 @@ public class Parcours {
 
 	/**
 	 * Setzt die Parcursbreite in Gittereinheiten
-	 * @param dimX Breite in Gittereinheiten
+	 * @param dimX1 Breite in Gittereinheiten
 	 */
-	public void setDimX(int dimX) {
-		this.dimX = dimX;
+	public void setDimX(int dimX1) {
+		this.dimX = dimX1;
 	}
 
 	/**
-	 * Liefert die Parcurshoehe zurück in Gittereinheiten
-	 * @return
+	 * 
+	 * @return Liefert die Parcourshoehe zurueck in Gittereinheiten
 	 */
 	public int getDimY() {
 		return dimY;
 	}
 
 	/**
-	 * Liefert die Breite (X) des Parcours in mm zurueck
-	 * @return
+	 * 
+	 * @return Liefert die Breite (X) des Parcours in mm zurueck
 	 */
 	public float getWidth(){
 		return dimX* grid;
 	}
 
 	/**
-	 * Liefert die Hoehe (Y) des Parcours in mm zurueck
-	 * @return
+	 * 
+	 * @return Liefert die Hoehe (Y) des Parcours in mm zurueck
 	 */
 	public float getHeight(){
 		return dimY* grid;
 	}
 	/**
 	 * Setzt die Parcurshoehe in Gittereinheiten
-	 * @param dimX Hoehe in Gittereinheiten
+	 * @param dimY1 Hoehe in Gittereinheiten
 	 */
-	public void setDimY(int dimY) {
-		this.dimY = dimY;
+	public void setDimY(int dimY1) {
+		this.dimY = dimY1;
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class Parcours {
 	 * @param x X-Achse im Parcours-Gitter
 	 * @param y Y-Achse im Parcours-Gitter
 	 * @param z Z-Achse absolut
-	 * @param branchGroup Gruppe in die das Objekt rein soll
+	 * @param bg Gruppe in die das Objekt rein soll
 	 */
 	public void addNode(Node node, float x, float y,float z,BranchGroup bg) {
 		Transform3D translate = new Transform3D();
@@ -188,7 +188,7 @@ public class Parcours {
 		translate.set(new Vector3d(x * grid, y* grid, z));
 
 		TransformGroup tg = new TransformGroup(translate);
-		tg.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		tg.setCapability(Node.ENABLE_PICK_REPORTING);
 		tg.setPickable(true);
 		tg.addChild(node);
 		bg.addChild(tg);
@@ -199,7 +199,7 @@ public class Parcours {
 	 * @param node Die Node
 	 * @param x X-Achse im Parcours-Gitter
 	 * @param y Y-Achse im Parcours-Gitter
-	 * @param branchGroup Gruppe in die das Objekt rein soll
+	 * @param bg Gruppe in die das Objekt rein soll
 	 */
 	public void addNode(Node node, float x, float y,BranchGroup bg) {
 		addNode(node,x,y,0.0f,bg);
@@ -210,6 +210,7 @@ public class Parcours {
 	 * @param light Die Lichtquelle
 	 * @param x X-Achse im Parcours-Gitter
 	 * @param y Y-Achse im Parcours-Gitter
+	 * @param z Z-Achse im Parcours-Gitter
 	 */
 	public void addLight(Node light, float x, float y, float z) {
 		addNode(light,x,y,z,lightBG);
@@ -225,24 +226,24 @@ public class Parcours {
 	
 	
 	/**
-	 * Liefert die Licht-Branchgroup zurück
-	 * @return
+	 * 
+	 * @return Liefert die Licht-Branchgroup zurueck
 	 */
 	public BranchGroup getLightBG() {
 		return lightBG;
 	}
 
 	/**
-	 * Liefert die Hinderniss-Branchgroup zurück
-	 * @return
+	 * 
+	 * @return Liefert die Hindernis-Branchgroup zurueck
 	 */
 	public BranchGroup getObstBG() {
 		return obstBG;
 	}
 	
 	/**
-	 * Liefert die Boden-Branchgroup zurück
-	 * @return
+	 *
+	 * @return  Liefert die Boden-Branchgroup zurueck
 	 */
 	public BranchGroup getTerrainBG() {
 		return terrainBG;
@@ -250,7 +251,7 @@ public class Parcours {
 	
 	/**
 	 * Legt die Startposition eines Bots fest
-	 * @param bot Nummer des Bots (fängt bei 0 an zu zählen)
+	 * @param bot Nummer des Bots (faengt bei 0 an zu zaehlen)
 	 * @param x
 	 * @param y
 	 */
@@ -263,7 +264,7 @@ public class Parcours {
 
 	/**
 	 * Legt die Startrichtung eines Bots fest
-	 * @param bot Nummer des Bots (fängt bei 0 an zu zählen)
+	 * @param bot Nummer des Bots (faengt bei 0 an zu zaehlen)
 	 * @param dir Richtung in Grad. 0 entspricht (x=1, y=0) dann im Uhrzeigersinn
 	 */
 	public void setStartHeading(int bot, int dir){
@@ -298,7 +299,7 @@ public class Parcours {
 	 * Liefert die Startposition eines Bots
 	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
 	 * @param bot
-	 * @return
+	 * @return Die Startposition
 	 */
 	public Vector3d getStartPosition(int bot){
 		Vector3d pos = null;
@@ -314,7 +315,7 @@ public class Parcours {
 	 * Liefert die Startrichtung eines Bots
 	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
 	 * @param bot
-	 * @return
+	 * @return Die Startrichtung
 	 */
 	public Vector3d getStartHeading(int bot){
 		Vector3d pos = null;
@@ -325,7 +326,7 @@ public class Parcours {
 			
 		if (pos.length()==0){
 			pos.x=1.0f;
-			ErrorHandler.error("getStartHeading wurde nach einer noch nicht gesetzten Heading gefragt ("+bot+"). Setze Default");
+			ErrorHandler.error("getStartHeading wurde nach einer noch nicht gesetzten Heading gefragt ("+bot+"). Setze Default");  //$NON-NLS-1$//$NON-NLS-2$
 		}
 		
 		pos.normalize();
@@ -345,8 +346,8 @@ public class Parcours {
 	}
 
 	/** 
-	 * Liefert die Gitterbreite in mm zurueck
-	 * @return
+	 * 
+	 * @return Liefert die Gitterbreite in mm zurueck
 	 */
 	public float getGrid() {
 		return grid;
@@ -355,7 +356,7 @@ public class Parcours {
 	/**
 	 * Prueft, ob ein Punkt innerhalb des Zielfeldes liegt
 	 * @param pos
-	 * @return
+	 * @return true, falls ja
 	 */
 	public boolean finishReached(Vector3d pos){
 		float minX = finishPosition[0]*grid ;
@@ -365,8 +366,7 @@ public class Parcours {
 		
 		if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
 			return true;
-		else
-			return false;
+		return false;
 	}
 	
 }

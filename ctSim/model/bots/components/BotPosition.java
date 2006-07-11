@@ -35,7 +35,7 @@ public abstract class BotPosition extends BotComponent {
 	@Override
 	public Shape3D getShape() {
 		
-		// TODO: hier Bot-Shape zurückgeben?
+		// TODO: hier Bot-Shape zurueckgeben?
 		return new Shape3D();
 	}
 	

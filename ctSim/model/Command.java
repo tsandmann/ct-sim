@@ -159,23 +159,23 @@ public class Command {
 	/**
 	 * Erzeugt ein Kommando zum Abschicken (direction=DIR_REQUEST)
 	 * 
-	 * @param command Kommando
-	 * @param dataL Datum links
-	 * @param dataR Datum rechts
-	 * @param seq
+	 * @param command1 Kommando
+	 * @param dataL1 Datum links
+	 * @param dataR1 Datum rechts
+	 * @param seq1
 	 *            Die Sequenznummer des Packetes
 	 */
-	public Command(int command, int dataL, int dataR, int seq) {
+	public Command(int command1, int dataL1, int dataR1, int seq1) {
 		super();
-		this.command = command;
-		this.dataL = dataL;
-		this.dataR = dataR;
+		this.command = command1;
+		this.dataL = dataL1;
+		this.dataR = dataR1;
 		this.subcommand = SUB_CMD_NORM;
 		direction = DIR_REQUEST;
 		startCode = STARTCODE;
 		crc = CRCCODE;
 		payload = 0;
-		this.seq = seq;
+		this.seq = seq1;
 		dataBytes = new byte[payload];
 	}
 
@@ -319,15 +319,16 @@ public class Command {
 	 * 
 	 * @return Der String
 	 */
+	@Override
 	public String toString() {
 		String dataStr = getDataBytesAsString();
 
-		return "Startcode:\t" + startCode + "\n" + "Command:\t"
-				+ (char) command + "\n" + "Subcommand:\t" + (char) subcommand
-				+ "\n" + "Direction:\t" + direction + "\n" + "Payload:\t"
-				+ payload + "\n" + "Data:\t\t" + dataL + " " + dataR + "\n"
-				+ "Seq:\t\t" + seq + "\n" + "Data:\t\t'" + dataStr + "'\n"
-				+ "CRC:\t\t" + crc;
+		return "Startcode:\t" + startCode + "\n" + "Command:\t" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ (char) command + "\n" + "Subcommand:\t" + (char) subcommand //$NON-NLS-1$ //$NON-NLS-2$
+				+ "\n" + "Direction:\t" + direction + "\n" + "Payload:\t" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				+ payload + "\n" + "Data:\t\t" + dataL + " " + dataR + "\n"  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
+				+ "Seq:\t\t" + seq + "\n" + "Data:\t\t'" + dataStr + "'\n"  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				+ "CRC:\t\t" + crc; //$NON-NLS-1$
 	}
 
 	/**
@@ -338,56 +339,55 @@ public class Command {
 	private int validate() {
 		if ((startCode == STARTCODE) && (crc == CRCCODE))
 			return 0;
-		else
-			return -1;
+		return -1;
 	}
 
 	/**
-	 * @param command
+	 * @param command1
 	 *            Kommando, das gesetzt werden soll
 	 */
-	public void setCommand(int command) {
-		this.command = command;
+	public void setCommand(int command1) {
+		this.command = command1;
 	}
 
 	/**
-	 * @param dataL
+	 * @param dataL1
 	 *            Datum fuer links, das gesetzt werden soll
 	 */
-	public void setDataL(int dataL) {
-		this.dataL = dataL;
+	public void setDataL(int dataL1) {
+		this.dataL = dataL1;
 	}
 
 	/**
-	 * @param dataR
+	 * @param dataR1
 	 *            Datum fuer rechts, das gesetzt werden soll
 	 */
-	public void setDataR(int dataR) {
-		this.dataR = dataR;
+	public void setDataR(int dataR1) {
+		this.dataR = dataR1;
 	}
 
 	/**
-	 * @param direction
+	 * @param direction1
 	 *            Richtung, die gesetzt werden soll
 	 */
-	public void setDirection(int direction) {
-		this.direction = direction;
+	public void setDirection(int direction1) {
+		this.direction = direction1;
 	}
 
 	/**
-	 * @param seq
+	 * @param seq1
 	 *            Paketsequenznummer, die gesetzt werden soll
 	 */
-	public void setSeq(int seq) {
-		this.seq = seq;
+	public void setSeq(int seq1) {
+		this.seq = seq1;
 	}
 
 	/**
-	 * @param subcommand
+	 * @param subcommand1
 	 *            Subkommando, das gesetzt werden soll
 	 */
-	public void setSubcommand(int subcommand) {
-		this.subcommand = subcommand;
+	public void setSubcommand(int subcommand1) {
+		this.subcommand = subcommand1;
 	}
 
 }

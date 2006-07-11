@@ -65,7 +65,7 @@ public class TcpConnection extends Connection {
 			connect();
 
 		} catch (IOException iOEx) {
-			ErrorHandler.error("Error listening on port: " + port + " "
+			ErrorHandler.error("Error listening on port: " + port + " "  //$NON-NLS-1$//$NON-NLS-2$
 					+ iOEx.getMessage());
 			return -1;
 		}
@@ -80,12 +80,12 @@ public class TcpConnection extends Connection {
 
 	/**
 	 * Legt fuer den uebergebenen Socket Little Endian Streams an.
-	 * @param socket Der Socket, ueber den geschrieben und gelesen wird.
+	 * @param sock Der Socket, ueber den geschrieben und gelesen wird.
 	 * @throws IOException Wenn es beim Anlegen der beiden Streams zu Problemen kommt.
 	 * */
-	public void connect(Socket socket) throws IOException {
+	public void connect(Socket sock) throws IOException {
 		
-		this.socket = socket;
+		this.socket = sock;
 		connect();
 	}
 
@@ -145,6 +145,7 @@ public class TcpConnection extends Connection {
 	 * @throws Exception
 	 * @Override CtSim.Connection.disconnect()
 	 */
+	@Override
 	public synchronized void disconnect() throws IOException, Exception {
 		super.disconnect();
 		try {

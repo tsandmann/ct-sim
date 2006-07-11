@@ -188,7 +188,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setCommand(Command.CMD_SENS_ENC);
 			command.setDataL((Integer)this.encL.getValue());
 			command.setDataR((Integer)this.encR.getValue());
-			// TODO: Überflüssig?
+			// TODO: Ueberfluessig?
 //			setSensEncL((short) 0);
 //			setSensEncR((short) 0);
 			command.setSeq(seq++);
@@ -229,7 +229,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setSeq(seq++);
 			this.connection.send(command.getCommandBytes());
 			
-			// TODO: nur für real-bot
+			// TODO: nur fuer real-bot
 			command.setCommand(Command.CMD_SENS_TRANS);
 			command.setDataL(0);
 			command.setDataR(0);
@@ -246,7 +246,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //				setSensRc5(0);
 //			}
 			
-			// TODO: sehr hässlich: Bot-Verhalten "Wandverfolgung" starten
+			// TODO: sehr haesslich: Bot-Verhalten "Wandverfolgung" starten
 			first++;
 			if(first==1) {
 				
@@ -262,7 +262,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				//setSensRc5(0);
 			}
 
-			// TODO: nur für real-bot
+			// TODO: nur fuer real-bot
 			command.setCommand(Command.CMD_SENS_ERROR);
 			command.setDataL(0);
 			command.setDataR(0);

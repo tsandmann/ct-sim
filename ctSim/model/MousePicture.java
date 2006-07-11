@@ -71,7 +71,7 @@ public class MousePicture {
 	/**
 	 * Fuegt Daten zum Maussensor-Bild hinzu
 	 * @param start Nummer des ersten Pixels in data
-	 * @param data Nutzdaten
+	 * @param in Nutzdaten
 	 */
 	public void addPixels(int start, byte[] in){
 		int i;
@@ -94,7 +94,7 @@ public class MousePicture {
 		// Genug Daten empfangen?
 		if ((i+start-1) == (dimX*dimY)) {
 			complete=true;
-			System.out.println("Bild vollständig");
+			System.out.println("Bild vollstaendig"); //$NON-NLS-1$
 		}
 	}
 
@@ -126,7 +126,7 @@ public class MousePicture {
 	 * Liefert das Mausbild als Image zurueck
 	 * @param width gewuenschte Breite
 	 * @param height gewuenschte Hoehe
-	 * @return
+	 * @return Das Bild
 	 */
 	public Image getImage(int width, int height){
 		int w = dimX;

@@ -43,11 +43,11 @@ public abstract class Sensor<E> extends BotComponent {
 	/* Sollte nur von GUI aufgerufen werden:
 	 * 
 	 * - Setzen ist nur erlaubt, wenn entsprechendes flag gesetzt ist
-	 * - Wert wird dann beim nächsten update zurückgegeben (kein updateValue()!)
-	 * - nächster Aufruf von getVal() geschieht ohne Kennlinien-lookup
+	 * - Wert wird dann beim naechsten update zurueckgegeben (kein updateValue()!)
+	 * - naechster Aufruf von getVal() geschieht ohne Kennlinien-lookup
 	 * 
-	 * Vorsicht: Wenn update öfter als get geschieht, bekommt "man" die entsprechende Eingabe
-	 *           von Hand/ über die GUI eventuell gar nicht mit (da Wert bereits wieder überschrieben)
+	 * Vorsicht: Wenn update oefter als get geschieht, bekommt "man" die entsprechende Eingabe
+	 *           von Hand/ ueber die GUI eventuell gar nicht mit (da Wert bereits wieder ueberschrieben)
 	 */
 	public final boolean setValue(E value) {
 		
@@ -70,7 +70,7 @@ public abstract class Sensor<E> extends BotComponent {
 		
 		this.value = updateValue();
 		
-		// TODO: Äußerst hässlich:
+		// TODO: Aeusserst haesslich:
 		if(this.characteristic != null) {
 //			System.out.print(this.getName()+" :  "+this.value+"  ->  ");
 			this.value = (E)((Double)((Integer)this.characteristic.lookup((((Number)this.value).intValue())/10)).doubleValue());

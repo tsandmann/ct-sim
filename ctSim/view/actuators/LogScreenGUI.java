@@ -31,7 +31,7 @@ import javax.swing.border.TitledBorder;
 import ctSim.model.bots.components.actuators.LogScreen;
 
 /**
- * Klasse für grafische Anzeige von LogScreens
+ * Klasse fuer grafische Anzeige von LogScreens
  * @author Felix Beckwermert
  */
 public class LogScreenGUI extends ActuatorGroupGUI<LogScreen> {
@@ -58,7 +58,7 @@ public class LogScreenGUI extends ActuatorGroupGUI<LogScreen> {
 			
 			LogScreen log = it.next();
 			
-			// Größe?? Unterscheiden zw. LogScreen u. Disp.???
+			// Groesse?? Unterscheiden zw. LogScreen u. Disp.???
 			JTextArea lcd = new JTextArea(4, 20);
 			lcd.setBorder(new EtchedBorder());
 			lcd.setEditable(false);

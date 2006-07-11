@@ -33,7 +33,7 @@ import javax.swing.border.TitledBorder;
 import ctSim.model.bots.components.actuators.Indicator;
 
 /**
- * Klasse für grafische Anzeige von Indikatorgruppen
+ * Klasse fuer grafische Anzeige von Indikatorgruppen
  * @author Felix Beckwermert
  */
 public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {

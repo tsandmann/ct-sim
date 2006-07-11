@@ -56,10 +56,9 @@ public interface MovableObstacle extends Obstacle {
 	
 	/**
 	 * @param pos
-	 *            Die Position, an die der Bot gesetzt werden soll
+	 *            Die Position, an die das Hindernis gesetzt werden soll
 	 */
-	/* TODO: über? (wenn man getPos vorgibt, ist setPos wohl über oder wer sollte die Pose setzen)
-	 *       Wieso steht in der Doku was von "Bot", wenn wir doch in MoveObst sind?
+	/* TODO: ueber? (wenn man getPos vorgibt, ist setPos wohl ueber oder wer sollte die Pose setzen)
 	 */
 	public void setPosition(Point3d pos);
 	

@@ -34,6 +34,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
@@ -54,7 +55,7 @@ public class StatusBar extends Box {
 	private CtSimFrame parent;
 	
 //	private DateFormat timeFormatter;
-	private final long TIME_TO_SUB = 1000*60*60; // Eine Stunde abziehen für Anzeige
+	private final long TIME_TO_SUB = 1000*60*60; // Eine Stunde abziehen fuer Anzeige
 	
 //	private JTextField timeField;
 	private JLabel timeLabel;
@@ -89,8 +90,8 @@ public class StatusBar extends Box {
 		
 		this.add(Box.createHorizontalGlue());
 		
-		JTextField tr = new JTextField("TR:");
-		tr.setHorizontalAlignment(JTextField.CENTER);
+		JTextField tr = new JTextField("TR:"); //$NON-NLS-1$
+		tr.setHorizontalAlignment(SwingConstants.CENTER);
 		tr.setEditable(false);
 		//tr.setEnabled(false);
 		tr.setBorder(BorderFactory.createEtchedBorder());
@@ -146,7 +147,7 @@ public class StatusBar extends Box {
 		this.tickRateField = new JFormattedTextField(formatter);
 		this.tickRateField.setValue(StatusBar.INIT_TICK_RATE);
 		this.tickRateField.setColumns(3);
-		this.tickRateField.setHorizontalAlignment(JTextField.CENTER);
+		this.tickRateField.setHorizontalAlignment(SwingConstants.CENTER);
 		this.tickRateField.setMinimumSize(new Dimension(44, 22));
 		this.tickRateField.setMaximumSize(new Dimension(44, 22));
 		this.tickRateField.setPreferredSize(new Dimension(44, 22));

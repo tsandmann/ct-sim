@@ -57,7 +57,7 @@ public class JudgeChooser extends JDialog implements ActionListener {
 	 */
 	JudgeChooser(Frame own) {
 		
-		super(own, "Schiedsrichter wählen...", true);
+		super(own, "Schiedsrichter waehlen...", true);
 		
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
@@ -67,7 +67,7 @@ public class JudgeChooser extends JDialog implements ActionListener {
 		
 		buttons.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
 		
-		buttons.add(new JLabel("Wählen Sie einen Schiedsrichter:"));
+		buttons.add(new JLabel("Waehlen Sie einen Schiedsrichter:"));
 		
 		initRadioButtons();
 		

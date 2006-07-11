@@ -28,7 +28,7 @@ import ctSim.model.bots.components.Sensor;
 import ctSim.view.ComponentGroupGUI;
 
 /**
- * Abstrakte Klasse für grafische Anzeige von Sensorgruppen
+ * Abstrakte Klasse fuer grafische Anzeige von Sensorgruppen
  * @author Felix Beckwermert
  * @param <E> Der Datentyp der Sensoren
  */

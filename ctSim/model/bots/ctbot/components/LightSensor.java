@@ -24,7 +24,7 @@ public class LightSensor extends SimpleSensor<Integer> {
 	private World world;
 	private Bot bot;
 	
-	// TODO: als Bogenmaﬂ / in Radiant
+
 	private double angle = Math.PI / 180 * 180;  // 180∞
 	
 	private Shape3D shape;
@@ -266,7 +266,7 @@ public class LightSensor extends SimpleSensor<Integer> {
 		
 		// TODO: Richtig so?
 		return this.world.sensLight(
-				// TODO: H‰sslich:
+				// TODO: Haesslich:
 				//this.getAbsPosition(this.bot.getPosition(), this.bot.getHeading()),
 				this.getSensLdrPosition(this.getName()),
 				//this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()),
@@ -283,11 +283,11 @@ public class LightSensor extends SimpleSensor<Integer> {
 		 * Wert aus Welt bestimmen:
 		 *     Pos, Heading reicht (nicht!?)
 		 *     -> Wert an Bot geben
-		 *     -> Welcher Sensor muﬂ wie gesendet werden?
-		 *     -> ¸ber Namen?
-		 * Wert ¸ber Bot bestimmen:
-		 *     ¸ber Namen (?)
-		 *     -> Bot-Command (o.‰.)
+ss
+		 *     -> ueber Namen?
+		 * Wert ueber Bot bestimmen:
+		 *     ueber Namen (?)
+		 *     -> Bot-Command (o.ae.)
 		 *     -> ... (gleiches Problem wie beim Senden -> s.o.)
 		 * 
 		 * -> Kommando in XML-Datei angeben?

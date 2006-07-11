@@ -44,7 +44,7 @@ public class LabyrinthJudge extends Judge {
 	@Override
 	public boolean isStartAllowed() {
 		
-		// TODO: Bot-Anzahl prüfen
+		// TODO: Bot-Anzahl pruefen
 		if(this.controller.getParticipants() != this.participants) {
 			Debug.out.println("Fehler: Noch nicht genuegend Bots auf der Karte.");
 			return false;

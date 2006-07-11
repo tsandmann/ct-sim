@@ -28,7 +28,7 @@ import ctSim.model.bots.components.Actuator;
 import ctSim.view.ComponentGroupGUI;
 
 /**
- * Abstrakte Klasse für grafische Anzeige von Aktuatorgruppen
+ * Abstrakte Klasse fuer grafische Anzeige von Aktuatorgruppen
  * @author Felix Beckwermert
  * @param <E> Der Datentyp der Aktuatoren
  */

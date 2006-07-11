@@ -283,7 +283,7 @@ public class CtSimFrame extends JFrame {
 		
 		//////////////////////////////////////////////////////////////////////
 		// World-Actions
-		this.openWorld = new AbstractAction("Öffnen...",
+		this.openWorld = new AbstractAction("Oeffnen...",
 				new ImageIcon(this.openImg)) {
 
 			/* (non-Javadoc)
@@ -305,7 +305,7 @@ public class CtSimFrame extends JFrame {
 				cmdRandomWorldClicked();
 			}
 		};
-		this.closeWorld = new AbstractAction("Schließen",
+		this.closeWorld = new AbstractAction("Schliessen",
 				new ImageIcon(this.closeImg)) {
 
 			/* (non-Javadoc)
@@ -330,7 +330,7 @@ public class CtSimFrame extends JFrame {
 		
 		//////////////////////////////////////////////////////////////////////
 		// Bot-Actions
-		this.selectJudge = new AbstractAction("Schiedsrichter wählen...") {
+		this.selectJudge = new AbstractAction("Schiedsrichter waehlen...") {
 			
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -340,7 +340,7 @@ public class CtSimFrame extends JFrame {
 				cmdSetJudgeClicked();
 			}
 		};
-		this.addBot = new AbstractAction("Bot hinzufügen...") {
+		this.addBot = new AbstractAction("Bot hinzufuegen...") {
 
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -420,21 +420,21 @@ public class CtSimFrame extends JFrame {
 		
 		this.menuBar = new JMenuBar();
 		
-		JMenu worldMenu = new JMenu("Welt");
+		JMenu worldMenu = new JMenu("Welt"); //$NON-NLS-1$
 		//worldMenu.getPopupMenu().setLightWeightPopupEnabled(false);
 		worldMenu.add(this.openWorld);
 		worldMenu.add(this.randomWorld);
 		worldMenu.add(this.closeWorld);
 		worldMenu.add(this.saveWorld);
 		
-		JMenu botMenu = new JMenu("Hinzufügen");
+		JMenu botMenu = new JMenu("Hinzufuegen"); //$NON-NLS-1$
 		//botMenu.getPopupMenu().setLightWeightPopupEnabled(false);
 		botMenu.add(this.selectJudge);
 		botMenu.addSeparator();
 		botMenu.add(this.addBot);
 		// botMenu.add(this.configBots);
 		
-		JMenu controlMenu = new JMenu("Ansicht");
+		JMenu controlMenu = new JMenu("Ablauf"); //$NON-NLS-1$
 		//controlMenu.getPopupMenu().setLightWeightPopupEnabled(false);
 		controlMenu.add(this.start);
 		controlMenu.add(this.pause);
@@ -535,7 +535,7 @@ public class CtSimFrame extends JFrame {
 			}
 		}
 		
-		// TODO: Alte Welt entladen -> Schließen
+
 		this.closeWorld();
 		
 		// TODO: Exception-Handling, ...
@@ -553,17 +553,17 @@ public class CtSimFrame extends JFrame {
 			
 			this.tmpParcoursFile = file;
 			
-			Debug.out.println("Neue Welt geöffnet.");
+			Debug.out.println("Neue Welt geoeffnet.");
 			
 		} catch (SAXException e) {
-			Debug.out.println("Fehler beim Öffnen der Welt-Datei.");
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
 			e.printStackTrace();
 		} catch (IOException e) {
-			Debug.out.println("Fehler beim Öffnen der Welt-Datei.");
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO: Über?
-			Debug.out.println("Fehler beim Öffnen der Welt-Datei.");
+			// TODO: Ueber?
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
 			e.printStackTrace();
 		}
 	}
@@ -644,7 +644,7 @@ public class CtSimFrame extends JFrame {
 				}
 			}
 			
-			// TODO: Hässlich!
+			// TODO: Haesslich!
 			// XML-Stream zwischenspeichern und in Datei schreiben; keine tmp-Dateien mehr (?)
 			try {
 				FileInputStream fin = new FileInputStream(this.tmpParcoursFile);
@@ -695,7 +695,7 @@ public class CtSimFrame extends JFrame {
 		
 		if(this.controller.setJudge(judge)) {
 			
-			Debug.out.println("Judge \""+judge+"\" wurde gewählt.");
+			Debug.out.println("Judge \""+judge+"\" wurde gewaehlt.");
 		}
 	}
 	
@@ -748,7 +748,7 @@ public class CtSimFrame extends JFrame {
 		
 		//this.world.die();
 		
-		// TODO: ganz hässlich!
+		// TODO: ganz haesslich!
 		//this.split.remove(this.worldPanel);
 		this.consoleSplit.remove(this.worldPanel);
 		this.world = null;
@@ -780,7 +780,7 @@ public class CtSimFrame extends JFrame {
 	 */
 	public void update() {
 		
-		// TODO: Größe sichern...
+		// TODO: Groesse sichern...
 		//this.setPreferredSize(this.getSize());
 		
 		//this.setVisible(false);
@@ -801,7 +801,7 @@ public class CtSimFrame extends JFrame {
 	 */
 	public void update(long time) {
 		
-		// TODO: alles ganz hässlich:
+		// TODO: alles ganz haesslich:
 		this.statusBar.updateTime(time);
 		this.update();
 	}
@@ -822,7 +822,7 @@ public class CtSimFrame extends JFrame {
 		//this.validate();
 		//this.doLayout();
 		
-		Debug.out.println("Bot \""+botInfo.getName()+"\" wurde hinzugefügt.");
+		Debug.out.println("Bot \""+botInfo.getName()+"\" wurde hinzugefuegt.");
 	}
 	
 	/**

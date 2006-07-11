@@ -77,7 +77,7 @@ public class World {
 	 */
 	public int baseTimeVirtual = 10;
 	
-	// TODO: Listen vereinen? -> Views auch für Obst
+	// TODO: Listen vereinen? -> Views auch fuer Obst
 	/** Liste mit allen Bots, die in dieser Welt leben */
 	private List<AliveObstacle> aliveObstacles;
 

@@ -28,6 +28,7 @@ import javax.media.j3d.AmbientLight;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Group;
 import javax.media.j3d.Node;
 import javax.media.j3d.PickBounds;
 import javax.media.j3d.PickConeRay;
@@ -159,7 +160,7 @@ public class World {
 		Transform3D translate = new Transform3D();
 		translate.set(new Vector3d(0d, 0d, 0.2d - PLAYGROUND_THICKNESS));
 		TransformGroup obstTG = new TransformGroup(translate);
-		obstTG.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+		obstTG.setCapability(Node.ENABLE_PICK_REPORTING);
 		obstTG.setPickable(true);
 //		this.sceneLight.getObstBG().addChild(obstTG);
 		this.obstBG.addChild(obstTG);
@@ -183,8 +184,8 @@ public class World {
 
 		// Die Wurzel des Ganzen:
 		this.scene = new BranchGroup();
-		this.scene.setName("World");
-		this.scene.setUserData(new String("World"));
+		this.scene.setName("World"); //$NON-NLS-1$
+		this.scene.setUserData(new String("World")); //$NON-NLS-1$
 		
 		Transform3D worldTransform = new Transform3D();
 		worldTransform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));
@@ -192,9 +193,9 @@ public class World {
 		
 		this.worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		this.worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-		this.worldTG.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		this.worldTG.setCapability(TransformGroup.ALLOW_PICKABLE_READ);
-		this.worldTG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		this.worldTG.setCapability(Node.ENABLE_PICK_REPORTING);
+		this.worldTG.setCapability(Node.ALLOW_PICKABLE_READ);
+		this.worldTG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 		this.worldTG.setPickable(true);
 
 		this.scene.addChild(this.worldTG);
@@ -243,7 +244,7 @@ public class World {
 //		this.sceneLight.setScene(root);
 	}
 	
-	// TODO: Besser weg -> WorldPanel, WorldView überarbeiten...
+	// TODO: Besser weg -> WorldPanel, WorldView ueberarbeiten...
 	public BranchGroup getScene() {
 		
 		return this.scene;
@@ -266,7 +267,7 @@ public class World {
 		// TODO: Hmmm...... woanders hin... Fehlermeldung, wenn keine Pos,Head mehr...
 		Point3d pos = new Point3d(parcours.getStartPosition(this.aliveObsts.size()+1));
 		if (pos != null) {
-			// TODO: Ganz hässlich:
+			// TODO: Ganz haesslich:
 			pos.z = bot.getPosition().z;	// Achtung die Bots stehen etwas ueber der Spielflaeche
 			bot.setPosition(pos);
 		}
@@ -386,7 +387,7 @@ public class World {
 	 * 
 	 * TODO: Auslagern in eigene Klasse?
 	 * 
-	 * Funktionen für die Sensoren usw. (Abstandsfunktionen u.ä.)
+	 * Funktionen fuer die Sensoren usw. (Abstandsfunktionen u.ae.)
 	 * 
 	 */
 	/** Reichweite des Lichtes in m */
@@ -409,7 +410,7 @@ public class World {
 	 *            die angestrebte neue Position
 	 * @return True wenn der Bot sich frei bewegen kann
 	 */
-	// TODO: Überarbeiten?
+	// TODO: Ueberarbeiten?
 	public boolean checkCollision(AliveObstacle obst, /*Shape3D botBody,*/ Bounds bounds,
 			Vector3d newPosition) { //, String botName) {
 		
@@ -467,7 +468,7 @@ public class World {
 	 *            Name des Beruehrungspunktes, welcher getestet wird
 	 * @return True wenn Bodenkontakt besteht.
 	 */
-	// TODO: Überarbeiten... (GroundClearance?)
+	// TODO: Ueberarbeiten... (GroundClearance?)
 	public boolean checkTerrain(Point3d pos, double groundClearance,
 			String message) {
 
@@ -519,7 +520,7 @@ public class World {
 	 *            Es werden rayCount viele Strahlen vom Sensor ausgewertet.
 	 * @return Die Menge an Licht, die absorbiert wird, von 1023(100%) bis 0(0%)
 	 */
-	// TODO: Überarbeiten?
+	// TODO: Ueberarbeiten?
 	public short sensGroundReflectionLine(Point3d pos, Vector3d heading,
 			double openingAngle, short rayCount) {
 		// Sensorposition
@@ -682,12 +683,12 @@ public class World {
 	 * @param heading
 	 *            Die Blickrichtung
 	 * @param openingAngle
-	 *            Der Oeffnungswinkel des Blickstrahls (als Bogenmaß/in Radiant)
+ss
 	 * @param botBody
 	 *            Der Koerper des Roboter, der anfragt
 	 * @return Die Distanz zum naechsten Objekt in Metern
 	 */
-	// TODO: Überarbeiten?
+	// TODO: Ueberarbeiten?
 	public double watchObstacle(Point3d pos, Vector3d heading,
 			double openingAngle, Shape3D botBody) {
 

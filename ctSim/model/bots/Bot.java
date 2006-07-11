@@ -278,7 +278,7 @@ public abstract class Bot extends AliveObstacle{
 	
 	protected final void addSensor(Sensor sens) {
 		
-		// TODO: rüber in Sensor selbst?
+		// TODO: rueber in Sensor selbst?
 		this.sens.add(sens);
 		
 		this.addBranchComponent(sens.getRelTransform(), sens.getShape());
