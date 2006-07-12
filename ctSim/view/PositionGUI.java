@@ -92,7 +92,7 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	 */
 	public int getSortId() {
 		
-		return 0;
+		return 10;
 	}
 	
 	/* (non-Javadoc)

@@ -9,7 +9,7 @@ import javax.vecmath.Vector3d;
 import ctSim.view.actuators.ActuatorGroupGUI;
 import ctSim.view.actuators.Actuators;
 
-public abstract class Display extends LogScreen {
+public class Display extends LogScreen {
 	
 	public Display(String name, Point3d relPos, Vector3d relHead) {
 		

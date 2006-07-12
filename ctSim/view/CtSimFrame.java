@@ -186,7 +186,8 @@ public class CtSimFrame extends JFrame {
 		
 		this.add(split, BorderLayout.CENTER);
 		
-		this.setPreferredSize(new Dimension(800, 650));
+		//this.setPreferredSize(new Dimension(800, 650));
+		this.setPreferredSize(new Dimension(1000, 800));
 		//this.setMinimumSize(new Dimension(900, 650));
 		
 		this.pack();

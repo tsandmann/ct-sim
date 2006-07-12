@@ -19,6 +19,7 @@
 
 package ctSim.view;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,8 @@ import javax.swing.JTabbedPane;
  *
  */
 public final class ControlBar extends JPanel {
+	
+	private final Dimension PREF_SIZE = new Dimension(180, 600);
 	
 	private List<BotInfo> botList;
 	
@@ -59,6 +62,7 @@ public final class ControlBar extends JPanel {
 		//TODO: ???
 		//this.setPreferredSize(new Dimension(180, 500));
 		//this.setMinimumSize(new Dimension(100, 150));
+		//this.setPreferredSize(this.PREF_SIZE);
 	}
 	
 	/**
@@ -86,6 +90,12 @@ public final class ControlBar extends JPanel {
 		
 		botPanel.invalidate();
 		//this.invalidate();
+	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		
+		return this.PREF_SIZE;
 	}
 	
 	/**

@@ -106,6 +106,6 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 	 */
 	@Override
 	public int getSortId() {
-		return 20;
+		return 50;
 	}
 }

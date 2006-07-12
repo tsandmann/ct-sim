@@ -106,6 +106,6 @@ public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGr
 	 * @Override
 	 */
 	public int getSortId() {
-		return 10;
+		return 20;
 	}
 }

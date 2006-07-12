@@ -1,5 +1,6 @@
 package ctSim.model.bots.ctbot;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
@@ -21,6 +22,9 @@ import ctSim.model.bots.TcpBot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.Sensor;
+import ctSim.model.bots.components.actuators.Display;
+import ctSim.model.bots.components.actuators.Indicator;
+import ctSim.model.bots.components.actuators.LogScreen;
 import ctSim.model.bots.ctbot.components.BorderSensor;
 import ctSim.model.bots.ctbot.components.DistanceSensor;
 import ctSim.model.bots.ctbot.components.EncoderSensor;
@@ -38,6 +42,29 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	/** Sequenznummer der TCP-Pakete */
 	int seq = 0;
+	
+	/** Puffer fuer Logausgaben */
+	public StringBuffer logBuffer = new StringBuffer("");
+	
+	/** Zustand der LEDs */
+	private Integer actLed = new Integer(0);
+	
+	/** Anzahl der Zeilen im LCD */
+	public static final short LCD_LINES = 4;
+
+	/** Anzahl der Zeichen pro Zeile im LCD */
+	public static final short LCD_CHARS = 20;
+	
+	/** Zustand des LCD */
+	private String[] lcdText = new String[LCD_LINES];
+	
+	/** Cursorposition des LCD
+	 * X : vor welchem Zeichen steht der Cursor (0 .. LCD_CHARS-1)
+	 * Y : in welcher Zeile steht der Cursor (0 .. LCD_LINES-1)
+	 */
+	private int lcdCursorX = 0;
+
+	private int lcdCursorY = 0;
 	
 	/** maximale Geschwindigkeit als PWM-Wert */
 	public static final short PWM_MAX = 255;
@@ -77,7 +104,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR, encL, encR;
 	
-	private Actuator govL, govR;
+	private Actuator govL, govR, log, disp;
 	
 	public CtBotSimTcp(World world, String name, Point3d pos, Vector3d head, Connection con) {
 		super(world, name, pos, head);
@@ -131,11 +158,38 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	private void initActuators() {
 		
+		// LEDs:
+		for(int i=0; i<8; i++) {
+			
+			final Integer idx = new Integer(i);
+			
+			this.addActuator(new Indicator("LED "+i, new Point3d(), new Vector3d(), cols[i], colsAct[i]) {
+				
+				@Override
+				public void setValue(Boolean value) {
+					
+					// TODO: ???
+				}
+				
+				@Override
+				public Boolean getValue() {
+					
+					return (actLed > Math.pow(2, idx));
+				}
+			});
+		}
+		
 		this.govL = new Governor("GovL", new Point3d(), new Vector3d(0d, 1d, 0d));
 		this.govR = new Governor("GovR", new Point3d(), new Vector3d(0d, 1d, 0d));
 		
+		this.disp = new Display("Display", new Point3d(), new Vector3d());
+		this.log  = new LogScreen("LogScreen", new Point3d(), new Vector3d());
+		
 		this.addActuator(this.govL);
 		this.addActuator(this.govR);
+		
+		this.addActuator(this.disp);
+		this.addActuator(this.log);
 	}
 	
 	/**
@@ -447,6 +501,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 */
 	public void evaluate_command(Command command) {
 		Command answer = new Command();
+		
+		StringBuffer buf;
 
 		if (command.getDirection() == Command.DIR_REQUEST) {
 			// Antwort vorbereiten
@@ -515,30 +571,97 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			case Command.CMD_AKT_LED:
 				command.getDataL();
 				command.getDataL();
-//				this.setActLed(command.getDataL());
+				this.setActLed(command.getDataL());
 				break;
 			case Command.CMD_ACT_LCD:
 				switch (command.getSubcommand()) {
 				case Command.SUB_CMD_NORM:
-					command.getDataL();
-					command.getDataR();
-//					this.setLcdText(command.getDataL(), command.getDataR(),
-//							command.getDataBytesAsString());
+					
+					this.setLcdText(command.getDataL(), command.getDataR(),
+							command.getDataBytesAsString());
+					
+					// Neu:
+					if(lcdText == null || lcdText.length == 0)
+						break;
+					
+					buf = new StringBuffer();
+					buf.append(lcdText[0]);
+					
+					for(int i=1; i<lcdText.length; i++) {
+						
+						buf.append("\n");
+						buf.append(lcdText[i]);
+					}
+					
+					this.disp.setValue(buf.toString());
+					
 					break;
 				case Command.SUB_LCD_CURSOR:
-//					this.setCursor(command.getDataL(), command.getDataR());
-//					break;
+					this.setCursor(command.getDataL(), command.getDataR());
+					
+					// Neu:
+					if(lcdText == null || lcdText.length == 0)
+						break;
+					
+					buf = new StringBuffer();
+					
+					buf.append(lcdText[0]);
+					
+					for(int i=1; i<lcdText.length; i++) {
+						
+						buf.append("\n");
+						buf.append(lcdText[i]);
+					}
+					
+					this.disp.setValue(buf.toString());
+					
+					break;
 				case Command.SUB_LCD_CLEAR:
-//					this.lcdClear();
-//					break;
+					this.lcdClear();
+					
+					// Neu:
+					if(lcdText == null || lcdText.length == 0)
+						break;
+					
+					buf = new StringBuffer();
+					buf.append(lcdText[0]);
+					
+					for(int i=1; i<lcdText.length; i++) {
+						
+						buf.append("\n");
+						buf.append(lcdText[i]);
+					}
+					
+					this.disp.setValue(buf.toString());
+					
+					break;
 				case Command.SUB_LCD_DATA:
-//					this.setLcdText(command.getDataBytesAsString());
+					this.setLcdText(command.getDataBytesAsString());
+					
+					// Neu:
+					if(lcdText == null || lcdText.length == 0)
+						break;
+					
+					buf = new StringBuffer();
+					buf.append(lcdText[0]);
+					
+					for(int i=1; i<lcdText.length; i++) {
+						
+						buf.append("\n");
+						buf.append(lcdText[i]);
+					}
+					
+					this.disp.setValue(buf.toString());
+					
 					break;
 				}
 				break;
 			case Command.CMD_LOG:
-//				this.setLog(command.getDataBytesAsString());
-//				break;
+				this.setLog(command.getDataBytesAsString());
+				
+				this.log.setValue(this.getLog().toString());
+				
+				break;
 //				
 			case Command.CMD_SENS_MOUSE_PICTURE:
 //				// Empfangen eine Bildes
@@ -583,4 +706,149 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		super.work();
 		transmitSensors();
 	}
+	
+	// LOG:
+	/**
+	 * Schreibt Logausgabe in den Puffer.
+	 * @param str String fuer die Ausgabe
+	 */
+	public void setLog(String str) {
+		synchronized(logBuffer) {
+			logBuffer.append(str + "\n");
+		}
+	}
+	
+	/**
+	 * Liefert Puffer fuer die Logausgabe.
+	 * @return Logausgabe
+	 */
+	public StringBuffer getLog() {
+		StringBuffer tempBuffer = new StringBuffer("");
+		
+		synchronized(logBuffer) {
+			
+			/* Puffer kopieren und leeren*/
+			tempBuffer.append(logBuffer.toString());
+			logBuffer.delete(0, logBuffer.length());
+		}
+		
+		return tempBuffer;
+	}
+	
+	// LCD-Gefrickel:
+	/**
+	 * Setzt Text an eine bestimmte Position im LCD.
+	 * 
+	 * @param charPos Neue Cursorposition (Spalte 0..19)
+	 * @param linePos Neue Cursorposition (Zeile 0..3)
+	 * @param text    Der Text, der ab der neuen Cursorposition einzutragen ist
+	 */
+	public void setLcdText(int charPos, int linePos, String text) {
+		setCursor(charPos, linePos);
+		{
+			String pre = "";
+			String post = "";
+			int max = Math.min(text.length(), LCD_CHARS - lcdCursorX - 1);
+
+			// Der neue Zeilentext ist der alte bis zur Cursorposition, gefolgt 
+			// vom uebergebenen String 'text' gefolgt von den nicht ueberschriebenen Zeichen, 
+			// wenn sich die neue X-Position noch vor dem Zeilenende befindet.
+			if (lcdCursorX > 0) {
+				pre = new String(lcdText[lcdCursorY].substring(0,
+						lcdCursorX - 1));
+			}
+			lcdCursorX += max;
+			if (lcdCursorX < LCD_CHARS - 1) {
+				post = new String(lcdText[lcdCursorY].substring(lcdCursorX));
+			}
+			synchronized (lcdText) {
+				lcdText[lcdCursorY] = new String(pre + text + post);
+			}
+		}
+	}
+
+	/**
+	 * Setzt Text in eine bestimmte Zeile im LCD.
+	 * 
+	 * @param linePos Neue Cursorposition (Zeile 0..3)
+	 * @param text    Der Text, der ab der neuen Cursorposition einzutragen ist
+	 */
+	public void setLcdText(int linePos, String text) {
+		setLcdText(0, linePos, text);
+	}
+
+	/**
+	 * Setzt Text ins LCD.
+	 * 
+	 * @param text Der Text, der ab der neuen Cursorposition einzutragen ist	
+	 */
+	public void setLcdText(String text) {
+		setLcdText(lcdCursorX, lcdCursorY, text);
+	}
+
+	/**
+	 * Setzt den Cursor an eine bestimmte Position im LCD 
+	 * @param charPos Neue Cursorposition (Spalte 0..19)
+	 * @param linePos Neue Cursorposition (Zeile 0..3)
+	 */
+	public void setCursor(int charPos, int linePos) {
+		if (charPos < 0) {
+			charPos = 0;
+		}
+		if (charPos > LCD_CHARS - 1) {
+			charPos = LCD_CHARS - 1;
+		}
+		if (linePos < 0) {
+			linePos = 0;
+		}
+		if (linePos > LCD_LINES - 1) {
+			linePos = LCD_LINES - 1;
+		}
+
+		this.lcdCursorX = charPos;
+		this.lcdCursorY = linePos;
+	}
+	
+	/**
+	 * Loesche das Display
+	 *
+	 */
+	public void lcdClear() {
+		synchronized (lcdText) {
+			for (int i = 0; i < lcdText.length; i++) {
+				lcdText[i] = new String("                    ");
+			}
+		}
+	}
+	
+	//LEDs
+	/**
+	 * @param actLed
+	 *            Der Wert von actLed, der gesetzt werden soll
+	 */
+	public void setActLed(int actLed) {
+		this.actLed = new Integer(actLed);
+	}
+	
+	private static final Color[] cols = {
+		new Color(137, 176, 255), // blau
+		new Color(137, 176, 255), // blau
+		new Color(255, 137, 137), // rot
+		new Color(255, 230, 139), // orange
+		new Color(255, 255, 159), // gelb
+		new Color(170, 255, 170), // grün
+		new Color(200, 255, 245), // türkis
+		new Color(245, 245, 245)  // weiß
+	};
+	
+	private static final Color[] colsAct = {
+		new Color(  0,  84, 255), // blau
+		new Color(  0,  84, 255), // blau
+		new Color(255,   0,   0), // rot
+		new Color(255, 200,   0), // orange
+		new Color(255, 255,   0), // gelb
+		new Color(  0, 255,   0), // grün
+		new Color(  0, 255, 210), // türkis
+		new Color(255, 255, 255)  // weiß
+	};
 }

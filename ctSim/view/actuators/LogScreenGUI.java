@@ -104,6 +104,6 @@ public class LogScreenGUI extends ActuatorGroupGUI<LogScreen> {
 	 * 	@Override
 	 */
 	public int getSortId() {
-		return 80;
+		return 100;
 	}
 }
