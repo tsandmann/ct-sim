@@ -25,6 +25,7 @@ import ctSim.model.bots.components.Sensor;
 import ctSim.model.bots.components.actuators.Display;
 import ctSim.model.bots.components.actuators.Indicator;
 import ctSim.model.bots.components.actuators.LogScreen;
+import ctSim.model.bots.components.sensors.SimpleSensor;
 import ctSim.model.bots.ctbot.components.BorderSensor;
 import ctSim.model.bots.ctbot.components.DistanceSensor;
 import ctSim.model.bots.ctbot.components.EncoderSensor;
@@ -154,6 +155,60 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		
 		this.addSensor(this.lightL);
 		this.addSensor(this.lightR);
+		
+		this.addSensor(new SimpleSensor<Integer>("MouseX", new Point3d(), new Vector3d()) {
+
+			@Override
+			public Integer updateValue() {
+				
+				return mouseX;
+			}
+
+			@Override
+			public String getType() {
+				
+				return "Maus-Sensor";
+			}
+
+			@Override
+			public String getDescription() {
+				
+				return "Maus-Sensor-Wert X";
+			}
+
+			@Override
+			public Shape3D getShape() {
+				
+				return new Shape3D();
+			}
+		});
+		
+		this.addSensor(new SimpleSensor<Integer>("MouseY", new Point3d(), new Vector3d()) {
+
+			@Override
+			public Integer updateValue() {
+				
+				return mouseY;
+			}
+
+			@Override
+			public String getType() {
+				
+				return "Maus-Sensor";
+			}
+
+			@Override
+			public String getDescription() {
+				
+				return "Maus-Sensor-Wert Y";
+			}
+
+			@Override
+			public Shape3D getShape() {
+				
+				return new Shape3D();
+			}
+		});
 	}
 	
 	private void initActuators() {
