@@ -47,10 +47,10 @@ import javax.swing.text.NumberFormatter;
  */
 public class StatusBar extends Box {
 	
-	private static final int MIN_TICK_RATE = 10;
-	private static final int INIT_TICK_RATE = 50;
-	private static final int MAX_TICK_RATE = 500;
-	private static final int MAJOR_TICK = 10;
+	private static final int MIN_TICK_RATE = 0;
+	private static final int INIT_TICK_RATE = 25;
+	private static final int MAX_TICK_RATE = 250;
+	private static final int MAJOR_TICK = 25;
 	
 	private CtSimFrame parent;
 	
@@ -129,6 +129,7 @@ public class StatusBar extends Box {
 		});
 		
 		this.tickRateSlider.setMajorTickSpacing(StatusBar.MAJOR_TICK);
+		//this.tickRateSlider.setMinorTickSpacing(StatusBar.MAJOR_TICK);
 		this.tickRateSlider.setPaintTicks(true);
 		//this.tickRateSlider.setPaintLabels(true);
 		this.tickRateSlider.setPreferredSize(new Dimension(150, 22));
