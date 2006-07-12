@@ -1,5 +1,6 @@
 Kennlinien der Distanzsensoren am c't-Bot;				
 Distanz (cm);	Messwert links;
+0;	167;
 1;	167;
 2;	182;
 3;	252;
