@@ -95,6 +95,8 @@ public final class ControlBar extends JPanel {
 	@Override
 	public Dimension getPreferredSize() {
 		
+		if(this.botList.isEmpty())
+			return new Dimension(0,0);
 		return this.PREF_SIZE;
 	}
 	
