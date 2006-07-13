@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.model.bots.ctbot.components;
 
 import javax.media.j3d.Shape3D;
@@ -10,6 +28,11 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.sensors.SimpleSensor;
 
+/**
+ * Klasse der Rad-Encoder
+ * 
+ * @author Felix Beckwermert
+ */
 public class EncoderSensor extends SimpleSensor<Integer> {
 	
 	/** maximale Geschwindigkeit als PWM-Wert */
@@ -77,7 +100,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	@Override
 	public String getType() {
 		// TODO: Kodiersensor?
-		return "Infrarot";
+		return "Infrarot"; //$NON-NLS-1$
 	}
 
 	/** (non-Javadoc)
@@ -86,7 +109,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	@Override
 	public String getDescription() {
 		// TODO: Kodiersensor?
-		return "Infrarot Kodier-Sensor: "+this.getName();
+		return "Infrarot Kodier-Sensor: "+this.getName(); //$NON-NLS-1$
 	}
 	
 	/**
@@ -105,7 +128,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	/** (non-Javadoc)
 	 * @see ctSim.model.bots.components.Sensor#updateValue()
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked","boxing"})
 	@Override
 	public Integer updateValue() {
 		

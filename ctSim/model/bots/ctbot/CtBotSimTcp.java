@@ -187,7 +187,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		
 		this.addSensor(new SimpleSensor<Integer>("MouseX", new Point3d(), new Vector3d()) { //$NON-NLS-1$
 
-			@SuppressWarnings("synthetic-access")
+			@SuppressWarnings({"synthetic-access","boxing"})
 			@Override
 			public Integer updateValue() {
 				
@@ -215,7 +215,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		
 		this.addSensor(new SimpleSensor<Integer>("MouseY", new Point3d(), new Vector3d()) { //$NON-NLS-1$
 
-			@SuppressWarnings("synthetic-access")
+			@SuppressWarnings({"synthetic-access","boxing"})
 			@Override
 			public Integer updateValue() {
 				
@@ -257,7 +257,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 					// TODO: ???
 				}
 				
-				@SuppressWarnings("synthetic-access")
+				@SuppressWarnings({"synthetic-access","boxing"})
 				@Override
 				public Boolean getValue() {
 					
@@ -310,6 +310,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	/**
 	 * Leite Sensordaten an den Bot weiter
 	 */
+	@SuppressWarnings({"unchecked","boxing"})
 	private synchronized void transmitSensors() {
 		try {
 //			Command command = new Command(Command.CMD_SENS_IR,
@@ -411,13 +412,13 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			this.connection.send(command.getCommandBytes());
 			
 		} catch (IOException IoEx) {
-			ErrorHandler.error("Error during sending Sensor data, dieing: "
+			ErrorHandler.error("Error during sending Sensor data, dieing: " //$NON-NLS-1$
 					+ IoEx);
 			die();
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked","boxing"})
 	private void calcPos() {
 			
 			////////////////////////////////////////////////////////////////////
@@ -541,21 +542,21 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			
 			boolean isFalling = false;
 			if (!this.world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE,
-					"Der Gleitpin von " + this.getName())) {
+					"Der Gleitpin von " + this.getName())) { //$NON-NLS-1$
 				isFalling = true;
 			}
 			
 			// Bodenkontakt des linken Reifens ueberpruefen
 			posRadL.z -= BOT_HEIGHT / 2;
 			if (!this.world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE,
-					"Das linke Rad von " + this.getName())) {
+					"Das linke Rad von " + this.getName())) { //$NON-NLS-1$
 				isFalling = true;
 			}
 			
 			// Bodenkontakt des rechten Reifens ueberpruefen
 			posRadR.z -= BOT_HEIGHT / 2;
 			if (!this.world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE,
-					"Das rechte Rad von " + this.getName())) {
+					"Das rechte Rad von " + this.getName())) { //$NON-NLS-1$
 				isFalling = true;
 			}
 			
@@ -679,7 +680,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 					
 					for(int i=1; i<this.lcdText.length; i++) {
 						
-						buf.append("\n");
+						buf.append("\n"); //$NON-NLS-1$
 						buf.append(this.lcdText[i]);
 					}
 					
@@ -699,7 +700,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 					
 					for(int i=1; i<this.lcdText.length; i++) {
 						
-						buf.append("\n");
+						buf.append("\n"); //$NON-NLS-1$
 						buf.append(this.lcdText[i]);
 					}
 					
@@ -718,7 +719,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 					
 					for(int i=1; i<this.lcdText.length; i++) {
 						
-						buf.append("\n");
+						buf.append("\n"); //$NON-NLS-1$
 						buf.append(this.lcdText[i]);
 					}
 					
@@ -737,7 +738,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 					
 					for(int i=1; i<this.lcdText.length; i++) {
 						
-						buf.append("\n");
+						buf.append("\n"); //$NON-NLS-1$
 						buf.append(this.lcdText[i]);
 					}
 					
@@ -760,13 +761,13 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				
 			case Command.CMD_WELCOME:
 				if (command.getSubcommand() != Command.SUB_WELCOME_SIM){
-					ErrorHandler.error("Ich bin kein Sim-Bot! Sterbe vor Schreck ;-)");
+					ErrorHandler.error("Ich bin kein Sim-Bot! Sterbe vor Schreck ;-)"); //$NON-NLS-1$
 					die();
 				}
 				break;
 				
 			default:
-				ErrorHandler.error("Unknown Command:" + command.toString());
+				ErrorHandler.error("Unknown Command:" + command.toString()); //$NON-NLS-1$
 				break;
 			}
 			//System.out.println("////////////////////////////////////////////////////////////////");
@@ -775,7 +776,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			try {
 				// tcpCon.send(answer.getCommandBytes());
 			} catch (Exception ex) {
-				ErrorHandler.error("Sending answer failed");
+				ErrorHandler.error("Sending answer failed"); //$NON-NLS-1$
 			}
 
 		} else {
@@ -804,7 +805,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 */
 	public void setLog(String str) {
 		synchronized(this.logBuffer) {
-			this.logBuffer.append(str + "\n");
+			this.logBuffer.append(str + "\n"); //$NON-NLS-1$
 		}
 	}
 	
@@ -813,7 +814,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 * @return Logausgabe
 	 */
 	public StringBuffer getLog() {
-		StringBuffer tempBuffer = new StringBuffer("");
+		StringBuffer tempBuffer = new StringBuffer(""); //$NON-NLS-1$
 		
 		synchronized(this.logBuffer) {
 			
@@ -836,8 +837,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	public void setLcdText(int charPos, int linePos, String text) {
 		setCursor(charPos, linePos);
 		{
-			String pre = "";
-			String post = "";
+			String pre = ""; //$NON-NLS-1$
+			String post = ""; //$NON-NLS-1$
 			int max = Math.min(text.length(), LCD_CHARS - this.lcdCursorX - 1);
 
 			// Der neue Zeilentext ist der alte bis zur Cursorposition, gefolgt 
@@ -906,7 +907,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	public void lcdClear() {
 		synchronized (this.lcdText) {
 			for (int i = 0; i < this.lcdText.length; i++) {
-				this.lcdText[i] = new String("                    ");
+				this.lcdText[i] = new String("                    "); //$NON-NLS-1$
 			}
 		}
 	}

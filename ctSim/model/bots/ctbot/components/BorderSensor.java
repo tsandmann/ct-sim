@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.model.bots.ctbot.components;
 
 import javax.media.j3d.BranchGroup;
@@ -18,6 +36,11 @@ import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.sensors.SimpleSensor;
 
+/**
+ * Klasse der Abgrundsensoren
+ * 
+ * @author Felix Beckwermert
+ */
 public class BorderSensor extends SimpleSensor<Short> {
 	
 	// TODO:
@@ -30,6 +53,14 @@ public class BorderSensor extends SimpleSensor<Short> {
 	
 	private Shape3D shape;
 	
+	/**
+	 * Der Konstruktor
+	 * @param world Welt
+	 * @param bot Bot
+	 * @param name Sensor-Name
+	 * @param relPos relative Position zum Bot
+	 * @param relHead relative Blickrichtung zum Bot
+	 */
 	public BorderSensor(World world, Bot bot, String name, Point3d relPos, Vector3d relHead) {
 		
 		super(name, relPos, relHead);
@@ -205,18 +236,28 @@ public class BorderSensor extends SimpleSensor<Short> {
 		this.shape.setCapability(Group.ALLOW_CHILDREN_WRITE);
 	}
 	
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.BotComponent#getType()
+	 */
 	@Override
 	public String getType() {
 		// TODO: Abgrundsensor?
-		return "Infrarot";
+		return "Infrarot"; //$NON-NLS-1$
 	}
 
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.BotComponent#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		// TODO: Abgrundsensor?
-		return "Infrarot Abgrund-Sensor: "+this.getName();
+		return "Infrarot Abgrund-Sensor: "+this.getName(); //$NON-NLS-1$
 	}
 
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.Sensor#updateValue()
+	 */
+	@SuppressWarnings("boxing")
 	@Override
 	public Short updateValue() {
 		
@@ -255,6 +296,10 @@ ss
 		//return null;
 	}
 	
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.BotComponent#getShape()
+	 */
+	@Override
 	public Shape3D getShape() {
 		
 		// TODO:
