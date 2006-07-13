@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.model.bots.components.actuators;
 
 import java.awt.Color;
@@ -9,9 +27,14 @@ import javax.vecmath.Vector3d;
 import ctSim.model.bots.components.Actuator;
 import ctSim.view.actuators.ActuatorGroupGUI;
 import ctSim.view.actuators.Actuators;
-import ctSim.view.actuators.IndicatorGroupGUI;
 
 // TODO: Should be off Enumeration-Type
+/**
+ * Abstrakte Oberklasse aller Indikatoren
+ * 
+ * @author Felix Beckwermert
+ * 
+ */
 public abstract class Indicator extends Actuator<Boolean> {
 	
 	private Boolean val;
@@ -19,12 +42,21 @@ public abstract class Indicator extends Actuator<Boolean> {
 	private Color off;
 	private Color on;
 	
-	public Indicator(String name, Point3d relPos, Vector3d relHead, Color off, Color on) {
+	/**
+	 * Der Konstruktor
+	 * @param name Indikator-Name
+	 * @param relPos relative Position zum Bot
+	 * @param relHead relative Blickrichtung zum Bot
+	 * @param of Farbe im inaktiven Zustand
+	 * @param onn Farbe im aktivierten Zustand
+	 */
+	@SuppressWarnings("boxing")
+	public Indicator(String name, Point3d relPos, Vector3d relHead, Color of, Color onn) {
 		super(name, relPos, relHead);
 		// TODO Auto-generated constructor stub
 		
-		this.off = off;
-		this.on = on;
+		this.off = of;
+		this.on = onn;
 		
 		this.val = false;
 	}
@@ -41,18 +73,28 @@ public abstract class Indicator extends Actuator<Boolean> {
 //		return this.val;
 //	}
 
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.BotComponent#getType()
+	 */
 	@Override
 	public String getType() {
 		
-		return "Indicator";
+		return "Indicator"; //$NON-NLS-1$
 	}
 
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.BotComponent#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		// TODO:
 		return null;
 	}
 	
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.Actuator#getActuatorGroupGUI()
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public ActuatorGroupGUI getActuatorGroupGUI() {
 		
@@ -61,6 +103,10 @@ public abstract class Indicator extends Actuator<Boolean> {
 		return gui;
 	}
 	
+	/**
+	 * @return Die Farbe des Indikators
+	 */
+	@SuppressWarnings("boxing")
 	public Color getColor() {
 		
 		if(this.val)
@@ -81,6 +127,9 @@ public abstract class Indicator extends Actuator<Boolean> {
 //		return this.val;
 //	}
 
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.BotComponent#getShape()
+	 */
 	@Override
 	public Shape3D getShape() {
 		
@@ -88,7 +137,7 @@ public abstract class Indicator extends Actuator<Boolean> {
 	}
 	
 	//////////////////////////////////////////////////////////////////////
-	// Testfälle:
+	// Testfaelle:
 	
 	// Testfall 1:
 //	public static Actuator getTestActuator1(String name) {

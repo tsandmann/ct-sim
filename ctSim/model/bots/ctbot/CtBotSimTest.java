@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.model.bots.ctbot;
 
 import javax.vecmath.Point3d;
@@ -10,6 +28,10 @@ import ctSim.model.bots.ctbot.components.DistanceSensor;
 import ctSim.model.bots.ctbot.components.LightSensor;
 import ctSim.model.bots.ctbot.components.LineSensor;
 
+/**
+ * Klasse aller simulierten c't-Bots, die nur innerhalb des Simulators existieren
+ *
+ */
 public class CtBotSimTest extends CtBotSim {
 	
 	// TODO: weg
@@ -17,10 +39,16 @@ public class CtBotSimTest extends CtBotSim {
 	
 	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR;
 	
-	public CtBotSimTest(World world, String name, Point3d pos, Vector3d head) {
-		super(world, name, pos, head);
+	/**
+	 * Der Konstruktor
+	 * @param w Die Welt
+	 * @param name Der Name des Bot
+	 * @param pos Position
+	 * @param head Blickrichtung
+	 */	public CtBotSimTest(World w, String name, Point3d pos, Vector3d head) {
+		super(w, name, pos, head);
 		
-		this.world = world;
+		this.world = w;
 		
 		initSensors();
 		initActuators();
@@ -28,17 +56,17 @@ public class CtBotSimTest extends CtBotSim {
 	
 	private void initSensors() {
 		
-		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0.035d-BOT_HEIGHT/2), new Vector3d(0d, 1d, 0d));
-		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0.035d-BOT_HEIGHT/2), new Vector3d(0d, 1d, 0d));
+		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0.035d-BOT_HEIGHT/2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0.035d-BOT_HEIGHT/2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
-		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
-		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
-		this.borderL = new BorderSensor(this.world, this, "BorderL", new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
-		this.borderR = new BorderSensor(this.world, this, "BorderR", new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.borderL = new BorderSensor(this.world, this, "BorderL", new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.borderR = new BorderSensor(this.world, this, "BorderR", new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
-		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
-		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
 		this.addSensor(this.irL);
 		this.addSensor(this.irR);
@@ -56,7 +84,7 @@ public class CtBotSimTest extends CtBotSim {
 	
 	private void initActuators() {
 		
-		
+		// TODO!
 	}
 	
 	@Override
@@ -65,12 +93,13 @@ public class CtBotSimTest extends CtBotSim {
 		
 	}
 	
+	@SuppressWarnings({"boxing","unchecked"})
 	@Override
 	protected void work() {
 		
 		super.work();
 		
-		double ll = 100d, rr = 100d;
+		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
 		
 		double irl = (Double)irL.getValue();
 		double irr = (Double)irR.getValue();

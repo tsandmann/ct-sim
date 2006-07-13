@@ -41,6 +41,11 @@ import ctSim.model.rules.Judge;
  */
 public class JudgeChooser extends JDialog implements ActionListener {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String judge;
 	
 	private JButton ok;

@@ -32,7 +32,7 @@ public class Sensors {
 	 * @param sens Der Sensor
 	 * @return Die GUI fuer den Sensor
 	 */
-	public static SensorGroupGUI getGuiFor(SimpleSensor sens) {
+	public static SensorGroupGUI getGuiFor(@SuppressWarnings("unused") SimpleSensor sens) {
 		
 		return new SimpleSensorGroupGUI();
 	}

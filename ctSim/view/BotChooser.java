@@ -41,6 +41,11 @@ import ctSim.model.bots.Bot;
  */
 public class BotChooser extends JDialog {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private JButton testBot, cBot;
 	
 	private Controller controller;

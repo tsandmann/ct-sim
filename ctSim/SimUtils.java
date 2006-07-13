@@ -64,8 +64,7 @@ public class SimUtils {
 		// muessen hier zwei Faelle unterschieden werden:
 		if (vec.x >= 0)
 			return deg;
-		else
-			return -deg;
+		return -deg;
 	}
 
 	/**

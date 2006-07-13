@@ -208,7 +208,7 @@ public final class Controller implements Runnable {
 			dummy.interrupt();
 	}
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
@@ -624,6 +624,7 @@ public final class Controller implements Runnable {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private synchronized Bot addBot(Bot bot){
 		
 		if (bot != null && this.judge.isAddAllowed()) {
@@ -667,6 +668,7 @@ public final class Controller implements Runnable {
 	 * Wartet auf eine eingehende JD2XX-Verbindung
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private Connection waitForJD2XX(){
 		JD2xxConnection com = new JD2xxConnection();
 		try {
@@ -741,7 +743,7 @@ public final class Controller implements Runnable {
 			
 			//als erster suchen wir uns den Parcours-Block
 			Node n = doc.getDocumentElement().getFirstChild();
-			while ((n != null)&& (!n.getNodeName().equals("bots"))) {
+			while ((n != null)&& (!n.getNodeName().equals("bots"))) { //$NON-NLS-1$
 				n=n.getNextSibling();
 			}
 

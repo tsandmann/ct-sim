@@ -39,6 +39,11 @@ import ctSim.model.bots.components.sensors.SimpleSensor;
  */
 public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI<E> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private Vector<String> columns = new Vector<String>();
 	
 	private TableModel tabData;
@@ -57,6 +62,11 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 		
 		this.tabData = new DefaultTableModel(columns, this.getAllSensors().size()) {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public boolean isCellEditable(int row, int col) {
 				
 				if(col == 0)

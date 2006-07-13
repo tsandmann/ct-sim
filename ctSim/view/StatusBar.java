@@ -47,6 +47,10 @@ import javax.swing.text.NumberFormatter;
  */
 public class StatusBar extends Box {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final int MIN_TICK_RATE = 0;
 	private static final int INIT_TICK_RATE = 25;
 	private static final int MAX_TICK_RATE = 250;

@@ -60,9 +60,9 @@ public class MousePicture {
 	}
 
 	/**
-	 * betrachtet ein byte als unsigned Byte
-	 * @param value
-	 * @return
+	 * betrachtet ein Byte als unsigned Int
+	 * @param value Das Byte
+	 * @return Der vorzeichenlose int-Wert
 	 */
 	private static int toUnsignedInt(byte value){
 		return (value & 0x7F) + (value < 0 ? 128 : 0);

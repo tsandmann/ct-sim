@@ -35,7 +35,7 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import com.sun.j3d.utils.geometry.Cylinder;
+// import com.sun.j3d.utils.geometry.Cylinder;
 
 import ctSim.SimUtils;
 import ctSim.controller.Controller;
@@ -72,6 +72,7 @@ public abstract class AliveObstacle
 
 	/** Zeiger auf die Welt, in der der Bot lebt */
 	// TODO: weg?
+	@SuppressWarnings("unused")
 	private World world;
 	
 	/** Verweis auf den zugehoerigen Controller */
@@ -201,7 +202,7 @@ public abstract class AliveObstacle
 		this.world = world1;
 	}
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see ctSim.model.Obstacle#getBranchGroup()
 	 */
 	public final BranchGroup getBranchGroup() {
@@ -236,7 +237,7 @@ public abstract class AliveObstacle
 	
 	// TODO: Besser Set oder Iterator/Enumerator (dann nicht mehr veraenderlich?)
 	/**
-	 * @return
+	 * @return Liste der ViewPlatforms
 	 */
 	public final List<ViewPlatform> getViewingPlatforms() {
 		
@@ -297,7 +298,7 @@ public abstract class AliveObstacle
 	}
 	
 	// TODO: Vorsicht: Heading ist relativ zur Welt!
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see ctSim.model.Obstacle#getHeading()
 	 */
 	public final Vector3d getHeading() {
@@ -344,7 +345,7 @@ public abstract class AliveObstacle
 		//}
 	}
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see ctSim.model.MovableObstacle#setHeading(javax.vecmath.Vector3d)
 	 */
 	public final synchronized void setHeading(Vector3d vec) {

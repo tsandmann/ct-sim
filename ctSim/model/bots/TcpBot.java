@@ -31,5 +31,8 @@ public interface TcpBot {
 	 */
 	public void evaluate_command(Command command);
 
+	/**
+	 * Beendet den Bot-Thread 
+	 */
 	public void die();
 }

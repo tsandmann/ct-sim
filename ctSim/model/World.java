@@ -48,7 +48,6 @@ import javax.vecmath.Vector3f;
 import org.xml.sax.SAXException;
 
 import ctSim.model.AliveObstacle;
-import ctSim.model.Obstacle;
 import ctSim.model.Parcours;
 import ctSim.model.ParcoursLoader;
 import ctSim.model.bots.Bot;
@@ -102,19 +101,19 @@ public class World {
 	
 	/**
 	 * Alternativer Konstruktor 
-	 * @param parcours Der Parcours, den die Welt enthalten soll
+	 * @param parc Der Parcours, den die Welt enthalten soll
 	 */
-	public World(Parcours parcours) {
+	public World(Parcours parc) {
 		
 		this.aliveObsts = new HashSet<AliveObstacle>();
 		this.views = new HashSet<ViewPlatform>();
 		
-		this.parcours = parcours;
+		this.parcours = parc;
 		
 		//this.sceneLight = new SceneLight();
 		
 		init();
-		setParcours(parcours);
+		setParcours(parc);
 		
 		//this.sceneLightBackup = this.sceneLight.clone();
 		
@@ -130,16 +129,16 @@ public class World {
 //	}
 	
 	/**
-	 * X-Dimension des Spielfldes im mm
-	 * @return
+	 * 
+	 * @return X-Dimension des Spielfldes im mm
 	 */
 	public float getPlaygroundDimX() {
 		return this.parcours.getWidth();
 	}
 
 	/**
-	 * Y-Dimension des Spielfldes im mm
-	 * @return
+	 * 
+	 * @return Y-Dimension des Spielfldes im mm
 	 */
 	public float getPlaygroundDimY() {
 		return this.parcours.getHeight();
@@ -148,11 +147,10 @@ public class World {
 	/**
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
 	 * @param parcoursFile Dateinamen des Parcours
-	 * @return der Szenegraph
 	 */
-	private void setParcours(Parcours parcours) {
+	private void setParcours(Parcours parc) {
 		
-		this.parcours = parcours;
+		this.parcours = parc;
 		// Hindernisse werden an die richtige Position geschoben
 		
 		// Zuerst werden sie gemeinsam so verschoben, dass ihre Unterkante genau
@@ -165,9 +163,9 @@ public class World {
 //		this.sceneLight.getObstBG().addChild(obstTG);
 		this.obstBG.addChild(obstTG);
 
-	    obstTG.addChild(parcours.getObstBG());
-	    this.lightBG.addChild(parcours.getLightBG());
-	    this.terrainBG.addChild(parcours.getTerrainBG());		
+	    obstTG.addChild(parc.getObstBG());
+	    this.lightBG.addChild(parc.getLightBG());
+	    this.terrainBG.addChild(parc.getTerrainBG());		
 		
 //	    this.sceneLight.getObstBG().setCapability(Node.ENABLE_PICK_REPORTING);
 //	    this.sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
@@ -212,13 +210,13 @@ public class World {
 		
 		// Die Branchgroup fuer die Lichtquellen
 		this.lightBG = new BranchGroup();
-		this.lightBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		this.lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.lightBG.setPickable(true);
 		this.worldTG.addChild(this.lightBG);
 
 		// Die Branchgroup fuer den Boden
 		this.terrainBG = new BranchGroup();
-		this.terrainBG.setCapability(TransformGroup.ALLOW_PICKABLE_WRITE);
+		this.terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.terrainBG.setPickable(true);
 		this.worldTG.addChild(this.terrainBG);
 		
@@ -230,10 +228,10 @@ public class World {
 //		this.sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
 //		this.sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_PICKABLE_WRITE);
 		this.obstBG = new BranchGroup();
-		this.obstBG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		this.obstBG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 		this.obstBG.setCapability(BranchGroup.ALLOW_DETACH);
-		this.obstBG.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-		this.obstBG.setCapability(BranchGroup.ALLOW_PICKABLE_WRITE);
+		this.obstBG.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		this.obstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.obstBG.setPickable(true);
 		this.worldTG.addChild(this.obstBG);
 
@@ -245,11 +243,18 @@ public class World {
 	}
 	
 	// TODO: Besser weg -> WorldPanel, WorldView ueberarbeiten...
+	/**
+	 * @return Gibt die BranchGroup der Szene zurueck
+	 */
 	public BranchGroup getScene() {
 		
 		return this.scene;
 	}
 	
+	/**
+	 * Fuegt eine ViewPlatform hinzu
+	 * @param view Die neue Ansicht 
+	 */
 	public void addViewPlatform(ViewPlatform view) {
 		
 		this.views.add(view);
@@ -262,6 +267,10 @@ public class World {
 //	}
 	
 	// TODO: Joinen mit den anderen adds
+	/**
+	 * Fuegt einen neuen Bot hinzu
+	 * @param bot Der neue Bot
+	 */
 	public void addBot(Bot bot) {
 		
 		// TODO: Hmmm...... woanders hin... Fehlermeldung, wenn keine Pos,Head mehr...
@@ -280,6 +289,10 @@ public class World {
 		this.addAliveObstacle(bot);
 	}
 	
+	/**
+	 * Fuegt ein neues "belebtes" Hindernis hinzu
+	 * @param obst Das Hindernis
+	 */
 	public void addAliveObstacle(AliveObstacle obst) {
 		
 		// TODO: mit addObst joinen, bzw. wenigstens verwenden
@@ -289,6 +302,9 @@ public class World {
 		this.obstBG.addChild(obst.getBranchGroup());
 	}
 	
+	/**
+	 * @return Die Menge der "belebten" Hindernisse
+	 */
 	public Set<AliveObstacle> getAliveObstacles() {
 		
 		return this.aliveObsts;
@@ -300,6 +316,10 @@ public class World {
 //		
 //	}
 	
+	/**
+	 * Entfernt ein Hindernis
+	 * @param obst Das Hindernis zu entfernen
+	 */
 	public void removeAliveObstacle(AliveObstacle obst) {
 		
 		// TODO: mit remObst joinen, bzw. wenigstens verwenden
@@ -309,16 +329,23 @@ public class World {
 		this.obstBG.removeChild(obst.getBranchGroup());
 	}
 	
-	/**
-	 * Entfernt einen Bot wieder
-	 * @param bot
-	 */
+//	/**
+//	 * Entfernt einen Bot wieder
+//	 * @param bot
+//	 */
 //	public void remove(AliveObstacle obst){
 //		aliveObstacles.remove(obst);
 //		sceneLight.removeBot(obst.getName());
 //		sceneLightBackup.removeBot(obst.getName());
 //	}
 	
+	/**
+	 * Liest eine Welt aus einer Datei ein
+	 * @param file Die Datei
+	 * @return Die Welt
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	public static World parseWorldFile(File file)
 			throws SAXException, IOException {
 		
@@ -374,6 +401,9 @@ public class World {
 		return simulTime;
 	}
 	
+	/**
+	 * @return Gibt die um baseTimeVirtual erhoehte Simulationszeit zurueck
+	 */
 	public long increaseSimulTime() {
 		
 		this.simulTime += this.baseTimeVirtual;
@@ -395,20 +425,21 @@ public class World {
 	
 	/**
 	 * Prueft, ob ein Punkt auf dem Zielfeld liegt
-	 * @return
+	 * @param pos Die Position zu pruefen
+	 * @return true, falls Ziel erreicht ist
 	 */
 	public boolean finishReached(Vector3d pos){
 		return parcours.finishReached(pos);
 	}
 	
 	/**
-	 * Prueft, ob ein Bot mit irgendeinem anderen Objekt kollidiert
-	 * 
+	 * Prueft, ob ein Objekt mit irgendeinem anderen Objekt kollidiert
+	 * @param obst das Objekt
 	 * @param bounds
-	 *            die Grenzen des Bot
+	 *            die Grenzen des Objekts
 	 * @param newPosition
 	 *            die angestrebte neue Position
-	 * @return True wenn der Bot sich frei bewegen kann
+	 * @return True wenn das Objekt sich frei bewegen kann
 	 */
 	// TODO: Ueberarbeiten?
 	public boolean checkCollision(AliveObstacle obst, /*Shape3D botBody,*/ Bounds bounds,
@@ -448,12 +479,10 @@ public class World {
 
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return true;
-		else {
-			//System.out.println(botName + " hatte einen Unfall!");
-			Debug.out.println("Bot \""+botName + "\" hatte einen Unfall!");
-			//obst.stop();
-			return false;
-		}
+		//System.out.println(botName + " hatte einen Unfall!");
+		Debug.out.println("Bot \""+botName + "\" hatte einen Unfall!"); //$NON-NLS-1$ //$NON-NLS-2$
+		//obst.stop();
+		return false;
 	}
 	
 	/**
@@ -489,12 +518,12 @@ public class World {
 					PickInfo.CLOSEST_DISTANCE, pickShape);
 		}
 		if (pickInfo == null) {
-			Debug.out.println(message + " faellt ins Bodenlose.");
+			Debug.out.println(message + " faellt ins Bodenlose."); //$NON-NLS-1$
 			return false;
 		} else if (Math.round(pickInfo.getClosestDistance() * 1000) > Math
 				.round(groundClearance * 1000)) {
-			Debug.out.println(message + " faellt "
-					+ pickInfo.getClosestDistance() * 1000 + " mm.");
+			Debug.out.println(message + " faellt " //$NON-NLS-1$
+					+ pickInfo.getClosestDistance() * 1000 + " mm."); //$NON-NLS-1$
 			return false;
 		} else
 			return true;
@@ -665,12 +694,10 @@ public class World {
 		}
 		if (pickInfo == null)
 			return 1023;
-		else {
-			int darkness = (int) ((pickInfo.getClosestDistance() / LIGHT_SOURCE_REACH) * 1023);
-			if (darkness > 1023)
-				darkness = 1023;
-			return darkness;
-		}
+		int darkness = (int) ((pickInfo.getClosestDistance() / LIGHT_SOURCE_REACH) * 1023);
+		if (darkness > 1023)
+			darkness = 1023;
+		return darkness;
 	}
 	
 	/**
@@ -724,10 +751,8 @@ ss
 		}
 		if (pickInfo == null)
 			return 100.0;
-		else {
-			double d = pickInfo.getClosestDistance();
+		double d = pickInfo.getClosestDistance();
 //			System.out.println("IR: "+Math.floor(d*1000));
-			return d;
-		}
+		return d;
 	}
 }

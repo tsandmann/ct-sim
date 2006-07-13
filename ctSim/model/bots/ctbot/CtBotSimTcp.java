@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.model.bots.ctbot;
 
 import java.awt.Color;
@@ -9,7 +27,6 @@ import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 
 import ctSim.Connection;
 import ctSim.ErrorHandler;
@@ -33,6 +50,10 @@ import ctSim.model.bots.ctbot.components.Governor;
 import ctSim.model.bots.ctbot.components.LightSensor;
 import ctSim.model.bots.ctbot.components.LineSensor;
 
+/**
+ * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator kommunizieren
+ *
+ */
 public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	/** Die TCP-Verbindung */
@@ -45,7 +66,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	int seq = 0;
 	
 	/** Puffer fuer Logausgaben */
-	public StringBuffer logBuffer = new StringBuffer("");
+	public StringBuffer logBuffer = new StringBuffer(""); //$NON-NLS-1$
 	
 	/** Zustand der LEDs */
 	private Integer actLed = new Integer(0);
@@ -107,13 +128,21 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	private Actuator govL, govR, log, disp;
 	
-	public CtBotSimTcp(World world, String name, Point3d pos, Vector3d head, Connection con) {
-		super(world, name, pos, head);
+	/**
+	 * Der Konstruktor
+	 * @param w Die Welt
+	 * @param name Der Name des Bot
+	 * @param pos Position
+	 * @param head Blickrichtung
+	 * @param con Verbindung 
+	 */
+	public CtBotSimTcp(World w, String name, Point3d pos, Vector3d head, Connection con) {
+		super(w, name, pos, head);
 		
 		this.connection = (TcpConnection)con;
 		this.answeringMachine = new AnsweringMachine(this, con);
 		
-		this.world = world;
+		this.world = w;
 		
 		initActuators();
 		initSensors();
@@ -122,22 +151,22 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	private void initSensors() {
 		
-		this.encL = new EncoderSensor(this.world, this, "EncL", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govL);
-		this.encR = new EncoderSensor(this.world, this, "EncR", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govR);
+		this.encL = new EncoderSensor(this.world, this, "EncL", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govL); //$NON-NLS-1$
+		this.encR = new EncoderSensor(this.world, this, "EncR", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govR); //$NON-NLS-1$
 		
-		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d));
-		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d));
-		this.irL.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Left.txt"), 100f));
-		this.irR.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Right.txt"), 80f));
+		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.irL.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Left.txt"), 100f)); //$NON-NLS-1$
+		this.irR.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Right.txt"), 80f)); //$NON-NLS-1$
 
-		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
-		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
-		this.borderL = new BorderSensor(this.world, this, "BorderL", new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
-		this.borderR = new BorderSensor(this.world, this, "BorderR", new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.borderL = new BorderSensor(this.world, this, "BorderL", new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.borderR = new BorderSensor(this.world, this, "BorderR", new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
-		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
-		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
 		
 		this.addSensor(this.encL);
@@ -156,7 +185,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		this.addSensor(this.lightL);
 		this.addSensor(this.lightR);
 		
-		this.addSensor(new SimpleSensor<Integer>("MouseX", new Point3d(), new Vector3d()) {
+		this.addSensor(new SimpleSensor<Integer>("MouseX", new Point3d(), new Vector3d()) { //$NON-NLS-1$
 
 			@Override
 			public Integer updateValue() {
@@ -167,13 +196,13 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			@Override
 			public String getType() {
 				
-				return "Maus-Sensor";
+				return "Maus-Sensor"; //$NON-NLS-1$
 			}
 
 			@Override
 			public String getDescription() {
 				
-				return "Maus-Sensor-Wert X";
+				return "Maus-Sensor-Wert X"; //$NON-NLS-1$
 			}
 
 			@Override
@@ -183,7 +212,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			}
 		});
 		
-		this.addSensor(new SimpleSensor<Integer>("MouseY", new Point3d(), new Vector3d()) {
+		this.addSensor(new SimpleSensor<Integer>("MouseY", new Point3d(), new Vector3d()) { //$NON-NLS-1$
 
 			@Override
 			public Integer updateValue() {
@@ -194,13 +223,13 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			@Override
 			public String getType() {
 				
-				return "Maus-Sensor";
+				return "Maus-Sensor"; //$NON-NLS-1$
 			}
 
 			@Override
 			public String getDescription() {
 				
-				return "Maus-Sensor-Wert Y";
+				return "Maus-Sensor-Wert Y"; //$NON-NLS-1$
 			}
 
 			@Override
@@ -218,7 +247,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			
 			final Integer idx = new Integer(i);
 			
-			this.addActuator(new Indicator("LED "+i, new Point3d(), new Vector3d(), cols[i], colsAct[i]) {
+			this.addActuator(new Indicator("LED "+i, new Point3d(), new Vector3d(), cols[i], colsAct[i]) { //$NON-NLS-1$
 				
 				@Override
 				public void setValue(Boolean value) {
@@ -234,11 +263,11 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			});
 		}
 		
-		this.govL = new Governor("GovL", new Point3d(), new Vector3d(0d, 1d, 0d));
-		this.govR = new Governor("GovR", new Point3d(), new Vector3d(0d, 1d, 0d));
+		this.govL = new Governor("GovL", new Point3d(), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.govR = new Governor("GovR", new Point3d(), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
-		this.disp = new Display("Display", new Point3d(), new Vector3d());
-		this.log  = new LogScreen("LogScreen", new Point3d(), new Vector3d());
+		this.disp = new Display("Display", new Point3d(), new Vector3d()); //$NON-NLS-1$
+		this.log  = new LogScreen("LogScreen", new Point3d(), new Vector3d()); //$NON-NLS-1$
 		
 		this.addActuator(this.govL);
 		this.addActuator(this.govR);
@@ -554,6 +583,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 * @param command
 	 *            Das Kommando
 	 */
+	@SuppressWarnings({"unchecked","boxing"})
 	public void evaluate_command(Command command) {
 		Command answer = new Command();
 		

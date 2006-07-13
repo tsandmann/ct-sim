@@ -34,6 +34,11 @@ import javax.swing.JTabbedPane;
  */
 public final class ControlBar extends JPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private final Dimension PREF_SIZE = new Dimension(180, 600);
 	
 	private List<BotInfo> botList;

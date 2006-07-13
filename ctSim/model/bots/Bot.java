@@ -20,29 +20,15 @@
 package ctSim.model.bots;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.media.j3d.Appearance;
-import javax.media.j3d.Shape3D;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
-import javax.media.j3d.ViewPlatform;
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 
-import ctSim.ErrorHandler;
-import ctSim.controller.Controller;
 import ctSim.model.AliveObstacle;
 import ctSim.model.bots.components.Actuator;
-import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotPosition;
 import ctSim.model.bots.components.Sensor;
-import ctSim.model.bots.components.sensors.SimpleSensor;
-import ctSim.SimUtils;
 
 /**
  * Superklasse fuer alle Bots, unabhaengig davon, ob sie real oder simuliert
@@ -83,13 +69,12 @@ public abstract class Bot extends AliveObstacle{
 	/** Konstanten fuer die Noderefernces */
 //	public static final String BOTBODY = "botBody";
 	
-	/** Konstanten fuer die ViewingPlatform */
 //	public static final String VP = "VP";
 	
-	/**
-	 * Initialisierung des Bots
-	 * @param controller Verweis auf den zugehoerigen Controller
-	 */
+//	/**
+//	 * Initialisierung des Bots
+//	 * @param controller Verweis auf den zugehoerigen Controller
+//	 */
 //	public Bot(Controller controller) {
 //		super(controller);
 //	 	
@@ -99,6 +84,11 @@ public abstract class Bot extends AliveObstacle{
 //		this.acts = new ArrayList<Actuator>();
 //		this.sens = new ArrayList<Sensor>();
 //	}
+
+	/** Konstanten fuer die ViewingPlatform 
+	 * @param position Position  
+	 * @param heading Blickrichtung
+	 */
 	public Bot(Point3d position, Vector3d heading) {
 	 	
 		super(position, heading);
@@ -240,16 +230,25 @@ public abstract class Bot extends AliveObstacle{
 //
 //	}
 	
+	/**
+	 * @return Die Liste der Aktuatoren
+	 */
 	public final List<Actuator> getActuators() {
 		
 		return this.acts;
 	}
 	
+	/**
+	 * @return Die Liste der Sensoren
+	 */
 	public final List<Sensor> getSensors() {
 		
 		return this.sens;
 	}
 	
+	/**
+	 * @return Der Positionsanzeiger
+	 */
 	public final BotPosition getBotPosition() {
 		
 		return this.posHead;
@@ -276,14 +275,16 @@ public abstract class Bot extends AliveObstacle{
 		this.acts.add(act);
 	}
 	
-	protected final void addSensor(Sensor sens) {
+	protected final void addSensor(Sensor sen) {
 		
 		// TODO: rueber in Sensor selbst?
-		this.sens.add(sens);
+		this.sens.add(sen);
 		
-		this.addBranchComponent(sens.getRelTransform(), sens.getShape());
+		this.addBranchComponent(sen.getRelTransform(), sen.getShape());
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
 	protected void work() {
 		
 		for(Sensor s : this.getSensors()) {

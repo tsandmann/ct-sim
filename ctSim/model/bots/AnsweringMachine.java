@@ -44,13 +44,13 @@ public class AnsweringMachine extends Thread {
 
 	/**
 	 * Erzeugt einen neuen Anrufbeantworter
-	 * @param bot Der zugehoerige Bot
-	 * @param con Die Verbindung
+	 * @param b Der zugehoerige Bot
+	 * @param c Die Verbindung
 	 */
-	public AnsweringMachine(TcpBot bot, Connection con) {
+	public AnsweringMachine(TcpBot b, Connection c) {
 		super();
-		this.bot = bot;
-		this.con = con;
+		this.bot = b;
+		this.con = c;
 	}
 
 	/**
@@ -69,6 +69,7 @@ public class AnsweringMachine extends Thread {
 	 * 
 	 * @see java.lang.Thread#run()
 	 */
+	@Override
 	public void run() {
 		super.run();
 		Command command = new Command();
@@ -80,9 +81,9 @@ public class AnsweringMachine extends Thread {
 				if (valid == 0) {// Kommando ist in Ordnung
 					bot.evaluate_command(command);
 				} else
-					System.out.println("Invalid Command");
+					System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
 			} catch (IOException ex) {
-				ErrorHandler.error("Connection broken - Bot dies: " + ex);
+				ErrorHandler.error("Verbindung unterbrochen -- Bot stirbt: " + ex); //$NON-NLS-1$
 				die();
 			}
 		}

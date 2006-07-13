@@ -58,12 +58,21 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	// TODO:
 	private Actuator governor;
 	
-	public EncoderSensor(World world, Bot bot, String name, Point3d relPos, Vector3d relHead, /* TODO */ Actuator gov) {
+	/**
+	 * Der Konstruktor
+	 * @param w Die Welt 
+	 * @param bot Der Bot
+	 * @param name Name 
+	 * @param relPos relative Position 
+	 * @param relHead relative Blickrichtung
+	 * @param gov Aktuator
+	 */
+	public EncoderSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHead, /* TODO */ Actuator gov) {
 		
 		super(name, relPos, relHead);
 		
 		// TODO:
-		this.world = world;
+		this.world = w;
 		this.bot   = bot;
 		
 		this.governor = gov;

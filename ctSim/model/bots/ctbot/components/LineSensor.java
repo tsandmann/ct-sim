@@ -1,6 +1,8 @@
 package ctSim.model.bots.ctbot.components;
 
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.GeometryArray;
+import javax.media.j3d.Group;
 import javax.media.j3d.QuadArray;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.TriangleStripArray;
@@ -28,12 +30,12 @@ public class LineSensor extends SimpleSensor<Short> {
 	
 	private Shape3D shape;
 	
-	public LineSensor(World world, Bot bot, String name, Point3d relPos, Vector3d relHead) {
+	public LineSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHead) {
 		
 		super(name, relPos, relHead);
 		
 		// TODO:
-		this.world = world;
+		this.world = w;
 		this.bot   = bot;
 		
 		initShape();
@@ -141,12 +143,12 @@ public class LineSensor extends SimpleSensor<Short> {
 					-data[i * 3 + 2]);
 		}
 
-		tsa = new TriangleStripArray(2 * N, TriangleStripArray.COORDINATES,
+		tsa = new TriangleStripArray(2 * N, GeometryArray.COORDINATES,
 				stripCountTsa);
 		tsa.setCoordinates(0, coords);
 
 		tsa.setCapability(BranchGroup.ALLOW_DETACH);
-		tsa.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		tsa.setCapability(Group.ALLOW_CHILDREN_WRITE);
 
 		
 		// Hinzufuegen der aeusseren Seitenverkleidung zur Bot-Shape3D
@@ -191,18 +193,18 @@ public class LineSensor extends SimpleSensor<Short> {
 		quadCoords[11] = new Point3f(data[n * 3], data[n * 3 + 1],
 				data[n * 3 + 2]);
 
-		qa = new QuadArray(3 * 4, QuadArray.COORDINATES);
+		qa = new QuadArray(3 * 4, GeometryArray.COORDINATES);
 		qa.setCoordinates(0, quadCoords);
 
 		qa.setCapability(BranchGroup.ALLOW_DETACH);
-		qa.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		qa.setCapability(Group.ALLOW_CHILDREN_WRITE);
 
 		
 		// Hinzufuegen der Fachwaende zur Bot-Shape3D 
 		this.shape.addGeometry(qa);
 
 		this.shape.setCapability(BranchGroup.ALLOW_DETACH);
-		this.shape.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		this.shape.setCapability(Group.ALLOW_CHILDREN_WRITE);
 	}
 	
 	@Override

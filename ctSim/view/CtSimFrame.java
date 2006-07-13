@@ -66,6 +66,10 @@ import ctSim.model.bots.Bot;
  */
 public class CtSimFrame extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//////////////////////////////////////////////////////////////////////
 	// Icons:
 	private MediaTracker tracker;
@@ -287,6 +291,11 @@ public class CtSimFrame extends JFrame {
 		this.openWorld = new AbstractAction("Oeffnen...",
 				new ImageIcon(this.openImg)) {
 
+			/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
@@ -297,6 +306,11 @@ public class CtSimFrame extends JFrame {
 		};
 		this.randomWorld = new AbstractAction("Generieren...",
 				new ImageIcon(this.randomImg)) {
+
+			/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
 
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -309,6 +323,11 @@ public class CtSimFrame extends JFrame {
 		this.closeWorld = new AbstractAction("Schliessen",
 				new ImageIcon(this.closeImg)) {
 
+			/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
@@ -319,6 +338,11 @@ public class CtSimFrame extends JFrame {
 		};
 		this.saveWorld = new AbstractAction("Speichern als...",
 				new ImageIcon(this.saveImg)) {
+
+			/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
 
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -333,6 +357,11 @@ public class CtSimFrame extends JFrame {
 		// Bot-Actions
 		this.selectJudge = new AbstractAction("Schiedsrichter waehlen...") {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
@@ -343,6 +372,11 @@ public class CtSimFrame extends JFrame {
 		};
 		this.addBot = new AbstractAction("Bot hinzufuegen...") {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
@@ -352,6 +386,11 @@ public class CtSimFrame extends JFrame {
 			}
 		};
 		this.configBots = new AbstractAction("Bots konfigurieren...") {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -367,6 +406,11 @@ public class CtSimFrame extends JFrame {
 		this.start = new AbstractAction("Start",
 				new ImageIcon(this.playImg)) {
 
+			/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
@@ -378,6 +422,11 @@ public class CtSimFrame extends JFrame {
 		this.stop = new AbstractAction("Stop",
 				new ImageIcon(this.stopImg)) {
 
+			/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
@@ -388,6 +437,11 @@ public class CtSimFrame extends JFrame {
 		};
 		this.pause = new AbstractAction("Pause",
 				new ImageIcon(this.pauseImg)) {
+
+			/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
 
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)

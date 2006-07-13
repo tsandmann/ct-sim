@@ -36,6 +36,10 @@ import ctSim.model.bots.components.actuators.LogScreen;
  */
 public class LogScreenGUI extends ActuatorGroupGUI<LogScreen> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<JTextArea> lcds;
 	
 	/* (non-Javadoc)

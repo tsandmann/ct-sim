@@ -1,25 +1,44 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.model.bots.ctbot;
 
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.GeometryArray;
+import javax.media.j3d.Group;
 import javax.media.j3d.QuadArray;
 import javax.media.j3d.Shape3D;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
 import javax.media.j3d.TriangleStripArray;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
-
-import com.sun.j3d.utils.geometry.Cylinder;
 import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Stripifier;
 
 import ctSim.model.bots.Bot;
 
+/**
+ * Abstrakte Oberklasse fuer alle c't-Bots
+ *
+ */
 public abstract class CtBot extends Bot {
 	
 	/** Abstand vom Zentrum zur Aussenkante des Bots [m] */
@@ -39,6 +58,7 @@ public abstract class CtBot extends Bot {
 	
 	private String name;
 	
+	@SuppressWarnings("unused")
 	private Bounds bounds;
 	
 	private Shape3D shape;
@@ -48,11 +68,17 @@ public abstract class CtBot extends Bot {
 	 * -> Jedes (Alive)Obstacle braucht (initiale) Pos.
 	 * 
 	 */
-	public CtBot(String name, Point3d pos, Vector3d head) {
+	/**
+	 * Der Konstruktor
+	 * @param n Name
+	 * @param pos Position
+	 * @param head Blickrichtung
+	 */
+	public CtBot(String n, Point3d pos, Vector3d head) {
 		
 		super(pos, head);
 		
-		this.name = name;
+		this.name = n;
 		
 		initBounds();
 		initShape();
@@ -78,7 +104,6 @@ public abstract class CtBot extends Bot {
 	/**
 	 * Baut die 3D-Repraesentation des Bot-Koerpers aus 2D-Polygonen zusammen
 	 *  
-	 * @return Koerper des Bots 
 	 */
 	private void initShape() {
 
@@ -164,12 +189,12 @@ public abstract class CtBot extends Bot {
 					-data[i * 3 + 2]);
 		}
 
-		tsa = new TriangleStripArray(2 * N, TriangleStripArray.COORDINATES,
+		tsa = new TriangleStripArray(2 * N, GeometryArray.COORDINATES,
 				stripCountTsa);
 		tsa.setCoordinates(0, coords);
 
 		tsa.setCapability(BranchGroup.ALLOW_DETACH);
-		tsa.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		tsa.setCapability(Group.ALLOW_CHILDREN_WRITE);
 
 		
 		// Hinzufuegen der aeusseren Seitenverkleidung zur Bot-Shape3D
@@ -214,25 +239,32 @@ public abstract class CtBot extends Bot {
 		quadCoords[11] = new Point3f(data[n * 3], data[n * 3 + 1],
 				data[n * 3 + 2]);
 
-		qa = new QuadArray(3 * 4, QuadArray.COORDINATES);
+		qa = new QuadArray(3 * 4, GeometryArray.COORDINATES);
 		qa.setCoordinates(0, quadCoords);
 
 		qa.setCapability(BranchGroup.ALLOW_DETACH);
-		qa.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		qa.setCapability(Group.ALLOW_CHILDREN_WRITE);
 
 		
 		// Hinzufuegen der Fachwaende zur Bot-Shape3D 
 		this.shape.addGeometry(qa);
 
 		this.shape.setCapability(BranchGroup.ALLOW_DETACH);
-		this.shape.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		this.shape.setCapability(Group.ALLOW_CHILDREN_WRITE);
 	}
 	
+	/** (non-Javadoc)
+	 * @see ctSim.model.AliveObstacle#getName()
+	 */
+	@Override
 	public String getName() {
 		
 		return this.name;
 	}
 	
+	/** (non-Javadoc)
+	 * @see ctSim.model.Obstacle#getBounds()
+	 */
 	public Bounds getBounds() {
 		
 		//return this.bounds;

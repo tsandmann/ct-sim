@@ -67,19 +67,31 @@ public class ParcoursLoader {
 	/** Z-Koorndinate der Lampen */
 	public static final float LIGHTZ = 0.5f;
 	
+	/**
+	 * Linienbreite
+	 */
 	public static final float LINEWIDTH = 0.1f;
 	
+	/**
+	 * Horizontales Liniensegment
+	 */
 	public static final float[] LINE_HORIZ = 	{ -0.5f, 0f - LINEWIDTH/2,0f, 
 													   0.5f, 0f - LINEWIDTH/2,0f, 
 													   0.5f, 0f + LINEWIDTH/2,0f,
 													  -0.5f, 0f + LINEWIDTH/2,0f,
 													  -0.5f, 0f - LINEWIDTH/2,0f}; 
+	/**
+	 * Vertikales Liniensegment
+	 */
 	public static final float[] LINE_VERT =  	{ 0f - LINEWIDTH/2,-0.5f,0f,  // Start unten links 
 													  0f + LINEWIDTH/2,-0.5f,0f,  // kurze Linie nach rechts
 													  0f + LINEWIDTH/2, 0.5f,0f,  // Lange Linie hoch  
 													  0f - LINEWIDTH/2, 0.5f,0f,  // kurze Linie nach links   
 													  0f - LINEWIDTH/2,-0.5f,0f}; // lange Linie runter
 	
+	/**
+	 * Linie -- Suedostecke
+	 */
 	public static final float[] LINE_CORNER_SE = { 0f - LINEWIDTH/2,-0.5f               ,0f,  // Start unten links
 													  0f + LINEWIDTH/2,-0.5f               ,0f,  // kurze Linie nach rechts   
 													  0f + LINEWIDTH/2, 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie hoch 
@@ -87,6 +99,9 @@ public class ParcoursLoader {
 													  0.5f			  , 0.0f + LINEWIDTH/2 ,0f,  // kurze Linie hoch
 													  0f -LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,  // Lange Linie nach links
 													  0f - LINEWIDTH/2,-0.5f               ,0f};  // Lange Linie nach unten 
+	/**
+	 * Linie -- Suedwestecke
+	 */
 	public static final float[] LINE_CORNER_SW = { 0f - LINEWIDTH/2,-0.5f               ,0f,  // Start unten links
 													  0f + LINEWIDTH/2,-0.5f               ,0f,  // kurze Linie nach rechts   
 													  0f + LINEWIDTH/2, 0.0f + LINEWIDTH/2 ,0f,  // Lange Linie hoch 
@@ -94,6 +109,9 @@ public class ParcoursLoader {
 													 -0.5f			  , 0.0f - LINEWIDTH/2 ,0f,  // kurze Linie runter
 													  0f -LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie nach links
 													  0f - LINEWIDTH/2,-0.5f               ,0f};  // Lange Linie nach unten
+	/**
+	 * Linie -- Nordwestecke
+	 */
 	public static final float[] LINE_CORNER_NW ={ -0.5f			  , 0.0f + LINEWIDTH/2 ,0f,  // Start Links oben
 													 -0.5f			  , 0.0f - LINEWIDTH/2 ,0f,  // kurze Linie runter
 													  0f +LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie nach rechts
@@ -102,6 +120,9 @@ public class ParcoursLoader {
 													  0f -LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,  // lange Linie nach unten
 													 -0.5f			  , 0.0f + LINEWIDTH/2 ,0f};  // Lange Linie nach links	
 	
+	/**
+	 * Linie -- Nordostecke
+	 */
 	public static final float[] LINE_CORNER_NE = { 0f +LINEWIDTH/2 , 0.5f               ,0f,  // Start oben rechts
 												      0f -LINEWIDTH/2 , 0.5f               ,0f,  // kurze Linie nach links
 													  0f -LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,  // lange Linie nach unten
@@ -412,7 +433,7 @@ public class ParcoursLoader {
 			
 			//als erster suchen wir uns den Parcours-Block
 			Node n = doc.getDocumentElement().getFirstChild();
-			while ((n != null)&& (!n.getNodeName().equals("parcours")))
+			while ((n != null)&& (!n.getNodeName().equals("parcours"))) //$NON-NLS-1$
 				n=n.getNextSibling();
 			// jetzt haben wir ihn
 
@@ -426,7 +447,7 @@ public class ParcoursLoader {
 			//	Anzahl der Zeilen und spalten bestimmen
 	        for (int i=0; i<children.getLength(); i++){
 	        		Node child =children.item(i);
-	        		if (child.getNodeName().equals("line")){	        			
+	        		if (child.getNodeName().equals("line")){	        			 //$NON-NLS-1$
 	        			y++;
 	        			if (x < child.getChildNodes().item(0).getNodeValue().length())
 	        				x = child.getChildNodes().item(0).getNodeValue().length();
@@ -444,7 +465,7 @@ public class ParcoursLoader {
 			//	ParcoursMap aufbauen
 	        for (int i=children.getLength()-1; i>=0; i--){
 	        		Node child =children.item(i);
-	        		if (child.getNodeName().equals("line")){	        			
+	        		if (child.getNodeName().equals("line")){	        			 //$NON-NLS-1$
 	        			char c[] = child.getChildNodes().item(0).getNodeValue().toCharArray();
 	        			for (x=0; x<c.length; x++)
 	        				parcoursMap[x][y]= c[x];
@@ -456,7 +477,7 @@ public class ParcoursLoader {
 	        
 			//suchen wir uns den Otptics-Block
 			n = doc.getDocumentElement().getFirstChild();
-			while ((n != null)&& (!n.getNodeName().equals("optics")))
+			while ((n != null)&& (!n.getNodeName().equals("optics"))) //$NON-NLS-1$
 				n=n.getNextSibling();
 			// jetzt haben wir ihn
 
@@ -466,9 +487,9 @@ public class ParcoursLoader {
 			//	HashMap mit den Apearances aufbauen
 	        for (int i=0; i<children.getLength()-1; i++){
 	        		Node appearance =children.item(i);
-	        		if (appearance.getNodeName().equals("appearance")){
+	        		if (appearance.getNodeName().equals("appearance")){ //$NON-NLS-1$
 	        			// Zuerst den Type extrahieren
-	        			char item = appearance.getAttributes().getNamedItem("type").getNodeValue().toCharArray()[0];
+	        			char item = appearance.getAttributes().getNamedItem("type").getNodeValue().toCharArray()[0]; //$NON-NLS-1$
 	        			
 	        			String texture = null;
 	        			String clone = null;
@@ -477,11 +498,11 @@ public class ParcoursLoader {
 	        			
 	        			NodeList features = appearance.getChildNodes();
 	        			for (int j=0; j< features.getLength(); j++){
-	        				if (features.item(j).getNodeName().equals("texture"))
+	        				if (features.item(j).getNodeName().equals("texture")) //$NON-NLS-1$
 	        					texture= features.item(j).getChildNodes().item(0).getNodeValue();
-	        				if (features.item(j).getNodeName().equals("color"))
-	        					colors.put(features.item(j).getAttributes().getNamedItem("type").getNodeValue(),features.item(j).getChildNodes().item(0).getNodeValue());
-	        				if (features.item(j).getNodeName().equals("clone"))
+	        				if (features.item(j).getNodeName().equals("color")) //$NON-NLS-1$
+	        					colors.put(features.item(j).getAttributes().getNamedItem("type").getNodeValue(),features.item(j).getChildNodes().item(0).getNodeValue()); //$NON-NLS-1$
+	        				if (features.item(j).getNodeName().equals("clone")) //$NON-NLS-1$
 	        					clone= features.item(j).getChildNodes().item(0).getNodeValue();
 	        			}
 	        				   
@@ -494,11 +515,11 @@ public class ParcoursLoader {
 			parse();		// Parcours Zusammenbauen
 			
 		} catch (SAXException e) {
-			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+filename+" : "+e);
+			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+filename+" : "+e); //$NON-NLS-1$ //$NON-NLS-2$
 			//e.printStackTrace();
 			throw e;
 		} catch (IOException e) {
-			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+filename+" : "+e);
+			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+filename+" : "+e); //$NON-NLS-1$ //$NON-NLS-2$
 			//e.printStackTrace();
 			throw e;
 		}
@@ -506,13 +527,14 @@ public class ParcoursLoader {
 	
 	/**
 	 * Liefert eine Appearance aus der Liste zurueck
-	 * @param key Der Schluessel mit dem sie abgelegt wurde
-	 * @return 
+	 * @param key Der Schluessel, mit dem sie abgelegt wurde
+	 * @return Die Appearance
 	 */
+	@SuppressWarnings("boxing")
 	private Appearance getAppearance(int key) {
 		Appearance app= (Appearance)appearances.get((char)key);
 		if (app == null)
-			ErrorHandler.error("Appearance fuer '"+(char)key+"' nicht gefunden!");
+			ErrorHandler.error("Appearance fuer '"+(char)key+"' nicht gefunden!"); //$NON-NLS-1$ //$NON-NLS-2$
 		return app;
 	}
 	
@@ -523,7 +545,7 @@ public class ParcoursLoader {
 	 * @param textureFile Der Name des Texture-Files
 	 * @param clone Referenz auf einen schon bestehenden Eintrag, der geclonet werden soll
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked","boxing"})
 	private void addAppearance(char item, HashMap colors, String textureFile, String clone){
 
 		if (clone != null){
@@ -541,13 +563,13 @@ public class ParcoursLoader {
 				String colorType = (String)it.next();
 				String colorName = (String)colors.get(colorType);
 
-				if (colorType.equals("ambient"))
+				if (colorType.equals("ambient")) //$NON-NLS-1$
 					mat.setAmbientColor(new Color3f(Color.decode(colorName)));
-				if (colorType.equals("diffuse"))
+				if (colorType.equals("diffuse")) //$NON-NLS-1$
 					mat.setDiffuseColor(new Color3f(Color.decode(colorName)));
-				if (colorType.equals("specular"))
+				if (colorType.equals("specular")) //$NON-NLS-1$
 					mat.setSpecularColor(new Color3f(Color.decode(colorName)));
-				if (colorType.equals("emmissive"))
+				if (colorType.equals("emmissive")) //$NON-NLS-1$
 					mat.setEmissiveColor(new Color3f(Color.decode(colorName)));
 			}
 			appearance.setMaterial(mat);
@@ -580,7 +602,7 @@ public class ParcoursLoader {
 				appearance.setCapability(Appearance.ALLOW_TEXTURE_READ);
 				
 			} catch (Exception ex) {
-				ErrorHandler.error("Probleme beim Laden der Textur: "+textureFile+" :"+ex);
+				ErrorHandler.error("Probleme beim Laden der Textur: "+textureFile+" :"+ex);  //$NON-NLS-1$//$NON-NLS-2$
 			}
 			
 		}
@@ -592,36 +614,36 @@ public class ParcoursLoader {
 		    int type = node.getNodeType();
 		    switch (type) {
 		      case Node.ELEMENT_NODE:
-		        out.print("<" + node.getNodeName());
+		        out.print("<" + node.getNodeName()); //$NON-NLS-1$
 		        NamedNodeMap attrs = node.getAttributes();
 		        int len = attrs.getLength();
 		        for (int i=0; i<len; i++) {
 		            Attr attr = (Attr)attrs.item(i);
-		            out.print(" " + attr.getNodeName() + "=\"" +
-		                      attr.getNodeValue() + "\"");
+		            out.print(" " + attr.getNodeName() + "=\"" +  //$NON-NLS-1$//$NON-NLS-2$
+		                      attr.getNodeValue() + "\""); //$NON-NLS-1$
 		        }
 		        out.print('>');
 		        NodeList children = node.getChildNodes();
 		        len = children.getLength();
 		        for (int i=0; i<len; i++)
 		          print(children.item(i), out);
-		        out.print("</" + node.getNodeName() + ">");
+		        out.print("</" + node.getNodeName() + ">");  //$NON-NLS-1$//$NON-NLS-2$
 		        break;
 		      case Node.ENTITY_REFERENCE_NODE:
-		        out.print("&" + node.getNodeName() + ";");
+		        out.print("&" + node.getNodeName() + ";");  //$NON-NLS-1$//$NON-NLS-2$
 		        break;
 		      case Node.CDATA_SECTION_NODE:
-		        out.print("<![CDATA[" + node.getNodeValue() + "]]>");
+		        out.print("<![CDATA[" + node.getNodeValue() + "]]>"); //$NON-NLS-1$ //$NON-NLS-2$
 		        break;
 		      case Node.TEXT_NODE:
 		        out.print(node.getNodeValue());
 		        break;
 		      case Node.PROCESSING_INSTRUCTION_NODE:
-		        out.print("<?" + node.getNodeName());
+		        out.print("<?" + node.getNodeName()); //$NON-NLS-1$
 		        String data = node.getNodeValue();
 		        if (data!=null && data.length()>0)
-		           out.print(" " + data);
-		        out.println("?>");
+		           out.print(" " + data); //$NON-NLS-1$
+		        out.println("?>"); //$NON-NLS-1$
 		        break;
 		    }
 		  }

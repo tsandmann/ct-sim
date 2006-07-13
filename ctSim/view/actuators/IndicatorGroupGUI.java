@@ -38,6 +38,10 @@ import ctSim.model.bots.components.actuators.Indicator;
  */
 public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<JPanel> leds;
 	
 	/* (non-Javadoc)

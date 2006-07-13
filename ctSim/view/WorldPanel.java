@@ -41,6 +41,10 @@ import ctSim.model.bots.Bot;
  */
 public class WorldPanel extends JPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private WorldView view;
 	private World world;
 	
@@ -61,11 +65,11 @@ public class WorldPanel extends JPanel {
 	}
 	
 	/**
-	 * @param world Die Welt, auf die eine Referenz gesetzt werden soll
+	 * @param w Die Welt, auf die eine Referenz gesetzt werden soll
 	 */
-	protected void setWorld(World world) {
+	protected void setWorld(World w) {
 		
-		this.world = world;
+		this.world = w;
 		
 		this.view.init();
 		

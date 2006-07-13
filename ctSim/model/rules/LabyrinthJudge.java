@@ -21,14 +21,22 @@ public class LabyrinthJudge extends Judge {
 	private int participants = 2;
 	
 	
-	public LabyrinthJudge(Controller ctrl, World world) {
+	/**
+	 * Der Konstruktor
+	 * @param ctrl Der Controller
+	 * @param w Die Welt
+	 */
+	public LabyrinthJudge(Controller ctrl, World w) {
 		
-		super(ctrl, world);
+		super(ctrl, w);
 		
 		this.controller = ctrl;
-		this.world = world;
+		this.world = w;
 	}
 	
+	/** (non-Javadoc)
+	 * @see ctSim.model.rules.Judge#isAddAllowed()
+	 */
 	@Override
 	public boolean isAddAllowed() {
 		

@@ -36,6 +36,10 @@ import ctSim.view.sensors.SensorGroupGUI;
  */
 public class DefBotPanel extends BotPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<ComponentGroupGUI> compList;
 	
 	/**
@@ -55,6 +59,7 @@ public class DefBotPanel extends BotPanel {
 	 * @see ctSim.view.BotPanel#initGUI()
 	 * 	@SuppressWarnings("unchecked")
 	 */
+	@SuppressWarnings("unchecked")
 	protected void initGUI() {
 		
 //		List<PositionGroupGUI> posList = new ArrayList<PositionGroupGUI>();		

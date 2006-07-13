@@ -61,13 +61,15 @@ public abstract class Judge {
 	
 	/**
 	 * Erzeuge neuen Judge
+	 * @param ctrl Der Controller
+	 * @param w Die Welt
 	 */
-	public Judge(Controller ctrl, World world) {
+	public Judge(Controller ctrl, World w) {
 		super();
 		
 		this.controller = ctrl;
-		this.world = world;
-		this.startTime = world.getSimulTime();
+		this.world = w;
+		this.startTime = w.getSimulTime();
 		this.time = this.startTime;
 //		panel = new JudgePanel(this);
 //		setName(this.getClass().getName());

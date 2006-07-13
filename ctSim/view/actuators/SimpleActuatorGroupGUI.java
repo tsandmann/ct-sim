@@ -39,6 +39,11 @@ import ctSim.model.bots.components.actuators.SimpleActuator;
  */
 public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGroupGUI<E> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private Vector<String> columns = new Vector<String>();
 	
 	private TableModel tabData;
@@ -57,6 +62,11 @@ public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGr
 		
 		this.tabData = new DefaultTableModel(columns, this.getAllActuators().size()) {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public boolean isCellEditable(int row, int col) {
 				
 				if(col == 0)

@@ -23,6 +23,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 
 /**
  * Eine Textkonsole in der c't-Sim-GUI
@@ -32,6 +33,10 @@ import javax.swing.JTextArea;
  */
 public class Console extends Box implements DebugWindow {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextArea console;
 	
 	/**
@@ -45,7 +50,7 @@ public class Console extends Box implements DebugWindow {
 		this.console.setEditable(false);
 		this.console.setBorder(BorderFactory.createEtchedBorder());
 		
-		JScrollPane scroll = new JScrollPane(this.console, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scroll = new JScrollPane(this.console, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		//this.console.setBorder(BorderFactory.create)
 		
 		this.add(scroll);

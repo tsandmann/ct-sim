@@ -61,14 +61,14 @@ public class Characteristic {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Characteristic charac = new Characteristic(new File("..\\ct-Sim_V2\\characteristics\\gp2d12Left.txt"), 999f);
-		System.out.println("Performante Werte");
+		Characteristic charac = new Characteristic(new File("..\\ct-Sim_V2\\characteristics\\gp2d12Left.txt"), 999f); //$NON-NLS-1$
+		System.out.println("Performante Werte"); //$NON-NLS-1$
 		for (float f = -2f; f < 100; f = f + 0.25f) {
-			System.out.println(f + "\t" + charac.lookup(f));
+			System.out.println(f + "\t" + charac.lookup(f)); //$NON-NLS-1$
 		}
-		System.out.println("Praezise Werte");
+		System.out.println("Praezise Werte"); //$NON-NLS-1$
 		for (float f = -2f; f < 100; f = f + 0.25f) {
-			System.out.println(f + "\t" + charac.lookupPrecise(f));
+			System.out.println(f + "\t" + charac.lookupPrecise(f)); //$NON-NLS-1$
 		}
 
 	}
@@ -94,9 +94,9 @@ public class Characteristic {
 		try {
 			c = readFile(file);
 		} catch (FileNotFoundException e1) {
-			System.err.println("Kennlinien-Datei nicht gefunden");
+			System.err.println("Kennlinien-Datei nicht gefunden"); //$NON-NLS-1$
 		} catch (IOException e1) {
-			System.err.println("I/O-Fehler");
+			System.err.println("I/O-Fehler"); //$NON-NLS-1$
 		}			 
 		
 		Number[] charac = csv2array(c); 
@@ -234,10 +234,11 @@ public class Characteristic {
 	/**
 	 * Schreibt die Lookup-Tables zum Debuggen auf die Konsole
 	 */
+	@SuppressWarnings("unused")
 	private void printLookup() {
-		System.out.println("Lookup-Table");
+		System.out.println("Lookup-Table"); //$NON-NLS-1$
 		for (int i = 0; i < lookup.length; i++) {
-			System.out.println("Zeile\t" + i + "\t" + lookup[i]+ "\t" + intLookup[i]);
+			System.out.println("Zeile\t" + i + "\t" + lookup[i]+ "\t" + intLookup[i]);   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 		}
 	}
 
@@ -249,7 +250,7 @@ public class Characteristic {
 	 */
 	private static Number[] csv2array(String input) {
 
-		StringTokenizer st = new StringTokenizer(input, ";");
+		StringTokenizer st = new StringTokenizer(input, ";"); //$NON-NLS-1$
 		Vector<Number> num = new Vector<Number>();
 		Number curr;
 		while (st.hasMoreTokens()) {

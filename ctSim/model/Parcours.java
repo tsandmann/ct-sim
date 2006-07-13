@@ -93,8 +93,8 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert die Parcursbreite zurück in Gittereinheiten
-	 * @return
+	 *  
+	 * @return Liefert die Parcursbreite in Gittereinheiten zurueck
 	 */
 	public int getDimX() {
 		return dimX;

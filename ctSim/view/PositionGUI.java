@@ -64,6 +64,11 @@ import ctSim.model.bots.components.BotPosition;
  */
 public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private BotPosition position;
 	
 	private Vector<String> columns = new Vector<String>();
@@ -111,6 +116,11 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		// Tabellendarstellung ohne JSpinner:
 		this.tabData = new DefaultTableModel(columns, 4) {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public boolean isCellEditable(int row, int col) {
 				
 				if(col == 0)
@@ -178,7 +188,12 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
  		tab.getColumnModel().getColumn(1).setCellEditor(new SpinnerCellEditor());
  		tab.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
  			
- 			public void setValue(Object value) {
+ 			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public void setValue(Object value) {
  		        
  		        setText((value == null) ? "" : String.format("%.2f", value));
  		    }
@@ -211,6 +226,10 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	
 	private class SpinnerCellEditor extends AbstractCellEditor implements TableCellEditor {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private JSpinner spinner;
 		private SpinnerNumberModel model;
 		
