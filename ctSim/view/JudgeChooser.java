@@ -32,7 +32,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 
-import ctSim.model.rules.Judge;
 
 /**
  * Auswahldialog fuer die Schiedsrichter-Instanz
@@ -68,11 +67,11 @@ public class JudgeChooser extends JDialog implements ActionListener {
 		
 		this.setLayout(new BorderLayout());
 		
-		buttons = new Box(BoxLayout.PAGE_AXIS);
+		this.buttons = new Box(BoxLayout.PAGE_AXIS);
 		
-		buttons.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
+		this.buttons.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
 		
-		buttons.add(new JLabel("Waehlen Sie einen Schiedsrichter:"));
+		this.buttons.add(new JLabel("Waehlen Sie einen Schiedsrichter:"));
 		
 		initRadioButtons();
 		
@@ -83,8 +82,8 @@ public class JudgeChooser extends JDialog implements ActionListener {
 		this.ok = new JButton("Ok");
 		this.ok.addActionListener(this);
 		
-		this.add(buttons, BorderLayout.CENTER);
-		this.add(ok, BorderLayout.SOUTH);
+		this.add(this.buttons, BorderLayout.CENTER);
+		this.add(this.ok, BorderLayout.SOUTH);
 		
 		this.setLocationRelativeTo(own);
 		
@@ -121,6 +120,9 @@ public class JudgeChooser extends JDialog implements ActionListener {
 		return this.judge;
 	}
 	
+	/** (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getSource() == this.ok) {

@@ -33,7 +33,7 @@ public class Actuators {
 	 * @param a Der Aktuator
 	 * @return Die GUI fuer den Aktuator
 	 */
-	public static ActuatorGroupGUI getGuiFor(SimpleActuator a) {
+	public static ActuatorGroupGUI getGuiFor(@SuppressWarnings("unused") SimpleActuator a) {
 		
 		//System.out.println("Simple");
 		return new SimpleActuatorGroupGUI();
@@ -44,7 +44,7 @@ public class Actuators {
 	 * @param a Der Indikator
 	 * @return Die GUI fuer den Indikator
 	 */
-	public static ActuatorGroupGUI getGuiFor(Indicator a) {
+	public static ActuatorGroupGUI getGuiFor(@SuppressWarnings("unused") Indicator a) {
 		return new IndicatorGroupGUI();
 	}
 	
@@ -58,7 +58,7 @@ public class Actuators {
 	 * @param a Der LogScreen
 	 * @return Die GUI fuer den LogScreen
 	 */
-	public static ActuatorGroupGUI getGuiFor(LogScreen a) {
+	public static ActuatorGroupGUI getGuiFor(@SuppressWarnings("unused") LogScreen a) {
 		
 		return new LogScreenGUI();
 	}

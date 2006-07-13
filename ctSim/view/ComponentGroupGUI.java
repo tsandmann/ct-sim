@@ -67,9 +67,10 @@ public abstract class ComponentGroupGUI<E extends BotComponent> extends Box {
 //		this.components.addAll(compGUI.getAllComponents());
 //	}
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object o) {
 		
 		return (this.getClass().equals(o.getClass()));

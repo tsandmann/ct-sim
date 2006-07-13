@@ -36,34 +36,39 @@ public class JD2XXInputStream extends InputStream {
 	public JD2XX jd2xx = null;
 
 	public JD2XXInputStream() {
+	// TODO
 	}
 
 	public JD2XXInputStream(JD2XX j) {
-		jd2xx = j;
+		this.jd2xx = j;
 	}
 
 	public JD2XXInputStream(int dn) throws IOException {
-		jd2xx = new JD2XX(dn);
+		this.jd2xx = new JD2XX(dn);
 	}
 
 	public JD2XXInputStream(String dn, int f) throws IOException {
-		jd2xx = new JD2XX(dn, f);
+		this.jd2xx = new JD2XX(dn, f);
 	}
 
 	public JD2XXInputStream(int n, int f) throws IOException {
-		jd2xx = new JD2XX(n, f);
+		this.jd2xx = new JD2XX(n, f);
 	}
 
-	public void close() throws IOException {
+	/** (non-Javadoc)
+	 * @see java.io.Closeable#close()
+	 */
+	@Override
+	public void close(){
 		// jd2xx.close();
-		jd2xx = null;
+		this.jd2xx = null;
 	}
 
 	public int read() throws IOException {
-		return jd2xx.read();
+		return this.jd2xx.read();
 	}
 
 	public int read(byte[] b) throws IOException {
-		return jd2xx.read(b);
+		return this.jd2xx.read(b);
 	}
 }

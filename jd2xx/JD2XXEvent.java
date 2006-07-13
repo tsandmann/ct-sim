@@ -44,10 +44,10 @@ public class JD2XXEvent extends java.util.EventObject {
 
 	public JD2XXEvent(JD2XX jd2xx, int et) {
 		super(jd2xx);
-		eventType = et;
+		this.eventType = et;
 	}
 
 	public int getEventType() {
-		return eventType;
+		return this.eventType;
 	}
 }

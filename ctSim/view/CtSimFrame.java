@@ -85,6 +85,7 @@ public class CtSimFrame extends JFrame {
 	//////////////////////////////////////////////////////////////////////
 	// Actions:
 	private Action openWorld, randomWorld, closeWorld, saveWorld;
+	@SuppressWarnings("unused")
 	private Action selectJudge, addBot, configBots;
 	private Action start, stop, pause;
 	
@@ -174,21 +175,21 @@ public class CtSimFrame extends JFrame {
 		Debug.registerDebugWindow(console);
 		
 		this.consoleSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		consoleSplit.setResizeWeight(1.0);
-		consoleSplit.setOneTouchExpandable(true);
-		consoleSplit.setTopComponent(this.worldPanel);
-		consoleSplit.setBottomComponent(console);
+		this.consoleSplit.setResizeWeight(1.0);
+		this.consoleSplit.setOneTouchExpandable(true);
+		this.consoleSplit.setTopComponent(this.worldPanel);
+		this.consoleSplit.setBottomComponent(console);
 		
 		//JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		split.setLeftComponent(this.controlBar);
+		this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		this.split.setLeftComponent(this.controlBar);
 		//split.setRightComponent(this.worldPanel);
-		split.setRightComponent(consoleSplit);
-		split.setDividerLocation(0);
+		this.split.setRightComponent(this.consoleSplit);
+		this.split.setDividerLocation(0);
 		//split.setContinuousLayout(true);
 		//split.setOneTouchExpandable(true);
 		
-		this.add(split, BorderLayout.CENTER);
+		this.add(this.split, BorderLayout.CENTER);
 		
 		//this.setPreferredSize(new Dimension(800, 650));
 		this.setPreferredSize(new Dimension(1000, 800));
@@ -204,15 +205,15 @@ public class CtSimFrame extends JFrame {
 		ClassLoader cl = ClassLoader.getSystemClassLoader();
 		Toolkit tk = Toolkit.getDefaultToolkit();
 
-		openImg    = tk.getImage(cl.getResource("images/Open16.gif"));
-		closeImg   = tk.getImage(cl.getResource("images/Delete16.gif"));
-		saveImg    = tk.getImage(cl.getResource("images/SaveAs16.gif"));
-		randomImg  = tk.getImage(cl.getResource("images/New16.gif"));
+		this.openImg    = tk.getImage(cl.getResource("images/Open16.gif"));
+		this.closeImg   = tk.getImage(cl.getResource("images/Delete16.gif"));
+		this.saveImg    = tk.getImage(cl.getResource("images/SaveAs16.gif"));
+		this.randomImg  = tk.getImage(cl.getResource("images/New16.gif"));
 		
 		//refreshImg = tk.getImage(cl.getResource("images/Refresh16.gif"));
-		stopImg    = tk.getImage(cl.getResource("images/Stop16.gif"));
-		pauseImg   = tk.getImage(cl.getResource("images/Pause16.gif"));
-		playImg    = tk.getImage(cl.getResource("images/Play16.gif"));
+		this.stopImg    = tk.getImage(cl.getResource("images/Stop16.gif"));
+		this.pauseImg   = tk.getImage(cl.getResource("images/Pause16.gif"));
+		this.playImg    = tk.getImage(cl.getResource("images/Play16.gif"));
 		
 		/*
 		zoomInImg  = tk.getImage(cl.getResource("images/ZoomIn16.gif"));
@@ -239,16 +240,16 @@ public class CtSimFrame extends JFrame {
 		pfadImg = tk.getImage(cl.getResource("pfad32.png"));
 		*/
 
-		tracker = new MediaTracker(this);
-		tracker.addImage(openImg, 0);
-		tracker.addImage(closeImg, 0);
-		tracker.addImage(randomImg, 0);
-		tracker.addImage(saveImg, 0);
+		this.tracker = new MediaTracker(this);
+		this.tracker.addImage(this.openImg, 0);
+		this.tracker.addImage(this.closeImg, 0);
+		this.tracker.addImage(this.randomImg, 0);
+		this.tracker.addImage(this.saveImg, 0);
 		
 		//tracker.addImage(refreshImg, 0);
-		tracker.addImage(stopImg, 0);
-		tracker.addImage(pauseImg, 0);
-		tracker.addImage(playImg, 0);
+		this.tracker.addImage(this.stopImg, 0);
+		this.tracker.addImage(this.pauseImg, 0);
+		this.tracker.addImage(this.playImg, 0);
 		/*
 		tracker.addImage(zoomInImg, 0);
 		tracker.addImage(zoomOutImg, 0);
@@ -277,7 +278,7 @@ public class CtSimFrame extends JFrame {
 	private void initActions() {
 		
 		try {
-			tracker.waitForAll();
+			this.tracker.waitForAll();
 		} catch (InterruptedException e) {
 			System.err.println("Interrupted!");
 		}
@@ -299,6 +300,7 @@ public class CtSimFrame extends JFrame {
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdOpenWorldClicked();
@@ -315,6 +317,7 @@ public class CtSimFrame extends JFrame {
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdRandomWorldClicked();
@@ -331,6 +334,7 @@ public class CtSimFrame extends JFrame {
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdCloseWorldClicked();
@@ -347,6 +351,7 @@ public class CtSimFrame extends JFrame {
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdSaveWorldClicked();
@@ -365,6 +370,7 @@ public class CtSimFrame extends JFrame {
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdSetJudgeClicked();
@@ -380,6 +386,7 @@ public class CtSimFrame extends JFrame {
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@SuppressWarnings({"synthetic-access","synthetic-access"})
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdAddBotClicked();
@@ -395,6 +402,7 @@ public class CtSimFrame extends JFrame {
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdConfigureBotsClicked();
@@ -414,6 +422,7 @@ public class CtSimFrame extends JFrame {
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdStartClicked();
@@ -430,6 +439,7 @@ public class CtSimFrame extends JFrame {
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdStopClicked();
@@ -446,6 +456,7 @@ public class CtSimFrame extends JFrame {
 			/* (non-Javadoc)
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				
 				cmdPauseClicked();
@@ -580,7 +591,7 @@ public class CtSimFrame extends JFrame {
 			
 			if(k == JFileChooser.APPROVE_OPTION) {
 				
-				file = worldChooser.getSelectedFile();
+				file = this.worldChooser.getSelectedFile();
 				
 				if(		! file.exists()
 					 && ! file.getName().endsWith(".xml")) {
@@ -631,11 +642,11 @@ public class CtSimFrame extends JFrame {
 		
 		String fileContent = parcGen.generateParc();
 		
-		this.tmpParcoursFile = new File("./"+TMP_PARCOURS_PATH+"/"+TMP_PARCOURS_FILE_NAME+".xml");
+		this.tmpParcoursFile = new File("./"+this.TMP_PARCOURS_PATH+"/"+this.TMP_PARCOURS_FILE_NAME+".xml");
 		
 		for(int i=1; this.tmpParcoursFile.exists(); i++) {
 			
-			this.tmpParcoursFile = new File("./"+TMP_PARCOURS_PATH+"/"+TMP_PARCOURS_FILE_NAME+i+".xml");
+			this.tmpParcoursFile = new File("./"+this.TMP_PARCOURS_PATH+"/"+this.TMP_PARCOURS_FILE_NAME+i+".xml");
 		}
 		
 		try {

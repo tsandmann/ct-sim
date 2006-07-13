@@ -18,9 +18,6 @@
  */
 package ctSim.view;
 
-import java.util.EventListener;
-import java.util.EventObject;
-import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
@@ -28,18 +25,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JSpinner;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.SpinnerNumberModel;
 
 import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -114,14 +103,14 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		
 		
 		// Tabellendarstellung ohne JSpinner:
-		this.tabData = new DefaultTableModel(columns, 4) {
+		this.tabData = new DefaultTableModel(this.columns, 4) {
 			
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public boolean isCellEditable(int row, int col) {
+			public boolean isCellEditable(@SuppressWarnings("unused") int row, int col) {
 				
 				if(col == 0)
 					return false;
@@ -136,11 +125,12 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		
 		this.tabData.addTableModelListener(new TableModelListener() {
 			
+			@SuppressWarnings("synthetic-access")
 			public void tableChanged(TableModelEvent e) {
 				
 				int column = e.getColumn();
 		        
-				if(column != 1 || noupdate)
+				if(column != 1 || PositionGUI.this.noupdate)
 		        	return;
 		        
 //				System.out.println("soweit so gut");
@@ -156,28 +146,28 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		        
 		        switch(row) {
 		        case 0:
-		        	position.setPos(
+		        	PositionGUI.this.position.setPos(
 		        			new Point3d(
 		        					val,
-		        					position.getRelPosition().y,
-		        					position.getRelPosition().z));
+		        					PositionGUI.this.position.getRelPosition().y,
+		        					PositionGUI.this.position.getRelPosition().z));
 		        	break;
 		        case 1:
-		        	position.setPos(
+		        	PositionGUI.this.position.setPos(
 		        			new Point3d(
-		        					position.getRelPosition().x,
+		        					PositionGUI.this.position.getRelPosition().x,
 		        					val,
-		        					position.getRelPosition().z));
+		        					PositionGUI.this.position.getRelPosition().z));
 		        	break;
 		        case 2:
-		        	position.setPos(
+		        	PositionGUI.this.position.setPos(
 		        			new Point3d(
-		        					position.getRelPosition().x,
-		        					position.getRelPosition().y,
+		        					PositionGUI.this.position.getRelPosition().x,
+		        					PositionGUI.this.position.getRelPosition().y,
 		        					val));
 		        	break;
 		        case 3:
-		        	position.setHead(SimUtils.doubleToVec3d((Double)model.getValueAt(row, column)));
+		        	PositionGUI.this.position.setHead(SimUtils.doubleToVec3d((Double)model.getValueAt(row, column)));
 		        	break;
 		        }
 			}
@@ -242,7 +232,7 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			this.spinner.setEditor(new JSpinner.NumberEditor(this.spinner, "0.00"));
 		}
 		
-		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+		public Component getTableCellEditorComponent(@SuppressWarnings("unused") JTable table, Object value, boolean isSelected, int row, int column) {
 			
 			if(row == 3) {
 				this.model.setMinimum(-180d);

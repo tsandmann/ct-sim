@@ -49,7 +49,7 @@ public class LEDataOutputStream implements DataOutput {
      */
     public final void close () throws IOException
         {
-        d.close();
+        this.d.close();
         }
 
     // DataOutputStream
@@ -59,7 +59,7 @@ public class LEDataOutputStream implements DataOutput {
      */
     public void flush () throws IOException
         {
-        d.flush();
+        this.d.flush();
         }
 
     /**
@@ -69,7 +69,7 @@ public class LEDataOutputStream implements DataOutput {
      */
     public final int size ()
         {
-        return d.size();
+        return this.d.size();
         }
 
     /**
@@ -78,7 +78,7 @@ public class LEDataOutputStream implements DataOutput {
      */
     public final void write ( byte b[] ) throws IOException
         {
-        d.write( b, 0, b.length );
+        this.d.write( b, 0, b.length );
         }
 
     /**
@@ -88,7 +88,7 @@ public class LEDataOutputStream implements DataOutput {
     public final synchronized void write ( byte b[], int off, int len )
         throws IOException
         {
-        d.write( b, off, len );
+        this.d.write( b, off, len );
         }
 
     /**
@@ -99,7 +99,7 @@ public class LEDataOutputStream implements DataOutput {
      */
     public final synchronized void write ( int b ) throws IOException
         {
-        d.write( b );
+        this.d.write( b );
         }
 
     /**
@@ -109,7 +109,7 @@ public class LEDataOutputStream implements DataOutput {
     /* Only writes one byte */
     public final void writeBoolean ( boolean v ) throws IOException
         {
-        d.writeBoolean( v );
+        this.d.writeBoolean( v );
         }
 
     // p u r e l y w r a p p e r m e t h o d s
@@ -121,7 +121,7 @@ public class LEDataOutputStream implements DataOutput {
      */
     public final void writeByte ( int v ) throws IOException
         {
-        d.writeByte( v );
+        this.d.writeByte( v );
         }
 
     /**
@@ -130,7 +130,7 @@ public class LEDataOutputStream implements DataOutput {
      */
     public final void writeBytes ( String s ) throws IOException
         {
-        d.writeBytes( s );
+        this.d.writeBytes( s );
         }
 
     /**
@@ -143,9 +143,9 @@ public class LEDataOutputStream implements DataOutput {
     public final void writeChar ( int v ) throws IOException
         {
         // same code as writeShort
-        w[ 0 ] = (byte)v;
-        w[ 1 ] = (byte) ( v >> 8 );
-        d.write( w, 0, 2 );
+        this.w[ 0 ] = (byte)v;
+        this.w[ 1 ] = (byte) ( v >> 8 );
+        this.d.write( this.w, 0, 2 );
         }
 
     /**
@@ -191,11 +191,11 @@ public class LEDataOutputStream implements DataOutput {
      */
     public final void writeInt ( int v ) throws IOException
         {
-        w[ 0 ] = (byte)v;
-        w[ 1 ] = (byte) ( v >> 8 );
-        w[ 2 ] = (byte) ( v >> 16 );
-        w[ 3 ] = (byte) ( v >> 24 );
-        d.write( w, 0, 4 );
+        this.w[ 0 ] = (byte)v;
+        this.w[ 1 ] = (byte) ( v >> 8 );
+        this.w[ 2 ] = (byte) ( v >> 16 );
+        this.w[ 3 ] = (byte) ( v >> 24 );
+        this.d.write( this.w, 0, 4 );
         }
 
     /**
@@ -207,15 +207,15 @@ public class LEDataOutputStream implements DataOutput {
      */
     public final void writeLong ( long v ) throws IOException
         {
-        w[ 0 ] = (byte)v;
-        w[ 1 ] = (byte) ( v >> 8 );
-        w[ 2 ] = (byte) ( v >> 16 );
-        w[ 3 ] = (byte) ( v >> 24 );
-        w[ 4 ] = (byte) ( v >> 32 );
-        w[ 5 ] = (byte) ( v >> 40 );
-        w[ 6 ] = (byte) ( v >> 48 );
-        w[ 7 ] = (byte) ( v >> 56 );
-        d.write( w, 0, 8 );
+        this.w[ 0 ] = (byte)v;
+        this.w[ 1 ] = (byte) ( v >> 8 );
+        this.w[ 2 ] = (byte) ( v >> 16 );
+        this.w[ 3 ] = (byte) ( v >> 24 );
+        this.w[ 4 ] = (byte) ( v >> 32 );
+        this.w[ 5 ] = (byte) ( v >> 40 );
+        this.w[ 6 ] = (byte) ( v >> 48 );
+        this.w[ 7 ] = (byte) ( v >> 56 );
+        this.d.write( this.w, 0, 8 );
         }
 
     /**
@@ -228,9 +228,9 @@ public class LEDataOutputStream implements DataOutput {
      */
     public final void writeShort ( int v ) throws IOException
         {
-        w[ 0 ] = (byte)v;
-        w[ 1 ] = (byte) ( v >> 8 );
-        d.write( w, 0, 2 );
+        this.w[ 0 ] = (byte)v;
+        this.w[ 1 ] = (byte) ( v >> 8 );
+        this.d.write( this.w, 0, 2 );
         }
 
     /**
@@ -239,7 +239,7 @@ public class LEDataOutputStream implements DataOutput {
      */
     public final void writeUTF ( String str ) throws IOException
         {
-        d.writeUTF( str );
+        this.d.writeUTF( str );
         }
 
     /**
@@ -251,7 +251,7 @@ public class LEDataOutputStream implements DataOutput {
     public LEDataOutputStream( OutputStream out )
         {
         this.d = new DataOutputStream( out );
-        w = new byte[ 8 ]; // work array for composing output
+        this.w = new byte[ 8 ]; // work array for composing output
         }
 
     /**

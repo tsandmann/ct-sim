@@ -101,8 +101,8 @@ public class CtBotSimTest extends CtBotSim {
 		
 		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
 		
-		double irl = (Double)irL.getValue();
-		double irr = (Double)irR.getValue();
+		double irl = (Double)this.irL.getValue();
+		double irr = (Double)this.irR.getValue();
 		
 		// Ansteuerung fuer die Motoren in Abhaengigkeit vom Input
 		// der IR-Abstandssensoren, welche die Entfernung in mm

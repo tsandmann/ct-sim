@@ -48,10 +48,11 @@ public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGr
 	
 	private TableModel tabData;
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see ctSim.view.ComponentGroupGUI#initGUI()
 	 * @Override
 	 */
+	@Override
 	public void initGUI() {
 		
 		this.setBorder(new TitledBorder(new EtchedBorder(), "Aktuatoren"));
@@ -60,14 +61,18 @@ public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGr
 		this.columns.add("Aktuator");
 		this.columns.add("Wert");
 		
-		this.tabData = new DefaultTableModel(columns, this.getAllActuators().size()) {
+		this.tabData = new DefaultTableModel(this.columns, this.getAllActuators().size()) {
 			
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public boolean isCellEditable(int row, int col) {
+			/** (non-Javadoc)
+			 * @see javax.swing.table.TableModel#isCellEditable(int, int)
+			 */
+			@Override
+			public boolean isCellEditable(@SuppressWarnings("unused") int row, int col) {
 				
 				if(col == 0)
 					return false;
@@ -89,10 +94,12 @@ public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGr
 		this.add(scroll);
 	}
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see ctSim.view.ComponentGroupGUI#updateGUI()	
 	 * @Override
 	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public void updateGUI() {
 		
 		//System.out.println("Simple: "+this.getAllActuators().size());
@@ -111,10 +118,11 @@ public class SimpleActuatorGroupGUI<E extends SimpleActuator> extends ActuatorGr
 		}
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see ctSim.view.ComponentGroupGUI#getSortId()	
 	 * @Override
 	 */
+	@Override
 	public int getSortId() {
 		return 20;
 	}

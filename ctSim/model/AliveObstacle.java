@@ -511,7 +511,7 @@ public abstract class AliveObstacle
 	 * @return Der Zustand des Objekts
 	 */
 	public int getObstState() {
-		return obstState;
+		return this.obstState;
 	}
 
 	/**

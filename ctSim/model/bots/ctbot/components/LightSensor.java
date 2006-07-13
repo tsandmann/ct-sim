@@ -242,11 +242,11 @@ public class LightSensor extends SimpleSensor<Integer> {
 		/** Abstand Zentrum Lichtsensoren in Hochrichtung (Z) [m] */
 		double SENS_LDR_DIST_Z = 0.060d - BOT_HEIGHT / 2;
 		
-		double angle = SimUtils.getRotation(this.bot.getHeading());
+		double ang = SimUtils.getRotation(this.bot.getHeading());
 		Transform3D rotation = new Transform3D();
-		rotation.rotZ(angle);
+		rotation.rotZ(ang);
 		Point3d ptLdr;
-		if (side == "LightL") {
+		if (side == "LightL") { //$NON-NLS-1$
 			ptLdr = new Point3d(-SENS_LDR_DIST_X, SENS_LDR_DIST_Y,
 					SENS_LDR_DIST_Z);
 		} else {

@@ -15,7 +15,7 @@ public class JD2xxConnection extends Connection {
 
 	private int list() throws IOException{
 		int count=0;
-		Object[] devs= jd.listDevicesByDescription();
+		Object[] devs= this.jd.listDevicesByDescription();
 		for (int i=0; i<devs.length; i++){
 			System.out.println(devs[i]);
 			count++;
@@ -35,16 +35,16 @@ public class JD2xxConnection extends Connection {
 				throw new IOException("No FT232 found - deinstalling Virtual comport might help"); //$NON-NLS-1$
 			}
 			
-			jd.open(0);
-			jd.setBaudRate(9600);
-			jd.setDataCharacteristics(  8, JD2XX.STOP_BITS_1, JD2XX.PARITY_NONE	);
-			jd.setFlowControl( JD2XX.FLOW_NONE, 0, 0);
-			jd.setTimeouts(60000, 60000);
+			this.jd.open(0);
+			this.jd.setBaudRate(9600);
+			this.jd.setDataCharacteristics(  8, JD2XX.STOP_BITS_1, JD2XX.PARITY_NONE	);
+			this.jd.setFlowControl( JD2XX.FLOW_NONE, 0, 0);
+			this.jd.setTimeouts(60000, 60000);
 		
-			setDis(new LEDataInputStream(new JD2XXInputStream(jd)));
-			setDos(new LEDataOutputStream( new JD2XXOutputStream(jd)));
+			setDis(new LEDataInputStream(new JD2XXInputStream(this.jd)));
+			setDos(new LEDataOutputStream( new JD2XXOutputStream(this.jd)));
 		} catch (IOException ex) {
-			jd.close();
+			this.jd.close();
 			ErrorHandler.error("Error while creating Streams "+ex); //$NON-NLS-1$
 			throw ex;			
 		}
@@ -62,7 +62,7 @@ public class JD2xxConnection extends Connection {
 	public synchronized void disconnect() throws IOException, Exception {
 		super.disconnect();
 		try {
-			jd.close(); // as well as the socket
+			this.jd.close(); // as well as the socket
 		} catch (Exception Ex) {
 			throw Ex;
 		}

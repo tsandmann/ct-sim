@@ -22,7 +22,6 @@ import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -102,15 +101,15 @@ public class WorldView extends Box {
 		GraphicsConfigTemplate3D template = new GraphicsConfigTemplate3D();
 
         // Leinwand fuer die Welt erzeugen
-		worldCanvas = new Canvas3D(
+		this.worldCanvas = new Canvas3D(
 				GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(
 						template));
 		
-		this.add(worldCanvas);
+		this.add(this.worldCanvas);
 		
 		// wird zum ScreenCapture gebraucht
 		try {
-            robot = new Robot();
+            this.robot = new Robot();
         } catch (AWTException e) {
             throw new RuntimeException(e);
         }
@@ -123,7 +122,7 @@ public class WorldView extends Box {
 	 */
 	public void initGUI() {
 		/* Hole die TransformGroup aus dem SimpleUniverse heraus */
-		tgViewPlatform = universe.getViewingPlatform().getViewPlatformTransform() ;
+		this.tgViewPlatform = this.universe.getViewingPlatform().getViewPlatformTransform() ;
 		
 		// Zur Benutzung des org.j3d.ui.navigation Paketes den folgenden Block auskommentieren
 		// Start Block	
@@ -134,28 +133,28 @@ public class WorldView extends Box {
 		mouseBounds = new BoundingSphere(new Point3d(), 1000.0);
 
 		MouseRotate myMouseRotate = new MouseRotate(MouseBehavior.INVERT_INPUT);
-        myMouseRotate.setTransformGroup(tgViewPlatform);
+        myMouseRotate.setTransformGroup(this.tgViewPlatform);
         myMouseRotate.setSchedulingBounds(mouseBounds);
         myMouseRotate.setFactor(0.001d);
         objRoot.addChild(myMouseRotate);
 
         MouseTranslate myMouseTranslate = new MouseTranslate(MouseBehavior.INVERT_INPUT);
-        myMouseTranslate.setTransformGroup(tgViewPlatform);
+        myMouseTranslate.setTransformGroup(this.tgViewPlatform);
         myMouseTranslate.setSchedulingBounds(mouseBounds);
         myMouseTranslate.setFactor(0.01d);
         objRoot.addChild(myMouseTranslate);
 
         MouseZoom myMouseZoom = new MouseZoom(MouseBehavior.INVERT_INPUT);
-        myMouseZoom.setTransformGroup(tgViewPlatform);
+        myMouseZoom.setTransformGroup(this.tgViewPlatform);
         myMouseZoom.setSchedulingBounds(mouseBounds);
         myMouseZoom.setFactor(0.05d);
         objRoot.addChild(myMouseZoom);
         
-        universe.addBranchGraph(objRoot);
+        this.universe.addBranchGraph(objRoot);
         // End Block
 		
 		try {
-			worldCanvas.setVisible(true);
+			this.worldCanvas.setVisible(true);
 			this.setVisible(true);
 			this.repaint();
 
@@ -168,7 +167,7 @@ public class WorldView extends Box {
 	 * @return Gibt eine Referenz auf worldCanvas zurueck
 	 */
 	public Canvas3D getWorldCanvas() {
-		return worldCanvas;
+		return this.worldCanvas;
 	}
 
 	/** Legt die Scene Fest, die dieses Objekt anzeigen soll */
@@ -193,9 +192,9 @@ public class WorldView extends Box {
 			biggerOne = dimY;
 
 		Transform3D translate = new Transform3D();
-		universe.getViewingPlatform().getViewPlatformTransform().getTransform(translate);
-		translate.setTranslation(new Vector3d(dimX/2,dimY/2,(biggerOne/2)/Math.tan(universe.getViewer().getView().getFieldOfView()/2)));
-		universe.getViewingPlatform().getViewPlatformTransform().setTransform(translate);
+		this.universe.getViewingPlatform().getViewPlatformTransform().getTransform(translate);
+		translate.setTranslation(new Vector3d(dimX/2,dimY/2,(biggerOne/2)/Math.tan(this.universe.getViewer().getView().getFieldOfView()/2)));
+		this.universe.getViewingPlatform().getViewPlatformTransform().setTransform(translate);
 	}
 
 		
@@ -242,7 +241,7 @@ public class WorldView extends Box {
                 Rectangle bounds = child.getBounds();
                 Point location = bounds.getLocation();
                 bounds.setLocation(child.getLocationOnScreen());
-                BufferedImage capture = robot.createScreenCapture(bounds);
+                BufferedImage capture = this.robot.createScreenCapture(bounds);
                 bounds.setLocation(location);
                 SwingUtilities.convertRectangle(child, bounds, this);
                 image.createGraphics().drawImage(capture, location.x, location.y, this);
@@ -258,12 +257,13 @@ public class WorldView extends Box {
 	 * @return Gibt eine Referenz auf universe zurueck
 	 */
 	public SimpleUniverse getUniverse() {
-		return universe;
+		return this.universe;
 	}
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see java.awt.Component#invalidate()
 	 */
+	@Override
 	public void invalidate() {
 		
 		if(this.worldCanvas != null) {

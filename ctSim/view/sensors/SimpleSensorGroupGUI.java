@@ -48,7 +48,7 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 	
 	private TableModel tabData;
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see ctSim.view.ComponentGroupGUI#initGUI()
 	 */
 	@Override
@@ -60,14 +60,15 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 		this.columns.add("Sensor");
 		this.columns.add("Wert");
 		
-		this.tabData = new DefaultTableModel(columns, this.getAllSensors().size()) {
+		this.tabData = new DefaultTableModel(this.columns, this.getAllSensors().size()) {
 			
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public boolean isCellEditable(int row, int col) {
+			@Override
+			public boolean isCellEditable(@SuppressWarnings("unused") int row, int col) {
 				
 				if(col == 0)
 					return false;
@@ -89,9 +90,10 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 		this.add(scroll);
 	}
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see ctSim.view.ComponentGroupGUI#updateGUI()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void updateGUI() {
 		
@@ -111,7 +113,7 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 		}
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see ctSim.view.ComponentGroupGUI#getSortId()
 	 */
 	@Override

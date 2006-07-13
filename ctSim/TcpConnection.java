@@ -60,7 +60,7 @@ public class TcpConnection extends Connection {
 	public int listen(int port) {
 		try {
 			ServerSocket server = new ServerSocket(port);
-			socket = server.accept();
+			this.socket = server.accept();
 
 			connect();
 
@@ -74,8 +74,8 @@ public class TcpConnection extends Connection {
 
 	/* Interne Hilfsmethode fuer die Verbindung */
 	private void connect() throws IOException {
-		setDis(new LEDataInputStream(socket.getInputStream()));
-		setDos(new LEDataOutputStream(socket.getOutputStream()));
+		setDis(new LEDataInputStream(this.socket.getInputStream()));
+		setDos(new LEDataOutputStream(this.socket.getOutputStream()));
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class TcpConnection extends Connection {
 			Exception {
 		try {
 			// really establish a TCP connection (at last...)
-			socket = new Socket(ipa.getHostAddress(), port);
+			this.socket = new Socket(ipa.getHostAddress(), port);
 			connect(); // Init rest of stuff
 
 		} catch (IOException IOEx) {
@@ -149,7 +149,7 @@ public class TcpConnection extends Connection {
 	public synchronized void disconnect() throws IOException, Exception {
 		super.disconnect();
 		try {
-			socket.close(); // as well as the socket
+			this.socket.close(); // as well as the socket
 		} catch (Exception Ex) {
 			throw Ex;
 		}
@@ -159,6 +159,6 @@ public class TcpConnection extends Connection {
 	 * @return Gibt eine Referenz auf socket zurueck
 	 */
 	public Socket getSocket() {
-		return socket;
+		return this.socket;
 	}
 }

@@ -53,10 +53,10 @@ public class MousePicture {
 	public MousePicture(int dimx, int dimy) {
 		super();
 		
-		dimX = dimx;
-		dimY = dimy;
-		complete= false;
-		data = new int[dimX * dimY];
+		this.dimX = dimx;
+		this.dimY = dimy;
+		this.complete= false;
+		this.data = new int[this.dimX * this.dimY];
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class MousePicture {
 	public void addPixels(int start, byte[] in){
 		int i;
 		if (start==1)	// Anfang des Frames ?
-			complete = false;
+			this.complete = false;
 		
 		for (i=0; i< in.length; i++){
 			int tmp= toUnsignedInt(in[i]);
@@ -84,16 +84,16 @@ public class MousePicture {
 			tmp = tmp << 2;	// verbleibende Bits auf den normalen Farbraum ausdehnen
 			
 			
-			data[i+start-1]=tmp ;
-			data[i+start-1] += tmp <<8; 
-			data[i+start-1] += tmp <<16 ;
-			data[i+start-1] += 255 <<24 ;
+			this.data[i+start-1]=tmp ;
+			this.data[i+start-1] += tmp <<8; 
+			this.data[i+start-1] += tmp <<16 ;
+			this.data[i+start-1] += 255 <<24 ;
 			
 //			System.out.println("tmp= "+tmp);
 		}
 		// Genug Daten empfangen?
-		if ((i+start-1) == (dimX*dimY)) {
-			complete=true;
+		if ((i+start-1) == (this.dimX*this.dimY)) {
+			this.complete=true;
 			System.out.println("Bild vollstaendig"); //$NON-NLS-1$
 		}
 	}
@@ -102,7 +102,7 @@ public class MousePicture {
 	 * @return Gibt den Wert von dimX zurueck
 	 */
 	public int getDimX() {
-		return dimX;
+		return this.dimX;
 	}
 
 
@@ -110,7 +110,7 @@ public class MousePicture {
 	 * @return Gibt den Wert von dimY zurueck
 	 */
 	public int getDimY() {
-		return dimY;
+		return this.dimY;
 	}
 
 
@@ -118,7 +118,7 @@ public class MousePicture {
 	 * @return Gibt den Wert von complete zurueck
 	 */
 	public boolean isComplete() {
-		return complete;
+		return this.complete;
 	}
 	
 
@@ -129,8 +129,8 @@ public class MousePicture {
 	 * @return Das Bild
 	 */
 	public Image getImage(int width, int height){
-		int w = dimX;
-		int h = dimY;
+		int w = this.dimX;
+		int h = this.dimY;
 		int pix[] = new int[w * h];
 		int index = 0;
 		for (int y = 0; y < h; y++) {
@@ -148,8 +148,8 @@ public class MousePicture {
 		
 		
 		Image image = Toolkit.getDefaultToolkit().createImage(
-		                new MemoryImageSource(dimX, dimY,
-		                data, 0, dimX));
+		                new MemoryImageSource(this.dimX, this.dimY,
+		                this.data, 0, this.dimX));
 	//     	            pix, 0, dimX));
 		
 	    ImageFilter replicate = new ReplicateScaleFilter

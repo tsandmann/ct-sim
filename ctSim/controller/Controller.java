@@ -123,7 +123,7 @@ public final class Controller implements Runnable {
 		
 		try {
 			
-			Class<?> cl = Class.forName(config.get("judge")); //$NON-NLS-1$
+			Class<?> cl = Class.forName(this.config.get("judge")); //$NON-NLS-1$
 			
 			Constructor<?> c = cl.getConstructor(this.getClass(), this.world.getClass());
 			
@@ -406,15 +406,15 @@ public final class Controller implements Runnable {
 		int p = 10001;
 		
 		try {
-			String port = config.get("botport"); //$NON-NLS-1$
+			String port = this.config.get("botport"); //$NON-NLS-1$
 			p = new Integer(port).intValue();
 		} catch(NumberFormatException nfe) {
 			nfe.printStackTrace();
 		}
 		
 		System.out.println("Warte auf Verbindung vom c't-Bot auf Port "+p); //$NON-NLS-1$
-		botListener = new BotSocketListener(p);
-		botListener.start();
+		this.botListener = new BotSocketListener(p);
+		this.botListener.start();
 		
 		//} else {
 		//	ErrorHandler.error("Kein botPort in der Config-Datei gefunden. Es wird nicht auf Bots gelauscht!");			
@@ -482,9 +482,9 @@ public final class Controller implements Runnable {
 		public void run() {
 			TcpConnection tcp = null;
 			try {
-				ServerSocket server = new ServerSocket(port);
+				ServerSocket server = new ServerSocket(this.port);
 				
-				while (listen) {
+				while (this.listen) {
 					tcp = new TcpConnection();
 					/*
 					 * Da die Klasse TcpConnection staendig den ServerSocket neu
@@ -506,7 +506,7 @@ public final class Controller implements Runnable {
 				}
 			} catch (IOException ioe) {
 				System.err.format("Kann nicht an port %d binden.", new Integer( //$NON-NLS-1$
-						port));
+						this.port));
 				System.err.println(ioe.getMessage());
 			}
 		}
@@ -705,7 +705,7 @@ public final class Controller implements Runnable {
 				if (n.getNodeName().equals("parameter")){ //$NON-NLS-1$
 					String name = n.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$
 					String value = n.getAttributes().getNamedItem("value").getNodeValue(); //$NON-NLS-1$
-					config.put(name,value);
+					this.config.put(name,value);
 				}
 				n=n.getNextSibling();
 			}

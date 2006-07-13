@@ -1,7 +1,5 @@
 package ctSim.model.rules;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.vecmath.Vector3d;
@@ -68,7 +66,7 @@ public class LabyrinthJudge extends Judge {
 	@Override
 	public boolean check(){
 		
-		if(world == null)
+		if(this.world == null)
 			return false;
 		
 		Set<AliveObstacle> obsts = this.world.getAliveObstacles();

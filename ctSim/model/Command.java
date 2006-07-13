@@ -171,12 +171,12 @@ public class Command {
 		this.dataL = dataL1;
 		this.dataR = dataR1;
 		this.subcommand = SUB_CMD_NORM;
-		direction = DIR_REQUEST;
-		startCode = STARTCODE;
-		crc = CRCCODE;
-		payload = 0;
+		this.direction = DIR_REQUEST;
+		this.startCode = STARTCODE;
+		this.crc = CRCCODE;
+		this.payload = 0;
 		this.seq = seq1;
-		dataBytes = new byte[payload];
+		this.dataBytes = new byte[this.payload];
 	}
 
 	/**
@@ -185,18 +185,18 @@ public class Command {
 	public Command() {
 		super();
 		this.subcommand = SUB_CMD_NORM;
-		direction = DIR_REQUEST;
-		startCode = STARTCODE;
-		crc = CRCCODE;
-		payload = 0;
-		dataBytes = new byte[payload];
+		this.direction = DIR_REQUEST;
+		this.startCode = STARTCODE;
+		this.crc = CRCCODE;
+		this.payload = 0;
+		this.dataBytes = new byte[this.payload];
 	}
 
 	/**
 	 * @return Gibt Kommando zurueck
 	 */
 	public int getCommand() {
-		return command;
+		return this.command;
 	}
 
 	/**
@@ -205,21 +205,21 @@ public class Command {
 	 * @return byte[], in dem jeweils ein byte steht
 	 */
 	public byte[] getCommandBytes() {
-		byte data[] = new byte[COMMAND_SIZE + payload];
+		byte data[] = new byte[COMMAND_SIZE + this.payload];
 
 		int i = 0;
 		data[i++] = STARTCODE;
-		data[i++] = (byte) (command & 255);
-		data[i] = (byte) (subcommand);
-		data[i++] += (byte) (direction << 7);
+		data[i++] = (byte) (this.command & 255);
+		data[i] = (byte) (this.subcommand);
+		data[i++] += (byte) (this.direction << 7);
 
-		data[i++] = (byte) (payload);
-		data[i++] = (byte) (dataL & 255);
-		data[i++] = (byte) (dataL >> 8);
-		data[i++] = (byte) (dataR & 255);
-		data[i++] = (byte) (dataR >> 8);
-		data[i++] = (byte) (seq & 255);
-		data[i++] = (byte) (seq >> 8);
+		data[i++] = (byte) (this.payload);
+		data[i++] = (byte) (this.dataL & 255);
+		data[i++] = (byte) (this.dataL >> 8);
+		data[i++] = (byte) (this.dataR & 255);
+		data[i++] = (byte) (this.dataR >> 8);
+		data[i++] = (byte) (this.seq & 255);
+		data[i++] = (byte) (this.seq >> 8);
 		data[i++] = CRCCODE;
 
 		return data;
@@ -229,49 +229,49 @@ public class Command {
 	 * @return Gib die angehaengten Nutzdaten weiter
 	 */
 	public byte[] getDataBytes() {
-		return dataBytes;
+		return this.dataBytes;
 	}
 
 	/**
 	 * @return Gibt die Nutzdaten als String zurueck
 	 */
 	public String getDataBytesAsString() {
-		return new String(dataBytes);
+		return new String(this.dataBytes);
 	}
 
 	/**
 	 * @return Gibt die Daten zum Kommando links zurueck
 	 */
 	public int getDataL() {
-		return dataL;
+		return this.dataL;
 	}
 
 	/**
 	 * @return Gibt die Daten zum Kommando rechts zurueck
 	 */
 	public int getDataR() {
-		return dataR;
+		return this.dataR;
 	}
 
 	/**
 	 * @return Gibt die Richtung zurueck
 	 */
 	public int getDirection() {
-		return direction;
+		return this.direction;
 	}
 
 	/**
 	 * @return Liefert die Paketsequenznummer
 	 */
 	public int getSeq() {
-		return seq;
+		return this.seq;
 	}
 
 	/**
 	 * @return Gibt das Subkommando zurueck
 	 */
 	public int getSubcommand() {
-		return subcommand;
+		return this.subcommand;
 	}
 
 	/**
@@ -286,29 +286,29 @@ public class Command {
 	public int readCommand(Connection con) throws IOException {
 		int tmp;
 
-		startCode = 0;
+		this.startCode = 0;
 		// lese Bytes bis Startcode gefunden wird
-		while (startCode != STARTCODE) {
-			startCode = con.readUnsignedByte();
+		while (this.startCode != STARTCODE) {
+			this.startCode = con.readUnsignedByte();
 		}
 
-		command = con.readUnsignedByte();
+		this.command = con.readUnsignedByte();
 
 		tmp = con.readUnsignedByte();
 
-		subcommand = tmp & 127;
-		direction = tmp >> 7 & 1;
+		this.subcommand = tmp & 127;
+		this.direction = tmp >> 7 & 1;
 
-		payload = con.readUnsignedByte();
-		dataL = con.readShort();
-		dataR = con.readShort();
-		seq = con.readShort();
-		crc = con.readUnsignedByte();
+		this.payload = con.readUnsignedByte();
+		this.dataL = con.readShort();
+		this.dataR = con.readShort();
+		this.seq = con.readShort();
+		this.crc = con.readUnsignedByte();
 
-		dataBytes = new byte[payload];
+		this.dataBytes = new byte[this.payload];
 
-		for (int i = 0; i < payload; i++) {
-			dataBytes[i] = (byte) con.readUnsignedByte();
+		for (int i = 0; i < this.payload; i++) {
+			this.dataBytes[i] = (byte) con.readUnsignedByte();
 		}
 
 		return validate();
@@ -323,12 +323,12 @@ public class Command {
 	public String toString() {
 		String dataStr = getDataBytesAsString();
 
-		return "Startcode:\t" + startCode + "\n" + "Command:\t" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ (char) command + "\n" + "Subcommand:\t" + (char) subcommand //$NON-NLS-1$ //$NON-NLS-2$
-				+ "\n" + "Direction:\t" + direction + "\n" + "Payload:\t" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				+ payload + "\n" + "Data:\t\t" + dataL + " " + dataR + "\n"  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
-				+ "Seq:\t\t" + seq + "\n" + "Data:\t\t'" + dataStr + "'\n"  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				+ "CRC:\t\t" + crc; //$NON-NLS-1$
+		return "Startcode:\t" + this.startCode + "\n" + "Command:\t" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ (char) this.command + "\n" + "Subcommand:\t" + (char) this.subcommand //$NON-NLS-1$ //$NON-NLS-2$
+				+ "\n" + "Direction:\t" + this.direction + "\n" + "Payload:\t" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				+ this.payload + "\n" + "Data:\t\t" + this.dataL + " " + this.dataR + "\n"  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
+				+ "Seq:\t\t" + this.seq + "\n" + "Data:\t\t'" + dataStr + "'\n"  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				+ "CRC:\t\t" + this.crc; //$NON-NLS-1$
 	}
 
 	/**
@@ -337,7 +337,7 @@ public class Command {
 	 * @return 0, wenn intakt, sonst -1
 	 */
 	private int validate() {
-		if ((startCode == STARTCODE) && (crc == CRCCODE))
+		if ((this.startCode == STARTCODE) && (this.crc == CRCCODE))
 			return 0;
 		return -1;
 	}

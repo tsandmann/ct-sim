@@ -1,16 +1,9 @@
 package ctSim.model.bots.ctbot.components;
 
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.QuadArray;
 import javax.media.j3d.Shape3D;
-import javax.media.j3d.TriangleStripArray;
 import javax.vecmath.Point3d;
-import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 
-import com.sun.j3d.utils.geometry.GeometryInfo;
-import com.sun.j3d.utils.geometry.NormalGenerator;
-import com.sun.j3d.utils.geometry.Stripifier;
 
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
@@ -47,13 +40,13 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	 */
 	
 	// TODO:
-	private World world;
-	private Bot bot;
+	//private World world;
+	//private Bot bot;
 	
 
 	//private double angle = Math.PI / 180 * 180;  // 180°
 	
-	private Shape3D shape;
+	//private Shape3D shape;
 	
 	// TODO:
 	private Actuator governor;
@@ -67,23 +60,29 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	 * @param relHead relative Blickrichtung
 	 * @param gov Aktuator
 	 */
-	public EncoderSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHead, /* TODO */ Actuator gov) {
+	public EncoderSensor(@SuppressWarnings("unused") World w, @SuppressWarnings("unused") Bot bot, String name, Point3d relPos, Vector3d relHead, /* TODO */ Actuator gov) {
 		
 		super(name, relPos, relHead);
 		
 		// TODO:
-		this.world = w;
-		this.bot   = bot;
+		//this.world = w;
+		//this.bot   = bot;
 		
 		this.governor = gov;
 	}
 	
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.BotComponent#getType()
+	 */
 	@Override
 	public String getType() {
 		// TODO: Kodiersensor?
 		return "Infrarot";
 	}
 
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.BotComponent#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		// TODO: Kodiersensor?
@@ -103,21 +102,25 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 		// TODO Die Kennlinien der echten Motoren ist nicht linear
 	}
 	
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.Sensor#updateValue()
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Integer updateValue() {
 		
 		// Anzahl der Umdrehungen der Raeder
 		double turns = calculateWheelSpeed((Integer)this.governor.getValue());
-		turns = turns * deltaT / 1000.0f;
+		turns = turns * this.deltaT / 1000.0f;
 		
 		// Encoder-Schritte als Gleitzahl errechnen:
 		// Anzahl der Drehungen mal Anzahl der Markierungen,
 		// dazu der Rest der letzten Runde
-		double tmp = (turns * ENCODER_MARKS) + encoderRest;
+		double tmp = (turns * ENCODER_MARKS) + this.encoderRest;
 		// Der Bot bekommt nur ganze Schritte zu sehen,
 		int encoderSteps = (int) Math.floor(tmp);
 		// aber wir merken uns Teilschritte intern
-		encoderRest = tmp - encoderSteps;
+		this.encoderRest = tmp - encoderSteps;
 		// und speichern sie.
 		//this.setSensEncL((short) (this.getSensEncL() + encoderSteps));
 		
@@ -128,6 +131,10 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 		return encoderSteps;
 	}
 	
+	/** (non-Javadoc)
+	 * @see ctSim.model.bots.components.BotComponent#getShape()
+	 */
+	@Override
 	public Shape3D getShape() {
 		
 		// TODO: ?

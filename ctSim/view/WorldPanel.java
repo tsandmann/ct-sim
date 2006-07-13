@@ -18,21 +18,9 @@
  */
 package ctSim.view;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Robot;
-import java.util.List;
-
-import javax.media.j3d.Canvas3D;
-import javax.media.j3d.TransformGroup;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-
-import com.sun.j3d.utils.universe.SimpleUniverse;
-
 import ctSim.model.World;
-import ctSim.model.bots.Bot;
-//import ctSim.model.scene.SceneUpdate;
 
 /**
  * Packt den Blick auf die Roboterwelt in ein Panel

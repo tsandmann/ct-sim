@@ -1,6 +1,5 @@
 package ctSim.model.rules;
 
-import ctSim.ErrorHandler;
 import ctSim.controller.Controller;
 import ctSim.model.World;
 import ctSim.view.Debug;
@@ -26,7 +25,7 @@ import ctSim.view.Debug;
  */
 public abstract class Judge {
 	
-	private World world;
+	// private World world;
 	
 	private boolean start = true;
 	
@@ -68,7 +67,7 @@ public abstract class Judge {
 		super();
 		
 		this.controller = ctrl;
-		this.world = w;
+		//this.world = w;
 		this.startTime = w.getSimulTime();
 		this.time = this.startTime;
 //		panel = new JudgePanel(this);
@@ -115,9 +114,12 @@ public abstract class Judge {
 		return false;
 	}
 	
-	public final void update(long time) {
+	/**
+	 * @param t
+	 */
+	public final void update(long t) {
 		
-		this.time = time;
+		this.time = t;
 		
 		if(!check()) {
 			

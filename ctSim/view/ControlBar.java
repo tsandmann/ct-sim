@@ -62,7 +62,7 @@ public final class ControlBar extends JPanel {
 		this.botTabs = new JTabbedPane();
 		
 		//this.add(Box.createVerticalGlue());
-		this.add(botTabs);
+		this.add(this.botTabs);
 		
 		//TODO: ???
 		//this.setPreferredSize(new Dimension(180, 500));
@@ -97,6 +97,9 @@ public final class ControlBar extends JPanel {
 		//this.invalidate();
 	}
 	
+	/** (non-Javadoc)
+	 * @see java.awt.Component#getPreferredSize()
+	 */
 	@Override
 	public Dimension getPreferredSize() {
 		

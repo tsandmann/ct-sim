@@ -36,39 +36,44 @@ public class JD2XXOutputStream extends OutputStream {
 	public JD2XX jd2xx = null;
 
 	public JD2XXOutputStream() {
+		//TODO
 	}
 
 	public JD2XXOutputStream(JD2XX j) {
-		jd2xx = j;
+		this.jd2xx = j;
 	}
 
 	public JD2XXOutputStream(int dn) throws IOException {
-		jd2xx = new JD2XX(dn);
+		this.jd2xx = new JD2XX(dn);
 	}
 
 	public JD2XXOutputStream(String dn, int f) throws IOException {
-		jd2xx = new JD2XX(dn, f);
+		this.jd2xx = new JD2XX(dn, f);
 	}
 
 	public JD2XXOutputStream(int n, int f) throws IOException {
-		jd2xx = new JD2XX(n, f);
+		this.jd2xx = new JD2XX(n, f);
 	}
 
-	public void close() throws IOException {
+	/** (non-Javadoc)
+	 * @see java.io.Closeable#close()
+	 */
+	@Override
+	public void close() {
 		// jd2xx.close();
-		jd2xx = null;
+		this.jd2xx = null;
 	}
 
 	public void write(int b) throws IOException {
 		byte[] c = new byte[1];
 		c[0] = (byte)b;
-		jd2xx.write(c);
+		this.jd2xx.write(c);
 		
 //		while (jd2xx.write(c) != 0) ;
 		//jd2xx.write(c);
 	}
 
 	public void write(byte[] b) throws IOException {
-		jd2xx.write(b);
+		this.jd2xx.write(b);
 	}
 }

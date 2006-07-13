@@ -22,7 +22,6 @@ import java.util.List;
 
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
-import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotPosition;
 import ctSim.model.bots.components.Sensor;
 
@@ -62,7 +61,7 @@ public final class BotInfo {
 	 * @return Name des Bot
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
 	/**
@@ -83,7 +82,7 @@ public final class BotInfo {
 	 * @return die Steuertafel des Bot
 	 */
 	public BotPanel getBotPanel() {
-		return botPanel;
+		return this.botPanel;
 	}
 	
 //	protected void setBotPanel(BotPanel panel) {
@@ -94,7 +93,7 @@ public final class BotInfo {
 	 * @return der Typ des Bot
 	 */
 	public String getType() {
-		return type;
+		return this.type;
 	}
 	
 	/**
@@ -121,6 +120,9 @@ public final class BotInfo {
 		return this.bot.getSensors();
 	}
 	
+	/**
+	 * @return Das Positions-Objekt des Bot
+	 */
 	public BotPosition getBotPosition() {
 		
 		return this.bot.getBotPosition();

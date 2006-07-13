@@ -59,9 +59,9 @@ public class AnsweringMachine extends Thread {
 	 * @see Bot#work()
 	 */
 	public void die() {
-		run = false;
+		this.run = false;
 		this.interrupt();
-		bot.die(); // Alles muss sterben
+		this.bot.die(); // Alles muss sterben
 	}
 
 	/**
@@ -74,12 +74,12 @@ public class AnsweringMachine extends Thread {
 		super.run();
 		Command command = new Command();
 		int valid = 0;
-		while (run) {
+		while (this.run) {
 			try {
-				valid = command.readCommand(con);
+				valid = command.readCommand(this.con);
 				//System.out.println("incoming command");
 				if (valid == 0) {// Kommando ist in Ordnung
-					bot.evaluate_command(command);
+					this.bot.evaluate_command(command);
 				} else
 					System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
 			} catch (IOException ex) {

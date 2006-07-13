@@ -21,11 +21,8 @@ package ctSim.view;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -86,7 +83,7 @@ public class StatusBar extends Box {
 //		this.timeField.setMaximumSize(new Dimension(50, 22));
 		
 		//this.timeLabel = new JLabel("Time: "+this.timeFormatter.format(new Date(-TIME_TO_SUB)));
-		this.timeLabel = new JLabel("Zeit: "+String.format("%tT.%<tL", new Date(-TIME_TO_SUB)));
+		this.timeLabel = new JLabel("Zeit: "+String.format("%tT.%<tL", new Date(-this.TIME_TO_SUB)));
 		
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		//this.add(this.timeField);
@@ -121,13 +118,14 @@ public class StatusBar extends Box {
 		
 		this.tickRateSlider.addChangeListener(new ChangeListener() {
 
+			@SuppressWarnings("synthetic-access")
 			public void stateChanged(ChangeEvent e) {
 				
-				if(tickRateSlider.getValueIsAdjusting()) {
-					tickRateField.setText(String.valueOf(tickRateSlider.getValue()));
+				if(StatusBar.this.tickRateSlider.getValueIsAdjusting()) {
+					StatusBar.this.tickRateField.setText(String.valueOf(StatusBar.this.tickRateSlider.getValue()));
 				} else {
-					tickRateField.setValue(tickRateSlider.getValue());
-					parent.setTickRate(tickRateSlider.getValue());
+					StatusBar.this.tickRateField.setValue(StatusBar.this.tickRateSlider.getValue());
+					StatusBar.this.parent.setTickRate(StatusBar.this.tickRateSlider.getValue());
 				}
 			}
 		});
@@ -160,10 +158,11 @@ public class StatusBar extends Box {
 		
 		this.tickRateField.addPropertyChangeListener(new PropertyChangeListener() {
 
+			@SuppressWarnings("synthetic-access")
 			public void propertyChange(PropertyChangeEvent evt) {
 				
 				if("value".equals(evt.getPropertyName())) {
-					tickRateSlider.setValue((Integer)tickRateField.getValue());
+					StatusBar.this.tickRateSlider.setValue((Integer)StatusBar.this.tickRateField.getValue());
 				}
 			}
 		});
@@ -177,7 +176,7 @@ public class StatusBar extends Box {
 //		this.timeField.setText("Time: "+time);
 		
 		//this.timeLabel.setText("Time: "+this.timeFormatter.format(new Date(time-TIME_TO_SUB)));
-		this.timeLabel.setText("Zeit: "+String.format("%tT.%<tL", new Date(time-TIME_TO_SUB)));
+		this.timeLabel.setText("Zeit: "+String.format("%tT.%<tL", new Date(time-this.TIME_TO_SUB)));
 	}
 	
 	/**

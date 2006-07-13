@@ -72,7 +72,7 @@ public abstract class BotComponent {
 	 */
 	public String getName() {
 
-		return name;
+		return this.name;
 	}
 	
 	/**

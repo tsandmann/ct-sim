@@ -43,7 +43,7 @@ public class Parcours {
 	public static int BOTS = 3; 
 	
 	/** enthaelt alle Hindernisse */
-	private BranchGroup obstBG;
+	private BranchGroup ObstBG;
 	/** Enthaelt alle Lichter */
 	private BranchGroup lightBG;
 	/** Enthaelt den Boden */
@@ -72,24 +72,24 @@ public class Parcours {
 	public Parcours() {
 		super();
 		// Die Branchgroup fuer die Hindernisse
-		obstBG = new BranchGroup();
-		obstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		obstBG.setPickable(true);
+		this.ObstBG = new BranchGroup();
+		this.ObstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		this.ObstBG.setPickable(true);
 		
 		// Die Branchgroup fuer die Lichtquellen
-		lightBG = new BranchGroup();
-		lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		lightBG.setPickable(true);
+		this.lightBG = new BranchGroup();
+		this.lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		this.lightBG.setPickable(true);
 
 		// Die Branchgroup fuer die Lichtquellen
-		terrainBG = new BranchGroup();
-		terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		terrainBG.setPickable(true);
+		this.terrainBG = new BranchGroup();
+		this.terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		this.terrainBG.setPickable(true);
 
 		
 		// Standard startposition
-		startPositions[0][0] =0;
-		startPositions[0][1] =0;
+		this.startPositions[0][0] =0;
+		this.startPositions[0][1] =0;
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class Parcours {
 	 * @return Liefert die Parcursbreite in Gittereinheiten zurueck
 	 */
 	public int getDimX() {
-		return dimX;
+		return this.dimX;
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class Parcours {
 	 * @return Liefert die Parcourshoehe zurueck in Gittereinheiten
 	 */
 	public int getDimY() {
-		return dimY;
+		return this.dimY;
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class Parcours {
 	 * @return Liefert die Breite (X) des Parcours in mm zurueck
 	 */
 	public float getWidth(){
-		return dimX* grid;
+		return this.dimX* this.grid;
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class Parcours {
 	 * @return Liefert die Hoehe (Y) des Parcours in mm zurueck
 	 */
 	public float getHeight(){
-		return dimY* grid;
+		return this.dimY* this.grid;
 	}
 	/**
 	 * Setzt die Parcurshoehe in Gittereinheiten
@@ -146,7 +146,7 @@ public class Parcours {
 	 * @param y Y-Achse im Parcours-Gitter
 	 */
 	public void addObstacle(Node obstacle, float x, float y) {
-		addNode(obstacle,x,y,obstBG);
+		addNode(obstacle,x,y,this.ObstBG);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class Parcours {
 	 * @param z Z-Achse Absolut
 	 */
 	public void addObstacle(Node obstacle, float x, float y, float z) {
-		addNode(obstacle,x,y,z,obstBG);
+		addNode(obstacle,x,y,z,this.ObstBG);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class Parcours {
 	 * @param z Z-Achse Absolut
 	 */
 	public void addFloor(Node floor, float x, float y, float z) {
-		addNode(floor,x,y,z,terrainBG);
+		addNode(floor,x,y,z,this.terrainBG);
 	}
 	
 	/**
@@ -185,7 +185,7 @@ public class Parcours {
 		node.setPickable(true);
 //		node.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 		
-		translate.set(new Vector3d(x * grid, y* grid, z));
+		translate.set(new Vector3d(x * this.grid, y* this.grid, z));
 
 		TransformGroup tg = new TransformGroup(translate);
 		tg.setCapability(Node.ENABLE_PICK_REPORTING);
@@ -213,7 +213,7 @@ public class Parcours {
 	 * @param z Z-Achse im Parcours-Gitter
 	 */
 	public void addLight(Node light, float x, float y, float z) {
-		addNode(light,x,y,z,lightBG);
+		addNode(light,x,y,z,this.lightBG);
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class Parcours {
 	 * @param light Die Lichtquelle
 	 */
 	public void addLight(Node light) {
-		lightBG.addChild(light);
+		this.lightBG.addChild(light);
 	}
 	
 	
@@ -230,7 +230,7 @@ public class Parcours {
 	 * @return Liefert die Licht-Branchgroup zurueck
 	 */
 	public BranchGroup getLightBG() {
-		return lightBG;
+		return this.lightBG;
 	}
 
 	/**
@@ -238,7 +238,7 @@ public class Parcours {
 	 * @return Liefert die Hindernis-Branchgroup zurueck
 	 */
 	public BranchGroup getObstBG() {
-		return obstBG;
+		return this.ObstBG;
 	}
 	
 	/**
@@ -246,7 +246,7 @@ public class Parcours {
 	 * @return  Liefert die Boden-Branchgroup zurueck
 	 */
 	public BranchGroup getTerrainBG() {
-		return terrainBG;
+		return this.terrainBG;
 	}
 	
 	/**
@@ -257,8 +257,8 @@ public class Parcours {
 	 */
 	public void setStartPosition(int bot, int x, int y){
 		if (bot <= BOTS-1){
-			startPositions[bot][0]=x;
-			startPositions[bot][1]=y;
+			this.startPositions[bot][0]=x;
+			this.startPositions[bot][1]=y;
 		}
 	}
 
@@ -271,20 +271,20 @@ public class Parcours {
 		if (bot <= BOTS-1){
 			switch (dir) {
 			case 0:
-				startHeadings[bot][0]=1;
-				startHeadings[bot][1]=0;
+				this.startHeadings[bot][0]=1;
+				this.startHeadings[bot][1]=0;
 				break;
 			case 90:
-				startHeadings[bot][0]=0;
-				startHeadings[bot][1]=-1;
+				this.startHeadings[bot][0]=0;
+				this.startHeadings[bot][1]=-1;
 				break;
 			case 180:
-				startHeadings[bot][0]=-1;
-				startHeadings[bot][1]=0;
+				this.startHeadings[bot][0]=-1;
+				this.startHeadings[bot][1]=0;
 				break;
 			case 270:
-				startHeadings[bot][0]=0;
-				startHeadings[bot][1]=1;
+				this.startHeadings[bot][0]=0;
+				this.startHeadings[bot][1]=1;
 				break;
 
 			default:
@@ -304,9 +304,9 @@ public class Parcours {
 	public Vector3d getStartPosition(int bot){
 		Vector3d pos = null;
 		if (bot < BOTS)
-			pos= new Vector3d(startPositions[bot][0]*grid + grid/2,startPositions[bot][1]*grid + grid/2,0.0f);
+			pos= new Vector3d(this.startPositions[bot][0]*this.grid + this.grid/2,this.startPositions[bot][1]*this.grid + this.grid/2,0.0f);
 		else
-			pos= new Vector3d(startPositions[0][0]*grid + grid/2,startPositions[0][1]*grid + grid/2,0.0f);
+			pos= new Vector3d(this.startPositions[0][0]*this.grid + this.grid/2,this.startPositions[0][1]*this.grid + this.grid/2,0.0f);
 		
 		return pos;
 	}
@@ -320,9 +320,9 @@ public class Parcours {
 	public Vector3d getStartHeading(int bot){
 		Vector3d pos = null;
 		if (bot < BOTS)
-			pos= new Vector3d(startHeadings[bot][0],startHeadings[bot][1],0.0f);
+			pos= new Vector3d(this.startHeadings[bot][0],this.startHeadings[bot][1],0.0f);
 		else  // sonst leifer die Default-Richtung
-			pos= new Vector3d(startHeadings[0][0],startHeadings[0][1],0.0f);
+			pos= new Vector3d(this.startHeadings[0][0],this.startHeadings[0][1],0.0f);
 			
 		if (pos.length()==0){
 			pos.x=1.0f;
@@ -341,8 +341,8 @@ public class Parcours {
 	 * @param y
 	 */
 	public void setFinishPosition(int x, int y){
-		finishPosition[0]=x;
-		finishPosition[1]=y;
+		this.finishPosition[0]=x;
+		this.finishPosition[1]=y;
 	}
 
 	/** 
@@ -350,7 +350,7 @@ public class Parcours {
 	 * @return Liefert die Gitterbreite in mm zurueck
 	 */
 	public float getGrid() {
-		return grid;
+		return this.grid;
 	}
 
 	/**
@@ -359,10 +359,10 @@ public class Parcours {
 	 * @return true, falls ja
 	 */
 	public boolean finishReached(Vector3d pos){
-		float minX = finishPosition[0]*grid ;
-		float maxX = finishPosition[0]*grid + grid;
-		float minY = finishPosition[1]*grid ;
-		float maxY = finishPosition[1]*grid + grid;
+		float minX = this.finishPosition[0]*this.grid ;
+		float maxX = this.finishPosition[0]*this.grid + this.grid;
+		float minY = this.finishPosition[1]*this.grid ;
+		float maxY = this.finishPosition[1]*this.grid + this.grid;
 		
 		if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
 			return true;

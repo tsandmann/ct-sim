@@ -56,10 +56,10 @@ public class Debug {
 	 */
 	Debug() {
 		
-		this.timeFormatter = new SimpleDateFormat(TIME_PREFIX);
+		this.timeFormatter = new SimpleDateFormat(this.TIME_PREFIX);
 		
 		try {
-			File file = new File(LOG_FILE);
+			File file = new File(this.LOG_FILE);
 			
 			FileWriter fw = new FileWriter(file);
 			

@@ -53,8 +53,8 @@ public abstract class Connection {
 	 */
 	public int readUnsignedByte() throws IOException {
 		int data;
-		synchronized (dis) {
-			data = dis.readUnsignedByte();
+		synchronized (this.dis) {
+			data = this.dis.readUnsignedByte();
 		}
 		return data;
 	}
@@ -67,8 +67,8 @@ public abstract class Connection {
 	 */
 	public short readShort() throws IOException {
 		short data = 0;
-		synchronized (dis) {
-			data = dis.readShort();
+		synchronized (this.dis) {
+			data = this.dis.readShort();
 		}
 
 		return data;
@@ -82,9 +82,9 @@ public abstract class Connection {
 	 */
 	public synchronized void disconnect() throws IOException, Exception {
 		try {
-			dis.close(); // close input and output stream
+			this.dis.close(); // close input and output stream
 			// br.close();
-			dos.close();
+			this.dos.close();
 		} catch (IOException IOEx) {
 			throw IOEx;
 		} catch (Exception Ex) {
@@ -104,9 +104,9 @@ public abstract class Connection {
 	public void send(String sendString) throws IOException {
 
 		try {
-			synchronized (dos) {
-				dos.writeBytes(sendString);
-				dos.flush(); // write dos
+			synchronized (this.dos) {
+				this.dos.writeBytes(sendString);
+				this.dos.flush(); // write dos
 			}
 
 		} catch (IOException iOEx) {
@@ -123,9 +123,9 @@ public abstract class Connection {
 	 */
 	public void send(byte sendByte[]) throws IOException {
 		try {
-			synchronized (dos) {
-				dos.write(sendByte);
-				dos.flush(); // write dos
+			synchronized (this.dos) {
+				this.dos.write(sendByte);
+				this.dos.flush(); // write dos
 			}
 		} catch (IOException iOEx) {
 			throw iOEx;
@@ -136,7 +136,7 @@ public abstract class Connection {
 	 * @return Gibt eine Referenz auf dis zurueck
 	 */
 	public LEDataInputStream getDis() {
-		return dis;
+		return this.dis;
 	}
 
 	/**
@@ -151,7 +151,7 @@ public abstract class Connection {
 	 * @return Gibt eine Referenz auf dos zurueck
 	 */
 	public LEDataOutputStream getDos() {
-		return dos;
+		return this.dos;
 	}
 
 	/**

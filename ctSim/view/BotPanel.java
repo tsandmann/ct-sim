@@ -62,7 +62,7 @@ public abstract class BotPanel extends JPanel {
 			return;
 		
 		// Ueberfluessig: (?)
-		if(!updated)
+		if(!this.updated)
 			this.botInfo = botInfo;
 		
 		// TODO: Sonst Error

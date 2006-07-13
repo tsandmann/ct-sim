@@ -274,14 +274,14 @@ public class World {
 	public void addBot(Bot bot) {
 		
 		// TODO: Hmmm...... woanders hin... Fehlermeldung, wenn keine Pos,Head mehr...
-		Point3d pos = new Point3d(parcours.getStartPosition(this.aliveObsts.size()+1));
+		Point3d pos = new Point3d(this.parcours.getStartPosition(this.aliveObsts.size()+1));
 		if (pos != null) {
 			// TODO: Ganz haesslich:
 			pos.z = bot.getPosition().z;	// Achtung die Bots stehen etwas ueber der Spielflaeche
 			bot.setPosition(pos);
 		}
 
-		Vector3d head = new Vector3d(parcours.getStartHeading(this.aliveObsts.size()+1));
+		Vector3d head = new Vector3d(this.parcours.getStartHeading(this.aliveObsts.size()+1));
 		if (head != null) {
 			bot.setHeading(head);
 		}
@@ -379,14 +379,14 @@ public class World {
 	 * @return Gibt baseTimeReal zurueck.
 	 */
 	public int getBaseTimeReal() {
-		return baseTimeReal;
+		return this.baseTimeReal;
 	}
 
 	/**
 	 * @return Gibt baseTimeVirtual zurueck.
 	 */
 	public int getBaseTimeVirtual() {
-		return baseTimeVirtual;
+		return this.baseTimeVirtual;
 	}
 
 	/**
@@ -398,7 +398,7 @@ public class World {
 	 * @Throws InterruptedException
 	 */
 	public long getSimulTime() {
-		return simulTime;
+		return this.simulTime;
 	}
 	
 	/**
@@ -429,7 +429,7 @@ public class World {
 	 * @return true, falls Ziel erreicht ist
 	 */
 	public boolean finishReached(Vector3d pos){
-		return parcours.finishReached(pos);
+		return this.parcours.finishReached(pos);
 	}
 	
 	/**
@@ -459,7 +459,7 @@ public class World {
 //		System.out.println(bounds.toString());
 		
 		// und noch die Welttransformation darauf anwenden
-		worldTG.getTransform(transform);
+		this.worldTG.getTransform(transform);
 		bounds.transform(transform);
 		
 //		System.out.println(bounds.toString());
@@ -504,7 +504,7 @@ public class World {
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
 		Transform3D transform = new Transform3D();
-		worldTG.getTransform(transform);
+		this.worldTG.getTransform(transform);
 		transform.transform(relPos);
 
 		// oder rotiert:
@@ -513,8 +513,8 @@ public class World {
 
 		PickShape pickShape = new PickRay(relPos, relHeading);
 		PickInfo pickInfo;
-		synchronized (terrainBG) {
-			pickInfo = terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
+		synchronized (this.terrainBG) {
+			pickInfo = this.terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
 					PickInfo.CLOSEST_DISTANCE, pickShape);
 		}
 		if (pickInfo == null) {
@@ -559,7 +559,7 @@ public class World {
 
 		// Falls die Welt verschoben wurde:
 		Transform3D transform = new Transform3D();
-		worldTG.getTransform(transform);
+		this.worldTG.getTransform(transform);
 		transform.transform(sensPos);
 		// oder rotiert:
 		transform.transform(sensHeading);
@@ -595,9 +595,9 @@ public class World {
 		for (int j = 0; j < rayCount; j++) {
 			// PickRay modifizieren
 			pickRay.set(sensPos, sensHeading);
-			synchronized (terrainBG) {
+			synchronized (this.terrainBG) {
 				// Picking durchfuehren
-				pickInfo = terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
+				pickInfo = this.terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
 						PickInfo.NODE, pickRay);
 			}
 			// Boden auswerten
@@ -672,7 +672,7 @@ public class World {
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
 		Transform3D transform = new Transform3D();
-		worldTG.getTransform(transform);
+		this.worldTG.getTransform(transform);
 		transform.transform(relPos);
 
 		// oder rotiert:
@@ -682,14 +682,14 @@ public class World {
 		PickShape pickShape = new PickConeRay(relPos, relHeading,
 				openingAngle / 2);
 		PickInfo pickInfo;
-		synchronized (terrainBG) {
+		synchronized (this.terrainBG) {
 			synchronized (this.obstBG) {
 				this.obstBG.setPickable(false);
-				terrainBG.setPickable(false);
-				pickInfo = lightBG.pickClosest(PickInfo.PICK_GEOMETRY,
+				this.terrainBG.setPickable(false);
+				pickInfo = this.lightBG.pickClosest(PickInfo.PICK_GEOMETRY,
 						PickInfo.CLOSEST_DISTANCE, pickShape);
 				this.obstBG.setPickable(true);
-				terrainBG.setPickable(true);
+				this.terrainBG.setPickable(true);
 			}
 		}
 		if (pickInfo == null)
@@ -727,7 +727,7 @@ ss
 		Point3d relPos = new Point3d(pos);
 //		System.out.println(Math.floor(relPos.x*1000)+" | "+Math.floor(relPos.y*1000)+" | "+Math.floor(relPos.z*1000));
 		Transform3D transform = new Transform3D();
-		worldTG.getTransform(transform);
+		this.worldTG.getTransform(transform);
 		transform.transform(relPos);
 //		System.out.println(Math.floor(relPos.x*1000)+" | "+Math.floor(relPos.y*1000)+" | "+Math.floor(relPos.z*1000));
 

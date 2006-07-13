@@ -5,7 +5,6 @@ import javax.media.j3d.GeometryArray;
 import javax.media.j3d.Group;
 import javax.media.j3d.QuadArray;
 import javax.media.j3d.Shape3D;
-import javax.media.j3d.Transform3D;
 import javax.media.j3d.TriangleStripArray;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
@@ -18,7 +17,6 @@ import com.sun.j3d.utils.geometry.Stripifier;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.sensors.SimpleSensor;
-import ctSim.view.Debug;
 
 public class DistanceSensor extends SimpleSensor<Double> {
 	

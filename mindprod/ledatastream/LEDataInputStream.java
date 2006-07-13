@@ -35,7 +35,7 @@ public class LEDataInputStream implements DataInput {
      */
     public final void close () throws IOException
         {
-        d.close();
+        this.d.close();
         }
 
     // InputStream
@@ -57,7 +57,7 @@ public class LEDataInputStream implements DataInput {
     public final int read ( byte b[], int off, int len ) throws IOException
         {
         // For efficiency, we avoid one layer of wrapper
-        return in.read( b, off, len );
+        return this.in.read( b, off, len );
         }
 
     /**
@@ -67,7 +67,7 @@ public class LEDataInputStream implements DataInput {
      */
     public final boolean readBoolean () throws IOException
         {
-        return d.readBoolean();
+        return this.d.readBoolean();
         }
 
     /**
@@ -76,7 +76,7 @@ public class LEDataInputStream implements DataInput {
      */
     public final byte readByte () throws IOException
         {
-        return d.readByte();
+        return this.d.readByte();
         }
 
     /**
@@ -87,8 +87,8 @@ public class LEDataInputStream implements DataInput {
      */
     public final char readChar () throws IOException
         {
-        d.readFully( w, 0, 2 );
-        return (char) ( ( w[ 1 ] & 0xff ) << 8 | ( w[ 0 ] & 0xff ) );
+        this.d.readFully( this.w, 0, 2 );
+        return (char) ( ( this.w[ 1 ] & 0xff ) << 8 | ( this.w[ 0 ] & 0xff ) );
         }
 
     /**
@@ -119,7 +119,7 @@ public class LEDataInputStream implements DataInput {
      */
     public final void readFully ( byte b[] ) throws IOException
         {
-        d.readFully( b, 0, b.length );
+        this.d.readFully( b, 0, b.length );
         }
 
     /**
@@ -129,7 +129,7 @@ public class LEDataInputStream implements DataInput {
     public final void readFully ( byte b[], int off, int len )
         throws IOException
         {
-        d.readFully( b, off, len );
+        this.d.readFully( b, off, len );
         }
 
     /**
@@ -140,11 +140,11 @@ public class LEDataInputStream implements DataInput {
      */
     public final int readInt () throws IOException
         {
-        d.readFully( w, 0, 4 );
-        return ( w[ 3 ] ) << 24
-            | ( w[ 2 ] & 0xff ) << 16
-            | ( w[ 1 ] & 0xff ) << 8
-            | ( w[ 0 ] & 0xff );
+        this.d.readFully( this.w, 0, 4 );
+        return ( this.w[ 3 ] ) << 24
+            | ( this.w[ 2 ] & 0xff ) << 16
+            | ( this.w[ 1 ] & 0xff ) << 8
+            | ( this.w[ 0 ] & 0xff );
         }
 
     /**
@@ -156,7 +156,7 @@ public class LEDataInputStream implements DataInput {
      */
     public final String readLine () throws IOException
         {
-        return d.readLine();
+        return this.d.readLine();
         }
 
     /**
@@ -167,16 +167,16 @@ public class LEDataInputStream implements DataInput {
      */
     public final long readLong () throws IOException
         {
-        d.readFully( w, 0, 8 );
-        return (long) ( w[ 7 ] ) << 56
+        this.d.readFully( this.w, 0, 8 );
+        return (long) ( this.w[ 7 ] ) << 56
             | /* long cast needed or shift done modulo 32 */
-            (long) ( w[ 6 ] & 0xff ) << 48
-            | (long) ( w[ 5 ] & 0xff ) << 40
-            | (long) ( w[ 4 ] & 0xff ) << 32
-            | (long) ( w[ 3 ] & 0xff ) << 24
-            | (long) ( w[ 2 ] & 0xff ) << 16
-            | (long) ( w[ 1 ] & 0xff ) << 8
-            | (long) ( w[ 0 ] & 0xff );
+            (long) ( this.w[ 6 ] & 0xff ) << 48
+            | (long) ( this.w[ 5 ] & 0xff ) << 40
+            | (long) ( this.w[ 4 ] & 0xff ) << 32
+            | (long) ( this.w[ 3 ] & 0xff ) << 24
+            | (long) ( this.w[ 2 ] & 0xff ) << 16
+            | (long) ( this.w[ 1 ] & 0xff ) << 8
+            | (long) ( this.w[ 0 ] & 0xff );
         }
 
     // L I T T L E E N D I A N R E A D E R S
@@ -190,8 +190,8 @@ public class LEDataInputStream implements DataInput {
      */
     public final short readShort () throws IOException
         {
-        d.readFully( w, 0, 2 );
-        return (short) ( ( w[ 1 ] & 0xff ) << 8 | ( w[ 0 ] & 0xff ) );
+        this.d.readFully( this.w, 0, 2 );
+        return (short) ( ( this.w[ 1 ] & 0xff ) << 8 | ( this.w[ 0 ] & 0xff ) );
         }
 
     /**
@@ -202,7 +202,7 @@ public class LEDataInputStream implements DataInput {
      */
     public final int readUnsignedByte () throws IOException
         {
-        return d.readUnsignedByte();
+        return this.d.readUnsignedByte();
         }
 
     /**
@@ -214,8 +214,8 @@ public class LEDataInputStream implements DataInput {
      */
     public final int readUnsignedShort () throws IOException
         {
-        d.readFully( w, 0, 2 );
-        return ( ( w[ 1 ] & 0xff ) << 8 | ( w[ 0 ] & 0xff ) );
+        this.d.readFully( this.w, 0, 2 );
+        return ( ( this.w[ 1 ] & 0xff ) << 8 | ( this.w[ 0 ] & 0xff ) );
         }
 
     /**
@@ -223,7 +223,7 @@ public class LEDataInputStream implements DataInput {
      */
     public final String readUTF () throws IOException
         {
-        return d.readUTF();
+        return this.d.readUTF();
         }
 
     /**
@@ -240,7 +240,7 @@ public class LEDataInputStream implements DataInput {
      */
     public final int skipBytes ( int n ) throws IOException
         {
-        return d.skipBytes( n );
+        return this.d.skipBytes( n );
         }
 
     // i n s t a n c e v a r i a b l e s
@@ -255,7 +255,7 @@ public class LEDataInputStream implements DataInput {
         {
         this.in = in;
         this.d = new DataInputStream( in );
-        w = new byte[ 8 ];
+        this.w = new byte[ 8 ];
         }
 
     /**
