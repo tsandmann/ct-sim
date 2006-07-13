@@ -1,0 +1,8 @@
+Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
+================================================================================
+
+* LED muessen Signale anzeigen 
+
+* Compilerwarnings entfernen (pek)
+
+* Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (pek) 
