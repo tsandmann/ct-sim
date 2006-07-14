@@ -1,6 +1,8 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
+* Es gibt immer noch undokumentierte Fkts im Code. 
+
 * Letzte Compilerwarnings entfernen
 
 * Slider fuer Position
