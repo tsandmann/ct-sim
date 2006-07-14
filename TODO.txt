@@ -1,5 +1,14 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
+* Klassenstruktur wieder aufräumen
+
+* Real-Bot (USB-2-Bot) reparieren
+
+* Threads syncen (bbe)
+
+* Kommunikation überarbeiten (bbe)
+
+* Bitte prüfen, was alles beim Wechsel auf den neuen Sim verloren gegangen ist
 
 * Es gibt immer noch undokumentierte Fkts im Code. 
 
