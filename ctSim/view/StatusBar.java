@@ -49,9 +49,9 @@ public class StatusBar extends Box {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final int MIN_TICK_RATE = 0;
-	private static final int INIT_TICK_RATE = 25;
-	private static final int MAX_TICK_RATE = 250;
-	private static final int MAJOR_TICK = 25;
+	private static final int INIT_TICK_RATE = 10;
+	private static final int MAX_TICK_RATE = 400;
+	private static final int MAJOR_TICK = 10;
 	
 	private CtSimFrame parent;
 	
