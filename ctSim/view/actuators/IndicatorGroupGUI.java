@@ -26,7 +26,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
@@ -42,7 +45,9 @@ public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private ArrayList<JPanel> leds;
+	private ArrayList<JLabel> leds;
+	// Wenn doch Panels, dann EmptyBorder rausnehmen...
+//	private ArrayList<JPanel> leds;
 	
 	/**
 	 * @see ctSim.view.ComponentGroupGUI#initGUI()
@@ -51,20 +56,26 @@ public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 	public void initGUI() {
 		
 		//System.out.println("Indicator: "+this.getAllActuators().size());
-		this.setBorder(new TitledBorder(new EtchedBorder(), "Indikatoren")); //$NON-NLS-1$
+		this.setBorder(BorderFactory.createCompoundBorder(new TitledBorder(new EtchedBorder(), "Indikatoren"), new EmptyBorder(0,0,1,0))); //$NON-NLS-1$
 		
 		Set<Indicator> acts = this.getAllActuators();
 		
-		this.leds = new ArrayList<JPanel>(acts.size());
+		this.leds = new ArrayList<JLabel>(acts.size());
+//		this.leds = new ArrayList<JPanel>(acts.size());
 		
 		JPanel ledPanel = new JPanel(new GridLayout(1, acts.size(), 5, 5));
 		
 		Iterator<Indicator> it = acts.iterator();
 		while(it.hasNext()) {
-			JPanel led = new JPanel();
+			JLabel led = new JLabel();
+//			JPanel led = new JPanel();
 			// TODO: siehe Indicator
-			led.setBackground(it.next().getColor());
+			led.setBackground(it.next().getColor(false));
+			led.setOpaque(true);
+			led.setVerticalAlignment(SwingConstants.CENTER);
+			led.setHorizontalAlignment(SwingConstants.CENTER);
 			led.setMinimumSize(new Dimension(15, 15));
+			led.setMaximumSize(new Dimension(15, 15));
 			//led.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 			led.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 			this.leds.add(led);
@@ -85,7 +96,13 @@ public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 		Iterator<Indicator> it = this.getAllActuators().iterator();
 		for(int i=0; it.hasNext(); i++) {
 			// TODO: siehe Indicator: getColor
-			this.leds.get(i).setBackground(it.next().getColor());
+			Indicator ind = it.next();
+			this.leds.get(i).setBackground(ind.getColor(ind.getValue()));
+//			if(ind.getValue()) {
+//				this.leds.get(i).setText("-");
+//			} else {
+//				this.leds.get(i).setText("");
+//			}
 		}
 	}
 

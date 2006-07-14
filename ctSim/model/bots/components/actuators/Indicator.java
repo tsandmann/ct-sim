@@ -107,9 +107,9 @@ public abstract class Indicator extends Actuator<Boolean> {
 	 * @return Die Farbe des Indikators
 	 */
 	@SuppressWarnings("boxing")
-	public Color getColor() {
+	public Color getColor(boolean val) {
 		
-		if(this.val)
+		if(val)
 			return this.on;
 		
 		return this.off;

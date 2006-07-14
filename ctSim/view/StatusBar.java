@@ -131,7 +131,7 @@ public class StatusBar extends Box {
 		});
 		
 		this.tickRateSlider.setMajorTickSpacing(StatusBar.MAJOR_TICK);
-		//this.tickRateSlider.setMinorTickSpacing(StatusBar.MAJOR_TICK);
+		//this.tickRateSlider.setMinorTickSpacing(5);
 		this.tickRateSlider.setPaintTicks(true);
 		//this.tickRateSlider.setPaintLabels(true);
 		this.tickRateSlider.setPreferredSize(new Dimension(150, 22));

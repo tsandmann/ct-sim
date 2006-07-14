@@ -1,4 +1,4 @@
-/*
+/* 
  * c't-Sim - Robotersimulator fuer den c't-Bot
  * 
  * This program is free software; you can redistribute it
@@ -244,10 +244,13 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	private void initActuators() {
 		
+		// !! cols.length == colsAct.length !!
+		int ledCount = cols.length;
+		
 		// LEDs:
-		for(int i=0; i<8; i++) {
+		for(int i=0; i<ledCount; i++) {
 			
-			final Integer idx = new Integer(i);
+			final Integer idx = new Integer(ledCount-i-1);
 			
 			this.addActuator(new Indicator("LED "+i, new Point3d(), new Vector3d(), cols[i], colsAct[i]) { //$NON-NLS-1$
 				
@@ -261,7 +264,12 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				@Override
 				public Boolean getValue() {
 					
-					return (CtBotSimTcp.this.actLed > Math.pow(2, idx));
+					int soll = (int)Math.pow(2, idx);
+					int ist = CtBotSimTcp.this.actLed & soll; // Bitweises "und"
+					
+					//System.out.println(this.getName()+" ["+idx+"]:  "+CtBotSimTcp.this.actLed+"  ->  "+soll+"  +  "+ist+"  =  "+(soll==ist));
+					
+					return (soll == ist);
 				}
 			});
 		}
@@ -919,7 +927,15 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 *            Der Wert von actLed, der gesetzt werden soll
 	 */
 	public void setActLed(int actL) {
+		
 		this.actLed = new Integer(actL);
+		
+//		int ledCount = cols.length;
+//		
+//		int range = (int)Math.pow(2, ledCount);
+//		
+//		while(this.actLed > range)
+//			this.actLed -= range;
 	}
 	
 	private static final Color[] cols = {
