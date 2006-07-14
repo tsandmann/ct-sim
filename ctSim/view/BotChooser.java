@@ -59,7 +59,7 @@ public class BotChooser extends JDialog {
 	 */
 	BotChooser(Frame own, Controller ctrl) {
 		
-		super(own, "Bot waehlen...", true);
+		super(own, "Bot waehlen...", true); //$NON-NLS-1$
 		
 		this.controller = ctrl;
 		
@@ -83,12 +83,12 @@ public class BotChooser extends JDialog {
 	
 	private void initButtons() {
 		
-		this.testBot = new JButton("TestBot");
-		this.cBot    = new JButton("CBot");
+		this.testBot = new JButton("TestBot"); //$NON-NLS-1$
+		this.cBot    = new JButton("CBot"); //$NON-NLS-1$
 		
 		this.testBot.addActionListener(new ActionListener() {
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -99,7 +99,7 @@ public class BotChooser extends JDialog {
 		});
 		this.cBot.addActionListener(new ActionListener() {
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -112,7 +112,7 @@ public class BotChooser extends JDialog {
 	
 	private void addTestBotClicked() {
 		
-		this.bot = this.controller.addBot("CtBotSimTest");
+		this.bot = this.controller.addBot("CtBotSimTest"); //$NON-NLS-1$
 		this.dispose();
 	}
 	
@@ -124,13 +124,13 @@ public class BotChooser extends JDialog {
 			@Override
 			public boolean accept(File f) {
 				
-				return (f.isDirectory() || f.getName().endsWith(".exe") || f.getName().endsWith(".elf"));
+				return (f.isDirectory() || f.getName().endsWith(".exe") || f.getName().endsWith(".elf")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			@Override
 			public String getDescription() {
 				
-				return "Bot-Controller (*.exe, *.elf)";
+				return "Bot-Controller (*.exe, *.elf)"; //$NON-NLS-1$
 			}
 		});
 		

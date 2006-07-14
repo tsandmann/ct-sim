@@ -56,19 +56,19 @@ public class LightSensor extends SimpleSensor<Integer> {
 	
 	/**
 	 * Der Konstruktor
-	 * @param world Welt
-	 * @param bot Bot
+	 * @param w Welt
+	 * @param b Bot
 	 * @param name Sensor-Name
 	 * @param relPos relative Position zum Bot
 	 * @param relHead relative Blickrichtung zum Bot
 	 */
-public LightSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHead) {
+public LightSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead) {
 		
 		super(name, relPos, relHead);
 		
 		// TODO:
 		this.world = w;
-		this.bot   = bot;
+		this.bot   = b;
 		
 		initShape();
 	}
@@ -76,7 +76,6 @@ public LightSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHe
 	/**
 	 * Baut die 3D-Repraesentation des Bot-Koerpers aus 2D-Polygonen zusammen
 	 *  
-	 * @return Koerper des Bots 
 	 */
 	// TODO: Testshape vom Bot
 	private void initShape() {
@@ -239,7 +238,7 @@ public LightSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHe
 		this.shape.setCapability(Group.ALLOW_CHILDREN_WRITE);
 	}
 	
-	/* (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getType()
 	 */
 	@Override
@@ -248,7 +247,7 @@ public LightSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHe
 		return "Infrarot"; //$NON-NLS-1$
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override
@@ -295,7 +294,7 @@ public LightSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHe
 		return ptLdr;
 	}
 	
-	/* (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.Sensor#updateValue()
 	 */
 	@SuppressWarnings("boxing")
@@ -339,7 +338,7 @@ ss
 		//return null;
 	}
 	
-	/* (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getShape()
 	 */
 	@Override

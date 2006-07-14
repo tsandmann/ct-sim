@@ -4,13 +4,18 @@ import ctSim.controller.Controller;
 import ctSim.model.World;
 import ctSim.view.Debug;
 
-/* Das ist der "Ich-mache-nix"-Judge fuer den "Normal-Betrieb"...
+/**  Das ist der "Ich-mache-nix"-Judge fuer den "Normal-Betrieb" mit einem einzelnen Bot
  * 
  */
 public class DefaultJudge extends Judge {
 	
 	private Controller controller;
 	
+	/**
+	 * Der Konstruktor
+	 * @param ctrl Der Controller
+	 * @param world Die Welt
+	 */
 	public DefaultJudge(Controller ctrl, World world) {
 		
 		super(ctrl, world);
@@ -18,21 +23,33 @@ public class DefaultJudge extends Judge {
 		this.controller = ctrl;
 	}
 	
+	/** 
+	 * @see ctSim.model.rules.Judge#isAddAllowed()
+	 */
+	@Override
 	public boolean isAddAllowed() {
 		
 		return true;
 	}
 	
+	/**
+	 * @see ctSim.model.rules.Judge#isStartAllowed()
+	 */
+	@Override
 	public boolean isStartAllowed() {
 		
 		if(this.controller.getParticipants() < 1) {
-			Debug.out.println("Fehler: Noch kein Bot auf der Karte.");
+			Debug.out.println("Fehler: Noch kein Bot auf der Karte."); //$NON-NLS-1$
 			return false;
 		}
 		
 		return true;
 	}
 	
+	/**
+	 * @see ctSim.model.rules.Judge#isModifyingAllowed()
+	 */
+	@Override
 	public boolean isModifyingAllowed() {
 		
 		return true;

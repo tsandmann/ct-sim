@@ -54,27 +54,27 @@ public abstract class BotPanel extends JPanel {
 	}
 	
 	/**
-	 * @param botInfo Die Bot-Informationen, die zu setzen sind
+	 * @param bI Die Bot-Informationen, die zu setzen sind
 	 */
-	private final void setBotInfo(BotInfo botInfo) {
+	private final void setBotInfo(BotInfo bI) {
 		
-		if(botInfo.getBotPanel() != this)
+		if(bI.getBotPanel() != this)
 			return;
 		
 		// Ueberfluessig: (?)
 		if(!this.updated)
-			this.botInfo = botInfo;
+			this.botInfo = bI;
 		
 		// TODO: Sonst Error
 	}
 	
 	/**
 	 * Initialisiert die Anzeigetafel
-	 * @param botInfo Informationen zum betreffenden Bot
+	 * @param bI Informationen zum betreffenden Bot
 	 */
-	protected final void init(BotInfo botInfo) {
+	protected final void init(BotInfo bI) {
 		
-		this.setBotInfo(botInfo);		
+		this.setBotInfo(bI);		
 		this.initGUI();
 	}
 	
@@ -85,7 +85,7 @@ public abstract class BotPanel extends JPanel {
 		
 		if(this.botInfo == null) {
 			// TODO: Error
-			System.err.println("Error: BotInfo not set!");
+			System.err.println("Error: BotInfo not set!"); //$NON-NLS-1$
 			System.exit(-1);
 		}
 		

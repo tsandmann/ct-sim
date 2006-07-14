@@ -53,19 +53,19 @@ public class DistanceSensor extends SimpleSensor<Double> {
 	
 	/**
 	 * Der Konstruktor
-	 * @param world Welt
-	 * @param bot Bot
+	 * @param w Welt
+	 * @param b Bot
 	 * @param name Sensor-Name
 	 * @param relPos relative Position zum Bot
 	 * @param relHead relative Blickrichtung zum Bot
 	 */
-public DistanceSensor(World world, Bot bot, String name, Point3d relPos, Vector3d relHead) {
+public DistanceSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead) {
 		
 		super(name, relPos, relHead);
 		
 		// TODO:
-		this.world = world;
-		this.bot   = bot;
+		this.world = w;
+		this.bot   = b;
 		
 		initShape();
 	}
@@ -73,7 +73,6 @@ public DistanceSensor(World world, Bot bot, String name, Point3d relPos, Vector3
 	/**
 	 * Baut die 3D-Repraesentation des Bot-Koerpers aus 2D-Polygonen zusammen
 	 *  
-	 * @return Koerper des Bots 
 	 */
 	// TODO: Testshape vom Bot
 	private void initShape() {

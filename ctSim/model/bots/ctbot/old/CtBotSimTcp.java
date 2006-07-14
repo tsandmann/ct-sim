@@ -269,7 +269,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * 
 	 * 
 	 * @see ctSim.Model.Bot#cleanup()
 	 */

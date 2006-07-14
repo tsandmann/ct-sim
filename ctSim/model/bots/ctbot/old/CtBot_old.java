@@ -806,7 +806,7 @@ ss
 	}
 
 	/*
-	 * (non-Javadoc) Der Aufruf dieser Methode direkt nach dem Erzeugen sorgt
+	 *  Der Aufruf dieser Methode direkt nach dem Erzeugen sorgt
 	 * dafuer, dass der Bot ueber ein passendes ControlPanel verfuegt
 	 * 
 	 * @see ctSim.Model.Bot#providePanel()
@@ -1019,7 +1019,7 @@ ss
 	}
 	
 	/*
-	 * (non-Javadoc)
+	 * 
 	 * 
 	 * @see ctSim.Model.Bot#init()
 	 */
@@ -1027,7 +1027,7 @@ ss
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * 
 	 * 
 	 * @see ctSim.Model.Bot#work()
 	 */

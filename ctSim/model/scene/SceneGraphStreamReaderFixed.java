@@ -41,11 +41,18 @@ import ctSim.ErrorHandler;
  *
  */public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 
+	/**
+	 * @param arg0
+	 * @throws IOException
+	 */
 	public SceneGraphStreamReaderFixed(InputStream arg0) throws IOException {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * @see com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader#readBranchGraph(java.util.HashMap)
+	 */
 	@Override
 	public BranchGroup readBranchGraph(HashMap map) throws IOException {
 		BranchGroup bg = super.readBranchGraph(map);
@@ -56,7 +63,7 @@ import ctSim.ErrorHandler;
 	@SuppressWarnings("unchecked")
 	private void reconstructMap(Group scene, HashMap map){
 		if (scene == null){
-			ErrorHandler.error("Keine Group empfangen!");
+			ErrorHandler.error("Keine Group empfangen!"); //$NON-NLS-1$
 			return;
 		}
 		
@@ -67,11 +74,12 @@ import ctSim.ErrorHandler;
 		while (it.hasNext()){
 			String name = (String)it.next();
 			SceneGraphObject so = findInScenegraph(scene,name);
+			String string = "Key "; //$NON-NLS-1$
 			if (so != null){
 				map.put(name,so);
-				System.out.println("Key "+name+" rekonstruiert");
+				System.out.println(string+name+" rekonstruiert");  //$NON-NLS-1$//$NON-NLS-2$
 			}else {
-				ErrorHandler.error("Key "+name+" konnte nach der Uebertragung nicht rekonstruiert werden");
+				ErrorHandler.error(string+name+" konnte nach der Uebertragung nicht rekonstruiert werden"); //$NON-NLS-1$
 				toKill.add(name);
 			}
 		}

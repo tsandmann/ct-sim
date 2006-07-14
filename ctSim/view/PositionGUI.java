@@ -80,26 +80,27 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		this.position = pos;
 	}
 	
-	/* (non-Javadoc)
+	/** 
 	 * @see ctSim.view.ComponentGroupGUI#getSortId()
-	 * @Override
+	 * 
 	 */
+	@Override
 	public int getSortId() {
 		
 		return 10;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ctSim.view.ComponentGroupGUI#initGUI()
 	 * 
 	 */
 	@Override
 	public void initGUI() {
 				
-		this.setBorder(new TitledBorder(new EtchedBorder(), "Position"));
+		this.setBorder(new TitledBorder(new EtchedBorder(), "Position")); //$NON-NLS-1$
 		
-		this.columns.add("Koordinate");
-		this.columns.add("Wert");
+		this.columns.add("Koordinate"); //$NON-NLS-1$
+		this.columns.add("Wert"); //$NON-NLS-1$
 		
 		
 		// Tabellendarstellung ohne JSpinner:
@@ -110,6 +111,7 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			 */
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean isCellEditable(@SuppressWarnings("unused") int row, int col) {
 				
 				if(col == 0)
@@ -118,14 +120,14 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			}
 		};
 		
-		this.tabData.setValueAt("X:", 0, 0);
-		this.tabData.setValueAt("Y:", 1, 0);
-		this.tabData.setValueAt("Z:", 2, 0);
-		this.tabData.setValueAt("H:", 3, 0);
+		this.tabData.setValueAt("X:", 0, 0); //$NON-NLS-1$
+		this.tabData.setValueAt("Y:", 1, 0); //$NON-NLS-1$
+		this.tabData.setValueAt("Z:", 2, 0); //$NON-NLS-1$
+		this.tabData.setValueAt("H:", 3, 0); //$NON-NLS-1$
 		
 		this.tabData.addTableModelListener(new TableModelListener() {
 			
-			@SuppressWarnings("synthetic-access")
+			@SuppressWarnings({"synthetic-access","boxing"})
 			public void tableChanged(TableModelEvent e) {
 				
 				int column = e.getColumn();
@@ -183,9 +185,10 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			 */
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void setValue(Object value) {
  		        
- 		        setText((value == null) ? "" : String.format("%.2f", value));
+ 		        setText((value == null) ? "" : String.format("%.2f", value)); //$NON-NLS-1$ //$NON-NLS-2$
  		    }
  		});
 		
@@ -196,10 +199,11 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		this.add(scroll);
 	}
 	
-	/* (non-Javadoc)
+	/** 
 	 * @see ctSim.view.ComponentGroupGUI#updateGUI()
 	 * 
 	 */
+	@SuppressWarnings("boxing")
 	@Override
 	public void updateGUI() {
 		
@@ -229,9 +233,13 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			
 			this.spinner = new JSpinner(this.model);
 			
-			this.spinner.setEditor(new JSpinner.NumberEditor(this.spinner, "0.00"));
+			this.spinner.setEditor(new JSpinner.NumberEditor(this.spinner, "0.00")); //$NON-NLS-1$
 		}
 		
+		/**
+		 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
+		 */
+		@SuppressWarnings("boxing")
 		public Component getTableCellEditorComponent(@SuppressWarnings("unused") JTable table, Object value, boolean isSelected, int row, int column) {
 			
 			if(row == 3) {
@@ -252,6 +260,9 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			return this.spinner;
 		}
 		
+		/**
+		 * @see javax.swing.CellEditor#getCellEditorValue()
+		 */
 		public Object getCellEditorValue() {
 			
 			return this.model.getValue();

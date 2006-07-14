@@ -68,7 +68,7 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * 
 	 * 
 	 * @see ctSim.Model.Bot#work()
 	 */

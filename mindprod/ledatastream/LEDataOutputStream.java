@@ -92,7 +92,7 @@ public class LEDataOutputStream implements DataOutput {
         }
 
     /**
-     * This method writes only one byte, even though it says int (non-Javadoc)
+     * This method writes only one byte, even though it says int 
      * 
      * @inheritDoc
      * @see java.io.DataOutput#write(int)
@@ -261,7 +261,7 @@ public class LEDataOutputStream implements DataOutput {
      */
     public static final String getCopyright ()
         {
-        return "LeDataStream 1.7 freeware copyright (c) 1998-2006 Roedy Green, Canadian Mind Products, http://mindprod.com roedyg@mindprod.com";
+        return "LeDataStream 1.7 freeware copyright (c) 1998-2006 Roedy Green, Canadian Mind Products, http://mindprod.com roedyg@mindprod.com"; //$NON-NLS-1$
         }
 
 } // end LEDataOutputStream

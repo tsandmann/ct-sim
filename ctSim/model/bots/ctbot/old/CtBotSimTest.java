@@ -52,7 +52,7 @@ public class CtBotSimTest extends CtBotSim {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * 
 	 * 
 	 * @see ctSim.Model.Bot#init()
 	 */

@@ -91,13 +91,13 @@ public final class ControlBar extends JPanel {
 //		
 //		this.botTabs.addTab(botInfo.getName(), null, scroll,
 		this.botTabs.addTab(botInfo.getName(), null, botPanel,
-				"Bot '"+botInfo.getName()+"' with type '"+botInfo.getType()+"'");
+				"Bot '"+botInfo.getName()+"' with type '"+botInfo.getType()+"'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
 		botPanel.invalidate();
 		//this.invalidate();
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see java.awt.Component#getPreferredSize()
 	 */
 	@Override

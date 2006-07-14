@@ -94,7 +94,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 		this.governor = gov;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getType()
 	 */
 	@Override
@@ -103,7 +103,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 		return "Infrarot"; //$NON-NLS-1$
 	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override
@@ -125,7 +125,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 		// TODO Die Kennlinien der echten Motoren ist nicht linear
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.Sensor#updateValue()
 	 */
 	@SuppressWarnings({"unchecked","boxing"})
@@ -154,7 +154,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 		return encoderSteps;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getShape()
 	 */
 	@Override

@@ -43,17 +43,17 @@ public final class BotInfo {
 	
 	/**
 	 * Der Konstruktor
-	 * @param name Name des Bot
-	 * @param type Typ des Bot
-	 * @param bot Der Bot selbst
+	 * @param n Name des Bot
+	 * @param t Typ des Bot
+	 * @param b Der Bot selbst
 	 * @param panel Die passende Anzeigetafel fuer den Bot
 	 */
-	public BotInfo(String name, String type, Bot bot, BotPanel panel) {
+	public BotInfo(String n, String t, Bot b, BotPanel panel) {
 		
 		// TODO: Bot adden!
-		this.name     = name;
-		this.type     = type;
-		this.bot      = bot;
+		this.name     = n;
+		this.type     = t;
+		this.bot      = b;
 		this.botPanel = panel;
 	}
 	
@@ -65,10 +65,10 @@ public final class BotInfo {
 	}
 	
 	/**
-	 * @param name Der zu setzende Bot-Name
+	 * @param n Der zu setzende Bot-Name
 	 */
-	protected void setName(String name) {
-		this.name = name;
+	protected void setName(String n) {
+		this.name = n;
 	}
 	
 	/**

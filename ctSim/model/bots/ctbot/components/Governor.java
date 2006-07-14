@@ -36,8 +36,6 @@ public class Governor extends SimpleActuator<Integer> {
 	
 	/**
 	 * Der Konstruktor
-	 * @param world Welt
-	 * @param bot Bot
 	 * @param name Sensor-Name
 	 * @param relPos relative Position zum Bot
 	 * @param relHead relative Blickrichtung zum Bot
@@ -71,7 +69,8 @@ public Governor(String name, Point3d relPos, Vector3d relHead) {
 	}
 	
 	/**
-	 * @see ctSim.model.bots.components.Actuator#setValue(E)
+	 * @param value Der Wert zu setzen
+	 * @see ctSim.model.bots.components.Actuator#setValue
 	 */
 	// TODO: should be abstract (?)
 	@Override

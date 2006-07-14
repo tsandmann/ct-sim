@@ -55,19 +55,19 @@ public class BorderSensor extends SimpleSensor<Short> {
 	
 	/**
 	 * Der Konstruktor
-	 * @param world Welt
-	 * @param bot Bot
+	 * @param w Welt
+	 * @param b Bot
 	 * @param name Sensor-Name
 	 * @param relPos relative Position zum Bot
 	 * @param relHead relative Blickrichtung zum Bot
 	 */
-	public BorderSensor(World world, Bot bot, String name, Point3d relPos, Vector3d relHead) {
+	public BorderSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead) {
 		
 		super(name, relPos, relHead);
 		
 		// TODO:
-		this.world = world;
-		this.bot   = bot;
+		this.world = w;
+		this.bot   = b;
 		
 		initShape();
 	}
@@ -236,7 +236,7 @@ public class BorderSensor extends SimpleSensor<Short> {
 		this.shape.setCapability(Group.ALLOW_CHILDREN_WRITE);
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getType()
 	 */
 	@Override
@@ -245,8 +245,8 @@ public class BorderSensor extends SimpleSensor<Short> {
 		return "Infrarot"; //$NON-NLS-1$
 	}
 
-	/** (non-Javadoc)
-	 * @see ctSim.model.bots.components.BotComponent#getDescription()
+	/** 
+	 * 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override
 	public String getDescription() {
@@ -254,7 +254,7 @@ public class BorderSensor extends SimpleSensor<Short> {
 		return "Infrarot Abgrund-Sensor: "+this.getName(); //$NON-NLS-1$
 	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.Sensor#updateValue()
 	 */
 	@SuppressWarnings("boxing")
@@ -272,6 +272,7 @@ public class BorderSensor extends SimpleSensor<Short> {
 				this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()),
 				this.angle,
 				this.precision);
+		
 		
 		/* TODO:
 		 * 
@@ -296,7 +297,7 @@ ss
 		//return null;
 	}
 	
-	/** (non-Javadoc)
+	/**
 	 * @see ctSim.model.bots.components.BotComponent#getShape()
 	 */
 	@Override

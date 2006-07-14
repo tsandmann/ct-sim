@@ -55,27 +55,25 @@ public class LineSensor extends SimpleSensor<Short> {
 	
 	/**
 	 * Der Konstruktor
-	 * @param world Welt
-	 * @param bot Bot
+	 * @param w Welt
+	 * @param b Bot
 	 * @param name Sensor-Name
 	 * @param relPos relative Position zum Bot
 	 * @param relHead relative Blickrichtung zum Bot
 	 */
-public LineSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHead) {
+public LineSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead) {
 		
 		super(name, relPos, relHead);
 		
 		// TODO:
 		this.world = w;
-		this.bot   = bot;
+		this.bot   = b;
 		
 		initShape();
 	}
 
 	/**
 	 * Baut die 3D-Repraesentation des Bot-Koerpers aus 2D-Polygonen zusammen
-	 *  
-	 * @return Koerper des Bots 
 	 */
 	// TODO: Testshape vom Bot
 	private void initShape() {
@@ -247,7 +245,7 @@ public LineSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHea
 		return "Infrarot"; //$NON-NLS-1$
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override
@@ -256,7 +254,7 @@ public LineSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHea
 		return "Infrarot Linien-Sensor: "+this.getName(); //$NON-NLS-1$
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ctSim.model.bots.components.Sensor#updateValue()
 	 */
 	@SuppressWarnings("boxing")
@@ -274,6 +272,8 @@ public LineSensor(World w, Bot bot, String name, Point3d relPos, Vector3d relHea
 				this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()),
 				this.angle,
 				this.precision);
+		
+		
 		
 		/* TODO:
 		 * 
@@ -298,7 +298,7 @@ ss
 		//return null;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ctSim.model.bots.components.BotComponent#getShape()
 	 */
 	@Override

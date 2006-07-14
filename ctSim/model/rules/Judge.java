@@ -88,27 +88,33 @@ public abstract class Judge {
 	 * Diese Routine muss den Judge-Thread in einen Schlaf-Modus versetzen.
 	 * Sie kann von Unterklassen ueberschrieben werden, oder sie setzen einfach 
 	 * das Feld delay auf einen anderen Wert!  
-	 * @throws InterruptedException
+	 * @return  
 	 */
 //	protected void delay() throws InterruptedException{
 //		sleep(delay);
 //	}
 	
-	public boolean isAddAllowed() {
+	public boolean isAddAllowed(){
 		
 		return this.time == this.startTime;
 	}
 	
+	/**
+	 * @return true, wenn die Bedingungen fuer einen Start erfuellt sind
+	 */
 	public boolean isStartAllowed() {
 		
 		if(this.controller.getParticipants() < 1) {
-			Debug.out.println("Fehler: Noch kein Bot auf der Karte.");
+			Debug.out.println("Fehler: Noch kein Bot auf der Karte."); //$NON-NLS-1$
 			return false;
 		}
 		
 		return this.start;
 	}
 	
+	/**
+	 * @return true, falls Aenderungen vorgenommen werden koennen
+	 */
 	public boolean isModifyingAllowed() {
 		
 		return false;

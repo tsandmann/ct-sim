@@ -39,9 +39,9 @@ public class Debug {
 	 */
 	public static final Debug out = new Debug();
 	
-	private final String LOG_FILE = "debug.txt";
+	private final String LOG_FILE = "debug.txt"; //$NON-NLS-1$
 	
-	private final String TIME_PREFIX = "[HH:mm:ss] "; 
+	private final String TIME_PREFIX = "[HH:mm:ss] ";  //$NON-NLS-1$
 	
 	private BufferedWriter bw;
 	
@@ -70,9 +70,9 @@ public class Debug {
 		}
 	}
 	
-	private void setDebugWindow(DebugWindow win) {
+	private void setDebugWindow(DebugWindow window) {
 		
-		this.win = win;
+		this.win = window;
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public class Debug {
 			}
 		}
 		
-		if(!str.endsWith("\n"))
+		if(!str.endsWith("\n")) //$NON-NLS-1$
 			this.isNewLine = false;
 	}
 	
@@ -127,9 +127,10 @@ public class Debug {
 		this.isNewLine = true;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see java.lang.Object#finalize()
 	 */
+	@Override
 	protected void finalize() throws Throwable {
 		
 		try {

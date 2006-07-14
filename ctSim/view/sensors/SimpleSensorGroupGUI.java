@@ -48,17 +48,17 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 	
 	private TableModel tabData;
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.view.ComponentGroupGUI#initGUI()
 	 */
 	@Override
 	public void initGUI() {
 		
-		this.setBorder(new TitledBorder(new EtchedBorder(), "Sensoren"));
+		this.setBorder(new TitledBorder(new EtchedBorder(), "Sensoren")); //$NON-NLS-1$
 		
 		//System.out.println("Simple: "+this.getAllSensors().size());
-		this.columns.add("Sensor");
-		this.columns.add("Wert");
+		this.columns.add("Sensor"); //$NON-NLS-1$
+		this.columns.add("Wert"); //$NON-NLS-1$
 		
 		this.tabData = new DefaultTableModel(this.columns, this.getAllSensors().size()) {
 			
@@ -90,7 +90,7 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 		this.add(scroll);
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.view.ComponentGroupGUI#updateGUI()
 	 */
 	@SuppressWarnings("unchecked")
@@ -113,7 +113,7 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 		}
 	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.view.ComponentGroupGUI#getSortId()
 	 */
 	@Override

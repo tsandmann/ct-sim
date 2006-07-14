@@ -73,7 +73,7 @@ public abstract class Indicator extends Actuator<Boolean> {
 //		return this.val;
 //	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getType()
 	 */
 	@Override
@@ -82,7 +82,7 @@ public abstract class Indicator extends Actuator<Boolean> {
 		return "Indicator"; //$NON-NLS-1$
 	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override
@@ -91,7 +91,7 @@ public abstract class Indicator extends Actuator<Boolean> {
 		return null;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.Actuator#getActuatorGroupGUI()
 	 */
 	@SuppressWarnings("unchecked")
@@ -127,7 +127,7 @@ public abstract class Indicator extends Actuator<Boolean> {
 //		return this.val;
 //	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getShape()
 	 */
 	@Override

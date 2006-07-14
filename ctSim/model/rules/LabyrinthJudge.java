@@ -1,3 +1,21 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
 package ctSim.model.rules;
 
 import java.util.Set;
@@ -10,6 +28,10 @@ import ctSim.model.World;
 import ctSim.view.Debug;
 import ctSim.SimUtils;
 
+/**
+ * Schiedsrichter fuer Rennen von zwei Bots durch ein Labyrinth
+ *
+ */
 public class LabyrinthJudge extends Judge {
 	
 	private Controller controller;
@@ -32,7 +54,7 @@ public class LabyrinthJudge extends Judge {
 		this.world = w;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.rules.Judge#isAddAllowed()
 	 */
 	@Override
@@ -40,19 +62,22 @@ public class LabyrinthJudge extends Judge {
 		
 		// TODO: Bot-Anzahl pruefen
 		if(this.controller.getParticipants() == this.participants) {
-			Debug.out.println("Fehler: Es sind schon "+this.participants+" Bots auf der Karte.");
+			Debug.out.println("Fehler: Es sind schon "+this.participants+" Bots auf der Karte."); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
 		
 		return super.isAddAllowed();
 	}
 	
+	/**
+	 * @see ctSim.model.rules.Judge#isStartAllowed()
+	 */
 	@Override
 	public boolean isStartAllowed() {
 		
 		// TODO: Bot-Anzahl pruefen
 		if(this.controller.getParticipants() != this.participants) {
-			Debug.out.println("Fehler: Noch nicht genuegend Bots auf der Karte.");
+			Debug.out.println("Fehler: Noch nicht genuegend Bots auf der Karte."); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -61,7 +86,7 @@ public class LabyrinthJudge extends Judge {
 	
 	/**
 	 * Prueft die Einhaltung der Regeln
-	 *
+	 * @return true, wenn aller Reglen eingehalten werden
 	 */
 	@Override
 	public boolean check(){
@@ -80,7 +105,7 @@ public class LabyrinthJudge extends Judge {
 				
 				//Debug.out.println("Bot \""+obst.getName()+"\" erreicht nach "+this.getTime()+" ms als erster das Ziel!");
 				//Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "+ this.getTime()+" ms.");
-				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "+ SimUtils.millis2time(this.getTime()));
+				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "+ SimUtils.millis2time(this.getTime()));  //$NON-NLS-1$//$NON-NLS-2$
 				
 				return false;
 			}

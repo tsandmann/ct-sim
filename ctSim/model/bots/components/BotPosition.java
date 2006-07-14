@@ -44,7 +44,7 @@ public abstract class BotPosition extends BotComponent {
 		super(name, pos, head);
 	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getType()
 	 */
 	@Override
@@ -53,7 +53,7 @@ public abstract class BotPosition extends BotComponent {
 		return "Bot-Position"; //$NON-NLS-1$
 	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override
@@ -70,7 +70,7 @@ public abstract class BotPosition extends BotComponent {
 		return new PositionGUI(this);
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getShape()
 	 */
 	@Override
@@ -80,13 +80,13 @@ public abstract class BotPosition extends BotComponent {
 		return new Shape3D();
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getRelPosition()
 	 */
 	@Override
 	public abstract Point3d getRelPosition();
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getRelHeading()
 	 */
 	@Override

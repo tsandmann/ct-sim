@@ -53,7 +53,7 @@ public class JudgeChooser extends JDialog implements ActionListener {
 	//private JRadioButton defJudge, contestJudge, labyJudge;
 	
 	// Add Judges here; first one should be default:
-	private final String[] judges = new String[] {"ctSim.model.rules.DefaultJudge", "ctSim.model.rules.LabyrinthJudge"}; // "LabyrinthContestJudge"
+	private final String[] judges = new String[] {"ctSim.model.rules.DefaultJudge", "ctSim.model.rules.LabyrinthJudge"}; // "LabyrinthContestJudge"  //$NON-NLS-1$//$NON-NLS-2$
 	
 	/**
 	 * Der Konstruktor
@@ -61,7 +61,7 @@ public class JudgeChooser extends JDialog implements ActionListener {
 	 */
 	JudgeChooser(Frame own) {
 		
-		super(own, "Schiedsrichter waehlen...", true);
+		super(own, "Schiedsrichter waehlen...", true); //$NON-NLS-1$
 		
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
@@ -71,7 +71,7 @@ public class JudgeChooser extends JDialog implements ActionListener {
 		
 		this.buttons.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
 		
-		this.buttons.add(new JLabel("Waehlen Sie einen Schiedsrichter:"));
+		this.buttons.add(new JLabel("Waehlen Sie einen Schiedsrichter:")); //$NON-NLS-1$
 		
 		initRadioButtons();
 		
@@ -79,7 +79,7 @@ public class JudgeChooser extends JDialog implements ActionListener {
 		//buttons.add(this.labyJudge);
 		//buttons.add(this.contestJudge);
 		
-		this.ok = new JButton("Ok");
+		this.ok = new JButton("Ok"); //$NON-NLS-1$
 		this.ok.addActionListener(this);
 		
 		this.add(this.buttons, BorderLayout.CENTER);
@@ -120,7 +120,7 @@ public class JudgeChooser extends JDialog implements ActionListener {
 		return this.judge;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {

@@ -186,7 +186,7 @@ public class ParcoursLoader {
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
 	 * 
 	 * @param x  Position in X-Richtung
-	 * @param y  Position in X-Richtung
+	 * @param y  Position in Y-Richtung
 	 * @param app Aussehen des Bodens
 	 */
 	private void createFloor(int x, int y, Appearance app) {
@@ -195,12 +195,26 @@ public class ParcoursLoader {
 	}	
 
 	/**
+	 * Erzeugt einen Fussboden aus einem Stueck 
+	 * Alle Postionen sind keine Weltkoordinaten,
+	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
+	 * 
+	 * @param app Aussehen des Bodens
+	 */
+	@SuppressWarnings("unused")
+	private void createWholeFloor(Appearance app) {
+		Box box = new Box(this.parcours.getDimX()*this.parcours.getGrid() *0.5f , this.parcours.getDimY()*this.parcours.getGrid()  *0.5f, World.PLAYGROUND_THICKNESS, app);
+		this.parcours.addFloor(box,this.parcours.getDimX()/2,this.parcours.getDimY()/2, -World.PLAYGROUND_THICKNESS); // +0.001f);
+	}	
+
+	
+	/**
 	 * Erzeugt eine Linie auf dem Boden 
 	 * Alle Postionen sind keine Weltkoordinaten,
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
 	 * 
 	 * @param x  Position in X-Richtung
-	 * @param y  Position in X-Richtung
+	 * @param y  Position in Y-Richtung
 	 * @param type Art der Linie
 	 */
 	private void createLine(int x, int y, float[] points, Appearance appearance) {
@@ -315,6 +329,7 @@ public class ParcoursLoader {
 
     	
     	if (this.parcoursMap != null){
+    		
 			for (int y = 0; y < this.parcours.getDimY(); y++){
 				for (int x = 0; x < this.parcours.getDimX(); x++) 
 					switch (this.parcoursMap[x][y]) {
@@ -401,8 +416,10 @@ public class ParcoursLoader {
 						
 					}
 				    	
-				    	
+	    		
 			}
+//			 TODO: Hier wird testweise ein Boden aus einem Stueck eingefuegt!
+//			createWholeFloor(getAppearance(' '));	
        }
 	}    	
 	
@@ -429,7 +446,7 @@ public class ParcoursLoader {
 			// umwandeln in ein Document
 			Document doc = parser.getDocument();
 			
-			// Und Anfangen mit dem abarbeiten
+			// Und anfangen mit dem abarbeiten
 			
 			//als erster suchen wir uns den Parcours-Block
 			Node n = doc.getDocumentElement().getFirstChild();
@@ -481,7 +498,7 @@ public class ParcoursLoader {
 				n=n.getNextSibling();
 			// jetzt haben wir ihn
 
-			//	Eine Liste aller Kinder des Parcours-Eitnrags organsisieren
+			//	Eine Liste aller Kinder des Parcours-Eintrags organsisieren
 			children=n.getChildNodes();	
 			
 			//	HashMap mit den Apearances aufbauen

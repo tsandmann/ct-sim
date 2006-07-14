@@ -28,7 +28,7 @@ import ctSim.ErrorHandler;
 import ctSim.model.bots.ctbot.CtBot;
 
 /**
- * Repraesentiert einen Parcouts fuer die Bots
+ * Repraesentiert einen Parcouss fuer die Bots
  * Wird zum Laden eines solchen benoetigt. 
  * Des Weiteren stehen hier auch Informationen ueber
  * Start- und Zielpunkte der Bots
@@ -39,7 +39,7 @@ public class Parcours {
 	/** Raster des Parcours-Gitters */
 	private float grid = (float) (CtBot.BOT_RADIUS * 2 * 2);
 
-	/** Anzahl der Startpositionen für Bots. Dir Position 0 ist die Default Position, ab 1 für die Wettkampfbots.*/
+	/** Anzahl der Startpositionen fuer Bots. Dir Position 0 ist die Default Position, ab 1 für die Wettkampfbots.*/
 	public static int BOTS = 3; 
 	
 	/** enthaelt alle Hindernisse */
@@ -94,7 +94,7 @@ public class Parcours {
 
 	/**
 	 *  
-	 * @return Liefert die Parcursbreite in Gittereinheiten zurueck
+	 * @return Liefert die Parcoursbreite in Gittereinheiten zurueck
 	 */
 	public int getDimX() {
 		return this.dimX;
@@ -206,7 +206,7 @@ public class Parcours {
 	}
 	
 	/**
-	 * Fuegt eine Dartsellung der Lichtquelle ein
+	 * Fuegt eine Darstellung der Lichtquelle ein
 	 * @param light Die Lichtquelle
 	 * @param x X-Achse im Parcours-Gitter
 	 * @param y Y-Achse im Parcours-Gitter

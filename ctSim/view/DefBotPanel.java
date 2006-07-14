@@ -53,12 +53,11 @@ public class DefBotPanel extends BotPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 	}
 	
-	// do not call this function directly!
-	// call 'init' instead
-	/* (non-Javadoc)
+	/**
+	 * Nicht direkt aufrufen, statt dessen 'init' benutzen!
 	 * @see ctSim.view.BotPanel#initGUI()
-	 * 	@SuppressWarnings("unchecked")
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected void initGUI() {
 		
@@ -135,11 +134,13 @@ public class DefBotPanel extends BotPanel {
 		//this.setPreferredSize(new Dimension(200, 400));
 	}
 	
-	// do not call this function directly!
-	// call 'update' instead
-	/* (non-Javadoc)
+	/**
+	 * Nicht direkt aufrufen, stattdessen 'update' benutzen!
+	 * 
 	 * @see ctSim.view.BotPanel#updateGUI()
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	protected void updateGUI() {
 		
 		for(ComponentGroupGUI gui : this.compList) {

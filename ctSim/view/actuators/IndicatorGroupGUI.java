@@ -44,14 +44,14 @@ public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<JPanel> leds;
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ctSim.view.ComponentGroupGUI#initGUI()
-	 * 	@Override
 	 */
+	@Override
 	public void initGUI() {
 		
 		//System.out.println("Indicator: "+this.getAllActuators().size());
-		this.setBorder(new TitledBorder(new EtchedBorder(), "Indikatoren"));
+		this.setBorder(new TitledBorder(new EtchedBorder(), "Indikatoren")); //$NON-NLS-1$
 		
 		Set<Indicator> acts = this.getAllActuators();
 		
@@ -74,10 +74,11 @@ public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 		this.add(ledPanel);
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see ctSim.view.ComponentGroupGUI#updateGUI()
-	 * @Override
-	 */	
+	 * 
+	 */
+	@Override
 	public void updateGUI() {
 		// TODO
 		//System.out.println("Indicator: "+this.getAllActuators().size());
@@ -88,10 +89,10 @@ public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 		}
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ctSim.view.ComponentGroupGUI#getSortId()
-	 * 	@Override
 	 */
+	@Override
 	public int getSortId() {
 		return 1;
 	}

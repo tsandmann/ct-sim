@@ -208,7 +208,7 @@ public final class Controller implements Runnable {
 			dummy.interrupt();
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {

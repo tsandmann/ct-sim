@@ -116,8 +116,8 @@ public class CtSimFrame extends JFrame {
 	private World world;
 	private Controller controller;
 	
-	private final String TMP_PARCOURS_PATH = "tmp";
-	private final String TMP_PARCOURS_FILE_NAME = "tmpParcoursFile";
+	private final String TMP_PARCOURS_PATH = "tmp"; //$NON-NLS-1$
+	private final String TMP_PARCOURS_FILE_NAME = "tmpParcoursFile"; //$NON-NLS-1$
 	private File tmpParcoursFile;
 	
 	
@@ -137,26 +137,27 @@ public class CtSimFrame extends JFrame {
 		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter() {
 			
-			/* (non-Javadoc)
+			/** 
 			 * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
 			 */
+			@Override
 			public void windowClosing(WindowEvent e) {
 				
 				cmdExitClicked();
 			}
 		});
 		
-		this.worldChooser = new JFileChooser(".");
+		this.worldChooser = new JFileChooser("."); //$NON-NLS-1$
 		this.worldChooser.setFileFilter(new FileFilter() {
 
 			@Override
 			public boolean accept(File f) {
-				return (f.isDirectory() || f.getName().endsWith(".xml"));
+				return (f.isDirectory() || f.getName().endsWith(".xml")); //$NON-NLS-1$
 			}
 
 			@Override
 			public String getDescription() {
-				return "World-Files (*.xml)";
+				return "World-Files (*.xml)"; //$NON-NLS-1$
 			}
 		});
 		
@@ -205,15 +206,15 @@ public class CtSimFrame extends JFrame {
 		ClassLoader cl = ClassLoader.getSystemClassLoader();
 		Toolkit tk = Toolkit.getDefaultToolkit();
 
-		this.openImg    = tk.getImage(cl.getResource("images/Open16.gif"));
-		this.closeImg   = tk.getImage(cl.getResource("images/Delete16.gif"));
-		this.saveImg    = tk.getImage(cl.getResource("images/SaveAs16.gif"));
-		this.randomImg  = tk.getImage(cl.getResource("images/New16.gif"));
+		this.openImg    = tk.getImage(cl.getResource("images/Open16.gif")); //$NON-NLS-1$
+		this.closeImg   = tk.getImage(cl.getResource("images/Delete16.gif")); //$NON-NLS-1$
+		this.saveImg    = tk.getImage(cl.getResource("images/SaveAs16.gif")); //$NON-NLS-1$
+		this.randomImg  = tk.getImage(cl.getResource("images/New16.gif")); //$NON-NLS-1$
 		
 		//refreshImg = tk.getImage(cl.getResource("images/Refresh16.gif"));
-		this.stopImg    = tk.getImage(cl.getResource("images/Stop16.gif"));
-		this.pauseImg   = tk.getImage(cl.getResource("images/Pause16.gif"));
-		this.playImg    = tk.getImage(cl.getResource("images/Play16.gif"));
+		this.stopImg    = tk.getImage(cl.getResource("images/Stop16.gif")); //$NON-NLS-1$
+		this.pauseImg   = tk.getImage(cl.getResource("images/Pause16.gif")); //$NON-NLS-1$
+		this.playImg    = tk.getImage(cl.getResource("images/Play16.gif")); //$NON-NLS-1$
 		
 		/*
 		zoomInImg  = tk.getImage(cl.getResource("images/ZoomIn16.gif"));
@@ -280,7 +281,7 @@ public class CtSimFrame extends JFrame {
 		try {
 			this.tracker.waitForAll();
 		} catch (InterruptedException e) {
-			System.err.println("Interrupted!");
+			System.err.println("Unterbrechung!"); //$NON-NLS-1$
 		}
 		
 		// TODO:
@@ -289,7 +290,7 @@ public class CtSimFrame extends JFrame {
 		
 		//////////////////////////////////////////////////////////////////////
 		// World-Actions
-		this.openWorld = new AbstractAction("Oeffnen...",
+		this.openWorld = new AbstractAction("Oeffnen...", //$NON-NLS-1$
 				new ImageIcon(this.openImg)) {
 
 			/**
@@ -297,7 +298,7 @@ public class CtSimFrame extends JFrame {
 					 */
 					private static final long serialVersionUID = 1L;
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -306,7 +307,7 @@ public class CtSimFrame extends JFrame {
 				cmdOpenWorldClicked();
 			}
 		};
-		this.randomWorld = new AbstractAction("Generieren...",
+		this.randomWorld = new AbstractAction("Generieren...", //$NON-NLS-1$
 				new ImageIcon(this.randomImg)) {
 
 			/**
@@ -314,7 +315,7 @@ public class CtSimFrame extends JFrame {
 					 */
 					private static final long serialVersionUID = 1L;
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -323,7 +324,7 @@ public class CtSimFrame extends JFrame {
 				cmdRandomWorldClicked();
 			}
 		};
-		this.closeWorld = new AbstractAction("Schliessen",
+		this.closeWorld = new AbstractAction("Schliessen", //$NON-NLS-1$
 				new ImageIcon(this.closeImg)) {
 
 			/**
@@ -331,7 +332,7 @@ public class CtSimFrame extends JFrame {
 					 */
 					private static final long serialVersionUID = 1L;
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -340,7 +341,7 @@ public class CtSimFrame extends JFrame {
 				cmdCloseWorldClicked();
 			}
 		};
-		this.saveWorld = new AbstractAction("Speichern als...",
+		this.saveWorld = new AbstractAction("Speichern als...", //$NON-NLS-1$
 				new ImageIcon(this.saveImg)) {
 
 			/**
@@ -348,7 +349,7 @@ public class CtSimFrame extends JFrame {
 					 */
 					private static final long serialVersionUID = 1L;
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -360,14 +361,14 @@ public class CtSimFrame extends JFrame {
 		
 		//////////////////////////////////////////////////////////////////////
 		// Bot-Actions
-		this.selectJudge = new AbstractAction("Schiedsrichter waehlen...") {
+		this.selectJudge = new AbstractAction("Schiedsrichter waehlen...") { //$NON-NLS-1$
 			
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -376,14 +377,14 @@ public class CtSimFrame extends JFrame {
 				cmdSetJudgeClicked();
 			}
 		};
-		this.addBot = new AbstractAction("Bot hinzufuegen...") {
+		this.addBot = new AbstractAction("Bot hinzufuegen...") { //$NON-NLS-1$
 
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings({"synthetic-access","synthetic-access"})
@@ -392,14 +393,14 @@ public class CtSimFrame extends JFrame {
 				cmdAddBotClicked();
 			}
 		};
-		this.configBots = new AbstractAction("Bots konfigurieren...") {
+		this.configBots = new AbstractAction("Bots konfigurieren...") { //$NON-NLS-1$
 
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -411,7 +412,7 @@ public class CtSimFrame extends JFrame {
 		
 		//////////////////////////////////////////////////////////////////////
 		// Control-Options
-		this.start = new AbstractAction("Start",
+		this.start = new AbstractAction("Start", //$NON-NLS-1$
 				new ImageIcon(this.playImg)) {
 
 			/**
@@ -419,7 +420,7 @@ public class CtSimFrame extends JFrame {
 					 */
 					private static final long serialVersionUID = 1L;
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -428,7 +429,7 @@ public class CtSimFrame extends JFrame {
 				cmdStartClicked();
 			}
 		};
-		this.stop = new AbstractAction("Stop",
+		this.stop = new AbstractAction("Stop", //$NON-NLS-1$
 				new ImageIcon(this.stopImg)) {
 
 			/**
@@ -436,7 +437,7 @@ public class CtSimFrame extends JFrame {
 					 */
 					private static final long serialVersionUID = 1L;
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -445,7 +446,7 @@ public class CtSimFrame extends JFrame {
 				cmdStopClicked();
 			}
 		};
-		this.pause = new AbstractAction("Pause",
+		this.pause = new AbstractAction("Pause", //$NON-NLS-1$
 				new ImageIcon(this.pauseImg)) {
 
 			/**
@@ -453,7 +454,7 @@ public class CtSimFrame extends JFrame {
 					 */
 					private static final long serialVersionUID = 1L;
 
-			/* (non-Javadoc)
+			/* 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
@@ -594,9 +595,9 @@ public class CtSimFrame extends JFrame {
 				file = this.worldChooser.getSelectedFile();
 				
 				if(		! file.exists()
-					 && ! file.getName().endsWith(".xml")) {
+					 && ! file.getName().endsWith(".xml")) { //$NON-NLS-1$
 					
-					file = new File(file.getAbsolutePath()+".xml");
+					file = new File(file.getAbsolutePath()+".xml"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -619,17 +620,17 @@ public class CtSimFrame extends JFrame {
 			
 			this.tmpParcoursFile = file;
 			
-			Debug.out.println("Neue Welt geoeffnet.");
+			Debug.out.println("Neue Welt geoeffnet."); //$NON-NLS-1$
 			
 		} catch (SAXException e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
 			e.printStackTrace();
 		} catch (IOException e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
 			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO: Ueber?
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}
@@ -642,11 +643,11 @@ public class CtSimFrame extends JFrame {
 		
 		String fileContent = parcGen.generateParc();
 		
-		this.tmpParcoursFile = new File("./"+this.TMP_PARCOURS_PATH+"/"+this.TMP_PARCOURS_FILE_NAME+".xml");
+		this.tmpParcoursFile = new File("./"+this.TMP_PARCOURS_PATH+"/"+this.TMP_PARCOURS_FILE_NAME+".xml");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		
 		for(int i=1; this.tmpParcoursFile.exists(); i++) {
 			
-			this.tmpParcoursFile = new File("./"+this.TMP_PARCOURS_PATH+"/"+this.TMP_PARCOURS_FILE_NAME+i+".xml");
+			this.tmpParcoursFile = new File("./"+this.TMP_PARCOURS_PATH+"/"+this.TMP_PARCOURS_FILE_NAME+i+".xml");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 		}
 		
 		try {
@@ -669,16 +670,16 @@ public class CtSimFrame extends JFrame {
 			
 			this.validate();
 			
-			Debug.out.println("Labyrinth generiert");
+			Debug.out.println("Labyrinth generiert"); //$NON-NLS-1$
 			
 		} catch (SAXException e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
 			e.printStackTrace();
 		} catch (IOException e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
 			e.printStackTrace();
 		} catch (Exception e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei.");
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
 			// TODO: Ueber?
 			e.printStackTrace();
 		}
@@ -696,14 +697,15 @@ public class CtSimFrame extends JFrame {
 			
 			File file = this.worldChooser.getSelectedFile();
 			
-			if(! file.getAbsolutePath().endsWith(".xml"))
-				file = new File(file.getAbsolutePath()+".xml");
+			if(! file.getAbsolutePath().endsWith(".xml")) { //$NON-NLS-1$
+				file = new File(file.getAbsolutePath()+".xml"); //$NON-NLS-1$
+			}
 			
 			if(file.exists()) {
 				if (JOptionPane.YES_OPTION != JOptionPane.showConfirmDialog(this,
-																			"Do you really want to overwrite file:\n"
+																			"Do you really want to overwrite file:\n" //$NON-NLS-1$
 																			+file.getName(),
-																			"Overwrite file?",
+																			"Overwrite file?", //$NON-NLS-1$
 																			JOptionPane.YES_NO_OPTION,
 																			JOptionPane.WARNING_MESSAGE)) {
 					return;
@@ -737,14 +739,14 @@ public class CtSimFrame extends JFrame {
 				
 			} catch(Exception e) {
 				
-				Debug.out.println("Fehler: Datei konnte nicht gespeichert werden!");
+				Debug.out.println("Fehler: Datei konnte nicht gespeichert werden!"); //$NON-NLS-1$
 				e.printStackTrace();
 				return;
 			}
 			
 			
 			//Debug.out.println("  !!! Funktioniert noch nicht !!!");
-			Debug.out.println("Welt wurde gespeichert als \""+file.getName()+"\".");
+			Debug.out.println("Welt wurde gespeichert als \""+file.getName()+"\"."); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			// TODO: XML-Geblubber schreiben, bzw. Datei kopieren (siehe randomWorld)...
 		}
@@ -753,7 +755,7 @@ public class CtSimFrame extends JFrame {
 	private void cmdSetJudgeClicked() {
 		
 		if(this.controller == null) {
-			Debug.out.println("Fehler: Noch keine Welt geladen.");
+			Debug.out.println("Fehler: Noch keine Welt geladen."); //$NON-NLS-1$
 			return;
 		}
 		
@@ -761,7 +763,7 @@ public class CtSimFrame extends JFrame {
 		
 		if(this.controller.setJudge(judge)) {
 			
-			Debug.out.println("Judge \""+judge+"\" wurde gewaehlt.");
+			Debug.out.println("Judge \""+judge+"\" wurde gewaehlt.");  //$NON-NLS-1$//$NON-NLS-2$
 		}
 	}
 	
@@ -777,14 +779,14 @@ public class CtSimFrame extends JFrame {
 		if(bot == null)
 			return;
 		
-		BotInfo info = new BotInfo("Test"+Math.round(Math.random()*10), "SimTest", bot, new DefBotPanel());
+		BotInfo info = new BotInfo("Test"+Math.round(Math.random()*10), "SimTest", bot, new DefBotPanel()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		this.addBot(info);
 	}
 	
 	private void cmdConfigureBotsClicked() {
 		
-		Debug.out.println("  !!! Funktioniert noch nicht !!!");
+		Debug.out.println("  !!! Funktioniert noch nicht !!!"); //$NON-NLS-1$
 		// TODO
 	}
 	
@@ -830,7 +832,7 @@ public class CtSimFrame extends JFrame {
 		this.controller.stop();
 		this.controller = null;
 		
-		Debug.out.println("Welt wurde geschlossen.");
+		Debug.out.println("Welt wurde geschlossen."); //$NON-NLS-1$
 	}
 	
 	/**
@@ -888,7 +890,7 @@ public class CtSimFrame extends JFrame {
 		//this.validate();
 		//this.doLayout();
 		
-		Debug.out.println("Bot \""+botInfo.getName()+"\" wurde hinzugefuegt.");
+		Debug.out.println("Bot \""+botInfo.getName()+"\" wurde hinzugefuegt.");  //$NON-NLS-1$//$NON-NLS-2$
 	}
 	
 	/**
@@ -934,7 +936,7 @@ public class CtSimFrame extends JFrame {
 		
 		//JFrame.setDefaultLookAndFeelDecorated(true);
 		
-		CtSimFrame simFrame = new CtSimFrame("Ct-Sim-Frame");
+		CtSimFrame simFrame = new CtSimFrame("Ct-Sim-Frame"); //$NON-NLS-1$
 		
 		simFrame.setVisible(true);
 		

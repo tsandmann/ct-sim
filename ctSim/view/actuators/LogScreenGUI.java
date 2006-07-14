@@ -42,13 +42,14 @@ public class LogScreenGUI extends ActuatorGroupGUI<LogScreen> {
 	private static final long serialVersionUID = 1L;
 	private List<JTextArea> lcds;
 	
-	/* (non-Javadoc)
+	/** 
 	 * @see ctSim.view.ComponentGroupGUI#initGUI()	
-	 * @Override
+	 * 
 	 */
+	@Override
 	public void initGUI() {
 		
-		this.setBorder(new TitledBorder(new EtchedBorder(), "LogScreens"));
+		this.setBorder(new TitledBorder(new EtchedBorder(), "LogScreens")); //$NON-NLS-1$
 		
 		//JTabbedPane tab = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 		JTabbedPane tab = new JTabbedPane();
@@ -84,10 +85,11 @@ public class LogScreenGUI extends ActuatorGroupGUI<LogScreen> {
 		this.add(tab);
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ctSim.view.ComponentGroupGUI#updateGUI()
-	 * 	@Override
+	 * 	
 	 */
+	@Override
 	public void updateGUI() {
 		
 		Iterator<LogScreen> it = this.getAllActuators().iterator();
@@ -103,10 +105,11 @@ public class LogScreenGUI extends ActuatorGroupGUI<LogScreen> {
 		}
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see ctSim.view.ComponentGroupGUI#getSortId()
-	 * 	@Override
+	 * 	
 	 */
+	@Override
 	public int getSortId() {
 		return 100;
 	}

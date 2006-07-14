@@ -253,7 +253,7 @@ public abstract class CtBot extends Bot {
 		this.shape.setCapability(Group.ALLOW_CHILDREN_WRITE);
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.AliveObstacle#getName()
 	 */
 	@Override
@@ -262,7 +262,7 @@ public abstract class CtBot extends Bot {
 		return this.name;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.Obstacle#getBounds()
 	 */
 	public Bounds getBounds() {

@@ -202,7 +202,7 @@ public class World {
 		// Streulicht (ambient light)
 		BoundingSphere ambientLightBounds = 
 			new BoundingSphere(new Point3d(0d, 0d, 0d), 100d);
-		Color3f ambientLightColor = new Color3f(0.3f, 0.3f, 0.3f);
+		Color3f ambientLightColor = new Color3f(0.33f, 0.33f, 0.33f);
 		AmbientLight ambientLightNode = new AmbientLight(ambientLightColor);
 		ambientLightNode.setInfluencingBounds(ambientLightBounds);
 		ambientLightNode.setEnable(true);

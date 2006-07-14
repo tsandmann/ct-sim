@@ -83,7 +83,7 @@ public class StatusBar extends Box {
 //		this.timeField.setMaximumSize(new Dimension(50, 22));
 		
 		//this.timeLabel = new JLabel("Time: "+this.timeFormatter.format(new Date(-TIME_TO_SUB)));
-		this.timeLabel = new JLabel("Zeit: "+String.format("%tT.%<tL", new Date(-this.TIME_TO_SUB)));
+		this.timeLabel = new JLabel("Zeit: "+String.format("%tT.%<tL", new Date(-this.TIME_TO_SUB))); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		//this.add(this.timeField);
@@ -118,7 +118,7 @@ public class StatusBar extends Box {
 		
 		this.tickRateSlider.addChangeListener(new ChangeListener() {
 
-			@SuppressWarnings("synthetic-access")
+			@SuppressWarnings({"synthetic-access","boxing"})
 			public void stateChanged(ChangeEvent e) {
 				
 				if(StatusBar.this.tickRateSlider.getValueIsAdjusting()) {
@@ -141,7 +141,7 @@ public class StatusBar extends Box {
 	/**
 	 * Erzeugt ein Anzeigefeld fuer den Simulatortakt
 	 */
-	void initTickRateField() {
+	@SuppressWarnings("boxing") void initTickRateField() {
 		
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 		formatter.setMinimum(StatusBar.MIN_TICK_RATE);
@@ -161,7 +161,7 @@ public class StatusBar extends Box {
 			@SuppressWarnings("synthetic-access")
 			public void propertyChange(PropertyChangeEvent evt) {
 				
-				if("value".equals(evt.getPropertyName())) {
+				if("value".equals(evt.getPropertyName())) { //$NON-NLS-1$
 					StatusBar.this.tickRateSlider.setValue((Integer)StatusBar.this.tickRateField.getValue());
 				}
 			}
@@ -176,12 +176,13 @@ public class StatusBar extends Box {
 //		this.timeField.setText("Time: "+time);
 		
 		//this.timeLabel.setText("Time: "+this.timeFormatter.format(new Date(time-TIME_TO_SUB)));
-		this.timeLabel.setText("Zeit: "+String.format("%tT.%<tL", new Date(time-this.TIME_TO_SUB)));
+		this.timeLabel.setText("Zeit: "+String.format("%tT.%<tL", new Date(time-this.TIME_TO_SUB))); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	/**
 	 * Setzt den Simulatortakt auf den initialen Wert zurueck
 	 */
+	@SuppressWarnings("boxing")
 	protected void reinit() {
 		
 		this.tickRateField.setValue(StatusBar.INIT_TICK_RATE);

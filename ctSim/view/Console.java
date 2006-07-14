@@ -60,7 +60,7 @@ public class Console extends Box implements DebugWindow {
 		
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.view.DebugWindow#print(java.lang.String)
 	 */
 	public void print(String str) {
@@ -68,12 +68,12 @@ public class Console extends Box implements DebugWindow {
 		this.console.append(str);
 	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.view.DebugWindow#println(java.lang.String)
 	 */
 	public void println(String str) {
 		
 		this.console.append(str);
-		this.console.append("\n");
+		this.console.append("\n"); //$NON-NLS-1$
 	}
 }

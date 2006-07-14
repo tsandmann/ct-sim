@@ -63,7 +63,7 @@ public class WorldView extends Box {
 	private static final Dimension MIN_SIZE = new Dimension(100,100);
 	
 	/** Dateiname fuer den Screenshot */
-	private static final String SCREENSHOT ="screenshot.jpg";
+	private static final String SCREENSHOT ="screenshot.jpg"; //$NON-NLS-1$
 	
 	private static final long serialVersionUID = 1L;
 
@@ -170,7 +170,11 @@ public class WorldView extends Box {
 		return this.worldCanvas;
 	}
 
-	/** Legt die Scene Fest, die dieses Objekt anzeigen soll */
+	/** Legt die Scene Fest, die dieses Objekt anzeigen soll 
+	 * @param scene die BranchGroup, die die Szene enthaelt
+	 * @param dimX X-Ausdehnung
+	 * @param dimY Y-Ausdehnung
+	 * */
 	public void setScene(BranchGroup scene, float dimX, float dimY){
 		SimpleUniverse simpleUniverse = new SimpleUniverse(getWorldCanvas());
 		setUniverse(simpleUniverse, dimX,dimY);
@@ -180,6 +184,8 @@ public class WorldView extends Box {
 	/**
 	 * @param uni
 	 *            Referenz auf das Universum, die gesetzt werden soll
+	 * @param dimX X-Ausdehnung
+	 * @param dimY Y-Ausdehnung
 	 */
 	public void setUniverse(SimpleUniverse uni, float dimX, float dimY) {
 		this.universe = uni;
@@ -204,15 +210,15 @@ public class WorldView extends Box {
 	 */
 	public void dumpScreen() {
         BufferedImage image = captureScreen();
-        System.out.println("image " + image);
+        System.out.println("image " + image); //$NON-NLS-1$
         File f = new File(SCREENSHOT);
         
         String type = f.getName().substring(f.getName().lastIndexOf('.') + 1);
-        System.out.println("type " + type);
+        System.out.println("type " + type); //$NON-NLS-1$
         try {
             ImageIO.write(image,type,f);
         } catch (IOException ioe) {
-        	ErrorHandler.error("Fehler beim Sichern des Bilds: "+ioe);
+        	ErrorHandler.error("Fehler beim Sichern des Bilds: "+ioe); //$NON-NLS-1$
         }
     }
 	
@@ -260,7 +266,7 @@ public class WorldView extends Box {
 		return this.universe;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see java.awt.Component#invalidate()
 	 */
 	@Override

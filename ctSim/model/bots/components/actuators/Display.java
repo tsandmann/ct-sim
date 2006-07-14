@@ -45,7 +45,7 @@ public class Display extends LogScreen {
 		super(name, relPos, relHead);
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.Actuator#getActuatorGroupGUI()
 	 */
 	@SuppressWarnings("unchecked")
@@ -57,7 +57,7 @@ public class Display extends LogScreen {
 		return gui;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getType()
 	 */
 	@Override
@@ -66,7 +66,7 @@ public class Display extends LogScreen {
 		return "Display"; //$NON-NLS-1$
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override
@@ -75,7 +75,7 @@ public class Display extends LogScreen {
 		return null;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.actuators.LogScreen#getBackgroundColor()
 	 */
 	@Override
@@ -83,7 +83,7 @@ public class Display extends LogScreen {
 		return new Color(120, 150, 90);
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.actuators.LogScreen#getFont()
 	 */
 	@Override
@@ -91,7 +91,7 @@ public class Display extends LogScreen {
 		return new Font("Monospaced", Font.BOLD, 12); //$NON-NLS-1$
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.actuators.LogScreen#hasToRewrite()
 	 */
 	@Override

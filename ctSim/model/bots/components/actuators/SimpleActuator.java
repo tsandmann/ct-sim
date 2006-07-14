@@ -49,7 +49,7 @@ import ctSim.view.actuators.Actuators;
 		super(name, relPos, relHead);
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.Actuator#getActuatorGroupGUI()
 	 */
 	/* Hacky: The groupGUI-Member must not be the GUI-Comp. showing

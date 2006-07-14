@@ -50,7 +50,7 @@ public class LogScreen extends Actuator<String> {
 		super(name, relPos, relHead);
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.Actuator#getActuatorGroupGUI()
 	 */
 	@SuppressWarnings("unchecked")
@@ -62,7 +62,7 @@ public class LogScreen extends Actuator<String> {
 		return gui;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getType()
 	 */
 	@Override
@@ -70,7 +70,7 @@ public class LogScreen extends Actuator<String> {
 		return "Log"; //$NON-NLS-1$
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override
@@ -109,7 +109,7 @@ public class LogScreen extends Actuator<String> {
 		this.val = value;
 	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.Actuator#getValue()
 	 */
 	@Override
@@ -118,7 +118,7 @@ public class LogScreen extends Actuator<String> {
 		return this.val;
 	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getShape()
 	 */
 	@Override

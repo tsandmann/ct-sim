@@ -541,6 +541,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			skidVec.add(new Point3d(newPos));
 			
 			boolean isFalling = false;
+			
 			if (!this.world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE,
 					"Der Gleitpin von " + this.getName())) { //$NON-NLS-1$
 				isFalling = true;
@@ -914,11 +915,11 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	//LEDs
 	/**
-	 * @param actLed
+	 * @param actL
 	 *            Der Wert von actLed, der gesetzt werden soll
 	 */
-	public void setActLed(int actLed) {
-		this.actLed = new Integer(actLed);
+	public void setActLed(int actL) {
+		this.actLed = new Integer(actL);
 	}
 	
 	private static final Color[] cols = {

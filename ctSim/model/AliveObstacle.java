@@ -202,7 +202,7 @@ public abstract class AliveObstacle
 		this.world = world1;
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.Obstacle#getBranchGroup()
 	 */
 	public final BranchGroup getBranchGroup() {
@@ -298,7 +298,7 @@ public abstract class AliveObstacle
 	}
 	
 	// TODO: Vorsicht: Heading ist relativ zur Welt!
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.Obstacle#getHeading()
 	 */
 	public final Vector3d getHeading() {
@@ -345,7 +345,7 @@ public abstract class AliveObstacle
 		//}
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.MovableObstacle#setHeading(javax.vecmath.Vector3d)
 	 */
 	public final synchronized void setHeading(Vector3d vec) {

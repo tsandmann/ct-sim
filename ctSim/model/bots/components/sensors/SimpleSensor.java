@@ -48,7 +48,7 @@ public abstract class SimpleSensor<E extends Number> extends Sensor<E> {
 		// TODO Auto-generated constructor stub
 	}
 	
-	/** (non-Javadoc)
+	/** 
 	 * @see ctSim.model.bots.components.Sensor#getSensorGroupGUI()
 	 */
 	@SuppressWarnings("unchecked")

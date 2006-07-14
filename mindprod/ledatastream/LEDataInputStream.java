@@ -195,7 +195,7 @@ public class LEDataInputStream implements DataInput {
         }
 
     /**
-     * note: returns an int, even though says Byte (non-Javadoc)
+     * note: returns an int, even though says Byte 
      * 
      * @inheritDoc
      * @see java.io.DataInput#readUnsignedByte()
@@ -265,7 +265,7 @@ public class LEDataInputStream implements DataInput {
      */
     public static final String getCopyright ()
         {
-        return "LeDataStream 1.7 freeware copyright (c) 1998-2006 Roedy Green, Canadian Mind Products, http://mindprod.com roedyg@mindprod.com";
+        return "LeDataStream 1.7 freeware copyright (c) 1998-2006 Roedy Green, Canadian Mind Products, http://mindprod.com roedyg@mindprod.com"; //$NON-NLS-1$
         }
 
     /**

@@ -55,7 +55,7 @@ public class JD2XXOutputStream extends OutputStream {
 		this.jd2xx = new JD2XX(n, f);
 	}
 
-	/** (non-Javadoc)
+	/** 
 	 * @see java.io.Closeable#close()
 	 */
 	@Override
