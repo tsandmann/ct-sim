@@ -1,8 +1,18 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
-* LED muessen Signale anzeigen 
+* Letzte Compilerwarnings entfernen
 
-* Compilerwarnings entfernen (pek)
+* Slider fuer Position
 
-* Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (pek) 
+* Parcours und Binaries im XML-Config-File festlegen
+
+* Fernbedienung
+
+* Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte  
+
+* Sim kann vom Simulator selbst abgespeicherten Welten nur laden, wenn 
+sie im Ordner parcours innerhalb des Projekts gespeichert worden sind.
+Der Sim findet sonst parcours.dtd nicht. 
+
+* Mausbild
