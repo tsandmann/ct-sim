@@ -1,5 +1,6 @@
 Changelog fuer c't-Sim
 ======================
+2006-07-14  Benjamin Benz [bbe@heise.de]: Parcoursloader lädt nun eine massive Bodenplatte, loecher werden getrennt behandelt
 
 2006-07-3	Peter Koenig [pek@heise.de]: Kennlinien werden jetzt aus Files gelesen.
 

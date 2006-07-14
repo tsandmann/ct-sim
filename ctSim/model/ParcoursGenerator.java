@@ -117,6 +117,11 @@ public class ParcoursGenerator {
 			+ "			<color type=\"ambient\">#606060</color>\n" //$NON-NLS-1$
 			+ "			<color type=\"diffuse\">#606060</color>\n" //$NON-NLS-1$
 			+ "		</appearance>\n" //$NON-NLS-1$
+			+ "		<appearance type=\"L\">\n" //$NON-NLS-1$
+			+ "			<description>Fussboden mit Loch</description>\n" //$NON-NLS-1$
+			+ "			<color type=\"ambient\">#000000</color>\n" //$NON-NLS-1$
+			+ "			<color type=\"diffuse\">#000000</color>\n" //$NON-NLS-1$
+			+ "		</appearance>\n" //$NON-NLS-1$
 			+ "		<appearance type=\"1\">\n" //$NON-NLS-1$
 			+ "			<description>Fussboden des Startfeldes 1</description>\n" //$NON-NLS-1$
 			+ "			<color type=\"ambient\">#993030</color>\n" //$NON-NLS-1$

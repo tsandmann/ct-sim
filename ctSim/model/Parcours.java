@@ -18,10 +18,17 @@
  */
 package ctSim.model;
 
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Vector;
+
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector2d;
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3d;
 
 import ctSim.ErrorHandler;
@@ -36,6 +43,20 @@ import ctSim.model.bots.ctbot.CtBot;
  *
  */
 public class Parcours {
+/*	private class Hole{
+		int x;
+		int y;
+		*//**
+		 * @param x
+		 * @param y
+		 *//*
+		public Hole(int x, int y) {
+			super();
+			this.x = x;
+			this.y = y;
+		}
+	}*/
+	
 	/** Raster des Parcours-Gitters */
 	private float grid = (float) (CtBot.BOT_RADIUS * 2 * 2);
 
@@ -66,6 +87,9 @@ public class Parcours {
 	/** Zielposition */
 	private int[] finishPosition = new int[2];
 
+	/** Liste mit allen Abgruenden */
+	private Vector<Vector2d> holes = new Vector<Vector2d>();
+	
 	/**
 	 * Erzeugt einen neuen, leeren Parcours 
 	 */
@@ -366,6 +390,36 @@ public class Parcours {
 		
 		if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
 			return true;
+		return false;
+	}
+
+	/**
+	 * Fuegt ein Loch hinzu
+	 * @param x
+	 * @param y
+	 */
+	public void addWhole(int x, int y) {
+		holes.add(new Vector2d(x,y));
+	}
+	
+	/**
+	 * Prueft, ob ein Punkt ueber einem Loch liegt
+	 * @param pos
+	 * @return
+	 */
+	public boolean checkWhole(Point3d pos){
+		Iterator it = holes.iterator();
+		while (it.hasNext()){	
+			Vector2f min = new Vector2f((Vector2d)it.next()); 
+			min.scale(grid);
+			
+			Vector2f max = new Vector2f(min); 
+			max.add(new Vector2f(grid,grid));
+						
+			if ((pos.x > min.x) && (pos.x < max.x) && (pos.y > min.y) && (pos.y < max.y))
+				return true;
+		}
+		
 		return false;
 	}
 	

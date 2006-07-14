@@ -324,7 +324,7 @@ public class ParcoursLoader {
 	 * Liest die parcourMap ein und baut daraus einen Parcour zusammen
 	 */
 	public void parse(){
-	int l;
+		int l;
     	int d;
 
     	
@@ -371,9 +371,14 @@ public class ParcoursLoader {
 					    		createFloor(x, y,getAppearance(this.parcoursMap[x][y]));
 							break;
 					    case ' ':
-					    		//	TODO Boden optimieren, kacheln zusammenfassen
-					    		createFloor(x, y,getAppearance(this.parcoursMap[x][y]));
+					    		// TODO Boden optimieren, kacheln zusammenfassen
+					    		// createFloor(x, y,getAppearance(this.parcoursMap[x][y]));
 							break;
+					    case 'L':
+				    		// TODO Boden optimieren, kacheln zusammenfassen
+				    		createFloor(x, y,getAppearance(this.parcoursMap[x][y]));
+				    		parcours.addWhole(x,y);
+						break;
 							
 					    case '0':
 							this.parcours.setStartPosition(0,x,y);
@@ -419,7 +424,7 @@ public class ParcoursLoader {
 	    		
 			}
 //			 TODO: Hier wird testweise ein Boden aus einem Stueck eingefuegt!
-//			createWholeFloor(getAppearance(' '));	
+			createWholeFloor(getAppearance(' '));	
        }
 	}    	
 	

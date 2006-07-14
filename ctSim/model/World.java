@@ -500,7 +500,14 @@ public class World {
 	// TODO: Ueberarbeiten... (GroundClearance?)
 	public boolean checkTerrain(Point3d pos, double groundClearance,
 			String message) {
-
+		if (parcours.checkWhole(pos) == false)
+			return true;
+		else {
+			Debug.out.println(message + " faellt " );
+			return false;
+		}
+/*		
+		
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
 		Transform3D transform = new Transform3D();
@@ -527,6 +534,8 @@ public class World {
 			return false;
 		} else
 			return true;
+			
+*/			
 	}
 
 	/**
