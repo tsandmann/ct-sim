@@ -92,7 +92,7 @@ public class BotChooser extends JDialog {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				addTestBotClicked();
 			}
@@ -103,7 +103,7 @@ public class BotChooser extends JDialog {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				addCBotClicked();
 			}

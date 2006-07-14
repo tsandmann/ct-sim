@@ -37,6 +37,7 @@ import ctSim.view.actuators.Actuators;
  */
 public abstract class Indicator extends Actuator<Boolean> {
 	
+	@SuppressWarnings("unused")
 	private Boolean val;
 	
 	private Color off;
@@ -107,9 +108,9 @@ public abstract class Indicator extends Actuator<Boolean> {
 	 * @return Die Farbe des Indikators
 	 */
 	@SuppressWarnings("boxing")
-	public Color getColor(boolean val) {
+	public Color getColor(boolean v) {
 		
-		if(val)
+		if(v)
 			return this.on;
 		
 		return this.off;

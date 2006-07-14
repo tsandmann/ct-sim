@@ -141,7 +141,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
 			 */
 			@Override
-			public void windowClosing(WindowEvent e) {
+			public void windowClosing(@SuppressWarnings("unused") WindowEvent e) {
 				
 				cmdExitClicked();
 			}
@@ -302,7 +302,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				cmdOpenWorldClicked();
 			}
@@ -319,7 +319,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				cmdRandomWorldClicked();
 			}
@@ -336,7 +336,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				cmdCloseWorldClicked();
 			}
@@ -353,7 +353,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				cmdSaveWorldClicked();
 			}
@@ -372,7 +372,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				cmdSetJudgeClicked();
 			}
@@ -388,7 +388,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings({"synthetic-access","synthetic-access"})
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				cmdAddBotClicked();
 			}
@@ -404,7 +404,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				cmdConfigureBotsClicked();
 			}
@@ -424,7 +424,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				cmdStartClicked();
 			}
@@ -441,7 +441,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				cmdStopClicked();
 			}
@@ -458,7 +458,7 @@ public class CtSimFrame extends JFrame {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
 				
 				cmdPauseClicked();
 			}

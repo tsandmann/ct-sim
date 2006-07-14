@@ -240,7 +240,7 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
 		 */
 		@SuppressWarnings("boxing")
-		public Component getTableCellEditorComponent(@SuppressWarnings("unused") JTable table, Object value, boolean isSelected, int row, int column) {
+		public Component getTableCellEditorComponent(@SuppressWarnings("unused") JTable table, Object value, @SuppressWarnings("unused") boolean isSelected, int row, @SuppressWarnings("unused") int column) {
 			
 			if(row == 3) {
 				this.model.setMinimum(-180d);

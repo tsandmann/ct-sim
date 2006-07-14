@@ -89,6 +89,7 @@ public class IndicatorGroupGUI extends ActuatorGroupGUI<Indicator> {
 	 * @see ctSim.view.ComponentGroupGUI#updateGUI()
 	 * 
 	 */
+	@SuppressWarnings("boxing")
 	@Override
 	public void updateGUI() {
 		// TODO
