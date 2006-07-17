@@ -49,6 +49,7 @@ import ctSim.model.bots.ctbot.components.EncoderSensor;
 import ctSim.model.bots.ctbot.components.Governor;
 import ctSim.model.bots.ctbot.components.LightSensor;
 import ctSim.model.bots.ctbot.components.LineSensor;
+import ctSim.model.bots.ctbot.components.RemoteControlSensor;
 
 /**
  * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator kommunizieren
@@ -124,7 +125,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	private int  mouseX, mouseY;
 	
-	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR, encL, encR;
+	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR, encL, encR, rc5;
 	
 	private Actuator govL, govR, log, disp;
 	
@@ -168,6 +169,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
+		this.rc5 = new RemoteControlSensor(this.world, this, "RC5", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
 		this.addSensor(this.encL);
 		this.addSensor(this.encR);
@@ -184,6 +186,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		
 		this.addSensor(this.lightL);
 		this.addSensor(this.lightR);
+
+		this.addSensor(this.rc5);
 		
 		this.addSensor(new SimpleSensor<Integer>("MouseX", new Point3d(), new Vector3d()) { //$NON-NLS-1$
 
@@ -240,6 +244,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				return new Shape3D();
 			}
 		});
+		
+		
 	}
 	
 	private void initActuators() {
