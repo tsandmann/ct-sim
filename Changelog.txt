@@ -1,6 +1,9 @@
 Changelog fuer c't-Sim
 ======================
-2006-07-14  Benjamin Benz [bbe@heise.de]: Parcoursloader lädt nun eine massive Bodenplatte, loecher werden getrennt behandelt
+
+2006-07-16 Christian Isensee [isensee.christian@web.de]: Es wird auch tatsaechlich der Wert des rechten Distanzsensors an den Bot uebertragen und nicht der Wert des linken Sensors.
+
+2006-07-14  Benjamin Benz [bbe@heise.de]: Parcoursloader laedt nun eine massive Bodenplatte, Loecher werden getrennt behandelt
 
 2006-07-3	Peter Koenig [pek@heise.de]: Kennlinien werden jetzt aus Files gelesen.
 

@@ -331,7 +331,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //			command.setDataL(1000);
 //			command.setDataR(1000);
 			command.setDataL(((Double)this.irL.getValue()).intValue());
-			command.setDataR(((Double)this.irL.getValue()).intValue());
+			command.setDataR(((Double)this.irR.getValue()).intValue());
 			command.setSeq(this.seq++);
 			this.connection.send(command.getCommandBytes());
 			
