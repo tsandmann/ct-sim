@@ -169,7 +169,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
-		this.rc5 = new RemoteControlSensor(this.world, this, "RC5", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.rc5 = new RemoteControlSensor("Fernbedieung Univers 29", new Point3d(), new Vector3d()); //$NON-NLS-1$
 		
 		this.addSensor(this.encL);
 		this.addSensor(this.encR);
@@ -392,31 +392,35 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setSeq(this.seq++);
 			this.connection.send(command.getCommandBytes());
 
-			
-//			if (getSensRc5() != 0) {
-//				command.setCommand(Command.CMD_SENS_RC5);
-//				command.setDataL(getSensRc5());
-//				command.setDataR(42);
-//				command.setSeq(seq++);
-//				tcpCon.send(command.getCommandBytes());
-//				setSensRc5(0);
-//			}
-			
-			// TODO: sehr haesslich: Bot-Verhalten "Wandverfolgung" starten
-			this.first++;
-			if(this.first==1) {
+			Object rc5 = this.rc5.getValue();
+			if(rc5 != null) {
 				
-				int RC5_CODE_5 = 0x3945;
-				Integer i = new Integer(RC5_CODE_5);
-				command.setCommand(Command.CMD_SENS_RC5);
-				command.setDataL(i.intValue());
-				command.setDataR(42);
-				command.setSeq(this.seq++);
-				this.connection.send(command.getCommandBytes());
-				//System.out.println("Raus: "+i);
-				//System.out.println(command.toString());
-				//setSensRc5(0);
+				Integer val = (Integer)rc5;
+				
+				if(val != 0) {
+					command.setCommand(Command.CMD_SENS_RC5);
+					command.setDataL(val);
+					command.setDataR(42);
+					command.setSeq(seq++);
+					this.connection.send(command.getCommandBytes());
+				}
 			}
+			
+//			// TODO: sehr haesslich: Bot-Verhalten "Wandverfolgung" starten
+//			this.first++;
+//			if(this.first==1) {
+//				
+//				int RC5_CODE_5 = 0x3945;
+//				Integer i = new Integer(RC5_CODE_5);
+//				command.setCommand(Command.CMD_SENS_RC5);
+//				command.setDataL(i.intValue());
+//				command.setDataR(42);
+//				command.setSeq(this.seq++);
+//				this.connection.send(command.getCommandBytes());
+//				//System.out.println("Raus: "+i);
+//				//System.out.println(command.toString());
+//				//setSensRc5(0);
+//			}
 
 			// TODO: nur fuer real-bot
 			command.setCommand(Command.CMD_SENS_ERROR);

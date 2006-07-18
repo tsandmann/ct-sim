@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2006-07-18 Felix Beckwermert [felix@beckwermert.de]: Fernbedienung hinzugefügt (noch hässlich)
+
 2006-07-17 Peter Koenig [pek@heise.de]: Angefangen, Fernbedienung einzubauen, noch keine Tasten-Anzeige
 
 2006-07-16 Christian Isensee [isensee.christian@web.de]: Es wird auch tatsaechlich der Wert des rechten Distanzsensors an den Bot uebertragen und nicht der Wert des linken Sensors.

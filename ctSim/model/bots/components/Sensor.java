@@ -77,7 +77,7 @@ public abstract class Sensor<E> extends BotComponent {
 	/**
 	 * @return Der Wert der Sensoren
 	 */
-public final E getValue() {
+	public final E getValue() {
 		
 		return this.value;
 	}
@@ -92,12 +92,12 @@ public final E getValue() {
 	 *           von Hand/ ueber die GUI eventuell gar nicht mit (da Wert bereits wieder ueberschrieben)
 	 */
 
-/**
- * Setzt einen Wert fuer den Sensor
- * @param val Der Wert zu setzen
- * @return true, wenn Wert setzbar ist
- */
-public final boolean setValue(E val) {
+	/**
+	 * Setzt einen Wert fuer den Sensor
+	 * @param val Der Wert zu setzen
+	 * @return true, wenn Wert setzbar ist
+	 */
+	public final boolean setValue(E val) {
 		
 		if(!this.isSetable())
 			return false;
