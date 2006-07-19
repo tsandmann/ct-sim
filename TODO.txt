@@ -1,5 +1,20 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
+
+* Slider fuer Position
+
+* ParcoursGenerator static machen (wegen heap-overflow)
+
+* Fernbedienungs-Optik verbessern (pek)
+
+* Bodenplatte im Sim korrigieren -- ist manchmal verschoben (pek)
+
+* Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek) 
+
+* Parcours und Binaries im XML-Config-File festlegen
+
+* Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (erledigt?) 
+
 * Klassenstruktur wieder aufraeumen
 
 * Real-Bot (USB-2-Bot) reparieren
@@ -12,13 +27,7 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * Es gibt immer noch undokumentierte Fkts im Code [wo?] 
 
-* Letzte Compilerwarnings entfernen
-
-* Slider fuer Position
-
-* Parcours und Binaries im XML-Config-File festlegen
-
-* Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (erledigt?) 
+* Letzte Compilerwarnings entfernen 
 
 * Sim kann vom Simulator selbst abgespeicherten Welten nur laden, wenn 
 sie im Ordner parcours innerhalb des Projekts gespeichert worden sind.
