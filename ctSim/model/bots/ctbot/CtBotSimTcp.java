@@ -954,9 +954,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		new Color(255, 137, 137), // rot
 		new Color(255, 230, 139), // orange
 		new Color(255, 255, 159), // gelb
-		new Color(170, 255, 170), // grün
-		new Color(200, 255, 245), // türkis
-		new Color(245, 245, 245)  // weiß
+		new Color(170, 255, 170), // gruen
+		new Color(200, 255, 245), // tuerkis
+		new Color(245, 245, 245)  // weiss
 	};
 	
 	private static final Color[] colsAct = {
@@ -965,8 +965,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		new Color(255,   0,   0), // rot
 		new Color(255, 200,   0), // orange
 		new Color(255, 255,   0), // gelb
-		new Color(  0, 255,   0), // grün
-		new Color(  0, 255, 210), // türkis
-		new Color(255, 255, 255)  // weiß
+		new Color(  0, 255,   0), // gruen
+		new Color(  0, 255, 210), // tuerkis
+		new Color(255, 255, 255)  // weiss
 	};
 }
