@@ -89,7 +89,7 @@ public class ParcoursGenerator {
 			+ "	<description>Dieses ist ein automatisch generierter Beispielparcours fuer den c't-Sim-Wettbewerb.</description>\n" //$NON-NLS-1$
 			+ "	<parcours>\n"; //$NON-NLS-1$
 
-	/*
+	/**
 	 * XML-String -- Ende der Parcours-Datei
 	 */
 	private static final String xmlTail = "	</parcours>\n" //$NON-NLS-1$
@@ -153,76 +153,67 @@ public class ParcoursGenerator {
 			+ "		<appearance type=\"|\"><description>Linie</description>\n" //$NON-NLS-1$
 			+ "			<clone>-</clone>\n" + "		</appearance>\n" //$NON-NLS-1$ //$NON-NLS-2$
 			+ "		<appearance type=\"/\">\n" //$NON-NLS-1$
-			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"  //$NON-NLS-1$//$NON-NLS-2$
-			+ "		</appearance>\n" + "		<appearance type=\"\\\">\n"  //$NON-NLS-1$//$NON-NLS-2$
+			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n" //$NON-NLS-1$//$NON-NLS-2$
+			+ "		</appearance>\n" + "		<appearance type=\"\\\">\n" //$NON-NLS-1$//$NON-NLS-2$
 			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n" //$NON-NLS-1$ //$NON-NLS-2$
 			+ "		</appearance>\n" + "		<appearance type=\"+\">\n" //$NON-NLS-1$ //$NON-NLS-2$
 			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n" //$NON-NLS-1$ //$NON-NLS-2$
 			+ "		</appearance>\n" + "		<appearance type=\"~\">\n" //$NON-NLS-1$ //$NON-NLS-2$
 			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n" //$NON-NLS-1$ //$NON-NLS-2$
-			+ "		</appearance>\n" + "	</optics>\n" + "</world>\n";  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+			+ "		</appearance>\n" + "	</optics>\n" + "</world>\n"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
 	/**
 	 * Die Karte ist ein char-Array, erste Dimension die Zeilennummer, die
 	 * zweite die Spaltennummer:
 	 */
-	private char[][] map;
+	private static char[][] map;
 
 	/**
 	 * Die Karte wird allerdings zurerst nur zur Haelfte generiert, ebenfalls
 	 * als char-Array, erste Dimension die Zeilennummer, die zweite die
 	 * Spaltennummer:
 	 */
-	private char[][] halfmap;
+	private static char[][] halfmap;
 
 	/**
 	 * Die Groesse des Labyrinths in Feldern; die Breite ist die Breite der
 	 * halben Karte!
 	 */
-	private int width;
+	private static int width;
 
-	
 	/**
 	 * Die Hoehe:
 	 */
-	private int height;
+	private static int height;
 
 	/**
 	 * Zufallszahlengenerator
 	 */
-	private Random rand;
+	private static Random rand;
 
 	/**
 	 * Parameter fuer die Erzeugung: Verschnoerkelungsfaktor; Anzahl der
 	 * angestrebten Segmente pro Hindernis
 	 */
-	private int twirling;
+	private static int twirling;
 
 	/**
-	 * Hindernisdichte an der Wand; klein = rauh
-	 * Es wird Wandlange/wallRoughness oft versucht,
-	 * der Wand ein Hindernis hinzuzufuegen
+	 * Hindernisdichte an der Wand; klein = rauh Es wird Wandlange/wallRoughness
+	 * oft versucht, der Wand ein Hindernis hinzuzufuegen
 	 */
-	private int wallRoughness;
+	private static int wallRoughness;
 
 	/**
-	 * Hindernisdichte im Inneren des Labyrinths klein = viele
-	 * Es wird Wandlange/wallRoughness oft versucht,
-	 * der Wand ein Hindernis hinzuzufuegen
+	 * Hindernisdichte im Inneren des Labyrinths klein = viele Es wird
+	 * Wandlange/wallRoughness oft versucht, der Wand ein Hindernis
+	 * hinzuzufuegen
 	 */
-	private int innerRoughness;
+	private static int innerRoughness;
 
 	/**
 	 * Lochanteil; jedes n-te Wandstueck wird durch Loch ersetzt
 	 */
-	private int perforation;
-
-	/**
-	 * Der Konstruktor
-	 */
-	public ParcoursGenerator() {
-		this.rand = new Random();
-	}
+	private static int perforation;
 
 	/**
 	 * Diese main-Methode dient nur dem Debugging. Sie generiert 20 Parcours mit
@@ -233,32 +224,29 @@ public class ParcoursGenerator {
 	 */
 	public static void main(String[] args) {
 		for (int i = 0; i < 20; i++) {
-			ParcoursGenerator parcGen = new ParcoursGenerator();
-			parcGen.generateParc();
+			ParcoursGenerator.generateParc();
 		}
 	}
 
 	/**
 	 * Diese Methode generiert das eigentliche Labyrinth. Parameter werden
-	 * innerhalb fester Grenzen zufaellig gesetzt: 
-	 * Breite zwischen 12 und 30 Feldern; 
-	 * Hoehe zwischen 12 und 30 Feldern; 
-	 * wallRoughness zwischen 2 und 6;
-	 * innerRoughness zwischen 7 und 12;
-	 * twirling zwischen 2 und 5;
+	 * innerhalb fester Grenzen zufaellig gesetzt: Breite zwischen 12 und 30
+	 * Feldern; Hoehe zwischen 12 und 30 Feldern; wallRoughness zwischen 2 und
+	 * 6; innerRoughness zwischen 7 und 12; twirling zwischen 2 und 5;
 	 * perforation zwischen 6 und 20
 	 * 
 	 * @return Der Parcours als XML-String
 	 */
-	public String generateParc() {
+	public static String generateParc() {
 		// Generiere zufaellige Werte fuer die Parameter:
 		int w, h, wr, ir, t, p;
-		w = this.rand.nextInt(10) + 6; // Breite zwischen 12 und 30 Felder
-		h = this.rand.nextInt(19) + 12; // Hoehe zwischen 12 und 30 Felder
-		wr = this.rand.nextInt(5) + 2; // zwischen 2 und 6; 
-		ir = this.rand.nextInt(6) + 7; // zwischen 7 und 12;
-		t = this.rand.nextInt(4) + 2; // zwischen 2 und 5;
-		p = this.rand.nextInt(15) + 6; // zwischen 6 und 20;
+		rand = new Random();
+		w = rand.nextInt(10) + 6; // Breite zwischen 12 und 30 Felder
+		h = rand.nextInt(19) + 12; // Hoehe zwischen 12 und 30 Felder
+		wr = rand.nextInt(5) + 2; // zwischen 2 und 6;
+		ir = rand.nextInt(6) + 7; // zwischen 7 und 12;
+		t = rand.nextInt(4) + 2; // zwischen 2 und 5;
+		p = rand.nextInt(15) + 6; // zwischen 6 und 20;
 		// Rufe Methode mit den Parametern auf:
 		return generateParc(w, h, ir, wr, t, p);
 	}
@@ -282,14 +270,15 @@ public class ParcoursGenerator {
 	 *            Lochanteil; jedes n-te Wandstueck wird durch Loch ersetzt
 	 * @return Der Parcours als XML-String
 	 */
-	public String generateParc(int wi, int he, int wr, int ir, int tw, int pe) {
-		// Alle Werte sind groesser als 0: 
-		this.width = Math.max(wi, 1);
-		this.height = Math.max(he, 1); 
-		this.wallRoughness = Math.max(wr, 1);
-		this.innerRoughness = Math.max(ir, 1);
-		this.twirling = Math.max(tw, 1);
-		this.perforation = Math.max(pe, 1);
+	public static String generateParc(int wi, int he, int wr, int ir, int tw,
+			int pe) {
+		// Alle Werte sind groesser als 0:
+		width = Math.max(wi, 1);
+		height = Math.max(he, 1);
+		wallRoughness = Math.max(wr, 1);
+		innerRoughness = Math.max(ir, 1);
+		twirling = Math.max(tw, 1);
+		perforation = Math.max(pe, 1);
 
 		/*
 		 * Zunaechst wird nur die halbe Karte gebaut.
@@ -298,12 +287,12 @@ public class ParcoursGenerator {
 		 * daher erst Hoehe und dann Breite:
 		 */
 
-		this.halfmap = new char[this.height][this.width];
+		halfmap = new char[height][width];
 
 		// Mit Leerzeichen fuellen:
-		for (int r = 0; r < this.height; r++) {
-			for (int c = 0; c < this.width; c++) {
-				this.halfmap[r][c] = FLOOR;
+		for (int r = 0; r < height; r++) {
+			for (int c = 0; c < width; c++) {
+				halfmap[r][c] = FLOOR;
 			}
 		}
 
@@ -320,31 +309,31 @@ public class ParcoursGenerator {
 		// Startfelder einbauen:
 		generateStart();
 		// Parcours in XML packen:
-		return parc2XML(this.map);
+		return parc2XML(map);
 	}
 
 	/**
 	 * Versieht das Spielfeld mit einer Einfriedung:
 	 */
-	private void buildEnclosure() {
+	private static void buildEnclosure() {
 
 		// Nord- und Suedwand:
-		for (int c = 1; c < this.width; c++) {
-			this.halfmap[0][c] = WALLH;
-			this.halfmap[this.height - 1][c] = WALLH;
+		for (int c = 1; c < width; c++) {
+			halfmap[0][c] = WALLH;
+			halfmap[height - 1][c] = WALLH;
 		}
 
 		// Westwand:
-		for (int r = 1; r < this.height - 1; r++) {
-			this.halfmap[r][0] = WALLV;
+		for (int r = 1; r < height - 1; r++) {
+			halfmap[r][0] = WALLV;
 		}
 
 		// Die Lampen in die Ecken:
-		this.halfmap[0][0] = LAMP;
-		this.halfmap[this.height - 1][0] = LAMP;
+		halfmap[0][0] = LAMP;
+		halfmap[height - 1][0] = LAMP;
 
 		// Zielfeld ganz rechts oben:
-		this.halfmap[0][this.width - 1] = GOAL;
+		halfmap[0][width - 1] = GOAL;
 
 	}
 
@@ -353,33 +342,33 @@ public class ParcoursGenerator {
 	 * auf jeden Fall laenger ist als der kuerzeste Weg. Die Methode sorgt auch
 	 * fuer Hindernisse, die ueber die Mittellinie hinausgehen.
 	 */
-	private void roughenWalls() {
+	private static void roughenWalls() {
 		/*
 		 * Die Anzahl der Hindernisse an der Wand berechnet sich durch Laenge /
 		 * xxxRoughness -- im Osten innerRoughness, sonst wallRoughness
 		 */
-		
+
 		// Zuerst Westwand moeblieren:
-		int obstNum = this.height / this.wallRoughness;
+		int obstNum = height / wallRoughness;
 		for (int i = 0; i < obstNum; i++) {
 			addWallObstacle('W');
 		}
 
 		// Dann Nord- und Suedwand moeblieren:
-		obstNum = this.width / this.wallRoughness;
+		obstNum = width / wallRoughness;
 		for (int i = 0; i < obstNum; i++) {
 			addWallObstacle('N');
 			addWallObstacle('S');
 		}
 
 		/*
-		 * Zuletzt Ostwand moeblieren (= Hindernisse einfuegen, die 
-		 * ueber die Mittelline gehen):
+		 * Zuletzt Ostwand moeblieren (= Hindernisse einfuegen, die ueber die
+		 * Mittelline gehen):
 		 */
-		obstNum = this.height / this.innerRoughness; 
+		obstNum = height / innerRoughness;
 		for (int i = 0; i < obstNum; i++) {
 			addWallObstacle('E');
-		}		
+		}
 	}
 
 	/**
@@ -389,7 +378,7 @@ public class ParcoursGenerator {
 	 * @param wall
 	 *            Die Wand, die ein Hindernis erhalten soll (N, S, W, E)
 	 */
-	private void addWallObstacle(char wall) {
+	private static void addWallObstacle(char wall) {
 
 		int col, row;
 
@@ -399,33 +388,33 @@ public class ParcoursGenerator {
 			row = 0;
 			// Spalte ist Zufall, haelt aber Sicherheitsabstand
 			// von der Ecke und vom Zielfeld:
-			col = this.rand.nextInt(this.width - 5) + 3;
-			generateTwirl(row, col, 2, this.twirling);
+			col = rand.nextInt(width - 5) + 3;
+			generateTwirl(row, col, 2, twirling);
 			break;
 		case 'S':
 			// zweite Zeile,
-			row = this.height - 1;
+			row = height - 1;
 			// Spalte ist Zufall, haelt aber Sicherheitsabstand
 			// von der Ecke:
-			col = this.rand.nextInt(this.width - 4) + 3;
-			generateTwirl(row, col, 0, this.twirling);
+			col = rand.nextInt(width - 4) + 3;
+			generateTwirl(row, col, 0, twirling);
 			break;
 		case 'W':
 			// Reihe ist Zufall, haelt aber Sicherheitsabstand von der Ecke:
-			row = this.rand.nextInt(this.height - 6) + 3;
+			row = rand.nextInt(height - 6) + 3;
 			// erste Spalte
 			col = 0;
-			generateTwirl(row, col, 1, this.twirling);
+			generateTwirl(row, col, 1, twirling);
 			break;
 		case 'E':
 			// Reihe ist Zufall, haelt aber Sicherheitsabstand von der Ecke:
-			row = this.rand.nextInt(this.height - 6) + 3;
+			row = rand.nextInt(height - 6) + 3;
 			// letzte Spalte
-			col = this.width - 1;
+			col = width - 1;
 			// Freien Raum nur nach Westen pruefen:
-			if (testNextFields(row, col, 3, 3)){ 
-				this.halfmap[row][col] = WALLH;
-				generateTwirl(row, col, 3, this.twirling);
+			if (testNextFields(row, col, 3, 3)) {
+				halfmap[row][col] = WALLH;
+				generateTwirl(row, col, 3, twirling);
 			}
 			break;
 
@@ -448,10 +437,10 @@ public class ParcoursGenerator {
 	 *            folgen (duerfen)
 	 */
 
-	private void generateTwirl(int row, int col, int twirlsLeft) {
+	private static void generateTwirl(int row, int col, int twirlsLeft) {
 		// Zufaellige Richtung: 0 = nach Norden 1 = nach Osten
 		// 2 = nach Sueden 3= nach Westen
-		int dir = this.rand.nextInt(4);
+		int dir = rand.nextInt(4);
 		// Dann Methode mit diesen Parametern aufrufen:
 		generateTwirl(row, col, dir, twirlsLeft);
 	}
@@ -472,7 +461,7 @@ public class ParcoursGenerator {
 	 *            folgen (duerfen)
 	 * 
 	 */
-	private void generateTwirl(int row, int col, int dir, int twirlsLeft) {
+	private static void generateTwirl(int row, int col, int dir, int twirlsLeft) {
 		twirlsLeft--;
 		if (twirlsLeft < 0)
 			return;
@@ -481,8 +470,8 @@ public class ParcoursGenerator {
 		 * zufaellig bestimmte Wunschlaenge, die mindestens 3 betraegt und auch
 		 * von den Parcours-Dimensionen abhaengt:
 		 */
-		int desL = this.rand
-				.nextInt(Math.min(this.halfmap[0].length, this.halfmap.length) / 4) + 3;
+		int desL = rand
+				.nextInt(Math.min(halfmap[0].length, halfmap.length) / 4) + 3;
 		int[] newC = new int[2];
 
 		// Falls das naechste Feld in der gewuenschten Richtung Boden ist...
@@ -493,9 +482,9 @@ public class ParcoursGenerator {
 			while (testNextFields(row, col, dir, 3) && desL > 0) {
 				newC = getNextCoordinate(row, col, dir);
 				if (dir % 2 == 0) {
-					this.halfmap[newC[0]][newC[1]] = WALLV;
+					halfmap[newC[0]][newC[1]] = WALLV;
 				} else {
-					this.halfmap[newC[0]][newC[1]] = WALLH;
+					halfmap[newC[0]][newC[1]] = WALLH;
 				}
 				row = newC[0];
 				col = newC[1];
@@ -533,7 +522,7 @@ public class ParcoursGenerator {
 	 *            Suchtiefe in Feldern
 	 * @return true, wenn alle getesteten Felder Bodenfelder sind.
 	 */
-	private boolean testNextFields(int row, int col, int depth) {
+	private static boolean testNextFields(int row, int col, int depth) {
 		return (testNextFields(row, col, 0, depth)
 				&& testNextFields(row, col, 2, depth) && testNextFields(row,
 				col, 3, depth));
@@ -555,7 +544,7 @@ public class ParcoursGenerator {
 	 *            Suchtiefe in Feldern
 	 * @return true, wenn alle getesteten Felder Bodenfelder sind.
 	 */
-	private boolean testNextFields(int row, int col, int dir, int depth) {
+	private static boolean testNextFields(int row, int col, int dir, int depth) {
 		// Offset sind die ebenfalls zu pruefenden Reihen parallel
 		// zu den eigentlichen Feldern
 		int offset = Math.max(0, Math.min(depth - 1, 2));
@@ -566,28 +555,28 @@ public class ParcoursGenerator {
 			case 0:
 				for (int i = (-offset); i < (offset + 1); i++) {
 					for (int j = 1; j <= depth; j++) {
-						result = result && (this.halfmap[row - j][col + i] == FLOOR);
+						result = result && (halfmap[row - j][col + i] == FLOOR);
 					}
 				}
 				break;
 			case 1:
 				for (int i = (-offset); i < (offset + 1); i++) {
 					for (int j = 1; j <= depth; j++) {
-						result = result && (this.halfmap[row + i][col + j] == FLOOR);
+						result = result && (halfmap[row + i][col + j] == FLOOR);
 					}
 				}
 				break;
 			case 2:
 				for (int i = (-offset); i < (offset + 1); i++) {
 					for (int j = 1; j <= depth; j++) {
-						result = result && (this.halfmap[row + j][col + i] == FLOOR);
+						result = result && (halfmap[row + j][col + i] == FLOOR);
 					}
 				}
 				break;
 			case 3:
 				for (int i = (-offset); i < (offset + 1); i++) {
 					for (int j = 1; j <= depth; j++) {
-						result = result && (this.halfmap[row + i][col - j] == FLOOR);
+						result = result && (halfmap[row + i][col - j] == FLOOR);
 					}
 				}
 				break;
@@ -615,7 +604,7 @@ public class ParcoursGenerator {
 	 *            Richtung (0=N, 1=O, 2=S, 3 =W)
 	 * @return Ein Tupel mit den neuen Koordinaten [Zeile|Spalte]
 	 */
-	private int[] getNextCoordinate(int row, int col, int dir) {
+	private static int[] getNextCoordinate(int row, int col, int dir) {
 		int[] result = new int[2];
 		switch (dir) {
 		case 0:
@@ -644,19 +633,19 @@ public class ParcoursGenerator {
 	/**
 	 * Fuegt dem Parcours Hindernisse ohne Wandkontakt hinzu. Hindernisse bauen
 	 * garantiert keine Wege zu und halten Abstand von allen vorhandenen
-	 * Hindernissen -- allerdings auch von der Mittelachse des Parcours. 
+	 * Hindernissen -- allerdings auch von der Mittelachse des Parcours.
 	 */
-	private void generateFreeObstacles() {
+	private static void generateFreeObstacles() {
 		// Anzahl haengt von Dimension des Parcours und innerRoughness ab:
-		int obstNum = 2* Math.max(this.width, this.height) / this.innerRoughness;
+		int obstNum = 2 * Math.max(width, height) / innerRoughness;
 		int row, col;
 		for (int i = 0; i < obstNum; i++) {
-			row = this.rand.nextInt(this.height);
-			col = this.rand.nextInt(this.width);
+			row = rand.nextInt(height);
+			col = rand.nextInt(width);
 			// Ist das gefundene Feld leer und von freiem Raum umgeben?
-			if ((this.halfmap[row][col] == FLOOR) && testNextFields(row, col, 2)) {
+			if ((halfmap[row][col] == FLOOR) && testNextFields(row, col, 2)) {
 				// Dann einfach mit extra langen Schnoerkeln anfangen,
-				generateTwirl(row, col, this.twirling + 3);
+				generateTwirl(row, col, twirling + 3);
 			}
 		}
 	}
@@ -664,31 +653,31 @@ public class ParcoursGenerator {
 	/**
 	 * Fuegt die Startfelder hinzu.
 	 */
-	private void generateStart() {
-		int offset = this.rand.nextInt(this.width - 3) + 2;
-		int row = this.height - 2;
-		this.map[row][offset] = START1;
-		this.map[row][offset - 1] = WHITE;
-		this.map[row][2 * this.width - 1 - offset] = START2;
-		this.map[row][2 * this.width - offset] = WHITE;
+	private static void generateStart() {
+		int offset = rand.nextInt(width - 3) + 2;
+		int row = height - 2;
+		map[row][offset] = START1;
+		map[row][offset - 1] = WHITE;
+		map[row][2 * width - 1 - offset] = START2;
+		map[row][2 * width - offset] = WHITE;
 		// Sicherheitsabstand einhalten:
-		this.map[row - 1][offset] = FLOOR;
-		this.map[row - 1][offset - 1] = FLOOR;
-		this.map[row - 1][2 * this.width - 1 - offset] = FLOOR;
-		this.map[row - 1][2 * this.width - offset] = FLOOR;
+		map[row - 1][offset] = FLOOR;
+		map[row - 1][offset - 1] = FLOOR;
+		map[row - 1][2 * width - 1 - offset] = FLOOR;
+		map[row - 1][2 * width - offset] = FLOOR;
 	}
 
 	/**
 	 * Spiegelt den halben Parcours aus halfmap in map
 	 */
-	private void mirror() {
+	private static void mirror() {
 
-		this.map = new char[this.height][this.width * 2];
+		map = new char[height][width * 2];
 
-		for (int r = 0; r < this.height; r++) {
-			for (int c = 0; c < this.width; c++) {
-				this.map[r][c] = this.halfmap[r][c];
-				this.map[r][this.width * 2 - 1 - c] = this.halfmap[r][c];
+		for (int r = 0; r < height; r++) {
+			for (int c = 0; c < width; c++) {
+				map[r][c] = halfmap[r][c];
+				map[r][width * 2 - 1 - c] = halfmap[r][c];
 			}
 		}
 	}
@@ -696,13 +685,13 @@ public class ParcoursGenerator {
 	/**
 	 * Ersetzt je nach Faktor perforation jedes n-te Wandfeld durch ein Loch
 	 */
-	private void perforate() {
-		for (int r = 1; r < this.height - 1; r++) {
-			for (int c = 1; c < this.width - 1; c++) {
+	private static void perforate() {
+		for (int r = 1; r < height - 1; r++) {
+			for (int c = 1; c < width - 1; c++) {
 				// Es gibt so viele Sorten von Waenden... 8-)
-				if ((this.rand.nextInt(this.perforation) == 0)
-						&& ((this.halfmap[r][c] == WALL) || (this.halfmap[r][c] == WALLH) || (this.halfmap[r][c] == WALLV))) {
-					this.halfmap[r][c] = HOLE;
+				if ((rand.nextInt(perforation) == 0)
+						&& ((halfmap[r][c] == WALL) || (halfmap[r][c] == WALLH) || (halfmap[r][c] == WALLV))) {
+					halfmap[r][c] = HOLE;
 				}
 			}
 		}
@@ -718,8 +707,8 @@ public class ParcoursGenerator {
 	 * 
 	 */
 	@SuppressWarnings("unused")
-	private void printParc(String step, char[][] parc) {
-		System.out.println("\n" + step + "\n");  //$NON-NLS-1$//$NON-NLS-2$
+	private static void printParc(String step, char[][] parc) {
+		System.out.println("\n" + step + "\n"); //$NON-NLS-1$//$NON-NLS-2$
 		System.out.println(parc2String(parc));
 	}
 
@@ -731,7 +720,7 @@ public class ParcoursGenerator {
 	 * 
 	 * @return Der Ausgabestring
 	 */
-	private String parc2String(char[][] parc) {
+	private static String parc2String(char[][] parc) {
 		StringBuffer result = new StringBuffer();
 		for (int r = 0; r < parc.length; r++) {
 			for (int c = 0; c < parc[r].length; c++) {
@@ -749,7 +738,7 @@ public class ParcoursGenerator {
 	 *            Der Parcours
 	 * @return Der XML-String
 	 */
-	private String parc2XML(char[][] parc) {
+	private static String parc2XML(char[][] parc) {
 		StringBuffer result = new StringBuffer();
 		result.append(xmlHead);
 		for (int r = 0; r < parc.length; r++) {

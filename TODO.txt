@@ -3,13 +3,15 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * Slider fuer Position
 
-* ParcoursGenerator static machen (wegen heap-overflow)
+* Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz)
 
 * Fernbedienungs-Optik verbessern (pek)
 
 * Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek) 
 
 * Parcours und Binaries im XML-Config-File festlegen
+
+* Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung
 
 * Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (erledigt?) 
 
@@ -38,3 +40,4 @@ ERLEDIGT:
 
 * Bodenplatte im Sim korrigieren -- ist manchmal verschoben (pek)
 
+* ParcoursGenerator static machen (pek)

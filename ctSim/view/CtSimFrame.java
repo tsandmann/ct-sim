@@ -638,10 +638,8 @@ public class CtSimFrame extends JFrame {
 	private void cmdRandomWorldClicked() {
 		
 		this.closeWorld();
-		
-		ParcoursGenerator parcGen = new ParcoursGenerator();
-		
-		String fileContent = parcGen.generateParc();
+				
+		String fileContent = ParcoursGenerator.generateParc();
 		
 		this.tmpParcoursFile = new File("./"+this.TMP_PARCOURS_PATH+"/"+this.TMP_PARCOURS_FILE_NAME+".xml");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		
