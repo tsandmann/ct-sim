@@ -18,15 +18,11 @@
  */
 package ctSim.view.sensors;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -36,11 +32,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 
 import ctSim.model.bots.ctbot.components.RemoteControlSensor;
 import ctSim.view.Debug;
@@ -52,6 +44,10 @@ import ctSim.view.Debug;
 public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		implements ActionListener {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton showRemoteControl;
 	private RemoteControlGUI remoteControlGUI;
 	private RemoteControlSensor remoteControlSensor;
@@ -67,10 +63,10 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		
 		Set<RemoteControlSensor> sens = this.getAllSensors();
 		
-		// TODO: Was wenn keine (eigentlich nicht möglich)?
+		// TODO: Was wenn keine (eigentlich nicht mï¿½glich)?
 		if(sens.size() != 1) {
 			
-			Debug.out.println("Fehler: Mehrere Fernbedienungen werden von der GUI nicht unterstützt!");
+			Debug.out.println("Fehler: Mehrere Fernbedienungen werden von der GUI nicht unterstï¿½tzt!");
 		}
 		
 		Iterator<RemoteControlSensor> it = sens.iterator();
@@ -100,6 +96,11 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 	
 	class RemoteControlGUI extends JDialog {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/** RC5-Taste 0*/
 		public static final int RC5_CODE_0 = 0x3940; 
 
@@ -188,7 +189,7 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		
 		void initCommandMap() {
 			
-			this.commandMappings = new LinkedHashMap();
+			this.commandMappings = new LinkedHashMap<String,Integer>();
 			
 			this.commandMappings.put("PWR", RC5_CODE_PWR);
 			
@@ -203,7 +204,7 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 			this.commandMappings.put("9", RC5_CODE_9);
 			this.commandMappings.put("0", RC5_CODE_0);
 			
-			this.commandMappings.put("Grün", RC5_CODE_GREEN);
+			this.commandMappings.put("Gruen", RC5_CODE_GREEN);
 			this.commandMappings.put("Rot", RC5_CODE_RED);
 			this.commandMappings.put("Gelb", RC5_CODE_YELLOW);
 			this.commandMappings.put("Blau", RC5_CODE_BLUE);
