@@ -204,7 +204,7 @@ public class ParcoursLoader {
 	@SuppressWarnings("unused")
 	private void createWholeFloor(Appearance app) {
 		Box box = new Box(this.parcours.getDimX()*this.parcours.getGrid() *0.5f , this.parcours.getDimY()*this.parcours.getGrid()  *0.5f, World.PLAYGROUND_THICKNESS, app);
-		this.parcours.addFloor(box,this.parcours.getDimX()/2,this.parcours.getDimY()/2, -World.PLAYGROUND_THICKNESS-0.005f); // +0.001f);
+		this.parcours.addFloor(box, ((float)this.parcours.getDimX())/2, ((float)this.parcours.getDimY())/2, -World.PLAYGROUND_THICKNESS-0.005f); // +0.001f);
 	}	
 
 	

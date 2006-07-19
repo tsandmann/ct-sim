@@ -34,7 +34,7 @@ import ctSim.ErrorHandler;
 import ctSim.model.bots.ctbot.CtBot;
 
 /**
- * Repraesentiert einen Parcouss fuer die Bots
+ * Repraesentiert einen Parcours fuer die Bots
  * Wird zum Laden eines solchen benoetigt. 
  * Des Weiteren stehen hier auch Informationen ueber
  * Start- und Zielpunkte der Bots

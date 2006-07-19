@@ -7,8 +7,6 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * Fernbedienungs-Optik verbessern (pek)
 
-* Bodenplatte im Sim korrigieren -- ist manchmal verschoben (pek)
-
 * Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek) 
 
 * Parcours und Binaries im XML-Config-File festlegen
@@ -34,3 +32,9 @@ sie im Ordner parcours innerhalb des Projekts gespeichert worden sind.
 Der Sim findet sonst parcours.dtd nicht. 
 
 * Mausbild
+
+ERLEDIGT:
+=========
+
+* Bodenplatte im Sim korrigieren -- ist manchmal verschoben (pek)
+
