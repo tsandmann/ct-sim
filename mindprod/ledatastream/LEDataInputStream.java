@@ -154,10 +154,10 @@ public class LEDataInputStream implements DataInput {
      * @Deprecated This method does not properly convert bytes to characters.
      *             Use a Reader instead with a little-endian encoding.
      */
-    public final String readLine () throws IOException
-        {
+    @Deprecated
+    public final String readLine () throws IOException {
         return this.d.readLine();
-        }
+    }
 
     /**
      * like DataInputStream.readLong except little endian.
