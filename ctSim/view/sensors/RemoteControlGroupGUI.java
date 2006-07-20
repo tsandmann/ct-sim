@@ -107,75 +107,73 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 	class RemoteControlGUI extends JDialog {
 		
 		private static final long serialVersionUID = 1L;
-		
+
 		/** RC5-Taste PWR*/
-		public static final int RC5_CODE_PWR = 0x100C; 
+		public static final int RC5_CODE_PWR = 0x118C; 
 
 		// Zahlentasten:
 		
 		/** RC5-Taste 0*/
-		public static final int RC5_CODE_0 = 0x1000; 
+		public static final int RC5_CODE_0 = 0x1180; 
 		// TODO:  Ist das Taste 10?
 		
 		/** RC5-Taste 1*/
-		public static final int RC5_CODE_1 = 0x1001; 
+		public static final int RC5_CODE_1 = 0x1181; 
 
 		/** RC5-Taste 2*/
-		public static final int RC5_CODE_2 = 0x1002; 
+		public static final int RC5_CODE_2 = 0x1182; 
 
 		/** RC5-Taste 3*/
-		public static final int RC5_CODE_3 = 0x1003; 
+		public static final int RC5_CODE_3 = 0x1183; 
 
 		/** RC5-Taste 4*/
-		public static final int RC5_CODE_4 = 0x1004; 
+		public static final int RC5_CODE_4 = 0x1184; 
 
 		/** RC5-Taste 5*/
-		public static final int RC5_CODE_5 = 0x1005; 
+		public static final int RC5_CODE_5 = 0x1185; 
 
 		/** RC5-Taste 6*/
-		public static final int RC5_CODE_6 = 0x1006; 
+		public static final int RC5_CODE_6 = 0x1186; 
 
 		/** RC5-Taste 7*/
-		public static final int RC5_CODE_7 = 0x1007; 
+		public static final int RC5_CODE_7 = 0x1187; 
 
 		/** RC5-Taste 8*/
-		public static final int RC5_CODE_8 = 0x1008; 
+		public static final int RC5_CODE_8 = 0x1188; 
 
 		/** RC5-Taste 9*/
-		public static final int RC5_CODE_9 = 0x1009; 
+		public static final int RC5_CODE_9 = 0x1189; 
 
 		/** RC5-Taste 11*/
-		public static final int RC5_CODE_11 = 0x100A; 
+		public static final int RC5_CODE_11 = 0x118A; 
 
 		/** RC5-Taste 12*/
-		public static final int RC5_CODE_12 = 0x100B; 
-		// TODO: Achtung, Bot definiert den noch (faelschlicherweise?) als 0x1003!
+		public static final int RC5_CODE_12 = 0x11A3; 
 		
 		// Farbtasten
 		
 		/** RC5-Taste RED*/
-		public static final int RC5_CODE_RED = 0x101E; 
+		public static final int RC5_CODE_RED = 0x01BD; 
 
 		/** RC5-Taste GREEN*/
-		public static final int RC5_CODE_GREEN = 0x101D; 
+		public static final int RC5_CODE_GREEN = 0x01BA; 
 
 		/** RC5-Taste YELLOW*/
-		public static final int RC5_CODE_YELLOW = 0x1027; 
+		public static final int RC5_CODE_YELLOW = 0x01B1; 
 
 		/** RC5-Taste BLUE*/
-		public static final int RC5_CODE_BLUE = 0x101C; 
+		public static final int RC5_CODE_BLUE = 0x01B0; 
 
-		
 		// Sondertasten:
 		
 		/** RC5-Taste I/II*/
-		public static final int RC5_CODE_I_II=0x1023;
+		public static final int RC5_CODE_I_II=0x11AB;
 		/** RC5-Taste TV/VCR*/
-		public static final int  RC5_CODE_TV_VCR=0x1038;
+		public static final int  RC5_CODE_TV_VCR=0x11B8;
 		/** RC5-Taste mit dem Punkt*/
-		public static final int  RC5_CODE_DOT=0x1037;
+		public static final int  RC5_CODE_DOT=0x11AB;
 		/** RC5-Taste CH*P/C*/
-		public static final int  RC5_CODE_CH_PC=0x100B;
+		public static final int  RC5_CODE_CH_PC=0x11BF;
 
 		
 		// Steuertasten:
@@ -183,26 +181,27 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		/** RC5-Taste Play*/
 		public static final int  RC5_CODE_PLAY=0x11B5;
 		/** RC5-Taste Pause*/
-		public static final int  RC5_CODE_STILL=0x1029;
+		public static final int  RC5_CODE_STILL=0x11A9;
 		/** RC5-Taste Stop*/
-		public static final int  RC5_CODE_STOP=0x1036;
+		public static final int  RC5_CODE_STOP=0x11B6;
 		/** RC5-Taste <<*/
-		public static final int   RC5_CODE_BWD=0x1032;
+		public static final int   RC5_CODE_BWD=0x11B2;
 		/** RC5-Taste >>*/
-		public static final int   RC5_CODE_FWD=0x1034;
-
+		public static final int   RC5_CODE_FWD=0x11B4;
+		
 		/** RC5-Taste Mute*/
-		public static final int   RC5_CODE_MUTE=0x003F;
+		public static final int   RC5_CODE_MUTE=0x01BF;
 
 		/** RC5-Taste Vol+*/
-		public static final int   RC5_VOL_PLUS=0x1010;
+		public static final int   RC5_VOL_PLUS=0x1190;
 		/** RC5-Taste Vol-*/
-		public static final int   RC5_VOL_MINUS=0x1011;
+		public static final int   RC5_VOL_MINUS=0x1191;
 
 		/** RC5-Taste CH+*/
-		public static final int   RC5_CH_PLUS=0x1020;
+		public static final int   RC5_CH_PLUS=0x11A0;
 		/** RC5-Taste CH-*/
-		public static final int   RC5_CH_MINUS=0x1021;		
+		public static final int   RC5_CH_MINUS=0x11A1;		
+
 		
 		private RemoteControlSensor remCtrl;
 		private Map<String,Integer> commandMappings;
