@@ -241,7 +241,7 @@ public final class Controller implements Runnable {
 				}
 				
 			
-				ctSim.getWorldView().getWorldCanvas().stopRenderer();
+//				ctSim.getWorldView().getWorldCanvas().stopRenderer();
 				// Die ganze Simulation aktualisieren
 				world.updateSimulation();
 				
@@ -275,7 +275,7 @@ public final class Controller implements Runnable {
 //				else
 //					System.out.println("AliveObstacles done");
 				
-				ctSim.getWorldView().getWorldCanvas().startRenderer();
+//				ctSim.getWorldView().getWorldCanvas().startRenderer();
 //				long waitTime = (world.getRealTime()-realTimeBegin) - simTime;
 				
 				long elapsedTime= world.getRealTime()-realTimeBegin;
