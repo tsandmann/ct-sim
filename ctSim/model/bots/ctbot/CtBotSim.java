@@ -39,7 +39,18 @@ public abstract class CtBotSim extends CtBot {
 	 * @param head Blickrichtung
 	 */
 	public CtBotSim(@SuppressWarnings("unused") World world, String name, Point3d pos, Vector3d head) {
-		
 		super(name, pos, head);
 	}
+
+	/* 
+	 * Hier erfolgt die Aktualisierung der gesamten Simualtion
+	 * @see ctSim.model.AliveObstacle#updateSimulation(long)
+	 */
+	@Override
+	public void updateSimulation(long simulTime) {
+		super.updateSimulation(simulTime);
+		// TODO Diese Funktion ist noch leer, da der gesamt kram leider noch in ctbotsimtcp steht
+	}
+	
+	
 }

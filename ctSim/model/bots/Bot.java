@@ -22,6 +22,7 @@ package ctSim.model.bots;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.media.j3d.Bounds;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -282,13 +283,15 @@ public abstract class Bot extends AliveObstacle{
 		
 		this.addBranchComponent(sen.getRelTransform(), sen.getShape());
 	}
-	
-	@SuppressWarnings("unchecked")
+
+	/* (non-Javadoc)
+	 * @see ctSim.model.AliveObstacle#updateSimulation(long)
+	 */
 	@Override
-	protected void work() {
+	public void updateSimulation(long simulTime) {
+		super.updateSimulation(simulTime);
 		
 		for(Sensor s : this.getSensors()) {
-			
 			s.update();
 		}
 		
@@ -297,6 +300,15 @@ public abstract class Bot extends AliveObstacle{
 //			
 //			a.update();
 //		}
+
+	}
+
+	/* (non-Javadoc)
+	 * @see ctSim.model.MovableObstacle#getBounds()
+	 */
+	public Bounds getBounds() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 //	protected final void addPosition(Position posi) {

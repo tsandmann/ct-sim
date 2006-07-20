@@ -29,10 +29,13 @@ public interface TcpBot {
 	 * @param command
 	 *            Das Kommando
 	 */
-	public void evaluate_command(Command command);
+	public void evaluateCommand(Command command);
 
 	/**
 	 * Beendet den Bot-Thread 
 	 */
 	public void die();
+
+	/** Puffert ein Kommando */ 
+	public int storeCommand(Command command);
 }

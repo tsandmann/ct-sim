@@ -97,7 +97,7 @@ public class CtBotSimTest extends CtBotSim {
 	@Override
 	protected void work() {
 		
-		super.work();
+		// TDO prüfen ob: super.work();
 		
 		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
 		

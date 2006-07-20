@@ -35,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.media.j3d.View;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -547,6 +548,14 @@ public class CtSimFrame extends JFrame {
 		this.worldPanel = new WorldPanel();
 	}
 	
+	public View getView(){
+		return worldPanel.getWorldView().getUniverse().getViewer().getView();
+	}
+	
+	public WorldView getWorldView(){
+		return worldPanel.getWorldView();
+	}
+	
 	private void initControlBar() {
 		
 		// TODO:
@@ -834,11 +843,11 @@ public class CtSimFrame extends JFrame {
 	}
 	
 	/**
-	 * @param rate Die neue Taktrate fuer den Simulator
+	 * @param rate Die neue Zeitbasis fuer den Simulator in Aufrufen alle xxx ms
 	 */
-	protected void setTickRate(long rate) {
+	protected void setTickRate(int rate) {
 		
-		this.controller.setTickRate(rate);
+		this.controller.getWorld().setBaseTimeReal(rate);
 	}
 	
 	/**

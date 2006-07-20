@@ -364,13 +364,13 @@ public class World {
 	 * 
 	 */
 	/** Zeitbasis in Millisekunden. Realzeit - so oft wird simuliert */
-	public int baseTimeReal = 10;
+	private int baseTimeReal = 10;
 	
 	/**
 	 * Zeitbasis in Millisekunden. Virtuelle Zeit - das sieht die Welt pro
 	 * Simulationsschritt
 	 */
-	public int baseTimeVirtual = 10;
+	private int baseTimeVirtual = 10;
 	
 	/** Interne Zeitbasis in Millisekunden. */
 	private long simulTime = 0;
@@ -404,11 +404,8 @@ public class World {
 	/**
 	 * @return Gibt die um baseTimeVirtual erhoehte Simulationszeit zurueck
 	 */
-	public long increaseSimulTime() {
-		
-		this.simulTime += this.baseTimeVirtual;
-		
-		return this.simulTime;
+	private void increaseSimulTime() {
+		simulTime += baseTimeVirtual;
 	}
 	
 	/* **********************************************************************
@@ -763,5 +760,45 @@ ss
 		double d = pickInfo.getClosestDistance();
 //			System.out.println("IR: "+Math.floor(d*1000));
 		return d;
+	}
+
+	/** Damit jedes Obstacle fair behandelt wird, merken wir uns, wer das letztemal zuerst dran war */
+	private int aliveObstaclePtr=0;
+	
+	/**
+	 * Diese Methode aktualisiert die gesamte Simualtion 
+	 * @see AliveObstacle#updateSimulation()
+	 */
+	public void updateSimulation() {
+		// Zeitbasis aktualisieren
+		increaseSimulTime();
+		
+		
+		Object[] aliveObstacles = aliveObsts.toArray();
+		// pruefen, ob nicht etwa der Zeiger zu weit steht
+		if (aliveObstaclePtr >= aliveObstacles.length)
+			aliveObstaclePtr=0;
+		
+		for (int i=aliveObstaclePtr; i<aliveObstacles.length; i++)
+			((AliveObstacle)aliveObstacles[i]).updateSimulation(simulTime);
+		for (int i=0; i<aliveObstaclePtr; i++)
+			((AliveObstacle)aliveObstacles[i]).updateSimulation(simulTime);
+		aliveObstaclePtr++;
+	}
+
+	/**
+	 * @param baseTimeReal The baseTimeReal to set.
+	 */
+	public void setBaseTimeReal(int baseTimeReal) {
+		this.baseTimeReal = baseTimeReal;
+	}
+
+	/**
+	 * liefert die real-Zeit in ms zurueck
+	 * @return Zeit in ms
+	 */
+	public long getRealTime() {
+		// TODO Auto-generated method stub
+		return System.currentTimeMillis();
 	}
 }

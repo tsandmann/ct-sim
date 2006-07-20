@@ -1,12 +1,14 @@
 Changelog fuer c't-Sim
 ======================
+2006-07-20 Benjamin Benz [bbe@heise.de]: Thread-Modell grundlegend ueberarbeitet. Bot und sim nun synchron
+
 2006-07-19 Peter Koenig [pek@heise.de]: Fernbedienung folgt in Layout und Codes der Standardfernbedienung RC Univers29
 
 2006-07-19 Peter Koenig [pek@heise.de]: ParcoursGenerator ist jetzt statische Klasse
 
 2006-07-19 Peter Koenig [pek@heise.de]: Bodenplatte passt jetzt immer genau unter den Parcours
 
-2006-07-18 Felix Beckwermert [felix@beckwermert.de]: Fernbedienung hinzugefügt (noch hässlich)
+2006-07-18 Felix Beckwermert [felix@beckwermert.de]: Fernbedienung hinzugefuegt (noch haesslich)
 
 2006-07-17 Peter Koenig [pek@heise.de]: Angefangen, Fernbedienung einzubauen, noch keine Tasten-Anzeige
 

@@ -71,15 +71,24 @@ public class AnsweringMachine extends Thread {
 	 */
 	@Override
 	public void run() {
+		long start, duration;
 		super.run();
-		Command command = new Command();
+		
+		
 		int valid = 0;
 		while (this.run) {
 			try {
+				Command command = new Command();
+
+				start= System.nanoTime();
 				valid = command.readCommand(this.con);
+				duration= (System.nanoTime()-start)/1000;
+				System.out.println("habe auf Kommando "+(char)command.getCommand()+" "+duration+" usec gewartet");
+
 				//System.out.println("incoming command");
 				if (valid == 0) {// Kommando ist in Ordnung
-					this.bot.evaluate_command(command);
+					bot.storeCommand(command);
+//					this.bot.evaluate_command(command);
 				} else
 					System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
 			} catch (IOException ex) {

@@ -37,6 +37,7 @@ import javax.vecmath.Vector3d;
 
 // import com.sun.j3d.utils.geometry.Cylinder;
 
+import ctSim.ErrorHandler;
 import ctSim.SimUtils;
 import ctSim.controller.Controller;
 import ctSim.view.Debug;
@@ -46,8 +47,7 @@ import ctSim.view.Debug;
  * 
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
-public abstract class AliveObstacle 
-		implements MovableObstacle, Runnable {
+public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	
 	private int obstState = OBST_STATE_NORMAL;
 	
@@ -85,6 +85,12 @@ public abstract class AliveObstacle
 	private TransformGroup transformgrp;
 	private Shape3D shape;
 	private List<ViewPlatform> views;
+	
+	/** Simultime beim letzten Aufruf */
+	private long lastSimulTime=0;
+	
+	/** Zeit zwischen letztem Aufruf von UpdateSimulation und jetzt*/
+	private long deltaT=0;
 	
 //	public AliveObstacle() {
 //		
@@ -263,7 +269,7 @@ public abstract class AliveObstacle
 		this.thrd = null;
 		dummy.interrupt();
 	}
-	
+
 	/**
 	 * @return Gibt den Namen des Objektes zurueck.  
 	 */
@@ -332,7 +338,7 @@ public abstract class AliveObstacle
 	 */
 	public final synchronized void setPosition(Point3d pos1) {
 		
-		// TODO: synchron ist schoen, aber wird eine Pose �ber die GUI denn ueberhaupt verwendet?
+		// TODO: synchron ist schoen, aber wird eine Pose �ber die GUI denn ueberhaupt verwendet?
 		//synchronized (this) {
 			
 			this.pos = pos1;
@@ -391,11 +397,13 @@ public abstract class AliveObstacle
 			while (this.thrd == thisThread) {
 				work();
 				this.controller.waitOnController();
+				//System.out.println("Alive Obstacle gaining Controll");
 			}
 		} catch(InterruptedException ie) {
-			// nothing...
+			ErrorHandler.error("Alive Obstacle \""+this.getName()+"\" interrupted: "+ie);
+			ie.printStackTrace();
 		}
-		Debug.out.println("Bot \""+this.getName()+"\" stirbt..."); //$NON-NLS-1$ //$NON-NLS-2$
+		Debug.out.println("Alive Obstacle \""+this.getName()+"\" stirbt..."); //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO: ???
 		//cleanup();
 	}
@@ -522,5 +530,25 @@ public abstract class AliveObstacle
 	 */
 	public void setObstState(int state) {
 		this.obstState = state;
+	}
+
+	/**
+	 * Diese Methode wird von außen aufgerufen und erledigt die ganze Aktualisierung 
+	 * der Simulation.
+	 * Steuerzung des Bots hat hier jedoch nichts zu suchen. die gehört in work()  
+	 * @param simulTime
+	 * @see AliveObstacle#work()
+	 */
+	public void updateSimulation(long simulTime){
+		deltaT = simulTime - lastSimulTime;
+		lastSimulTime = simulTime;
+	}
+
+	/**
+	 * Liefert die Zeit zwischen dem aktuellen Stand und dem vorhergehenden Aufruf von updateSimulation
+	 * @return Returns the deltaT.
+	 */
+	public long getDeltaT() {
+		return deltaT;
 	}
 }

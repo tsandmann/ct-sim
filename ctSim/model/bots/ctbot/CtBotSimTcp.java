@@ -21,6 +21,10 @@ package ctSim.model.bots.ctbot;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Shape3D;
@@ -62,6 +66,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 	/** Der "Anrufbeantworter" fuer eingehende Kommandos */
 	private AnsweringMachine answeringMachine;
+	
+	private ArrayList<Command> commandBuffer = new ArrayList<Command>();
 	
 	/** Sequenznummer der TCP-Pakete */
 	int seq = 0;
@@ -107,14 +113,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	/** Aufloesung des Maussensors [DPI] */
 	public static final int SENS_MOUSE_DPI = 400;
 	
-	/**
-	 * Interne Zeitbasis in Millisekunden -- Zeitaenderung seit letztem
-	 * Simulationschritt
-	 */
-	protected long deltaT = 10;
 	
-	
-	private int first = 0;
+	//private int first = 0;
 	/* **********************************************************************
 	 * **********************************************************************
 	 * 
@@ -141,7 +141,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		super(w, name, pos, head);
 		
 		this.connection = (TcpConnection)con;
-		this.answeringMachine = new AnsweringMachine(this, con);
+	//	this.answeringMachine = new AnsweringMachine(this, con);
 		
 		this.world = w;
 		
@@ -322,6 +322,15 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	}
 	
 	/**
+	 * Variable, die sich merkt, welche Daten wir zueltzt uebertragen haben
+	 */
+	private int lastTransmittedSimulTime =0;
+	
+	
+	private long sendTime =0;
+	private long recvTime =0;
+	
+	/**
 	 * Leite Sensordaten an den Bot weiter
 	 */
 	@SuppressWarnings({"unchecked","boxing"})
@@ -428,6 +437,19 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setDataR(0);
 			command.setSeq(this.seq++);
 			this.connection.send(command.getCommandBytes());
+
+			
+			lastTransmittedSimulTime= (int)world.getSimulTime();
+			lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
+			command.setCommand(Command.CMD_DONE);
+			command.setDataL(lastTransmittedSimulTime);
+			command.setDataR(0);
+			command.setSeq(this.seq++);
+			this.connection.send(command.getCommandBytes());
+//			System.out.println(world.getRealTime()+"ms: requesting @"+lastTransmittedSimulTime+" ms");
+
+			sendTime=System.nanoTime()/1000;
+			
 			
 		} catch (IOException IoEx) {
 			ErrorHandler.error("Error during sending Sensor data, dieing: " //$NON-NLS-1$
@@ -438,16 +460,17 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	@SuppressWarnings({"unchecked","boxing"})
 	private void calcPos() {
-			
+			// TODO diese ganze Fkt hat hier nix zu suchen. bitte zerlegen und an die entsprechenden Stellen sortieren
+		
 			////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////
 			// Position und Heading berechnen:
 			
 			// Anzahl der Umdrehungen der Raeder
 			double turnsL = calculateWheelSpeed((Integer)this.govL.getValue());
-			turnsL = turnsL * this.deltaT / 1000.0f;
+			turnsL = turnsL * getDeltaT() / 1000.0f;
 			double turnsR = calculateWheelSpeed((Integer)this.govR.getValue());
-			turnsR = turnsR * this.deltaT / 1000.0f;
+			turnsR = turnsR * getDeltaT() / 1000.0f;
 //			System.out.println(this.govL.getValue()+" -> "+turnsL);
 //			System.out.println(this.govR.getValue()+" -> "+turnsR);
 			
@@ -608,7 +631,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 *            Das Kommando
 	 */
 	@SuppressWarnings({"unchecked","boxing"})
-	public void evaluate_command(Command command) {
+	public void evaluateCommand(Command command) {
 		Command answer = new Command();
 		
 		StringBuffer buf;
@@ -624,47 +647,55 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			case Command.CMD_SENS_IR:
 //				setSensIrL( ((double)command.getDataL())/1000);
 //				setSensIrR( ((double)command.getDataR())/1000);
-//				break;
+				break;
 			case Command.CMD_SENS_ENC:
 //				answer.setDataL(this.getSensEncL());
 //				this.setSensEncL((short) 0); // nach Uebertragung aufraeumen
 //				answer.setDataR(this.getSensEncR());
 //				this.setSensEncR((short) 0); // nach Uebertragung aufraeumen
-//				break;
+				break;
 			case Command.CMD_SENS_BORDER:
 //				answer.setDataL(this.getSensBorderL());
 //				answer.setDataR(this.getSensBorderR());
-//				break;
+				break;
 			case Command.CMD_SENS_DOOR:
 //				answer.setDataL(this.getSensDoor());
 //				answer.setDataR(0);
-//				break;
+				break;
 			case Command.CMD_SENS_LDR:
 //				answer.setDataL(this.getSensLdrL());
 //				answer.setDataR(this.getSensLdrR());
-//				break;
+				break;
 			case Command.CMD_SENS_LINE:
 //				answer.setDataL(this.getSensLineL());
 //				answer.setDataR(this.getSensLineR());
-//				break;
+				break;
 			case Command.CMD_SENS_MOUSE:
 //				answer.setDataL(this.getSensMouseDX());
 //				answer.setDataR(this.getSensMouseDY());
-//				break;
+				break;
 			case Command.CMD_SENS_TRANS:
 //				answer.setDataL(this.getSensTrans());
 //				answer.setDataR(0);
-//				break;
+				break;
 			case Command.CMD_SENS_RC5:
 //				answer.setDataL(this.getSensRc5());
 //				this.setSensRc5(0); // nicht zweimal lesen
 //				answer.setDataR(0);
-//				break;
+				break;
 			case Command.CMD_SENS_ERROR:
 //				answer.setDataL(this.getSensError());
 //				answer.setDataR(0);
 				break;
-
+			case Command.CMD_DONE:
+//				answer.setDataL(this.getSensError());
+//				answer.setDataR(0);
+//				System.out.println(world.getRealTime()+"ms: received Frame for "+command.getDataL()+" ms - expected "+lastTransmittedSimulTime+" ms");
+//				if (command.getDataL() != lastTransmittedSimulTime)
+//					System.out.println("C-Bot und Sim nicht synchron!");
+				
+				break;
+				
 			case Command.CMD_AKT_MOT:
 				//this.setActMotL((short) command.getDataL());
 				//this.setActMotR((short) command.getDataR());
@@ -790,7 +821,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				break;
 			}
 			//System.out.println("////////////////////////////////////////////////////////////////");
-			//System.out.println("Command: "+(char)command.getCommand()+"  -  "+(char)command.getSubcommand());
+			//System.out.println("Command: "+(char)command.getCommand()+"  -  "+(char)command.getSubcommand()+"");
+			//System.out.println(command.toString());
+			
 			
 			try {
 				// tcpCon.send(answer.getCommandBytes());
@@ -806,15 +839,39 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	@Override
 	protected void init() {
 		
-		this.answeringMachine.start();
+		if (answeringMachine != null) 
+			this.answeringMachine.start();
 	}
+	
+	CountDownLatch waitForCommands = new CountDownLatch(1);
 	
 	@Override
 	protected void work() {
 		
-		calcPos();
-		super.work();
+//		while (1==1){
+		
 		transmitSensors();
+
+
+//		int timeout= 200; //world.getBaseTimeVirtual() -2;
+		
+//		try {
+		try {
+			receiveCommands();
+			processCommands();
+		} catch (InterruptedException ex) {
+			ErrorHandler.error("Bot "+getName()+" hat innerhalb des Timeouts nicht geliefert");
+		}
+		
+			// Signal wird in Store Kommando gesetzt und in processCommands resettet
+//			if (waitForCommands.await(timeout,TimeUnit.MILLISECONDS))
+//			else {
+//				ErrorHandler.error("Bot "+getName()+" hat innerhalb des Timeouts ("+timeout+" ms) Frame "+lastTransmittedSimulTime+" ms nicht geliefert");
+//			}
+//		} catch (InterruptedException e) {
+//			ErrorHandler.error("CtBotSimTcp.work() wurde unterbrochen beim warten auf Kommandos "+e);
+//		}
+//		}
 	}
 	
 	// LOG:
@@ -930,6 +987,103 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			}
 		}
 	}
+
+	/**
+	*  Hier erfolgt die Aktualisierung der gesamten Simualtion
+	* @see ctSim.model.AliveObstacle#updateSimulation(long)
+	* @param simulTime 
+	*/
+	@Override
+	public void updateSimulation(long simulTime) {
+		super.updateSimulation(simulTime);
+		// TODO Diese Funktion hat hier rein gar nix zu suchen und muss nach ctbotsim
+		calcPos();	
+	}
+	
+	/**
+	 * Sichert ein Kommando im Puffer
+	 * @param command Das Komamndo
+	 */
+	public int storeCommand(Command command) {
+		int result=0;
+		synchronized (commandBuffer) {
+			// 	TODO verhidnern, dass teilpakete ankommen!!! Achtun geht nicht ohne Aenderungen mit dem C-Code
+
+//			System.out.println("Put CMD: "+command.getCommand()+" DataL: "+command.getDataL()+" Seq: "+command.getSeq());
+
+			commandBuffer.add(command);
+			
+		//	System.out.println("Command: "+(char)command.getCommand()+"  -  "+(char)command.getSubcommand());
+				// Das DONE-kommando ist das letzte in einem Datensatz und beendet ein Paket
+			if (command.getCommand() ==  Command.CMD_DONE){ 
+//				System.out.println(world.getRealTime()+"ms: received Frame for "+command.getDataL()+" ms - expected "+lastTransmittedSimulTime+" ms");
+				if (command.getDataL() == lastTransmittedSimulTime){
+					recvTime=System.nanoTime()/1000;
+					result=1;
+	//				System.out.println("warten auf Bot: "+(recvTime-sendTime)+" usec");
+
+	//				System.out.println("releasing\n");
+					waitForCommands.countDown();
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	* Verarbeitet alle eingegangenen Daten
+	*/
+	public void processCommands(){
+		
+		synchronized (commandBuffer) {
+//			int i=0;
+			Iterator it = commandBuffer.iterator();
+//			System.out.println(commandBuffer.size()+" Elemente im Puffer");
+			while (it.hasNext()){
+				Command command = (Command)it.next();
+//				System.out.println("GET("+(i++)+") CMD: "+command.getCommand()+" DataL: "+command.getDataL()+" Seq: "+command.getSeq());
+				evaluateCommand(command);
+			}
+			commandBuffer.clear();
+			// resete Signal
+//			waitForCommands= new CountDownLatch(1);
+		}
+			
+	}	
+	
+	long t1, t2;
+	public void receiveCommands() throws InterruptedException {
+		long start, duration;
+		int valid = 0;
+		int run=0;
+		
+
+		t1= System.nanoTime()/1000;
+
+		long aussen= t1-t2;
+		
+		while (run==0) {
+			try {
+				Command command = new Command();
+				start= System.nanoTime();
+				valid = command.readCommand(connection);
+				duration= (System.nanoTime()-start)/1000;
+//				System.out.println("habe auf Kommando "+(char)command.getCommand()+" "+duration+" usec gewartet");
+				if (valid == 0) {// Kommando ist in Ordnung
+					run=storeCommand(command);
+				} else
+					System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
+			} catch (IOException ex) {
+				ErrorHandler.error("Verbindung unterbrochen -- Bot stirbt: " + ex); //$NON-NLS-1$
+				die();
+			}
+		}
+		
+		t2 = System.nanoTime()/1000;
+//		System.out.println("zeit in receiveCommands: "+(t2-t1)+" us   --  Zeit ausserhalb :"+aussen+ " us" );
+	//	die();
+	}
+	
 	
 	//LEDs
 	/**

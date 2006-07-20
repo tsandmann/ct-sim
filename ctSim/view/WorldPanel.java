@@ -33,7 +33,7 @@ public class WorldPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private WorldView view;
+	private WorldView worldView;
 	private World world;
 	
 	/**
@@ -44,9 +44,9 @@ public class WorldPanel extends JPanel {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
-		this.view = new WorldView();
+		this.worldView = new WorldView();
 		
-		this.add(this.view);
+		this.add(this.worldView);
 		
 		// TODO:
 		//this.setPreferredSize(new Dimension(800, 500));
@@ -59,17 +59,17 @@ public class WorldPanel extends JPanel {
 		
 		this.world = w;
 		
-		this.view.init();
+		this.worldView.init();
 		
-		this.view.setScene(//this.world.getSceneLight().getScene(),
+		this.worldView.setScene(//this.world.getSceneLight().getScene(),
 						   this.world.getScene(),
 						   this.world.getPlaygroundDimX(),
 						   this.world.getPlaygroundDimY());
-		this.view.initGUI();
+		this.worldView.initGUI();
 		
 		// TODO: ???
 		//this.world.getSceneLight().addReference("World_"+Bot.VP,this.view.getUniverse().getViewingPlatform().getViewPlatform());
-		this.world.addViewPlatform(this.view.getUniverse().getViewingPlatform().getViewPlatform());
+		this.world.addViewPlatform(this.worldView.getUniverse().getViewingPlatform().getViewPlatform());
 		
 		//this.world.start();
 		// TODO: ...
@@ -85,9 +85,16 @@ public class WorldPanel extends JPanel {
 		
 		// RemoteViews benachrichtigen (siehe alter Controller.update())
 		
-		this.view.repaint();
+		this.worldView.repaint();
 		
 		//System.out.println(this.view.worldCanvas.getSize());
 		//System.out.println(this.getSize());
+	}
+
+	/**
+	 * @return Returns the worldView.
+	 */
+	public WorldView getWorldView() {
+		return worldView;
 	}
 }

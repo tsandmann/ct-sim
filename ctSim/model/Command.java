@@ -29,6 +29,9 @@ import ctSim.Connection;
  * @author Benjamin Benz (bbe@heise.de)
  */
 public class Command {
+	/** Motorgeschwindigkeit */
+	public static final int CMD_DONE = 'X';
+	
 	/** Steuerung Klappe */
 	public static final int CMD_AKT_DOOR = 'd';
 
@@ -274,6 +277,10 @@ public class Command {
 		return this.subcommand;
 	}
 
+	
+	public static final int CMD_LENGTH=11;
+	private byte[] b = new byte[CMD_LENGTH];
+
 	/**
 	 * Liest ein Kommando von einer TcpConnection
 	 * 
@@ -284,33 +291,54 @@ public class Command {
 	 * @see Command#validate()
 	 */
 	public int readCommand(Connection con) throws IOException {
-		int tmp;
+//		int tmp;
+//
+//		this.startCode = 0;
+//		// lese Bytes bis Startcode gefunden wird
+//		while (this.startCode != STARTCODE) {
+//			this.startCode = con.readUnsignedByte();
+//		}
+//
+//		this.command = con.readUnsignedByte();
+//
+//		tmp = con.readUnsignedByte();
+//
+//		this.subcommand = tmp & 127;
+//		this.direction = tmp >> 7 & 1;
+//
+//		this.payload = con.readUnsignedByte();
+//		this.dataL = con.readShort();
+//		this.dataR = con.readShort();
+//		this.seq = con.readShort();
+//		this.crc = con.readUnsignedByte();
+//
+//		this.dataBytes = new byte[this.payload];
+//
+//		for (int i = 0; i < this.payload; i++) {
+//			this.dataBytes[i] = (byte) con.readUnsignedByte();
+//		}
 
-		this.startCode = 0;
-		// lese Bytes bis Startcode gefunden wird
-		while (this.startCode != STARTCODE) {
-			this.startCode = con.readUnsignedByte();
-		}
+		
+		con.read(b);
+		
+		startCode = b[0];
 
-		this.command = con.readUnsignedByte();
+		command = b[1];
 
-		tmp = con.readUnsignedByte();
+		subcommand = b[2] & 127;
+		direction = b[2] >> 7 & 1;
 
-		this.subcommand = tmp & 127;
-		this.direction = tmp >> 7 & 1;
+		payload = b[3];
+		dataL =(short) ( ( b[ 5 ] & 0xff ) << 8 | ( b[ 4 ] & 0xff ) );
+		dataR =(short) ( ( b[ 7 ] & 0xff ) << 8 | ( b[ 6 ] & 0xff ) );
+		seq =(short) ( ( b[ 9 ] & 0xff ) << 8 | ( b[ 8 ] & 0xff ) );
+		crc = b[10];
 
-		this.payload = con.readUnsignedByte();
-		this.dataL = con.readShort();
-		this.dataR = con.readShort();
-		this.seq = con.readShort();
-		this.crc = con.readUnsignedByte();
-
-		this.dataBytes = new byte[this.payload];
-
-		for (int i = 0; i < this.payload; i++) {
-			this.dataBytes[i] = (byte) con.readUnsignedByte();
-		}
-
+		dataBytes = new byte[this.payload];
+		
+		if (payload > 0 )
+			con.read(dataBytes,payload);
+		
 		return validate();
 	}
 

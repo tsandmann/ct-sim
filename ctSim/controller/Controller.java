@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
@@ -38,6 +39,7 @@ import javax.media.j3d.Material;
 import javax.media.j3d.TexCoordGeneration;
 import javax.media.j3d.Texture;
 import javax.media.j3d.Texture2D;
+import javax.media.j3d.VirtualUniverse;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.vecmath.Color3f;
@@ -70,6 +72,7 @@ import ctSim.model.rules.Judge;
 import ctSim.view.BotInfo;
 import ctSim.view.CtSimFrame;
 import ctSim.view.DefBotPanel;
+import ctSim.view.WorldView;
 
 /**
  * Zentrale Controller-Klasse des c't-Sim
@@ -89,7 +92,7 @@ public final class Controller implements Runnable {
 	private Thread ctrlThread;
 	private volatile boolean pause;
 	//private boolean run = true;
-	private long tickRate;
+//	private long tickRate;
 	// TODO: CyclicBarrier (?)
 	private CountDownLatch startSignal, doneSignal;
 	
@@ -106,7 +109,7 @@ public final class Controller implements Runnable {
 		this.botsToStart = new ArrayList<Bot>();
 		
 		this.pause = true;
-		this.tickRate = 500;
+//		this.tickRate = 500;
 		
 		init();
 	}
@@ -214,32 +217,33 @@ public final class Controller implements Runnable {
 	public void run() {
 		Thread thisThread = Thread.currentThread();
 		
-		this.startSignal = new CountDownLatch(1);
-		this.doneSignal = new CountDownLatch(this.botList.size());
-		
-		long t = 0;
-		
+		startSignal = new CountDownLatch(1);
+		doneSignal = new CountDownLatch(botList.size());
+			
+		// TODO bitte den Zeit-Thread evtl. wieder in die Welt zurück verschieben
 		while(this.ctrlThread == thisThread) {
 			try {
+				long realTimeBegin = world.getRealTime();
+
 				//System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
-				this.doneSignal.await();
-				//System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
-				CountDownLatch startSig = this.startSignal;
 				
 				// Judge pruefen:
-				this.judge.update(t);
+				judge.update(world.getSimulTime());
 				// Update World
 				// TODO: ganz dirty!
-				this.ctSim.update(t);
-				// Update GUI
-				t = this.world.increaseSimulTime();
-				
+				ctSim.update(world.getSimulTime());
+								
 				// TODO: Vor Bots adden?
 				if(this.pause) {
 					synchronized(this) {
 						wait();
 					}
 				}
+				
+			
+				ctSim.getWorldView().getWorldCanvas().stopRenderer();
+				// Die ganze Simulation aktualisieren
+				world.updateSimulation();
 				
 				// Add/Start new Bot
 				// + neue Runde einleuten (CountDownLatch neu setzen)
@@ -251,11 +255,40 @@ public final class Controller implements Runnable {
 				
 				//System.out.println("Raus: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				
-				// vor sleep?
-				startSig.countDown();
+				long simTime = (world.getRealTime()-realTimeBegin);
 				
-				Thread.sleep(this.tickRate);
+				// DoneSignal vorbereiten
+				doneSignal = new CountDownLatch(this.botList.size());
 				
+//				System.out.println("Release AliveObstacles");
+				// Alle Bots wieder freigeben
+				startSignal.countDown();
+				// und startsignal wieder scharf machen
+				startSignal = new CountDownLatch(1);
+				
+				
+				// Warte, bis alle Bots fertig sind und auf die nächste Aktualisierung warten
+				// breche ab, wenn die Bots zu lange brauchen !
+//				doneSignal.await();
+				if (!doneSignal.await(world.getBaseTimeVirtual(), TimeUnit.MILLISECONDS))
+					System.out.println("Bots hatten Timeout nach: "+world.getBaseTimeVirtual()+" ms");
+//				else
+//					System.out.println("AliveObstacles done");
+				
+				ctSim.getWorldView().getWorldCanvas().startRenderer();
+//				long waitTime = (world.getRealTime()-realTimeBegin) - simTime;
+				
+				long elapsedTime= world.getRealTime()-realTimeBegin;
+				long timeToSleep = world.getBaseTimeReal() - elapsedTime;
+				if ( timeToSleep >=0)
+					Thread.sleep(timeToSleep);
+				else {
+					System.out.println("Zyklus braucht " +elapsedTime+" ms (Sim="+simTime+" ms)" + "Zeitfenster ist aber nur "+world.getBaseTimeReal()+" ms ==> kein sleep");
+					//		""+ -timeToSleep + "ms laenger als baseTimeReal! ==> no sleep");
+					//ErrorHandler.error
+				}
+				
+				//System.out.println("Zyklus brauchte: "+ (world.getRealTime()-realTimeBegin) +" ms. ("+simTime+" ms simul, "+waitTime+" ms wait, " +timeToSleep+" ms sleep)");
 				//System.out.println("Raus: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				
 			} catch (InterruptedException e) {
@@ -276,23 +309,12 @@ public final class Controller implements Runnable {
 		//this.world.cleanup();
 	}
 	
-	/**
-	 * @param rate Der Simulatortakt zu setzen
-	 */
-	public void setTickRate(long rate) {
-		
-		this.tickRate = rate;
-	}
-	
 	private synchronized void startBots() {
 		
 		// TODO: Shuold be a set?
 		for(Bot b : this.botsToStart)
 			this.botList.add(b);
-		
-		this.doneSignal = new CountDownLatch(this.botList.size());
-		this.startSignal = new CountDownLatch(1);
-		
+				
 		for(Bot b : this.botsToStart) {
 			b.start();
 			// TODO:
@@ -307,13 +329,11 @@ public final class Controller implements Runnable {
 	 * @throws InterruptedException
 	 */
 	public void waitOnController() throws InterruptedException {
+		// liefer ein Done ab
+		doneSignal.countDown();
 		
-		CountDownLatch doneSig = this.doneSignal;
-		CountDownLatch startSig = this.startSignal;
-		
-		doneSig.countDown();
-		
-		startSig.await();
+		// und warte auf die erlaubnis weiterzu machen
+		startSignal.await();
 	}
 	
 	/**
@@ -653,6 +673,11 @@ public final class Controller implements Runnable {
 			bot.setController(this);
 			bot.setWorld(this.world);
 			
+			
+//			ctSim.getView().setMinimumFrameCycleTime(100);
+//			System.out.println("dT="+ctSim.getView().getMinimumFrameCycleTime()+" ms");
+
+			
 			return bot;
 			
 //			controlFrame.addBot(bot);
@@ -660,6 +685,8 @@ public final class Controller implements Runnable {
 //			bot.start();
 //			
 //			controlFrame.addViewItem(bot.getName());
+			
+			
 		}
 		return null;
 	}
@@ -859,7 +886,7 @@ public final class Controller implements Runnable {
 	 * @param args keine Argumente
 	 */
 	public static void main(String[] args) {
-		
+		VirtualUniverse.setJ3DThreadPriority(1);
 		// TODO:
 		// - args checken
 		// - UIManager, Locale, ... setzen (?)
@@ -900,5 +927,12 @@ public final class Controller implements Runnable {
 		CtSimFrame ctSim = new CtSimFrame("CtSim"); //$NON-NLS-1$
 		
 		ctSim.setVisible(true);
+	}
+
+	/**
+	 * @return Returns the world.
+	 */
+	public World getWorld() {
+		return world;
 	}
 }

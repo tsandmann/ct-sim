@@ -2,8 +2,6 @@ package ctSim;
 
 import java.io.IOException;
 
-import mindprod.ledatastream.LEDataInputStream;
-import mindprod.ledatastream.LEDataOutputStream;
 import jd2xx.*;
 
 /**
@@ -41,8 +39,8 @@ public class JD2xxConnection extends Connection {
 			this.jd.setFlowControl( JD2XX.FLOW_NONE, 0, 0);
 			this.jd.setTimeouts(60000, 60000);
 		
-			setDis(new LEDataInputStream(new JD2XXInputStream(this.jd)));
-			setDos(new LEDataOutputStream( new JD2XXOutputStream(this.jd)));
+			setInputStream(new JD2XXInputStream(this.jd));
+			setOutputStream( new JD2XXOutputStream(this.jd));
 		} catch (IOException ex) {
 			this.jd.close();
 			ErrorHandler.error("Error while creating Streams "+ex); //$NON-NLS-1$

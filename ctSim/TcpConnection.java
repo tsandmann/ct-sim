@@ -24,9 +24,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import mindprod.ledatastream.LEDataInputStream;
-import mindprod.ledatastream.LEDataOutputStream;
-
 /**
  * Repraesentiert eine TCP-Verbindung
  * 
@@ -62,6 +59,8 @@ public class TcpConnection extends Connection {
 			ServerSocket server = new ServerSocket(port);
 			this.socket = server.accept();
 
+			socket.setPerformancePreferences(0,1,0);
+			socket.setTcpNoDelay(true);
 			connect();
 
 		} catch (IOException iOEx) {
@@ -74,8 +73,8 @@ public class TcpConnection extends Connection {
 
 	/* Interne Hilfsmethode fuer die Verbindung */
 	private void connect() throws IOException {
-		setDis(new LEDataInputStream(this.socket.getInputStream()));
-		setDos(new LEDataOutputStream(this.socket.getOutputStream()));
+		setInputStream(this.socket.getInputStream());
+		setOutputStream(this.socket.getOutputStream());
 	}
 
 	/**
