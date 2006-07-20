@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+
 
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Shape3D;
@@ -327,8 +327,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	private int lastTransmittedSimulTime =0;
 	
 	
-	private long sendTime =0;
-	private long recvTime =0;
+//	private long sendTime =0;
+//	private long recvTime =0;
 	
 	/**
 	 * Leite Sensordaten an den Bot weiter
@@ -448,7 +448,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			this.connection.send(command.getCommandBytes());
 //			System.out.println(world.getRealTime()+"ms: requesting @"+lastTransmittedSimulTime+" ms");
 
-			sendTime=System.nanoTime()/1000;
+//			sendTime=System.nanoTime()/1000;
 			
 			
 		} catch (IOException IoEx) {
@@ -856,12 +856,12 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //		int timeout= 200; //world.getBaseTimeVirtual() -2;
 		
 //		try {
-		try {
+//		try {
 			receiveCommands();
 			processCommands();
-		} catch (InterruptedException ex) {
-			ErrorHandler.error("Bot "+getName()+" hat innerhalb des Timeouts nicht geliefert");
-		}
+//		} catch (InterruptedException ex) {
+//			ErrorHandler.error("Bot "+getName()+" hat innerhalb des Timeouts nicht geliefert");
+//		}
 		
 			// Signal wird in Store Kommando gesetzt und in processCommands resettet
 //			if (waitForCommands.await(timeout,TimeUnit.MILLISECONDS))
@@ -1018,7 +1018,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			if (command.getCommand() ==  Command.CMD_DONE){ 
 //				System.out.println(world.getRealTime()+"ms: received Frame for "+command.getDataL()+" ms - expected "+lastTransmittedSimulTime+" ms");
 				if (command.getDataL() == lastTransmittedSimulTime){
-					recvTime=System.nanoTime()/1000;
+//					recvTime=System.nanoTime()/1000;
 					result=1;
 	//				System.out.println("warten auf Bot: "+(recvTime-sendTime)+" usec");
 
@@ -1052,22 +1052,22 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	}	
 	
 	long t1, t2;
-	public void receiveCommands() throws InterruptedException {
-		long start, duration;
+	public void receiveCommands() {
+//		long start, duration;
 		int valid = 0;
 		int run=0;
 		
 
 		t1= System.nanoTime()/1000;
 
-		long aussen= t1-t2;
+//		long aussen= t1-t2;
 		
 		while (run==0) {
 			try {
 				Command command = new Command();
-				start= System.nanoTime();
+//				start= System.nanoTime();
 				valid = command.readCommand(connection);
-				duration= (System.nanoTime()-start)/1000;
+//				duration= (System.nanoTime()-start)/1000;
 //				System.out.println("habe auf Kommando "+(char)command.getCommand()+" "+duration+" usec gewartet");
 				if (valid == 0) {// Kommando ist in Ordnung
 					run=storeCommand(command);

@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2006-07-20 Benjamin Benz [bbe@heise.de]: Warnings entfernt
+
 2006-07-20 Benjamin Benz [bbe@heise.de]: Thread-Modell grundlegend ueberarbeitet. Bot und sim nun synchron
 
 2006-07-19 Peter Koenig [pek@heise.de]: Fernbedienung folgt in Layout und Codes der Standardfernbedienung RC Univers29

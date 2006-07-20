@@ -176,7 +176,7 @@ public class LEDataInputStream implements DataInput {
             | (long) ( this.w[ 3 ] & 0xff ) << 24
             | (long) ( this.w[ 2 ] & 0xff ) << 16
             | (long) ( this.w[ 1 ] & 0xff ) << 8
-            | (long) ( this.w[ 0 ] & 0xff );
+            |  ( this.w[ 0 ] & 0xff );
         }
 
     // L I T T L E E N D I A N R E A D E R S

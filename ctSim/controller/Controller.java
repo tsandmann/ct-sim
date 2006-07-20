@@ -72,7 +72,6 @@ import ctSim.model.rules.Judge;
 import ctSim.view.BotInfo;
 import ctSim.view.CtSimFrame;
 import ctSim.view.DefBotPanel;
-import ctSim.view.WorldView;
 
 /**
  * Zentrale Controller-Klasse des c't-Sim

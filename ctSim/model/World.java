@@ -499,10 +499,10 @@ public class World {
 			String message) {
 		if (parcours.checkWhole(pos) == false)
 			return true;
-		else {
+//		else {
 			Debug.out.println(message + " faellt " );
 			return false;
-		}
+//		}
 /*		
 		
 		// Falls die Welt verschoben wurde:
