@@ -5,7 +5,7 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz)
 
-* Fernbedienungs-Optik verbessern (pek)
+* Fernbedienungs-Optik verbessern und korrekte Codes einbauen (pek)
 
 * Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek) 
 
