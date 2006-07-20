@@ -279,7 +279,7 @@ public final class Controller implements Runnable {
 				
 				long elapsedTime= world.getRealTime()-realTimeBegin;
 				long timeToSleep = world.getBaseTimeReal() - elapsedTime;
-				if ( timeToSleep >=0)
+				if ( timeToSleep > 0)
 					Thread.sleep(timeToSleep);
 				else {
 					System.out.println("Zyklus braucht " +elapsedTime+" ms (Sim="+simTime+" ms)" + "Zeitfenster ist aber nur "+world.getBaseTimeReal()+" ms ==> kein sleep");

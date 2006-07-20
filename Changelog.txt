@@ -1,5 +1,6 @@
 Changelog fuer c't-Sim
 ======================
+2006-07-20 Benjamin Benz [bbe@heise.de]: Kleinigkeit im Sleep veraendert
 
 2006-07-20 Peter Koenig [pek@heise.de]: Fernbedienung folgt in den Codes der Standardfernbedienung RC Univers29 Geraetecode 334
 
