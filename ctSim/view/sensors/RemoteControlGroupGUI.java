@@ -94,7 +94,8 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 	/** 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(@SuppressWarnings("unused")
+	ActionEvent e) {
 		
 		if(this.remoteControlGUI == null)
 			this.remoteControlGUI = new RemoteControlGUI(this.remoteControlSensor, "Hier BotName");  // TODO:  <----------------------- //$NON-NLS-1$
@@ -147,8 +148,8 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		public static final int RC5_CODE_11 = 0x100A; 
 
 		/** RC5-Taste 12*/
-		public static final int RC5_CODE_12 = 0x1003; 
-		// TODO: Der gleiche wie Taste 3?
+		public static final int RC5_CODE_12 = 0x100B; 
+		// TODO: Achtung, Bot definiert den noch (faelschlicherweise?) als 0x1003!
 		
 		// Farbtasten
 		
@@ -326,7 +327,8 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 			but.addActionListener(new ActionListener() {
 				
 				@SuppressWarnings("synthetic-access")
-				public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(@SuppressWarnings("unused")
+				ActionEvent e) {
 					
 					RemoteControlGUI.this.remCtrl.setValue(val);
 					//RemoteControlGroupGUI.this.remoteControlSensor.setValue(val);
