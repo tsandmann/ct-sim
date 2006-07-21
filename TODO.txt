@@ -7,21 +7,23 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * Fernbedienungs-Optik verbessern und korrekte Codes einbauen (pek)
 
-* Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek) 
+* Threads syncen (bbe)
+
+* Kommunikation ueberarbeiten (bbe)
 
 * Parcours und Binaries im XML-Config-File festlegen
 
 * Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung
 
-* Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (erledigt?) 
+* wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
+
+* wenn der Stop-Button gedrückt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird
+
+* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten übernommen werden
 
 * Klassenstruktur wieder aufraeumen
 
 * Real-Bot (USB-2-Bot) reparieren
-
-* Threads syncen (bbe)
-
-* Kommunikation ueberarbeiten (bbe)
 
 * Bitte pruefen, was alles beim Wechsel auf den neuen Sim verloren gegangen ist
 
@@ -35,9 +37,14 @@ Der Sim findet sonst parcours.dtd nicht.
 
 * Mausbild
 
+* Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek) 
+
 ERLEDIGT:
 =========
 
 * Bodenplatte im Sim korrigieren -- ist manchmal verschoben (pek)
 
 * ParcoursGenerator static machen (pek)
+
+* Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (bbe) 
+
