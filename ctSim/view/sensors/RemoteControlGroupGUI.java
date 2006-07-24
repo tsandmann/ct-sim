@@ -69,7 +69,7 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		// TODO: Was wenn keine (eigentlich nicht moeglich)?
 		if(sens.size() != 1) {
 			
-			Debug.out.println("Fehler: Mehrere Fernbedienungen werden von der GUI nicht unterst�tzt!"); //$NON-NLS-1$
+			Debug.out.println("Fehler: Mehrere Fernbedienungen werden von der GUI nicht unterstuetzt!"); //$NON-NLS-1$
 		}
 		
 		Iterator<RemoteControlSensor> it = sens.iterator();
@@ -79,6 +79,7 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		this.showRemoteControl = new JButton("-> Fernbedienung <-"); //$NON-NLS-1$
 		this.showRemoteControl.addActionListener(this);
 		
+		this.setAlignmentX(Box.CENTER_ALIGNMENT);
 		this.add(this.showRemoteControl);
 	}
 
