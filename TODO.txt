@@ -1,6 +1,8 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
+* Characteristics.lookupPrecise() muss Number nehmen, dann kann der Sim kontinuierliche Abstandswerte rauspusten und das gesamte Datenspektrum der IR-Sensoren ausschoepfen (pek)
+
 * Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz) (fbe)
 
 * Fernbedienungs-Optik verbessern und korrekte Codes einbauen (pek)
