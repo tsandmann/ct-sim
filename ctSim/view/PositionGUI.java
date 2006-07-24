@@ -29,6 +29,8 @@ import javax.swing.SpinnerNumberModel;
 
 import java.awt.Component;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -53,9 +55,6 @@ import ctSim.model.bots.components.BotPosition;
  */
 public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private BotPosition position;
@@ -106,9 +105,6 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		// Tabellendarstellung ohne JSpinner:
 		this.tabData = new DefaultTableModel(this.columns, 4) {
 			
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -180,9 +176,6 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
  		tab.getColumnModel().getColumn(1).setCellEditor(new SpinnerCellEditor());
  		tab.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
  			
- 			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -220,12 +213,11 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	
 	private class SpinnerCellEditor extends AbstractCellEditor implements TableCellEditor {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		private JSpinner spinner;
 		private SpinnerNumberModel model;
+		
+		private ChangeListener last;
 		
 		SpinnerCellEditor() {
 			
@@ -242,6 +234,8 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 		@SuppressWarnings("boxing")
 		public Component getTableCellEditorComponent(@SuppressWarnings("unused") JTable table, Object value, @SuppressWarnings("unused") boolean isSelected, int row, @SuppressWarnings("unused") int column) {
 			
+			////////////////////////////////////////////////////////////
+			// Je nach Zeile, passende Werte initialiesieren:
 			if(row == 3) {
 				this.model.setMinimum(-180d);
 				this.model.setMaximum(180d);
@@ -252,6 +246,27 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 				this.model.setStepSize(0.1d);
 			}
 			
+			// this.spinner.setEditor(table.getCellRenderer(row, column));
+			
+			////////////////////////////////////////////////////////////
+			// ChangeListener um direkt Wert-Änderungen in der Tabelle anzuzeigen:
+			final JTable tab = table;
+			final int r = row;
+			final int c = column;
+			
+			if(last != null)
+				this.spinner.removeChangeListener(last);
+			this.last = new ChangeListener() {
+				
+				public void stateChanged(ChangeEvent e) {
+					
+					tab.setValueAt(spinner.getValue(), r, c);
+				}
+			};
+			this.spinner.addChangeListener(last);
+			
+			////////////////////////////////////////////////////////////
+			// Aktuellen Wert setzen:
 			if(value != null)
 				this.model.setValue(value);
 			else

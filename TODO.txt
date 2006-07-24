@@ -1,9 +1,7 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
-* Slider fuer Position
-
-* Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz)
+* Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz) (fbe)
 
 * Fernbedienungs-Optik verbessern und korrekte Codes einbauen (pek)
 
@@ -11,21 +9,21 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * Kommunikation ueberarbeiten (bbe)
 
-* Parcours und Binaries im XML-Config-File festlegen
+* Parcours und Binaries im XML-Config-File festlegen (fbe)
 
-* Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung
+* Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe)
 
-* wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
+* wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden (fbe)
 
-* wenn der Stop-Button gedrückt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird
+* wenn der Stop-Button gedrückt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
 
-* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten übernommen werden
+* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten übernommen werden (fbe)
 
-* Klassenstruktur wieder aufraeumen
+* Klassenstruktur wieder aufraeumen (fbe)
 
-* Real-Bot (USB-2-Bot) reparieren
+* Real-Bot (USB-2-Bot) reparieren (fbe)
 
-* Bitte pruefen, was alles beim Wechsel auf den neuen Sim verloren gegangen ist
+* Bitte pruefen, was alles beim Wechsel auf den neuen Sim verloren gegangen ist (fbe)
 
 * Es gibt immer noch undokumentierte Fkts im Code [wo?] 
 
@@ -33,7 +31,7 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * Sim kann vom Simulator selbst abgespeicherten Welten nur laden, wenn 
 sie im Ordner parcours innerhalb des Projekts gespeichert worden sind.
-Der Sim findet sonst parcours.dtd nicht. 
+Der Sim findet sonst parcours.dtd nicht.
 
 * Mausbild
 
@@ -41,6 +39,8 @@ Der Sim findet sonst parcours.dtd nicht.
 
 ERLEDIGT:
 =========
+
+* Slider fuer Position (fbe) -> Spinner ändern Wert jetzt mit jedem Klick
 
 * Bodenplatte im Sim korrigieren -- ist manchmal verschoben (pek)
 
