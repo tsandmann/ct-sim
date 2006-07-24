@@ -3,23 +3,13 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * Characteristics.lookupPrecise() muss Number nehmen, dann kann der Sim kontinuierliche Abstandswerte rauspusten und das gesamte Datenspektrum der IR-Sensoren ausschoepfen (pek)
 
-* Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz) (fbe)
-
 * Fernbedienungs-Optik verbessern und korrekte Codes einbauen (pek)
 
 * Threads syncen (bbe)
 
 * Kommunikation ueberarbeiten (bbe)
 
-* Parcours und Binaries im XML-Config-File festlegen (fbe)
-
 * Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe)
-
-* wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden (fbe)
-
-* wenn der Stop-Button gedrückt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
-
-* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten übernommen werden (fbe)
 
 * Klassenstruktur wieder aufraeumen (fbe)
 
@@ -41,6 +31,16 @@ Der Sim findet sonst parcours.dtd nicht.
 
 ERLEDIGT:
 =========
+
+* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten übernommen werden (fbe)
+
+* wenn der Stop-Button gedrückt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
+
+* wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden (fbe)
+
+* Parcours und Binaries im XML-Config-File festlegen (fbe)
+
+* Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz) (fbe)
 
 * Slider fuer Position (fbe) -> Spinner ändern Wert jetzt mit jedem Klick
 
