@@ -266,6 +266,10 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	public final void stop() {
 		
 		Thread dummy = this.thrd;
+		
+		if(dummy == null)
+			return;
+		
 		this.thrd = null;
 		dummy.interrupt();
 	}

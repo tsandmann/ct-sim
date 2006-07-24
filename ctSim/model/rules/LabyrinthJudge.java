@@ -46,12 +46,17 @@ public class LabyrinthJudge extends Judge {
 	 * @param ctrl Der Controller
 	 * @param w Die Welt
 	 */
-	public LabyrinthJudge(Controller ctrl, World w) {
+	public LabyrinthJudge(Controller ctrl) {
 		
-		super(ctrl, w);
+		super(ctrl);
 		
 		this.controller = ctrl;
-		this.world = w;
+	}
+	
+	public void setWorld(World world) {
+		
+		this.world = world;
+		super.setWorld(world);
 	}
 	
 	/** 
@@ -61,7 +66,7 @@ public class LabyrinthJudge extends Judge {
 	public boolean isAddAllowed() {
 		
 		// TODO: Bot-Anzahl pruefen
-		if(this.controller.getParticipants() == this.participants) {
+		if(this.controller.getParticipants() >= this.participants) {
 			Debug.out.println("Fehler: Es sind schon "+this.participants+" Bots auf der Karte."); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
@@ -76,8 +81,13 @@ public class LabyrinthJudge extends Judge {
 	public boolean isStartAllowed() {
 		
 		// TODO: Bot-Anzahl pruefen
-		if(this.controller.getParticipants() != this.participants) {
+		if(this.controller.getParticipants() < this.participants) {
 			Debug.out.println("Fehler: Noch nicht genuegend Bots auf der Karte."); //$NON-NLS-1$
+			return false;
+		}
+		
+		if(this.controller.getParticipants() > this.participants) {
+			Debug.out.println("Fehler: Es sind zu viele Bots auf der Karte."); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -151,7 +161,10 @@ public class LabyrinthJudge extends Judge {
 	
 	@Override
 	protected void init() {
-		// TODO Auto-generated method stub
+		
+	}
+	
+	public void reinit() {
 		
 	}
 }

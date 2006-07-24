@@ -20,6 +20,7 @@
 package ctSim.controller;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 import java.lang.Thread.State;
 import java.lang.reflect.Constructor;
@@ -98,19 +99,21 @@ public final class Controller implements Runnable {
 	private Judge judge;
 	private CtSimFrame ctSim;
 	private World world;
-	private List<Bot> botList, botsToStart;
+	private List<Bot> botList, botsToStart, botsToStop;
 	
-	private Controller(CtSimFrame ctS, World w) {
+	private Controller() {
 		
-		this.ctSim = ctS;
-		this.world = w;
-		this.botList = new ArrayList<Bot>();
+		this.botList     = new ArrayList<Bot>();
 		this.botsToStart = new ArrayList<Bot>();
+		this.botsToStop  = new ArrayList<Bot>();
 		
 		this.pause = true;
 //		this.tickRate = 500;
 		
 		init();
+		
+		this.startBotListener();
+		//this.start();
 	}
 	
 	private void init() {
@@ -127,9 +130,9 @@ public final class Controller implements Runnable {
 			
 			Class<?> cl = Class.forName(this.config.get("judge")); //$NON-NLS-1$
 			
-			Constructor<?> c = cl.getConstructor(this.getClass(), this.world.getClass());
+			Constructor<?> c = cl.getConstructor(this.getClass());
 			
-			this.judge = (Judge) c.newInstance(this, this.world);
+			this.judge = (Judge) c.newInstance(this);
 			
 			//judge = (Judge) Class.forName(config.get("judge")).newInstance();
 			//judge.setController(this);
@@ -166,11 +169,51 @@ public final class Controller implements Runnable {
 		}
 	}
 	
+	private void init2() {
+		
+		try {
+			String parcFile = config.get("parcours"); //$NON-NLS-1$
+			
+			this.ctSim.openWorld(new File(parcFile));
+			
+		} catch(SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(NullPointerException e) {
+			ErrorHandler.error("Keine Welt vorgesehen.");				 //$NON-NLS-1$
+		} catch(Exception e) {
+			ErrorHandler.error("Probleme beim Instantiieren der Welt: "+e); //$NON-NLS-1$
+		}
+		
+		try {
+			String botBin = config.get("botbinary"); //$NON-NLS-1$
+			
+			this.invokeBot(botBin);
+			
+		} catch(SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(NullPointerException e) {
+			ErrorHandler.error("Schneller: Kein Bot vorgesehen.");				 //$NON-NLS-1$
+		} catch(Exception e) {
+			ErrorHandler.error("Probleme beim Ausführen des Bot: "+e); //$NON-NLS-1$
+		}
+	}
+	
 	private void start() {
+		
+		if(this.world == null)
+			return;
 		
 		if(this.judge == null) {
 			
-			this.judge = new DefaultJudge(this, this.world);
+			this.judge = new DefaultJudge(this);
 		}
 		
 		this.ctrlThread = new Thread(this, "Controller"); //$NON-NLS-1$
@@ -179,34 +222,21 @@ public final class Controller implements Runnable {
 	}
 	
 	/**
-	 * Startet den Controller
-	 * @param frame Der Rahmen zur Anzeige der Simulator-GUI
-	 * @param world Die Welt
-	 * @return Der Controller
-	 */
-	public static Controller start(CtSimFrame frame, World world) {
-		
-		Controller ctrl = new Controller(frame, world);
-		
-		//TODO:
-		ctrl.startBotListener();
-		
-		ctrl.start();
-		
-		return ctrl;
-	}
-	
-	/**
 	 * Haelt den Controller an
 	 */
 	public void stop() {
 		
-		if(this.botListener != null && !this.botListener.equals(State.TERMINATED))
-			this.botListener.die();
+//		if(this.botListener != null && !this.botListener.equals(State.TERMINATED))
+//			this.botListener.die();
 		
 		Thread dummy = this.ctrlThread;
+		
+		if(dummy == null)
+			return;
+		
 		this.ctrlThread = null;
-		while(!dummy.getState().equals(State.TERMINATED))
+		// while -> if
+		if(!dummy.getState().equals(State.TERMINATED))
 			dummy.interrupt();
 	}
 	
@@ -218,7 +248,7 @@ public final class Controller implements Runnable {
 		
 		startSignal = new CountDownLatch(1);
 		doneSignal = new CountDownLatch(botList.size());
-			
+		
 		// TODO bitte den Zeit-Thread evtl. wieder in die Welt zurÃ¼ck verschieben
 		while(this.ctrlThread == thisThread) {
 			try {
@@ -300,9 +330,25 @@ public final class Controller implements Runnable {
 	
 	private synchronized void cleanup() {
 		
-		for(Bot b : this.botList)
-			//b.interrupt();
+		// TODO: Judge beenden?
+		
+		for(Bot b : this.botsToStart) {
+			//this.botsToStart.remove(b);
 			b.stop();
+		}
+		
+		for(Bot b : this.botList) {
+			//this.botList.remove(b);
+			b.stop();
+		}
+		
+		for(Bot b : this.botsToStop) {
+			
+			b.stop();
+		}
+		
+		this.botList     = new ArrayList<Bot>();
+		this.botsToStart = new ArrayList<Bot>();
 		
 		// TODO:
 		//this.world.cleanup();
@@ -313,7 +359,10 @@ public final class Controller implements Runnable {
 		// TODO: Shuold be a set?
 		for(Bot b : this.botsToStart)
 			this.botList.add(b);
-				
+		
+		for(Bot b : this.botsToStop)
+			b.stop();
+		
 		for(Bot b : this.botsToStart) {
 			b.start();
 			// TODO:
@@ -347,7 +396,13 @@ public final class Controller implements Runnable {
 	 * Beendet die Pause
 	 */	
 	public synchronized void unpause() {
-//		System.out.println("Da bin ich doch...");
+		
+		if(this.world == null)
+			return;
+		
+		if(this.ctrlThread == null)
+			this.start();
+		
 		if(this.pause && this.judge.isStartAllowed()) {
 			this.pause = false;
 			this.notify();
@@ -362,9 +417,9 @@ public final class Controller implements Runnable {
 		
 		try {
 			Class<?> cl = Class.forName(judgeClass);
-			Constructor<?> c = cl.getConstructor(this.getClass(), this.world.getClass());
+			Constructor<?> c = cl.getConstructor(this.getClass());
 			
-			return this.setJudge((Judge) c.newInstance(this, this.world));
+			return this.setJudge((Judge) c.newInstance(this));
 			
 		} catch(ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -403,15 +458,60 @@ public final class Controller implements Runnable {
 		
 		if(this.judge == null || this.judge.getTime() == 0) {
 			this.judge = j;
+			
+			if(this.world != null)
+				this.judge.setWorld(world);
+			
 			return true;
 		}
 		return false;
 	}
 	
-	// TODO:
-//	public void reset() {
+	public void setSim(CtSimFrame sim) {
+		
+		this.ctSim = sim;
+		
+		init2();
+	}
+	
+	public void setWorld(World world) {
+		
+		// TODO: ???
+		this.pause();
+		
+		for(Bot b : this.botsToStart) {
+			//this.botsToStart.remove(b);
+			b.stop();
+		}
+		
+		for(Bot b : this.botList) {
+			//this.botList.remove(b);
+			b.stop();
+		}
+		
+		this.botList     = new ArrayList<Bot>();
+		this.botsToStart = new ArrayList<Bot>();
+		
+		this.world = world;
+		if(this.judge != null)
+			this.judge.setWorld(world);
+	}
+	
+	public void reset() {
+		
+		// TODO: Bots nur "zurückstellen"???
+		this.stop();
+		
+//		for(Bot b : this.botsToStart)
+//			b.stop();
 //		
-//	}
+//		for(Bot b : this.botList)
+//			b.stop();
+		
+		this.judge.reinit();
+//		if(world != null)
+//			this.world.reinit();
+	}
 	
 	// TODO
 	void startBotListener() {
@@ -514,7 +614,7 @@ public final class Controller implements Runnable {
 					 * gaenzlich entfernt.
 					 */
 					try {
-					server.setSoTimeout(1000);
+					//server.setSoTimeout(1000);
 					tcp.connect(server.accept());
 					System.out.println("Eingehende Verbindung auf dem Bot-Port"); //$NON-NLS-1$
 					
@@ -537,6 +637,16 @@ public final class Controller implements Runnable {
 	public int getParticipants() {
 		
 		return this.botList.size()+this.botsToStart.size();
+	}
+	
+	public synchronized void removeBot(Bot bot) {
+		
+		this.world.removeAliveObstacle(bot);
+		
+		this.botsToStart.remove(bot);
+		this.botList.remove(bot);
+		
+		this.botsToStop.add(bot);
 	}
 	
 	/** 
@@ -646,7 +756,7 @@ public final class Controller implements Runnable {
 	@SuppressWarnings("unchecked")
 	private synchronized Bot addBot(Bot bot){
 		
-		if (bot != null && this.judge.isAddAllowed()) {
+		if (bot != null && this.world != null && this.judge.isAddAllowed()) {
 			
 			// TODO Sinnvolle Zuordnung von Bot-Name zu Konfig
 			HashMap botConfig = getBotConfig("config/ct-sim.xml",bot.getName()); //$NON-NLS-1$
@@ -922,10 +1032,10 @@ public final class Controller implements Runnable {
 		}
 		
 		//JFrame.setDefaultLookAndFeelDecorated(true);
+		Controller ctrl = new Controller();
 		
-		CtSimFrame ctSim = new CtSimFrame("CtSim"); //$NON-NLS-1$
-		
-		ctSim.setVisible(true);
+		CtSimFrame ctSim = CtSimFrame.showSimGUI(ctrl, "CtSim"); //$NON-NLS-1$
+		ctrl.setSim(ctSim);
 	}
 
 	/**

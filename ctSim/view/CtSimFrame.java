@@ -47,8 +47,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 
@@ -67,9 +65,6 @@ import ctSim.model.bots.Bot;
  */
 public class CtSimFrame extends JFrame {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	//////////////////////////////////////////////////////////////////////
 	// Icons:
@@ -126,10 +121,12 @@ public class CtSimFrame extends JFrame {
 	 * Der Konstruktor
 	 * @param title Die Titelzeile des Fensters
 	 */
-	public CtSimFrame(String title) {
+	private CtSimFrame(Controller ctrl, String title) {
 		
 		// TODO: Titel setzen (?)
 		super(title);
+		
+		this.controller = ctrl;
 		
 		loadImages();
 		
@@ -199,7 +196,7 @@ public class CtSimFrame extends JFrame {
 		
 		this.pack();
 		//this.show();
-		//this.setVisible(true);
+		this.setVisible(true);
 	}
 	
 	private void loadImages() {
@@ -495,14 +492,14 @@ public class CtSimFrame extends JFrame {
 		worldMenu.add(this.closeWorld);
 		worldMenu.add(this.saveWorld);
 		
-		JMenu botMenu = new JMenu("Hinzufuegen"); //$NON-NLS-1$
+		JMenu botMenu = new JMenu("Optionen"); //$NON-NLS-1$
 		//botMenu.getPopupMenu().setLightWeightPopupEnabled(false);
 		botMenu.add(this.selectJudge);
 		botMenu.addSeparator();
 		botMenu.add(this.addBot);
 		// botMenu.add(this.configBots);
 		
-		JMenu controlMenu = new JMenu("Ablauf"); //$NON-NLS-1$
+		JMenu controlMenu = new JMenu("Simulation"); //$NON-NLS-1$
 		//controlMenu.getPopupMenu().setLightWeightPopupEnabled(false);
 		controlMenu.add(this.start);
 		controlMenu.add(this.pause);
@@ -558,33 +555,29 @@ public class CtSimFrame extends JFrame {
 	
 	private void initControlBar() {
 		
-		// TODO:
 		// Initialize ControlBarPanel
-		this.controlBar = new ControlBar();
+		this.controlBar = new ControlBar(this);
 	}
 	
 	protected void cmdExitClicked() {
 		
-		// TODO:
+		this.controller.stop();
 		this.dispose();
 		System.exit(0);
 	}
 	
 	private void cmdStartClicked() {
 		
-		// TODO
 		this.startWorld();
 	}
 	
 	private void cmdStopClicked() {
 		
-		// TODO
-		this.stopWorld();
+		this.resetWorld();
 	}
 	
 	private void cmdPauseClicked() {
 		
-		// TODO
 		this.stopWorld();
 	}
 	
@@ -612,36 +605,7 @@ public class CtSimFrame extends JFrame {
 		}
 		
 
-		this.closeWorld();
-		
-		// TODO: Exception-Handling, ...
-		try {
-			// TODO: Wenn kein DTD-file gegeben, besser Fehlermeldung!
-			this.world = World.parseWorldFile(file);
-			//this.world = new World(file.getAbsolutePath());
-			
-			// TODO:
-			this.worldPanel.setWorld(this.world);
-			
-			this.controller = Controller.start(this, this.world);
-			
-			this.validate();
-			
-			this.tmpParcoursFile = file;
-			
-			Debug.out.println("Neue Welt geoeffnet."); //$NON-NLS-1$
-			
-		} catch (SAXException e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
-			e.printStackTrace();
-		} catch (IOException e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO: Ueber?
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
-			e.printStackTrace();
-		}
+		this.openWorld(file);
 	}
 	
 	private void cmdRandomWorldClicked() {
@@ -673,7 +637,8 @@ public class CtSimFrame extends JFrame {
 			// TODO:
 			this.worldPanel.setWorld(this.world);
 			
-			this.controller = Controller.start(this, this.world);
+			//this.controller = Controller.start(this, this.world);
+			this.controller.setWorld(this.world);
 			
 			this.validate();
 			
@@ -761,10 +726,10 @@ public class CtSimFrame extends JFrame {
 	
 	private void cmdSetJudgeClicked() {
 		
-		if(this.controller == null) {
-			Debug.out.println("Fehler: Noch keine Welt geladen."); //$NON-NLS-1$
-			return;
-		}
+//		if(this.controller == null) {
+//			Debug.out.println("Fehler: Noch keine Welt geladen."); //$NON-NLS-1$
+//			return;
+//		}
 		
 		String judge = JudgeChooser.showJudgeChooserDialog(this);
 		
@@ -776,13 +741,14 @@ public class CtSimFrame extends JFrame {
 	
 	private void cmdAddBotClicked() {
 		
-		if(this.controller == null)
-			return;
+//		if(this.controller == null)
+//			return;
 		
 		// TODO
 		//Bot bot = this.controller.addBot("CtBotSimTest");
 		Bot bot = BotChooser.showBotChooserDialog(this, this.controller);
 		
+		// TODO: hässlich: C-Bot wird indirekt gesetzt
 		if(bot == null)
 			return;
 		
@@ -793,24 +759,67 @@ public class CtSimFrame extends JFrame {
 	
 	private void cmdConfigureBotsClicked() {
 		
+		// TODO:
 		Debug.out.println("  !!! Funktioniert noch nicht !!!"); //$NON-NLS-1$
-		// TODO
 	}
 	
 	// TODO: Geschwindigkeit setzen:
 	private void startWorld() {
 		
 		//this.world.setHaveABreak(false);
-		if(this.controller != null)
-			this.controller.unpause();
+		this.controller.unpause();
 	}
 	
 	// TODO: Geschwindigkeit setzen:
 	private void stopWorld() {
 		
 		//this.world.setHaveABreak(true);
-		if(this.controller != null)
-			this.controller.pause();
+		this.controller.pause();
+	}
+	
+	private void resetWorld() {
+		
+		this.controller.reset();
+		
+		this.statusBar.reinit();
+		this.controlBar.reinit();
+		
+		this.split.resetToPreferredSizes();
+	}
+	
+	public void openWorld(File file) {
+		
+		this.closeWorld();
+		
+		// TODO: Exception-Handling, ...
+		try {
+			// TODO: Wenn kein DTD-file gegeben, besser Fehlermeldung!
+			this.world = World.parseWorldFile(file);
+			//this.world = new World(file.getAbsolutePath());
+			
+			// TODO:
+			this.worldPanel.setWorld(this.world);
+			
+			//this.controller = Controller.start(this, this.world);
+			this.controller.setWorld(this.world);
+			
+			this.validate();
+			
+			this.tmpParcoursFile = file;
+			
+			Debug.out.println("Neue Welt geoeffnet."); //$NON-NLS-1$
+			
+		} catch (SAXException e) {
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
+			e.printStackTrace();
+		} catch (IOException e) {
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO: Ueber?
+			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
+			e.printStackTrace();
+		}
 	}
 	
 	// TODO: Close Controller:
@@ -833,11 +842,11 @@ public class CtSimFrame extends JFrame {
 		this.controlBar.reinit();
 		//this.split.setRightComponent(this.worldPanel);
 		this.consoleSplit.setTopComponent(this.worldPanel);
-		this.split.resetToPreferredSizes();
+		this.updateLayout();
 		//this.consoleSplit.resetToPreferredSizes();
 		
-		this.controller.stop();
-		this.controller = null;
+		//this.controller.stop();
+		//this.controller = null;
 		
 		Debug.out.println("Welt wurde geschlossen."); //$NON-NLS-1$
 	}
@@ -848,6 +857,11 @@ public class CtSimFrame extends JFrame {
 	protected void setTickRate(int rate) {
 		
 		this.controller.getWorld().setBaseTimeReal(rate);
+	}
+	
+	public void updateLayout() {
+		
+		this.split.resetToPreferredSizes();
 	}
 	
 	/**
@@ -864,7 +878,6 @@ public class CtSimFrame extends JFrame {
 		
 		// --> this.validate();
 		
-		// TODO: ControlBar-Update, WorldView-Update
 		this.controlBar.update();
 		
 		this.worldPanel.update();
@@ -882,7 +895,6 @@ public class CtSimFrame extends JFrame {
 	}
 	
 	
-	// TODO:
 	/**
 	 * Fuegt einen neuen Bot hinzu
 	 * @param botInfo Die Informationen rund um den neuen Bot
@@ -892,7 +904,7 @@ public class CtSimFrame extends JFrame {
 		this.controlBar.addBot(botInfo);
 		
 		this.update();
-		this.split.resetToPreferredSizes();
+		this.updateLayout();
 		
 		//this.validate();
 		//this.doLayout();
@@ -900,55 +912,71 @@ public class CtSimFrame extends JFrame {
 		Debug.out.println("Bot \""+botInfo.getName()+"\" wurde hinzugefuegt.");  //$NON-NLS-1$//$NON-NLS-2$
 	}
 	
-	/**
-	 * Hauptmethode
-	 * @param args bleibt leer
-	 */
-	public static void main(String[] args) {
+	public void removeBot(BotInfo botInfo) {
 		
-		// TODO:
-		// - set DefaultLocale
-		// - set DefaultLook&Feel
-		//
-		// - instantiate SimFrame
-		// - show SimFrame
-		//
-		// ...
+		this.controlBar.removeBot(botInfo);
+		this.update();
+		this.split.resetToPreferredSizes();
 		
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-			//UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-			
-			/*
-			LookAndFeelInfo[] info = UIManager.getInstalledLookAndFeels();
-			
-			for(int i=0; i<info.length; i++) {
-				
-				System.out.println(info[i].getName());
-				System.out.println(info[i].getClassName());
-			}
-			*/
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
+		this.controller.removeBot(botInfo.getBot());
 		
-		//JFrame.setDefaultLookAndFeelDecorated(true);
-		
-		CtSimFrame simFrame = new CtSimFrame("Ct-Sim-Frame"); //$NON-NLS-1$
-		
-		simFrame.setVisible(true);
-		
-//		testfall2(simFrame);
+		Debug.out.println("Bot \""+botInfo.getName()+"\" wurde gelöscht.");  //$NON-NLS-1$//$NON-NLS-2$
 	}
+	
+	public static CtSimFrame showSimGUI(Controller ctrl, String title) {
+		
+		return new CtSimFrame(ctrl, title);
+	}
+	
+//	/**
+//	 * Hauptmethode
+//	 * @param args bleibt leer
+//	 */
+//	public static void main(String[] args) {
+//		
+//		// TODO:
+//		// - set DefaultLocale
+//		// - set DefaultLook&Feel
+//		//
+//		// - instantiate SimFrame
+//		// - show SimFrame
+//		//
+//		// ...
+//		
+//		try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+//			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+//			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+//			//UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+//			
+//			/*
+//			LookAndFeelInfo[] info = UIManager.getInstalledLookAndFeels();
+//			
+//			for(int i=0; i<info.length; i++) {
+//				
+//				System.out.println(info[i].getName());
+//				System.out.println(info[i].getClassName());
+//			}
+//			*/
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (InstantiationException e) {
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		} catch (UnsupportedLookAndFeelException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		//JFrame.setDefaultLookAndFeelDecorated(true);
+//		
+//		CtSimFrame simFrame = new CtSimFrame("Ct-Sim-Frame"); //$NON-NLS-1$
+//		
+//		simFrame.setVisible(true);
+//		
+////		testfall2(simFrame);
+//	}
 	
 	//////////////////////////////////////////////////////////////////////
 	// Testfaelle:

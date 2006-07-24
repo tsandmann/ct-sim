@@ -20,11 +20,17 @@
 package ctSim.view;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 
 /**
@@ -34,9 +40,6 @@ import javax.swing.JTabbedPane;
  */
 public final class ControlBar extends JPanel {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final Dimension PREF_SIZE = new Dimension(180, 600);
@@ -45,12 +48,16 @@ public final class ControlBar extends JPanel {
 	
 	private JTabbedPane botTabs;
 	
+	private CtSimFrame parent;
+	
 	/**
 	 * Der Konstruktor
 	 */
-	ControlBar() {
+	ControlBar(CtSimFrame parent) {
 		
 		super();
+		
+		this.parent = parent;
 		
 		this.botList = new ArrayList<BotInfo>();
 		
@@ -93,8 +100,17 @@ public final class ControlBar extends JPanel {
 		this.botTabs.addTab(botInfo.getName(), null, botPanel,
 				"Bot '"+botInfo.getName()+"' with type '"+botInfo.getType()+"'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
+		this.botTabs.addMouseListener(new PopupListener());
+		
 		botPanel.invalidate();
 		//this.invalidate();
+	}
+	
+	protected void removeBot(BotInfo botInfo) {
+		
+		this.botList.remove(botInfo);
+		if(botInfo.getBotPanel() != null)
+			this.botTabs.remove(botInfo.getBotPanel());
 	}
 	
 	/** 
@@ -126,4 +142,51 @@ public final class ControlBar extends JPanel {
 		this.botList = new ArrayList<BotInfo>();
 		this.botTabs.removeAll();
 	}
+	
+	class PopupListener extends MouseAdapter implements ActionListener {
+		
+        JPopupMenu popup;
+        int idx;
+
+        PopupListener() {
+        	
+        	initMenu();
+        }
+        
+        private void initMenu() {
+        	
+        	popup = new JPopupMenu();
+        	JMenuItem kill = new JMenuItem("Kill...");
+        	kill.addActionListener(this);
+        	popup.add(kill);
+        }
+
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+            	
+            	idx = botTabs.indexAtLocation(e.getX(), e.getY());
+            	
+            	if(idx < 0)
+            		return;
+            	
+                popup.show(e.getComponent(),
+                           e.getX(), e.getY());
+            }
+        }
+        
+        public void actionPerformed(ActionEvent e) {
+			
+			System.out.println("Töte "+botList.get(idx).getName());
+			
+			parent.removeBot(botList.get(idx));
+		}
+    }
 }

@@ -186,5 +186,6 @@ public class StatusBar extends Box {
 	protected void reinit() {
 		
 		this.tickRateField.setValue(StatusBar.INIT_TICK_RATE);
+		this.updateTime(0);
 	}
 }

@@ -38,12 +38,12 @@ public abstract class Judge {
 	/**
 	 * Welt-Zeit zu Beginn des Wettkampfes [ms]
 	 */
-	private long startTime;
+	private long startTime = 0;
 
 	/**
 	 * aktuelle Welt-Zeit [ms]
 	 */
-	private long time;
+	private long time = 0;
 	
 	/**
 	 * bisher verstrichene Zeit [ms]
@@ -63,13 +63,13 @@ public abstract class Judge {
 	 * @param ctrl Der Controller
 	 * @param w Die Welt
 	 */
-	public Judge(Controller ctrl, World w) {
+	public Judge(Controller ctrl) {
 		super();
 		
 		this.controller = ctrl;
 		//this.world = w;
-		this.startTime = w.getSimulTime();
-		this.time = this.startTime;
+//		this.startTime = w.getSimulTime();
+//		this.time = this.startTime;
 //		panel = new JudgePanel(this);
 //		setName(this.getClass().getName());
 	}
@@ -93,6 +93,12 @@ public abstract class Judge {
 //	protected void delay() throws InterruptedException{
 //		sleep(delay);
 //	}
+	
+	public void setWorld(World w) {
+		
+		this.startTime = w.getSimulTime();
+		this.time = this.startTime;
+	}
 	
 	public boolean isAddAllowed(){
 		
@@ -163,6 +169,8 @@ public abstract class Judge {
 	
 	/** Hier kommt alles rein, was vor dem Start ausgefuehrt werden muss*/
 	protected abstract void init();
+	
+	public abstract void reinit();
 
 
 	/**

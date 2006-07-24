@@ -1,7 +1,6 @@
 package ctSim.model.rules;
 
 import ctSim.controller.Controller;
-import ctSim.model.World;
 import ctSim.view.Debug;
 
 /**  Das ist der "Ich-mache-nix"-Judge fuer den "Normal-Betrieb" mit einem einzelnen Bot
@@ -16,9 +15,9 @@ public class DefaultJudge extends Judge {
 	 * @param ctrl Der Controller
 	 * @param world Die Welt
 	 */
-	public DefaultJudge(Controller ctrl, World world) {
+	public DefaultJudge(Controller ctrl) {
 		
-		super(ctrl, world);
+		super(ctrl);
 		
 		this.controller = ctrl;
 	}
@@ -63,7 +62,10 @@ public class DefaultJudge extends Judge {
 	
 	@Override
 	protected void init() {
-		// TODO Auto-generated method stub
+		
+	}
+	
+	public void reinit() {
 		
 	}
 }
