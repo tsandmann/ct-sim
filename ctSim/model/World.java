@@ -799,6 +799,6 @@ ss
 	 */
 	public long getRealTime() {
 		// TODO Auto-generated method stub
-		return System.currentTimeMillis();
+		return 	System.nanoTime()/1000000;
 	}
 }
