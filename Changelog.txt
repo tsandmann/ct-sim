@@ -1,8 +1,11 @@
 Changelog fuer c't-Sim
 ======================
-2006-07-20 Benjamin Benz [bbe@heise.de]: zeitfunktion praezisiert
+
+2006-07-24 Peter Koenig [pek@heise.de]: Characteristics.lookupPrecise() nimmt Number
 
 2006-07-24 Peter Koenig [pek@heise.de]: Text der GPL eingefuegt
+
+2006-07-20 Benjamin Benz [bbe@heise.de]: zeitfunktion praezisiert
 
 2006-07-20 Benjamin Benz [bbe@heise.de]: Kleinigkeit im Sleep veraendert
 

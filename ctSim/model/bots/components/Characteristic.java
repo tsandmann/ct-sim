@@ -201,19 +201,50 @@ public class Characteristic {
 	}
 
 	
+//	/**
+//	 * Gibt zur uebergebenen Messgroesse den passenden Sensorwert zurueck.
+//	 * Praezise Funktion, die bei Messgroessen zwischen ganzen Zahlen weitere
+//	 * Zwischenwerte berechnet. Nur sinnvoll bei Sensoren, die nicht nur ganzzahlige
+//	 * Messwerte liefern
+//	 * 
+//	 * @param measurement
+//	 *            Die Messgroesse, aufgrund derer der Sensor seinen Wert erzeugt
+//	 *            (z.B. die Distanz bei Distanzsensoren)
+//	 * @return Das Sensordatum laut Kennlinie
+//	 */
+//	public float lookupPrecise(float measurement) {
+//		float data;
+//		// Liegt der Wert innerhalb der Tabelle?
+//		if (measurement >= 0 && measurement <= this.lookup.length - 1) {
+//			int index = Math.round(Math.round(Math.floor(measurement)));
+//			data = this.lookup[index];
+//			// Falls der Wert nicht am Rand der Tabelle liegt,
+//			// noch Zwischenwert extrapolieren --
+//			if (data != this.INF && index < this.lookup.length - 1) {
+//				data = data + (measurement - index)
+//						* (this.lookup[index + 1] - this.lookup[index]);
+//			}
+//		} else {
+//			// Sonst INF zurueckgeben:
+//			data = this.INF;
+//		}
+//		return data;
+//	}
+
 	/**
 	 * Gibt zur uebergebenen Messgroesse den passenden Sensorwert zurueck.
 	 * Praezise Funktion, die bei Messgroessen zwischen ganzen Zahlen weitere
 	 * Zwischenwerte berechnet. Nur sinnvoll bei Sensoren, die nicht nur ganzzahlige
 	 * Messwerte liefern
 	 * 
-	 * @param measurement
+	 * @param measure
 	 *            Die Messgroesse, aufgrund derer der Sensor seinen Wert erzeugt
 	 *            (z.B. die Distanz bei Distanzsensoren)
 	 * @return Das Sensordatum laut Kennlinie
 	 */
-	public float lookupPrecise(float measurement) {
-		float data;
+	public double lookupPrecise(Number measure) {
+		double measurement = measure.doubleValue();
+		double data;
 		// Liegt der Wert innerhalb der Tabelle?
 		if (measurement >= 0 && measurement <= this.lookup.length - 1) {
 			int index = Math.round(Math.round(Math.floor(measurement)));
@@ -231,6 +262,7 @@ public class Characteristic {
 		return data;
 	}
 
+	
 	/**
 	 * Schreibt die Lookup-Tables zum Debuggen auf die Konsole
 	 */

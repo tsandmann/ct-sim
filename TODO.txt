@@ -1,7 +1,7 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
-* Characteristics.lookupPrecise() muss Number nehmen, dann kann der Sim kontinuierliche Abstandswerte rauspusten und das gesamte Datenspektrum der IR-Sensoren ausschoepfen (pek)
+* Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab 
 
 * Fernbedienungs-Optik verbessern und korrekte Codes einbauen (pek)
 
@@ -31,6 +31,8 @@ Der Sim findet sonst parcours.dtd nicht.
 
 ERLEDIGT:
 =========
+
+* Characteristics.lookupPrecise() nimmt Number
 
 * beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten übernommen werden (fbe)
 
