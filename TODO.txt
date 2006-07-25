@@ -1,8 +1,6 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
-* Wenn ct-Sim.xml ein Botbinary vorsieht, soll dieses nicht von selbst bei Sim-Start platziert werden, sondern bei jedem Klick auf "Bot hinzufuegen/C-Bot" (fbe?)
-
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab 
 
 * Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe)
