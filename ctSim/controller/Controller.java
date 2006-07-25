@@ -202,7 +202,7 @@ public final class Controller implements Runnable {
 		} catch(NullPointerException e) {
 			ErrorHandler.error("Schneller: Kein Bot vorgesehen.");				 //$NON-NLS-1$
 		} catch(Exception e) {
-			ErrorHandler.error("Probleme beim Ausführen des Bot: "+e); //$NON-NLS-1$
+			ErrorHandler.error("Probleme beim Ausfï¿½hren des Bot: "+e); //$NON-NLS-1$
 		}
 	}
 	
@@ -300,7 +300,7 @@ public final class Controller implements Runnable {
 				// breche ab, wenn die Bots zu lange brauchen !
 //				doneSignal.await();
 				if (!doneSignal.await(world.getBaseTimeReal(), TimeUnit.MILLISECONDS))
-					System.out.println("Bots hatten Timeout nach: "+world.getBaseTimeVirtual()+" ms");
+					System.out.println("Problem: Bots antworten auch nach: "+world.getBaseTimeVirtual()+" ms nicht. Evtl. TR erhÃ¶hen!");
 //				else
 //					System.out.println("AliveObstacles done");
 				
@@ -312,7 +312,7 @@ public final class Controller implements Runnable {
 				if ( timeToSleep > 0)
 					Thread.sleep(timeToSleep);
 				else {
-					System.out.println("Zyklus braucht " +elapsedTime+" ms (Sim="+simTime+" ms)" + "Zeitfenster ist aber nur "+world.getBaseTimeReal()+" ms ==> kein sleep");
+					System.out.println("Info: Sim schnappt sich " +elapsedTime+" ms (Sim="+simTime+" ms)" + "statt "+world.getBaseTimeReal()+" ms ==> kein sleep aber kein Problem");
 					//		""+ -timeToSleep + "ms laenger als baseTimeReal! ==> no sleep");
 					//ErrorHandler.error
 				}
@@ -499,7 +499,7 @@ public final class Controller implements Runnable {
 	
 	public void reset() {
 		
-		// TODO: Bots nur "zurückstellen"???
+		// TODO: Bots nur "zurï¿½ckstellen"???
 		this.stop();
 		
 //		for(Bot b : this.botsToStart)

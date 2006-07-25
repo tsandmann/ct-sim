@@ -70,7 +70,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	private ArrayList<Command> commandBuffer = new ArrayList<Command>();
 	
 	/** Sequenznummer der TCP-Pakete */
-	int seq = 0;
+	private int seq = 0;
 	
 	/** Puffer fuer Logausgaben */
 	public StringBuffer logBuffer = new StringBuffer(""); //$NON-NLS-1$
