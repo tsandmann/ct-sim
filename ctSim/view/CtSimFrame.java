@@ -52,6 +52,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.xml.sax.SAXException;
 
+import ctSim.ConfigManager;
 import ctSim.controller.Controller;
 import ctSim.model.ParcoursGenerator;
 import ctSim.model.World;
@@ -145,7 +146,11 @@ public class CtSimFrame extends JFrame {
 			}
 		});
 		
-		this.worldChooser = new JFileChooser("."); //$NON-NLS-1$
+		if(ConfigManager.getConfigValue("worlddir") != null)
+			this.worldChooser = new JFileChooser(ConfigManager.getConfigValue("worlddir")); //$NON-NLS-1$
+		else
+			this.worldChooser = new JFileChooser("."); //$NON-NLS-1$
+		
 		this.worldChooser.setFileFilter(new FileFilter() {
 
 			@Override
@@ -604,7 +609,6 @@ public class CtSimFrame extends JFrame {
 			}
 		}
 		
-
 		this.openWorld(file);
 	}
 	

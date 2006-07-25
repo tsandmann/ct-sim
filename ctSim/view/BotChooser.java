@@ -31,6 +31,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import ctSim.ConfigManager;
 import ctSim.controller.Controller;
 import ctSim.model.bots.Bot;
 
@@ -118,7 +119,11 @@ public class BotChooser extends JDialog {
 	
 	private void addCBotClicked() {
 		
-		JFileChooser fc = new JFileChooser();
+		JFileChooser fc = new JFileChooser(".");
+		
+		if(ConfigManager.getConfigValue("botdir") != null)
+			fc = new JFileChooser(ConfigManager.getConfigValue("botdir")); //$NON-NLS-1$
+		
 		fc.setFileFilter(new FileFilter() {
 
 			@Override
@@ -138,8 +143,9 @@ public class BotChooser extends JDialog {
 			// TODO:
 			//this.bot = 
 				this.controller.invokeBot(fc.getSelectedFile().getAbsolutePath());
-			this.dispose();
 		}
+		
+		this.dispose();
 	}
 	
 	private Bot getBot() {

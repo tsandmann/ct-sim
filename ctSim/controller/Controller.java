@@ -56,6 +56,7 @@ import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import ctSim.CmdExec;
+import ctSim.ConfigManager;
 import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.JD2xxConnection;
@@ -79,11 +80,6 @@ import ctSim.view.DefBotPanel;
  *
  */
 public final class Controller implements Runnable {
-	
-	/**
-	 * Enthaelt die gesamten Einzelparameter der Konfiguration 
-	 */
-	private HashMap<String,String> config = new HashMap<String,String>();
 	
 	private static final String CONFIGFILE = "config/ct-sim.xml"; //$NON-NLS-1$
 	
@@ -119,7 +115,7 @@ public final class Controller implements Runnable {
 	private void init() {
 		
 		try {
-			parseConfig();
+			ConfigManager.loadConfigFile(new File(CONFIGFILE));
 			
 		} catch (Exception ex){
 			ErrorHandler.error("Einlesen der c't-Sim-Konfiguration nicht moeglich. Abburch!"); //$NON-NLS-1$
@@ -128,7 +124,7 @@ public final class Controller implements Runnable {
 		
 		try {
 			
-			Class<?> cl = Class.forName(this.config.get("judge")); //$NON-NLS-1$
+			Class<?> cl = Class.forName(ConfigManager.getConfigValue("judge")); //$NON-NLS-1$
 			
 			Constructor<?> c = cl.getConstructor(this.getClass());
 			
@@ -172,7 +168,7 @@ public final class Controller implements Runnable {
 	private void init2() {
 		
 		try {
-			String parcFile = config.get("parcours"); //$NON-NLS-1$
+			String parcFile = ConfigManager.getConfigValue("parcours"); //$NON-NLS-1$
 			
 			this.ctSim.openWorld(new File(parcFile));
 			
@@ -189,7 +185,7 @@ public final class Controller implements Runnable {
 		}
 		
 		try {
-			String botBin = config.get("botbinary"); //$NON-NLS-1$
+			String botBin = ConfigManager.getConfigValue("botbinary"); //$NON-NLS-1$
 			
 			this.invokeBot(botBin);
 			
@@ -525,7 +521,7 @@ public final class Controller implements Runnable {
 		int p = 10001;
 		
 		try {
-			String port = this.config.get("botport"); //$NON-NLS-1$
+			String port = ConfigManager.getConfigValue("botport"); //$NON-NLS-1$
 			p = new Integer(port).intValue();
 		} catch(NumberFormatException nfe) {
 			nfe.printStackTrace();
@@ -814,40 +810,6 @@ public final class Controller implements Runnable {
 		} catch (Exception ex) {
 			ErrorHandler.error("JD2XX-Verbindung nicht moeglich: " + ex); //$NON-NLS-1$
 			return null;
-		}
-	}
-	
-	/**
-	 * Liest die Konfiguration des Sims ein
-	 * @throws Exception
-	 */
-	private void parseConfig() throws Exception{
-		// Ein DOMParser liest ein XML-File ein
-		DOMParser parser = new DOMParser();
-		try {
-			// einlesen
-			String configFile= ClassLoader.getSystemResource(CONFIGFILE).toString();
-			System.out.println("Lade Konfiguration aus: "+configFile); //$NON-NLS-1$
-			
-			parser.parse(configFile);
-			// umwandeln in ein Document
-			Document doc = parser.getDocument();
-			
-			// Und Anfangen mit dem abarbeiten
-			
-			//als erster suchen wir uns den Parameter-Block
-			Node n = doc.getDocumentElement().getFirstChild();
-			while (n != null){
-				if (n.getNodeName().equals("parameter")){ //$NON-NLS-1$
-					String name = n.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$
-					String value = n.getAttributes().getNamedItem("value").getNodeValue(); //$NON-NLS-1$
-					this.config.put(name,value);
-				}
-				n=n.getNextSibling();
-			}
-		} catch (Exception ex) {
-			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex); //$NON-NLS-1$
-			throw ex;
 		}
 	}
 	

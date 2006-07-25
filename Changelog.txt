@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-07-25 Felix Beckwermert [felix@beckwermert.de]: config.xml umd "botdir" und "worlddir" erweitert
+
+2006-07-25 Felix Beckwermert [felix@beckwermert.de]: statische ConfigManager-Klasse eingeführt
+
 2006-07-24 Peter Koenig [pek@heise.de]: An Bot angepasst: CtBotSimTcp.WHEEL_PERIMETER = Math.PI * 0.057d;
 
 2006-07-24 Peter Koenig [pek@heise.de]: Characteristics.lookupPrecise() nimmt Number
@@ -9,12 +13,15 @@ Changelog fuer c't-Sim
 
 2006-07-24 Felix Beckwermert [felix@beckwermert.de]: 
 
-	* beim Generieren/Laden einer neuer Welt werden die TCP-Verbindungen beendet (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt werden übernommen
-	* wenn der Stop-Button gedrückt wird, werden alle TCP-Verbindung beendet, so dass ct-Bot.exe auch beendet wird 
-	* wenn ct-Bot beendet wird (TCP-Verbindung beendet), wird der Bot aus der Welt entfernt
+	* beim Generieren/Laden einer neuen Welt, bzw. Schließen der alten werden alle Bots beendet
+	* es gibt nur noch einen "ständigen" Controller
+	* Judge u. TickRate bleiben erhalten (bei Kartenwechsel -> reinit des Judges beachten!!)
+	* wenn der Stop-Button gedrückt wird, werden alle Bots beendet
 	* Parcours und Binaries werden im XML-Config-File festgelegt 
-	* Alte Welten werden geloescht, um HeapOverflow bei zu haeufigem Generieren zu vermeiden
+	* Alte Threads werden beendet, um HeapOverflow bei zu haeufigem Generieren zu vermeiden
 	* Slider fuer Position -> Spinner ändern Wert jetzt mit jedem Klick
+	* Bots können jetzt über rechts Klick auf den Tab gekillt werden
+	* kleinere Anpassungen beim Controller, Judge, View vorgenommen
 
 2006-07-20 Benjamin Benz [bbe@heise.de]: zeitfunktion praezisiert
 

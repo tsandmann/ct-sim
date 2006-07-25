@@ -1,6 +1,8 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
+* wenn ct-Bot beendet wird (TCP-Verbindung beendet), wird der Bot aus der Welt entfernt (???)
+
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab 
 
 * Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe)
@@ -30,6 +32,9 @@ Der Sim findet sonst parcours.dtd nicht.
 ERLEDIGT:
 =========
 
+* Wenn ct-Sim.xml ein Botbinary vorsieht, soll dieses nicht von selbst bei Sim-Start platziert werden, sondern bei jedem Klick auf "Bot hinzufuegen/C-Bot" [von pek]
+  -> es gibt ein DefaultDirectory für die BotBins (sowie für die world-files), daß über die Config angegeben werden kann (fbe)
+
 * Threads syncen (bbe)
 
 * Kommunikation ueberarbeiten (bbe)
@@ -39,8 +44,6 @@ ERLEDIGT:
 * beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten übernommen werden (fbe)
 
 * wenn der Stop-Button gedrückt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
-
-* wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden (fbe)
 
 * Parcours und Binaries im XML-Config-File festlegen (fbe)
 
