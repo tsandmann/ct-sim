@@ -116,10 +116,10 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			}
 		};
 		
-		this.tabData.setValueAt("X:", 0, 0); //$NON-NLS-1$
-		this.tabData.setValueAt("Y:", 1, 0); //$NON-NLS-1$
-		this.tabData.setValueAt("Z:", 2, 0); //$NON-NLS-1$
-		this.tabData.setValueAt("H:", 3, 0); //$NON-NLS-1$
+		this.tabData.setValueAt("X-Position [m]:", 0, 0); //$NON-NLS-1$
+		this.tabData.setValueAt("Y-Position [m]:", 1, 0); //$NON-NLS-1$
+		this.tabData.setValueAt("Z-Position [m]:", 2, 0); //$NON-NLS-1$
+		this.tabData.setValueAt("Blickrichtung [Grad]:", 3, 0); //$NON-NLS-1$
 		
 		this.tabData.addTableModelListener(new TableModelListener() {
 			
