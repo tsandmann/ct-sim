@@ -5,13 +5,11 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab 
 
-* Fernbedienungs-Optik verbessern und korrekte Codes einbauen (pek)
-
-* Threads syncen (bbe)
-
-* Kommunikation ueberarbeiten (bbe)
-
 * Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe)
+
+* Fernbedienungs-Optik verbessern (pek)
+
+--- Alles bis hier fuer naechstes Release fertigmachen!!! ---
 
 * Klassenstruktur wieder aufraeumen (fbe)
 
@@ -33,6 +31,10 @@ Der Sim findet sonst parcours.dtd nicht.
 
 ERLEDIGT:
 =========
+
+* Threads syncen (bbe)
+
+* Kommunikation ueberarbeiten (bbe)
 
 * Characteristics.lookupPrecise() nimmt Number
 
