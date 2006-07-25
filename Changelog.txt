@@ -7,6 +7,15 @@ Changelog fuer c't-Sim
 
 2006-07-24 Peter Koenig [pek@heise.de]: Text der GPL eingefuegt
 
+2006-07-24 Felix Beckwermert [felix@beckwermert.de]: 
+
+	* beim Generieren/Laden einer neuer Welt werden die TCP-Verbindungen beendet (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt werden übernommen
+	* wenn der Stop-Button gedrückt wird, werden alle TCP-Verbindung beendet, so dass ct-Bot.exe auch beendet wird 
+	* wenn ct-Bot beendet wird (TCP-Verbindung beendet), wird der Bot aus der Welt entfernt
+	* Parcours und Binaries werden im XML-Config-File festgelegt 
+	* Alte Welten werden geloescht, um HeapOverflow bei zu haeufigem Generieren zu vermeiden
+	* Slider fuer Position -> Spinner ändern Wert jetzt mit jedem Klick
+
 2006-07-20 Benjamin Benz [bbe@heise.de]: zeitfunktion praezisiert
 
 2006-07-20 Benjamin Benz [bbe@heise.de]: Kleinigkeit im Sleep veraendert
