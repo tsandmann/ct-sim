@@ -312,7 +312,7 @@ public final class Controller implements Runnable {
 				if ( timeToSleep > 0)
 					Thread.sleep(timeToSleep);
 				else {
-					System.out.println("Info: Sim schnappt sich " +elapsedTime+" ms (Sim="+simTime+" ms)" + "statt "+world.getBaseTimeReal()+" ms ==> kein sleep aber kein Problem");
+					System.out.println("Info: Sim schnappt sich " +elapsedTime+" ms (Sim="+simTime+" ms)" + "statt "+world.getBaseTimeReal()+" ms ==> kein sleep, aber kein Problem");
 					//		""+ -timeToSleep + "ms laenger als baseTimeReal! ==> no sleep");
 					//ErrorHandler.error
 				}
