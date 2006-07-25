@@ -102,7 +102,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	public static final float UPS_MAX = (float) 151 / (float) 60;
 	
 	/** Umfang eines Rades [m] */
-	public static final double WHEEL_PERIMETER = Math.PI * 0.059d;
+	public static final double WHEEL_PERIMETER = Math.PI * 0.057d;
 
 	/** Abstand Mittelpunkt Bot zum Rad [m] */
 	public static final double WHEEL_DIST = 0.0485d;

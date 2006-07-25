@@ -1,6 +1,8 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-07-24 Peter Koenig [pek@heise.de]: An Bot angepasst: CtBotSimTcp.WHEEL_PERIMETER = Math.PI * 0.057d;
+
 2006-07-24 Peter Koenig [pek@heise.de]: Characteristics.lookupPrecise() nimmt Number
 
 2006-07-24 Peter Koenig [pek@heise.de]: Text der GPL eingefuegt
