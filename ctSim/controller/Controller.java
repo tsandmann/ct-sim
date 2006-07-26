@@ -73,6 +73,7 @@ import ctSim.model.rules.DefaultJudge;
 import ctSim.model.rules.Judge;
 import ctSim.view.BotInfo;
 import ctSim.view.CtSimFrame;
+import ctSim.view.Debug;
 import ctSim.view.DefBotPanel;
 
 /**
@@ -298,7 +299,7 @@ public final class Controller implements Runnable {
 				// breche ab, wenn die Bots zu lange brauchen !
 //				doneSignal.await();
 				if (!doneSignal.await(world.getBaseTimeReal(), TimeUnit.MILLISECONDS))
-					System.out.println("Problem: Bots antworten auch nach: "+world.getBaseTimeVirtual()+" ms nicht. Evtl. TR erhoehen!");
+					Debug.out.println("Problem: Bots antworten auch nach: "+world.getBaseTimeVirtual()+" ms nicht. Evtl. TR erhoehen!");
 //				else
 //					System.out.println("AliveObstacles done");
 				
@@ -310,7 +311,7 @@ public final class Controller implements Runnable {
 				if ( timeToSleep > 0)
 					Thread.sleep(timeToSleep);
 				else {
-					System.out.println("Info: Sim schnappt sich " +elapsedTime+" ms (Sim="+simTime+" ms)" + "statt "+world.getBaseTimeReal()+" ms ==> kein sleep, aber kein Problem");
+					Debug.out.println("Info: Sim schnappt sich " +elapsedTime+" ms (Sim="+simTime+" ms)" + "statt "+world.getBaseTimeReal()+" ms ==> kein sleep, aber kein Problem");
 					//		""+ -timeToSleep + "ms laenger als baseTimeReal! ==> no sleep");
 					//ErrorHandler.error
 				}
