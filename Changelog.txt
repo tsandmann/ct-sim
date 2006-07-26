@@ -1,6 +1,8 @@
 Changelog fuer c't-Sim
 ======================
-2006-07-20 Benjamin Benz [bbe@heise.de]: Config ist nun einheitlich fuer Linux und Windows, Pfade werden umgewandelt
+2006-07-26 Benjamin Benz [bbe@heise.de]: Command_evaluate entmistet
+
+2006-07-26 Benjamin Benz [bbe@heise.de]: Config ist nun einheitlich fuer Linux und Windows, Pfade werden umgewandelt
 
 2006-07-25 Felix Beckwermert [felix@beckwermert.de]: config.xml umd "botdir" und "worlddir" erweitert
 

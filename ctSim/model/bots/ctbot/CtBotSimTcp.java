@@ -258,26 +258,28 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			
 			final Integer idx = new Integer(ledCount-i-1);
 			
-			this.addActuator(new Indicator("LED "+i, new Point3d(), new Vector3d(), cols[i], colsAct[i]) { //$NON-NLS-1$
+			this.addActuator(
+					new Indicator("LED "+i, new Point3d(), new Vector3d(), cols[i], colsAct[i]) { //$NON-NLS-1$
 				
-				@Override
-				public void setValue(@SuppressWarnings("unused") Boolean value) {
-					
-					// TODO: ???
-				}
-				
-				@SuppressWarnings({"synthetic-access","boxing"})
-				@Override
-				public Boolean getValue() {
-					
-					int soll = (int)Math.pow(2, idx);
-					int ist = CtBotSimTcp.this.actLed & soll; // Bitweises "und"
-					
-					//System.out.println(this.getName()+" ["+idx+"]:  "+CtBotSimTcp.this.actLed+"  ->  "+soll+"  +  "+ist+"  =  "+(soll==ist));
-					
-					return (soll == ist);
-				}
-			});
+						@Override
+						public void setValue(@SuppressWarnings("unused") Boolean value) {
+							
+							// TODO: ???
+						}
+						
+						@SuppressWarnings({"synthetic-access","boxing"})
+						@Override
+						public Boolean getValue() {
+							
+							int soll = (int)Math.pow(2, idx);
+							int ist = CtBotSimTcp.this.actLed & soll; // Bitweises "und"
+							
+							//System.out.println(this.getName()+" ["+idx+"]:  "+CtBotSimTcp.this.actLed+"  ->  "+soll+"  +  "+ist+"  =  "+(soll==ist));
+							
+							return (soll == ist);
+						}
+					}
+			);
 		}
 		
 		this.govL = new Governor("GovL", new Point3d(), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
@@ -632,73 +634,16 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 */
 	@SuppressWarnings({"unchecked","boxing"})
 	public void evaluateCommand(Command command) {
-		Command answer = new Command();
-		
 		StringBuffer buf;
 
 		if (command.getDirection() == Command.DIR_REQUEST) {
-			// Antwort vorbereiten
-			answer.setDirection(Command.DIR_ANSWER);
-			answer.setCommand(command.getCommand());
-			answer.setSubcommand(command.getSubcommand());
-			answer.setSeq(command.getSeq());
 
 			switch (command.getCommand()) {
-			case Command.CMD_SENS_IR:
-//				setSensIrL( ((double)command.getDataL())/1000);
-//				setSensIrR( ((double)command.getDataR())/1000);
-				break;
-			case Command.CMD_SENS_ENC:
-//				answer.setDataL(this.getSensEncL());
-//				this.setSensEncL((short) 0); // nach Uebertragung aufraeumen
-//				answer.setDataR(this.getSensEncR());
-//				this.setSensEncR((short) 0); // nach Uebertragung aufraeumen
-				break;
-			case Command.CMD_SENS_BORDER:
-//				answer.setDataL(this.getSensBorderL());
-//				answer.setDataR(this.getSensBorderR());
-				break;
-			case Command.CMD_SENS_DOOR:
-//				answer.setDataL(this.getSensDoor());
-//				answer.setDataR(0);
-				break;
-			case Command.CMD_SENS_LDR:
-//				answer.setDataL(this.getSensLdrL());
-//				answer.setDataR(this.getSensLdrR());
-				break;
-			case Command.CMD_SENS_LINE:
-//				answer.setDataL(this.getSensLineL());
-//				answer.setDataR(this.getSensLineR());
-				break;
-			case Command.CMD_SENS_MOUSE:
-//				answer.setDataL(this.getSensMouseDX());
-//				answer.setDataR(this.getSensMouseDY());
-				break;
-			case Command.CMD_SENS_TRANS:
-//				answer.setDataL(this.getSensTrans());
-//				answer.setDataR(0);
-				break;
-			case Command.CMD_SENS_RC5:
-//				answer.setDataL(this.getSensRc5());
-//				this.setSensRc5(0); // nicht zweimal lesen
-//				answer.setDataR(0);
-				break;
-			case Command.CMD_SENS_ERROR:
-//				answer.setDataL(this.getSensError());
-//				answer.setDataR(0);
-				break;
+				
 			case Command.CMD_DONE:
-//				answer.setDataL(this.getSensError());
-//				answer.setDataR(0);
-//				System.out.println(world.getRealTime()+"ms: received Frame for "+command.getDataL()+" ms - expected "+lastTransmittedSimulTime+" ms");
-//				if (command.getDataL() != lastTransmittedSimulTime)
-//					System.out.println("C-Bot und Sim nicht synchron!");
-				
+				// nIx zu tun mit diesem Kommando
 				break;
-				
 			case Command.CMD_AKT_MOT:
-				//this.setActMotL((short) command.getDataL());
-				//this.setActMotR((short) command.getDataR());
 				this.govL.setValue(command.getDataL());
 				this.govR.setValue(command.getDataR());
 				break;
@@ -709,8 +654,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //				this.setActDoor(command.getDataL());
 				break;
 			case Command.CMD_AKT_LED:
-				command.getDataL();
-				command.getDataL();
 				this.setActLed(command.getDataL());
 				break;
 			case Command.CMD_ACT_LCD:
@@ -803,7 +746,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				this.log.setValue(this.getLog().toString());
 				
 				break;
-//				
 			case Command.CMD_SENS_MOUSE_PICTURE:
 //				// Empfangen eine Bildes
 //				setMousePicture(command.getDataL(),command.getDataBytes());
@@ -825,11 +767,11 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			//System.out.println(command.toString());
 			
 			
-			try {
+//			try {
 				// tcpCon.send(answer.getCommandBytes());
-			} catch (Exception ex) {
-				ErrorHandler.error("Sending answer failed"); //$NON-NLS-1$
-			}
+//			} catch (Exception ex) {
+//				ErrorHandler.error("Sending answer failed"); //$NON-NLS-1$
+//			}
 
 		} else {
 			// TODO: Antworten werden noch nicht gegeben
