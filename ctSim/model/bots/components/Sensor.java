@@ -77,7 +77,7 @@ public abstract class Sensor<E> extends BotComponent {
 	/**
 	 * @return Der Wert der Sensoren
 	 */
-	public final E getValue() {
+	public synchronized final E getValue() {
 		
 		return this.value;
 	}
@@ -97,7 +97,7 @@ public abstract class Sensor<E> extends BotComponent {
 	 * @param val Der Wert zu setzen
 	 * @return true, wenn Wert setzbar ist
 	 */
-	public final boolean setValue(E val) {
+	public synchronized final boolean setValue(E val) {
 		
 		if(!this.isSetable())
 			return false;
@@ -112,7 +112,7 @@ public abstract class Sensor<E> extends BotComponent {
 	 * Aktualsiert den Sensor
 	 */
 	@SuppressWarnings({"boxing","unchecked"})
-	public final void update() {
+	public synchronized final void update() {
 		
 		if(this.useGuiValue) {
 			
@@ -133,6 +133,7 @@ public abstract class Sensor<E> extends BotComponent {
 	/**
 	 * @return Datentyp, der fuer das Update des Sensors benoetigt wird
 	 */
+	// TODO: protected?
 	public abstract E updateValue();
 	
 	/**

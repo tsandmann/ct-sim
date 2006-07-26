@@ -66,6 +66,7 @@ public class Console extends Box implements DebugWindow {
 	public void print(String str) {
 		
 		this.console.append(str);
+		this.console.setCaretPosition(this.console.getText().length());
 	}
 
 	/** 
@@ -75,5 +76,6 @@ public class Console extends Box implements DebugWindow {
 		
 		this.console.append(str);
 		this.console.append("\n"); //$NON-NLS-1$
+		this.console.setCaretPosition(this.console.getText().length());
 	}
 }

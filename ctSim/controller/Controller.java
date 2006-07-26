@@ -331,18 +331,21 @@ public final class Controller implements Runnable {
 		for(Bot b : this.botsToStart) {
 			//this.botsToStart.remove(b);
 			b.stop();
+			this.world.removeAliveObstacle(b);
 		}
 		
 		for(Bot b : this.botList) {
 			//this.botList.remove(b);
 			b.stop();
+			this.world.removeAliveObstacle(b);
 		}
 		
 		for(Bot b : this.botsToStop) {
 			
 			b.stop();
+			this.world.removeAliveObstacle(b);
 		}
-		
+		System.out.println("asdfadf");
 		this.botList     = new ArrayList<Bot>();
 		this.botsToStart = new ArrayList<Bot>();
 		
@@ -356,8 +359,10 @@ public final class Controller implements Runnable {
 		for(Bot b : this.botsToStart)
 			this.botList.add(b);
 		
-		for(Bot b : this.botsToStop)
+		for(Bot b : this.botsToStop) {
 			b.stop();
+			this.world.removeAliveObstacle(b);
+		}
 		
 		for(Bot b : this.botsToStart) {
 			b.start();
@@ -478,12 +483,20 @@ public final class Controller implements Runnable {
 		for(Bot b : this.botsToStart) {
 			//this.botsToStart.remove(b);
 			b.stop();
+			this.world.removeAliveObstacle(b);
 		}
 		
 		for(Bot b : this.botList) {
 			//this.botList.remove(b);
 			b.stop();
+			this.world.removeAliveObstacle(b);
 		}
+		
+		for(Bot b : this.botsToStop) {
+			
+			b.stop();
+			this.world.removeAliveObstacle(b);
+		}	
 		
 		this.botList     = new ArrayList<Bot>();
 		this.botsToStart = new ArrayList<Bot>();
@@ -495,18 +508,24 @@ public final class Controller implements Runnable {
 	
 	public void reset() {
 		
+		// TODO: Damit überhaupt eine Thrd vorhanden ist, diesen Starten:
+		this.unpause();
+		
 		// TODO: Bots nur "zurï¿½ckstellen"???
 		this.stop();
-		
-//		for(Bot b : this.botsToStart)
-//			b.stop();
-//		
-//		for(Bot b : this.botList)
-//			b.stop();
 		
 		this.judge.reinit();
 //		if(world != null)
 //			this.world.reinit();
+		
+		// TODO: unpause muß auch greifen:
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.pause();
 	}
 	
 	// TODO

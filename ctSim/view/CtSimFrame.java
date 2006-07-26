@@ -432,7 +432,7 @@ public class CtSimFrame extends JFrame {
 				cmdStartClicked();
 			}
 		};
-		this.stop = new AbstractAction("Stop", //$NON-NLS-1$
+		this.stop = new AbstractAction("Stopp", //$NON-NLS-1$
 				new ImageIcon(this.stopImg)) {
 
 			/**
@@ -789,6 +789,8 @@ public class CtSimFrame extends JFrame {
 		this.controlBar.reinit();
 		
 		this.split.resetToPreferredSizes();
+		
+		Debug.out.println("Alle Bots entfernt.");
 	}
 	
 	public void openWorld(File file) {

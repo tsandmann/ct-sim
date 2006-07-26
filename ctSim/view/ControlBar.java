@@ -67,6 +67,7 @@ public final class ControlBar extends JPanel {
 		
 		//this.botTabs = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
 		this.botTabs = new JTabbedPane();
+		//this.botTabs = new JTabbedPaneWithCloseIcons();
 		
 		//this.add(Box.createVerticalGlue());
 		this.add(this.botTabs);
