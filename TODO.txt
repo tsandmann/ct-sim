@@ -1,7 +1,13 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
+* FB schließen, wenn Bot stirbt; FB-Position?
+
 * FB-Kommandos kommen gelegentlich nicht durch (?)
+
+* Sensor-Daten werden öfters in einem Zyklus gesendet???
+
+* Fernbedienungs-Optik verbessern (pek)
 
 * Funktioniert der Maussensor?
 
@@ -10,8 +16,6 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab 
 
 * Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe)
-
-* Fernbedienungs-Optik verbessern (pek)
 
 --- Alles bis hier fuer naechstes Release fertigmachen!!! ---
 
