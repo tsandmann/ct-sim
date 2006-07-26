@@ -35,8 +35,6 @@ public class RemoteControlSensor extends SimpleSensor<Integer> {
 	
 	/**
 	 * Der Konstruktor
-	 * @param w Welt
-	 * @param b Bot
 	 * @param name Sensor-Name
 	 * @param relPos relative Position zum Bot
 	 * @param relHead relative Blickrichtung zum Bot
