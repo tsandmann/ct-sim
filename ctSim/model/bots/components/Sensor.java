@@ -33,7 +33,9 @@ import ctSim.view.sensors.SensorGroupGUI;
 */
 public abstract class Sensor<E> extends BotComponent {
 	
+	/** Typenvariable fuer den Wert des Sensors. Von den abgeleiteten Klassen zu spezifizieren */
 	private E value;
+	
 	private Characteristic characteristic;
 	private boolean useGuiValue = false;
 	private boolean setable = true;
@@ -77,9 +79,14 @@ public abstract class Sensor<E> extends BotComponent {
 	/**
 	 * @return Der Wert der Sensoren
 	 */
-	public synchronized final E getValue() {
+	public final E getValue() {
+		if (this.value == null)
+			return null;
 		
-		return this.value;
+		synchronized (this.value) {
+			return this.value;
+		}
+		
 	}
 	
 	/* Sollte nur von GUI aufgerufen werden:
@@ -120,17 +127,27 @@ public abstract class Sensor<E> extends BotComponent {
 			return;
 		}
 		
-		this.value = updateValue();
+		// TODO sehr haesslicher Workaround, um eine nicht initilaisierte value zu umschiffen
+		if (this.value ==null){
+			this.value = updateValue();			
+		} else {
 		
-		// TODO: Aeusserst haesslich:
-		if(this.characteristic != null) {
-//			System.out.print(this.getName()+" :  "+this.value+"  ->  ");
-			this.value = (E)((Double)((Integer)this.characteristic.lookup((((Number)this.value).intValue())/10)).doubleValue());
-//			System.out.println(this.value);
-		}
+			synchronized (this.value) {
+				this.value = updateValue();
+				
+				// TODO: Aeusserst haesslich:
+				if(this.characteristic != null) {
+	//				System.out.print(this.getName()+" :  "+this.value+"  ->  ");
+					this.value = (E)((Double)((Integer)this.characteristic.lookup((((Number)this.value).intValue())/10)).doubleValue());
+	//				System.out.println(this.value);
+				}
+			}
+		}		
 	}
 	
 	/**
+	 * Diese Funktion liefert den neuen Wert fuer den Sensor zurueck, traegt ihn aber noch NICHT in die Klasse ein
+	 * Achtung darf nicht this.getValue oder setValue() aufrufen!!
 	 * @return Datentyp, der fuer das Update des Sensors benoetigt wird
 	 */
 	// TODO: protected?
