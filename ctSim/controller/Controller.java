@@ -298,8 +298,8 @@ public final class Controller implements Runnable {
 				// Warte, bis alle Bots fertig sind und auf die nächste Aktualisierung warten
 				// breche ab, wenn die Bots zu lange brauchen !
 //				doneSignal.await();
-				if (!doneSignal.await(world.getBaseTimeReal(), TimeUnit.MILLISECONDS))
-					Debug.out.println("Problem: Bots antworten auch nach: "+world.getBaseTimeVirtual()+" ms nicht. Evtl. TR erhoehen!");
+				if (!doneSignal.await(world.getBaseTimeReal()*20, TimeUnit.MILLISECONDS))
+					Debug.out.println("Problem: Bots antworten auch nach: "+world.getBaseTimeVirtual()*20+" ms nicht. Evtl. TR erhoehen!");
 //				else
 //					System.out.println("AliveObstacles done");
 				

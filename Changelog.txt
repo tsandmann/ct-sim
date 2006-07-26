@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2006-07-26 Benjamin Benz [bbe@heise.de]: Timeouts nochmal veraendert
+
 2006-07-26 Benjamin Benz [bbe@heise.de]: Bot faellt jetzt auch ausserhalb des Labyrinths
 
 2006-07-26 Benjamin Benz [bbe@heise.de]: Command_evaluate entmistet

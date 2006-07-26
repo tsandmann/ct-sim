@@ -17,11 +17,11 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * TabbedPane -> TabbedPaneWithCloseIcons
 
-* JudgeChooser sollte aktuell gewählten Jugde anzeigen
+* JudgeChooser sollte aktuell gewï¿½hlten Jugde anzeigen
 
-* Was machen bei Mangel an Startplätzen?
+* Was machen bei Mangel an Startplï¿½tzen?
 
-* Bug: Hinzufügen von Bots auch ohne Welt möglich!?
+* Bug: Hinzufï¿½gen von Bots auch ohne Welt mï¿½glich!?
 
 * Klassenstruktur wieder aufraeumen (fbe)
 
@@ -41,11 +41,15 @@ Der Sim findet sonst parcours.dtd nicht.
 
 * Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek) 
 
+* Beim hinzufuegen von neuen Bots den Judge fragen, ob das zulaessig ist
+
+* Beim hinzufuegen von Bots pruefen, ob der Platz leer ist und wenn nicht einen neuen Spawn-Punkt suchen
+
 ERLEDIGT:
 =========
 
 * Wenn ct-Sim.xml ein Botbinary vorsieht, soll dieses nicht von selbst bei Sim-Start platziert werden, sondern bei jedem Klick auf "Bot hinzufuegen/C-Bot" [von pek]
-  -> es gibt ein DefaultDirectory für die BotBins (sowie für die world-files), daß über die Config angegeben werden kann (fbe)
+  -> es gibt ein DefaultDirectory fï¿½r die BotBins (sowie fï¿½r die world-files), daï¿½ ï¿½ber die Config angegeben werden kann (fbe)
 
 * Threads syncen (bbe)
 
@@ -53,19 +57,18 @@ ERLEDIGT:
 
 * Characteristics.lookupPrecise() nimmt Number
 
-* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten übernommen werden (fbe)
+* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten ï¿½bernommen werden (fbe)
 
-* wenn der Stop-Button gedrückt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
+* wenn der Stop-Button gedrï¿½ckt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
 
 * Parcours und Binaries im XML-Config-File festlegen (fbe)
 
 * Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz) (fbe)
 
-* Slider fuer Position (fbe) -> Spinner ändern Wert jetzt mit jedem Klick
+* Slider fuer Position (fbe) -> Spinner ï¿½ndern Wert jetzt mit jedem Klick
 
 * Bodenplatte im Sim korrigieren -- ist manchmal verschoben (pek)
 
 * ParcoursGenerator static machen (pek)
 
 * Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (bbe) 
-
