@@ -23,7 +23,7 @@ public class ConfigManager {
 	}
 	
 	/**
-	 * Lädt die Konfiguration des Sims ein
+	 * Lï¿½dt die Konfiguration des Sims ein
 	 * @throws Exception
 	 */
 	public static boolean loadConfigFile(File file) {
@@ -34,7 +34,7 @@ public class ConfigManager {
 				return true;
 			}
 		} catch(Exception e) {
-			// TODO: schöner machen
+			// TODO: schï¿½ner machen
 		}
 		return false;
 	}
@@ -70,5 +70,27 @@ public class ConfigManager {
 			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+ex); //$NON-NLS-1$
 			throw ex;
 		}
+	}
+	
+	/**
+	 * Wandelt einen Pfad mit Bot-Binary von Windows zu Linux 
+	 * @param in der Originalstring
+	 * @return 
+	 */
+	public static String botPathWin2Lin(String in){
+		String tmp = in.replace('\\','/');
+		tmp= tmp.replace("exe","elf");
+		return tmp.replace("Debug-W32","Debug-Linux");
+	}
+
+	/**
+	 * Wandelt einen Pfad mit Bot-Binary von Linux zu Windows 
+	 * @param in der Originalstring
+	 * @return 
+	 */
+	public static String botPathLin2Win(String in){
+		String tmp = in.replace('/','\\');
+		tmp= tmp.replace("elf","exe");
+		return tmp.replace("Debug-Linux","Debug-W32");
 	}
 }

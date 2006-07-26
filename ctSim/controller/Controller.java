@@ -185,7 +185,13 @@ public final class Controller implements Runnable {
 		}
 		
 		try {
-			String botBin = ConfigManager.getConfigValue("botbinary"); //$NON-NLS-1$
+			String botBin = ConfigManager.getConfigValue("botbinary");
+			if (System.getProperty("os.name").indexOf("Linux") >=0)
+				botBin= ConfigManager.botPathWin2Lin(botBin);
+			else
+				botBin= ConfigManager.botPathLin2Win(botBin);				
+
+		//	String botBin = ConfigManager.getConfigValue("botbinary"); //$NON-NLS-1$
 			
 			this.invokeBot(botBin);
 			
@@ -198,7 +204,7 @@ public final class Controller implements Runnable {
 		} catch(NullPointerException e) {
 			ErrorHandler.error("Schneller: Kein Bot vorgesehen.");				 //$NON-NLS-1$
 		} catch(Exception e) {
-			ErrorHandler.error("Probleme beim Ausfï¿½hren des Bot: "+e); //$NON-NLS-1$
+			ErrorHandler.error("Probleme beim Ausfuehren des Bot: "+e); //$NON-NLS-1$
 		}
 	}
 	
@@ -508,7 +514,7 @@ public final class Controller implements Runnable {
 	
 	public void reset() {
 		
-		// TODO: Damit überhaupt eine Thrd vorhanden ist, diesen Starten:
+		// TODO: Damit ï¿½berhaupt eine Thrd vorhanden ist, diesen Starten:
 		this.unpause();
 		
 		// TODO: Bots nur "zurï¿½ckstellen"???
@@ -518,7 +524,7 @@ public final class Controller implements Runnable {
 //		if(world != null)
 //			this.world.reinit();
 		
-		// TODO: unpause muß auch greifen:
+		// TODO: unpause muï¿½ auch greifen:
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
