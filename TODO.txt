@@ -1,6 +1,10 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
+* FB-Kommandos kommen gelegentlich nicht durch (?)
+
+* Funktioniert der Maussensor?
+
 * wenn ct-Bot beendet wird (TCP-Verbindung beendet), wird der Bot aus der Welt entfernt (???)
 
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab 
