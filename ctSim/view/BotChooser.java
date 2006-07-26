@@ -122,11 +122,7 @@ public class BotChooser extends JDialog {
 		JFileChooser fc = null; 
 		
 		if(ConfigManager.getConfigValue("botdir") != null){
-			String path= ConfigManager.getConfigValue("botdir");
-			if (System.getProperty("os.name").indexOf("Linux") >=0)
-				path= ConfigManager.botPathWin2Lin(path);
-			else
-				path= ConfigManager.botPathLin2Win(path);				
+			String path= ConfigManager.path2Os(ConfigManager.getConfigValue("botdir"));
 			
 			fc = new JFileChooser(path); //$NON-NLS-1$
 		} else

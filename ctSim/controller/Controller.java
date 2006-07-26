@@ -185,11 +185,7 @@ public final class Controller implements Runnable {
 		}
 		
 		try {
-			String botBin = ConfigManager.getConfigValue("botbinary");
-			if (System.getProperty("os.name").indexOf("Linux") >=0)
-				botBin= ConfigManager.botPathWin2Lin(botBin);
-			else
-				botBin= ConfigManager.botPathLin2Win(botBin);				
+			String botBin = ConfigManager.path2Os(ConfigManager.getConfigValue("botbinary"));
 
 		//	String botBin = ConfigManager.getConfigValue("botbinary"); //$NON-NLS-1$
 			
