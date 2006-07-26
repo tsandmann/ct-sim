@@ -404,9 +404,13 @@ public class Parcours {
 	/**
 	 * Prueft, ob ein Punkt ueber einem Loch liegt
 	 * @param pos
-	 * @return
+	 * @return true, wenn der Bot ueber dem loch steht
 	 */
 	public boolean checkWhole(Point3d pos){
+		if ((pos.x < 0) || (pos.y <0) || (pos.x > dimX* grid) || (pos.y > dimY* grid))
+			return true;
+		
+		
 		Iterator it = holes.iterator();
 		while (it.hasNext()){	
 			Vector2f min = new Vector2f((Vector2d)it.next()); 
