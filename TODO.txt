@@ -7,8 +7,6 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 * Sensor-Daten werden öfters in einem Zyklus gesendet???
 
-* Fernbedienungs-Optik verbessern (pek)
-
 * Funktioniert der Maussensor?
 
 * wenn ct-Bot beendet wird (TCP-Verbindung beendet), wird der Bot aus der Welt entfernt (???)
@@ -52,8 +50,10 @@ Der Sim findet sonst parcours.dtd nicht.
 ERLEDIGT:
 =========
 
+* Fernbedienungs-Optik verbessern (pek)
+
 * Wenn ct-Sim.xml ein Botbinary vorsieht, soll dieses nicht von selbst bei Sim-Start platziert werden, sondern bei jedem Klick auf "Bot hinzufuegen/C-Bot" [von pek]
-  -> es gibt ein DefaultDirectory fï¿½r die BotBins (sowie fï¿½r die world-files), daï¿½ ï¿½ber die Config angegeben werden kann (fbe)
+  -> es gibt ein DefaultDirectory fuer die BotBins (sowie fuer die world-files), dass ueber die Config angegeben werden kann (fbe)
 
 * Threads syncen (bbe)
 

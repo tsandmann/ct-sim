@@ -18,6 +18,9 @@
  */
 package ctSim.view.sensors;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,7 +51,7 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 	private JButton showRemoteControl;
 	private RemoteControlGUI remoteControlGUI;
 	private RemoteControlSensor remoteControlSensor;
-	
+		
 	/**
 	 * @see ctSim.view.ComponentGroupGUI#getSortId()
 	 */
@@ -223,6 +226,9 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 			
 			this.setDefaultCloseOperation(HIDE_ON_CLOSE);
 			
+			this.setBackground(Color.DARK_GRAY);
+			
+			
 			initCommandMap();
 			initButtons();
 			
@@ -231,9 +237,8 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		
 		@SuppressWarnings("boxing") void initCommandMap() {
 			
-			this.commandMappings = new LinkedHashMap<String,Integer>();
-			
-			this.commandMappings.put("PWR", RC5_CODE_PWR); //$NON-NLS-1$
+			this.commandMappings = new LinkedHashMap<String,Integer>();			
+			this.commandMappings.put("\u03A6", RC5_CODE_PWR); //$NON-NLS-1$
 			
 			this.commandMappings.put("1", RC5_CODE_1); //$NON-NLS-1$
 			this.commandMappings.put("2", RC5_CODE_2); //$NON-NLS-1$
@@ -248,21 +253,23 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 			this.commandMappings.put("11", RC5_CODE_11); //$NON-NLS-1$
 			this.commandMappings.put("12", RC5_CODE_12); //$NON-NLS-1$
 			
-			this.commandMappings.put("Gruen", RC5_CODE_GREEN); //$NON-NLS-1$
-			this.commandMappings.put("Rot", RC5_CODE_RED); //$NON-NLS-1$
-			this.commandMappings.put("Gelb", RC5_CODE_YELLOW); //$NON-NLS-1$
-			this.commandMappings.put("Blau", RC5_CODE_BLUE); //$NON-NLS-1$
+			this.commandMappings.put("GR -", RC5_CODE_GREEN); //$NON-NLS-1$
+			this.commandMappings.put("RE +", RC5_CODE_RED); //$NON-NLS-1$
+			this.commandMappings.put("YE -", RC5_CODE_YELLOW); //$NON-NLS-1$
+			this.commandMappings.put("BL +", RC5_CODE_BLUE); //$NON-NLS-1$
 
 			this.commandMappings.put("I/II", RC5_CODE_I_II); //$NON-NLS-1$
-			this.commandMappings.put("||", RC5_CODE_STILL); //$NON-NLS-1$
 			this.commandMappings.put("TV/VCR", RC5_CODE_TV_VCR); //$NON-NLS-1$
 
+			this.commandMappings.put("||", RC5_CODE_STILL); //$NON-NLS-1$
+			
 			this.commandMappings.put("<<", RC5_CODE_BWD); //$NON-NLS-1$
 			this.commandMappings.put(">", RC5_CODE_PLAY); //$NON-NLS-1$
 			this.commandMappings.put(">>", RC5_CODE_FWD); //$NON-NLS-1$
 
-			this.commandMappings.put("°", RC5_CODE_DOT); //$NON-NLS-1$
-			this.commandMappings.put("#", RC5_CODE_STOP); //$NON-NLS-1$
+			this.commandMappings.put("\u25A1", RC5_CODE_STOP); //$NON-NLS-1$
+			
+			this.commandMappings.put("\u25CF", RC5_CODE_DOT); //$NON-NLS-1$
 			this.commandMappings.put("CH*P/P", RC5_CODE_CH_PC); //$NON-NLS-1$
 
 			this.commandMappings.put("Vol+", RC5_VOL_PLUS); //$NON-NLS-1$
@@ -276,54 +283,101 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		
 		void initButtons() {
 			
+			Color myblue = new Color(50,50,200);
+			Color mylightblue = new Color(80,80,255);
+			Color mygreen = new Color(50,200,50);
+			Color mydarkgreen = new Color(20,130,50);
+			
 			Iterator<Entry<String, Integer>> it = this.commandMappings.entrySet().iterator();
 			
 			// POWER-BUT:
 			JPanel pow = new JPanel(new GridLayout(1, 3));
-			pow.add(new JLabel());
-			pow.add(new JLabel());
-			pow.add(createButton(it.next()));
+			pow.add(getDarkLabel());
+			pow.add(getDarkLabel());
+			pow.add(createButton(it.next(), mygreen, Color.WHITE));
 			this.box.add(pow);
 
 			
 			// NUMBER-BUT:
 			JPanel nums = new JPanel(new GridLayout(4, 3));
 			for(int i=0; i<12; i++) {
-				nums.add(createButton(it.next()));
+				nums.add(createButton(it.next(), myblue, Color.WHITE));
 			}
 			this.box.add(nums);
 			
 			// COLOR-BUT:
 			JPanel cols = new JPanel(new GridLayout(1, 4));
-			for(int i=0; i<4; i++) {
-				cols.add(createButton(it.next()));
-			}
+				cols.add(createButton(it.next(), mygreen, Color.WHITE));
+				cols.add(createButton(it.next(), Color.RED, Color.WHITE));
+				cols.add(createButton(it.next(), Color.YELLOW, Color.WHITE));
+				cols.add(createButton(it.next(), mylightblue, Color.WHITE));
+//			for(int i=0; i<4; i++) {
+//				cols.add(createButton(it.next()));
+//			}
 			this.box.add(cols);
 			
 			// ARROW-BUT:
-			JPanel arrows = new JPanel(new GridLayout(3, 3));
-			for(int i=0; i<9; i++) {
-				arrows.add(createButton(it.next()));
+			JPanel arrows = new JPanel(new GridLayout(5, 5));
+
+			arrows.add(createButton(it.next()));
+			for(int i=0; i<3; i++) {
+				arrows.add(getDarkLabel());				
 			}
+			arrows.add(createButton(it.next()));
+
+			arrows.add(getDarkLabel());				
+			arrows.add(getDarkLabel());				
+			arrows.add(createButton(it.next(), mydarkgreen, Color.WHITE));
+			arrows.add(getDarkLabel());				
+			arrows.add(getDarkLabel());				
+
+			arrows.add(getDarkLabel());				
+			arrows.add(createButton(it.next(), mydarkgreen, Color.WHITE));
+			arrows.add(createButton(it.next(), mydarkgreen, Color.WHITE));			
+			arrows.add(createButton(it.next(), mydarkgreen, Color.WHITE));
+			arrows.add(getDarkLabel());				
+
+			arrows.add(getDarkLabel());				
+			arrows.add(getDarkLabel());				
+			arrows.add(createButton(it.next(), mydarkgreen, Color.WHITE));
+			arrows.add(getDarkLabel());				
+			arrows.add(getDarkLabel());				
+
+			arrows.add(createButton(it.next(), mygreen, Color.WHITE));
+			for(int i=0; i<3; i++) {
+				arrows.add(getDarkLabel());				
+			}
+			arrows.add(createButton(it.next()));
+			
 			this.box.add(arrows);
 
 			// VOLUME-BUT:
 			JPanel vols = new JPanel(new GridLayout(2, 3));
 			for(int i=0; i<4; i++) {
-				vols.add(createButton(it.next()));
+				vols.add(createButton(it.next(),myblue, Color.WHITE));
 			}
 			vols.add(new JLabel());
-			vols.add(createButton(it.next()));
+			vols.add(createButton(it.next(),myblue, Color.WHITE));
 
 			this.box.add(vols);
 		
 		}
 		
-		JButton createButton(Entry<String, Integer> ent) {
+		/**
+		 * Erzeugt einen neuen Fernbedienungs-Knopf
+		 * @param ent Tabelleneintrag String, Integer
+		 * @param bg Hintergrundfarbe
+		 * @param font Schriftfarbe
+		 * @return Der Knopf
+		 */
+		JButton createButton(Entry<String, Integer> ent, Color bg, Color font) {
 			
 			final Integer val = ent.getValue();
 			
 			JButton but = new JButton(ent.getKey());
+			but.setBackground(bg);
+			but.setForeground(font);
+			but.setFont(but.getFont().deriveFont(Font.BOLD));
 			but.addActionListener(new ActionListener() {
 				
 				@SuppressWarnings("synthetic-access")
@@ -337,5 +391,24 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 			
 			return but;
 		}
+		
+		/**
+		 * Erzeugt einen neuen Fernbedienungs-Knopf mit weisser Schrift auf grauem Grund
+		 * @param ent Tabelleneintrag String, Integer
+		 * @return Der Knopf
+		 */
+		JButton createButton(Entry<String, Integer> ent) {
+			
+			return createButton(ent, Color.LIGHT_GRAY, Color.WHITE);
+		}
+
+		
+		JLabel getDarkLabel(){
+			JLabel lab = new JLabel();
+			lab.setBackground(Color.BLACK);
+			return lab;
+		}
+		
+
 	}
 	
