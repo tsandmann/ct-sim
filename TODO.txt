@@ -4,20 +4,25 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 Offene Bugs:   
 ------------
 
-* FB schließen, wenn Bot stirbt
+* FB schliessen, wenn Bot stirbt
 
+(?) Haben wir immer noch ein Speicherleck? Mir schien, dass der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
 (?) Funktioniert der Maussensor?
 
-(?) Haben wir immer noch ein Speicherleck? Mir schien, daß der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
+(?) Haben wir immer noch ein Speicherleck? Mir schien, daï¿½ der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
 
 (?) FB-Kommandos kommen gelegentlich nicht durch 
 
-(?) Sensor-Daten werden öfters in einem Zyklus gesendet 
+(?) Sensor-Daten werden oefters in einem Zyklus gesendet 
 
 (?) wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
 
-* Durch die ständigen Ausgaben bei Unfällen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren könnte das der andere Bot sich nicht mehr bewegt.
+* Durch die stï¿½ndigen Ausgaben bei Unfï¿½llen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren kï¿½nnte das der andere Bot sich nicht mehr bewegt.
   -> Das ist wohl das performante Java-IO; was soll man da jetzt machen?
+
+* Funktioniert der Maussensor?
+
+* Appearnaces werden noch nicht wieder gesetzt!
 
 Requested Features:
 -------------------
@@ -25,14 +30,16 @@ Requested Features:
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab 
 
 * Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe) --> wenn dieser der alten Struktur entspricht, werden auch wieder die richtigen Appearances aus der config gelesen
+Das Namensschema bitte aus der letzten Version des alten Sims Ã¼bernehmen. Ein Teil davon ist auch schon wieder eingebaut, so dass die Appearances wiesder gelesen werden
+
 
 --- Alles oberhalb dieser Linie fuer naechstes Release fertigmachen!!! ---
 
 * Grafiken fuer Fernbedienung (pek)
 
-* FB schließen, wenn Bot stirbt; FB-Position? --> eventuelle eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
+* FB schlieï¿½en, wenn Bot stirbt; FB-Position? --> eventuelle eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
 
-* Verzeichnis-Angabe für die DTD in der Config
+* Verzeichnis-Angabe fï¿½r die DTD in der Config
 
 * TabbedPane -> TabbedPaneWithCloseIcons
 
@@ -40,7 +47,7 @@ Requested Features:
 
 * Bug: Hinzufuegen von Bots auch ohne Welt moeglich!?
 
-* FB soll sich Position merken; FileChooser sollten sich Verz. merken (für eine Sitzung?)...
+* FB soll sich Position merken; FileChooser sollten sich Verz. merken (fï¿½r eine Sitzung?)...
 
 * Klassenstruktur wieder aufraeumen (fbe)
 
@@ -67,9 +74,9 @@ Der Sim findet sonst parcours.dtd nicht.
 ERLEDIGT:
 =========
 
-* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird können keine Bots mehr hinzugefügt werden. (fbe)
+* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird kï¿½nnen keine Bots mehr hinzugefï¿½gt werden. (fbe)
 
-* Nach dem Ende eines Rennens können keine Bots wieder hinzugefügt werden --> Erst neues Level generieren. (fbe)
+* Nach dem Ende eines Rennens kï¿½nnen keine Bots wieder hinzugefï¿½gt werden --> Erst neues Level generieren. (fbe)
 
 * JudgeChooser sollte aktuell gewaehlten Jugde anzeigen (fbe)
 

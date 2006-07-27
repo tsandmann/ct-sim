@@ -1,9 +1,11 @@
 Changelog fuer c't-Sim
 ======================
+2006-07-27 Benjamin Benz [bbe@heise.de]: Die Namen werden wieder mit system vergeben, wenn auch das System noch nicht wieder voellig repariert ist. ==>Appearances werden wieder einglesen
 
+2006-07-25 Felix Beckwermert [felix@beckwermert.de]: Aktuell gewaehlter Judge wird (im Auswahl-Dialog) angezeigt
 2006-07-27 Felix Beckwermert [felix@beckwermert.de]: Bugs behoben...
 
-2006-07-27 Felix Beckwermert [felix@beckwermert.de]: Aktuell gewählter Judge wird (im Auswahl-Dialog) angezeigt
+2006-07-27 Felix Beckwermert [felix@beckwermert.de]: Aktuell gewï¿½hlter Judge wird (im Auswahl-Dialog) angezeigt
 
 2006-07-27 Benjamin Benz [bbe@heise.de]: Beim Start eines Rennen bekommen die Bots das Fernbedigungsbefehl 5, sodass Sie sofort anfangen zu Fahren
 

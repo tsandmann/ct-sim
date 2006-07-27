@@ -98,6 +98,17 @@ public final class Controller implements Runnable {
 	private World world;
 	private List<Bot> botList, botsToStart, botsToStop;
 	
+	/** Puffer fuer den naechsten BotNamen. 
+	 * Wird von invokeBot(Name, file) gesetzt und dann von
+	 * getNewBotName() zugewiesen
+	 */
+	private String nextBotName= null; 
+	
+	/**
+	 * Anzahl der Bots im System
+	 */
+	private HashMap<String,Integer> numberBots = new HashMap<String,Integer>();	
+	
 	private Controller() {
 		
 		this.botList     = new ArrayList<Bot>();
@@ -311,7 +322,7 @@ public final class Controller implements Runnable {
 				if ( timeToSleep > 0)
 					Thread.sleep(timeToSleep);
 				else {
-					Debug.out.println("Info: Sim schnappt sich " +elapsedTime+" ms (Sim="+simTime+" ms)" + "statt "+world.getBaseTimeReal()+" ms ==> kein sleep, aber kein Problem");
+		//			Debug.out.println("Info: Sim schnappt sich " +elapsedTime+" ms (Sim="+simTime+" ms)" + "statt "+world.getBaseTimeReal()+" ms ==> kein sleep, aber kein Problem");
 					//		""+ -timeToSleep + "ms laenger als baseTimeReal! ==> no sleep");
 					//ErrorHandler.error
 				}
@@ -669,6 +680,37 @@ public final class Controller implements Runnable {
 		this.botsToStop.add(bot);
 	}
 	
+	/**
+	 * Bennent einen neuen Bot
+	 * Achtung, die Namensvergabe wird nicht zurueckgesetzt, wenn ein bot stirbt
+	 * @param type Typ des Bots, z.B. der Klassenname
+	 * @return Name des neuen Bots
+	 */
+	public String getNewBotName(String type){
+		String name;
+		if (nextBotName != null){
+			name=nextBotName;
+			nextBotName=null;
+			return name;
+		}
+		
+		// TODO Namensvergabe sollte die Namen von gestorbenen Bots neu verteilen
+
+		// Schaue nach, wieviele Bots von der Sorte wir schon haben
+		Integer bots = numberBots.get(type);
+		if (bots == null){
+			bots = new Integer(0);
+		}
+
+		name=type +"_"+ bots.intValue();
+
+		bots = new Integer(bots.intValue()+1);	// erhoehen
+		numberBots.put(type, bots);				// sichern
+		
+		return name;
+		
+	}
+	
 	/** 
 	 * Fuegt einen Bot dazu, sobald die Connection steht
 	 * @param con Die Verbindung
@@ -693,7 +735,8 @@ public final class Controller implements Runnable {
 //									con);
 //							System.out.println("Real Bot comming up");
 						} else {
-							bot = new CtBotSimTcp(this.world, "Test C-Bot", //$NON-NLS-1$
+							String name = getNewBotName("ctSim.model.bots.CtBotSimTcp");
+							bot = new CtBotSimTcp(this.world, name,
 									new Point3d(0.5d, 0d, 0.075d),
 									new Vector3d(1.0f, -0.5f, 0f),
 									con);
@@ -745,7 +788,9 @@ public final class Controller implements Runnable {
 		
 		if (type.equalsIgnoreCase("CtBotSimTest")) { //$NON-NLS-1$
 			//bot = new CtBotSimTest(new Point3f(), new Vector3f());
-			bot = new CtBotSimTest(this.world, "Test", new Point3d(0d, 0d, 0.075d), new Vector3d()); //$NON-NLS-1$
+			
+			String name = getNewBotName("CtBotSimTest");
+			bot = new CtBotSimTest(this.world, name, new Point3d(0d, 0d, 0.075d), new Vector3d()); //$NON-NLS-1$
 		}
 		
 //		if (type.equalsIgnoreCase("CtBotRealJD2XX")) {
@@ -781,7 +826,7 @@ public final class Controller implements Runnable {
 			// TODO Sinnvolle Zuordnung von Bot-Name zu Konfig
 			HashMap botConfig = getBotConfig("config/ct-sim.xml",bot.getName()); //$NON-NLS-1$
 			if (botConfig == null){
-				ErrorHandler.error("Keine BotConfig fuer: "+bot.getName()+" in der XML-Config-Datei gefunden. Lade Defaults.");  //$NON-NLS-1$//$NON-NLS-2$
+				ErrorHandler.error("Keine BotConfig fuer: <"+bot.getName()+"> in der XML-Config-Datei gefunden. Lade Defaults.");  //$NON-NLS-1$//$NON-NLS-2$
 				botConfig = getBotConfig("config/ct-sim.xml","default");  //$NON-NLS-1$//$NON-NLS-2$
 			}
 			
