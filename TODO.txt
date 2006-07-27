@@ -1,29 +1,47 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
-* FB schließen, wenn Bot stirbt; FB-Position?
+Offene Bugs:   
+------------
 
-* FB-Kommandos kommen gelegentlich nicht durch (?)
+(?) Haben wir immer noch ein Speicherleck? Mir schien, daß der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
 
-* Sensor-Daten werden öfters in einem Zyklus gesendet???
+(?) FB-Kommandos kommen gelegentlich nicht durch 
+
+(?) Sensor-Daten werden öfters in einem Zyklus gesendet 
+
+(?) wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
+
+* Nach dem Ende eines Rennens können keine Bots wieder hinzugefügt werden --> Erst neues Level generieren.
+
+* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird können keine Bots mehr hinzugefügt werden.
+
+* Durch die ständigen Ausgaben bei Unfällen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren könnte das der andere Bot sich nicht mehr bewegt.
 
 * Funktioniert der Maussensor?
 
-* wenn ct-Bot beendet wird (TCP-Verbindung beendet), wird der Bot aus der Welt entfernt (???)
+Requested Features:
+-------------------
+
+* FB schließen, wenn Bot stirbt; FB-Position?
 
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab 
 
 * Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe)
 
---- Alles bis hier fuer naechstes Release fertigmachen!!! ---
+* Auslesen der Appearances aus der config klappt nicht: "Keine BotConfig fuer: Test C-Bot in der XML-Config-Datei gefunden. Lade Defaults." 
+
+* Grafiken fuer Fernbedienung (pek)
+
+--- Alles oberhalb dieser Linie fuer naechstes Release fertigmachen!!! ---
 
 * TabbedPane -> TabbedPaneWithCloseIcons
 
-* JudgeChooser sollte aktuell gewï¿½hlten Jugde anzeigen
+* JudgeChooser sollte aktuell gewaehlten Jugde anzeigen
 
-* Was machen bei Mangel an Startplï¿½tzen?
+* Was machen bei Mangel an Startplaetzen?
 
-* Bug: Hinzufï¿½gen von Bots auch ohne Welt mï¿½glich!?
+* Bug: Hinzufuegen von Bots auch ohne Welt moeglich!?
 
 * Klassenstruktur wieder aufraeumen (fbe)
 
