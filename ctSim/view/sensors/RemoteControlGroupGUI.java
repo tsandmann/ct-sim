@@ -287,6 +287,7 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 			Color mylightblue = new Color(80,80,255);
 			Color mygreen = new Color(50,200,50);
 			Color mydarkgreen = new Color(20,130,50);
+			Color mydarkyellow = new Color(200, 200, 0);
 			
 			Iterator<Entry<String, Integer>> it = this.commandMappings.entrySet().iterator();
 			
@@ -294,23 +295,23 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 			JPanel pow = new JPanel(new GridLayout(1, 3));
 			pow.add(getDarkLabel());
 			pow.add(getDarkLabel());
-			pow.add(createButton(it.next(), mygreen, Color.WHITE));
+			pow.add(createButton(it.next(), mygreen));
 			this.box.add(pow);
 
 			
 			// NUMBER-BUT:
 			JPanel nums = new JPanel(new GridLayout(4, 3));
 			for(int i=0; i<12; i++) {
-				nums.add(createButton(it.next(), myblue, Color.WHITE));
+				nums.add(createButton(it.next(), myblue));
 			}
 			this.box.add(nums);
 			
 			// COLOR-BUT:
 			JPanel cols = new JPanel(new GridLayout(1, 4));
-				cols.add(createButton(it.next(), mygreen, Color.WHITE));
-				cols.add(createButton(it.next(), Color.RED, Color.WHITE));
-				cols.add(createButton(it.next(), Color.YELLOW, Color.WHITE));
-				cols.add(createButton(it.next(), mylightblue, Color.WHITE));
+				cols.add(createButton(it.next(), mygreen));
+				cols.add(createButton(it.next(), Color.RED));
+				cols.add(createButton(it.next(), mydarkyellow));
+				cols.add(createButton(it.next(), mylightblue));
 //			for(int i=0; i<4; i++) {
 //				cols.add(createButton(it.next()));
 //			}
@@ -327,23 +328,23 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 
 			arrows.add(getDarkLabel());				
 			arrows.add(getDarkLabel());				
-			arrows.add(createButton(it.next(), mydarkgreen, Color.WHITE));
+			arrows.add(createButton(it.next(), mydarkgreen));
 			arrows.add(getDarkLabel());				
 			arrows.add(getDarkLabel());				
 
 			arrows.add(getDarkLabel());				
-			arrows.add(createButton(it.next(), mydarkgreen, Color.WHITE));
-			arrows.add(createButton(it.next(), mydarkgreen, Color.WHITE));			
-			arrows.add(createButton(it.next(), mydarkgreen, Color.WHITE));
+			arrows.add(createButton(it.next(), mydarkgreen));
+			arrows.add(createButton(it.next(), mydarkgreen));			
+			arrows.add(createButton(it.next(), mydarkgreen));
 			arrows.add(getDarkLabel());				
 
 			arrows.add(getDarkLabel());				
 			arrows.add(getDarkLabel());				
-			arrows.add(createButton(it.next(), mydarkgreen, Color.WHITE));
+			arrows.add(createButton(it.next(), mydarkgreen));
 			arrows.add(getDarkLabel());				
 			arrows.add(getDarkLabel());				
 
-			arrows.add(createButton(it.next(), mygreen, Color.WHITE));
+			arrows.add(createButton(it.next(), mygreen));
 			for(int i=0; i<3; i++) {
 				arrows.add(getDarkLabel());				
 			}
@@ -354,10 +355,10 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 			// VOLUME-BUT:
 			JPanel vols = new JPanel(new GridLayout(2, 3));
 			for(int i=0; i<4; i++) {
-				vols.add(createButton(it.next(),myblue, Color.WHITE));
+				vols.add(createButton(it.next(),myblue));
 			}
 			vols.add(new JLabel());
-			vols.add(createButton(it.next(),myblue, Color.WHITE));
+			vols.add(createButton(it.next(),myblue));
 
 			this.box.add(vols);
 		
@@ -366,18 +367,18 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		/**
 		 * Erzeugt einen neuen Fernbedienungs-Knopf
 		 * @param ent Tabelleneintrag String, Integer
-		 * @param bg Hintergrundfarbe
-		 * @param font Schriftfarbe
+		 * @param bc Knopffarbe
 		 * @return Der Knopf
 		 */
-		JButton createButton(Entry<String, Integer> ent, Color bg, Color font) {
+		JButton createButton(Entry<String, Integer> ent, Color bc) {
 			
 			final Integer val = ent.getValue();
 			
 			JButton but = new JButton(ent.getKey());
-			but.setBackground(bg);
-			but.setForeground(font);
-			but.setFont(but.getFont().deriveFont(Font.BOLD));
+			but.setBackground(Color.BLACK);
+			but.setForeground(bc);
+			Font font = but.getFont().deriveFont(Font.BOLD);
+			but.setFont(font);
 			but.addActionListener(new ActionListener() {
 				
 				@SuppressWarnings("synthetic-access")
@@ -398,14 +399,14 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		 * @return Der Knopf
 		 */
 		JButton createButton(Entry<String, Integer> ent) {
-			
-			return createButton(ent, Color.LIGHT_GRAY, Color.WHITE);
+			return createButton(ent, Color.LIGHT_GRAY);
 		}
 
 		
 		JLabel getDarkLabel(){
 			JLabel lab = new JLabel();
 			lab.setBackground(Color.BLACK);
+			lab.setForeground(Color.BLACK);
 			return lab;
 		}
 		

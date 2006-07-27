@@ -1,6 +1,8 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-07-26 Peter Koenig [pek@heise.de]: Fernbedienungs-Optik korrigiert 
+
 2006-07-26 Peter Koenig [pek@heise.de]: Fernbedienungs-Optik verbessert 
 
 2006-07-26 Benjamin Benz [bbe@heise.de]: Timeouts nochmal veraendert
