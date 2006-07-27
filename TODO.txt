@@ -23,17 +23,15 @@ Offene Bugs:
 Requested Features:
 -------------------
 
-* FB schließen, wenn Bot stirbt; FB-Position?
-
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab 
 
-* Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe)
+* Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe) --> wenn dieser der alten Struktur entspricht, werden auch wieder die richtigen Appearances aus der config gelesen
 
-* Auslesen der Appearances aus der config klappt nicht: "Keine BotConfig fuer: Test C-Bot in der XML-Config-Datei gefunden. Lade Defaults." 
+--- Alles oberhalb dieser Linie fuer naechstes Release fertigmachen!!! ---
 
 * Grafiken fuer Fernbedienung (pek)
 
---- Alles oberhalb dieser Linie fuer naechstes Release fertigmachen!!! ---
+* FB schließen, wenn Bot stirbt; FB-Position? --> eventuelle eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
 
 * TabbedPane -> TabbedPaneWithCloseIcons
 
