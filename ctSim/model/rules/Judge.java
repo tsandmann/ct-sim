@@ -135,7 +135,7 @@ public abstract class Judge {
 		
 		if(!check()) {
 			
-			this.controller.stop();
+			this.controller.pause();
 			this.start = false;
 		}
 	}
@@ -170,7 +170,12 @@ public abstract class Judge {
 	/** Hier kommt alles rein, was vor dem Start ausgefuehrt werden muss*/
 	protected abstract void init();
 	
-	public abstract void reinit();
+	public void reinit() {
+		
+		this.start = true;
+		this.time = 0;
+		this.startTime = 0;
+	}
 
 
 	/**

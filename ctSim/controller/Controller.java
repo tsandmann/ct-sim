@@ -460,6 +460,8 @@ public final class Controller implements Runnable {
 	 */
 	public boolean setJudge(Judge j) {
 		
+		System.out.println(this.judge.getTime());
+		
 		if(this.judge == null || this.judge.getTime() == 0) {
 			this.judge = j;
 			

@@ -67,5 +67,6 @@ public class DefaultJudge extends Judge {
 	
 	public void reinit() {
 		
+		super.reinit();
 	}
 }

@@ -177,5 +177,7 @@ public class LabyrinthJudge extends Judge {
 	
 	public void reinit() {
 		
+		super.reinit();
+		this.first = true;
 	}
 }

@@ -741,6 +741,7 @@ public class CtSimFrame extends JFrame {
 			
 			Debug.out.println("Judge \""+judge+"\" wurde gewaehlt.");  //$NON-NLS-1$//$NON-NLS-2$
 		}
+		Debug.out.println("Judge");
 	}
 	
 	private void cmdAddBotClicked() {

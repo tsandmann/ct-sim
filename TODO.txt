@@ -6,6 +6,8 @@ Offene Bugs:
 
 * FB schließen, wenn Bot stirbt
 
+(?) Funktioniert der Maussensor?
+
 (?) Haben wir immer noch ein Speicherleck? Mir schien, daß der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
 
 (?) FB-Kommandos kommen gelegentlich nicht durch 
@@ -14,13 +16,8 @@ Offene Bugs:
 
 (?) wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
 
-* Nach dem Ende eines Rennens können keine Bots wieder hinzugefügt werden --> Erst neues Level generieren.
-
-* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird können keine Bots mehr hinzugefügt werden.
-
 * Durch die ständigen Ausgaben bei Unfällen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren könnte das der andere Bot sich nicht mehr bewegt.
-
-* Funktioniert der Maussensor?
+  -> Das ist wohl das performante Java-IO; was soll man da jetzt machen?
 
 Requested Features:
 -------------------
@@ -70,7 +67,11 @@ Der Sim findet sonst parcours.dtd nicht.
 ERLEDIGT:
 =========
 
-* JudgeChooser sollte aktuell gewaehlten Jugde anzeigen
+* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird können keine Bots mehr hinzugefügt werden. (fbe)
+
+* Nach dem Ende eines Rennens können keine Bots wieder hinzugefügt werden --> Erst neues Level generieren. (fbe)
+
+* JudgeChooser sollte aktuell gewaehlten Jugde anzeigen (fbe)
 
 * Fernbedienungs-Optik verbessern (pek)
 
