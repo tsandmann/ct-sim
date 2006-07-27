@@ -59,7 +59,7 @@ public class DistanceSensor extends SimpleSensor<Double> {
 	 * @param relPos relative Position zum Bot
 	 * @param relHead relative Blickrichtung zum Bot
 	 */
-public DistanceSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead) {
+	public DistanceSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead) {
 		
 		super(name, relPos, relHead);
 		

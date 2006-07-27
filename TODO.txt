@@ -4,7 +4,7 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 Offene Bugs:   
 ------------
 
-* FB schliessen, wenn Bot stirbt
+* Bug: Hinzufuegen von Bots auch ohne Welt moeglich!?
 
 (?) Haben wir immer noch ein Speicherleck? Mir schien, dass der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
 
@@ -24,8 +24,6 @@ Offene Bugs:
 Requested Features:
 -------------------
 
-* Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab 
-
 * Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe) --> wenn dieser der alten Struktur entspricht, werden auch wieder die richtigen Appearances aus der config gelesen
 Das Namensschema bitte aus der letzten Version des alten Sims Ã¼bernehmen. Ein Teil davon ist auch schon wieder eingebaut, so dass die Appearances wiesder gelesen werden
 
@@ -34,7 +32,7 @@ Das Namensschema bitte aus der letzten Version des alten Sims Ã¼bernehmen. Ein T
 
 * Grafiken fuer Fernbedienung (pek)
 
-* FB schlieï¿½en, wenn Bot stirbt; FB-Position? --> eventuelle eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
+* FB-Position? --> eventuelle eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
 
 * Verzeichnis-Angabe fï¿½r die DTD in der Config
 
@@ -42,9 +40,7 @@ Das Namensschema bitte aus der letzten Version des alten Sims Ã¼bernehmen. Ein T
 
 * Was machen bei Mangel an Startplaetzen?
 
-* Bug: Hinzufuegen von Bots auch ohne Welt moeglich!?
-
-* FB soll sich Position merken; FileChooser sollten sich Verz. merken (fï¿½r eine Sitzung?)...
+* FB soll sich Position merken; FileChooser sollten sich Verz. merken (für eine Sitzung?)...
 
 * Klassenstruktur wieder aufraeumen (fbe)
 
@@ -64,14 +60,19 @@ Der Sim findet sonst parcours.dtd nicht.
 
 * Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek) 
 
-* Beim hinzufuegen von neuen Bots den Judge fragen, ob das zulaessig ist
-
 * Beim hinzufuegen von Bots pruefen, ob der Platz leer ist und wenn nicht einen neuen Spawn-Punkt suchen
 
 ERLEDIGT:
 =========
 
-* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird kï¿½nnen keine Bots mehr hinzugefï¿½gt werden. (fbe)
+* Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab (fbe)
+
+* Beim hinzufuegen von neuen Bots den Judge fragen, ob das zulaessig ist
+  --> war doch längst erledigt? (fbe)
+
+* FB schliessen, wenn Bot stirbt (fbe)
+
+* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird können keine Bots mehr hinzugefügt werden. (fbe)
 
 * Nach dem Ende eines Rennens kï¿½nnen keine Bots wieder hinzugefï¿½gt werden --> Erst neues Level generieren. (fbe)
 

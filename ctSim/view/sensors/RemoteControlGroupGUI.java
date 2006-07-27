@@ -156,7 +156,15 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		
 		// NOTHING TO DO...
 	}
-
+	
+	public void removeNotify() {
+		
+		if(this.remoteControlGUI != null)
+			this.remoteControlGUI.dispose();
+		
+		super.removeNotify();
+	}
+	
 	/** 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */

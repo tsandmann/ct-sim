@@ -135,10 +135,14 @@ public abstract class Sensor<E> extends BotComponent {
 			synchronized (this.value) {
 				this.value = updateValue();
 				
+				// TODO: Unbedingt anpassen: 'Characteristics' müssen allg. werden -> Hierarchie der Sens. wiederspiegeln?
 				// TODO: Aeusserst haesslich:
 				if(this.characteristic != null) {
 	//				System.out.print(this.getName()+" :  "+this.value+"  ->  ");
-					this.value = (E)((Double)((Integer)this.characteristic.lookup((((Number)this.value).intValue())/10)).doubleValue());
+					// Einfacher lookup:
+					//this.value = (E)((Double)((Integer)this.characteristic.lookup((((Number)this.value).intValue())/10)).doubleValue());
+					// Präziserer (?) lookup:
+					this.value = (E)((Double)this.characteristic.lookupPrecise((((Number)this.value).intValue())/10));
 	//				System.out.println(this.value);
 				}
 			}
