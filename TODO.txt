@@ -7,9 +7,8 @@ Offene Bugs:
 * FB schliessen, wenn Bot stirbt
 
 (?) Haben wir immer noch ein Speicherleck? Mir schien, dass der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
-(?) Funktioniert der Maussensor?
 
-(?) Haben wir immer noch ein Speicherleck? Mir schien, da� der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
+(?) Funktioniert der Maussensor?
 
 (?) FB-Kommandos kommen gelegentlich nicht durch 
 
@@ -17,10 +16,8 @@ Offene Bugs:
 
 (?) wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
 
-* Durch die st�ndigen Ausgaben bei Unf�llen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren k�nnte das der andere Bot sich nicht mehr bewegt.
+* Durch die staendigen Ausgaben bei Unfaellen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren koennte das der andere Bot sich nicht mehr bewegt.
   -> Das ist wohl das performante Java-IO; was soll man da jetzt machen?
-
-* Funktioniert der Maussensor?
 
 * Appearnaces werden noch nicht wieder gesetzt!
 
