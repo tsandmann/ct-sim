@@ -54,6 +54,7 @@ import ctSim.model.bots.ctbot.components.Governor;
 import ctSim.model.bots.ctbot.components.LightSensor;
 import ctSim.model.bots.ctbot.components.LineSensor;
 import ctSim.model.bots.ctbot.components.RemoteControlSensor;
+import ctSim.view.Debug;
 
 /**
  * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator kommunizieren
@@ -532,14 +533,18 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			this.mouseY = meter2Dots(moveDistance);
 			
 			
-			int oldState = this.getObstState(); 
+			int oldState = this.getObstState();
+			
+			boolean noCol = this.world.checkCollision(this, new BoundingSphere(new Point3d(0d, 0d, 0d), BOT_RADIUS), newPos);
 			// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 			// der Bot blau gefaerbt.
 			//System.out.println(this.world.checkCollision(this, newPos));
-			if (this.world.checkCollision(this, new BoundingSphere(new Point3d(0d, 0d, 0d), BOT_RADIUS), newPos)) {
+			if(noCol && (oldState & OBST_STATE_COLLISION) == OBST_STATE_COLLISION) {
 				// Zustand setzen
+				Debug.out.println("Bot "+this.getName()+" hat keinen Unfall mehr!");
 				setObstState( oldState & ~OBST_STATE_COLLISION);
-			} else {
+			} else if (!noCol && (oldState & OBST_STATE_COLLISION) != OBST_STATE_COLLISION) {
+				Debug.out.println("Bot "+this.getName()+" hatte einen Unfall!");
 				moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt
 				
 				// Zustand setzen
@@ -583,33 +588,27 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			rotation.transform(skidVec);
 			skidVec.add(new Point3d(newPos));
 			
-			boolean isFalling = false;
-			
-			if (!this.world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE,
-					"Der Gleitpin von " + this.getName())) { //$NON-NLS-1$
-				isFalling = true;
-			}
+			boolean isFalling = !this.world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE);
 			
 			// Bodenkontakt des linken Reifens ueberpruefen
 			posRadL.z -= BOT_HEIGHT / 2;
-			if (!this.world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE,
-					"Das linke Rad von " + this.getName())) { //$NON-NLS-1$
-				isFalling = true;
-			}
+			
+			isFalling |= !this.world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE);
 			
 			// Bodenkontakt des rechten Reifens ueberpruefen
 			posRadR.z -= BOT_HEIGHT / 2;
-			if (!this.world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE,
-					"Das rechte Rad von " + this.getName())) { //$NON-NLS-1$
-				isFalling = true;
-			}
+			
+			isFalling |= !this.world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE);
 			
 			// Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat,
 			// wird der Bot gestoppt und gruen gefaerbt.
-			if (isFalling) 
+			if(isFalling && (OBST_STATE_FALLING != (getObstState() & OBST_STATE_FALLING))) {
+				Debug.out.println("Bot "+this.getName()+" faellt in ein Loch!");
 				setObstState(getObstState() | OBST_STATE_FALLING);
-			else 
+			} else if(!isFalling && (OBST_STATE_FALLING == (getObstState() & OBST_STATE_FALLING))) {
+				Debug.out.println("Bot "+this.getName()+" faellt nicht mehr!");
 				setObstState(getObstState() & ~OBST_STATE_FALLING);
+			}
 			
 			// Wenn der Bot nicht kollidiert oder ueber einem Abgrund steht Position aktualisieren
 			if ((getObstState() & (OBST_STATE_COLLISION | OBST_STATE_FALLING)) == 0 )

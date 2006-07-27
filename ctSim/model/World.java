@@ -51,7 +51,6 @@ import ctSim.model.AliveObstacle;
 import ctSim.model.Parcours;
 import ctSim.model.ParcoursLoader;
 import ctSim.model.bots.Bot;
-import ctSim.view.Debug;
 //import ctSim.model.scene.SceneLight;
 
 /**
@@ -444,7 +443,7 @@ public class World {
 		
 		Shape3D botBody = obst.getShape();
 //		Bounds bounds = obst.getBounds();
-		String botName = obst.getName();
+		//String botName = obst.getName();
 		
 //		System.out.println(bounds.toString());
 		
@@ -477,7 +476,7 @@ public class World {
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return true;
 		//System.out.println(botName + " hatte einen Unfall!");
-		Debug.out.println("Bot \""+botName + "\" hatte einen Unfall!"); //$NON-NLS-1$ //$NON-NLS-2$
+		//Debug.out.println("Bot \""+botName + "\" hatte einen Unfall!"); //$NON-NLS-1$ //$NON-NLS-2$
 		//obst.stop();
 		return false;
 	}
@@ -495,14 +494,9 @@ public class World {
 	 * @return True wenn Bodenkontakt besteht.
 	 */
 	// TODO: Ueberarbeiten... (GroundClearance?)
-	public boolean checkTerrain(Point3d pos, double groundClearance,
-			String message) {
-		if (parcours.checkWhole(pos) == false)
-			return true;
-//		else {
-			Debug.out.println(message + " faellt " );
-			return false;
-//		}
+	public boolean checkTerrain(Point3d pos, double groundClearance) {
+		
+		return !parcours.checkWhole(pos);
 /*		
 		
 		// Falls die Welt verschoben wurde:
