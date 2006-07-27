@@ -1022,6 +1022,11 @@ public final class Controller implements Runnable {
 		ctrl.setSim(ctSim);
 	}
 
+	public Judge getJudge() {
+		
+		return this.judge;
+	}
+	
 	/**
 	 * @return Returns the world.
 	 */

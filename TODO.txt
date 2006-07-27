@@ -4,6 +4,8 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 Offene Bugs:   
 ------------
 
+* FB schließen, wenn Bot stirbt
+
 (?) Haben wir immer noch ein Speicherleck? Mir schien, daß der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
 
 (?) FB-Kommandos kommen gelegentlich nicht durch 
@@ -33,13 +35,15 @@ Requested Features:
 
 * FB schließen, wenn Bot stirbt; FB-Position? --> eventuelle eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
 
-* TabbedPane -> TabbedPaneWithCloseIcons
+* Verzeichnis-Angabe für die DTD in der Config
 
-* JudgeChooser sollte aktuell gewaehlten Jugde anzeigen
+* TabbedPane -> TabbedPaneWithCloseIcons
 
 * Was machen bei Mangel an Startplaetzen?
 
 * Bug: Hinzufuegen von Bots auch ohne Welt moeglich!?
+
+* FB soll sich Position merken; FileChooser sollten sich Verz. merken (für eine Sitzung?)...
 
 * Klassenstruktur wieder aufraeumen (fbe)
 
@@ -65,6 +69,8 @@ Der Sim findet sonst parcours.dtd nicht.
 
 ERLEDIGT:
 =========
+
+* JudgeChooser sollte aktuell gewaehlten Jugde anzeigen
 
 * Fernbedienungs-Optik verbessern (pek)
 

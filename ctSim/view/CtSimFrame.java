@@ -735,7 +735,7 @@ public class CtSimFrame extends JFrame {
 //			return;
 //		}
 		
-		String judge = JudgeChooser.showJudgeChooserDialog(this);
+		String judge = JudgeChooser.showJudgeChooserDialog(this, this.controller.getJudge().getClass().getCanonicalName());
 		
 		if(this.controller.setJudge(judge)) {
 			

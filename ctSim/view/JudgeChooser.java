@@ -59,9 +59,11 @@ public class JudgeChooser extends JDialog implements ActionListener {
 	 * Der Konstruktor
 	 * @param own Der Frame, in dem der Auswahldialog laeuft
 	 */
-	JudgeChooser(Frame own) {
+	JudgeChooser(Frame own, String selectedJudge) {
 		
 		super(own, "Schiedsrichter waehlen...", true); //$NON-NLS-1$
+		
+		this.judge = selectedJudge;
 		
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
@@ -93,8 +95,6 @@ public class JudgeChooser extends JDialog implements ActionListener {
 	
 	private void initRadioButtons() {
 		
-		boolean first = true;
-		
 		ButtonGroup grp = new ButtonGroup();
 		
 		for(String s : this.judges) {
@@ -103,11 +103,9 @@ public class JudgeChooser extends JDialog implements ActionListener {
 			but.setActionCommand(s);
 			but.addActionListener(this);
 			
-			if(first) {
+			if(this.judge == null || this.judge.equals(s)) {
 				but.setSelected(true);
 				this.judge = s;
-				
-				first = false;
 			}
 			
 			grp.add(but);
@@ -138,9 +136,9 @@ public class JudgeChooser extends JDialog implements ActionListener {
 	 * @param parent Der Frame, in dem der Auswahldialog laeuft
 	 * @return Der Schiedsrichter
 	 */
-	public static String showJudgeChooserDialog(Frame parent) {
+	public static String showJudgeChooserDialog(Frame parent, String selectedJudge) {
 		
-		JudgeChooser jc = new JudgeChooser(parent);
+		JudgeChooser jc = new JudgeChooser(parent, selectedJudge);
 		
 		return jc.getJudge();
 	}

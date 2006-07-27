@@ -1,5 +1,8 @@
 Changelog fuer c't-Sim
 ======================
+
+2006-07-25 Felix Beckwermert [felix@beckwermert.de]: Aktuell gewählter Judge wird (im Auswahl-Dialog) angezeigt
+
 2006-07-27 Benjamin Benz [bbe@heise.de]: Beim Start eines Rennen bekommen die Bots das Fernbedigungsbefehl 5, sodass Sie sofort anfangen zu Fahren
 
 2006-07-26 Peter Koenig [pek@heise.de]: Fernbedienungs-Optik korrigiert 
