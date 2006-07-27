@@ -19,13 +19,13 @@ Offene Bugs:
 * Durch die staendigen Ausgaben bei Unfaellen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren koennte das der andere Bot sich nicht mehr bewegt.
   -> Das ist wohl das performante Java-IO; was soll man da jetzt machen?
 
-* Appearnaces werden noch nicht wieder gesetzt!
+* Appearances werden noch nicht wieder gesetzt!
 
 Requested Features:
 -------------------
 
 * Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe) --> wenn dieser der alten Struktur entspricht, werden auch wieder die richtigen Appearances aus der config gelesen
-Das Namensschema bitte aus der letzten Version des alten Sims übernehmen. Ein Teil davon ist auch schon wieder eingebaut, so dass die Appearances wiesder gelesen werden
+Das Namensschema bitte aus der letzten Version des alten Sims uebernehmen. Ein Teil davon ist auch schon wieder eingebaut, so dass die Appearances wieder gelesen werden
 
 
 --- Alles oberhalb dieser Linie fuer naechstes Release fertigmachen!!! ---

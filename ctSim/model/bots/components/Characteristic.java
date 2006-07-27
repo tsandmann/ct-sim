@@ -240,7 +240,7 @@ public class Characteristic {
 	 * @param measure
 	 *            Die Messgroesse, aufgrund derer der Sensor seinen Wert erzeugt
 	 *            (z.B. die Distanz bei Distanzsensoren)
-	 * @return Das Sensordatum laut Kennlinie
+	 * @return Das Sensordatum laut Kennlinie, ist eine ganze Zahl
 	 */
 	public double lookupPrecise(Number measure) {
 		double measurement = measure.doubleValue();
@@ -254,6 +254,9 @@ public class Characteristic {
 			if (data != this.INF && index < this.lookup.length - 1) {
 				data = data + (measurement - index)
 						* (this.lookup[index + 1] - this.lookup[index]);
+				// Es sollen ganze Zahlen zurueckgegeben werden, wie 
+				// sich das fuer einen digitalen Sensor gehoert:
+				data = Math.round(data);
 			}
 		} else {
 			// Sonst INF zurueckgeben:

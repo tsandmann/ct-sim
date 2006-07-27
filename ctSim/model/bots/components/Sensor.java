@@ -135,15 +135,17 @@ public abstract class Sensor<E> extends BotComponent {
 			synchronized (this.value) {
 				this.value = updateValue();
 				
-				// TODO: Unbedingt anpassen: 'Characteristics' müssen allg. werden -> Hierarchie der Sens. wiederspiegeln?
-				// TODO: Aeusserst haesslich:
+				// TODO: Unbedingt anpassen: 'Characteristics' muessen allg. werden -> Hierarchie der Sens. wiederspiegeln?
 				if(this.characteristic != null) {
-	//				System.out.print(this.getName()+" :  "+this.value+"  ->  ");
+					// System.out.print(this.getName()+" :  "+this.value+"  ->  ");
 					// Einfacher lookup:
-					//this.value = (E)((Double)((Integer)this.characteristic.lookup((((Number)this.value).intValue())/10)).doubleValue());
-					// Präziserer (?) lookup:
-					this.value = (E)((Double)this.characteristic.lookupPrecise((((Number)this.value).intValue())/10));
-	//				System.out.println(this.value);
+					// this.value = (E)((Double)((Integer)this.characteristic.lookup((((Number)this.value).intValue())/10)).doubleValue());
+					// Praeziserer lookup:
+					// this.value = gemessene Distanz im mm zum naechsten Objekt ist eine Intsanz von Number.
+					// Deren double-Wert wird durch 10 geteilt ==> Distanz in cm, mit double-Praezision.
+					// Diese cm-Distanz wird in lookupPrecise gesteckt.
+					// Zurueck kommt der extrapolierte Sensor-Wert -- ein Integer.
+					this.value = (E)((Double)this.characteristic.lookupPrecise((((Number)this.value).doubleValue())/10d));
 				}
 			}
 		}		

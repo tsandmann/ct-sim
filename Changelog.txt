@@ -1,6 +1,8 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-07-27 Peter Koenig [pek@heise.de]: Characteristic.lookupPrecise() gibt jetzt auf ganze Zahlen gerundete doubles zurueck, Sensor.update() gibt ungerundete cm-Entfernungen in die Kennlinie hinein.
+
 2006-07-27 Felix Beckwermert [felix@beckwermert.de]: Bot-Status-Ausgaben nur noch "einmal"
 
 2006-07-27 Benjamin Benz [bbe@heise.de]: Die Namen werden wieder mit system vergeben, wenn auch das System noch nicht wieder voellig repariert ist. ==>Appearances werden wieder einglesen
