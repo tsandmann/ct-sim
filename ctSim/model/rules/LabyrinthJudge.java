@@ -25,7 +25,9 @@ import javax.vecmath.Vector3d;
 import ctSim.controller.Controller;
 import ctSim.model.AliveObstacle;
 import ctSim.model.World;
+import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.view.Debug;
+import ctSim.view.sensors.RemoteControlGroupGUI;
 import ctSim.SimUtils;
 
 /**
@@ -39,6 +41,9 @@ public class LabyrinthJudge extends Judge {
 	private World world;
 	
 	private int participants = 2;
+
+	/** Variable umd den ersten Start zu markieren */
+	private boolean first = true;
 	
 	
 	/**
@@ -111,6 +116,11 @@ public class LabyrinthJudge extends Judge {
 		
 		for(AliveObstacle obst : obsts) {
 			
+			if (first ==true){
+				if (obst instanceof CtBotSimTcp)
+					((CtBotSimTcp)obst).sendRCCommand(RemoteControlGroupGUI.RC5_CODE_5);
+			}
+			
 			if(this.world.finishReached(new Vector3d(obst.getPosition()))) {
 				
 				//Debug.out.println("Bot \""+obst.getName()+"\" erreicht nach "+this.getTime()+" ms als erster das Ziel!");
@@ -120,6 +130,7 @@ public class LabyrinthJudge extends Judge {
 				return false;
 			}
 		}
+		first=false;
 //		
 //		Bot finishCrossed = null;
 //		

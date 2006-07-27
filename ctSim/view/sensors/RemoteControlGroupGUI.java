@@ -19,7 +19,6 @@
 package ctSim.view.sensors;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -51,6 +50,69 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 	private JButton showRemoteControl;
 	private RemoteControlGUI remoteControlGUI;
 	private RemoteControlSensor remoteControlSensor;
+	/** RC5-Taste PWR*/
+	public static final int RC5_CODE_PWR = 0x118C;
+	/** RC5-Taste 0*/
+	public static final int RC5_CODE_0 = 0x1180; 
+	// TODO:  Ist das Taste 10?
+	/** RC5-Taste 1*/
+	public static final int RC5_CODE_1 = 0x1181;
+	/** RC5-Taste 2*/
+	public static final int RC5_CODE_2 = 0x1182;
+	/** RC5-Taste 3*/
+	public static final int RC5_CODE_3 = 0x1183;
+	/** RC5-Taste 4*/
+	public static final int RC5_CODE_4 = 0x1184;
+	/** RC5-Taste 5*/
+	public static final int RC5_CODE_5 = 0x1185;
+	/** RC5-Taste 6*/
+	public static final int RC5_CODE_6 = 0x1186;
+	/** RC5-Taste 7*/
+	public static final int RC5_CODE_7 = 0x1187;
+	/** RC5-Taste 8*/
+	public static final int RC5_CODE_8 = 0x1188;
+	/** RC5-Taste 9*/
+	public static final int RC5_CODE_9 = 0x1189;
+	/** RC5-Taste 11*/
+	public static final int RC5_CODE_11 = 0x118A;
+	/** RC5-Taste 12*/
+	public static final int RC5_CODE_12 = 0x11A3;
+	/** RC5-Taste RED*/
+	public static final int RC5_CODE_RED = 0x01BD;
+	/** RC5-Taste GREEN*/
+	public static final int RC5_CODE_GREEN = 0x01BA;
+	/** RC5-Taste YELLOW*/
+	public static final int RC5_CODE_YELLOW = 0x01B1;
+	/** RC5-Taste BLUE*/
+	public static final int RC5_CODE_BLUE = 0x01B0;
+	/** RC5-Taste I/II*/
+	public static final int RC5_CODE_I_II=0x11AB;
+	/** RC5-Taste TV/VCR*/
+	public static final int  RC5_CODE_TV_VCR=0x11B8;
+	/** RC5-Taste mit dem Punkt*/
+	public static final int  RC5_CODE_DOT=0x11AB;
+	/** RC5-Taste CH*P/C*/
+	public static final int  RC5_CODE_CH_PC=0x11BF;
+	/** RC5-Taste Play*/
+	public static final int  RC5_CODE_PLAY=0x11B5;
+	/** RC5-Taste Pause*/
+	public static final int  RC5_CODE_STILL=0x11A9;
+	/** RC5-Taste Stop*/
+	public static final int  RC5_CODE_STOP=0x11B6;
+	/** RC5-Taste <<*/
+	public static final int   RC5_CODE_BWD=0x11B2;
+	/** RC5-Taste >>*/
+	public static final int   RC5_CODE_FWD=0x11B4;
+	/** RC5-Taste Mute*/
+	public static final int   RC5_CODE_MUTE=0x01BF;
+	/** RC5-Taste Vol+*/
+	public static final int   RC5_VOL_PLUS=0x1190;
+	/** RC5-Taste Vol-*/
+	public static final int   RC5_VOL_MINUS=0x1191;
+	/** RC5-Taste CH+*/
+	public static final int   RC5_CH_PLUS=0x11A0;
+	/** RC5-Taste CH-*/
+	public static final int   RC5_CH_MINUS=0x11A1;
 		
 	/**
 	 * @see ctSim.view.ComponentGroupGUI#getSortId()
@@ -112,101 +174,6 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		
 		private static final long serialVersionUID = 1L;
 
-		/** RC5-Taste PWR*/
-		public static final int RC5_CODE_PWR = 0x118C; 
-
-		// Zahlentasten:
-		
-		/** RC5-Taste 0*/
-		public static final int RC5_CODE_0 = 0x1180; 
-		// TODO:  Ist das Taste 10?
-		
-		/** RC5-Taste 1*/
-		public static final int RC5_CODE_1 = 0x1181; 
-
-		/** RC5-Taste 2*/
-		public static final int RC5_CODE_2 = 0x1182; 
-
-		/** RC5-Taste 3*/
-		public static final int RC5_CODE_3 = 0x1183; 
-
-		/** RC5-Taste 4*/
-		public static final int RC5_CODE_4 = 0x1184; 
-
-		/** RC5-Taste 5*/
-		public static final int RC5_CODE_5 = 0x1185; 
-
-		/** RC5-Taste 6*/
-		public static final int RC5_CODE_6 = 0x1186; 
-
-		/** RC5-Taste 7*/
-		public static final int RC5_CODE_7 = 0x1187; 
-
-		/** RC5-Taste 8*/
-		public static final int RC5_CODE_8 = 0x1188; 
-
-		/** RC5-Taste 9*/
-		public static final int RC5_CODE_9 = 0x1189; 
-
-		/** RC5-Taste 11*/
-		public static final int RC5_CODE_11 = 0x118A; 
-
-		/** RC5-Taste 12*/
-		public static final int RC5_CODE_12 = 0x11A3; 
-		
-		// Farbtasten
-		
-		/** RC5-Taste RED*/
-		public static final int RC5_CODE_RED = 0x01BD; 
-
-		/** RC5-Taste GREEN*/
-		public static final int RC5_CODE_GREEN = 0x01BA; 
-
-		/** RC5-Taste YELLOW*/
-		public static final int RC5_CODE_YELLOW = 0x01B1; 
-
-		/** RC5-Taste BLUE*/
-		public static final int RC5_CODE_BLUE = 0x01B0; 
-
-		// Sondertasten:
-		
-		/** RC5-Taste I/II*/
-		public static final int RC5_CODE_I_II=0x11AB;
-		/** RC5-Taste TV/VCR*/
-		public static final int  RC5_CODE_TV_VCR=0x11B8;
-		/** RC5-Taste mit dem Punkt*/
-		public static final int  RC5_CODE_DOT=0x11AB;
-		/** RC5-Taste CH*P/C*/
-		public static final int  RC5_CODE_CH_PC=0x11BF;
-
-		
-		// Steuertasten:
-		
-		/** RC5-Taste Play*/
-		public static final int  RC5_CODE_PLAY=0x11B5;
-		/** RC5-Taste Pause*/
-		public static final int  RC5_CODE_STILL=0x11A9;
-		/** RC5-Taste Stop*/
-		public static final int  RC5_CODE_STOP=0x11B6;
-		/** RC5-Taste <<*/
-		public static final int   RC5_CODE_BWD=0x11B2;
-		/** RC5-Taste >>*/
-		public static final int   RC5_CODE_FWD=0x11B4;
-		
-		/** RC5-Taste Mute*/
-		public static final int   RC5_CODE_MUTE=0x01BF;
-
-		/** RC5-Taste Vol+*/
-		public static final int   RC5_VOL_PLUS=0x1190;
-		/** RC5-Taste Vol-*/
-		public static final int   RC5_VOL_MINUS=0x1191;
-
-		/** RC5-Taste CH+*/
-		public static final int   RC5_CH_PLUS=0x11A0;
-		/** RC5-Taste CH-*/
-		public static final int   RC5_CH_MINUS=0x11A1;		
-
-		
 		private RemoteControlSensor remCtrl;
 		private Map<String,Integer> commandMappings;
 		
@@ -238,46 +205,46 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		@SuppressWarnings("boxing") void initCommandMap() {
 			
 			this.commandMappings = new LinkedHashMap<String,Integer>();			
-			this.commandMappings.put("\u03A6", RC5_CODE_PWR); //$NON-NLS-1$
+			this.commandMappings.put("\u03A6", RemoteControlGroupGUI.RC5_CODE_PWR); //$NON-NLS-1$
 			
-			this.commandMappings.put("1", RC5_CODE_1); //$NON-NLS-1$
-			this.commandMappings.put("2", RC5_CODE_2); //$NON-NLS-1$
-			this.commandMappings.put("3", RC5_CODE_3); //$NON-NLS-1$
-			this.commandMappings.put("4", RC5_CODE_4); //$NON-NLS-1$
-			this.commandMappings.put("5", RC5_CODE_5); //$NON-NLS-1$
-			this.commandMappings.put("6", RC5_CODE_6); //$NON-NLS-1$
-			this.commandMappings.put("7", RC5_CODE_7); //$NON-NLS-1$
-			this.commandMappings.put("8", RC5_CODE_8); //$NON-NLS-1$
-			this.commandMappings.put("9", RC5_CODE_9); //$NON-NLS-1$
-			this.commandMappings.put("10", RC5_CODE_0); //$NON-NLS-1$
-			this.commandMappings.put("11", RC5_CODE_11); //$NON-NLS-1$
-			this.commandMappings.put("12", RC5_CODE_12); //$NON-NLS-1$
+			this.commandMappings.put("1", RemoteControlGroupGUI.RC5_CODE_1); //$NON-NLS-1$
+			this.commandMappings.put("2", RemoteControlGroupGUI.RC5_CODE_2); //$NON-NLS-1$
+			this.commandMappings.put("3", RemoteControlGroupGUI.RC5_CODE_3); //$NON-NLS-1$
+			this.commandMappings.put("4", RemoteControlGroupGUI.RC5_CODE_4); //$NON-NLS-1$
+			this.commandMappings.put("5", RemoteControlGroupGUI.RC5_CODE_5); //$NON-NLS-1$
+			this.commandMappings.put("6", RemoteControlGroupGUI.RC5_CODE_6); //$NON-NLS-1$
+			this.commandMappings.put("7", RemoteControlGroupGUI.RC5_CODE_7); //$NON-NLS-1$
+			this.commandMappings.put("8", RemoteControlGroupGUI.RC5_CODE_8); //$NON-NLS-1$
+			this.commandMappings.put("9", RemoteControlGroupGUI.RC5_CODE_9); //$NON-NLS-1$
+			this.commandMappings.put("10", RemoteControlGroupGUI.RC5_CODE_0); //$NON-NLS-1$
+			this.commandMappings.put("11", RemoteControlGroupGUI.RC5_CODE_11); //$NON-NLS-1$
+			this.commandMappings.put("12", RemoteControlGroupGUI.RC5_CODE_12); //$NON-NLS-1$
 			
-			this.commandMappings.put("GR -", RC5_CODE_GREEN); //$NON-NLS-1$
-			this.commandMappings.put("RE +", RC5_CODE_RED); //$NON-NLS-1$
-			this.commandMappings.put("YE -", RC5_CODE_YELLOW); //$NON-NLS-1$
-			this.commandMappings.put("BL +", RC5_CODE_BLUE); //$NON-NLS-1$
+			this.commandMappings.put("GR -", RemoteControlGroupGUI.RC5_CODE_GREEN); //$NON-NLS-1$
+			this.commandMappings.put("RE +", RemoteControlGroupGUI.RC5_CODE_RED); //$NON-NLS-1$
+			this.commandMappings.put("YE -", RemoteControlGroupGUI.RC5_CODE_YELLOW); //$NON-NLS-1$
+			this.commandMappings.put("BL +", RemoteControlGroupGUI.RC5_CODE_BLUE); //$NON-NLS-1$
 
-			this.commandMappings.put("I/II", RC5_CODE_I_II); //$NON-NLS-1$
-			this.commandMappings.put("TV/VCR", RC5_CODE_TV_VCR); //$NON-NLS-1$
+			this.commandMappings.put("I/II", RemoteControlGroupGUI.RC5_CODE_I_II); //$NON-NLS-1$
+			this.commandMappings.put("TV/VCR", RemoteControlGroupGUI.RC5_CODE_TV_VCR); //$NON-NLS-1$
 
-			this.commandMappings.put("||", RC5_CODE_STILL); //$NON-NLS-1$
+			this.commandMappings.put("||", RemoteControlGroupGUI.RC5_CODE_STILL); //$NON-NLS-1$
 			
-			this.commandMappings.put("<<", RC5_CODE_BWD); //$NON-NLS-1$
-			this.commandMappings.put(">", RC5_CODE_PLAY); //$NON-NLS-1$
-			this.commandMappings.put(">>", RC5_CODE_FWD); //$NON-NLS-1$
+			this.commandMappings.put("<<", RemoteControlGroupGUI.RC5_CODE_BWD); //$NON-NLS-1$
+			this.commandMappings.put(">", RemoteControlGroupGUI.RC5_CODE_PLAY); //$NON-NLS-1$
+			this.commandMappings.put(">>", RemoteControlGroupGUI.RC5_CODE_FWD); //$NON-NLS-1$
 
-			this.commandMappings.put("\u25A1", RC5_CODE_STOP); //$NON-NLS-1$
+			this.commandMappings.put("\u25A1", RemoteControlGroupGUI.RC5_CODE_STOP); //$NON-NLS-1$
 			
-			this.commandMappings.put("\u25CF", RC5_CODE_DOT); //$NON-NLS-1$
-			this.commandMappings.put("CH*P/P", RC5_CODE_CH_PC); //$NON-NLS-1$
+			this.commandMappings.put("\u25CF", RemoteControlGroupGUI.RC5_CODE_DOT); //$NON-NLS-1$
+			this.commandMappings.put("CH*P/P", RemoteControlGroupGUI.RC5_CODE_CH_PC); //$NON-NLS-1$
 
-			this.commandMappings.put("Vol+", RC5_VOL_PLUS); //$NON-NLS-1$
-			this.commandMappings.put("Mute", RC5_CODE_MUTE); //$NON-NLS-1$
-			this.commandMappings.put("Ch+", RC5_CH_PLUS); //$NON-NLS-1$
+			this.commandMappings.put("Vol+", RemoteControlGroupGUI.RC5_VOL_PLUS); //$NON-NLS-1$
+			this.commandMappings.put("Mute", RemoteControlGroupGUI.RC5_CODE_MUTE); //$NON-NLS-1$
+			this.commandMappings.put("Ch+", RemoteControlGroupGUI.RC5_CH_PLUS); //$NON-NLS-1$
 
-			this.commandMappings.put("Vol-", RC5_VOL_MINUS); //$NON-NLS-1$
-			this.commandMappings.put("Ch-", RC5_CH_MINUS); //$NON-NLS-1$
+			this.commandMappings.put("Vol-", RemoteControlGroupGUI.RC5_VOL_MINUS); //$NON-NLS-1$
+			this.commandMappings.put("Ch-", RemoteControlGroupGUI.RC5_CH_MINUS); //$NON-NLS-1$
 
 		}
 		

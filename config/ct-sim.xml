@@ -12,8 +12,8 @@
 	<parameter name="botbinary" value="..\ct-Bot\Debug-W32\ct-Bot.exe"/>
 	<parameter name="worlddir" value="./parcours"/>
 	<parameter name="botdir" value="..\ct-Bot\Debug-W32"/>
-	<parameter name="judge" value="ctSim.model.rules.DefaultJudge"/>
-	
+	<parameter name="judge" value="ctSim.model.rules.LabyrinthJudge"/>
+
 	<bots>         
 		<bot name="ctSim.model.bots.CtBotSimTest_0">
 			<appearance type="normal">

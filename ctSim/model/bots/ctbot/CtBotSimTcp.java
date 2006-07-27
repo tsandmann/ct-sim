@@ -417,21 +417,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				}
 			}
 			
-//			// TODO: sehr haesslich: Bot-Verhalten "Wandverfolgung" starten
-//			this.first++;
-//			if(this.first==1) {
-//				
-//				int RC5_CODE_5 = 0x3945;
-//				Integer i = new Integer(RC5_CODE_5);
-//				command.setCommand(Command.CMD_SENS_RC5);
-//				command.setDataL(i.intValue());
-//				command.setDataR(42);
-//				command.setSeq(this.seq++);
-//				this.connection.send(command.getCommandBytes());
-//				//System.out.println("Raus: "+i);
-//				//System.out.println(command.toString());
-//				//setSensRc5(0);
-//			}
+
 
 			// TODO: nur fuer real-bot
 			command.setCommand(Command.CMD_SENS_ERROR);
@@ -459,6 +445,20 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			die();
 		}
 	}
+	
+	/** sendet ein IR-Fernbedienungsklommandoi an den Bot 
+	 * 
+	 * @param command RC5-Code des Kommandos
+	 */
+	@SuppressWarnings("unchecked")
+	public void sendRCCommand(int command){
+		// TODO Warning entfernen
+		boolean setValue = this.rc5.setValue((Object)(new Integer(command)));
+		if (!setValue) {
+			ErrorHandler.error("Kann kein RC5-Kommando absetzen!");
+		}
+	}
+
 	
 	@SuppressWarnings({"unchecked","boxing"})
 	private void calcPos() {
@@ -979,10 +979,10 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		
 		synchronized (commandBuffer) {
 //			int i=0;
-			Iterator it = commandBuffer.iterator();
+			Iterator<Command> it = commandBuffer.iterator();
 //			System.out.println(commandBuffer.size()+" Elemente im Puffer");
 			while (it.hasNext()){
-				Command command = (Command)it.next();
+				Command command = it.next();
 //				System.out.println("GET("+(i++)+") CMD: "+command.getCommand()+" DataL: "+command.getDataL()+" Seq: "+command.getSeq());
 				evaluateCommand(command);
 			}
