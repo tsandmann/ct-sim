@@ -66,6 +66,8 @@ Der Sim findet sonst parcours.dtd nicht.
 ERLEDIGT:
 =========
 
+* Bot-Name wird in FB angezeigt (fbe)
+
 * Durch die staendigen Ausgaben bei Unfaellen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren koennte das der andere Bot sich nicht mehr bewegt.
   -> Das ist wohl das performante Java-IO; was soll man da jetzt machen?
 

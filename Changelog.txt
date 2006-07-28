@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-07-28 Felix Beckwermert [felix@beckwermert.de]: Bot-Name wird in FB angezeigt
+
+2006-07-28 Felix Beckwermert [felix@beckwermert.de]: Bots haben nur noch _einen_ Namen
+
 2006-07-27 Peter Koenig [pek@heise.de]: Characteristic.lookupPrecise() gibt jetzt auf ganze Zahlen gerundete doubles zurueck, Sensor.update() gibt ungerundete cm-Entfernungen in die Kennlinie hinein.
 
 2006-07-27 Felix Beckwermert [felix@beckwermert.de]: Bot-Status-Ausgaben nur noch "einmal"
