@@ -170,7 +170,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
-		this.rc5 = new RemoteControlSensor("Fernbedieung Univers 29", new Point3d(), new Vector3d()); //$NON-NLS-1$
+		this.rc5 = new RemoteControlSensor("RC für '"+this.getName()+"'", new Point3d(), new Vector3d()); //$NON-NLS-1$
 		
 		this.addSensor(this.encL);
 		this.addSensor(this.encR);

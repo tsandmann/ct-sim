@@ -172,7 +172,13 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 	ActionEvent e) {
 		
 		if(this.remoteControlGUI == null)
-			this.remoteControlGUI = new RemoteControlGUI(this.remoteControlSensor, "Hier BotName");  // TODO:  <----------------------- //$NON-NLS-1$
+			
+			// TODO: Für BotNamen:
+			// Bisher heißt die FB wie der Bot (aus initSensors())
+			// Besser:
+			// Jedes Component hat ein paranet-Component und ermittelt über dieses auch (rekursiv) die absolute Pos.
+			// Ein Bot ist dann (im Prinzip) nur noch dieses Parent-Component -> siehe auch BotPosition
+			this.remoteControlGUI = new RemoteControlGUI(this.remoteControlSensor, this.remoteControlSensor.getName());  // TODO:  <----------------------- //$NON-NLS-1$
 		
 		this.remoteControlGUI.setVisible(true);
 	}
