@@ -32,7 +32,7 @@ import ctSim.model.bots.components.Sensor;
  */
 public final class BotInfo {
 	
-	private String name;
+	//private String name;
 	private String type;
 	
 	// TODO: auch view (?)
@@ -48,10 +48,10 @@ public final class BotInfo {
 	 * @param b Der Bot selbst
 	 * @param panel Die passende Anzeigetafel fuer den Bot
 	 */
-	public BotInfo(String n, String t, Bot b, BotPanel panel) {
+	public BotInfo(String t, Bot b, BotPanel panel) {
 		
 		// TODO: Bot adden!
-		this.name     = n;
+		//this.name     = n;
 		this.type     = t;
 		this.bot      = b;
 		this.botPanel = panel;
@@ -61,15 +61,16 @@ public final class BotInfo {
 	 * @return Name des Bot
 	 */
 	public String getName() {
-		return this.name;
+		//return this.name;
+		return this.bot.getName();
 	}
 	
 	/**
 	 * @param n Der zu setzende Bot-Name
 	 */
-	protected void setName(String n) {
-		this.name = n;
-	}
+//	protected void setName(String n) {
+//		this.name = n;
+//	}
 	
 	/**
 	 * @return der Bot

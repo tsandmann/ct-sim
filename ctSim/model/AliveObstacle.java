@@ -67,6 +67,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	
 	/** Position */
 	//private Vector3d pos = new Vector3d(0.0d, 0d, getHeight() / 2 + 0.006d);
+	private String name;
 	private Point3d pos;
 	private Vector3d head;
 
@@ -107,8 +108,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 * @param position Position des Objekts
 	 * @param heading Blickrichtung des Objekts
 	 */
-	public AliveObstacle(Point3d position, Vector3d heading) {
+	public AliveObstacle(String name, Point3d position, Vector3d heading) {
 		
+		this.name = name;
 		this.pos = position;
 		this.head = heading;
 		
@@ -277,7 +279,11 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 * @return Gibt den Namen des Objektes zurueck.  
 	 */
-	abstract public String getName();
+	// TODO: Should be abstract or Interface -> Move to Bot with Pos, Head, ...
+	//       A Bot should be a (big) BotComponent (BotPosition)...
+	public String getName() {
+		return this.name;
+	}
 	
 	/**
 	 * @return Die Hoehe des Objektes in Metern

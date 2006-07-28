@@ -6,13 +6,21 @@ Known Bugs:
 
 * Hinzufuegen von Bots ist auch ohne Welt moeglich
 
+* Probleme mit dem timeOut?
+
+(?) Haben wir immer noch ein Speicherleck? Mir schien, dass der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
+
 * FB-Kommandos kommen gelegentlich nicht durch. Das passiert auch beim LabyrinthJudge, der eigentlich allen Bots zu Beginn das Fernbedienungssignal "5" schickt. 
 
 * Sensor-Daten werden oefters in einem Zyklus gesendet 
 
 * wenn ct-Bot beendet wird (TCP-Verbindung beendet), wird der Bot nicht aus der Welt entfernt
 
-* Appearances werden noch nicht wieder gesetzt!
+(?) Sensor-Daten werden oefters in einem Zyklus gesendet 
+
+(?) wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
+
+* Appearnaces werden noch nicht wieder gesetzt!
 
 Requested Features:
 -------------------
@@ -57,6 +65,9 @@ Der Sim findet sonst parcours.dtd nicht.
 
 ERLEDIGT:
 =========
+
+* Durch die staendigen Ausgaben bei Unfaellen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren koennte das der andere Bot sich nicht mehr bewegt.
+  -> Das ist wohl das performante Java-IO; was soll man da jetzt machen?
 
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab (fbe)
 

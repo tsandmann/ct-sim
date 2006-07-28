@@ -757,7 +757,7 @@ public class CtSimFrame extends JFrame {
 		if(bot == null)
 			return;
 		
-		BotInfo info = new BotInfo("Test"+Math.round(Math.random()*10), "SimTest", bot, new DefBotPanel()); //$NON-NLS-1$ //$NON-NLS-2$
+		BotInfo info = new BotInfo(/*"Test"+Math.round(Math.random()*10), */"SimTest", bot, new DefBotPanel()); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		this.addBot(info);
 	}

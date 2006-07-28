@@ -762,7 +762,7 @@ public final class Controller implements Runnable {
 		if (bot != null && this.judge.isAddAllowed()) {
 			// TODO:
 			addBot(bot);
-			this.ctSim.addBot(new BotInfo("Test"+Math.round(Math.random()*10), "CTest", bot, new DefBotPanel()));  //$NON-NLS-1$//$NON-NLS-2$
+			this.ctSim.addBot(new BotInfo(/*"Test"+Math.round(Math.random()*10), */"CTest", bot, new DefBotPanel()));  //$NON-NLS-1$//$NON-NLS-2$
 		} else
 			try {
 				con.disconnect();

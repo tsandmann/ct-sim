@@ -45,7 +45,8 @@ public class CtBotSimTest extends CtBotSim {
 	 * @param name Der Name des Bot
 	 * @param pos Position
 	 * @param head Blickrichtung
-	 */	public CtBotSimTest(World w, String name, Point3d pos, Vector3d head) {
+	 */
+	public CtBotSimTest(World w, String name, Point3d pos, Vector3d head) {
 		super(w, name, pos, head);
 		
 		this.world = w;

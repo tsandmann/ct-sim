@@ -90,15 +90,20 @@ public abstract class Bot extends AliveObstacle{
 	 * @param position Position  
 	 * @param heading Blickrichtung
 	 */
-	public Bot(Point3d position, Vector3d heading) {
+	public Bot(String name, Point3d position, Vector3d heading) {
 	 	
-		super(position, heading);
+		super(name, position, heading);
 		
 	 	// Zu diesem Zeitpunkt ist die ganze 3D-Repraesentation bereits aufgebaut
 //		createViewingPlatform();
 		
 		this.posHead = new BotPosition(this.getName(), this.getPosition(), this.getHeading()) {
 
+			@Override
+			public String getName() {
+				return Bot.this.getName();
+			}
+			
 			@Override
 			public Point3d getRelPosition() {
 				

@@ -56,8 +56,6 @@ public abstract class CtBot extends Bot {
 	/** Bodenfreiheit des Bots [m] */
 	public static final double BOT_GROUND_CLEARANCE = 0.015d;
 	
-	private String name;
-	
 	@SuppressWarnings("unused")
 	private Bounds bounds;
 	
@@ -76,9 +74,7 @@ public abstract class CtBot extends Bot {
 	 */
 	public CtBot(String n, Point3d pos, Vector3d head) {
 		
-		super(pos, head);
-		
-		this.name = n;
+		super(n, pos, head);
 		
 		initBounds();
 		initShape();
@@ -251,15 +247,6 @@ public abstract class CtBot extends Bot {
 
 		this.shape.setCapability(BranchGroup.ALLOW_DETACH);
 		this.shape.setCapability(Group.ALLOW_CHILDREN_WRITE);
-	}
-	
-	/** 
-	 * @see ctSim.model.AliveObstacle#getName()
-	 */
-	@Override
-	public String getName() {
-		
-		return this.name;
 	}
 	
 	/** 
