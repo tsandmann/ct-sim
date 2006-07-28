@@ -1,23 +1,16 @@
 Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 ================================================================================
 
-Offene Bugs:   
-------------
+Known Bugs:   
+-----------
 
-* Bug: Hinzufuegen von Bots auch ohne Welt moeglich!?
+* Hinzufuegen von Bots ist auch ohne Welt moeglich
 
-(?) Haben wir immer noch ein Speicherleck? Mir schien, dass der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
+* FB-Kommandos kommen gelegentlich nicht durch. Das passiert auch beim LabyrinthJudge, der eigentlich allen Bots zu Beginn das Fernbedienungssignal "5" schickt. 
 
-(?) Funktioniert der Maussensor?
+* Sensor-Daten werden oefters in einem Zyklus gesendet 
 
-(?) FB-Kommandos kommen gelegentlich nicht durch 
-
-(?) Sensor-Daten werden oefters in einem Zyklus gesendet 
-
-(?) wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
-
-* Durch die staendigen Ausgaben bei Unfaellen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren koennte das der andere Bot sich nicht mehr bewegt.
-  -> Das ist wohl das performante Java-IO; was soll man da jetzt machen?
+* wenn ct-Bot beendet wird (TCP-Verbindung beendet), wird der Bot nicht aus der Welt entfernt
 
 * Appearances werden noch nicht wieder gesetzt!
 
