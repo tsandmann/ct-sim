@@ -63,7 +63,7 @@ public class Console extends Box implements DebugWindow {
 	/** 
 	 * @see ctSim.view.DebugWindow#print(java.lang.String)
 	 */
-	public void print(String str) {
+	public synchronized void print(String str) {
 		
 		this.console.append(str);
 		this.console.setCaretPosition(this.console.getText().length());
@@ -72,7 +72,7 @@ public class Console extends Box implements DebugWindow {
 	/** 
 	 * @see ctSim.view.DebugWindow#println(java.lang.String)
 	 */
-	public void println(String str) {
+	public synchronized void println(String str) {
 		
 		this.console.append(str);
 		this.console.append("\n"); //$NON-NLS-1$
