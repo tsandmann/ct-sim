@@ -1,9 +1,10 @@
 Changelog fuer c't-Sim
 ======================
+2006-07-28 Felix Beckwermert [felix@beckwermert.de]: TestServer.java eingefuehrt
 
 2006-08-01 Markus Stoeber [mst@heise.de]: 
 
-2006-08-01 Markus Stoeber [mst@heise.de]: In der Controller reset()-Funktion unpause() auskommentiert und nur die wichtigsten Funktionen darauf übernommen um Debug Ausgaben zu sparen.
+2006-08-01 Markus Stoeber [mst@heise.de]: In der Controller reset()-Funktion unpause() auskommentiert und nur die wichtigsten Funktionen darauf ï¿½bernommen um Debug Ausgaben zu sparen.
 
 2006-07-28 Felix Beckwermert [felix@beckwermert.de]: Bot-Name wird in FB angezeigt
 
