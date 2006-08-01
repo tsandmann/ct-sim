@@ -1,6 +1,8 @@
 Changelog fuer c't-Sim
 ======================
-2006-07-28 Felix Beckwermert [felix@beckwermert.de]: TestServer.java eingefuehrt
+2006-08-01 Benjamin Benz [bbe@heise.de]: Testserver ueberatrbeitet, ports wieder auf 10001
+
+2006-08-01 Felix Beckwermert [felix@beckwermert.de]: TestServer.java eingefuehrt
 
 2006-08-01 Markus Stoeber [mst@heise.de]: 
 

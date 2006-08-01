@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
 public class TestServer implements Runnable {
 	
 	public static final String  HOST        = "localhost";
-	public static final int     PORT        = 36721;
+	public static final int     PORT        = 10001;
 	
 	/* 
 	 * Content, der hin und her geschickt wird...
@@ -127,9 +127,9 @@ public class TestServer implements Runnable {
 			
 			System.out.println("Connection wurde hergestellt...");
 			
-			while(this.thrd == thisThrd) {
-				
-				try {
+			try {
+				while(this.thrd == thisThrd) {
+					
 					if(TestServer.SERVER_TIME) {
 						
 						long time = System.nanoTime();
@@ -138,9 +138,12 @@ public class TestServer implements Runnable {
 						@SuppressWarnings("unused")
 						String str = this.in.readLine();
 						
-						System.out.println(String.format("SERVER: Antwort nach " +
-														//"%9d ns", (System.nanoTime()-time)));
-														"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
+						if (str != null)
+							System.out.println(String.format("SERVER: Antwort nach " +
+															//"%9d ns", (System.nanoTime()-time)));
+															"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
+						else
+							throw (new IOException("Stream ends here or connection broken"));
 						
 					} else {
 						this.out.println(this.in.readLine());
@@ -148,14 +151,14 @@ public class TestServer implements Runnable {
 					
 					if(this.worker != null)
 						this.worker.waitOnWorker();
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
+					
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 			this.out.close();
