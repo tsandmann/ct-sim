@@ -246,8 +246,6 @@ public class TestServer implements Runnable {
 		// Initialisiert Latches für den "nächsten" Zyklus
 		public synchronized void reinit() {
 			
-			System.out.println("Worker zählt runter...");
-			
 			CountDownLatch start = this.start;
 			
 			this.start = new CountDownLatch(1);
