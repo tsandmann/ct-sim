@@ -3,6 +3,9 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 Known Bugs:   
 -----------
+* Bei neuem Welt-Generieren in einem Rennen wird die Zeit öffters ins neue Level mit übernommen 
+
+* Maussensor liefert bei kleinen Geschwindigkeiten (PWM < 4) keine Werte
 
 * Hinzufuegen von Bots ist auch ohne Welt moeglich
 

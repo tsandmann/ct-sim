@@ -614,7 +614,9 @@ public class CtSimFrame extends JFrame {
 	
 	private void cmdRandomWorldClicked() {
 		
-		this.closeWorld();
+		this.closeWorld();		
+		
+			
 				
 		String fileContent = ParcoursGenerator.generateParc();
 		
@@ -791,6 +793,8 @@ public class CtSimFrame extends JFrame {
 		
 		this.split.resetToPreferredSizes();
 		
+		//Ausgabe macht nur Sinn, wenn überhaupt ein Bot da ist.
+		if(this.controller.getParticipants()>1) 
 		Debug.out.println("Alle Bots entfernt.");
 	}
 	
@@ -837,6 +841,8 @@ public class CtSimFrame extends JFrame {
 		
 		this.stopWorld();
 		
+		
+		
 		//this.world.die();
 		
 		// TODO: ganz haesslich!
@@ -856,6 +862,8 @@ public class CtSimFrame extends JFrame {
 		//this.controller = null;
 		
 		Debug.out.println("Welt wurde geschlossen."); //$NON-NLS-1$
+		
+		
 	}
 	
 	/**

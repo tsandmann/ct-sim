@@ -416,6 +416,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		Debug.out.println("Alive Obstacle \""+this.getName()+"\" stirbt..."); //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO: ???
 		//cleanup();
+		
+		
 	}
 
 	/**

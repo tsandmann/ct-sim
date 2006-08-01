@@ -402,9 +402,11 @@ public final class Controller implements Runnable {
 	/**
 	 * Laesst Controller pausieren
 	 */
+	
 	public void pause() {
 		
-		this.pause = true;
+			this.pause = true;
+			
 	}
 	
 	/**
@@ -525,9 +527,14 @@ public final class Controller implements Runnable {
 	public void reset() {
 		
 		// TODO: Damit �berhaupt eine Thrd vorhanden ist, diesen Starten:
-		this.unpause();
+					
 		
-		// TODO: Bots nur "zur�ckstellen"???
+		this.start();
+		
+		this.pause = false;
+			
+		
+		// TODO: Bots nur "zurueckstellen"???
 		this.stop();
 		
 		this.judge.reinit();
