@@ -174,6 +174,7 @@ public class TestServer implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			System.exit(-1);
 		}
 	}
 	
