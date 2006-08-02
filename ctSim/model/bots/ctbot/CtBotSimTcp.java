@@ -170,7 +170,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		
-		this.rc5 = new RemoteControlSensor("RC für '"+this.getName()+"'", new Point3d(), new Vector3d()); //$NON-NLS-1$
+		this.rc5 = new RemoteControlSensor("RC fï¿½r '"+this.getName()+"'", new Point3d(), new Vector3d()); //$NON-NLS-1$
 		
 		this.addSensor(this.encL);
 		this.addSensor(this.encR);
@@ -317,11 +317,11 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 *            die Laenge der Strecke in Metern
 	 * @return Anzahl der Dots
 	 */
-	private int meter2Dots(double distance) {
+	private double meter2Dots(double distance) {
 		// distance ist in Metern angegeben,
 		// * 100 macht daraus cm; 2,54 cm sind ein Inch,
 		// anschliessend Multiplikation mit der Aufloesung des Maussensors
-		return (int) ((distance * 100 / 2.54) * SENS_MOUSE_DPI);
+		return distance * 100 / 2.54 * SENS_MOUSE_DPI;
 	}
 	
 	/**
@@ -460,6 +460,10 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		}
 	}
 
+	/** Puffer fuer kleine Mausbewegungen */
+	private double deltaXRest=0;
+	/** Puffer fuer kleine Mausbewegungen */
+	private double deltaYRest=0;
 	
 	@SuppressWarnings({"unchecked","boxing"})
 	private void calcPos() {
@@ -529,8 +533,15 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			
 			
 			// TODO: nach unten!
-			this.mouseX = meter2Dots(2 * _gamma * SENS_MOUSE_DIST_Y);
-			this.mouseY = meter2Dots(moveDistance);
+			double tmp = meter2Dots(2 * _gamma * SENS_MOUSE_DIST_Y) + deltaXRest;
+			int deltaX = (int) Math.floor(tmp);
+			deltaXRest = tmp - deltaX;
+			this.mouseX = deltaX; 
+
+			tmp = meter2Dots(moveDistance) + deltaYRest;
+			int deltaY = (int) Math.floor(tmp);
+			deltaYRest = tmp - deltaY;
+			this.mouseY = deltaY;
 			
 			
 			int oldState = this.getObstState();

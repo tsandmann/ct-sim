@@ -294,7 +294,7 @@ public final class Controller implements Runnable {
 				
 				//System.out.println("Raus: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				
-				long simTime = (world.getRealTime()-realTimeBegin);
+			//	long simTime = (world.getRealTime()-realTimeBegin);
 				
 				// DoneSignal vorbereiten
 				doneSignal = new CountDownLatch(this.botList.size());

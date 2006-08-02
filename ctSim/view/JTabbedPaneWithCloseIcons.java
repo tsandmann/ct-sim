@@ -25,6 +25,11 @@ import java.awt.event.*;
  */
 public class JTabbedPaneWithCloseIcons extends JTabbedPane implements
 		MouseListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public JTabbedPaneWithCloseIcons() {
 		super();
 		addMouseListener(this);
