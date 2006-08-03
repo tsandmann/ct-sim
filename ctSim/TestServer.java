@@ -30,7 +30,7 @@ public class TestServer implements Runnable {
 	 * Ansonsten C-Client "von Hand" starten...
 	 * 
 	 */
-	public static final boolean JAVA_CLIENT = false;
+	public static final boolean JAVA_CLIENT = true;
 	
 	/* 
 	 * Wie oft soll der Java-Client "flushen"?
@@ -39,7 +39,7 @@ public class TestServer implements Runnable {
 	 * ca. jedes "Command"...
 	 * 
 	 */
-	public static final boolean FLUSH_ALL   = true;
+	public static final boolean FLUSH_ALL   = false;
 	
 	/* 
 	 * TRUE: Server -> Client -> Server
@@ -239,7 +239,7 @@ public class TestServer implements Runnable {
 			System.exit(-1);
 		}
 		
-		// Erweiterung für Connection-Gedöns aus dem Bot:
+		// Erweiterung fï¿½r Connection-Gedï¿½ns aus dem Bot:
 		
 		// Kopiert aus Connection:
 		public void send(byte sendByte[]) throws IOException {
@@ -261,7 +261,7 @@ public class TestServer implements Runnable {
 			in.readFully( b, 0, len);
 		}
 		
-		// Connection-Gedöns aus dem Bot
+		// Connection-Gedï¿½ns aus dem Bot
 		private int seq = 0;
 		
 		private synchronized void transmitSensors() {
@@ -667,7 +667,7 @@ class TestClient implements Runnable {
 		while(cmd != 60) {
 			try {
 				cmd = this.in.read();
-				//System.out.println(cmd);
+				System.out.println(cmd);
 				this.out.write(cmd);
 				this.out.flush();
 			} catch (IOException e) {
@@ -675,7 +675,7 @@ class TestClient implements Runnable {
 				System.exit(-1);
 			}
 		}
-		
+		int c = 1;
 		while(this.clientThrd == thisThrd) {
 			
 			try {
@@ -695,10 +695,14 @@ class TestClient implements Runnable {
 //				}
 				
 				int str = this.in.read();
-				//System.out.println(str);
+				//if(c==1) {
+				System.out.println(c+".: "+str);
 				this.out.write(str);
-				if(TestServer.FLUSH_ALL || str == 60)
+				//}
+				if(TestServer.FLUSH_ALL || str == 60) {
 					this.out.flush();
+					c++;
+				}
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
