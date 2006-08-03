@@ -1,14 +1,21 @@
 Changelog fuer c't-Sim
 ======================
+
+2006-08-03 Felix Beckwermert [felix@beckwermert.de]: Tabs haben "X"e zum schließen (funktonieren aber noch nicht korrekt)
+
+2006-08-03 Felix Beckwermert [felix@beckwermert.de]: Timing-Ausagben eingebaut
+
+2006-08-03 Felix Beckwermert [felix@beckwermert.de]: Alte Ctrl.-Sync wieder hergestellt
+
+2006-08-03 Felix Beckwermert [felix@beckwermert.de]: TestServer erweiter um "korrekte" Connection (die des Bots)
+
 2006-08-02 Benjamin Benz [bbe@heise.de]: Maussensor macht keine Rundungsfehler mehr, da er sich die "Reste" fuer den naechsten Zyklus merkt
+
+2006-08-01 Markus Stoeber [mst@heise.de]: In der Controller reset()-Funktion unpause() auskommentiert und nur die wichtigsten Funktionen darauf uebernommen um Debug Ausgaben zu sparen.
 
 2006-08-01 Benjamin Benz [bbe@heise.de]: Testserver ueberatrbeitet, ports wieder auf 10001
 
-2006-08-01 Felix Beckwermert [felix@beckwermert.de]: TestServer.java eingefuehrt
-
-2006-08-01 Markus Stoeber [mst@heise.de]: 
-
-2006-08-01 Markus Stoeber [mst@heise.de]: In der Controller reset()-Funktion unpause() auskommentiert und nur die wichtigsten Funktionen darauf uebernommen um Debug Ausgaben zu sparen.
+2006-08-01 Felix Beckwermert [felix@beckwermert.de]: TestServer hinzugefügt
 
 2006-07-28 Felix Beckwermert [felix@beckwermert.de]: Bot-Name wird in FB angezeigt
 
