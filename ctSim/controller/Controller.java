@@ -102,7 +102,7 @@ public final class Controller implements Runnable {
 	 * Wird von invokeBot(Name, file) gesetzt und dann von
 	 * getNewBotName() zugewiesen
 	 */
-	private String nextBotName= null; 
+	private String nextBotName= null;
 	
 	/**
 	 * Anzahl der Bots im System
@@ -259,10 +259,35 @@ public final class Controller implements Runnable {
 		startSignal = new CountDownLatch(1);
 		doneSignal = new CountDownLatch(botList.size());
 		
+		Debug.out.println(" Update    | Transmit  | Receive   | Process   | Bot (all) | World etc.");
+		Debug.out.println("-----------|-----------|-----------|-----------|-----------|-----------");
+		
+		long time = System.nanoTime();
+		
 		// TODO bitte den Zeit-Thread evtl. wieder in die Welt zurück verschieben
 		while(this.ctrlThread == thisThread) {
 			try {
-				long realTimeBegin = world.getRealTime();
+			
+				// Warte, bis alle Bots fertig sind und auf die nächste Aktualisierung warten
+				// breche ab, wenn die Bots zu lange brauchen !
+				//doneSignal.await(100, TimeUnit.MILLISECONDS);
+				
+				boolean b = doneSignal.await(10000, TimeUnit.MILLISECONDS);
+				
+//				Debug.out.println("  +- Bots sind fertig (?):                         "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
+				Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
+				
+				if (!b)
+					Debug.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEUER ZYKLUS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				else Debug.out.println("----------------------------- NEUER ZYKLUS -----------------------------");
+				
+				//Debug.out.println("  +- Bots sind fertig (?):                         "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
+				
+				time = System.nanoTime();
+				
+				CountDownLatch startSig = this.startSignal;
+			
+				//long realTimeBegin = world.getRealTime();
 
 				//System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				
@@ -271,7 +296,10 @@ public final class Controller implements Runnable {
 				// Update World
 				// TODO: ganz dirty!
 				ctSim.update(world.getSimulTime());
-								
+				
+//				Debug.out.println("  +- Welt ist fertig:                              "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
+				Debug.out.println("                                                            "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
+				
 				// TODO: Vor Bots adden?
 				if(this.pause) {
 					synchronized(this) {
@@ -279,7 +307,8 @@ public final class Controller implements Runnable {
 					}
 				}
 				
-			
+				time = System.nanoTime();
+				
 //				ctSim.getWorldView().getWorldCanvas().stopRenderer();
 				// Die ganze Simulation aktualisieren
 				world.updateSimulation();
@@ -294,38 +323,38 @@ public final class Controller implements Runnable {
 				
 				//System.out.println("Raus: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				
-			//	long simTime = (world.getRealTime()-realTimeBegin);
+//				long simTime = (world.getRealTime()-realTimeBegin);
 				
 				// DoneSignal vorbereiten
-				doneSignal = new CountDownLatch(this.botList.size());
-				
+				//doneSignal = new CountDownLatch(this.botList.size());
+				//time = System.nanoTime();
 //				System.out.println("Release AliveObstacles");
 				// Alle Bots wieder freigeben
-				startSignal.countDown();
+				startSig.countDown();
 				// und startsignal wieder scharf machen
-				startSignal = new CountDownLatch(1);
+				//startSignal = new CountDownLatch(1);
 				
 				
-				// Warte, bis alle Bots fertig sind und auf die nächste Aktualisierung warten
-				// breche ab, wenn die Bots zu lange brauchen !
-//				doneSignal.await();
-				if (!doneSignal.await(world.getBaseTimeReal()*20, TimeUnit.MILLISECONDS))
-					Debug.out.println("Problem: Bots antworten auch nach: "+world.getBaseTimeVirtual()*20+" ms nicht. Evtl. TR erhoehen!");
+				
 //				else
 //					System.out.println("AliveObstacles done");
 				
 //				ctSim.getWorldView().getWorldCanvas().startRenderer();
 //				long waitTime = (world.getRealTime()-realTimeBegin) - simTime;
 				
-				long elapsedTime= world.getRealTime()-realTimeBegin;
-				long timeToSleep = world.getBaseTimeReal() - elapsedTime;
-				if ( timeToSleep > 0)
-					Thread.sleep(timeToSleep);
-				else {
+//				long elapsedTime= world.getRealTime()-realTimeBegin;
+//				long timeToSleep = world.getBaseTimeReal() - elapsedTime;
+				
+				Thread.sleep(this.world.getBaseTimeReal());
+				
+				// TODO: WTF!?!?!?
+//				if ( timeToSleep > 0)
+//					Thread.sleep(timeToSleep);
+				//else {
 		//			Debug.out.println("Info: Sim schnappt sich " +elapsedTime+" ms (Sim="+simTime+" ms)" + "statt "+world.getBaseTimeReal()+" ms ==> kein sleep, aber kein Problem");
 					//		""+ -timeToSleep + "ms laenger als baseTimeReal! ==> no sleep");
 					//ErrorHandler.error
-				}
+				//}
 				
 				//System.out.println("Zyklus brauchte: "+ (world.getRealTime()-realTimeBegin) +" ms. ("+simTime+" ms simul, "+waitTime+" ms wait, " +timeToSleep+" ms sleep)");
 				//System.out.println("Raus: "+this.doneSignal.getCount()+" / "+this.botList.size());
@@ -378,6 +407,9 @@ public final class Controller implements Runnable {
 			this.world.removeAliveObstacle(b);
 		}
 		
+		this.doneSignal = new CountDownLatch(this.botList.size());
+		this.startSignal = new CountDownLatch(1);
+		
 		for(Bot b : this.botsToStart) {
 			b.start();
 			// TODO:
@@ -388,15 +420,23 @@ public final class Controller implements Runnable {
 		this.botsToStart = new ArrayList<Bot>();
 	}
 	
+	private long botT = System.nanoTime();
+	
 	/**	 
 	 * @throws InterruptedException
 	 */
 	public void waitOnController() throws InterruptedException {
-		// liefer ein Done ab
-		doneSignal.countDown();
 		
-		// und warte auf die erlaubnis weiterzu machen
-		startSignal.await();
+		Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-botT)/1000000000.));
+		
+		CountDownLatch doneSig = this.doneSignal;
+		CountDownLatch startSig = this.startSignal;
+		
+		doneSig.countDown();
+		
+		startSig.await();
+		
+		botT = System.nanoTime();
 	}
 	
 	/**

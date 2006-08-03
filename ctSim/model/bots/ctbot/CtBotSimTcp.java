@@ -339,6 +339,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	@SuppressWarnings({"unchecked","boxing"})
 	private synchronized void transmitSensors() {
 		try {
+			
 //			Command command = new Command(Command.CMD_SENS_IR,
 //			1000,
 //			1000, seq++);
@@ -438,7 +439,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //			System.out.println(world.getRealTime()+"ms: requesting @"+lastTransmittedSimulTime+" ms");
 
 //			sendTime=System.nanoTime()/1000;
-			
 			
 		} catch (IOException IoEx) {
 			ErrorHandler.error("Error during sending Sensor data, dieing: " //$NON-NLS-1$
@@ -800,30 +800,39 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	@Override
 	protected void work() {
 		
-//		while (1==1){
+//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
+//			 + "             | +- Sensor-Werte werden gesendet");
+//		long time = System.nanoTime();
+//		transmitSensors();
+//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
+//			 + "             | +- Sensor-Werte wurden gesendet:               "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
+//		
+//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
+//			 + "             | +- Aktuator-Werte werden empfangen...");
+//		time = System.nanoTime();
+//		receiveCommands();
+//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
+//			 + "             | +- Aktuator-Werte wurden empfangen:            "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
+//		
+//		
+//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
+//			 + "             | +- Aktuator-Werte werden bearbeitet...");
+//		time = System.nanoTime();
+//		processCommands();
+//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
+//			 + "             | +- Aktuator-Werte wurden bearbeitet:           "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 		
+		long time = System.nanoTime();
 		transmitSensors();
-
-
-//		int timeout= 200; //world.getBaseTimeVirtual() -2;
+		Debug.out.println("            "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
 		
-//		try {
-//		try {
-			receiveCommands();
-			processCommands();
-//		} catch (InterruptedException ex) {
-//			ErrorHandler.error("Bot "+getName()+" hat innerhalb des Timeouts nicht geliefert");
-//		}
+		time = System.nanoTime();
+		receiveCommands();
+		Debug.out.println("                        "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 		
-			// Signal wird in Store Kommando gesetzt und in processCommands resettet
-//			if (waitForCommands.await(timeout,TimeUnit.MILLISECONDS))
-//			else {
-//				ErrorHandler.error("Bot "+getName()+" hat innerhalb des Timeouts ("+timeout+" ms) Frame "+lastTransmittedSimulTime+" ms nicht geliefert");
-//			}
-//		} catch (InterruptedException e) {
-//			ErrorHandler.error("CtBotSimTcp.work() wurde unterbrochen beim warten auf Kommandos "+e);
-//		}
-//		}
+		time = System.nanoTime();
+		processCommands();
+		Debug.out.println("                                    "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 	}
 	
 	// LOG:
@@ -964,7 +973,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //			System.out.println("Put CMD: "+command.getCommand()+" DataL: "+command.getDataL()+" Seq: "+command.getSeq());
 
 			commandBuffer.add(command);
-			
+			//System.out.println(command.toString());
 		//	System.out.println("Command: "+(char)command.getCommand()+"  -  "+(char)command.getSubcommand());
 				// Das DONE-kommando ist das letzte in einem Datensatz und beendet ein Paket
 			if (command.getCommand() ==  Command.CMD_DONE){ 
@@ -1003,14 +1012,14 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			
 	}	
 	
-	long t1, t2;
+	//long t1, t2;
 	public void receiveCommands() {
 //		long start, duration;
 		int valid = 0;
 		int run=0;
 		
 
-		t1= System.nanoTime()/1000;
+		//t1= System.nanoTime()/1000;
 
 //		long aussen= t1-t2;
 		
@@ -1031,7 +1040,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			}
 		}
 		
-		t2 = System.nanoTime()/1000;
+		//t2 = System.nanoTime()/1000;
 //		System.out.println("zeit in receiveCommands: "+(t2-t1)+" us   --  Zeit ausserhalb :"+aussen+ " us" );
 	//	die();
 	}

@@ -1,12 +1,17 @@
 package ctSim;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
+
+import ctSim.model.Command;
 
 public class TestServer implements Runnable {
 	
@@ -28,11 +33,20 @@ public class TestServer implements Runnable {
 	public static final boolean JAVA_CLIENT = false;
 	
 	/* 
+	 * Wie oft soll der Java-Client "flushen"?
+	 * 
+	 * Wenn TRUE, dann jedes byte, sonst
+	 * ca. jedes "Command"...
+	 * 
+	 */
+	public static final boolean FLUSH_ALL   = true;
+	
+	/* 
 	 * TRUE: Server -> Client -> Server
 	 * FALSE: Client -> Server -> Client
 	 * 
 	 */
-	public static final boolean SERVER_TIME = true;
+//	public static final boolean SERVER_TIME = true;
 	
 	/* 
 	 * Soll der Server einen Worker-Thread
@@ -74,7 +88,9 @@ public class TestServer implements Runnable {
 	 * (wenn eingestellt Ã¼ber USE_WORKER) gewartet...
 	 * 
 	 */
-	class ServerCom implements Runnable {
+	class ServerCom
+			extends Connection
+			implements Runnable {
 		
 		private Socket socket;
 		
@@ -82,8 +98,11 @@ public class TestServer implements Runnable {
 		
 		private Worker worker;
 		
-		private PrintWriter out;
-		private BufferedReader in;
+//		private PrintWriter out;
+//		private BufferedReader in;
+		
+		private DataInputStream  in;
+		private DataOutputStream out;
 		
 		ServerCom(Socket socket) {
 			
@@ -94,10 +113,12 @@ public class TestServer implements Runnable {
 			
 			try {
 				this.socket = socket;
-				this.out = new PrintWriter(socket.getOutputStream(), true);
-				this.in = new BufferedReader(
-						new InputStreamReader(
-						socket.getInputStream()));
+//				this.out = new PrintWriter(socket.getOutputStream(), true);
+//				this.in = new BufferedReader(
+//						new InputStreamReader(
+//						socket.getInputStream()));
+				this.in  = new DataInputStream(this.socket.getInputStream());
+				this.out = new DataOutputStream(this.socket.getOutputStream());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -120,7 +141,7 @@ public class TestServer implements Runnable {
 			
 			dummy.interrupt();
 		}
-
+		
 		public void run() {
 			
 			Thread thisThrd = Thread.currentThread();
@@ -128,40 +149,81 @@ public class TestServer implements Runnable {
 			System.out.println("Connection wurde hergestellt...");
 			
 			try {
-				while(this.thrd == thisThrd) {
+				send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
+				System.out.println("Willkommen gesendet...");
+			} catch (IOException e2) {
+				e2.printStackTrace();
+				System.exit(-1);
+			}
+			
+			System.out.println("Warten auf willkommen...");
+			
+			Command cmd = new Command();
+			try {
+				if (cmd.readCommand(this) == 0) {
 					
-					if(TestServer.SERVER_TIME) {
-						
-						long time = System.nanoTime();
-						
-						this.out.println("Test");
-						@SuppressWarnings("unused")
-						String str = this.in.readLine();
-						
-						if (str != null)
-							System.out.println(String.format("SERVER: Antwort nach " +
-															//"%9d ns", (System.nanoTime()-time)));
-															"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
-						else
-							throw (new IOException("Stream ends here or connection broken"));
-						
+					if (cmd.getCommand() == Command.CMD_WELCOME) {
+						System.out.println("Willkommen...");
 					} else {
-						this.out.println(this.in.readLine());
+						System.out.println("Nix willkommen...");
+						System.exit(-1);
 					}
+				} else {
+					System.out.println("Fehler: Kein Willkommen!");
+					System.exit(-1);
+				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				System.exit(-1);
+			}
+			
+			while(this.thrd == thisThrd) {
+				try {
+					
+//					if(TestServer.SERVER_TIME) {
+//						
+//						long time = System.nanoTime();
+//						
+//						this.out.println("Test");
+//						@SuppressWarnings("unused")
+//						String str = this.in.readLine();
+//						
+//						if (str != null)
+//							System.out.println(String.format("SERVER: Antwort nach " +
+//															//"%9d ns", (System.nanoTime()-time)));
+//															"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
+//						else
+//							//throw (new IOException("Stream ends here or connection broken"));
+//							break;
+//						
+//					} else {
+//						this.out.println(this.in.readLine());
+//					}
+					
+					long time = System.nanoTime();
+					
+					transmitSensors();
+					receiveCommands();
+					
+					System.out.println(String.format("SERVER: Antwort nach " +
+							//"%9d ns", (System.nanoTime()-time)));
+							"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
 					
 					if(this.worker != null)
 						this.worker.waitOnWorker();
+				
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-					
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			
-			this.out.close();
+			try {
+				this.out.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			try {
 				this.in.close();
 			} catch (IOException e) {
@@ -175,6 +237,186 @@ public class TestServer implements Runnable {
 				e.printStackTrace();
 			}
 			System.exit(-1);
+		}
+		
+		// Erweiterung für Connection-Gedöns aus dem Bot:
+		
+		// Kopiert aus Connection:
+		public void send(byte sendByte[]) throws IOException {
+			try {
+				synchronized (this.out) {
+					this.out.write(sendByte);
+					this.out.flush(); // write dos
+				}
+			} catch (IOException iOEx) {
+				throw iOEx;
+			}
+		}
+		
+		public void read(byte[] b) throws IOException {
+			in.readFully( b, 0, b.length);
+		}
+
+		public void read(byte[] b, int len) throws IOException {
+			in.readFully( b, 0, len);
+		}
+		
+		// Connection-Gedöns aus dem Bot
+		private int seq = 0;
+		
+		private synchronized void transmitSensors() {
+			try {
+				
+				Command command = new Command();
+				command.setCommand(Command.CMD_SENS_IR);
+				command.setDataL(1000);
+				command.setDataR(1000);
+//				command.setDataL(((Double)this.irL.getValue()).intValue());
+//				command.setDataR(((Double)this.irR.getValue()).intValue());
+				command.setSeq(this.seq++);
+				this.send(command.getCommandBytes());
+				
+				command.setCommand(Command.CMD_SENS_ENC);
+//				command.setDataL((Integer)this.encL.getValue());
+//				command.setDataR((Integer)this.encR.getValue());
+				command.setDataL(1000);
+				command.setDataR(1000);
+				command.setSeq(this.seq++);
+				this.send(command.getCommandBytes());
+				
+				command.setCommand(Command.CMD_SENS_BORDER);
+//				command.setDataL(((Short)this.borderL.getValue()).intValue());
+//				command.setDataR(((Short)this.borderR.getValue()).intValue());
+				command.setDataL((short)1000);
+				command.setDataR((short)1000);
+				command.setSeq(this.seq++);
+				this.send(command.getCommandBytes());
+				
+				// TODO
+				command.setCommand(Command.CMD_SENS_DOOR);
+				command.setDataL(0);
+				command.setDataR(0);
+				command.setSeq(this.seq++);
+				this.send(command.getCommandBytes());
+
+				command.setCommand(Command.CMD_SENS_LDR);
+//				command.setDataL((Integer)this.lightL.getValue());
+//				command.setDataR((Integer)this.lightR.getValue());
+				command.setDataL(1000);
+				command.setDataR(1000);
+				command.setSeq(this.seq++);
+				this.send(command.getCommandBytes());
+				
+				command.setCommand(Command.CMD_SENS_LINE);
+//				command.setDataL(((Short)this.lineL.getValue()).intValue());
+//				command.setDataR(((Short)this.lineR.getValue()).intValue());
+				command.setDataL((short) 1000);
+				command.setDataR((short) 1000);
+				command.setSeq(this.seq++);
+				this.send(command.getCommandBytes());
+				
+//				if(this.getObstState() != OBST_STATE_NORMAL) {
+//					this.mouseX = 0;
+//					this.mouseY = 0;
+//				}
+				command.setCommand(Command.CMD_SENS_MOUSE);
+//				command.setDataL(this.mouseX);
+//				command.setDataR(this.mouseY);
+				command.setDataL(0);
+				command.setDataR(0);
+				command.setSeq(this.seq++);
+				this.send(command.getCommandBytes());
+				
+				// TODO: nur fuer real-bot
+				command.setCommand(Command.CMD_SENS_TRANS);
+				command.setDataL(0);
+				command.setDataR(0);
+				command.setSeq(this.seq++);
+				this.send(command.getCommandBytes());
+
+//				Object rc5 = this.rc5.getValue();
+//				if(rc5 != null) {
+//					
+//					Integer val = (Integer)rc5;
+//					
+//					if(val != 0) {
+//						command.setCommand(Command.CMD_SENS_RC5);
+//						command.setDataL(val);
+//						command.setDataR(42);
+//						command.setSeq(seq++);
+//						this.send(command.getCommandBytes());
+//					}
+//				}
+				
+				// TODO: nur fuer real-bot
+				command.setCommand(Command.CMD_SENS_ERROR);
+				command.setDataL(0);
+				command.setDataR(0);
+				command.setSeq(this.seq++);
+				this.send(command.getCommandBytes());
+
+				
+//				lastTransmittedSimulTime= (int)world.getSimulTime();
+//				lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
+				command.setCommand(Command.CMD_DONE);
+//				command.setDataL(lastTransmittedSimulTime);
+				command.setDataL(10);
+				command.setDataR(0);
+				command.setSeq(this.seq++);
+				this.send(command.getCommandBytes());
+				
+			} catch (IOException IoEx) {
+				ErrorHandler.error("Error during sending Sensor data, dieing: " //$NON-NLS-1$
+						+ IoEx);
+//				die();
+				System.exit(-1);
+			}
+		}
+		
+		public void receiveCommands() {
+			
+			int valid = 0;
+			int run   = 0;
+			
+			while (run==0) {
+				try {
+					Command command = new Command();
+					
+					valid = command.readCommand(this);
+					
+					if (valid == 0) {// Kommando ist in Ordnung
+						run = storeCommand(command);
+					} else
+						System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
+				} catch (IOException ex) {
+					ErrorHandler.error("Verbindung unterbrochen -- Bot stirbt: " + ex); //$NON-NLS-1$
+//					die();
+					System.exit(-1);
+				}
+			}
+		}
+		
+		private ArrayList<Command> commandBuffer = new ArrayList<Command>();
+		CountDownLatch waitForCommands = new CountDownLatch(1);
+		
+		public int storeCommand(Command command) {
+			int result=0;
+			synchronized (commandBuffer) {
+				
+				commandBuffer.add(command);
+				
+				if (command.getCommand() ==  Command.CMD_DONE){ 
+					
+					//if (command.getDataL() == lastTransmittedSimulTime){
+					if (command.getDataL() == 10){
+						
+						result = 1;
+						
+						waitForCommands.countDown();
+					}
+				}
+			}
+			return result;
 		}
 	}
 	
@@ -420,23 +662,43 @@ class TestClient implements Runnable {
 		
 		System.out.println("Client ist hoch und rennen...");
 		
+		System.out.println("Warten und Senden willkommen...");
+		int cmd = 0;
+		while(cmd != 60) {
+			try {
+				cmd = this.in.read();
+				//System.out.println(cmd);
+				this.out.write(cmd);
+				this.out.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(-1);
+			}
+		}
+		
 		while(this.clientThrd == thisThrd) {
 			
 			try {
-				if(TestServer.SERVER_TIME) {
-					this.out.println(this.in.readLine());
-					
-				} else {
-					long time = System.nanoTime();
-					
-					this.out.println("Test");
-					@SuppressWarnings("unused")
-					String str = this.in.readLine();
-					
-					System.out.println(String.format("CLIENT: Antwort nach " +
-													//"%9d ns", (System.nanoTime()-time)));
-													"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
-				}
+//				if(TestServer.SERVER_TIME) {
+//					this.out.println(this.in.readLine());
+//					
+//				} else {
+//					long time = System.nanoTime();
+//					
+//					this.out.println("Test");
+//					@SuppressWarnings("unused")
+//					String str = this.in.readLine();
+//					
+//					System.out.println(String.format("CLIENT: Antwort nach " +
+//													//"%9d ns", (System.nanoTime()-time)));
+//													"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
+//				}
+				
+				int str = this.in.read();
+				//System.out.println(str);
+				this.out.write(str);
+				if(TestServer.FLUSH_ALL || str == 60)
+					this.out.flush();
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
