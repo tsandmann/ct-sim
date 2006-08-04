@@ -1,7 +1,8 @@
 Changelog fuer c't-Sim
 ======================
+2006-08-04 Timo Sandmann [mail@timosandmann.de]: ConfigManager fuer OS X erweitert
 
-2006-08-03 Felix Beckwermert [felix@beckwermert.de]: Tabs haben "X"e zum schließen (funktonieren aber noch nicht korrekt)
+2006-08-03 Felix Beckwermert [felix@beckwermert.de]: Tabs haben "X"e zum schlieï¿½en (funktonieren aber noch nicht korrekt)
 
 2006-08-03 Felix Beckwermert [felix@beckwermert.de]: Timing-Ausagben eingebaut
 
@@ -15,7 +16,7 @@ Changelog fuer c't-Sim
 
 2006-08-01 Benjamin Benz [bbe@heise.de]: Testserver ueberatrbeitet, ports wieder auf 10001
 
-2006-08-01 Felix Beckwermert [felix@beckwermert.de]: TestServer hinzugefügt
+2006-08-01 Felix Beckwermert [felix@beckwermert.de]: TestServer hinzugefï¿½gt
 
 2006-07-28 Felix Beckwermert [felix@beckwermert.de]: Bot-Name wird in FB angezeigt
 
