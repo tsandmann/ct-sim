@@ -102,6 +102,8 @@ public class ConfigManager {
 	public static String path2Os(String in){
 		if (System.getProperty("os.name").indexOf("Linux") >=0)
 			return botPathWin2Lin(in);
+		else if (System.getProperty("os.name").indexOf("OS X") >=0)
+			return botPathWin2Lin(in);
 		else
 			return botPathLin2Win(in);
 	}
