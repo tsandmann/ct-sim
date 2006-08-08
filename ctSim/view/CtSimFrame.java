@@ -841,7 +841,7 @@ public class CtSimFrame extends JFrame {
 		
 		this.stopWorld();
 		
-		
+		this.controller.closeWorld();
 		
 		//this.world.die();
 		

@@ -1,5 +1,10 @@
 Changelog fuer c't-Sim
 ======================
+
+2006-08-08 Felix Beckwermert [felix@beckwermert.de]: Bug-fixes...
+
+2006-08-08 Felix Beckwermert [felix@beckwermert.de]: App. werden wieder (wie fürher) verwendet
+
 2006-08-04 Timo Sandmann [mail@timosandmann.de]: ConfigManager fuer OS X erweitert
 
 2006-08-03 Felix Beckwermert [felix@beckwermert.de]: Tabs haben "X"e zum schlieï¿½en (funktonieren aber noch nicht korrekt)

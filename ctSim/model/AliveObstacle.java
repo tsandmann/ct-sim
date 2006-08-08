@@ -20,7 +20,6 @@ package ctSim.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.media.j3d.Appearance;
@@ -86,6 +85,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private TransformGroup transformgrp;
 	private Shape3D shape;
 	private List<ViewPlatform> views;
+	
+	// TODO:
+	private HashMap<String, Appearance> apps;
 	
 	/** Simultime beim letzten Aufruf */
 	private long lastSimulTime=0;
@@ -190,9 +192,14 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		if(map.isEmpty())
 			return;
 		
-		Iterator<Appearance> it = map.values().iterator();
+		// TODO: !?
+//		Iterator<Appearance> it = map.values().iterator();
+//		
+//		this.shape.setAppearance(it.next());
 		
-		this.shape.setAppearance(it.next());
+		this.apps = map;
+		
+		this.setAppearance(this.getObstState());
 	}
 	
 	/**
@@ -542,6 +549,26 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 */
 	public void setObstState(int state) {
 		this.obstState = state;
+		
+		// TODO:
+		this.setAppearance(state);
+	}
+	
+	private void setAppearance(int state) {
+		
+		// TODO:
+		if(this.apps == null || this.apps.isEmpty())
+			return;
+		
+		if(state == OBST_STATE_COLLISION
+				&& this.apps.containsKey("collision"))
+			this.shape.setAppearance(this.apps.get("collision"));
+		if(state == OBST_STATE_FALLING
+				&& this.apps.containsKey("falling"))
+			this.shape.setAppearance(this.apps.get("falling"));
+		if(state == OBST_STATE_NORMAL
+				&& this.apps.containsKey("normal"))
+			this.shape.setAppearance(this.apps.get("normal"));
 	}
 
 	/**

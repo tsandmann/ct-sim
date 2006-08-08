@@ -564,6 +564,13 @@ public final class Controller implements Runnable {
 			this.judge.setWorld(world);
 	}
 	
+	public void closeWorld() {
+		
+		this.reset();
+		
+		this.world = null;
+	}
+	
 	public void reset() {
 		
 		// TODO: Damit �berhaupt eine Thrd vorhanden ist, diesen Starten:
@@ -806,7 +813,7 @@ public final class Controller implements Runnable {
 			ErrorHandler.error("TCPConnection unterbrochen - Verbindung nicht moeglich: " + ex); //$NON-NLS-1$
 		}
 		
-		if (bot != null && this.judge.isAddAllowed()) {
+		if (bot != null && this.world != null && this.judge.isAddAllowed()) {
 			// TODO:
 			addBot(bot);
 			this.ctSim.addBot(new BotInfo(/*"Test"+Math.round(Math.random()*10), */"CTest", bot, new DefBotPanel()));  //$NON-NLS-1$//$NON-NLS-2$

@@ -3,36 +3,26 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 
 Known Bugs:   
 -----------
-* Bei neuem Welt-Generieren in einem Rennen wird die Zeit öffters ins neue Level mit übernommen 
 
 * Maussensor liefert bei kleinen Geschwindigkeiten (PWM < 4) keine Werte
-
-* Hinzufuegen von Bots ist auch ohne Welt moeglich
-
-* Probleme mit dem timeOut?
+  -> erledigt?
 
 (?) Haben wir immer noch ein Speicherleck? Mir schien, dass der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
 
 * FB-Kommandos kommen gelegentlich nicht durch. Das passiert auch beim LabyrinthJudge, der eigentlich allen Bots zu Beginn das Fernbedienungssignal "5" schickt. 
+  -> sollte nur passieren, wenn ein Bot ins timeout kommt (aktuell also eigentlich nicht mehr)
 
-* Sensor-Daten werden oefters in einem Zyklus gesendet 
-
-* wenn ct-Bot beendet wird (TCP-Verbindung beendet), wird der Bot nicht aus der Welt entfernt
-
-(?) Sensor-Daten werden oefters in einem Zyklus gesendet 
-
-(?) wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
-
-* Appearnaces werden noch nicht wieder gesetzt!
+* wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
 
 Requested Features:
 -------------------
 
-* Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe) --> wenn dieser der alten Struktur entspricht, werden auch wieder die richtigen Appearances aus der config gelesen
-Das Namensschema bitte aus der letzten Version des alten Sims uebernehmen. Ein Teil davon ist auch schon wieder eingebaut, so dass die Appearances wieder gelesen werden
-
+* Bei neuem Welt-Generieren in einem Rennen wird die Zeit öffters ins neue Level mit übernommen
+  -> bei mir nicht? kann da mal einer genauere angaben machen? (fbe)
 
 --- Alles oberhalb dieser Linie fuer naechstes Release fertigmachen!!! ---
+
+* Bot-Namen grausam
 
 * Grafiken fuer Fernbedienung (pek)
 
@@ -68,6 +58,22 @@ Der Sim findet sonst parcours.dtd nicht.
 
 ERLEDIGT:
 =========
+
+* Hinzufuegen von Bots ist auch ohne Welt moeglich (fbe)
+  -> erledigt
+
+* Appearnaces werden noch nicht wieder gesetzt! (fbe)
+
+* Sensor-Daten werden oefters in einem Zyklus gesendet
+  -> lag an mangelnder Sync.
+  -> behoben (fbe)
+
+* Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe) --> wenn dieser der alten Struktur entspricht, werden auch wieder die richtigen Appearances aus der config gelesen
+Das Namensschema bitte aus der letzten Version des alten Sims uebernehmen. Ein Teil davon ist auch schon wieder eingebaut, so dass die Appearances wieder gelesen werden
+  -> die tollen alten Strukturen sind da
+  -> die App. wird wie zuvor gesetzt
+
+* Probleme mit dem timeOut -> ist wohl jetzt erledigt? (fbe)
 
 * Bot-Name wird in FB angezeigt (fbe)
 
