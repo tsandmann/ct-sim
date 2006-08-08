@@ -66,14 +66,11 @@ import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.Command;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
-//import ctSim.model.bots.ctbot.CtBotRealCon;
-//import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.rules.DefaultJudge;
 import ctSim.model.rules.Judge;
 import ctSim.view.BotInfo;
 import ctSim.view.CtSimFrame;
-import ctSim.view.Debug;
 import ctSim.view.DefBotPanel;
 
 /**
@@ -259,10 +256,10 @@ public final class Controller implements Runnable {
 		startSignal = new CountDownLatch(1);
 		doneSignal = new CountDownLatch(botList.size());
 		
-		Debug.out.println(" Update    | Transmit  | Receive   | Process   | Bot (all) | World etc.");
-		Debug.out.println("-----------|-----------|-----------|-----------|-----------|-----------");
-		
-		long time = System.nanoTime();
+//		Debug.out.println(" Update    | Transmit  | Receive   | Process   | Bot (all) | World etc.");
+//		Debug.out.println("-----------|-----------|-----------|-----------|-----------|-----------");
+//		
+//		long time = System.nanoTime();
 		
 		// TODO bitte den Zeit-Thread evtl. wieder in die Welt zurück verschieben
 		while(this.ctrlThread == thisThread) {
@@ -272,18 +269,19 @@ public final class Controller implements Runnable {
 				// breche ab, wenn die Bots zu lange brauchen !
 				//doneSignal.await(100, TimeUnit.MILLISECONDS);
 				
-				boolean b = doneSignal.await(10000, TimeUnit.MILLISECONDS);
+//				boolean b = 
+					doneSignal.await(10000, TimeUnit.MILLISECONDS);
 				
 //				Debug.out.println("  +- Bots sind fertig (?):                         "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
-				Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
-				
-				if (!b)
-					Debug.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEUER ZYKLUS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				else Debug.out.println("----------------------------- NEUER ZYKLUS -----------------------------");
-				
-				//Debug.out.println("  +- Bots sind fertig (?):                         "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
-				
-				time = System.nanoTime();
+//				Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
+//				
+//				if (!b)
+//					Debug.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEUER ZYKLUS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//				else Debug.out.println("----------------------------- NEUER ZYKLUS -----------------------------");
+//				
+//				//Debug.out.println("  +- Bots sind fertig (?):                         "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
+//				
+//				time = System.nanoTime();
 				
 				CountDownLatch startSig = this.startSignal;
 			
@@ -297,8 +295,8 @@ public final class Controller implements Runnable {
 				// TODO: ganz dirty!
 				ctSim.update(world.getSimulTime());
 				
-//				Debug.out.println("  +- Welt ist fertig:                              "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
-				Debug.out.println("                                                            "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
+////				Debug.out.println("  +- Welt ist fertig:                              "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
+//				Debug.out.println("                                                            "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 				
 				// TODO: Vor Bots adden?
 				if(this.pause) {
@@ -307,7 +305,7 @@ public final class Controller implements Runnable {
 					}
 				}
 				
-				time = System.nanoTime();
+//				time = System.nanoTime();
 				
 //				ctSim.getWorldView().getWorldCanvas().stopRenderer();
 				// Die ganze Simulation aktualisieren
@@ -420,14 +418,14 @@ public final class Controller implements Runnable {
 		this.botsToStart = new ArrayList<Bot>();
 	}
 	
-	private long botT = System.nanoTime();
+//	private long botT = System.nanoTime();
 	
 	/**	 
 	 * @throws InterruptedException
 	 */
 	public void waitOnController() throws InterruptedException {
 		
-		Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-botT)/1000000000.));
+//		Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-botT)/1000000000.));
 		
 		CountDownLatch doneSig = this.doneSignal;
 		CountDownLatch startSig = this.startSignal;
@@ -436,7 +434,7 @@ public final class Controller implements Runnable {
 		
 		startSig.await();
 		
-		botT = System.nanoTime();
+//		botT = System.nanoTime();
 	}
 	
 	/**

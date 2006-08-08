@@ -822,17 +822,17 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
 //			 + "             | +- Aktuator-Werte wurden bearbeitet:           "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 		
-		long time = System.nanoTime();
+//		long time = System.nanoTime();
 		transmitSensors();
-		Debug.out.println("            "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
-		
-		time = System.nanoTime();
+//		Debug.out.println("            "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
+//		
+//		time = System.nanoTime();
 		receiveCommands();
-		Debug.out.println("                        "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
-		
-		time = System.nanoTime();
+//		Debug.out.println("                        "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
+//		
+//		time = System.nanoTime();
 		processCommands();
-		Debug.out.println("                                    "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
+//		Debug.out.println("                                    "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 	}
 	
 	// LOG:

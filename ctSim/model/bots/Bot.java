@@ -30,7 +30,6 @@ import ctSim.model.AliveObstacle;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.BotPosition;
 import ctSim.model.bots.components.Sensor;
-import ctSim.view.Debug;
 
 /**
  * Superklasse fuer alle Bots, unabhaengig davon, ob sie real oder simuliert
@@ -309,13 +308,13 @@ public abstract class Bot extends AliveObstacle{
 //		     + "             | +- Sensor-Werte wurden geupdatet:              "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 		
 		
-		long time = System.nanoTime();
+//		long time = System.nanoTime();
 		
 		for(Sensor s : this.getSensors()) {
 			s.update();
 		}
 		
-		Debug.out.println(String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
+//		Debug.out.println(String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 		
 		
 		
