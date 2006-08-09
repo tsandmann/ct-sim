@@ -334,11 +334,18 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //	private long recvTime =0;
 	
 	/**
+	 * Sendbuffer fuer transmitSensors()
+	 */
+	private ArrayList<Byte> commandsToSend = new ArrayList<Byte>();
+	
+	/**
 	 * Leite Sensordaten an den Bot weiter
 	 */
 	@SuppressWarnings({"unchecked","boxing"})
 	private synchronized void transmitSensors() {
 		try {
+			commandsToSend.clear();
+			byte tmp[];	// buffer per command
 			
 //			Command command = new Command(Command.CMD_SENS_IR,
 //			1000,
@@ -352,7 +359,10 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setDataL(((Double)this.irL.getValue()).intValue());
 			command.setDataR(((Double)this.irR.getValue()).intValue());
 			command.setSeq(this.seq++);
-			this.connection.send(command.getCommandBytes());
+			tmp = command.getCommandBytes();
+			for (int i=0; i<tmp.length; i++)
+				commandsToSend.add(tmp[i]);
+			//this.connection.send(command.getCommandBytes());
 			
 			command.setCommand(Command.CMD_SENS_ENC);
 			command.setDataL((Integer)this.encL.getValue());
@@ -361,32 +371,47 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 //			setSensEncL((short) 0);
 //			setSensEncR((short) 0);
 			command.setSeq(this.seq++);
-			this.connection.send(command.getCommandBytes());
+			tmp = command.getCommandBytes();
+			for (int i=0; i<tmp.length; i++)
+				commandsToSend.add(tmp[i]);
+			//this.connection.send(command.getCommandBytes());
 			
 			command.setCommand(Command.CMD_SENS_BORDER);
 			command.setDataL(((Short)this.borderL.getValue()).intValue());
 			command.setDataR(((Short)this.borderR.getValue()).intValue());
 			command.setSeq(this.seq++);
-			this.connection.send(command.getCommandBytes());
+			tmp = command.getCommandBytes();
+			for (int i=0; i<tmp.length; i++)
+				commandsToSend.add(tmp[i]);
+			//this.connection.send(command.getCommandBytes());
 			
 			// TODO
 			command.setCommand(Command.CMD_SENS_DOOR);
 			command.setDataL(0);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
-			this.connection.send(command.getCommandBytes());
+			tmp = command.getCommandBytes();
+			for (int i=0; i<tmp.length; i++)
+				commandsToSend.add(tmp[i]);
+			//this.connection.send(command.getCommandBytes());
 
 			command.setCommand(Command.CMD_SENS_LDR);
 			command.setDataL((Integer)this.lightL.getValue());
 			command.setDataR((Integer)this.lightR.getValue());
 			command.setSeq(this.seq++);
-			this.connection.send(command.getCommandBytes());
+			tmp = command.getCommandBytes();
+			for (int i=0; i<tmp.length; i++)
+				commandsToSend.add(tmp[i]);
+			//this.connection.send(command.getCommandBytes());
 			
 			command.setCommand(Command.CMD_SENS_LINE);
 			command.setDataL(((Short)this.lineL.getValue()).intValue());
 			command.setDataR(((Short)this.lineR.getValue()).intValue());
 			command.setSeq(this.seq++);
-			this.connection.send(command.getCommandBytes());
+			tmp = command.getCommandBytes();
+			for (int i=0; i<tmp.length; i++)
+				commandsToSend.add(tmp[i]);
+			//this.connection.send(command.getCommandBytes());
 			
 			if(this.getObstState() != OBST_STATE_NORMAL) {
 				this.mouseX = 0;
@@ -396,14 +421,20 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setDataL(this.mouseX);
 			command.setDataR(this.mouseY);
 			command.setSeq(this.seq++);
-			this.connection.send(command.getCommandBytes());
+			tmp = command.getCommandBytes();
+			for (int i=0; i<tmp.length; i++)
+				commandsToSend.add(tmp[i]);
+			//this.connection.send(command.getCommandBytes());
 			
 			// TODO: nur fuer real-bot
 			command.setCommand(Command.CMD_SENS_TRANS);
 			command.setDataL(0);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
-			this.connection.send(command.getCommandBytes());
+			tmp = command.getCommandBytes();
+			for (int i=0; i<tmp.length; i++)
+				commandsToSend.add(tmp[i]);
+			//this.connection.send(command.getCommandBytes());
 
 			Object rc5 = this.rc5.getValue();
 			if(rc5 != null) {
@@ -415,27 +446,39 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 					command.setDataL(val);
 					command.setDataR(42);
 					command.setSeq(seq++);
-					this.connection.send(command.getCommandBytes());
+					tmp = command.getCommandBytes();
+					for (int i=0; i<tmp.length; i++)
+						commandsToSend.add(tmp[i]);
+					//this.connection.send(command.getCommandBytes());
 				}
 			}
 			
-
-
 			// TODO: nur fuer real-bot
 			command.setCommand(Command.CMD_SENS_ERROR);
 			command.setDataL(0);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
-			this.connection.send(command.getCommandBytes());
+			tmp = command.getCommandBytes();
+			for (int i=0; i<tmp.length; i++)
+				commandsToSend.add(tmp[i]);
+			//this.connection.send(command.getCommandBytes());
 
-			
 			lastTransmittedSimulTime= (int)world.getSimulTime();
 			lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
 			command.setCommand(Command.CMD_DONE);
 			command.setDataL(lastTransmittedSimulTime);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
-			this.connection.send(command.getCommandBytes());
+			tmp = command.getCommandBytes();
+			for (int i=0; i<tmp.length; i++)
+				commandsToSend.add(tmp[i]);
+
+			// Lets build an array for sending
+			byte toSend[] = new byte[commandsToSend.size()];
+			for (int i=0; i<commandsToSend.size(); i++)  // Bad O(n) operation here :(
+				toSend[i] = commandsToSend.get(i);
+			this.connection.send(toSend);
+			//this.connection.send(command.getCommandBytes());
 //			System.out.println(world.getRealTime()+"ms: requesting @"+lastTransmittedSimulTime+" ms");
 
 //			sendTime=System.nanoTime()/1000;

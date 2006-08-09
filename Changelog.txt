@@ -1,6 +1,8 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-08-08 Timo Sandmann [mail@timosandmann.de]: Sensordaten gesammelt verschicken
+
 2006-08-08 Felix Beckwermert [felix@beckwermert.de]: Bug-fixes...
 
 2006-08-08 Felix Beckwermert [felix@beckwermert.de]: App. werden wieder (wie fürher) verwendet
