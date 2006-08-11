@@ -67,7 +67,7 @@ public final class ControlBar extends JPanel {
 		
 		//this.botTabs = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
 		//this.botTabs = new JTabbedPane();
-		this.botTabs = new JTabbedPaneWithCloseIcons();
+		this.botTabs = new JTabbedPaneWithCloseIcons(this);
 		
 		//this.add(Box.createVerticalGlue());
 		this.add(this.botTabs);
@@ -112,6 +112,13 @@ public final class ControlBar extends JPanel {
 		this.botList.remove(botInfo);
 		if(botInfo.getBotPanel() != null)
 			this.botTabs.remove(botInfo.getBotPanel());
+	}
+	
+	// TODO: Called by 'actionPerformed(..)' in 'PopupListener'
+	//       and 'mouseClicked(..)' in 'JTabbedPaneWithCloseIcons'
+	public void remBot(int idx) {
+		
+		this.parent.removeBot(this.botList.get(idx));
 	}
 	
 	/** 
@@ -187,7 +194,8 @@ public final class ControlBar extends JPanel {
 			
 			System.out.println("Töte "+botList.get(idx).getName());
 			
-			parent.removeBot(botList.get(idx));
+			//parent.removeBot(botList.get(idx));
+			remBot(idx);
 		}
     }
 }

@@ -393,4 +393,3 @@ public class RemoteControlGroupGUI extends SensorGroupGUI<RemoteControlSensor>
 		
 
 	}
-	

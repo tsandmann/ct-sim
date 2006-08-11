@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-08-08 Felix Beckwermert [felix@beckwermert.de]: "Gleitpin-f‰llt"-Bug gefixt (dank forum); auﬂerdem einen Bug zur Berechnung der Pos. des linken Rades gefixt (fehlte ein "-")
+
+2006-08-11 Felix Beckwermert [felix@beckwermert.de]: Tabs schlieﬂen jetzt korrekt (beenden auch den Bot)
+
 2006-08-08 Timo Sandmann [mail@timosandmann.de]: Sensordaten gesammelt verschicken
 
 2006-08-08 Felix Beckwermert [felix@beckwermert.de]: Bug-fixes...

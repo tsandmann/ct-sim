@@ -61,7 +61,6 @@ import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.JD2xxConnection;
 import ctSim.TcpConnection;
-// import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.Command;
 import ctSim.model.World;
@@ -245,6 +244,8 @@ public final class Controller implements Runnable {
 		// while -> if
 		if(!dummy.getState().equals(State.TERMINATED))
 			dummy.interrupt();
+		
+		System.out.println("interrupt");
 	}
 	
 	/** 
@@ -328,7 +329,12 @@ public final class Controller implements Runnable {
 				//time = System.nanoTime();
 //				System.out.println("Release AliveObstacles");
 				// Alle Bots wieder freigeben
+//				System.out.println("CTRL: NewStartSig: "+this.startSignal.getCount());
+//				System.out.println("CTRL: StartSig: "+startSig.getCount());
 				startSig.countDown();
+//				System.out.println("CTRL: StartSig: "+startSig.getCount());
+//				System.out.println("CTRL: NewStartSig: "+this.startSignal.getCount());
+//				System.out.println("CTRL: NewDoneSig: "+this.doneSignal.getCount());
 				// und startsignal wieder scharf machen
 				//startSignal = new CountDownLatch(1);
 				
@@ -345,7 +351,7 @@ public final class Controller implements Runnable {
 				
 				Thread.sleep(this.world.getBaseTimeReal());
 				
-				// TODO: WTF!?!?!?
+				// TODO:
 //				if ( timeToSleep > 0)
 //					Thread.sleep(timeToSleep);
 				//else {
@@ -386,7 +392,7 @@ public final class Controller implements Runnable {
 			b.stop();
 			this.world.removeAliveObstacle(b);
 		}
-		System.out.println("asdfadf");
+		System.out.println("Cleanup");
 		this.botList     = new ArrayList<Bot>();
 		this.botsToStart = new ArrayList<Bot>();
 		
@@ -427,12 +433,18 @@ public final class Controller implements Runnable {
 		
 //		Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-botT)/1000000000.));
 		
+//		System.out.println("BOT: Warte...");
+		
 		CountDownLatch doneSig = this.doneSignal;
 		CountDownLatch startSig = this.startSignal;
 		
+//		System.out.println("BOT: doneSig: "+doneSig.getCount());
 		doneSig.countDown();
-		
+//		System.out.println("BOT: doneSig: "+doneSig.getCount());
+//		
+//		System.out.println("BOT: startSig: "+startSig.getCount());
 		startSig.await();
+//		System.out.println("BOT: startSig: "+startSig.getCount());
 		
 //		botT = System.nanoTime();
 	}
@@ -443,8 +455,7 @@ public final class Controller implements Runnable {
 	
 	public void pause() {
 		
-			this.pause = true;
-			
+		this.pause = true;
 	}
 	
 	/**
@@ -572,7 +583,6 @@ public final class Controller implements Runnable {
 	public void reset() {
 		
 		// TODO: Damit �berhaupt eine Thrd vorhanden ist, diesen Starten:
-					
 		
 		this.start();
 		

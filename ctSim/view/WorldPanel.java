@@ -29,9 +29,6 @@ import ctSim.model.World;
  */
 public class WorldPanel extends JPanel {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private WorldView worldView;
 	private World world;

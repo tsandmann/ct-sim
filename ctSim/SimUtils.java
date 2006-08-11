@@ -127,7 +127,7 @@ public class SimUtils {
 		
 		double angle = heading.angle(new Vector3d(0d, 1d, 0d));
 		
-		if(heading.y < 0)
+		if(heading.x >= 0)
 			angle = -angle;
 		
 		return angle;

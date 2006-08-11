@@ -4,37 +4,63 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 Known Bugs:   
 -----------
 
+* Zielerkennung (des Judge) nicht immer korrekt
+
+* Bot kann sich aus Loch "befreien"
+
+* Bots werden gekillt, nach Reset und Neustart
+
+* wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
+
 * Maussensor liefert bei kleinen Geschwindigkeiten (PWM < 4) keine Werte
   -> erledigt?
-
-(?) Haben wir immer noch ein Speicherleck? Mir schien, dass der Sim mit jedem Zyklus langsamer wurde. Hat das noch jemand beobachtet?
 
 * FB-Kommandos kommen gelegentlich nicht durch. Das passiert auch beim LabyrinthJudge, der eigentlich allen Bots zu Beginn das Fernbedienungssignal "5" schickt. 
   -> sollte nur passieren, wenn ein Bot ins timeout kommt (aktuell also eigentlich nicht mehr)
 
-* wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
+* Bei neuem Welt-Generieren in einem Rennen wird die Zeit öffters ins neue Level mit übernommen
+  -> bei mir nicht? kann da mal einer genauere angaben machen? (fbe)
 
 Requested Features:
 -------------------
 
-* Bei neuem Welt-Generieren in einem Rennen wird die Zeit öffters ins neue Level mit übernommen
-  -> bei mir nicht? kann da mal einer genauere angaben machen? (fbe)
 
 --- Alles oberhalb dieser Linie fuer naechstes Release fertigmachen!!! ---
 
+* Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek)
+  -> erledigt?
+
+* ContestJudge wieder einbauen
+
+* FB-Kommandos können (so nicht) vom Judge geschickt werden
+
+* Manipulation von Pos. und Sensoren unterbinden
+
 * Bot-Namen grausam
+
+* Positionen überarbeiten
+
+* Controller überarbeiten
+
+* Characteristic verallgemeinern
 
 * Grafiken fuer Fernbedienung (pek)
 
+* FB soll sich Position merken; FileChooser sollten sich Verz. merken (für eine Sitzung?)...
+
 * FB-Position? --> eventuelle eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
 
-* Verzeichnis-Angabe fï¿½r die DTD in der Config
+* Sim kann vom Simulator selbst abgespeicherten Welten nur laden, wenn 
+sie im Ordner parcours innerhalb des Projekts gespeichert worden sind.
+Der Sim findet sonst parcours.dtd nicht.
 
-* TabbedPane -> TabbedPaneWithCloseIcons
+* Verzeichnis-Angabe fuer die DTD in der Config
+
+* TabbedPane -> TabbedPaneWithCloseIcons: Icons rechts?
 
 * Was machen bei Mangel an Startplaetzen?
 
-* FB soll sich Position merken; FileChooser sollten sich Verz. merken (für eine Sitzung?)...
+* Beim hinzufuegen von Bots pruefen, ob der Platz leer ist und wenn nicht einen neuen Spawn-Punkt suchen
 
 * Klassenstruktur wieder aufraeumen (fbe)
 
@@ -42,22 +68,19 @@ Requested Features:
 
 * Bitte pruefen, was alles beim Wechsel auf den neuen Sim verloren gegangen ist (fbe)
 
-* Es gibt immer noch undokumentierte Fkts im Code [wo?] 
+* Es gibt immer noch undokumentierte Fkts im Code [wo?]
 
-* Letzte Compilerwarnings entfernen 
-
-* Sim kann vom Simulator selbst abgespeicherten Welten nur laden, wenn 
-sie im Ordner parcours innerhalb des Projekts gespeichert worden sind.
-Der Sim findet sonst parcours.dtd nicht.
+* Letzte Compilerwarnings entfernen
 
 * Mausbild
 
-* Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek) 
-
-* Beim hinzufuegen von Bots pruefen, ob der Platz leer ist und wenn nicht einen neuen Spawn-Punkt suchen
-
 ERLEDIGT:
 =========
+
+* Gleitpinn fällt, obwohl er nicht fällt? (fbe)
+  -> Durch Mithilfe aus dem Forum (auch ein Bug zum linken Rad gefixt)
+
+* TabbedPane -> TabbedPaneWithCloseIcons (fbe)
 
 * Hinzufuegen von Bots ist auch ohne Welt moeglich (fbe)
   -> erledigt

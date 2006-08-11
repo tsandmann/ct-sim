@@ -25,16 +25,19 @@ import java.awt.event.*;
  * ...und wurden für unsere Zwecke ein wenig angepasst.
  * 
  */
-public class JTabbedPaneWithCloseIcons extends JTabbedPane implements
-		MouseListener {
-	/**
-	 * 
-	 */
+public class JTabbedPaneWithCloseIcons extends JTabbedPane
+		implements MouseListener {
+	
 	private static final long serialVersionUID = 1L;
 
-	public JTabbedPaneWithCloseIcons() {
+	private ControlBar parent;
+	
+	public JTabbedPaneWithCloseIcons(ControlBar parent) {
+		
 		super();
 		addMouseListener(this);
+		
+		this.parent = parent;
 	}
 
 	public void addTab(String title, Component component) {
@@ -63,7 +66,8 @@ public class JTabbedPaneWithCloseIcons extends JTabbedPane implements
 		Rectangle rect = ((CloseTabIcon) getIconAt(tabNumber)).getBounds();
 		if (rect.contains(e.getX(), e.getY())) {
 			// the tab is being closed
-			this.removeTabAt(tabNumber);
+			//this.removeTabAt(tabNumber);
+			this.parent.remBot(tabNumber);
 		}
 	}
 
