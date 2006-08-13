@@ -395,7 +395,8 @@ public class ParcoursLoader {
 							createFloor(x, y,getAppearance(this.parcoursMap[x][y]));
 							break;
 					    case 'Z':
-							this.parcours.setFinishPosition(x,y);
+							//this.parcours.setFinishPosition(x,y);
+					    	this.parcours.addFinishPosition(x, y);
 							createFloor(x, y,getAppearance(this.parcoursMap[x][y]));
 							break;
 							

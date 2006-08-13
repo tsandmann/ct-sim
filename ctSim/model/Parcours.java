@@ -18,7 +18,10 @@
  */
 package ctSim.model;
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.media.j3d.BranchGroup;
@@ -83,8 +86,9 @@ public class Parcours {
 	private int[][] startHeadings = new int[BOTS][2];
 	
 	
-	/** Zielposition */
-	private int[] finishPosition = new int[2];
+	/** Zielpositionen */
+	//private int[] finishPosition = new int[2];
+	private List<Point> finishPositions = new ArrayList<Point>();
 
 	/** Liste mit allen Abgruenden */
 	private Vector<Vector2d> holes = new Vector<Vector2d>();
@@ -363,9 +367,18 @@ public class Parcours {
 	 * @param x
 	 * @param y
 	 */
-	public void setFinishPosition(int x, int y){
-		this.finishPosition[0]=x;
-		this.finishPosition[1]=y;
+//	public void setFinishPosition(int x, int y){
+//		this.finishPosition[0]=x;
+//		this.finishPosition[1]=y;
+//	}
+	
+	/** 
+	 * Fügt eine neue Zielposition hinzu
+	 * @param x
+	 * @param y
+	 */
+	public void addFinishPosition(int x, int y) {
+		this.finishPositions.add(new Point(x, y));
 	}
 
 	/** 
@@ -382,13 +395,25 @@ public class Parcours {
 	 * @return true, falls ja
 	 */
 	public boolean finishReached(Vector3d pos){
-		float minX = this.finishPosition[0]*this.grid ;
-		float maxX = this.finishPosition[0]*this.grid + this.grid;
-		float minY = this.finishPosition[1]*this.grid ;
-		float maxY = this.finishPosition[1]*this.grid + this.grid;
+//		float minX = this.finishPosition[0]*this.grid ;
+//		float maxX = this.finishPosition[0]*this.grid + this.grid;
+//		float minY = this.finishPosition[1]*this.grid ;
+//		float maxY = this.finishPosition[1]*this.grid + this.grid;
+//		
+//		if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
+//			return true;
+//		return false;
 		
-		if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
-			return true;
+		for(Point p : this.finishPositions) {
+			
+			float minX = p.x*this.grid ;
+			float maxX = p.x*this.grid + this.grid;
+			float minY = p.y*this.grid ;
+			float maxY = p.y*this.grid + this.grid;
+			
+			if((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
+				return true;
+		}
 		return false;
 	}
 

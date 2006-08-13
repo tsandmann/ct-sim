@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 
 public class WelcomeDialog extends JDialog {
 	
+	private static final long serialVersionUID = -875010138581237097L;
+	
 	private JPanel panel;
 	
 	WelcomeDialog() {

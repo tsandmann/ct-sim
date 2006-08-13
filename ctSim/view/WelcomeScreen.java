@@ -10,6 +10,8 @@ import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
 public class WelcomeScreen extends Box {
 	
+	private static final long serialVersionUID = 5538112396754476053L;
+	
 	private JEditorPane editor;
 	
 	WelcomeScreen(String text) {

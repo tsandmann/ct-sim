@@ -4,8 +4,6 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 Known Bugs:   
 -----------
 
-* Zielerkennung (des Judge) nicht immer korrekt
-
 * Bot kann sich aus Loch "befreien"
 
 * Bots werden gekillt, nach Reset und Neustart
@@ -76,6 +74,8 @@ Der Sim findet sonst parcours.dtd nicht.
 
 ERLEDIGT:
 =========
+
+* Zielerkennung (des Judge) nicht immer korrekt (fbe)
 
 * Gleitpinn fällt, obwohl er nicht fällt? (fbe)
   -> Durch Mithilfe aus dem Forum (auch ein Bug zum linken Rad gefixt)
