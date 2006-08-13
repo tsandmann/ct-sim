@@ -159,8 +159,8 @@ public class SimUtils {
 	 * @return Die Zeit als Text
 	 */
 	public static String millis2time(long millis){
-		long hours = millis / 360000;
-		long minutes = (millis % 360000) / 60000;
+		long hours = millis / 3600000;
+		long minutes = (millis % 3600000) / 60000;
 		long seconds = (millis % 60000) / 1000;
 		long rest = millis % 1000;
 		return new String (hours+":"+minutes+":"+seconds+":"+rest);  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
