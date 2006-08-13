@@ -52,39 +52,11 @@ public abstract class Bot extends AliveObstacle{
 	
 	private BotPosition posHead;
 	
-//	private List<Position> pos;
 	private List<Actuator> acts;
 	private List<Sensor> sens;
 	
-	/** Steuerpanel des Bots */
-//	private ControlPanel panel;
-
-	/**
-	 * Blickvektor
-	 */
-//	private Vector3f heading = new Vector3f(1f, 0f, 0f);
-
 	/** Liste mit den verschiedenen Aussehen eines Bots */
 //	private HashMap appearances;
-	
-	/** Konstanten fuer die Noderefernces */
-//	public static final String BOTBODY = "botBody";
-	
-//	public static final String VP = "VP";
-	
-//	/**
-//	 * Initialisierung des Bots
-//	 * @param controller Verweis auf den zugehoerigen Controller
-//	 */
-//	public Bot(Controller controller) {
-//		super(controller);
-//	 	
-//	 	// Zu diesem Zeitpunkt ist die ganze 3D-Repraesentation bereits aufgebaut
-//		createViewingPlatform();
-//		
-//		this.acts = new ArrayList<Actuator>();
-//		this.sens = new ArrayList<Sensor>();
-//	}
 
 	/** Konstanten fuer die ViewingPlatform 
 	 * @param position Position  
@@ -143,98 +115,7 @@ public abstract class Bot extends AliveObstacle{
 		
 		this.acts = new ArrayList<Actuator>();
 		this.sens = new ArrayList<Sensor>();
-//		this.pos = new ArrayList<Position>();
-//		initPosition();
 	}
-	
-//	private void initPosition(){
-//		// X-Position
-//		this.addPosition(new SimplePosition<Float>("X-Position", "", 0.0) {
-//
-//			@Override
-//			public Float getValue() {
-//				return new Float(getPos().x);
-//			}
-//
-//			@Override
-//			public void setValue(Float value) {
-//				setPos (new Vector3f(value.floatValue(), getPos().y, getGroundClearance() + getHeight()/2));
-//				// TODO: stimmt z-Wert ?
-//			}
-//
-//			@Override
-//			public String getType() {
-//				
-//				return "Metrisch";
-//			}
-//
-//			@Override
-//			public String getDescription() {
-//				
-//				return "Position im Parcours";
-//			}
-//		});
-//
-//		// TODO: Positionen und Winkel stimmen nicht mehr und lassen sich 
-//		// noch nicht setzen
-//		
-//		// Y-Position
-//		this.addPosition(new SimplePosition<Float>("Y-Position", "", 0.0) {
-//
-//			@Override
-//			public Float getValue() {
-//				return new Float(getPos().y);
-//			}
-//
-//			@Override
-//			public void setValue(Float value) {
-//				setPos (new Vector3f(getPos().x, value.floatValue(), getGroundClearance() + getHeight()/2));
-//				// TODO: korrekter z-Wert fehlt noch!!!
-//			}
-//
-//			@Override
-//			public String getType() {
-//				
-//				return "Metrisch";
-//			}
-//
-//			@Override
-//			public String getDescription() {
-//				
-//				return "Position im Parcours";
-//			}
-//		});
-//
-//
-//		// Blickrichtung
-//		this.addPosition(new SimplePosition<Double>("Blickrichtung", "", 0.0) {
-//
-//			@Override
-//			public Double getValue() {
-//				return new Double(SimUtils.vec3fToDouble(getPos()));
-//			}
-//
-//			@Override
-//			public void setValue(Double value) {
-//
-//				// TODO: echten Wert rausgeben
-//
-//			}
-//
-//			@Override
-//			public String getType() {
-//				
-//				return "Winkel in Grad";
-//			}
-//
-//			@Override
-//			public String getDescription() {
-//				
-//				return "Blickrichtung des Bot";
-//			}
-//		});
-//
-//	}
 	
 	/**
 	 * @return Die Liste der Aktuatoren
@@ -333,19 +214,7 @@ public abstract class Bot extends AliveObstacle{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-//	protected final void addPosition(Position posi) {
-//		
-//		this.pos.add(posi);
-//	}
-
 	
-	/**
-	 * Der Aufruf dieser Methode direkt nach dem Erzeugen sorgt dafuer, dass der
-	 * Bot ueber ein passendes ControlPanel verfuegt
-	 */
-//	abstract public void providePanel();
-
 	/**
 	 * Hier wird aufgeraeumt, wenn die Lebenszeit des Bots zuende ist:
 	 * Verbindungen zur Welt und zum ControlPanel werden aufgeloest, das Panel
@@ -353,6 +222,7 @@ public abstract class Bot extends AliveObstacle{
 	 * 
 	 * @see Bot#work()
 	 */
+	// TODO
 //	protected void cleanup() {
 //		super.cleanup();
 //		
@@ -431,31 +301,13 @@ public abstract class Bot extends AliveObstacle{
 //	 	
 //	}
 	
-
-	/**
-	 * @return Gibt das ControlPanel des Bot zurueck
-	 */
-//	public ControlPanel getPanel() {
-//		return panel;
-//	}
-
-	/**
-	 * @param panel
-	 *            Referenz auf das ControlPanel, die gesetzt werden soll
-	 */
-//	public void setPanel(ControlPanel panel) {
-//		this.panel = panel;
-//	}
-
-
-
 	/**
 	 * @return Gibt die Blickrichtung zurueck
 	 */
 //	public Vector3d getHeading() {
 //		return this.heading;
 //	}
-
+	
 	/**
 	 * Sucht ein Erscheinungsbild des Bots aus der Liste heraus
 	 * @param key

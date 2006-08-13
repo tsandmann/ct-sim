@@ -70,6 +70,7 @@ import ctSim.model.rules.DefaultJudge;
 import ctSim.model.rules.Judge;
 import ctSim.view.BotInfo;
 import ctSim.view.CtSimFrame;
+import ctSim.view.Debug;
 import ctSim.view.DefBotPanel;
 
 /**
@@ -84,8 +85,9 @@ public final class Controller implements Runnable {
 	
 	private Thread ctrlThread;
 	private volatile boolean pause;
-	//private boolean run = true;
+	
 //	private long tickRate;
+	
 	// TODO: CyclicBarrier (?)
 	private CountDownLatch startSignal, doneSignal;
 	
@@ -117,7 +119,6 @@ public final class Controller implements Runnable {
 		init();
 		
 		this.startBotListener();
-		//this.start();
 	}
 	
 	private void init() {
@@ -137,11 +138,6 @@ public final class Controller implements Runnable {
 			Constructor<?> c = cl.getConstructor(this.getClass());
 			
 			this.judge = (Judge) c.newInstance(this);
-			
-			//judge = (Judge) Class.forName(config.get("judge")).newInstance();
-			//judge.setController(this);
-			//judge.start();
-			//controlFrame.addJudge(judge);
 			
 		} catch(ClassNotFoundException e) {
 			ErrorHandler.error("Die Judge-Klasse wurde nicht gefunden: "+e); //$NON-NLS-1$
@@ -193,8 +189,9 @@ public final class Controller implements Runnable {
 		}
 		
 		try {
+			// TODO: ???
 			String botBin = ConfigManager.path2Os(ConfigManager.getConfigValue("botbinary"));
-
+			
 		//	String botBin = ConfigManager.getConfigValue("botbinary"); //$NON-NLS-1$
 			
 			this.invokeBot(botBin);
@@ -268,10 +265,8 @@ public final class Controller implements Runnable {
 			
 				// Warte, bis alle Bots fertig sind und auf die nÃ¤chste Aktualisierung warten
 				// breche ab, wenn die Bots zu lange brauchen !
-				//doneSignal.await(100, TimeUnit.MILLISECONDS);
-				
-//				boolean b = 
-					doneSignal.await(10000, TimeUnit.MILLISECONDS);
+				if(!doneSignal.await(10000, TimeUnit.MILLISECONDS))
+					Debug.out.println("Bot-Probleme: Ein oder mehrere Bots waren (viel) zu lansgam...");
 				
 //				Debug.out.println("  +- Bots sind fertig (?):                         "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
 //				Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
@@ -293,13 +288,12 @@ public final class Controller implements Runnable {
 				// Judge pruefen:
 				judge.update(world.getSimulTime());
 				// Update World
-				// TODO: ganz dirty!
+				// TODO: schöner...
 				ctSim.update(world.getSimulTime());
 				
 ////				Debug.out.println("  +- Welt ist fertig:                              "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
 //				Debug.out.println("                                                            "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 				
-				// TODO: Vor Bots adden?
 				if(this.pause) {
 					synchronized(this) {
 						wait();
@@ -308,44 +302,21 @@ public final class Controller implements Runnable {
 				
 //				time = System.nanoTime();
 				
-//				ctSim.getWorldView().getWorldCanvas().stopRenderer();
 				// Die ganze Simulation aktualisieren
 				world.updateSimulation();
 				
 				// Add/Start new Bot
-				// + neue Runde einleuten (CountDownLatch neu setzen)
+				// + neue Runde einleuten (CountDownLatches neu setzen)
 				startBots();
-				
-				// Start a new round (-> Starten der neuen Bots)
-				//this.doneSignal = new CountDownLatch(this.botList.size());
-				//this.startSignal = new CountDownLatch(1);
-				
-				//System.out.println("Raus: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				
 //				long simTime = (world.getRealTime()-realTimeBegin);
 				
-				// DoneSignal vorbereiten
-				//doneSignal = new CountDownLatch(this.botList.size());
 				//time = System.nanoTime();
-//				System.out.println("Release AliveObstacles");
+				
 				// Alle Bots wieder freigeben
-//				System.out.println("CTRL: NewStartSig: "+this.startSignal.getCount());
-//				System.out.println("CTRL: StartSig: "+startSig.getCount());
 				startSig.countDown();
-//				System.out.println("CTRL: StartSig: "+startSig.getCount());
-//				System.out.println("CTRL: NewStartSig: "+this.startSignal.getCount());
-//				System.out.println("CTRL: NewDoneSig: "+this.doneSignal.getCount());
-				// und startsignal wieder scharf machen
-				//startSignal = new CountDownLatch(1);
 				
-				
-				
-//				else
-//					System.out.println("AliveObstacles done");
-				
-//				ctSim.getWorldView().getWorldCanvas().startRenderer();
 //				long waitTime = (world.getRealTime()-realTimeBegin) - simTime;
-				
 //				long elapsedTime= world.getRealTime()-realTimeBegin;
 //				long timeToSleep = world.getBaseTimeReal() - elapsedTime;
 				
@@ -433,20 +404,11 @@ public final class Controller implements Runnable {
 		
 //		Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-botT)/1000000000.));
 		
-//		System.out.println("BOT: Warte...");
-		
 		CountDownLatch doneSig = this.doneSignal;
 		CountDownLatch startSig = this.startSignal;
 		
-//		System.out.println("BOT: doneSig: "+doneSig.getCount());
 		doneSig.countDown();
-//		System.out.println("BOT: doneSig: "+doneSig.getCount());
-//		
-//		System.out.println("BOT: startSig: "+startSig.getCount());
 		startSig.await();
-//		System.out.println("BOT: startSig: "+startSig.getCount());
-		
-//		botT = System.nanoTime();
 	}
 	
 	/**
@@ -582,7 +544,7 @@ public final class Controller implements Runnable {
 	
 	public void reset() {
 		
-		// TODO: Damit ï¿½berhaupt eine Thrd vorhanden ist, diesen Starten:
+		// TODO: Damit ueberhaupt ein Thrd vorhanden ist, diesen Starten:
 		
 		this.start();
 		
@@ -596,7 +558,7 @@ public final class Controller implements Runnable {
 //		if(world != null)
 //			this.world.reinit();
 		
-		// TODO: unpause muï¿½ auch greifen:
+		// TODO: unpause muss auch greifen:
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {

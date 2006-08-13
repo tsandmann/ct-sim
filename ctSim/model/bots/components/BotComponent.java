@@ -99,16 +99,6 @@ public abstract class BotComponent {
 	 */
 	public Point3d getAbsPosition(Point3d absPos, Vector3d absHead) {
 		
-//		Transform3D transform = new Transform3D();
-//		
-//		transform.setTranslation(new Vector3d(absPos));
-//		
-//		double angle = absHead.angle(new Vector3d(1d, 0d, 0d));
-//		if(absHead.y < 0)
-//			angle = -angle;
-//		
-//		transform.setRotation(new AxisAngle4d(0d, 0d, 1d, angle));
-		
 		Transform3D transform = SimUtils.getTransform(absPos, absHead);
 		
 		Point3d pos = new Point3d(this.relPos);
@@ -125,16 +115,6 @@ public abstract class BotComponent {
 	 */
 	public Vector3d getAbsHeading(Point3d absPos, Vector3d absHead) {
 		
-//		Transform3D transform = new Transform3D();
-//		
-//		transform.setTranslation(new Vector3d(absPos));
-//		
-//		double angle = absHead.angle(new Vector3d(1d, 0d, 0d));
-//		if(absHead.y < 0)
-//			angle = -angle;
-//		
-//		transform.setRotation(new AxisAngle4d(0d, 0d, 1d, angle));
-		
 		Transform3D transform = SimUtils.getTransform(absPos, absHead);
 		
 		Vector3d vec = new Vector3d(this.relHead);
@@ -147,18 +127,6 @@ public abstract class BotComponent {
 	 * @return Die relative 3D-Transformation
 	 */
 	public Transform3D getRelTransform() {
-		
-//		Transform3D transform = new Transform3D();
-//		
-//		transform.setTranslation(new Vector3d(this.getRelPosition()));
-//		
-//		double angle = this.getRelHeading().angle(new Vector3d(1d, 0d, 0d));
-//		if(this.getRelHeading().y < 0)
-//			angle = -angle;
-//		
-//		transform.setRotation(new AxisAngle4d(0d, 0d, 1d, angle));
-//		
-//		return transform;
 		
 		return SimUtils.getTransform(this.getRelPosition(), this.getRelHeading());
 	}

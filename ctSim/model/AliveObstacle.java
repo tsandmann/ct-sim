@@ -34,8 +34,6 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-// import com.sun.j3d.utils.geometry.Cylinder;
-
 import ctSim.ErrorHandler;
 import ctSim.SimUtils;
 import ctSim.controller.Controller;
@@ -50,27 +48,10 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	
 	private int obstState = OBST_STATE_NORMAL;
 	
-	/** Die Grenzen des Roboters */
-//	private Bounds bounds;
-	
-	/** Konstanten fuer die Noderefernces */
-//	public static final String BG = "BG";
-//	/** Konstanten fuer die Noderefernces */
-//	public static final String TG = "TG";
-
-	/** Liste mit allen Einsprungspunkten in den Szenegraphen */
-//	private HashMap<String,SceneGraphObject> nodeMap = new HashMap<String,SceneGraphObject>();
-	
-	/** Soll die Simulation noch laufen? */
-//	private boolean run = true;
-	
-	/** Position */
-	//private Vector3d pos = new Vector3d(0.0d, 0d, getHeight() / 2 + 0.006d);
 	private String name;
 	private Point3d pos;
 	private Vector3d head;
-
-	/** Zeiger auf die Welt, in der der Bot lebt */
+	
 	// TODO: weg?
 	@SuppressWarnings("unused")
 	private World world;
@@ -90,20 +71,13 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private HashMap<String, Appearance> apps;
 	
 	/** Simultime beim letzten Aufruf */
-	private long lastSimulTime=0;
+	// TODO
+	private long lastSimulTime = 0;
 	
 	/** Zeit zwischen letztem Aufruf von UpdateSimulation und jetzt*/
-	private long deltaT=0;
+	// TODO
+	private long deltaT = 0;
 	
-//	public AliveObstacle() {
-//		
-//		this.pos = new Point3d();
-//		this.head = new Vector3d();
-//		
-//		this.views = new ArrayList<ViewPlatform>();
-//		
-//		initBG();
-//	}
 	
 	/**
 	 * Der Konstruktor
@@ -127,33 +101,16 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private void initBG() {
 		
 		// Translationsgruppe fuer das Obst
-		//TransformGroup tg = new TransformGroup();
-		//Transform3D transform = new Transform3D();
-		//tg = new TransformGroup(transform);
-		
 		this.transformgrp = new TransformGroup();
 		this.transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		this.transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		this.transformgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		
-		// Referenz im Bot ablegen
-//		addNodeReference(BOTBODY,realBot);
-			
-		// Die Grenzen (Bounds) des Bots sind wichtig
-		// fuer die Kollisionserkennung.
-		// Die Grenze des Roboters wird vorlaefig definiert ueber
-		// eine Sphaere mit Radius der Bot-Grundplatte um die Position des Bot
-//		setBounds(new BoundingSphere(new Point3d(super.getPos()), BOT_RADIUS));
-
 		// Jetzt wird noch alles nett verpackt
 		this.branchgrp = new BranchGroup();
 		this.branchgrp.setCapability(BranchGroup.ALLOW_DETACH);
 		this.branchgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		this.branchgrp.addChild(this.transformgrp);
-
-		// Referenz im Bot ablegen
-//		addNodeReference(TG,tg);
-//		addNodeReference(BG,bg);
 	}
 	
 	/**
@@ -167,14 +124,14 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 * @param shape1 3D-Gestalt, die das Objekt erhalten soll
 	 */
-	public final void setShape(Shape3D shape1) {
+	public final void setShape(Shape3D shp) {
 		
 		// TODO: Test: Reicht auch einfach "this.shape"-Referenz anzupassen?
 		
 		if(this.shape != null)
 			this.transformgrp.removeChild(this.shape);
 		
-		this.shape = shape1;
+		this.shape = shp;
 		this.shape.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 		//this.shape.setName(getName() + " Body");
 		this.shape.setPickable(true);
@@ -192,11 +149,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		if(map.isEmpty())
 			return;
 		
-		// TODO: !?
-//		Iterator<Appearance> it = map.values().iterator();
-//		
-//		this.shape.setAppearance(it.next());
-		
 		this.apps = map;
 		
 		this.setAppearance(this.getObstState());
@@ -213,8 +165,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 * @param world1 Referenz auf die Welt, die gesetzt werden soll
 	 */
-	public void setWorld(World world1) {
-		this.world = world1;
+	public void setWorld(World wrld) {
+		this.world = wrld;
 	}
 	
 	/** 
@@ -353,13 +305,13 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 * @param pos1
 	 *            Die Position, an die der Bot gesetzt werden soll
 	 */
-	public final synchronized void setPosition(Point3d pos1) {
+	public final synchronized void setPosition(Point3d p) {
 		
 		// TODO: synchron ist schoen, aber wird eine Pose �ber die GUI denn ueberhaupt verwendet?
 		//synchronized (this) {
 			
-			this.pos = pos1;
-			Vector3d vec = new Vector3d(pos1);
+			this.pos = p;
+			Vector3d vec = new Vector3d(p);
 			
 			Transform3D transform = new Transform3D();
 			this.transformgrp.getTransform(transform);
@@ -385,6 +337,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		this.transformgrp.setTransform(transform);
 	}
 	
+	// TODO:
 //	public final Transform3D getTransform() {
 //		
 //		Transform3D transform = new Transform3D();
@@ -414,7 +367,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 			while (this.thrd == thisThread) {
 				work();
 				this.controller.waitOnController();
-				//System.out.println("Alive Obstacle gaining Controll");
 			}
 		} catch(InterruptedException ie) {
 			ErrorHandler.error("Alive Obstacle \""+this.getName()+"\" interrupted: "+ie);
@@ -449,50 +401,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 //		world.remove(this);
 //		world = null;
 //	}
-
-	/**
-	 * Erzeugt ein neues Objekt mit einem zugeordneten Controller
-	 * @param controller
-	 */
-//	public AliveObstacle(Controller controller) {
-//		super();
-//		this.controller =controller;
-//		world = controller.getWorld();
-//	 	setName(controller.getNewBotName(getClass().getName()));
-//		createBranchGroup();
-//	}
-//	public AliveObstacle() {
-//		world = controller.getWorld();
-//	 	setName(controller.getNewBotName(getClass().getName()));
-//		createBranchGroup();
-//	}
-
 	
-	/**
-	 * Gibt alle Referenzen auf den Szenegraphen zurück
-	 * @return
-	 */
-//	public HashMap<String,SceneGraphObject> getNodeMap() {
-//		return nodeMap;
-//	}
-
-	/** Liefert eine einzelne Referenz auf ein Szenegraph-Objekt
-	 * 
-	 * @param key
-	 * @return
-	 */
-//	public SceneGraphObject getNodeReference(String key){
-//		if (key.contains(getName()))
-//			return	(SceneGraphObject) nodeMap.get(key);
-//		else
-//			return	(SceneGraphObject) nodeMap.get(getName()+"_"+key);
-//	}
-
-	/** Fuegt eine Referenz ein */
-//	public void addNodeReference(String key, SceneGraphObject so){
-//		nodeMap.put(getName()+"_"+key,so);
-//	}
-	
+	// TODO: im Obstacle?
 	/**
 	 * @return Gibt die Grenzen des Bots zurueck
 	 */
@@ -506,29 +416,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 //	 */
 //	public void setBounds(Bounds bounds) {
 //		this.bounds = bounds;
-//	}
-	
-	/**
-	 * @return Gibt Referenz auf die Welt zurueck
-	 */
-//	public World getWorld() {
-//		return world;
-//	}
-
-	/**
-	 * @param world
-	 *            Referenz auf die Welt, die gesetzt werden soll
-	 */
-//	public void setWorld(World world) {
-//		this.world = world;
-//	}
-	
-	/**
-	 * @return Gibt eine Referenz auf controller zurueck
-	 * @return Gibt den Wert von controller zurueck
-	 */
-//	public Controller getController() {
-//		return controller;
 //	}
 	
 	/**

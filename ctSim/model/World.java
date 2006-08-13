@@ -51,7 +51,6 @@ import ctSim.model.AliveObstacle;
 import ctSim.model.Parcours;
 import ctSim.model.ParcoursLoader;
 import ctSim.model.bots.Bot;
-//import ctSim.model.scene.SceneLight;
 
 /**
  * Welt-Modell, kuemmert sich um die globale Simulation und das Zeitmanagement
@@ -71,8 +70,6 @@ public class World {
 	
 	private BranchGroup lightBG, terrainBG, obstBG;
 	
-	//private SceneLight sceneLight, sceneLightBackup;
-	
 	private BranchGroup scene;
 	
 	private Parcours parcours;
@@ -91,11 +88,7 @@ public class World {
 		this.aliveObsts = new HashSet<AliveObstacle>();
 		this.views = new HashSet<ViewPlatform>();
 		
-//		this.sceneLight = new SceneLight();
-		
 		init();
-		
-//		this.sceneLightBackup = this.sceneLight.clone();
 	}
 	
 	/**
@@ -109,23 +102,9 @@ public class World {
 		
 		this.parcours = parc;
 		
-		//this.sceneLight = new SceneLight();
-		
 		init();
 		setParcours(parc);
-		
-		//this.sceneLightBackup = this.sceneLight.clone();
-		
-		//this.sceneLight.getScene().compile();
 	}
-	
-	/**
-	 * @return Gibt eine Referenz auf sceneLight zurueck
-	 * @return Gibt den Wert von sceneLight zurueck
-	 */
-//	public SceneLight getSceneLight() {
-//		return this.sceneLight;
-//	}
 	
 	/**
 	 * 
@@ -159,7 +138,6 @@ public class World {
 		TransformGroup obstTG = new TransformGroup(translate);
 		obstTG.setCapability(Node.ENABLE_PICK_REPORTING);
 		obstTG.setPickable(true);
-//		this.sceneLight.getObstBG().addChild(obstTG);
 		this.obstBG.addChild(obstTG);
 
 	    obstTG.addChild(parc.getObstBG());
@@ -170,11 +148,6 @@ public class World {
 //	    this.sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
 	    this.obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
 	    this.obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
-
-		// Die Hindernisse der Welt hinzufuegen
-//		this.worldTG.addChild(this.sceneLight.getObstBG());
-		// es duerfen noch weitere dazukommen
-//		this.worldTG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND); // verschoben nach "init"
 	}
 	
 	private void init() {
@@ -233,12 +206,6 @@ public class World {
 		this.obstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.obstBG.setPickable(true);
 		this.worldTG.addChild(this.obstBG);
-
-		
-		// Objekte sind fest
-//		this.sceneLight.getObstBG().setPickable(true);
-//		
-//		this.sceneLight.setScene(root);
 	}
 	
 	// TODO: Besser weg -> WorldPanel, WorldView ueberarbeiten...
