@@ -115,13 +115,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	public static final int SENS_MOUSE_DPI = 400;
 	
 	
-	//private int first = 0;
-	/* **********************************************************************
-	 * **********************************************************************
-	 * 
-	 */
-	
-	// TODO: weg
 	private World world;
 	
 	private int  mouseX, mouseY;
@@ -142,7 +135,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		super(w, name, pos, head);
 		
 		this.connection = (TcpConnection)con;
-	//	this.answeringMachine = new AnsweringMachine(this, con);
 		
 		this.world = w;
 		
@@ -178,7 +170,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		this.addSensor(this.irL);
 		this.addSensor(this.irR);
 		
-		// new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d)); // 
 		this.addSensor(this.lineL);
 		this.addSensor(this.lineR);
 		
@@ -275,8 +266,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 							int soll = (int)Math.pow(2, idx);
 							int ist = CtBotSimTcp.this.actLed & soll; // Bitweises "und"
 							
-							//System.out.println(this.getName()+" ["+idx+"]:  "+CtBotSimTcp.this.actLed+"  ->  "+soll+"  +  "+ist+"  =  "+(soll==ist));
-							
 							return (soll == ist);
 						}
 					}
@@ -329,10 +318,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 */
 	private int lastTransmittedSimulTime =0;
 	
-	
-//	private long sendTime =0;
-//	private long recvTime =0;
-	
 	/**
 	 * Sendbuffer fuer transmitSensors()
 	 */
@@ -347,15 +332,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			commandsToSend.clear();	// Sendbuffer loeschen
 			byte tmp[];	// Buffer pro Command
 			
-//			Command command = new Command(Command.CMD_SENS_IR,
-//			1000,
-//			1000, seq++);
-//			this.connection.send(command.getCommandBytes());
-			
 			Command command = new Command();
 			command.setCommand(Command.CMD_SENS_IR);
-//			command.setDataL(1000);
-//			command.setDataR(1000);
 			command.setDataL(((Double)this.irL.getValue()).intValue());
 			command.setDataR(((Double)this.irR.getValue()).intValue());
 			command.setSeq(this.seq++);
@@ -366,9 +344,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			command.setCommand(Command.CMD_SENS_ENC);
 			command.setDataL((Integer)this.encL.getValue());
 			command.setDataR((Integer)this.encR.getValue());
-			// TODO: Ueberfluessig?
-//			setSensEncL((short) 0);
-//			setSensEncR((short) 0);
 			command.setSeq(this.seq++);
 			tmp = command.getCommandBytes();
 			for (int i=0; i<tmp.length; i++)
@@ -467,9 +442,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			for (int i=0; i<commandsToSend.size(); i++)
 				toSend[i] = commandsToSend.get(i);
 			this.connection.send(toSend);
-//			System.out.println(world.getRealTime()+"ms: requesting @"+lastTransmittedSimulTime+" ms");
-
-//			sendTime=System.nanoTime()/1000;
 			
 		} catch (IOException IoEx) {
 			ErrorHandler.error("Error during sending Sensor data, dieing: " //$NON-NLS-1$
@@ -498,7 +470,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	
 	@SuppressWarnings({"unchecked","boxing"})
 	private void calcPos() {
-			// TODO diese ganze Fkt hat hier nix zu suchen. bitte zerlegen und an die entsprechenden Stellen sortieren
 		
 			////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////
@@ -509,8 +480,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			turnsL = turnsL * getDeltaT() / 1000.0f;
 			double turnsR = calculateWheelSpeed((Integer)this.govR.getValue());
 			turnsR = turnsR * getDeltaT() / 1000.0f;
-//			System.out.println(this.govL.getValue()+" -> "+turnsL);
-//			System.out.println(this.govR.getValue()+" -> "+turnsR);
 			
 			// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe pdf
 			// Absolut zurueckgelegte Strecke pro Rad berechnen
@@ -556,14 +525,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			// ... und die alte Position entsprechend veraendern.
 			newPos.add(moveDirection);
 			
-			// TODO: Pos nur setzen, wenn Status o.k. -> s.u.
-			//this.setPosition(new Point3d(newPos));
-			//this.setHeading(newHeading);
 			
-			//System.out.println(" -->  "+newPos+"   |   "+newHeading);
-			
-			
-			// TODO: nach unten!
 			double tmp = meter2Dots(2 * _gamma * SENS_MOUSE_DIST_Y) + deltaXRest;
 			int deltaX = (int) Math.floor(tmp);
 			deltaXRest = tmp - deltaX;
@@ -580,7 +542,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			boolean noCol = this.world.checkCollision(this, new BoundingSphere(new Point3d(0d, 0d, 0d), BOT_RADIUS), newPos);
 			// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
 			// der Bot blau gefaerbt.
-			//System.out.println(this.world.checkCollision(this, newPos));
 			if(noCol && (oldState & OBST_STATE_COLLISION) == OBST_STATE_COLLISION) {
 				// Zustand setzen
 				Debug.out.println("Bot "+this.getName()+" hat keinen Unfall mehr!");
@@ -655,16 +616,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			// Wenn der Bot nicht kollidiert oder ueber einem Abgrund steht Position aktualisieren
 			if ((getObstState() & (OBST_STATE_COLLISION | OBST_STATE_FALLING)) == 0 )
 				this.setPosition(new Point3d(newPos));
-			
-			// Update Appearance
-//			int newState=getObstState();
-//			if (newState == oldState){
-//			} else if (newState == OBST_STATE_NORMAL)
-//				setAppearance("normal");
-//			else if ((newState & OBST_STATE_FALLING) != 0)
-//				setAppearance("falling");
-//			else if ((newState & OBST_STATE_COLLISION) != 0)
-//				setAppearance("collision");
 	}
 
 	/**
@@ -724,7 +675,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				case Command.SUB_LCD_CURSOR:
 					this.setCursor(command.getDataL(), command.getDataR());
 					
-					// Neu:
 					if(this.lcdText == null || this.lcdText.length == 0)
 						break;
 					
@@ -744,7 +694,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				case Command.SUB_LCD_CLEAR:
 					this.lcdClear();
 					
-					// Neu:
 					if(this.lcdText == null || this.lcdText.length == 0)
 						break;
 					
@@ -803,16 +752,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				ErrorHandler.error("Unknown Command:" + command.toString()); //$NON-NLS-1$
 				break;
 			}
-			//System.out.println("////////////////////////////////////////////////////////////////");
-			//System.out.println("Command: "+(char)command.getCommand()+"  -  "+(char)command.getSubcommand()+"");
-			//System.out.println(command.toString());
-			
-			
-//			try {
-				// tcpCon.send(answer.getCommandBytes());
-//			} catch (Exception ex) {
-//				ErrorHandler.error("Sending answer failed"); //$NON-NLS-1$
-//			}
 
 		} else {
 			// TODO: Antworten werden noch nicht gegeben
@@ -831,42 +770,11 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	@Override
 	protected void work() {
 		
-//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
-//			 + "             | +- Sensor-Werte werden gesendet");
-//		long time = System.nanoTime();
-//		transmitSensors();
-//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
-//			 + "             | +- Sensor-Werte wurden gesendet:               "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
-//		
-//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
-//			 + "             | +- Aktuator-Werte werden empfangen...");
-//		time = System.nanoTime();
-//		receiveCommands();
-//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
-//			 + "             | +- Aktuator-Werte wurden empfangen:            "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
-//		
-//		
-//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
-//			 + "             | +- Aktuator-Werte werden bearbeitet...");
-//		time = System.nanoTime();
-//		processCommands();
-//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
-//			 + "             | +- Aktuator-Werte wurden bearbeitet:           "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
-		
-//		long time = System.nanoTime();
 		transmitSensors();
-//		Debug.out.println("            "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
-//		
-//		time = System.nanoTime();
 		receiveCommands();
-//		Debug.out.println("                        "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
-//		
-//		time = System.nanoTime();
 		processCommands();
-//		Debug.out.println("                                    "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 	}
 	
-	// LOG:
 	/**
 	 * Schreibt Logausgabe in den Puffer.
 	 * @param str String fuer die Ausgabe
@@ -894,7 +802,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		return tempBuffer;
 	}
 	
-	// LCD-Gefrickel:
 	/**
 	 * Setzt Text an eine bestimmte Position im LCD.
 	 * 

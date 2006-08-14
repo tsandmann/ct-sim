@@ -86,9 +86,6 @@ public final class Controller implements Runnable {
 	private Thread ctrlThread;
 	private volatile boolean pause;
 	
-//	private long tickRate;
-	
-	// TODO: CyclicBarrier (?)
 	private CountDownLatch startSignal, doneSignal;
 	
 	private Judge judge;
@@ -114,7 +111,6 @@ public final class Controller implements Runnable {
 		this.botsToStop  = new ArrayList<Bot>();
 		
 		this.pause = true;
-//		this.tickRate = 500;
 		
 		init();
 		
@@ -189,10 +185,7 @@ public final class Controller implements Runnable {
 		}
 		
 		try {
-			// TODO: ???
 			String botBin = ConfigManager.path2Os(ConfigManager.getConfigValue("botbinary"));
-			
-		//	String botBin = ConfigManager.getConfigValue("botbinary"); //$NON-NLS-1$
 			
 			this.invokeBot(botBin);
 			
@@ -229,20 +222,15 @@ public final class Controller implements Runnable {
 	 */
 	public void stop() {
 		
-//		if(this.botListener != null && !this.botListener.equals(State.TERMINATED))
-//			this.botListener.die();
-		
 		Thread dummy = this.ctrlThread;
 		
 		if(dummy == null)
 			return;
 		
 		this.ctrlThread = null;
-		// while -> if
+		
 		if(!dummy.getState().equals(State.TERMINATED))
 			dummy.interrupt();
-		
-		System.out.println("interrupt");
 	}
 	
 	/** 
@@ -254,12 +242,6 @@ public final class Controller implements Runnable {
 		startSignal = new CountDownLatch(1);
 		doneSignal = new CountDownLatch(botList.size());
 		
-//		Debug.out.println(" Update    | Transmit  | Receive   | Process   | Bot (all) | World etc.");
-//		Debug.out.println("-----------|-----------|-----------|-----------|-----------|-----------");
-//		
-//		long time = System.nanoTime();
-		
-		// TODO bitte den Zeit-Thread evtl. wieder in die Welt zurÃ¼ck verschieben
 		while(this.ctrlThread == thisThread) {
 			try {
 			
@@ -268,39 +250,18 @@ public final class Controller implements Runnable {
 				if(!doneSignal.await(10000, TimeUnit.MILLISECONDS))
 					Debug.out.println("Bot-Probleme: Ein oder mehrere Bots waren (viel) zu lansgam...");
 				
-//				Debug.out.println("  +- Bots sind fertig (?):                         "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
-//				Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
-//				
-//				if (!b)
-//					Debug.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEUER ZYKLUS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//				else Debug.out.println("----------------------------- NEUER ZYKLUS -----------------------------");
-//				
-//				//Debug.out.println("  +- Bots sind fertig (?):                         "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
-//				
-//				time = System.nanoTime();
-				
 				CountDownLatch startSig = this.startSignal;
-			
-				//long realTimeBegin = world.getRealTime();
-
-				//System.out.println("Rein: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				
 				// Judge pruefen:
 				judge.update(world.getSimulTime());
 				// Update World
-				// TODO: schöner...
 				ctSim.update(world.getSimulTime());
-				
-////				Debug.out.println("  +- Welt ist fertig:                              "+String.format("%2.9f",(System.nanoTime()-time)/1000000000.));
-//				Debug.out.println("                                                            "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
 				
 				if(this.pause) {
 					synchronized(this) {
 						wait();
 					}
 				}
-				
-//				time = System.nanoTime();
 				
 				// Die ganze Simulation aktualisieren
 				world.updateSimulation();
@@ -309,30 +270,10 @@ public final class Controller implements Runnable {
 				// + neue Runde einleuten (CountDownLatches neu setzen)
 				startBots();
 				
-//				long simTime = (world.getRealTime()-realTimeBegin);
-				
-				//time = System.nanoTime();
-				
 				// Alle Bots wieder freigeben
 				startSig.countDown();
 				
-//				long waitTime = (world.getRealTime()-realTimeBegin) - simTime;
-//				long elapsedTime= world.getRealTime()-realTimeBegin;
-//				long timeToSleep = world.getBaseTimeReal() - elapsedTime;
-				
 				Thread.sleep(this.world.getBaseTimeReal());
-				
-				// TODO:
-//				if ( timeToSleep > 0)
-//					Thread.sleep(timeToSleep);
-				//else {
-		//			Debug.out.println("Info: Sim schnappt sich " +elapsedTime+" ms (Sim="+simTime+" ms)" + "statt "+world.getBaseTimeReal()+" ms ==> kein sleep, aber kein Problem");
-					//		""+ -timeToSleep + "ms laenger als baseTimeReal! ==> no sleep");
-					//ErrorHandler.error
-				//}
-				
-				//System.out.println("Zyklus brauchte: "+ (world.getRealTime()-realTimeBegin) +" ms. ("+simTime+" ms simul, "+waitTime+" ms wait, " +timeToSleep+" ms sleep)");
-				//System.out.println("Raus: "+this.doneSignal.getCount()+" / "+this.botList.size());
 				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -344,36 +285,27 @@ public final class Controller implements Runnable {
 	
 	private synchronized void cleanup() {
 		
-		// TODO: Judge beenden?
-		
 		for(Bot b : this.botsToStart) {
-			//this.botsToStart.remove(b);
 			b.stop();
 			this.world.removeAliveObstacle(b);
 		}
 		
 		for(Bot b : this.botList) {
-			//this.botList.remove(b);
 			b.stop();
 			this.world.removeAliveObstacle(b);
 		}
 		
 		for(Bot b : this.botsToStop) {
-			
 			b.stop();
 			this.world.removeAliveObstacle(b);
 		}
-		System.out.println("Cleanup");
+		
 		this.botList     = new ArrayList<Bot>();
 		this.botsToStart = new ArrayList<Bot>();
-		
-		// TODO:
-		//this.world.cleanup();
 	}
 	
 	private synchronized void startBots() {
 		
-		// TODO: Shuold be a set?
 		for(Bot b : this.botsToStart)
 			this.botList.add(b);
 		
@@ -387,22 +319,16 @@ public final class Controller implements Runnable {
 		
 		for(Bot b : this.botsToStart) {
 			b.start();
-			// TODO:
-			//((CtBot)b).setSensRc5(CtBot.RC5_CODE_5);
 			System.out.println("Bot gestartet: "+b.getName()); //$NON-NLS-1$
 		}
 		
 		this.botsToStart = new ArrayList<Bot>();
 	}
 	
-//	private long botT = System.nanoTime();
-	
 	/**	 
 	 * @throws InterruptedException
 	 */
 	public void waitOnController() throws InterruptedException {
-		
-//		Debug.out.println("                                                "+String.format("%2.9f",(float)(System.nanoTime()-botT)/1000000000.));
 		
 		CountDownLatch doneSig = this.doneSignal;
 		CountDownLatch startSig = this.startSignal;
@@ -484,8 +410,6 @@ public final class Controller implements Runnable {
 	 */
 	public boolean setJudge(Judge j) {
 		
-		System.out.println(this.judge.getTime());
-		
 		if(this.judge == null || this.judge.getTime() == 0) {
 			this.judge = j;
 			
@@ -506,23 +430,19 @@ public final class Controller implements Runnable {
 	
 	public void setWorld(World world) {
 		
-		// TODO: ???
 		this.pause();
 		
 		for(Bot b : this.botsToStart) {
-			//this.botsToStart.remove(b);
 			b.stop();
 			this.world.removeAliveObstacle(b);
 		}
 		
 		for(Bot b : this.botList) {
-			//this.botList.remove(b);
 			b.stop();
 			this.world.removeAliveObstacle(b);
 		}
 		
 		for(Bot b : this.botsToStop) {
-			
 			b.stop();
 			this.world.removeAliveObstacle(b);
 		}	
@@ -544,21 +464,14 @@ public final class Controller implements Runnable {
 	
 	public void reset() {
 		
-		// TODO: Damit ueberhaupt ein Thrd vorhanden ist, diesen Starten:
-		
 		this.start();
 		
 		this.pause = false;
-			
 		
-		// TODO: Bots nur "zurueckstellen"???
 		this.stop();
 		
 		this.judge.reinit();
-//		if(world != null)
-//			this.world.reinit();
 		
-		// TODO: unpause muss auch greifen:
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
@@ -589,10 +502,6 @@ public final class Controller implements Runnable {
 		System.out.println("Warte auf Verbindung vom c't-Bot auf Port "+p); //$NON-NLS-1$
 		this.botListener = new BotSocketListener(p);
 		this.botListener.start();
-		
-		//} else {
-		//	ErrorHandler.error("Kein botPort in der Config-Datei gefunden. Es wird nicht auf Bots gelauscht!");			
-		//}
 	}
 	
 	/**
@@ -630,7 +539,6 @@ public final class Controller implements Runnable {
 		 */
 		public void die() {
 			this.listen = false;
-			//this.interrupt();
 		}
 	}
 	
@@ -669,7 +577,6 @@ public final class Controller implements Runnable {
 					 * gaenzlich entfernt.
 					 */
 					try {
-					//server.setSoTimeout(1000);
 					tcp.connect(server.accept());
 					System.out.println("Eingehende Verbindung auf dem Bot-Port"); //$NON-NLS-1$
 					
@@ -718,8 +625,6 @@ public final class Controller implements Runnable {
 			return name;
 		}
 		
-		// TODO Namensvergabe sollte die Namen von gestorbenen Bots neu verteilen
-
 		// Schaue nach, wieviele Bots von der Sorte wir schon haben
 		Integer bots = numberBots.get(type);
 		if (bots == null){
@@ -765,7 +670,6 @@ public final class Controller implements Runnable {
 									new Vector3d(1.0f, -0.5f, 0f),
 									con);
 							System.out.println("Virtueller Bot nimmt Verbindung auf"); //$NON-NLS-1$
-							//System.exit(0);  // <<------------------------ !!!!!!!!!!!!
 						}
 					} else {
 						System.out.print("Bot ist nicht willkommen: \n" //$NON-NLS-1$
@@ -786,7 +690,7 @@ public final class Controller implements Runnable {
 		if (bot != null && this.world != null && this.judge.isAddAllowed()) {
 			// TODO:
 			addBot(bot);
-			this.ctSim.addBot(new BotInfo(/*"Test"+Math.round(Math.random()*10), */"CTest", bot, new DefBotPanel()));  //$NON-NLS-1$//$NON-NLS-2$
+			this.ctSim.addBot(new BotInfo("CTest", bot, new DefBotPanel()));  //$NON-NLS-1$//$NON-NLS-2$
 		} else
 			try {
 				con.disconnect();
@@ -811,7 +715,6 @@ public final class Controller implements Runnable {
 		Bot bot = null;
 		
 		if (type.equalsIgnoreCase("CtBotSimTest")) { //$NON-NLS-1$
-			//bot = new CtBotSimTest(new Point3f(), new Vector3f());
 			
 			String name = getNewBotName("CtBotSimTest");
 			bot = new CtBotSimTest(this.world, name, new Point3d(0d, 0d, 0.075d), new Vector3d()); //$NON-NLS-1$
@@ -871,20 +774,7 @@ public final class Controller implements Runnable {
 			bot.setController(this);
 			bot.setWorld(this.world);
 			
-			
-//			ctSim.getView().setMinimumFrameCycleTime(100);
-//			System.out.println("dT="+ctSim.getView().getMinimumFrameCycleTime()+" ms");
-
-			
 			return bot;
-			
-//			controlFrame.addBot(bot);
-//			// Dann wird der eigene Bot-Thread gestartet:
-//			bot.start();
-//			
-//			controlFrame.addViewItem(bot.getName());
-			
-			
 		}
 		return null;
 	}
