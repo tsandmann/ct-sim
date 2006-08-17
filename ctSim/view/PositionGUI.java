@@ -228,6 +228,15 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			this.spinner.setEditor(new JSpinner.NumberEditor(this.spinner, "0.00")); //$NON-NLS-1$
 		}
 		
+		protected void fireEditingStopped() {
+			// TODO: Ein bisl dirty, aber naja...
+			PositionGUI.this.noupdate = true;
+			super.fireEditingStopped();
+//			for(int i=0; i<this.getCellEditorListeners().length; i++)
+//				System.out.println(this.getCellEditorListeners()[i].getClass());
+			PositionGUI.this.noupdate = false;
+		}
+		
 		/**
 		 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
 		 */
@@ -240,6 +249,10 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 				this.model.setMinimum(-180d);
 				this.model.setMaximum(180d);
 				this.model.setStepSize(1.0d);
+			} else if(row == 2) {
+				this.model.setMinimum(0d);
+				this.model.setMaximum(1000d);
+				this.model.setStepSize(0.01d);
 			} else {
 				this.model.setMinimum(0d);
 				this.model.setMaximum(1000d);
