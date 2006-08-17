@@ -243,7 +243,7 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			} else {
 				this.model.setMinimum(0d);
 				this.model.setMaximum(1000d);
-				this.model.setStepSize(0.1d);
+				this.model.setStepSize(0.12d);
 			}
 			
 			// this.spinner.setEditor(table.getCellRenderer(row, column));
