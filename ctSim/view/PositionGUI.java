@@ -18,6 +18,7 @@
  */
 package ctSim.view;
 
+import java.util.EventObject;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
@@ -28,6 +29,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import java.awt.Component;
+import java.awt.event.MouseEvent;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -213,6 +215,8 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 	
 	private class SpinnerCellEditor extends AbstractCellEditor implements TableCellEditor {
 		
+		protected int clickCountToStart = 2;
+		
 		private static final long serialVersionUID = 1L;
 		private JSpinner spinner;
 		private SpinnerNumberModel model;
@@ -227,6 +231,18 @@ public class PositionGUI<E extends BotPosition> extends ComponentGroupGUI<E> {
 			
 			this.spinner.setEditor(new JSpinner.NumberEditor(this.spinner, "0.00")); //$NON-NLS-1$
 		}
+		
+		public boolean isCellEditable(EventObject anEvent) {
+			// Copied from the source of "DefaultCellEditor" by java.sun.com:
+		    if (anEvent instanceof MouseEvent) { 
+		    	return ((MouseEvent)anEvent).getClickCount() >= clickCountToStart;
+		    }
+		    return true;
+		}
+		
+		public boolean shouldSelectCell(EventObject anEvent) { 
+            return true; 
+        }
 		
 		protected void fireEditingStopped() {
 			// TODO: Ein bisl dirty, aber naja...
