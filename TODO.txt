@@ -28,8 +28,6 @@ Requested Features:
 * Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek)
   -> erledigt?
 
-* ContestJudge wieder einbauen
-
 * FB-Kommandos können (so nicht) vom Judge geschickt werden
 
 * Manipulation von Pos. und Sensoren unterbinden
@@ -74,6 +72,8 @@ Der Sim findet sonst parcours.dtd nicht.
 
 ERLEDIGT:
 =========
+
+* ContestJudge wieder einbauen (fbe)
 
 * Zielerkennung (des Judge) nicht immer korrekt (fbe)
 

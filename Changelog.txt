@@ -1,6 +1,12 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-08-23 Felix Beckwermert [felix@beckwermert.de]: ContestJudge zum testen eingecheckt
+
+2006-08-23 Felix Beckwermert [felix@beckwermert.de]: BotManager eingeführt; Ctrl. und View auf diesen angepasst
+
+2006-08-23 Felix Beckwermert [felix@beckwermert.de]: Kleinere (Schönheits-)Anpassungen
+
 2006-08-13 Felix Beckwermert [felix@beckwermert.de]: Bug in der Ziel-Erkennung behoben
 
 2006-08-11 Felix Beckwermert [felix@beckwermert.de]: "Gleitpin-fällt"-Bug gefixt (dank forum); außerdem einen Bug zur Berechnung der Pos. des linken Rades gefixt (fehlte ein "-")
