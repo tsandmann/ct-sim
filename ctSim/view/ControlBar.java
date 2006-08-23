@@ -33,6 +33,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 
+import ctSim.controller.BotManager;
+
 /**
  * Der Rahmen, der die Steuertafeln der einzelnen Bots enthaelt
  * @author Felix Beckwermert
@@ -118,7 +120,8 @@ public final class ControlBar extends JPanel {
 	//       and 'mouseClicked(..)' in 'JTabbedPaneWithCloseIcons'
 	public void remBot(int idx) {
 		
-		this.parent.removeBot(this.botList.get(idx));
+		//this.parent.removeBot(this.botList.get(idx));
+		BotManager.removeBot(this.botList.get(idx));
 	}
 	
 	/** 

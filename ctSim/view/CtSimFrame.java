@@ -53,6 +53,7 @@ import javax.swing.filechooser.FileFilter;
 import org.xml.sax.SAXException;
 
 import ctSim.ConfigManager;
+import ctSim.controller.BotManager;
 import ctSim.controller.Controller;
 import ctSim.model.ParcoursGenerator;
 import ctSim.model.World;
@@ -128,6 +129,8 @@ public class CtSimFrame extends JFrame {
 		super(title);
 		
 		this.controller = ctrl;
+		
+		BotManager.setSim(this);
 		
 		loadImages();
 		
@@ -743,7 +746,6 @@ public class CtSimFrame extends JFrame {
 			
 			Debug.out.println("Judge \""+judge+"\" wurde gewaehlt.");  //$NON-NLS-1$//$NON-NLS-2$
 		}
-		Debug.out.println("Judge");
 	}
 	
 	private void cmdAddBotClicked() {
@@ -759,9 +761,10 @@ public class CtSimFrame extends JFrame {
 		if(bot == null)
 			return;
 		
-		BotInfo info = new BotInfo(/*"Test"+Math.round(Math.random()*10), */"SimTest", bot, new DefBotPanel()); //$NON-NLS-1$ //$NON-NLS-2$
-		
-		this.addBot(info);
+//		BotInfo info = new BotInfo(/*"Test"+Math.round(Math.random()*10), */"SimTest", bot, new DefBotPanel()); //$NON-NLS-1$ //$NON-NLS-2$
+//		
+//		this.addBot(info);
+		//BotManager.addBot(info);
 	}
 	
 	private void cmdConfigureBotsClicked() {
@@ -933,7 +936,7 @@ public class CtSimFrame extends JFrame {
 		this.update();
 		this.split.resetToPreferredSizes();
 		
-		this.controller.removeBot(botInfo.getBot());
+//		this.controller.removeBot(botInfo.getBot());
 		
 		Debug.out.println("Bot \""+botInfo.getName()+"\" wurde gelöscht.");  //$NON-NLS-1$//$NON-NLS-2$
 	}

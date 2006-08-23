@@ -39,7 +39,7 @@ public class Sensors {
 	}
 	
 	public static SensorGroupGUI getGuiFor(@SuppressWarnings("unused") RemoteControlSensor sens) {
-		System.out.println("hier");
+		
 		return new RemoteControlGroupGUI();
 	}
 }

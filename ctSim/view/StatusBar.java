@@ -154,7 +154,7 @@ public class StatusBar extends Box {
 		this.tickRateField.setMinimumSize(new Dimension(44, 22));
 		this.tickRateField.setMaximumSize(new Dimension(44, 22));
 		this.tickRateField.setPreferredSize(new Dimension(44, 22));
-		System.out.println(this.tickRateField.getPreferredSize());
+		//System.out.println(this.tickRateField.getPreferredSize());
 		
 		this.tickRateField.addPropertyChangeListener(new PropertyChangeListener() {
 

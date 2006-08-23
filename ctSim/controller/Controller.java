@@ -91,7 +91,7 @@ public final class Controller implements Runnable {
 	private Judge judge;
 	private CtSimFrame ctSim;
 	private World world;
-	private List<Bot> botList, botsToStart, botsToStop;
+//	private List<Bot> botList, botsToStart, botsToStop;
 	
 	/** Puffer fuer den naechsten BotNamen. 
 	 * Wird von invokeBot(Name, file) gesetzt und dann von
@@ -106,9 +106,11 @@ public final class Controller implements Runnable {
 	
 	private Controller() {
 		
-		this.botList     = new ArrayList<Bot>();
-		this.botsToStart = new ArrayList<Bot>();
-		this.botsToStop  = new ArrayList<Bot>();
+//		this.botList     = new ArrayList<Bot>();
+//		this.botsToStart = new ArrayList<Bot>();
+//		this.botsToStop  = new ArrayList<Bot>();
+		
+		BotManager.setController(this);
 		
 		this.pause = true;
 		
@@ -240,7 +242,7 @@ public final class Controller implements Runnable {
 		Thread thisThread = Thread.currentThread();
 		
 		startSignal = new CountDownLatch(1);
-		doneSignal = new CountDownLatch(botList.size());
+		doneSignal = new CountDownLatch(BotManager.getSize());
 		
 		while(this.ctrlThread == thisThread) {
 			try {
@@ -285,44 +287,47 @@ public final class Controller implements Runnable {
 	
 	private synchronized void cleanup() {
 		
-		for(Bot b : this.botsToStart) {
-			b.stop();
-			this.world.removeAliveObstacle(b);
-		}
-		
-		for(Bot b : this.botList) {
-			b.stop();
-			this.world.removeAliveObstacle(b);
-		}
-		
-		for(Bot b : this.botsToStop) {
-			b.stop();
-			this.world.removeAliveObstacle(b);
-		}
-		
-		this.botList     = new ArrayList<Bot>();
-		this.botsToStart = new ArrayList<Bot>();
+//		for(Bot b : this.botsToStart) {
+//			b.stop();
+//			this.world.removeAliveObstacle(b);
+//		}
+//		
+//		for(Bot b : this.botList) {
+//			b.stop();
+//			this.world.removeAliveObstacle(b);
+//		}
+//		
+//		for(Bot b : this.botsToStop) {
+//			b.stop();
+//			this.world.removeAliveObstacle(b);
+//		}
+//		
+//		this.botList     = new ArrayList<Bot>();
+//		this.botsToStart = new ArrayList<Bot>();
+		BotManager.reinit();
 	}
 	
 	private synchronized void startBots() {
 		
-		for(Bot b : this.botsToStart)
-			this.botList.add(b);
+//		for(Bot b : this.botsToStart)
+//			this.botList.add(b);
+//		
+//		for(Bot b : this.botsToStop) {
+//			b.stop();
+//			this.world.removeAliveObstacle(b);
+//		}
 		
-		for(Bot b : this.botsToStop) {
-			b.stop();
-			this.world.removeAliveObstacle(b);
-		}
-		
-		this.doneSignal = new CountDownLatch(this.botList.size());
+		this.doneSignal  = new CountDownLatch(BotManager.getNewSize());
 		this.startSignal = new CountDownLatch(1);
 		
-		for(Bot b : this.botsToStart) {
-			b.start();
-			System.out.println("Bot gestartet: "+b.getName()); //$NON-NLS-1$
-		}
+		BotManager.startNstopBots();
 		
-		this.botsToStart = new ArrayList<Bot>();
+//		for(Bot b : this.botsToStart) {
+//			b.start();
+//			System.out.println("Bot gestartet: "+b.getName()); //$NON-NLS-1$
+//		}
+//		
+//		this.botsToStart = new ArrayList<Bot>();
 	}
 	
 	/**	 
@@ -432,23 +437,26 @@ public final class Controller implements Runnable {
 		
 		this.pause();
 		
-		for(Bot b : this.botsToStart) {
-			b.stop();
-			this.world.removeAliveObstacle(b);
-		}
+//		for(Bot b : this.botsToStart) {
+//			b.stop();
+//			this.world.removeAliveObstacle(b);
+//		}
+//		
+//		for(Bot b : this.botList) {
+//			b.stop();
+//			this.world.removeAliveObstacle(b);
+//		}
+//		
+//		for(Bot b : this.botsToStop) {
+//			b.stop();
+//			this.world.removeAliveObstacle(b);
+//		}	
+//		
+//		this.botList     = new ArrayList<Bot>();
+//		this.botsToStart = new ArrayList<Bot>();
 		
-		for(Bot b : this.botList) {
-			b.stop();
-			this.world.removeAliveObstacle(b);
-		}
-		
-		for(Bot b : this.botsToStop) {
-			b.stop();
-			this.world.removeAliveObstacle(b);
-		}	
-		
-		this.botList     = new ArrayList<Bot>();
-		this.botsToStart = new ArrayList<Bot>();
+		BotManager.reset();
+		BotManager.setWorld(world);
 		
 		this.world = world;
 		if(this.judge != null)
@@ -598,17 +606,20 @@ public final class Controller implements Runnable {
 	 */
 	public int getParticipants() {
 		
-		return this.botList.size()+this.botsToStart.size();
+//		return this.botList.size()+this.botsToStart.size();
+		return BotManager.getNewSize();
 	}
 	
-	public synchronized void removeBot(Bot bot) {
+	public synchronized void removeBot(BotInfo bot) {
 		
-		this.world.removeAliveObstacle(bot);
+//		this.world.removeAliveObstacle(bot);
+//		
+//		this.botsToStart.remove(bot);
+//		this.botList.remove(bot);
+//		
+//		this.botsToStop.add(bot);
 		
-		this.botsToStart.remove(bot);
-		this.botList.remove(bot);
-		
-		this.botsToStop.add(bot);
+		BotManager.removeBot(bot);
 	}
 	
 	/**
@@ -690,7 +701,8 @@ public final class Controller implements Runnable {
 		if (bot != null && this.world != null && this.judge.isAddAllowed()) {
 			// TODO:
 			addBot(bot);
-			this.ctSim.addBot(new BotInfo("CTest", bot, new DefBotPanel()));  //$NON-NLS-1$//$NON-NLS-2$
+			//this.ctSim.addBot(new BotInfo("CTest", bot, new DefBotPanel()));  //$NON-NLS-1$//$NON-NLS-2$
+			//BotManager.addBot(new BotInfo("CTest", bot, new DefBotPanel()));
 		} else
 			try {
 				con.disconnect();
@@ -750,7 +762,7 @@ public final class Controller implements Runnable {
 		
 		if (bot != null && this.world != null && this.judge.isAddAllowed()) {
 			
-			// TODO Sinnvolle Zuordnung von Bot-Name zu Konfig
+			// TODO Sinnvolle Zuordnung von Bot-Name zu Config
 			HashMap botConfig = getBotConfig("config/ct-sim.xml",bot.getName()); //$NON-NLS-1$
 			if (botConfig == null){
 				ErrorHandler.error("Keine BotConfig fuer: <"+bot.getName()+"> in der XML-Config-Datei gefunden. Lade Defaults.");  //$NON-NLS-1$//$NON-NLS-2$
@@ -764,15 +776,17 @@ public final class Controller implements Runnable {
 			// TODO:
 			bot.setAppearances(botConfig);
 			
-			this.world.addBot(bot);
+//			this.world.addBot(bot);
 			
 			// TODO: (?)
 			//bot.start();
 			
-			this.botsToStart.add(bot);
+//			this.botsToStart.add(bot);
 			
 			bot.setController(this);
 			bot.setWorld(this.world);
+			
+			BotManager.addBot(new BotInfo(bot.getName(), bot, new DefBotPanel()));
 			
 			return bot;
 		}
@@ -993,5 +1007,10 @@ public final class Controller implements Runnable {
 	 */
 	public World getWorld() {
 		return world;
+	}
+	
+	public void openWorld(String f) {
+		
+		this.ctSim.openWorld(new File(f));
 	}
 }
