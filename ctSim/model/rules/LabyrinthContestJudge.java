@@ -65,6 +65,8 @@ public class LabyrinthContestJudge extends Judge {
 		super(ctrl);
 		
 		this.ctrl = ctrl;
+		
+		this.init();
 	}
 	
 	private void check2(){
@@ -684,7 +686,7 @@ public class LabyrinthContestJudge extends Judge {
 	
 	
 	
-	@Override
+//	@Override
 	protected void init() {
 		
 		//	Register the JDBC driver for MySQL.

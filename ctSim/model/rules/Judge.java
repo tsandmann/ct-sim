@@ -168,7 +168,7 @@ public abstract class Judge {
 //	}
 	
 	/** Hier kommt alles rein, was vor dem Start ausgefuehrt werden muss*/
-	protected abstract void init();
+//	protected abstract void init();
 	
 	public void reinit() {
 		

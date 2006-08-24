@@ -60,10 +60,10 @@ public class DefaultJudge extends Judge {
 		return true;
 	}
 	
-	@Override
-	protected void init() {
-		
-	}
+//	@Override
+//	protected void init() {
+//		
+//	}
 	
 	public void reinit() {
 		
