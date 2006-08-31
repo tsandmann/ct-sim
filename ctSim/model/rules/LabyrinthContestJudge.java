@@ -4,20 +4,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.*;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Set;
-import java.io.InputStream;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 
 import ctSim.ErrorHandler;
 import ctSim.SimUtils;
-import ctSim.controller.BotManager;
 import ctSim.controller.Controller;
 import ctSim.model.AliveObstacle;
 import ctSim.model.World;
@@ -28,33 +31,39 @@ import ctSim.view.sensors.RemoteControlGroupGUI;
 
 /** Judge, der einen kompletten Labyrinthwettbwerb ausrichten kann */
 public class LabyrinthContestJudge extends Judge {
+	int state = STATE_WAIT_FOR_GAME;
+
+	// status vom judge
 	static final String STATE_NOT_INIT ="not init";
 	static final String STATE_WAIT_FOR_BOT1 ="wait for bot1";
 	static final String STATE_WAIT_FOR_BOT2 = "wait for bot2";
 	static final String STATE_READY_TO_RUN  = "ready to run";
 	static final String STATE_RUNNING  = "running";
 	static final String STATE_GAME_OVER = "game over";
-	String databaseUrl = "jdbc:mysql://localhost:3306/ctjudge";
-	Connection databaseConnection = null;
-
-	
 	static final int STATE_WAIT_FOR_GAME =1;
 	static final int STATE_GAME_RUNNING =2;
 	static final int STATE_DONE =3;
-
-	int state = STATE_WAIT_FOR_GAME;
-
-	int runningLevel;
-	int runningGame;
-	String runningParcours;
 	
+	String databaseUrl = "jdbc:mysql://localhost:3306/ctjudge";
+	Connection databaseConnection = null;
+
+	/** 8 fuer Achtelfinale, 4 fuer Viertelfinale usw. */
+	//$$ vielliecht unnötig
+	int runningLevel;
+	/** Nummer des aktuellen Spiels im runningLevel */  
+	int runningGame;
+	
+	/** Typen, die gegeneinander laufen */
 	Bot bot1 = null;
 	Bot bot2 = null;
+	
+	String bot1Name, bot2Name; //$$
 	
 	private Controller ctrl;
 	private World world;
 	
 	private boolean first = true;
+	private boolean second = false;
 	
 	/**
 	 * Konstruktor
@@ -63,22 +72,86 @@ public class LabyrinthContestJudge extends Judge {
 	public LabyrinthContestJudge(Controller ctrl) {
 		
 		super(ctrl);
-		
 		this.ctrl = ctrl;
-		
 		this.init();
 	}
 	
-	private void check2(){
+	private boolean check2() throws Exception{
 		
-		Set<AliveObstacle> obsts = this.world.getAliveObstacles();
+		Set<AliveObstacle> obsts = this.world.getAliveObstacles(); //$$ schöner: getBots()
 		
-		Bot finishCrossed = null;
+		Bot finishCrossed = null; // Typ, der gewonnen hat
+		
+		if(first) { // Vorbereiten eines Spiels
+			
+			// Bots adden
+			Statement statement = databaseConnection.createStatement();
+			
+//			 Die Welt wird pausiert, bis alle Spieler da sind
+			//this.ctrl.pause();
+//			Thread.sleep(200);
+
+			ResultSet bots= statement.executeQuery(
+					"SELECT * " +
+					"FROM ctsim_bot " +
+					"WHERE name = '"+bot1Name+"'");
+			bots.next();
+			
+			
+			
+			
+			// Hole Binary aus DB und kopiere es in eine Datei
+			blob2File("bot12.exe");
+			// Starte Bot aus Binary
+			//this.ctrl.invokeBot(bot1Name,"bot12.exe");
+			this.ctrl.invokeBot("bot12.exe");
+			
+			
+			
+			while (this.ctrl.getParticipants() != 1){
+				Thread.sleep(100);
+				System.out.println("Warte auf Bot: "+bot1+" ("+bot1Name+")");
+			}
+			//bot1= (Bot) this.ctrl.getWorld().getAliveObstacle(bot1Name);
+			
+			
+			bots= statement.executeQuery(
+					"SELECT * " +
+					"FROM ctsim_bot " +
+					"WHERE name = '"+bot2Name+"'");
+			bots.next();
+			
+		
+			
+			// Hole Binary aus DB und kopiere es in eine Datei
+			blob2File("bot22.exe");
+			// Starte Bot aus Binary
+			//this.ctrl.invokeBot(bot2Name,"bot22.exe");
+			this.ctrl.invokeBot("bot22.exe");
+
+			// Eigentlich koennte man hier auf den 2. Bot warten, aber das ist egal, da check() das macht
+			while (this.ctrl.getParticipants() != 2){
+				Thread.sleep(100);
+				System.out.println("Warte auf Bot: "+bot2+" ("+bot2Name+")");
+			}
+			//bot2=(Bot) this.ctrl.getWorld().getAliveObstacle(bot2Name);
+			
+			Iterator<AliveObstacle> it = this.world.getAliveObstacles().iterator();
+			
+			bot1 = (Bot)it.next();
+			bot2 = (Bot)it.next();
+			
+			this.ctrl.unpause();
+			
+			second = true;
+			first = false;
+			return false;
+		}
 		
 		for(AliveObstacle obst : obsts) {
 			
-			if (first ==true){
-				if (obst instanceof CtBotSimTcp)
+			if (second ==true){ // "Initialisierung Teil 2"
+				if (obst instanceof CtBotSimTcp) //$$ sollte ctBot sein, wo sendRCCommand() auch hingehoert
 					((CtBotSimTcp)obst).sendRCCommand(RemoteControlGroupGUI.RC5_CODE_5);
 			}
 			
@@ -93,11 +166,14 @@ public class LabyrinthContestJudge extends Judge {
 			}
 		}
 		if (finishCrossed != null){
+			// Zustand: wir haben einen Gewinner
 			kissArrivingBot(finishCrossed,getTime());
 			finishCrossed=null;
 		}
 		
-		first=false;
+		second=false;
+		
+		return true;
 	}
 	
 	//@Override
@@ -107,18 +183,19 @@ public class LabyrinthContestJudge extends Judge {
 				case STATE_WAIT_FOR_GAME:
 						ResultSet rs = getNextGame();
 						if (rs.next()){
-							Timestamp sceduled = rs.getTimestamp("sceduled");
+							Timestamp scheduled = rs.getTimestamp("sceduled");
 							Calendar now = Calendar.getInstance();                         // lokales Kalendersystem mit aktueller Zeit
 							
-							long ms= sceduled.getTime()-now.getTimeInMillis();
+							long ms= scheduled.getTime()-now.getTimeInMillis();
 							if (ms >0){
 								try {
-									System.out.println(now.getTime()+": Warte "+ms/1000+" s auf naechsten Wettkampf ("+sceduled+")");
+									System.out.println(now.getTime()+": Warte "+ms/1000+" s auf naechsten Wettkampf ("+scheduled+")");
 									Thread.sleep(ms);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
 							} else {
+								// Zustand: wir wollen ein Spiel starten
 								state=STATE_GAME_RUNNING;
 								System.out.println(now.getTime()+": Starte Rennen. Level= "+rs.getInt("level")+" Game= "+rs.getInt("game")+ " Sceduled= "+rs.getTimestamp("sceduled"));
 								try {
@@ -135,8 +212,13 @@ public class LabyrinthContestJudge extends Judge {
 					break;
 					
 				case STATE_GAME_RUNNING:
-					log();
-					check2();
+					try {
+						if (check2())
+							log();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					break;
 
 				case STATE_DONE:		
@@ -187,6 +269,34 @@ public class LabyrinthContestJudge extends Judge {
 		} 		
 	}
 	
+	private void gameTearDown()
+	{
+		state=STATE_WAIT_FOR_GAME;
+		this.ctrl.pause();
+		// Alle Bots entfernen
+		while (this.ctrl.getParticipants() > 0){
+	
+			Iterator it = this.ctrl.getWorld().getAliveObstacles().iterator();
+			while (it.hasNext()){
+				Object obst = it.next();
+				if (obst instanceof Bot)
+					((Bot) obst).die();
+			}
+	
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// Auch egal
+			}
+			System.out.println("Warte bis alle Bots gestorben sind!");
+		}
+	}
+
+	/**
+	 * 
+	 * @param bot
+	 * @param time	Simulatorzeit [ms] seit Start des Spiels 
+	 */
 	protected void kissArrivingBot(Bot bot, long time) {
 		System.out.println("Bot "+bot.getName()+" hat das Ziel nach "+time+" ms erreicht!");
 		
@@ -195,7 +305,7 @@ public class LabyrinthContestJudge extends Judge {
 			statement = databaseConnection.createStatement();
 			statement.executeUpdate(
 					"UPDATE ctsim_game " +
-					"SET winner='"+bot.getName()+"', " +
+					"SET winner='"+bot.getName()+"', " + //$$ soll ID sein, nicht Name
 					"finishtime="+time+", "+
 					"state= '"+STATE_GAME_OVER+"' "+
 					"WHERE level ="+runningLevel+" AND game ="+runningGame
@@ -210,31 +320,13 @@ public class LabyrinthContestJudge extends Judge {
 			ErrorHandler.error("Probleme beim Fortschreiben des Spielplans "+e);
 			e.printStackTrace();			
 		}
-
-//		state=STATE_WAIT_FOR_GAME;
-//		this.ctrl.pause();
-//		// Alle Bots entfernen
-//		while (this.ctrl.getParticipants() > 0){
-//
-//			Iterator it = this.ctrl.getWorld().getAliveObstacles().iterator();
-//			while (it.hasNext()){
-//				Object obst = it.next();
-//				if (obst instanceof Bot)
-//					((Bot) obst).die();
-//			}
-//
-//			try {
-//				Thread.sleep(100);
-//			} catch (InterruptedException e) {
-//				// Auch egal
-//			}
-//			System.out.println("Warte bis alle Bots gestorben sind!");
-//		}
 		
+		//$$ gameTearDown()
+		
+		// Spiel de-initialisieren
 		bot1=null;
 		bot2=null;
 		// Rennen laueft nicht mehr
-		//setRaceStartet(false);
 		state=STATE_WAIT_FOR_GAME;
 	}
 
@@ -244,10 +336,8 @@ public class LabyrinthContestJudge extends Judge {
 	 * @throws Exception 
 	 */
 	private void startGame(ResultSet game) throws Exception {
-		//setRaceStartet(false);
-		
-		String bot1Name = game.getString("bot1");
-		String bot2Name = game.getString("bot2");
+		bot1Name = game.getString("bot1");
+		bot2Name = game.getString("bot2");
 		
 		runningGame = game.getInt("game");
 		runningLevel= game.getInt("level");
@@ -256,81 +346,29 @@ public class LabyrinthContestJudge extends Judge {
 		ResultSet level= statement.executeQuery(
 				"SELECT * " +
 				"FROM ctsim_level " +
-				"WHERE id = "+runningLevel);   //level<->id
+				"WHERE id = "+runningLevel);
 		
 		level.next();
 		String newParcours = level.getString("parcours");
 
 		System.out.println("Starte Level="+ runningLevel +" Game="+runningGame+" Bot1="+bot1Name+" Bot2="+bot2Name+ " Parcours="+newParcours);
-		
+
+		//$$ es ist fraglich, ob die Welt (ctrl.openWorld()) korrekt neuinitialisiert wird. Moeglicherweise brauchen wir diesen Code wieder.
 //		if (!newParcours.equals(runningParcours)){
 //			System.out.println("Muss den Parcours wechseln!");
 //			this.ctrl.changeParcours(newParcours);
 //			runningParcours=newParcours;
 //		}
-		
-		this.ctrl.openWorld(newParcours);
 
 		statement.executeUpdate(
 				"UPDATE ctsim_game " +
 				"SET state= '"+STATE_RUNNING+"' "+
 				"WHERE level ="+runningLevel+" AND game ="+runningGame
 				);
-
 		
-		// Die Welt wird pausiert, bis alle Spieler da sind
-		//this.ctrl.pause();
-		Thread.sleep(200);
-
-		ResultSet bots= statement.executeQuery(
-				"SELECT * " +
-				"FROM ctsim_bot " +
-				"WHERE name = '"+bot1Name+"'");
-		bots.next();
+		this.ctrl.openWorld(newParcours);
 		
-		
-		
-		
-		// Hole Binary aus DB und kopiere es in eine Datei
-		blob2File("bot12.exe");
-		// Starte Bot aus Binary
-		//this.ctrl.invokeBot(bot1Name,"bot12.exe");
-		this.ctrl.invokeBot("bot12.exe");
-		
-		
-		
-		while (this.ctrl.getParticipants() != 1){
-			Thread.sleep(100);
-			System.out.println("Warte auf Bot: "+bot1Name+" ("+bot1Name+")");
-		}
-		//bot1= (Bot) this.ctrl.getWorld().getAliveObstacle(bot1Name);
-		
-		
-		bots= statement.executeQuery(
-				"SELECT * " +
-				"FROM ctsim_bot " +
-				"WHERE name = '"+bot2Name+"'");
-		bots.next();
-		
-	
-		
-		// Hole Binary aus DB und kopiere es in eine Datei
-		blob2File("bot22.exe");
-		// Starte Bot aus Binary
-		//this.ctrl.invokeBot(bot2Name,"bot22.exe");
-		this.ctrl.invokeBot("bot22.exe");
-
-		// Eigentlich koennte man hier auf den 2. Bot warten, aber das ist egal, da check() das macht
-		while (this.ctrl.getParticipants() != 2){
-			Thread.sleep(100);
-			System.out.println("Warte auf Bot: "+bot2+" ("+bot2Name+")");
-		}
-		//bot2=(Bot) this.ctrl.getWorld().getAliveObstacle(bot2Name);
-		
-		Iterator<AliveObstacle> it = this.world.getAliveObstacles().iterator();
-		
-		bot1 = (Bot)it.next();
-		bot2 = (Bot)it.next();
+		state = STATE_GAME_RUNNING;
 		
 		this.ctrl.unpause();
 	}
@@ -343,12 +381,10 @@ public class LabyrinthContestJudge extends Judge {
 	 */
 	private void blob2File(String fileName) throws Exception{
 		
-		
 		Statement statement = databaseConnection.createStatement();
 		
 		File file = new File(fileName);
 		FileOutputStream fos = new FileOutputStream( file );
-				
 		
 		ResultSet rs = statement.executeQuery("Select * from ctsim_bot");
 		
@@ -364,17 +400,11 @@ public class LabyrinthContestJudge extends Judge {
 		        }
 		        
 		fos.close();        
-		      
-			
-			
-		
-		
 	}
-	
-
 	
 	/**
 	 * Erzeugt ein paar Testdaten
+	 * $$ Testmethode
 	 * Achtung loescht die Tabellen zuvor
 	 * @throws FileNotFoundException 
 	 */
@@ -436,7 +466,9 @@ public class LabyrinthContestJudge extends Judge {
 
 	}
 	
+	//$$ Hier auch Vorrunde behandeln
 	/**
+	 * Gameplan anlegen $$
 	 * Bereitet die eintraege in der Tabelle Games vor
 	 * Achtung, loescht alle bisherigen eintraege
 	 * @param maxLevel hoechstes Level, fuer das vorbereitet wird
@@ -455,19 +487,21 @@ public class LabyrinthContestJudge extends Judge {
 						"values ("+level+","+game+")"); 
 			}
 		}
+		// per default stehen jetzt alle auf state == "not init"
+		
 		// Das Semifinale faellt aus dem Schema:
 		statement.executeUpdate("INSERT INTO ctsim_game (level, game) " +
 				"values ("+0+","+1+")"); 
 		
-		// Alle Level, bis auf das letzte werden auf jedenfall gebraucht, daher state setzen
+		// Alle Level, bis auf das letzte werden auf jeden Fall gebraucht, daher state setzen
 		statement.executeUpdate("UPDATE ctsim_game " +
 				"SET state='"+STATE_WAIT_FOR_BOT1+"'"+
 				"WHERE level<"+maxLevel);
 	}
 	
 	/**
-	 * Traegt zwei Bots in ein Game ein
-	 * @param bot Bot der platziert werden soll
+	 * Traegt einen Bots in ein Game ein
+	 * @param bot Bot der platziert werden soll //$$ sollte ID sein
 	 * @param level Das Level in das das Game eingefuegt wird
 	 * @param game Die Nummer des Spieles im jeweiligen Level
 	 * @throws SQLException 
@@ -475,7 +509,6 @@ public class LabyrinthContestJudge extends Judge {
 	 */
 	private void placeBot(String bot, int level, int game) throws SQLException, GamePlanException{
 		System.out.println("Placing Bot Name= '"+bot+"' in Level "+level+" Spiel "+game);
-		
 		
 		Statement statement = databaseConnection.createStatement();
 		// Suche das Spiel heraus
@@ -519,31 +552,32 @@ public class LabyrinthContestJudge extends Judge {
 	 * @throws GamePlanException 
 	 */
 	private void propagateWinner(int level, int game) throws SQLException, GamePlanException{
-		Statement statement = databaseConnection.createStatement();
-		ResultSet rs = statement.executeQuery(
+		ResultSet rs = databaseConnection.createStatement().executeQuery(
 				"SELECT * " +
 				"FROM ctsim_game " +
 				"WHERE level ="+level+" AND game ="+game
 				);
 		
 		rs.next();
-		String winner = rs.getString("winner");
+		String winner = rs.getString("winner"); //$$ sollte ID sein
 		
-		String looser = rs.getString("bot1");
-		if (looser.equals(winner))
-			looser = rs.getString("bot2");
+		String loser = rs.getString("bot1"); //$$ sollte ID sein
+		if (loser.equals(winner))
+			loser = rs.getString("bot2"); //$$ sollte ID sein
 		
 		if (winner != null)
 			if (level > 2)	
-				placeBot(winner,level/2,(game+1)/2);
+				placeBot(winner,level/2,(game+1)/2); //$$ game: altes ID-Schema -> anpassen
 			else {
 				// Aus dem Halbfinale kommen die Gewinner ins Finale und die Verlierer ins Semifinale
 				if (level ==2) {
 					placeBot(winner,1,1);
-					placeBot(looser,0,1);
+					placeBot(loser,0,1);
 				}
 			}
+			// und fuer level == 1 (Finale wurde gespielt) wird nichts gemacht; kein weiteres Propagieren
 		else {
+			// "kann nicht passieren"
 			GamePlanException e = new GamePlanException("Fehler: Versuch einen nicht ermittelten Sieger zu propagieren: Level= "+level+" Game= "+game);
 			ErrorHandler.error(e.getMessage());
 			throw e;
@@ -551,11 +585,12 @@ public class LabyrinthContestJudge extends Judge {
 	}
 	
 	/**
+	 * Gehoert zur Gameplan-Vorbereitung $$
 	 * Setzt die Spielzeiten fuer alle Games in einem Level
 	 * @param level Das Level, fuer das die Zeiten gesetzt werden sollen
 	 * @throws SQLException
 	 */
-	private void scedule(int level) throws SQLException{
+	private void schedule(int level) throws SQLException{
 		Statement statement = databaseConnection.createStatement();
 
 		// Nur Bots mit binary waehlen
@@ -578,11 +613,11 @@ public class LabyrinthContestJudge extends Judge {
 					"WHERE level ="+level+ " AND game = "+rs.getInt("game"));
 			baseTime.setTime(baseTime.getTime()+gameTime*1000);
 		}
-		
 	}
 	
 	/**
 	 * Alle laufenden spiele Zuruecksetzen, damit sie neu begonnen werden
+	 * $$ Testmethode
 	 * @throws SQLException
 	 */
 	private void recover() throws SQLException{
@@ -593,10 +628,9 @@ public class LabyrinthContestJudge extends Judge {
 				"SET state= '"+STATE_READY_TO_RUN+"' "+
 				"WHERE state = '"+STATE_RUNNING+"'"
 				);
-
-		
 	}
 	
+	//$$ Vorrundenkram hier rein
 	private void createGamePlan() throws SQLException{
 		try {
 			Statement statement = databaseConnection.createStatement();
@@ -653,9 +687,9 @@ public class LabyrinthContestJudge extends Judge {
 			level*=2;
 			// Zeitplaene setzen
 			for (;level >=1;level/=2)
-				scedule(level);
+				schedule(level);
 			// Finale und Semifinale sind sonderfaelle
-			scedule(0);
+			schedule(0);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
@@ -702,12 +736,6 @@ public class LabyrinthContestJudge extends Judge {
 			e.printStackTrace();
 		}
 		System.out.println("Connection: " + databaseConnection);
-		
-		
-		
-		
-		
-		
 
 		try {
 			recover();
@@ -730,6 +758,8 @@ public class LabyrinthContestJudge extends Judge {
 	 * @author bbe (bbe@heise.de)
 	 */
 	private class GamePlanException extends Exception{
+		private static final long serialVersionUID = -9195564639022108463L;
+
 		/**
 		 * Konstruktor
 		 * @param string
@@ -737,22 +767,16 @@ public class LabyrinthContestJudge extends Judge {
 		public GamePlanException(String string) {
 			super(string);
 		}
-
-		/**
-		 */
-		private static final long serialVersionUID = 1L;
 	}
 	
-	
-	
-	
+	//$$ koennte man vielleicht anders machen: Controller, World und Judge muessen sich alle gegenseitig kennen oder so; vielleicht ginge das weniger verstrickt
 	public void setWorld(World world) {
 		
 		this.world = world;
 		super.setWorld(world);
 	}
 	
-	public boolean isAddAllowed() {
+	public boolean isAddingBotsAllowed() {
 		
 		return true;
 	}
