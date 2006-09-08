@@ -103,7 +103,7 @@ public abstract class Judge {
 	/** Gibt an, ob es erlaubt ist, Bots zum Spiel hinzuzufuegen.
 	 * Der Controller fragt hier z.B. nach
 	 */
-	public boolean isAddingBotsAllowed(){
+	public boolean isAddAllowed(){
 		
 		return this.time == this.startTime;
 	}
