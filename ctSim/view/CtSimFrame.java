@@ -19,21 +19,15 @@
 
 package ctSim.view;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import javax.media.j3d.View;
 import javax.swing.AbstractAction;
@@ -50,12 +44,9 @@ import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 
-import org.xml.sax.SAXException;
-
 import ctSim.ConfigManager;
 import ctSim.controller.BotManager;
 import ctSim.controller.Controller;
-import ctSim.model.ParcoursGenerator;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
 
@@ -113,11 +104,6 @@ public class CtSimFrame extends JFrame {
 	//////////////////////////////////////////////////////////////////////
 	private World world;
 	private Controller controller;
-	
-	private final String TMP_PARCOURS_PATH = "tmp"; //$NON-NLS-1$
-	private final String TMP_PARCOURS_FILE_NAME = "tmpParcoursFile"; //$NON-NLS-1$
-	private File tmpParcoursFile;
-	
 	
 	/**
 	 * Der Konstruktor
@@ -326,8 +312,7 @@ public class CtSimFrame extends JFrame {
 			 */
 			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(@SuppressWarnings("unused") ActionEvent e) {
-				
-				cmdRandomWorldClicked();
+				controller.openRandomWorld();
 			}
 		};
 		this.closeWorld = new AbstractAction("Schliessen", //$NON-NLS-1$
@@ -585,8 +570,7 @@ public class CtSimFrame extends JFrame {
 	}
 	
 	private void cmdPauseClicked() {
-		
-		this.stopWorld();
+		this.controller.pause();
 	}
 	
 	private void cmdOpenWorldClicked() {
@@ -612,64 +596,13 @@ public class CtSimFrame extends JFrame {
 			}
 		}
 		
-		this.openWorld(file);
-	}
-	
-	private void cmdRandomWorldClicked() {
-		
-		this.closeWorld();		
-		
-			
-				
-		String fileContent = ParcoursGenerator.generateParc();
-		
-		this.tmpParcoursFile = new File("./"+this.TMP_PARCOURS_PATH+"/"+this.TMP_PARCOURS_FILE_NAME+".xml");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-		
-		for(int i=1; this.tmpParcoursFile.exists(); i++) {
-			
-			this.tmpParcoursFile = new File("./"+this.TMP_PARCOURS_PATH+"/"+this.TMP_PARCOURS_FILE_NAME+i+".xml");   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		}
-		
-		try {
-			FileWriter fw = new FileWriter(this.tmpParcoursFile);
-			//BufferedWriter bw = new BufferedWriter(fw);
-			
-			fw.write(fileContent);
-			fw.flush();
-			fw.close();
-			
-			// TODO: kopiert von openWorld:
-			
-			this.world = World.parseWorldFile(this.tmpParcoursFile);
-			//this.world = new World(this.tmpParcoursFile.getAbsolutePath());
-			
-			// TODO:
-			this.worldPanel.setWorld(this.world);
-			
-			//this.controller = Controller.start(this, this.world);
-			this.controller.setWorld(this.world);
-			
-			this.validate();
-			
-			Debug.out.println("Labyrinth generiert"); //$NON-NLS-1$
-			
-		} catch (SAXException e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
-			e.printStackTrace();
-		} catch (IOException e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
-			e.printStackTrace();
-		} catch (Exception e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
-			// TODO: Ueber?
-			e.printStackTrace();
-		}
+		controller.openWorldFromFile(file);
 	}
 	
 	private void cmdCloseWorldClicked() {
-		
-		// TODO
-		this.closeWorld();
+		controller.closeWorld();
+		// TODO [Was bedeutet dieses leere Todo? --hkr]
+		closeWorld();
 	}
 	
 	private void cmdSaveWorldClicked() {
@@ -692,44 +625,8 @@ public class CtSimFrame extends JFrame {
 					return;
 				}
 			}
-			
-			// TODO: Haesslich!
-			// XML-Stream zwischenspeichern und in Datei schreiben; keine tmp-Dateien mehr (?)
-			try {
-				FileInputStream fin = new FileInputStream(this.tmpParcoursFile);
-				FileOutputStream fout = new FileOutputStream(file);
-				
-				BufferedInputStream bin = new BufferedInputStream(fin);
-				BufferedOutputStream bout = new BufferedOutputStream(fout);
-				
-				for(int b = bin.read(); b != -1; b = bin.read()) {
-					bout.write(b);
-				}
-//				byte[] b = new byte[bin.available()];
-//				
-//				bin.read(b);
-//				bout.write(b);
-				
-				bout.flush();
-				
-				bin.close();
-				bout.close();
-				
-				fin.close();
-				fout.close();
-				
-			} catch(Exception e) {
-				
-				Debug.out.println("Fehler: Datei konnte nicht gespeichert werden!"); //$NON-NLS-1$
-				e.printStackTrace();
-				return;
-			}
-			
-			
-			//Debug.out.println("  !!! Funktioniert noch nicht !!!");
-			Debug.out.println("Welt wurde gespeichert als \""+file.getName()+"\"."); //$NON-NLS-1$ //$NON-NLS-2$
-			
-			// TODO: XML-Geblubber schreiben, bzw. Datei kopieren (siehe randomWorld)...
+			world.writeParcoursToFile(file);
+			// TODO: XML-Geblubber schreiben, bzw. Datei kopieren (siehe randomWorld)... [Was ist damit gemeint? --hkr]
 		}
 	}
 	
@@ -780,13 +677,6 @@ public class CtSimFrame extends JFrame {
 		this.controller.unpause();
 	}
 	
-	// TODO: Geschwindigkeit setzen:
-	private void stopWorld() {
-		
-		//this.world.setHaveABreak(true);
-		this.controller.pause();
-	}
-	
 	private void resetWorld() {
 		
 		this.controller.reset();
@@ -801,54 +691,22 @@ public class CtSimFrame extends JFrame {
 		Debug.out.println("Alle Bots entfernt.");
 	}
 	
-	public void openWorld(File file) {
-		
+	/** Vom Controller aufzurufen, wenn sich die Welt &auml;ndert. 
+	 * Schlie&szlig;t die alte Welt und zeigt die neue an.*/
+	public void openWorld(World w) {
 		this.closeWorld();
-		
-		// TODO: Exception-Handling, ...
-		try {
-			// TODO: Wenn kein DTD-file gegeben, besser Fehlermeldung!
-			this.world = World.parseWorldFile(file);
-			//this.world = new World(file.getAbsolutePath());
-			
-			// TODO:
-			this.worldPanel.setWorld(this.world);
-			
-			//this.controller = Controller.start(this, this.world);
-			this.controller.setWorld(this.world);
-			
-			this.validate();
-			
-			this.tmpParcoursFile = file;
-			
-			Debug.out.println("Neue Welt geoeffnet."); //$NON-NLS-1$
-			
-		} catch (SAXException e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
-			e.printStackTrace();
-		} catch (IOException e) {
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO: Ueber?
-			Debug.out.println("Fehler beim Oeffnen der Welt-Datei."); //$NON-NLS-1$
-			e.printStackTrace();
-		}
+		this.world = w;
+		// TODO: [Was ist mit dem leeren Todo hier gemeint? --hkr]
+		this.worldPanel.setWorld(this.world);
+		this.validate();
 	}
 	
-	// TODO: Close Controller:
-	private void closeWorld() {
-		
+	// TODO: Close Controller: [Was bedeutet dieses Todo? --hkr]
+	public void closeWorld() {
 		if(this.world == null)
 			return;
 		
-		this.stopWorld();
-		
-		this.controller.closeWorld();
-		
-		//this.world.die();
-		
-		// TODO: ganz haesslich!
+		// TODO: ganz haesslich! [Was ist haesslich? --hkr]
 		//this.split.remove(this.worldPanel);
 		this.consoleSplit.remove(this.worldPanel);
 		this.world = null;
@@ -856,17 +714,10 @@ public class CtSimFrame extends JFrame {
 		initWorldView();
 		this.statusBar.reinit();
 		this.controlBar.reinit();
-		//this.split.setRightComponent(this.worldPanel);
 		this.consoleSplit.setTopComponent(this.worldPanel);
 		this.updateLayout();
-		//this.consoleSplit.resetToPreferredSizes();
 		
-		//this.controller.stop();
-		//this.controller = null;
-		
-		Debug.out.println("Welt wurde geschlossen."); //$NON-NLS-1$
-		
-		
+		Debug.out.println("Welt wurde geschlossen.");
 	}
 	
 	/**

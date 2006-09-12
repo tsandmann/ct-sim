@@ -2,5 +2,6 @@
 <classpath>
 	<classpathentry excluding="ctSim/model/bots/ctbot/old/CtBot_old.java|ctSim/model/bots/ctbot/old/CtBotReal.java|ctSim/model/bots/ctbot/old/CtBotRealCon.java|ctSim/model/bots/ctbot/old/CtBotSim.java|ctSim/model/bots/ctbot/old/CtBotSimTcp.java|ctSim/model/bots/ctbot/old/CtBotSimTest.java|ctSim/model/bots/ctbot/old/TcpBot.java|ctSim/model/bots/components/sensors/Switch.java|ctSim/view/ViewBotUpdate.java|ctSim/model/scene/SceneUpdate.java|ctSim/model/scene/SceneLight.java|ctSim/model/ViewBot.java|ctSim/model/World_old.java|ctSim/model/bots/components/actuators/Governor.java|ctSim/view/positions/PositionGroupGUI.java|ctSim/view/positions/SimplePositionGroupGUI.java|ctSim/view/positions/Positions.java|ctSim/model/bots/components/Position.java|ctSim/model/bot/components/positions/SimplePosition.java|ctSim/view/PositionGUI_old.java" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

@@ -45,6 +45,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.sun.j3d.utils.geometry.Box;
@@ -435,20 +437,43 @@ public class ParcoursLoader {
 	public Parcours getParcours() {
 		return this.parcours;
 	}
-
-	/**
-	 * Laedt einen Parcours aus einer XML-Datei
-	 * @param filename
+	
+	/** <p>L&auml;dt einen Parcours aus einer InputSource.
+	 * 
+	 * @param source Xerces-InputSource-Objekt, aus dem der Parcours geholt
+	 * werden kann. Der Sinn ist, dass beliebige Eingabequellen 
+	 * &uuml;bergeben werden k&ouml;nnen und daher nicht mehr nur aus Dateien, 
+	 * sondern auch aus Strings oder von sonstwo gelesen werden kann.</p>
+	 * 
+	 * @param resolver Der zu verwendende Xerces-EntityResolver, oder 
+	 * <code>null</code>, wenn der Standard-Resolver verwendet werden soll. 
+	 * Der DOMParser, der dieser Methode zugrundeliegt, verwendet den 
+	 * Resolver w&auml;hrend dem Verarbeiten 
+	 * der im XML vorkommenden "system identifier" und "public identifier".
+	 * Diese treten in unseren Parcoursdateien nur an einer Stelle auf, 
+	 * n&auml;mlich in Zeile&nbsp;2: 
+	 * <code>&lt;!DOCTYPE collection SYSTEM "parcours.dtd"></code>. Der 
+	 * system identifier ist dabei <code>parcours.dtd</code>. F&uuml;r 
+	 * Parcours-Dateien ist kein Resolver n&ouml;tig (= es kann 
+	 * <code>null</code> &uuml;bergeben werden), weil sie im gleichen 
+	 * Verzeichnis liegen wie die Datei parcours.dtd. F&uuml;r Parcours, die 
+	 * aus XML-Strings gelesen werden, ist ein Resolver n&ouml;tig, da der
+	 * Parser sonst nur im ctSim-Verzeichnis sucht (nicht im 
+	 * Verzeichnis ctSim/parcours), und daher die Datei 
+	 * ctSim/parcours/parcours.dtd nicht findet.
+	 *  
 	 * @throws SAXException 
 	 * @throws IOException 
 	 */
-	public void load_xml_file(String filename)
+	public void loadParcours(InputSource source, EntityResolver resolver)
 			throws SAXException, IOException {
 		// Ein DOMParser liest ein XML-File ein
 		DOMParser parser = new DOMParser();
 		try {
+			if (resolver != null)
+				parser.setEntityResolver(resolver);
 			// einlesen
-			parser.parse(filename);
+			parser.parse(source);
 			// umwandeln in ein Document
 			Document doc = parser.getDocument();
 			
@@ -538,11 +563,11 @@ public class ParcoursLoader {
 			parse();		// Parcours Zusammenbauen
 			
 		} catch (SAXException e) {
-			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+filename+" : "+e); //$NON-NLS-1$ //$NON-NLS-2$
+			ErrorHandler.error("Probleme beim Parsen des XML: "+e); //$NON-NLS-1$ //$NON-NLS-2$
 			//e.printStackTrace();
 			throw e;
 		} catch (IOException e) {
-			ErrorHandler.error("Probleme beim Parsen der XML-Datei: "+filename+" : "+e); //$NON-NLS-1$ //$NON-NLS-2$
+			ErrorHandler.error("Probleme beim Parsen des XML: "+e); //$NON-NLS-1$ //$NON-NLS-2$
 			//e.printStackTrace();
 			throw e;
 		}

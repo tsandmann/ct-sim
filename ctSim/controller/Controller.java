@@ -27,10 +27,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -55,16 +54,16 @@ import org.w3c.dom.NodeList;
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
-import ctSim.CmdExec;
 import ctSim.ConfigManager;
 import ctSim.Connection;
 import ctSim.ErrorHandler;
 import ctSim.JD2xxConnection;
 import ctSim.TcpConnection;
-import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.Command;
+import ctSim.model.ParcoursGenerator;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
+import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.rules.DefaultJudge;
 import ctSim.model.rules.Judge;
@@ -79,7 +78,8 @@ import ctSim.view.DefBotPanel;
  */
 public final class Controller implements Runnable {
 	
-	private static final String CONFIGFILE = "config/ct-sim.xml"; //$NON-NLS-1$
+	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml"; //$NON-NLS-1$
+	private static String configFile = DEFAULT_CONFIGFILE;
 	
 	private SocketListener botListener;
 	
@@ -110,8 +110,6 @@ public final class Controller implements Runnable {
 //		this.botsToStart = new ArrayList<Bot>();
 //		this.botsToStop  = new ArrayList<Bot>();
 		
-		BotManager.setController(this);
-		
 		this.pause = true;
 		
 		init();
@@ -122,7 +120,7 @@ public final class Controller implements Runnable {
 	private void init() {
 		
 		try {
-			ConfigManager.loadConfigFile(new File(CONFIGFILE));
+			ConfigManager.loadConfigFile(new File(configFile));
 			
 		} catch (Exception ex){
 			ErrorHandler.error("Einlesen der c't-Sim-Konfiguration nicht moeglich. Abburch!"); //$NON-NLS-1$
@@ -171,9 +169,7 @@ public final class Controller implements Runnable {
 		
 		try {
 			String parcFile = ConfigManager.getConfigValue("parcours"); //$NON-NLS-1$
-			
-			this.ctSim.openWorld(new File(parcFile));
-			
+			openWorldFromFile(new File(parcFile));
 		} catch(SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -187,9 +183,9 @@ public final class Controller implements Runnable {
 		}
 		
 		try {
-			String botBin = ConfigManager.path2Os(ConfigManager.getConfigValue("botbinary"));
-			
-			this.invokeBot(botBin);
+			String botBin = ConfigManager.path2Os(
+					ConfigManager.getConfigValue("botbinary"));
+			invokeBot(botBin);
 			
 		} catch(SecurityException e) {
 			// TODO Auto-generated catch block
@@ -433,27 +429,8 @@ public final class Controller implements Runnable {
 		init2();
 	}
 	
-	public void setWorld(World world) {
-		
+	private void setWorld(World world) {
 		this.pause();
-		
-//		for(Bot b : this.botsToStart) {
-//			b.stop();
-//			this.world.removeAliveObstacle(b);
-//		}
-//		
-//		for(Bot b : this.botList) {
-//			b.stop();
-//			this.world.removeAliveObstacle(b);
-//		}
-//		
-//		for(Bot b : this.botsToStop) {
-//			b.stop();
-//			this.world.removeAliveObstacle(b);
-//		}	
-//		
-//		this.botList     = new ArrayList<Bot>();
-//		this.botsToStart = new ArrayList<Bot>();
 		
 		BotManager.reset();
 		BotManager.setWorld(world);
@@ -461,12 +438,13 @@ public final class Controller implements Runnable {
 		this.world = world;
 		if(this.judge != null)
 			this.judge.setWorld(world);
+		
+		ctSim.openWorld(world);
+		Debug.out.println("Neue Welt geoeffnet.");
 	}
 	
 	public void closeWorld() {
-		
 		this.reset();
-		
 		this.world = null;
 	}
 	
@@ -747,13 +725,15 @@ public final class Controller implements Runnable {
 	 * @param filename Pfad zum Binary des Bots
 	 */
 	public void invokeBot(String filename){
+		if (filename == null)
+			return;
 		
-		System.out.println("Starte externen Bot: "+filename); //$NON-NLS-1$
-		CmdExec executor = new CmdExec();
+		System.out.println("Starte externen Bot: "+filename);
 		try {
-			executor.exec(filename);
-		} catch (Exception ex){
-			ErrorHandler.error("Kann Bot: "+filename+" nicht ausfuehren: "+ex);  //$NON-NLS-1$//$NON-NLS-2$
+			Runtime.getRuntime().exec(filename);
+		} catch (Exception e){
+			System.err.println("Kann Bot '"+filename+"' nicht ausfuehren:");
+			e.printStackTrace();
 		}
 	}
 	
@@ -787,6 +767,7 @@ public final class Controller implements Runnable {
 			bot.setWorld(this.world);
 			
 			BotManager.addBot(new BotInfo(bot.getName(), bot, new DefBotPanel()));
+			judge.newBotArrived(bot);
 			
 			return bot;
 		}
@@ -949,9 +930,30 @@ public final class Controller implements Runnable {
 		appearances.put(item,appearance);
 	}
 	
+	/** Behandelt die Kommandozeilenargumente. Momentan zul&auml;ssig:
+	 * <ul>
+	 * <li><code>-conf pfad/zur/konfigdatei.xml</code>: Andere 
+	 * Konfigurationsdatei als die standardm&auml;&szlig;ige config/ct-sim.xml 
+	 * verwenden</li>
+	 * </ul>
+	 * @param args	Kommandozeilenargumente, wie sie main() &uuml;bergeben 
+	 * bekommen hat
+	 */
+	private static void handleCommandLineArgs(String[] args) {
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].toLowerCase().equals("-conf")) {
+				i++;
+				configFile = args[i]; // Default ueberschreiben
+			} else {
+				System.out.println("Ungueltiges Argument '"+args[i]+"'");
+				System.exit(1);
+			}
+		}
+	}
+	
 	/**
 	 * Hauptmethode
-	 * @param args keine Argumente
+	 * @param args Siehe {@link #handleCommandLineArgs(String[])}
 	 */
 	public static void main(String[] args) {
 		VirtualUniverse.setJ3DThreadPriority(1);
@@ -991,6 +993,7 @@ public final class Controller implements Runnable {
 		}
 		
 		//JFrame.setDefaultLookAndFeelDecorated(true);
+		handleCommandLineArgs(args);
 		Controller ctrl = new Controller();
 		
 		CtSimFrame ctSim = CtSimFrame.showSimGUI(ctrl, "CtSim"); //$NON-NLS-1$
@@ -1009,8 +1012,60 @@ public final class Controller implements Runnable {
 		return world;
 	}
 	
-	public void openWorld(String f) {
-		
-		this.ctSim.openWorld(new File(f));
+	/** &Ouml;ffnet eine Welt, die aus einer Datei gelesen wird.
+	 *  
+	 * @see World#buildWorldFromFile(File)
+	 */
+	public void openWorldFromFile(File sourceFile) {
+		// TODO: Wenn kein DTD-file gegeben, besser Fehlermeldung!
+		try {
+			setWorld(World.buildWorldFromFile(sourceFile));
+		} catch (Exception e) {
+			ErrorHandler.error("Probleme beim Parsen der Parcours-Datei "+
+					sourceFile.getAbsolutePath());
+			e.printStackTrace();
+		}
+	}
+	
+	/** &Ouml;ffnet eine Welt, deren Parcours aus einem XML-String gelesen 
+	 * wird. Dies ist n&uuml;tzlich f&uuml;r Parcours, die als String aus 
+	 * einer Datenbank gelesen wurden oder die der ParcoursGenerator erstellt 
+	 * hat.
+	 * 
+	 * @see World#buildWorldFromXmlString(String)
+	 */
+	public void openWorldFromXmlString(String parcoursAsXml) {
+		try {
+			setWorld(World.buildWorldFromXmlString(parcoursAsXml));
+		} catch (Exception e) {
+			ErrorHandler.error("Probleme beim Parsen des Parcours");
+			e.printStackTrace();
+		}
+	}
+	
+	/** Generiert einen zuf&auml;lligen Parcours und &ouml;ffnet ihn als Welt.
+	 *
+	 *@see ParcoursGenerator
+	 *@see World#buildWorldFromXmlString(String)
+	 */ 
+	public void openRandomWorld() {
+		try {
+			String p = ParcoursGenerator.generateParc();
+			Debug.out.println("Parcours generiert");
+			openWorldFromXmlString(p);
+		} catch (Exception e) {
+			Debug.out.println("Probleme beim Oeffnen des generierten " +
+					"Parcours.");
+			e.printStackTrace();
+		}
+	}
+
+	//TODO Doku genauer: "Menge der Bots"? Menge *welcher* Bots?
+	/** Liefert die Menge der Bots.
+	 * Methode ist nicht f&uuml;r performance-kritische Punkte gedacht, da 
+	 * einiges Herumeiern stattfindet.
+	 */
+	public Set<Bot> getBots() {
+		return BotManager.getBots();
 	}
 }

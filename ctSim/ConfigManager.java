@@ -78,6 +78,8 @@ public class ConfigManager {
 	 * @return 
 	 */
 	private static String botPathWin2Lin(String in){
+		if (in == null)
+			return null;
 		String tmp = in.replace('\\','/');
 		tmp= tmp.replace("exe","elf");
 		return tmp.replace("Debug-W32","Debug-Linux");
@@ -89,6 +91,8 @@ public class ConfigManager {
 	 * @return 
 	 */
 	private static String botPathLin2Win(String in){
+		if (in == null)
+			return null;
 		String tmp = in.replace('/','\\');
 		tmp= tmp.replace("elf","exe");
 		return tmp.replace("Debug-Linux","Debug-W32");

@@ -53,7 +53,10 @@ public class JudgeChooser extends JDialog implements ActionListener {
 	//private JRadioButton defJudge, contestJudge, labyJudge;
 	
 	// Add Judges here; first one should be default:
-	private final String[] judges = new String[] {"ctSim.model.rules.DefaultJudge", "ctSim.model.rules.LabyrinthJudge"}; // "LabyrinthContestJudge"  //$NON-NLS-1$//$NON-NLS-2$
+	private final String[] judges = new String[] {
+			"ctSim.model.rules.DefaultJudge", 
+			"ctSim.model.rules.LabyrinthJudge", 
+			"ctSim.model.rules.contestJudge.ContestJudge"}; //$NON-NLS-1$
 	
 	/**
 	 * Der Konstruktor

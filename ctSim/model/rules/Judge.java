@@ -2,8 +2,8 @@ package ctSim.model.rules;
 
 import ctSim.controller.Controller;
 import ctSim.model.World;
+import ctSim.model.bots.Bot;
 import ctSim.view.Debug;
-//import ctSim.view.JudgePanel;
 
 /**
  * Abstrakte Superklasse fuer alle Judges, die pruefent, 
@@ -24,16 +24,10 @@ import ctSim.view.Debug;
  *
  */
 public abstract class Judge {
-	
-	// private World world;
-	
 	private boolean start = true;
 	
 	/** Verweis auf den zuegehoerigen controller */
 	private Controller controller;
-	
-	/** Soll der Thread noch laufen ?*/
-//	private boolean run = true;
 
 	/**
 	 * Welt-Zeit zu Beginn des Wettkampfes [ms]
@@ -46,54 +40,15 @@ public abstract class Judge {
 	private long time = 0;
 	
 	/**
-	 * bisher verstrichene Zeit [ms]
-	 */
-//	private long runTime;
-
-	/** 
-	 * Wartezeit zwischen zwei Aufrufen des Judges [ms]	
-	 */
-//	private int delay = 100; 
-	
-	/** Die Anzeige des Judges */
-//	private JudgePanel panel;
-	
-	/**
 	 * Erzeuge neuen Judge
 	 * @param ctrl Der Controller
-	 * @param w Die Welt
 	 */
 	public Judge(Controller ctrl) {
 		super();
 		
 		this.controller = ctrl;
-		//this.world = w;
-//		this.startTime = w.getSimulTime();
-//		this.time = this.startTime;
-//		panel = new JudgePanel(this);
-//		setName(this.getClass().getName());
 	}
 
-	/**
-	 * Nimmt die Startzeit
-	 */
-//	public void takeStartTime(){
-//		World world =controller.getWorld();
-//		startTime = world.getSimulTimeUnblocking();
-//		runTime=0;
-//	}
-	
-	/** 
-	 * Wie oft soll der Judge das System pruefen?
-	 * Diese Routine muss den Judge-Thread in einen Schlaf-Modus versetzen.
-	 * Sie kann von Unterklassen ueberschrieben werden, oder sie setzen einfach 
-	 * das Feld delay auf einen anderen Wert!  
-	 * @return  
-	 */
-//	protected void delay() throws InterruptedException{
-//		sleep(delay);
-//	}
-	
 	public void setWorld(World w) {
 		
 		this.startTime = w.getSimulTime();
@@ -143,35 +98,8 @@ public abstract class Judge {
 		}
 	}
 	
-	/** hier kommen die eigentlichen Schiedsrichteraufgaben rein */
-//	abstract protected void work();
+	/** Hier kommen die eigentlichen Schiedsrichteraufgaben rein. */
 	protected abstract boolean check();
-	
-	/**
-	 * Erledigt die Arbeit
-	 */
-//	@Override
-//	public void run() {
-//		init();
-//		takeStartTime();
-//		while (run == true) {
-//			try {
-//				delay();
-//			}catch (InterruptedException ex){
-//				ErrorHandler.error("Judge "+this.getClass().getName()+" wurde unterbrochen");
-//				die();
-//			}
-//
-//			time=controller.getWorld().getSimulTimeUnblocking();
-//			runTime = time - startTime;
-//			panel.setRunTime(getRunTime());
-//			
-//			work();
-//		}
-//	}
-	
-	/** Hier kommt alles rein, was vor dem Start ausgefuehrt werden muss*/
-//	protected abstract void init();
 	
 	public void reinit() {
 		
@@ -180,78 +108,25 @@ public abstract class Judge {
 		this.startTime = 0;
 	}
 
-
-	/**
-	 * Versetzt die Welt in einen Dornroeschenschlaf, oder erweckt sie
-	 * @param sleep true, wenn die Welt einschlafen soll, false wenn sie aufwachen soll
-	 */
-//	public void suspendWorld(boolean sleep){
-//		controller.getControlFrame().setHaveABreak(sleep);
-//	}
-	
-	
-	/**
-	 * Beendet den Judge
-	 */
-//	public void die() {
-//		run = false;
-//		this.interrupt();
-//	}
-
-
-	/**
-	 * Laufzeit seit dem setzen der StartTime
-	 * @return die Zeit
-	 */
-//	public long getRunTime() {
-//		return runTime;
-//	}
-
-	/**
-	 * Liefert die Startzeit des Wettlampfes zurueck
-	 * @return die Zeit
-	 */
-	public long getStartTime() {
-		return this.startTime;
-	}
-
-	/**
-	 * Liefert die aktuelle Zeit zurueck
-	 * @return die Zeit
-	 */
+	/** Liefert die Simulatorzeit [ms] seit Beginn des aktuellen Spiels. */
 	public long getTime() {
 		return this.time-this.startTime;
 	}
 
-	/** Der zugehoerige Controller 
-	 *  @return der Controller 
-	 */
-//	public Controller getController() {
-//		return controller;
-//	}
-
-
-	/** Lege die Geschwindigkeit des Judges fest 
-	 * @param delay verzoegerung
-	 */ 
-//	public void setDelay(int delay) {
-//		this.delay = delay;
-//	}
-
-	/**
-	 * Liefert das zugehoerige Panel
-	 * @return das Panel
-	 */
-//	public JudgePanel getPanel() {
-//		return panel;
-//	}
-
-	/**
-	 * Setze den Controller
-	 * @param controller
-	 */
-//	public void setController(Controller controller) {
-//		this.controller = controller;
-//	}
+	/** <p>Vom Controller aufzurufen, um mitzuteilen, dass ein neuer Bot 
+	 * angekommen ist.</p>
+	 * 
+	 * <p>Tut nichts in der vorliegenden Implementierung. Judges, die die 
+	 * Information ben&ouml;tigen, &uuml;berschreiben die Methode.</p>
+	 * 
+	 * <p>Die Methode ist erforderlich, da in der gegenw&auml;rtigen 
+	 * (diskutablen) Architektur der ContestJudge veranlasst, dass ein 
+	 * externer bin&auml;rer Bot geladen wird, und dann warten muss, bis 
+	 * der Bot sich initialisiert und mit dem Controller verbunden hat. 
+	 * Diese Methode dient dazu, dem ContestJudge mitzuteilen, wann der Bot
+	 * bereitsteht und der Judge aufh&ouml;ren kann, auf ihn zu warten.</p> */
+	public void newBotArrived(@SuppressWarnings("unused") Bot bot) {
+		// no-op im Normalfall; die Judges, die die Methode brauchen, 
+		// ueberschreiben sie
+	}
 }
-

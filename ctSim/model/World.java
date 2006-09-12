@@ -19,8 +19,13 @@
 
 package ctSim.model;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,21 +50,27 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import ctSim.model.AliveObstacle;
-import ctSim.model.Parcours;
-import ctSim.model.ParcoursLoader;
+import ctSim.ConfigManager;
 import ctSim.model.bots.Bot;
+import ctSim.view.Debug;
 
 /**
- * Welt-Modell, kuemmert sich um die globale Simulation und das Zeitmanagement
+ * <p>Welt-Modell, kuemmert sich um die globale Simulation und das 
+ * Zeitmanagement.</p>
+ * 
+ * <p>Zum Erzeugen einer Welt die statischen Methoden 
+ * <code>buildWorldFrom...()</code> verwenden.</p>
  * 
  * @author Benjamin Benz (bbe@heise.de)
  * @author Peter Koenig (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
  * @author Christoph Grimmer (c.grimmer@futurio.de)
  * @author Werner Pirkl (morpheus.the.real@gmx.de)
+ * @author Hendrik Krauss (hkr@heise.de)
  */
 public class World {
 	
@@ -76,34 +87,91 @@ public class World {
 	
 	// TODO: joinen?
 	//private Set<Obstacle> obsts;
-	private Set<AliveObstacle> aliveObsts;
+	private Set<AliveObstacle> aliveObsts = new HashSet<AliveObstacle>();
 	
-	private Set<ViewPlatform> views;
+	private Set<ViewPlatform> views = new HashSet<ViewPlatform>();
+
+	/** Die Quelle, aus der der Parcours dieser Welt gelesen wurde. Siehe
+	 * Dokumentation des Konstruktors.
+	 * @see World(InputSource) */
+	private InputSource source;
+	
+	///////////////////////////////////////////////////////////////////////////
+	// Statische Methoden, um eine Welt zu erzeugen
 	
 	/**
-	 * Der Konstruktor
+	 * L&auml;dt einen Parcours aus einer Datei und baut damit eine Welt.
+	 * @param file Die zu &ouml;ffnende Datei. Sie 
+	 * hat in dem f&uuml;r Parcours vorgesehenen Schema zu sein.
 	 */
-	public World() {
-		
-		this.aliveObsts = new HashSet<AliveObstacle>();
-		this.views = new HashSet<ViewPlatform>();
-		
-		init();
+	public static World buildWorldFromFile(File sourceFile)
+	throws SAXException, IOException {
+		return new World(new InputSource(sourceFile.getAbsolutePath()), null);
+	}
+
+	/** L&auml;dt einen Parcours aus einem String und baut damit eine Welt. 
+	 * @param parcoursAsXml Der String, der die XML-Darstellung des Parcours
+	 * enth&auml;lt. Das XML muss in dem f&uuml;r Parcours vorgesehenen Schema
+	 * sein. Die in Zeile&nbsp;2 des XML angegebene DTD-Datei wird von dieser 
+	 * Methode im Unterverzeichnis "parcours" gesucht. */
+	public static World buildWorldFromXmlString(String parcoursAsXml) 
+	throws SAXException, IOException {
+		return new World(
+				new InputSource(new StringReader(parcoursAsXml)), 
+				/* Der EntityResolver hat den Sinn, dem Parser zu sagen, 
+				 * er soll die parcours.dtd bitte im Verzeichnis "parcours" 
+				 * suchen. */
+				new EntityResolver() {
+					@SuppressWarnings("unused")
+                    public InputSource resolveEntity(
+							String publicId, 
+							String systemId) 
+					throws SAXException, IOException {
+						if (systemId.endsWith("/parcours.dtd")) //TODO: Irgendwann als Konstante statt hardcoded
+							return new InputSource(
+									ConfigManager.getConfigValue("worlddir") + 
+									"/parcours.dtd"); //TODO: Irgendwann als Konstante statt hardcoded
+		                return null; // Standard-EntityResolver verwenden
+		            }
+				});
 	}
 	
-	/**
-	 * Alternativer Konstruktor 
-	 * @param parc Der Parcours, den die Welt enthalten soll
+	///////////////////////////////////////////////////////////////////////////
+	
+	/** <p>Liest einen Parcours aus einer XML-Quelle und baut damit eine 
+	 * Welt.</p>
+	 * 
+	 * <p>Der Konstruktor ist privat, da ihn niemand von au&szlig;en verwendet 
+	 * hat. Der Controller verwendet die statischen Methoden 
+	 * <code>buildWorldFromFile</code> und
+	 * <code>buildWorldFromXmlString</code> aus dieser Klasse, um Welten 
+	 * zu erzeugen.</p>
+	 * 
+	 * @param source Die Xerces-Eingabequelle, aus der der die 
+	 * XML-Darstellung des 
+	 * Parcours kommt. Das Parsen der Quelle liefert einen Parcours, auf 
+	 * dessen Grundlage eine Instanz der Welt konstruiert wird. 
+	 * <code>source</code> kann auf die 
+	 * Parcours-Datei zeigen oder (via einen java.io.StringReader) auf das 
+	 * in einem String stehende XML. Potentiell auch auf anderes.
+	 * 
+	 * @param resolver Der Xerces-EntityResolver, der beim Parsen des 
+	 * XML verwendet werden soll. Details siehe Methode 
+	 * ParcoursLoader.loadParcours.
+	 * 
+	 * @see ParcoursLoader#loadParcours(InputSource, EntityResolver)
 	 */
-	public World(Parcours parc) {
-		
-		this.aliveObsts = new HashSet<AliveObstacle>();
-		this.views = new HashSet<ViewPlatform>();
-		
-		this.parcours = parc;
-		
+	private World(InputSource source, EntityResolver resolver) 
+	throws SAXException, IOException {
+		//TODO: Wann wird source wieder geschlossen?
+		this.source = source;
+
+		ParcoursLoader pL = new ParcoursLoader();
+		pL.loadParcours(source, resolver);
+		Parcours p = pL.getParcours();
+
 		init();
-		setParcours(parc);
+		setParcours(p);
 	}
 	
 	/**
@@ -304,23 +372,6 @@ public class World {
 //		sceneLight.removeBot(obst.getName());
 //		sceneLightBackup.removeBot(obst.getName());
 //	}
-	
-	/**
-	 * Liest eine Welt aus einer Datei ein
-	 * @param file Die Datei
-	 * @return Die Welt
-	 * @throws SAXException
-	 * @throws IOException
-	 */
-	public static World parseWorldFile(File file)
-			throws SAXException, IOException {
-		
-		ParcoursLoader pL = new ParcoursLoader();
-		pL.load_xml_file(file.getAbsolutePath());
-		Parcours parcours = pL.getParcours();
-		
-		return new World(parcours);
-	}
 	
 	/* **********************************************************************
 	 * **********************************************************************
@@ -761,5 +812,29 @@ ss
 	public long getRealTime() {
 		// TODO Auto-generated method stub
 		return 	System.nanoTime()/1000000;
+	}
+	
+	/** Schreibt den Parcours der Welt in eine Datei. Es wird dasselbe XML 
+	 * in die Datei geschrieben, das beim
+	 * Konstruieren dieser Instanz geparst wurde, um den Parcours der Welt zu
+	 * erhalten.
+	 * 
+	 * @param targetFile Datei, in die das XML des Parcours ausgegeben wird. 
+	 * Sie wird bei Bedarf angelegt.
+	 */
+	public void writeParcoursToFile(File targetFile) {
+		try {
+			OutputStream out = new BufferedOutputStream(new FileOutputStream(
+					targetFile));
+			InputStream in = source.getByteStream();
+			while (in.available() > 0)
+				out.write(in.read());
+			out.close();
+			Debug.out.println("Welt wurde gespeichert als \""+
+					targetFile.getName()+"\".");
+		} catch(IOException e) {
+			Debug.out.println("Fehler: Datei konnte nicht gespeichert werden!");
+			e.printStackTrace();
+		}
 	}
 }

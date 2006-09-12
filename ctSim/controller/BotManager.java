@@ -1,7 +1,9 @@
 package ctSim.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
@@ -9,8 +11,6 @@ import ctSim.view.BotInfo;
 import ctSim.view.CtSimFrame;
 
 public class BotManager {
-	
-	private static Controller controller;
 	private static World world;
 	private static CtSimFrame sim;
 	
@@ -26,11 +26,6 @@ public class BotManager {
 	public static void setSim(CtSimFrame simFrame) {
 		
 		sim = simFrame;
-	}
-	
-	protected static void setController(Controller ctrl) {
-		
-		controller = ctrl;
 	}
 	
 	protected static synchronized void startNstopBots() {
@@ -115,5 +110,17 @@ public class BotManager {
 		
 		reinit();
 		world = null;
+	}
+
+	/** Liefert die Menge der dem BotManager bekannten Bots. 
+	 * Methode ist nicht f&uuml;r performance-kritische Punkte gedacht, da 
+	 * einiges Herumeiern stattfindet.
+	 */
+	//TODO Koennte schoener / schneller sein: wir laufen jedes Mal wieder durch 'bots' und machen jedes Mal wieder eine ArrayList
+	public static Set<Bot> getBots() {
+		Set<Bot> rv = new HashSet<Bot>();
+		for (BotInfo b : bots)
+			rv.add(b.getBot());
+		return rv;
 	}
 }
