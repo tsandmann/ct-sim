@@ -34,10 +34,11 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import ctSim.ConfigManager;
 import ctSim.ErrorHandler;
 import ctSim.SimUtils;
-import ctSim.controller.Controller;
-import ctSim.view.Debug;
+import ctSim.controller.DefaultController;
+import ctSim.view.gui.Debug;
 
 /**
  * Klasse fuer alle Hindernisse die sich selbst bewegen koennen
@@ -52,13 +53,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private Point3d pos;
 	private Vector3d head;
 	
-	// TODO: weg?
-	@SuppressWarnings("unused")
-	private World world;
-	
 	/** Verweis auf den zugehoerigen Controller */
 	// TODO: hmmm
-	private Controller controller;
+	private DefaultController controller;
 	
 	private Thread thrd;
 	
@@ -144,7 +141,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 * @param map
 	 */
-	public final void setAppearances(HashMap<String, Appearance> map) {
+	private final void setAppearances(HashMap<String, Appearance> map) {
 		
 		if(map.isEmpty())
 			return;
@@ -157,16 +154,17 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 * @param ctrl Referenz auf den Controller, die gesetzt werden soll
 	 */
-	public final void setController(Controller ctrl) {
+	public final void setController(DefaultController ctrl) {
 		
 		this.controller = ctrl;
+		// setApp darf erst hier passieren (keine Ahnung warum). Es macht unerklaerliche NullPtrExcp, wenn es im Konstruktor ist
+		setAppearances(ConfigManager.getBotAppearances(getName()));
 	}
 	
 	/**
 	 * @param world1 Referenz auf die Welt, die gesetzt werden soll
 	 */
 	public void setWorld(World wrld) {
-		this.world = wrld;
 	}
 	
 	/** 
@@ -454,8 +452,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 				&& this.apps.containsKey("falling"))
 			this.shape.setAppearance(this.apps.get("falling"));
 		if(state == OBST_STATE_NORMAL
-				&& this.apps.containsKey("normal"))
+				&& this.apps.containsKey("normal")) {
 			this.shape.setAppearance(this.apps.get("normal"));
+		}
 	}
 
 	/**

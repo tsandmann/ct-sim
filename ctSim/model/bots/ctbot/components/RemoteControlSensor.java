@@ -23,8 +23,8 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.model.bots.components.sensors.SimpleSensor;
-import ctSim.view.sensors.SensorGroupGUI;
-import ctSim.view.sensors.Sensors;
+import ctSim.view.gui.sensors.SensorGroupGUI;
+import ctSim.view.gui.sensors.Sensors;
 
 /**
  * Klasse der Fernbedienung (auch eine Art Sensor)

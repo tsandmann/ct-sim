@@ -21,7 +21,7 @@ package ctSim.model.bots.components;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import ctSim.view.actuators.ActuatorGroupGUI;
+import ctSim.view.gui.actuators.ActuatorGroupGUI;
 
 /**
  * Abstrakte Oberklasse aller Aktuatoren

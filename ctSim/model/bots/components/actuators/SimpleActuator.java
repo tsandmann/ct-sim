@@ -23,8 +23,8 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.model.bots.components.Actuator;
-import ctSim.view.actuators.ActuatorGroupGUI;
-import ctSim.view.actuators.Actuators;
+import ctSim.view.gui.actuators.ActuatorGroupGUI;
+import ctSim.view.gui.actuators.Actuators;
 
 
 /**

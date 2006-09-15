@@ -22,8 +22,8 @@ import javax.media.j3d.Shape3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import ctSim.view.ComponentGroupGUI;
-import ctSim.view.PositionGUI;
+import ctSim.view.gui.ComponentGroupGUI;
+import ctSim.view.gui.PositionGUI;
 
 
 /**

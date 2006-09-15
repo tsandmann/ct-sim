@@ -3,15 +3,34 @@
 
 <ct-sim>
 	<description>
-		Dieses ist die zentrale Konfigurationsdatei für den c't-Sim
+		Dies ist eine Konfigurationsdatei für den c't-Sim, die den Sim in 
+		Wettbewerbskonfiguration versetzt. Das bedeutet, dass als Judge der 
+		ContestJudge eingesetzt wird. Die Wettbewerbskonfig umfasst auch 
+		einige ContestJudge-spezifische Parameter, auf welcher Datenbank 
+		gearbeitet werden soll.
+		
+		Mit der Kommandozeilenoption -conf config/ct-sim-contest-judge.xml 
+		kann der Controller veranlasst werden, diese Datei statt der 
+		standardmaessigen zu verwenden. Zum einfachen Ausfuehren beider 
+		Varianten lassen sich in Eclipse zwei Run Configurations einrichten 
+		(eine mit der o.g. Option, eine ohne).
 	</description>
 
 	<parameter name="parcours" value="parcours/testparcours2.xml"/>
+	<parameter name="viewport" value="10002"/>
 	<parameter name="botport" value="10001"/>
-	<parameter name="botbinary" value="..\ct-Bot\Debug-W32\ct-Bot.exe"/>
 	<parameter name="worlddir" value="./parcours"/>
 	<parameter name="botdir" value="..\ct-Bot\Debug-W32"/>
 	<parameter name="judge" value="ctSim.model.rules.LabyrinthJudge"/>
+
+	<parameter name="useContestConductor" value="true"/>
+	<!-- URL, Username und Passwort der Datenbank, mit der die Klasse 
+	ctSim.view.contestConductor.ContestConductor reden soll (Format der URL 
+	wie es java.sql.DriverManager.getConnection() erwartet) -->
+	<parameter name="contest-database-url"
+		value="jdbc:mysql://localhost:3306/ctjudge"/>
+	<parameter name="contest-database-user" value="root"/>
+	<parameter name="contest-database-password" value=""/>
 
 	<bots>         
 		<bot name="ctSim.model.bots.CtBotSimTest_0">

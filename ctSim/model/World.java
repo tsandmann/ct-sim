@@ -44,6 +44,7 @@ import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.ViewPlatform;
+import javax.media.j3d.VirtualUniverse;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
@@ -56,7 +57,7 @@ import org.xml.sax.SAXException;
 
 import ctSim.ConfigManager;
 import ctSim.model.bots.Bot;
-import ctSim.view.Debug;
+import ctSim.view.gui.Debug;
 
 /**
  * <p>Welt-Modell, kuemmert sich um die globale Simulation und das 
@@ -70,7 +71,7 @@ import ctSim.view.Debug;
  * @author Lasse Schwarten (lasse@schwarten.org)
  * @author Christoph Grimmer (c.grimmer@futurio.de)
  * @author Werner Pirkl (morpheus.the.real@gmx.de)
- * @author Hendrik Krauss (hkr@heise.de)
+ * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class World {
 	
@@ -93,7 +94,7 @@ public class World {
 
 	/** Die Quelle, aus der der Parcours dieser Welt gelesen wurde. Siehe
 	 * Dokumentation des Konstruktors.
-	 * @see World(InputSource) */
+	 * @see #World(InputSource) */
 	private InputSource source;
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -101,12 +102,13 @@ public class World {
 	
 	/**
 	 * L&auml;dt einen Parcours aus einer Datei und baut damit eine Welt.
-	 * @param file Die zu &ouml;ffnende Datei. Sie 
+	 * @param sourceFile Die zu &ouml;ffnende Datei. Sie 
 	 * hat in dem f&uuml;r Parcours vorgesehenen Schema zu sein.
 	 */
 	public static World buildWorldFromFile(File sourceFile)
 	throws SAXException, IOException {
-		return new World(new InputSource(sourceFile.getAbsolutePath()), null);
+		return new World(new InputSource(sourceFile.toURI().toString()), 
+				null);
 	}
 
 	/** L&auml;dt einen Parcours aus einem String und baut damit eine Welt. 
@@ -129,7 +131,7 @@ public class World {
 					throws SAXException, IOException {
 						if (systemId.endsWith("/parcours.dtd")) //TODO: Irgendwann als Konstante statt hardcoded
 							return new InputSource(
-									ConfigManager.getConfigValue("worlddir") + 
+									ConfigManager.getValue("worlddir") + 
 									"/parcours.dtd"); //TODO: Irgendwann als Konstante statt hardcoded
 		                return null; // Standard-EntityResolver verwenden
 		            }
@@ -142,7 +144,7 @@ public class World {
 	 * Welt.</p>
 	 * 
 	 * <p>Der Konstruktor ist privat, da ihn niemand von au&szlig;en verwendet 
-	 * hat. Der Controller verwendet die statischen Methoden 
+	 * hat. Der DefaultController verwendet die statischen Methoden 
 	 * <code>buildWorldFromFile</code> und
 	 * <code>buildWorldFromXmlString</code> aus dieser Klasse, um Welten 
 	 * zu erzeugen.</p>
@@ -219,6 +221,7 @@ public class World {
 	}
 	
 	private void init() {
+		VirtualUniverse.setJ3DThreadPriority(1);
 
 		// Die Wurzel des Ganzen:
 		this.scene = new BranchGroup();
@@ -377,52 +380,54 @@ public class World {
 	 * **********************************************************************
 	 * "Geerbte" Zeit-Sachen...
 	 * 
-	 * TODO: Auslagern in Controller?
+	 * TODO: Auslagern in DefaultController?
 	 * 
 	 */
-	/** Zeitbasis in Millisekunden. Realzeit - so oft wird simuliert */
-	private int baseTimeReal = 10;
+	/** Gibt an, wieviel Realzeit ("wall-clock time") zwischen zwei 
+	 * Schritten der Simulation vergeht. Mit anderen Worten, nach 
+	 * einem Simulationsschritt wird f&uuml;r diese Zeitspanne gewartet 
+	 * und dann der n&auml;chste Schritt ausgef&uuml;hrt. Einheit 
+	 * Millisekunden. */
+	private int simStepIntervalInMs = 10;
 	
-	/**
-	 * Zeitbasis in Millisekunden. Virtuelle Zeit - das sieht die Welt pro
-	 * Simulationsschritt
-	 */
-	private int baseTimeVirtual = 10;
+	/** Pro Simulationsschritt r&uuml;ckt die Simulationszeit-Uhr um den 
+	 * Wert dieser Variablen vor. Einheit Millisekunden. */
+	private static final int SIM_TIME_PER_STEP = 10;
 	
-	/** Interne Zeitbasis in Millisekunden. */
+	/** Gegenw&auml;rtige Simulationszeit. Sie entspricht der Anzahl der 
+	 * bisher ausgef&auml;hrten Simulationsschritte &times; 
+	 * <code>SIM_TIME_PER_STEP</code>.
+	 * Einheit Millisekunden. */
 	private long simulTime = 0;
 	
 	/**
 	 * @return Gibt baseTimeReal zurueck.
 	 */
-	public int getBaseTimeReal() {
-		return this.baseTimeReal;
+	public int getSimStepIntervalInMs() {
+		return this.simStepIntervalInMs;
 	}
 
 	/**
-	 * @return Gibt baseTimeVirtual zurueck.
-	 */
-	public int getBaseTimeVirtual() {
-		return this.baseTimeVirtual;
-	}
+     * @param timeInterval The baseTimeReal to set.
+     */
+    public void setSimStepIntervalInMs(int timeInterval) {
+    	this.simStepIntervalInMs = timeInterval;
+    }
 
 	/**
-	 * Liefert die Weltzeit (simulTime) zurueck. Blockiert, bis der naechste
-	 * Simualationschritt gekommen ist. Diese Methode dient der Synchronisation
-	 * zwischen Bots und Welt
+	 * Liefert die Weltzeit (simulTime) zurueck.
 	 * 
 	 * @return Die aktuelle Weltzeit in ms
-	 * @Throws InterruptedException
 	 */
 	public long getSimulTime() {
-		return this.simulTime;
+		return simulTime;
 	}
 	
 	/**
 	 * @return Gibt die um baseTimeVirtual erhoehte Simulationszeit zurueck
 	 */
 	private void increaseSimulTime() {
-		simulTime += baseTimeVirtual;
+		simulTime += SIM_TIME_PER_STEP;
 	}
 	
 	/* **********************************************************************
@@ -798,22 +803,6 @@ ss
 		aliveObstaclePtr++;
 	}
 
-	/**
-	 * @param baseTimeReal The baseTimeReal to set.
-	 */
-	public void setBaseTimeReal(int baseTimeReal) {
-		this.baseTimeReal = baseTimeReal;
-	}
-
-	/**
-	 * liefert die real-Zeit in ms zurueck
-	 * @return Zeit in ms
-	 */
-	public long getRealTime() {
-		// TODO Auto-generated method stub
-		return 	System.nanoTime()/1000000;
-	}
-	
 	/** Schreibt den Parcours der Welt in eine Datei. Es wird dasselbe XML 
 	 * in die Datei geschrieben, das beim
 	 * Konstruieren dieser Instanz geparst wurde, um den Parcours der Welt zu

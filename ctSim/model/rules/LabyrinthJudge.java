@@ -22,12 +22,12 @@ import java.util.Set;
 
 import javax.vecmath.Vector3d;
 
-import ctSim.controller.Controller;
+import ctSim.controller.DefaultController;
 import ctSim.model.AliveObstacle;
 import ctSim.model.World;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
-import ctSim.view.Debug;
-import ctSim.view.sensors.RemoteControlGroupGUI;
+import ctSim.view.gui.Debug;
+import ctSim.view.gui.sensors.RemoteControlGroupGUI;
 import ctSim.SimUtils;
 
 /**
@@ -35,44 +35,28 @@ import ctSim.SimUtils;
  *
  */
 public class LabyrinthJudge extends Judge {
-	
-	private Controller controller;
-	
+	private DefaultController controller;
 	private World world;
-	
 	private int participants = 2;
-
 	/** Variable umd den ersten Start zu markieren */
 	private boolean first = true;
 	
-	
-	/**
-	 * Der Konstruktor
-	 * @param ctrl Der Controller
-	 * @param w Die Welt
-	 */
-	public LabyrinthJudge(Controller ctrl) {
-		
+	public LabyrinthJudge(DefaultController ctrl) {
 		super(ctrl);
-		
 		this.controller = ctrl;
 	}
 	
-	public void setWorld(World world) {
-		
+	@Override
+    public void setWorld(World world) {
 		this.world = world;
 		super.setWorld(world);
 	}
 	
-	/** 
-	 * @see ctSim.model.rules.Judge#isAddAllowed()
-	 */
 	@Override
 	public boolean isAddAllowed() {
-		
 		// TODO: Bot-Anzahl pruefen
 		if(this.controller.getParticipants() >= this.participants) {
-			Debug.out.println("Fehler: Es sind schon "+this.participants+" Bots auf der Karte."); //$NON-NLS-1$ //$NON-NLS-2$
+			Debug.out.println("Fehler: Es sind schon "+this.participants+" Bots auf der Karte.");
 			return false;
 		}
 		
@@ -101,7 +85,7 @@ public class LabyrinthJudge extends Judge {
 	
 	/**
 	 * Prueft die Einhaltung der Regeln
-	 * @return true, wenn aller Reglen eingehalten werden
+	 * @return true, wenn alle Regelen eingehalten werden
 	 */
 	@Override
 	public boolean check(){
@@ -122,60 +106,18 @@ public class LabyrinthJudge extends Judge {
 			}
 			
 			if(this.world.finishReached(new Vector3d(obst.getPosition()))) {
-				
-				//Debug.out.println("Bot \""+obst.getName()+"\" erreicht nach "+this.getTime()+" ms als erster das Ziel!");
-				//Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "+ this.getTime()+" ms.");
-				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "+ SimUtils.millis2time(this.getTime()));  //$NON-NLS-1$//$NON-NLS-2$
-				
+				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "
+						+ SimUtils.millis2time(this.getTime()));
 				return false;
 			}
 		}
 		first=false;
-//		
-//		Bot finishCrossed = null;
-//		
-//		if (raceStartet==false) { 
-//			if (getActiveParticipants() == participants){
-//				suspendWorld(false);	
-//				takeStartTime();
-//				raceStartet= true;
-//				Iterator it = bots.iterator();
-//				while (it.hasNext()) {
-//					Bot bot = (Bot) it.next();
-//					((CtBot)bot).setSensRc5(CtBot.RC5_CODE_5);
-//				}
-//			}
-//		} else {	// Wir sind im Rennen
-//			
-//			Iterator it = bots.iterator();
-//			while (it.hasNext()) {
-//				Object obj = it.next();
-//				if (obj instanceof Bot){
-//					Bot bot = (Bot) obj; 
-//					// Puefen, ob Ziel erreicht
-//					
-//					if (world.finishReached(bot.getPos())){
-//						finishCrossed= bot;
-//						break;
-//					}
-//				}
-//			}
-//
-//			if (finishCrossed != null){
-//				kissArrivingBot(finishCrossed,getRunTime());
-//				finishCrossed=null;
-//			}
-//		}
 		
 		return true;
 	}
 	
-//	@Override
-//	protected void init() {
-//		
-//	}
-	
-	public void reinit() {
+	@Override
+    public void reinit() {
 		
 		super.reinit();
 		this.first = true;

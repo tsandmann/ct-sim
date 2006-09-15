@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ant-Task, der das Javadoc des ctSim erzeugt. 
+Ausfuehren in Eclipse: Alt-Shift-X, dann Q. Auch
+ueber Run > External Tools zu erreichen. -->
+<project default="javadoc">
+<target name="javadoc">
+<javadoc access="package" additionalparam=" -link http://java.sun.com/j2se/1.5.0/docs/api/" author="true" classpath="C:\Programme\eclipse\plugins\org.junit4_4.1.0\junit-4.1.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="ctSim.model.bots.components.sensors,jd2xx,ctSim.model.bots.ctbot,ctSim.view,ctSim.model.bots.components.actuators,ctSim.view.gui,ctSim.model.bots.components,ctSim,ctSim.model.rules,ctSim.view.gui.sensors,ctSim.model,ctSim.controller,ctSim.model.bots,ctSim.view.gui.actuators,ctSim.util,ctSim.model.bots.ctbot.components,mindprod.ledatastream,ctSim.model.scene,ctSim.view.contestConductor" source="1.5" sourcepath="." splitindex="true" use="true" version="true"/>
+</target>
+</project>

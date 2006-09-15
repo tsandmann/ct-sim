@@ -24,8 +24,8 @@ import java.awt.Font;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import ctSim.view.actuators.ActuatorGroupGUI;
-import ctSim.view.actuators.Actuators;
+import ctSim.view.gui.actuators.ActuatorGroupGUI;
+import ctSim.view.gui.actuators.Actuators;
 
 /**
  * Das Display der Bots im Simulator

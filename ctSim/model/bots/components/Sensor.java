@@ -22,7 +22,7 @@ package ctSim.model.bots.components;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import ctSim.view.sensors.SensorGroupGUI;
+import ctSim.view.gui.sensors.SensorGroupGUI;
 
 /* not synchronized!! */
 

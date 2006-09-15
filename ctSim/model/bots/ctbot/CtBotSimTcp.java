@@ -54,7 +54,7 @@ import ctSim.model.bots.ctbot.components.Governor;
 import ctSim.model.bots.ctbot.components.LightSensor;
 import ctSim.model.bots.ctbot.components.LineSensor;
 import ctSim.model.bots.ctbot.components.RemoteControlSensor;
-import ctSim.view.Debug;
+import ctSim.view.gui.Debug;
 
 /**
  * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator kommunizieren
