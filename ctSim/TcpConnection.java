@@ -1,32 +1,31 @@
 /*
  * c't-Sim - Robotersimulator fuer den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
  * Repraesentiert eine TCP-Verbindung
- * 
+ *
  * @author Benjamin Benz (bbe@heise.de)
  * @author Christoph Grimmer (c.grimmer@futurio.de)
  */
@@ -45,32 +44,6 @@ public class TcpConnection extends Connection {
 		super();
 	}
 
-	/**
-	 * Lauscht auf einem Port und initialisiert die Verbindung
-	 * 
-	 * @Deprecated Bitte diese Methode nicht mehr verwenden, da sie
-	 * ihren Port nicht wieder freigibt.
-	 * @param port
-	 *            Der Port, auf dem gelauscht werden soll
-	 * @return 0 wenn alles ok, sonst -1
-	 */
-	public int listen(int port) {
-		try {
-			ServerSocket server = new ServerSocket(port);
-			this.socket = server.accept();
-
-			socket.setPerformancePreferences(0,1,0);
-			socket.setTcpNoDelay(true);
-			connect();
-
-		} catch (IOException iOEx) {
-			ErrorHandler.error("Error listening on port: " + port + " "  //$NON-NLS-1$//$NON-NLS-2$
-					+ iOEx.getMessage());
-			return -1;
-		}
-		return 0;
-	}
-
 	/* Interne Hilfsmethode fuer die Verbindung */
 	private void connect() throws IOException {
 		setInputStream(this.socket.getInputStream());
@@ -83,14 +56,14 @@ public class TcpConnection extends Connection {
 	 * @throws IOException Wenn es beim Anlegen der beiden Streams zu Problemen kommt.
 	 * */
 	public void connect(Socket sock) throws IOException {
-		
+
 		this.socket = sock;
 		connect();
 	}
 
 	/**
 	 * Stellt eine TCP/IP-Verbindung her
-	 * 
+	 *
 	 * @param ipa
 	 *            TCP/IP-Adresse
 	 * @param port
@@ -115,7 +88,7 @@ public class TcpConnection extends Connection {
 	/**
 	 * Wandelt den uebergebenen String und die Portnummer in eine TCP/IP-Adresse
 	 * und stellt dann die Verbindung her
-	 * 
+	 *
 	 * @param ipa_str
 	 *            Adresse als String
 	 * @param port
@@ -139,7 +112,7 @@ public class TcpConnection extends Connection {
 
 	/**
 	 * Beendet die laufende Verbindung
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws Exception
 	 * @Override CtSim.Connection.disconnect()

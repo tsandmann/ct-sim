@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator fuer den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.model;
@@ -60,12 +60,12 @@ import ctSim.model.bots.Bot;
 import ctSim.view.gui.Debug;
 
 /**
- * <p>Welt-Modell, kuemmert sich um die globale Simulation und das 
+ * <p>Welt-Modell, kuemmert sich um die globale Simulation und das
  * Zeitmanagement.</p>
- * 
- * <p>Zum Erzeugen einer Welt die statischen Methoden 
+ *
+ * <p>Zum Erzeugen einer Welt die statischen Methoden
  * <code>buildWorldFrom...()</code> verwenden.</p>
- * 
+ *
  * @author Benjamin Benz (bbe@heise.de)
  * @author Peter Koenig (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
@@ -74,96 +74,170 @@ import ctSim.view.gui.Debug;
  * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class World {
-	
+
 	/** Breite des Spielfelds in m */
 	public static final float PLAYGROUND_THICKNESS = 0f;
-	
+
 	private TransformGroup worldTG;
-	
+
 	private BranchGroup lightBG, terrainBG, obstBG;
-	
+
 	private BranchGroup scene;
-	
+
 	private Parcours parcours;
-	
+
 	// TODO: joinen?
 	//private Set<Obstacle> obsts;
 	private Set<AliveObstacle> aliveObsts = new HashSet<AliveObstacle>();
-	
+
 	private Set<ViewPlatform> views = new HashSet<ViewPlatform>();
 
 	/** Die Quelle, aus der der Parcours dieser Welt gelesen wurde. Siehe
 	 * Dokumentation des Konstruktors.
 	 * @see #World(InputSource) */
 	private InputSource source;
-	
+
+	///////////////////////////////////////////////////////////////////////////
+	// "Geerbte" Zeit-Sachen
+
+	/** @see #setSimStepIntervalInMs(int) */
+	private int simStepIntervalInMs = 10;
+
+	/** <p>Pro Simulationsschritt r&uuml;ckt die Simulationszeit-Uhr um diesen
+	 * Wert vor. Einheit Millisekunden.</p>
+	 *
+	 * $$ Dokumentieren: Bot kriegt Zeit in diesen Schritten mitgeteilt; setzt indirekt max. Aufloesung
+	 */
+	private static final int SIM_TIME_PER_STEP =
+		Integer.parseInt(ConfigManager.getValue("simTimePerStep"));
+
+	/** <p>Gegenw&auml;rtige Simulationszeit. Sie ist gleich <em>Zahl der
+	 * bisher ausgef&uuml;hrten Simulationsschritte &times;
+	 * <code>SIM_TIME_PER_STEP</code></em>. Einheit Millisekunden.</p>
+	 *
+	 * @see #getSimTimeInMs()
+	 */
+	private long simTimeInMs = 0;
+
+	/** <p>Liefert den Zeitraffer-/Zeitlupen-Faktor: Wieviel Realzeit
+	 * (Armbanduhrenzeit) vergeht zwischen dem Beginn eines Simulatorschritts
+	 * und dem Beginn des n&auml;chsten Simulatorschritts?</p>
+	 *
+	 * N&auml;heres siehe {@link #setSimStepIntervalInMs(int)}.
+	 */
+	public int getSimStepIntervalInMs() {
+		return this.simStepIntervalInMs;
+	}
+
+	/** <p>Setzen des Zeitraffer-/Zeitlupen-Faktors:
+	 * Stellt ein, wieviel Realzeit (Armbanduhrenzeit) zwischen zwei
+	 * Schritten der Simulation vergeht. Einheit Millisekunden.</p>
+	 *
+	 * <p>Vorg&auml;nge in der Simulation werden von diesem Wert nicht
+	 * beeinflusst, da unabh&auml;ngig von ihm jeder Simulationsschritt
+	 * ausgef&uuml;hrt wird. Der Wert bestimmt nur, wie lange
+	 * zwischen den Schritten (in Realzeit) gewartet wird.</p>
+	 *
+	 * @param timeInterval Zeitspanne [ms], wieviel Zeit zwischen dem
+	 * Beginn eines Simulatorschritts und dem Beginn des folgenden
+	 * Simulatorschritts liegen soll.
+	 */
+    public void setSimStepIntervalInMs(int timeInterval) {
+    	this.simStepIntervalInMs = timeInterval;
+    }
+
+	/** Liefert die aktuelle Simulationszeit in Millisekunden.
+	 *
+	 * @return Die momentane Simulationszeit [ms]. Sie ist gleich der Zahl
+	 * der bisher ausgef&uuml;hrten Simulationsschritte mal einem
+	 * konstanten Faktor. Daher ist sie unabh&auml;ngig von der Realzeit
+	 * (Armbanduhrenzeit): eine Sim-Sekunde ist im allgemeinen
+	 * nicht gleich lang wie eine Armbanduhr-Sekunde, und zudem wird
+	 * die Simzeit-Uhr beispielsweise angehalten, wenn in der GUI der
+	 * Pause-Knopf gedr&uuml;ckt wird. Simzeit und Realzeit unterscheiden
+	 * sich also sowohl um Summanden als auch um einen Faktor.
+	 */
+    public long getSimTimeInMs() { //$$ Nachverfolgen, wo das ueberall auftaucht und Doku + Variablennamen klarer machen
+		return simTimeInMs;
+    }
+
+	/** Setzt die Simulationszeit-Uhr um den Gegenwert eines
+	 * Simulationsschrittes weiter.
+	 *
+	 * @see #SIM_TIME_PER_STEP
+	 * @see #getSimTimeInMs()
+	 */
+	private void increaseSimulTime() {
+		simTimeInMs += SIM_TIME_PER_STEP;
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 	// Statische Methoden, um eine Welt zu erzeugen
-	
+
 	/**
 	 * L&auml;dt einen Parcours aus einer Datei und baut damit eine Welt.
-	 * @param sourceFile Die zu &ouml;ffnende Datei. Sie 
+	 * @param sourceFile Die zu &ouml;ffnende Datei. Sie
 	 * hat in dem f&uuml;r Parcours vorgesehenen Schema zu sein.
 	 */
 	public static World buildWorldFromFile(File sourceFile)
 	throws SAXException, IOException {
-		return new World(new InputSource(sourceFile.toURI().toString()), 
+		return new World(new InputSource(sourceFile.toURI().toString()),
 				null);
 	}
 
-	/** L&auml;dt einen Parcours aus einem String und baut damit eine Welt. 
+	/** L&auml;dt einen Parcours aus einem String und baut damit eine Welt.
 	 * @param parcoursAsXml Der String, der die XML-Darstellung des Parcours
 	 * enth&auml;lt. Das XML muss in dem f&uuml;r Parcours vorgesehenen Schema
-	 * sein. Die in Zeile&nbsp;2 des XML angegebene DTD-Datei wird von dieser 
+	 * sein. Die in Zeile&nbsp;2 des XML angegebene DTD-Datei wird von dieser
 	 * Methode im Unterverzeichnis "parcours" gesucht. */
-	public static World buildWorldFromXmlString(String parcoursAsXml) 
+	public static World buildWorldFromXmlString(String parcoursAsXml)
 	throws SAXException, IOException {
 		return new World(
-				new InputSource(new StringReader(parcoursAsXml)), 
-				/* Der EntityResolver hat den Sinn, dem Parser zu sagen, 
-				 * er soll die parcours.dtd bitte im Verzeichnis "parcours" 
+				new InputSource(new StringReader(parcoursAsXml)),
+				/* Der EntityResolver hat den Sinn, dem Parser zu sagen,
+				 * er soll die parcours.dtd bitte im Verzeichnis "parcours"
 				 * suchen. */
 				new EntityResolver() {
 					@SuppressWarnings("unused")
                     public InputSource resolveEntity(
-							String publicId, 
-							String systemId) 
+							String publicId,
+							String systemId)
 					throws SAXException, IOException {
 						if (systemId.endsWith("/parcours.dtd")) //TODO: Irgendwann als Konstante statt hardcoded
 							return new InputSource(
-									ConfigManager.getValue("worlddir") + 
+									ConfigManager.getValue("worlddir") +
 									"/parcours.dtd"); //TODO: Irgendwann als Konstante statt hardcoded
 		                return null; // Standard-EntityResolver verwenden
 		            }
 				});
 	}
-	
+
 	///////////////////////////////////////////////////////////////////////////
-	
-	/** <p>Liest einen Parcours aus einer XML-Quelle und baut damit eine 
+
+	/** <p>Liest einen Parcours aus einer XML-Quelle und baut damit eine
 	 * Welt.</p>
-	 * 
-	 * <p>Der Konstruktor ist privat, da ihn niemand von au&szlig;en verwendet 
-	 * hat. Der DefaultController verwendet die statischen Methoden 
+	 *
+	 * <p>Der Konstruktor ist privat, da ihn niemand von au&szlig;en verwendet
+	 * hat. Der DefaultController verwendet die statischen Methoden
 	 * <code>buildWorldFromFile</code> und
-	 * <code>buildWorldFromXmlString</code> aus dieser Klasse, um Welten 
+	 * <code>buildWorldFromXmlString</code> aus dieser Klasse, um Welten
 	 * zu erzeugen.</p>
-	 * 
-	 * @param source Die Xerces-Eingabequelle, aus der der die 
-	 * XML-Darstellung des 
-	 * Parcours kommt. Das Parsen der Quelle liefert einen Parcours, auf 
-	 * dessen Grundlage eine Instanz der Welt konstruiert wird. 
-	 * <code>source</code> kann auf die 
-	 * Parcours-Datei zeigen oder (via einen java.io.StringReader) auf das 
+	 *
+	 * @param source Die Xerces-Eingabequelle, aus der der die
+	 * XML-Darstellung des
+	 * Parcours kommt. Das Parsen der Quelle liefert einen Parcours, auf
+	 * dessen Grundlage eine Instanz der Welt konstruiert wird.
+	 * <code>source</code> kann auf die
+	 * Parcours-Datei zeigen oder (via einen java.io.StringReader) auf das
 	 * in einem String stehende XML. Potentiell auch auf anderes.
-	 * 
-	 * @param resolver Der Xerces-EntityResolver, der beim Parsen des 
-	 * XML verwendet werden soll. Details siehe Methode 
+	 *
+	 * @param resolver Der Xerces-EntityResolver, der beim Parsen des
+	 * XML verwendet werden soll. Details siehe Methode
 	 * ParcoursLoader.loadParcours.
-	 * 
+	 *
 	 * @see ParcoursLoader#loadParcours(InputSource, EntityResolver)
 	 */
-	private World(InputSource source, EntityResolver resolver) 
+	private World(InputSource source, EntityResolver resolver)
 	throws SAXException, IOException {
 		//TODO: Wann wird source wieder geschlossen?
 		this.source = source;
@@ -175,9 +249,9 @@ public class World {
 		init();
 		setParcours(p);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return X-Dimension des Spielfldes im mm
 	 */
 	public float getPlaygroundDimX() {
@@ -185,22 +259,22 @@ public class World {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Y-Dimension des Spielfldes im mm
 	 */
 	public float getPlaygroundDimY() {
 		return this.parcours.getHeight();
 	}
-	
+
 	/**
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
 	 * @param parcoursFile Dateinamen des Parcours
 	 */
 	private void setParcours(Parcours parc) {
-		
+
 		this.parcours = parc;
 		// Hindernisse werden an die richtige Position geschoben
-		
+
 		// Zuerst werden sie gemeinsam so verschoben, dass ihre Unterkante genau
 		// buendig mit der Unterkante des Bodens ist:
 		Transform3D translate = new Transform3D();
@@ -212,14 +286,14 @@ public class World {
 
 	    obstTG.addChild(parc.getObstBG());
 	    this.lightBG.addChild(parc.getLightBG());
-	    this.terrainBG.addChild(parc.getTerrainBG());		
-		
+	    this.terrainBG.addChild(parc.getTerrainBG());
+
 //	    this.sceneLight.getObstBG().setCapability(Node.ENABLE_PICK_REPORTING);
 //	    this.sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
 	    this.obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
 	    this.obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
 	}
-	
+
 	private void init() {
 		VirtualUniverse.setJ3DThreadPriority(1);
 
@@ -227,11 +301,11 @@ public class World {
 		this.scene = new BranchGroup();
 		this.scene.setName("World"); //$NON-NLS-1$
 		this.scene.setUserData(new String("World")); //$NON-NLS-1$
-		
+
 		Transform3D worldTransform = new Transform3D();
 		worldTransform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));
 		this.worldTG = new TransformGroup(worldTransform);
-		
+
 		this.worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		this.worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		this.worldTG.setCapability(Node.ENABLE_PICK_REPORTING);
@@ -240,17 +314,17 @@ public class World {
 		this.worldTG.setPickable(true);
 
 		this.scene.addChild(this.worldTG);
-		
+
 		// Lichtquellen einfuegen
 		// Streulicht (ambient light)
-		BoundingSphere ambientLightBounds = 
+		BoundingSphere ambientLightBounds =
 			new BoundingSphere(new Point3d(0d, 0d, 0d), 100d);
 		Color3f ambientLightColor = new Color3f(0.33f, 0.33f, 0.33f);
 		AmbientLight ambientLightNode = new AmbientLight(ambientLightColor);
 		ambientLightNode.setInfluencingBounds(ambientLightBounds);
 		ambientLightNode.setEnable(true);
 		this.worldTG.addChild(ambientLightNode);
-		
+
 		// Die Branchgroup fuer die Lichtquellen
 		this.lightBG = new BranchGroup();
 		this.lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
@@ -262,7 +336,7 @@ public class World {
 		this.terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.terrainBG.setPickable(true);
 		this.worldTG.addChild(this.terrainBG);
-		
+
 		// Die TranformGroup fuer alle Hindernisse:
 //		this.sceneLight.setObstBG(new BranchGroup());
 //		// Damit spaeter Bots hinzugefuegt werden koennen:
@@ -278,38 +352,38 @@ public class World {
 		this.obstBG.setPickable(true);
 		this.worldTG.addChild(this.obstBG);
 	}
-	
+
 	// TODO: Besser weg -> WorldPanel, WorldView ueberarbeiten...
 	/**
 	 * @return Gibt die BranchGroup der Szene zurueck
 	 */
 	public BranchGroup getScene() {
-		
+
 		return this.scene;
 	}
-	
+
 	/**
 	 * Fuegt eine ViewPlatform hinzu
-	 * @param view Die neue Ansicht 
+	 * @param view Die neue Ansicht
 	 */
 	public void addViewPlatform(ViewPlatform view) {
-		
+
 		this.views.add(view);
 	}
-	
+
 	//  TODO:
 //	public void addObstacle() {
-//		
-//		
+//
+//
 //	}
-	
+
 	// TODO: Joinen mit den anderen adds
 	/**
 	 * Fuegt einen neuen Bot hinzu
 	 * @param bot Der neue Bot
 	 */
 	public void addBot(Bot bot) {
-		
+
 		// TODO: Hmmm...... woanders hin... Fehlermeldung, wenn keine Pos,Head mehr...
 		Point3d pos = new Point3d(this.parcours.getStartPosition(this.aliveObsts.size()+1));
 		if (pos != null) {
@@ -322,126 +396,62 @@ public class World {
 		if (head != null) {
 			bot.setHeading(head);
 		}
-		
+
 		this.addAliveObstacle(bot);
 	}
-	
+
 	/**
 	 * Fuegt ein neues "belebtes" Hindernis hinzu
 	 * @param obst Das Hindernis
 	 */
 	public void addAliveObstacle(AliveObstacle obst) {
-		
+
 		// TODO: mit addObst joinen, bzw. wenigstens verwenden
 		this.aliveObsts.add(obst);
 		this.views.addAll(obst.getViewingPlatforms());
-		
+
 		this.obstBG.addChild(obst.getBranchGroup());
 	}
-	
+
 	/**
 	 * @return Die Menge der "belebten" Hindernisse
 	 */
 	public Set<AliveObstacle> getAliveObstacles() {
-		
+
 		return this.aliveObsts;
 	}
-	
+
 	// TODO:
 //	public void removeObstacle() {
-//		
-//		
+//
+//
 //	}
-	
+
 	/**
 	 * Entfernt ein Hindernis
 	 * @param obst Das Hindernis zu entfernen
 	 */
 	public void removeAliveObstacle(AliveObstacle obst) {
-		
+
 		// TODO: mit remObst joinen, bzw. wenigstens verwenden
 		this.aliveObsts.remove(obst);
 		this.views.removeAll(obst.getViewingPlatforms());
-		
+
 		this.obstBG.removeChild(obst.getBranchGroup());
 	}
-	
-//	/**
-//	 * Entfernt einen Bot wieder
-//	 * @param bot
-//	 */
-//	public void remove(AliveObstacle obst){
-//		aliveObstacles.remove(obst);
-//		sceneLight.removeBot(obst.getName());
-//		sceneLightBackup.removeBot(obst.getName());
-//	}
-	
-	/* **********************************************************************
-	 * **********************************************************************
-	 * "Geerbte" Zeit-Sachen...
-	 * 
-	 * TODO: Auslagern in DefaultController?
-	 * 
-	 */
-	/** Gibt an, wieviel Realzeit ("wall-clock time") zwischen zwei 
-	 * Schritten der Simulation vergeht. Mit anderen Worten, nach 
-	 * einem Simulationsschritt wird f&uuml;r diese Zeitspanne gewartet 
-	 * und dann der n&auml;chste Schritt ausgef&uuml;hrt. Einheit 
-	 * Millisekunden. */
-	private int simStepIntervalInMs = 10;
-	
-	/** Pro Simulationsschritt r&uuml;ckt die Simulationszeit-Uhr um den 
-	 * Wert dieser Variablen vor. Einheit Millisekunden. */
-	private static final int SIM_TIME_PER_STEP = 10;
-	
-	/** Gegenw&auml;rtige Simulationszeit. Sie entspricht der Anzahl der 
-	 * bisher ausgef&auml;hrten Simulationsschritte &times; 
-	 * <code>SIM_TIME_PER_STEP</code>.
-	 * Einheit Millisekunden. */
-	private long simulTime = 0;
-	
-	/**
-	 * @return Gibt baseTimeReal zurueck.
-	 */
-	public int getSimStepIntervalInMs() {
-		return this.simStepIntervalInMs;
-	}
 
-	/**
-     * @param timeInterval The baseTimeReal to set.
-     */
-    public void setSimStepIntervalInMs(int timeInterval) {
-    	this.simStepIntervalInMs = timeInterval;
-    }
-
-	/**
-	 * Liefert die Weltzeit (simulTime) zurueck.
-	 * 
-	 * @return Die aktuelle Weltzeit in ms
-	 */
-	public long getSimulTime() {
-		return simulTime;
-	}
-	
-	/**
-	 * @return Gibt die um baseTimeVirtual erhoehte Simulationszeit zurueck
-	 */
-	private void increaseSimulTime() {
-		simulTime += SIM_TIME_PER_STEP;
-	}
-	
 	/* **********************************************************************
 	 * **********************************************************************
 	 * WORLD_FUNCTIONS
-	 * 
+	 *
 	 * TODO: Auslagern in eigene Klasse?
-	 * 
+	 *
 	 * Funktionen fuer die Sensoren usw. (Abstandsfunktionen u.ae.)
-	 * 
+	 *
 	 */
 	/** Reichweite des Lichtes in m */
 	private static final float LIGHT_SOURCE_REACH = 1f;
-	
+
 	/**
 	 * Prueft, ob ein Punkt auf dem Zielfeld liegt
 	 * @param pos Die Position zu pruefen
@@ -450,7 +460,7 @@ public class World {
 	public boolean finishReached(Vector3d pos){
 		return this.parcours.finishReached(pos);
 	}
-	
+
 	/**
 	 * Prueft, ob ein Objekt mit irgendeinem anderen Objekt kollidiert
 	 * @param obst das Objekt
@@ -463,26 +473,26 @@ public class World {
 	// TODO: Ueberarbeiten?
 	public boolean checkCollision(AliveObstacle obst, /*Shape3D botBody,*/ Bounds bounds,
 			Vector3d newPosition) { //, String botName) {
-		
+
 		Shape3D botBody = obst.getShape();
 //		Bounds bounds = obst.getBounds();
 		//String botName = obst.getName();
-		
+
 //		System.out.println(bounds.toString());
-		
+
 		// schiebe probehalber Bounds an die neue Position
 		Transform3D transform = new Transform3D();
 		transform.setTranslation(newPosition);
 		bounds.transform(transform);
-		
+
 //		System.out.println(bounds.toString());
-		
+
 		// und noch die Welttransformation darauf anwenden
 		this.worldTG.getTransform(transform);
 		bounds.transform(transform);
-		
+
 //		System.out.println(bounds.toString());
-		
+
 		PickBounds pickShape = new PickBounds(bounds);
 		PickInfo pickInfo;
 		synchronized (this.obstBG) {
@@ -503,11 +513,11 @@ public class World {
 		//obst.stop();
 		return false;
 	}
-	
+
 	/**
 	 * Prueft, ob unter dem angegebenen Punkt innerhalb der Bodenfreiheit des
 	 * Bots noch Boden zu finden ist
-	 * 
+	 *
 	 * @param pos
 	 *            Die Position, von der aus nach unten gemessen wird
 	 * @param groundClearance
@@ -518,10 +528,10 @@ public class World {
 	 */
 	// TODO: Ueberarbeiten... (GroundClearance?)
 	public boolean checkTerrain(Point3d pos, double groundClearance) {
-		
-		return !parcours.checkWhole(pos);
-/*		
-		
+
+		return !parcours.checkHole(pos);
+/*
+
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
 		Transform3D transform = new Transform3D();
@@ -548,8 +558,8 @@ public class World {
 			return false;
 		} else
 			return true;
-			
-*/			
+
+*/
 	}
 
 	/**
@@ -558,10 +568,10 @@ public class World {
 	 * wird, desto niedriger ist der zurueckgegebene Wert. Der Wertebereich
 	 * erstreckt sich von 0 (weiss oder maximale Reflexion) bis 1023 (minimale
 	 * Reflexion, schwarz oder Loch).
-	 * 
+	 *
 	 * Es werden rayCount viele Strahlen gleichmaessig orthogonal zum Heading
 	 * in die Szene geschossen.
-	 * 
+	 *
 	 * @param pos
 	 *            Die Position, an der der Sensor angebracht ist
 	 * @param heading
@@ -612,7 +622,7 @@ public class World {
 		PickInfo pickInfo;
 		Shape3D shape;
 		Color3f color = new Color3f();
-		
+
 		// Variable zur Auswertung der Absorption/Reflexion
 		float absorption = 0f;
 		for (int j = 0; j < rayCount; j++) {
@@ -648,13 +658,13 @@ public class World {
 	 * wird, desto niedriger ist der zurueckgegebene Wert. Der Wertebereich
 	 * erstreckt sich von 0 (weiss oder maximale Reflexion) bis 1023 (minimale
 	 * Reflexion, schwarz oder Loch).
-	 * 
+	 *
 	 * Es werden rayCount viele Strahlen gleichmaessig orthogonal zum Heading in
 	 * die Szene geschossen.
-	 * 
+	 *
 	 * Es werden rayCount viele Strahlen gleichmaessig in Form eines "+" in in
 	 * die Szene Geschossen.
-	 * 
+	 *
 	 * @param pos
 	 *            Die Position, an der der Sensor angebracht ist
 	 * @param heading
@@ -681,7 +691,7 @@ public class World {
 
 	/**
 	 * Liefert die Helligkeit, die auf einen Lichtsensor faellt
-	 * 
+	 *
 	 * @param pos
 	 *            Die Position des Lichtsensors
 	 * @param heading
@@ -722,12 +732,12 @@ public class World {
 			darkness = 1023;
 		return darkness;
 	}
-	
+
 	/**
 	 * Liefert die Distanz in Metern zum naechesten Objekt zurueck, das man
 	 * sieht, wenn man von der uebergebenen Position aus in Richtung des
 	 * uebergebenen Vektors schaut.
-	 * 
+	 *
 	 * @param pos
 	 *            Die Position, von der aus der Seh-Strahl verfolgt wird
 	 * @param heading
@@ -759,7 +769,7 @@ ss
 //		System.out.println(Math.floor(relHeading.angle(new Vector3d(0d, 1d, 0d))*100));
 		transform.transform(relHeading);
 //		System.out.println(Math.floor(relHeading.angle(new Vector3d(0d, 1d, 0d))*100));
-		
+
 //		Point3d relPos = pos;
 //		Vector3d relHeading = heading;
 
@@ -781,34 +791,34 @@ ss
 
 	/** Damit jedes Obstacle fair behandelt wird, merken wir uns, wer das letztemal zuerst dran war */
 	private int aliveObstaclePtr=0;
-	
+
 	/**
-	 * Diese Methode aktualisiert die gesamte Simualtion 
+	 * Diese Methode aktualisiert die gesamte Simualtion
 	 * @see AliveObstacle#updateSimulation()
 	 */
 	public void updateSimulation() {
 		// Zeitbasis aktualisieren
 		increaseSimulTime();
-		
-		
+
+
 		Object[] aliveObstacles = aliveObsts.toArray();
 		// pruefen, ob nicht etwa der Zeiger zu weit steht
 		if (aliveObstaclePtr >= aliveObstacles.length)
 			aliveObstaclePtr=0;
-		
+
 		for (int i=aliveObstaclePtr; i<aliveObstacles.length; i++)
-			((AliveObstacle)aliveObstacles[i]).updateSimulation(simulTime);
+			((AliveObstacle)aliveObstacles[i]).updateSimulation(getSimTimeInMs());
 		for (int i=0; i<aliveObstaclePtr; i++)
-			((AliveObstacle)aliveObstacles[i]).updateSimulation(simulTime);
+			((AliveObstacle)aliveObstacles[i]).updateSimulation(getSimTimeInMs());
 		aliveObstaclePtr++;
 	}
 
-	/** Schreibt den Parcours der Welt in eine Datei. Es wird dasselbe XML 
+	/** Schreibt den Parcours der Welt in eine Datei. Es wird dasselbe XML
 	 * in die Datei geschrieben, das beim
 	 * Konstruieren dieser Instanz geparst wurde, um den Parcours der Welt zu
 	 * erhalten.
-	 * 
-	 * @param targetFile Datei, in die das XML des Parcours ausgegeben wird. 
+	 *
+	 * @param targetFile Datei, in die das XML des Parcours ausgegeben wird.
 	 * Sie wird bei Bedarf angelegt.
 	 */
 	public void writeParcoursToFile(File targetFile) {
@@ -825,5 +835,19 @@ ss
 			Debug.out.println("Fehler: Datei konnte nicht gespeichert werden!");
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Liefert den der Welt zugrundeliegenden Parcours. Er wurde i.d.R. aus den
+	 * als XML vorliegenden Parcours-Dateien geladen und enth&auml;lt die
+	 * nicht-beweglichen Dinge auf der Karte wie Hindernisse, Lichtquellen,
+	 * Bodenabschnitte, L&ouml;cher usw.
+	 *
+	 * @see #buildWorldFromFile(File)
+	 * @see #buildWorldFromXmlString(String)
+	 * @see ParcoursLoader
+	 */
+	public Parcours getParcours() {
+		return parcours;
 	}
 }

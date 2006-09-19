@@ -428,7 +428,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			for (int i=0; i<tmp.length; i++)
 				commandsToSend.add(tmp[i]);
 
-			lastTransmittedSimulTime= (int)world.getSimulTime();
+			lastTransmittedSimulTime= (int)world.getSimTimeInMs();
 			lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
 			command.setCommand(Command.CMD_DONE);
 			command.setDataL(lastTransmittedSimulTime);

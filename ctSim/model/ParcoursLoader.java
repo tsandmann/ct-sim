@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator fuer den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.model;
@@ -62,51 +62,51 @@ import ctSim.ErrorHandler;
 
 /**
  * Diese Klasse hilft einen Parcours aus einer ASCII-Datei zu laden
- * 
+ *
  * @author bbe (bbe@heise.de)
  */
 public class ParcoursLoader {
 	/** Z-Koorndinate der Lampen */
 	public static final float LIGHTZ = 0.5f;
-	
+
 	/**
 	 * Linienbreite
 	 */
 	public static final float LINEWIDTH = 0.1f;
-	
+
 	/**
 	 * Horizontales Liniensegment
 	 */
-	public static final float[] LINE_HORIZ = 	{ -0.5f, 0f - LINEWIDTH/2,0f, 
-													   0.5f, 0f - LINEWIDTH/2,0f, 
+	public static final float[] LINE_HORIZ = 	{ -0.5f, 0f - LINEWIDTH/2,0f,
+													   0.5f, 0f - LINEWIDTH/2,0f,
 													   0.5f, 0f + LINEWIDTH/2,0f,
 													  -0.5f, 0f + LINEWIDTH/2,0f,
-													  -0.5f, 0f - LINEWIDTH/2,0f}; 
+													  -0.5f, 0f - LINEWIDTH/2,0f};
 	/**
 	 * Vertikales Liniensegment
 	 */
-	public static final float[] LINE_VERT =  	{ 0f - LINEWIDTH/2,-0.5f,0f,  // Start unten links 
+	public static final float[] LINE_VERT =  	{ 0f - LINEWIDTH/2,-0.5f,0f,  // Start unten links
 													  0f + LINEWIDTH/2,-0.5f,0f,  // kurze Linie nach rechts
-													  0f + LINEWIDTH/2, 0.5f,0f,  // Lange Linie hoch  
-													  0f - LINEWIDTH/2, 0.5f,0f,  // kurze Linie nach links   
+													  0f + LINEWIDTH/2, 0.5f,0f,  // Lange Linie hoch
+													  0f - LINEWIDTH/2, 0.5f,0f,  // kurze Linie nach links
 													  0f - LINEWIDTH/2,-0.5f,0f}; // lange Linie runter
-	
+
 	/**
 	 * Linie -- Suedostecke
 	 */
 	public static final float[] LINE_CORNER_SE = { 0f - LINEWIDTH/2,-0.5f               ,0f,  // Start unten links
-													  0f + LINEWIDTH/2,-0.5f               ,0f,  // kurze Linie nach rechts   
-													  0f + LINEWIDTH/2, 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie hoch 
+													  0f + LINEWIDTH/2,-0.5f               ,0f,  // kurze Linie nach rechts
+													  0f + LINEWIDTH/2, 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie hoch
 													  0.5f			  , 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie nach rechts
 													  0.5f			  , 0.0f + LINEWIDTH/2 ,0f,  // kurze Linie hoch
 													  0f -LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,  // Lange Linie nach links
-													  0f - LINEWIDTH/2,-0.5f               ,0f};  // Lange Linie nach unten 
+													  0f - LINEWIDTH/2,-0.5f               ,0f};  // Lange Linie nach unten
 	/**
 	 * Linie -- Suedwestecke
 	 */
 	public static final float[] LINE_CORNER_SW = { 0f - LINEWIDTH/2,-0.5f               ,0f,  // Start unten links
-													  0f + LINEWIDTH/2,-0.5f               ,0f,  // kurze Linie nach rechts   
-													  0f + LINEWIDTH/2, 0.0f + LINEWIDTH/2 ,0f,  // Lange Linie hoch 
+													  0f + LINEWIDTH/2,-0.5f               ,0f,  // kurze Linie nach rechts
+													  0f + LINEWIDTH/2, 0.0f + LINEWIDTH/2 ,0f,  // Lange Linie hoch
 													 -0.5f			  , 0.0f + LINEWIDTH/2 ,0f,  // Lange Linie nach links
 													 -0.5f			  , 0.0f - LINEWIDTH/2 ,0f,  // kurze Linie runter
 													  0f -LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie nach links
@@ -120,28 +120,28 @@ public class ParcoursLoader {
 													  0f +LINEWIDTH/2 , 0.5f               ,0f,  // Lange Linie nach oben
 													  0f -LINEWIDTH/2 , 0.5f               ,0f,  // kurze Linie nach links
 													  0f -LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,  // lange Linie nach unten
-													 -0.5f			  , 0.0f + LINEWIDTH/2 ,0f};  // Lange Linie nach links	
-	
+													 -0.5f			  , 0.0f + LINEWIDTH/2 ,0f};  // Lange Linie nach links
+
 	/**
 	 * Linie -- Nordostecke
 	 */
 	public static final float[] LINE_CORNER_NE = { 0f +LINEWIDTH/2 , 0.5f               ,0f,  // Start oben rechts
 												      0f -LINEWIDTH/2 , 0.5f               ,0f,  // kurze Linie nach links
 													  0f -LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,  // lange Linie nach unten
-													  0.5f			  , 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie nach rechts 
-													  0.5f			  , 0.0f + LINEWIDTH/2 ,0f,  // kurze Linie nach oben 
+													  0.5f			  , 0.0f - LINEWIDTH/2 ,0f,  // Lange Linie nach rechts
+													  0.5f			  , 0.0f + LINEWIDTH/2 ,0f,  // kurze Linie nach oben
 													  0f +LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,  // lange Linie nach links
 													  0f +LINEWIDTH/2 , 0.5f			   ,0f,  // lange Linie nach oben
 	};
-	
+
 	/** Verwaltet alle Aussehen */
 	HashMap appearances = new HashMap();
-	
+
 	private int[][] parcoursMap = null;
 
 	/** Der eigentliche Parcours */
 	private Parcours parcours;
-	
+
 	/**
 	 * Neuen ParcoursLoader instantiieren
 	 */
@@ -151,10 +151,10 @@ public class ParcoursLoader {
 	}
 
 	/**
-	 * Erzeugt ein Wandsegment 
+	 * Erzeugt ein Wandsegment
 	 * Alle Postionen sind keine Weltkoordinaten,
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
-	 * 
+	 *
 	 * @param x  Position in X-Richtung
 	 * @param y  Position in X-Richtung
 	 * @param lengthX Laenge der Wand in X-Richtung
@@ -164,12 +164,12 @@ public class ParcoursLoader {
 		Box box = new Box(this.parcours.getGrid() / 2 * lengthX, this.parcours.getGrid() / 2* lengthY, 0.2f, appearance);
 		this.parcours.addObstacle(box,x+lengthX/2.0f,y+lengthY/2.0f);
 	}
-	
+
 	/**
-	 * Erzeugt ein Stueck Fussboden 
+	 * Erzeugt ein Stueck Fussboden
 	 * Alle Postionen sind keine Weltkoordinaten,
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
-	 * 
+	 *
 	 * @param x  Position in X-Richtung
 	 * @param y  Position in X-Richtung
 	 * @param lengthX Laenge der Flaeche in X-Richtung
@@ -180,13 +180,13 @@ public class ParcoursLoader {
 	private void createFloor(int x, int y, int lengthX, int lengthY, Appearance app) {
 		Box box = new Box(this.parcours.getGrid() / 2 * lengthX, this.parcours.getGrid() / 2* lengthY, World.PLAYGROUND_THICKNESS, app);
 		this.parcours.addFloor(box,x+lengthX/2.0f,y+lengthY/2.0f, -World.PLAYGROUND_THICKNESS+0.001f);
-	}	
+	}
 
 	/**
-	 * Erzeugt ein Stueck Fussboden 
+	 * Erzeugt ein Stueck Fussboden
 	 * Alle Postionen sind keine Weltkoordinaten,
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
-	 * 
+	 *
 	 * @param x  Position in X-Richtung
 	 * @param y  Position in Y-Richtung
 	 * @param app Aussehen des Bodens
@@ -194,27 +194,27 @@ public class ParcoursLoader {
 	private void createFloor(int x, int y, Appearance app) {
 		Box box = new Box(this.parcours.getGrid() *0.5f , this.parcours.getGrid()  *0.5f, World.PLAYGROUND_THICKNESS, app);
 		this.parcours.addFloor(box,x+0.5f,y+0.5f, -World.PLAYGROUND_THICKNESS+0.001f);
-	}	
+	}
 
 	/**
-	 * Erzeugt einen Fussboden aus einem Stueck 
+	 * Erzeugt einen Fussboden aus einem Stueck
 	 * Alle Postionen sind keine Weltkoordinaten,
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
-	 * 
+	 *
 	 * @param app Aussehen des Bodens
 	 */
 	@SuppressWarnings("unused")
 	private void createWholeFloor(Appearance app) {
 		Box box = new Box(this.parcours.getDimX()*this.parcours.getGrid() *0.5f , this.parcours.getDimY()*this.parcours.getGrid()  *0.5f, World.PLAYGROUND_THICKNESS, app);
 		this.parcours.addFloor(box, ((float)this.parcours.getDimX())/2, ((float)this.parcours.getDimY())/2, -World.PLAYGROUND_THICKNESS-0.005f); // +0.001f);
-	}	
+	}
 
-	
+
 	/**
-	 * Erzeugt eine Linie auf dem Boden 
+	 * Erzeugt eine Linie auf dem Boden
 	 * Alle Postionen sind keine Weltkoordinaten,
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
-	 * 
+	 *
 	 * @param x  Position in X-Richtung
 	 * @param y  Position in Y-Richtung
 	 * @param type Art der Linie
@@ -228,7 +228,7 @@ public class ParcoursLoader {
 
 		for (n=0; n< points.length; n++)
 			p[n]=points[n]*this.parcours.getGrid();
-		
+
 	    createFloor(x, y,getAppearance(' '));
 
 		// Polygone in darstellbare Form umwandeln
@@ -247,13 +247,13 @@ public class ParcoursLoader {
 		// Hinzufuegen der Ober- und Unterseite des Linien-Shape3D
 		Shape3D ls = new Shape3D();
 		ls.addGeometry(gi.getGeometryArray());
-		
+
 		ls.setAppearance(appearance);
 
 		this.parcours.addFloor(ls,x+0.5f,y+0.5f, 0.002f);
-	}	
-		
-	
+	}
+
+
 	/**
 	 * Erzeugt eine Sauele mit Lichtquelle obendrauf
 	 * @param x X-Koordinate
@@ -268,12 +268,12 @@ public class ParcoursLoader {
 		TransformGroup tg = new TransformGroup(translate);
 		tg.setCapability(javax.media.j3d.Node.ENABLE_PICK_REPORTING);
 		tg.addChild(pillar);
-		
+
 		this.parcours.addObstacle(tg,x+0.5f,y+0.5f);
 		createLight(new BoundingSphere(new Point3d(0d,
 				0d, 0d), 10d),new Color3f(1.0f, 1.0f, 0.9f),x,y, lightAppearance);
 	}
-	
+
 	/**
 	 * Fuegt ein Licht ein
 	 * @param pointLightBounds
@@ -299,10 +299,10 @@ public class ParcoursLoader {
 
 	/**
 	 * Prueft die angrenzenden Felder (ohne diagonalen), ob mindestens eines davon den uebergebenen Wert hat
-	 * @param x X-Koordinate des mittelfeldes 
+	 * @param x X-Koordinate des mittelfeldes
 	 * @param y Y-Koordinate des mittelfeldes
 	 * @param c Der zu suchende Feldtyp
-	 * 
+	 *
 	 * @return -1 wenn kein Feld den Wert hat. Wenn er einen Nachbarn findet dann die Richtung in Grad.
 	 * 0 = (x=1, y=0) ab da im Uhrzeigersinn
 	 */
@@ -310,18 +310,18 @@ public class ParcoursLoader {
 		if ((y>0) && (this.parcoursMap[x][y-1] == c))
 			return 90;
 		if ((y<this.parcours.getDimY()-1) && (this.parcoursMap[x][y+1] == c))
-			return 270;		
+			return 270;
 		if ((x>0) && (this.parcoursMap[x-1][y] == c))
 				return 180;
 		if ((x<this.parcours.getDimX()-1) && (this.parcoursMap[x+1][y] == c))
-			return 0;		
-		
-		
+			return 0;
+
+
 		return -1;
 	}
-		
-		
-	
+
+
+
 	/**
 	 * Liest die parcourMap ein und baut daraus einen Parcour zusammen
 	 */
@@ -329,11 +329,11 @@ public class ParcoursLoader {
 		int l;
     	int d;
 
-    	
+
     	if (this.parcoursMap != null){
-    		
+
 			for (int y = 0; y < this.parcours.getDimY(); y++){
-				for (int x = 0; x < this.parcours.getDimX(); x++) 
+				for (int x = 0; x < this.parcours.getDimX(); x++)
 					switch (this.parcoursMap[x][y]) {
 						case 'X':
 							createWall(x, y,1 ,1,getAppearance(this.parcoursMap[x][y]));
@@ -379,9 +379,9 @@ public class ParcoursLoader {
 					    case 'L':
 				    		// TODO Boden optimieren, kacheln zusammenfassen
 				    		createFloor(x, y,getAppearance(this.parcoursMap[x][y]));
-				    		parcours.addWhole(x,y);
+				    		parcours.addHole(x,y);
 						break;
-							
+
 					    case '0':
 							this.parcours.setStartPosition(0,x,y);
 							createFloor(x, y,getAppearance(this.parcoursMap[x][y]));
@@ -401,7 +401,7 @@ public class ParcoursLoader {
 					    	this.parcours.addFinishPosition(x, y);
 							createFloor(x, y,getAppearance(this.parcoursMap[x][y]));
 							break;
-							
+
 					    case '-':
 							createLine(x,y,LINE_HORIZ,getAppearance(this.parcoursMap[x][y]));
 							break;
@@ -421,49 +421,49 @@ public class ParcoursLoader {
 							createLine(x,y,LINE_CORNER_NW,getAppearance(this.parcoursMap[x][y]));
 							break;
 
-						
+
 					}
-				    	
-	    		
+
+
 			}
 //			 TODO: Hier wird testweise ein Boden aus einem Stueck eingefuegt!
-			createWholeFloor(getAppearance(' '));	
+			createWholeFloor(getAppearance(' '));
        }
-	}    	
-	
+	}
+
 	/**
 	 * @return Liefert das soeben aufgebaute Parcours-Objekt zurueck
 	 */
 	public Parcours getParcours() {
 		return this.parcours;
 	}
-	
+
 	/** <p>L&auml;dt einen Parcours aus einer InputSource.
-	 * 
+	 *
 	 * @param source Xerces-InputSource-Objekt, aus dem der Parcours geholt
-	 * werden kann. Der Sinn ist, dass beliebige Eingabequellen 
-	 * &uuml;bergeben werden k&ouml;nnen und daher nicht mehr nur aus Dateien, 
+	 * werden kann. Der Sinn ist, dass beliebige Eingabequellen
+	 * &uuml;bergeben werden k&ouml;nnen und daher nicht mehr nur aus Dateien,
 	 * sondern auch aus Strings oder von sonstwo gelesen werden kann.</p>
-	 * 
-	 * @param resolver Der zu verwendende Xerces-EntityResolver, oder 
-	 * <code>null</code>, wenn der Standard-Resolver verwendet werden soll. 
-	 * Der DOMParser, der dieser Methode zugrundeliegt, verwendet den 
-	 * Resolver w&auml;hrend dem Verarbeiten 
+	 *
+	 * @param resolver Der zu verwendende Xerces-EntityResolver, oder
+	 * <code>null</code>, wenn der Standard-Resolver verwendet werden soll.
+	 * Der DOMParser, der dieser Methode zugrundeliegt, verwendet den
+	 * Resolver w&auml;hrend dem Verarbeiten
 	 * der im XML vorkommenden "system identifier" und "public identifier".
-	 * Diese treten in unseren Parcoursdateien nur an einer Stelle auf, 
-	 * n&auml;mlich in Zeile&nbsp;2: 
-	 * <code>&lt;!DOCTYPE collection SYSTEM "parcours.dtd"></code>. Der 
-	 * system identifier ist dabei <code>parcours.dtd</code>. F&uuml;r 
-	 * Parcours-Dateien ist kein Resolver n&ouml;tig (= es kann 
-	 * <code>null</code> &uuml;bergeben werden), weil sie im gleichen 
-	 * Verzeichnis liegen wie die Datei parcours.dtd. F&uuml;r Parcours, die 
+	 * Diese treten in unseren Parcoursdateien nur an einer Stelle auf,
+	 * n&auml;mlich in Zeile&nbsp;2:
+	 * <code>&lt;!DOCTYPE collection SYSTEM "parcours.dtd"></code>. Der
+	 * system identifier ist dabei <code>parcours.dtd</code>. F&uuml;r
+	 * Parcours-Dateien ist kein Resolver n&ouml;tig (= es kann
+	 * <code>null</code> &uuml;bergeben werden), weil sie im gleichen
+	 * Verzeichnis liegen wie die Datei parcours.dtd. F&uuml;r Parcours, die
 	 * aus XML-Strings gelesen werden, ist ein Resolver n&ouml;tig, da der
-	 * Parser sonst nur im ctSim-Verzeichnis sucht (nicht im 
-	 * Verzeichnis ctSim/parcours), und daher die Datei 
+	 * Parser sonst nur im ctSim-Verzeichnis sucht (nicht im
+	 * Verzeichnis ctSim/parcours), und daher die Datei
 	 * ctSim/parcours/parcours.dtd nicht findet.
-	 *  
-	 * @throws SAXException 
-	 * @throws IOException 
+	 *
+	 * @throws SAXException
+	 * @throws IOException
 	 */
 	public void loadParcours(InputSource source, EntityResolver resolver)
 			throws SAXException, IOException {
@@ -476,9 +476,9 @@ public class ParcoursLoader {
 			parser.parse(source);
 			// umwandeln in ein Document
 			Document doc = parser.getDocument();
-			
+
 			// Und anfangen mit dem abarbeiten
-			
+
 			//als erster suchen wir uns den Parcours-Block
 			Node n = doc.getDocumentElement().getFirstChild();
 			while ((n != null)&& (!n.getNodeName().equals("parcours"))) //$NON-NLS-1$
@@ -487,11 +487,11 @@ public class ParcoursLoader {
 
 			int y=0;	// Anzahl der Zeilen im File
 			int x=0;	// Anzahl der Spalten im File
-			
-			
+
+
 			//	Eine Liste aller Kinder des Parcours-Eitnrags organsisieren
-			NodeList children=n.getChildNodes();	
-	
+			NodeList children=n.getChildNodes();
+
 			//	Anzahl der Zeilen und spalten bestimmen
 	        for (int i=0; i<children.getLength(); i++){
 	        		Node child =children.item(i);
@@ -501,13 +501,15 @@ public class ParcoursLoader {
 	        				x = child.getChildNodes().item(0).getNodeValue().length();
 	        		}
 	        }
-			
+
 	        // Parcors vorbereiten
 			this.parcours.setDimX(x);
 			this.parcours.setDimY(y);
 
 			// Und eine Map anlegen
 			this.parcoursMap = new int[x][y];
+
+			parcours.setParcoursMap(parcoursMap);
 
 			x=0; y=0;
 			//	ParcoursMap aufbauen
@@ -520,9 +522,9 @@ public class ParcoursLoader {
 	        			y++;
 	        		}
 	        }
-		
-	        // ********** Appearances aus dem Document lesen 
-	        
+
+	        // ********** Appearances aus dem Document lesen
+
 			//suchen wir uns den Otptics-Block
 			n = doc.getDocumentElement().getFirstChild();
 			while ((n != null)&& (!n.getNodeName().equals("optics"))) //$NON-NLS-1$
@@ -530,20 +532,20 @@ public class ParcoursLoader {
 			// jetzt haben wir ihn
 
 			//	Eine Liste aller Kinder des Parcours-Eintrags organsisieren
-			children=n.getChildNodes();	
-			
+			children=n.getChildNodes();
+
 			//	HashMap mit den Apearances aufbauen
 	        for (int i=0; i<children.getLength()-1; i++){
 	        		Node appearance =children.item(i);
 	        		if (appearance.getNodeName().equals("appearance")){ //$NON-NLS-1$
 	        			// Zuerst den Type extrahieren
 	        			char item = appearance.getAttributes().getNamedItem("type").getNodeValue().toCharArray()[0]; //$NON-NLS-1$
-	        			
+
 	        			String texture = null;
 	        			String clone = null;
-	        			
+
 	        			HashMap<String,String> colors = new HashMap<String,String>();
-	        			
+
 	        			NodeList features = appearance.getChildNodes();
 	        			for (int j=0; j< features.getLength(); j++){
 	        				if (features.item(j).getNodeName().equals("texture")) //$NON-NLS-1$
@@ -553,15 +555,15 @@ public class ParcoursLoader {
 	        				if (features.item(j).getNodeName().equals("clone")) //$NON-NLS-1$
 	        					clone= features.item(j).getChildNodes().item(0).getNodeValue();
 	        			}
-	        				   
-	        			
+
+
 	        			addAppearance(item, colors, texture, clone);
 	        		}
 	        }
-	        
+
 			// Soweit fertig.
 			parse();		// Parcours Zusammenbauen
-			
+
 		} catch (SAXException e) {
 			ErrorHandler.error("Probleme beim Parsen des XML: "+e); //$NON-NLS-1$ //$NON-NLS-2$
 			//e.printStackTrace();
@@ -572,7 +574,7 @@ public class ParcoursLoader {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * Liefert eine Appearance aus der Liste zurueck
 	 * @param key Der Schluessel, mit dem sie abgelegt wurde
@@ -585,7 +587,7 @@ public class ParcoursLoader {
 			ErrorHandler.error("Appearance fuer '"+(char)key+"' nicht gefunden!"); //$NON-NLS-1$ //$NON-NLS-2$
 		return app;
 	}
-	
+
 	/**
 	 * Erzeugt eine Appearnace und fuegt die der Liste hinzu
 	 * @param item Der Key, iunter dem diese Apperance abgelegt wird
@@ -600,9 +602,9 @@ public class ParcoursLoader {
 			this.appearances.put(item, this.appearances.get(clone.toCharArray()[0]));
 			return;
 		}
-		
+
 		Appearance appearance = new Appearance();
-		
+
 		if (colors != null){
 			Material mat = new Material();
 
@@ -622,15 +624,15 @@ public class ParcoursLoader {
 			}
 			appearance.setMaterial(mat);
 
-			
+
 		}
-				
+
 		if (textureFile != null){
 			TexCoordGeneration tcg = new TexCoordGeneration(
 					TexCoordGeneration.OBJECT_LINEAR,
-					TexCoordGeneration.TEXTURE_COORDINATE_3, 
+					TexCoordGeneration.TEXTURE_COORDINATE_3,
 					new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),
-					new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), 
+					new Vector4f(0.0f, 1.0f, 1.0f, 0.0f),
 					new Vector4f(1.0f, 0.0f, 1.0f, 0.0f));
 			appearance.setTexCoordGeneration(tcg);
 
@@ -645,19 +647,19 @@ public class ParcoursLoader {
 				ImageComponent[] imgs = texture.getImages();
 				for (int i=0; i< imgs.length; i++)
 					imgs[i].setCapability(ImageComponent.ALLOW_IMAGE_READ);
-				
+
 				appearance.setTexture(texture);
 				appearance.setCapability(Appearance.ALLOW_TEXTURE_READ);
-				
+
 			} catch (Exception ex) {
 				ErrorHandler.error("Probleme beim Laden der Textur: "+textureFile+" :"+ex);  //$NON-NLS-1$//$NON-NLS-2$
 			}
-			
+
 		}
-		
+
 		this.appearances.put(item,appearance);
 	}
-	
+
 	  static void print(Node node, PrintStream out) {
 		    int type = node.getNodeType();
 		    switch (type) {

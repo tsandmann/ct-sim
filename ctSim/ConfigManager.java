@@ -3,7 +3,6 @@ package ctSim;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -21,23 +20,21 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import ctSim.util.XPathApiBearableMaker;
 
+//$$ Typen verifizieren
 public class ConfigManager {
 	/** <p>Default-Werte der Konfiguration. Ist ein Array, um sie im Quelltext
-	 * m&ouml;glichst bequem notieren zu k&ouml;nnen.</p> 
-	 * 
-	 * <p>Vorteile: Die Werte sind hier zentral statt quer durch den Quelltext 
-	 * verteilt; Code, der {@link #getValue(String)} aufruft, kann einfacher 
-	 * werden, da nicht dauernd der R&uuml;gabewert gegen <code>null</code> 
-	 * gepr&uuml;ft werden muss &ndash; wenn in diesem Array ein Wert steht, 
+	 * m&ouml;glichst bequem notieren zu k&ouml;nnen.</p>
+	 *
+	 * <p>Vorteile: Die Werte sind hier zentral statt quer durch den Quelltext
+	 * verteilt; Code, der {@link #getValue(String)} aufruft, kann einfacher
+	 * werden, da nicht dauernd der R&uuml;gabewert gegen <code>null</code>
+	 * gepr&uuml;ft werden muss &ndash; wenn in diesem Array ein Wert steht,
 	 * kann getValue(String) kein <code>null</code> mehr liefern.</p>*/
 	private static final String[] configDefaults = {
 		"botport", "10001",
@@ -45,49 +42,53 @@ public class ConfigManager {
 		"worlddir", ".",
 		"botdir", ".",
 		"useContestConductor", "false",
+		"contestBotTargetDir", "tmp",
+		"contestBotFileNamePrefix", "tmp-contest-bot",
+		"contestBotFileNameSuffix", ".exe",
+		"simTimePerStep", "10",
 	};
-	
-	/** Dings, das die Arbeit mit XPath vereinfacht. Es &uuml;bernimmt auch 
+
+	/** Dings, das die Arbeit mit XPath vereinfacht. Es &uuml;bernimmt auch
 	 * XML-Parserei und sowas. Nebenbedeutung: Wenn <code>null</code>, sind wir
 	 * noch nicht initialisiert; wenn nicht <code>null</code>, sind wir es. */
 	private static XPathApiBearableMaker xp = null;
-	
-	/** <p>Enth&auml;lt die Einzelparameter der Konfiguration (spiegelt also 
+
+	/** <p>Enth&auml;lt die Einzelparameter der Konfiguration (spiegelt also
 	 * die <code>&lt;parameter></code>-Tags wider)</p>
-	 * 
+	 *
 	 * <p>Verwendung: Wird zun&auml;chst auf die Default-Werte gesetzt, die aus
-	 * dem hartkodierten Array <code>configDefaults</code> kommen. Beim 
-	 * sp&auml;teren Parsen der Konfigurationsdatei werden Defaults 
+	 * dem hartkodierten Array <code>configDefaults</code> kommen. Beim
+	 * sp&auml;teren Parsen der Konfigurationsdatei werden Defaults
 	 * dann m&ouml;glicherweise &uuml;berschrieben.</p> */
-	private static HashMap<String, String> config = 
+	private static HashMap<String, String> config =
 		new HashMap<String, String>();
-	
-	/** Hilfskonstruktion. Sobald die Implementierung von getBotConfig() 
+
+	/** Hilfskonstruktion. Sobald die Implementierung von getBotConfig()
 	 * &uuml;berarbeitet ist, wird das unn&ouml;tig. */
 	private static String filename;
-	
+
 	static { // configDefaults laden
 		assert configDefaults.length % 2 == 0;
 		for (int i = 0; i < configDefaults.length; i += 2)
 			config.put(configDefaults[i], configDefaults[i + 1]);
 	}
-	
+
 	public static String getValue(String key) {
 		if(config == null)
 			return null;
 		return config.get(key);
 	}
-	
+
 	/**
-	 * L&auml;dt die <code>&lt;parameter></code>-Tags aus der 
+	 * L&auml;dt die <code>&lt;parameter></code>-Tags aus der
 	 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
 	 * {@link #getValue(String)} verf&uuml;gbar.
-	 * @param file Konfigurationsdatei dem von config.dtd vorgeschriebenen 
+	 * @param file Konfigurationsdatei dem von config.dtd vorgeschriebenen
 	 * XML-Format.
 	 * @throws FileNotFoundException Falls die &uuml;bergebene Datei nicht
-	 * gefunden werden kann. 
+	 * gefunden werden kann.
 	 */
-	public static void loadConfigFile(File file) 
+	public static void loadConfigFile(File file)
 	throws FileNotFoundException {
 		if (xp != null) {
 			throw new IllegalStateException("loadConfigFile() wurde zum " +
@@ -102,7 +103,7 @@ public class ConfigManager {
 				xp = new XPathApiBearableMaker(file);
                 for(Node n : xp.getNodeList("//parameter")) {
                 	config.put(
-                		n.getAttributes().getNamedItem("name").getNodeValue(), 
+                		n.getAttributes().getNamedItem("name").getNodeValue(),
                 		n.getAttributes().getNamedItem("value").getNodeValue());
                 }
 			}
@@ -118,7 +119,7 @@ public class ConfigManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/*
 	 * Liefert die Config zu einem Bot zurueck
 	 * @param filename
@@ -138,14 +139,14 @@ public class ConfigManager {
 		}
 		return rv;
 	}
-	
+
 	//TODO Zu kompliziert. Wette: Diese Methode kann auf 15 Zeilen vereinfacht werden, wenn sie mit XPath neuimplementiert wird
 	private static HashMap getBotConfig(String botId) {
-		
+
 		boolean found = false;
-		
+
 		HashMap botConfig = new HashMap();
-		
+
 		// Ein DOMParser liest ein XML-File ein
 		DOMParser parser = new DOMParser();
 		try {
@@ -156,9 +157,9 @@ public class ConfigManager {
 			parser.parse(configFile);
 			// umwandeln in ein Document
 			Document doc = parser.getDocument();
-			
+
 			// Und Anfangen mit dem abarbeiten
-			
+
 			//als erster suchen wir uns den Parcours-Block
 			Node n = doc.getDocumentElement().getFirstChild();
 			while ((n != null)&& (!n.getNodeName().equals("bots"))) { //$NON-NLS-1$
@@ -166,8 +167,8 @@ public class ConfigManager {
 			}
 
 			//	Eine Liste aller Kinder des Parcours-Eitnrags organsisieren
-			NodeList bots=n.getChildNodes();	
-	
+			NodeList bots=n.getChildNodes();
+
 			for(int b=0; b<bots.getLength()-1;b++){
 				Node botSection = bots.item(b);
 				// Ist das ueberhaupt ein Bot-Eintrag?
@@ -176,30 +177,30 @@ public class ConfigManager {
 					if (botSection.getAttributes().getNamedItem("name").getNodeValue().equals(botId)){ //$NON-NLS-1$
 						found=true;
 						NodeList children = botSection.getChildNodes();
-						
+
 						//	HashMap mit den Apearances aufbauen
 				        for (int i=0; i<children.getLength()-1; i++){
 				        		Node appearance =children.item(i);
 				        		if (appearance.getNodeName().equals("appearance")){ //$NON-NLS-1$
 				        			// Zuerst den Type extrahieren
 				        			String item = appearance.getAttributes().getNamedItem("type").getNodeValue(); //$NON-NLS-1$
-				        			
+
 				        			String texture = null;
 				        			String clone = null;
-				        			
+
 				        			HashMap<String,String> colors = new HashMap<String,String>();
-				        			
+
 				        			NodeList features = appearance.getChildNodes();
 				        			for (int j=0; j< features.getLength(); j++){
 				        				if (features.item(j).getNodeName().equals("texture")) //$NON-NLS-1$
 				        					texture= features.item(j).getChildNodes().item(0).getNodeValue();
-//				        				 // TODO wir nutzen nur noch eine farbe, daher kann die auflistung von ambient und Co entfallen				        				
+//				        				 // TODO wir nutzen nur noch eine farbe, daher kann die auflistung von ambient und Co entfallen
 				        				if (features.item(j).getNodeName().equals("color")) //$NON-NLS-1$
 				        					colors.put(features.item(j).getAttributes().getNamedItem("type").getNodeValue(),features.item(j).getChildNodes().item(0).getNodeValue()); //$NON-NLS-1$
 				        				if (features.item(j).getNodeName().equals("clone")) //$NON-NLS-1$
 				        					clone= features.item(j).getChildNodes().item(0).getNodeValue();
 				        			}
-				        				   
+
 				        			addAppearance(botConfig, item, colors, texture, clone);
 				        		}
 				        }
@@ -209,12 +210,12 @@ public class ConfigManager {
 			System.err.println("Probleme beim Parsen der XML-Datei: ");
 			ex.printStackTrace();
 		}
-		
+
 		if (found == true)
 			return botConfig;
 		return null;
 	}
-	
+
 	/*
 	 * Erzeugt eine Appearnace und fuegt die der Liste hinzu
 	 * @param appearances Die Hashmap in der das Pappearance eingetragen wird
@@ -224,14 +225,14 @@ public class ConfigManager {
 	 * @param clone Referenz auf einen schon bestehenden Eintrag, der geclonet werden soll
 	 */
 	public static void addAppearance(HashMap<String,Appearance> appearances, String item, HashMap colors, String textureFile, String clone){
-		
+
 		if (clone != null){
 			appearances.put(item, appearances.get(clone));
 			return;
 		}
-		
+
 		Appearance appearance = new Appearance();
-		
+
 		if (colors != null){
 			Material mat = new Material();
 
@@ -246,15 +247,15 @@ public class ConfigManager {
 			}
 			appearance.setMaterial(mat);
 
-			
+
 		}
-				
+
 		if (textureFile != null){
 			TexCoordGeneration tcg = new TexCoordGeneration(
 					TexCoordGeneration.OBJECT_LINEAR,
-					TexCoordGeneration.TEXTURE_COORDINATE_3, 
+					TexCoordGeneration.TEXTURE_COORDINATE_3,
 					new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),
-					new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), 
+					new Vector4f(0.0f, 1.0f, 1.0f, 0.0f),
 					new Vector4f(1.0f, 0.0f, 1.0f, 0.0f));
 			appearance.setTexCoordGeneration(tcg);
 
@@ -267,16 +268,16 @@ public class ConfigManager {
 			} catch (Exception ex) {
 				ErrorHandler.error("Textur: "+textureFile+"nicht gefunden "+ex); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			
+
 		}
-		
+
 		appearances.put(item,appearance);
 	}
-	
+
 	/**
-	 * Wandelt einen Pfad mit Bot-Binary von Windows zu Linux 
+	 * Wandelt einen Pfad mit Bot-Binary von Windows zu Linux
 	 * @param in der Originalstring
-	 * @return 
+	 * @return
 	 */
 	private static String botPathWin2Lin(String in){
 		if (in == null)
@@ -287,9 +288,9 @@ public class ConfigManager {
 	}
 
 	/**
-	 * Wandelt einen Pfad mit Bot-Binary von Linux zu Windows 
+	 * Wandelt einen Pfad mit Bot-Binary von Linux zu Windows
 	 * @param in der Originalstring
-	 * @return 
+	 * @return
 	 */
 	private static String botPathLin2Win(String in){
 		if (in == null)
@@ -298,7 +299,7 @@ public class ConfigManager {
 		tmp= tmp.replace("elf","exe");
 		return tmp.replace("Debug-Linux","Debug-W32");
 	}
-	
+
 	/**
 	 * Passt einen Pfad an das aktuelle OS an
 	 * @param in der Originalstring

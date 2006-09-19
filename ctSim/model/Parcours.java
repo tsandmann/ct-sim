@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator fuer den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 package ctSim.model;
 
@@ -38,7 +38,7 @@ import ctSim.model.bots.ctbot.CtBot;
 
 /**
  * Repraesentiert einen Parcours fuer die Bots
- * Wird zum Laden eines solchen benoetigt. 
+ * Wird zum Laden eines solchen benoetigt.
  * Des Weiteren stehen hier auch Informationen ueber
  * Start- und Zielpunkte der Bots
  * @author bbe (bbe@heise.de)
@@ -58,13 +58,13 @@ public class Parcours {
 			this.y = y;
 		}
 	}*/
-	
+
 	/** Raster des Parcours-Gitters */
 	private float grid = (float) (CtBot.BOT_RADIUS * 2 * 2);
 
 	/** Anzahl der Startpositionen fuer Bots. Dir Position 0 ist die Default Position, ab 1 f√ºr die Wettkampfbots.*/
-	public static int BOTS = 3; 
-	
+	public static int BOTS = 3;
+
 	/** enthaelt alle Hindernisse */
 	private BranchGroup ObstBG;
 	/** Enthaelt alle Lichter */
@@ -72,8 +72,8 @@ public class Parcours {
 	/** Enthaelt den Boden */
 	private BranchGroup terrainBG;
 
-	
-	
+
+
 	/** Ausdehnung des Parcours in X-Richtung [Gitter]*/
 	private int dimX =0;
 	/** Ausdehnung des Parcours in Y-Richtung [Gitter]*/
@@ -84,17 +84,21 @@ public class Parcours {
 
 	/** Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots), zweite Dimension X, Y*/
 	private int[][] startHeadings = new int[BOTS][2];
-	
-	
+
+
 	/** Zielpositionen */
 	//private int[] finishPosition = new int[2];
 	private List<Point> finishPositions = new ArrayList<Point>();
 
 	/** Liste mit allen Abgruenden */
 	private Vector<Vector2d> holes = new Vector<Vector2d>();
-	
+
+	/** Referenz auf eine Rohversion der Karte des Parcours (wie aus dem XML
+	 * gelesen). Format siehe {@link ParcoursLoader}. */
+	private int[][] parcoursMap;
+
 	/**
-	 * Erzeugt einen neuen, leeren Parcours 
+	 * Erzeugt einen neuen, leeren Parcours
 	 */
 	public Parcours() {
 		super();
@@ -102,7 +106,7 @@ public class Parcours {
 		this.ObstBG = new BranchGroup();
 		this.ObstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.ObstBG.setPickable(true);
-		
+
 		// Die Branchgroup fuer die Lichtquellen
 		this.lightBG = new BranchGroup();
 		this.lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
@@ -113,14 +117,14 @@ public class Parcours {
 		this.terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.terrainBG.setPickable(true);
 
-		
+
 		// Standard startposition
 		this.startPositions[0][0] =0;
 		this.startPositions[0][1] =0;
 	}
 
 	/**
-	 *  
+	 *
 	 * @return Liefert die Parcoursbreite in Gittereinheiten zurueck
 	 */
 	public int getDimX() {
@@ -136,7 +140,7 @@ public class Parcours {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Liefert die Parcourshoehe zurueck in Gittereinheiten
 	 */
 	public int getDimY() {
@@ -144,7 +148,7 @@ public class Parcours {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Liefert die Breite (X) des Parcours in mm zurueck
 	 */
 	public float getWidth(){
@@ -152,7 +156,7 @@ public class Parcours {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Liefert die Hoehe (Y) des Parcours in mm zurueck
 	 */
 	public float getHeight(){
@@ -197,7 +201,7 @@ public class Parcours {
 	public void addFloor(Node floor, float x, float y, float z) {
 		addNode(floor,x,y,z,this.terrainBG);
 	}
-	
+
 	/**
 	 * Fuegt eine Node ein
 	 * @param node Die Node
@@ -211,7 +215,7 @@ public class Parcours {
 
 		node.setPickable(true);
 //		node.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
-		
+
 		translate.set(new Vector3d(x * this.grid, y* this.grid, z));
 
 		TransformGroup tg = new TransformGroup(translate);
@@ -231,7 +235,7 @@ public class Parcours {
 	public void addNode(Node node, float x, float y,BranchGroup bg) {
 		addNode(node,x,y,0.0f,bg);
 	}
-	
+
 	/**
 	 * Fuegt eine Darstellung der Lichtquelle ein
 	 * @param light Die Lichtquelle
@@ -250,10 +254,10 @@ public class Parcours {
 	public void addLight(Node light) {
 		this.lightBG.addChild(light);
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * @return Liefert die Licht-Branchgroup zurueck
 	 */
 	public BranchGroup getLightBG() {
@@ -261,13 +265,13 @@ public class Parcours {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Liefert die Hindernis-Branchgroup zurueck
 	 */
 	public BranchGroup getObstBG() {
 		return this.ObstBG;
 	}
-	
+
 	/**
 	 *
 	 * @return  Liefert die Boden-Branchgroup zurueck
@@ -275,7 +279,7 @@ public class Parcours {
 	public BranchGroup getTerrainBG() {
 		return this.terrainBG;
 	}
-	
+
 	/**
 	 * Legt die Startposition eines Bots fest
 	 * @param bot Nummer des Bots (faengt bei 0 an zu zaehlen)
@@ -319,9 +323,9 @@ public class Parcours {
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Liefert die Startposition eines Bots
 	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
@@ -334,7 +338,7 @@ public class Parcours {
 			pos= new Vector3d(this.startPositions[bot][0]*this.grid + this.grid/2,this.startPositions[bot][1]*this.grid + this.grid/2,0.0f);
 		else
 			pos= new Vector3d(this.startPositions[0][0]*this.grid + this.grid/2,this.startPositions[0][1]*this.grid + this.grid/2,0.0f);
-		
+
 		return pos;
 	}
 
@@ -350,18 +354,18 @@ public class Parcours {
 			pos= new Vector3d(this.startHeadings[bot][0],this.startHeadings[bot][1],0.0f);
 		else  // sonst leifer die Default-Richtung
 			pos= new Vector3d(this.startHeadings[0][0],this.startHeadings[0][1],0.0f);
-			
+
 		if (pos.length()==0){
 			pos.x=1.0f;
 			ErrorHandler.error("getStartHeading wurde nach einer noch nicht gesetzten Heading gefragt ("+bot+"). Setze Default");  //$NON-NLS-1$//$NON-NLS-2$
 		}
-		
+
 		pos.normalize();
-		
+
 		return pos;
 	}
-	
-	
+
+
 	/**
 	 * Legt die Zielposition fest
 	 * @param x
@@ -371,8 +375,8 @@ public class Parcours {
 //		this.finishPosition[0]=x;
 //		this.finishPosition[1]=y;
 //	}
-	
-	/** 
+
+	/**
 	 * F¸gt eine neue Zielposition hinzu
 	 * @param x
 	 * @param y
@@ -381,8 +385,8 @@ public class Parcours {
 		this.finishPositions.add(new Point(x, y));
 	}
 
-	/** 
-	 * 
+	/**
+	 *
 	 * @return Liefert die Gitterbreite in mm zurueck
 	 */
 	public float getGrid() {
@@ -399,18 +403,18 @@ public class Parcours {
 //		float maxX = this.finishPosition[0]*this.grid + this.grid;
 //		float minY = this.finishPosition[1]*this.grid ;
 //		float maxY = this.finishPosition[1]*this.grid + this.grid;
-//		
+//
 //		if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
 //			return true;
 //		return false;
-		
+
 		for(Point p : this.finishPositions) {
-			
+
 			float minX = p.x*this.grid ;
 			float maxX = p.x*this.grid + this.grid;
 			float minY = p.y*this.grid ;
 			float maxY = p.y*this.grid + this.grid;
-			
+
 			if((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
 				return true;
 		}
@@ -422,33 +426,44 @@ public class Parcours {
 	 * @param x
 	 * @param y
 	 */
-	public void addWhole(int x, int y) {
+	public void addHole(int x, int y) {
 		holes.add(new Vector2d(x,y));
 	}
-	
+
 	/**
 	 * Prueft, ob ein Punkt ueber einem Loch liegt
 	 * @param pos
 	 * @return true, wenn der Bot ueber dem loch steht
 	 */
-	public boolean checkWhole(Point3d pos){
+	public boolean checkHole(Point3d pos){
 		if ((pos.x < 0) || (pos.y <0) || (pos.x > dimX* grid) || (pos.y > dimY* grid))
 			return true;
-		
-		
+
 		Iterator it = holes.iterator();
-		while (it.hasNext()){	
-			Vector2f min = new Vector2f((Vector2d)it.next()); 
+		while (it.hasNext()){
+			Vector2f min = new Vector2f((Vector2d)it.next());
 			min.scale(grid);
-			
-			Vector2f max = new Vector2f(min); 
+
+			Vector2f max = new Vector2f(min);
 			max.add(new Vector2f(grid,grid));
-						
+
 			if ((pos.x > min.x) && (pos.x < max.x) && (pos.y > min.y) && (pos.y < max.y))
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
+	void setParcoursMap(int[][] parcoursMap) {
+	    this.parcoursMap = parcoursMap;
+    }
+
+	/**
+	 * Liefert eine Referenz auf die Rohversion der Karte dieses Parcours (wie
+	 * aus dem XML gelesen). Das Format ist so, wie der {@link ParcoursLoader}
+	 * die parcoursMap erstellt hat.
+	 */
+	public int[][] getParcoursMap() {
+    	return parcoursMap;
+    }
 }
