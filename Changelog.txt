@@ -2,23 +2,43 @@ Changelog fuer c't-Sim
 ======================
 2006-09-20 Benjamin Benz [bbe@heise.de]: Parcours um Routinen zur Bestimmung der kuerzesten Distanz zwischen einem Punkt und dem Ziel erweitert (dazu einen Leserpatch von Michael PrÃ¤hofer verwendet)
 
+2006-09-19 Hendrik Krauss [hkr@heise.de]: Umbau Etappe 3 (vorher Tag erstellt):
+* World: Zeitvariablen und -methoden nach oben verschoben, umbenannt, besser bzw. ueberhaupt mal dokumentiert. Semantik nicht veraendert.
+* ParcoursLoader, Parcours, World: Vorbereitungen getroffen fuer Einbau des Shortest-Path-Patch
+* Subsystem ctSim.view.contestConductor weiterhin experimentell
+* Konvention zur besseren Unterscheidung von Threads im Debugger: Alle von unserem Code direkt erzeugten Threads haben jetzt Namen, die mit "ctSim/" anfangen
+* Alle 3 Judges: Straffungen; Arbeit an der Stelle muss aber noch weitergehen
+* Logging-System auf java.util.logging-Basis eingefuehrt (Hauptklasse fuer uns: ctSim.util.FmtLogger). Sinn: Nach und nach das Gestruepp aus System.out, System.err, Debug.out, ErrorHandler und e.printStackTrace vereinheitlichen + professionalisieren
+* Weitere 11 unbenutzte Klassen geloescht
+* Diverse Verbesserungen
+
+2006-09-?? Hendrik Krauss [hkr@heise.de]: Etappe 2 des Umbaus/Aufraeumens: Grosse Umbenennungen und Verschiebungen; vorher auch Tag erstellt zur Sicherheit.
+* neuer Einstriegspunkt ins Programm ist die Klasse ctSim.controller.Main nach Reorganisation des Controller
+* GUI aus Package ctSim.view in Package ctSim.view.gui
+* ContestJudge heisst jetzt ContestConductor und ist ein View im Package ctSim.view.contestConductor (das sollte die endgueltige Architektur sein)
+* Es existieren jetzt Interfaces, ueber die Controller und View aufeinander zugreifen, um dieses Objektgestruepp aus Controller, CtSimFrame, World, Judge etc. zu strukturieren; Arbeit in dieser Richtung wird fortgesetzt
+* diverse Vereinfachungen in der GUI und andernorts
+* ueberfluessige Dateien weg (jd2xx, mindprod, manches aus der GUI)
+
+2006-0?-?? Hendrik Krauss [hkr@heise.de]: Etappe 1 vom Umbau des ContestJudge (ehemals LabyrinthContestJudge); einige damit verknuepfte Aenderungen hier und da; generelles Aufraeumen. ContestJudge ist experimentell: kompiliert, aber ist nicht weiter getestet und tut noch nicht das, was er soll
+
 2006-08-23 Felix Beckwermert [felix@beckwermert.de]: ContestJudge zum testen eingecheckt
 
-2006-08-23 Felix Beckwermert [felix@beckwermert.de]: BotManager eingefï¿½hrt; Ctrl. und View auf diesen angepasst
+2006-08-23 Felix Beckwermert [felix@beckwermert.de]: BotManager eingeführt; Ctrl. und View auf diesen angepasst
 
-2006-08-23 Felix Beckwermert [felix@beckwermert.de]: Kleinere (Schï¿½nheits-)Anpassungen
+2006-08-23 Felix Beckwermert [felix@beckwermert.de]: Kleinere (Schönheits-)Anpassungen
 
 2006-08-13 Felix Beckwermert [felix@beckwermert.de]: Bug in der Ziel-Erkennung behoben
 
-2006-08-11 Felix Beckwermert [felix@beckwermert.de]: "Gleitpin-fï¿½llt"-Bug gefixt (dank forum); auï¿½erdem einen Bug zur Berechnung der Pos. des linken Rades gefixt (fehlte ein "-")
+2006-08-11 Felix Beckwermert [felix@beckwermert.de]: "Gleitpin-fällt"-Bug gefixt (dank forum); außerdem einen Bug zur Berechnung der Pos. des linken Rades gefixt (fehlte ein "-")
 
-2006-08-11 Felix Beckwermert [felix@beckwermert.de]: Tabs schlieï¿½en jetzt korrekt (beenden auch den Bot)
+2006-08-11 Felix Beckwermert [felix@beckwermert.de]: Tabs schließen jetzt korrekt (beenden auch den Bot)
 
 2006-08-08 Timo Sandmann [mail@timosandmann.de]: Sensordaten gesammelt verschicken
 
 2006-08-08 Felix Beckwermert [felix@beckwermert.de]: Bug-fixes...
 
-2006-08-08 Felix Beckwermert [felix@beckwermert.de]: App. werden wieder (wie fï¿½rher) verwendet
+2006-08-08 Felix Beckwermert [felix@beckwermert.de]: App. werden wieder (wie fürher) verwendet
 
 2006-08-04 Timo Sandmann [mail@timosandmann.de]: ConfigManager fuer OS X erweitert
 
@@ -58,9 +78,9 @@ Changelog fuer c't-Sim
 
 2006-07-27 Benjamin Benz [bbe@heise.de]: Beim Start eines Rennen bekommen die Bots das Fernbedigungsbefehl 5, sodass Sie sofort anfangen zu Fahren
 
-2006-07-26 Peter Koenig [pek@heise.de]: Fernbedienungs-Optik korrigiert 
+2006-07-26 Peter Koenig [pek@heise.de]: Fernbedienungs-Optik korrigiert
 
-2006-07-26 Peter Koenig [pek@heise.de]: Fernbedienungs-Optik verbessert 
+2006-07-26 Peter Koenig [pek@heise.de]: Fernbedienungs-Optik verbessert
 
 2006-07-26 Benjamin Benz [bbe@heise.de]: Timeouts nochmal veraendert
 
@@ -80,13 +100,13 @@ Changelog fuer c't-Sim
 
 2006-07-24 Peter Koenig [pek@heise.de]: Text der GPL eingefuegt
 
-2006-07-24 Felix Beckwermert [felix@beckwermert.de]: 
+2006-07-24 Felix Beckwermert [felix@beckwermert.de]:
 
 	* beim Generieren/Laden einer neuen Welt, bzw. Schliessen der alten werden alle Bots beendet
 	* es gibt nur noch einen "staendigen" Controller
 	* Judge u. TickRate bleiben erhalten (bei Kartenwechsel -> reinit des Judges beachten!!)
 	* wenn der Stop-Button gedrueckt wird, werden alle Bots beendet
-	* Parcours und Binaries werden im XML-Config-File festgelegt 
+	* Parcours und Binaries werden im XML-Config-File festgelegt
 	* Alte Threads werden beendet, um HeapOverflow bei zu haeufigem Generieren zu vermeiden
 	* Slider fuer Position -> Spinner aendern Wert jetzt mit jedem Klick
 	* Bots koennen jetzt ueber rechts Klick auf den Tab gekillt werden
