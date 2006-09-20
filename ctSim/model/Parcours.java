@@ -18,7 +18,6 @@
  */
 package ctSim.model;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -88,7 +87,7 @@ public class Parcours {
 
 	/** Zielpositionen */
 	//private int[] finishPosition = new int[2];
-	private List<Point> finishPositions = new ArrayList<Point>();
+	private List<Vector2d> finishPositions = new ArrayList<Vector2d>();
 
 	/** Liste mit allen Abgruenden */
 	private Vector<Vector2d> holes = new Vector<Vector2d>();
@@ -341,7 +340,7 @@ public class Parcours {
 
 		return pos;
 	}
-
+	
 	/**
 	 * Liefert die Startrichtung eines Bots
 	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
@@ -377,12 +376,12 @@ public class Parcours {
 //	}
 
 	/**
-	 * Fügt eine neue Zielposition hinzu
+	 * Fuegt eine neue Zielposition hinzu
 	 * @param x
 	 * @param y
 	 */
 	public void addFinishPosition(int x, int y) {
-		this.finishPositions.add(new Point(x, y));
+		this.finishPositions.add(new Vector2d(x, y));
 	}
 
 	/**
@@ -408,12 +407,12 @@ public class Parcours {
 //			return true;
 //		return false;
 
-		for(Point p : this.finishPositions) {
+		for(Vector2d p : this.finishPositions) {
 
-			float minX = p.x*this.grid ;
-			float maxX = p.x*this.grid + this.grid;
-			float minY = p.y*this.grid ;
-			float maxY = p.y*this.grid + this.grid;
+			double minX = p.x*this.grid ;
+			double maxX = p.x*this.grid + this.grid;
+			double minY = p.y*this.grid ;
+			double maxY = p.y*this.grid + this.grid;
 
 			if((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
 				return true;
@@ -466,4 +465,99 @@ public class Parcours {
 	public int[][] getParcoursMap() {
     	return parcoursMap;
     }
+	
+	/**
+	 * Liefert einen stark verienfachten Parcours zurÃ¼ck.
+	 * das Array enthaelt nur 0 (freies Feld) und 1 (blockiertes Feld)
+	 *
+	 */
+	int[][] getFlatParcours() {
+		int[][] parcoursMapSimple = new int[this.getDimX()][this.getDimY()];
+		for (int y = 0; y < parcoursMapSimple[0].length; y++) {
+			for (int x = 0; x < parcoursMapSimple.length; x++) {
+				switch (parcoursMap[x][y]) {
+				case '.':
+				case ' ':
+				case '1':
+				case '2':
+				case '0':
+				case 'Z':
+				case '-':
+				case '|':
+				case '/':
+				case '\\':
+				case '+':
+				case '~':
+					parcoursMapSimple[x][y] = 0;
+					break;
+				default:
+					parcoursMapSimple[x][y] = 1;
+					break;
+				}
+			}
+		}
+		return parcoursMapSimple;
+	}
+
+	/**
+	 * Liefert die kuerzeste Distanz von einem gegebenen Punkt (in Gitterkoordinaten) zum Ziel
+	 * @param from Startpunkt in Weltkoordinaten
+	 * @return Distanz (ohne Drehungen) in Metern
+	 */
+	double getShortestDistanceToFinish(Vector3d from){
+		return getShortestDistanceToFinish(new Vector2d(from.x,from.y));
+	}
+	
+	
+	/**
+	 * Liefert die kuerzeste Distanz von einem gegebenen Punkt (in Gitterkoordinaten) zum Ziel
+	 * @param from Startpunkt in Weltkoordinaten
+	 * @return Distanz in Metern
+	 */
+	double getShortestDistanceToFinish(Vector2d from){
+		Vector<TurningPoint> shortestPath=getShortestPath(from);
+		
+    	if(shortestPath==null || shortestPath.size()<2)
+    		return -1;
+    	
+    	double distance=TurningPoint.getLengthOfPath(shortestPath);
+		
+		return distance*this.grid;
+	}
+	
+	/**
+	 * Liefert den kuerzesten Pfad von einem bestimmten Punkt aus zum Ziel
+	 * @param from Startpunkt in weltkoordinaten
+	 * @return Liste der Turningpoints (Gitterkoordinaten!!!)
+	 */
+	public Vector<TurningPoint> getShortestPath(Vector3d from){
+		return getShortestPath(new Vector2d(from.x,from.y));
+	}
+	
+	/**
+	 * Liefert den kuerzesten Pfad von einem bestimmten Punkt aus zum Ziel
+	 * @param from Startpunkt in weltkoordinaten
+	 * @return Liste der Turningpoints (Gitterkoordinaten!!!)
+	 */
+	public Vector<TurningPoint> getShortestPath(Vector2d from){
+		Vector2d f = new Vector2d(from);
+		f.scale(1/this.grid);
+		
+		TurningPoint start = new TurningPoint(f);
+		
+		if (finishPositions.size()== 0)
+			return null;
+		
+		Vector2d fin = new Vector2d(finishPositions.get(0));
+		Vector2d offset = new Vector2d(0.5,0.5);
+		fin.add(offset);
+		TurningPoint finish = new TurningPoint(fin);
+		
+    	// finde die kuerzeste Verbindung
+    	Vector<TurningPoint> shortestPath=
+    		start.getShortestPathTo(finish, getFlatParcours());
+    	
+    	return shortestPath;
+	
+	}
 }

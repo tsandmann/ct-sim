@@ -329,7 +329,6 @@ public class ParcoursLoader {
 		int l;
     	int d;
 
-
     	if (this.parcoursMap != null){
 
 			for (int y = 0; y < this.parcours.getDimY(); y++){
@@ -425,10 +424,33 @@ public class ParcoursLoader {
 					}
 
 
+
 			}
 //			 TODO: Hier wird testweise ein Boden aus einem Stueck eingefuegt!
 			createWholeFloor(getAppearance(' '));
-       }
+	
+			/**
+			for (int i=0; i<Parcours.BOTS; i++){
+				double dist= this.parcours.getShortestDistanceToFinish(this.parcours.getStartPosition(i));
+				
+				if (dist>=0)
+					System.out.println("Distanz zum Ziel von Starpunkt "+i+" = "+dist+" m");
+				else
+					System.out.println("Kein Weg zum Ziel von Starpunkt "+i);
+				
+				
+	        	// finde die kuerzeste Verbindung
+	        	Vector<TurningPoint> shortestPath= this.parcours.getShortestPath(this.parcours.getStartPosition(i));
+	        	
+	        	if(shortestPath==null || shortestPath.size()<2){
+	        	} else{
+	        		for(int q=1;q<shortestPath.size();q++){
+	        			createLine(0,0,shortestPath.get(q-1).returnLineTo(shortestPath.get(q)),getAppearance('p'));
+	        		}
+	        	}
+			}
+		    */
+		}
 	}
 
 	/**
