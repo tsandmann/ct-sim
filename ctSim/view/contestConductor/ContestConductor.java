@@ -312,7 +312,7 @@ public class ContestConductor implements View {
 				ConfigManager.getValue("contestBotFileNamePrefix"),
 				ConfigManager.getValue("contestBotFileNameSuffix"),
 				new File(ConfigManager.getValue("contestBotTargetDir")));
-		f.deleteOnExit();
+		f.deleteOnExit(); //$$ deleteOnExit() scheint nicht zu klappen
 		lg.fine("Schreibe Bot nach '"+f.getAbsolutePath()+"'");
 		InputStream in = b.getBinaryStream();
 		FileOutputStream out = new FileOutputStream(f);

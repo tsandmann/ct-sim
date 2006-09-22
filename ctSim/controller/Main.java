@@ -154,7 +154,7 @@ public class Main {
 		lg.fine("Logging-Subsystem initialisiert");
     }
 
-	private void initViewAndController() throws SQLException,
+	protected void initViewAndController() throws SQLException,
 	ClassNotFoundException, SecurityException {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -162,7 +162,7 @@ public class Main {
 			lg.warning(e, "Problem beim Setzen des Look and Feel");
 		}
 
-		Controller c = new DefaultController();
+		Controller c = buildController();
 
 		// View der Applikation ist mindestens der CtSimFrame
 		View view = new CtSimFrame(c, "CtSim");
@@ -175,6 +175,10 @@ public class Main {
 		c.setView(view);
 		c.onApplicationInited();
     }
+
+	protected Controller buildController() {
+		return new DefaultController();
+	}
 
 	protected View buildContestConductor(Controller c)
 	throws SQLException, ClassNotFoundException {

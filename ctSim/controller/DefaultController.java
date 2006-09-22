@@ -50,8 +50,8 @@ import ctSim.view.View;
 /**
  * Zentrale Controller-Klasse des c't-Sim
  */
-public final class DefaultController implements Runnable, Controller {
-	FmtLogger lg = FmtLogger.getLogger("ctSim.controller");
+public class DefaultController implements Runnable, Controller {
+	protected FmtLogger lg = FmtLogger.getLogger("ctSim.controller");
 
     private SocketListener botListener;
 
