@@ -1,9 +1,7 @@
 package ctSim.view.contestConductor;
 
-import static ctSim.view.contestConductor.ContestConductor.State.MAIN_ROUND_BETWEEN_GAMES;
-import static ctSim.view.contestConductor.ContestConductor.State.NOT_INITIALIZED;
-import static ctSim.view.contestConductor.ContestConductor.State.PRELIM_ROUND_BETWEEN_GAMES;
-import static ctSim.view.contestConductor.ContestConductor.State.PRELIM_ROUND_DONE;
+import static ctSim.view.contestConductor.ContestConductor.Phase.MAIN_ROUND;
+import static ctSim.view.contestConductor.ContestConductor.Phase.PRELIM_ROUND;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,9 +11,7 @@ import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.vecmath.Vector3d;
@@ -31,10 +27,10 @@ import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
 import ctSim.view.View;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
-import ctSim.view.gui.Debug;
 import ctSim.view.gui.sensors.RemoteControlGroupGUI;
 
 // $$ doc gesamte Klasse
+// $$ die staendigen "assert false" sind nicht so doll. Schoener waere: Exceptions werfen und den Controller exit machen lassen (verbessert auch Testbarkeit (Unit-Tests) des ContestConductor). Ich zieh mir aber nicht den Schuh an, Exception-Handling in den z.Zt. noch chaotischen Controller reinzupopeln.
 
 /**
  * <p>
@@ -43,30 +39,36 @@ import ctSim.view.gui.sensors.RemoteControlGroupGUI;
  * </p>
  * <p>
  * <strong>Architektur</strong> des ContestConductor-Subsystems: <!-- Ascii-Art
- * NICHT neu formatieren oder "reparieren"! Die Verschiebungen durch die
+ * NICHT "reparieren"! Die Verschiebungen durch die
  * Link-Tags sind okay, siehe Ausgabe im Browser -->
  *
  * <pre>
- *                                hat einen
- *       {@link ContestConductor} -------------------------&gt; {@link TournamentPlanner}
- *              |                                            |
- *              |                                            |
- *              | hat einen                                  | hat einen
- *              |                                            |
- *              v                                            v
- *     {@link ConductorToDatabaseAdapter} ----.     .---- {@link PlannerToDatabaseAdapter}
- *                                    |     |
- *                                    |     |
- *                 ist abgeleitet von |     | ist abgeleitet von
- *                                    |     |
- *                                    v     v
- *                                {@link DatabaseAdapter}
- *                                       |
- *                                       |
- *                                       | verbunden mit
- *                                       |
- *                                       v
- *                                MySQL-Datenbank
+ *   Au&szlig;enwelt
+ *   (Controller)
+ *      |
+ *      |
+ *      |
+ *      |
+ *      v                     hat einen
+ *   {@link ContestConductor} -------------------------&gt; {@link TournamentPlanner}
+ *          |                                            |
+ *          |                                            |
+ *          | hat einen                                  | hat einen
+ *          |                                            |
+ *          v                                            v
+ * {@link ConductorToDatabaseAdapter} ----.     .---- {@link PlannerToDatabaseAdapter}
+ *                                |     |
+ *                                |     |
+ *             ist abgeleitet von |     | ist abgeleitet von
+ *                                |     |
+ *                                v     v
+ *                            {@link DatabaseAdapter}
+ *                                   |
+ *                                   |
+ *                                   | ist verbunden mit
+ *                                   |
+ *                                   v
+ *                            MySQL-Datenbank
  * </pre>
  *
  * </p>
@@ -76,19 +78,36 @@ import ctSim.view.gui.sensors.RemoteControlGroupGUI;
 public class ContestConductor implements View {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.contestConductor");
 
+	public class NoMoreGamesException extends Exception {
+		private static final long serialVersionUID = - 930001102842406374L;
+	}
+
 	public class ContestJudge extends Judge {
-		public ContestJudge(Controller controller) {
-			super((DefaultController)controller); //$$ Das ist Mist. Judge und die davon abgeleiteten Klassen muessen aufgeraeumt und vereinfacht werden
+		public ContestJudge(DefaultController controller) {
+			super(controller); //$$ Das ist Mist. Judge und die davon abgeleiteten Klassen muessen aufgeraeumt und vereinfacht werden
 	    }
 
+		@Override
+        public boolean isStartingSimulationAllowed() {
+			//$$ Doofe Methode, keine Ahnung wofuer die ueberhaupt da ist
+	        return true;
+        }
+
 		@SuppressWarnings("synthetic-access")
-		private boolean isAnyoneOnFinishTile() {
+        protected void setWinner(Bot winner)
+		throws NullPointerException, SQLException, TournamentPlanException {
+			lg.info("Zieleinlauf von Bot %s nach %s", winner.getName(),
+				SimUtils.millis2time(world.getSimTimeInMs()));
+			// Spiel beenden
+			db.setWinner(botIds.get(winner), world.getSimTimeInMs());
+		}
+
+		@SuppressWarnings("synthetic-access")
+		private boolean isAnyoneOnFinishTile()
+		throws NullPointerException, SQLException, TournamentPlanException {
 			for(Bot b : botIds.keySet()) {
-				if(world.finishReached(new Vector3d(b.getPosition()))) {
-					// Zustand: wir haben einen Gewinner
-					Debug.out.println("Zieleinlauf \""+b.getName()+"\" nach "+
-							SimUtils.millis2time(world.getSimTimeInMs()));
-					kissArrivingBot(b, world.getSimTimeInMs());
+				if (world.finishReached(new Vector3d(b.getPosition()))) {
+					setWinner(b);
 					return true;
 				}
 			}
@@ -96,59 +115,57 @@ public class ContestConductor implements View {
 		}
 
 		@SuppressWarnings("synthetic-access")
-        private boolean isGameTimeoutElapsed() {
-            try {
-                return System.currentTimeMillis() - startTimeCurrentGame >=
-                	db.getMaxGameLengthInMs();
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                lg.severe(e, "Problem beim Lesen des Spiel-Timeouts aus der " +
-                		"Datenbank");
-                return false;
-            }
+        private boolean isGameTimeoutElapsed() throws SQLException {
+            return System.currentTimeMillis() - startTimeCurrentGame >=
+            	db.getMaxGameLengthInMs();
 		}
 
         @Override
 		public boolean isSimulationFinished() {
-			return isAnyoneOnFinishTile() || isGameTimeoutElapsed();
-		}
+            try {
+	            return isAnyoneOnFinishTile() || isGameTimeoutElapsed();
+            } catch (NullPointerException e) {
+	            lg.severe(e, "Inkonsistenter Zustand: Es l\u00E4uft laut " +
+	            		"Datenbank kein Spiel, laut Controller aber schon");
+	            assert false;
+            } catch (SQLException e) {
+	            lg.severe(e, "Low-Level-Datenbankproblem");
+	            assert false;
+            } catch (TournamentPlanException e) {
+				lg.severe(e, "Probleme beim Fortschreiben des Spielplans");
+				assert false;
+            }
+            // unerreichbarer Code, aber man will ja den Compiler bei
+            // Laune halten
+            return false;
+        }
 	}
 
-	/** Status dieses Judge. Typischer Ablauf:
+	/**
+	 * Status des ContestConductor-Subsystems. Typischer Ablauf:
+	 *
 	 * <pre>
-	 *    NOT_INITIALIZED
-	 * -> PRELIM_ROUND_BETWEEN_GAMES -> PRELIM_ROUND_IN_GAME
-	 * -> PRELIM_ROUND_BETWEEN_GAMES -> PRELIM_ROUND_IN_GAME
-	 *    ... viele Spiele ...
-	 * -> PRELIM_ROUND_BETWEEN_GAMES -> PRELIM_ROUND_IN_GAME
-	 * -> PRELIM_ROUND_DONE
-	 * -> MAIN_ROUND_BETWEEN_GAMES -> MAIN_ROUND_IN_GAME
-	 * -> MAIN_ROUND_BETWEEN_GAMES -> MAIN_ROUND_IN_GAME
-	 *    ... viele Spiele ...
-	 * -> MAIN_ROUND_BETWEEN_GAMES -> MAIN_ROUND_IN_GAME -> (Schluss)</pre>
+	 * PRELIM_ROUND &rarr; MAIN_ROUND &rarr; (Programmende)
+	 * </pre>
 	 */
-	enum State {
-		NOT_INITIALIZED,
-		PRELIM_ROUND_BETWEEN_GAMES,
-		PRELIM_ROUND_IN_GAME,
-		PRELIM_ROUND_DONE,
-		MAIN_ROUND_BETWEEN_GAMES,
-		MAIN_ROUND_IN_GAME,
+	enum Phase {
+		PRELIM_ROUND,
+		MAIN_ROUND,
 	}
 
-	/** Siehe {@link #State} */
-	private State state = NOT_INITIALIZED;
+	/** Siehe {@link #Phase} */
+	private Phase currentPhase = PRELIM_ROUND;
 
 	/** Abstrahiert die Datenbank */
 	private ConductorToDatabaseAdapter db;
 
 	/** H&auml;lt die DB-Prim&auml;rschl&uuml;ssel der Bots */
-	private Map<Bot, Integer> botIds = new HashMap<Bot, Integer>();
+	protected Map<Bot, Integer> botIds = new HashMap<Bot, Integer>();
 
 	private TournamentPlanner planner;
 
 	/** Referenz auf den Controller */
-	private Controller ctrlr;
+	private Controller controller;
 	/** Referenz auf die Welt*/
 	private World world;
 
@@ -167,98 +184,120 @@ public class ContestConductor implements View {
 	 */
 	public ContestConductor(Controller controller)
 	throws SQLException, ClassNotFoundException {
-		ctrlr = controller;
-		db = new ConductorToDatabaseAdapter();
-		planner = new TournamentPlanner();
-		ctrlr.setJudge(new ContestJudge(ctrlr));
+		this(controller,
+			new ConductorToDatabaseAdapter(),
+			new TournamentPlanner());
 	}
 
-	public void update(@SuppressWarnings("unused") long simTimeInMs) {
-		doWork();
+	protected ContestConductor(Controller controller,
+		ConductorToDatabaseAdapter db, TournamentPlanner planner) {
+		this.controller = controller;
+		this.db = db;
+		this.planner = planner;
 	}
 
-	/** Wird von au&szlig;en einmal pro Simulatorschritt aufgerufen. Hier
-	 * verrichtet der Judge die haupts&auml;chliche Arbeit.
+	/**
+	 * <p>
+	 * Liefert den zu verwendenden Judge.
+	 * </p>
+	 * <p>
+	 * Warum ist das eine eigene Methode? &ndash; Test-Cases k&ouml;nnen in den
+	 * ctSim auf einfache Art ihren eigenen Test-Judge injizieren, indem eine
+	 * Subklasse dieser Klasse gebildet wird. In der muss nicht mehr getan
+	 * werden als diese Methode zu &uuml;berschreiben und den Test-Judge
+	 * zur&uuml;ckzuliefern. Beispiel: {@link ContestConductorTest}.
+	 * </p>
 	 */
-	public synchronized void doWork() {
-		lg.fine("Eintritt in doWork(); Status "+state);
+	protected Judge buildOurJudge(Controller c) {
+		return new ContestJudge((DefaultController)c); //$$ Cast unschoen
+	}
+
+	public void onApplicationInited() {
+		controller.setJudge(buildOurJudge(controller));
 		try {
-			while (true) {
-				switch (state) {
-					case NOT_INITIALIZED:
-		                planner.planPrelimRound();
-		                setState(PRELIM_ROUND_BETWEEN_GAMES);
-						break;
+			planner.planPrelimRound();
+		} catch (SQLException e) {
+			lg.severe(e, "Vorrunde konnte nicht geplant werden");
+			assert false;
+		}
+		try {
+	        sleepAndStartNextGame();
+        } catch (Exception e) {
+	        lg.severe(e, "Problem beim Durchf\u00FChren des ersten Spiels");
+	        assert false;
+        }
+	}
 
-					case PRELIM_ROUND_BETWEEN_GAMES: {
-							ResultSet games = db.getReadyGames();
-							if (games.next())
-								sleepAndStartGame(games);
-							else
-								setState(PRELIM_ROUND_DONE);
-							break;
-						}
+	public void onSimulationStep(
+		@SuppressWarnings("unused") long simTimeInMs) {
+		try {
+	        db.log(botIds.keySet(), world.getSimTimeInMs());
+        } catch (Exception e) {
+    		lg.warn(e, "Probleme beim Loggen des Spielzustands in die DB");
+        }
+	}
 
-					case PRELIM_ROUND_DONE:
-						planner.planMainRound();
-						setState(MAIN_ROUND_BETWEEN_GAMES);
-						break;
+	public void onSimulationFinished() {
+		lg.fine("Spiel beendet");
+		try {
+			try {
+				sleepAndStartNextGame();
+			} catch (NoMoreGamesException e) {
+				switch (currentPhase) {
+	                case PRELIM_ROUND:
+	                	planner.planMainRound();
+	                	// Dank Planner sind jetzt wieder Spiele "Ready"
+	                	currentPhase = MAIN_ROUND;
+	                	try {
+	                        sleepAndStartNextGame();
+                        } catch (NoMoreGamesException e1) {
+	                        lg.severe(e1, "Planer hat versagt: Hauptrunde " +
+	                        		"nicht oder falsch geplant");
+	                        assert false;
+                        }
+		                break;
 
-					case MAIN_ROUND_BETWEEN_GAMES: {
-							ResultSet games = db.getReadyGames();
-							if (games.next())
-								sleepAndStartGame(games);
-							else {
-								lg.info("Es gibt keine weiteren " +
-									"Rennen mehr. Beende das " +
-									"Programm");
-								System.exit(0);
-							}
-							break;
-						}
-
-					case PRELIM_ROUND_IN_GAME:
-					case MAIN_ROUND_IN_GAME:
-						logGameStateToDb();
-						break;
+	                case MAIN_ROUND:
+	                	lg.info("Turnier erfolgreich abgeschlossen. Beende " +
+	                			"den ctSim");
+	                	System.exit(0);
+	                	break;
 				}
 			}
 		} catch (Exception e) {
-			lg.severe(e, "Problem im Ablauf des Wettbewerbs");
-			//$$ Besseres Error-handling
-		}
-	}
-
-	private void setState(State state) {
-		lg.fine("Gehe \u00FCber zu Status "+state);
-		this.state = state;
-	}
+	        lg.severe(e, "Problem mit der Durchf\u00FChrung des Wettbewerbs");
+	        assert false;
+        }
+    }
 
 	/**
 	 *
 	 * @param game
 	 * @throws SQLException
 	 * @throws IOException
+	 * @throws NoMoreGamesException
 	 */
-	private synchronized void sleepAndStartGame(ResultSet game)
-	throws SQLException, IOException {
-		Timestamp scheduled = game.getTimestamp("scheduled");
-		// lokales Kalendersystem mit aktueller Zeit
-		Calendar now = Calendar.getInstance();
+	private synchronized void sleepAndStartNextGame()
+	throws SQLException, IOException, NoMoreGamesException {
+		ResultSet game = db.getReadyGames();
+		if (! game.next())
+			throw new NoMoreGamesException();
 
-		long timeTilGameMillisec = scheduled.getTime() - now.getTimeInMillis();
-		if (timeTilGameMillisec > 0){
+		Timestamp scheduled = game.getTimestamp("scheduled");
+
+		long timeTilGameInMs;
+		while ((timeTilGameInMs =
+			scheduled.getTime() - System.currentTimeMillis()) > 0) {
 			try {
-				lg.fine("Warte "+
-					timeTilGameMillisec+" ms auf naechsten Wettkampf ("+
-					scheduled+")");
-				Thread.sleep(timeTilGameMillisec);
+				lg.fine("Warte %d ms auf n\u00E4chsten Wettkampf (bis %s)",
+					timeTilGameInMs, scheduled);
+				Thread.sleep(timeTilGameInMs);
 			} catch (InterruptedException e) {
-				//$$ InterruptedExcp? was hier machen?
+				lg.warn(e, "ContestConductor aufgeweckt. Schlafe weiter.");
 			}
-		} else
-			// Zustand: wir wollen ein Spiel starten
-			startGame(game);
+		}
+		// Zustand: Startzeitpunkt des Spiels erreicht
+		startGame(game);
     }
 
 	/**
@@ -273,6 +312,7 @@ public class ContestConductor implements View {
 				ConfigManager.getValue("contestBotFileNamePrefix"),
 				ConfigManager.getValue("contestBotFileNameSuffix"),
 				new File(ConfigManager.getValue("contestBotTargetDir")));
+		f.deleteOnExit();
 		lg.fine("Schreibe Bot nach '"+f.getAbsolutePath()+"'");
 		InputStream in = b.getBinaryStream();
 		FileOutputStream out = new FileOutputStream(f);
@@ -282,29 +322,29 @@ public class ContestConductor implements View {
             out.write(buf, 0, len);
 		out.close();
 
-		// Datei ausfuehren
-		ctrlr.invokeBot(f);
-		// Warten bis uns der Controller auf den neuen Bot hinweist
-		try {
-			synchronized (botArrivalLock) {
-				// Schutz vor spurious wakeups (siehe Java-API-Doku zu wait())
-				//$$ Schoener waere Verwendung von java.util.concurrent.Future
-				while (newlyArrivedBot == null)
+		// Datei ausfuehren + warten bis auf den neuen Bot hingewiesen werden
+		controller.invokeBot(f);
+		synchronized (botArrivalLock) {
+			//$$ Schoener waere vielleicht Verwendung von java.util.concurrent.Future
+			// Schutz vor spurious wakeups (siehe Java-API-Doku zu wait())
+			while (newlyArrivedBot == null) {
+				try {
 					botArrivalLock.wait();
+				} catch (InterruptedException e) {
+					lg.fine(e, "Wurde aufgeweckt. Kommt nur unter seltsamen " +
+							"Umst\u00E4nden vor, aber f\u00FCr sich allein " +
+							"unkritisch. Schlafe weiter.");
+				}
 			}
-			Bot rv = newlyArrivedBot;
-			lg.fine("Gestarteter Bot '"+rv.getName()+"' ist korrekt " +
-					"angemeldet; Freigabe f\u00FCr ContestConductor");
-			newlyArrivedBot = null;
-			return rv;
-		} catch (InterruptedException e) {
-			// $$ was soll man hier machen? return was?
-			e.printStackTrace();
-			return null;
 		}
+		Bot rv = newlyArrivedBot;
+		lg.fine("Gestarteter Bot '"+rv.getName()+"' ist korrekt " +
+				"angemeldet; Go f\u00FCr ContestConductor");
+		newlyArrivedBot = null;
+		return rv;
 	}
 
-	public void addBot(Bot bot) {
+	public void onBotAdded(Bot bot) {
 		synchronized (botArrivalLock) {
 			newlyArrivedBot = bot;
 			botArrivalLock.notifyAll();
@@ -319,83 +359,49 @@ public class ContestConductor implements View {
 	 * @throws IOException
 	 */
 	private synchronized void startGame(ResultSet game) throws SQLException, IOException {
-		int gameId = game.getInt("game");
-		int levelId= game.getInt("level");
-		lg.info(String.format("Starte Spiel; Level %d, Spiel %d, " +
-				"geplante Startzeit %s",
-				levelId, gameId, game.getTimestamp("scheduled")));
-		startTimeCurrentGame = System.currentTimeMillis();
+		int gameId  = game.getInt("game");
+		int levelId = game.getInt("level");
+		lg.info("Starte Spiel; Level %d, Spiel %d, geplante Startzeit %s",
+				levelId, gameId, game.getTimestamp("scheduled"));
 		db.setGameRunning(levelId, gameId);
 
 		lg.fine("Lade Parcours");
-		ctrlr.openWorldFromXmlString(db.getParcours(levelId));
+		controller.openWorldFromXmlString(db.getParcours(levelId));
 
 		lg.fine("Starte Bot 1");
-		// Bots laden
 		botIds.put(executeBot(db.getBot1Binary()), db.getBot1Id());
-		// Wenn kein Vorrundenspiel, auch zweiten Spieler holen
-		if (db.isCurrentGameMainRound()) {
+		if (currentPhase == MAIN_ROUND) {
 			lg.fine("Starte Bot 2");
 			botIds.put(executeBot(db.getBot2Binary()), db.getBot2Id());
 		}
+
+		startTimeCurrentGame = System.currentTimeMillis();
 
 		lg.fine("Go f\u00FCr Bots");
 		// Bots starten
 		//$$ sollte nicht hier sein
 		for(Bot b : botIds.keySet()) {
-			if (b instanceof CtBotSimTcp) //$$ sollte ctBot sein, wo sendRCCommand() auch hingehoert
+			if (b instanceof CtBotSimTcp) //$$ sollte CtBot sein, wo sendRCCommand() auch hingehoert
 				((CtBotSimTcp)b).sendRCCommand(
 					RemoteControlGroupGUI.RC5_CODE_5);
 		}
 
 		lg.fine("Go f\u00FCr Controller");
-		ctrlr.unpause();
+		controller.unpause();
 	}
 
-	/**
-	 *
-	 * @param bot
-	 * @param time	Simulatorzeit [ms] seit Start des Spiels
-	 */
-	private void kissArrivingBot(Bot bot, long time) {
-		lg.info("Bot "+bot.getName()+" hat das Ziel nach "+
-				time+" ms erreicht!");
-		if (db.isCurrentGameMainRound())
-			setState(MAIN_ROUND_BETWEEN_GAMES);
-		else
-			setState(PRELIM_ROUND_BETWEEN_GAMES);
-
-		try {
-			// Spiel beenden
-			db.setWinner(botIds.get(bot), time);
-		} catch (SQLException e) {
-			lg.warning(e, "Probleme beim Sichern der Zieldaten");
-		} catch (TournamentPlanException e) {
-			lg.warning(e, "Probleme beim Fortschreiben des Spielplans");
-		}
-
-		// Alle Bots entfernen
-		//$$ wieso macht sowas nicht der Controller?
-		for (Bot b : botIds.keySet())
-			b.die();
-	}
-
-	private void logGameStateToDb() {
-		Iterator<Bot> it = botIds.keySet().iterator();
-		Bot b1 = it.next();
-		Bot b2 = it.next();
-		db.log(b1, b2, world.getSimTimeInMs());
-	}
-
-	public void openWorld(World w) {
+	public void onWorldOpened(World w) {
 	    this.world = w;
     }
 
-	public void removeBot(@SuppressWarnings("unused") Bot bot) {
-	    // $$ removeBot()
+	public void onBotRemoved(@SuppressWarnings("unused") Bot bot) {
+		assert botIds.size() >= 1;
+		assert botIds.size() <= 2;
+		assert botIds.containsKey(bot);
+		botIds.remove(bot);
     }
 
-	public void onApplicationInited() {
-	    doWork();
+	public void onJudgeSet(@SuppressWarnings("unused") Judge j) {
+		// $$ onJudgeChanged()
     }
 }

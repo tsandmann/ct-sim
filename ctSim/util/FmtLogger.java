@@ -17,6 +17,7 @@ public class FmtLogger extends Logger {
 	    this.delegate = delegate;
     }
 
+	//$$ auch Aufruf mit .class zulassen; flaechendeckend einfuehren
 	public static FmtLogger getLogger(String name) {
 		//$$ Ist das ok? Wir erzeugen abweichend von Logger.getLoggers Verhalten jedesmal ne neue Instanz
 		return new FmtLogger(name, Logger.getLogger(name));

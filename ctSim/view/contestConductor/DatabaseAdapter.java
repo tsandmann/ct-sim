@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import ctSim.ConfigManager;
-import ctSim.ErrorHandler;
 import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
 /** <p>Diese Klasse (und die von ihr abgeleiteten) abstrahieren die Datenbank,
@@ -85,13 +85,12 @@ class DatabaseAdapter {
 
 	/** Die Verbindung zu der Datenbank, die alles rund um den Wettbewerb
 	 * weiss. */
-	protected Connection dbConn = null;
+	private Connection dbConn = null;
 
 	/** Teil der Initialisierung. Baut eine Verbindung auf zu der
 	 * Datenbank, die in der ct-sim-Konfigurationsdatei angegeben ist. */
 	private static Connection getDbConn()
-	throws SQLException, ClassNotFoundException
-	{
+	throws SQLException, ClassNotFoundException {
 		// sieht sinnlos aus, aber erzwingt, dass die angegebene Treiberklasse
 		// gesucht, geladen und initialisiert wird
 		Class.forName("com.mysql.jdbc.Driver");
@@ -124,8 +123,26 @@ class DatabaseAdapter {
 	 * @param dbConn Verbindung zu der Datenbank, die f&uuml;r
 	 * benutzt werden soll.
 	 */
-	public DatabaseAdapter(Connection dbConn) {
+	protected DatabaseAdapter(Connection dbConn) {
 		this.dbConn = dbConn;
+	}
+
+	//$$ doc sql()
+	//$$ flaechendeckend sql() einsetzen
+	protected ResultSet execSql(String format, Object... values)
+	throws SQLException {
+		Statement s = dbConn.createStatement();
+		String sql = String.format(format, values);
+		if (sql.toLowerCase().startsWith("select"))
+			return s.executeQuery(sql);
+		else if (Misc.startsWith(sql.toLowerCase(),
+			"insert", "update", "delete")) {
+			s.executeUpdate(sql);
+			return null;
+		} else {
+			throw new SQLException("Kann keine SQL-Befehle au\u00DFer " +
+					"SELECT, INSERT, UPDATE und DELETE");
+		}
 	}
 
 	/** Liefert die Zeit, wie lange ein Spiel maximal dauern darf. Nach dieser
@@ -136,9 +153,8 @@ class DatabaseAdapter {
 	 * dauern darf.
 	 * @throws SQLException
 	 */
-	public int getMaxGameLengthInMs(int levelId) throws SQLException {
-		ResultSet rs = dbConn.createStatement().executeQuery(
-				"SELECT * from ctsim_level WHERE id ="+levelId);
+	protected int getMaxGameLengthInMs(int levelId) throws SQLException {
+		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id ="+levelId);
 		rs.next();
 		return rs.getInt("game_length");
 	}
@@ -191,10 +207,8 @@ class DatabaseAdapter {
     				"state='"+GameState.READY_TO_RUN +"' "+
     				"WHERE level="+levelId+" AND game="+gameId);
     	else {
-    		TournamentPlanException e = new TournamentPlanException(
+    		throw new TournamentPlanException(
     			"Kein Platz in Level: "+levelId+" Game: "+gameId);
-    		ErrorHandler.error("Fehler"+e);
-    		throw e;
     	}
     }
 }

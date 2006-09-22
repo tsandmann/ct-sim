@@ -26,7 +26,6 @@ import java.lang.reflect.Constructor;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -100,6 +99,7 @@ public final class DefaultController implements Runnable, Controller {
 		if(this.world == null)
 			return;
 
+		lg.fine("Initialisiere Sequencer");
 		this.ctrlThread = new Thread(this, "ctSim/Sequencer");
 		this.ctrlThread.start();
 	}
@@ -108,6 +108,7 @@ public final class DefaultController implements Runnable, Controller {
 	 * Haelt den DefaultController an
      */
 	public void stop() {
+		lg.fine("Terminieren des Sequencer angefordert");
 		Thread dummy = this.ctrlThread;
 
 		if(dummy == null)
@@ -131,7 +132,8 @@ public final class DefaultController implements Runnable, Controller {
 
 		while(this.ctrlThread == thisThread) {
 	        try {
-				// Warte, bis alle Bots fertig sind und auf die nächste Aktualisierung warten
+				// Warte, bis alle Bots fertig sind und auf die naechste
+	        	// Aktualisierung warten
 				// breche ab, wenn die Bots zu lange brauchen !
 				if(! doneSignal.await(10, TimeUnit.SECONDS)) {
 					lg.warn("Bot-Probleme: Ein oder mehrere Bots waren " +
@@ -141,11 +143,18 @@ public final class DefaultController implements Runnable, Controller {
 				CountDownLatch oldStartSignal = this.startSignal;
 
 				// Judge pruefen:
-				if (judge.isSimulationFinished(world.getSimTimeInMs()))
+				if (judge.isSimulationFinished(world.getSimTimeInMs())) {
+					lg.fine("Sequencer: Simulationsende");
+					// Spiel ist beendet
 					pause();
+					// Alle Bots entfernen
+					BotManager.reinit();
+					view.onSimulationFinished();
+				}
 
 				// Update World
-				view.update(world.getSimTimeInMs());
+				//$$ Wieso wird das nochmal gemacht, wenn die Simulation (per Judge-Urteil) schon beendet wurde?
+				view.onSimulationStep(world.getSimTimeInMs());
 
 				if(this.pause) {
 					lg.fine("Pause beginnt: Sequencer blockiert");
@@ -204,8 +213,8 @@ public final class DefaultController implements Runnable, Controller {
 	/**
 	 * Laesst DefaultController pausieren
 	 */
-
 	public void pause() {
+		lg.fine("Pause angefordert");
 		this.pause = true;
 	}
 
@@ -213,6 +222,7 @@ public final class DefaultController implements Runnable, Controller {
 	 * Beendet die Pause
 	 */
 	public synchronized void unpause() {
+		lg.fine("Pausenende angefordert");
 		if(this.world == null)
 			return;
 
@@ -232,7 +242,7 @@ public final class DefaultController implements Runnable, Controller {
         BotManager.reset();
         BotManager.setWorld(world);
         judge.setWorld(world);
-        view.openWorld(world);
+        view.onWorldOpened(world);
         lg.info("Neue Welt ge\u00F6ffnet");
     }
 
@@ -500,29 +510,29 @@ public final class DefaultController implements Runnable, Controller {
      * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist
      */
     public void setJudge(String judgeClassName) {
-           //$$ Wenn ein Spiel laeuft: throw new IllegalStateException("Aendern des Judge ist waehrend eines Spiels nicht moeglich")
+    	//$$ Wenn ein Spiel laeuft vielleicht folgendes: throw new IllegalStateException("Aendern des Judge ist waehrend eines Spiels nicht moeglich")
+    	Judge j = null;
         try {
             Class<?> cl = Class.forName(judgeClassName);
             Constructor<?> c = cl.getConstructor(DefaultController.class);
-            setJudge((Judge)c.newInstance(this));
+            j = (Judge)c.newInstance(this);
         } catch(ClassNotFoundException e) {
             lg.warning(e, "Die Judge-Klasse '"+judgeClassName+
                     "' wurde nicht gefunden");
+            return;
         } catch(Exception e) {
             lg.warning(e, "Probleme beim Instanziieren der Judge-Klasse");
+            return;
         }
+
+        setJudge(j); // wird nur erreicht, wenn der try-Block geklappt hat
     }
 
     public void setJudge(Judge judge) {
         if (judge == null)
             throw new NullPointerException();
         this.judge = judge;
-    }
-
-    public String getJudge() {
-        if (judge == null)
-            return ""; //$$ Ist das ok?
-        return judge.getClass().getCanonicalName();
+        view.onJudgeSet(judge);
     }
 
     public void openWorldFromFile(File sourceFile) {
@@ -552,15 +562,6 @@ public final class DefaultController implements Runnable, Controller {
             lg.warning("Probleme beim \u00D6ffnen des generierten " +
                     "Parcours.");
         }
-    }
-
-    //TODO Doku genauer: "Menge der Bots"? Menge *welcher* Bots?
-    /** Liefert die Menge der Bots.
-     * Methode ist nicht f&uuml;r performance-kritische Punkte gedacht, da
-     * einiges Herumeiern stattfindet.
-     */
-    public Set<Bot> getBots() {
-        return BotManager.getBots();
     }
 
     public void onApplicationInited() {

@@ -2,6 +2,7 @@ package ctSim.controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
@@ -13,6 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import javax.swing.UIManager;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import ctSim.ConfigManager;
 import ctSim.util.FmtLogger;
@@ -34,7 +38,6 @@ import ctSim.view.gui.CtSimFrame;
  * </p>
  */
 public class Main {
-
 	private static FmtLogger lg;
 
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
@@ -75,6 +78,11 @@ public class Main {
 	 */
 	public static void main(String[] args)
 	throws SQLException, ClassNotFoundException {
+		new Main(args);
+	}
+
+	public Main(String... args)
+	throws SQLException, ClassNotFoundException {
 		handleCommandLineArgs(args);
 		initLogging();
 
@@ -83,11 +91,19 @@ public class Main {
 	        initViewAndController();
         } catch (FileNotFoundException e) {
 	        lg.severe(e, "Konfigurationsdatei '"+configFile+"' nicht gefunden");
+        } catch (SAXException e) {
+	        lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
+	        	configFile);
+        } catch (IOException e) {
+	        lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'",
+	        	configFile);
+        } catch (ParserConfigurationException e) {
+	        lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
+	        	configFile);
         }
 	}
 
 	private static void initLogging() {
-		// $$ FmtLogger systemweit verwenden
 		lg = FmtLogger.getLogger("");
 		// Sowohl Root-Logger als auch der standardmaessige ConsoleHandler
 		// stehen noch auf INFO
@@ -103,11 +119,11 @@ public class Main {
 			public boolean isLoggable(LogRecord r) {
 	            if (r.getLoggerName() == null)
 	            	return true;
-	            return ! Misc.beginsWith(r.getLoggerName(), "java", "sun");
+	            return ! Misc.startsWith(r.getLoggerName(), "java", "sun");
             }});
 		console.setFormatter(new Formatter() {
 			private SimpleDateFormat df = new SimpleDateFormat(
-			    "d.MM.y H:mm:ss.SSS");
+			    "d MMM y H:mm:ss.SSS");
 
 			@Override
 			public String format(LogRecord r) {
@@ -128,16 +144,18 @@ public class Main {
 						break;
 					}
 				}
-				return r.getLevel() + ": " + r.getMessage() + " ["
-				    + df.format(r.getMillis()) + "] " + r.getLoggerName() + "."
-				    + r.getSourceMethodName() + "() " + "Thread " + threadName
-				    + "(" + r.getThreadID() + ")" + "\n" + throwable;
+
+				return "[" + df.format(r.getMillis()) + "] " +
+					r.getLevel() + ": " + r.getMessage() +
+					" [" + r.getLoggerName() + "."
+				    + r.getSourceMethodName() + "() " +
+				    "Thread " + threadName + "(" + r.getThreadID() + ")" + "]\n" + throwable;
             }});
 		lg.fine("Logging-Subsystem initialisiert");
     }
 
-	private static void initViewAndController()
-	throws SQLException, ClassNotFoundException {
+	private void initViewAndController() throws SQLException,
+	ClassNotFoundException, SecurityException {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -152,9 +170,14 @@ public class Main {
 		// View um ContestConductor erweitern falls so konfiguriert
 		if (ConfigManager.getValue("useContestConductor").
 				equalsIgnoreCase("true"))
-			view = ViewYAdapter.newInstance(view, new ContestConductor(c));
+			view = ViewYAdapter.newInstance(view, buildContestConductor(c));
 
 		c.setView(view);
 		c.onApplicationInited();
     }
+
+	protected View buildContestConductor(Controller c)
+	throws SQLException, ClassNotFoundException {
+		return new ContestConductor(c);
+	}
 }

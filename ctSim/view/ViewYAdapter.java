@@ -15,23 +15,20 @@ import java.lang.reflect.Proxy;
  * <strong>Verwendungsbeispiel:</strong>
  *
  * <pre>
- *   interface View {
- *       void setWurst(Wurst w);
- *   }
+ * interface View {
+ *     void setWurst(...);
+ * }
  *
- *   View zielView1 = ...;
- *   View zielView2 = ...;
- *   View yAdapter = ViewYAdapter.newInstance(zielView1, zielView2);
- *   Wurst w = ...;
- *   yAdapter.setWurst(w);
+ * View ziel1 = ...;
+ * View ziel2 = ...;
+ * View yAdapter = ViewYAdapter.newInstance(ziel1, ziel2);
+ * yAdapter.setWurst(...); // so gut wie: ziel1.setWurst(...); ziel2.setWurst(...);
  * </pre>
  *
- * Dieser Code h&auml;tte den Effekt, dass sowohl auf <code>zielView1</code>
- * als auch auf <code>zielView2</code> der Aufruf <code>setWurst(w)</code>
- * get&auml;tigt wird. Der Vorteil ist, dass der Code der letzten Zeile nicht zu
- * wissen braucht, mit wievielen Views er zu tun hat. Bei konventioneller
- * Herangehensweise mit einem Array von Views, w&auml;re an der Stelle eine
- * <code>for</code>-Schleife erforderlich gewesen. Je mehr solche
+ * <strong>Vorteil</strong>: Der Code der letzten Zeile braucht nicht zu
+ * wissen, mit wievielen Views er zu tun hat, er sieht nur eine Instanz. Bei
+ * konventioneller Herangehensweise mit einem Array von Views w&auml;re an der
+ * Stelle eine <code>for</code>-Schleife erforderlich gewesen. Je mehr solche
  * Methodenaufrufe, desto mehr an Schleifenb&uuml;rokratie wird durch diese
  * Klasse gespart.
  * </p>

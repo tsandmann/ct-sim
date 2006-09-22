@@ -10,8 +10,8 @@ import ctSim.view.View;
  * <p>
  * Interface, das die Views der Applikation verwenden, um auf den Controller
  * zuzugreifen. ("View" und "Controller" sind dabei im Sinne von <a
- * href="http://en.wikipedia.org/wiki/Model-view-controller">MVC</a> zu
- * verstehen.)
+ * href="http://en.wikipedia.org/wiki/Model-view-controller"
+ * target="_blank">MVC</a> zu verstehen.)
  * </p>
  * <p>
  * Das Interface definiert also in erster Linie, welche Dienste ein Controller
@@ -49,8 +49,6 @@ public interface Controller {
 	public void setJudge(String judgeClassName);
 
 	public void setJudge(Judge j);
-
-	public String getJudge();
 
 	// $$ Vorlaeufige Methode
 	public void pause();

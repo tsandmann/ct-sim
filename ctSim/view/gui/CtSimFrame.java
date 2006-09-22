@@ -30,6 +30,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Handler;
 
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JFileChooser;
@@ -50,6 +51,8 @@ import ctSim.controller.BotManager;
 import ctSim.controller.Controller;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
+import ctSim.model.rules.Judge;
+import ctSim.util.Enumerations;
 import ctSim.util.FmtLogger;
 import ctSim.util.IconHashMap;
 
@@ -62,6 +65,30 @@ import ctSim.util.IconHashMap;
 public class CtSimFrame extends JFrame implements ctSim.view.View {
     private static final long serialVersionUID = 3689470428407624063L;
     private FmtLogger lg;
+
+    //$$ doc JudgeMenuItem
+    public class JudgeMenuItem extends JRadioButtonMenuItem {
+        private static final long serialVersionUID = - 8177774672896579874L;
+
+        public final String fqJudgeClassName;
+
+		public JudgeMenuItem(final String fqName) {
+	        super(new AbstractAction(
+	        	// Fuers Anzeigen Packagename weg, nur Klassenname
+	        	fqName.replaceAll("^.*\\.(.*)$", "$1")) {
+					private static final long serialVersionUID =
+						-1873920690635293756L;
+
+					@SuppressWarnings("synthetic-access")
+	                public void actionPerformed(
+	                		@SuppressWarnings("unused") ActionEvent e) {
+						controller.setJudge(fqName);
+				}});
+	        this.fqJudgeClassName = fqName;
+        }
+    }
+
+    private ButtonGroup judgesButtonGroup = new ButtonGroup();
 
     private IconHashMap icons;
 	private static final String[] judgeClassNames = { //LODO Judges hardcoded
@@ -206,7 +233,7 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
         	buildMenu("Bot hinzuf\u00FCgen",
         		buildMenuItem("Testbot", "onAddTestbot"),
         		buildMenuItem("C-Bot ...", "onAddCBot")));
-        rv.add(buildMenu("Schiedsrichter", buildJudgeMenuItems())); //$$ Das sollte immer bei Klick aufs Menue gemacht werden
+        rv.add(buildMenu("Schiedsrichter", buildJudgeMenuItems()));
         simulationMenu =
         	buildMenu("Simulation",
         		buildMenuItem("Start", icons.get("Play16"), "startWorld"),
@@ -251,21 +278,9 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 
 	private JMenuItem[] buildJudgeMenuItems() {
 		JMenuItem[] rv = new JMenuItem[judgeClassNames.length];
-		ButtonGroup bg = new ButtonGroup();
 		for (int i = 0; i < judgeClassNames.length; i++) {
-			final String fullName = judgeClassNames[i];
-			String simpleName = fullName.replaceAll("^.*\\.(.*)$", "$1");
-			rv[i] = new JRadioButtonMenuItem(new AbstractAction(simpleName) {
-                private static final long serialVersionUID = -1873920690635293756L;
-
-				@SuppressWarnings("synthetic-access")
-                public void actionPerformed(
-                		@SuppressWarnings("unused") ActionEvent e) {
-					controller.setJudge(fullName);
-				}});
-			bg.add(rv[i]);
-			if (fullName.equals(controller.getJudge()))
-				bg.setSelected(rv[i].getModel(), true);
+			rv[i] = new JudgeMenuItem(judgeClassNames[i]);
+		    judgesButtonGroup.add(rv[i]);
 		}
 		return rv;
 	}
@@ -367,13 +382,13 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 		updateLayout();
 
 		//Ausgabe macht nur Sinn, wenn überhaupt ein Bot da ist.
-		if (BotManager.getBots().size() > 1)
+		if (BotManager.getSize() > 1)
 			Debug.out.println("Alle Bots entfernt.");
 	}
 
 	/** Vom Controller aufzurufen, wenn sich die Welt &auml;ndert.
 	 * Schlie&szlig;t die alte Welt und zeigt die neue an.*/
-	public void openWorld(World w) {
+	public void onWorldOpened(World w) {
 		this.closeWorld();
 		this.world = w;
 		// TODO: [Was ist mit dem leeren Todo hier gemeint? --hkr]
@@ -436,7 +451,7 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 	 * Aktualisiert die GUI
 	 * @param time Die Zeit, die zur Simulatorzeit hinzugezaehlt wird
 	 */
-	public void update(long time) {
+	public void onSimulationStep(long time) {
 
 		// TODO: alles ganz haesslich:
 		this.statusBar.updateTime(time);
@@ -446,7 +461,7 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 	/**
 	 * Fuegt einen neuen Bot hinzu
 	 */
-	public void addBot(Bot bot) {
+	public void onBotAdded(Bot bot) {
 		this.controlBar.addBot(bot);
 
 		this.update();
@@ -456,7 +471,7 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 				"\" wurde hinzugefuegt.");
 	}
 
-	public void removeBot(Bot bot) {
+	public void onBotRemoved(Bot bot) {
 		this.controlBar.removeBot(bot);
 		this.update();
 		updateLayout();
@@ -465,6 +480,19 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 	}
 
 	public void onApplicationInited() {
-	    //TODO Schoen waere: Splashscreen anzeigen mit Konsole und sonst nur einen Unendlich-Prozentbalken. Ab dem Eintritt in diese Methode dann das Hauptfenster sichtbar machen.
+	    //TODO Schoen waere: Bis hierhin Splashscreen anzeigen mit Konsole und sonst nur einen Unendlich-Prozentbalken. Ab dem Eintritt in diese Methode dann das Hauptfenster sichtbar machen.
+    }
+
+	public void onSimulationFinished() {
+	    // TODO Ueber diese Methode kriegt der CtSimFrame mit, wenn die Simulation anhaelt (wegen Referee-Intervention). Schoen waere: Knoepfe fuer Play/Pause/Stop ausgrauen, wenn nicht bedienbar.
+    }
+
+	public void onJudgeSet(Judge judge) {
+		for (AbstractButton b : Enumerations.asIterable(
+			judgesButtonGroup.getElements())) {
+			if (judge.getClass().getName().equals(
+				((JudgeMenuItem)b).fqJudgeClassName))
+				b.setSelected(true);
+		}
     }
 }

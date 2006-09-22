@@ -3,6 +3,7 @@ package ctSim;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -14,17 +15,19 @@ import javax.media.j3d.Texture;
 import javax.media.j3d.Texture2D;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector4f;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
-import ctSim.util.XPathApiBearableMaker;
+import ctSim.util.XmlDocument;
 
 //$$ Typen verifizieren
 public class ConfigManager {
@@ -48,11 +51,6 @@ public class ConfigManager {
 		"simTimePerStep", "10",
 	};
 
-	/** Dings, das die Arbeit mit XPath vereinfacht. Es &uuml;bernimmt auch
-	 * XML-Parserei und sowas. Nebenbedeutung: Wenn <code>null</code>, sind wir
-	 * noch nicht initialisiert; wenn nicht <code>null</code>, sind wir es. */
-	private static XPathApiBearableMaker xp = null;
-
 	/** <p>Enth&auml;lt die Einzelparameter der Konfiguration (spiegelt also
 	 * die <code>&lt;parameter></code>-Tags wider)</p>
 	 *
@@ -74,8 +72,6 @@ public class ConfigManager {
 	}
 
 	public static String getValue(String key) {
-		if(config == null)
-			return null;
 		return config.get(key);
 	}
 
@@ -83,25 +79,20 @@ public class ConfigManager {
 	 * L&auml;dt die <code>&lt;parameter></code>-Tags aus der
 	 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
 	 * {@link #getValue(String)} verf&uuml;gbar.
-	 * @param file Konfigurationsdatei dem von config.dtd vorgeschriebenen
-	 * XML-Format.
-	 * @throws FileNotFoundException Falls die &uuml;bergebene Datei nicht
-	 * gefunden werden kann.
+	 * @param file Konfigurationsdatei dem von "config/config.dtd"
+	 * vorgeschriebenen XML-Format.
+	 * @throws ParserConfigurationException
+	 * @throws IOException
+	 * @throws SAXException
 	 */
 	public static void loadConfigFile(File file)
-	throws FileNotFoundException {
-		if (xp != null) {
-			throw new IllegalStateException("loadConfigFile() wurde zum " +
-					"wiederholten Mal aufgerufen. Es ist nur fuer " +
-					"einmaligen Aufruf gedacht.");
-		}
+	throws SAXException, IOException, ParserConfigurationException {
 		try {
-			if(file.exists()) {
+			if (file.exists()) {
 				System.out.println("Lade Konfiguration aus '"+file+"'");
 				filename = file.getPath();
-				//$$ wird gegen die DTD validiert?
-				xp = new XPathApiBearableMaker(file);
-                for(Node n : xp.getNodeList("//parameter")) {
+                for(Node n : new XmlDocument(file).
+                	getNodeList("/ct-sim/parameter")) {
                 	config.put(
                 		n.getAttributes().getNamedItem("name").getNodeValue(),
                 		n.getAttributes().getNamedItem("value").getNodeValue());
@@ -115,7 +106,7 @@ public class ConfigManager {
 			// "Kann nicht passieren"
 			e.printStackTrace();
 		} catch (DOMException e) {
-			// Obskurer Fehler, wenn die Laenger der DOMStrings nicht reicht
+			// Obskurer Fehler, wenn die Laenge der DOMStrings nicht reicht
 			e.printStackTrace();
 		}
 	}

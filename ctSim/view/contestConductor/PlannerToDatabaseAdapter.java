@@ -23,7 +23,7 @@ class PlannerToDatabaseAdapter extends DatabaseAdapter {
 
 	/** Hat dieselbe Funktion wie {@link
 	 * DatabaseAdapter#DatabaseAdapter(Connection)}. */
-	public PlannerToDatabaseAdapter(Connection db) {
+	protected PlannerToDatabaseAdapter(Connection db) {
 		super(db);
     }
 
@@ -36,8 +36,7 @@ class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @throws SQLException
 	 */
 	public Timestamp getLevelBegin(int levelId) throws SQLException {
-		ResultSet rs = dbConn.createStatement().executeQuery(
-				"SELECT * from ctsim_level WHERE id ="+levelId);
+		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id ="+levelId);
 		rs.next();
 		return rs.getTimestamp("scheduled");
 	}
@@ -50,11 +49,10 @@ class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void createPrelimGame(int gameId, int player1botId)
 	throws SQLException {
-		dbConn.createStatement().executeUpdate(String.format(
-				"INSERT INTO ctsim_game " +
+		execSql("INSERT INTO ctsim_game " +
 				"(level, game, player1botId, state) " +
 				"VALUES (%d, %d, %d, '%s');",
-				-1, gameId, player1botId, GameState.READY_TO_RUN));
+				-1, gameId, player1botId, GameState.READY_TO_RUN);
 	}
 
 	/** Legt ein Hauptrundenspiel an. Die Methode weist ihm den
@@ -66,17 +64,16 @@ class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void createMainGame(int levelId, int gameId)
 	throws SQLException {
-		dbConn.createStatement().executeUpdate(String.format(
-				"INSERT INTO ctsim_game " +
+		execSql("INSERT INTO ctsim_game " +
 				"(level, game, state) " +
 				"VALUES (%d, %d, '%s');",
-				levelId, gameId, GameState.NOT_INITIALIZED));
+				levelId, gameId, GameState.NOT_INITIALIZED);
 	}
 
 	/**L&ouml;scht alle Spiele.
 	 */
 	public void clearGames() throws SQLException {
-		dbConn.createStatement().executeUpdate("DELETE FROM ctsim_game");
+		execSql("DELETE FROM ctsim_game");
 	}
 
 	/**Liefert diejenigen Bots, die bereit zum Spielen sind (die &uuml;ber
@@ -87,8 +84,7 @@ class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * der Tabelle ctsim_bot.
 	 */
 	public ResultSet getBotsWithBinary() throws SQLException {
-		return dbConn.createStatement().executeQuery(
-			"SELECT * from ctsim_bot WHERE bin !=''");
+		return execSql("SELECT * from ctsim_bot WHERE bin !=''");
 	}
 
 	/** Liefert die Spiele eines Levels, sortiert nach einem Schl&uuml;ssel.
@@ -100,9 +96,7 @@ class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public ResultSet getGames(int levelId, String sortKey)
 	throws SQLException {
-		return dbConn.createStatement().executeQuery(
-				"SELECT *" +
-				" FROM ctsim_game" +
+		return execSql("SELECT * FROM ctsim_game" +
 				" WHERE level ="+levelId+
 				" ORDER BY '" + sortKey + "'");
 	}
@@ -115,7 +109,7 @@ class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void scheduleGame(int levelId, int gameId, Timestamp time)
 	throws SQLException {
-		dbConn.createStatement().executeUpdate("UPDATE ctsim_game "+
+		execSql("UPDATE ctsim_game "+
 				"SET scheduled='"+time+"' "+
 				"WHERE level ="+levelId+ " AND game = "+gameId);
 	}
@@ -126,8 +120,7 @@ class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * <code>false</code> falls nicht.
 	 */
 	public boolean doesLevelExist(int levelId) throws SQLException {
-		ResultSet rs = dbConn.createStatement().executeQuery(
-				"SELECT * FROM ctsim_level WHERE id = "+levelId);
+		ResultSet rs = execSql("SELECT * FROM ctsim_level WHERE id = "+levelId);
 	    return rs.next();
     }
 }

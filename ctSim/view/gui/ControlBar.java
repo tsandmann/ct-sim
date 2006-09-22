@@ -114,7 +114,7 @@ public final class ControlBar extends JPanel {
 	public void remBot(int idx) {
 		
 		//this.parent.removeBot(this.botList.get(idx));
-		BotManager.removeBot(this.botList.get(idx).getBot());
+		BotManager.removeBotOnNextSimStep(this.botList.get(idx).getBot());
 	}
 	
 	/** 

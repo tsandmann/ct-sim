@@ -1,24 +1,35 @@
 package ctSim.controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
+import ctSim.util.FmtLogger;
 import ctSim.view.View;
 
 public class BotManager {
+	protected static FmtLogger lg = FmtLogger.getLogger(
+		"ctSim.controller.BotManager");
+
 	private static World world;
 	private static View view;
 
-	private static List<Bot> bots = new ArrayList<Bot>();
-	private static List<Bot> botsToStart = new ArrayList<Bot>();
-	private static List<Bot> botsToStop = new ArrayList<Bot>();
+	private static List<Bot> bots;
+	private static List<Bot> botsToStart;
+	private static List<Bot> botsToStop;
 
-	protected static void setWorld(World wrld) {
+	static {
+		init();
+	}
 
+	private static synchronized void init() {
+		bots = new ArrayList<Bot>();
+		botsToStart = new ArrayList<Bot>();
+		botsToStop = new ArrayList<Bot>();
+	}
+
+	protected static synchronized void setWorld(World wrld) {
 		world = wrld;
 	}
 
@@ -27,7 +38,6 @@ public class BotManager {
 	}
 
 	protected static synchronized void startNstopBots() {
-
 		for(Bot b : botsToStart) {
 			b.start();
 			System.out.println("Bot gestartet: "+b.getName()); //$NON-NLS-1$
@@ -35,8 +45,7 @@ public class BotManager {
 		}
 
 		for(Bot b : botsToStop) {
-			b.stop();
-			System.out.println("Bot beendet: "+b.getName()); //$NON-NLS-1$
+			removeBotNow(b);
 
 			// TODO: in removeBot
 			//world.removeAliveObstacle(b.getBot());
@@ -46,13 +55,11 @@ public class BotManager {
 		botsToStop  = new ArrayList<Bot>();
 	}
 
-	protected static synchronized int getSize() {
-
+	public static synchronized int getSize() {
 		return bots.size();
 	}
 
 	protected static synchronized int getNewSize() {
-
 		return bots.size() + botsToStart.size();
 	}
 
@@ -60,66 +67,41 @@ public class BotManager {
 		boolean rv = botsToStart.add(bot);
 
 		world.addBot(bot);
-		view.addBot(bot);
+		view.onBotAdded(bot);
 
 		return rv;
 	}
 
-	public static synchronized boolean removeBot(Bot bot) {
-
-		world.removeAliveObstacle(bot);
-		view.removeBot(bot);
-
-		return (bots.remove(bot) || botsToStart.remove(bot)) && botsToStop.add(bot);
+	public static synchronized boolean removeBotOnNextSimStep(Bot bot) {
+		world.removeAliveObstacle(bot); //$$ Wieso das hier sein muss, weiss auch keiner
+		return (bots.remove(bot) || botsToStart.remove(bot))
+			&& botsToStop.add(bot);
 	}
 
-	private static synchronized void removeAllBots() {
-
-		for(Bot b : botsToStart) {
-			b.stop();
-			world.removeAliveObstacle(b);
-		}
-
-		for(Bot b : bots) {
-			b.stop();
-			world.removeAliveObstacle(b);
-		}
-
-		for(Bot b : botsToStop) {
-			b.stop();
-			world.removeAliveObstacle(b);
-		}
+	private static synchronized void removeBotNow(Bot b) {
+		lg.info("Stoppe Bot " + b);
+		b.stop();
+		world.removeAliveObstacle(b);
+		view.onBotRemoved(b);
 	}
 
-	protected static synchronized void cleanup() {
-
-		removeAllBots();
+	private static synchronized void deinit() {
+		for(Bot b : botsToStart)
+			removeBotNow(b);
+		for(Bot b : bots)
+			removeBotNow(b);
+		for(Bot b : botsToStop)
+			removeBotNow(b);
 	}
 
 	protected static synchronized void reinit() {
-
-		removeAllBots();
-
-		bots = new ArrayList<Bot>();
-		botsToStart = new ArrayList<Bot>();
-		botsToStop  = new ArrayList<Bot>();
+		lg.fine("Neuinitialisierung BotManager");
+		deinit();
+		init();
 	}
 
 	protected static synchronized void reset() {
-
 		reinit();
 		world = null;
-	}
-
-	/** Liefert die Menge der dem BotManager bekannten Bots.
-	 * Methode ist nicht f&uuml;r performance-kritische Punkte gedacht, da
-	 * einiges Herumeiern stattfindet.
-	 */
-	//TODO Koennte schoener / schneller sein: wir laufen jedes Mal wieder durch 'bots' und machen jedes Mal wieder eine ArrayList
-	public static Set<Bot> getBots() {
-		Set<Bot> rv = new HashSet<Bot>();
-		for (Bot b : bots)
-			rv.add(b);
-		return rv;
 	}
 }

@@ -1,5 +1,17 @@
 Changelog fuer c't-Sim
 ======================
+
+2006-09-22 Hendrik Krauss [hkr@heise.de]: Umbau Etappe 4 (vorher Tag erstellt):
+* ContestConductor vereinfacht; ist jetzt Beta; Test-Durchlaeufe des Wettbewerbs scheinen zu funktionieren; Testen wird fortgesetzt
+* neuer Einstiegspunkt: ctSim.view.contestConductor.ContestConductorTest, der einen Wettbewerb durchlaufen laesst, wobei in jedem Spiel sofort Bot 1 gewinnt
+* View-Interface ausgebaut, damit die neue ContestConductor-Version arbeiten kann
+* View-Interface ausgebaut, damit CtSimFrame immer korrekt anzeigen kann, welcher Judge gewaehlt ist
+* DefaultController angepasst, um die neuen View-Methoden zu nutzen
+* Konfig wird jetzt wieder geparst und gegen DTD gecheckt (vorher: nur Parsen)
+* MySQL-Treiber in Verzeichnis contrib (der Vollstaendigkeit halber); .classpath angepasst
+* Weitere 4 unbenutzte Klassen geloescht
+* Diverse Verbesserungen
+
 2006-09-20 Benjamin Benz [bbe@heise.de]: Parcours um Routinen zur Bestimmung der kuerzesten Distanz zwischen einem Punkt und dem Ziel erweitert (dazu einen Leserpatch von Michael Prähofer verwendet)
 
 2006-09-19 Hendrik Krauss [hkr@heise.de]: Umbau Etappe 3 (vorher Tag erstellt):
