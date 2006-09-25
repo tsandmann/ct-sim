@@ -2,25 +2,9 @@ package ctSim.view.contestConductor;
 
 import java.util.ArrayList;
 import java.util.List;
+
 //$$$ doc klasse + methoden
-/**
- * <p>Dieses Ding baut einen Turnierbaum für die Hauptrunde auf. Mit anderen
- * Worten, es plant nach Abschluss der Vorrunde, welcher Bot gegen welchen
- * spielen soll. Die Planung erfolgt soweit m&ouml;glich ($$...).</p>
- *
- * <p>Die grunds&auml;tzliche Verwendung ist:
- * <ol><li><code>TournamentTree<...> tree = new
- * TournamentTree(</code><em>Spieler 1</em><code>);</code></li>
- * <li><code>tree = tree.add(</code><em>Spieler 2</em><code>);</code></li>
- * <li><code>tree = tree.add(</code><em>Spieler 3</em><code>);</code></li>
- * <li>...</li>
- * <li><code>tree.getTournamentPlan(1);</li></ol>
- *
- * </p>
- *
- * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
- */
-class TournamentTree<T> {
+public class TournamentTree<T> {
 	protected T payload = null;
 	protected TournamentTree<T> left = null;
 	protected TournamentTree<T> right = null;
@@ -35,6 +19,7 @@ class TournamentTree<T> {
 		this.right = right;
     }
 
+	// null undef
 	public TournamentTree<T> add(TournamentTree<T> node) {
 		if (payload == null) {
 			if (lastAdditionLeft) {
@@ -49,6 +34,7 @@ class TournamentTree<T> {
 			return new TournamentTree<T>(this, node);
 	}
 
+	// null undef
 	public TournamentTree<T> add(T p) {
 		return add(new TournamentTree<T>(p));
 	}
@@ -82,8 +68,13 @@ class TournamentTree<T> {
 		if (currentLevel == levelWanted)
 			payloads.add(payload);
 		if (payload == null) { // wir sind ein innerer Knoten
-			left.levelOrder( levelWanted, currentLevel * 2, payloads);
+			left. levelOrder(levelWanted, currentLevel * 2, payloads);
 			right.levelOrder(levelWanted, currentLevel * 2, payloads);
 		}
 	}
+
+	@Override
+    public String toString() { //$$ toString ist nur fuer demo
+	    return payload == null ? "?" : ""+payload;
+    }
 }

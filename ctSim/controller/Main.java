@@ -44,6 +44,7 @@ public class Main {
 
 	private static String configFile = DEFAULT_CONFIGFILE;
 
+	//$$ "Usage"-Meldung waere gut
 	/**
 	 * Behandelt die Kommandozeilenargumente. Momentan zul&auml;ssig:
 	 * <ul>

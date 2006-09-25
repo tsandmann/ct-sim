@@ -31,7 +31,7 @@ import ctSim.view.gui.sensors.RemoteControlGroupGUI;
 
 // $$ doc gesamte Klasse
 // $$ die staendigen "assert false" sind nicht so doll. Schoener waere: Exceptions werfen und den Controller exit machen lassen (verbessert auch Testbarkeit (Unit-Tests) des ContestConductor). Ich zieh mir aber nicht den Schuh an, Exception-Handling in den z.Zt. noch chaotischen Controller reinzupopeln.
-
+// $$ doc ConCon-Package
 /**
  * <p>
  * Erm&ouml;glicht die Durchf&uuml;hrung eines ctBot-Wettbewerbs wie den im
@@ -93,34 +93,7 @@ public class ContestConductor implements View {
 	        return true;
         }
 
-		@SuppressWarnings("synthetic-access")
-        protected void setWinner(Bot winner)
-		throws NullPointerException, SQLException, TournamentPlanException {
-			lg.info("Zieleinlauf von Bot %s nach %s", winner.getName(),
-				SimUtils.millis2time(world.getSimTimeInMs()));
-			// Spiel beenden
-			db.setWinner(botIds.get(winner), world.getSimTimeInMs());
-		}
-
-		@SuppressWarnings("synthetic-access")
-		private boolean isAnyoneOnFinishTile()
-		throws NullPointerException, SQLException, TournamentPlanException {
-			for(Bot b : botIds.keySet()) {
-				if (world.finishReached(new Vector3d(b.getPosition()))) {
-					setWinner(b);
-					return true;
-				}
-			}
-			return false;
-		}
-
-		@SuppressWarnings("synthetic-access")
-        private boolean isGameTimeoutElapsed() throws SQLException {
-            return System.currentTimeMillis() - startTimeCurrentGame >=
-            	db.getMaxGameLengthInMs();
-		}
-
-        @Override
+		@Override
 		public boolean isSimulationFinished() {
             try {
 	            return isAnyoneOnFinishTile() || isGameTimeoutElapsed();
@@ -139,6 +112,33 @@ public class ContestConductor implements View {
             // Laune halten
             return false;
         }
+
+		@SuppressWarnings("synthetic-access")
+		private boolean isAnyoneOnFinishTile()
+		throws NullPointerException, SQLException, TournamentPlanException {
+			for(Bot b : botIds.keySet()) {
+				if (world.finishReached(new Vector3d(b.getPosition()))) {
+					setWinner(b);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		@SuppressWarnings("synthetic-access")
+        private boolean isGameTimeoutElapsed() throws SQLException {
+            return System.currentTimeMillis() - currentGameBeginInMs >=
+            	db.getMaxGameLengthInMs();
+		}
+
+		@SuppressWarnings("synthetic-access")
+        protected void setWinner(Bot winner)
+		throws NullPointerException, SQLException, TournamentPlanException {
+			lg.info("Zieleinlauf von Bot %s nach %s", winner.getName(),
+				SimUtils.millis2time(world.getSimTimeInMs()));
+			// Spiel beenden
+			db.setWinner(botIds.get(winner), world.getSimTimeInMs());
+		}
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class ContestConductor implements View {
 
 	/** Zeitpunkt, zu dem das aktuelle Spiel gestartet wurde. Einheit
 	 * Millisekunden seit Beginn der Unix-&Auml;ra. */
-	private long startTimeCurrentGame;
+	private long currentGameBeginInMs;
 
 	/**
 	 * Konstruktor
@@ -208,12 +208,12 @@ public class ContestConductor implements View {
 	 * zur&uuml;ckzuliefern. Beispiel: {@link ContestConductorTest}.
 	 * </p>
 	 */
-	protected Judge buildOurJudge(Controller c) {
+	protected Judge buildJudge(Controller c) {
 		return new ContestJudge((DefaultController)c); //$$ Cast unschoen
 	}
 
 	public void onApplicationInited() {
-		controller.setJudge(buildOurJudge(controller));
+		controller.setJudge(buildJudge(controller));
 		try {
 			planner.planPrelimRound();
 		} catch (SQLException e) {
@@ -375,7 +375,7 @@ public class ContestConductor implements View {
 			botIds.put(executeBot(db.getBot2Binary()), db.getBot2Id());
 		}
 
-		startTimeCurrentGame = System.currentTimeMillis();
+		currentGameBeginInMs = System.currentTimeMillis();
 
 		lg.fine("Go f\u00FCr Bots");
 		// Bots starten
@@ -402,6 +402,6 @@ public class ContestConductor implements View {
     }
 
 	public void onJudgeSet(@SuppressWarnings("unused") Judge j) {
-		// $$ onJudgeChanged()
+		// $$ onJudgeSet()
     }
 }

@@ -208,7 +208,7 @@ class DatabaseAdapter {
     				"WHERE level="+levelId+" AND game="+gameId);
     	else {
     		throw new TournamentPlanException(
-    			"Kein Platz in Level: "+levelId+" Game: "+gameId);
+    			"Kein Platz in Spiel "+gameId+" Level: "+levelId);
     	}
     }
 }

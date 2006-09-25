@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-09-25 Hendrik Krauss [hkr@heise.de]:
+* TournamentTree hat jetzt ein ein kleines Demoprogramm (Klasse TournamentTreeGuiTest)
+* Mikroskopische Aenderungen hier und da
+
 2006-09-22-B Hendrik Krauss [hkr@heise.de]: Klasse MemoryLeakTest erstellt
 
 2006-09-22 Hendrik Krauss [hkr@heise.de]: Umbau Etappe 4 (vorher Tag erstellt):

@@ -56,6 +56,7 @@ import ctSim.util.Enumerations;
 import ctSim.util.FmtLogger;
 import ctSim.util.IconHashMap;
 
+//LODO Crasht, wenn Icon-Dateien nicht da
 /**
  * Die GUI-Hauptklasse fuer den c't-Sim
  *

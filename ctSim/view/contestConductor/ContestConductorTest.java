@@ -10,15 +10,15 @@ import ctSim.view.View;
 
 /**
  * <p>
- * Test-Case, der den ctSim im Contest-Modus startet, mit nur einer Unterschied:
- * Als Judge wird ein Test-Judge verwendet, der bei jedem Spiel im
- * Simulatorschritt 1 den Bot 1 gewinnen l&auml;sst. Sinn: Testl&auml;ufe
- * zeitlich nicht ausufern lassen.
+ * Test-Case, der einen vollen Wettbewerbsdurchlauf testet. Der ctSim startet im
+ * Contest-Modus, mit nur einer Unterschied: Als Judge wird ein Test-Judge
+ * verwendet, der bei jedem Spiel im Simulatorschritt 1 den Bot 1 gewinnen
+ * l&auml;sst. Sinn: Testl&auml;ufe zeitlich nicht ausufern lassen.
  * </p>
  * <p>
  * Abgesehen vom Test-Judge wird der Test-Wettbewerb so ausgef&uuml;hrt, wie der
- * tats&auml;chliche. Insbesondere wird als Wettbewerbsdatenbank die normale,
- * in der Konfigurationsdatei ct-sim-contest-conductor.xml angegebene verwendet
+ * tats&auml;chliche. Insbesondere wird als Wettbewerbsdatenbank die normale, in
+ * der Konfigurationsdatei ct-sim-contest-conductor.xml angegebene verwendet
  * (also keine Testdatenbank wie in anderen Test-Cases).
  * </p>
  * <p>
@@ -62,7 +62,7 @@ public class ContestConductorTest {
 		 * Simulationsschritt zum Sieger erkl&auml;rt.
 		 */
 		@Override
-        protected Judge buildOurJudge(Controller c) {
+        protected Judge buildJudge(Controller c) {
             return this.new ContestJudge((DefaultController)c) {
 				@Override
                 public boolean isSimulationFinished() {

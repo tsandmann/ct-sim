@@ -22,7 +22,7 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
  * ContestConductor)</li>
  * </ol>
  *
- * <p><strong>Hintergrund:</strong> Das Turnier
+ * <p><a name="turnier-zwei-phasen" /><strong>Hintergrund:</strong> Das Turnier
  * wird in zwei Phasen abgewickelt: Zun&auml;chst wird in einer
  * Vorrunde jeder Bot einzeln durch einen Parcours geschickt und die
  * ben&ouml;tigte Zeit gestoppt, was eine Rangliste ergibt. In der
@@ -51,7 +51,8 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
  * ersten Runde des Turniers nur ein einziges Duell statt &ndash;
  * daf&uuml;r sind alle anschlie&szlig;enden Durchg&auml;nge voll besetzt.</p>
  *
- * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krau&szlig; &lt;<a
+ * href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class TournamentPlanner {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.contestConductor");
