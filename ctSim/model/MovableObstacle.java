@@ -38,6 +38,12 @@ public interface MovableObstacle extends Obstacle {
 	/** Das Obstacle faellt */
 	public static final int OBST_STATE_FALLING   = 2;
 
+	/** Bitmakse, die alle bits ausblendedet, die keine Rolle für die Sicherheit des Bots spielen 
+	 * der bot gilt als sicher, wenn (obst_state & OBST_STATE_SAVE) ==0 )
+	 * */
+	public static final int OBST_STATE_SAVE = 0xFF;
+
+	
 	/**
 	 * Liefert den Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
 	 * Zustaende sind ein Bitmaske aus den OBST_STATE_ Konstanten

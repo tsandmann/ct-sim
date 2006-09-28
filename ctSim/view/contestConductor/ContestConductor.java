@@ -126,9 +126,24 @@ public class ContestConductor implements View {
 		}
 
 		@SuppressWarnings("synthetic-access")
-        private boolean isGameTimeoutElapsed() throws SQLException {
-            return System.currentTimeMillis() - currentGameBeginInMs >=
-            	db.getMaxGameLengthInMs();
+        private boolean isGameTimeoutElapsed() throws SQLException, TournamentPlanException {
+			// wenn die Spielzeit noch nicht um ist, liefere false zurück
+			if (world.getSimTimeInMs() < db.getMaxGameLengthInMs()) 
+				return false;
+
+			Bot winner = null;
+            for(Bot b : botIds.keySet()) {
+            	if (winner == null)
+            		winner = b;
+            	else 
+            		if (world.getParcours().getShortestDistanceToFinish(new Vector3d(winner.getPosition())) 
+            			 > world.getParcours().getShortestDistanceToFinish(new Vector3d(b.getPosition()))  )
+            			 winner = b;
+            }
+
+            setWinner(winner);
+			
+			return true;
 		}
 
 		@SuppressWarnings("synthetic-access")
@@ -171,10 +186,6 @@ public class ContestConductor implements View {
 
 	private Object botArrivalLock = new Object();
 	private Bot newlyArrivedBot = null;
-
-	/** Zeitpunkt, zu dem das aktuelle Spiel gestartet wurde. Einheit
-	 * Millisekunden seit Beginn der Unix-&Auml;ra. */
-	private long currentGameBeginInMs;
 
 	/**
 	 * Konstruktor
@@ -374,8 +385,6 @@ public class ContestConductor implements View {
 			lg.fine("Starte Bot 2");
 			botIds.put(executeBot(db.getBot2Binary()), db.getBot2Id());
 		}
-
-		currentGameBeginInMs = System.currentTimeMillis();
 
 		lg.fine("Go f\u00FCr Bots");
 		// Bots starten

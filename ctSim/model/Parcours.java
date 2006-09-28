@@ -504,7 +504,7 @@ public class Parcours {
 	 * @param from Startpunkt in Weltkoordinaten
 	 * @return Distanz (ohne Drehungen) in Metern
 	 */
-	double getShortestDistanceToFinish(Vector3d from){
+	public double getShortestDistanceToFinish(Vector3d from){
 		return getShortestDistanceToFinish(new Vector2d(from.x,from.y));
 	}
 	
@@ -514,7 +514,7 @@ public class Parcours {
 	 * @param from Startpunkt in Weltkoordinaten
 	 * @return Distanz in Metern
 	 */
-	double getShortestDistanceToFinish(Vector2d from){
+	public double getShortestDistanceToFinish(Vector2d from){
 		Vector<TurningPoint> shortestPath=getShortestPath(from);
 		
     	if(shortestPath==null || shortestPath.size()<2)

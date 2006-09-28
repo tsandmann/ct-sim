@@ -1,5 +1,6 @@
 Changelog fuer c't-Sim
 ======================
+2006-09-28 Benjamin Benz [bbe@heise.de]: Timeouts in den Judge eingefuegt, LastSavePostion in AliveObstacles hinzugefuegt
 
 2006-09-25 Hendrik Krauss [hkr@heise.de]:
 * TournamentTree hat jetzt ein ein kleines Demoprogramm (Klasse TournamentTreeGuiTest)
@@ -42,21 +43,21 @@ Changelog fuer c't-Sim
 
 2006-08-23 Felix Beckwermert [felix@beckwermert.de]: ContestJudge zum testen eingecheckt
 
-2006-08-23 Felix Beckwermert [felix@beckwermert.de]: BotManager eingeführt; Ctrl. und View auf diesen angepasst
+2006-08-23 Felix Beckwermert [felix@beckwermert.de]: BotManager eingefï¿½hrt; Ctrl. und View auf diesen angepasst
 
-2006-08-23 Felix Beckwermert [felix@beckwermert.de]: Kleinere (Schönheits-)Anpassungen
+2006-08-23 Felix Beckwermert [felix@beckwermert.de]: Kleinere (Schï¿½nheits-)Anpassungen
 
 2006-08-13 Felix Beckwermert [felix@beckwermert.de]: Bug in der Ziel-Erkennung behoben
 
-2006-08-11 Felix Beckwermert [felix@beckwermert.de]: "Gleitpin-fällt"-Bug gefixt (dank forum); außerdem einen Bug zur Berechnung der Pos. des linken Rades gefixt (fehlte ein "-")
+2006-08-11 Felix Beckwermert [felix@beckwermert.de]: "Gleitpin-fï¿½llt"-Bug gefixt (dank forum); auï¿½erdem einen Bug zur Berechnung der Pos. des linken Rades gefixt (fehlte ein "-")
 
-2006-08-11 Felix Beckwermert [felix@beckwermert.de]: Tabs schließen jetzt korrekt (beenden auch den Bot)
+2006-08-11 Felix Beckwermert [felix@beckwermert.de]: Tabs schlieï¿½en jetzt korrekt (beenden auch den Bot)
 
 2006-08-08 Timo Sandmann [mail@timosandmann.de]: Sensordaten gesammelt verschicken
 
 2006-08-08 Felix Beckwermert [felix@beckwermert.de]: Bug-fixes...
 
-2006-08-08 Felix Beckwermert [felix@beckwermert.de]: App. werden wieder (wie fürher) verwendet
+2006-08-08 Felix Beckwermert [felix@beckwermert.de]: App. werden wieder (wie fï¿½rher) verwendet
 
 2006-08-04 Timo Sandmann [mail@timosandmann.de]: ConfigManager fuer OS X erweitert
 
