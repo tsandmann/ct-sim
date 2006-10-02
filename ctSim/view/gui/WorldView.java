@@ -22,6 +22,8 @@ import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -100,11 +102,13 @@ public class WorldView extends Box {
 		
 		GraphicsConfigTemplate3D template = new GraphicsConfigTemplate3D();
 
-        // Leinwand fuer die Welt erzeugen
-		this.worldCanvas = new Canvas3D(
-				GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(
-						template));
 		
+		GraphicsEnvironment ge =GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gd = ge.getDefaultScreenDevice();
+		GraphicsConfiguration gc = gd.getBestConfiguration(template); 
+		
+        // Leinwand fuer die Welt erzeugen
+		this.worldCanvas = new Canvas3D(gc);
 		this.add(this.worldCanvas);
 		
 		// wird zum ScreenCapture gebraucht
@@ -154,11 +158,16 @@ public class WorldView extends Box {
         // End Block
 		
 		try {
-			this.worldCanvas.setVisible(true);
+			if (worldCanvas != null)
+				this.worldCanvas.setVisible(true);
+			else 
+				ErrorHandler.error("Achtung, kein worldCanvas gesetzt!");
+			
 			this.setVisible(true);
 			this.repaint();
 
 		} catch (Exception e) {
+			ErrorHandler.error("Probleme beim aktivieren des worldCanvas");
 			e.printStackTrace();
 		}
 	}
