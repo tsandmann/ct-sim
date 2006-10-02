@@ -9,8 +9,10 @@ import static org.junit.Assert.fail;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import ctSim.controller.Main;
 import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
@@ -23,12 +25,21 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	    return db;
     }
 
-	protected TournamentPlannerTest()
-	throws ClassNotFoundException, SQLException {
-		db = new PlannerToDatabaseAdapter(getTestDb());
-		testee = new TournamentPlanner(db);
-    }
+	// Vorsicht, wenn in dieser Methode Exceptions auftreten, verschluckt
+	// JUnit die und meldet nur unverstaendlich "No runnable methods". Im
+	// Zweifel main()-Methode schreiben, die das hier aufruft, und als
+	// Applikation (nicht Unit-Test) laufenlassen
+	@BeforeClass
+	public static void setUp() {
+		Main.dependencies.reRegisterImplementation(ContestDatabase.class, 
+			TestDatabase.class);
+	}
 
+	// Vorsicht -- siehe Kommentar zu setUp()
+	public TournamentPlannerTest() {
+		db = Main.dependencies.get(PlannerToDatabaseAdapter.class);
+		testee = Main.dependencies.get(TournamentPlanner.class);
+    }
 
 	@Test(expected=IllegalStateException.class)
 	public void prelimRoundWithMissingLevel() throws SQLException {
@@ -143,13 +154,13 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	 * f&uuml;r zwei Spiele vorsehen w&uuml;rde.) */
 	private void checkPlayerId(int whichPlayerId) throws SQLException {
 		// zur Erinnerung: count() und count(distinct) zaehlen NULL nicht mit
-		ResultSet rs = db.execSql("select count(player%sbotId) from " +
-		"`ctsim_game` where level != -1", whichPlayerId);
+		ResultSet rs = db.execSql("select count(bot" + whichPlayerId + ") " +
+			"from `ctsim_game` where level != -1");
 		rs.next();
 		int playerIdCount = rs.getInt(1);
 		assertNotSame(0, playerIdCount);
 
-		rs = db.execSql("select count(distinct player%sbotId) from " +
+		rs = db.execSql("select count(distinct bot%s) from " +
 			"`ctsim_game` where level != -1", whichPlayerId);
 		rs.next();
 		int playerIdDistinctCount = rs.getInt(1);
@@ -163,6 +174,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		db.execSql("delete from ctsim_game");
 		for (int i = 0; i < 42; i++)
 			makePrelimGame(i, GameState.GAME_OVER, i, Math.abs(30 - i));
+		db.execSql("delete from ctsim_level");
 		makeLevel(0); // Spiel um den 3. Platz
 		for (int i = 1; i <= 32; i *= 2)
 			makeLevel(i);

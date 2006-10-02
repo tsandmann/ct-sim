@@ -61,14 +61,12 @@ public class Characteristic {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Characteristic charac = new Characteristic(new File("..\\ct-Sim_V2\\characteristics\\gp2d12Left.txt"), 999f); //$NON-NLS-1$
-		System.out.println("Performante Werte"); //$NON-NLS-1$
-		for (float f = -2f; f < 100; f = f + 0.25f) {
-			System.out.println(f + "\t" + charac.lookup(f)); //$NON-NLS-1$
-		}
+		Characteristic charac = new Characteristic(new File("characteristics\\gp2d12Right.txt"), 999f); //$NON-NLS-1$
 		System.out.println("Praezise Werte"); //$NON-NLS-1$
-		for (float f = -2f; f < 100; f = f + 0.25f) {
-			System.out.println(f + "\t" + charac.lookupPrecise(f)); //$NON-NLS-1$
+		for (float f = 0f; f < 100; f = f + 0.1f) {
+			System.out.printf("\n%12f", f); //$NON-NLS-1$
+			for (int i = 0; i < charac.lookupPrecise(f)/5; i++)
+				System.out.print("*");
 		}
 
 	}
@@ -152,84 +150,6 @@ public class Characteristic {
 			}
 		// printLookup();
 	}
-
-	/**
-	 * Gibt zur uebergebenen Messgroesse den passenden Sensorwert zurueck.
-	 * Performante Funktion, die ganzzahlige Messgroessen erwartet und Sensorwerte 
-	 * auf ganze Zahlen rundet. 
-	 * 
-	 * @param measurement
-	 *            Die Messgroesse, aufgrund derer der Sensor seinen Wert erzeugt
-	 *            (z.B. die Distanz bei Distanzsensoren)
-	 * @return Das Sensordatum laut Kennlinie
-	 */
-	public int lookup(int measurement) {
-		int data;
-		// Liegt der Wert innerhalb der Tabelle?
-		if (measurement >= 0 && measurement <= this.intLookup.length - 1) {
-			data = this.intLookup[measurement];
-		} else {
-			// Sonst INF zurueckgeben:
-			data = Math.round(this.INF);
-		}
-		return data;
-	}
-
-	/**
-	 * Gibt zur uebergebenen Messgroesse den passenden Sensorwert zurueck.
-	 * Rundet die Messgroesse auf ganze Zahlen.
-	 * Performante Funktion, die Messgroessen und Sensorwerte auf ganze Zahlen rundet. 
-	 * Sollte nur benutzt werden, wenn Messgroessen auch Gleitkommazahlen sein
-	 * koennen.
-	 * 
-	 * @param measurement
-	 *            Die Messgroesse, aufgrund derer der Sensor seinen Wert erzeugt
-	 *            (z.B. die Distanz bei Distanzsensoren)
-	 * @return Das Sensordatum laut Kennlinie
-	 */
-	public int lookup(float measurement) {
-		int data;
-		// Liegt der Wert innerhalb der Tabelle?
-		if (measurement >= 0 && measurement <= this.intLookup.length - 1) {
-			int index = Math.round(Math.round(Math.floor(measurement)));
-			data = this.intLookup[index];
-		} else {
-			// Sonst INF zurueckgeben:
-			data = Math.round(this.INF);
-		}
-		return data;
-	}
-
-	
-//	/**
-//	 * Gibt zur uebergebenen Messgroesse den passenden Sensorwert zurueck.
-//	 * Praezise Funktion, die bei Messgroessen zwischen ganzen Zahlen weitere
-//	 * Zwischenwerte berechnet. Nur sinnvoll bei Sensoren, die nicht nur ganzzahlige
-//	 * Messwerte liefern
-//	 * 
-//	 * @param measurement
-//	 *            Die Messgroesse, aufgrund derer der Sensor seinen Wert erzeugt
-//	 *            (z.B. die Distanz bei Distanzsensoren)
-//	 * @return Das Sensordatum laut Kennlinie
-//	 */
-//	public float lookupPrecise(float measurement) {
-//		float data;
-//		// Liegt der Wert innerhalb der Tabelle?
-//		if (measurement >= 0 && measurement <= this.lookup.length - 1) {
-//			int index = Math.round(Math.round(Math.floor(measurement)));
-//			data = this.lookup[index];
-//			// Falls der Wert nicht am Rand der Tabelle liegt,
-//			// noch Zwischenwert extrapolieren --
-//			if (data != this.INF && index < this.lookup.length - 1) {
-//				data = data + (measurement - index)
-//						* (this.lookup[index + 1] - this.lookup[index]);
-//			}
-//		} else {
-//			// Sonst INF zurueckgeben:
-//			data = this.INF;
-//		}
-//		return data;
-//	}
 
 	/**
 	 * Gibt zur uebergebenen Messgroesse den passenden Sensorwert zurueck.

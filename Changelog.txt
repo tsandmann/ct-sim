@@ -1,5 +1,13 @@
 Changelog fuer c't-Sim
 ======================
+2006-10-02 Hendrik Krauss [hkr@heise.de]:
+* Neue Dependency PicoContainer inkl. Klasse ctSim.controller.InitializingPicoContainer; betrifft Initialisierung von ctSim und leichte Testbarkeit; Doku folgt
+* Neuimplementierung: ctSim.view.gui.WorldViewer ersetzt WorldPanel und WorldView; kuerzer, einfacher, fehlerfreier.
+* ConductorToDatabaseAdapter und DatabaseAdapter grossflaechig umgestellt zur Performance-Steigerung, nachdem Profiler-Laeufe ergeben haben, dass dort Probleme bzgl. memory footprint sind
+* World: Groessen-Getter umbenannt, um Klarheit zu schaffen
+* Characteristic: main()-Methode wieder funktionsfaehig gemacht zum Testen, aufgeraeumt
+* Diverse Verbesserungen
+
 2006-09-28 Benjamin Benz [bbe@heise.de]: Timeouts in den Judge eingefuegt, LastSavePostion in AliveObstacles hinzugefuegt
 
 2006-09-25 Hendrik Krauss [hkr@heise.de]:

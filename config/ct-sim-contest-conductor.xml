@@ -31,7 +31,7 @@
 	ctSim.view.contestConductor.ContestConductor reden soll (Format der URL
 	wie es java.sql.DriverManager.getConnection() erwartet) -->
 	<parameter name="contest-database-url"
-		value="jdbc:mysql://localhost:3306/ctjudge"/>
+		value="jdbc:mysql://localhost:3306/ctbot-contest"/>
 	<parameter name="contest-database-user" value="root"/>
 	<parameter name="contest-database-password" value=""/>
 

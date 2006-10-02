@@ -1,11 +1,9 @@
 package ctSim.controller;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Filter;
 import java.util.logging.Formatter;
@@ -38,11 +36,20 @@ import ctSim.view.gui.CtSimFrame;
  * </p>
  */
 public class Main {
-	private static FmtLogger lg;
-
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
 
-	private static String configFile = DEFAULT_CONFIGFILE;
+	static FmtLogger lg;
+
+	public static InitializingPicoContainer dependencies =
+		new InitializingPicoContainer();
+
+	static {
+		dependencies.registerImplementation(ContestConductor.class);
+		dependencies.registerImplementation(Controller.class,
+			DefaultController.class);
+		dependencies.registerInstance(
+			new Config.SourceFile(DEFAULT_CONFIGFILE));
+	}
 
 	//$$ "Usage"-Meldung waere gut
 	/**
@@ -60,10 +67,11 @@ public class Main {
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].toLowerCase().equals("-conf")) {
 				i++;
-				configFile = args[i]; // Default ueberschreiben
+				dependencies.reRegisterInstance(
+					new Config.SourceFile(args[i]));
 			} else {
-				System.out
-				        .println("Ung\u00FCltiges Argument '" + args[i] + "'");
+				System.out.println(
+					"Ung\u00FCltiges Argument '" + args[i] + "'");
 				System.exit(1);
 			}
 		}
@@ -74,22 +82,16 @@ public class Main {
 	 * starten.
 	 *
 	 * @param args Siehe {@link #handleCommandLineArgs(String[])}
-	 * @throws ClassNotFoundException
-	 * @throws SQLException
 	 */
-	public static void main(String[] args)
-	throws SQLException, ClassNotFoundException {
-		new Main(args);
-	}
-
-	public Main(String... args)
-	throws SQLException, ClassNotFoundException {
+	public static void main(String... args) {
 		handleCommandLineArgs(args);
 		initLogging();
 
+		Config.SourceFile configFile = dependencies.get(
+			Config.SourceFile.class);
 		try {
-	        ConfigManager.loadConfigFile(new File(configFile));
-	        initViewAndController();
+	        ConfigManager.loadConfigFile(configFile);
+	        go();
         } catch (FileNotFoundException e) {
 	        lg.severe(e, "Konfigurationsdatei '"+configFile+"' nicht gefunden");
         } catch (SAXException e) {
@@ -155,34 +157,27 @@ public class Main {
 		lg.fine("Logging-Subsystem initialisiert");
     }
 
-	protected void initViewAndController() throws SQLException,
-	ClassNotFoundException, SecurityException {
+	public static void go() {
+		//$$ kann einfacher werden mit pico (Startable ifc)
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			lg.warning(e, "Problem beim Setzen des Look and Feel");
 		}
 
-		Controller c = buildController();
+		Controller c = dependencies.get(Controller.class);
 
 		// View der Applikation ist mindestens der CtSimFrame
-		View view = new CtSimFrame(c, "CtSim");
+		View view = new CtSimFrame(c);
 
 		// View um ContestConductor erweitern falls so konfiguriert
 		if (ConfigManager.getValue("useContestConductor").
-				equalsIgnoreCase("true"))
-			view = ViewYAdapter.newInstance(view, buildContestConductor(c));
+				equalsIgnoreCase("true")) {
+			view = ViewYAdapter.newInstance(view,
+				dependencies.get(ContestConductor.class));
+		}
 
 		c.setView(view);
 		c.onApplicationInited();
     }
-
-	protected Controller buildController() {
-		return new DefaultController();
-	}
-
-	protected View buildContestConductor(Controller c)
-	throws SQLException, ClassNotFoundException {
-		return new ContestConductor(c);
-	}
 }

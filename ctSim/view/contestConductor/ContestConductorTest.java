@@ -1,12 +1,8 @@
 package ctSim.view.contestConductor;
 
-import java.sql.SQLException;
-
 import ctSim.controller.Controller;
-import ctSim.controller.DefaultController;
 import ctSim.controller.Main;
-import ctSim.model.rules.Judge;
-import ctSim.view.View;
+import ctSim.view.contestConductor.ContestConductor.ContestJudge;
 
 /**
  * <p>
@@ -39,43 +35,31 @@ import ctSim.view.View;
 public class ContestConductorTest {
 	/** Siehe {@link ContestConductorTest}. */
 	public static void main(String[] args) throws Exception {
-		new Main("-conf", "config/ct-sim-contest-conductor.xml") {
-			@Override
-	        protected View buildContestConductor(Controller c)
-			throws SQLException, ClassNotFoundException {
-				return new MockContestConductor(c);
-			}
-		};
+		Main.dependencies.reRegisterImplementation(
+			ContestJudge.class, MockContestJudge.class);
+		Main.main("-conf", "config/ct-sim-contest-conductor.xml");
 	}
 
 	/**
-	 * Attrappe, die in den ContestConductor den Test-ContestJudge injiziert.
+	 * ContestJudge-Attrappe, die zu Testzwecken immer Bot 1 im ersten
+	 * Simulationsschritt zum Sieger erkl&auml;rt.
 	 */
-	public static class MockContestConductor extends ContestConductor {
-		public MockContestConductor(Controller controller)
-		throws SQLException, ClassNotFoundException {
-			super(controller);
-        }
+	public static class MockContestJudge extends ContestJudge {
+		public MockContestJudge(Controller controller,
+			ContestConductor concon) {
+			super(controller, concon);
+	    }
 
-		/**
-		 * Liefert einen ContestJudge, der zu Testzwecken immer Bot 1 im ersten
-		 * Simulationsschritt zum Sieger erkl&auml;rt.
-		 */
 		@Override
-        protected Judge buildJudge(Controller c) {
-            return this.new ContestJudge((DefaultController)c) {
-				@Override
-                public boolean isSimulationFinished() {
-					lg.fine("ContestJudge-Attrappe: Bot 1 gewinnt, " +
-							"beende Spiel");
-                    try {
-                        setWinner(botIds.keySet().iterator().next());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    return true;
-                }
-            };
+        public boolean isSimulationFinished() {
+			concon.lg.fine("ContestJudge-Attrappe: Bot 1 gewinnt, " +
+					"beende Spiel");
+            try {
+                setWinner(concon.botIds.keySet().iterator().next());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return true;
         }
 	}
 }

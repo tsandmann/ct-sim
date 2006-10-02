@@ -3,7 +3,6 @@ package ctSim.view.contestConductor;
 import java.util.ArrayList;
 import java.util.List;
 
-//$$$ doc klasse + methoden
 public class TournamentTree<T> {
 	protected T payload = null;
 	protected TournamentTree<T> left = null;

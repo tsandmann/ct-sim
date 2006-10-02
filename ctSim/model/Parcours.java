@@ -33,7 +33,6 @@ import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3d;
 
 import ctSim.ErrorHandler;
-import ctSim.model.bots.ctbot.CtBot;
 
 /**
  * Repraesentiert einen Parcours fuer die Bots
@@ -58,8 +57,18 @@ public class Parcours {
 		}
 	}*/
 
-	/** Raster des Parcours-Gitters */
-	private float grid = (float) (CtBot.BOT_RADIUS * 2 * 2);
+	/**
+	 * <p>
+	 * Breite einer Gittereinheit (eines Blocks) in Meter
+	 * </p>
+	 * <p>
+	 * Idee: ct-Bot ist 12cm breit, wir setzen das Gitter auf 24cm, damit der
+	 * Bot auf dem engstm&ouml;glichen Durchgang (1 Block breit) m&ouml;glichst
+	 * viel Spielraum hat nach links und rechts, aber dass gerade keine zwei
+	 * Bots mehr aneinander vorbeik&ouml;nnen.
+	 * </p>
+	 */
+	private float gridSizeInM = 0.24f;
 
 	/** Anzahl der Startpositionen fuer Bots. Dir Position 0 ist die Default Position, ab 1 für die Wettkampfbots.*/
 	public static int BOTS = 3;
@@ -123,10 +132,9 @@ public class Parcours {
 	}
 
 	/**
-	 *
-	 * @return Liefert die Parcoursbreite in Gittereinheiten zurueck
+	 * @return Liefert die Parcoursbreite in Gittereinheiten zur&uuml;ck
 	 */
-	public int getDimX() {
+	public int getWidthInBlocks() {
 		return this.dimX;
 	}
 
@@ -140,27 +148,28 @@ public class Parcours {
 
 	/**
 	 *
-	 * @return Liefert die Parcourshoehe zurueck in Gittereinheiten
+	 * @return Liefert die Parcoursh&ouml;he in Gittereinheiten zur&uuml;ck
 	 */
-	public int getDimY() {
+	public int getHeightInBlocks() {
 		return this.dimY;
 	}
 
 	/**
-	 *
-	 * @return Liefert die Breite (X) des Parcours in mm zurueck
+	 * @return Liefert die Breite (X-Gr&ouml;&szlig;e) des Parcours in Meter
+	 * zur&uuml;ck
 	 */
-	public float getWidth(){
-		return this.dimX* this.grid;
+	public float getWidthInM(){
+		return this.dimX* this.gridSizeInM;
 	}
 
 	/**
-	 *
-	 * @return Liefert die Hoehe (Y) des Parcours in mm zurueck
+	 * @return Liefert die H&ouml;he (Y-Gr&ouml;&szlig;e) des Parcours in Meter
+	 * zur&uuml;ck
 	 */
-	public float getHeight(){
-		return this.dimY* this.grid;
+	public float getHeightInM(){
+		return this.dimY* this.gridSizeInM;
 	}
+
 	/**
 	 * Setzt die Parcurshoehe in Gittereinheiten
 	 * @param dimY1 Hoehe in Gittereinheiten
@@ -215,7 +224,7 @@ public class Parcours {
 		node.setPickable(true);
 //		node.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 
-		translate.set(new Vector3d(x * this.grid, y* this.grid, z));
+		translate.set(new Vector3d(x * this.gridSizeInM, y* this.gridSizeInM, z));
 
 		TransformGroup tg = new TransformGroup(translate);
 		tg.setCapability(Node.ENABLE_PICK_REPORTING);
@@ -334,13 +343,13 @@ public class Parcours {
 	public Vector3d getStartPosition(int bot){
 		Vector3d pos = null;
 		if (bot < BOTS)
-			pos= new Vector3d(this.startPositions[bot][0]*this.grid + this.grid/2,this.startPositions[bot][1]*this.grid + this.grid/2,0.0f);
+			pos= new Vector3d(this.startPositions[bot][0]*this.gridSizeInM + this.gridSizeInM/2,this.startPositions[bot][1]*this.gridSizeInM + this.gridSizeInM/2,0.0f);
 		else
-			pos= new Vector3d(this.startPositions[0][0]*this.grid + this.grid/2,this.startPositions[0][1]*this.grid + this.grid/2,0.0f);
+			pos= new Vector3d(this.startPositions[0][0]*this.gridSizeInM + this.gridSizeInM/2,this.startPositions[0][1]*this.gridSizeInM + this.gridSizeInM/2,0.0f);
 
 		return pos;
 	}
-	
+
 	/**
 	 * Liefert die Startrichtung eines Bots
 	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
@@ -389,7 +398,7 @@ public class Parcours {
 	 * @return Liefert die Gitterbreite in mm zurueck
 	 */
 	public float getGrid() {
-		return this.grid;
+		return this.gridSizeInM;
 	}
 
 	/**
@@ -409,10 +418,10 @@ public class Parcours {
 
 		for(Vector2d p : this.finishPositions) {
 
-			double minX = p.x*this.grid ;
-			double maxX = p.x*this.grid + this.grid;
-			double minY = p.y*this.grid ;
-			double maxY = p.y*this.grid + this.grid;
+			double minX = p.x*this.gridSizeInM ;
+			double maxX = p.x*this.gridSizeInM + this.gridSizeInM;
+			double minY = p.y*this.gridSizeInM ;
+			double maxY = p.y*this.gridSizeInM + this.gridSizeInM;
 
 			if((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
 				return true;
@@ -435,16 +444,16 @@ public class Parcours {
 	 * @return true, wenn der Bot ueber dem loch steht
 	 */
 	public boolean checkHole(Point3d pos){
-		if ((pos.x < 0) || (pos.y <0) || (pos.x > dimX* grid) || (pos.y > dimY* grid))
+		if ((pos.x < 0) || (pos.y <0) || (pos.x > dimX* gridSizeInM) || (pos.y > dimY* gridSizeInM))
 			return true;
 
 		Iterator it = holes.iterator();
 		while (it.hasNext()){
 			Vector2f min = new Vector2f((Vector2d)it.next());
-			min.scale(grid);
+			min.scale(gridSizeInM);
 
 			Vector2f max = new Vector2f(min);
-			max.add(new Vector2f(grid,grid));
+			max.add(new Vector2f(gridSizeInM,gridSizeInM));
 
 			if ((pos.x > min.x) && (pos.x < max.x) && (pos.y > min.y) && (pos.y < max.y))
 				return true;
@@ -465,14 +474,14 @@ public class Parcours {
 	public int[][] getParcoursMap() {
     	return parcoursMap;
     }
-	
+
 	/**
 	 * Liefert einen stark verienfachten Parcours zurück.
 	 * das Array enthaelt nur 0 (freies Feld) und 1 (blockiertes Feld)
 	 *
 	 */
 	int[][] getFlatParcours() {
-		int[][] parcoursMapSimple = new int[this.getDimX()][this.getDimY()];
+		int[][] parcoursMapSimple = new int[this.getWidthInBlocks()][this.getHeightInBlocks()];
 		for (int y = 0; y < parcoursMapSimple[0].length; y++) {
 			for (int x = 0; x < parcoursMapSimple.length; x++) {
 				switch (parcoursMap[x][y]) {
@@ -507,8 +516,8 @@ public class Parcours {
 	public double getShortestDistanceToFinish(Vector3d from){
 		return getShortestDistanceToFinish(new Vector2d(from.x,from.y));
 	}
-	
-	
+
+
 	/**
 	 * Liefert die kuerzeste Distanz von einem gegebenen Punkt (in Gitterkoordinaten) zum Ziel
 	 * @param from Startpunkt in Weltkoordinaten
@@ -516,15 +525,15 @@ public class Parcours {
 	 */
 	public double getShortestDistanceToFinish(Vector2d from){
 		Vector<TurningPoint> shortestPath=getShortestPath(from);
-		
+
     	if(shortestPath==null || shortestPath.size()<2)
     		return -1;
-    	
+
     	double distance=TurningPoint.getLengthOfPath(shortestPath);
-		
-		return distance*this.grid;
+
+		return distance*this.gridSizeInM;
 	}
-	
+
 	/**
 	 * Liefert den kuerzesten Pfad von einem bestimmten Punkt aus zum Ziel
 	 * @param from Startpunkt in weltkoordinaten
@@ -533,7 +542,7 @@ public class Parcours {
 	public Vector<TurningPoint> getShortestPath(Vector3d from){
 		return getShortestPath(new Vector2d(from.x,from.y));
 	}
-	
+
 	/**
 	 * Liefert den kuerzesten Pfad von einem bestimmten Punkt aus zum Ziel
 	 * @param from Startpunkt in weltkoordinaten
@@ -541,23 +550,23 @@ public class Parcours {
 	 */
 	public Vector<TurningPoint> getShortestPath(Vector2d from){
 		Vector2d f = new Vector2d(from);
-		f.scale(1/this.grid);
-		
+		f.scale(1/this.gridSizeInM);
+
 		TurningPoint start = new TurningPoint(f);
-		
+
 		if (finishPositions.size()== 0)
 			return null;
-		
+
 		Vector2d fin = new Vector2d(finishPositions.get(0));
 		Vector2d offset = new Vector2d(0.5,0.5);
 		fin.add(offset);
 		TurningPoint finish = new TurningPoint(fin);
-		
+
     	// finde die kuerzeste Verbindung
     	Vector<TurningPoint> shortestPath=
     		start.getShortestPathTo(finish, getFlatParcours());
-    	
+
     	return shortestPath;
-	
+
 	}
 }

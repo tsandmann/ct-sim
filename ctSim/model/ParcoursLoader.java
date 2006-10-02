@@ -205,8 +205,8 @@ public class ParcoursLoader {
 	 */
 	@SuppressWarnings("unused")
 	private void createWholeFloor(Appearance app) {
-		Box box = new Box(this.parcours.getDimX()*this.parcours.getGrid() *0.5f , this.parcours.getDimY()*this.parcours.getGrid()  *0.5f, World.PLAYGROUND_THICKNESS, app);
-		this.parcours.addFloor(box, ((float)this.parcours.getDimX())/2, ((float)this.parcours.getDimY())/2, -World.PLAYGROUND_THICKNESS-0.005f); // +0.001f);
+		Box box = new Box(this.parcours.getWidthInBlocks()*this.parcours.getGrid() *0.5f , this.parcours.getHeightInBlocks()*this.parcours.getGrid()  *0.5f, World.PLAYGROUND_THICKNESS, app);
+		this.parcours.addFloor(box, ((float)this.parcours.getWidthInBlocks())/2, ((float)this.parcours.getHeightInBlocks())/2, -World.PLAYGROUND_THICKNESS-0.005f); // +0.001f);
 	}
 
 
@@ -309,11 +309,11 @@ public class ParcoursLoader {
 	private int checkNeighbours(int x, int y, char c){
 		if ((y>0) && (this.parcoursMap[x][y-1] == c))
 			return 90;
-		if ((y<this.parcours.getDimY()-1) && (this.parcoursMap[x][y+1] == c))
+		if ((y<this.parcours.getHeightInBlocks()-1) && (this.parcoursMap[x][y+1] == c))
 			return 270;
 		if ((x>0) && (this.parcoursMap[x-1][y] == c))
 				return 180;
-		if ((x<this.parcours.getDimX()-1) && (this.parcoursMap[x+1][y] == c))
+		if ((x<this.parcours.getWidthInBlocks()-1) && (this.parcoursMap[x+1][y] == c))
 			return 0;
 
 
@@ -331,8 +331,8 @@ public class ParcoursLoader {
 
     	if (this.parcoursMap != null){
 
-			for (int y = 0; y < this.parcours.getDimY(); y++){
-				for (int x = 0; x < this.parcours.getDimX(); x++)
+			for (int y = 0; y < this.parcours.getHeightInBlocks(); y++){
+				for (int x = 0; x < this.parcours.getWidthInBlocks(); x++)
 					switch (this.parcoursMap[x][y]) {
 						case 'X':
 							createWall(x, y,1 ,1,getAppearance(this.parcoursMap[x][y]));
@@ -341,7 +341,7 @@ public class ParcoursLoader {
 						    	l=0;
 						    	d=x;
 						    	// ermittle die Laenge der zusammenhaengenden Wand
-						    	while ((d< this.parcours.getDimX()) && (this.parcoursMap[d][y] == '=')){
+						    	while ((d< this.parcours.getWidthInBlocks()) && (this.parcoursMap[d][y] == '=')){
 						    		this.parcoursMap[d][y] = 'O';  // Feld ist schon bearbeitet
 						    		l++; // Laenge hochzaeheln
 						    		d++;
@@ -352,7 +352,7 @@ public class ParcoursLoader {
 						    	l=0;
 						    	d=y;
 						    	// ermittle die Laenge der zusammenhaengenden Wand
-						    	while ((d< this.parcours.getDimY()) && (this.parcoursMap[x][d] == '#')){
+						    	while ((d< this.parcours.getHeightInBlocks()) && (this.parcoursMap[x][d] == '#')){
 						    		this.parcoursMap[x][d] = 'O';  // Feld ist schon bearbeitet
 						    		l++; // Laenge hochzaeheln
 						    		d++;

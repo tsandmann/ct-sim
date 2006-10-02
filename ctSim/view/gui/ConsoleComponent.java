@@ -32,6 +32,7 @@ import javax.swing.JTextArea;
  * 
  * @author Felix Beckwermert
  */
+//$$ Umbenennen: LogViewer
 public class ConsoleComponent extends JScrollPane implements DebugWindow {
     private static final long serialVersionUID = 7743090247891316572L;
 	private JTextArea textArea;

@@ -1,12 +1,12 @@
 package ctSim.view.contestConductor;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.HashMap;
 
-import ctSim.ConfigManager;
+import ctSim.controller.Main;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
@@ -29,31 +29,80 @@ import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
  * @see "Von dieser Klasse abgeleitete Klassen"
  * @see ContestConductor
  *
- * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 class DatabaseAdapter {
-	/** <p>Repr&auml;sentiert die möglichen Zust&auml;nde eines Spiels.
-	 * Die Enum
+	//$$ doc StatementCache
+	class StatementCache extends HashMap<String, PreparedStatement> {
+        private static final long serialVersionUID =
+        	- 293074803104060506L;
+
+        private final int maxSize;
+
+		public StatementCache(final int maxSize) {
+	        super();
+	        this.maxSize = maxSize;
+        }
+
+		@SuppressWarnings("synthetic-access")
+        @Override
+		public PreparedStatement get(Object key) {
+			if (size() >= maxSize)
+				clear();
+			// Wenn nicht drin, hinzufuegen, damit super.get garantiert was
+			// zurueckliefert
+			if (! containsKey(key)) {
+				/*
+				 * Cast ist okay, weil wir eine HashMap<String, ...> sind
+				 * und der Compiler sicherstellt, dass nur Strings in uns
+				 * geputtet werden
+				 */
+				String s = (String)key;
+				try {
+	                put(s, dbConn.prepareStatement(s));
+                } catch (SQLException e) {
+                	// In non-checked Excp einwickeln, um mit der geerbten
+                	// Signatur kompatibel zu bleiben
+                	throw new RuntimeException(e);
+                }
+			}
+		    return super.get(key);
+		}
+	}
+
+	/**
+	 * <p>
+	 * Repr&auml;sentiert die möglichen Zust&auml;nde eines Spiels. Die Enum
 	 * funktioniert Map-artig: sie umfasst Paare aus einem Symbol im Code und
 	 * einem String zugeordnet. Letzterer ist die Repr&auml;sentation, wie der
-	 * Spielzustand in der Datenbank dargestellt wird.</p>
-	 *
+	 * Spielzustand in der Datenbank dargestellt wird.
+	 * </p>
 	 * F&uuml;r ein Beispiel und zur Verwendung siehe Methode
-	 * {@link #toString()}. */
+	 * {@link #toString()}.
+	 */
 	enum GameState {
-		/** Zeigt an, dass (noch) keine Spieler f&uuml;r das Spiel eingetragen
-		 * sind. */
+		/**
+		 * Zeigt an, dass (noch) keine Spieler f&uuml;r das Spiel eingetragen
+		 * sind.
+		 */
 		NOT_INITIALIZED("not init"),
-		/** Zeigt an, dass ein Spieler, aber (noch) kein zweiter f&uuml;r das
-		 * Spiel eingetragen ist. */
+		/**
+		 * Zeigt an, dass ein Spieler, aber (noch) kein zweiter f&uuml;r das
+		 * Spiel eingetragen ist.
+		 */
 		WAITING_FOR_BOT2("wait for bot2"),
-		/** Zeigt an, dass das Spiel gestartet werden kann (es sind so viele
-		 * Spieler eingetragen wie n&ouml;tig). */
+		/**
+		 * Zeigt an, dass das Spiel gestartet werden kann (es sind so viele
+		 * Spieler eingetragen wie n&ouml;tig).
+		 */
 		READY_TO_RUN ("ready to run"),
-		/** Zeigt an, dass das Spiel gestartet, aber noch nicht abgeschlossen
+		/**
+		 * Zeigt an, dass das Spiel gestartet, aber noch nicht abgeschlossen
 		 * ist. Normalerweise hat zu jedem Zeitpunkt nur h&ouml;chstens ein
-		 * Spiel diesen Zustand.*/
+		 * Spiel diesen Zustand.
+		 */
 		RUNNING ("running"),
+
 		/** Zeigt an, dass das Spiel abgeschlossen ist. */
 		GAME_OVER("game over");
 
@@ -83,61 +132,46 @@ class DatabaseAdapter {
 
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.contestConductor");
 
+	static {
+		Main.dependencies.registerImplementation(ContestDatabase.class);
+	}
+
 	/** Die Verbindung zu der Datenbank, die alles rund um den Wettbewerb
 	 * weiss. */
-	private Connection dbConn = null;
+	private Connection dbConn;
 
-	/** Teil der Initialisierung. Baut eine Verbindung auf zu der
-	 * Datenbank, die in der ct-sim-Konfigurationsdatei angegeben ist. */
-	private static Connection getDbConn()
-	throws SQLException, ClassNotFoundException {
-		// sieht sinnlos aus, aber erzwingt, dass die angegebene Treiberklasse
-		// gesucht, geladen und initialisiert wird
-		Class.forName("com.mysql.jdbc.Driver");
-		return DriverManager.getConnection(
-			ConfigManager.getValue("contest-database-url"),
-			ConfigManager.getValue("contest-database-user"),
-			ConfigManager.getValue("contest-database-password"));
+	//$$ doc statementCache
+	protected StatementCache statementCache = new StatementCache(100);
+
+
+	protected DatabaseAdapter(ContestDatabase db) {
+		dbConn = db.getConnection();
 	}
 
-	/** Konstruiert eine Instanz, die mit der in der ct-sim-Konfigurationsdatei
-	 * angegebenen Datenbank verbunden ist.
-	 *
-	 * @throws SQLException Falls DriverManager.getConnection() eine
-	 * SQLException wirft.
-	 * @throws ClassNotFoundException Falls der Datenbanktreiber
-	 * com.mysql.jdbc.Driver nicht geladen werden kann.
-	 *
-	 * @see java.sql.DriverManager#getConnection(String, String, String)
-	 */
-	public DatabaseAdapter()
-	throws SQLException, ClassNotFoundException {
-		this(getDbConn());
+	//$$$ doc getPS
+	private PreparedStatement buildPreparedStatement(String sqlWithInParams,
+		Object... inValues) throws SQLException {
+		PreparedStatement rv = statementCache.get(sqlWithInParams);
+		for (int i = 0; i < inValues.length; i++) {
+			// PreparedStatement ist 1-based, inValues ist 0-based
+			if (inValues[i] instanceof GameState)
+				rv.setString(i + 1, inValues[i].toString()); //$$ GameState-Hack
+			else
+				rv.setObject(i + 1, inValues[i]);
+		}
+		return rv;
 	}
 
-	/**
-	 * <p>Konstruiert eine Instanz, die mit der &uuml;bergebenen Datenbank
-	 * verbunden ist. N&uuml;tzlich f&uuml;r Unit-Tests, die der Klasse
-	 * durch diesen Konstruktor eine Test-Datenbank unterschieben k&ouml;nnen.
-	 *
-	 * @param dbConn Verbindung zu der Datenbank, die f&uuml;r
-	 * benutzt werden soll.
-	 */
-	protected DatabaseAdapter(Connection dbConn) {
-		this.dbConn = dbConn;
-	}
-
-	//$$ doc sql()
-	//$$ flaechendeckend sql() einsetzen
-	protected ResultSet execSql(String format, Object... values)
+	//$$$ doc execSql()
+	protected ResultSet execSql(String sqlWithInParams, Object... inValues)
 	throws SQLException {
-		Statement s = dbConn.createStatement();
-		String sql = String.format(format, values);
-		if (sql.toLowerCase().startsWith("select"))
-			return s.executeQuery(sql);
-		else if (Misc.startsWith(sql.toLowerCase(),
+		if (sqlWithInParams.toLowerCase().startsWith("select")) {
+			return buildPreparedStatement(sqlWithInParams, inValues).
+				executeQuery();
+		}
+		else if (Misc.startsWith(sqlWithInParams.toLowerCase(),
 			"insert", "update", "delete")) {
-			s.executeUpdate(sql);
+			buildPreparedStatement(sqlWithInParams, inValues).executeUpdate();
 			return null;
 		} else {
 			throw new SQLException("Kann keine SQL-Befehle au\u00DFer " +
@@ -154,9 +188,10 @@ class DatabaseAdapter {
 	 * @throws SQLException
 	 */
 	protected int getMaxGameLengthInMs(int levelId) throws SQLException {
-		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id ="+levelId);
+		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?",
+			levelId);
 		rs.next();
-		return rs.getInt("game_length");
+		return rs.getInt("gametime");
 	}
 
 	/** Tr&auml;gt einen Bot f&uuml;r ein Spiel ein. Aufzurufen entweder
@@ -181,32 +216,31 @@ class DatabaseAdapter {
     		" Spiel "+gameId+" ein");
 
     	// Suche das Spiel heraus
-    	Statement s = dbConn.createStatement();
-    	ResultSet rs = s.executeQuery(
-    		"SELECT * from ctsim_game WHERE level="+levelId+
-    		" AND game="+gameId);
+    	ResultSet rs = execSql(
+    		"SELECT * from ctsim_game WHERE level = ? AND game = ?",
+    		levelId, gameId);
 
     	// Bots holen; Erwartung: einer oder beide sind NULL
     	rs.next();
-    	Integer bot1Id = rs.getInt("player1botId");
+    	Integer bot1Id = rs.getInt("bot1");
     	if (rs.wasNull())
     		bot1Id = null;
-    	Integer bot2Id = rs.getInt("player2botId");
+    	Integer bot2Id = rs.getInt("bot2");
     	if (rs.wasNull())
     		bot2Id = null;
 
     	// Bots aktualisieren
-    	if (bot1Id == null)
-    		s.executeUpdate("UPDATE ctsim_game " +
-    				"SET player1botId="+botId+","+
-    				"state='"+GameState.WAITING_FOR_BOT2 +"' "+
-    				"WHERE level="+levelId+" AND game="+gameId);
-    	else if (bot2Id == null)
-    		s.executeUpdate("UPDATE ctsim_game " +
-    				"SET player2botId="+botId+","+
-    				"state='"+GameState.READY_TO_RUN +"' "+
-    				"WHERE level="+levelId+" AND game="+gameId);
-    	else {
+    	if (bot1Id == null) {
+    		execSql("UPDATE ctsim_game " +
+    				"SET bot1 = ?, state = ? " +
+    				"WHERE level = ? AND game = ?",
+    				botId, GameState.WAITING_FOR_BOT2, levelId, gameId);
+    	} else if (bot2Id == null) {
+    		execSql("UPDATE ctsim_game " +
+    				"SET bot2 = ?, state = ? " +
+    				"WHERE level = ? AND game = ?",
+    				botId, GameState.READY_TO_RUN, levelId, gameId);
+    	} else {
     		throw new TournamentPlanException(
     			"Kein Platz in Spiel "+gameId+" Level: "+levelId);
     	}

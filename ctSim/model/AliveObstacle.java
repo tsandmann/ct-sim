@@ -46,17 +46,17 @@ import ctSim.view.gui.Debug;
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
 public abstract class AliveObstacle implements MovableObstacle, Runnable {
-	
+
 	private int obstState = OBST_STATE_NORMAL;
 
 	private String name;
 	private Point3d pos;
-	
-	/** Letzte Position an dem sich das AliveObstacle befand und dabei der obstState ok war. 
+
+	/** Letzte Position an dem sich das AliveObstacle befand und dabei der obstState ok war.
 	 * Also (obstState & OBSTSTATE_SAVE) ==0
 	 */
 	private Point3d lastSavePos;
-	
+
 	private Vector3d head;
 
 	/** Verweis auf den zugehoerigen Controller */
@@ -306,7 +306,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	/**
-	 * @param pos1
+	 * Drandenken: State setzen vor Aufruf dieser Methode
+	 *
+	 * @param p
 	 *            Die Position, an die der Bot gesetzt werden soll
 	 */
 	public final synchronized void setPosition(Point3d p) {
@@ -321,7 +323,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 			this.transformgrp.getTransform(transform);
 			transform.setTranslation(vec);
 			this.transformgrp.setTransform(transform);
-			
+
 			if ((obstState & OBST_STATE_SAVE) == 0)
 				lastSavePos = new Point3d(p);
 		//}

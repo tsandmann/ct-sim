@@ -20,6 +20,7 @@ import ctSim.ConfigManager;
 import ctSim.SimUtils;
 import ctSim.controller.Controller;
 import ctSim.controller.DefaultController;
+import ctSim.controller.Main;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
@@ -82,9 +83,12 @@ public class ContestConductor implements View {
 		private static final long serialVersionUID = - 930001102842406374L;
 	}
 
-	public class ContestJudge extends Judge {
-		public ContestJudge(DefaultController controller) {
-			super(controller); //$$ Das ist Mist. Judge und die davon abgeleiteten Klassen muessen aufgeraeumt und vereinfacht werden
+	public static class ContestJudge extends Judge {
+		protected ContestConductor concon;
+
+		public ContestJudge(Controller controller, ContestConductor concon) {
+			super((DefaultController)controller); //$$ Das ist Mist. Judge und die davon abgeleiteten Klassen muessen aufgeraeumt und vereinfacht werden
+			this.concon = concon;
 	    }
 
 		@Override
@@ -98,14 +102,16 @@ public class ContestConductor implements View {
             try {
 	            return isAnyoneOnFinishTile() || isGameTimeoutElapsed();
             } catch (NullPointerException e) {
-	            lg.severe(e, "Inkonsistenter Zustand: Es l\u00E4uft laut " +
-	            		"Datenbank kein Spiel, laut Controller aber schon");
+	            concon.lg.severe(e, "Inkonsistenter Zustand: Es l\u00E4uft " +
+	            		"laut Datenbank kein Spiel, laut Controller aber " +
+	            		"schon");
 	            assert false;
             } catch (SQLException e) {
-	            lg.severe(e, "Low-Level-Datenbankproblem");
+            	concon.lg.severe(e, "Low-Level-Datenbankproblem");
 	            assert false;
             } catch (TournamentPlanException e) {
-				lg.severe(e, "Probleme beim Fortschreiben des Spielplans");
+				concon.lg.severe(e, "Probleme beim Fortschreiben des " +
+						"Spielplans");
 				assert false;
             }
             // unerreichbarer Code, aber man will ja den Compiler bei
@@ -114,10 +120,10 @@ public class ContestConductor implements View {
         }
 
 		@SuppressWarnings("synthetic-access")
-		private boolean isAnyoneOnFinishTile()
+        private boolean isAnyoneOnFinishTile()
 		throws NullPointerException, SQLException, TournamentPlanException {
-			for(Bot b : botIds.keySet()) {
-				if (world.finishReached(new Vector3d(b.getPosition()))) {
+			for(Bot b : concon.botIds.keySet()) {
+				if (concon.world.finishReached(new Vector3d(b.getPosition()))) {
 					setWinner(b);
 					return true;
 				}
@@ -125,34 +131,44 @@ public class ContestConductor implements View {
 			return false;
 		}
 
-		@SuppressWarnings("synthetic-access")
-        private boolean isGameTimeoutElapsed() throws SQLException, TournamentPlanException {
-			// wenn die Spielzeit noch nicht um ist, liefere false zurück
-			if (world.getSimTimeInMs() < db.getMaxGameLengthInMs()) 
+        @SuppressWarnings("synthetic-access")
+        private boolean isGameTimeoutElapsed()
+        throws SQLException, TournamentPlanException {
+			// wenn die Spielzeit noch nicht um ist, liefere false zurueck
+			if (concon.world.getSimTimeInMs() <
+				concon.db.getMaxGameLengthInMs()) {
 				return false;
+			}
+
+			concon.lg.info("Spielzeit abgelaufen; Ermittle Bot, der dem " +
+					"Ziel am n\u00E4chsten ist");
 
 			Bot winner = null;
-            for(Bot b : botIds.keySet()) {
+            for (Bot b : concon.botIds.keySet()) {
             	if (winner == null)
             		winner = b;
-            	else 
-            		if (world.getParcours().getShortestDistanceToFinish(new Vector3d(winner.getPosition())) 
-            			 > world.getParcours().getShortestDistanceToFinish(new Vector3d(b.getPosition()))  )
+            	else {
+            		if (concon.world.getShortestDistanceToFinish(
+            				new Vector3d(winner.getPosition()))
+            		    > concon.world.getShortestDistanceToFinish(
+            		    	new Vector3d(b.getPosition())))
             			 winner = b;
+            	}
             }
 
             setWinner(winner);
-			
+
 			return true;
 		}
 
-		@SuppressWarnings("synthetic-access")
+        @SuppressWarnings("synthetic-access")
         protected void setWinner(Bot winner)
 		throws NullPointerException, SQLException, TournamentPlanException {
-			lg.info("Zieleinlauf von Bot %s nach %s", winner.getName(),
-				SimUtils.millis2time(world.getSimTimeInMs()));
+        	concon.lg.info("Zieleinlauf von Bot %s nach %s", winner.getName(),
+				SimUtils.millis2time(concon.world.getSimTimeInMs()));
 			// Spiel beenden
-			db.setWinner(botIds.get(winner), world.getSimTimeInMs());
+        	concon.db.setWinner(concon.botIds.get(winner),
+        		concon.world.getSimTimeInMs());
 		}
 	}
 
@@ -168,6 +184,15 @@ public class ContestConductor implements View {
 		MAIN_ROUND,
 	}
 
+	static {
+		Main.dependencies.registerImplementations(
+				ContestJudge.class,
+				TournamentPlanner.class,
+				ConductorToDatabaseAdapter.class,
+				PlannerToDatabaseAdapter.class //$$ in seine Klasse?
+			);
+	}
+
 	/** Siehe {@link #Phase} */
 	private Phase currentPhase = PRELIM_ROUND;
 
@@ -181,50 +206,20 @@ public class ContestConductor implements View {
 
 	/** Referenz auf den Controller */
 	private Controller controller;
-	/** Referenz auf die Welt*/
 	private World world;
 
 	private Object botArrivalLock = new Object();
 	private Bot newlyArrivedBot = null;
 
-	/**
-	 * Konstruktor
-	 * @throws SQLException Falls die Verbindung zur Datenbank nicht
-	 * hergestellt werden kann
-	 * @throws ClassNotFoundException
-	 */
-	public ContestConductor(Controller controller)
-	throws SQLException, ClassNotFoundException {
-		this(controller,
-			new ConductorToDatabaseAdapter(),
-			new TournamentPlanner());
-	}
-
-	protected ContestConductor(Controller controller,
+	public ContestConductor(Controller controller,
 		ConductorToDatabaseAdapter db, TournamentPlanner planner) {
 		this.controller = controller;
 		this.db = db;
 		this.planner = planner;
 	}
 
-	/**
-	 * <p>
-	 * Liefert den zu verwendenden Judge.
-	 * </p>
-	 * <p>
-	 * Warum ist das eine eigene Methode? &ndash; Test-Cases k&ouml;nnen in den
-	 * ctSim auf einfache Art ihren eigenen Test-Judge injizieren, indem eine
-	 * Subklasse dieser Klasse gebildet wird. In der muss nicht mehr getan
-	 * werden als diese Methode zu &uuml;berschreiben und den Test-Judge
-	 * zur&uuml;ckzuliefern. Beispiel: {@link ContestConductorTest}.
-	 * </p>
-	 */
-	protected Judge buildJudge(Controller c) {
-		return new ContestJudge((DefaultController)c); //$$ Cast unschoen
-	}
-
 	public void onApplicationInited() {
-		controller.setJudge(buildJudge(controller));
+		controller.setJudge(Main.dependencies.get(ContestJudge.class));
 		try {
 			planner.planPrelimRound();
 		} catch (SQLException e) {
@@ -399,8 +394,8 @@ public class ContestConductor implements View {
 		controller.unpause();
 	}
 
-	public void onWorldOpened(World w) {
-	    this.world = w;
+	public void onWorldOpened(World newWorld) {
+	    this.world = newWorld;
     }
 
 	public void onBotRemoved(@SuppressWarnings("unused") Bot bot) {

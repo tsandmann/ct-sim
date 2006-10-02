@@ -1,0 +1,14 @@
+Dokumentation
+Tabelle ctsim_log, Felder state1 und state2
+
+
+
+Diese Felder beschreiben, wie der Bot darzustellen ist. (Im ctSim wird die Farbe des Bots geändert, man könnte sich auch vorstellen, ein anderes Icon zu verwenden oder so.) state1 und state2 sind eine Bitmaske aus folgenden drei Konstanten:
+
+0: Normal, der Bot fährt herum
+1: Der Bot ist kollidiert (mit einer Wand oder einem anderen Bot)
+2: Der Bot ist in ein Loch gefallen, d.h. kann sich permanent nicht mehr bewegen
+
+Die Werte von state1 und state2 sind also immer 0, 1 oder 2.
+
+Detail: Der Bot _könnte_ auch gleichzeitig kollidiert und fallend sein (wurde in ein Loch geschubst ...), aber das ist ein obskurer Fall. Der ctSim hat dafür auch keine Extrabehandlung -- nur sollte man halt nicht gleich abstürzen, wenn das doch mal vorkommt. (hkr)

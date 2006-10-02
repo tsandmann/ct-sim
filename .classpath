@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="ctSim/model/bots/ctbot/old/CtBot_old.java|ctSim/model/bots/ctbot/old/CtBotReal.java|ctSim/model/bots/ctbot/old/CtBotRealCon.java|ctSim/model/bots/ctbot/old/CtBotSim.java|ctSim/model/bots/ctbot/old/CtBotSimTcp.java|ctSim/model/bots/ctbot/old/CtBotSimTest.java|ctSim/model/bots/ctbot/old/TcpBot.java|ctSim/model/bots/components/sensors/Switch.java|ctSim/view/ViewBotUpdate.java|ctSim/model/scene/SceneUpdate.java|ctSim/model/scene/SceneLight.java|ctSim/model/ViewBot.java|ctSim/model/World_old.java|ctSim/model/bots/components/actuators/Governor.java|ctSim/view/positions/PositionGroupGUI.java|ctSim/view/positions/SimplePositionGroupGUI.java|ctSim/view/positions/Positions.java|ctSim/model/bots/components/Position.java|ctSim/model/bot/components/positions/SimplePosition.java|ctSim/view/PositionGUI_old.java" kind="src" path=""/>
+	<classpathentry excluding="ctSim/view/contestConductor/contest-database" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="contrib/junit-4.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="contrib/junit-4.1.jar">
+		<attributes>
+			<attribute value="http://junit.sourceforge.net/javadoc/" name="javadoc_location"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="contrib/mysql-connector-java-3.1.13-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Dokumente und Einstellungen/hkr/Desktop/picocontainer-1.2.jar">
+		<attributes>
+			<attribute value="http://www.picocontainer.org/picocontainer/1.2/picocontainer/apidocs/" name="javadoc_location"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path=""/>
 </classpath>

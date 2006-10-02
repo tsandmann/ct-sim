@@ -10,12 +10,9 @@ import ctSim.controller.Main;
  */
 public class MemoryLeakTest {
 	public static void main(String[] args) throws Exception {
-		new Main() {
-			@Override
-			protected Controller buildController() {
-				return new TestController();
-			}
-		};
+		Main.dependencies.reRegisterImplementation(
+			Controller.class, TestController.class);
+		Main.main();
 	}
 
 	public static class TestController extends DefaultController {
@@ -30,7 +27,9 @@ public class MemoryLeakTest {
 				unpause();
 				try {
 					Thread.sleep(2000);
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException e) {
+                	// ist wurst
+                }
 			}
         }
 	}

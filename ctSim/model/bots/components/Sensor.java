@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator fuer den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 package ctSim.model.bots.components;
 
@@ -32,14 +32,14 @@ import ctSim.view.gui.sensors.SensorGroupGUI;
 * @param <E> Der Werttyp der Sensoren
 */
 public abstract class Sensor<E> extends BotComponent {
-	
+
 	/** Typenvariable fuer den Wert des Sensors. Von den abgeleiteten Klassen zu spezifizieren */
 	private E value;
-	
+
 	private Characteristic characteristic;
 	private boolean useGuiValue = false;
 	private boolean setable = true;
-	
+
 	/**
 	 * Der Konstruktor
 	 * @param name Sensor-Name
@@ -49,52 +49,52 @@ public abstract class Sensor<E> extends BotComponent {
 	public Sensor(String name, Point3d relPos, Vector3d relHead) {
 		super(name, relPos, relHead);
 	}
-	
+
 	/**
 	 * Setzt eine Kennlinie fuer den Sensor
 	 * @param ch
 	 */
 	public final void setCharacteristic(Characteristic ch) {
-		
+
 		this.characteristic = ch;
 	}
-	
+
 	/**
 	 * @return true, falls Sensorwert setzbar ist
 	 */
 	public boolean isSetable() {
-		
+
 		return this.setable;
 	}
-	
+
 	/**
 	 * Bestimmt, ob Sensorwert setzbar ist
 	 * @param b
 	 */
 	public void setIsSetable(boolean b) {
-		
+
 		this.setable = b;
 	}
-	
+
 	/**
 	 * @return Der Wert der Sensoren
 	 */
 	public final E getValue() {
 		if (this.value == null)
 			return null;
-		
+
 		synchronized (this.value) {
 			return this.value;
 		}
-		
+
 	}
-	
+
 	/* Sollte nur von GUI aufgerufen werden:
-	 * 
+	 *
 	 * - Setzen ist nur erlaubt, wenn entsprechendes flag gesetzt ist
 	 * - Wert wird dann beim naechsten update zurueckgegeben (kein updateValue()!)
 	 * - naechster Aufruf von getVal() geschieht ohne Kennlinien-lookup
-	 * 
+	 *
 	 * Vorsicht: Wenn update oefter als get geschieht, bekommt "man" die entsprechende Eingabe
 	 *           von Hand/ ueber die GUI eventuell gar nicht mit (da Wert bereits wieder ueberschrieben)
 	 */
@@ -105,38 +105,38 @@ public abstract class Sensor<E> extends BotComponent {
 	 * @return true, wenn Wert setzbar ist
 	 */
 	public synchronized final boolean setValue(E val) {
-		
+
 		if(!this.isSetable())
 			return false;
-		
+
 		this.value = val;
 		this.useGuiValue = true;
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Aktualsiert den Sensor
 	 */
 	@SuppressWarnings({"boxing","unchecked"})
 	public synchronized final void update() {
-		
+
 		if(this.useGuiValue) {
-			
+
 			this.useGuiValue = false;
 			return;
 		}
-		
+
 		// TODO sehr haesslicher Workaround, um eine nicht initilaisierte value zu umschiffen
 		if (this.value ==null){
-			this.value = updateValue();			
+			this.value = updateValue();
 		} else {
-		
+
 			synchronized (this.value) {
 				this.value = updateValue();
-				
+
 				// TODO: Unbedingt anpassen: 'Characteristics' muessen allg. werden -> Hierarchie der Sens. wiederspiegeln?
-				if(this.characteristic != null) {
+				if(this.characteristic != null) { //$$ So geht's nicht. CtBotSimTcp bekommt wenn er zum allerersten Mal bei uns getValue macht den Wert in mm zurueck, der noch nicht durch die Characteristic durch ist
 					// System.out.print(this.getName()+" :  "+this.value+"  ->  ");
 					// Einfacher lookup:
 					// this.value = (E)((Double)((Integer)this.characteristic.lookup((((Number)this.value).intValue())/10)).doubleValue());
@@ -148,9 +148,9 @@ public abstract class Sensor<E> extends BotComponent {
 					this.value = (E)((Double)this.characteristic.lookupPrecise((((Number)this.value).doubleValue())/10d));
 				}
 			}
-		}		
+		}
 	}
-	
+
 	/**
 	 * Diese Funktion liefert den neuen Wert fuer den Sensor zurueck, traegt ihn aber noch NICHT in die Klasse ein
 	 * Achtung darf nicht this.getValue oder setValue() aufrufen!!
@@ -158,13 +158,13 @@ public abstract class Sensor<E> extends BotComponent {
 	 */
 	// TODO: protected?
 	public abstract E updateValue();
-	
+
 	/**
 	 * @return Gibt die GUI fuer eine Sensorgruppe zurueck
 	 */
 	public abstract SensorGroupGUI getSensorGroupGUI();
 //	public SensorGroupGUI getSensorGroupGUI() {
-//		
+//
 //		SensorGroupGUI gui = Sensors.getGuiFor(this);
 //		gui.addSensor(this);
 //		return gui;

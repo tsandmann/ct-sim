@@ -59,18 +59,7 @@ public class TournamentPlanner {
 
 	private PlannerToDatabaseAdapter db;
 
-	/** Konstruiert einen TournamentPlanner, der verbunden ist mit der
-	 * Standard-Datenbank wie in der ct-Sim-Konfigurationsdatei angegeben.
-	 *
-	 * @throws ClassNotFoundException Unter den gleichen Umst&auml;nden wie
-	 * {@link DatabaseAdapter#DatabaseAdapter()}.
-	 * @throws SQLException Unter den gleichen Umst&auml;nden wie
-	 * {@link DatabaseAdapter#DatabaseAdapter()}.
-	 */
-	public TournamentPlanner() throws SQLException, ClassNotFoundException {
-		this(new PlannerToDatabaseAdapter());
-	}
-
+	//$$ doc
 	/** Konstruiert einen TournamentPlanner, der mit der &uuml;bergebenen
 	 * Datenbank verbunden ist. N&uuml;tzlich f&uuml;r Unit-Tests, die dem
 	 * Planner &uuml;ber diesen Konstruktor eine Testdatenbank unterschieben

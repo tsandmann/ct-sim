@@ -102,12 +102,9 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 	private StatusBar statusBar;
 
 	// TODO: Weg!?
-	private JSplitPane split, consoleSplit;
+	private JSplitPane split;
 
 	private ControlBar controlBar;
-	private WorldPanel worldPanel;
-
-	private JFileChooser worldChooser;
 
 	//////////////////////////////////////////////////////////////////////
 	private World world;
@@ -116,28 +113,18 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 	private JMenu simulationMenu;
 
 
-	private ConsoleComponent console;
+	private JFileChooser worldChooser;
 
 	private JFileChooser botChooser;
-
-	private void initLogging() {
-		console = new ConsoleComponent();
-		Debug.registerDebugWindow(console); //$$ Legacy
-		lg = FmtLogger.getLogger("ctSim.view.gui");
-		// Wir melden uns als Handler fuer den Root-Logger an;
-		Handler h = console.new LoggingHandler();
-		h.setLevel(INFO);
-		FmtLogger.getLogger("").addHandler(h);
-	}
+	private WorldViewer worldViewer = new WorldViewer();
 
 	/**
 	 * Der Konstruktor
-	 * @param title Die Titelzeile des Fensters
 	 */
-	public CtSimFrame(Controller c, String title) {
-		super(title);
+	public CtSimFrame(Controller c) {
+		super("CtSim");
 		this.controller = c;
-		initLogging();
+    	lg = FmtLogger.getLogger("ctSim.view.gui");
 
 		try {
 	        icons = new IconHashMap(new File("images")); //LODO Pfad hardcoded
@@ -194,25 +181,35 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 		add(buildToolBar(worldMenu, simulationMenu), BorderLayout.NORTH);
 		add(buildStatusBar(), BorderLayout.SOUTH);
 		initControlBar();
-		initWorldView();
 
-		this.consoleSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		this.consoleSplit.setResizeWeight(1);
-		this.consoleSplit.setOneTouchExpandable(true);
-		this.consoleSplit.setTopComponent(this.worldPanel);
-		this.consoleSplit.setBottomComponent(console);
-
-		this.split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		this.split.setLeftComponent(this.controlBar);
-		this.split.setRightComponent(this.consoleSplit);
-		this.split.setDividerLocation(0);
-		this.split.setOneTouchExpandable(true);
+		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+			controlBar, buildWorldAndConsole());
+		split.setDividerLocation(0);
+		split.setOneTouchExpandable(true);
 
 		add(split, BorderLayout.CENTER);
 
 		setSize(1000, 800);
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+
+	private ConsoleComponent buildLogViewer() {
+    	ConsoleComponent rv = new ConsoleComponent();
+    	Debug.registerDebugWindow(rv); //$$ Legacy
+    	// Wir melden uns als Handler fuer den Root-Logger an;
+    	Handler h = rv.new LoggingHandler();
+    	h.setLevel(INFO);
+    	FmtLogger.getLogger("").addHandler(h);
+    	return rv;
+    }
+
+	private JSplitPane buildWorldAndConsole() {
+		JSplitPane rv = new JSplitPane(
+			JSplitPane.VERTICAL_SPLIT, worldViewer, buildLogViewer());
+		rv.setResizeWeight(1);
+		rv.setOneTouchExpandable(true);
+		return rv;
 	}
 
 	private JMenuBar buildMenuBar()
@@ -303,13 +300,6 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 		return statusBar;
 	}
 
-	private void initWorldView() {
-
-		// TODO:
-		// Initialize WorldViewPanel
-		this.worldPanel = new WorldPanel();
-	}
-
 	private void initControlBar() {
 
 		// Initialize ControlBarPanel
@@ -390,30 +380,22 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 	/** Vom Controller aufzurufen, wenn sich die Welt &auml;ndert.
 	 * Schlie&szlig;t die alte Welt und zeigt die neue an.*/
 	public void onWorldOpened(World w) {
-		this.closeWorld();
-		this.world = w;
-		// TODO: [Was ist mit dem leeren Todo hier gemeint? --hkr]
-		this.worldPanel.setWorld(this.world);
-		this.validate();
+		closeWorld();
+		world = w;
+		worldViewer.show(world);
+		validate(); //$$ noetig?
 	}
 
 	// TODO: Close Controller: [Was bedeutet dieses Todo? --hkr]
 	public void closeWorld() {
-		if(this.world == null)
+		if (world == null)
 			return;
-
-		// TODO: ganz haesslich! [Was ist haesslich? --hkr]
-		//this.split.remove(this.worldPanel);
-		this.consoleSplit.remove(this.worldPanel);
-		this.world = null;
-		this.worldPanel = null;
-		initWorldView();
-		this.statusBar.reinit();
-		this.controlBar.reinit();
-		this.consoleSplit.setTopComponent(this.worldPanel);
-		this.updateLayout();
-
-		Debug.out.println("Welt wurde geschlossen.");
+		world = null;
+		worldViewer.show(null);
+		statusBar.reinit();
+		controlBar.reinit();
+		updateLayout();
+		lg.info("Welt geschlossen");
 	}
 
 	/**
@@ -433,19 +415,8 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 	 * Aktualisiert die GUI
 	 */
 	public void update() {
-
-		// TODO: Groesse sichern...
-		//this.setPreferredSize(this.getSize());
-
-		//this.setVisible(false);
-		//this.pack();
-		//this.setVisible(true);
-
-		// --> this.validate();
-
-		this.controlBar.update();
-
-		this.worldPanel.update();
+		controlBar.update();
+		worldViewer.update();
 	}
 
 	/**

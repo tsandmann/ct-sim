@@ -43,9 +43,9 @@ public interface View {
 
 	/**
 	 * <p>
-	 * Wird vom Controller aufgerufen, wenn sich eine Welt eben ge&ouml;ffnet
-	 * wurde. Falls bisher eine Welt offen war, gibt der Aufruf auch an, dass
-	 * sie ab sofort permanent au&szlig;er Gebrauch ist.
+	 * Wird vom Controller aufgerufen, wenn eben eine Welt ge&ouml;ffnet wurde.
+	 * Falls bisher eine Welt offen war, gibt der Aufruf auch an, dass sie ab
+	 * sofort permanent au&szlig;er Gebrauch ist.
 	 * </p>
 	 * <p>
 	 * <strong>Typische Implementierungen</strong> dieser Methode umfassen die
@@ -57,9 +57,9 @@ public interface View {
 	 * Garbage Collection freizugeben (d.h. um Speicherlecks zu vermeiden).
 	 * </p>
 	 *
-	 * @param w Die Welt, die eben neu ge&ouml;ffnet wurde.
+	 * @param newWorld Die Welt, die eben neu ge&ouml;ffnet wurde.
 	 */
-	public void onWorldOpened(World w);
+	public void onWorldOpened(World newWorld);
 
 	/**
 	 * <p>
@@ -104,8 +104,11 @@ public interface View {
 	public void onSimulationStep(long simTimeInMs);
 
 	//$$ sollte die hier nicht auch aufgerufen werden, wenn einer stop geklickt hat und sowas?
-	/** Wird vom Controller aufgerufen, wenn die Simulation beendet wurde. Simulationen werden beendet, wenn der aktive Judge angeordnet hat,
-	 * das Spiel zu beenden &ndash; typischerweise wenn ein Bot das Zielfeld erreicht hat.
+	/**
+	 * Wird vom Controller aufgerufen, wenn die Simulation beendet wurde.
+	 * Simulationen werden beendet, wenn der aktive Judge angeordnet hat, das
+	 * Spiel zu beenden &ndash; typischerweise wenn ein Bot das Zielfeld
+	 * erreicht hat.
 	 *
 	 * @see Judge#isSimulationFinished(long)
 	 */

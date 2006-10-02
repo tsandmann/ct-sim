@@ -1,6 +1,5 @@
 package ctSim.view.contestConductor;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -14,17 +13,11 @@ import java.sql.Timestamp;
  *
  * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-class PlannerToDatabaseAdapter extends DatabaseAdapter {
-	/** Hat dieselbe Funktion wie {@link DatabaseAdapter#DatabaseAdapter()}. */
-	public PlannerToDatabaseAdapter()
-	throws SQLException, ClassNotFoundException {
-	    super();
-    }
-
+public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	/** Hat dieselbe Funktion wie {@link
-	 * DatabaseAdapter#DatabaseAdapter(Connection)}. */
-	protected PlannerToDatabaseAdapter(Connection db) {
-		super(db);
+	 * DatabaseAdapter#DatabaseAdapter(ContestDatabase)}. */
+    public PlannerToDatabaseAdapter(ContestDatabase db) {
+	    super(db);
     }
 
 	/** Liefert den Zeitpunkt, f&uuml;r den das Spielen eines Levels angesezt
@@ -49,10 +42,10 @@ class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void createPrelimGame(int gameId, int player1botId)
 	throws SQLException {
-		execSql("INSERT INTO ctsim_game " +
-				"(level, game, player1botId, state) " +
+		execSql(String.format("INSERT INTO ctsim_game " + //$$ format
+				"(level, game, bot1, state) " +
 				"VALUES (%d, %d, %d, '%s');",
-				-1, gameId, player1botId, GameState.READY_TO_RUN);
+				-1, gameId, player1botId, GameState.READY_TO_RUN));
 	}
 
 	/** Legt ein Hauptrundenspiel an. Die Methode weist ihm den
@@ -64,10 +57,10 @@ class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void createMainGame(int levelId, int gameId)
 	throws SQLException {
-		execSql("INSERT INTO ctsim_game " +
+		execSql(String.format("INSERT INTO ctsim_game " + //$$ format
 				"(level, game, state) " +
 				"VALUES (%d, %d, '%s');",
-				levelId, gameId, GameState.NOT_INITIALIZED);
+				levelId, gameId, GameState.NOT_INITIALIZED));
 	}
 
 	/**L&ouml;scht alle Spiele.

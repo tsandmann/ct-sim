@@ -78,8 +78,6 @@ public class TournamentTreeTest {
 		assertEquals(Arrays.asList(1, 2),
 				lowestLvl(twoNodes));
 
-		// $$$ twoLowestLevelGames testen
-
 		assertEquals(Arrays.asList(null, null),
 			fifteenGreencards.getTournamentPlan(1));
 		assertEquals(Arrays.asList(null, null, null, null),

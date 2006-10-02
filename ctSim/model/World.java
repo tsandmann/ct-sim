@@ -71,7 +71,7 @@ import ctSim.view.gui.Debug;
  * @author Lasse Schwarten (lasse@schwarten.org)
  * @author Christoph Grimmer (c.grimmer@futurio.de)
  * @author Werner Pirkl (morpheus.the.real@gmx.de)
- * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class World {
 
@@ -250,20 +250,26 @@ public class World {
 		setParcours(p);
 	}
 
-	/**
-	 *
-	 * @return X-Dimension des Spielfldes im mm
-	 */
-	public float getPlaygroundDimX() {
-		return this.parcours.getWidth();
+	public int getWidthInGridBlocks() {
+		return parcours.getWidthInBlocks();
+	}
+
+	public int getHeightInGridBlocks() {
+		return parcours.getHeightInBlocks();
 	}
 
 	/**
-	 *
-	 * @return Y-Dimension des Spielfldes im mm
+	 * @return X-Dimension des Spielfeldes in Meter
 	 */
-	public float getPlaygroundDimY() {
-		return this.parcours.getHeight();
+	public float getWidthInM() {
+		return parcours.getWidthInM();
+	}
+
+	/**
+	 * @return Y-Dimension des Spielfeldes in Meter
+	 */
+	public float getHeightInM() {
+		return parcours.getHeightInM();
 	}
 
 	/**
@@ -690,15 +696,20 @@ public class World {
 	}
 
 	/**
-	 * Liefert die Helligkeit, die auf einen Lichtsensor faellt
+	 * <p>
+	 * Liefert die Helligkeit, die auf einen Lichtsensor f&auml;llt.
+	 * </p>
+	 * <p>
+	 * Da diese Methode unter Verwendung des PickConeRay implementiert ist, ist
+	 * sie seinen Bugs unterworfen. Ausf&uuml;hrliche Dokumentation siehe
+	 * {@link #watchObstacle(Point3d, Vector3d, double, Shape3D)}.
+	 * </p>
 	 *
-	 * @param pos
-	 *            Die Position des Lichtsensors
-	 * @param heading
-	 *            Die Blickrichtung des Lichtsensors
-	 * @param openingAngle
-	 *            Der Oeffnungswinkel des Blickstrahls
+	 * @param pos Die Position des Lichtsensors
+	 * @param heading Die Blickrichtung des Lichtsensors
+	 * @param openingAngle Der Oeffnungswinkel des Blickstrahls
 	 * @return Die Dunkelheit um den Sensor herum, von 1023(100%) bis 0(0%)
+	 * @see PickConeRay
 	 */
 	public int sensLight(Point3d pos, Vector3d heading, double openingAngle) {
 
@@ -734,27 +745,171 @@ public class World {
 	}
 
 	/**
-	 * Liefert die Distanz in Metern zum naechesten Objekt zurueck, das man
-	 * sieht, wenn man von der uebergebenen Position aus in Richtung des
-	 * uebergebenen Vektors schaut.
+	 * <p>
+	 * Liefert die Distanz in Metern zum n&auml;chsten Objekt zur&uuml;ck, das
+	 * man sieht, wenn man von der &uuml;bergebenen Position aus in Richtung des
+	 * &uuml;bergebenen Vektors schaut.
+	 * </p>
+	 * <p>
+	 * <h3>Bug-Warnung</h3>
+	 * Der von dieser Methode studenweise angemietete {@link PickConeRay}
+	 * (java3d.media.j3d) enth&auml;lt einen emp&ouml;renden Bug. Unter ganz
+	 * bestimmten Umst&auml;nden meldet er Objekte, die nur in seinen tiefsten
+	 * sadistischen Fantasien existieren. Das hei&szlig;t, seine Methode
+	 * getClosestDistance() liefert zu kurze Werte &ndash; z.B. 42 cm zur
+	 * n&auml;chsten wei&szlig;en Maus, wo sie aber nachweislich mindestens
+	 * 6&times;9 cm entfernt ist.
+	 * </p>
+	 * <p>
+	 * Die Umst&auml;nde, unter denen im PickConeRay die
+	 * Distanzwertberechnungsvermasselung eintritt, sind hochspeziell (von
+	 * dieser Position aus in diesem Winkel mit diesen Hindernissen in dieser
+	 * Entfernung usw.). Daher wirkt der Bug typischerweise nur f&uuml;r
+	 * einzelne Simschritte: Ein Bot vollzieht in aller Arglosigkeit einen
+	 * Simschritt, ist im zweiten Schritt zuf&auml;llig diesen Umst&auml;nden
+	 * ausgesetzt und erschrickt sich zu Tode, aber im dritten Schritt hat sich
+	 * der Spuk so schnell verzogen, wie er gekommen ist. Das mag wie Pillepalle
+	 * wirken, aber ein Simschritt lang irrsinnige Sensorwerte wirkt auf manche
+	 * Bot-Steueralgorithmen wie Volksfest im Reinraum. Die
+	 * verkorksten Werte machen sich &ndash; so vermuten wir &ndash; als
+	 * die unerkl&auml;rliche Ausrei&szlig;er in den Kurven der Licht- und
+	 * Distanzsensoren bemerkbar, die ja schon
+	 * <a href="http://de.uncyclopedia.wikia.com/wiki/Ludwig_Wittgenstein">Wittgenstein</a>
+	 * jahrzehntelang vor R&auml;tsel stellten und von zwei verschiedenen
+	 * Messieurs an mindestens drei Stellen dokumentiert wurden:
+	 * <ul>
+	 * <li><a
+	 * href="http://www.heise.de/ct/foren/go.shtml?t=1&T=lichtsensor&sres=1&msg_id=11156011&forum_id=89813">ctBot-Forum
+	 * (1)</a></li>
+	 * <li><a
+	 * href="http://www.heise.de/ct/foren/go.shtml?t=1&T=lichtsensor&sres=1&msg_id=11109100&forum_id=89813">ctBot-Forum
+	 * (2)</a></li>
+	 * <li>E-Mail siehe unten &ndash; Auf Basis dieser Mail konnte der Bug in
+	 * einer n&auml;chtlichen Gewaltaktion reproduziert werden (Java3D 1.4.0_01,
+	 * WinXP). Nach geduldigen verdeckten Ermittlungen einem fehlgeschlagenen
+	 * Zugriff unter Einsatz des Sonderkommandos konnte der PickConeRay nach
+	 * einer halsbrecherischen G&auml;nsejagd quer durch den Quelltext als
+	 * der Arsch dingfest gemacht werden.
+	 * </p>
+	 * </li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * <strong>Hinweis:</strong>Der {@link PickRay} scheint weniger schwuchtelig
+	 * unterwegs zu sein, also sollte man wohl mal &uuml;berlegen, dem den Job
+	 * zu &uuml;berlassen.
+	 * </p>
 	 *
-	 * @param pos
-	 *            Die Position, von der aus der Seh-Strahl verfolgt wird
-	 * @param heading
-	 *            Die Blickrichtung
-	 * @param openingAngle
-ss
-	 * @param botBody
-	 *            Der Koerper des Roboter, der anfragt
-	 * @return Die Distanz zum naechsten Objekt in Metern
+	 * <p>
+	 * <strong>Anhang: E-Mail, die auf den Bug hingewiesen hat</strong>
+	 *
+	 * <pre style="font-size: smaller;">
+	 * Betreff: &uuml;berlauf / bug in sensor werten?
+	 * Von: Nikolai Baumeister &lt;...&gt;
+	 * Datum: Fri, 29 Sep 2006 15:32:27 +0200
+	 * An: ct-sim@heise.de
+	 *
+	 * Liebe Mitarbeiter
+	 *
+	 * Wie im irc beschrieben habe ich m&ouml;glicherweise einen
+	 * reproduzierbaren Fehler in den Rohwerten der Distanzsensoren im
+	 * Wettbewerbs-Sim mit Wettbewerbsroboter gefunden:
+	 *
+	 * Das Labyrinth ist dieses:
+	 * http://nikola.light.hl-users.com/angle-world-lamps.xml
+	 *
+	 * Der Fehler tritt bei mir genau dann auf wenn der bot in DIESEM Labyrinth
+	 * GENAU von der Startposition aus startet.
+	 *
+	 * Der Bot f&amp;aumlhrt mit maximaler geschwindigkeit nach Norden auf die
+	 * Wand zu und gibt dabei die Distanzwerte aus.
+	 *
+	 * Was der Bot genau macht ist unten in START_BOT() zu finden.
+	 *
+	 * Sensor Rohwerte habe ich zus&auml;tzlich ausgegeben
+	 * zwischen Zeile 313 und 314 in command.c
+	 * mit:
+	 * printf(&quot;left raw: %i, right raw: %i\n&quot;,
+	 *     received_command.data_l, received_command.data_l);
+	 *
+	 * Ansonsten waren sensor.c, command.c etc identisch mit der CVS version.
+	 *
+	 * Ausgabe (bereinigt):
+	 *
+	 * left raw: 115, right raw: 115
+	 * sensDistL: 779, sensDistR: 999, y: 752
+	 *
+	 * left raw: 116, right raw: 116
+	 * sensDistL: 767, sensDistR: 999, y: 752
+	 *
+	 * left raw: 117, right raw: 117
+	 * sensDistL: 755, sensDistR: 999, y: 763
+	 *
+	 * -----&gt;left raw: 225, right raw: 225
+	 * -----&gt;sensDistL: 281, sensDistR: 298, y: 775
+	 *
+	 * left raw: 118, right raw: 118
+	 * sensDistL: 743, sensDistR: 999, y: 775
+	 *
+	 * left raw: 119, right raw: 119
+	 * sensDistL: 732, sensDistR: 999, y: 787
+	 *
+	 * left raw: 120, right raw: 120
+	 * sensDistL: 721, sensDistR: 999, y: 787
+	 *
+	 * Die Rohwerte der Distanzsensoren springen an einer Stelle auf 255 hoch.
+	 *
+	 * Gru&szlig;
+	 * Niko
+	 *
+	 *
+	 * void START_BOT(Behaviour_t *data) {
+	 *
+	 *     #define ACTION_1    0
+	 *     #define ACTION_2    1
+	 *     #define DONE        2
+	 *
+	 *     static int state = ACTION_1;
+	 *
+	 *     switch (state){
+	 *
+	 *         case ACTION_1:
+	 *             speedWishLeft=BOT_SPEED_MAX;
+	 *             speedWishRight=BOT_SPEED_MAX;
+	 *             state = ACTION_2;
+	 *             break;
+	 *
+	 *         case ACTION_2:
+	 *             printf(&quot;sensDistL: %i, sensDistR: %i, y: %.0f\n&quot;,
+	 *                 sensDistL, sensDistR, x_mou);
+	 *             state = ACTION_1;
+	 *             break;
+	 *
+	 *         default:
+	 *             break;
+	 *     }
+	 * }
+	 * </pre>
+	 * </p>
+	 *
+	 * @param pos Die Position, von der aus der Seh-Strahl verfolgt wird
+	 * @param heading Die Blickrichtung, d.h. die Richtung des Seh-Strahls
+	 * @param openingAngle $$ doc openingAngle
+	 * @param botBody Der K&ouml;rper des Roboter, der anfragt. Dies ist
+	 * erforderlich, da diese Methode mit einem PickConeRay implementiert ist,
+	 * d.h. der K&ouml;rper des Bots muss auf &quot;not pickable&quot; gesetzt
+	 * werden vor Anwendung des Ray und wieder auf &quot;pickable&quot; nach
+	 * Anwendung. Der Grund ist, dass sonst in Grenzf&auml;llen der
+	 * Botk&ouml;rper vom PickConeRay gefunden wird.
+	 * @return Die Distanz zum n&auml;chsten Objekt (&quot;pickable&quot;) in
+	 * Metern
+	 * @see PickConeRay
+	 * @see PickRay
 	 */
 	// TODO: Ueberarbeiten?
 	public double watchObstacle(Point3d pos, Vector3d heading,
 			double openingAngle, Shape3D botBody) {
 
-		// TODO: Sehstrahl oeffnet einen Konus mit dem festen Winkel von 3 Grad;
-		// muss an realen IR-Sensor angepasst werden!
-//		System.out.println("--------------------------------------------------");
 		// TODO: Wieder rein??
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
@@ -785,7 +940,6 @@ ss
 		if (pickInfo == null)
 			return 100.0;
 		double d = pickInfo.getClosestDistance();
-//			System.out.println("IR: "+Math.floor(d*1000));
 		return d;
 	}
 
@@ -837,17 +991,7 @@ ss
 		}
 	}
 
-	/**
-	 * Liefert den der Welt zugrundeliegenden Parcours. Er wurde i.d.R. aus den
-	 * als XML vorliegenden Parcours-Dateien geladen und enth&auml;lt die
-	 * nicht-beweglichen Dinge auf der Karte wie Hindernisse, Lichtquellen,
-	 * Bodenabschnitte, L&ouml;cher usw.
-	 *
-	 * @see #buildWorldFromFile(File)
-	 * @see #buildWorldFromXmlString(String)
-	 * @see ParcoursLoader
-	 */
-	public Parcours getParcours() {
-		return parcours;
+	public double getShortestDistanceToFinish(Vector3d fromWhere) {
+		return parcours.getShortestDistanceToFinish(fromWhere);
 	}
 }
