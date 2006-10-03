@@ -376,11 +376,30 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 		init();
 
+		int timeout = 0;
+		try {
+			timeout = Integer.parseInt(ConfigManager.getValue("AliveObstacleTimeout")); 
+		} catch (Exception e) {
+			// Wenn kein Teimout im Config-File steht, ignorieren wir dieses Feature
+			timeout = 0;
+		}
+		
 		try {
 			while (this.thrd == thisThread) {
+				// Stoppe die Zeit, die work() benoetigt
+				long realTimeBegin = System.nanoTime()/1000000;
+				
 				// Ein AliveObstacle darf nur dann seine work()-Routine ausführen, wenn es nicht Halted ist
 				if ((this.obstState & OBST_STATE_HALTED) == 0)
 					work();
+				
+				// berechne die Zeit, die work benoetigt hat
+				long elapsedTime = System.nanoTime()/1000000 - realTimeBegin;
+
+				// Wenn der Timeout aktiv ist und zuviel Zeit benoetigt wurde, halte dieses Alive Obstacle an
+				if ((timeout > 0) && (elapsedTime > timeout))
+					setHalted(true);
+				
 				this.controller.waitOnController();
 			}
 		} catch(InterruptedException ie) {
