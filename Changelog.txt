@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2006-10-03 Benjamin Benz [bbe@heise.de]: Config-Datei kommentiert
+
 2006-10-03 Benjamin Benz [bbe@heise.de]: Der Controller wartet nun nur noch die Zeit, die noch nicht verstrichen ist und nicht pauschal einen vollen Zyklus
 
 2006-10-03 Benjamin Benz [bbe@heise.de]: Timeout im Controller ist nun per Config-Datei konfigurierbar
