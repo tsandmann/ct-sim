@@ -124,6 +124,14 @@ public class DefaultController implements Runnable, Controller {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
+		int timeout = 10000;
+		
+		try {
+			timeout = Integer.parseInt(ConfigManager.getValue("ctSimTimeout")); 
+		} catch (Exception e) {
+			lg.warn("Kein ctSimTimeout in der Config-Datei festgelegt. Nehme Default-Wert (10s)"); 
+		}
+
 		lg.fine("Sequencer gestartet");
 		Thread thisThread = Thread.currentThread();
 
@@ -135,9 +143,9 @@ public class DefaultController implements Runnable, Controller {
 				// Warte, bis alle Bots fertig sind und auf die naechste
 	        	// Aktualisierung warten
 				// breche ab, wenn die Bots zu lange brauchen !
-				if(! doneSignal.await(10, TimeUnit.SECONDS)) {
+				if(! doneSignal.await(timeout, TimeUnit.MILLISECONDS)) {
 					lg.warn("Bot-Probleme: Ein oder mehrere Bots waren " +
-							"viel zu langsam");
+							"viel zu langsam (>"+timeout+" ms)");
 				}
 
 				CountDownLatch oldStartSignal = this.startSignal;

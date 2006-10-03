@@ -8,10 +8,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="contrib/mysql-connector-java-3.1.13-bin.jar"/>
-	<classpathentry kind="lib" path="C:/Dokumente und Einstellungen/hkr/Desktop/picocontainer-1.2.jar">
-		<attributes>
-			<attribute value="http://www.picocontainer.org/picocontainer/1.2/picocontainer/apidocs/" name="javadoc_location"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="contrib/picocontainer-1.2.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

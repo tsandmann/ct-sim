@@ -6,6 +6,7 @@
 		Dieses ist die zentrale Konfigurationsdatei für den c't-Sim
 	</description>
 
+	<parameter name="ctSimTimeout" value="10000"/>
 	<parameter name="parcours" value="parcours/testparcours2.xml"/>
 	<parameter name="botport" value="10001"/>
 	<parameter name="botbinary" value="..\ct-Bot\Debug-W32\ct-Bot.exe"/>
