@@ -509,7 +509,8 @@ public class DefaultController implements Runnable, Controller {
 //			this.botsToStart.add(bot);
 
 			bot.setController(this);
-			bot.setWorld(this.world);
+			// Diese Funktion hatte keine Funktion mehr, daher auskommentiert
+			//bot.setWorld(this.world);
 
 			BotManager.addBot(bot);
 

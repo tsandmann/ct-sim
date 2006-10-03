@@ -68,20 +68,28 @@
 				<description>Aussehen des  simulierten Bots 1 bei Absturz</description>
 				<color>#4000FF</color>
 			</appearance>
+			<appearance type="halted">
+				<description>Aussehen des  simulierten Bots 1 wenn er angehalten ist</description>
+				<color>#000000</color>
+			</appearance>
 		</bot>
 
 		<bot name="ctSim.model.bots.CtBotSimTcp_1">
 			<appearance type="normal">
 				<description>Standard Aussehen des  simulierten Bots 2</description>
-				<color>#800000</color>
+				<color>#808000</color>
 			</appearance>
 			<appearance type="collision">
 				<description>Aussehen des  simulierten Bots 2 bei Kollision</description>
-				<color>#8000FF</color>
+				<color>#8080FF</color>
 			</appearance>
 			<appearance type="falling">
 				<description>Aussehen des  simulierten Bots 2 bei Absturz</description>
-				<color>#4000FF</color>
+				<color>#4080FF</color>
+			</appearance>
+			<appearance type="halted">
+				<description>Aussehen des  simulierten Bots 2 wenn er angehalten ist</description>
+				<color>#008000</color>
 			</appearance>
 		</bot>
 		

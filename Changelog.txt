@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2006-10-03 Benjamin Benz [bbe@heise.de]: AliveObstacles kennen nun einen neune Zustand Halted, wenn dieser gesetzt ist, dürfen sie ihre work()-Methode nicht ausfuehren
+
 2006-10-03 Benjamin Benz [bbe@heise.de]: Config-Datei kommentiert
 
 2006-10-03 Benjamin Benz [bbe@heise.de]: Der Controller wartet nun nur noch die Zeit, die noch nicht verstrichen ist und nicht pauschal einen vollen Zyklus

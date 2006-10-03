@@ -32,16 +32,18 @@ public interface MovableObstacle extends Obstacle {
 	
 	// TODO Was muessen MovableObstacle koennen?
 	/** Mit dem Obstacle ist alles in Ordnung */
-	public static final int OBST_STATE_NORMAL    = 0;
+	public static final int OBST_STATE_NORMAL    = 0x0000;
 	/** Das Obstacle hat eine Kollision */
-	public static final int OBST_STATE_COLLISION = 1;
+	public static final int OBST_STATE_COLLISION = 0x0001;
 	/** Das Obstacle faellt */
-	public static final int OBST_STATE_FALLING   = 2;
+	public static final int OBST_STATE_FALLING   = 0x0002;
 
+	// Weitere Konstanten in AliveObstacle Wert > 0x0100
+	
 	/** Bitmakse, die alle bits ausblendedet, die keine Rolle für die Sicherheit des Bots spielen 
 	 * der bot gilt als sicher, wenn (obst_state & OBST_STATE_SAVE) ==0 )
 	 * */
-	public static final int OBST_STATE_SAVE = 0xFF;
+	public static final int OBST_STATE_SAVE = 0x00FF;
 
 	
 	/**

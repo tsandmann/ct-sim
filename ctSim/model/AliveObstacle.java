@@ -38,6 +38,7 @@ import ctSim.ConfigManager;
 import ctSim.ErrorHandler;
 import ctSim.SimUtils;
 import ctSim.controller.DefaultController;
+import ctSim.util.FmtLogger;
 import ctSim.view.gui.Debug;
 
 /**
@@ -46,6 +47,8 @@ import ctSim.view.gui.Debug;
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
 public abstract class AliveObstacle implements MovableObstacle, Runnable {
+	/** Das Obstacle ist von der weiteren Simulation ausgeschlossen */
+	public static final int OBST_STATE_HALTED   = 0x0100;
 
 	private int obstState = OBST_STATE_NORMAL;
 
@@ -81,6 +84,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	// TODO
 	private long deltaT = 0;
 
+	protected FmtLogger lg = FmtLogger.getLogger("ctSim.AliveObstacle");
 
 	/**
 	 * Der Konstruktor
@@ -170,8 +174,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 * @param world1 Referenz auf die Welt, die gesetzt werden soll
 	 */
-	public void setWorld(World wrld) {
-	}
+//	public void setWorld(World wrld) {
+//	}
 
 	/**
 	 * @see ctSim.model.Obstacle#getBranchGroup()
@@ -374,7 +378,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 		try {
 			while (this.thrd == thisThread) {
-				work();
+				// Ein AliveObstacle darf nur dann seine work()-Routine ausführen, wenn es nicht Halted ist
+				if ((this.obstState & OBST_STATE_HALTED) == 0)
+					work();
 				this.controller.waitOnController();
 			}
 		} catch(InterruptedException ie) {
@@ -397,6 +403,32 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		this.stop();
 	}
 
+	/**
+	 * Haelt ein Alive-Obstacle an oder gibt es wieder frei.
+	 * Ist ein Alive-Obstacle halted, so darf es seine work()-Methode nicht mehr ausfuehren.
+	 * Es ist aber ansonsten noch funktionsfaehig und reagiert auch auf den Controller 
+	 * @param halt true, wennd as AliveObstacle angehalten werden soll; false, wenn es wieder freigelassen werden soll
+	 */
+	public final void setHalted(boolean halt){
+		if (halt == true) {
+			lg.info("AliveObstcale "+getName()+" wird angehalten und darf ab sofort die work()-Methide nicht mehr ausfuehren");
+			setObstState(getObstState() | OBST_STATE_HALTED);
+		} else {
+			lg.info("AliveObstcale "+getName()+" wird reaktiviert und darf ab sofort die work()-Methide wieder ausfuehren");
+			setObstState(getObstState() & ~OBST_STATE_HALTED);
+		}
+	}
+	
+	/**
+	 * Liefert true zurueck, wenn der OBST_STATE_HALTED gesetzt ist
+	 * @return true, wenn OBST_STATE_HALTED gesetzt, false, wenn nicht
+	 */
+	public final boolean istHalted(){
+		if ((this.obstState & OBST_STATE_HALTED) != 0)
+			return true;
+		return false;
+	}
+	
 	/**
 	 * Hier wird aufgeraeumt, wenn die Lebenszeit des AliveObstacle zuende ist:
 	 * Verbindungen zur Welt und zum ControlPanel werden aufgeloest, das Panel
@@ -456,16 +488,19 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		if(this.apps == null || this.apps.isEmpty())
 			return;
 
-		if(state == OBST_STATE_COLLISION
-				&& this.apps.containsKey("collision"))
-			this.shape.setAppearance(this.apps.get("collision"));
-		if(state == OBST_STATE_FALLING
-				&& this.apps.containsKey("falling"))
-			this.shape.setAppearance(this.apps.get("falling"));
-		if(state == OBST_STATE_NORMAL
-				&& this.apps.containsKey("normal")) {
-			this.shape.setAppearance(this.apps.get("normal"));
-		}
+		String key= null;
+		
+		if (state == OBST_STATE_COLLISION)
+			key= "collision";
+		if (state == OBST_STATE_FALLING)
+			key= "falling";
+		if (state == OBST_STATE_NORMAL)
+			key= "normal";
+		if ((state & OBST_STATE_HALTED) != 0)
+			key="halted";
+		
+		if (this.apps.containsKey(key))
+			this.shape.setAppearance(this.apps.get(key));
 	}
 
 	/**
