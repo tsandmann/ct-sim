@@ -140,8 +140,11 @@ public class DefaultController implements Runnable, Controller {
 
 		while(this.ctrlThread == thisThread) {
 	        try {
+				long realTimeBegin = System.nanoTime()/1000000;
+
+
 				// Warte, bis alle Bots fertig sind und auf die naechste
-	        	// Aktualisierung warten
+	        		// Aktualisierung warten
 				// breche ab, wenn die Bots zu lange brauchen !
 				if(! doneSignal.await(timeout, TimeUnit.MILLISECONDS)) {
 					lg.warn("Bot-Probleme: Ein oder mehrere Bots waren " +
@@ -184,8 +187,14 @@ public class DefaultController implements Runnable, Controller {
 				// Alle Bots wieder freigeben
 				oldStartSignal.countDown();
 
+				// Schlafe nur, wenn nicht schon zuviel Zeit "verbraucht" wurde
+				// Felix: !!!Finger weg von den folgenden Zeilen !!!
+				long timeToSleep = world.getSimStepIntervalInMs() - ((System.nanoTime()/1000000 - realTimeBegin));
+				if ( timeToSleep > 0)
+					Thread.sleep(timeToSleep);
+
 				//$$ Falsch: Nicht die ganze Intervall-Zeit warten -- world.update() und Konsorten haben davon schon Zeit verbraucht, das muss einbezogen werden
-				Thread.sleep(this.world.getSimStepIntervalInMs());
+				//Thread.sleep(this.world.getSimStepIntervalInMs());
 
 	        } catch (InterruptedException e) {
 	            // TODO Auto-generated catch block
