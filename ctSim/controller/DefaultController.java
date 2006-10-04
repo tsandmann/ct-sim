@@ -109,6 +109,8 @@ public class DefaultController implements Runnable, Controller {
      */
 	public void stop() {
 		lg.fine("Terminieren des Sequencer angefordert");
+		this.botListener.die();
+
 		Thread dummy = this.ctrlThread;
 
 		if(dummy == null)
@@ -207,6 +209,7 @@ public class DefaultController implements Runnable, Controller {
 
 	private synchronized void cleanup() {
 		BotManager.reinit();
+		this.botListener.die();
     }
 
 	private synchronized void startBots() {
@@ -336,6 +339,7 @@ public class DefaultController implements Runnable, Controller {
          */
         public void die() {
             this.listen = false;
+            this.interrupt();
         }
     }
 
@@ -383,8 +387,10 @@ public class DefaultController implements Runnable, Controller {
                 }
             } catch (IOException e) {
                 lg.warning(e, "Kann nicht an Port "+port+" binden. " +
-                        "M\u00F6glicherweise l\u00E4uft c't-Sim schon.");
-            }
+                        "Moeglicherweise laeuft c't-Sim schon.");
+			}
+            
+            lg.fine("BotSocketListener beendet sich");
         }
     }
 

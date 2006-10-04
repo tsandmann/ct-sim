@@ -7,7 +7,7 @@
 	</description>
 
 	<!-- ctSimTimeout ist die Zeit in [ms], die der Controller maximal auf einen Bot wartet -->
-	<parameter name="ctSimTimeout" value="10000"/>
+	<parameter name="ctSimTimeout" value="100"/>
 	<!-- AliveObstacleTimeout ist die Zeit in [ms], die die work()-Methode eines AliveObstacles brauchen darf, um zum ende zu kommen. Wird sie ueberschritten, deakticviert sich das Obstacle selbst. Steht der Timeout auf 0, hat es beliebig viel Zeit -->
 	<parameter name="AliveObstacleTimeout" value="0"/>
 
