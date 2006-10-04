@@ -165,18 +165,27 @@ public class Main {
 			lg.warning(e, "Problem beim Setzen des Look and Feel");
 		}
 
-		Controller c = dependencies.get(Controller.class);
+		
+		View view = null;
+		Controller c = null;
+		try {
 
-		// View der Applikation ist mindestens der CtSimFrame
-		View view = new CtSimFrame(c);
+			c = dependencies.get(Controller.class);
 
-		// View um ContestConductor erweitern falls so konfiguriert
-		if (ConfigManager.getValue("useContestConductor").
-				equalsIgnoreCase("true")) {
-			view = ViewYAdapter.newInstance(view,
-				dependencies.get(ContestConductor.class));
+			// View der Applikation ist mindestens der CtSimFrame
+			view = new CtSimFrame(c);
+
+		
+			// View um ContestConductor erweitern falls so konfiguriert
+			if (ConfigManager.getValue("useContestConductor").
+					equalsIgnoreCase("true")) {
+				view = ViewYAdapter.newInstance(view,
+					dependencies.get(ContestConductor.class));
+			}
+		} catch (Exception e) {
+			lg.warn("Probleme beim instantiieren des ContestConductor "+e);
+			e.printStackTrace();
 		}
-
 		c.setView(view);
 		c.onApplicationInited();
     }

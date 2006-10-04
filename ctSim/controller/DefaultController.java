@@ -498,6 +498,11 @@ public class DefaultController implements Runnable, Controller {
 
         lg.info("Starte externen Bot '"+filename+"'");
         try {
+    		if (System.getProperty("os.name").indexOf("Linux") >=0){
+    			Runtime.getRuntime().exec("chmod ugo+x "+filename);
+    			// Keine Ahnung, warum dieses Delaz noetig ist, aber ohne geht es nicht
+    			Thread.sleep(1000);
+    		}
             Runtime.getRuntime().exec(filename);
         } catch (Exception e){
             lg.warning(e, "Fehler beim Starten von Bot '"+filename+"'");
