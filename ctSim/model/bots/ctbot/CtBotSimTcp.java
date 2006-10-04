@@ -981,6 +981,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			} catch (IOException ex) {
 				ErrorHandler.error("Verbindung unterbrochen -- Bot stirbt: " + ex); //$NON-NLS-1$
 				die();
+				run =-1;
 			}
 		}
 
@@ -1028,4 +1029,21 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		new Color(  0, 255, 210), // tuerkis
 		new Color(255, 255, 255)  // weiss
 	};
+	
+	/**
+	 * Erweitert stop() um das schliessen der TCP/Verbindung
+	 */
+	@Override
+	public void stop() {
+		// TODO Auto-generated method stub
+		super.stop();
+		try {
+			connection.disconnect();
+		} catch (IOException e) {
+			// uninteressant
+		} catch (Exception e) {
+			// uninteressant
+		}
+	}
+
 }

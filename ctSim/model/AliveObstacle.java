@@ -232,7 +232,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 *  Stoppt den Bot (bzw. dessen Thread).
 	 */
-	public final void stop() {
+	public void stop() {
 
 		Thread dummy = this.thrd;
 
@@ -400,7 +400,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 				if ((timeout > 0) && (elapsedTime > timeout))
 					setHalted(true);
 				
-				this.controller.waitOnController();
+				if (this.thrd != null)
+					this.controller.waitOnController();
 			}
 		} catch(InterruptedException ie) {
 			ErrorHandler.error("Alive Obstacle \""+this.getName()+"\" wurde unterbrochen und stirbt nun");

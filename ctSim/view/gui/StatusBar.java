@@ -49,7 +49,7 @@ public class StatusBar extends Box {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final int MIN_TICK_RATE = 0;
-	private static final int INIT_TICK_RATE = 10; //TODO: Gefaehrlich: sollte nicht hardcoded sein, sondern von World geholt werden
+	private static final int INIT_TICK_RATE = 0; //TODO: Gefaehrlich: sollte nicht hardcoded sein, sondern von World geholt werden
 	private static final int MAX_TICK_RATE = 400;
 	private static final int MAJOR_TICK = 10;
 	

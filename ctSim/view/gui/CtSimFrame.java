@@ -197,10 +197,10 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 	private ConsoleComponent buildLogViewer() {
     	ConsoleComponent rv = new ConsoleComponent();
     	Debug.registerDebugWindow(rv); //$$ Legacy
-    	// Wir melden uns als Handler fuer den Root-Logger an;
-    	Handler h = rv.new LoggingHandler();
-    	h.setLevel(INFO);
-    	FmtLogger.getLogger("").addHandler(h);
+    	// Wir melden uns als Handler fuer den Root-Logger an; //$$$
+//    	Handler h = rv.new LoggingHandler();
+//    	h.setLevel(INFO);
+//    	FmtLogger.getLogger("").addHandler(h);
     	return rv;
     }
 
@@ -372,7 +372,7 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 
 		updateLayout();
 
-		//Ausgabe macht nur Sinn, wenn überhaupt ein Bot da ist.
+		//Ausgabe macht nur Sinn, wenn ï¿½berhaupt ein Bot da ist.
 		if (BotManager.getSize() > 1)
 			Debug.out.println("Alle Bots entfernt.");
 	}
@@ -448,7 +448,7 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 		this.update();
 		updateLayout();
 
-		Debug.out.println("Bot \""+bot.getName()+"\" wurde gelöscht.");
+		Debug.out.println("Bot \""+bot.getName()+"\" wurde gelï¿½scht.");
 	}
 
 	public void onApplicationInited() {

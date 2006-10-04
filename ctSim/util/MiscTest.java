@@ -38,7 +38,7 @@ public class MiscTest {
 	}
 
 	@Test
-	public void intersperse() {
+	public void testIntersperse() {
 		String[] str;
 
 		str = intersperse("u", "a");
@@ -68,7 +68,7 @@ public class MiscTest {
 	}
 
 	@Test
-	public void join() {
+	public void testJoin() {
 		assertEquals("a", join("a"));
 		assertEquals("abc", join("a", "b", "c"));
 		assertEquals("lkjjkl", join("lkj", "jkl"));

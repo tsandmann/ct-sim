@@ -316,7 +316,7 @@ public class ContestConductor implements View {
 		// Blob in Datei
 		File f = File.createTempFile(
 				ConfigManager.getValue("contestBotFileNamePrefix"),
-				ConfigManager.getValue("contestBotFileNameSuffix"),
+				ConfigManager.path2Os(ConfigManager.getValue("contestBotFileNameSuffix")),
 				new File(ConfigManager.getValue("contestBotTargetDir")));
 		f.deleteOnExit(); //$$ deleteOnExit() scheint nicht zu klappen
 		lg.fine("Schreibe Bot nach '"+f.getAbsolutePath()+"'");
