@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2006-10-04 Benjamin Benz [bbe@heise.de]: Die/Routinen des Botlisteners bearbeitet, Contest-config abgepasst
+
 2006-10-03 Benjamin Benz [bbe@heise.de]: Es gibt nun einen eigenen Timeout fuer Alive Obstacles, der per Config festgesetzt werden darf. ueberschreitet ein work()-Zyklus diesen, wird das Obstacle "halted". Steht der Timeout auf 0, wird er ignoriert
 
 2006-10-03 Benjamin Benz [bbe@heise.de]: AliveObstacles kennen nun einen neune Zustand Halted, wenn dieser gesetzt ist, dürfen sie ihre work()-Methode nicht ausfuehren
