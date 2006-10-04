@@ -556,9 +556,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				setObstState( oldState| OBST_STATE_COLLISION);
 			}
 
-			// Blickrichtung immer aktualisieren:
-			this.setHeading(newHeading);
-
 			// Bodenkontakt ueberpruefen
 
 			// Vektor vom Ursprung zum linken Rad
@@ -616,8 +613,15 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			}
 
 			// Wenn der Bot nicht kollidiert oder ueber einem Abgrund steht Position aktualisieren
-			if ((getObstState() & (OBST_STATE_COLLISION | OBST_STATE_FALLING)) == 0 )
-				this.setPosition(new Point3d(newPos));
+			if ((getObstState() & (OBST_STATE_COLLISION | OBST_STATE_FALLING)) == 0 ){
+ 				this.setPosition(new Point3d(newPos));
+				this.setHeading(newHeading);
+			}
+			// Blickrichtung nur aktualisieren, wenn Bot nicht in ein 
+			// Loch gefallen ist:
+			if ((getObstState() & OBST_STATE_FALLING) == 0 ){
+				this.setHeading(newHeading);
+			}
 	}
 
 	/**
