@@ -403,8 +403,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 				this.controller.waitOnController();
 			}
 		} catch(InterruptedException ie) {
-			ErrorHandler.error("Alive Obstacle \""+this.getName()+"\" interrupted: "+ie);
-			ie.printStackTrace();
+			ErrorHandler.error("Alive Obstacle \""+this.getName()+"\" wurde unterbrochen und stirbt nun");
+	//		ie.printStackTrace();
 		}
 		Debug.out.println("Alive Obstacle \""+this.getName()+"\" stirbt..."); //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO: ???
