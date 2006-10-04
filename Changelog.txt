@@ -1,5 +1,8 @@
 Changelog fuer c't-Sim
 ======================
+
+2006-10-04 Hendrik Krauss [hkr@heise.de]: Versehentlicher Check-in rueckgaengig: Datei ContestConductorRecoveryTest weg
+
 2006-10-04 Benjamin Benz [bbe@heise.de]: ContestConductor startet nun auch unter Linux die Bots sauber
 
 2006-10-04 Benjamin Benz [bbe@heise.de]: Die/Routinen des Botlisteners bearbeitet, Contest-config abgepasst
