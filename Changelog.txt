@@ -1,9 +1,11 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-05 Hendrik Krauss [hkr@heise.de]: IP der Test-Datenbank stimmt jetzt wieder
+
 2006-10-04 Hendrik Krauss [hkr@heise.de]: Verschiedene Verbesserungen; CtSimFrame bringt keine Logausgaben aus java.util.logging mehr, da das als Fehlerquelle des terminate-Bug ausgemacht wurde
 
-2006-10-14 Peter Koenig [pek@heise.de]: Bots drehen sich nicht mehr, wenn sie in ein Loch gefallen sind 
+2006-10-14 Peter Koenig [pek@heise.de]: Bots drehen sich nicht mehr, wenn sie in ein Loch gefallen sind
 
 2006-10-04 Hendrik Krauss [hkr@heise.de]: Versehentlicher Check-in rueckgaengig: Datei ContestConductorRecoveryTest weg
 

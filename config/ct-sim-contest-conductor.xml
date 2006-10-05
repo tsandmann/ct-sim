@@ -40,11 +40,11 @@
 	ctSim.view.contestConductor.ContestConductor reden soll (Format der URL
 	wie es java.sql.DriverManager.getConnection() erwartet) -->
 	<parameter name="contest-database-url"
-		value="jdbc:mysql://10.10.22.184:3306/ctbot-contest"/>
+		value="jdbc:mysql://10.10.22.242:3306/ctbot-contest"/>
 	<parameter name="contest-database-user" value="root"/>
 	<parameter name="contest-database-password" value="geheimdienst"/>
 
-	<bots>         
+	<bots>
 		<bot name="ctSim.model.bots.CtBotSimTest_0">
 			<appearance type="normal">
 				<description>Standard Aussehen des TestBots 1</description>
@@ -111,7 +111,7 @@
 				<color>#008000</color>
 			</appearance>
 		</bot>
-		
+
 		<bot name="default">
 			<appearance type="normal">
 				<description>Standard Aussehen des Standard-Bots</description>
