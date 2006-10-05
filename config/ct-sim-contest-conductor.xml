@@ -37,17 +37,17 @@
 	<parameter name="contestBotFileNameSuffix" value=".exe"/>
 
 	<!-- ctSimIP ist der Rechner, auf dem der Sim laeuft -->
-	<parameter name="ctSimIP" value="10.10.22.115"/>
+	<parameter name="ctSimIP" value="192.168.123.252"/>
 
 
-	<!-- host1 ist der Rechner, der den Bot1 ausfuehrt -->
-	<parameter name="host1" value="10.10.22.115"/>
-	<!-- host1_username ist der Bnutzername für den Rechner, der den Bot1 ausfuehrt -->
-	<parameter name="host1_username" value="bbe"/>
-	<!-- host2 ist der Rechner, der den Bot2 ausfuehrt -->
-	<parameter name="host2" value="10.10.22.115"/>
-	<!-- host2_username ist der Bnutzername für den Rechner, der den Bot2 ausfuehrt -->
-	<parameter name="host2_username" value="bbe"/>
+	<!-- host1 ist der Rechner, der den Bot1 ausfuehrt Achtung dort muss ein ssh-Daemon laufen-->
+	<parameter name="host1" value="192.168.123.253"/>
+	<!-- host1_username ist der Bnutzername für den Rechner, der den Bot1 ausfuehrt. Authorisiert wird der User per Provate/Public-RSA Keys. diese muessen bereits uebertragen sein -->
+	<parameter name="host1_username" value="ctbot"/>
+	<!-- host2 ist der Rechner, der den Bot2 ausfuehrt. Achtung dort muss ein ssh-Daemon laufen -->
+	<parameter name="host2" value="192.168.123.254"/>
+	<!-- host2_username ist der Bnutzername für den Rechner, der den Bot2 ausfuehrt Authorisiert wird der User per Provate/Public-RSA Keys. diese muessen bereits uebertragen sein-->
+	<parameter name="host2_username" value="ctbot"/>
 
 	
 	<!-- URL, Username und Passwort der Datenbank, mit der die Klasse
