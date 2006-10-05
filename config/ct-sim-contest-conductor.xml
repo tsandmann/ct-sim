@@ -36,12 +36,16 @@
 	<parameter name="contestBotFileNamePrefix" value="tmp-contest-bot"/>
 	<parameter name="contestBotFileNameSuffix" value=".exe"/>
 
+	<!-- ctSimIP ist der Rechner, auf dem der Sim laeuft -->
+	<parameter name="ctSimIP" value="10.10.22.115"/>
+
+
 	<!-- host1 ist der Rechner, der den Bot1 ausfuehrt -->
-	<parameter name="host1" value="10.10.22.1"/>
+	<parameter name="host1" value="10.10.22.115"/>
 	<!-- host1_username ist der Bnutzername für den Rechner, der den Bot1 ausfuehrt -->
 	<parameter name="host1_username" value="bbe"/>
 	<!-- host2 ist der Rechner, der den Bot2 ausfuehrt -->
-	<parameter name="host2" value="10.10.22.1"/>
+	<parameter name="host2" value="10.10.22.115"/>
 	<!-- host2_username ist der Bnutzername für den Rechner, der den Bot2 ausfuehrt -->
 	<parameter name="host2_username" value="bbe"/>
 

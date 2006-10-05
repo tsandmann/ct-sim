@@ -319,6 +319,10 @@ public class ContestConductor implements View {
 		String host = ConfigManager.getValue("host"+nextHost);
 		String user = ConfigManager.getValue("host"+nextHost+"_username");
 
+		String server = ConfigManager.getValue("ctSimIP");
+		if (server == null)
+			server = "localhost";
+		
 		// Nur wenn ein Config-Eintrag fuer den entstprechenden Remote-Host exisitiert starten wir auch remote, osnst lokal
 		if ((user ==null) || (host == null)){
 			lg.info("Host oder Username fuer Remote-Ausfuehrung (Rechner "+nextHost+") nicht gesetzt. Starte lokal");
@@ -326,9 +330,20 @@ public class ContestConductor implements View {
 			controller.invokeBot(f);
 		} else {
             try {
-				Process pc= Runtime.getRuntime().exec("scp "+f.getAbsolutePath()+" "+user+"@"+host+":.");
+            	String execString = "scp "+f.getAbsolutePath()+" "+user+"@"+host+":. "; //2>&1 >> out.log";
+            	lg.info("Executing "+execString);
+				Process pc= Runtime.getRuntime().exec(execString);
 				pc.waitFor();
-				pc = Runtime.getRuntime().exec("ssh "+user+"@"+host+" "+f.getName());
+
+				execString ="ssh "+user+"@"+host+" chmod u+x "+f.getName();
+            	lg.info("Executing "+execString);
+				pc = Runtime.getRuntime().exec(execString);
+				pc.waitFor();
+
+				
+				execString ="ssh "+user+"@"+host+" ./"+f.getName()+" -t "+server;
+            	lg.info("Executing "+execString);
+				pc = Runtime.getRuntime().exec(execString);
 				
 			} catch (Exception e) {
 				lg.warn("Probleme beim Remote-Starten von Bot: "+f.getAbsolutePath()+" auf Rechner: "+user+"@"+host);
