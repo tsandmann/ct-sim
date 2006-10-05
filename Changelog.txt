@@ -1,5 +1,6 @@
 Changelog fuer c't-Sim
 ======================
+2006-10-05 Benjamin Benz [bbe@heise.de]: Begonen mit der remote-Ausfuehrung von Bots
 
 2006-10-05 Hendrik Krauss [hkr@heise.de]: IP der Test-Datenbank stimmt jetzt wieder
 

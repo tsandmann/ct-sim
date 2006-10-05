@@ -306,6 +306,42 @@ public class ContestConductor implements View {
 		startGame(game);
     }
 
+	/** 
+	 * Welcher Rechenr soll den naechsten Bot ausfuehren
+	 */
+	private int nextHost=1;
+	
+	/**
+	 * Startet eine Bot, entweder lokal oder remote
+	 * @param f
+	 */
+	private void executeBot(File f){
+		String host = ConfigManager.getValue("host"+nextHost);
+		String user = ConfigManager.getValue("host"+nextHost+"_username");
+
+		// Nur wenn ein Config-Eintrag fuer den entstprechenden Remote-Host exisitiert starten wir auch remote, osnst lokal
+		if ((user ==null) || (host == null)){
+			lg.info("Host oder Username fuer Remote-Ausfuehrung (Rechner "+nextHost+") nicht gesetzt. Starte lokal");
+			// Datei ausfuehren + warten bis auf den neuen Bot hingewiesen werden
+			controller.invokeBot(f);
+		} else {
+            try {
+				Process pc= Runtime.getRuntime().exec("scp "+f.getAbsolutePath()+" "+user+"@"+host+":.");
+				pc.waitFor();
+				pc = Runtime.getRuntime().exec("ssh "+user+"@"+host+" "+f.getName());
+				
+			} catch (Exception e) {
+				lg.warn("Probleme beim Remote-Starten von Bot: "+f.getAbsolutePath()+" auf Rechner: "+user+"@"+host);
+				e.printStackTrace();
+			}
+		}
+		
+		nextHost++;
+		if (nextHost ==3)
+			nextHost=1;
+
+	}
+	
 	/**
 	 * Annahme: Keiner ausser uns startet Bots. Wenn jemand gleichzeitig
 	 * @param b
@@ -328,8 +364,9 @@ public class ContestConductor implements View {
             out.write(buf, 0, len);
 		out.close();
 
-		// Datei ausfuehren + warten bis auf den neuen Bot hingewiesen werden
-		controller.invokeBot(f);
+		
+		executeBot(f);
+		
 		synchronized (botArrivalLock) {
 			//$$ Schoener waere vielleicht Verwendung von java.util.concurrent.Future
 			// Schutz vor spurious wakeups (siehe Java-API-Doku zu wait())
