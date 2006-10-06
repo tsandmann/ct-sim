@@ -88,16 +88,16 @@ public class IconHashMap extends HashMap<String, ImageIcon> {
 
     /**
 	 * Liefert ein aus einer Datei geladenes Icon.
-	 *
-	 * @param key Der Dateiname (ohne Extension) des zurückzuliefernden Icons.
-	 *            Für ein Icon "fruehstueck/Marmelade.gif" wäre das "Marmelade".
-	 *            Volles Verwendungsbeispiel siehe {@link IconHashMap}.
-	 * @throws RuntimeException Falls das gewünschte Icon im Dateisystem nicht
-	 *             existiert (genauer: falls es zum Zeitpunkt des
-	 *             Konstruktor-Aufrufs nicht existiert hat). Die Exception hat
-	 *             als <em>cause</em> eine FileNotFoundException (die nicht
-	 *             direkt geworfen werden kann, da die geerbte Methodensignatur
-	 *             keine <em>checked exceptions</em> zulässt).
+	 * 
+	 * @param key Der Dateiname (ohne Extension) des zur&uuml;ckzuliefernden
+	 * Icons. F&uuml;r ein Icon &quot;fruehstueck/Marmelade.gif&quot; w&auml;re
+	 * das &quot;Marmelade&quot;. Volles Verwendungsbeispiel siehe
+	 * {@link IconHashMap}.
+	 * @throws RuntimeException Falls das gew&uuml;nschte Icon im Dateisystem
+	 * nicht existiert (genauer: falls es zum Zeitpunkt des Konstruktor-Aufrufs
+	 * nicht existiert hat). Die Exception hat als <em>cause</em> eine
+	 * FileNotFoundException (die nicht direkt geworfen werden kann, da die
+	 * geerbte Methodensignatur keine <em>checked exceptions</em> zulässt).
 	 */
 	@Override
     public ImageIcon get(Object key) throws RuntimeException {

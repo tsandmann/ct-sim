@@ -1,5 +1,8 @@
 Changelog fuer c't-Sim
 ======================
+
+2006-10-06 Hendrik Krauss [hkr@heise.de]: Funktion neuimplementiert, die pro Simschritt in die DB loggt: unkomplizierter, kein Speicherleck mehr
+
 2006-10-05 Benjamin Benz [bbe@heise.de]: remote-Ausfuehrung von Bots geht
 
 2006-10-05 Benjamin Benz [bbe@heise.de]: Begonen mit der remote-Ausfuehrung von Bots

@@ -1,7 +1,5 @@
 package ctSim.view.contestConductor;
 
-import static org.junit.Assert.assertEquals;
-
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,11 +12,8 @@ import java.util.Set;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import org.junit.Test;
-
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
-import ctSim.util.Misc;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
 /**
@@ -123,40 +118,6 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	    super(db);
     }
 
-    //$$ doc
-    private List<Object> getLoggableBotCoord(Bot b, int n) {
-        Point3d pos = b.getPosition();
-        Vector3d head = b.getHeading();
-        return Arrays.asList(new Object[] {
-	    	"pos" + n + "x",  pos.x,
-	    	"pos" + n + "y",  pos.y,
-	    	"head"+ n + "x",  head.x,
-	    	"head"+ n + "y",  head.y,
-	    	"state" + n,      b.getObstState(),
-        });
-    }
-
-    //$$ doc
-    //$$ Verwendung in PlannerToDb
-    private static String buildInsert(
-    	String tableName, Object... namesAndValues) {
-        assert namesAndValues.length % 2 == 0;
-        String[] colNames = new String[namesAndValues.length / 2];
-        String[] values   = new String[namesAndValues.length / 2];
-
-        for (int i = 0; i < namesAndValues.length / 2; i++) {
-            colNames[i] = ""+namesAndValues[i * 2];
-            values  [i] = ""+namesAndValues[i * 2 + 1];
-        }
-
-        return
-            "INSERT INTO " + tableName + " ( " +
-            Misc.join(Misc.intersperse(", ", colNames)) +
-            " ) VALUES ( '" +
-            Misc.join(Misc.intersperse("', '", values)) +
-            "' );";
-    }
-
     //$$ irgendwie zu buerokratisch
     /**
      * Macht einen Log-Eintrag in die Datenbank. Das Log wird von der
@@ -177,23 +138,54 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      */
     public void log(Set<Bot> bots, long simTimeElapsed)
     throws IllegalArgumentException, SQLException, NullPointerException {
+    	// Gesundheitscheck
     	if (bots.size() != 1 && bots.size() != 2) {
     		throw new IllegalArgumentException("Falsche Anzahl von Bots im " +
     				"Set: erwarteter Wert 1 oder 2, tats\u00E4chlicher Wert "+
     				bots.size());
     	}
-        ArrayList<Object> insertParams = new ArrayList<Object>(
-        	Arrays.asList(new Object[] {
-			"logtime", simTimeElapsed,
-			"game", currentGame.getUniqueId()}));
 
-        Iterator<Bot> it = bots.iterator();
-        insertParams.addAll(getLoggableBotCoord(it.next(), 1));
-        if (it.hasNext())
-        	// Wir loggen ein Spiel mit 2 Bots
-        	insertParams.addAll(getLoggableBotCoord(it.next(), 2));
+    	// Hauptcode
+    	String common =
+    		"insert into ctsim_log (" +
+    		"game, logtime, " +
+    		"pos1x, pos1y, head1x, head1y, state1";
+    	String oneBot =
+    		") " +
+    		"values (?, ?, ?, ?, ?, ?, ?)";
+    	String twoBots =
+    		"pos2x, pos2y, head2x, head2y, state2) " +
+    		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-   		execSql(buildInsert("ctsim_log", insertParams.toArray()));
+    	ArrayList<Object> values = new ArrayList<Object>();
+    	values.add(currentGame.getUniqueId());
+    	values.add(simTimeElapsed);
+    	Iterator<Bot> it = bots.iterator();
+
+    	Bot b1 = it.next();
+    	values.addAll(getFieldValues(b1));
+
+    	if (it.hasNext()) {
+    		// wir haben zwei Bots
+    		Bot b2 = it.next();
+    		values.addAll(getFieldValues(b2));
+    		execSql(common + twoBots, values.toArray());
+    	} else {
+    		// wir haben einen Bot
+    		execSql(common + oneBot, values.toArray());
+    	}
+    }
+
+    //$$ doc
+    private List<Object> getFieldValues(Bot b) {
+        Point3d pos = b.getPosition();
+        Vector3d head = b.getHeading();
+        return Arrays.asList(new Object[] {
+        	pos.x,
+        	pos.y,
+        	head.x,
+        	head.y,
+        	b.getObstState()});
     }
 
 	/** Liefert das aus der Datenbank kommende XML, das einen Parcours
@@ -457,25 +449,5 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      */
     private boolean isCurrentGameMainRound() throws NullPointerException {
         return currentGame.getLevelId() != -1;
-    }
-
-    public static class UnitTest {
-        @SuppressWarnings("synthetic-access")
-        @Test
-        public void buildInsertTest() {
-        	// Achtung JUnit-Bug: Die Anzeige der Strings (bei Fehlschlag)
-        	// enthaelt unerklaerliche eckige Klammern; der Vergleich der
-        	// Strings klappt aber
-        	assertEquals("INSERT INTO wurst ( A, B ) VALUES ( 'a', 'b' );",
-        		buildInsert("wurst", "A", "a", "B", "b"));
-
-        	assertEquals("INSERT INTO wurst ( 42, true ) " +
-        		"VALUES ( '24', 'false' );",
-        		buildInsert("wurst", 42, 24, true, false));
-
-        	assertEquals("INSERT INTO wurst ( A, B, 42, true ) " +
-        		"VALUES ( 'a', 'b', '24', 'false' );",
-        		buildInsert("wurst", "A", "a", "B", "b", 42, 24, true, false));
-        }
     }
 }
