@@ -1046,4 +1046,12 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		}
 	}
 
+
+	@Override
+	protected void cleanup() {
+		// TODO Auto-generated method stub
+		super.cleanup();
+		world=null;
+	}
+
 }

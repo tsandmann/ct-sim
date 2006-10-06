@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.media.j3d.AmbientLight;
@@ -723,15 +724,14 @@ public class World {
 		Vector3d relHeading = new Vector3d(heading);
 		transform.transform(relHeading);
 
-		PickShape pickShape = new PickConeRay(relPos, relHeading,
-				openingAngle / 2);
+		pickConeRay.set(relPos, relHeading,	openingAngle / 2);
 		PickInfo pickInfo;
 		synchronized (this.terrainBG) {
 			synchronized (this.obstBG) {
 				this.obstBG.setPickable(false);
 				this.terrainBG.setPickable(false);
 				pickInfo = this.lightBG.pickClosest(PickInfo.PICK_GEOMETRY,
-						PickInfo.CLOSEST_DISTANCE, pickShape);
+						PickInfo.CLOSEST_DISTANCE, pickConeRay);
 				this.obstBG.setPickable(true);
 				this.terrainBG.setPickable(true);
 			}
@@ -907,7 +907,7 @@ public class World {
 	 * @see PickRay
 	 */
 	// TODO: Ueberarbeiten?
-	public double watchObstacle(Point3d pos, Vector3d heading,
+	synchronized public double watchObstacle(Point3d pos, Vector3d heading,
 			double openingAngle, Shape3D botBody) {
 
 		// TODO: Wieder rein??
@@ -928,23 +928,26 @@ public class World {
 //		Point3d relPos = pos;
 //		Vector3d relHeading = heading;
 
-		PickShape pickShape = new PickConeRay(relPos, relHeading, openingAngle);
+		pickConeRay.set(relPos, relHeading, openingAngle);
 		PickInfo pickInfo;
 		synchronized (this.obstBG) {
 			botBody.setPickable(false);
 			pickInfo = this.obstBG.pickClosest(
 					PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE,
-					pickShape);
+					pickConeRay);
 			botBody.setPickable(true);
 		}
 		if (pickInfo == null)
 			return 100.0;
 		double d = pickInfo.getClosestDistance();
+		
 		return d;
 	}
 
 	/** Damit jedes Obstacle fair behandelt wird, merken wir uns, wer das letztemal zuerst dran war */
 	private int aliveObstaclePtr=0;
+
+	private PickConeRay pickConeRay =new PickConeRay();
 
 	/**
 	 * Diese Methode aktualisiert die gesamte Simualtion
@@ -993,5 +996,31 @@ public class World {
 
 	public double getShortestDistanceToFinish(Vector3d fromWhere) {
 		return parcours.getShortestDistanceToFinish(fromWhere);
+	}
+
+	/**
+	 * Beseitige alles, was noch auf die Welt und den Szenegraphen verweist
+	 *
+	 */
+	public void cleanup() {
+		Iterator<AliveObstacle> it = aliveObsts.iterator();
+		
+		while (it.hasNext()){
+			AliveObstacle aliveObstacle = it.next();
+			aliveObstacle.die();
+		}
+		
+		views.clear();
+		aliveObsts.clear();
+		
+		scene = null;
+		lightBG = null;
+		obstBG = null;
+		terrainBG = null;
+		pickConeRay = null;
+		worldTG = null;
+		
+		
+		
 	}
 }

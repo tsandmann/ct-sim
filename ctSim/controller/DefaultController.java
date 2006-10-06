@@ -258,6 +258,9 @@ public class DefaultController implements Runnable, Controller {
 	private void setWorld(World world) {
 		this.pause();
 
+		if ((this.world != world) && (this.world != null))
+			this.world.cleanup();
+		
 		this.world = world;
         BotManager.reset();
         BotManager.setWorld(world);

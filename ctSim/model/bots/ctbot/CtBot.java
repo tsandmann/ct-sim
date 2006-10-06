@@ -257,6 +257,14 @@ public abstract class CtBot extends Bot {
 		//return this.bounds;
 		return new BoundingSphere(new Point3d(this.getPosition()), BOT_RADIUS);
 	}
+
+	@Override
+	protected void cleanup() {
+		// TODO Auto-generated method stub
+		super.cleanup();
+		bounds=null;
+		shape=null;
+	}
 	
 	/**
 	 * @return Die Bodenfreiheit des Bot in [m]

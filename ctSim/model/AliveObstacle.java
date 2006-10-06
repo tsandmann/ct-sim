@@ -409,9 +409,21 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		}
 		Debug.out.println("Alive Obstacle \""+this.getName()+"\" stirbt..."); //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO: ???
-		//cleanup();
+		cleanup();
 
 
+	}
+
+	/** Aufraeumen, wenn Bot stirbt
+	 * 
+	 *
+	 */
+	protected void cleanup() {
+		// TODO Auto-generated method stub
+		views=null;
+		branchgrp=null;
+		transformgrp=null;
+		shape=null;
 	}
 
 	/**
