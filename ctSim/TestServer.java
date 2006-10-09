@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import ctSim.model.Command;
+import ctSim.util.FmtLogger;
 
 public class TestServer implements Runnable {
+	FmtLogger lg = FmtLogger.getLogger("ctSim.TestServer");
 	
 	public static final String  HOST        = "localhost";
 	public static final int     PORT        = 10001;
@@ -365,9 +367,8 @@ public class TestServer implements Runnable {
 				command.setSeq(this.seq++);
 				this.send(command.getCommandBytes());
 				
-			} catch (IOException IoEx) {
-				ErrorHandler.error("Error during sending Sensor data, dieing: " //$NON-NLS-1$
-						+ IoEx);
+			} catch (IOException e) {
+				lg.severe(e, "Error sending Sensor data, dying");
 //				die();
 				System.exit(-1);
 			}
@@ -388,8 +389,8 @@ public class TestServer implements Runnable {
 						run = storeCommand(command);
 					} else
 						System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
-				} catch (IOException ex) {
-					ErrorHandler.error("Verbindung unterbrochen -- Bot stirbt: " + ex); //$NON-NLS-1$
+				} catch (IOException e) {
+					lg.severe(e, "Verbindung unterbrochen -- Bot stirbt");
 //					die();
 					System.exit(-1);
 				}

@@ -31,7 +31,7 @@ import javax.media.j3d.SceneGraphObject;
 
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 
-import ctSim.ErrorHandler;
+import ctSim.util.FmtLogger;
 
 /**
  * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benoetigt, da SceneGraphStreamReader von j3d defekt ist
@@ -39,7 +39,10 @@ import ctSim.ErrorHandler;
  * 
  * @author bbe (bbe@heise.de)
  *
- */public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
+ */
+public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
+	FmtLogger lg = FmtLogger.getLogger(
+		"ctSim.model.scene.SceneGraphStreamReaderFixed");
 
 	/**
 	 * @param arg0
@@ -63,7 +66,7 @@ import ctSim.ErrorHandler;
 	@SuppressWarnings("unchecked")
 	private void reconstructMap(Group scene, HashMap map){
 		if (scene == null){
-			ErrorHandler.error("Keine Group empfangen!"); //$NON-NLS-1$
+			lg.warn("Keine Group empfangen");
 			return;
 		}
 		
@@ -78,8 +81,9 @@ import ctSim.ErrorHandler;
 			if (so != null){
 				map.put(name,so);
 				System.out.println(string+name+" rekonstruiert");  //$NON-NLS-1$//$NON-NLS-2$
-			}else {
-				ErrorHandler.error(string+name+" konnte nach der Uebertragung nicht rekonstruiert werden"); //$NON-NLS-1$
+			} else {
+				lg.warn(string+name+" konnte nach der \u00DCbertragung nicht " +
+						"rekonstruiert werden");
 				toKill.add(name);
 			}
 		}

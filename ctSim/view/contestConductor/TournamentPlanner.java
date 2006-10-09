@@ -69,11 +69,12 @@ public class TournamentPlanner {
 		this.db = database;
 	}
 
-	/** Hilfsmethode: Denkt sich Spielzeiten aus f&uuml;r alle Spiele
-	 * in einem Level und schreibt den Teilplan in die DB.
+	/**
+	 * Hilfsmethode: Denkt sich Spielzeiten aus f&uuml;r alle Spiele in einem
+	 * Level und schreibt sie in die DB.
 	 *
-	 * @param levelId Prim&auml;rschl&uuml;ssel des Levels, f&uuml;r das
-	 * die Zeiten gesetzt werden sollen.
+	 * @param levelId Prim&auml;rschl&uuml;ssel des Levels, f&uuml;r das die
+	 * Zeiten gesetzt werden sollen.
 	 */
 	private void scheduleGames(int levelId) throws SQLException {
 		ResultSet games = db.getGames(levelId, "game");
@@ -82,15 +83,11 @@ public class TournamentPlanner {
 			return; // keine Spiele in diesem Level, nichts zu tun
 		games.beforeFirst();
 
-		// Spiele werden angesetzt in folgendem Intervall: Maximale
-		// Spiellaenge plus ein bisschen Puffer
-		int gameIntervalMillisec =
-			db.getMaxGameLengthInMs(levelId) + 5*60*1000;
 		Timestamp gameBegin = db.getLevelBegin(levelId);
-
 		while (games.next()) {
 			db.scheduleGame(levelId, games.getInt("game"), gameBegin);
-			gameBegin.setTime(gameBegin.getTime() + gameIntervalMillisec);
+			gameBegin.setTime(
+				gameBegin.getTime() + db.getGameIntervalInS(levelId) * 1000);
 		}
 	}
 

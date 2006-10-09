@@ -32,7 +32,7 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3d;
 
-import ctSim.ErrorHandler;
+import ctSim.util.FmtLogger;
 
 /**
  * Repraesentiert einen Parcours fuer die Bots
@@ -43,6 +43,7 @@ import ctSim.ErrorHandler;
  *
  */
 public class Parcours {
+	FmtLogger lg = FmtLogger.getLogger("ctSim.model.Parcours");
 /*	private class Hole{
 		int x;
 		int y;
@@ -212,10 +213,12 @@ public class Parcours {
 
 	/**
 	 * Fuegt eine Node ein
+	 *
 	 * @param node Die Node
 	 * @param x X-Achse im Parcours-Gitter
 	 * @param y Y-Achse im Parcours-Gitter
-	 * @param z Z-Achse absolut
+	 * @param z Z-Achse absolut; positiv ist vom Boden Richtung Bot +
+	 * Betrachter, negativ vom Boden weg vom Betrachter
 	 * @param bg Gruppe in die das Objekt rein soll
 	 */
 	public void addNode(Node node, float x, float y,float z,BranchGroup bg) {
@@ -365,7 +368,8 @@ public class Parcours {
 
 		if (pos.length()==0){
 			pos.x=1.0f;
-			ErrorHandler.error("getStartHeading wurde nach einer noch nicht gesetzten Heading gefragt ("+bot+"). Setze Default");  //$NON-NLS-1$//$NON-NLS-2$
+			lg.warn("getStartHeading wurde nach einer noch nicht gesetzten " +
+					"Heading gefragt (Bot "+bot+"). Setze Default");
 		}
 
 		pos.normalize();

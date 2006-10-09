@@ -22,9 +22,8 @@ package ctSim.model.bots;
 import java.io.IOException;
 
 import ctSim.Connection;
-import ctSim.ErrorHandler;
 import ctSim.model.Command;
-import ctSim.model.bots.TcpBot;
+import ctSim.util.FmtLogger;
 
 /**
  * Kuemmert sich um die Beantwortung eingehender Kommanods
@@ -32,6 +31,7 @@ import ctSim.model.bots.TcpBot;
  * @author Benjamin Benz (bbe@heise.de)
  */
 public class AnsweringMachine extends Thread {
+	FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.AnsweringMachine");
 
 	/** Soll der Thread noch laufen? */
 	private boolean run = true;
@@ -90,9 +90,9 @@ public class AnsweringMachine extends Thread {
 					bot.storeCommand(command);
 //					this.bot.evaluate_command(command);
 				} else
-					System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
-			} catch (IOException ex) {
-				ErrorHandler.error("Verbindung unterbrochen -- Bot stirbt: " + ex); //$NON-NLS-1$
+					lg.warn("Ung\u00FCltiges Kommando");
+			} catch (IOException e) {
+				lg.severe(e, "Verbindung unterbrochen -- Bot stirbt");
 				die();
 			}
 		}

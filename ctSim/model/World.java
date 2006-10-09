@@ -986,7 +986,7 @@ public class World {
 		try {
 			OutputStream out = new BufferedOutputStream(new FileOutputStream(
 					targetFile));
-			InputStream in = source.getByteStream();
+			InputStream in = source.getByteStream(); //$$ Klappt nicht: liefert dauernd NullPtr
 			while (in.available() > 0)
 				out.write(in.read());
 			out.close();
@@ -1008,23 +1008,23 @@ public class World {
 	 */
 	public void cleanup() {
 		Iterator<AliveObstacle> it = aliveObsts.iterator();
-		
+
 		while (it.hasNext()){
 			AliveObstacle aliveObstacle = it.next();
 			aliveObstacle.die();
 		}
-		
+
 		views.clear();
 		aliveObsts.clear();
-		
+
 		scene = null;
 		lightBG = null;
 		obstBG = null;
 		terrainBG = null;
 		pickConeRay = null;
 		worldTG = null;
-		
-		
-		
+
+
+
 	}
 }

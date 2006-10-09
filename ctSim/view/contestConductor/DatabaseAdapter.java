@@ -137,7 +137,11 @@ class DatabaseAdapter {
 
 	protected DatabaseAdapter(ContestDatabase db) {
 		dbConn = db.getConnection();
-		lg.info("Verwende Datenbank " + dbConn);
+		try {
+            lg.info("Verwende Datenbank " + dbConn.getMetaData().getURL());
+        } catch (SQLException e) {
+        	// no-op, da nur ne Info-Meldung nicht geht
+        }
 	}
 
 	//$$ doc getPS
@@ -230,21 +234,6 @@ class DatabaseAdapter {
 			throw new IllegalArgumentException("Kann keine SQL-Befehle " +
 					"au\u00DFer SELECT, INSERT, UPDATE und DELETE");
 		}
-	}
-
-	/** Liefert die Zeit, wie lange ein Spiel maximal dauern darf. Nach dieser
-	 * Zeit wird das Spiel vom Judge als unentschieden abgebrochen.
-	 *
-	 * @param levelId Prim&auml;rschl&uuml;ssel des Levels
-	 * @return Geplante Zeit [ms], wie lange ein Spiel dieses Levels maximal
-	 * dauern darf.
-	 * @throws SQLException
-	 */
-	protected int getMaxGameLengthInMs(int levelId) throws SQLException {
-		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?",
-			levelId);
-		rs.next();
-		return rs.getInt("gametime");
 	}
 
 	/** Tr&auml;gt einen Bot f&uuml;r ein Spiel ein. Aufzurufen entweder

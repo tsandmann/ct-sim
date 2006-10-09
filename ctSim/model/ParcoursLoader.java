@@ -46,6 +46,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -58,7 +59,7 @@ import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
-import ctSim.ErrorHandler;
+import ctSim.util.FmtLogger;
 
 /**
  * Diese Klasse hilft einen Parcours aus einer ASCII-Datei zu laden
@@ -66,6 +67,8 @@ import ctSim.ErrorHandler;
  * @author bbe (bbe@heise.de)
  */
 public class ParcoursLoader {
+	FmtLogger lg = FmtLogger.getLogger("ctSim.model.ParcoursLoader");
+
 	/** Z-Koorndinate der Lampen */
 	public static final float LIGHTZ = 0.5f;
 
@@ -588,11 +591,11 @@ public class ParcoursLoader {
 			parse();		// Parcours Zusammenbauen
 
 		} catch (SAXException e) {
-			ErrorHandler.error("Probleme beim Parsen des XML: "+e); //$NON-NLS-1$ //$NON-NLS-2$
+			lg.warn(e, "Probleme beim Parsen des XML");
 			//e.printStackTrace();
 			throw e;
 		} catch (IOException e) {
-			ErrorHandler.error("Probleme beim Parsen des XML: "+e); //$NON-NLS-1$ //$NON-NLS-2$
+			lg.warn(e, "Probleme beim Parsen des XML");
 			//e.printStackTrace();
 			throw e;
 		}
@@ -607,7 +610,7 @@ public class ParcoursLoader {
 	private Appearance getAppearance(int key) {
 		Appearance app= (Appearance)this.appearances.get((char)key);
 		if (app == null)
-			ErrorHandler.error("Appearance fuer '"+(char)key+"' nicht gefunden!"); //$NON-NLS-1$ //$NON-NLS-2$ //$$ Das wird immer x-mal ausgegeben
+			lg.warn("Appearance f\u00FCr '"+(char)key+"' nicht gefunden!"); //$$ Das wird immer x-mal ausgegeben -- 1x pro nicht gefundenem Ding. Besser speichern und einmal am Schluss ausgeben
 		return app;
 	}
 
@@ -674,8 +677,9 @@ public class ParcoursLoader {
 				appearance.setTexture(texture);
 				appearance.setCapability(Appearance.ALLOW_TEXTURE_READ);
 
-			} catch (Exception ex) {
-				ErrorHandler.error("Probleme beim Laden der Textur: "+textureFile+" :"+ex);  //$NON-NLS-1$//$NON-NLS-2$
+			} catch (Exception e) {
+				lg.warn(e, "Probleme beim Laden der Texturdatei '%s'", 
+					textureFile);
 			}
 
 		}

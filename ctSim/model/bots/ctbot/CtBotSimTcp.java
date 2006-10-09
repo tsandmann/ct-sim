@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 
-
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
@@ -33,7 +32,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.Connection;
-import ctSim.ErrorHandler;
 import ctSim.SimUtils;
 import ctSim.TcpConnection;
 import ctSim.model.Command;
@@ -54,6 +52,7 @@ import ctSim.model.bots.ctbot.components.Governor;
 import ctSim.model.bots.ctbot.components.LightSensor;
 import ctSim.model.bots.ctbot.components.LineSensor;
 import ctSim.model.bots.ctbot.components.RemoteControlSensor;
+import ctSim.util.FmtLogger;
 import ctSim.view.gui.Debug;
 
 /**
@@ -61,6 +60,7 @@ import ctSim.view.gui.Debug;
  *
  */
 public class CtBotSimTcp extends CtBotSim implements TcpBot {
+	FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.ctbot.CtBotSimTcp");
 
 	/** Die TCP-Verbindung */
 	private TcpConnection connection;
@@ -443,9 +443,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				toSend[i] = commandsToSend.get(i);
 			this.connection.send(toSend);
 
-		} catch (IOException IoEx) {
-			ErrorHandler.error("Error during sending Sensor data, dieing: " //$NON-NLS-1$
-					+ IoEx);
+		} catch (IOException e) {
+			lg.severe(e, "Error sending sensor data; dying");
 			die();
 		}
 	}
@@ -459,7 +458,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		// TODO Warning entfernen
 		boolean setValue = this.rc5.setValue((Object)(new Integer(command)));
 		if (!setValue) {
-			ErrorHandler.error("Kann kein RC5-Kommando absetzen!");
+			lg.warn("Kann RC5-Kommando nicht absetzen");
 		}
 	}
 
@@ -617,7 +616,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
  				this.setPosition(new Point3d(newPos));
 				this.setHeading(newHeading);
 			}
-			// Blickrichtung nur aktualisieren, wenn Bot nicht in ein 
+			// Blickrichtung nur aktualisieren, wenn Bot nicht in ein
 			// Loch gefallen ist:
 			if ((getObstState() & OBST_STATE_FALLING) == 0 ){
 				this.setHeading(newHeading);
@@ -749,13 +748,13 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 			case Command.CMD_WELCOME:
 				if (command.getSubcommand() != Command.SUB_WELCOME_SIM){
-					ErrorHandler.error("Ich bin kein Sim-Bot! Sterbe vor Schreck ;-)"); //$NON-NLS-1$
+					lg.severe("Ich bin kein Sim-Bot! Sterbe vor Schreck ;-)");
 					die();
 				}
 				break;
 
 			default:
-				ErrorHandler.error("Unknown Command:" + command.toString()); //$NON-NLS-1$
+				lg.warn("Unbekanntes Kommando '%s'", command.toString());
 				break;
 			}
 
@@ -978,8 +977,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 					run=storeCommand(command);
 				} else
 					System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
-			} catch (IOException ex) {
-				ErrorHandler.error("Verbindung unterbrochen -- Bot stirbt: " + ex); //$NON-NLS-1$
+			} catch (IOException e) {
+				lg.severe(e, "Verbindung unterbrochen -- Bot stirbt");
 				die();
 				run =-1;
 			}
@@ -1029,7 +1028,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		new Color(  0, 255, 210), // tuerkis
 		new Color(255, 255, 255)  // weiss
 	};
-	
+
 	/**
 	 * Erweitert stop() um das schliessen der TCP/Verbindung
 	 */

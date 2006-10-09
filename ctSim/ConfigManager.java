@@ -24,9 +24,12 @@ import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import ctSim.controller.Config;
+import ctSim.util.FmtLogger;
 
 //TODO Typen verifizieren
 public class ConfigManager {
+	static FmtLogger lg = FmtLogger.getLogger("ctSim.ConfigManager");
+
 	/** <p>Enth&auml;lt die Einzelparameter der Konfiguration (spiegelt also
 	 * die <code>&lt;parameter></code>-Tags wider)</p>
 	 *
@@ -71,10 +74,12 @@ public class ConfigManager {
 		// TODO Sinnvolle Zuordnung von Bot-Name zu Config
 		rv = getBotConfig(botId);
 		if (rv == null) {
-			ErrorHandler.error("Keine BotConfig fuer: <"+botId+"> in der XML-Config-Datei gefunden. Lade Defaults.");
+			lg.warn("Keine BotConfig f\u00FCr '%s' in der Config-Datei " +
+					"gefunden; lade Default", botId);
 			rv = getBotConfig("default");
 			if (rv == null) {
-				ErrorHandler.error("Keine Default-BotConfig in der XML-Config-Datei gefunden. Starte ohne.");
+				lg.warn("Keine Default-BotConfig in der Config-Datei " +
+						"gefunden; starte ohne");
 			}
 		}
 		return rv;
@@ -205,8 +210,8 @@ public class ConfigManager {
 				texture.setBoundaryModeS(Texture.WRAP);
 				texture.setBoundaryModeT(Texture.WRAP);
 				appearance.setTexture(texture);
-			} catch (Exception ex) {
-				ErrorHandler.error("Textur: "+textureFile+"nicht gefunden "+ex); //$NON-NLS-1$ //$NON-NLS-2$
+			} catch (Exception e) {
+				lg.warn(e, "Texturdatei '%s' nicht gefunden", textureFile);
 			}
 
 		}

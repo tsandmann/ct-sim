@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: 10.10.22.242
--- Erstellungszeit: 09. Oktober 2006 um 15:02
+-- Erstellungszeit: 09. Oktober 2006 um 20:23
 -- Server Version: 5.0.22
 -- PHP-Version: 5.1.4
 -- 
@@ -82,7 +82,7 @@ CREATE TABLE `ctsim_level` (
   `parcours` text collate latin1_german1_ci COMMENT 'Spezifikation eines Parcours als XML-String (nicht Dateiname oder so). Manuell zu befuellen.',
   `scheduled` datetime NOT NULL default '2007-01-01 00:00:00' COMMENT 'Startzeit des ersten Spiels dieses Levels. Manuell zu vergeben.',
   `gametime` int(11) NOT NULL default '600000' COMMENT 'Hoechstlaenge [Simzeit, ms] eines Spiels auf diesem Level. Bei Ueberschreitung wird das Spiel abgebrochen',
-  `gametime_real` int(11) NOT NULL default '600000' COMMENT 'Laenge [Realzeit, ms] eines Spiels auf diesem Level. Nur wichtig fuer Planung -- Spiele werden so angelegt, dass ihre Startzeitpunkte um diese Zeitspanne auseinanderliegen',
+  `gametime_real` int(11) NOT NULL default '600' COMMENT 'Laenge [Realzeit, s] eines Spiels auf diesem Level. Nur wichtig fuer Planung -- Spiele werden so angelegt, dass ihre Startzeitpunkte um diese Zeitspanne auseinanderliegen',
   `updatedatum` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `screenshot` mediumblob COMMENT 'Screenshot des Parcours ohne Bots, PNG, 1 Block im Parcours = 38x38 px, Parcours sind verschieden gross, aber maximal 25x18 Bloecke',
   PRIMARY KEY  (`id`)

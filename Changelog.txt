@@ -1,6 +1,14 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-10 Hendrik Krauss [hkr@heise.de]:
+* Neuer kleiner View (Klasse TimeLogger) gibt Sim- und Realzeit periodisch aus; aktiv nur in Contest-Modus
+* DB-Schema: Neues Feld gametime_real, TournamentPlanner beachtet es
+* Logging erfolgt jetzt standardmaessig in ctsim-N.log, wobei N rotiert durch 0, 1, und 2 (= die letzten drei ctSim-Laeufe sind als Log verfuegbar)
+* Hab die Geduld mit dem ErrorHandler verloren -- ist rausgeflogen, ersetzt durch Log-Methoden
+* Fix: Letzter Simschritt eines Spiels wird jetzt auch in die DB geloggt
+* Logging-Subsystem wird jetzt ueber die Datei config/logging.conf konfiguriert, nicht mehr hardcoded
+
 2006-10-09 Hendrik Krauss [hkr@heise.de]:
 * Turnierbaum neu gestrickt; macht Baeume jetzt so, wie's laut Maildiskussion sein soll
 * Schema fuer Contest-Datenbank inkl. umfangreicher Doku eingecheckt

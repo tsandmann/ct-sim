@@ -98,13 +98,25 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 			return cachedUniqueId;
         }
 
+		/**
+		 * Liefert die Zeit, wie lange das Spiel maximal dauern darf. Nach
+		 * dieser Zeit soll das Spiel vom Judge als abgebrochen werden.
+		 *
+		 * @return Geplante Simzeit [ms], wie lange ein Spiel des Levels dieses
+		 * Spiels maximal dauern darf.
+		 * @throws SQLException
+		 * @see World#getSimTimeInMs()
+		 */
 		public int getMaxLengthInMs()
 		throws SQLException, IllegalStateException {
 			if (gameId == null)
 				throw new IllegalStateException();
 
 			if (cachedMaxLengthInMs == null) {
-				cachedMaxLengthInMs = getMaxGameLengthInMs(getLevelId());
+				ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?",
+					getLevelId());
+				rs.next();
+				return rs.getInt("gametime");
 			}
 			return cachedMaxLengthInMs;
 		}

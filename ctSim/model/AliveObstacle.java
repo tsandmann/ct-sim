@@ -35,7 +35,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.ConfigManager;
-import ctSim.ErrorHandler;
 import ctSim.SimUtils;
 import ctSim.controller.DefaultController;
 import ctSim.util.FmtLogger;
@@ -47,6 +46,8 @@ import ctSim.view.gui.Debug;
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
 public abstract class AliveObstacle implements MovableObstacle, Runnable {
+	FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
+	
 	/** Das Obstacle ist von der weiteren Simulation ausgeschlossen */
 	public static final int OBST_STATE_HALTED   = 0x0100;
 
@@ -83,8 +84,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/** Zeit zwischen letztem Aufruf von UpdateSimulation und jetzt*/
 	// TODO
 	private long deltaT = 0;
-
-	protected FmtLogger lg = FmtLogger.getLogger("ctSim.AliveObstacle");
 
 	/**
 	 * Der Konstruktor
@@ -404,8 +403,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 					this.controller.waitOnController();
 			}
 		} catch(InterruptedException ie) {
-			ErrorHandler.error("Alive Obstacle \""+this.getName()+"\" wurde unterbrochen und stirbt nun");
-	//		ie.printStackTrace();
+			lg.warn("Alive Obstacle '%s' wurde unterbrochen und stirbt", 
+				getName());
 		}
 		Debug.out.println("Alive Obstacle \""+this.getName()+"\" stirbt..."); //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO: ???

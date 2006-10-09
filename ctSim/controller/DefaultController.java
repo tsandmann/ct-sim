@@ -156,6 +156,9 @@ public class DefaultController implements Runnable, Controller {
 
 				CountDownLatch oldStartSignal = this.startSignal;
 
+				// View(s) bescheidsagen
+				view.onSimulationStep(world.getSimTimeInMs());
+
 				// Judge pruefen:
 				if (judge.isSimulationFinished(world.getSimTimeInMs())) {
 					lg.fine("Sequencer: Simulationsende");
@@ -166,10 +169,6 @@ public class DefaultController implements Runnable, Controller {
 					view.onSimulationFinished();
 				}
 
-				// Update World
-				//$$ Wieso wird das nochmal gemacht, wenn die Simulation (per Judge-Urteil) schon beendet wurde?
-				view.onSimulationStep(world.getSimTimeInMs());
-
 				if(this.pause) {
 					lg.fine("Pause beginnt: Sequencer blockiert");
 					synchronized(this) {
@@ -179,7 +178,7 @@ public class DefaultController implements Runnable, Controller {
 				}
 
 				// Die ganze Simulation aktualisieren
-				//$$ Warum _nach_ dem view.update()? Heisst das nicht, die Anzeige hinkt der Simulation immer um einen Schritt hinterher?
+				//TODO Warum _nach_ dem view.update()? Heisst das nicht, die Anzeige hinkt der Simulation immer um einen Schritt hinterher?
 				world.updateSimulation();
 
 				// Add/Start new Bot
@@ -258,7 +257,7 @@ public class DefaultController implements Runnable, Controller {
 
 		if ((this.world != world) && (this.world != null))
 			this.world.cleanup();
-		
+
 		this.world = world;
         BotManager.reset();
         BotManager.setWorld(world);
@@ -272,7 +271,7 @@ public class DefaultController implements Runnable, Controller {
 		this.world = null;
     }
 
-	//$$ Um Himmels Willen, was soll das denn sein?
+	//TODO Um Himmels Willen, was soll das denn sein?
 	public void reset() {
 		this.start();
 		this.pause = false;

@@ -33,6 +33,14 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 		rs.next();
 		return rs.getTimestamp("scheduled");
 	}
+	
+	//$$ doc getGameInterval
+	public int getGameIntervalInS(int levelId) throws SQLException {
+		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?",
+			levelId);
+		rs.next();
+		return rs.getInt("gametime_real");
+	}
 
 	/** Legt ein Vorrundenspiel in der Datenbank an.
 	 *
