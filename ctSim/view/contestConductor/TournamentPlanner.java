@@ -59,7 +59,7 @@ public class TournamentPlanner {
 
 	private PlannerToDatabaseAdapter db;
 
-	//$$ doc
+	//$$ doc TournamentPlanner(...)
 	/** Konstruiert einen TournamentPlanner, der mit der &uuml;bergebenen
 	 * Datenbank verbunden ist. N&uuml;tzlich f&uuml;r Unit-Tests, die dem
 	 * Planner &uuml;ber diesen Konstruktor eine Testdatenbank unterschieben
@@ -131,15 +131,7 @@ public class TournamentPlanner {
 		lg.fine("Vorrunde geplant");
 	}
 
-	/** Hilfsmethode, um ohne Copy-Paste die gleiche Exception an
-	 * mehreren Stellen verwenden zu k&ouml;nnen. */
-	private static TournamentPlanException getWinnerNullExcp() {
-		return new TournamentPlanException("Eins oder mehrere der " +
-				"Vorrundenspiele haben winner == NULL. Hauptrunde kann " +
-				"nicht geplant werden.");
-	}
-
-	/** Plant die Hauptrunde. Sie besteht aus $$ doc
+	/** Plant die Hauptrunde. Sie besteht aus $$ doc planMainRound
 	 *
 	 * @throws TournamentPlanException
 	 * @throws IllegalStateException
@@ -167,15 +159,15 @@ public class TournamentPlanner {
 		}
 
 		// Hauptcode
-		prelimRound.first();
-		TournamentTree<Integer> tree =
-			new TournamentTree<Integer>(prelimRound.getInt("winner"));
-		if (prelimRound.wasNull())
-			throw getWinnerNullExcp();
+		prelimRound.beforeFirst();
+		TournamentTree tree = new TournamentTree();
 		while(prelimRound.next()) {
-			tree = tree.add(prelimRound.getInt("winner"));
-			if (prelimRound.wasNull())
-				throw getWinnerNullExcp();
+			tree.add(prelimRound.getInt("winner"));
+			if (prelimRound.wasNull()) {
+				throw new TournamentPlanException("Eins oder mehrere der " +
+					"Vorrundenspiele haben winner == NULL. Hauptrunde kann " +
+					"nicht geplant werden.");
+			}
 		}
 
 		// Gesundheitscheck
@@ -197,7 +189,7 @@ public class TournamentPlanner {
 
 		// Baum in die Datenbank und Zeitplanung erstellen
 		for (int i = 1; i <= tree.getLowestLevelId(); i *= 2) {
-			writeLevelToDb(tree, i);
+			writeLevelToDb(tree.getTournamentPlan(i), i);
 			scheduleGames(i);
 		}
 
@@ -207,29 +199,31 @@ public class TournamentPlanner {
 		lg.fine("Hauptrunde geplant");
 	}
 
-	/** Schreibt ein Level aus einem TournamentTree in die Datenbank. Manche
-	 * oder alle der Spieler, die im Baum sitzen, k&ouml;nnen
-	 * <code>null</code> sein (d.h. erst,
-	 * wenn die Ergebnisse niedrigerer Levels feststehen, r&uuml;cken Bots
-	 * auf diese Pl&auml;tze vor). Wenn Spieler <code>null</code> sind, werden
-	 * die zugeh&ouml;rigen Spiele trotzdem angelegt.
+	/**
+	 * Schreibt ein Level aus einem TournamentTree in die Datenbank. Manche oder
+	 * alle der Spieler, die in dem Level sitzen, k&ouml;nnen <code>null</code>
+	 * sein (d.h. anfangs steht nicht fest, wer im Achtelfinale spielt, erst
+	 * nach Spielen des Sechzehntelfinales wird das nach und nach klar). Wenn
+	 * Spieler <code>null</code> sind, werden die zugeh&ouml;rigen Spiele
+	 * trotzdem angelegt.
 	 *
-	 * @param tree Der TournamentTree, aus dem die Daten zu lesen sind.
-	 * @param levelWanted Nummer des zu schreibenden Levels.
+	 * @param players Eine Liste von Bot-IDs, die die Spieler
+	 * repr&auml;sentieren. <code>null</code> bedeutet, das für dieses Spiel
+	 * (noch) kein Spieler vorgesehen ist.
+	 * @param levelId Nummer des zu schreibenden Levels.
 	 * @throws TournamentPlanException Falls
 	 * {@link DatabaseAdapter#placeBot(Integer, int, int)} diese Exception
 	 * wirft.
 	 */
-	private void writeLevelToDb(TournamentTree<Integer> tree, int levelWanted)
+	private void writeLevelToDb(ArrayList<Integer> players, int levelId)
 	throws SQLException, TournamentPlanException {
 		int gameId = 1;
 		// Spieler auf diesem Level; kann null enthalten
-		ArrayList<Integer> players = tree.getTournamentPlan(levelWanted);
 		assert players.size() % 2 == 0;
 	    for (int i = 0; i < players.size(); i += 2) {
-    		db.createMainGame(levelWanted, gameId);
-   			db.placeBot(players.get(i), levelWanted, gameId);
-   			db.placeBot(players.get(i + 1), levelWanted, gameId);
+    		db.createMainGame(levelId, gameId);
+   			db.placeBot(players.get(i), levelId, gameId);
+   			db.placeBot(players.get(i + 1), levelId, gameId);
     		gameId++;
 	    }
     }

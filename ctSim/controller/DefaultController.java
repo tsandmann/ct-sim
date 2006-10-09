@@ -45,7 +45,7 @@ import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
 import ctSim.view.View;
 
-//$$ Es passiert Mist, wenn TestBots hinzugefuegt werden, bevor ein Parcours existiert. Untersuchen.
+//TODO Es passiert Mist, wenn TestBots hinzugefuegt werden, bevor ein Parcours existiert. Untersuchen.
 
 /**
  * Zentrale Controller-Klasse des c't-Sim
@@ -126,15 +126,17 @@ public class DefaultController implements Runnable, Controller {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		int timeout = 10000;
-		
-		try {
-			timeout = Integer.parseInt(ConfigManager.getValue("ctSimTimeout")); 
-		} catch (Exception e) {
-			lg.warn("Kein ctSimTimeout in der Config-Datei festgelegt. Nehme Default-Wert (10s)"); 
-		}
+		int timeout = 10000; //$$ Default lieber in Klasse Config
+
+        try {
+        	timeout = Integer.parseInt(ConfigManager.getValue("ctSimTimeout"));
+        } catch(NumberFormatException nfe) {
+            lg.warning(nfe, "Problem beim Parsen der Konfiguration: " +
+                    "Parameter 'ctSimTimeout' ist keine Ganzzahl");
+        }
 
 		lg.fine("Sequencer gestartet");
+		lg.fine("ctSimTimeout ist %d ms", timeout);
 		Thread thisThread = Thread.currentThread();
 
 		startSignal = new CountDownLatch(1);
@@ -142,11 +144,10 @@ public class DefaultController implements Runnable, Controller {
 
 		while(this.ctrlThread == thisThread) {
 	        try {
-				long realTimeBegin = System.nanoTime()/1000000;
-
+				long realTimeBeginInMs = System.currentTimeMillis();
 
 				// Warte, bis alle Bots fertig sind und auf die naechste
-	        		// Aktualisierung warten
+	        	// Aktualisierung warten
 				// breche ab, wenn die Bots zu lange brauchen !
 				if(! doneSignal.await(timeout, TimeUnit.MILLISECONDS)) {
 					lg.warn("Bot-Probleme: Ein oder mehrere Bots waren " +
@@ -191,13 +192,10 @@ public class DefaultController implements Runnable, Controller {
 
 				// Schlafe nur, wenn nicht schon zuviel Zeit "verbraucht" wurde
 				// Felix: !!!Finger weg von den folgenden Zeilen !!!
-				long timeToSleep = world.getSimStepIntervalInMs() - ((System.nanoTime()/1000000 - realTimeBegin));
-				if ( timeToSleep > 0)
+				long timeToSleep = world.getSimStepIntervalInMs() -
+						(System.currentTimeMillis() - realTimeBeginInMs);
+				if (timeToSleep > 0)
 					Thread.sleep(timeToSleep);
-
-				//$$ Falsch: Nicht die ganze Intervall-Zeit warten -- world.update() und Konsorten haben davon schon Zeit verbraucht, das muss einbezogen werden
-				//Thread.sleep(this.world.getSimStepIntervalInMs());
-
 	        } catch (InterruptedException e) {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();
@@ -295,7 +293,7 @@ public class DefaultController implements Runnable, Controller {
         /* Der Sim sollte auch auf die TCP-Verbindung lauschen, wenn es Testbots
          * gibt. Aus diesem Grund ist der thread, der auf TCP-Verbindungen
          * lauscht, an dieser Stelle eingebaut. */
-        int p = 10001; //$$ Default sollte hier weg und in ConfigManager umziehen
+        int p = 10001; //TODO Default sollte hier weg und in ConfigManager umziehen
 
         try {
             p = Integer.parseInt(ConfigManager.getValue("botport"));
@@ -390,9 +388,9 @@ public class DefaultController implements Runnable, Controller {
                 }
             } catch (IOException e) {
                 lg.warning(e, "Kann nicht an Port "+port+" binden. " +
-                        "Moeglicherweise laeuft c't-Sim schon.");
-			}
-            
+                        "M\u00F6glicherweise l\u00E4uft c't-Sim schon.");
+            }
+
             lg.fine("BotSocketListener beendet sich");
         }
     }
@@ -501,11 +499,15 @@ public class DefaultController implements Runnable, Controller {
 
         lg.info("Starte externen Bot '"+filename+"'");
         try {
-    		if (System.getProperty("os.name").indexOf("Linux") >=0){
-    			Runtime.getRuntime().exec("chmod ugo+x "+filename);
-    			// Keine Ahnung, warum dieses Delaz noetig ist, aber ohne geht es nicht
-    			Thread.sleep(1000);
+    		if (System.getProperty("os.name").indexOf("Linux") >= 0){
+    			Process p = Runtime.getRuntime().exec("chmod ugo+x "+filename);
+    			p.waitFor(); // Warten bis der gelaufen ist
+    			if (p.exitValue() != 0) {
+    				lg.warning("Fehler beim Setzen der execute-Permission: " +
+    						"chmod lieferte %d zur\u00FCck", p.exitValue());
+    			}
     		}
+    		// Bot ausfuehren
             Runtime.getRuntime().exec(filename);
         } catch (Exception e){
             lg.warning(e, "Fehler beim Starten von Bot '"+filename+"'");
@@ -523,8 +525,6 @@ public class DefaultController implements Runnable, Controller {
 //			this.botsToStart.add(bot);
 
 			bot.setController(this);
-			// Diese Funktion hatte keine Funktion mehr, daher auskommentiert
-			//bot.setWorld(this.world);
 
 			BotManager.addBot(bot);
 

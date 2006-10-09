@@ -1,8 +1,6 @@
 package ctSim;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,9 +14,7 @@ import javax.media.j3d.Texture2D;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector4f;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,30 +23,10 @@ import org.xml.sax.SAXException;
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
-import ctSim.util.XmlDocument;
+import ctSim.controller.Config;
 
-//$$ Typen verifizieren
+//TODO Typen verifizieren
 public class ConfigManager {
-	/** <p>Default-Werte der Konfiguration. Ist ein Array, um sie im Quelltext
-	 * m&ouml;glichst bequem notieren zu k&ouml;nnen.</p>
-	 *
-	 * <p>Vorteile: Die Werte sind hier zentral statt quer durch den Quelltext
-	 * verteilt; Code, der {@link #getValue(String)} aufruft, kann einfacher
-	 * werden, da nicht dauernd der R&uuml;gabewert gegen <code>null</code>
-	 * gepr&uuml;ft werden muss &ndash; wenn in diesem Array ein Wert steht,
-	 * kann getValue(String) kein <code>null</code> mehr liefern.</p>*/
-	private static final String[] configDefaults = {
-		"botport", "10001",
-		"judge", "ctSim.model.rules.DefaultJudge",
-		"worlddir", ".",
-		"botdir", ".",
-		"useContestConductor", "false",
-		"contestBotTargetDir", "tmp",
-		"contestBotFileNamePrefix", "tmp-contest-bot",
-		"contestBotFileNameSuffix", ".exe",
-		"simTimePerStep", "10",
-	};
-
 	/** <p>Enth&auml;lt die Einzelparameter der Konfiguration (spiegelt also
 	 * die <code>&lt;parameter></code>-Tags wider)</p>
 	 *
@@ -58,18 +34,11 @@ public class ConfigManager {
 	 * dem hartkodierten Array <code>configDefaults</code> kommen. Beim
 	 * sp&auml;teren Parsen der Konfigurationsdatei werden Defaults
 	 * dann m&ouml;glicherweise &uuml;berschrieben.</p> */
-	private static HashMap<String, String> config =
-		new HashMap<String, String>();
+	private static Config config;
 
 	/** Hilfskonstruktion. Sobald die Implementierung von getBotConfig()
 	 * &uuml;berarbeitet ist, wird das unn&ouml;tig. */
 	private static String filename;
-
-	static { // configDefaults laden
-		assert configDefaults.length % 2 == 0;
-		for (int i = 0; i < configDefaults.length; i += 2)
-			config.put(configDefaults[i], configDefaults[i + 1]);
-	}
 
 	public static String getValue(String key) {
 		return config.get(key);
@@ -85,30 +54,10 @@ public class ConfigManager {
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	public static void loadConfigFile(File file)
+	public static void loadConfigFile(Config.SourceFile file)
 	throws SAXException, IOException, ParserConfigurationException {
-		try {
-			if (file.exists()) {
-				System.out.println("Lade Konfiguration aus '"+file+"'");
-				filename = file.getPath();
-                for(Node n : new XmlDocument(file).
-                	getNodeList("/ct-sim/parameter")) {
-                	config.put(
-                		n.getAttributes().getNamedItem("name").getNodeValue(),
-                		n.getAttributes().getNamedItem("value").getNodeValue());
-                }
-			}
-			else {
-				throw new FileNotFoundException("Konfigurationsdatei '"+file+
-						"' nicht gefunden");
-			}
-		} catch (XPathExpressionException e) {
-			// "Kann nicht passieren"
-			e.printStackTrace();
-		} catch (DOMException e) {
-			// Obskurer Fehler, wenn die Laenge der DOMStrings nicht reicht
-			e.printStackTrace();
-		}
+		config = new Config(file);
+		filename = file.getPath();
 	}
 
 	/*

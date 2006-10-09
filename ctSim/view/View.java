@@ -80,10 +80,10 @@ public interface View {
 	 */
 	public void onJudgeSet(Judge j);
 
-	// $$ doc
+	// $$ doc onBotAdded
 	public void onBotAdded(Bot bot);
 
-	// $$ doc
+	// $$ doc onBotRemoved
 	public void onBotRemoved(Bot bot);
 
 	/**

@@ -306,7 +306,7 @@ public class ContestConductor implements View {
 		startGame(game);
     }
 
-	/** 
+	/**
 	 * Welcher Rechenr soll den naechsten Bot ausfuehren
 	 */
 	private int nextHost=1;
@@ -369,7 +369,7 @@ public class ContestConductor implements View {
 				ConfigManager.getValue("contestBotFileNamePrefix"),
 				ConfigManager.path2Os(ConfigManager.getValue("contestBotFileNameSuffix")),
 				new File(ConfigManager.getValue("contestBotTargetDir")));
-		f.deleteOnExit(); //$$ deleteOnExit() scheint nicht zu klappen
+		f.deleteOnExit(); //$$ deleteOnExit() scheint nicht zu klappen; Theorie:Prozesse noch offen wenn VM das aufrufen will
 		lg.fine("Schreibe Bot nach '"+f.getAbsolutePath()+"'");
 		InputStream in = b.getBinaryStream();
 		FileOutputStream out = new FileOutputStream(f);
@@ -379,9 +379,8 @@ public class ContestConductor implements View {
             out.write(buf, 0, len);
 		out.close();
 
-		
+		// Datei ausfuehren + warten bis auf den neuen Bot hingewiesen werden
 		executeBot(f);
-		
 		synchronized (botArrivalLock) {
 			//$$ Schoener waere vielleicht Verwendung von java.util.concurrent.Future
 			// Schutz vor spurious wakeups (siehe Java-API-Doku zu wait())

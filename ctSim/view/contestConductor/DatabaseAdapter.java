@@ -37,18 +37,9 @@ class DatabaseAdapter {
         private static final long serialVersionUID =
         	- 293074803104060506L;
 
-        private final int maxSize;
-
-		public StatementCache(final int maxSize) {
-	        super();
-	        this.maxSize = maxSize;
-        }
-
 		@SuppressWarnings("synthetic-access")
         @Override
 		public PreparedStatement get(Object key) {
-			if (size() >= maxSize)
-				clear();
 			// Wenn nicht drin, hinzufuegen, damit super.get garantiert was
 			// zurueckliefert
 			if (! containsKey(key)) {
@@ -141,14 +132,15 @@ class DatabaseAdapter {
 	private Connection dbConn;
 
 	//$$ doc statementCache
-	protected StatementCache statementCache = new StatementCache(100);
+	protected StatementCache statementCache = new StatementCache();
 
 
 	protected DatabaseAdapter(ContestDatabase db) {
 		dbConn = db.getConnection();
+		lg.info("Verwende Datenbank " + dbConn);
 	}
 
-	//$$$ doc getPS
+	//$$ doc getPS
 	private PreparedStatement buildPreparedStatement(String sqlWithInParams,
 		Object... inValues) throws SQLException {
 		PreparedStatement rv = statementCache.get(sqlWithInParams);
@@ -162,9 +154,70 @@ class DatabaseAdapter {
 		return rv;
 	}
 
-	//$$$ doc execSql()
+	/**
+	 * <p>
+	 * F&uuml;hrt einen SQL-Befehl aus, unter Benutzung eines Caches von
+	 * Befehlen. Falls der SQL-Befehl ein SELECT ist, gibt die Methode die
+	 * selektierten Daten zur&uuml;ck.
+	 * </p>
+	 * <p>
+	 * <strong>Beispielaufruf:</strong>
+	 * <code>ResultSet r = execSql("select * from gurken where id = ? and length = ?", gurkenId, 42);</code>
+	 * &ndash; Die Methode verwendet SQL-Strings mit IN-Parametern (dieselbe
+	 * Syntax wie in {@link PreparedStatement} dokumentiert). Im wesentlichen
+	 * gilt: Die Fragezeichen im String werden reihenfolgenrichtig durch die
+	 * Parameter ersetzt: Erstes Fragezeichen = erster Parameter, zweites =
+	 * zweiter Parameter, usw. Für die Ersetzung wird
+	 * {@link PreparedStatement#setObject(int, Object)} verwendet; Details siehe
+	 * dessen Dokumentation und dessen Beschreibung in der <a
+	 * href="http://java.sun.com/products/jdbc/download.html">JDBC-Spezifikation</a>
+	 * (für Java&nbsp;1.5 gilt JDBC&nbsp;3.0, Sektion&nbsp;13.2.2.2 und
+	 * Anhang&nbsp;B-4).
+	 * </p>
+	 * <p>
+	 * <strong>Wichtig</strong> bei der Verwendung der Methode ist, die Zahl
+	 * der verschiedenen SQL-Strings klein zu halten.
+	 * <ul>
+	 * <li>Doof:
+	 * <code>execSql("select * from rueben where id = " + ruebenId + " and mass > " + minMass);</code></li>
+	 * <li>Clever:
+	 * <code>execSql("select * from rueben where id = ? and mass > ?", ruebenId, minMass);</code></li>
+	 * </ul>
+	 * Bei wiederholten Aufrufen (etwa mit wechselnden <code>ruebenId</code>-Werten)
+	 * ist der Speicherbedarf im ersteren Fall linear ansteigend, da die Strings
+	 * und daher die PreparedStatement-Objekte immer wieder neu erzeugt werden.
+	 * Im letzteren Fall ist der Speicherbedarf konstant, da die Methode den
+	 * String schon kennt und das PreparedStatement-Objekt des vorherigen
+	 * Aufrufs wiederverwendet.
+	 * </p>
+	 * <p>
+	 * <strong>Wozu?</strong> Die Methode mit ihrem Statement-Cache wurde
+	 * aufgrund von Speicherlecks im ctSim erforderlich. Es hat sich
+	 * herausgestellt, dass bisher die laufend erzeugten Statements offenbar
+	 * erst zur Garbage Collection freigegeben werden, wenn das
+	 * Connection-Objekt, von dem sie erzeugt wurden, geschlossen wurde &ndash;
+	 * d.h. am Programmende. Korrekt angewendet l&ouml;st diese Methode das
+	 * Speicherproblem.
+	 * </p>
+	 * <p>
+	 * Die vorliegende Implementierung unterst&uuml;tzt nur SELECT, INSERT,
+	 * UPDATE und DELETE. Unterst&uuml;tzung f&uuml;r weitere SQL-Befehle sollte
+	 * leicht nachzur&uuml;sten sein.
+	 * </p>
+	 *
+	 * @param sqlWithInParams (siehe Beispielaufruf oben)
+	 * @param inValues (siehe Beispielaufruf oben)
+	 * @return Falls der Parameter <code>sqlWithParams</code> mit "select"
+	 * beginnt, das ResultSet, wie es ein Aufruf von executeQuery mit demselben
+	 * SQL-Befehl zur&uuml;ckgegeben h&auml;tte. Falls der genannte Parameter
+	 * mit "insert", "update" oder "delete" beginnt, wird <code>null</code>
+	 * zur&uuml;ckgegeben.
+	 * @throws IllegalArgumentException Falls der Parameter
+	 * <code>sqlWithParams</code> weder mit SELECT noch mit INSERT, UPDATE
+	 * oder DELETE beginnt. (Gro&szlig;-/Kleinschreibung irrelevant.)
+	 */
 	protected ResultSet execSql(String sqlWithInParams, Object... inValues)
-	throws SQLException {
+	throws SQLException, IllegalArgumentException {
 		if (sqlWithInParams.toLowerCase().startsWith("select")) {
 			return buildPreparedStatement(sqlWithInParams, inValues).
 				executeQuery();
@@ -174,8 +227,8 @@ class DatabaseAdapter {
 			buildPreparedStatement(sqlWithInParams, inValues).executeUpdate();
 			return null;
 		} else {
-			throw new SQLException("Kann keine SQL-Befehle au\u00DFer " +
-					"SELECT, INSERT, UPDATE und DELETE");
+			throw new IllegalArgumentException("Kann keine SQL-Befehle " +
+					"au\u00DFer SELECT, INSERT, UPDATE und DELETE");
 		}
 	}
 

@@ -5,7 +5,7 @@ import ctSim.model.World;
 import ctSim.view.gui.Debug;
 
 //$$ doc Judge
-//$$ Umbenennen in "Referees" (auch Package)
+//TODO Umbenennen in "Referees" (auch Package)
 //$$ Grosses Ausmisten
 /**
  * Abstrakte Superklasse f&uuml;r alle Judges, die pr&uuml;fen,
@@ -28,7 +28,7 @@ public abstract class Judge {
 	/** Verweis auf den zuegehoerigen controller */
 	protected DefaultController controller;
 
-	//$$ ??
+	//$$ startTime Wofuer?
 	/** Welt-Zeit zu Beginn des Wettkampfes [ms] */
 	private long startTime = 0;
 

@@ -8,6 +8,7 @@ import ctSim.model.bots.Bot;
 import ctSim.util.FmtLogger;
 import ctSim.view.View;
 
+//$$ Umziehen hinter kuenftige ModelFacade?
 public class BotManager {
 	protected static FmtLogger lg = FmtLogger.getLogger(
 		"ctSim.controller.BotManager");
@@ -73,7 +74,7 @@ public class BotManager {
 	}
 
 	public static synchronized boolean removeBotOnNextSimStep(Bot bot) {
-		world.removeAliveObstacle(bot); //$$ Wieso das hier sein muss, weiss auch keiner
+		world.removeAliveObstacle(bot); //TODO Wieso das hier sein muss, weiss auch keiner
 		return (bots.remove(bot) || botsToStart.remove(bot))
 			&& botsToStop.add(bot);
 	}

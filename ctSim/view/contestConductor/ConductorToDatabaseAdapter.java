@@ -37,9 +37,9 @@ import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
  * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class ConductorToDatabaseAdapter extends DatabaseAdapter {
-	//$$$ doc Game
+	//$$ doc Game, 2 Methoden high-performance
 	// Annahme: Keiner modifiziert ctsim_game waehrend wir laufen
-	//$$$ lock her
+	//$$ lock her
 	/** 8 fuer Achtelfinale, 4 fuer Viertelfinale usw. Ist zusammen mit
      * 'currentGameId' DB-Schl&uuml;ssel f&uuml;r ein Spiel.
      *
@@ -160,7 +160,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     	ArrayList<Object> values = new ArrayList<Object>();
     	values.add(currentGame.getUniqueId());
     	values.add(simTimeElapsed);
-    	Iterator<Bot> it = bots.iterator();
+        Iterator<Bot> it = bots.iterator();
 
     	Bot b1 = it.next();
     	values.addAll(getFieldValues(b1));
@@ -173,7 +173,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     	} else {
     		// wir haben einen Bot
     		execSql(common + oneBot, values.toArray());
-    	}
+    }
     }
 
     //$$ doc
@@ -450,4 +450,4 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     private boolean isCurrentGameMainRound() throws NullPointerException {
         return currentGame.getLevelId() != -1;
     }
-}
+        }

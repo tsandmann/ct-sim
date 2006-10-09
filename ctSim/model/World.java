@@ -93,9 +93,10 @@ public class World {
 
 	private Set<ViewPlatform> views = new HashSet<ViewPlatform>();
 
-	/** Die Quelle, aus der der Parcours dieser Welt gelesen wurde. Siehe
-	 * Dokumentation des Konstruktors.
-	 * @see #World(InputSource) */
+	/**
+	 * Die Quelle, aus der der Parcours dieser Welt gelesen wurde. Siehe
+	 * {@link #World(InputSource, EntityResolver)}.
+	 */
 	private InputSource source;
 
 	///////////////////////////////////////////////////////////////////////////
@@ -120,11 +121,16 @@ public class World {
 	 */
 	private long simTimeInMs = 0;
 
-	/** <p>Liefert den Zeitraffer-/Zeitlupen-Faktor: Wieviel Realzeit
+	/**
+	 * <p>
+	 * Liefert den Zeitraffer-/Zeitlupen-Faktor: Wieviel Realzeit
 	 * (Armbanduhrenzeit) vergeht zwischen dem Beginn eines Simulatorschritts
-	 * und dem Beginn des n&auml;chsten Simulatorschritts?</p>
-	 *
+	 * und dem Beginn des n&auml;chsten Simulatorschritts? &ndash; Einheit
+	 * Millisekunden.
+	 * </p>
+	 * <p>
 	 * N&auml;heres siehe {@link #setSimStepIntervalInMs(int)}.
+	 * </p>
 	 */
 	public int getSimStepIntervalInMs() {
 		return this.simStepIntervalInMs;
@@ -136,7 +142,7 @@ public class World {
 	 *
 	 * <p>Vorg&auml;nge in der Simulation werden von diesem Wert nicht
 	 * beeinflusst, da unabh&auml;ngig von ihm jeder Simulationsschritt
-	 * ausgef&uuml;hrt wird. Der Wert bestimmt nur, wie lange
+	 * ausgef&uuml;hrt wird. Der Wert beeinflusst nur, wie lange
 	 * zwischen den Schritten (in Realzeit) gewartet wird.</p>
 	 *
 	 * @param timeInterval Zeitspanne [ms], wieviel Zeit zwischen dem
@@ -215,27 +221,26 @@ public class World {
 
 	///////////////////////////////////////////////////////////////////////////
 
-	/** <p>Liest einen Parcours aus einer XML-Quelle und baut damit eine
-	 * Welt.</p>
+	/**
+	 * <p>
+	 * Liest einen Parcours aus einer XML-Quelle und baut damit eine Welt.
+	 * </p>
+	 * <p>
+	 * Der Konstruktor ist privat, da ihn niemand von au&szlig;en verwendet hat.
+	 * Es stehen die statischen Methoden <code>buildWorldFromFile</code> und
+	 * <code>buildWorldFromXmlString</code> aus dieser Klasse zu
+	 * Verf&uuml;gung, um Welten zu erzeugen.
+	 * </p>
 	 *
-	 * <p>Der Konstruktor ist privat, da ihn niemand von au&szlig;en verwendet
-	 * hat. Der DefaultController verwendet die statischen Methoden
-	 * <code>buildWorldFromFile</code> und
-	 * <code>buildWorldFromXmlString</code> aus dieser Klasse, um Welten
-	 * zu erzeugen.</p>
-	 *
-	 * @param source Die Xerces-Eingabequelle, aus der der die
-	 * XML-Darstellung des
-	 * Parcours kommt. Das Parsen der Quelle liefert einen Parcours, auf
+	 * @param source Die Xerces-Eingabequelle, aus der der die XML-Darstellung
+	 * des Parcours kommt. Das Parsen der Quelle liefert einen Parcours, auf
 	 * dessen Grundlage eine Instanz der Welt konstruiert wird.
-	 * <code>source</code> kann auf die
-	 * Parcours-Datei zeigen oder (via einen java.io.StringReader) auf das
-	 * in einem String stehende XML. Potentiell auch auf anderes.
-	 *
-	 * @param resolver Der Xerces-EntityResolver, der beim Parsen des
-	 * XML verwendet werden soll. Details siehe Methode
-	 * ParcoursLoader.loadParcours.
-	 *
+	 * <code>source</code> kann auf die Parcours-Datei zeigen oder (via einen
+	 * java.io.StringReader) auf das in einem String stehende XML. Potentiell
+	 * auch auf anderes.
+	 * @param resolver Der Xerces-EntityResolver, der beim Parsen des XML
+	 * verwendet werden soll. Details siehe
+	 * {@link ParcoursLoader#loadParcours(InputSource, EntityResolver)}.
 	 * @see ParcoursLoader#loadParcours(InputSource, EntityResolver)
 	 */
 	private World(InputSource source, EntityResolver resolver)
@@ -940,14 +945,13 @@ public class World {
 		if (pickInfo == null)
 			return 100.0;
 		double d = pickInfo.getClosestDistance();
-		
 		return d;
 	}
 
 	/** Damit jedes Obstacle fair behandelt wird, merken wir uns, wer das letztemal zuerst dran war */
 	private int aliveObstaclePtr=0;
 
-	private PickConeRay pickConeRay =new PickConeRay();
+	private PickConeRay pickConeRay = new PickConeRay();
 
 	/**
 	 * Diese Methode aktualisiert die gesamte Simualtion

@@ -44,6 +44,7 @@ public class Config extends HashMap<String, String> {
 		"contestBotFileNamePrefix", "tmp-contest-bot",
 		"contestBotFileNameSuffix", ".exe",
 		"simTimePerStep", "10",
+		"ctSimTimeout", "10000",
 	};
 
 	//LODO Klappt der Link "#get" im Javadoc? get ist geerbt

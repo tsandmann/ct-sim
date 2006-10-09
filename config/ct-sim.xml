@@ -11,17 +11,17 @@
 	<!-- AliveObstacleTimeout ist die Zeit in [ms], die die work()-Methode eines AliveObstacles brauchen darf, um zum ende zu kommen. Wird sie ueberschritten, deakticviert sich das Obstacle selbst. Steht der Timeout auf 0, hat es beliebig viel Zeit -->
 	<parameter name="AliveObstacleTimeout" value="0"/>
 
-	<!-- parcours ist die Welt, die per default geladen wird. Angabe unabhängig von worlddir -->
+	<!-- parcours ist die Welt, die per default geladen wird. Angabe unabhaengig von worlddir -->
 	<parameter name="parcours" value="parcours/testparcours2.xml"/>
-	<!-- worlddir ist das Verzeichnis, in dem alle Weltdateie liegen -->
+	<!-- worlddir ist das Verzeichnis, in dem alle Weltdateien liegen -->
 	<parameter name="worlddir" value="./parcours"/>
 
 	<!-- botport ist der TCP-Port, auf dem der sim auf Bots lauscht-->
 	<parameter name="botport" value="10001"/>
 
-	<!-- botbinary ist die Bot-Datei, die per default gestartet wird. Der Name wird automatisch von Linux-nachw Windows konvertiert und umgekehrt. Angabe unabhängig von botdir-->
+	<!-- botbinary ist die Bot-Datei, die per default gestartet wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt. Angabe unabhaengig von botdir-->
 	<parameter name="botbinary" value="..\ct-Bot\Debug-W32\ct-Bot.exe"/>
-	<!-- botdir ist das Verzeichnis, in dem nach Bots gesucht wird. Der Name wird automatisch von Linux-nachw Windows konvertiert und umgekehrt-->
+	<!-- botdir ist das Verzeichnis, in dem nach Bots gesucht wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt -->
 	<parameter name="botdir" value="..\ct-Bot\Debug-W32"/>
 
 	<!-- judge ist der Klassenname des Judges, den der Sim per default lädt-->

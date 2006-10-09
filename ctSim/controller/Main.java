@@ -24,7 +24,7 @@ import ctSim.view.ViewYAdapter;
 import ctSim.view.contestConductor.ContestConductor;
 import ctSim.view.gui.CtSimFrame;
 
-//$$ Doc: Grobe Architektur beschreiben; wer verdrahtet M, V und C?
+//$$ doc Grobe Architektur beschreiben; wer verdrahtet M, V und C? -> auch Pico beschreiben
 /**
  * <p>
  * Haupt-Einsprungpunkt in den ctSim. Der normale Weg, das Programm zu starten,
@@ -51,7 +51,7 @@ public class Main {
 			new Config.SourceFile(DEFAULT_CONFIGFILE));
 	}
 
-	//$$ "Usage"-Meldung waere gut
+	//TODO "Usage"-Meldung waere gut
 	/**
 	 * Behandelt die Kommandozeilenargumente. Momentan zul&auml;ssig:
 	 * <ul>
@@ -136,8 +136,8 @@ public class Main {
 					r.getThrown().printStackTrace(new PrintWriter(s));
 					throwable = s.toString();
 				}
-				// $$ Thread-Informationen beobachten. Ich bin mir nicht sicher -- die koennten schlicht falsch sein
-				// $$ "* 2" ist quick and dirty
+				// TODO Thread-Informationen beobachten. Ich bin mir nicht sicher -- die koennten schlicht falsch sein
+				// TODO "* 2" ist quick and dirty
 				Thread[] threads = new Thread[Thread.activeCount() * 2];
 				Thread.enumerate(threads);
 				String threadName = "";
@@ -165,17 +165,11 @@ public class Main {
 			lg.warning(e, "Problem beim Setzen des Look and Feel");
 		}
 
-		
-		View view = null;
-		Controller c = null;
+		Controller c = dependencies.get(Controller.class);
+
+		// View der Applikation ist mindestens der CtSimFrame
+		View view = new CtSimFrame(c);
 		try {
-
-			c = dependencies.get(Controller.class);
-
-			// View der Applikation ist mindestens der CtSimFrame
-			view = new CtSimFrame(c);
-
-		
 			// View um ContestConductor erweitern falls so konfiguriert
 			if (ConfigManager.getValue("useContestConductor").
 					equalsIgnoreCase("true")) {
@@ -183,9 +177,9 @@ public class Main {
 					dependencies.get(ContestConductor.class));
 			}
 		} catch (Exception e) {
-			lg.warn("Probleme beim instantiieren des ContestConductor "+e);
-			e.printStackTrace();
+			lg.warn(e, "Probleme beim Instanziieren des ContestConductor");
 		}
+
 		c.setView(view);
 		c.onApplicationInited();
     }

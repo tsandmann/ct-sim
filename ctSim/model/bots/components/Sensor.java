@@ -136,7 +136,7 @@ public abstract class Sensor<E> extends BotComponent {
 				this.value = updateValue();
 
 				// TODO: Unbedingt anpassen: 'Characteristics' muessen allg. werden -> Hierarchie der Sens. wiederspiegeln?
-				if(this.characteristic != null) { //$$ So geht's nicht. CtBotSimTcp bekommt wenn er zum allerersten Mal bei uns getValue macht den Wert in mm zurueck, der noch nicht durch die Characteristic durch ist
+				if(this.characteristic != null) { //TODO So geht's nicht. CtBotSimTcp bekommt wenn er zum allerersten Mal bei uns getValue macht den Wert in mm zurueck, der noch nicht durch die Characteristic durch ist
 					// System.out.print(this.getName()+" :  "+this.value+"  ->  ");
 					// Einfacher lookup:
 					// this.value = (E)((Double)((Integer)this.characteristic.lookup((((Number)this.value).intValue())/10)).doubleValue());

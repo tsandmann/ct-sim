@@ -4,6 +4,10 @@ import java.lang.reflect.Array;
 
 //$$ doc Misc
 public class Misc {
+	public static double log2(double x) {
+		return Math.log(x) / Math.log(2);
+	}
+
 	public static boolean startsWith(
 			String fullString, String... whitelistOfBeginnings) {
 		if (whitelistOfBeginnings == null)

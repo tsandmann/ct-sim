@@ -1,6 +1,16 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-09 Hendrik Krauss [hkr@heise.de]:
+* Turnierbaum neu gestrickt; macht Baeume jetzt so, wie's laut Maildiskussion sein soll
+* Schema fuer Contest-Datenbank inkl. umfangreicher Doku eingecheckt
+* Diverse Verbesserungen
+
+2006-10-06 Hendrik Krauss [hkr@heise.de]:
+* angle-world-lamps.xml eingecheckt als Testparcours fuer den PickConeRay-Bug; siehe Doku in der Klasse World
+* CtSimFrame hat jetzt einen Screenshot-Button, der ins Temp-Verzeichnis des Systems einen Screenshot legt (Linux: /tmp Windows: /Dokumente und Einstellungen/Kasimir/Lokale Einstellungen/Temp)
+* PicoContainer bewirkt, dass ConfigManager sich vereinfacht. Neue Klasse Config.
+
 2006-10-06 Hendrik Krauss [hkr@heise.de]: Funktion neuimplementiert, die pro Simschritt in die DB loggt: unkomplizierter, kein Speicherleck mehr
 
 2006-10-05 Benjamin Benz [bbe@heise.de]: remote-Ausfuehrung von Bots geht

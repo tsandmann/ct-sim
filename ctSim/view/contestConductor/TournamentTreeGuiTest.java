@@ -21,31 +21,34 @@ public class TournamentTreeGuiTest extends JFrame {
 	public class TournamentTreeModel implements TreeModel {
 		ArrayList<TreeModelListener> listeners =
 			new ArrayList<TreeModelListener>();
-		int currentNodePayload;
-		TournamentTree<Integer> carrier;
+		int currentLevel;
+		SpreadingTree<Integer> carrier;
 
 		public TournamentTreeModel() {
 			init();
 		}
 
 		public void init() {
-			currentNodePayload = 1;
-			carrier = new TournamentTree<Integer>(currentNodePayload++);
-			addNode();
+			currentLevel = 1;
+			addLevel();
 		}
 
-        public void addNode() {
-			carrier = carrier.add(currentNodePayload++);
+        public void addLevel() {
+        	ArrayList<Integer> li = new ArrayList<Integer>();
+        	for (int i = 1; i <= Math.pow(2, currentLevel); i++)
+        		li.add(i);
+        	carrier = SpreadingTree.buildTree(li);
 			for (TreeModelListener l : listeners)
 				l.treeStructureChanged(new TreeModelEvent(this,
 					new TreePath(carrier)));
+			currentLevel++;
         }
 
         public void removeNode() {
-        	int u = currentNodePayload - 4;
+        	int u = currentLevel - 4;
         	init();
         	for (int i = 0; i < u; i++)
-        		addNode();
+        		addLevel();
         }
 
 		public void addTreeModelListener(TreeModelListener l) {
@@ -64,8 +67,8 @@ public class TournamentTreeGuiTest extends JFrame {
 			if (index < 0 || index > 1)
 				throw new IllegalArgumentException();
 	        return index == 0
-	        	? ((TournamentTree)parent).left
-	        	: ((TournamentTree)parent).right;
+	        	? ((SpreadingTree)parent).left
+	        	: ((SpreadingTree)parent).right;
         }
 
 		public int getIndexOfChild(Object parent, Object child) {
@@ -77,7 +80,7 @@ public class TournamentTreeGuiTest extends JFrame {
         }
 
 		public boolean isLeaf(Object node) {
-	        return ((TournamentTree)node).payload != null;
+	        return ((SpreadingTree)node).payload != null;
         }
 
 		public void valueForPathChanged(TreePath path, Object newValue) {
@@ -88,7 +91,7 @@ public class TournamentTreeGuiTest extends JFrame {
     private static final long serialVersionUID = - 4828458620913240203L;
     TournamentTreeModel tm = new TournamentTreeModel();
     JTree t = new JTree(tm);
-    JLabel label = new JLabel("2 Dinger");
+    JLabel label = new JLabel("2 Level");
 
     public TournamentTreeGuiTest() {
     	setLayout(new BorderLayout());
@@ -96,10 +99,10 @@ public class TournamentTreeGuiTest extends JFrame {
     	her.addActionListener(new ActionListener() {
             public void actionPerformed(@SuppressWarnings("unused")
 				ActionEvent e) {
-	            tm.addNode();
+	            tm.addLevel();
 	            for (int i = 0; i < t.getRowCount(); i++)
 	            	t.expandRow(i);
-	            label.setText(tm.currentNodePayload - 1 + " Dinger");
+	            label.setText(tm.currentLevel - 1 + " Level");
             }
     	});
     	JButton weg = new JButton("\u2013");
@@ -109,7 +112,7 @@ public class TournamentTreeGuiTest extends JFrame {
     			tm.removeNode();
     			for (int i = 0; i < t.getRowCount(); i++)
     				t.expandRow(i);
-    			label.setText(tm.currentNodePayload - 1 + " Dinger");
+    			label.setText(tm.currentLevel - 1 + " Level");
     		}
     	});
     	JPanel p = new JPanel(new BorderLayout());
@@ -121,7 +124,7 @@ public class TournamentTreeGuiTest extends JFrame {
     	p.add(label, BorderLayout.EAST);
     	add(p, BorderLayout.NORTH);
     	add(new JScrollPane(t), BorderLayout.CENTER);
-    	setTitle("TournamentTree");
+    	setTitle("SpreadingTree");
     	setSize(200, 600);
     	setLocationRelativeTo(null);
     	setVisible(true);

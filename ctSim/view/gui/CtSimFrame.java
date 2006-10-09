@@ -19,16 +19,15 @@
 
 package ctSim.view.gui;
 
-import static java.util.logging.Level.INFO;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.logging.Handler;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -197,7 +196,8 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 	private ConsoleComponent buildLogViewer() {
     	ConsoleComponent rv = new ConsoleComponent();
     	Debug.registerDebugWindow(rv); //$$ Legacy
-    	// Wir melden uns als Handler fuer den Root-Logger an; //$$$
+    	//$$ Temporaer auskommentiert, da terminate-Bug damit zusammenhing (sehr seltsame Abhaengigkeit)
+    	// Wir melden uns als Handler fuer den Root-Logger an;
 //    	Handler h = rv.new LoggingHandler();
 //    	h.setLevel(INFO);
 //    	FmtLogger.getLogger("").addHandler(h);
@@ -225,7 +225,8 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
     			buildMenuItem("Speichern als ...",
     					icons.get("SaveAs16"), "onSaveWorld"),
     			buildMenuItem("Schlie\u00DFen",
-    					icons.get("Delete16"), "onCloseWorld"));
+    					icons.get("Delete16"), "onCloseWorld"),
+    			buildMenuItem("Screenshot", "onScreenshot"));
     	rv.add(worldMenu);
         rv.add(
         	buildMenu("Bot hinzuf\u00FCgen",
@@ -310,6 +311,17 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
     	controller.openRandomWorld();
     }
 
+	//$$ Methode vorlaeufig; weiss nicht, ob die im Endeffekt drin sein soll
+	public void onScreenshot() {
+		try {
+	        ImageIO.write(worldViewer.getScreenshot(), "png",
+	        	File.createTempFile("screenshot", ".png"));
+        } catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+        }
+	}
+
 	public void onCloseWorld() {
     	controller.closeWorld();
     	closeWorld();
@@ -372,7 +384,7 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 
 		updateLayout();
 
-		//Ausgabe macht nur Sinn, wenn �berhaupt ein Bot da ist.
+		//Ausgabe macht nur Sinn, wenn ueberhaupt ein Bot da ist.
 		if (BotManager.getSize() > 1)
 			Debug.out.println("Alle Bots entfernt.");
 	}
@@ -383,7 +395,7 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 		closeWorld();
 		world = w;
 		worldViewer.show(world);
-		validate(); //$$ noetig?
+		validate(); //$$ validate() noetig?
 	}
 
 	// TODO: Close Controller: [Was bedeutet dieses Todo? --hkr]
@@ -448,7 +460,7 @@ public class CtSimFrame extends JFrame implements ctSim.view.View {
 		this.update();
 		updateLayout();
 
-		Debug.out.println("Bot \""+bot.getName()+"\" wurde gel�scht.");
+		Debug.out.println("Bot \""+bot.getName()+"\" wurde gel\uu00F6scht.");
 	}
 
 	public void onApplicationInited() {

@@ -607,7 +607,7 @@ public class ParcoursLoader {
 	private Appearance getAppearance(int key) {
 		Appearance app= (Appearance)this.appearances.get((char)key);
 		if (app == null)
-			ErrorHandler.error("Appearance fuer '"+(char)key+"' nicht gefunden!"); //$NON-NLS-1$ //$NON-NLS-2$
+			ErrorHandler.error("Appearance fuer '"+(char)key+"' nicht gefunden!"); //$NON-NLS-1$ //$NON-NLS-2$ //$$ Das wird immer x-mal ausgegeben
 		return app;
 	}
 

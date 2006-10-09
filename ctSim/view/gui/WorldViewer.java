@@ -5,9 +5,7 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
-import javax.imageio.ImageIO;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
@@ -38,11 +36,18 @@ public class WorldViewer extends JPanel {
     private static final String NOTHING = "showing nothing";
     private static final String MODEL = "showing a model";
 
-    private final Canvas3D onScreenCanvas;
-    private final Canvas3D offScreenCanvas;
+    // Hilfsding fuer die J3D-Buerokratie
+    //$$ ist SimpleUniverse.getPreferredConfiguration() besser?
+    protected GraphicsConfiguration gc = GraphicsEnvironment.
+	    getLocalGraphicsEnvironment().getDefaultScreenDevice().
+	    getBestConfiguration(new GraphicsConfigTemplate3D());
+
+    protected final Canvas3D onScreenCanvas = new Canvas3D(gc, false);
+    protected final Canvas3D offScreenCanvas = new Canvas3D(gc, true);
+
 
     // wird mit jedem neuen Model ausgetauscht
-	private SimpleUniverse universe;
+    protected SimpleUniverse universe;
 
     public WorldViewer() {
     	setLayout(new CardLayout());
@@ -50,12 +55,6 @@ public class WorldViewer extends JPanel {
     	JPanel p = new JPanel(new GridBagLayout()); // nur zum Zentrieren
     	p.add(new JLabel("Keine Welt geladen"));
     	add(p, NOTHING);
-
-    	GraphicsConfiguration gc = GraphicsEnvironment.
-	    	getLocalGraphicsEnvironment().getDefaultScreenDevice().
-	    	getBestConfiguration(new GraphicsConfigTemplate3D());
-    	onScreenCanvas = new Canvas3D(gc, false);
-    	offScreenCanvas = new Canvas3D(gc, true);
     	add(onScreenCanvas, MODEL);
     }
 
@@ -72,14 +71,14 @@ public class WorldViewer extends JPanel {
 	 * Dieser Aufruf ist enorm wichtig -- wir instanziieren mit
 	 * jedem Aufruf von init() ca. ein Dutzend Java3D-Threads, die
 	 * nie mehr beendet wuerden ohne universe.cleanup() */
-	private void deinit() {
+	protected void deinit() {
     	if (universe != null)
     		universe.cleanup();
     }
 
-    private void init(World w) {
+    protected void init(World w) {
     	universe = new SimpleUniverse(onScreenCanvas);
-    	universe.getViewer().getView().addCanvas3D(offScreenCanvas);
+        universe.getViewer().getView().addCanvas3D(offScreenCanvas);
     	initPerspective(w);
     	universe.addBranchGraph(w.getScene());
 
