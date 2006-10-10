@@ -40,7 +40,6 @@ import javax.media.j3d.PickBounds;
 import javax.media.j3d.PickConeRay;
 import javax.media.j3d.PickInfo;
 import javax.media.j3d.PickRay;
-import javax.media.j3d.PickShape;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
@@ -103,7 +102,7 @@ public class World {
 	// "Geerbte" Zeit-Sachen
 
 	/** @see #setSimStepIntervalInMs(int) */
-	private int simStepIntervalInMs = 0;
+	private int simStepIntervalInMs = 10;
 
 	/** <p>Pro Simulationsschritt r&uuml;ckt die Simulationszeit-Uhr um diesen
 	 * Wert vor. Einheit Millisekunden.</p>
@@ -420,8 +419,6 @@ public class World {
 
 		// TODO: mit addObst joinen, bzw. wenigstens verwenden
 		this.aliveObsts.add(obst);
-		this.views.addAll(obst.getViewingPlatforms());
-
 		this.obstBG.addChild(obst.getBranchGroup());
 	}
 
@@ -447,8 +444,6 @@ public class World {
 
 		// TODO: mit remObst joinen, bzw. wenigstens verwenden
 		this.aliveObsts.remove(obst);
-		this.views.removeAll(obst.getViewingPlatforms());
-
 		this.obstBG.removeChild(obst.getBranchGroup());
 	}
 

@@ -1,6 +1,9 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-10-D Hendrik Krauss [hkr@heise.de]:
+* AliveObstacle hat jetzt keine Liste von ViewPlatforms mehr, da die zugehoerigen Methoden ohne einen Zweck zu erfuellen eine NullPtrExcp erzeugen
+
 2006-10-10-C Hendrik Krauss [hkr@heise.de]:
 * Wenn ein CtBotSimTcp die TCP-Verbindung verliert, stirbt er nicht, sondern setzt sich auf Status "halted"
 * ContestConductor schreibt jetzt Restwege (DB: ctsim_game.bot1restweg und bot2restweg)

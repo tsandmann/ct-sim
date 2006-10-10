@@ -59,7 +59,7 @@ public class ConfigManager {
 	 */
 	public static void loadConfigFile(Config.SourceFile file)
 	throws SAXException, IOException, ParserConfigurationException {
-		config = new Config(file);
+		config = new Config(file); //$$ Sollte weg: von Pico holen
 		filename = file.getPath();
 	}
 

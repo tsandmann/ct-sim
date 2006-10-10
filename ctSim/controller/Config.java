@@ -37,8 +37,8 @@ public class Config extends HashMap<String, String> {
 	private static final String[] configDefaults = {
 		"botport", "10001",
 		"judge", "ctSim.model.rules.DefaultJudge",
-		"worlddir", ".",
-		"botdir", ".",
+		"worlddir", ".", //$$ besser dokumentieren in ct-sim.xml und Co.
+		"botdir", ".", //$$ besser dokumentieren in ct-sim.xml und Co.
 		"useContestConductor", "false",
 		"contestBotTargetDir", "tmp",
 		"contestBotFileNamePrefix", "tmp-contest-bot",

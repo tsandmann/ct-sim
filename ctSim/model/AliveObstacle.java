@@ -18,9 +18,7 @@
  */
 package ctSim.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
@@ -29,7 +27,6 @@ import javax.media.j3d.Node;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
-import javax.media.j3d.ViewPlatform;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -90,7 +87,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private BranchGroup branchgrp;
 	private TransformGroup transformgrp;
 	private Shape3D shape;
-	private List<ViewPlatform> views;
 
 	// TODO:
 	private HashMap<String, Appearance> apps;
@@ -113,8 +109,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		this.name = name;
 		this.pos = position;
 		this.head = heading;
-
-		this.views = new ArrayList<ViewPlatform>();
 
 		initBG();
 
@@ -213,27 +207,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		tg.addChild(comp);
 
 		this.transformgrp.addChild(tg);
-	}
-
-	/**
-	 * @param relTrans
-	 */
-	public final void addViewingPlatform(Transform3D relTrans) {
-
-		ViewPlatform view = new ViewPlatform();
-
-		this.addBranchComponent(relTrans, view);
-
-		this.views.add(view);
-	}
-
-	// TODO: Besser Set oder Iterator/Enumerator (dann nicht mehr veraenderlich?)
-	/**
-	 * @return Liste der ViewPlatforms
-	 */
-	public final List<ViewPlatform> getViewingPlatforms() {
-
-		return this.views;
 	}
 
 	/**
@@ -437,7 +410,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 */
 	protected void cleanup() {
 		// TODO Auto-generated method stub
-		views=null;
 		branchgrp=null;
 		transformgrp=null;
 		shape=null;
