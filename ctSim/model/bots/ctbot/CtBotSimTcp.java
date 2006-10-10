@@ -979,7 +979,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 					System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
 			} catch (IOException e) {
 				lg.severe(e, "Verbindung unterbrochen -- Bot stirbt");
-				die();
+				setHalted(true);
 				run =-1;
 			}
 		}

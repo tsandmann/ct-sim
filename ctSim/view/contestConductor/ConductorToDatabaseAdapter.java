@@ -122,6 +122,12 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 		}
 	}
 
+	//$$ doc logonein
+	private static final int logOneIn = 20;
+
+	//$$ doc discardedlogentries
+	private int discardedLogEntries = 0;
+
 	private final Game currentGame = new Game();
 
 	/** Hat dieselbe Funktion wie {@link
@@ -130,7 +136,6 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	    super(db);
     }
 
-    //$$ irgendwie zu buerokratisch
     /**
      * Macht einen Log-Eintrag in die Datenbank. Das Log wird von der
      * JavaScript-Applikation der Messieurs von der Online-Redaktion
@@ -157,6 +162,13 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     				bots.size());
     	}
 
+    	if (discardedLogEntries < logOneIn - 1) {
+    		discardedLogEntries++;
+    		return;
+    	}
+
+    	discardedLogEntries = 0;
+
     	// Hauptcode
     	String common =
     		"insert into ctsim_log (" +
@@ -166,6 +178,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     		") " +
     		"values (?, ?, ?, ?, ?, ?, ?)";
     	String twoBots =
+    		", " +
     		"pos2x, pos2y, head2x, head2y, state2) " +
     		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -213,6 +226,42 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
         	"SELECT * FROM ctsim_level WHERE id = ?", levelId);
         rs.next();
         return rs.getString("parcours");
+    }
+
+    //$$ doc writeDistanceToFinish
+    public void writeDistanceToFinish(int botId, double distanceToFinishInM)
+    throws SQLException {
+    	// Feld "bot1restweg" oder "bot2restweg" setzen
+    	execSql(
+    		"UPDATE ctsim_game SET " + getColumnName(botId) + "restweg = ? " +
+    		"WHERE level = ? AND game = ?",
+    		distanceToFinishInM,
+    		currentGame.getLevelId(), currentGame.getGameId());
+    }
+
+    //$$ doc getColumnName
+    private String getColumnName(int botId) throws SQLException {
+    	ResultSet rs = execSql("SELECT bot1, bot2 FROM ctsim_game " +
+    			"WHERE level = ? AND game = ?",
+    			currentGame.getLevelId(), currentGame.getGameId());
+    	rs.next();
+
+    	int b1 = rs.getInt("bot1");
+    	if (rs.wasNull())
+    		// Fehlerzustand sowohl in Hauptrunden- als auch Vorrundenspiel
+    		throw new IllegalStateException();
+
+    	if (b1 == botId)
+    		return "bot1";
+    	else {
+    		int b2 = rs.getInt("bot2");
+    		// b2 == NULL heisst Vorrundenspiel, d.h. Fehler weil botId nicht
+    		// gefunden
+    		if (rs.wasNull() || b2 != botId)
+    			throw new IllegalStateException();
+   			return "bot2";
+    	}
+
     }
 
     /**

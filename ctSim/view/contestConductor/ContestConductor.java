@@ -149,9 +149,9 @@ public class ContestConductor implements View {
             		winner = b;
             	else {
             		if (concon.world.getShortestDistanceToFinish(
-            				new Vector3d(winner.getPosition()))
+            				new Vector3d(winner.getLastSafePos()))
             		    > concon.world.getShortestDistanceToFinish(
-            		    	new Vector3d(b.getPosition())))
+            		    	new Vector3d(b.getLastSafePos())))
             			 winner = b;
             	}
             }
@@ -166,9 +166,19 @@ public class ContestConductor implements View {
 		throws NullPointerException, SQLException, TournamentPlanException {
         	concon.lg.info("Zieleinlauf von Bot %s nach %s", winner.getName(),
 				SimUtils.millis2time(concon.world.getSimTimeInMs()));
+
         	// Letzten Schritt loggen //$$ Das ist nicht so toll: Macht die Annahme, dass der DefaultController so bleibt, wie er ist
         	concon.db.log(concon.botIds.keySet(),
         		concon.world.getSimTimeInMs());
+
+        	// Restwege schreiben
+            for (Map.Entry<Bot, Integer> b : concon.botIds.entrySet()) {
+            	concon.db.writeDistanceToFinish(
+            		b.getValue(),
+            		concon.world.getShortestDistanceToFinish(
+            			new Vector3d(b.getKey().getLastSafePos())));
+            }
+
 			// Spiel beenden
         	concon.db.setWinner(concon.botIds.get(winner),
         		concon.world.getSimTimeInMs());
@@ -421,8 +431,11 @@ public class ContestConductor implements View {
 	private synchronized void startGame(ResultSet game) throws SQLException, IOException {
 		int gameId  = game.getInt("game");
 		int levelId = game.getInt("level");
-		lg.info("Starte Spiel; Level %d, Spiel %d, geplante Startzeit %s",
-				levelId, gameId, game.getTimestamp("scheduled"));
+		lg.info("Starte Spiel; Level %d, Spiel %d, Bots %s und %s, " +
+				"geplante Startzeit %s",
+				levelId, gameId,
+				game.getString("bot1"), game.getString("bot2"),
+				game.getTimestamp("scheduled"));
 		db.setGameRunning(levelId, gameId);
 
 		lg.fine("Lade Parcours");

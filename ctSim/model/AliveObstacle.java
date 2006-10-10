@@ -47,8 +47,21 @@ import ctSim.view.gui.Debug;
  */
 public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
-	
-	/** Das Obstacle ist von der weiteren Simulation ausgeschlossen */
+
+	/**
+	 * <p>
+	 * Das Obstacle ist von der weiteren Simulation ausgeschlossen, d.h. seine
+	 * work()-Methode wird nicht mehr aufgerufen. Es steht damit nur noch rum,
+	 * bis die Simulation irgendwann endet. Dieser Zustand kann eintreten, wenn
+	 * &ndash;
+	 * <ul>
+	 * <li>die work()-Methode l&auml;nger rechnet, als der AliveObstacleTimeout
+	 * in der Konfigdatei erlaubt, oder</li>
+	 * <li>wenn die TCP-Verbindung eines CtBotSimTcp abrei&szlig;t (d.h. der
+	 * CtBotSimTcp gibt sich dann diesen Status).</li>
+	 * </ul>
+	 * </p>
+	 */
 	public static final int OBST_STATE_HALTED   = 0x0100;
 
 	private int obstState = OBST_STATE_NORMAL;
@@ -56,10 +69,15 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private String name;
 	private Point3d pos;
 
-	/** Letzte Position an dem sich das AliveObstacle befand und dabei der obstState ok war.
-	 * Also (obstState & OBSTSTATE_SAVE) ==0
+	/**
+	 * Letzte Position, an dem sich das AliveObstacle befand und dabei der
+	 * obstState &quot;SAFE&quot; war. Sinn: Dieses Feld wird verwendet zur
+	 * Berechnung des Abstands zum Ziel, was auch funktionieren soll, wenn der
+	 * Bot z.B. in ein Loch gefallen ist (d.h. jetzt un-&quot;SAFE&quot; ist).
+	 * Daher wird in dieser Variablen die letzte Position gehalten, wo der Bot
+	 * noch au&szlig;erhalb des Lochs war.
 	 */
-	private Point3d lastSavePos;
+	private Point3d lastSafePos;
 
 	private Vector3d head;
 
@@ -327,8 +345,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 			transform.setTranslation(vec);
 			this.transformgrp.setTransform(transform);
 
-			if ((obstState & OBST_STATE_SAVE) == 0)
-				lastSavePos = new Point3d(p);
+			if ((obstState & OBST_STATE_SAFE) == 0)
+				lastSafePos = new Point3d(p);
 		//}
 	}
 
@@ -377,33 +395,33 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 		int timeout = 0;
 		try {
-			timeout = Integer.parseInt(ConfigManager.getValue("AliveObstacleTimeout")); 
+			timeout = Integer.parseInt(ConfigManager.getValue("AliveObstacleTimeout"));
 		} catch (Exception e) {
 			// Wenn kein Teimout im Config-File steht, ignorieren wir dieses Feature
 			timeout = 0;
 		}
-		
+
 		try {
 			while (this.thrd == thisThread) {
 				// Stoppe die Zeit, die work() benoetigt
-				long realTimeBegin = System.nanoTime()/1000000;
-				
+				long realTimeBegin = System.currentTimeMillis();
+
 				// Ein AliveObstacle darf nur dann seine work()-Routine ausführen, wenn es nicht Halted ist
 				if ((this.obstState & OBST_STATE_HALTED) == 0)
 					work();
-				
+
 				// berechne die Zeit, die work benoetigt hat
-				long elapsedTime = System.nanoTime()/1000000 - realTimeBegin;
+				long elapsedTime = System.currentTimeMillis() - realTimeBegin;
 
 				// Wenn der Timeout aktiv ist und zuviel Zeit benoetigt wurde, halte dieses Alive Obstacle an
 				if ((timeout > 0) && (elapsedTime > timeout))
 					setHalted(true);
-				
+
 				if (this.thrd != null)
 					this.controller.waitOnController();
 			}
 		} catch(InterruptedException ie) {
-			lg.warn("Alive Obstacle '%s' wurde unterbrochen und stirbt", 
+			lg.warn("Alive Obstacle '%s' wurde unterbrochen und stirbt",
 				getName());
 		}
 		Debug.out.println("Alive Obstacle \""+this.getName()+"\" stirbt..."); //$NON-NLS-1$ //$NON-NLS-2$
@@ -414,7 +432,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	/** Aufraeumen, wenn Bot stirbt
-	 * 
+	 *
 	 *
 	 */
 	protected void cleanup() {
@@ -435,21 +453,26 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	/**
-	 * Haelt ein Alive-Obstacle an oder gibt es wieder frei.
-	 * Ist ein Alive-Obstacle halted, so darf es seine work()-Methode nicht mehr ausfuehren.
-	 * Es ist aber ansonsten noch funktionsfaehig und reagiert auch auf den Controller 
-	 * @param halt true, wennd as AliveObstacle angehalten werden soll; false, wenn es wieder freigelassen werden soll
+	 * Haelt ein Alive-Obstacle an oder gibt es wieder frei. Ist ein
+	 * Alive-Obstacle halted, so darf es seine work()-Methode nicht mehr
+	 * ausfuehren. Es ist aber ansonsten noch funktionsfaehig und reagiert auch
+	 * auf den Controller
+	 *
+	 * @param halt true, wennd as AliveObstacle angehalten werden soll; false,
+	 * wenn es wieder freigelassen werden soll
 	 */
 	public final void setHalted(boolean halt){
 		if (halt == true) {
-			lg.info("AliveObstcale "+getName()+" wird angehalten und darf ab sofort die work()-Methide nicht mehr ausfuehren");
+			lg.info("AliveObstcale "+getName()+" wird angehalten und darf " +
+					"ab sofort die work()-Methode nicht mehr ausfuehren");
 			setObstState(getObstState() | OBST_STATE_HALTED);
 		} else {
-			lg.info("AliveObstcale "+getName()+" wird reaktiviert und darf ab sofort die work()-Methide wieder ausfuehren");
+			lg.info("AliveObstcale "+getName()+" wird reaktiviert und darf " +
+					"ab sofort die work()-Methode wieder ausfuehren");
 			setObstState(getObstState() & ~OBST_STATE_HALTED);
 		}
 	}
-	
+
 	/**
 	 * Liefert true zurueck, wenn der OBST_STATE_HALTED gesetzt ist
 	 * @return true, wenn OBST_STATE_HALTED gesetzt, false, wenn nicht
@@ -459,7 +482,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Hier wird aufgeraeumt, wenn die Lebenszeit des AliveObstacle zuende ist:
 	 * Verbindungen zur Welt und zum ControlPanel werden aufgeloest, das Panel
@@ -520,7 +543,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 			return;
 
 		String key= null;
-		
+
 		if (state == OBST_STATE_COLLISION)
 			key= "collision";
 		if (state == OBST_STATE_FALLING)
@@ -529,7 +552,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 			key= "normal";
 		if ((state & OBST_STATE_HALTED) != 0)
 			key="halted";
-		
+
 		if (this.apps.containsKey(key))
 			this.shape.setAppearance(this.apps.get(key));
 	}
@@ -558,7 +581,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 * Liefert die letzte als sicher erachtete Position des Bots zurueck
 	 * @return Returns the lastSavePos.
 	 */
-	public Point3d getLastSavePos() {
-		return lastSavePos;
+	public Point3d getLastSafePos() {
+		return lastSafePos;
 	}
 }

@@ -148,6 +148,8 @@ class DatabaseAdapter {
 	private PreparedStatement buildPreparedStatement(String sqlWithInParams,
 		Object... inValues) throws SQLException {
 		PreparedStatement rv = statementCache.get(sqlWithInParams);
+		// Sicherheitsmassnahme, nicht dass einer auf alten Daten operiert
+		rv.clearParameters();
 		for (int i = 0; i < inValues.length; i++) {
 			// PreparedStatement ist 1-based, inValues ist 0-based
 			if (inValues[i] instanceof GameState)

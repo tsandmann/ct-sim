@@ -1,6 +1,11 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-10-C Hendrik Krauss [hkr@heise.de]:
+* Wenn ein CtBotSimTcp die TCP-Verbindung verliert, stirbt er nicht, sondern setzt sich auf Status "halted"
+* ContestConductor schreibt jetzt Restwege (DB: ctsim_game.bot1restweg und bot2restweg)
+* Spielstand wird nach Ruecksprache mit ws nur noch alle 200 ms in die DB geloggt
+
 2006-10-10-B Hendrik Krauss [hkr@heise.de]:
 * Fix: TimeLogger funktioniert auch fuer mehrere Spiele
 * Loggen des letzten Schritts nochmal umgestellt

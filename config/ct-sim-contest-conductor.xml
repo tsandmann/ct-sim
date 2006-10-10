@@ -9,7 +9,7 @@
 		einige ContestJudge-spezifische Parameter, auf welcher Datenbank
 		gearbeitet werden soll.
 
-		Mit der Kommandozeilenoption -conf config/ct-sim-contest-judge.xml
+		Mit der Kommandozeilenoption -conf config/ct-sim-contest-conductor.xml
 		kann der Controller veranlasst werden, diese Datei statt der
 		standardmaessigen zu verwenden. Zum einfachen Ausfuehren beider
 		Varianten lassen sich in Eclipse zwei Run Configurations einrichten
@@ -41,11 +41,11 @@
 
 
 	<!-- host1 ist der Rechner, der den Bot1 ausfuehrt Achtung dort muss ein ssh-Daemon laufen-->
-	<parameter name="host1" value="192.168.123.253"/>
+	<parameter name="host1" value="192.168.123.173"/>
 	<!-- host1_username ist der Bnutzername für den Rechner, der den Bot1 ausfuehrt. Authorisiert wird der User per Provate/Public-RSA Keys. diese muessen bereits uebertragen sein -->
 	<parameter name="host1_username" value="ctbot"/>
 	<!-- host2 ist der Rechner, der den Bot2 ausfuehrt. Achtung dort muss ein ssh-Daemon laufen -->
-	<parameter name="host2" value="192.168.123.254"/>
+	<parameter name="host2" value="192.168.123.184"/>
 	<!-- host2_username ist der Bnutzername für den Rechner, der den Bot2 ausfuehrt Authorisiert wird der User per Provate/Public-RSA Keys. diese muessen bereits uebertragen sein-->
 	<parameter name="host2_username" value="ctbot"/>
 
@@ -54,7 +54,7 @@
 	ctSim.view.contestConductor.ContestConductor reden soll (Format der URL
 	wie es java.sql.DriverManager.getConnection() erwartet) -->
 	<parameter name="contest-database-url"
-		value="jdbc:mysql://10.10.22.242:3306/ctbot-contest-test-2"/>
+		value="jdbc:mysql://10.10.22.111:3306/ctbot-contest-test-2"/>
 	<parameter name="contest-database-user" value="root"/>
 	<parameter name="contest-database-password" value="geheimdienst"/>
 
