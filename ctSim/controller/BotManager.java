@@ -81,9 +81,9 @@ public class BotManager {
 
 	private static synchronized void removeBotNow(Bot b) {
 		lg.info("Stoppe Bot " + b);
-		b.stop();
 		world.removeAliveObstacle(b);
 		view.onBotRemoved(b);
+		b.stop();
 	}
 
 	private static synchronized void deinit() {

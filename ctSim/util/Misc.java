@@ -1,5 +1,9 @@
 package ctSim.util;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Array;
 
 //$$ doc Misc
@@ -41,5 +45,14 @@ public class Misc {
 		for (String s : strings)
 			b.append(s);
 		return b.toString();
+	}
+
+	public static void copyStreamToStream(InputStream source,
+		OutputStream dest) throws IOException {
+		byte[] buf = new byte[4096];
+		int len;
+		while ((len = source.read(buf)) > 0)
+            dest.write(buf, 0, len);
+		dest.close();
 	}
 }

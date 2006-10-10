@@ -50,10 +50,10 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void createPrelimGame(int gameId, int player1botId)
 	throws SQLException {
-		execSql(String.format("INSERT INTO ctsim_game " + //$$ format
+		execSql("INSERT INTO ctsim_game " +
 				"(level, game, bot1, state) " +
-				"VALUES (%d, %d, %d, '%s');",
-				-1, gameId, player1botId, GameState.READY_TO_RUN));
+				"VALUES (?, ?, ?, ?);",
+				-1, gameId, player1botId, GameState.READY_TO_RUN);
 	}
 
 	/** Legt ein Hauptrundenspiel an. Die Methode weist ihm den
@@ -65,10 +65,10 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void createMainGame(int levelId, int gameId)
 	throws SQLException {
-		execSql(String.format("INSERT INTO ctsim_game " + //$$ format
+		execSql("INSERT INTO ctsim_game " +
 				"(level, game, state) " +
-				"VALUES (%d, %d, '%s');",
-				levelId, gameId, GameState.NOT_INITIALIZED));
+				"VALUES (?, ?, ?);",
+				levelId, gameId, GameState.NOT_INITIALIZED);
 	}
 
 	/**L&ouml;scht alle Spiele.

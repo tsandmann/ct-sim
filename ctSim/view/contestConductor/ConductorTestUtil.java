@@ -15,7 +15,7 @@ public abstract class ConductorTestUtil {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 return DriverManager.getConnection(
-                    "jdbc:mysql://10.10.22.242:3306/ctbot-contest-unittests",
+                    "jdbc:mysql://10.10.22.111:3306/ctbot-contest-unittests",
                     "root", "geheimdienst");
             } catch (Exception e) {
                 throw new RuntimeException(e);

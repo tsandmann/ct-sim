@@ -3,6 +3,8 @@ package ctSim.view.contestConductor;
 import java.util.ArrayList;
 import java.util.List;
 
+import ctSim.util.Misc;
+
 //$$ doc SpreadingTree
 /**
  * <p>
@@ -57,7 +59,8 @@ public class SpreadingTree<T> {
 	}
 
 	public static <T> SpreadingTree<T> buildTree(List<T> c) {
-		if (c.size() % 2 != 0) //$$$ quatsch
+    	// Muss Zweierpotenz sein
+		if (Misc.log2(c.size()) != Math.round(Misc.log2(c.size())))
 			throw new IllegalArgumentException();
 		SpreadingTree<T> rv = new SpreadingTree<T>(c.get(0));
 		for (int i = 1; i < c.size(); i++)

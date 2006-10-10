@@ -1,5 +1,8 @@
 package ctSim.view.contestConductor;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,11 +12,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.imageio.stream.ImageInputStream;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
+import ctSim.util.Misc;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
 /**
@@ -201,7 +206,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     	}
     }
 
-    //$$ doc
+    //$$ doc getFieldValues
     private List<Object> getFieldValues(Bot b) {
         Point3d pos = b.getPosition();
         Vector3d head = b.getHeading();
@@ -261,8 +266,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     			throw new IllegalStateException();
    			return "bot2";
     	}
-
     }
+
 
     /**
      * Zeichnet in der Datenbank auf, wer Gewinner des aktuellen Spiels war,
@@ -461,7 +466,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
         return getBotId("bot2");
     }
 
-    //$$ doc Method, NullP und alles
+    //$$ doc Methode, NullP und alles
     public int getMaxGameLengthInMs() throws SQLException {
         return currentGame.getMaxLengthInMs();
     }
@@ -483,7 +488,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
             GameState.READY_TO_RUN);
     }
 
-    /** Startet ein Spiel, d.h. setzt seinen Status in der Datebank
+    /** Startet ein Spiel, d.h. setzt seinen Status in der Datenbank
      * entsprechend.
      *
      * @param levelId Level des zu startenden Spiels.
@@ -495,6 +500,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
                 "WHERE level = ? AND game = ?",
                 GameState.RUNNING, levelId, gameId);
         currentGame.set(levelId, gameId);
+        discardedLogEntries = 0;
     }
 
     /** Zeigt an, ob das zur Zeit laufende Spiel ein Hauptrundenspiel ist.
@@ -511,4 +517,4 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     private boolean isCurrentGameMainRound() throws NullPointerException {
         return currentGame.getLevelId() != -1;
     }
-        }
+}

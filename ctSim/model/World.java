@@ -102,7 +102,7 @@ public class World {
 	// "Geerbte" Zeit-Sachen
 
 	/** @see #setSimStepIntervalInMs(int) */
-	private int simStepIntervalInMs = 10;
+	private int simStepIntervalInMs = 0;
 
 	/** <p>Pro Simulationsschritt r&uuml;ckt die Simulationszeit-Uhr um diesen
 	 * Wert vor. Einheit Millisekunden.</p>

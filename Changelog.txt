@@ -1,6 +1,11 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-11 Hendrik Krauss [hkr@heise.de]:
+* BotManager: race condition beseitigt, die zu intermittierenden Abstuerzen beim Level-Wechseln gefuehrt hat
+* Vorbereitungen fuer Screenshot-Kram getroffen
+* Kleinigkeiten
+
 2006-10-10-D Hendrik Krauss [hkr@heise.de]:
 * AliveObstacle hat jetzt keine Liste von ViewPlatforms mehr, da die zugehoerigen Methoden ohne einen Zweck zu erfuellen eine NullPtrExcp erzeugen
 

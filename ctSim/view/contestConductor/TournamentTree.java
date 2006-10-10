@@ -92,7 +92,9 @@ public class TournamentTree extends ArrayList<Integer> {
 	 */
     public ArrayList<Integer> getTournamentPlan(int desiredLevelId) {
     	assert desiredLevelId > 0;
-    	assert desiredLevelId == 1 || desiredLevelId % 2 == 0; //$$$ besser machen
+    	// Muss Zweierpotenz sein
+    	assert Misc.log2(desiredLevelId) == 
+    		Math.round(Misc.log2(desiredLevelId));
     	assert desiredLevelId <= getLowestLevelId();
     	assert size() >= 2;
 

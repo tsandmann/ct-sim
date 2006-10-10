@@ -26,6 +26,8 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
+import ctSim.view.ScreenshotProvider;
 import ctSim.view.View;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 import ctSim.view.gui.sensors.RemoteControlGroupGUI;
@@ -164,8 +166,8 @@ public class ContestConductor implements View {
         @SuppressWarnings("synthetic-access")
         protected void setWinner(Bot winner)
 		throws NullPointerException, SQLException, TournamentPlanException {
-        	concon.lg.info("Zieleinlauf von Bot %s nach %s", winner.getName(),
-				SimUtils.millis2time(concon.world.getSimTimeInMs()));
+        	concon.lg.info("Gewinner ist Bot %s nach einem Spiel von %d ms",
+        		winner.getName(), concon.world.getSimTimeInMs());
 
         	// Letzten Schritt loggen //$$ Das ist nicht so toll: Macht die Annahme, dass der DefaultController so bleibt, wie er ist
         	concon.db.log(concon.botIds.keySet(),
@@ -384,13 +386,7 @@ public class ContestConductor implements View {
 				new File(ConfigManager.getValue("contestBotTargetDir")));
 		f.deleteOnExit(); //$$ deleteOnExit() scheint nicht zu klappen; Theorie:Prozesse noch offen wenn VM das aufrufen will
 		lg.fine("Schreibe Bot nach '"+f.getAbsolutePath()+"'");
-		InputStream in = b.getBinaryStream();
-		FileOutputStream out = new FileOutputStream(f);
-		byte[] buf = new byte[4096];
-		int len;
-		while ((len = in.read(buf)) > 0)
-            out.write(buf, 0, len);
-		out.close();
+		Misc.copyStreamToStream(b.getBinaryStream(), new FileOutputStream(f));
 
 		// Datei ausfuehren + warten bis auf den neuen Bot hingewiesen werden
 		executeBot(f);

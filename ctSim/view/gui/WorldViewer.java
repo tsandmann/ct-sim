@@ -26,11 +26,13 @@ import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
 import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
+import ctSim.controller.Main;
 import ctSim.model.World;
+import ctSim.view.ScreenshotProvider;
 
 //$$ doc WorldViewer
 //$$ Kandidat fuer architektonischen Umbau: Wieso instanziiert _diese Klasse_ das Universe? Gehoert das nicht ins Model?
-public class WorldViewer extends JPanel {
+public class WorldViewer extends JPanel implements ScreenshotProvider {
     private static final long serialVersionUID = - 2085097216130758546L;
 
     private static final String NOTHING = "showing nothing";
@@ -45,17 +47,16 @@ public class WorldViewer extends JPanel {
     protected final Canvas3D onScreenCanvas = new Canvas3D(gc, false);
     protected final Canvas3D offScreenCanvas = new Canvas3D(gc, true);
 
-
     // wird mit jedem neuen Model ausgetauscht
     protected SimpleUniverse universe;
 
     public WorldViewer() {
     	setLayout(new CardLayout());
-
     	JPanel p = new JPanel(new GridBagLayout()); // nur zum Zentrieren
     	p.add(new JLabel("Keine Welt geladen"));
     	add(p, NOTHING);
     	add(onScreenCanvas, MODEL);
+    	Main.dependencies.registerInstance(ScreenshotProvider.class, this);
     }
 
     public void show(World world) {
