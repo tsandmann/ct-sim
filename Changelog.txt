@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-10-B Hendrik Krauss [hkr@heise.de]:
+* Fix: TimeLogger funktioniert auch fuer mehrere Spiele
+* Loggen des letzten Schritts nochmal umgestellt
+
 2006-10-10 Hendrik Krauss [hkr@heise.de]:
 * Neuer kleiner View (Klasse TimeLogger) gibt Sim- und Realzeit periodisch aus; aktiv nur in Contest-Modus
 * DB-Schema: Neues Feld gametime_real, TournamentPlanner beachtet es

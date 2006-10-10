@@ -166,6 +166,9 @@ public class ContestConductor implements View {
 		throws NullPointerException, SQLException, TournamentPlanException {
         	concon.lg.info("Zieleinlauf von Bot %s nach %s", winner.getName(),
 				SimUtils.millis2time(concon.world.getSimTimeInMs()));
+        	// Letzten Schritt loggen //$$ Das ist nicht so toll: Macht die Annahme, dass der DefaultController so bleibt, wie er ist
+        	concon.db.log(concon.botIds.keySet(),
+        		concon.world.getSimTimeInMs());
 			// Spiel beenden
         	concon.db.setWinner(concon.botIds.get(winner),
         		concon.world.getSimTimeInMs());
@@ -310,7 +313,7 @@ public class ContestConductor implements View {
 	 * Welcher Rechenr soll den naechsten Bot ausfuehren
 	 */
 	private int nextHost=1;
-	
+
 	/**
 	 * Startet eine Bot, entweder lokal oder remote
 	 * @param f
@@ -322,7 +325,7 @@ public class ContestConductor implements View {
 		String server = ConfigManager.getValue("ctSimIP");
 		if (server == null)
 			server = "localhost";
-		
+
 		// Nur wenn ein Config-Eintrag fuer den entstprechenden Remote-Host exisitiert starten wir auch remote, osnst lokal
 		if ((user ==null) || (host == null)){
 			lg.info("Host oder Username fuer Remote-Ausfuehrung (Rechner "+nextHost+") nicht gesetzt. Starte lokal");
@@ -340,23 +343,23 @@ public class ContestConductor implements View {
 				pc = Runtime.getRuntime().exec(execString);
 				pc.waitFor();
 
-				
+
 				execString ="ssh "+user+"@"+host+" ./"+f.getName()+" -t "+server;
             	lg.info("Executing "+execString);
 				pc = Runtime.getRuntime().exec(execString);
-				
+
 			} catch (Exception e) {
 				lg.warn("Probleme beim Remote-Starten von Bot: "+f.getAbsolutePath()+" auf Rechner: "+user+"@"+host);
 				e.printStackTrace();
 			}
 		}
-		
+
 		nextHost++;
 		if (nextHost ==3)
 			nextHost=1;
 
 	}
-	
+
 	/**
 	 * Annahme: Keiner ausser uns startet Bots. Wenn jemand gleichzeitig
 	 * @param b

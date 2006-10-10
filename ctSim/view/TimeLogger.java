@@ -7,7 +7,7 @@ import ctSim.util.FmtLogger;
 
 //$$ doc TimeLogger
 public class TimeLogger implements View {
-	private static final int intervalInSimMs = 5000; //TODO Koennte man in Config-Datei, auch zum Ein-/Ausschalten der ganzen Klasse
+	private static final int intervalInSimMs = 10000; //TODO Koennte man in Config-Datei, auch zum Ein-/Ausschalten der ganzen Klasse
 	private static final String minimalMsg =
 		"Simzeit %d ms; Armbanduhrenzeit %tT.%<tL";
 	private static final String normalMsg = minimalMsg +
@@ -16,10 +16,20 @@ public class TimeLogger implements View {
 
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.TimeLogger");
 	// sicherstellen, dass beim ersten Schritt geloggt wird
-	private long simTimeAtLastLog = - intervalInSimMs;
-	private long realTimeAtLastLog = 0;
+	private long simTimeAtLastLog;
+	private long realTimeAtLastLog;
 	//TODO Wann der Simulationsstart ist, wird ueber bloedsinnige Detektivarbeit herausgefunden. Besser: DefaultController macht auf den Views einen Aufruf "onSimulationBegins" oder so
-	private long realTimeAtSimulationStart = Long.MIN_VALUE;
+	private long realTimeAtSimulationStart;
+
+	{ // instance initializer
+		initVariables();
+	}
+
+	private void initVariables() {
+		realTimeAtSimulationStart = Long.MIN_VALUE;
+		simTimeAtLastLog = - intervalInSimMs;
+		realTimeAtLastLog = 0;
+	}
 
 	public void onApplicationInited() {
 		lg.fine("TimeLogger l\u00E4uft; Simzeit und Realzeit werden " +
@@ -48,7 +58,7 @@ public class TimeLogger implements View {
     }
 
 	public void onSimulationFinished() {
-		realTimeAtSimulationStart = Long.MIN_VALUE;
+		initVariables();
 	}
 
 	public void onBotAdded(@SuppressWarnings("unused") Bot bot) {

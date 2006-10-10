@@ -156,9 +156,6 @@ public class DefaultController implements Runnable, Controller {
 
 				CountDownLatch oldStartSignal = this.startSignal;
 
-				// View(s) bescheidsagen
-				view.onSimulationStep(world.getSimTimeInMs());
-
 				// Judge pruefen:
 				if (judge.isSimulationFinished(world.getSimTimeInMs())) {
 					lg.fine("Sequencer: Simulationsende");
@@ -168,6 +165,10 @@ public class DefaultController implements Runnable, Controller {
 					BotManager.reinit();
 					view.onSimulationFinished();
 				}
+
+				// View(s) bescheidsagen
+				//TODO Wieso wird das nochmal gemacht, wenn die Simulation (per Judge-Urteil) schon beendet wurde?
+				view.onSimulationStep(world.getSimTimeInMs());
 
 				if(this.pause) {
 					lg.fine("Pause beginnt: Sequencer blockiert");

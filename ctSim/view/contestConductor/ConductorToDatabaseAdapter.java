@@ -185,7 +185,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     	} else {
     		// wir haben einen Bot
     		execSql(common + oneBot, values.toArray());
-    }
+    	}
     }
 
     //$$ doc
