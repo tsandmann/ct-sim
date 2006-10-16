@@ -60,16 +60,17 @@ public class Parcours {
 
 	/**
 	 * <p>
-	 * Breite einer Gittereinheit (eines Blocks) in Meter
+	 * Breite einer Gittereinheit (eines Blocks) in Meter. Da die Bl&ouml;cke
+	 * immer quadratisch sind, ist die Breite auch die H&ouml;he.
 	 * </p>
 	 * <p>
 	 * Idee: ct-Bot ist 12cm breit, wir setzen das Gitter auf 24cm, damit der
 	 * Bot auf dem engstm&ouml;glichen Durchgang (1 Block breit) m&ouml;glichst
-	 * viel Spielraum hat nach links und rechts, aber dass gerade keine zwei
-	 * Bots mehr aneinander vorbeik&ouml;nnen.
+	 * viel Spielraum hat nach links und rechts (oben und unten), aber dass
+	 * gerade keine zwei Bots mehr aneinander vorbeik&ouml;nnen.
 	 * </p>
 	 */
-	private float gridSizeInM = 0.24f;
+	private float blockSizeInM = 0.24f;
 
 	/** Anzahl der Startpositionen fuer Bots. Dir Position 0 ist die Default Position, ab 1 für die Wettkampfbots.*/
 	public static int BOTS = 3;
@@ -160,7 +161,7 @@ public class Parcours {
 	 * zur&uuml;ck
 	 */
 	public float getWidthInM(){
-		return this.dimX* this.gridSizeInM;
+		return this.dimX* this.blockSizeInM;
 	}
 
 	/**
@@ -168,7 +169,7 @@ public class Parcours {
 	 * zur&uuml;ck
 	 */
 	public float getHeightInM(){
-		return this.dimY* this.gridSizeInM;
+		return this.dimY* this.blockSizeInM;
 	}
 
 	/**
@@ -227,7 +228,7 @@ public class Parcours {
 		node.setPickable(true);
 //		node.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 
-		translate.set(new Vector3d(x * this.gridSizeInM, y* this.gridSizeInM, z));
+		translate.set(new Vector3d(x * this.blockSizeInM, y* this.blockSizeInM, z));
 
 		TransformGroup tg = new TransformGroup(translate);
 		tg.setCapability(Node.ENABLE_PICK_REPORTING);
@@ -346,9 +347,9 @@ public class Parcours {
 	public Vector3d getStartPosition(int bot){
 		Vector3d pos = null;
 		if (bot < BOTS)
-			pos= new Vector3d(this.startPositions[bot][0]*this.gridSizeInM + this.gridSizeInM/2,this.startPositions[bot][1]*this.gridSizeInM + this.gridSizeInM/2,0.0f);
+			pos= new Vector3d(this.startPositions[bot][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[bot][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
 		else
-			pos= new Vector3d(this.startPositions[0][0]*this.gridSizeInM + this.gridSizeInM/2,this.startPositions[0][1]*this.gridSizeInM + this.gridSizeInM/2,0.0f);
+			pos= new Vector3d(this.startPositions[0][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[0][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
 
 		return pos;
 	}
@@ -398,11 +399,12 @@ public class Parcours {
 	}
 
 	/**
-	 *
-	 * @return Liefert die Gitterbreite in mm zurueck
+	 * @return Liefert die Breite/H&ouml;he einer Gittereinheit (eines Blocks)
+	 * in Meter zur&uuml;ck. (Da die Bl&ouml;cke quadratisch sind, sind Breite
+	 * und H&ouml;he gleich.)
 	 */
-	public float getGrid() {
-		return this.gridSizeInM;
+	public float getBlockSizeInM() {
+		return blockSizeInM;
 	}
 
 	/**
@@ -422,10 +424,10 @@ public class Parcours {
 
 		for(Vector2d p : this.finishPositions) {
 
-			double minX = p.x*this.gridSizeInM ;
-			double maxX = p.x*this.gridSizeInM + this.gridSizeInM;
-			double minY = p.y*this.gridSizeInM ;
-			double maxY = p.y*this.gridSizeInM + this.gridSizeInM;
+			double minX = p.x*this.blockSizeInM ;
+			double maxX = p.x*this.blockSizeInM + this.blockSizeInM;
+			double minY = p.y*this.blockSizeInM ;
+			double maxY = p.y*this.blockSizeInM + this.blockSizeInM;
 
 			if((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
 				return true;
@@ -448,16 +450,16 @@ public class Parcours {
 	 * @return true, wenn der Bot ueber dem loch steht
 	 */
 	public boolean checkHole(Point3d pos){
-		if ((pos.x < 0) || (pos.y <0) || (pos.x > dimX* gridSizeInM) || (pos.y > dimY* gridSizeInM))
+		if ((pos.x < 0) || (pos.y <0) || (pos.x > dimX* blockSizeInM) || (pos.y > dimY* blockSizeInM))
 			return true;
 
 		Iterator it = holes.iterator();
 		while (it.hasNext()){
 			Vector2f min = new Vector2f((Vector2d)it.next());
-			min.scale(gridSizeInM);
+			min.scale(blockSizeInM);
 
 			Vector2f max = new Vector2f(min);
-			max.add(new Vector2f(gridSizeInM,gridSizeInM));
+			max.add(new Vector2f(blockSizeInM,blockSizeInM));
 
 			if ((pos.x > min.x) && (pos.x < max.x) && (pos.y > min.y) && (pos.y < max.y))
 				return true;
@@ -518,7 +520,7 @@ public class Parcours {
 	 * @return Distanz (ohne Drehungen) in Metern
 	 */
 	public double getShortestDistanceToFinish(Vector3d from){
-		return getShortestDistanceToFinish(new Vector2d(from.x,from.y));
+		return getShortestDistanceToFinish(new Vector2d(from.x,from.y)); //LODO z wird ignoriert -- wird nicht mehr klappen, wenn der Bot (hypothetisch) mal Rampen hochfaehrt und sich auf verschiedenen Ebenen bewegt
 	}
 
 
@@ -535,7 +537,7 @@ public class Parcours {
 
     	double distance=TurningPoint.getLengthOfPath(shortestPath);
 
-		return distance*this.gridSizeInM;
+		return distance*this.blockSizeInM;
 	}
 
 	/**
@@ -554,23 +556,18 @@ public class Parcours {
 	 */
 	public Vector<TurningPoint> getShortestPath(Vector2d from){
 		Vector2d f = new Vector2d(from);
-		f.scale(1/this.gridSizeInM);
+		f.scale(1/this.blockSizeInM);
 
 		TurningPoint start = new TurningPoint(f);
 
 		if (finishPositions.size()== 0)
 			return null;
 
-		Vector2d fin = new Vector2d(finishPositions.get(0));
-		Vector2d offset = new Vector2d(0.5,0.5);
-		fin.add(offset);
+		Vector2d fin = new Vector2d(finishPositions.get(0)); //TODO Ist das richtig? Manche Parcours haben mehrere Zielfelder nebeneinander, wird dann immer das linkeste genommen?
+		fin.add(new Vector2d(0.5,0.5));
 		TurningPoint finish = new TurningPoint(fin);
 
     	// finde die kuerzeste Verbindung
-    	Vector<TurningPoint> shortestPath=
-    		start.getShortestPathTo(finish, getFlatParcours());
-
-    	return shortestPath;
-
+    	return start.getShortestPathTo(finish, getFlatParcours());
 	}
 }

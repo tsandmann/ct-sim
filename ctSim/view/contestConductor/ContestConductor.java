@@ -6,7 +6,6 @@ import static ctSim.view.contestConductor.ContestConductor.Phase.PRELIM_ROUND;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +16,6 @@ import java.util.Map;
 import javax.vecmath.Vector3d;
 
 import ctSim.ConfigManager;
-import ctSim.SimUtils;
 import ctSim.controller.Controller;
 import ctSim.controller.DefaultController;
 import ctSim.controller.Main;
@@ -27,7 +25,6 @@ import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
-import ctSim.view.ScreenshotProvider;
 import ctSim.view.View;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 import ctSim.view.gui.sensors.RemoteControlGroupGUI;
@@ -81,7 +78,7 @@ import ctSim.view.gui.sensors.RemoteControlGroupGUI;
 public class ContestConductor implements View {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.contestConductor");
 
-	public class NoMoreGamesException extends Exception {
+	public static class NoMoreGamesException extends Exception {
 		private static final long serialVersionUID = - 930001102842406374L;
 	}
 
@@ -424,14 +421,19 @@ public class ContestConductor implements View {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	private synchronized void startGame(ResultSet game) throws SQLException, IOException {
+	private synchronized void startGame(ResultSet game)
+	throws SQLException, IOException {
 		int gameId  = game.getInt("game");
 		int levelId = game.getInt("level");
-		lg.info("Starte Spiel; Level %d, Spiel %d, Bots %s und %s, " +
-				"geplante Startzeit %s",
-				levelId, gameId,
-				game.getString("bot1"), game.getString("bot2"),
-				game.getTimestamp("scheduled"));
+		lg.info(
+			"Starte Spiel; Level %d, Spiel %d, Bots %s (%s) und %s (%s), " +
+			"geplante Startzeit %s",
+			levelId, gameId,
+			game.getString("bot1"),
+			'"' + db.getBotName(game.getInt("bot1")) + '"',
+			game.getString("bot2"),
+			'"' + db.getBotName(game.getInt("bot2")) + '"',
+			game.getTimestamp("scheduled"));
 		db.setGameRunning(levelId, gameId);
 
 		lg.fine("Lade Parcours");

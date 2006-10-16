@@ -1,8 +1,5 @@
 package ctSim.view.contestConductor;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,13 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.imageio.stream.ImageInputStream;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
-import ctSim.util.Misc;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
 /**
@@ -57,7 +52,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * Integer (nicht int), um Zugriffe im uninitialisierten Zustand per
      * NullPointerException mitgeteilt zu bekommen (sonst w&uuml;rde im SQL
      * einfach id == 0 auftauchen) */
-	public class Game {
+	class Game {
 		// null-bedeutung
 		private Integer gameId;
 		// null-bedeutung
@@ -97,8 +92,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 				ResultSet rs = execSql("SELECT * FROM ctsim_game " +
 		    		"WHERE game = ? AND level = ?", gameId, levelId);
 		    	rs.next();
-		    	assert ! rs.wasNull();
 		    	cachedUniqueId = rs.getInt("id");
+		    	assert ! rs.wasNull();
 			}
 			return cachedUniqueId;
         }
@@ -121,7 +116,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 				ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?",
 					getLevelId());
 				rs.next();
-				return rs.getInt("gametime");
+				cachedMaxLengthInMs = rs.getInt("gametime");
+				assert ! rs.wasNull();
 			}
 			return cachedMaxLengthInMs;
 		}
@@ -464,6 +460,15 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      */
     public int getBot2Id() throws SQLException {
         return getBotId("bot2");
+    }
+
+    //$$ doc getBotName
+    public String getBotName(int botId) throws SQLException {
+    	ResultSet rs = execSql("SELECT * FROM ctsim_bot WHERE id = ?", botId);
+    	if (rs.next())
+    		return rs.getString("name");
+    	else
+    		return null;
     }
 
     //$$ doc Methode, NullP und alles

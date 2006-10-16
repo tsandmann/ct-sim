@@ -1,10 +1,16 @@
 package ctSim.view.contestConductor;
 
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
 
 import ctSim.controller.Main;
 import ctSim.util.FmtLogger;
@@ -145,15 +151,26 @@ class DatabaseAdapter {
 	}
 
 	//$$ doc getPS
-	private PreparedStatement buildPreparedStatement(String sqlWithInParams,
+	protected PreparedStatement buildPreparedStatement(String sqlWithInParams,
 		Object... inValues) throws SQLException {
 		PreparedStatement rv = statementCache.get(sqlWithInParams);
-		// Sicherheitsmassnahme, nicht dass einer auf alten Daten operiert
+		// Sicherheitsmassnahme, nicht dass einer auf teilweise alten Daten
+		// operiert
 		rv.clearParameters();
 		for (int i = 0; i < inValues.length; i++) {
 			// PreparedStatement ist 1-based, inValues ist 0-based
 			if (inValues[i] instanceof GameState)
 				rv.setString(i + 1, inValues[i].toString()); //$$ GameState-Hack
+			else if (inValues[i] instanceof RenderedImage) {
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				try {
+	                ImageIO.write((RenderedImage)inValues[i], "png", out);
+                } catch (IOException e) {
+                	throw new IllegalArgumentException(e); //$$ doc IllegalArg
+                }
+				rv.setBinaryStream(i + 1,
+					new ByteArrayInputStream(out.toByteArray()), out.size());
+			}
 			else
 				rv.setObject(i + 1, inValues[i]);
 		}
@@ -203,7 +220,7 @@ class DatabaseAdapter {
 	 * erst zur Garbage Collection freigegeben werden, wenn das
 	 * Connection-Objekt, von dem sie erzeugt wurden, geschlossen wurde &ndash;
 	 * d.h. am Programmende. Korrekt angewendet l&ouml;st diese Methode das
-	 * Speicherproblem.
+	 * Speicherproblem. $$ doc update close()
 	 * </p>
 	 * <p>
 	 * Die vorliegende Implementierung unterst&uuml;tzt nur SELECT, INSERT,

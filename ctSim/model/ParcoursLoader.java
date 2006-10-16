@@ -46,7 +46,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -137,6 +136,8 @@ public class ParcoursLoader {
 													  0f +LINEWIDTH/2 , 0.5f			   ,0f,  // lange Linie nach oben
 	};
 
+	private static final float WALL_HEIGHT = 0.2f;
+
 	/** Verwaltet alle Aussehen */
 	HashMap appearances = new HashMap();
 
@@ -164,8 +165,12 @@ public class ParcoursLoader {
 	 * @param lengthX Laenge der Wand in Y-Richtung
 	 */
 	private void createWall(int x, int y, int lengthX, int lengthY, Appearance appearance) {
-		Box box = new Box(this.parcours.getGrid() / 2 * lengthX, this.parcours.getGrid() / 2* lengthY, 0.2f, appearance);
-		this.parcours.addObstacle(box,x+lengthX/2.0f,y+lengthY/2.0f);
+		Box box = new Box(
+			parcours.getBlockSizeInM() / 2 * lengthX,
+			parcours.getBlockSizeInM() / 2 * lengthY,
+			WALL_HEIGHT,
+			appearance);
+		parcours.addObstacle(box,x+lengthX/2.0f,y+lengthY/2.0f);
 	}
 
 	/**
@@ -181,7 +186,7 @@ public class ParcoursLoader {
 	 */
 	@SuppressWarnings("unused")
 	private void createFloor(int x, int y, int lengthX, int lengthY, Appearance app) {
-		Box box = new Box(this.parcours.getGrid() / 2 * lengthX, this.parcours.getGrid() / 2* lengthY, World.PLAYGROUND_THICKNESS, app);
+		Box box = new Box(this.parcours.getBlockSizeInM() / 2 * lengthX, this.parcours.getBlockSizeInM() / 2* lengthY, World.PLAYGROUND_THICKNESS, app);
 		this.parcours.addFloor(box,x+lengthX/2.0f,y+lengthY/2.0f, -World.PLAYGROUND_THICKNESS+0.001f);
 	}
 
@@ -195,7 +200,7 @@ public class ParcoursLoader {
 	 * @param app Aussehen des Bodens
 	 */
 	private void createFloor(int x, int y, Appearance app) {
-		Box box = new Box(this.parcours.getGrid() *0.5f , this.parcours.getGrid()  *0.5f, World.PLAYGROUND_THICKNESS, app);
+		Box box = new Box(this.parcours.getBlockSizeInM() *0.5f , this.parcours.getBlockSizeInM()  *0.5f, World.PLAYGROUND_THICKNESS, app);
 		this.parcours.addFloor(box,x+0.5f,y+0.5f, -World.PLAYGROUND_THICKNESS+0.001f);
 	}
 
@@ -208,7 +213,7 @@ public class ParcoursLoader {
 	 */
 	@SuppressWarnings("unused")
 	private void createWholeFloor(Appearance app) {
-		Box box = new Box(this.parcours.getWidthInBlocks()*this.parcours.getGrid() *0.5f , this.parcours.getHeightInBlocks()*this.parcours.getGrid()  *0.5f, World.PLAYGROUND_THICKNESS, app);
+		Box box = new Box(this.parcours.getWidthInBlocks()*this.parcours.getBlockSizeInM() *0.5f , this.parcours.getHeightInBlocks()*this.parcours.getBlockSizeInM()  *0.5f, World.PLAYGROUND_THICKNESS, app);
 		this.parcours.addFloor(box, ((float)this.parcours.getWidthInBlocks())/2, ((float)this.parcours.getHeightInBlocks())/2, -World.PLAYGROUND_THICKNESS-0.005f); // +0.001f);
 	}
 
@@ -230,7 +235,7 @@ public class ParcoursLoader {
 		int n = 0;
 
 		for (n=0; n< points.length; n++)
-			p[n]=points[n]*this.parcours.getGrid();
+			p[n]=points[n]*this.parcours.getBlockSizeInM();
 
 	    createFloor(x, y,getAppearance(' '));
 
@@ -288,7 +293,7 @@ public class ParcoursLoader {
 		// Lichter bestehen aus dem echten Licht
 		PointLight pointLight = new PointLight();
 		pointLight.setColor(pointLightColor);
-		pointLight.setPosition((x+0.5f)*this.parcours.getGrid(), (y+0.5f)*this.parcours.getGrid(), LIGHTZ);
+		pointLight.setPosition((x+0.5f)*this.parcours.getBlockSizeInM(), (y+0.5f)*this.parcours.getBlockSizeInM(), LIGHTZ);
 		pointLight.setInfluencingBounds(pointLightBounds);
 		pointLight.setAttenuation(1f, 3f, 0f);
 		pointLight.setEnable(true);
@@ -463,6 +468,7 @@ public class ParcoursLoader {
 		return this.parcours;
 	}
 
+	//TODO Wette: Diese Methode (106 Zeilen) laesst sich durch Verwenden von XPath auf ca. 20 Zeilen vereinfachen
 	//$$ EntityResolver-Kram ist zu kompliziert bei Aufruf dieser Methode; weg und ersetzen durch das, was in XmlDocument auch gemacht wird
 	/** <p>L&auml;dt einen Parcours aus einer InputSource.
 	 *
@@ -678,7 +684,7 @@ public class ParcoursLoader {
 				appearance.setCapability(Appearance.ALLOW_TEXTURE_READ);
 
 			} catch (Exception e) {
-				lg.warn(e, "Probleme beim Laden der Texturdatei '%s'", 
+				lg.warn(e, "Probleme beim Laden der Texturdatei '%s'",
 					textureFile);
 			}
 
@@ -687,6 +693,7 @@ public class ParcoursLoader {
 		this.appearances.put(item,appearance);
 	}
 
+	//TODO Was soll diese Methode? (Wird nirgends aufgerufen)
 	  static void print(Node node, PrintStream out) {
 		    int type = node.getNodeType();
 		    switch (type) {

@@ -3,21 +3,39 @@ package ctSim.model;
 import java.util.Vector;
 import javax.vecmath.Vector2d;
 
+//TODO Doku ganze Klasse! Wenn Code zu unverstaendlich zum Dokumentieren, neu implementieren.
 /**
  * Diese Klasse beschreibt die Position eines Knicks im Pfad des Roboters, wenn
  * er an einem Hindernis abbiegt. Ausserdem enthaelt sie Methoden um die
  * Kuerzeste Verbindung in einem ungerichteten Graphen zu finden
- * 
+ *
  * @author phophermi (mpraehofer@web.de)
- * 
+ *
  */
 public class TurningPoint {
+	//TODO Mist: Dieser Algorithmus hat ganz eigene Vorstellungen davon, was "Bot ist in ein Loch gefallen" heisst (naemlich Bot-Zentrum ist naeher als distFromCorner an einer Ecke). Es waere besser, wenn das Model und diese Klasse einen Bot unter den gleichen Umstaenden als "im Loch" betrachten, nicht unter subtil unterschiedlichen Umstaenden
 	/**
-	 * Der vertikale bzw. horizontale Abstand den der Mittelpunkt des Bots von
-	 * den Waenden haelt, in grid-Einheiten. 0.25 bedeutet kein
-	 * Sicherheitsabstand
+	 * <p>
+	 * Der Abstand, wie weit der Mittelpunkt des Bots von den
+	 * W&auml;nden/L&ouml;chern/andern Hindernissen h&auml;lt, in
+	 * Grid-Einheiten.
+	 * </p>
+	 * <p>
+	 * 0.25 ist <strong>bei momentaner Block-Gr&ouml;&szlig;e</strong> ein
+	 * Bot-Radius. (&quot;Block-Gr&ouml;&szlig;e&quot;: siehe blockSizeInM in
+	 * der Klasse Parcours.) 0.25 bedeutet also, dieser der
+	 * Wegfindungs-Algorithmus erlaubt dem Bot, bis zur Kollision an W&auml;nde
+	 * heranzukommen.
+	 * </p>
+	 * <p>
+	 * bbe/hkr: Auf 0 gesetzt. Grund: Bots, die mit ihrer Vorderseite ein
+	 * bi&szlig;chen &uuml;ber einem Loch standen (was ja ok ist), wurden von
+	 * diesem Algorithmus betrachtet als in ung&uuml;ltiger Position, d.h. es
+	 * wurde &quot;-1&quot; (&quot;gibt keinen g&uuml;ltigen Weg&quot;)
+	 * zur&uuml;ckgeliefert.
+	 * </p>
 	 */
-	public static final double distFromCorner = 0.25;
+	public static final double distFromCorner = 0.0;
 
 	/**
 	 * Eingezeichnete Linienbreite der kuerzesten Verbindung in grid-Einheiten
@@ -40,7 +58,7 @@ public class TurningPoint {
 
 	/**
 	 * Konstruktor
-	 * 
+	 *
 	 * @param x
 	 * @param y
 	 */
@@ -52,19 +70,17 @@ public class TurningPoint {
 
 	/**
 	 * Konstruktor
-	 * 
+	 *
 	 * @param x
 	 * @param y
 	 */
 	TurningPoint(Vector2d p) {
 		pos = new Vector2d(p);
 	}
-	
-	
 	/**
 	 * Testet ob this mit p2 in der parcoursMapSimple auf direktem Wege vom Bot
 	 * erreicht werden koennen
-	 * 
+	 *
 	 * @param p2
 	 *            Zu testender Punkt
 	 * @param parcoursMapSimple
@@ -121,7 +137,7 @@ public class TurningPoint {
 
 	/**
 	 * Euklidischer Abstand von this zu p2
-	 * 
+	 *
 	 * @param p2
 	 * @return Euklidischer Abstand von this zu p2
 	 */
@@ -134,7 +150,7 @@ public class TurningPoint {
 	/**
 	 * gibt die Laenge des durch path gegebenen Streckenzugs bezueglich der
 	 * Inzidenz- (und Abstands-)Matrix M zurueck
-	 * 
+	 *
 	 * @param path
 	 * @param M
 	 * @return laenge von path bezueglich M
@@ -156,7 +172,7 @@ public class TurningPoint {
 
 	/**
 	 * gibt die Laenge des durch path gegebenen Streckenzugs zurueck
-	 * 
+	 *
 	 * @param path
 	 * @param M
 	 * @return laenge von path bezueglich M
@@ -178,16 +194,14 @@ public class TurningPoint {
 
 	/**
 	 * die kuerzeste Verbindung von this zu p2 wird rekursiv bestimmt
-	 * 
+	 *
 	 * @param p2
 	 *            Zielpunkt
-	 * @param initialPath
+	 * @param initPath
 	 *            der bisher untersuchte Weg
 	 * @param upperbound
 	 *            ist der untersuchte Weg laenger wird abgebrochen
-	 * @param parcoursMapSimple
-	 *            Parcours-Array, 0 befahrbar, 1 Hindernis
-	 * 
+	 * @param M Inzidenzmatrix
 	 * @return die kuerzeste Verbindung von this zu p2 unter Vermeidung von
 	 *         initialPath
 	 */
@@ -240,7 +254,7 @@ public class TurningPoint {
 	/**
 	 * gibt einen Polygonzug der mit Breite und einer Spitze versehen Linie von
 	 * this zu p2 zurueck, zur Weiterverwendung in createLine()
-	 * 
+	 *
 	 * @param p2
 	 * @return {x1,y1,z1,x2,y2,z2,...,x6,y6,z6}
 	 */
@@ -290,7 +304,7 @@ public class TurningPoint {
 
 	/**
 	 * Findet alle moeglichen Eckpunkte der kuerzesten Verbindung
-	 * 
+	 *
 	 * @param parcoursMapSimple
 	 * @return eine Liste moeglicher Eckpunkte fuer die kuerzesten Verbindung
 	 */
@@ -340,7 +354,7 @@ public class TurningPoint {
 
 	/**
 	 * Kreiert die Incidenzmatrix der Punkteliste bezueglich parcoursMapSimple
-	 * 
+	 *
 	 * @param turningPoints
 	 * @param parcoursMapSimple
 	 * @return double[i][j] ist der Abstand von Punkt i zu j, falls direkt
@@ -373,7 +387,7 @@ public class TurningPoint {
 
 	/**
 	 * Gibt eine Liste aller Punkte zusammen mit ihren direkten Nachbarn zurueck
-	 * 
+	 *
 	 * @param incidenceMatrix
 	 * @return int[i].length ist die Koordinationszahl des i-ten Punktes
 	 */
@@ -402,21 +416,23 @@ public class TurningPoint {
 	}
 
 	/**
-	 * gibt eine Folge von Punkten zurueck, die unter Beruecksichtigung von
-	 * parcoursMapSimple den kuerzersten Weg von start nach finish beschreiben,
-	 * den der bot durchfahren kann
-	 * 
-	 * @param start
-	 * @param finish
-	 * @param parcoursMapSimple
-	 * @return Eckpunkte der Kuerzesten Verbindung von start zu finish
+	 * Gibt eine Folge von Punkten zur&uuml;ck, die den k&uuml;rzesten Weg von
+	 * <code>this</code> nach <code>finish</code> beschreiben, den der Bot
+	 * im Labyrinth <code>parcoursMapSimple</code> durchfahren kann.
+	 *
+	 * @param finish Der Punkt, zu dem der k&uuml;rzeste Weg bestimmt werden
+	 * soll; typischerweise das Zielfeld des Labyrinths.
+	 * @param parcoursMapSimple Vereinfachte Karte des Parcours: 0 = befahrbar,
+	 * 1 = Hindernis
+	 * @return Eckpunkte der kürzesten Verbindung von <code>this</code> zu
+	 * finish. Die Liste kann leer sein.
 	 */
 	Vector<TurningPoint> getShortestPathTo(TurningPoint finish,
 			int[][] parcoursMapSimple) {
-		Vector<TurningPoint> turningPoints = this
-				.findTurningPoints(parcoursMapSimple);
-		turningPoints.insertElementAt(finish, 0);
-		turningPoints.insertElementAt(this, 0);
+		Vector<TurningPoint> turningPoints =
+			findTurningPoints(parcoursMapSimple);
+		turningPoints.add(this);
+		turningPoints.add(finish);
 		// Erstellen der Inzidenzmatrix des ungerichteten Graphen
 		double[][] incidenceMatrix = this.createIncidenceMatrix(turningPoints,
 				parcoursMapSimple);

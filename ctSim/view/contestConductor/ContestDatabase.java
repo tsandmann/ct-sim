@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import ctSim.controller.Config;
 import ctSim.controller.Main;
 
+//$$ doc ContestDatabase -- ist eigentlich ne Factory
 public class ContestDatabase {
 
 	private Connection connection;
