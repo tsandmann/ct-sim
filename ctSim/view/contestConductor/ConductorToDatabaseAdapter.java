@@ -214,6 +214,32 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
         	b.getObstState()});
     }
 
+    //$$ doc resetRunningGames
+    public void resetRunningGames()
+    throws IllegalArgumentException, SQLException {
+    	ResultSet rs = execSql(
+    		"SELECT * FROM ctsim_game WHERE state = ?", GameState.RUNNING);
+    	while (rs.next()) {
+    		execSql("DELETE FROM ctsim_log " +
+    			"WHERE game = ? ", rs.getInt("id"));
+    	}
+
+    	execSql("UPDATE ctsim_game SET state = ? WHERE state = ?",
+    		GameState.READY_TO_RUN, GameState.RUNNING);
+    }
+
+    //$$ doc gamesExist()
+    public boolean gamesExist()
+    throws IllegalArgumentException, SQLException {
+    	return execSql("SELECT * FROM ctsim_game").next();
+    }
+
+    public boolean isPrelimIncomplete()
+    throws IllegalArgumentException, SQLException {
+    	return execSql("SELECT * FROM ctsim_game " +
+    			"WHERE level = -1 AND state != ?", GameState.GAME_OVER).next();
+    }
+
 	/** Liefert das aus der Datenbank kommende XML, das einen Parcours
      * beschreibt.
      *

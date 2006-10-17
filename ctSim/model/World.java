@@ -993,6 +993,10 @@ public class World {
 		}
 	}
 
+	public double getShortestDistanceToFinish(Point3d fromWhere) {
+		return getShortestDistanceToFinish(new Vector3d(fromWhere));
+	}
+
 	public double getShortestDistanceToFinish(Vector3d fromWhere) {
 		return parcours.getShortestDistanceToFinish(fromWhere);
 	}

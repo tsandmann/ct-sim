@@ -34,7 +34,7 @@ public class Main {
 
 	static FmtLogger lg;
 
-	public static InitializingPicoContainer dependencies =
+	public static final InitializingPicoContainer dependencies =
 		new InitializingPicoContainer();
 
 	static {

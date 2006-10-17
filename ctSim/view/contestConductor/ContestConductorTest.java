@@ -37,7 +37,7 @@ public class ContestConductorTest {
 	public static void main(String[] args) throws Exception {
 		Main.dependencies.reRegisterImplementation(
 			ContestJudge.class, MockContestJudge.class);
-		Main.main("-conf", "config/ct-sim-contest-conductor.xml");
+		Main.main("-conf", "config/ct-sim-contest-conductor-local.xml");
 	}
 
 	/**
@@ -55,7 +55,9 @@ public class ContestConductorTest {
 			concon.lg.fine("ContestJudge-Attrappe: Bot 1 gewinnt, " +
 					"beende Spiel");
             try {
-                setWinner(concon.botIds.keySet().iterator().next());
+            	GameOutcome o = new GameOutcome();
+            	o.winner = concon.botIds.keySet().iterator().next();
+                setWinner(o);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ctSim.util;
 
 import java.io.PrintWriter;
@@ -13,9 +10,6 @@ import java.util.logging.LogRecord;
 public class CtSimFormatter extends Formatter {
 	private SimpleDateFormat df = new SimpleDateFormat(
 		"d MMM y H:mm:ss.SSS");
-	public CtSimFormatter() {
-        // TODO Auto-generated constructor stub
-    }
 
 	@Override
 	public String format(LogRecord r) {
@@ -40,7 +34,7 @@ public class CtSimFormatter extends Formatter {
 			r.getLevel() + ": " + r.getMessage() +
 			" [" + r.getLoggerName() + "."
 		    + r.getSourceMethodName() + "() " +
-		    "Thread " + threadName + "(" + r.getThreadID() + ")" + 
+		    "Thread " + threadName + "(" + r.getThreadID() + ")" +
 		    "]\n" + throwable;
     }
 }

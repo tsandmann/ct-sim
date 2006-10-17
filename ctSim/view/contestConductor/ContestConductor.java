@@ -83,6 +83,22 @@ public class ContestConductor implements View {
 	}
 
 	public static class ContestJudge extends Judge {
+		class GameOutcome {
+			Bot winner = null;
+			HashMap<Bot, Double> distToFinish =
+				new HashMap<Bot, Double>();
+
+			@SuppressWarnings("synthetic-access")
+            GameOutcome() {
+	            for (Bot b : concon.botIds.keySet()) {
+	            	distToFinish.put(
+	            		b,
+	            		concon.world.getShortestDistanceToFinish(
+	            			b.getLastSafePos()));
+	            }
+			}
+		}
+
 		protected ContestConductor concon;
 
 		public ContestJudge(Controller controller, ContestConductor concon) {
@@ -123,7 +139,11 @@ public class ContestConductor implements View {
 		throws NullPointerException, SQLException, TournamentPlanException {
 			for(Bot b : concon.botIds.keySet()) {
 				if (concon.world.finishReached(new Vector3d(b.getPosition()))) {
-					setWinner(b);
+					GameOutcome o = new GameOutcome();
+					o.winner = b;
+					o.distToFinish.put(b, 0d); // ueberschreiben
+
+					setWinner(o);
 					return true;
 				}
 			}
@@ -133,53 +153,45 @@ public class ContestConductor implements View {
         @SuppressWarnings("synthetic-access")
         private boolean isGameTimeoutElapsed()
         throws SQLException, TournamentPlanException {
-			// wenn die Spielzeit noch nicht um ist, liefere false zurueck
 			if (concon.world.getSimTimeInMs() <
 				concon.db.getMaxGameLengthInMs()) {
+				// Spielzeit ist noch nicht um
 				return false;
 			}
 
 			concon.lg.info("Spielzeit abgelaufen; Ermittle Bot, der dem " +
 					"Ziel am n\u00E4chsten ist");
 
-			Bot winner = null;
-            for (Bot b : concon.botIds.keySet()) {
-            	if (winner == null)
-            		winner = b;
-            	else {
-            		if (concon.world.getShortestDistanceToFinish(
-            				new Vector3d(winner.getLastSafePos()))
-            		    > concon.world.getShortestDistanceToFinish(
-            		    	new Vector3d(b.getLastSafePos())))
-            			 winner = b;
-            	}
+			GameOutcome o = new GameOutcome();
+			o.winner = concon.botIds.keySet().iterator().next();
+            for (Map.Entry<Bot, Double> d : o.distToFinish.entrySet()) {
+        		if (d.getValue() < o.distToFinish.get(o.winner))
+        			 o.winner = d.getKey();
             }
 
-            setWinner(winner);
-
+            setWinner(o);
 			return true;
 		}
 
         @SuppressWarnings("synthetic-access")
-        protected void setWinner(Bot winner)
+        protected void setWinner(GameOutcome outcome)
 		throws NullPointerException, SQLException, TournamentPlanException {
         	concon.lg.info("Gewinner ist Bot %s nach einem Spiel von %d ms",
-        		winner.getName(), concon.world.getSimTimeInMs());
+        		outcome.winner, concon.world.getSimTimeInMs());
 
         	// Letzten Schritt loggen //$$ Das ist nicht so toll: Macht die Annahme, dass der DefaultController so bleibt, wie er ist
         	concon.db.log(concon.botIds.keySet(),
         		concon.world.getSimTimeInMs());
 
         	// Restwege schreiben
-            for (Map.Entry<Bot, Integer> b : concon.botIds.entrySet()) {
-            	concon.db.writeDistanceToFinish(
-            		b.getValue(),
-            		concon.world.getShortestDistanceToFinish(
-            			new Vector3d(b.getKey().getLastSafePos())));
+            for (Map.Entry<Bot, Double> d :
+            	outcome.distToFinish.entrySet()) {
+            	concon.db.writeDistanceToFinish(concon.botIds.get(d.getKey()),
+            		d.getValue());
             }
 
 			// Spiel beenden
-        	concon.db.setWinner(concon.botIds.get(winner),
+        	concon.db.setWinner(concon.botIds.get(outcome.winner),
         		concon.world.getSimTimeInMs());
 		}
 	}
@@ -232,12 +244,18 @@ public class ContestConductor implements View {
 
 	public void onApplicationInited() {
 		controller.setJudge(Main.dependencies.get(ContestJudge.class));
+
 		try {
-			planner.planPrelimRound();
-		} catch (SQLException e) {
-			lg.severe(e, "Vorrunde konnte nicht geplant werden");
-			assert false;
-		}
+	        if (db.gamesExist()) // sort key ist eigentlich wurst
+	        	recoverFromCrash();
+	        else
+	        	// Turnier faengt neu an
+	        	planner.planPrelimRound();
+        } catch (SQLException e) {
+	        lg.severe(e, "Low-level-Datenbankproblem");
+	        assert false;
+        }
+
 		try {
 	        sleepAndStartNextGame();
         } catch (Exception e) {
@@ -245,6 +263,17 @@ public class ContestConductor implements View {
 	        assert false;
         }
 	}
+
+	private void recoverFromCrash()
+	throws IllegalArgumentException, SQLException {
+	    lg.info("Abgebrochenes Turnier gefunden; versuche Wiederaufnahme");
+	    db.resetRunningGames();
+	    if (! db.isPrelimIncomplete()) {
+	    	lg.info("Vorrunde wurde komplett gespielt; steige in " +
+	    			"Hauptrunde ein");
+	    	currentPhase = MAIN_ROUND;
+	    }
+    }
 
 	public void onSimulationStep(
 		@SuppressWarnings("unused") long simTimeInMs) {
@@ -318,13 +347,18 @@ public class ContestConductor implements View {
 		startGame(game);
     }
 
-	/**
-	 * Welcher Rechenr soll den naechsten Bot ausfuehren
-	 */
-	private int nextHost=1;
+	private Process execute(String commandAndArgs) throws IOException {
+    	lg.fine("Starte " + commandAndArgs);
+		return Runtime.getRuntime().exec(commandAndArgs);
+	}
 
 	/**
-	 * Startet eine Bot, entweder lokal oder remote
+	 * Welcher Rechner soll den n&auml;chsten Bot ausf&uuml;hren
+	 */
+	private int nextHost = 1;
+
+	/**
+	 * Startet einen Bot, entweder lokal oder remote
 	 * @param f
 	 */
 	private void executeBot(File f){
@@ -333,40 +367,31 @@ public class ContestConductor implements View {
 
 		String server = ConfigManager.getValue("ctSimIP");
 		if (server == null)
-			server = "localhost";
+			server = "localhost"; //$$ umziehen
 
-		// Nur wenn ein Config-Eintrag fuer den entstprechenden Remote-Host exisitiert starten wir auch remote, osnst lokal
-		if ((user ==null) || (host == null)){
-			lg.info("Host oder Username fuer Remote-Ausfuehrung (Rechner "+nextHost+") nicht gesetzt. Starte lokal");
-			// Datei ausfuehren + warten bis auf den neuen Bot hingewiesen werden
+		// Nur wenn ein Config-Eintrag fuer den entstprechenden Remote-Host
+		// existiert starten wir auch remote, sonst lokal
+		if ((user == null) || (host == null)){
+			lg.fine("Host oder Username f\u00FCr Remote-Ausf\u00FChrung " +
+					"(Rechner " + nextHost + ") nicht gesetzt. Starte lokal");
+			// Datei ausfuehren + warten bis auf den neuen Bot hingewiesen
+			// werden
 			controller.invokeBot(f);
 		} else {
             try {
-            	String execString = "scp "+f.getAbsolutePath()+" "+user+"@"+host+":. "; //2>&1 >> out.log";
-            	lg.info("Executing "+execString);
-				Process pc= Runtime.getRuntime().exec(execString);
-				pc.waitFor();
-
-				execString ="ssh "+user+"@"+host+" chmod u+x "+f.getName();
-            	lg.info("Executing "+execString);
-				pc = Runtime.getRuntime().exec(execString);
-				pc.waitFor();
-
-
-				execString ="ssh "+user+"@"+host+" ./"+f.getName()+" -t "+server;
-            	lg.info("Executing "+execString);
-				pc = Runtime.getRuntime().exec(execString);
-
+            	execute("scp "+f.getAbsolutePath()+" "+user+"@"+host+":. ").
+            		waitFor();
+				execute("ssh "+user+"@"+host+" chmod u+x "+f.getName()).
+					waitFor();
+				execute("ssh "+user+"@"+host+" ./"+f.getName()+" -t "+server);
 			} catch (Exception e) {
-				lg.warn("Probleme beim Remote-Starten von Bot: "+f.getAbsolutePath()+" auf Rechner: "+user+"@"+host);
-				e.printStackTrace();
+				lg.warn(e, "Probleme beim Remote-Starten von Bot: "+
+					f.getAbsolutePath()+" auf Rechner: "+user+"@"+host);
 			}
 		}
 
 		nextHost++;
-		if (nextHost ==3)
-			nextHost=1;
-
+		nextHost %= 3;
 	}
 
 	/**
@@ -426,13 +451,11 @@ public class ContestConductor implements View {
 		int gameId  = game.getInt("game");
 		int levelId = game.getInt("level");
 		lg.info(
-			"Starte Spiel; Level %d, Spiel %d, Bots %s (%s) und %s (%s), " +
-			"geplante Startzeit %s",
+			"Starte Spiel; Level %d, Spiel %d, Bots %s (\"%s\") und %s " +
+			"(\"%s\"), geplante Startzeit %s",
 			levelId, gameId,
-			game.getString("bot1"),
-			'"' + db.getBotName(game.getInt("bot1")) + '"',
-			game.getString("bot2"),
-			'"' + db.getBotName(game.getInt("bot2")) + '"',
+			game.getString("bot1"), db.getBotName(game.getInt("bot1")),
+			game.getString("bot2"), db.getBotName(game.getInt("bot2")),
 			game.getTimestamp("scheduled"));
 		db.setGameRunning(levelId, gameId);
 

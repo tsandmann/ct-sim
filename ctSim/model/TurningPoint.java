@@ -429,10 +429,10 @@ public class TurningPoint {
 	 */
 	Vector<TurningPoint> getShortestPathTo(TurningPoint finish,
 			int[][] parcoursMapSimple) {
-		Vector<TurningPoint> turningPoints =
-			findTurningPoints(parcoursMapSimple);
-		turningPoints.add(this);
-		turningPoints.add(finish);
+		Vector<TurningPoint> turningPoints = this
+				.findTurningPoints(parcoursMapSimple);
+		turningPoints.insertElementAt(finish, 0);
+		turningPoints.insertElementAt(this, 0);
 		// Erstellen der Inzidenzmatrix des ungerichteten Graphen
 		double[][] incidenceMatrix = this.createIncidenceMatrix(turningPoints,
 				parcoursMapSimple);

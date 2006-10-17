@@ -88,20 +88,6 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 		return execSql("SELECT * from ctsim_bot WHERE bin !=''");
 	}
 
-	/** Liefert die Spiele eines Levels, sortiert nach einem Schl&uuml;ssel.
-	 *
-	 * @param levelId Schl&uuml;ssel des gew&uuml;nschten Levels.
-	 * @param sortKey Ein Spaltenname in der Datenbanktabelle ctsim_game,
-	 * nach dem der R&uuml;ckgabewert sortiert wird.
-	 * @return Ein ResultSet im Format der DB-Tabelle ctsim_game.
-	 */
-	public ResultSet getGames(int levelId, String sortKey)
-	throws SQLException {
-		return execSql("SELECT * FROM ctsim_game" +
-				" WHERE level ="+levelId+
-				" ORDER BY '" + sortKey + "'");
-	}
-
 	/** Setzt die geplante Startzeit eines Spiels.
 	 *
 	 * @param levelId Schl&uuml;ssel des Levels des Spiels.
@@ -123,5 +109,18 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	public boolean doesLevelExist(int levelId) throws SQLException {
 		ResultSet rs = execSql("SELECT * FROM ctsim_level WHERE id = "+levelId);
 	    return rs.next();
+    }
+
+	/** Liefert die Spiele eines Levels, sortiert nach einem Schl&uuml;ssel.
+     *
+     * @param levelId Schl&uuml;ssel des gew&uuml;nschten Levels.
+     * @param sortKey Ein Spaltenname in der Datenbanktabelle ctsim_game,
+     * nach dem der R&uuml;ckgabewert sortiert wird.
+     * @return Ein ResultSet im Format der DB-Tabelle ctsim_game.
+     */
+    public ResultSet getGames(int levelId, String sortKey) throws SQLException {
+    	return execSql("SELECT * FROM ctsim_game" +
+    			" WHERE level ="+levelId+
+    			" ORDER BY '" + sortKey + "'");
     }
 }

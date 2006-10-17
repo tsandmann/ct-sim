@@ -1,12 +1,17 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-17 Hendrik Krauss [hkr@heise.de]:
+* Absturzresistenz: abgebrochene Contests werden erkannt und wiederaufgenommen
+* Wenn einer auf dem Zielfeld steht, kriegt er Restweg = 0
+* Aenderung in TurningPoint vom letzten Checkin rueckgaengig -- hat wohl mit den komisch gewordenen Restwegen zu tun
+* Kleinigkeiten
+
 2006-10-16 Hendrik Krauss [hkr@heise.de]:
 * Parcours, ParcoursLoader und TurningPoint leicht veraendert auf der Suche nach dem Restweg-Minus-1-Fehler; schliesslich gefixt
 * Weiter Vorbereitungen fuer Screenshot-Kram
 * Tool gestrickt, was ein Verzeichnis voller Screenshots in die Datenbank laedt (ctSim.view.contestConductor.ScreenshotUploadTool)
 * Kleinigkeiten
-
 
 2006-10-11 Hendrik Krauss [hkr@heise.de]:
 * BotManager: race condition beseitigt, die zu intermittierenden Abstuerzen beim Level-Wechseln gefuehrt hat
