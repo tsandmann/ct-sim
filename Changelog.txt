@@ -1,6 +1,11 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-18-C Hendrik Krauss [hkr@heise.de]:
+* ContestConductor und Subsysteme beachten jetzt die Reihenfolge der Bots (vorher war es Glueckssache, ob der, der in ctsim_game.bot1 steht auch in ctsim_log.pos1x/pos1y/usw. geschrieben wurde)
+* Abgerissene SQL-Verbindungen werden neu aufgebaut (nach Erichs nonchalantem Hinweis "och das kann schon mal passieren")
+* Wiedereinstieg in abgebrochene Turniere verbessert: Findet jetzt auch wieder rein, wenn Vorrunde komplett, aber Hauptrunde noch nicht geplant
+
 2006-10-18-B Hendrik Krauss [hkr@heise.de]:
 * Logschritt ganz am Ende eines Spiels wird jetzt erzwungen, um Forentrollen den Wind aus den Segeln zu nehmen ("Der ist ja gar nicht ganz im Ziel")
 

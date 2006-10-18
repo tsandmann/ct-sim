@@ -135,19 +135,29 @@ class DatabaseAdapter {
 
 	/** Die Verbindung zu der Datenbank, die alles rund um den Wettbewerb
 	 * weiss. */
-	private Connection dbConn;
+	private Connection dbConn = null;
 
 	//$$ doc statementCache
 	protected StatementCache statementCache = new StatementCache();
 
+	private ContestDatabase connFactory;
 
-	protected DatabaseAdapter(ContestDatabase db) {
-		dbConn = db.getConnection();
+
+	protected DatabaseAdapter(ContestDatabase connFactory) {
+		this.connFactory = connFactory;
 		try {
+			acquireConn();
             lg.info("Verwende Datenbank " + dbConn.getMetaData().getURL());
         } catch (SQLException e) {
         	// no-op, da nur ne Info-Meldung nicht geht
         }
+	}
+
+	protected void acquireConn() throws SQLException {
+		statementCache.clear();
+		if (dbConn != null)
+			dbConn.close();
+		dbConn = connFactory.getConnection();
 	}
 
 	//$$ doc getPS
@@ -241,11 +251,33 @@ class DatabaseAdapter {
 	 */
 	protected ResultSet execSql(String sqlWithInParams, Object... inValues)
 	throws SQLException, IllegalArgumentException {
+		// Idee: SQL-Kommando ausfuehren; wenn's nicht klappt, Verbindung neu
+		// herstellen und nochmal ausfuehren.
+		// Fix gegen abreissende DB-Verbindungen (wenn die Verbindung abreisst,
+		// kriegt man von MySQL mit dem naechsten SQL-Befehl eine
+		// com.mysql.jdbc.CommunicationsException, die von SQLException
+		// abgeleitet ist)
+		try {
+			return tryExecSql(sqlWithInParams, inValues);
+		} catch (SQLException e) {
+			lg.warn(e, "SQLException; stelle DB-Verbindung neu her und " +
+					"probiere nochmal");
+			acquireConn();
+			// Wenn jetzt nochmal eine Excp kommt, reichen wir sie nach oben
+			// durch -- es liegt nicht an einer abgerissenen Verbindung, sondern
+			// an falscher SQL-Syntax oder so -- da hilft ne neue Verbindung
+			// auch nicht
+			return tryExecSql(sqlWithInParams, inValues);
+		}
+	}
+
+	//$$ doc tryExecSql
+	private ResultSet tryExecSql(String sqlWithInParams, Object... inValues)
+	throws SQLException, IllegalArgumentException {
 		if (sqlWithInParams.toLowerCase().startsWith("select")) {
 			return buildPreparedStatement(sqlWithInParams, inValues).
 				executeQuery();
-		}
-		else if (Misc.startsWith(sqlWithInParams.toLowerCase(),
+		} else if (Misc.startsWith(sqlWithInParams.toLowerCase(),
 			"insert", "update", "delete")) {
 			buildPreparedStatement(sqlWithInParams, inValues).executeUpdate();
 			return null;

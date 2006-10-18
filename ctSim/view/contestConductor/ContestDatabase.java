@@ -8,9 +8,8 @@ import ctSim.controller.Config;
 import ctSim.controller.Main;
 
 //$$ doc ContestDatabase -- ist eigentlich ne Factory
+//$$ Ganze Klasse ueberarbeiten
 public class ContestDatabase {
-
-	private Connection connection;
 
 	static {
 		Main.dependencies.registerImplementation(Config.class);
@@ -21,16 +20,20 @@ public class ContestDatabase {
 	}
 
 	public ContestDatabase(Config c)
-	throws ClassNotFoundException, SQLException {
+	throws ClassNotFoundException {
 		Class.forName("com.mysql.jdbc.Driver");
-		connection = DriverManager.getConnection(
-			c.get("contest-database-url"),
-			c.get("contest-database-user"),
-			c.get("contest-database-password"));
 	}
 
-	public Connection getConnection() {
-	    return connection;
+	public Connection getConnection()  {
+		try {
+			Config c = Main.dependencies.get(Config.class);
+		    return DriverManager.getConnection(
+				c.get("contest-database-url"),
+				c.get("contest-database-user"),
+				c.get("contest-database-password"));
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
     }
 
 }

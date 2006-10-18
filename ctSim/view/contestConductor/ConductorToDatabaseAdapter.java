@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -154,7 +153,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      *
      * @see World#getSimTimeInMs()
      */
-    public void log(Set<Bot> bots, long simTimeElapsed)
+    public void log(List<Bot> bots, long simTimeElapsed)
     throws IllegalArgumentException, SQLException, NullPointerException {
     	if (discardedLogEntries < logOneIn - 1) {
     		discardedLogEntries++;
@@ -165,7 +164,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     	logUnconditionally(bots, simTimeElapsed);
     }
 
-    public void logUnconditionally(Set<Bot> bots, long simTimeElapsed)
+    //$$ doc logUncond()
+    public void logUnconditionally(List<Bot> bots, long simTimeElapsed)
     throws IllegalArgumentException, SQLException, NullPointerException {
     	// Gesundheitscheck
     	if (bots.size() != 1 && bots.size() != 2) {
@@ -238,10 +238,15 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     	return execSql("SELECT * FROM ctsim_game").next();
     }
 
-    public boolean isPrelimIncomplete()
+    //$$ doc isPrelimIncomplete()
+    public boolean wasCrashDuringMainRound()
     throws IllegalArgumentException, SQLException {
-    	return execSql("SELECT * FROM ctsim_game " +
-    			"WHERE level = -1 AND state != ?", GameState.GAME_OVER).next();
+    	boolean incompletePrelimGamesExist = execSql(
+    		"SELECT * FROM ctsim_game WHERE level = -1 AND state != ?",
+    		GameState.GAME_OVER).next();
+    	boolean isMainRoundPlanned = execSql(
+    		"SELECT * FROM ctsim_game WHERE level != -1").next();
+    	return ! incompletePrelimGamesExist && isMainRoundPlanned;
     }
 
 	/** Liefert das aus der Datenbank kommende XML, das einen Parcours
