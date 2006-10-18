@@ -285,7 +285,13 @@ public class ContestConductor implements View {
 	}
 
 	public void onSimulationFinished() {
-		lg.fine("Spiel beendet");
+		lg.info("Spiel beendet; 10 Sekunden Unterbrechung");
+		try {
+	        Thread.sleep(10000);
+        } catch (InterruptedException e) {
+	        lg.warning(e, "ContestConductor aufgeweckt");
+        }
+
 		try {
 			try {
 				sleepAndStartNextGame();
@@ -293,7 +299,7 @@ public class ContestConductor implements View {
 				switch (currentPhase) {
 	                case PRELIM_ROUND:
 	                	planner.planMainRound();
-	                	// Dank Planner sind jetzt wieder Spiele "Ready"
+	                	// Dank Planner sind jetzt wieder Spiele "ready"
 	                	currentPhase = MAIN_ROUND;
 	                	try {
 	                        sleepAndStartNextGame();

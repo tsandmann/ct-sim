@@ -137,7 +137,7 @@ public class TournamentPlanner {
 	throws SQLException, TournamentPlanException {
 		lg.fine("Hauptrunde geplant");
 		// Vorrunde holen
-		ResultSet prelimRound = db.getGames(-1, "finishtime");
+		ResultSet prelimRound = db.getGames(-1, "finishtime, bot1restweg");
 		// Gesundheitscheck
 		while (prelimRound.next()) {
 			if (! GameState.GAME_OVER.toString().equals(

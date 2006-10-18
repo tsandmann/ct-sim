@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-18 Hendrik Krauss [hkr@heise.de]:
+* 10 Sekunden Pause zwischen Spielen
+* Sortierung Vorrunden-Rangliste nicht nach "finishtime", sondern "finishtime, bot1restweg"
+
 2006-10-17 Hendrik Krauss [hkr@heise.de]:
 * Absturzresistenz: abgebrochene Contests werden erkannt und wiederaufgenommen
 * Wenn einer auf dem Zielfeld steht, kriegt er Restweg = 0

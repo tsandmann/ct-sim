@@ -33,7 +33,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 		rs.next();
 		return rs.getTimestamp("scheduled");
 	}
-	
+
 	//$$ doc getGameInterval
 	public int getGameIntervalInS(int levelId) throws SQLException {
 		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?",
@@ -120,7 +120,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
      */
     public ResultSet getGames(int levelId, String sortKey) throws SQLException {
     	return execSql("SELECT * FROM ctsim_game" +
-    			" WHERE level ="+levelId+
-    			" ORDER BY '" + sortKey + "'");
+    			" WHERE level = ? " +
+    			" ORDER BY " + sortKey, levelId);
     }
 }
