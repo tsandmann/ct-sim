@@ -1,6 +1,9 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-18-B Hendrik Krauss [hkr@heise.de]:
+* Logschritt ganz am Ende eines Spiels wird jetzt erzwungen, um Forentrollen den Wind aus den Segeln zu nehmen ("Der ist ja gar nicht ganz im Ziel")
+
 2006-10-18 Hendrik Krauss [hkr@heise.de]:
 * 10 Sekunden Pause zwischen Spielen
 * Sortierung Vorrunden-Rangliste nicht nach "finishtime", sondern "finishtime, bot1restweg"

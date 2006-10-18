@@ -180,7 +180,7 @@ public class ContestConductor implements View {
         		outcome.winner, concon.world.getSimTimeInMs());
 
         	// Letzten Schritt loggen //$$ Das ist nicht so toll: Macht die Annahme, dass der DefaultController so bleibt, wie er ist
-        	concon.db.log(concon.botIds.keySet(),
+        	concon.db.logUnconditionally(concon.botIds.keySet(),
         		concon.world.getSimTimeInMs());
 
         	// Restwege schreiben

@@ -156,19 +156,23 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      */
     public void log(Set<Bot> bots, long simTimeElapsed)
     throws IllegalArgumentException, SQLException, NullPointerException {
-    	// Gesundheitscheck
-    	if (bots.size() != 1 && bots.size() != 2) {
-    		throw new IllegalArgumentException("Falsche Anzahl von Bots im " +
-    				"Set: erwarteter Wert 1 oder 2, tats\u00E4chlicher Wert "+
-    				bots.size());
-    	}
-
     	if (discardedLogEntries < logOneIn - 1) {
     		discardedLogEntries++;
     		return;
     	}
 
     	discardedLogEntries = 0;
+    	logUnconditionally(bots, simTimeElapsed);
+    }
+
+    public void logUnconditionally(Set<Bot> bots, long simTimeElapsed)
+    throws IllegalArgumentException, SQLException, NullPointerException {
+    	// Gesundheitscheck
+    	if (bots.size() != 1 && bots.size() != 2) {
+    		throw new IllegalArgumentException("Falsche Anzahl von Bots im " +
+    				"Set: erwarteter Wert 1 oder 2, tats\u00E4chlicher Wert "+
+    				bots.size());
+    	}
 
     	// Hauptcode
     	String common =
