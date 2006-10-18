@@ -468,6 +468,11 @@ public class World {
 		return this.parcours.finishReached(pos);
 	}
 
+	//$$ doc finishReached
+	public boolean finishReached(Point3d pos){
+		return this.parcours.finishReached(new Vector3d(pos));
+	}
+
 	/**
 	 * Prueft, ob ein Objekt mit irgendeinem anderen Objekt kollidiert
 	 * @param obst das Objekt
