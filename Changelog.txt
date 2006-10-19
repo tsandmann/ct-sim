@@ -1,6 +1,9 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-19 Benjamin Benz [bbe@heise.de] / Hendrik Krauss [hkr@heise.de]:
+* Fix: Restwegfindung beachtet jetzt alle Zielfelder, nicht nur das ganz links
+
 2006-10-18-C Hendrik Krauss [hkr@heise.de]:
 * ContestConductor und Subsysteme beachten jetzt die Reihenfolge der Bots (vorher war es Glueckssache, ob der, der in ctsim_game.bot1 steht auch in ctsim_log.pos1x/pos1y/usw. geschrieben wurde)
 * Abgerissene SQL-Verbindungen werden neu aufgebaut (nach Erichs nonchalantem Hinweis "och das kann schon mal passieren")

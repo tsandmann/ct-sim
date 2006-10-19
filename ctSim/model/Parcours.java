@@ -563,11 +563,26 @@ public class Parcours {
 		if (finishPositions.size()== 0)
 			return null;
 
-		Vector2d fin = new Vector2d(finishPositions.get(0)); //TODO Ist das richtig? Manche Parcours haben mehrere Zielfelder nebeneinander, wird dann immer das linkeste genommen?
-		fin.add(new Vector2d(0.5,0.5));
-		TurningPoint finish = new TurningPoint(fin);
+		Iterator<Vector2d> it = finishPositions.iterator();
+		
+		double dist = java.lang.Double.MAX_VALUE; 
+		Vector<TurningPoint> shortestPath = null; 
+		
+		while (it.hasNext()){
+			Vector2d fin = new Vector2d(it.next());
+			fin.add(new Vector2d(0.5,0.5));
+			TurningPoint finish = new TurningPoint(fin);
+
+			Vector<TurningPoint> tmpShortestPath = start.getShortestPathTo(finish, getFlatParcours());
+			
+			double tmpDist = TurningPoint.getLengthOfPath(tmpShortestPath);
+			if (tmpDist < dist){
+				shortestPath = tmpShortestPath;
+				dist=tmpDist;
+			}
+		}
 
     	// finde die kuerzeste Verbindung
-    	return start.getShortestPathTo(finish, getFlatParcours());
+    	return shortestPath;
 	}
 }

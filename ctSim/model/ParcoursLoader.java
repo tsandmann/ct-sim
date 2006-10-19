@@ -453,7 +453,7 @@ public class ParcoursLoader {
 	        	if(shortestPath==null || shortestPath.size()<2){
 	        	} else{
 	        		for(int q=1;q<shortestPath.size();q++){
-	        			createLine(0,0,shortestPath.get(q-1).returnLineTo(shortestPath.get(q)),getAppearance('p'));
+	        			createLine(0,0,shortestPath.get(q-1).returnLineTo(shortestPath.get(q)),getAppearance('-'));
 	        		}
 	        	}
 			}
@@ -461,6 +461,8 @@ public class ParcoursLoader {
 		}
 	}
 
+	
+	
 	/**
 	 * @return Liefert das soeben aufgebaute Parcours-Objekt zurueck
 	 */
