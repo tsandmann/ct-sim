@@ -35,7 +35,7 @@ public class TurningPoint {
 	 * zur&uuml;ckgeliefert.
 	 * </p>
 	 */
-	public static final double distFromCorner = 0.0;
+	public static final double distFromCorner = 0.05;
 
 	/**
 	 * Eingezeichnete Linienbreite der kuerzesten Verbindung in grid-Einheiten
@@ -424,7 +424,7 @@ public class TurningPoint {
 	 * soll; typischerweise das Zielfeld des Labyrinths.
 	 * @param parcoursMapSimple Vereinfachte Karte des Parcours: 0 = befahrbar,
 	 * 1 = Hindernis
-	 * @return Eckpunkte der kürzesten Verbindung von <code>this</code> zu
+	 * @return Eckpunkte der kï¿½rzesten Verbindung von <code>this</code> zu
 	 * finish. Die Liste kann leer sein.
 	 */
 	Vector<TurningPoint> getShortestPathTo(TurningPoint finish,
