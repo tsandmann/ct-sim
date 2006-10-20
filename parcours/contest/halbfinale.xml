@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE world SYSTEM "parcours.dtd">
+<world>
+	<description>Dieses ist ein automatisch generierter Beispielparcours fuer den c't-Sim-Wettbewerb.</description>
+	<parcours>
+<line>*==========ZZ==========*</line>
+<line>#      #        #      #</line>
+<line>#      #        #      #</line>
+<line>#  ===L    LL    L===  #</line>
+<line>#  #       LL       #  #</line>
+<line>#  #     LLLLLL     #  #</line>
+<line>#  #     L    L     #  #</line>
+<line>#        L    L        #</line>
+<line>#     ===LL  LL===     #</line>
+<line>#                      #</line>
+<line>#==                  ==#</line>
+<line>#    ====#LLLL#====    #</line>
+<line>#    L   #    #   L    #</line>
+<line>#    #            #    #</line>
+<line>#==  #            #  ==#</line>
+<line>#       .#    #.       #</line>
+<line>#       1#    #2       #</line>
+<line>*======================*</line>
+	</parcours>
+	<optics>
+		<appearance type="X">
+			<description>quadratische Wand</description>
+			<texture>textures/rock_wall.jpg</texture>
+			<color>#999999</color>
+		</appearance>
+		<appearance type="#">
+			<description>senkrechte Wand</description>
+			<clone>X</clone>
+		</appearance>
+		<appearance type="=">
+			<description>wagrechte Wand</description>
+			<clone>X</clone>
+		</appearance>
+		<appearance type=".">
+			<description>Fussboden im Eingangsbereich</description>
+			<color type="ambient">#FFFFFF</color>
+			<color type="diffuse">#FFFFFF</color>
+		</appearance>
+		<appearance type=" ">
+			<description>Fussboden im Labyrinth</description>
+			<color type="ambient">#606060</color>
+			<color type="diffuse">#606060</color>
+		</appearance>
+		<appearance type="L">
+			<description>Fussboden mit Loch</description>
+			<color type="ambient">#000000</color>
+			<color type="diffuse">#000000</color>
+		</appearance>
+		<appearance type="1">
+			<description>Fussboden des Startfeldes 1</description>
+			<color type="ambient">#993030</color>
+			<color type="diffuse">#993030</color>
+		</appearance>
+		<appearance type="2">
+			<description>Fussboden des Startfeldes 2</description>
+			<color type="ambient">#000099</color>
+			<color type="diffuse">#000099</color>
+		</appearance>
+		<appearance type="0">
+			<description>Fussboden des Default-Startfeldes</description>
+			<clone>.</clone>
+		</appearance>
+		<appearance type="Z">
+			<description>Fussboden des Zielfeldes 0</description>
+			<color type="ambient">#66FF00</color>
+			<color type="diffuse">#66FF00</color>
+		</appearance>
+		<appearance type="*"><description>Lichtkugel</description>
+			<color type="emmissive">#FFFF90</color>
+		</appearance>
+		<appearance type="-"><description>Linie</description>
+			<color type="ambient">#000000</color>
+			<color type="diffuse">#000000</color>
+			<color type="specular">#000000</color>
+			<color type="emmissive">#000000</color>
+		</appearance>
+		<appearance type="|"><description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+		<appearance type="/">
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+		<appearance type="\">
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+		<appearance type="+">
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+		<appearance type="~">
+			<description>Linie</description>
+			<clone>-</clone>
+		</appearance>
+	</optics>
+</world>
