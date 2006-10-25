@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-10-25 Hendrik Krauss [hkr@heise.de]:
+* Alle Parcours des Wettbewerbs eingecheckt
+* Kleinigkeiten hier und da
+
 2006-10-19 Benjamin Benz [bbe@heise.de] / Hendrik Krauss [hkr@heise.de]:
 * Fix: Restwegfindung beachtet jetzt alle Zielfelder, nicht nur das ganz links
 

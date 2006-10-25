@@ -1,0 +1,12 @@
+Umlaute und wie man sie in Java escapt
+
+Beispiel: 
+System.out.println("Dieser Java-String enth\u00E4lt einen Umlaut");
+
+Ä u00C4
+ä u00E4
+Ö u00D6
+ö u00F6
+Ü u00DC
+ü u00FC
+ß u00DF

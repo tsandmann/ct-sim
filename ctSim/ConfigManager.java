@@ -30,6 +30,7 @@ import ctSim.util.FmtLogger;
 public class ConfigManager {
 	static FmtLogger lg = FmtLogger.getLogger("ctSim.ConfigManager");
 
+	//$$ Doku ruebermachen nach Config
 	/** <p>Enth&auml;lt die Einzelparameter der Konfiguration (spiegelt also
 	 * die <code>&lt;parameter></code>-Tags wider)</p>
 	 *

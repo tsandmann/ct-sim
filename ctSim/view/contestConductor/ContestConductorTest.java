@@ -56,7 +56,7 @@ public class ContestConductorTest {
 					"beende Spiel");
             try {
             	GameOutcome o = new GameOutcome();
-            	o.winner = concon.botIds.keySet().iterator().next();
+            	o.winner = ContestConductor.BotView.getAll().get(0);
                 setWinner(o);
             } catch (Exception e) {
                 throw new RuntimeException(e);

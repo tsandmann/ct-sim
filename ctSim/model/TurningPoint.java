@@ -14,6 +14,7 @@ import javax.vecmath.Vector2d;
  */
 public class TurningPoint {
 	//TODO Mist: Dieser Algorithmus hat ganz eigene Vorstellungen davon, was "Bot ist in ein Loch gefallen" heisst (naemlich Bot-Zentrum ist naeher als distFromCorner an einer Ecke). Es waere besser, wenn das Model und diese Klasse einen Bot unter den gleichen Umstaenden als "im Loch" betrachten, nicht unter subtil unterschiedlichen Umstaenden
+	//TODO Variable distFromCorner ist wirklich problematisch und sollte anders geloest werden -- siehe ihre Doku
 	/**
 	 * <p>
 	 * Der Abstand, wie weit der Mittelpunkt des Bots von den
@@ -27,13 +28,25 @@ public class TurningPoint {
 	 * Wegfindungs-Algorithmus erlaubt dem Bot, bis zur Kollision an W&auml;nde
 	 * heranzukommen.
 	 * </p>
-	 * <p>
-	 * bbe/hkr: Auf 0 gesetzt. Grund: Bots, die mit ihrer Vorderseite ein
-	 * bi&szlig;chen &uuml;ber einem Loch standen (was ja ok ist), wurden von
-	 * diesem Algorithmus betrachtet als in ung&uuml;ltiger Position, d.h. es
-	 * wurde &quot;-1&quot; (&quot;gibt keinen g&uuml;ltigen Weg&quot;)
-	 * zur&uuml;ckgeliefert.
-	 * </p>
+	 * <ol>
+	 * <h3>Probleme:</h3>
+	 * <li>Wenn dieser Wert zu gro&szlig; ist (z.B. 0.25), und man den Weg bis
+	 * zum Ziel bestimmt von der Position eines Bots aus, kann folgendes
+	 * passieren: Bots, die mit ihrer Vorderseite ein bisschen &uuml;ber einem
+	 * Loch stehen, sind nach Meinung dieses Algorithmus in ung&uuml;ltiger
+	 * Position. Das hei&szlig;t, dass
+	 * {@link #getShortestPathTo(TurningPoint, int[][])} zur&uuml;ckliefert, es
+	 * g&auml;be keinen g&uuml;ltigen Weg von der Botposition zum Ziel, obwohl
+	 * laut {@link AliveObstacle} der Bot noch lang nicht in ein Loch gefallen
+	 * ist. </li>
+	 * <li> Es ist nicht empfehlenswert, diesen Wert auf 0 zu setzen.
+	 * Angenommen, solche Stellen kommen auf der Karte (XML) vor:<br /> #<br />
+	 * #===<br /> #<br/> Ein Weg zum Ziel wird dann auch gefunden in der
+	 * zweiten Zeile zwischen den Bl&ouml;cken &quot;#&quot; und &quot;=&quot;,
+	 * wo der Bot nat&uuml;rlich nicht durchkommt. Dieser Wegfindungsalgorithmus
+	 * ist f&uuml;r den Wert 0 also praktisch nutzlos, da er auch Wege durch
+	 * W&auml;nde u.dgl. sucht. </li>
+	 * </ol>
 	 */
 	public static final double distFromCorner = 0.05;
 
@@ -424,7 +437,7 @@ public class TurningPoint {
 	 * soll; typischerweise das Zielfeld des Labyrinths.
 	 * @param parcoursMapSimple Vereinfachte Karte des Parcours: 0 = befahrbar,
 	 * 1 = Hindernis
-	 * @return Eckpunkte der k�rzesten Verbindung von <code>this</code> zu
+	 * @return Eckpunkte der k&uuml;rzesten Verbindung von <code>this</code> zu
 	 * finish. Die Liste kann leer sein.
 	 */
 	Vector<TurningPoint> getShortestPathTo(TurningPoint finish,

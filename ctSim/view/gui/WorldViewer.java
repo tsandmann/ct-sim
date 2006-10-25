@@ -68,10 +68,20 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     		init(world);
     }
 
-    /* Altes Universum weg, inkl. seiner J3D-Threads.
-	 * Dieser Aufruf ist enorm wichtig -- wir instanziieren mit
-	 * jedem Aufruf von init() ca. ein Dutzend Java3D-Threads, die
-	 * nie mehr beendet wuerden ohne universe.cleanup() */
+    /**
+	 * <p>
+	 * Altes Universum deinitialisieren (falls vorhanden), inkl. seiner
+	 * Java3D-Threads. Es ist enorm wichtig, diese Methode aufzurufen!
+	 * </p>
+	 * <p>
+	 * Mit jedem Aufruf von {@link init()} werden ca. ein Dutzend
+	 * Java3D-Threads instanziiert, die ohne <code>deinit()</code>
+	 * dann nie mehr beendet w&uuml;rden und ein massives Ressourcenleck (v.a.
+	 * Speicherleck wegen Referenzen auf alte Welten, Bots, etc.) darstellen.
+	 * Bei h&auml;ufigem Welt-Wechsel, etwa in Wettbewerbssituationen, hat das
+	 * gruselige Auswirkungen.
+	 * </p>
+	 */
 	protected void deinit() {
     	if (universe != null)
     		universe.cleanup();

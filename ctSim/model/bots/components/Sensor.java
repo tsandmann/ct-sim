@@ -67,6 +67,7 @@ public abstract class Sensor<E> extends BotComponent {
 		return this.setable;
 	}
 
+	//TODO Methode wird nie aufgerufen
 	/**
 	 * Bestimmt, ob Sensorwert setzbar ist
 	 * @param b
@@ -99,6 +100,7 @@ public abstract class Sensor<E> extends BotComponent {
 	 *           von Hand/ ueber die GUI eventuell gar nicht mit (da Wert bereits wieder ueberschrieben)
 	 */
 
+	//TODO Methode gibt immer true zurueck, weil "setable" niemals false wird
 	/**
 	 * Setzt einen Wert fuer den Sensor
 	 * @param val Der Wert zu setzen
