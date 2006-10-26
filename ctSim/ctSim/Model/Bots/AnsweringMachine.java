@@ -76,8 +76,9 @@ public class AnsweringMachine extends Thread {
 				valid = command.readCommand(con);
 				if (valid == 0) {// Kommando ist in Ordnung
 					bot.evaluate_command(command);
-				} else
-					System.out.println("Invalid Command");
+				} else {
+					System.out.println("Invalid Command: ");
+				}
 			} catch (IOException ex) {
 				ErrorHandler.error("Connection broken - Bot dies: " + ex);
 				die();

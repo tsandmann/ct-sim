@@ -219,4 +219,24 @@ public class CtBotRealCon extends CtBotReal implements TcpBot {
 			// Wenn jetzt noch was daneben geht ist uns das egal
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see ctSim.Model.Bots.CtBot#work()
+	 */
+	@Override
+	protected void work() {
+		// TODO Auto-generated method stub
+		super.work();
+
+
+		if (getSensRc5() != 0) {
+			Command command = new Command(Command.CMD_SENS_RC5, getSensRc5(),	42, seq++);
+			try {
+				con.send(command.getCommandBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			setSensRc5(0);
+		}
+	}
 }

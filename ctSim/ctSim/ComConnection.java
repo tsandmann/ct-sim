@@ -40,8 +40,8 @@ public class ComConnection extends Connection {
 			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 			port.enableReceiveTimeout(60000);
 		
-			setDis(new LEDataInputStream(port.getInputStream()));
-			setDos(new LEDataOutputStream( port.getOutputStream()));
+			setInputStream(port.getInputStream());
+			setOutputStream( port.getOutputStream());
 		
 			
 		} catch (IOException ex) {

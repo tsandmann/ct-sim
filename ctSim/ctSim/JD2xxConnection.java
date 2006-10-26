@@ -44,8 +44,8 @@ public class JD2xxConnection extends Connection {
 			jd.setFlowControl( JD2XX.FLOW_NONE, 0, 0);
 			jd.setTimeouts(60000, 60000);
 		
-			setDis(new LEDataInputStream(new JD2XXInputStream(jd)));
-			setDos(new LEDataOutputStream( new JD2XXOutputStream(jd)));
+			setInputStream(new JD2XXInputStream(jd));
+			setOutputStream( new JD2XXOutputStream(jd));
 		} catch (IOException ex) {
 			jd.close();
 			ErrorHandler.error("Error while creating Streams "+ex);

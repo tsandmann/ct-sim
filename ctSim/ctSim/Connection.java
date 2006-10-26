@@ -19,30 +19,36 @@
 
 package ctSim;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-
-import mindprod.ledatastream.LEDataInputStream;
-import mindprod.ledatastream.LEDataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 /**
  * Repraesentiert eine Verbindung
+ * 
  * @author bbe (bbe@heise.de)
- *
+ * 
  */
 public abstract class Connection {
 
 	/** Ein Input-Stream */
-	private LEDataInputStream dis = null;
-
+	private DataInputStream dis = null;
+	BufferedReader br = null;
+	
+	//private InputStream is = null;
+	
 	/** Ein Ausgabe-Stream */
-	private LEDataOutputStream dos = null;
+	private DataOutputStream dos = null;
 
 	/**
 	 * 
 	 */
 	public Connection() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -51,13 +57,14 @@ public abstract class Connection {
 	 * @return das Byte
 	 * @throws IOException
 	 */
-	public int readUnsignedByte() throws IOException {
-		int data;
-		synchronized (dis) {
-			data = dis.readUnsignedByte();
-		}
-		return data;
-	}
+//	public int readUnsignedByte() throws IOException {
+//		int data;
+//		synchronized (isr) {
+//			data = this.dis.readUnsignedByte();
+////			data = isr.read();
+//		}
+//		return data;
+//	}
 
 	/**
 	 * Liest einen 16-Bit-Ganzzahlwert (short)
@@ -65,14 +72,18 @@ public abstract class Connection {
 	 * @return das Datum
 	 * @throws IOException
 	 */
-	public short readShort() throws IOException {
-		short data = 0;
-		synchronized (dis) {
-			data = dis.readShort();
-		}
-
-		return data;
-	}
+//	public short readShort() throws IOException {
+//		//byte [] w = new byte[2];
+//		int [] w = new int[2];
+//		synchronized (br) {
+//	        //dis.readFully( w, 0, 2 );
+////			w[0]=dis.readUnsignedByte();
+////			w[1]=dis.readUnsignedByte();
+//			
+//			//isr.read( w, 0, 2 );
+//	        return (short) ( ( w[ 1 ] & 0xff ) << 8 | ( w[ 0 ] & 0xff ) );
+//		}
+//	}
 
 	/**
 	 * Beendet die laufende Verbindung
@@ -82,9 +93,9 @@ public abstract class Connection {
 	 */
 	public synchronized void disconnect() throws IOException, Exception {
 		try {
-			dis.close(); // close input and output stream
-			// br.close();
-			dos.close();
+			//isr.close(); // close input and output stream
+			br.close();
+			this.dos.close();
 		} catch (IOException IOEx) {
 			throw IOEx;
 		} catch (Exception Ex) {
@@ -104,9 +115,9 @@ public abstract class Connection {
 	public void send(String sendString) throws IOException {
 
 		try {
-			synchronized (dos) {
-				dos.writeBytes(sendString);
-				dos.flush(); // write dos
+			synchronized (this.dos) {
+				this.dos.writeBytes(sendString);
+				this.dos.flush(); // write dos
 			}
 
 		} catch (IOException iOEx) {
@@ -123,9 +134,9 @@ public abstract class Connection {
 	 */
 	public void send(byte sendByte[]) throws IOException {
 		try {
-			synchronized (dos) {
-				dos.write(sendByte);
-				dos.flush(); // write dos
+			synchronized (this.dos) {
+				this.dos.write(sendByte);
+				this.dos.flush(); // write dos
 			}
 		} catch (IOException iOEx) {
 			throw iOEx;
@@ -135,29 +146,52 @@ public abstract class Connection {
 	/**
 	 * @return Gibt eine Referenz auf dis zurueck
 	 */
-	public LEDataInputStream getDis() {
-		return dis;
-	}
+//	public DataInputStream getDis() {
+//		return dis;
+//	}
 
 	/**
-	 * @param dis Referenz auf dis, die gesetzt werden soll
+	 * @param disIn
+	 *            Referenz auf dis, die gesetzt werden soll
 	 */
-	public void setDis(LEDataInputStream dis) {
-		this.dis = dis;
+	public void setInputStream(InputStream is) {
+		dis = new DataInputStream(is);
+//		this.dis=is;
+		//isr= new InputStreamReader(is);
+		br = new BufferedReader(new InputStreamReader(is));
 	}
 
 	/**
 	 * @return Gibt eine Referenz auf dos zurueck
 	 */
-	public LEDataOutputStream getDos() {
-		return dos;
-	}
+//	public DataOutputStream getDos() {
+//		return dos;
+//	}
 
 	/**
-	 * @param dos Referenz auf dos, die gesetzt werden soll
+	 * @param dosIn
+	 *            Referenz auf dos, die gesetzt werden soll
 	 */
-	public void setDos(LEDataOutputStream dos) {
-		this.dos = dos;
+	public void setOutputStream(OutputStream os) {
+		dos = new DataOutputStream(os);
+	}
+
+	public void read(byte[] b) throws IOException {
+		dis.readFully( b, 0, b.length);
+//		char [] c = new char[b.length];
+//		br.read( c, 0, b.length);
+//		for (int i=0; i<c.length; i++)
+//			b[i]=(byte)c[i];
+	}
+
+	public void read(byte[] b, int len) throws IOException {
+		dis.readFully( b, 0, len);
+		
+//		char [] c = new char[len];
+//		br.read( c, 0, b.length);
+//		for (int i=0; i<c.length; i++)
+//			b[i]=(byte)c[i];
+
 	}
 
 }
