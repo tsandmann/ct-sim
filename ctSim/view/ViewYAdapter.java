@@ -9,7 +9,8 @@ import java.lang.reflect.Proxy;
  * Fabrik-Klasse, die es erlaubt, beliebige Mengen Views in der Applikation
  * einzusetzen, wobei der Controller davon abstrahiert ist: F&uuml;r ihn sieht
  * sein View weiterhin wie nur ein einzelner View aus, egal wieviele Views
- * tats&auml;chlich dahinterstehen.
+ * tats&auml;chlich dahinterstehen. Die Klasse realisiert mit anderen Worten
+ * Point-to-Multipoint-Methodenaufrufe.
  * </p>
  * <p>
  * <strong>Verwendungsbeispiel:</strong>
@@ -49,7 +50,7 @@ import java.lang.reflect.Proxy;
  * </p>
  *
  * @see View
- * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class ViewYAdapter {
 	/**

@@ -1,6 +1,9 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-11-24 Hendrik Krauss [hkr@heise.de]:
+* Mikro-Aenderung, nur ein paar Kommentare
+
 2006-10-25 Hendrik Krauss [hkr@heise.de]:
 * Alle Parcours des Wettbewerbs eingecheckt
 * Kleinigkeiten hier und da

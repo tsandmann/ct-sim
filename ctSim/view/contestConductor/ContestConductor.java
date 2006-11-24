@@ -430,7 +430,7 @@ public class ContestConductor implements View {
 
 		String server = ConfigManager.getValue("ctSimIP");
 		if (server == null)
-			server = "localhost"; //$$ umziehen
+			server = "localhost"; //$$ umziehen: Sollte in Config
 
 		// Nur wenn ein Config-Eintrag fuer den entstprechenden Remote-Host
 		// existiert starten wir auch remote, sonst lokal
@@ -476,7 +476,6 @@ public class ContestConductor implements View {
 		// Datei ausfuehren + warten bis auf den neuen Bot hingewiesen werden
 		executeBot(f);
 		synchronized (botArrivalLock) {
-			//$$ Schoener waere vielleicht Verwendung von java.util.concurrent.Future
 			// Schutz vor spurious wakeups (siehe Java-API-Doku zu wait())
 			while (newlyArrivedBot == null) {
 				try {

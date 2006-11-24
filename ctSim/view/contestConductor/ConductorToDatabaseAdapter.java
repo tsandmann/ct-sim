@@ -38,7 +38,6 @@ import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	//$$ doc Game, 2 Methoden high-performance
 	// Annahme: Keiner modifiziert ctsim_game waehrend wir laufen
-	//$$ lock her
 	/** 8 fuer Achtelfinale, 4 fuer Viertelfinale usw. Ist zusammen mit
      * 'currentGameId' DB-Schl&uuml;ssel f&uuml;r ein Spiel.
      *
