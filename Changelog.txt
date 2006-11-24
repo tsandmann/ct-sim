@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-11-24-B Hendrik Krauss [hkr@heise.de]:
+* Infrastruktur: FacadeFactory ermoeglicht Mixins, so ganz generell
+* XmlDocument glorifiziert mit Hilfe von Mixins, liefert jetzt bessere Nodes zurueck
+
 2006-11-24 Hendrik Krauss [hkr@heise.de]:
 * Mikro-Aenderung, nur ein paar Kommentare
 

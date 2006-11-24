@@ -12,7 +12,8 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import ctSim.util.XmlDocument;
+import ctSim.util.FmtLogger;
+import ctSim.util.xml.XmlDocument;
 
 //$$ doc Config
 public class Config extends HashMap<String, String> {
@@ -25,6 +26,8 @@ public class Config extends HashMap<String, String> {
     		super(pathAndName);
     	}
     }
+
+	FmtLogger lg = FmtLogger.getLogger("ctSim.controller.Config");
 
 	/** <p>Default-Werte der Konfiguration. Ist ein Array, um sie im Quelltext
 	 * m&ouml;glichst bequem notieren zu k&ouml;nnen.</p>
@@ -68,8 +71,8 @@ public class Config extends HashMap<String, String> {
 		// Datei laden
 		try {
 			if (file.exists()) {
-				System.out.println("Lade Konfiguration aus '"+file+"'");
-                for(Node n : new XmlDocument(file).
+				lg.info("Lade Konfiguration aus '"+file+"'");
+                for(Node n : XmlDocument.parse(file).
                 	getNodeList("/ct-sim/parameter")) {
                 	put(n.getAttributes().getNamedItem("name").getNodeValue(),
                 		n.getAttributes().getNamedItem("value").getNodeValue());
