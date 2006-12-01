@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 
 import javax.media.j3d.BoundingSphere;
-import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -201,12 +200,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 				return "Maus-Sensor-Wert X"; //$NON-NLS-1$
 			}
-
-			@Override
-			public Shape3D getShape() {
-
-				return new Shape3D();
-			}
 		});
 
 		this.addSensor(new SimpleSensor<Integer>("MouseY", new Point3d(), new Vector3d()) { //$NON-NLS-1$
@@ -228,12 +221,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			public String getDescription() {
 
 				return "Maus-Sensor-Wert Y"; //$NON-NLS-1$
-			}
-
-			@Override
-			public Shape3D getShape() {
-
-				return new Shape3D();
 			}
 		});
 

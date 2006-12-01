@@ -74,7 +74,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	 * Java3D-Threads. Es ist enorm wichtig, diese Methode aufzurufen!
 	 * </p>
 	 * <p>
-	 * Mit jedem Aufruf von {@link init()} werden ca. ein Dutzend
+	 * Mit jedem Aufruf von {@link #init()} werden ca. ein Dutzend
 	 * Java3D-Threads instanziiert, die ohne <code>deinit()</code>
 	 * dann nie mehr beendet w&uuml;rden und ein massives Ressourcenleck (v.a.
 	 * Speicherleck wegen Referenzen auf alte Welten, Bots, etc.) darstellen.

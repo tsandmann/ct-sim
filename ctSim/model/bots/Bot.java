@@ -22,7 +22,6 @@ package ctSim.model.bots;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.j3d.Bounds;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -163,11 +162,8 @@ public abstract class Bot extends AliveObstacle{
 	}
 
 	protected final void addSensor(Sensor sen) {
-
 		// TODO: rueber in Sensor selbst?
 		this.sens.add(sen);
-
-		this.addBranchComponent(sen.getRelTransform(), sen.getShape());
 	}
 
 	/* (non-Javadoc)
@@ -205,14 +201,6 @@ public abstract class Bot extends AliveObstacle{
 //			a.update();
 //		}
 
-	}
-
-	/* (non-Javadoc)
-	 * @see ctSim.model.MovableObstacle#getBounds()
-	 */
-	public Bounds getBounds() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

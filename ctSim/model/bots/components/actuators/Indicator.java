@@ -20,7 +20,6 @@ package ctSim.model.bots.components.actuators;
 
 import java.awt.Color;
 
-import javax.media.j3d.Shape3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -128,15 +127,6 @@ public abstract class Indicator extends Actuator<Boolean> {
 //		return this.val;
 //	}
 
-	/** 
-	 * @see ctSim.model.bots.components.BotComponent#getShape()
-	 */
-	@Override
-	public Shape3D getShape() {
-		
-		return new Shape3D();
-	}
-	
 	//////////////////////////////////////////////////////////////////////
 	// Testfaelle:
 	

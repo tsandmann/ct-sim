@@ -18,10 +18,8 @@
  */
 package ctSim.model.bots.ctbot.components;
 
-import javax.media.j3d.Shape3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
 
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
@@ -152,15 +150,5 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 		// TODO: Achtung! Value kann 'null' sein
 		//return this.getValue()+encoderSteps;
 		return encoderSteps;
-	}
-	
-	/** 
-	 * @see ctSim.model.bots.components.BotComponent#getShape()
-	 */
-	@Override
-	public Shape3D getShape() {
-		
-		// TODO: ?
-		return new Shape3D();
 	}
 }

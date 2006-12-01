@@ -1,6 +1,11 @@
 Changelog fuer c't-Sim
 ======================
 
+2006-12-01 Hendrik Krauss [hkr@heise.de]: Beginn der Operation Java3D-Modularisierung, Tag erstellt (weil das geplante Applet kein J3D haben wird, muss der ganze J3D benutzende Code so geschickt zusammengefasst sein, dass man durch Weglassen eines Sim-Moduls ueberhaupt keine Abhaengigkeit zu J3D mehr hat)
+* Unnoetige Abhaengigkeit von Bot auf J3D weg
+* Dito Sensoren und Aktuatoren
+* Fix: Javadoc-Warning in WorldViewer
+
 2006-11-24-B Hendrik Krauss [hkr@heise.de]:
 * Infrastruktur: FacadeFactory ermoeglicht Mixins, so ganz generell
 * XmlDocument glorifiziert mit Hilfe von Mixins, liefert jetzt bessere Nodes zurueck

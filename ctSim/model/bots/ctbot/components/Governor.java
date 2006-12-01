@@ -17,7 +17,6 @@
  * 
  */package ctSim.model.bots.ctbot.components;
 
-import javax.media.j3d.Shape3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -87,14 +86,5 @@ public Governor(String name, Point3d relPos, Vector3d relHead) {
 	public Integer getValue() {
 		
 		return this.val;
-	}
-
-	/**
-	 * @see ctSim.model.bots.components.BotComponent#getShape()
-	 */
-	@Override
-	public Shape3D getShape() {
-		// TODO Auto-generated method stub
-		return new Shape3D();
 	}
 }

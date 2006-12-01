@@ -18,7 +18,6 @@
  */
 package ctSim.model.bots.components;
 
-import javax.media.j3d.Shape3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -68,16 +67,6 @@ public abstract class BotPosition extends BotComponent {
 	public ComponentGroupGUI getGUI() {
 		
 		return new PositionGUI(this);
-	}
-	
-	/** 
-	 * @see ctSim.model.bots.components.BotComponent#getShape()
-	 */
-	@Override
-	public Shape3D getShape() {
-		
-		// TODO: hier Bot-Shape zurueckgeben?
-		return new Shape3D();
 	}
 	
 	/** 

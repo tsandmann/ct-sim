@@ -18,7 +18,6 @@
  */
 package ctSim.model.bots.components;
 
-import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -140,10 +139,4 @@ public abstract class BotComponent {
 	 * @return Beschreibung der Komponente
 	 */
 	public abstract String getDescription();
-	
-	// TODO: weg, dafuer getBranchGroup?
-	/**
-	 * @return Die 3D-Gestalt der Komponente
-	 */
-	public abstract Shape3D getShape();
 }

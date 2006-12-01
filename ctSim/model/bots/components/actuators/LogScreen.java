@@ -21,7 +21,6 @@ package ctSim.model.bots.components.actuators;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.media.j3d.Shape3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -116,14 +115,5 @@ public class LogScreen extends Actuator<String> {
 	public String getValue() {
 		
 		return this.val;
-	}
-
-	/** 
-	 * @see ctSim.model.bots.components.BotComponent#getShape()
-	 */
-	@Override
-	public Shape3D getShape() {
-		
-		return new Shape3D();
 	}
 }
