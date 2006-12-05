@@ -20,7 +20,7 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import ctSim.util.FacadeFactory;
+import ctSim.util.Decoratoror;
 
 /**
  * <p>
@@ -170,13 +170,13 @@ public class XmlDocument {
 				throw exception;
 			}});
 		Document document = parser.parse(documentStream, baseDir);
-		return FacadeFactory.createFacadeSimple(QueryableDocument.class,
-			document, new QueryableMixin(document));
+		return Decoratoror.createDecorated(QueryableDocument.class,
+			new QueryableMixin(document), document);
 	}
 
 	public static QueryableNode createQueryableNode(Node baseNode) {
-		return FacadeFactory.createFacadeSimple(QueryableNode.class,
-			baseNode, new QueryableMixin(baseNode));
+		return Decoratoror.createDecorated(QueryableNode.class,
+			new QueryableMixin(baseNode), baseNode);
 	}
 
 	public static class QueryableMixin implements XPathQueryable {
@@ -258,7 +258,8 @@ public class XmlDocument {
 		 * {@link Node}.
 		 * </p>
 		 */
-		public Node getNode(String xPathExpression) throws XPathExpressionException;
+		public QueryableNode getNode(String xPathExpression) 
+		throws XPathExpressionException;
 
 		/**
 		 * <p>

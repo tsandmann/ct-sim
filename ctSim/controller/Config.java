@@ -1,7 +1,6 @@
 package ctSim.controller;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -9,10 +8,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.w3c.dom.DOMException;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import ctSim.util.FmtLogger;
+import ctSim.util.xml.QueryableNode;
 import ctSim.util.xml.XmlDocument;
 
 //$$ doc Config
@@ -70,24 +69,17 @@ public class Config extends HashMap<String, String> {
 
 		// Datei laden
 		try {
-			if (file.exists()) {
-				lg.info("Lade Konfiguration aus '"+file+"'");
-                for(Node n : XmlDocument.parse(file).
-                	getNodeList("/ct-sim/parameter")) {
-                	put(n.getAttributes().getNamedItem("name").getNodeValue(),
-                		n.getAttributes().getNamedItem("value").getNodeValue());
-                }
-			}
-			else {
-				throw new FileNotFoundException("Konfigurationsdatei '"+file+
-						"' nicht gefunden");
-			}
+			lg.info("Lade Konfigurationsparameter aus '"+file+"'");
+            for(QueryableNode n :
+            	XmlDocument.parse(file).getNodeList("/ct-sim/parameter")) {
+            	put(n.getString("@name"), n.getString("@value"));
+            }
 		} catch (XPathExpressionException e) {
 			// "Kann nicht passieren"
-			e.printStackTrace();
+			throw new AssertionError(e);
 		} catch (DOMException e) {
 			// Obskurer Fehler, wenn die Laenge der DOMStrings nicht reicht
-			e.printStackTrace();
+			throw new AssertionError(e);
 		}
 	}
 }
