@@ -10,6 +10,18 @@ public class Misc {
 	public static double log2(double x) {
 		return Math.log(x) / Math.log(2);
 	}
+	
+	/** Bringt einen Winkel in das Intervall ]-180; 180].
+	 *
+	 * @param angleInDeg Winkel in Grad
+	 */
+	public static double normalizeAngle(double angleInDeg) {
+		while (angleInDeg > 180)
+			angleInDeg -= 360;
+		while (angleInDeg <= -180)
+			angleInDeg += 360;
+		return angleInDeg;
+	}
 
 	public static boolean startsWith(
 			String fullString, String... whitelistOfBeginnings) {

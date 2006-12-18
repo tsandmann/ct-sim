@@ -403,10 +403,7 @@ public class World {
 			bot.setPosition(pos);
 		}
 
-		Vector3d head = new Vector3d(this.parcours.getStartHeading(this.aliveObsts.size()+1));
-		if (head != null) {
-			bot.setHeading(head);
-		}
+		bot.setHeadingInDeg(parcours.getStartHeadingInDeg(aliveObsts.size() + 1));
 
 		this.addAliveObstacle(bot);
 	}

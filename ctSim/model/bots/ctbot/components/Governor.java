@@ -48,16 +48,6 @@ public Governor(String name, Point3d relPos, Vector3d relHead) {
 	}
 	
 	/**
-	 * @see ctSim.model.bots.components.BotComponent#getType()
-	 */
-	// TODO: Ueberfluessig?
-	@Override
-	public String getType() {
-		
-		return "Regulator"; //$NON-NLS-1$
-	}
-	
-	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	// TODO: should be abstract (?)

@@ -62,14 +62,6 @@ public class LogScreen extends Actuator<String> {
 	}
 	
 	/** 
-	 * @see ctSim.model.bots.components.BotComponent#getType()
-	 */
-	@Override
-	public String getType() {
-		return "Log"; //$NON-NLS-1$
-	}
-	
-	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override

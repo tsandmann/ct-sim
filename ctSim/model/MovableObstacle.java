@@ -71,15 +71,10 @@ public interface MovableObstacle extends Obstacle {
 	 */
 	/* TODO: ueber? (wenn man getPos vorgibt, ist setPos wohl ueber oder wer sollte die Pose setzen)
 	 */
-	public void setPosition(Point3d pos);
+	//$$$public void setPosition(Point3d pos);
 
 	/**
 	 * @param head Die Blickrichtung, die gesetzt werden soll
 	 */
-	public void setHeading(Vector3d head);
-
-	/**
-	 * @return Gibt die Grenzen des Obstacles zurueck
-	 */
-	public Bounds getBounds() ;
+	//$$$public void setHeading(Vector3d head);
 }

@@ -130,8 +130,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 * @param head Blickrichtung
 	 * @param con Verbindung
 	 */
-	public CtBotSimTcp(World w, String name, Point3d pos, Vector3d head, Connection con) {
-		super(w, name, pos, head);
+	public CtBotSimTcp(World w, String name, Point3d pos, double headingInDeg,
+		Connection con) {
+		super(w, name, pos, headingInDeg);
 
 		this.connection = (TcpConnection)con;
 
@@ -190,12 +191,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			}
 
 			@Override
-			public String getType() {
-
-				return "Maus-Sensor"; //$NON-NLS-1$
-			}
-
-			@Override
 			public String getDescription() {
 
 				return "Maus-Sensor-Wert X"; //$NON-NLS-1$
@@ -209,12 +204,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			public Integer updateValue() {
 
 				return CtBotSimTcp.this.mouseY;
-			}
-
-			@Override
-			public String getType() {
-
-				return "Maus-Sensor"; //$NON-NLS-1$
 			}
 
 			@Override
@@ -456,11 +445,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 	//TODO Bot soll in Loecher reinfahren, in Hindernisse aber nicht. Momentan: calcPos traegt Pos nicht ein, wenn Hindernis oder Loch. Gewuenscht: Bei Loch das erste Mal Pos updaten, alle weiteren Male nicht
 	//TODO calcPos umziehen nach Bot oder CtBotSim
+	// siehe auch http://www.heise.de/ct/06/05/224/
 	@SuppressWarnings({"unchecked","boxing"})
 	private void calcPos() {
-
-			////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////
 			// Position und Heading berechnen:
 
 			// Anzahl der Umdrehungen der Raeder
@@ -601,12 +588,12 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			// Wenn der Bot nicht kollidiert oder ueber einem Abgrund steht Position aktualisieren
 			if ((getObstState() & (OBST_STATE_COLLISION | OBST_STATE_FALLING)) == 0 ){
  				this.setPosition(new Point3d(newPos));
-				this.setHeading(newHeading);
+				this.setHeadingInDeg(angle);
 			}
 			// Blickrichtung nur aktualisieren, wenn Bot nicht in ein
 			// Loch gefallen ist:
 			if ((getObstState() & OBST_STATE_FALLING) == 0 ){
-				this.setHeading(newHeading);
+				this.setHeadingInDeg(angle);
 			}
 	}
 
@@ -729,6 +716,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 				break;
 			case Command.CMD_SENS_MOUSE_PICTURE:
+				//TODO Tut ein Sim-Bot sowieso nicht, nur ein Real-Bot: Hier weg
 //				// Empfangen eine Bildes
 //				setMousePicture(command.getDataL(),command.getDataBytes());
 				break;

@@ -56,15 +56,6 @@ public class DistanceSensor extends SimpleSensor<Double> {
 	}
 
 	/**
-	 * @see ctSim.model.bots.components.BotComponent#getType()
-	 */
-	@Override
-	public String getType() {
-		// TODO Auto-generated method stub
-		return "Infrarot"; //$NON-NLS-1$
-	}
-
-	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override

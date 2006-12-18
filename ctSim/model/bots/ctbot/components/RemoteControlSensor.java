@@ -45,14 +45,6 @@ public class RemoteControlSensor extends SimpleSensor<Integer> {
 	}
 	
 	/** 
-	 * @see ctSim.model.bots.components.BotComponent#getType()
-	 */
-	@Override
-	public String getType() {
-		return "RC5-Fernbedienung"; //$NON-NLS-1$
-	}
-
-	/** 
 	 * 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override

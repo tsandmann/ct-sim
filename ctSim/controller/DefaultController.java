@@ -438,7 +438,7 @@ public class DefaultController implements Runnable, Controller {
                             String name = getNewBotName("ctSim.model.bots.CtBotSimTcp");
                             bot = new CtBotSimTcp(this.world, name,
                                     new Point3d(0.5d, 0d, 0.075d),
-                                    new Vector3d(1.0f, -0.5f, 0f),
+                                    0,
                                     con);
                             lg.fine("Virtueller Bot nimmt Verbindung auf");
                         }
@@ -480,7 +480,7 @@ public class DefaultController implements Runnable, Controller {
     public void addTestBot() {
         String name = getNewBotName("CtBotSimTest");
         Bot bot = new CtBotSimTest(this.world, name,
-                new Point3d(0d, 0d, 0.075d), new Vector3d());
+                new Point3d(0d, 0d, 0.075d), 0);
         addBot(bot);
     }
 
