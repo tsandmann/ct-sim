@@ -58,6 +58,15 @@ public class Display extends LogScreen {
 	}
 	
 	/** 
+	 * @see ctSim.model.bots.components.BotComponent#getType()
+	 */
+	@Override
+	public String getType() {
+		
+		return "Display"; //$NON-NLS-1$
+	}
+	
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override

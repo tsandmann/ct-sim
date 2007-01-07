@@ -58,6 +58,15 @@ public LineSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead)
 	}
 
 	/**
+	 * @see ctSim.model.bots.components.BotComponent#getType()
+	 */
+	@Override
+	public String getType() {
+		// TODO: Liniensensor?
+		return "Infrarot"; //$NON-NLS-1$
+	}
+
+	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override

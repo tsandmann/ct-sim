@@ -1,6 +1,12 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-07 18:50 Hendrik Krauss [hkr@heise.de]:
+Ok, mein letzter Check-in (18. Dez) war Mist. Der ganze NavState klappt nicht
+und ich weiss nicht woran's liegt. Verwerfe den letzten Commit: gehe auf den
+vorletzten Check-in zurueck (Stand 6. Dez, denn am 5. war der vorletzte
+Check-in). Dann gehen wir das nochmal ruhiger an.
+
 2006-12-18 Hendrik Krauss [hkr@heise.de]: Entwicklungsversion, UNSTABLE
 * Blickrichtung (Heading) wird jetzt fast ueberall in Grad (Uhrzeigersinn und 0° = Norden) ausgedrueckt, das ist einfacher und weniger irrefuehrend als der bisherige Vector3d. Funktioniert in Gui noch nicht
 * Position + Blickrichtung eines AliveObstacle gesammelt in neuer Klasse NavState (J3D-Modularisierung)

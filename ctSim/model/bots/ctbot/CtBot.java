@@ -1,23 +1,25 @@
 /*
  * c't-Sim - Robotersimulator fuer den c't-Bot
- *
+ * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version.
- * This program is distributed in the hope that it will be
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public
- * License along with this program; if not, write to the Free
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- *
+ * 
  */
 package ctSim.model.bots.ctbot;
 
+import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.GeometryArray;
 import javax.media.j3d.Group;
@@ -27,7 +29,6 @@ import javax.media.j3d.TriangleStripArray;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
-
 import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Stripifier;
@@ -35,13 +36,11 @@ import com.sun.j3d.utils.geometry.Stripifier;
 import ctSim.model.bots.Bot;
 
 /**
- * Abstrakte Oberklasse für alle c't-Bots. 95% dieser Klasse befassen sich mit
- * der Erstellung der 3D-Form, die einen CtBot ausmachen.
+ * Abstrakte Oberklasse fuer alle c't-Bots
  *
- * @see Bot
  */
 public abstract class CtBot extends Bot {
-
+	
 	/** Abstand vom Zentrum zur Aussenkante des Bots [m] */
 	public static final double BOT_RADIUS = 0.060d;
 
@@ -53,14 +52,19 @@ public abstract class CtBot extends Bot {
 
 	/** Tiefe des Faches [m] */
 	public static final double POCKET_DEPTH = BOT_RADIUS - 0.015d;
-
+	
 	/** Bodenfreiheit des Bots [m] */
 	public static final double BOT_GROUND_CLEARANCE = 0.015d;
-
+	
+	@SuppressWarnings("unused")
+	private Bounds bounds;
+	
+	private Shape3D shape;
+	
 	/* TODO:
 	 * Pos. u. Head. in Klassenhierarchie weiter nach oben:
 	 * -> Jedes (Alive)Obstacle braucht (initiale) Pos.
-	 *
+	 * 
 	 */
 	/**
 	 * Der Konstruktor
@@ -68,26 +72,38 @@ public abstract class CtBot extends Bot {
 	 * @param pos Position
 	 * @param head Blickrichtung
 	 */
-	public CtBot(String n, Point3d pos, double headingInDeg) {
-		super(buildShape(), n, pos, headingInDeg);
-
+	public CtBot(String n, Point3d pos, Vector3d head) {
+		
+		super(n, pos, head);
+		
+		initBounds();
+		initShape();
+		
+		this.setShape(this.shape);
+		
 		// Einfachen Konstruktor aufrufen:
 //		Vector3f vec = new Vector3f(pos);
 //		// TODO: Was das!?
 //		vec.z += getHeight() / 2 + getGroundClearance();
 //		setPos(vec);
 //		setHeading(head);
-
+		
 		//initSensors();
 		//initActutaors();
 	}
-
+	
+	private void initBounds() {
+		
+		this.bounds = new BoundingSphere(new Point3d(this.getPosition()), BOT_RADIUS);
+	}
+	
 	/**
 	 * Baut die 3D-Repraesentation des Bot-Koerpers aus 2D-Polygonen zusammen
-	 *
+	 *  
 	 */
-	private static Shape3D buildShape() {
-		Shape3D rv = new Shape3D();
+	private void initShape() {
+
+		this.shape = new Shape3D();
 		// Anzahl der Ecken, um den Kreis des Bots zu beschreiben.
 		// Mehr sehen besser aus, benoetigen aber auch mehr Rechenzeit.
 		int N = 10;
@@ -154,8 +170,8 @@ public abstract class CtBot extends Bot {
 		st.stripify(gi);
 		gi.recomputeIndices();
 
-		// Hinzufuegen des Deckels und des Bodens zur Bot-Shape3D
-		rv.addGeometry(gi.getGeometryArray());
+		// Hinzufuegen des Deckels und des Bodens zur Bot-Shape3D 
+		this.shape.addGeometry(gi.getGeometryArray());
 
 		// Erzeugen der aeusseren Seitenverkleidung
 		TriangleStripArray tsa;
@@ -176,9 +192,9 @@ public abstract class CtBot extends Bot {
 		tsa.setCapability(BranchGroup.ALLOW_DETACH);
 		tsa.setCapability(Group.ALLOW_CHILDREN_WRITE);
 
-
+		
 		// Hinzufuegen der aeusseren Seitenverkleidung zur Bot-Shape3D
-		rv.setGeometry(tsa);
+		this.shape.setGeometry(tsa);
 
 		// Erzeugen der Waende des Faches
 		QuadArray qa;
@@ -225,13 +241,93 @@ public abstract class CtBot extends Bot {
 		qa.setCapability(BranchGroup.ALLOW_DETACH);
 		qa.setCapability(Group.ALLOW_CHILDREN_WRITE);
 
+		
+		// Hinzufuegen der Fachwaende zur Bot-Shape3D 
+		this.shape.addGeometry(qa);
 
-		// Hinzufuegen der Fachwaende zur Bot-Shape3D
-		rv.addGeometry(qa);
-
-		rv.setCapability(BranchGroup.ALLOW_DETACH);
-		rv.setCapability(Group.ALLOW_CHILDREN_WRITE);
-
-		return rv;
+		this.shape.setCapability(BranchGroup.ALLOW_DETACH);
+		this.shape.setCapability(Group.ALLOW_CHILDREN_WRITE);
 	}
+	
+	/** 
+	 * @see ctSim.model.Obstacle#getBounds()
+	 */
+	public Bounds getBounds() {
+		
+		//return this.bounds;
+		return new BoundingSphere(new Point3d(this.getPosition()), BOT_RADIUS);
+	}
+
+	@Override
+	protected void cleanup() {
+		// TODO Auto-generated method stub
+		super.cleanup();
+		bounds=null;
+		shape=null;
+	}
+	
+	/**
+	 * @return Die Bodenfreiheit des Bot in [m]
+	 */
+//	@Override
+//	public float getGroundClearance() {
+//		return (float) BOT_GROUND_CLEARANCE;
+//	}
+
+	/**
+	 * @return Hoehe des Bot in [m]
+	 */
+//	@Override
+//	public float getHeight() {
+//		return (float) BOT_HEIGHT;
+//	}
+
+	/**
+	 * Erzeugt die 3D-Repraesentation eines Bots
+	 * Nicht von aussen aufrufen!
+	 */
+//	//@Override
+//	public void createBranchGroup() {
+//		// Translationsgruppe fuer den Bot
+//		TransformGroup tg = new TransformGroup();
+//		Transform3D transform = new Transform3D();
+//		tg = new TransformGroup(transform);
+//		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+//		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+//		tg.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+//		
+//		// Bot erzeugen
+//		Shape3D realBot = createBotShape();
+//		realBot.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
+//		setAppearance("normal");
+//				
+//		realBot.setName(getName() + " Body");
+//		// Koerper "pickable" setzen, um Kollisionen mit anderen Bots
+//		// zu erkennen
+//		realBot.setPickable(true);
+//		// "Pickable" muss fuer die eigene Kollisionsabfrage abschaltbar sein
+//		realBot.setCapability(Cylinder.ALLOW_PICKABLE_WRITE);
+//		// Referenz auf Koerper merken, um spaeter bei der eigenen Kollisionsabfrage die 
+//		// "Pickable"-Eigenschaft aendern zu koennen
+//		tg.addChild(realBot);
+//		
+//		// Referenz im Bot ablegen
+//		addNodeReference(BOTBODY,realBot);
+//			
+//		// Die Grenzen (Bounds) des Bots sind wichtig
+//		// fuer die Kollisionserkennung.
+//		// Die Grenze des Roboters wird vorlaefig definiert ueber
+//		// eine Sphaere mit Radius der Bot-Grundplatte um die Position des Bot
+//		setBounds(new BoundingSphere(new Point3d(super.getPos()), BOT_RADIUS));
+//
+//		// Jetzt wird noch alles nett verpackt
+//		BranchGroup bg = new BranchGroup();
+//		bg.setCapability(BranchGroup.ALLOW_DETACH);
+//		bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+//		bg.addChild(tg);
+//
+//		// Referenz im Bot ablegen
+//		addNodeReference(TG,tg);
+//		addNodeReference(BG,bg);
+//	}
 }

@@ -74,6 +74,15 @@ public abstract class Indicator extends Actuator<Boolean> {
 //	}
 
 	/** 
+	 * @see ctSim.model.bots.components.BotComponent#getType()
+	 */
+	@Override
+	public String getType() {
+		
+		return "Indicator"; //$NON-NLS-1$
+	}
+
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override

@@ -33,7 +33,6 @@ import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3d;
 
 import ctSim.util.FmtLogger;
-import ctSim.util.Misc;
 
 /**
  * Repraesentiert einen Parcours fuer die Bots
@@ -93,17 +92,8 @@ public class Parcours {
 	/** Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots), zweite Dimension X, Y*/
 	private int[][] startPositions = new int[BOTS][2];
 
-	/**
-	 * <p>
-	 * Startpositionen der Bots in Grad; 0&#176; = Norden; gemessen im
-	 * Uhrzeigersinn = im &quot;mathematisch negativen&quot; Drehsinn
-	 * </p>
-	 * <p>
-	 * Array-Index: Startpositionen; es werden nur 1 und 2 verwendet in der
-	 * gegenwärtigen Implementierung des ParcoursLoader
-	 * </p>
-	 */
-	private double[] startHeadings = new double[BOTS];
+	/** Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots), zweite Dimension X, Y*/
+	private int[][] startHeadings = new int[BOTS][2];
 
 
 	/** Zielpositionen */
@@ -317,22 +307,36 @@ public class Parcours {
 
 	/**
 	 * Legt die Startrichtung eines Bots fest
-	 *
-	 * @param bot Nummer des Bots (f&auml;ngt bei 0 an zu z&auml;hlen)
-	 * @param dir Richtung in Grad. 0 entspricht "nach Osten", d.h. x=1, y=0,
-	 * dann im Uhrzeigersinn weiter. <strong>Achtung</strong>, weil der
-	 * ParcoursLoader die genannten Gradangaben verwendet, der Rest des
-	 * Programms aber &quot;0&#176; = Norden&quot; annimmt, wird in dieser
-	 * Methode konvertiert (&minus; 90&#176; gerechnet)
+	 * @param bot Nummer des Bots (faengt bei 0 an zu zaehlen)
+	 * @param dir Richtung in Grad. 0 entspricht (x=1, y=0) dann im Uhrzeigersinn
 	 */
 	public void setStartHeading(int bot, int dir){
-		if (bot < 0 || bot >= startHeadings.length)
-			throw new IllegalArgumentException();
-		if (dir != 0 && dir != 90 && dir != 180 && dir != 270)
-			throw new IllegalArgumentException();
+		if (bot <= BOTS-1){
+			switch (dir) {
+			case 0:
+				this.startHeadings[bot][0]=1;
+				this.startHeadings[bot][1]=0;
+				break;
+			case 90:
+				this.startHeadings[bot][0]=0;
+				this.startHeadings[bot][1]=-1;
+				break;
+			case 180:
+				this.startHeadings[bot][0]=-1;
+				this.startHeadings[bot][1]=0;
+				break;
+			case 270:
+				this.startHeadings[bot][0]=0;
+				this.startHeadings[bot][1]=1;
+				break;
 
-		startHeadings[bot] = dir - 90;
+			default:
+				break;
+			}
+		}
 	}
+
+
 
 	/**
 	 * Liefert die Startposition eines Bots
@@ -342,7 +346,7 @@ public class Parcours {
 	 */
 	public Vector3d getStartPosition(int bot){
 		Vector3d pos = null;
-		if (bot < startHeadings.length)
+		if (bot < BOTS)
 			pos= new Vector3d(this.startPositions[bot][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[bot][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
 		else
 			pos= new Vector3d(this.startPositions[0][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[0][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
@@ -351,27 +355,27 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert die Startrichtung eines Bots. Diese ergibt sich wie folgt:
-	 * <ul>
-	 * <li>Die Richtung, die im Parcours definiert ist; z.B. 90°, falls die
-	 * Methode mit {@code bot == 2} aufgerufen wird und ein Parcours geladen
-	 * worden ist, der die Felder "2." enthält</li>
-	 * <li>Falls der Parcours keine solche Startrichtung definiert, wird
-	 * stillschweigend 0&#176; zur&uuml;ckgeliefert, d.h. Blick nach Norden</li>
-	 * </ul>
-	 *
-	 * @param bot Nummer des Startfelds: 0 f&uuml;r 0° = Defaultrichtung; 1 oder
-	 * 2 f&uuml;r die Nummer des Startfelds; andere Werte nicht zul&auml;ssig
-	 * aufgrund der gegenw&auml;rtigen Implementierung des ParcoursLoader
-	 * @return Die Richtung, in die ein auf dem Startfeld Nummer {@code bot}
-	 * stehender Bot laut Parcours-XML gucken soll. In Grad; 0° = Norden;
-	 * gemessen im Uhrzeigersinn; Intervall ]-180; 180]
+	 * Liefert die Startrichtung eines Bots
+	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
+	 * @param bot
+	 * @return Die Startrichtung
 	 */
-	public double getStartHeadingInDeg(int bot) {
-		if (bot > 0 || bot < startHeadings.length)
-			return Misc.normalizeAngle(startHeadings[bot]);
-		else
-			return 0; // default
+	public Vector3d getStartHeading(int bot){
+		Vector3d pos = null;
+		if (bot < BOTS)
+			pos= new Vector3d(this.startHeadings[bot][0],this.startHeadings[bot][1],0.0f);
+		else  // sonst leifer die Default-Richtung
+			pos= new Vector3d(this.startHeadings[0][0],this.startHeadings[0][1],0.0f);
+
+		if (pos.length()==0){
+			pos.x=1.0f;
+			lg.warn("getStartHeading wurde nach einer noch nicht gesetzten " +
+					"Heading gefragt (Bot "+bot+"). Setze Default");
+		}
+
+		pos.normalize();
+
+		return pos;
 	}
 
 
@@ -560,17 +564,17 @@ public class Parcours {
 			return null;
 
 		Iterator<Vector2d> it = finishPositions.iterator();
-
-		double dist = java.lang.Double.MAX_VALUE;
-		Vector<TurningPoint> shortestPath = null;
-
+		
+		double dist = java.lang.Double.MAX_VALUE; 
+		Vector<TurningPoint> shortestPath = null; 
+		
 		while (it.hasNext()){
 			Vector2d fin = new Vector2d(it.next());
 			fin.add(new Vector2d(0.5,0.5));
 			TurningPoint finish = new TurningPoint(fin);
 
 			Vector<TurningPoint> tmpShortestPath = start.getShortestPathTo(finish, getFlatParcours());
-
+			
 			double tmpDist = TurningPoint.getLengthOfPath(tmpShortestPath);
 			if (tmpDist < dist){
 				shortestPath = tmpShortestPath;

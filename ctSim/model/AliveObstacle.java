@@ -26,6 +26,8 @@ import javax.media.j3d.Group;
 import javax.media.j3d.Node;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -62,6 +64,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private int obstState = OBST_STATE_NORMAL;
 
 	private String name;
+	private Point3d pos;
 
 	/**
 	 * Letzte Position, an dem sich das AliveObstacle befand und dabei der
@@ -71,7 +74,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 * Daher wird in dieser Variablen die letzte Position gehalten, wo der Bot
 	 * noch au&szlig;erhalb des Lochs war.
 	 */
-	private Point3d lastSafePos = new Point3d();
+	private Point3d lastSafePos;
+
+	private Vector3d head;
 
 	/** Verweis auf den zugehoerigen Controller */
 	// TODO: hmmm
@@ -79,6 +84,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 	private Thread thrd;
 
+	private BranchGroup branchgrp;
+	private TransformGroup transformgrp;
 	private Shape3D shape;
 
 	// TODO:
@@ -92,41 +99,36 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	// TODO
 	private long deltaT = 0;
 
-	private NavState navState;
-
-	private BranchGroup branchgrp;
-
 	/**
-	 * @param shape Form des Obstacle
+	 * Der Konstruktor
 	 * @param position Position des Objekts
 	 * @param heading Blickrichtung des Objekts
 	 */
-	public AliveObstacle(Shape3D shape, String name, Point3d position,
-		double heading) {
-		/* Teil des J3D-Szenegraph, den wir hier bauen:
-		 *
-		 * BranchGroup-Instanz
-		 *          |
-		 *          |
-		 *   NavState-Instanz (NavState extends TransformGroup)
-		 *          |
-		 *          |
-		 *      this.shape (Shape3D)
-		 */
+	public AliveObstacle(String name, Point3d position, Vector3d heading) {
+
 		this.name = name;
+		this.pos = position;
+		this.head = heading;
 
-		shape.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
-		shape.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		shape.setPickable(true);
-		this.shape = shape;
+		initBG();
 
-		navState = new NavState(position, heading);
-		navState.addChild(shape);
+		this.setPosition(this.pos);
+		this.setHeading(this.head);
+	}
 
-		branchgrp = new BranchGroup();
-		branchgrp.setCapability(BranchGroup.ALLOW_DETACH);
-		branchgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
-		branchgrp.addChild(navState);
+	private void initBG() {
+
+		// Translationsgruppe fuer das Obst
+		this.transformgrp = new TransformGroup();
+		this.transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		this.transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		this.transformgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
+
+		// Jetzt wird noch alles nett verpackt
+		this.branchgrp = new BranchGroup();
+		this.branchgrp.setCapability(BranchGroup.ALLOW_DETACH);
+		this.branchgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		this.branchgrp.addChild(this.transformgrp);
 	}
 
 	/**
@@ -135,6 +137,25 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	public final Shape3D getShape() {
 
 		return this.shape;
+	}
+
+	/**
+	 * @param shape1 3D-Gestalt, die das Objekt erhalten soll
+	 */
+	public final void setShape(Shape3D shp) {
+
+		// TODO: Test: Reicht auch einfach "this.shape"-Referenz anzupassen?
+
+		if(this.shape != null)
+			this.transformgrp.removeChild(this.shape);
+
+		this.shape = shp;
+		this.shape.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
+		//this.shape.setName(getName() + " Body");
+		this.shape.setPickable(true);
+		this.shape.setCapability(Node.ALLOW_PICKABLE_WRITE);
+
+		this.transformgrp.addChild(this.shape);
 	}
 
 	// TODO: Altlast: anders loesen...
@@ -161,8 +182,31 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		setAppearances(ConfigManager.getBotAppearances(getName()));
 	}
 
+	/**
+	 * @param world1 Referenz auf die Welt, die gesetzt werden soll
+	 */
+//	public void setWorld(World wrld) {
+//	}
+
+	/**
+	 * @see ctSim.model.Obstacle#getBranchGroup()
+	 */
 	public final BranchGroup getBranchGroup() {
-		return branchgrp;
+
+		return this.branchgrp;
+	}
+
+	/**
+	 * @param relTrans
+	 * @param comp
+	 */
+	public final void addBranchComponent(Transform3D relTrans, Node comp) {
+
+		TransformGroup tg = new TransformGroup();
+		tg.setTransform(relTrans);
+		tg.addChild(comp);
+
+		this.transformgrp.addChild(tg);
 	}
 
 	/**
@@ -222,30 +266,90 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 */
 	// TODO: Vorsicht: Pose ist relativ zur Welt!
 	public final Point3d getPosition() {
-		return navState.getPosition();
+
+		return this.pos;
 	}
 
 	// TODO: Vorsicht: Heading ist relativ zur Welt!
+	/**
+	 * @see ctSim.model.Obstacle#getHeading()
+	 */
 	public final Vector3d getHeading() {
-		return navState.getHeading();
-	}
 
-	public void setHeadingInDeg(double heading) {
-		navState.setHeadingInDeg(heading);
-	}
-
-	public void setPosition(Point3d position) {
-		navState.setPosition(position);
-		if ((obstState & OBST_STATE_SAFE) == 0)
-			lastSafePos.set(position);
+		return this.head;
 	}
 
 	/**
 	 * @return Die Transformation
 	 */
 	public final Transform3D getTransform() {
+
+//		Transform3D transform = new Transform3D();
+//
+//		transform.setTranslation(new Vector3d(this.getPosition()));
+//
+//		double angle = this.getHeading().angle(new Vector3d(1d, 0d, 0d));
+//		if(this.getHeading().y < 0)
+//			angle = -angle;
+//
+//		transform.setRotation(new AxisAngle4d(0d, 0d, 1d, angle));
+//
+//		return transform;
+
 		return SimUtils.getTransform(this.getPosition(), this.getHeading());
 	}
+
+	/**
+	 * Drandenken: State setzen vor Aufruf dieser Methode
+	 *
+	 * @param p
+	 *            Die Position, an die der Bot gesetzt werden soll
+	 */
+	public final synchronized void setPosition(Point3d p) {
+
+		// TODO: synchron ist schoen, aber wird eine Pose �ber die GUI denn ueberhaupt verwendet?
+		//synchronized (this) {
+
+			this.pos = p;
+			Vector3d vec = new Vector3d(p);
+
+			Transform3D transform = new Transform3D();
+			this.transformgrp.getTransform(transform);
+			transform.setTranslation(vec);
+			this.transformgrp.setTransform(transform);
+
+			if ((obstState & OBST_STATE_SAFE) == 0)
+				lastSafePos = new Point3d(p);
+		//}
+	}
+
+	/**
+	 * @see ctSim.model.MovableObstacle#setHeading(javax.vecmath.Vector3d)
+	 */
+	public final synchronized void setHeading(Vector3d vec) {
+
+		this.head = vec;
+
+		double angle = this.head.angle(new Vector3d(1d, 0d, 0d));
+		if (this.head.y < 0)
+			angle = -angle;
+
+		Transform3D transform = new Transform3D();
+		this.transformgrp.getTransform(transform);
+		transform.setRotation(new AxisAngle4d(0d, 0d, 1d, angle));
+		this.transformgrp.setTransform(transform);
+	}
+
+	// TODO:
+//	public final Transform3D getTransform() {
+//
+//		Transform3D transform = new Transform3D();
+//
+//		this.transformgrp.getTransform(transform);
+//
+//		return transform;
+//	}
+
 
 	/**
 	 * Ueberschreibt die run() Methode aus der Klasse Thread und arbeitet drei
@@ -300,11 +404,14 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 	}
 
-	/**
-	 * Aufr&auml;umen, wenn Bot stirbt
+	/** Aufraeumen, wenn Bot stirbt
+	 *
+	 *
 	 */
 	protected void cleanup() {
 		// TODO Auto-generated method stub
+		branchgrp=null;
+		transformgrp=null;
 		shape=null;
 	}
 
@@ -449,9 +556,4 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	public Point3d getLastSafePos() {
 		return lastSafePos;
 	}
-
-	@Override
-    public String toString() {
-	    return getName();
-    }
 }

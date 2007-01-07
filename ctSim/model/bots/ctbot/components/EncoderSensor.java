@@ -93,6 +93,15 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	}
 	
 	/** 
+	 * @see ctSim.model.bots.components.BotComponent#getType()
+	 */
+	@Override
+	public String getType() {
+		// TODO: Kodiersensor?
+		return "Infrarot"; //$NON-NLS-1$
+	}
+
+	/** 
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
 	@Override
