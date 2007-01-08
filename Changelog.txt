@@ -1,6 +1,15 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-08 20:07 Hendrik Krauss [hkr@heise.de]:
+* Klasse Command ueberarbeitet, vereinfacht, teilweise dokumentiert. Wirkt sich auf alle Stellen aus, wo sie verwendet wird
+* CtBotSimTcp: bisschen aufgeraeumt
+* AnsweringMachine raus, hat keinen Sinn (Streams puffern eh alles)
+* EchoTest und TestServer werden nicht mehr mitkompiliert
+* BotComponent.getType() weg (nirgends verwendet), wirkt sich auf alle BotComponents aus
+* Aktuatorklasse Display aufgeraeumt, umbenannt: LcDisplay
+* Kleinigkeiten
+
 2007-01-08 1:03 Hendrik Krauss [hkr@heise.de]: Einige Sachen aus meinem lokalen Prototyp eingebaut
 * RX/TX-Bibliothek wieder eingecheckt (Vorbereitung fuer RealBot-Restauration)
 * CtSimFrame aufgeteilt: MainWindow und MainWinMenuBar

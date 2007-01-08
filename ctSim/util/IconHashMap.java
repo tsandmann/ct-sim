@@ -107,7 +107,7 @@ public class IconHashMap extends HashMap<String, ImageIcon> {
 			// Methodensignatur (keine throws-Dekl) kompatibel zu sein
 			throw new RuntimeException(
 					new FileNotFoundException(String.format(
-					"Icon-Datei '%s%s%s' nicht gefunden.",
+					"Icon-Datei '%s%s%s.*' nicht gefunden",
 					parentDir.getPath(), File.separator, key)));
 		}
 		return rv;

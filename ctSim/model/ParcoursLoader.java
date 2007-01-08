@@ -436,7 +436,7 @@ public class ParcoursLoader {
 			}
 //			 TODO: Hier wird testweise ein Boden aus einem Stueck eingefuegt!
 			createWholeFloor(getAppearance(' '));
-
+			//TODO Hat mit dem Einzeichnen des Wegs bis zum Ziel zu tun; sollte ordentlich integriert werden: Menueeintrag in GUI, der das Einzeichnen ein-/ausschaltet. Aus Gruenden der Klarheit sollten die Linien vorher ihre eigene BranchGroup bekommen
 			/**
 			for (int i=0; i<Parcours.BOTS; i++){
 				double dist= this.parcours.getShortestDistanceToFinish(this.parcours.getStartPosition(i));
@@ -461,8 +461,8 @@ public class ParcoursLoader {
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * @return Liefert das soeben aufgebaute Parcours-Objekt zurueck
 	 */

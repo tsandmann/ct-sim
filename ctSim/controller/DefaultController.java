@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.Thread.State;
 import java.lang.reflect.Constructor;
+import java.net.ProtocolException;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
@@ -423,18 +424,17 @@ public class DefaultController implements Runnable, Controller {
      */
     public void addBot(Connection con) {
         Bot bot = null;
-        Command cmd = new Command();
         try {
             // Hallo sagen
-            con.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
+            con.send(new Command(Command.Code.WELCOME).getCommandBytes());
             // TODO Timeout einfuegen!!
             while (bot == null) {
                 lg.fine("Warte auf Willkommen ...");
 
-                if (cmd.readCommand(con) == 0) {
-
-                    if (cmd.getCommand() == Command.CMD_WELCOME) {
-                        if (cmd.getSubcommand() != Command.SUB_WELCOME_REAL) {
+				try {
+					Command cmd = new Command(con);
+					if (cmd.has(Command.Code.WELCOME)) {
+                        if (cmd.has(Command.SubCode.WELCOME_SIM)) {
                             String name = getNewBotName("ctSim.model.bots.CtBotSimTcp");
                             bot = new CtBotSimTcp(this.world, name,
                                     new Point3d(0.5d, 0d, 0.075d),
@@ -449,11 +449,11 @@ public class DefaultController implements Runnable, Controller {
                                         "ist veraltet, "+
                                         "Schicke Willkommen nochmals");
                         // Hallo sagen
-                        con.send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
+                        con.send(new Command(Command.Code.WELCOME).getCommandBytes());
                     }
-                } else
-                    //LODO Fehlermeldung unklar: Was fuer ein Kommando?
-                    lg.warning("Fehlerhaftes Kommando gefunden");
+				} catch (ProtocolException e) {
+					lg.warning(e, "Fehlerhaftes Kommando; ignoriere");
+				}
             }
         } catch (IOException e) {
             //LODO Fehlermeldung unverstaendlich
@@ -513,7 +513,7 @@ public class DefaultController implements Runnable, Controller {
             lg.warning(e, "Fehler beim Starten von Bot '"+filename+"'");
         }
     }
-    
+
 	public void addComBot() {
 		// $$$ addComBot
 	}

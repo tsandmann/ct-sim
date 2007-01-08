@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.WeakHashMap;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -99,7 +98,7 @@ public class BotViewer extends JPanel implements Updatable {
 		for (ComponentGroupGUI<?> gui : compList)
 			gui.updateGUI();
 	}
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(180, 600);

@@ -21,6 +21,7 @@ package ctSim.model.bots.ctbot;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
@@ -35,12 +36,11 @@ import ctSim.SimUtils;
 import ctSim.TcpConnection;
 import ctSim.model.Command;
 import ctSim.model.World;
-import ctSim.model.bots.AnsweringMachine;
 import ctSim.model.bots.TcpBot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.Sensor;
-import ctSim.model.bots.components.actuators.Display;
+import ctSim.model.bots.components.actuators.LcDisplay;
 import ctSim.model.bots.components.actuators.Indicator;
 import ctSim.model.bots.components.actuators.LogScreen;
 import ctSim.model.bots.components.sensors.SimpleSensor;
@@ -56,7 +56,6 @@ import ctSim.view.gui.Debug;
 
 /**
  * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator kommunizieren
- *
  */
 public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.ctbot.CtBotSimTcp");
@@ -64,16 +63,13 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	/** Die TCP-Verbindung */
 	private TcpConnection connection;
 
-	/** Der "Anrufbeantworter" fuer eingehende Kommandos */
-	private AnsweringMachine answeringMachine;
-
 	private ArrayList<Command> commandBuffer = new ArrayList<Command>();
 
 	/** Sequenznummer der TCP-Pakete */
 	private int seq = 0;
 
 	/** Puffer fuer Logausgaben */
-	public StringBuffer logBuffer = new StringBuffer(""); //$NON-NLS-1$
+	public StringBuffer logBuffer = new StringBuffer("");
 
 	/** Zustand der LEDs */
 	private Integer actLed = new Integer(0);
@@ -113,12 +109,12 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	/** Aufloesung des Maussensors [DPI] */
 	public static final int SENS_MOUSE_DPI = 400;
 
-
 	private World world;
 
 	private int  mouseX, mouseY;
 
-	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR, encL, encR, rc5;
+	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR,
+		encL, encR, rc5;
 
 	private Actuator govL, govR, log, disp;
 
@@ -130,7 +126,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 * @param head Blickrichtung
 	 * @param con Verbindung
 	 */
-	public CtBotSimTcp(World w, String name, Point3d pos, Vector3d head, Connection con) {
+	public CtBotSimTcp(World w, String name, Point3d pos, Vector3d head,
+		Connection con) {
+
 		super(w, name, pos, head);
 
 		this.connection = (TcpConnection)con;
@@ -144,24 +142,24 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 	private void initSensors() {
 
-		this.encL = new EncoderSensor(this.world, this, "EncL", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govL); //$NON-NLS-1$
-		this.encR = new EncoderSensor(this.world, this, "EncR", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govR); //$NON-NLS-1$
+		this.encL = new EncoderSensor(this.world, this, "EncL", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govL);
+		this.encR = new EncoderSensor(this.world, this, "EncR", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govR);
 
-		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-		this.irL.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Left.txt"), 100f)); //$NON-NLS-1$
-		this.irR.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Right.txt"), 80f)); //$NON-NLS-1$
+		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d));
+		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d));
+		this.irL.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Left.txt"), 100f));
+		this.irR.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Right.txt"), 80f));
 
-		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
 
-		this.borderL = new BorderSensor(this.world, this, "BorderL", new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-		this.borderR = new BorderSensor(this.world, this, "BorderR", new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.borderL = new BorderSensor(this.world, this, "BorderL", new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.borderR = new BorderSensor(this.world, this, "BorderR", new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
 
-		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
 
-		this.rc5 = new RemoteControlSensor("RC fuer '"+this.getName()+"'", new Point3d(), new Vector3d()); //$NON-NLS-1$
+		this.rc5 = new RemoteControlSensor("RC fuer '"+this.getName()+"'", new Point3d(), new Vector3d());
 
 		this.addSensor(this.encL);
 		this.addSensor(this.encR);
@@ -180,90 +178,71 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 		this.addSensor(this.rc5);
 
-		this.addSensor(new SimpleSensor<Integer>("MouseX", new Point3d(), new Vector3d()) { //$NON-NLS-1$
+		this.addSensor(new SimpleSensor<Integer>("MouseX", new Point3d(),
+			new Vector3d()) {
 
 			@SuppressWarnings({"synthetic-access","boxing"})
 			@Override
 			public Integer updateValue() {
-
 				return CtBotSimTcp.this.mouseX;
 			}
 
 			@Override
-			public String getType() {
-
-				return "Maus-Sensor"; //$NON-NLS-1$
-			}
-
-			@Override
 			public String getDescription() {
-
-				return "Maus-Sensor-Wert X"; //$NON-NLS-1$
+				return "Maus-Sensor-Wert X";
 			}
 		});
 
-		this.addSensor(new SimpleSensor<Integer>("MouseY", new Point3d(), new Vector3d()) { //$NON-NLS-1$
+		this.addSensor(new SimpleSensor<Integer>("MouseY", new Point3d(),
+			new Vector3d()) {
 
 			@SuppressWarnings({"synthetic-access","boxing"})
 			@Override
 			public Integer updateValue() {
-
 				return CtBotSimTcp.this.mouseY;
 			}
 
 			@Override
-			public String getType() {
-
-				return "Maus-Sensor"; //$NON-NLS-1$
-			}
-
-			@Override
 			public String getDescription() {
-
-				return "Maus-Sensor-Wert Y"; //$NON-NLS-1$
+				return "Maus-Sensor-Wert Y";
 			}
 		});
-
-
 	}
 
 	private void initActuators() {
-
 		// !! cols.length == colsAct.length !!
 		int ledCount = cols.length;
 
 		// LEDs:
 		for(int i=0; i<ledCount; i++) {
-
 			final Integer idx = new Integer(ledCount-i-1);
 
-			this.addActuator(
-					new Indicator("LED "+i, new Point3d(), new Vector3d(), cols[i], colsAct[i]) { //$NON-NLS-1$
+			this.addActuator(new Indicator("LED "+i, new Point3d(),
+				new Vector3d(), cols[i], colsAct[i]) {
 
-						@Override
-						public void setValue(@SuppressWarnings("unused") Boolean value) {
-
-							// TODO: ???
-						}
-
-						@SuppressWarnings({"synthetic-access","boxing"})
-						@Override
-						public Boolean getValue() {
-
-							int soll = (int)Math.pow(2, idx);
-							int ist = CtBotSimTcp.this.actLed & soll; // Bitweises "und"
-
-							return (soll == ist);
-						}
+					@Override
+					public void setValue(@SuppressWarnings("unused") Boolean value) {
+						// TODO: ???
 					}
+
+					@SuppressWarnings({"synthetic-access","boxing"})
+					@Override
+					public Boolean getValue() {
+						int soll = (int)Math.pow(2, idx);
+						// Bitweises "und"
+						int ist = CtBotSimTcp.this.actLed & soll;
+
+						return (soll == ist);
+					}
+				}
 			);
 		}
 
-		this.govL = new Governor("GovL", new Point3d(), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-		this.govR = new Governor("GovR", new Point3d(), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.govL = new Governor("GovL", new Point3d(), new Vector3d(0d, 1d, 0d));
+		this.govR = new Governor("GovR", new Point3d(), new Vector3d(0d, 1d, 0d));
 
-		this.disp = new Display("Display", new Point3d(), new Vector3d()); //$NON-NLS-1$
-		this.log  = new LogScreen("LogScreen", new Point3d(), new Vector3d()); //$NON-NLS-1$
+		this.disp = new LcDisplay("Display", new Point3d(), new Vector3d());
+		this.log  = new LogScreen("LogScreen", new Point3d(), new Vector3d());
 
 		this.addActuator(this.govL);
 		this.addActuator(this.govR);
@@ -313,14 +292,13 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	/**
 	 * Leite Sensordaten an den Bot weiter
 	 */
-	@SuppressWarnings({"unchecked","boxing"})
 	private synchronized void transmitSensors() {
 		try {
 			commandsToSend.clear();	// Sendbuffer loeschen
 			byte tmp[];	// Buffer pro Command
 
-			Command command = new Command();
-			command.setCommand(Command.CMD_SENS_IR);
+			Command command;
+			command = new Command(Command.Code.SENS_IR);
 			command.setDataL(((Double)this.irL.getValue()).intValue());
 			command.setDataR(((Double)this.irR.getValue()).intValue());
 			command.setSeq(this.seq++);
@@ -328,7 +306,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			for (int i=0; i<tmp.length; i++)
 				commandsToSend.add(tmp[i]);
 
-			command.setCommand(Command.CMD_SENS_ENC);
+			command = new Command(Command.Code.SENS_ENC);
 			command.setDataL((Integer)this.encL.getValue());
 			command.setDataR((Integer)this.encR.getValue());
 			command.setSeq(this.seq++);
@@ -336,7 +314,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			for (int i=0; i<tmp.length; i++)
 				commandsToSend.add(tmp[i]);
 
-			command.setCommand(Command.CMD_SENS_BORDER);
+			command = new Command(Command.Code.SENS_BORDER);
 			command.setDataL(((Short)this.borderL.getValue()).intValue());
 			command.setDataR(((Short)this.borderR.getValue()).intValue());
 			command.setSeq(this.seq++);
@@ -345,7 +323,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				commandsToSend.add(tmp[i]);
 
 			// TODO
-			command.setCommand(Command.CMD_SENS_DOOR);
+			command = new Command(Command.Code.SENS_DOOR);
 			command.setDataL(0);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
@@ -353,7 +331,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			for (int i=0; i<tmp.length; i++)
 				commandsToSend.add(tmp[i]);
 
-			command.setCommand(Command.CMD_SENS_LDR);
+			command = new Command(Command.Code.SENS_LDR);
 			command.setDataL((Integer)this.lightL.getValue());
 			command.setDataR((Integer)this.lightR.getValue());
 			command.setSeq(this.seq++);
@@ -361,7 +339,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			for (int i=0; i<tmp.length; i++)
 				commandsToSend.add(tmp[i]);
 
-			command.setCommand(Command.CMD_SENS_LINE);
+			command = new Command(Command.Code.SENS_LINE);
 			command.setDataL(((Short)this.lineL.getValue()).intValue());
 			command.setDataR(((Short)this.lineR.getValue()).intValue());
 			command.setSeq(this.seq++);
@@ -373,7 +351,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				this.mouseX = 0;
 				this.mouseY = 0;
 			}
-			command.setCommand(Command.CMD_SENS_MOUSE);
+			command = new Command(Command.Code.SENS_MOUSE);
 			command.setDataL(this.mouseX);
 			command.setDataR(this.mouseY);
 			command.setSeq(this.seq++);
@@ -382,7 +360,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				commandsToSend.add(tmp[i]);
 
 			// TODO: nur fuer real-bot
-			command.setCommand(Command.CMD_SENS_TRANS);
+			command = new Command(Command.Code.SENS_TRANS);
 			command.setDataL(0);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
@@ -392,11 +370,9 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 			Object rc5 = this.rc5.getValue();
 			if(rc5 != null) {
-
 				Integer val = (Integer)rc5;
-
 				if(val != 0) {
-					command.setCommand(Command.CMD_SENS_RC5);
+					command = new Command(Command.Code.SENS_RC5);
 					command.setDataL(val);
 					command.setDataR(42);
 					command.setSeq(seq++);
@@ -407,7 +383,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			}
 
 			// TODO: nur fuer real-bot
-			command.setCommand(Command.CMD_SENS_ERROR);
+			command = new Command(Command.Code.SENS_ERROR);
 			command.setDataL(0);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
@@ -417,7 +393,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 			lastTransmittedSimulTime= (int)world.getSimTimeInMs();
 			lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
-			command.setCommand(Command.CMD_DONE);
+			command = new Command(Command.Code.DONE);
 			command.setDataL(lastTransmittedSimulTime);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
@@ -458,8 +434,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	//TODO calcPos umziehen nach Bot oder CtBotSim
 	@SuppressWarnings({"unchecked","boxing"})
 	private void calcPos() {
-
-			////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////
 			// Position und Heading berechnen:
 
@@ -622,30 +596,30 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 		if (command.getDirection() == Command.DIR_REQUEST) {
 
-			switch (command.getCommand()) {
+			switch (command.getCommandCode()) {
 
-			case Command.CMD_DONE:
+			case DONE:
 				// nIx zu tun mit diesem Kommando
 				break;
-			case Command.CMD_AKT_MOT:
+			case ACT_MOT:
 				this.govL.setValue(command.getDataL());
 				this.govR.setValue(command.getDataR());
 				break;
-			case Command.CMD_AKT_SERVO:
+			case ACT_SERVO:
 //				this.setActServo(command.getDataL());
 				break;
-			case Command.CMD_AKT_DOOR:
+			case ACT_DOOR:
 //				this.setActDoor(command.getDataL());
 				break;
-			case Command.CMD_AKT_LED:
+			case ACT_LED:
 				this.setActLed(command.getDataL());
 				break;
-			case Command.CMD_ACT_LCD:
-				switch (command.getSubcommand()) {
-				case Command.SUB_CMD_NORM:
+			case ACT_LCD:
+				switch (command.getSubCode()) {
+				case NORM:
 
 					this.setLcdText(command.getDataL(), command.getDataR(),
-							command.getDataBytesAsString());
+							command.getPayloadAsString());
 
 					// Neu:
 					if(this.lcdText == null || this.lcdText.length == 0) {
@@ -657,14 +631,14 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 					for(int i=1; i<this.lcdText.length; i++) {
 
-						buf.append("\n"); //$NON-NLS-1$
+						buf.append("\n");
 						buf.append(this.lcdText[i]);
 					}
 
 					this.disp.setValue(buf.toString());
 
 					break;
-				case Command.SUB_LCD_CURSOR:
+				case LCD_CURSOR:
 					this.setCursor(command.getDataL(), command.getDataR());
 
 					if(this.lcdText == null || this.lcdText.length == 0)
@@ -676,14 +650,14 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 					for(int i=1; i<this.lcdText.length; i++) {
 
-						buf.append("\n"); //$NON-NLS-1$
+						buf.append("\n");
 						buf.append(this.lcdText[i]);
 					}
 
 					this.disp.setValue(buf.toString());
 
 					break;
-				case Command.SUB_LCD_CLEAR:
+				case LCD_CLEAR:
 					this.lcdClear();
 
 					if(this.lcdText == null || this.lcdText.length == 0)
@@ -694,15 +668,15 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 					for(int i=1; i<this.lcdText.length; i++) {
 
-						buf.append("\n"); //$NON-NLS-1$
+						buf.append("\n");
 						buf.append(this.lcdText[i]);
 					}
 
 					this.disp.setValue(buf.toString());
 
 					break;
-				case Command.SUB_LCD_DATA:
-					this.setLcdText(command.getDataBytesAsString());
+				case LCD_DATA:
+					this.setLcdText(command.getPayloadAsString());
 
 					// Neu:
 					if(this.lcdText == null || this.lcdText.length == 0)
@@ -713,7 +687,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 					for(int i=1; i<this.lcdText.length; i++) {
 
-						buf.append("\n"); //$NON-NLS-1$
+						buf.append("\n");
 						buf.append(this.lcdText[i]);
 					}
 
@@ -722,19 +696,19 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 					break;
 				}
 				break;
-			case Command.CMD_LOG:
-				this.setLog(command.getDataBytesAsString());
+			case LOG:
+				this.setLog(command.getPayloadAsString());
 
 				this.log.setValue(this.getLog().toString());
 
 				break;
-			case Command.CMD_SENS_MOUSE_PICTURE:
+			case SENS_MOUSE_PICTURE:
 //				// Empfangen eine Bildes
 //				setMousePicture(command.getDataL(),command.getDataBytes());
 				break;
 
-			case Command.CMD_WELCOME:
-				if (command.getSubcommand() != Command.SUB_WELCOME_SIM){
+			case WELCOME:
+				if (! command.has(Command.SubCode.WELCOME_SIM)) {
 					lg.severe("Ich bin kein Sim-Bot! Sterbe vor Schreck ;-)");
 					die();
 				}
@@ -748,13 +722,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		} else {
 			// TODO: Antworten werden noch nicht gegeben
 		}
-	}
-
-	@Override
-	protected void init() {
-
-		if (answeringMachine != null)
-			this.answeringMachine.start();
 	}
 
 	CountDownLatch waitForCommands = new CountDownLatch(1);
@@ -773,7 +740,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 */
 	public void setLog(String str) {
 		synchronized(this.logBuffer) {
-			this.logBuffer.append(str + "\n"); //$NON-NLS-1$
+			this.logBuffer.append(str + "\n");
 		}
 	}
 
@@ -782,7 +749,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 * @return Logausgabe
 	 */
 	public StringBuffer getLog() {
-		StringBuffer tempBuffer = new StringBuffer(""); //$NON-NLS-1$
+		StringBuffer tempBuffer = new StringBuffer("");
 
 		synchronized(this.logBuffer) {
 
@@ -804,8 +771,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	public void setLcdText(int charPos, int linePos, String text) {
 		setCursor(charPos, linePos);
 		{
-			String pre = ""; //$NON-NLS-1$
-			String post = ""; //$NON-NLS-1$
+			String pre = "";
+			String post = "";
 			int max = Math.min(text.length(), LCD_CHARS - this.lcdCursorX - 1);
 
 			// Der neue Zeilentext ist der alte bis zur Cursorposition, gefolgt
@@ -874,7 +841,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	public void lcdClear() {
 		synchronized (this.lcdText) {
 			for (int i = 0; i < this.lcdText.length; i++) {
-				this.lcdText[i] = new String("                    "); //$NON-NLS-1$
+				this.lcdText[i] = new String("                    ");
 			}
 		}
 	}
@@ -906,7 +873,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			//System.out.println(command.toString());
 		//	System.out.println("Command: "+(char)command.getCommand()+"  -  "+(char)command.getSubcommand());
 				// Das DONE-kommando ist das letzte in einem Datensatz und beendet ein Paket
-			if (command.getCommand() ==  Command.CMD_DONE){
+			if (command.has(Command.Code.DONE)) {
 //				System.out.println(world.getRealTime()+"ms: received Frame for "+command.getDataL()+" ms - expected "+lastTransmittedSimulTime+" ms");
 				if (command.getDataL() == lastTransmittedSimulTime){
 //					recvTime=System.nanoTime()/1000;
@@ -945,9 +912,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	//long t1, t2;
 	public void receiveCommands() {
 //		long start, duration;
-		int valid = 0;
 		int run=0;
-
 
 		//t1= System.nanoTime()/1000;
 
@@ -955,15 +920,14 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 
 		while (run==0) {
 			try {
-				Command command = new Command();
 //				start= System.nanoTime();
-				valid = command.readCommand(connection);
+				try {
+					run = storeCommand(new Command(connection));
+				} catch (ProtocolException e) {
+					lg.warn(e, "Ungu\00FCltiges Kommando; ignoriere");
+				}
 //				duration= (System.nanoTime()-start)/1000;
 //				System.out.println("habe auf Kommando "+(char)command.getCommand()+" "+duration+" usec gewartet");
-				if (valid == 0) {// Kommando ist in Ordnung
-					run=storeCommand(command);
-				} else
-					System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
 			} catch (IOException e) {
 				lg.severe(e, "Verbindung unterbrochen -- Bot stirbt");
 				setHalted(true);

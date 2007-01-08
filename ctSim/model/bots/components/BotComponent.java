@@ -131,11 +131,6 @@ public abstract class BotComponent {
 	}
 	
 	/**
-	 * @return Der Komponenten-Typ
-	 */
-	public abstract String getType();
-	
-	/**
 	 * @return Beschreibung der Komponente
 	 */
 	public abstract String getDescription();

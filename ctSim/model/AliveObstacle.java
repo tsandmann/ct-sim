@@ -260,7 +260,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 *
 	 * @see AliveObstacle#work()
 	 */
-	abstract protected void init();
+	protected void init() {
+		// No-op; Kindklassen ueberschreiben bei Bedarf
+	}
 
 	/**
 	 * Diese Methode enthaelt die Routinen, die der Bot waehrend seiner Laufzeit

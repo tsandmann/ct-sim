@@ -14,6 +14,12 @@ import java.util.concurrent.CountDownLatch;
 import ctSim.model.Command;
 import ctSim.util.FmtLogger;
 
+/*
+ * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim
+ * gehoert. Hab keine Ahnung, wofuer das sein soll. Ich nehm die Datei aus dem
+ * Build Path, damit man bei Namensaenderungen in Sim-Klassen das nicht immer
+ * hier mitfuehren muss. --hkr@heise.de
+ */
 public class TestServer implements Runnable {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.TestServer");
 	

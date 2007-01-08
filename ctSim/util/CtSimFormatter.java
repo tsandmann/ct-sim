@@ -31,7 +31,7 @@ import java.util.logging.LogRecord;
  *     at ctSim.model.AliveObstacle.run(AliveObstacle.java:393)
  *     at java.lang.Thread.run(Thread.java:595)</pre></p>
  *
- * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class CtSimFormatter extends Formatter {
 	private SimpleDateFormat timestampFormatter =
@@ -45,7 +45,7 @@ public class CtSimFormatter extends Formatter {
 			r.getThrown().printStackTrace(new PrintWriter(s));
 			throwable = s.toString();
 		}
-		// TODO "* 2" ist quick and dirty. Kommt daher, dass Thread.activeCount() nur Schaetzungen ueber die Groesse zurueckgibt ... Details siehe Doku der Methode
+		// TODO "* 2" ist quick and dirty. Kommt daher, dass Thread.activeCount() nur Schaetzungen ueber die Groesse zurueckgibt ... Details siehe Doku der Methode //$$ Ist sowieso Kaese; man kann doch einfach Thread.currentThread().getName() machen, oder?
 		Thread[] threads = new Thread[Thread.activeCount() * 2];
 		Thread.enumerate(threads);
 		String threadName = "";

@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator fuer den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */package ctSim.model.bots.ctbot.components;
 
 import javax.vecmath.Point3d;
@@ -26,13 +26,13 @@ import ctSim.model.bots.components.actuators.SimpleActuator;
 // TODO: sollte double sein?
 /**
  * Klasse der Motoransteuerung
- * 
+ *
  * @author Felix Beckwermert
  */
 public class Governor extends SimpleActuator<Integer> {
-	
+
 	private Integer val;
-	
+
 	/**
 	 * Der Konstruktor
 	 * @param name Sensor-Name
@@ -41,22 +41,12 @@ public class Governor extends SimpleActuator<Integer> {
 	 */
 @SuppressWarnings("boxing")
 public Governor(String name, Point3d relPos, Vector3d relHead) {
-		
+
 		super(name, relPos, relHead);
-		
+
 		this.val = 0;
 	}
-	
-	/**
-	 * @see ctSim.model.bots.components.BotComponent#getType()
-	 */
-	// TODO: Ueberfluessig?
-	@Override
-	public String getType() {
-		
-		return "Regulator"; //$NON-NLS-1$
-	}
-	
+
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
@@ -66,7 +56,7 @@ public Governor(String name, Point3d relPos, Vector3d relHead) {
 		// TODO:
 		return null;
 	}
-	
+
 	/**
 	 * @param value Der Wert zu setzen
 	 * @see ctSim.model.bots.components.Actuator#setValue
@@ -74,17 +64,17 @@ public Governor(String name, Point3d relPos, Vector3d relHead) {
 	// TODO: should be abstract (?)
 	@Override
 	public void setValue(Integer value) {
-		
+
 		this.val = value;
 	}
-	
+
 	/**
 	 * @see ctSim.model.bots.components.Actuator#getValue()
 	 */
 	// TODO: should be abstract (?)
 	@Override
 	public Integer getValue() {
-		
+
 		return this.val;
 	}
 }

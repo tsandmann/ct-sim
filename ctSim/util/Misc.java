@@ -54,4 +54,13 @@ public class Misc {
             dest.write(buf, 0, len);
 		dest.close();
 	}
+
+	/**
+	 * Konvertiert ein Byte (Wertebereich [&minus;128; +127]) in ein
+	 * <em>unsigned byte</em> (Wertebereich [0; 255]).
+	 */
+	public static int toUnsignedInt8(byte value) {
+		// Zweierkomplement (1. Bit gesetzt = negatives Vorzeichen)
+		return (value & 0x7F) + (value < 0 ? 128 : 0);
+	}
 }
