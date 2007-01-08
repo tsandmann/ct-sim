@@ -16,7 +16,7 @@ import ctSim.view.TimeLogger;
 import ctSim.view.View;
 import ctSim.view.ViewYAdapter;
 import ctSim.view.contestConductor.ContestConductor;
-import ctSim.view.gui.CtSimFrame;
+import ctSim.view.gui.MainWindow;
 
 //$$ doc Grobe Architektur beschreiben; wer verdrahtet M, V und C? -> auch Pico beschreiben
 /**
@@ -30,12 +30,14 @@ import ctSim.view.gui.CtSimFrame;
  * </p>
  */
 public class Main {
+	public static final String VERSION = "2.1b";
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
 
 	static FmtLogger lg;
 
 	public static final InitializingPicoContainer dependencies =
 		new InitializingPicoContainer();
+
 
 	static {
 		dependencies.registerImplementation(ContestConductor.class);
@@ -128,8 +130,8 @@ public class Main {
 
 		Controller c = dependencies.get(Controller.class);
 
-		// View der Applikation ist mindestens der CtSimFrame
-		View view = new CtSimFrame(c);
+		// View der Applikation ist mindestens das MainWindow
+		View view = new MainWindow(c);
 		try {
 			// View um ContestConductor erweitern falls so konfiguriert
 			if (ConfigManager.getValue("useContestConductor").

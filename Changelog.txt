@@ -1,6 +1,17 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-08 1:03 Hendrik Krauss [hkr@heise.de]: Einige Sachen aus meinem lokalen Prototyp eingebaut
+* RX/TX-Bibliothek wieder eingecheckt (Vorbereitung fuer RealBot-Restauration)
+* CtSimFrame aufgeteilt: MainWindow und MainWinMenuBar
+* JTabbedPaneWithCloseIcons neu implementiert (ClosableTabsPane: kuerzer, einfacher, kann bisschen mehr), 2 Icons hinzugefuegt
+* Bot: stop() und die() waren Synonyme, stop() entfernt
+* AObst hat death listener bekommen (wird benachrichtigt, wenn AObst stirbt)
+* BotInfo weg (bestand im Endeffekt nur aus 2 Feldern)
+* BotPanel, DefBotPanel unter dem Namen BotViewer zusammengefasst und vereinfacht
+* ControlBar ist aufgrund der Vereinfachungen ueberfluessig geworden
+* Kleinigkeiten
+
 2007-01-07 18:50 Hendrik Krauss [hkr@heise.de]:
 Ok, mein letzter Check-in (18. Dez) war Mist. Der ganze NavState klappt nicht
 und ich weiss nicht woran's liegt. Verwerfe den letzten Commit: gehe auf den

@@ -53,7 +53,7 @@ public class StatusBar extends Box {
 	private static final int MAX_TICK_RATE = 400;
 	private static final int MAJOR_TICK = 10;
 	
-	private CtSimFrame parent;
+	private MainWindow parent;
 	
 //	private DateFormat timeFormatter;
 	private final long TIME_TO_SUB = 1000*60*60; // Eine Stunde abziehen fuer Anzeige
@@ -68,7 +68,7 @@ public class StatusBar extends Box {
 	 * Konstruktor
 	 * @param par Referenz auf den Frame, in dem die StatusBar angezeigt wird
 	 */
-	StatusBar(CtSimFrame par) {
+	StatusBar(MainWindow par) {
 		
 		super(BoxLayout.LINE_AXIS);
 		

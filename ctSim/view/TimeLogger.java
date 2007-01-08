@@ -5,7 +5,7 @@ import ctSim.model.bots.Bot;
 import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
 
-//$$$ doc TimeLogger
+//$$ doc TimeLogger
 public class TimeLogger implements View {
 	private static final int intervalInSimMs = 10000; //TODO Koennte man in Config-Datei, auch zum Ein-/Ausschalten der ganzen Klasse
 	private static final String minimalMsg =
@@ -58,7 +58,7 @@ public class TimeLogger implements View {
     }
 
 	public void onSimulationFinished() {
-		//$$$ log()
+		//$$ nochmal ein log()?
 		initVariables();
 	}
 

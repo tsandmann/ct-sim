@@ -513,8 +513,15 @@ public class DefaultController implements Runnable, Controller {
             lg.warning(e, "Fehler beim Starten von Bot '"+filename+"'");
         }
     }
+    
+	public void addComBot() {
+		// $$$ addComBot
+	}
 
-	@SuppressWarnings("unchecked")
+	public void connectToTcp(String address) {
+		// $$$ connectToTcp
+	}
+
 	private synchronized Bot addBot(Bot bot){
 		if (bot != null && world != null && judge.isAddingBotsAllowed()) {
 //			this.world.addBot(bot);

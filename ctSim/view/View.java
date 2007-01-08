@@ -84,7 +84,7 @@ public interface View {
 	public void onBotAdded(Bot bot);
 
 	// $$ doc onBotRemoved
-	public void onBotRemoved(Bot bot);
+	public void onBotRemoved(Bot bot); //$$$ nutzt das irgendwer?
 
 	/**
 	 * <p>

@@ -1017,12 +1017,12 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	};
 
 	/**
-	 * Erweitert stop() um das schliessen der TCP/Verbindung
+	 * Erweitert die() um das schliessen der TCP/Verbindung
 	 */
 	@Override
-	public void stop() {
+	public void die() {
 		// TODO Auto-generated method stub
-		super.stop();
+		super.die();
 		try {
 			connection.disconnect();
 		} catch (IOException e) {
@@ -1031,7 +1031,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			// uninteressant
 		}
 	}
-
 
 	@Override
 	protected void cleanup() {

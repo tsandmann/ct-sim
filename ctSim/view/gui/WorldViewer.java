@@ -1,6 +1,7 @@
 package ctSim.view.gui;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
@@ -63,7 +64,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     	deinit();
 
     	if (world == null)
-    		((CardLayout)getLayout()).show(this, NOTHING);
+    		((CardLayout)getLayout()).show(this, NOTHING); //$$ falscher platz, vgl MODEL
     	else
     		init(world);
     }
@@ -74,7 +75,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	 * Java3D-Threads. Es ist enorm wichtig, diese Methode aufzurufen!
 	 * </p>
 	 * <p>
-	 * Mit jedem Aufruf von {@link #init()} werden ca. ein Dutzend
+	 * Mit jedem Aufruf von {@link #init(World)} werden ca. ein Dutzend
 	 * Java3D-Threads instanziiert, die ohne <code>deinit()</code>
 	 * dann nie mehr beendet w&uuml;rden und ein massives Ressourcenleck (v.a.
 	 * Speicherleck wegen Referenzen auf alte Welten, Bots, etc.) darstellen.
@@ -101,9 +102,12 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     	 */
     	universe.addBranchGraph(new BranchGroup() {
     		{
-    			/* Syntaxhinweis zu den doppelten Schweifklammern: Es handelt
-    			 * sich um "instance initializer", die hier den Code kompakter
-    			 * und unbuerokratischer machen sollen -- siehe JLS §8.6 */
+    			/*
+				 * Syntaxhinweis zu den doppelten Schweifklammern: Es handelt
+				 * sich um "instance initializer", die den Code kompakter machen
+				 * sollen -- siehe JLS §8.6 und
+				 * http://www.c2.com/cgi/wiki?DoubleBraceInitialization
+				 */
     			addMouseBehavior(new MouseRotate(MouseBehavior.INVERT_INPUT)
     				{{ setFactor(0.001); }});
     			addMouseBehavior(new MouseTranslate(MouseBehavior.INVERT_INPUT)
@@ -174,7 +178,17 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     	return offScreenCanvas.getOffScreenBuffer().getImage();
     }
 
-    public void update() {
+    public void update() { //$$ Ist wohl ueberfluessig: MainWindow koennte auch einfach repaint() auf sich aufrufen, dann werden wir auch nach nem Repaint gefragt
 		repaint();
+    }
+
+    /**
+	 * MinimumSize ist (1,1): Erm&ouml;glicht der SplitPane, die uns
+	 * enth&auml;lt, ihren Divider zu &auml;ndern. W&uuml;rden wir unsere
+	 * MinimumSize nicht auf was sehr kleines setzen, ginge das nicht.
+	 */ 
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(1,1);
     }
 }

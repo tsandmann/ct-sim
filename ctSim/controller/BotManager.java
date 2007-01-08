@@ -83,7 +83,7 @@ public class BotManager {
 		lg.info("Stoppe Bot " + b);
 		world.removeAliveObstacle(b);
 		view.onBotRemoved(b);
-		b.stop();
+		b.die();
 	}
 
 	private static synchronized void deinit() {

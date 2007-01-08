@@ -40,6 +40,10 @@ public interface Controller {
 
 	public void addTestBot();
 
+	public void connectToTcp(String address);
+
+	public void addComBot();
+
 	public void openWorldFromFile(File sourceFile);
 
 	public void openWorldFromXmlString(String parcoursAsXml);

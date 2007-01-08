@@ -18,7 +18,9 @@
  */
 package ctSim.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
@@ -44,6 +46,8 @@ import ctSim.view.gui.Debug;
  */
 public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
+
+	private List<Runnable> deathListeners = new ArrayList<Runnable>();
 
 	/**
 	 * <p>
@@ -222,7 +226,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 *  Stoppt den Bot (bzw. dessen Thread).
 	 */
-	public void stop() {
+	public void die() {
 
 		Thread dummy = this.thrd;
 
@@ -231,6 +235,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 		this.thrd = null;
 		dummy.interrupt();
+
+		for (Runnable r : deathListeners)
+			r.run();
 	}
 
 	/**
@@ -400,28 +407,14 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		Debug.out.println("Alive Obstacle \""+this.getName()+"\" stirbt..."); //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO: ???
 		cleanup();
-
-
 	}
 
-	/** Aufraeumen, wenn Bot stirbt
-	 *
-	 *
-	 */
+	/** Aufraeumen, wenn Bot stirbt */
 	protected void cleanup() {
 		// TODO Auto-generated method stub
 		branchgrp=null;
 		transformgrp=null;
 		shape=null;
-	}
-
-	/**
-	 * Beendet den AliveObstacle-Thread<b>
-	 *
-	 * @see AliveObstacle#work()
-	 */
-	public final void die() {
-		this.stop();
 	}
 
 	/**
@@ -555,5 +548,11 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 */
 	public Point3d getLastSafePos() {
 		return lastSafePos;
+	}
+
+	public void addDeathListener(Runnable listener) {
+		if (listener == null)
+			throw new NullPointerException();
+		deathListeners.add(listener);
 	}
 }
