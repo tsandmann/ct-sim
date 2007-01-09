@@ -20,7 +20,6 @@
 package ctSim.model.bots;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.vecmath.Point3d;
@@ -31,6 +30,7 @@ import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotPosition;
 import ctSim.model.bots.components.Sensor;
+import ctSim.model.bots.components.BotComponent.IOFlagsEnum;
 import ctSim.view.gui.BotBuisitor;
 
 /**
@@ -64,9 +64,76 @@ import ctSim.view.gui.BotBuisitor;
  * @author Peter K&ouml;nig (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
-public abstract class Bot extends AliveObstacle{
-	protected final List<BotComponent<?>> components =
-		new ArrayList<BotComponent<?>>();
+public abstract class Bot extends AliveObstacle {
+	public static class BotComponentList extends ArrayList<BotComponent<?>> {
+        private static final long serialVersionUID = - 1331425647710880289L;
+
+        // bulk add
+        public void add(BotComponent<?>... elements) {
+            for (BotComponent<?> e : elements)
+                add(e);
+        }
+
+        //$$$ doc
+        public void applyFlagTable(CompntWithFlag... compntFlagTable) {
+        	for (BotComponent<?> compnt : this) {
+        		for (CompntWithFlag cwf : compntFlagTable) {
+        			if (cwf.compntClass.isAssignableFrom(compnt.getClass()))
+        				compnt.setFlags(cwf.flags);
+        		}
+        	}
+        }
+    }
+
+	/**
+	 * <p>
+	 * Ordnet einer BotComponent IOFlags zu. Component-Flag-Tabellen sind Arrays
+	 * von diesem Typ. Zum Thema Component-Flag-Arrays siehe $$$
+	 * </p>
+	 * <p>
+	 * Kleingedrucktes: Die Klasse existiert, um mit einem technischen Detail
+	 * umzugehen. F&uuml;r die Component-Flag-Tabellen h&auml;tten wir gern
+	 * Arrays von dem Typ, der hinter dem {@code implements} steht. Dieser Typ
+	 * ist jedoch generisch, und von generischen Typen kann man keine Arrays
+	 * bilden. Daher deklarieren wir diese leere Klasse, damit's nicht mehr
+	 * generisch ist.
+	 * </p>
+	 */
+	static class CompntWithFlag {
+		final Class<? extends BotComponent<?>> compntClass;
+		final IOFlagsEnum[] flags;
+
+		CompntWithFlag(Class<? extends BotComponent<?>> compntClass,
+			IOFlagsEnum[] flags) {
+
+			this.compntClass = compntClass;
+			this.flags = flags;
+		}
+	}
+
+	/**
+	 * <p>
+	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann:
+	 *
+	 * <pre>
+	 * new CompntWithFlag[] {
+	 *     _(Governor.class),
+	 *     _(Led.class, CON_READ),
+	 *     _(LightSensor.class, CON_READ, CON_WRITE),
+	 * }
+	 * </pre>
+	 *
+	 * Zum Thema Component-Flag-Arrays siehe $$$
+	 * </p>
+	 */
+	protected static CompntWithFlag _(
+		Class<? extends BotComponent<?>> compntClass,
+		IOFlagsEnum... flags) {
+
+		return new CompntWithFlag(compntClass, flags);
+	}
+
+	protected final BotComponentList components = new BotComponentList();
 
 	private BotPosition posHead;
 
@@ -144,12 +211,12 @@ public abstract class Bot extends AliveObstacle{
 
 	public void accept(BotBuisitor buisitor) {
 		for (BotComponent<?> c : components)
-			buisitor.visit(c);
+			buisitor.visit(c, this);
 		for (Sensor<?> s : sens)
-			buisitor.visit(s);
+			buisitor.visit(s, this);
 		for (Actuator<?> a : acts)
-			buisitor.visit(a);
-		buisitor.visit(posHead);
+			buisitor.visit(a, this);
+		buisitor.visit(posHead, this);
 	}
 
     //$$ ViewPlatforms: Toter Code

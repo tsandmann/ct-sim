@@ -18,13 +18,14 @@
  */
 package ctSim.model.bots.ctbot;
 
+import static ctSim.model.bots.components.BotComponent.IOFlagsEnum.CON_READ;
+
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.CountDownLatch;
 
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Transform3D;
@@ -37,12 +38,12 @@ import ctSim.TcpConnection;
 import ctSim.model.Command;
 import ctSim.model.World;
 import ctSim.model.bots.components.Actuator;
+import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.Sensor;
-import ctSim.model.bots.components.BotComponent.IOFlagsEnum;
 import ctSim.model.bots.components.actuators.Indicator;
 import ctSim.model.bots.components.actuators.LcDisplay;
-import ctSim.model.bots.components.actuators.LogScreen;
+import ctSim.model.bots.components.actuators.Log;
 import ctSim.model.bots.components.sensors.SimpleSensor;
 import ctSim.model.bots.ctbot.components.BorderSensor;
 import ctSim.model.bots.ctbot.components.DistanceSensor;
@@ -68,28 +69,8 @@ public class CtBotSimTcp extends CtBotSim {
 	/** Sequenznummer der TCP-Pakete */
 	private int seq = 0;
 
-	/** Puffer fuer Logausgaben */
-	public StringBuffer logBuffer = new StringBuffer("");
-
 	/** Zustand der LEDs */
 	private Integer actLed = new Integer(0);
-
-	/** Anzahl der Zeilen im LCD */
-	public static final short LCD_LINES = 4;
-
-	/** Anzahl der Zeichen pro Zeile im LCD */
-	public static final short LCD_CHARS = 20;
-
-	/** Zustand des LCD */
-	private String[] lcdText = new String[LCD_LINES];
-
-	/** Cursorposition des LCD
-	 * X : vor welchem Zeichen steht der Cursor (0 .. LCD_CHARS-1)
-	 * Y : in welcher Zeile steht der Cursor (0 .. LCD_LINES-1)
-	 */
-	private int lcdCursorX = 0;
-
-	private int lcdCursorY = 0;
 
 	/** maximale Geschwindigkeit als PWM-Wert */
 	public static final short PWM_MAX = 255;
@@ -116,8 +97,8 @@ public class CtBotSimTcp extends CtBotSim {
 	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR,
 		encL, encR, rc5;
 
-	private Actuator govL, govR, log;
-	private LcDisplay disp;
+	private Actuator govL, govR;
+
 	/**
 	 * Der Konstruktor
 	 * @param w Die Welt
@@ -134,10 +115,14 @@ public class CtBotSimTcp extends CtBotSim {
 		this.world = w;
 
 		components.add(
-			disp = new LcDisplay(20, 4)
+			new LcDisplay(20, 4),
+			new Log()
 		);
-		
-		disp.setFlags(IOFlagsEnum.CON_READ); //$$$ flag table
+
+		components.applyFlagTable(
+			_(LcDisplay.class, CON_READ),
+			_(Log.class      , CON_READ)
+		);
 
 		initActuators();
 		initSensors();
@@ -245,12 +230,8 @@ public class CtBotSimTcp extends CtBotSim {
 		this.govL = new Governor("GovL", new Point3d(), new Vector3d(0d, 1d, 0d));
 		this.govR = new Governor("GovR", new Point3d(), new Vector3d(0d, 1d, 0d));
 
-		this.log  = new LogScreen("LogScreen", new Point3d(), new Vector3d());
-
 		this.addActuator(this.govL);
 		this.addActuator(this.govR);
-
-		this.addActuator(this.log);
 	}
 
 	/**
@@ -436,166 +417,163 @@ public class CtBotSimTcp extends CtBotSim {
 	//TODO calcPos umziehen nach Bot oder CtBotSim
 	@SuppressWarnings({"unchecked","boxing"})
 	private void calcPos() {
-			////////////////////////////////////////////////////////////////////
-			// Position und Heading berechnen:
+		////////////////////////////////////////////////////////////////////
+		// Position und Heading berechnen:
 
-			// Anzahl der Umdrehungen der Raeder
-			double turnsL = calculateWheelSpeed((Integer)this.govL.getValue());
-			turnsL = turnsL * getDeltaT() / 1000.0f;
-			double turnsR = calculateWheelSpeed((Integer)this.govR.getValue());
-			turnsR = turnsR * getDeltaT() / 1000.0f;
+		// Anzahl der Umdrehungen der Raeder
+		double turnsL = calculateWheelSpeed((Integer)this.govL.getValue());
+		turnsL = turnsL * getDeltaT() / 1000.0f;
+		double turnsR = calculateWheelSpeed((Integer)this.govR.getValue());
+		turnsR = turnsR * getDeltaT() / 1000.0f;
 
-			// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe pdf
-			// Absolut zurueckgelegte Strecke pro Rad berechnen
-			double s_l = turnsL * WHEEL_PERIMETER;
-			double s_r = turnsR * WHEEL_PERIMETER;
+		// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe pdf
+		// Absolut zurueckgelegte Strecke pro Rad berechnen
+		double s_l = turnsL * WHEEL_PERIMETER;
+		double s_r = turnsR * WHEEL_PERIMETER;
 
-			// halben Drehwinkel berechnen
-			double _gamma = (s_l - s_r) / (4.0 * WHEEL_DIST);
+		// halben Drehwinkel berechnen
+		double _gamma = (s_l - s_r) / (4.0 * WHEEL_DIST);
 
-			/*
-			 * // Jetzt fehlt noch die neue Blickrichtung Vector3f newHeading = new
-			 * Vector3f(-mid.y, mid.x, 0);
-			 */
+		/*
+		 * // Jetzt fehlt noch die neue Blickrichtung Vector3f newHeading = new
+		 * Vector3f(-mid.y, mid.x, 0);
+		 */
 
-			// neue Blickrichtung berechnen
-			// ergibt sich aus Rotation der Blickrichtung um 2*_gamma
-			Vector3d _hd = this.getHeading();
-			double _s2g = Math.sin(2 * _gamma);
-			double _c2g = Math.cos(2 * _gamma);
-			Vector3d newHeading = new Vector3d(
-					(_hd.x * _c2g + _hd.y * _s2g),
-					(-_hd.x * _s2g + _hd.y * _c2g), 0f);
+		// neue Blickrichtung berechnen
+		// ergibt sich aus Rotation der Blickrichtung um 2*_gamma
+		Vector3d _hd = this.getHeading();
+		double _s2g = Math.sin(2 * _gamma);
+		double _c2g = Math.cos(2 * _gamma);
+		Vector3d newHeading = new Vector3d(
+				(_hd.x * _c2g + _hd.y * _s2g),
+				(-_hd.x * _s2g + _hd.y * _c2g), 0f);
 
-			newHeading.normalize();
+		newHeading.normalize();
 
-			// Neue Position bestimmen
-			Vector3d newPos = new Vector3d(this.getPosition());
-			double _sg = Math.sin(_gamma);
-			double _cg = Math.cos(_gamma);
-			double moveDistance;
-			if (_gamma == 0) {
-				// Bewegung geradeaus
-				moveDistance = s_l; // = s_r
-			} else {
-				// anderfalls die Distanz laut Formel berechnen
-				moveDistance = 0.5 * (s_l + s_r) * Math.sin(_gamma) / _gamma;
-			}
-			// Den Bewegungsvektor berechnen ...
-			Vector3d moveDirection = new Vector3d((_hd.x * _cg + _hd.y
-					* _sg), (-_hd.x * _sg + _hd.y * _cg), 0f);
-			moveDirection.normalize();
-			moveDirection.scale(moveDistance);
-			// ... und die alte Position entsprechend veraendern.
-			newPos.add(moveDirection);
-
-
-			double tmp = meter2Dots(2 * _gamma * SENS_MOUSE_DIST_Y) + deltaXRest;
-			int deltaX = (int) Math.floor(tmp);
-			deltaXRest = tmp - deltaX;
-			this.mouseX = deltaX;
-
-			tmp = meter2Dots(moveDistance) + deltaYRest;
-			int deltaY = (int) Math.floor(tmp);
-			deltaYRest = tmp - deltaY;
-			this.mouseY = deltaY;
+		// Neue Position bestimmen
+		Vector3d newPos = new Vector3d(this.getPosition());
+		double _sg = Math.sin(_gamma);
+		double _cg = Math.cos(_gamma);
+		double moveDistance;
+		if (_gamma == 0) {
+			// Bewegung geradeaus
+			moveDistance = s_l; // = s_r
+		} else {
+			// anderfalls die Distanz laut Formel berechnen
+			moveDistance = 0.5 * (s_l + s_r) * Math.sin(_gamma) / _gamma;
+		}
+		// Den Bewegungsvektor berechnen ...
+		Vector3d moveDirection = new Vector3d((_hd.x * _cg + _hd.y
+				* _sg), (-_hd.x * _sg + _hd.y * _cg), 0f);
+		moveDirection.normalize();
+		moveDirection.scale(moveDistance);
+		// ... und die alte Position entsprechend veraendern.
+		newPos.add(moveDirection);
 
 
-			int oldState = this.getObstState();
+		double tmp = meter2Dots(2 * _gamma * SENS_MOUSE_DIST_Y) + deltaXRest;
+		int deltaX = (int) Math.floor(tmp);
+		deltaXRest = tmp - deltaX;
+		this.mouseX = deltaX;
 
-			boolean noCol = this.world.checkCollision(this, new BoundingSphere(new Point3d(0d, 0d, 0d), BOT_RADIUS), newPos);
-			// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
-			// der Bot blau gefaerbt.
-			if(noCol && (oldState & OBST_STATE_COLLISION) == OBST_STATE_COLLISION) {
-				// Zustand setzen
-				Debug.out.println("Bot "+this.getName()+" hat keinen Unfall mehr!");
-				setObstState( oldState & ~OBST_STATE_COLLISION);
-			} else if (!noCol && (oldState & OBST_STATE_COLLISION) != OBST_STATE_COLLISION) {
-				Debug.out.println("Bot "+this.getName()+" hatte einen Unfall!");
-				moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt
+		tmp = meter2Dots(moveDistance) + deltaYRest;
+		int deltaY = (int) Math.floor(tmp);
+		deltaYRest = tmp - deltaY;
+		this.mouseY = deltaY;
 
-				// Zustand setzen
-				setObstState( oldState| OBST_STATE_COLLISION);
-			}
 
-			// Bodenkontakt ueberpruefen
+		int oldState = this.getObstState();
 
-			// Vektor vom Ursprung zum linken Rad
-			Vector3d vecL = new Vector3d(-newHeading.y,newHeading.x, 0f);
-			vecL.scale((float) WHEEL_DIST);
-			// neue Position linkes Rad
-			Vector3d posRadL = new Vector3d(this.getPosition());
-			posRadL.add(vecL);
+		boolean noCol = this.world.checkCollision(this, new BoundingSphere(new Point3d(0d, 0d, 0d), BOT_RADIUS), newPos);
+		// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
+		// der Bot blau gefaerbt.
+		if(noCol && (oldState & OBST_STATE_COLLISION) == OBST_STATE_COLLISION) {
+			// Zustand setzen
+			Debug.out.println("Bot "+this.getName()+" hat keinen Unfall mehr!");
+			setObstState( oldState & ~OBST_STATE_COLLISION);
+		} else if (!noCol && (oldState & OBST_STATE_COLLISION) != OBST_STATE_COLLISION) {
+			Debug.out.println("Bot "+this.getName()+" hatte einen Unfall!");
+			moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt
 
-			// Vektor vom Ursprung zum rechten Rad
-			Vector3d vecR = new Vector3d(newHeading.y, -newHeading.x, 0f);
-			vecR.scale((float) WHEEL_DIST);
-			// neue Position rechtes Rad
-			Vector3d posRadR = new Vector3d(this.getPosition());
-			posRadR.add(vecR);
+			// Zustand setzen
+			setObstState( oldState| OBST_STATE_COLLISION);
+		}
 
-			// Winkel des heading errechnen
-			double angle = SimUtils.getRotation(newHeading);
-			// Transformations-Matrix fuer die Rotation erstellen
-			Transform3D rotation = new Transform3D();
-			rotation.rotZ(angle);
+		// Bodenkontakt ueberpruefen
 
-			/** Abstand Zentrum Gleitpin in Achsrichtung (X) [m] */
-			double BOT_SKID_X = 0d;
+		// Vektor vom Ursprung zum linken Rad
+		Vector3d vecL = new Vector3d(-newHeading.y,newHeading.x, 0f);
+		vecL.scale((float) WHEEL_DIST);
+		// neue Position linkes Rad
+		Vector3d posRadL = new Vector3d(this.getPosition());
+		posRadL.add(vecL);
 
-			/** Abstand Zentrum Gleitpin in Vorausrichtung (Y) [m] */
-			double BOT_SKID_Y = -0.054d;
+		// Vektor vom Ursprung zum rechten Rad
+		Vector3d vecR = new Vector3d(newHeading.y, -newHeading.x, 0f);
+		vecR.scale((float) WHEEL_DIST);
+		// neue Position rechtes Rad
+		Vector3d posRadR = new Vector3d(this.getPosition());
+		posRadR.add(vecR);
 
-			// Bodenkontakt des Gleitpins ueberpruefen
-			Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT / 2);
-			// Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
-			rotation.transform(skidVec);
-			skidVec.add(new Point3d(newPos));
+		// Winkel des heading errechnen
+		double angle = SimUtils.getRotation(newHeading);
+		// Transformations-Matrix fuer die Rotation erstellen
+		Transform3D rotation = new Transform3D();
+		rotation.rotZ(angle);
 
-			boolean isFalling = !this.world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE);
+		/** Abstand Zentrum Gleitpin in Achsrichtung (X) [m] */
+		double BOT_SKID_X = 0d;
 
-			// Bodenkontakt des linken Reifens ueberpruefen
-			posRadL.z -= BOT_HEIGHT / 2;
+		/** Abstand Zentrum Gleitpin in Vorausrichtung (Y) [m] */
+		double BOT_SKID_Y = -0.054d;
 
-			isFalling |= !this.world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE);
+		// Bodenkontakt des Gleitpins ueberpruefen
+		Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -BOT_HEIGHT / 2);
+		// Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
+		rotation.transform(skidVec);
+		skidVec.add(new Point3d(newPos));
 
-			// Bodenkontakt des rechten Reifens ueberpruefen
-			posRadR.z -= BOT_HEIGHT / 2;
+		boolean isFalling = !this.world.checkTerrain(new Point3d(skidVec), BOT_GROUND_CLEARANCE);
 
-			isFalling |= !this.world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE);
+		// Bodenkontakt des linken Reifens ueberpruefen
+		posRadL.z -= BOT_HEIGHT / 2;
 
-			// Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat,
-			// wird der Bot gestoppt und gruen gefaerbt.
-			if(isFalling && (OBST_STATE_FALLING != (getObstState() & OBST_STATE_FALLING))) {
-				Debug.out.println("Bot "+this.getName()+" faellt in ein Loch!");
-				setObstState(getObstState() | OBST_STATE_FALLING);
-			} else if(!isFalling && (OBST_STATE_FALLING == (getObstState() & OBST_STATE_FALLING))) {
-				Debug.out.println("Bot "+this.getName()+" faellt nicht mehr!");
-				setObstState(getObstState() & ~OBST_STATE_FALLING);
-			}
+		isFalling |= !this.world.checkTerrain(new Point3d(posRadL), BOT_GROUND_CLEARANCE);
 
-			// Wenn der Bot nicht kollidiert oder ueber einem Abgrund steht Position aktualisieren
-			if ((getObstState() & (OBST_STATE_COLLISION | OBST_STATE_FALLING)) == 0 ){
- 				this.setPosition(new Point3d(newPos));
-				this.setHeading(newHeading);
-			}
-			// Blickrichtung nur aktualisieren, wenn Bot nicht in ein
-			// Loch gefallen ist:
-			if ((getObstState() & OBST_STATE_FALLING) == 0 ){
-				this.setHeading(newHeading);
-			}
+		// Bodenkontakt des rechten Reifens ueberpruefen
+		posRadR.z -= BOT_HEIGHT / 2;
+
+		isFalling |= !this.world.checkTerrain(new Point3d(posRadR), BOT_GROUND_CLEARANCE);
+
+		// Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat,
+		// wird der Bot gestoppt und gruen gefaerbt.
+		if(isFalling && (OBST_STATE_FALLING != (getObstState() & OBST_STATE_FALLING))) {
+			Debug.out.println("Bot "+this.getName()+" faellt in ein Loch!");
+			setObstState(getObstState() | OBST_STATE_FALLING);
+		} else if(!isFalling && (OBST_STATE_FALLING == (getObstState() & OBST_STATE_FALLING))) {
+			Debug.out.println("Bot "+this.getName()+" faellt nicht mehr!");
+			setObstState(getObstState() & ~OBST_STATE_FALLING);
+		}
+
+		// Wenn der Bot nicht kollidiert oder ueber einem Abgrund steht Position aktualisieren
+		if ((getObstState() & (OBST_STATE_COLLISION | OBST_STATE_FALLING)) == 0 ){
+			this.setPosition(new Point3d(newPos));
+			this.setHeading(newHeading);
+		}
+		// Blickrichtung nur aktualisieren, wenn Bot nicht in ein
+		// Loch gefallen ist:
+		if ((getObstState() & OBST_STATE_FALLING) == 0 ){
+			this.setHeading(newHeading);
+		}
 	}
 
 	/**
 	 * Wertet ein empfangenes Kommando aus
 	 *
-	 * @param command
-	 *            Das Kommando
+	 * @param command Das Kommando
 	 */
 	@SuppressWarnings({"unchecked","boxing"})
 	public void evaluateCommand(Command command) throws ProtocolException {
-		StringBuffer buf;
-
 		if (command.getDirection() == Command.DIR_REQUEST) {
 
 			switch (command.getCommandCode()) {
@@ -617,13 +595,9 @@ public class CtBotSimTcp extends CtBotSim {
 				this.setActLed(command.getDataL());
 				break;
 			case ACT_LCD:
-				disp.offerRead(command);
-				break;
 			case LOG:
-				this.setLog(command.getPayloadAsString());
-
-				this.log.setValue(this.getLog().toString());
-
+				for (BotComponent<?> c : components)
+					c.offerRead(command);
 				break;
 			case SENS_MOUSE_PICTURE:
 //				// Empfangen eine Bildes
@@ -641,132 +615,16 @@ public class CtBotSimTcp extends CtBotSim {
 				lg.warn("Unbekanntes Kommando '%s'", command.toString());
 				break;
 			}
-
 		} else {
 			// TODO: Antworten werden noch nicht gegeben
 		}
 	}
 
-	CountDownLatch waitForCommands = new CountDownLatch(1);
-
 	@Override
 	protected void work() {
-
 		transmitSensors();
 		receiveCommands();
 		processCommands();
-	}
-
-	/**
-	 * Schreibt Logausgabe in den Puffer.
-	 * @param str String fuer die Ausgabe
-	 */
-	public void setLog(String str) {
-		synchronized(this.logBuffer) {
-			this.logBuffer.append(str + "\n");
-		}
-	}
-
-	/**
-	 * Liefert Puffer fuer die Logausgabe.
-	 * @return Logausgabe
-	 */
-	public StringBuffer getLog() {
-		StringBuffer tempBuffer = new StringBuffer("");
-
-		synchronized(this.logBuffer) {
-
-			/* Puffer kopieren und leeren*/
-			tempBuffer.append(this.logBuffer.toString());
-			this.logBuffer.delete(0, this.logBuffer.length());
-		}
-
-		return tempBuffer;
-	}
-
-	/**
-	 * Setzt Text an eine bestimmte Position im LCD.
-	 *
-	 * @param charPos Neue Cursorposition (Spalte 0..19)
-	 * @param linePos Neue Cursorposition (Zeile 0..3)
-	 * @param text    Der Text, der ab der neuen Cursorposition einzutragen ist
-	 */
-	public void setLcdText(int charPos, int linePos, String text) {
-		setCursor(charPos, linePos);
-		{
-			String pre = "";
-			String post = "";
-			int max = Math.min(text.length(), LCD_CHARS - this.lcdCursorX - 1);
-
-			// Der neue Zeilentext ist der alte bis zur Cursorposition, gefolgt
-			// vom uebergebenen String 'text' gefolgt von den nicht ueberschriebenen Zeichen,
-			// wenn sich die neue X-Position noch vor dem Zeilenende befindet.
-			if (this.lcdCursorX > 0) {
-				pre = new String(this.lcdText[this.lcdCursorY].substring(0,
-						this.lcdCursorX - 1));
-			}
-			this.lcdCursorX += max;
-			if (this.lcdCursorX < LCD_CHARS - 1) {
-				post = new String(this.lcdText[this.lcdCursorY].substring(this.lcdCursorX));
-			}
-			synchronized (this.lcdText) {
-				this.lcdText[this.lcdCursorY] = new String(pre + text + post);
-			}
-		}
-	}
-
-	/**
-	 * Setzt Text in eine bestimmte Zeile im LCD.
-	 *
-	 * @param linePos Neue Cursorposition (Zeile 0..3)
-	 * @param text    Der Text, der ab der neuen Cursorposition einzutragen ist
-	 */
-	public void setLcdText(int linePos, String text) {
-		setLcdText(0, linePos, text);
-	}
-
-	/**
-	 * Setzt Text ins LCD.
-	 *
-	 * @param text Der Text, der ab der neuen Cursorposition einzutragen ist
-	 */
-	public void setLcdText(String text) {
-		setLcdText(this.lcdCursorX, this.lcdCursorY, text);
-	}
-
-	/**
-	 * Setzt den Cursor an eine bestimmte Position im LCD
-	 * @param charPos Neue Cursorposition (Spalte 0..19)
-	 * @param linePos Neue Cursorposition (Zeile 0..3)
-	 */
-	public void setCursor(int charPos, int linePos) {
-		if (charPos < 0) {
-			charPos = 0;
-		}
-		if (charPos > LCD_CHARS - 1) {
-			charPos = LCD_CHARS - 1;
-		}
-		if (linePos < 0) {
-			linePos = 0;
-		}
-		if (linePos > LCD_LINES - 1) {
-			linePos = LCD_LINES - 1;
-		}
-
-		this.lcdCursorX = charPos;
-		this.lcdCursorY = linePos;
-	}
-
-	/**
-	 * Loesche das Display
-	 *
-	 */
-	public void lcdClear() {
-		synchronized (this.lcdText) {
-			for (int i = 0; i < this.lcdText.length; i++) {
-				this.lcdText[i] = new String("                    ");
-			}
-		}
 	}
 
 	/**
@@ -804,7 +662,6 @@ public class CtBotSimTcp extends CtBotSim {
 	//				System.out.println("warten auf Bot: "+(recvTime-sendTime)+" usec");
 
 	//				System.out.println("releasing\n");
-					waitForCommands.countDown();
 				}
 			}
 		}
@@ -868,10 +725,7 @@ public class CtBotSimTcp extends CtBotSim {
 
 
 	//LEDs
-	/**
-	 * @param actL
-	 *            Der Wert von actLed, der gesetzt werden soll
-	 */
+	/** @param actL Der Wert von actLed, der gesetzt werden soll */
 	public void setActLed(int actL) {
 
 		this.actLed = new Integer(actL);
@@ -906,9 +760,7 @@ public class CtBotSimTcp extends CtBotSim {
 		new Color(255, 255, 255)  // weiss
 	};
 
-	/**
-	 * Erweitert die() um das schliessen der TCP/Verbindung
-	 */
+	/** Erweitert die() um das Schliessen der TCP-Verbindung */
 	@Override
 	public void die() {
 		// TODO Auto-generated method stub
@@ -928,5 +780,4 @@ public class CtBotSimTcp extends CtBotSim {
 		super.cleanup();
 		world=null;
 	}
-
 }

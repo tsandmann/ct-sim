@@ -306,7 +306,7 @@ public class World {
 	}
 
 	private void init() {
-		VirtualUniverse.setJ3DThreadPriority(1);
+		VirtualUniverse.setJ3DThreadPriority(1); //$$ setJ3DThreadPriority() gehoert hier nicht hin
 
 		// Die Wurzel des Ganzen:
 		this.scene = new BranchGroup();

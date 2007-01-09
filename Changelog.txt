@@ -1,6 +1,12 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-09 15:03 Hendrik Krauss [hkr@heise.de]:
+* Bot: Infrastruktur fuer Component-Flag-Tabellen (Doku folgt)
+* Neuer Log-Aktuator (Klasse Log); noch ungetestet, da Sim-Bot sowas nicht sendet und Real-Bot noch nicht geht
+* CtBotSimTcp: Log- und LCD-Kram weg
+* Kleinigkeiten
+
 2007-01-09 13:20 Hendrik Krauss [hkr@heise.de]:
 * Gui-Bauen-Infrastruktur jetzt Builder/Visitor-Pattern (BotViewer angepasst, BotBuisitor dazu, AndEverything dazu); Doku folgt
 * BotComponent: Neue Infrastruktur vorbereitet, Klasse Flags erstellt

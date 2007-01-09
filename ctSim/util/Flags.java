@@ -4,7 +4,6 @@ import java.util.BitSet;
 
 //$$ doc
 // Konvention: 0 = LSB, 63 = MSB
-// Geht sowohl C-Stil Flags(READ | WRITE) als auch moderner Flags(READ, WRITE)
 public class Flags<T extends Enum<?>> {
 	private static final long serialVersionUID = 3185762205479976647L;
 
@@ -15,6 +14,8 @@ public class Flags<T extends Enum<?>> {
 	}
 
 	public Flags(T... initialValues) {
+		if (initialValues == null)
+			return;
 		for (T iv : initialValues)
 			set(iv);
 	}

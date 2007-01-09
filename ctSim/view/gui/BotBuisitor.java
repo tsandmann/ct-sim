@@ -8,6 +8,8 @@ import java.lang.reflect.Method;
 
 import javax.swing.JPanel;
 
+import ctSim.model.bots.Bot;
+
 public abstract class BotBuisitor extends JPanel {
 	private boolean shouldBeDisplayed = false;
 
@@ -16,26 +18,38 @@ public abstract class BotBuisitor extends JPanel {
 	public @interface Buisit {
 		// Marker-Annotation
 	}
-
-	public void visit(Object o) {
+	
+	public void visit(Object o, Bot bot) {
 		for (Method m : getClass().getMethods()) {
 			if (! m.isAnnotationPresent(Buisit.class))
 				continue;
-			Class[] parms = m.getParameterTypes();
-			if (parms.length != 1)
-				continue;
-			if (! ((Class<?>)parms[0]).isAssignableFrom(o.getClass()))
-				continue;
 			try {
-				m.invoke(this, new Object[] {o});
-				shouldBeDisplayed = true;
+				if (hasSignature(m, o.getClass())) {
+					m.invoke(this, new Object[] {o});
+					shouldBeDisplayed = true;
+				}
+				if (hasSignature(m, o.getClass(), bot.getClass())) {
+					m.invoke(this, new Object[] {o, bot});
+					shouldBeDisplayed = true;
+				}
 			} catch (Exception e) {
 				// kann nicht passieren ... eigentlich ...
 				throw new AssertionError(e);
 			}
 		}
 	}
-
+	
+	private static boolean hasSignature(Method m, Class... types) {
+		Class[] pt = m.getParameterTypes();
+		if (pt.length != types.length)
+			return false;
+		for (int i = 0; i < pt.length; i++) {
+			if (! ((Class<?>)pt[i]).isAssignableFrom(types[i]))
+				return false;
+		}
+		return true;
+	}
+	
 	public boolean shouldBeDisplayed() {
 		return shouldBeDisplayed;
 	}

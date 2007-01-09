@@ -8,9 +8,13 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.actuators.LcDisplay;
+import ctSim.model.bots.components.actuators.Log;
+import ctSim.util.AuxFrameButton;
 
 public class AndEverything extends BotBuisitor {
 	private static final long serialVersionUID = - 8170321975584432026L;
@@ -33,6 +37,23 @@ public class AndEverything extends BotBuisitor {
 		t.setMaximumSize(t.getPreferredSize());
 		t.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(t);
+		add(Box.createRigidArea(new Dimension(0, 5)));
+	}
+
+	@Buisit
+	public void buildLogViewer(Log log, Bot bot) {
+		// TextArea bauen
+		JTextArea t = new JTextArea(log.getModel());
+		t.setEditable(false);
+		t.setColumns(70);
+		t.setRows(25);
+
+		// Ausliefern
+		//$$ Fenster sollte immer zur neuesten Ausgabe scrollen
+		add(new AuxFrameButton(
+			log.getName(),
+			log.getDescription() + " von " + bot.getName(), // Fenster-Titel
+			new JScrollPane(t)));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 }

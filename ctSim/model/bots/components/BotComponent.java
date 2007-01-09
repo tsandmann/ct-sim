@@ -40,13 +40,16 @@ public abstract class BotComponent<T> {
 	public static enum IOFlagsEnum { CON_READ, CON_WRITE }
 
 	private final T model;
-	private Flags<IOFlagsEnum> flags;
+	
+	/** Anf&auml;nglich alles false */
+	private Flags<IOFlagsEnum> flags = new Flags<IOFlagsEnum>();
 
 	public BotComponent(T model) { this.model = model; }
 
 	public T getModel() { return model; }
 
 	public void setFlags(IOFlagsEnum... flags) {
+		// Wenn flags == null wird alles default, also false
 		this.flags = new Flags<IOFlagsEnum>(flags);
 	}
 

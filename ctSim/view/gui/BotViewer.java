@@ -31,7 +31,6 @@ import javax.swing.JScrollPane;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.Sensor;
-import ctSim.model.bots.components.actuators.SimpleActuator;
 import ctSim.view.gui.actuators.ActuatorGroupGUI;
 import ctSim.view.gui.sensors.SensorGroupGUI;
 
