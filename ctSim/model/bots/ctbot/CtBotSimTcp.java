@@ -36,12 +36,12 @@ import ctSim.SimUtils;
 import ctSim.TcpConnection;
 import ctSim.model.Command;
 import ctSim.model.World;
-import ctSim.model.bots.TcpBot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.Sensor;
-import ctSim.model.bots.components.actuators.LcDisplay;
+import ctSim.model.bots.components.BotComponent.IOFlagsEnum;
 import ctSim.model.bots.components.actuators.Indicator;
+import ctSim.model.bots.components.actuators.LcDisplay;
 import ctSim.model.bots.components.actuators.LogScreen;
 import ctSim.model.bots.components.sensors.SimpleSensor;
 import ctSim.model.bots.ctbot.components.BorderSensor;
@@ -57,7 +57,7 @@ import ctSim.view.gui.Debug;
 /**
  * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator kommunizieren
  */
-public class CtBotSimTcp extends CtBotSim implements TcpBot {
+public class CtBotSimTcp extends CtBotSim {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.ctbot.CtBotSimTcp");
 
 	/** Die TCP-Verbindung */
@@ -116,8 +116,8 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR,
 		encL, encR, rc5;
 
-	private Actuator govL, govR, log, disp;
-
+	private Actuator govL, govR, log;
+	private LcDisplay disp;
 	/**
 	 * Der Konstruktor
 	 * @param w Die Welt
@@ -130,10 +130,14 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		Connection con) {
 
 		super(w, name, pos, head);
-
 		this.connection = (TcpConnection)con;
-
 		this.world = w;
+
+		components.add(
+			disp = new LcDisplay(20, 4)
+		);
+		
+		disp.setFlags(IOFlagsEnum.CON_READ); //$$$ flag table
 
 		initActuators();
 		initSensors();
@@ -241,13 +245,11 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 		this.govL = new Governor("GovL", new Point3d(), new Vector3d(0d, 1d, 0d));
 		this.govR = new Governor("GovR", new Point3d(), new Vector3d(0d, 1d, 0d));
 
-		this.disp = new LcDisplay("Display", new Point3d(), new Vector3d());
 		this.log  = new LogScreen("LogScreen", new Point3d(), new Vector3d());
 
 		this.addActuator(this.govL);
 		this.addActuator(this.govR);
 
-		this.addActuator(this.disp);
 		this.addActuator(this.log);
 	}
 
@@ -591,7 +593,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	 *            Das Kommando
 	 */
 	@SuppressWarnings({"unchecked","boxing"})
-	public void evaluateCommand(Command command) {
+	public void evaluateCommand(Command command) throws ProtocolException {
 		StringBuffer buf;
 
 		if (command.getDirection() == Command.DIR_REQUEST) {
@@ -615,86 +617,7 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 				this.setActLed(command.getDataL());
 				break;
 			case ACT_LCD:
-				switch (command.getSubCode()) {
-				case NORM:
-
-					this.setLcdText(command.getDataL(), command.getDataR(),
-							command.getPayloadAsString());
-
-					// Neu:
-					if(this.lcdText == null || this.lcdText.length == 0) {
-						break;
-					}
-
-					buf = new StringBuffer();
-					buf.append(this.lcdText[0]);
-
-					for(int i=1; i<this.lcdText.length; i++) {
-
-						buf.append("\n");
-						buf.append(this.lcdText[i]);
-					}
-
-					this.disp.setValue(buf.toString());
-
-					break;
-				case LCD_CURSOR:
-					this.setCursor(command.getDataL(), command.getDataR());
-
-					if(this.lcdText == null || this.lcdText.length == 0)
-						break;
-
-					buf = new StringBuffer();
-
-					buf.append(this.lcdText[0]);
-
-					for(int i=1; i<this.lcdText.length; i++) {
-
-						buf.append("\n");
-						buf.append(this.lcdText[i]);
-					}
-
-					this.disp.setValue(buf.toString());
-
-					break;
-				case LCD_CLEAR:
-					this.lcdClear();
-
-					if(this.lcdText == null || this.lcdText.length == 0)
-						break;
-
-					buf = new StringBuffer();
-					buf.append(this.lcdText[0]);
-
-					for(int i=1; i<this.lcdText.length; i++) {
-
-						buf.append("\n");
-						buf.append(this.lcdText[i]);
-					}
-
-					this.disp.setValue(buf.toString());
-
-					break;
-				case LCD_DATA:
-					this.setLcdText(command.getPayloadAsString());
-
-					// Neu:
-					if(this.lcdText == null || this.lcdText.length == 0)
-						break;
-
-					buf = new StringBuffer();
-					buf.append(this.lcdText[0]);
-
-					for(int i=1; i<this.lcdText.length; i++) {
-
-						buf.append("\n");
-						buf.append(this.lcdText[i]);
-					}
-
-					this.disp.setValue(buf.toString());
-
-					break;
-				}
+				disp.offerRead(command);
 				break;
 			case LOG:
 				this.setLog(command.getPayloadAsString());
@@ -892,7 +815,6 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 	* Verarbeitet alle eingegangenen Daten
 	*/
 	public void processCommands(){
-
 		synchronized (commandBuffer) {
 //			int i=0;
 			Iterator<Command> it = commandBuffer.iterator();
@@ -900,13 +822,17 @@ public class CtBotSimTcp extends CtBotSim implements TcpBot {
 			while (it.hasNext()){
 				Command command = it.next();
 //				System.out.println("GET("+(i++)+") CMD: "+command.getCommand()+" DataL: "+command.getDataL()+" Seq: "+command.getSeq());
-				evaluateCommand(command);
+				try {
+					evaluateCommand(command);
+				} catch (ProtocolException e) {
+					lg.warning(e, "Fehler beim Verarbeiten eines Kommandos:%s",
+						command);
+				}
 			}
 			commandBuffer.clear();
 			// resete Signal
 //			waitForCommands= new CountDownLatch(1);
 		}
-
 	}
 
 	//long t1, t2;

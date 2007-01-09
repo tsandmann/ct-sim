@@ -11,6 +11,19 @@ public class Misc {
 		return Math.log(x) / Math.log(2);
 	}
 
+	/**
+	 * Liefert den &uuml;bergebenen Wert <code>value</code> zurück, falls 0
+	 * &lt; <code>value</code> &lt; <code>maxAllowed</code> gilt. Falls
+	 * nicht, liefert den Wert aus dem Intervall [0; <code>maxAllowed</code>],
+	 * der <code>value</code> am n&auml;chsten liegt.
+	 */
+	public static int clamp(int value, int maxAllowed) {
+		int rv = value;
+		rv = Math.max(rv, 0);
+		rv = Math.min(rv, maxAllowed);
+		return rv;
+	}
+
 	public static boolean startsWith(
 			String fullString, String... whitelistOfBeginnings) {
 		if (whitelistOfBeginnings == null)

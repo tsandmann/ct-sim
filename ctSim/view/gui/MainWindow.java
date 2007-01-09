@@ -43,6 +43,7 @@ import ctSim.util.Closure;
 import ctSim.util.FmtLogger;
 import ctSim.util.IconHashMap;
 
+//$$ Wenn man BotViewer groesser gezogen hat und noch einen Bot hinzufuegt, springt BotViewer wieder auf Standardgroesse
 //LODO Crasht, wenn Icon-Dateien nicht da
 //$$ doc
 /**

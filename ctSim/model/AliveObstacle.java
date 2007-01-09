@@ -78,12 +78,12 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 * Daher wird in dieser Variablen die letzte Position gehalten, wo der Bot
 	 * noch au&szlig;erhalb des Lochs war.
 	 */
-	private Point3d lastSafePos;
+	private Point3d lastSafePos = new Point3d();
 
 	private Vector3d head;
 
 	/** Verweis auf den zugehoerigen Controller */
-	// TODO: hmmm
+	// TODO: Verweis auf Controller wirklich noetig?
 	private DefaultController controller;
 
 	private Thread thrd;
@@ -92,7 +92,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private TransformGroup transformgrp;
 	private Shape3D shape;
 
-	// TODO:
+	// TODO: Appearances
 	private HashMap<String, Appearance> apps;
 
 	/** Simultime beim letzten Aufruf */
@@ -104,7 +104,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private long deltaT = 0;
 
 	/**
-	 * Der Konstruktor
+	 * @param shape Form des Obstacle
 	 * @param position Position des Objekts
 	 * @param heading Blickrichtung des Objekts
 	 */
@@ -186,18 +186,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		setAppearances(ConfigManager.getBotAppearances(getName()));
 	}
 
-	/**
-	 * @param world1 Referenz auf die Welt, die gesetzt werden soll
-	 */
-//	public void setWorld(World wrld) {
-//	}
-
-	/**
-	 * @see ctSim.model.Obstacle#getBranchGroup()
-	 */
 	public final BranchGroup getBranchGroup() {
-
-		return this.branchgrp;
+		return branchgrp;
 	}
 
 	/**
@@ -255,10 +245,10 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 //	abstract public float getHeight();
 
 	/**
-	 * Diese Methode muss alles enthalten, was ausgefuehrt werden soll, bevor
-	 * der Thread ueber work() seine Arbeit aufnimmt
+	 * Falls eine Subklasse etwas auszuf&uuml;hren hat, bevor der Thread
+	 * &uuml;ber work() seine Arbeit aufnimmt: Diese Methode &uuml;berschreiben.
 	 *
-	 * @see AliveObstacle#work()
+	 * @see #work()
 	 */
 	protected void init() {
 		// No-op; Kindklassen ueberschreiben bei Bedarf
@@ -268,7 +258,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 * Diese Methode enthaelt die Routinen, die der Bot waehrend seiner Laufzeit
 	 * immer wieder durchfuehrt. Die Methode darf keine Schleife enthalten!
 	 */
-	abstract protected void work();
+	protected abstract void work();
 
 	/**
 	 * @return Gibt die Position zurueck
@@ -280,9 +270,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	// TODO: Vorsicht: Heading ist relativ zur Welt!
-	/**
-	 * @see ctSim.model.Obstacle#getHeading()
-	 */
 	public final Vector3d getHeading() {
 
 		return this.head;
@@ -328,13 +315,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 			this.transformgrp.setTransform(transform);
 
 			if ((obstState & OBST_STATE_SAFE) == 0)
-				lastSafePos = new Point3d(p);
-		//}
+				lastSafePos.set(pos);
 	}
 
-	/**
-	 * @see ctSim.model.MovableObstacle#setHeading(javax.vecmath.Vector3d)
-	 */
 	public final synchronized void setHeading(Vector3d vec) {
 
 		this.head = vec;
@@ -440,6 +423,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		}
 	}
 
+	//$$ Umbenennen: isHalted()
 	/**
 	 * Liefert true zurueck, wenn der OBST_STATE_HALTED gesetzt ist
 	 * @return true, wenn OBST_STATE_HALTED gesetzt, false, wenn nicht
@@ -464,7 +448,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 //		world = null;
 //	}
 
-	// TODO: im Obstacle?
+	// $$$ Bounds ins AObstacle
 	/**
 	 * @return Gibt die Grenzen des Bots zurueck
 	 */
@@ -499,13 +483,13 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	public void setObstState(int state) {
 		this.obstState = state;
 
-		// TODO:
+		// TODO: Appearances
 		this.setAppearance(state);
 	}
 
 	private void setAppearance(int state) {
 
-		// TODO:
+		// TODO: Appearances
 		if(this.apps == null || this.apps.isEmpty())
 			return;
 
@@ -525,9 +509,10 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	/**
-	 * Diese Methode wird von außen aufgerufen und erledigt die ganze Aktualisierung
-	 * der Simulation.
-	 * Steuerzung des Bots hat hier jedoch nichts zu suchen. die gehört in work()
+	 * Diese Methode wird von au&szlig;en aufgerufen und erledigt die ganze
+	 * Aktualisierung der Simulation. Steuerung des Bots hat hier jedoch nichts
+	 * zu suchen. Die geh&ouml;rt in work().
+	 *
 	 * @param simulTime
 	 * @see AliveObstacle#work()
 	 */

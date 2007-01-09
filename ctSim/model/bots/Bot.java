@@ -20,6 +20,7 @@
 package ctSim.model.bots;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.vecmath.Point3d;
@@ -27,32 +28,50 @@ import javax.vecmath.Vector3d;
 
 import ctSim.model.AliveObstacle;
 import ctSim.model.bots.components.Actuator;
+import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotPosition;
 import ctSim.model.bots.components.Sensor;
+import ctSim.view.gui.BotBuisitor;
 
 /**
- * Superklasse fuer alle Bots, unabhaengig davon, ob sie real oder simuliert
- * sind.</br> Die Klasse ist abstrakt und muss daher erst abgeleitet werden, um
- * instanziiert werden zu koennen.</br> Der Haupt-Thread kuemmert sich um die
- * eigentliche Simulation und die Koordination mit dem Zeittakt der Welt. Die
- * Kommunikation z.B. ueber eine TCP/IP-Verbindung muss von den abgeleiteten
- * Klassen selbst behandelt werden.
+ * <p>
+ * Superklasse f&uuml;r alle Bots, unabh&auml;ngig davon, ob sie &ndash;
+ * <ul>
+ * <li><strong>real</strong> sind, d.h. ein Bot aus Hardware wurde an den Sim
+ * angeschlossen und der Sim spielt daher haupts&auml;chlich die Rolle eines
+ * erweiterten Displays f&uuml;r Sensorwerte, die von echten Sensoren stammen
+ * (mit anderen Worten, der Sim l&auml;uft im Slave-Modus)</li>
+ * <li><strong>simuliert</strong> sind, d.h. es gibt keinen Bot aus Hardware,
+ * es l&auml;uft nur der Steuercode auf einem PC. Sensordaten kommen in diesem
+ * Fall nicht von echter Hardware, sondern &uuml;ber TCP vom Sim, der sie
+ * ausgerechnet hat (Sim im Master-Modus)</li>
+ * <li><strong>c't-Bots</strong> sind oder nicht &ndash; theoretisch
+ * k&ouml;nnte jemand ja mal den Simulator um selbstgestrickte Bots erweitern,
+ * die keine c't-Bot sind.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * Die Klasse ist abstrakt und muss daher erst abgeleitet werden, um
+ * instanziiert werden zu koennen.
+ * </p>
+ * <p>
+ * Der Haupt-Thread k&uuml;mmert sich um die eigentliche Simulation und die
+ * Koordination mit dem Zeittakt der Welt. Die Kommunikation z.B. &uuml;ber eine
+ * TCP/IP-Verbindung muss von den abgeleiteten Klassen selbst behandelt werden.
+ * </p>
  *
  * @author Benjamin Benz (bbe@heise.de)
- * @author Peter Koenig (pek@heise.de)
+ * @author Peter K&ouml;nig (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
-/* TODO:
- * Alles was mit der Darstellung des Bots zu tun hat wird ausgelagert...
- * - bei allgeimeinen Sachen in die Super-Klasse (bzw. abstract Methoden der (Super-)Klasse)
- * - bei speziellen Sachen in die jew. Unterklasse
- */
 public abstract class Bot extends AliveObstacle{
+	protected final List<BotComponent<?>> components =
+		new ArrayList<BotComponent<?>>();
 
 	private BotPosition posHead;
 
-	private List<Actuator> acts;
-	private List<Sensor> sens;
+    private final List<Actuator> acts = new ArrayList<Actuator>();
+    private final List<Sensor> sens = new ArrayList<Sensor>();
 
 	/** Liste mit den verschiedenen Aussehen eines Bots */
 //	private HashMap appearances;
@@ -62,14 +81,13 @@ public abstract class Bot extends AliveObstacle{
 	 * @param heading Blickrichtung
 	 */
 	public Bot(String name, Point3d position, Vector3d heading) {
-
 		super(name, position, heading);
 
+	    //$$ ViewPlatforms: Toter Code
 	 	// Zu diesem Zeitpunkt ist die ganze 3D-Repraesentation bereits aufgebaut
 //		createViewingPlatform();
 
-		this.posHead = new BotPosition(this.getName(), this.getPosition(), this.getHeading()) {
-
+		posHead = new BotPosition(getName(), getPosition(), getHeading()) {
 			@Override
 			public String getName() {
 				return Bot.this.getName();
@@ -77,7 +95,6 @@ public abstract class Bot extends AliveObstacle{
 
 			@Override
 			public Point3d getRelPosition() {
-
 				return getPosition();
 			}
 
@@ -101,157 +118,41 @@ public abstract class Bot extends AliveObstacle{
 
 			@Override
 			public void setPos(Point3d pos) {
-
 				setPosition(pos);
 			}
 
 			@Override
 			public void setHead(Vector3d head) {
-
 				setHeading(head);
 			}
 		};
+    }
 
-		this.acts = new ArrayList<Actuator>();
-		this.sens = new ArrayList<Sensor>();
-	}
+	/** @return Der Positionsanzeiger */
+	public final BotPosition getBotPosition() { return this.posHead; }
 
-	/**
-	 * @return Die Liste der Aktuatoren
-	 */
-	public final List<Actuator> getActuators() {
+	protected final void addActuator(Actuator act) { acts.add(act); }
 
-		return this.acts;
-	}
+	protected final void addSensor(Sensor sen) { sens.add(sen); }
 
-	/**
-	 * @return Die Liste der Sensoren
-	 */
-	public final List<Sensor> getSensors() {
-
-		return this.sens;
-	}
-
-	/**
-	 * @return Der Positionsanzeiger
-	 */
-	public final BotPosition getBotPosition() {
-
-		return this.posHead;
-	}
-
-//	public final List<BotComponent> getComponents() {
-//
-//		List<BotComponent> comps = new ArrayList<BotComponent>(this.sens.size()+this.acts.size()+1);
-//
-//		comps.add(this.posHead);
-//		comps.addAll(this.sens);
-//		comps.addAll(this.acts);
-//
-//		return comps;
-//	}
-
-//	public final List<Position> getPositions() {
-//
-//		return this.pos;
-//	}
-
-	protected final void addActuator(Actuator act) {
-
-		this.acts.add(act);
-	}
-
-	protected final void addSensor(Sensor sen) {
-		// TODO: rueber in Sensor selbst?
-		this.sens.add(sen);
-	}
-
-	/* (non-Javadoc)
-	 * @see ctSim.model.AliveObstacle#updateSimulation(long)
-	 */
 	@Override
 	public void updateSimulation(long simulTime) {
 		super.updateSimulation(simulTime);
-
-//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
-//			 + "             | +- Sensor-Werte werden geupdatet...");
-//		long time = System.nanoTime();
-//
-//		for(Sensor s : this.getSensors()) {
-//			s.update();
-//		}
-//
-//		Debug.out.println("  +-+  Bot '"+this.getName()+"':\n"
-//		     + "             | +- Sensor-Werte wurden geupdatet:              "+String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
-
-
-//		long time = System.nanoTime();
-
-		for(Sensor s : this.getSensors()) {
+		for(Sensor s : sens)
 			s.update();
-		}
-
-//		Debug.out.println(String.format("%2.9f",(float)(System.nanoTime()-time)/1000000000.));
-
-
-
-		// TODO:
-//		for(Actuator a : this.getActuators()) {
-//
-//			a.update();
-//		}
-
 	}
 
-	@Override
-    public String toString() {
-	    return getName();
-    }
+	public void accept(BotBuisitor buisitor) {
+		for (BotComponent<?> c : components)
+			buisitor.visit(c);
+		for (Sensor<?> s : sens)
+			buisitor.visit(s);
+		for (Actuator<?> a : acts)
+			buisitor.visit(a);
+		buisitor.visit(posHead);
+	}
 
-	/**
-	 * Hier wird aufgeraeumt, wenn die Lebenszeit des Bots zuende ist:
-	 * Verbindungen zur Welt und zum ControlPanel werden aufgeloest, das Panel
-	 * wird aus dem ControlFrame entfernt
-	 *
-	 * @see Bot#work()
-	 */
-	// TODO
-//	protected void cleanup() {
-//		super.cleanup();
-//
-//		getController().removeFromView(getName());
-//		panel.remove();
-//		panel = null;
-//	}
-
-
-	/**
-	 * @return Die Hoehe der Grundplatte des Bot ueber dem Boden in Metern
-	 */
-//	abstract public float getGroundClearance();
-
-	/**
-	 * @param heading
-	 *            Die Blickrichtung des Bot, die gesetzt werden soll
-	 */
-//	public void setHeading(Vector3d heading) {
-//
-//		synchronized (heading) {
-//			this.heading = heading;
-//			double angle = heading.angle(new Vector3d(1d, 0d, 0d));
-//			if (heading.y < 0)
-//				angle = -angle;
-//			Transform3D transform = new Transform3D();
-//
-//			((TransformGroup)getNodeReference(TG)).getTransform(transform);
-//
-//			transform.setRotation(new AxisAngle4f(0f, 0f, 1f, angle));
-//
-//			((TransformGroup)getNodeReference(TG)).setTransform(transform);
-//
-//
-//		}
-
+    //$$ ViewPlatforms: Toter Code
 /*//		Vector3f p= new Vector3f(getPos());
 		Vector3f p= new Vector3f(0f,0f,0f);
 //		p.sub(new Vector3f(0f,0.3f,1.8f));
@@ -292,46 +193,5 @@ public abstract class Bot extends AliveObstacle{
 //	 	((TransformGroup)getNodeReference(TG)).addChild(tg); // Fuege sie ein
 //	 	addNodeReference(VP,viewPlatform);	// Trage sie in die Map ein
 //
-//	}
-
-	/**
-	 * @return Gibt die Blickrichtung zurueck
-	 */
-//	public Vector3d getHeading() {
-//		return this.heading;
-//	}
-
-	/**
-	 * Sucht ein Erscheinungsbild des Bots aus der Liste heraus
-	 * @param key
-	 * @return
-	 */
-//	private Appearance getAppearance(String key) {
-//		Appearance app = null;
-//		if (appearances != null)
-//			app =(Appearance) appearances.get(key);
-//
-//		return app;
-//	}
-
-	/** Lagert die Erscheinungsbilder des Bots ein
-	 *
-	 * @param appearances
-	 */
-//	public void setAppearances(HashMap appearances) {
-//		this.appearances = appearances;
-//		setAppearance("normal");
-//	}
-
-	/**
-	 * Setzt das erscheinungsbild des Bots auf einenWert, zu dem bereits eine Appearance ind er Liste vorliegt
-	 * @param key
-	 */
-//	public void setAppearance(String key) {
-//		Shape3D botBody = (Shape3D) getNodeReference(BOTBODY);
-//		if (botBody != null)
-//			botBody.setAppearance(getAppearance(key));
-//		else
-//			ErrorHandler.error("Fehler beim Versuch eine Appearance zu setzen: botBody == null");
 //	}
 }

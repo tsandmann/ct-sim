@@ -18,56 +18,134 @@
  */
 package ctSim.model.bots.components.actuators;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.net.ProtocolException;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
-import ctSim.view.gui.actuators.ActuatorGroupGUI;
-import ctSim.view.gui.actuators.Actuators;
+import ctSim.model.Command;
+import ctSim.model.bots.components.BotComponent;
+import ctSim.util.Misc;
 
 /**
- * Das LCD der Bots im Simulator
+ * Das Liquid Crystal Display (LCD) oben auf dem c't-Bot.
  * @author Felix Beckwermert
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-public class LcDisplay extends LogScreen {
+public class LcDisplay extends BotComponent<PlainDocument> {
+	private final int numCols;
+	private final int numRows;
+	private int cursorX;
+	private int cursorY;
+
 	/**
-	 * Der Konstruktor
-	 * @param name LcDisplay-Name
-	 * @param relPos relative Position zum Bot
-	 * @param relHead relative Blickrichtung zum Bot
+	 * Erstellt ein LCD mit der angegebenen Zahl Spalten (= Zeichen) und Zeilen.
 	 */
-	public LcDisplay(String name, Point3d relPos, Vector3d relHead) {
-		super(name, relPos, relHead);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public ActuatorGroupGUI getActuatorGroupGUI() {
-		ActuatorGroupGUI gui = Actuators.getGuiFor(this);
-		gui.addActuator(this);
-		return gui;
+	public LcDisplay(int numCols, int numRows) {
+		super(new PlainDocument());
+		if (numCols < 1 || numRows < 1)
+			throw new IllegalArgumentException();
+		this.numCols = numCols;
+		this.numRows = numRows;
+		clearModel();
 	}
 
 	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+	protected void readFrom(Command c) throws ProtocolException {
+		if (! c.has(Command.Code.ACT_LCD))
+			return;
+		try {
+            switch (c.getSubCode()) {
+	            case NORM:
+	            	setCursor(c.getDataL(), c.getDataR());
+	                overwrite(c.getPayloadAsString());
+	                break;
+
+	            case LCD_DATA:
+	            	overwrite(c.getPayloadAsString());
+	            	break;
+
+	            case LCD_CURSOR:
+	                setCursor(c.getDataL(), c.getDataR());
+	                break;
+
+	            case LCD_CLEAR:
+	            	clearModel();
+	                break;
+
+	            default:
+	            	throw new ProtocolException();
+            }
+		} catch (BadLocationException e) {
+			// "kann nicht passieren"
+			throw new AssertionError(e);
+		}
 	}
 
-	@Override
-	public Color getBackgroundColor() {
-		return new Color(120, 150, 90);
+	/**
+	 * Setzt das Display zur&uuml;ck, so dass es auf ganzer Breite und H&ouml;he
+	 * nur Leerzeichen anzeigt.
+	 */
+	protected void clearModel() {
+		StringBuilder b = new StringBuilder();
+		for (int i = 0; i < numCols; i++)
+			b.append(' ');
+		try {
+			getModel().remove(0, getModel().getLength());
+			// letzte Zeile ohne \n
+			getModel().insertString(0, b.toString(), null);
+			// 1. bis vorletzte Zeile mit \n
+			for (int i = 0; i < numRows - 1; i++)
+				getModel().insertString(0, b.toString() + "\n", null);
+		} catch (BadLocationException e) {
+			throw new AssertionError(e);
+		}
 	}
 
-	@Override
-	public Font getFont() {
-		return new Font("Monospaced", Font.BOLD, 12);
-	}
+	/**
+	 * Text einf&uuml;gen an der aktuellen Cursorposition. Dort stehender Text
+	 * wird &uuml;berschrieben (nicht verschoben).
+	 *
+	 * @param text Der Text, der ab der neuen Cursorposition einzutragen ist
+	 * @throws BadLocationException "Kann nicht passieren"&#8482;
+	 */
+	protected void overwrite(String text)
+    throws BadLocationException {
+		// +1 fuer \n am Zeilenende
+    	int offset = cursorY * (numCols + 1) + cursorX;
+    	int numCharsAvail = numCols - cursorX;
+    	if (numCharsAvail < text.length())
+    		// abschneiden; wir haben nicht genug Platz in der Zeile
+    		text = text.substring(0, numCharsAvail);
 
-	@Override
-	public boolean hasToRewrite() {
-		return true;
-	}
+    	getModel().remove(offset, text.length());
+    	getModel().insertString(offset, text, null);
+    }
+
+    /**
+	 * Setzt den Cursor an eine bestimmte Position im LCD.
+	 *
+	 * @param col Neue Cursorposition. Falls sie au&szlig;erhalb der Ausdehnung
+	 * dieses Displays liegt, wird sie auf den n&auml;chstliegenden
+	 * zul&auml;ssigen Wert gesetzt.
+	 * @param row Dito.
+	 */
+	protected void setCursor(int col, int row) {
+        cursorX = Misc.clamp(col, numCols - 1);
+        cursorY = Misc.clamp(row, numRows - 1);
+    }
+
+	/**
+	 * Zahl der Spalten, die das Display breit ist (Spalte = Breite eines
+	 * Zeichens).
+	 */
+	public int getNumCols() { return numCols; }
+
+	/**
+	 * Zahl der Zeilen, die das Display hoch ist (Zeile = Höhe eines
+	 * Zeichens).
+	 */
+	public int getNumRows() { return numRows; }
+	@Override public String getName() { return "LCD"; }
+	@Override public String getDescription() { return "LCD-Anzeige"; }
 }

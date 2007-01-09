@@ -4,9 +4,7 @@ import ctSim.controller.DefaultController;
 import ctSim.model.World;
 import ctSim.view.gui.Debug;
 
-//$$ doc Judge
-//TODO Umbenennen in "Referees" (auch Package)
-//$$ Grosses Ausmisten
+//$$ Judges weg, deren einzige Bedeutung: Spielende (Simulationsende) veranlassen. Siehe Wiki
 /**
  * Abstrakte Superklasse f&uuml;r alle Judges, die pr&uuml;fen,
  * ob die Spielregeln eingehalten werden.

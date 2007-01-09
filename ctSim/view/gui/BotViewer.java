@@ -26,10 +26,12 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.Sensor;
+import ctSim.model.bots.components.actuators.SimpleActuator;
 import ctSim.view.gui.actuators.ActuatorGroupGUI;
 import ctSim.view.gui.sensors.SensorGroupGUI;
 
@@ -37,8 +39,105 @@ import ctSim.view.gui.sensors.SensorGroupGUI;
  * @author Felix Beckwermert
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-public class BotViewer extends JPanel implements Updatable {
+public class BotViewer extends JScrollPane implements Updatable {
 	private static final long serialVersionUID = - 7367493564649395707L;
+	//$$$ Legacy
+	public static class Act extends BotBuisitor {
+		private static final long serialVersionUID = 8159984057289235784L;
+		List<ActuatorGroupGUI<?>> actsList =
+			new ArrayList<ActuatorGroupGUI<?>>();
+
+		public Act() {
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		}
+
+		@Buisit
+		public void buisit(Actuator<?> a) {
+			ActuatorGroupGUI gGUI = a.getActuatorGroupGUI();
+			int idx = actsList.indexOf(gGUI);
+			if(idx < 0)
+				actsList.add(gGUI);
+			else
+				actsList.get(idx).join(gGUI);
+
+			Collections.sort(actsList, new Comparator<ComponentGroupGUI<?>>() {
+				public int compare(ComponentGroupGUI<?> gui1,
+					ComponentGroupGUI<?> gui2) {
+
+					if (gui1.getSortId() < gui2.getSortId())
+						return -1;
+					if (gui1.getSortId() > gui2.getSortId())
+						return 1;
+					return 0;
+				}
+			});
+		}
+
+		@Override
+		public boolean shouldBeDisplayed() {
+			for (ComponentGroupGUI<?> g : actsList) {
+				g.initGUI();
+				add(g);
+			}
+			return true;
+		}
+
+		@Override
+		public Dimension getPreferredSize() {
+			return new Dimension(180, 200);
+		}
+	}
+
+	public static class Sens extends BotBuisitor {
+		List<SensorGroupGUI<?>>   sensList = new ArrayList<SensorGroupGUI<?>>();
+
+		public Sens() {
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		}
+
+		@Buisit
+		public void buisit(Sensor<?> s) {
+			SensorGroupGUI gGUI = s.getSensorGroupGUI();
+			int idx = sensList.indexOf(gGUI);
+			if(idx < 0)
+				sensList.add(gGUI);
+			else
+				sensList.get(idx).join(gGUI);
+
+			Collections.sort(sensList, new Comparator<ComponentGroupGUI<?>>() {
+				public int compare(ComponentGroupGUI<?> gui1,
+					ComponentGroupGUI<?> gui2) {
+
+					if (gui1.getSortId() < gui2.getSortId())
+						return -1;
+					if (gui1.getSortId() > gui2.getSortId())
+						return 1;
+					return 0;
+				}
+			});
+		}
+
+		@Override
+		public boolean shouldBeDisplayed() {
+			for (ComponentGroupGUI<?> gui : sensList) {
+				gui.initGUI();
+				add(gui);
+			}
+			return true;
+		}
+
+		@Override
+		public Dimension getPreferredSize() {
+			return new Dimension(180, 400);
+		}
+	}
+	//$$$ /Legacy
+
+	private static final Class[] buisitors = {
+		Act.class,
+		Sens.class,
+		AndEverything.class,
+    };
 
 	public final Bot bot;
 
@@ -48,50 +147,29 @@ public class BotViewer extends JPanel implements Updatable {
 	public BotViewer(Bot bot) {
 		this.bot = bot;
 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-		List<ActuatorGroupGUI<?>> actsList = new ArrayList<ActuatorGroupGUI<?>>();
-		List<SensorGroupGUI<?>>   sensList = new ArrayList<SensorGroupGUI<?>>();
-
-		for (Actuator a : bot.getActuators()) {
-			ActuatorGroupGUI gGUI = a.getActuatorGroupGUI();
-			int idx = actsList.indexOf(gGUI);
-			if(idx < 0)
-				actsList.add(gGUI);
-			else
-				actsList.get(idx).join(gGUI);
-		}
-
-		for (Sensor s : bot.getSensors()) {
-			SensorGroupGUI gGUI = s.getSensorGroupGUI();
-			int idx = sensList.indexOf(gGUI);
-			if(idx < 0)
-				sensList.add(gGUI);
-			else
-				sensList.get(idx).join(gGUI);
-		}
-
-		compList.add(bot.getBotPosition().getGUI());
-		compList.addAll(actsList);
-		compList.addAll(sensList);
-		Collections.sort(compList, new Comparator<ComponentGroupGUI<?>>() {
-			public int compare(ComponentGroupGUI<?> gui1,
-				ComponentGroupGUI<?> gui2) {
-
-				if (gui1.getSortId() < gui2.getSortId())
-					return -1;
-				if (gui1.getSortId() > gui2.getSortId())
-					return 1;
-				return 0;
+		setBorder(null);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		for (Class<?> b : buisitors) {
+			try {
+				BotBuisitor buisitor = (BotBuisitor)b.newInstance();
+				bot.accept(buisitor);
+				if (buisitor.shouldBeDisplayed())
+					panel.add(buisitor);
+			} catch (IllegalAccessException e) {
+				/*
+				 * Kommt nur vor, wenn ein BotBuisitor keinen Konstruktor hat,
+				 * der public und parameterlos ist. Waere ein
+				 * Compile-time-Fehler, nur wegen Verwendung von Reflection
+				 * sehen wir das erst zur Laufzeit.
+				 */
+				throw new AssertionError(e);
+			} catch (InstantiationException e) {
+				// Dito
+				throw new AssertionError(e);
 			}
-		});
-
-		for (ComponentGroupGUI<?> gui : compList) {
-			gui.initGUI();
-			add(gui);
 		}
-
-		//this.add(Box.createVerticalGlue());
+		setViewportView(panel);
 	}
 
 	public void update() {
