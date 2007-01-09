@@ -211,14 +211,38 @@ public class ClosableTabsPane extends JTabbedPane {
 		closeIconToolTips.add(closeIconToolTip);
 	}
 
-	//$$$ doc: feuert nur, wenn ueber X geschlossen
+	/**
+	 * <p>
+	 * Registriert einen Listener, der benachrichtigt wird, wenn der Benutzer
+	 * ein Tab aus dieser TabsPane schlie&szlig;t. Der Parameter, der dem
+	 * Listener &uuml;bergeben wird, ist der Index des Tab (einer der in
+	 * {@link JTabbedPane} &uuml;blichen Indizes). Verwendungsbeispiel:
+	 * 
+	 * <pre>
+	 * tabsPane.addCloseListener(new Closure&lt;Integer&gt;() {
+	 *     public void run(Integer index) { 
+	 *         Component c = tabsPane.getComponentAt(index);
+	 *         ...
+	 *     }
+	 * });</pre>
+	 * 
+	 * </p>
+	 * 
+	 * @param li
+	 * @throws NullPointerException Falls li == {@code null} ist.
+	 */
 	public void addCloseListener(Closure<Integer> li) {
 		if (li == null)
 			throw new NullPointerException();
 		closeListeners.add(li);
 	}
 
-	//$$$ doc
+	/**
+	 * Entfernt einen Listener, den man zuvor registriert hat. Siehe
+	 * {@link #addCloseListener(Closure)}. Der Aufruf wird stillschweigend
+	 * ignoriert, falls der Listener schon entfernt ist oder nie registriert
+	 * wurde.
+	 */
 	public void removeCloseListener(Closure<Integer> li) {
 		closeListeners.remove(li);
 	}

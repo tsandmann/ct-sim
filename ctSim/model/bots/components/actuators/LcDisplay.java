@@ -135,16 +135,10 @@ public class LcDisplay extends BotComponent<PlainDocument> {
         cursorY = Misc.clamp(row, numRows - 1);
     }
 
-	/**
-	 * Zahl der Spalten, die das Display breit ist (Spalte = Breite eines
-	 * Zeichens).
-	 */
+	/** Wieviele Spalten breit ist das Display? (1 Zeichen pro Spalte) */
 	public int getNumCols() { return numCols; }
 
-	/**
-	 * Zahl der Zeilen, die das Display hoch ist (Zeile = Höhe eines
-	 * Zeichens).
-	 */
+	/** Wieviele Zeilen hoch ist das Display? */
 	public int getNumRows() { return numRows; }
 	@Override public String getName() { return "LCD"; }
 	@Override public String getDescription() { return "LCD-Anzeige"; }

@@ -65,6 +65,26 @@ import ctSim.view.gui.BotBuisitor;
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
 public abstract class Bot extends AliveObstacle {
+	/**
+	 * <p>
+	 * Liste von BotComponents; wie ArrayList, aber kann zus&auml;tzlich
+	 * Component-Flag-Tabellen (siehe
+	 * {@link #applyFlagTable(ctSim.model.bots.Bot.CompntWithFlag[]) applyFlagTable()})
+	 * und Massen-Hinzuf&uuml;gen:
+	 *
+	 * <pre>
+	 * componentList.add(
+	 *     new BotComponent&lt;...&gt;(...),
+	 *     new BotComponent&lt;...&gt;(...),
+	 *     new BotComponent&lt;...&gt;(...),
+	 *     ...
+	 * );</pre>
+	 *
+	 * </p>
+	 *
+	 * @author Hendrik Krau&szlig; &lt;<a
+	 * href="mailto:hkr@heise.de">hkr@heise.de</a>>
+	 */
 	public static class BotComponentList extends ArrayList<BotComponent<?>> {
         private static final long serialVersionUID = - 1331425647710880289L;
 

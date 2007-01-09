@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.ProtocolException;
 
 import ctSim.Connection;
+import ctSim.model.bots.components.actuators.Led;
 import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.bots.ctbot.CtBotSim;
 import ctSim.util.FmtLogger;
@@ -30,8 +31,9 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Hauptteil des Protokolls zwischen c't-Sim und Bot-Steuercode. Eingesetzt
- * vorwiegend in zwei F&auml;llen:
+ * Hauptteil des Protokolls zwischen c't-Sim und Bot-Steuercode (sog.
+ * <em>c't-Bot-Protokoll</em>). Eingesetzt wird diese Klasse vorwiegend in
+ * zwei F&auml;llen:
  * <ol>
  * <li>Ein realer (in Hardware existierender) Bot, der per USB oder TCP
  * verbunden ist, sendet laufend Messwerte der Sensoren und andere
@@ -85,7 +87,11 @@ import ctSim.util.Misc;
  * Regeln:
  * <ul>
  * <li>Der Steuercode sendet laufend Commands mit Sensor-Messwerten und anderen
- * Statusinformationen, die der Sim auswertet und dem Benutzer anzeigt</li>
+ * Statusinformationen, die der Sim auswertet und dem Benutzer anzeigt. Welche
+ * einzelnen Commands behandelt werden, und wie sie im Detail interpretiert
+ * werden, ist in den Bot-Komponenten beschrieben, die das Interpretieren
+ * vornehmen. Siehe die Abschnitte <strong>c't-Bot-Protokoll</strong> in den
+ * Klassen {@link Led}, $$</li>
  * <li>Beim Start des Sim &uuml;bertr&auml;gt er ein Command mit dem
  * Command-Code {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * (Zu diesem Zeitpunkt kann der Bot schon laufen, d.h. f&uuml;r den Bot kann
@@ -109,8 +115,8 @@ import ctSim.util.Misc;
  * <p>
  * "Network order&quot;, also die Endianness auf dem Draht, ist <a
  * href="http://de.wikipedia.org/wiki/Big_endian">Big-Endian</a>. Java
- * verwendet intern Little-Endian &amp;ndash; Konvertierung erfolgt zu Fu&szlig;
- * in dieser Klasse.
+ * verwendet intern Little-Endian &ndash; Konvertierung erfolgt zu Fu&szlig; in
+ * dieser Klasse.
  * </p>
  *
  * @author Benjamin Benz (bbe@heise.de)
@@ -218,7 +224,7 @@ public class Command {
 
 		protected byte toUint7() { return onTheWire; }
 
-		//$$$ Code-Duplikation
+		//$$ Code-Duplikation enum Code <-> enum SubCode
 		/** Akzeptiert ints aus Toleranz. */
 		public static Code fromByte(int b) throws ProtocolException {
 			for (Code c : Code.values()) {
@@ -428,7 +434,7 @@ public class Command {
 			return String.format("(%d)", aChar);
 	}
 
-	/** Liefert eine Stringrepr&auml;sentation des Command */
+	/** Liefert eine vollst&auml;ndige Stringrepr&auml;sentation des Command */
 	@Override
 	public String toString() {
 		// Vorsicht beim Ausgeben; wenn man lustig %c macht und der Wert wegen
@@ -445,12 +451,13 @@ public class Command {
 				seq, getPayloadAsString(), payload.length, formatChar(crc));
 	}
 
+	/** Liefert eine kompakte Stringrepr&auml;sentation des Command (1 Zeile) */
 	public String toCompactString() {
 		return
-			String.format("%s%s ",
-				commandCode, (has(SubCode.NORM) ? "" : " / "+subCommandCode))+
-			String.format("L/R=%4d/%4d ", dataL, dataR)+
-			String.format("Payload='%s'", getPayloadAsString().
+			String.format("%-20s",
+				commandCode + (has(SubCode.NORM) ? "" : "/"+subCommandCode))+
+			String.format(" L %4d R %4d", dataL, dataR)+
+			String.format(" Payload='%s'", getPayloadAsString().
 				replaceAll("\n", "\\\\n"));
 	}
 

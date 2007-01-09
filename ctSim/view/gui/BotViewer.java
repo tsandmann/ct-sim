@@ -41,7 +41,7 @@ import ctSim.view.gui.sensors.SensorGroupGUI;
 public class BotViewer extends JScrollPane implements Updatable {
 	private static final long serialVersionUID = - 7367493564649395707L;
 	//$$$ Legacy
-	public static class Act extends BotBuisitor {
+	public static class Act extends BotBuisitor implements Updatable {
 		private static final long serialVersionUID = 8159984057289235784L;
 		List<ActuatorGroupGUI<?>> actsList =
 			new ArrayList<ActuatorGroupGUI<?>>();
@@ -85,15 +85,25 @@ public class BotViewer extends JScrollPane implements Updatable {
 		public Dimension getPreferredSize() {
 			return new Dimension(180, 200);
 		}
+		
+		public void update() {
+			for (ComponentGroupGUI<?> c : actsList)
+				c.updateGUI();
+		}
 	}
 
-	public static class Sens extends BotBuisitor {
+	public static class Sens extends BotBuisitor implements Updatable {
 		List<SensorGroupGUI<?>>   sensList = new ArrayList<SensorGroupGUI<?>>();
 
 		public Sens() {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		}
 
+		public void update() {
+			for (ComponentGroupGUI<?> c : sensList)
+				c.updateGUI();
+		}
+		
 		@Buisit
 		public void buisit(Sensor<?> s) {
 			SensorGroupGUI gGUI = s.getSensorGroupGUI();
@@ -135,13 +145,13 @@ public class BotViewer extends JScrollPane implements Updatable {
 	private static final Class[] buisitors = {
 		Act.class,
 		Sens.class,
+		Leds.class,
 		AndEverything.class,
     };
 
 	public final Bot bot;
 
-	private final List<ComponentGroupGUI<?>> compList =
-		new ArrayList<ComponentGroupGUI<?>>();
+	private final List<Updatable> ups = new ArrayList<Updatable>();
 
 	public BotViewer(Bot bot) {
 		this.bot = bot;
@@ -153,8 +163,11 @@ public class BotViewer extends JScrollPane implements Updatable {
 			try {
 				BotBuisitor buisitor = (BotBuisitor)b.newInstance();
 				bot.accept(buisitor);
-				if (buisitor.shouldBeDisplayed())
+				if (buisitor.shouldBeDisplayed()) {
+					if (buisitor instanceof Updatable)
+						ups.add((Updatable)buisitor);
 					panel.add(buisitor);
+				}
 			} catch (IllegalAccessException e) {
 				/*
 				 * Kommt nur vor, wenn ein BotBuisitor keinen Konstruktor hat,
@@ -172,8 +185,8 @@ public class BotViewer extends JScrollPane implements Updatable {
 	}
 
 	public void update() {
-		for (ComponentGroupGUI<?> gui : compList)
-			gui.updateGUI();
+		for (Updatable gui : ups)
+			gui.update();
 	}
 
 	@Override

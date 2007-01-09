@@ -365,12 +365,10 @@ public class DefaultController implements Runnable, Controller {
          */
         @Override
         public void run() {
-            TcpConnection tcp = null;
             try {
                 ServerSocket server = new ServerSocket(this.port);
 
                 while (this.listen) {
-                    tcp = new TcpConnection();
                     /*
                      * Da die Klasse TcpConnection staendig den ServerSocket neu
                      * aufbaut und wieder zerstoert, wird die eingebaute Methode
@@ -380,7 +378,7 @@ public class DefaultController implements Runnable, Controller {
                      * gaenzlich entfernt.
                      */
                     try {
-                        tcp.connect(server.accept());
+                    	TcpConnection tcp = new TcpConnection(server.accept());
                         lg.fine("Eingehende Verbindung auf dem Bot-Port");
                         addBot(tcp);
                     } catch(SocketTimeoutException e) {
@@ -423,34 +421,49 @@ public class DefaultController implements Runnable, Controller {
      * @param con Die Verbindung
      */
     public void addBot(Connection con) {
-        Bot bot = null;
+        Bot bot = null; //$$ Variable stinkt
         try {
             // Hallo sagen
-            con.send(new Command(Command.Code.WELCOME).getCommandBytes());
+            con.write(new Command(Command.Code.WELCOME));
             // TODO Timeout einfuegen!!
             while (bot == null) {
                 lg.fine("Warte auf Willkommen ...");
 
 				try {
 					Command cmd = new Command(con);
-					if (cmd.has(Command.Code.WELCOME)) {
-                        if (cmd.has(Command.SubCode.WELCOME_SIM)) {
-                            String name = getNewBotName("ctSim.model.bots.CtBotSimTcp");
-                            bot = new CtBotSimTcp(this.world, name,
-                                    new Point3d(0.5d, 0d, 0.075d),
-                                    new Vector3d(1.0f, -0.5f, 0f),
-                                    con);
-                            lg.fine("Virtueller Bot nimmt Verbindung auf");
-                        }
-                    } else {
-                        lg.info("Bot ist nicht willkommen: '"
-                                        + cmd.toString()+ "'"+
-                                        " ==> Bot l\u00E4uft schon oder " +
-                                        "ist veraltet, "+
-                                        "Schicke Willkommen nochmals");
-                        // Hallo sagen
-                        con.send(new Command(Command.Code.WELCOME).getCommandBytes());
-                    }
+
+	                if (cmd.has(Command.Code.WELCOME)) {
+	                	switch (cmd.getSubCode()) {
+	                		case WELCOME_SIM:
+	                			String name = getNewBotName(
+	                				"ctSim.model.bots.CtBotSimTcp");
+	                            bot = new CtBotSimTcp(world, name,
+		                                new Point3d(0.5d, 0d, 0.075d),
+		                                new Vector3d(1.0f, -0.5f, 0f),
+		                                con);
+		            			lg.fine("TCP-Verbindung von simuliertem Bot " +
+		            					"eingegangen");
+		            			break;
+
+	                		case WELCOME_REAL:
+	                			//$$$ RealBot erstellen
+//	                			bot = new RealCtBot(con, world, "TCP-Bot",
+//	                				new Point3d(), 0);
+	                			lg.fine("TCP-Verbindung von realem Bot " +
+	                					"eingegangen");
+	                			break;
+
+	                		default:
+	                			throw new ProtocolException(); //$$
+	                	}
+	                } else {
+	                    lg.fine("Kommando, aber kein Willkommen von Verbindung " +
+	                    		"gelesen: Bot l\u00E4uft schon oder ist " +
+	                    		"veraltet, schicke Willkommen nochmals. " +
+	                    		"Ignoriertes Kommando folgt" + cmd);
+	                    // Handshake nochmal versuchen
+                        con.write(new Command(Command.Code.WELCOME));
+	                }
 				} catch (ProtocolException e) {
 					lg.warning(e, "Fehlerhaftes Kommando; ignoriere");
 				}
@@ -468,14 +481,31 @@ public class DefaultController implements Runnable, Controller {
             //BotManager.addBot(new BotInfo("CTest", bot, new DefBotPanel()));
         } else
             try {
-                con.disconnect();
+                con.close();
             } catch (Exception ex) {
                 // Wenn jetzt noch was schief geht interessiert es uns nicht mehr
             }
     }
 
+    public void connectToTcp(String address) {
+    	int port = 10002; //$$$ Conf + aus address parsen
+    	lg.fine("Verbinde mit %s:%d ...", address, port);
+    	try {
+			addBot(new TcpConnection(address, port));
+		} catch (Exception e) {
+			throw new AssertionError(e); //$$$ doof, mindestens timeout und UnknownHost fangen und anzeigen
+		}
+    }
+
+    public void addComBot() {
+		//$$$ RealBot erstellen
+//		addBot(new RealCtBot(new ComConnection(), world,
+//			"USB-Bot", new Point3d(), 0));
+		lg.fine("Serielle Verbindung von realem Bot eingegangen");
+    }
+
     /**
-     * Fuegt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu
+     * F&uuml;gt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu
      */
     public void addTestBot() {
         String name = getNewBotName("CtBotSimTest");
@@ -514,27 +544,10 @@ public class DefaultController implements Runnable, Controller {
         }
     }
 
-	public void addComBot() {
-		// $$$ addComBot
-	}
-
-	public void connectToTcp(String address) {
-		// $$$ connectToTcp
-	}
-
 	private synchronized Bot addBot(Bot bot){
 		if (bot != null && world != null && judge.isAddingBotsAllowed()) {
-//			this.world.addBot(bot);
-
-			// TODO: (?)
-			//bot.start();
-
-//			this.botsToStart.add(bot);
-
 			bot.setController(this);
-
 			BotManager.addBot(bot);
-
 			return bot;
 		}
 		return null;
@@ -544,6 +557,7 @@ public class DefaultController implements Runnable, Controller {
         return BotManager.getNewSize();
     }
 
+	//$$ Nach Judge-Umbau: kann weg
     /**
      * @param judgeClassName Die Art des Schiedrichters zu setzen
      * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist

@@ -13,5 +13,6 @@
 			<attribute name="javadoc_location" value="http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="contrib/rxtx.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

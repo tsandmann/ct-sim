@@ -1,13 +1,24 @@
 Changelog fuer c't-Sim
 ======================
 
-2007-01-09 15:03 Hendrik Krauss [hkr@heise.de]:
+2007-01-09 21:46 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Fix: Aktuatoren/Sensoren zeigen wieder Werte
+* Neu: LEDs (Indicators umbenannt und aktualisiert)
+* Neu: Entwicklertool ctSim.SimBotTcpDump (Macht die Command-Objekte sichtbar, die durch die TCP-Verbindung zwischen c't-Sim und Steuercode laufen)
+* Aufgeraeumt: Connection: toter Code weg, Methoden umbenannt wie in Java ueblich (send -> write, disconnect -> close); wirkt sich auf Commands + deren Verwender aus
+* Aufgeraeumt: TcpConnection: Vereinfacht
+* Neu: ComConnection: Unterstuetzung fuer serielle Verbindungen
+* DefaultController: Unterstuetzung fuer Real-Bots
+* RXTX im Eclipse-Projekt als Library angemeldet
+* Kleinigkeiten
+
+2007-01-09 15:03 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
 * Bot: Infrastruktur fuer Component-Flag-Tabellen (Doku folgt)
 * Neuer Log-Aktuator (Klasse Log); noch ungetestet, da Sim-Bot sowas nicht sendet und Real-Bot noch nicht geht
 * CtBotSimTcp: Log- und LCD-Kram weg
 * Kleinigkeiten
 
-2007-01-09 13:20 Hendrik Krauss [hkr@heise.de]:
+2007-01-09 13:20 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
 * Gui-Bauen-Infrastruktur jetzt Builder/Visitor-Pattern (BotViewer angepasst, BotBuisitor dazu, AndEverything dazu); Doku folgt
 * BotComponent: Neue Infrastruktur vorbereitet, Klasse Flags erstellt
 * Erste neue Komponente: LcDisplay, die andern werden nach und nach upgedated
@@ -16,7 +27,7 @@ Changelog fuer c't-Sim
 * Interface TcpBot weg (keine Bedeutung mehr ohne AnsweringMachine)
 * Kleinigkeiten
 
-2007-01-08 20:07 Hendrik Krauss [hkr@heise.de]:
+2007-01-08 20:07 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
 * Klasse Command ueberarbeitet, vereinfacht, teilweise dokumentiert. Wirkt sich auf alle Stellen aus, wo sie verwendet wird
 * CtBotSimTcp: bisschen aufgeraeumt
 * AnsweringMachine raus, hat keinen Sinn (Streams puffern eh alles)

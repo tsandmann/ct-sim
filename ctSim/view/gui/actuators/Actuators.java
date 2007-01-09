@@ -18,7 +18,6 @@
  */
 package ctSim.view.gui.actuators;
 
-import ctSim.model.bots.components.actuators.Indicator;
 import ctSim.model.bots.components.actuators.SimpleActuator;
 
 /**
@@ -34,14 +33,5 @@ public class Actuators {
 	 */
 	public static ActuatorGroupGUI getGuiFor(@SuppressWarnings("unused") SimpleActuator a) {
 		return new SimpleActuatorGroupGUI();
-	}
-
-	/**
-	 * Erzeugt eine GUI fuer einen einfachen Indikator
-	 * @param a Der Indikator
-	 * @return Die GUI fuer den Indikator
-	 */
-	public static ActuatorGroupGUI getGuiFor(@SuppressWarnings("unused") Indicator a) {
-		return new IndicatorGroupGUI();
 	}
 }

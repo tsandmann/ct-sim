@@ -13,12 +13,16 @@ import ctSim.model.bots.Bot;
 public abstract class BotBuisitor extends JPanel {
 	private boolean shouldBeDisplayed = false;
 
+	public BotBuisitor() {
+		super(true); // DoubleBuffering an
+	}
+
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
 	public @interface Buisit {
 		// Marker-Annotation
 	}
-	
+
 	public void visit(Object o, Bot bot) {
 		for (Method m : getClass().getMethods()) {
 			if (! m.isAnnotationPresent(Buisit.class))
@@ -38,7 +42,7 @@ public abstract class BotBuisitor extends JPanel {
 			}
 		}
 	}
-	
+
 	private static boolean hasSignature(Method m, Class... types) {
 		Class[] pt = m.getParameterTypes();
 		if (pt.length != types.length)
@@ -49,7 +53,7 @@ public abstract class BotBuisitor extends JPanel {
 		}
 		return true;
 	}
-	
+
 	public boolean shouldBeDisplayed() {
 		return shouldBeDisplayed;
 	}

@@ -41,8 +41,8 @@ import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.Sensor;
-import ctSim.model.bots.components.actuators.Indicator;
 import ctSim.model.bots.components.actuators.LcDisplay;
+import ctSim.model.bots.components.actuators.Led;
 import ctSim.model.bots.components.actuators.Log;
 import ctSim.model.bots.components.sensors.SimpleSensor;
 import ctSim.model.bots.ctbot.components.BorderSensor;
@@ -56,9 +56,21 @@ import ctSim.util.FmtLogger;
 import ctSim.view.gui.Debug;
 
 /**
- * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator kommunizieren
+ * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator
+ * kommunizieren
  */
 public class CtBotSimTcp extends CtBotSim {
+	private static final Color[] ledColors = {
+		new Color(  0,  84, 255), // blau
+		new Color(  0,  84, 255), // blau
+		Color.RED,
+		new Color(255, 200,   0), // orange
+		Color.YELLOW,
+		Color.GREEN,
+		new Color(  0, 255, 210), // tuerkis
+		Color.WHITE,
+	};
+
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.ctbot.CtBotSimTcp");
 
 	/** Die TCP-Verbindung */
@@ -68,9 +80,6 @@ public class CtBotSimTcp extends CtBotSim {
 
 	/** Sequenznummer der TCP-Pakete */
 	private int seq = 0;
-
-	/** Zustand der LEDs */
-	private Integer actLed = new Integer(0);
 
 	/** maximale Geschwindigkeit als PWM-Wert */
 	public static final short PWM_MAX = 255;
@@ -100,7 +109,6 @@ public class CtBotSimTcp extends CtBotSim {
 	private Actuator govL, govR;
 
 	/**
-	 * Der Konstruktor
 	 * @param w Die Welt
 	 * @param name Der Name des Bot
 	 * @param pos Position
@@ -119,18 +127,24 @@ public class CtBotSimTcp extends CtBotSim {
 			new Log()
 		);
 
+        // LEDs
+        int numLeds = ledColors.length;
+        for (int i = 0; i < numLeds; i++) {
+        	components.add(new Led("LED " + (i + 1), numLeds - i - 1,
+        		ledColors[i]));
+        }
+
 		components.applyFlagTable(
 			_(LcDisplay.class, CON_READ),
-			_(Log.class      , CON_READ)
+			_(Log.class      , CON_READ),
+			_(Led.class      , CON_READ)
 		);
 
 		initActuators();
 		initSensors();
 	}
 
-
 	private void initSensors() {
-
 		this.encL = new EncoderSensor(this.world, this, "EncL", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govL);
 		this.encR = new EncoderSensor(this.world, this, "EncR", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govR);
 
@@ -170,7 +184,7 @@ public class CtBotSimTcp extends CtBotSim {
 		this.addSensor(new SimpleSensor<Integer>("MouseX", new Point3d(),
 			new Vector3d()) {
 
-			@SuppressWarnings({"synthetic-access","boxing"})
+			@SuppressWarnings({"synthetic-access"})
 			@Override
 			public Integer updateValue() {
 				return CtBotSimTcp.this.mouseX;
@@ -185,7 +199,7 @@ public class CtBotSimTcp extends CtBotSim {
 		this.addSensor(new SimpleSensor<Integer>("MouseY", new Point3d(),
 			new Vector3d()) {
 
-			@SuppressWarnings({"synthetic-access","boxing"})
+			@SuppressWarnings({"synthetic-access"})
 			@Override
 			public Integer updateValue() {
 				return CtBotSimTcp.this.mouseY;
@@ -199,34 +213,6 @@ public class CtBotSimTcp extends CtBotSim {
 	}
 
 	private void initActuators() {
-		// !! cols.length == colsAct.length !!
-		int ledCount = cols.length;
-
-		// LEDs:
-		for(int i=0; i<ledCount; i++) {
-			final Integer idx = new Integer(ledCount-i-1);
-
-			this.addActuator(new Indicator("LED "+i, new Point3d(),
-				new Vector3d(), cols[i], colsAct[i]) {
-
-					@Override
-					public void setValue(@SuppressWarnings("unused") Boolean value) {
-						// TODO: ???
-					}
-
-					@SuppressWarnings({"synthetic-access","boxing"})
-					@Override
-					public Boolean getValue() {
-						int soll = (int)Math.pow(2, idx);
-						// Bitweises "und"
-						int ist = CtBotSimTcp.this.actLed & soll;
-
-						return (soll == ist);
-					}
-				}
-			);
-		}
-
 		this.govL = new Governor("GovL", new Point3d(), new Vector3d(0d, 1d, 0d));
 		this.govR = new Governor("GovR", new Point3d(), new Vector3d(0d, 1d, 0d));
 
@@ -268,67 +254,47 @@ public class CtBotSimTcp extends CtBotSim {
 	private int lastTransmittedSimulTime =0;
 
 	/**
-	 * Sendbuffer fuer transmitSensors()
-	 */
-	private ArrayList<Byte> commandsToSend = new ArrayList<Byte>();
-
-	/**
 	 * Leite Sensordaten an den Bot weiter
 	 */
 	private synchronized void transmitSensors() {
 		try {
-			commandsToSend.clear();	// Sendbuffer loeschen
-			byte tmp[];	// Buffer pro Command
-
 			Command command;
 			command = new Command(Command.Code.SENS_IR);
 			command.setDataL(((Double)this.irL.getValue()).intValue());
 			command.setDataR(((Double)this.irR.getValue()).intValue());
 			command.setSeq(this.seq++);
-			tmp = command.getCommandBytes();
-			for (int i=0; i<tmp.length; i++)
-				commandsToSend.add(tmp[i]);
+			connection.write(command);
 
 			command = new Command(Command.Code.SENS_ENC);
 			command.setDataL((Integer)this.encL.getValue());
 			command.setDataR((Integer)this.encR.getValue());
 			command.setSeq(this.seq++);
-			tmp = command.getCommandBytes();
-			for (int i=0; i<tmp.length; i++)
-				commandsToSend.add(tmp[i]);
+			connection.write(command);
 
 			command = new Command(Command.Code.SENS_BORDER);
 			command.setDataL(((Short)this.borderL.getValue()).intValue());
 			command.setDataR(((Short)this.borderR.getValue()).intValue());
 			command.setSeq(this.seq++);
-			tmp = command.getCommandBytes();
-			for (int i=0; i<tmp.length; i++)
-				commandsToSend.add(tmp[i]);
+			connection.write(command);
 
 			// TODO
 			command = new Command(Command.Code.SENS_DOOR);
 			command.setDataL(0);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
-			tmp = command.getCommandBytes();
-			for (int i=0; i<tmp.length; i++)
-				commandsToSend.add(tmp[i]);
+			connection.write(command);
 
 			command = new Command(Command.Code.SENS_LDR);
 			command.setDataL((Integer)this.lightL.getValue());
 			command.setDataR((Integer)this.lightR.getValue());
 			command.setSeq(this.seq++);
-			tmp = command.getCommandBytes();
-			for (int i=0; i<tmp.length; i++)
-				commandsToSend.add(tmp[i]);
+			connection.write(command);
 
 			command = new Command(Command.Code.SENS_LINE);
 			command.setDataL(((Short)this.lineL.getValue()).intValue());
 			command.setDataR(((Short)this.lineR.getValue()).intValue());
 			command.setSeq(this.seq++);
-			tmp = command.getCommandBytes();
-			for (int i=0; i<tmp.length; i++)
-				commandsToSend.add(tmp[i]);
+			connection.write(command);
 
 			if(this.getObstState() != OBST_STATE_NORMAL) {
 				this.mouseX = 0;
@@ -338,18 +304,14 @@ public class CtBotSimTcp extends CtBotSim {
 			command.setDataL(this.mouseX);
 			command.setDataR(this.mouseY);
 			command.setSeq(this.seq++);
-			tmp = command.getCommandBytes();
-			for (int i=0; i<tmp.length; i++)
-				commandsToSend.add(tmp[i]);
+			connection.write(command);
 
 			// TODO: nur fuer real-bot
 			command = new Command(Command.Code.SENS_TRANS);
 			command.setDataL(0);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
-			tmp = command.getCommandBytes();
-			for (int i=0; i<tmp.length; i++)
-				commandsToSend.add(tmp[i]);
+			connection.write(command);
 
 			Object rc5 = this.rc5.getValue();
 			if(rc5 != null) {
@@ -359,9 +321,7 @@ public class CtBotSimTcp extends CtBotSim {
 					command.setDataL(val);
 					command.setDataR(42);
 					command.setSeq(seq++);
-					tmp = command.getCommandBytes();
-					for (int i=0; i<tmp.length; i++)
-						commandsToSend.add(tmp[i]);
+					connection.write(command);
 				}
 			}
 
@@ -370,9 +330,7 @@ public class CtBotSimTcp extends CtBotSim {
 			command.setDataL(0);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
-			tmp = command.getCommandBytes();
-			for (int i=0; i<tmp.length; i++)
-				commandsToSend.add(tmp[i]);
+			connection.write(command);
 
 			lastTransmittedSimulTime= (int)world.getSimTimeInMs();
 			lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
@@ -380,15 +338,7 @@ public class CtBotSimTcp extends CtBotSim {
 			command.setDataL(lastTransmittedSimulTime);
 			command.setDataR(0);
 			command.setSeq(this.seq++);
-			tmp = command.getCommandBytes();
-			for (int i=0; i<tmp.length; i++)
-				commandsToSend.add(tmp[i]);
-
-			byte toSend[] = new byte[commandsToSend.size()];
-			for (int i=0; i<commandsToSend.size(); i++)
-				toSend[i] = commandsToSend.get(i);
-			this.connection.send(toSend);
-
+			connection.write(command);
 		} catch (IOException e) {
 			lg.severe(e, "Error sending sensor data; dying");
 			die();
@@ -399,7 +349,6 @@ public class CtBotSimTcp extends CtBotSim {
 	 *
 	 * @param command RC5-Code des Kommandos
 	 */
-	@SuppressWarnings("unchecked")
 	public void sendRCCommand(int command){
 		// TODO Warning entfernen
 		boolean setValue = this.rc5.setValue((Object)(new Integer(command)));
@@ -415,7 +364,6 @@ public class CtBotSimTcp extends CtBotSim {
 
 	//TODO Bot soll in Loecher reinfahren, in Hindernisse aber nicht. Momentan: calcPos traegt Pos nicht ein, wenn Hindernis oder Loch. Gewuenscht: Bei Loch das erste Mal Pos updaten, alle weiteren Male nicht
 	//TODO calcPos umziehen nach Bot oder CtBotSim
-	@SuppressWarnings({"unchecked","boxing"})
 	private void calcPos() {
 		////////////////////////////////////////////////////////////////////
 		// Position und Heading berechnen:
@@ -572,7 +520,6 @@ public class CtBotSimTcp extends CtBotSim {
 	 *
 	 * @param command Das Kommando
 	 */
-	@SuppressWarnings({"unchecked","boxing"})
 	public void evaluateCommand(Command command) throws ProtocolException {
 		if (command.getDirection() == Command.DIR_REQUEST) {
 
@@ -592,8 +539,6 @@ public class CtBotSimTcp extends CtBotSim {
 //				this.setActDoor(command.getDataL());
 				break;
 			case ACT_LED:
-				this.setActLed(command.getDataL());
-				break;
 			case ACT_LCD:
 			case LOG:
 				for (BotComponent<?> c : components)
@@ -723,53 +668,14 @@ public class CtBotSimTcp extends CtBotSim {
 	//	die();
 	}
 
-
-	//LEDs
-	/** @param actL Der Wert von actLed, der gesetzt werden soll */
-	public void setActLed(int actL) {
-
-		this.actLed = new Integer(actL);
-
-//		int ledCount = cols.length;
-//
-//		int range = (int)Math.pow(2, ledCount);
-//
-//		while(this.actLed > range)
-//			this.actLed -= range;
-	}
-
-	private static final Color[] cols = {
-		new Color(137, 176, 255), // blau
-		new Color(137, 176, 255), // blau
-		new Color(255, 137, 137), // rot
-		new Color(255, 230, 139), // orange
-		new Color(255, 255, 159), // gelb
-		new Color(170, 255, 170), // gruen
-		new Color(200, 255, 245), // tuerkis
-		new Color(245, 245, 245)  // weiss
-	};
-
-	private static final Color[] colsAct = {
-		new Color(  0,  84, 255), // blau
-		new Color(  0,  84, 255), // blau
-		new Color(255,   0,   0), // rot
-		new Color(255, 200,   0), // orange
-		new Color(255, 255,   0), // gelb
-		new Color(  0, 255,   0), // gruen
-		new Color(  0, 255, 210), // tuerkis
-		new Color(255, 255, 255)  // weiss
-	};
-
 	/** Erweitert die() um das Schliessen der TCP-Verbindung */
 	@Override
 	public void die() {
 		// TODO Auto-generated method stub
 		super.die();
 		try {
-			connection.disconnect();
+			connection.close();
 		} catch (IOException e) {
-			// uninteressant
-		} catch (Exception e) {
 			// uninteressant
 		}
 	}

@@ -1,9 +1,12 @@
 package ctSim.util;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
+import java.util.HashMap;
 
 //$$ doc Misc
 public class Misc {
@@ -24,6 +27,14 @@ public class Misc {
 		return rv;
 	}
 
+	/** Wie {@link #clamp(int, int)} */
+	public static double clamp(double value, double maxAllowed) {
+		double rv = value;
+		rv = Math.max(rv, 0);
+		rv = Math.min(rv, maxAllowed);
+		return rv;
+	}
+	
 	public static boolean startsWith(
 			String fullString, String... whitelistOfBeginnings) {
 		if (whitelistOfBeginnings == null)
@@ -66,6 +77,18 @@ public class Misc {
 		while ((len = source.read(buf)) > 0)
             dest.write(buf, 0, len);
 		dest.close();
+	}
+
+	private static HashMap<RenderingHints.Key, Object> antiAliasingOn =
+		new HashMap<RenderingHints.Key, Object>();
+
+	static {
+		antiAliasingOn.put(RenderingHints.KEY_ANTIALIASING,
+			RenderingHints.VALUE_ANTIALIAS_ON);
+	}
+
+	public static void enableAntiAliasing(Graphics2D g) {
+		g.addRenderingHints(antiAliasingOn);
 	}
 
 	/**
