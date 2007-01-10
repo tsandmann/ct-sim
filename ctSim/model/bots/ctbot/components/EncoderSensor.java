@@ -70,7 +70,7 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	//private Shape3D shape;
 
 	// TODO:
-	private Actuator governor;
+	private Actuator.Governor governor;
 
 	/**
 	 * Der Konstruktor
@@ -81,7 +81,8 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	 * @param relHead relative Blickrichtung
 	 * @param gov Aktuator
 	 */
-	public EncoderSensor(@SuppressWarnings("unused") World w, @SuppressWarnings("unused") Bot bot, String name, Point3d relPos, Vector3d relHead, /* TODO */ Actuator gov) {
+	public EncoderSensor(String name, Point3d relPos, Vector3d relHead, 
+		/* TODO */ Actuator.Governor gov) {
 
 		super(name, relPos, relHead);
 
@@ -122,7 +123,8 @@ public class EncoderSensor extends SimpleSensor<Integer> {
 	public Integer updateValue() {
 
 		// Anzahl der Umdrehungen der Raeder
-		double turns = calculateWheelSpeed((Integer)this.governor.getValue());
+		double turns = calculateWheelSpeed(
+			governor.getModel().getValue().intValue()); //$$$ umstaendlich
 		turns = turns * this.deltaT / 1000.0f;
 
 		// Encoder-Schritte als Gleitzahl errechnen:

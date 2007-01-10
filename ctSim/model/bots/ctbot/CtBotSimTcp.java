@@ -18,7 +18,7 @@
  */
 package ctSim.model.bots.ctbot;
 
-import static ctSim.model.bots.components.BotComponent.IOFlagsEnum.CON_READ;
+import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
 
 import java.awt.Color;
 import java.io.File;
@@ -43,12 +43,10 @@ import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.Sensor;
 import ctSim.model.bots.components.actuators.LcDisplay;
 import ctSim.model.bots.components.actuators.Led;
-import ctSim.model.bots.components.actuators.Log;
 import ctSim.model.bots.components.sensors.SimpleSensor;
 import ctSim.model.bots.ctbot.components.BorderSensor;
 import ctSim.model.bots.ctbot.components.DistanceSensor;
 import ctSim.model.bots.ctbot.components.EncoderSensor;
-import ctSim.model.bots.ctbot.components.Governor;
 import ctSim.model.bots.ctbot.components.LightSensor;
 import ctSim.model.bots.ctbot.components.LineSensor;
 import ctSim.model.bots.ctbot.components.RemoteControlSensor;
@@ -106,7 +104,8 @@ public class CtBotSimTcp extends CtBotSim {
 	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR,
 		encL, encR, rc5;
 
-	private Actuator govL, govR;
+	private Actuator.Governor govL;
+	private Actuator.Governor govR;
 
 	/**
 	 * @param w Die Welt
@@ -123,30 +122,36 @@ public class CtBotSimTcp extends CtBotSim {
 		this.world = w;
 
 		components.add(
+			govL = new Actuator.Governor(true),
+			govR = new Actuator.Governor(false),
 			new LcDisplay(20, 4),
-			new Log()
+			new Actuator.Log()
 		);
 
         // LEDs
         int numLeds = ledColors.length;
         for (int i = 0; i < numLeds; i++) {
-        	components.add(new Led("LED " + (i + 1), numLeds - i - 1,
-        		ledColors[i]));
+        	String s = "LED " + (i + 1)
+        	         + (i == 0 ? " (vorn rechts)" :
+        	            i == 1 ? " (vorn links)" : "");
+        	components.add(new Led(s, numLeds - i - 1, ledColors[i]));
         }
 
 		components.applyFlagTable(
-			_(LcDisplay.class, CON_READ),
-			_(Log.class      , CON_READ),
-			_(Led.class      , CON_READ)
+			_(Actuator.Governor.class, READS),
+			_(LcDisplay.class        , READS),
+			_(Actuator.Log.class     , READS),
+			_(Led.class              , READS)
 		);
 
-		initActuators();
 		initSensors();
 	}
 
 	private void initSensors() {
-		this.encL = new EncoderSensor(this.world, this, "EncL", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govL);
-		this.encR = new EncoderSensor(this.world, this, "EncR", new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), this.govR);
+		this.encL = new EncoderSensor("EncL",
+			new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), govL);
+		this.encR = new EncoderSensor("EncR",
+			new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), govR);
 
 		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d));
 		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d));
@@ -210,14 +215,6 @@ public class CtBotSimTcp extends CtBotSim {
 				return "Maus-Sensor-Wert Y";
 			}
 		});
-	}
-
-	private void initActuators() {
-		this.govL = new Governor("GovL", new Point3d(), new Vector3d(0d, 1d, 0d));
-		this.govR = new Governor("GovR", new Point3d(), new Vector3d(0d, 1d, 0d));
-
-		this.addActuator(this.govL);
-		this.addActuator(this.govR);
 	}
 
 	/**
@@ -369,9 +366,11 @@ public class CtBotSimTcp extends CtBotSim {
 		// Position und Heading berechnen:
 
 		// Anzahl der Umdrehungen der Raeder
-		double turnsL = calculateWheelSpeed((Integer)this.govL.getValue());
+		double turnsL = calculateWheelSpeed(
+			govL.getModel().getValue().intValue()); //$$$ umstaendlich
 		turnsL = turnsL * getDeltaT() / 1000.0f;
-		double turnsR = calculateWheelSpeed((Integer)this.govR.getValue());
+		double turnsR = calculateWheelSpeed(
+			govR.getModel().getValue().intValue()); //$$$ umstaendlich
 		turnsR = turnsR * getDeltaT() / 1000.0f;
 
 		// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe pdf
@@ -528,16 +527,13 @@ public class CtBotSimTcp extends CtBotSim {
 			case DONE:
 				// nIx zu tun mit diesem Kommando
 				break;
-			case ACT_MOT:
-				this.govL.setValue(command.getDataL());
-				this.govR.setValue(command.getDataR());
-				break;
 			case ACT_SERVO:
 //				this.setActServo(command.getDataL());
 				break;
 			case ACT_DOOR:
 //				this.setActDoor(command.getDataL());
 				break;
+			case ACT_MOT:
 			case ACT_LED:
 			case ACT_LCD:
 			case LOG:

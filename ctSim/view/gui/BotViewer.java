@@ -29,9 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import ctSim.model.bots.Bot;
-import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.Sensor;
-import ctSim.view.gui.actuators.ActuatorGroupGUI;
 import ctSim.view.gui.sensors.SensorGroupGUI;
 
 /**
@@ -40,58 +38,8 @@ import ctSim.view.gui.sensors.SensorGroupGUI;
  */
 public class BotViewer extends JScrollPane implements Updatable {
 	private static final long serialVersionUID = - 7367493564649395707L;
+
 	//$$$ Legacy
-	public static class Act extends BotBuisitor implements Updatable {
-		private static final long serialVersionUID = 8159984057289235784L;
-		List<ActuatorGroupGUI<?>> actsList =
-			new ArrayList<ActuatorGroupGUI<?>>();
-
-		public Act() {
-			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		}
-
-		@Buisit
-		public void buisit(Actuator<?> a) {
-			ActuatorGroupGUI gGUI = a.getActuatorGroupGUI();
-			int idx = actsList.indexOf(gGUI);
-			if(idx < 0)
-				actsList.add(gGUI);
-			else
-				actsList.get(idx).join(gGUI);
-
-			Collections.sort(actsList, new Comparator<ComponentGroupGUI<?>>() {
-				public int compare(ComponentGroupGUI<?> gui1,
-					ComponentGroupGUI<?> gui2) {
-
-					if (gui1.getSortId() < gui2.getSortId())
-						return -1;
-					if (gui1.getSortId() > gui2.getSortId())
-						return 1;
-					return 0;
-				}
-			});
-		}
-
-		@Override
-		public boolean shouldBeDisplayed() {
-			for (ComponentGroupGUI<?> g : actsList) {
-				g.initGUI();
-				add(g);
-			}
-			return true;
-		}
-
-		@Override
-		public Dimension getPreferredSize() {
-			return new Dimension(180, 200);
-		}
-		
-		public void update() {
-			for (ComponentGroupGUI<?> c : actsList)
-				c.updateGUI();
-		}
-	}
-
 	public static class Sens extends BotBuisitor implements Updatable {
 		List<SensorGroupGUI<?>>   sensList = new ArrayList<SensorGroupGUI<?>>();
 
@@ -103,7 +51,7 @@ public class BotViewer extends JScrollPane implements Updatable {
 			for (ComponentGroupGUI<?> c : sensList)
 				c.updateGUI();
 		}
-		
+
 		@Buisit
 		public void buisit(Sensor<?> s) {
 			SensorGroupGUI gGUI = s.getSensorGroupGUI();
@@ -140,12 +88,11 @@ public class BotViewer extends JScrollPane implements Updatable {
 			return new Dimension(180, 400);
 		}
 	}
-	//$$$ /Legacy
 
 	private static final Class[] buisitors = {
-		Act.class,
 		Sens.class,
 		Leds.class,
+		Actuators.class,
 		AndEverything.class,
     };
 

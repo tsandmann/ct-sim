@@ -1,6 +1,14 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-10 17:19 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* BotComponent jetzt mit CanRead- und CanWrite-Interfaces, scheint mir besser so
+* Neu: Governor ueberarbeitet, alte Aktuatoren-Gui konnte damit weg
+* Neu: Unterstuetzung fuer DoorServo
+* Verschoben: Log-Komponente -> freigewordene Actuator-Klasse (die kurzen Klassen kann man gut in einer Datei zusammenfassen)
+* Dokumentiert: Component-Flag-Tabellen
+* Kleinigkeiten
+
 2007-01-09 21:46 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
 * Fix: Aktuatoren/Sensoren zeigen wieder Werte
 * Neu: LEDs (Indicators umbenannt und aktualisiert)

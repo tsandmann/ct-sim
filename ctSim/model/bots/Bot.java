@@ -26,11 +26,10 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.model.AliveObstacle;
-import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotPosition;
 import ctSim.model.bots.components.Sensor;
-import ctSim.model.bots.components.BotComponent.IOFlagsEnum;
+import ctSim.model.bots.components.BotComponent.ConnectionFlags;
 import ctSim.view.gui.BotBuisitor;
 
 /**
@@ -67,10 +66,10 @@ import ctSim.view.gui.BotBuisitor;
 public abstract class Bot extends AliveObstacle {
 	/**
 	 * <p>
-	 * Liste von BotComponents; wie ArrayList, aber kann zus&auml;tzlich
+	 * Liste von BotComponents; wie ArrayList, aber kann zus&auml;tzlich 1.
 	 * Component-Flag-Tabellen (siehe
 	 * {@link #applyFlagTable(ctSim.model.bots.Bot.CompntWithFlag[]) applyFlagTable()})
-	 * und Massen-Hinzuf&uuml;gen:
+	 * und 2. Massen-Hinzuf&uuml;gen:
 	 *
 	 * <pre>
 	 * componentList.add(
@@ -94,7 +93,54 @@ public abstract class Bot extends AliveObstacle {
                 add(e);
         }
 
-        //$$$ doc
+        /**
+		 * <p>
+		 * Eine Component-Flag-Tabelle gibt an, welche {@link BotComponent}s
+		 * vom TCP (oder USB) lesen sollen, welche schreiben. Funktioniert so:
+		 *
+		 * <pre>
+         * import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
+		 * import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES;
+		 * ...
+		 *
+         * public class C3PO extends Bot {
+         *     private BotComponentList components = ...;
+         *
+         *     public C3PO() {
+         *         // Alle BotComponents erzeugen
+         *         components.add(
+         *             new Plappermaul(...),
+         *             new Goldbein("links"),
+         *             new Goldbein("rechts"), // Beide Instanzen werden betroffen
+         *             new Nervensaegmodul(...),
+         *         );
+         *
+         *         // Hier die Component-Flag-Tabelle
+         *         // Setzen, welche BotComponents lesen/schreiben
+         *         components.applyFlagTable(
+         *             _(Plappermaul.class, WRITES),   // schreibt nur ins TCP
+         *             _(Nervensaegmodul.class, READS, WRITES), // liest + schreibt
+         *             _(Goldbein.class)   // weder noch
+         *         );
+         *     }
+         * }
+         * </pre>
+		 *
+		 * Component-Flag-Tabellen sind also eine Verkn&uuml;pfung dieser
+		 * Methode, einer Hilfsmethode mit Namen Unterstrich (_) und einer
+		 * kleinen Klasse (CompntWithFlag). Vorteil: eine Superklasse, z.B.
+		 * CtBot, kann die Komponenten instanziieren. Subklassen, z.B.
+		 * SimulierterCtBot und MitTcpVerbundenerRealerCtBot, haben ja alle
+		 * dieselben Komponenten, aber betreiben sie in verschiedenen Modi (z.B.
+		 * realer Bot: (fast) alle nur lesen). Die Superklasse macht also
+		 * {@code components.add(...)}, die Subklassen k&ouml;nnen dann den
+		 * {@code applyFlagsTable(...)}-Aufruf machen.
+		 * </p>
+		 * <p>
+		 * Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von
+		 * ihnen allen betroffen.
+		 * </p>
+		 */
         public void applyFlagTable(CompntWithFlag... compntFlagTable) {
         	for (BotComponent<?> compnt : this) {
         		for (CompntWithFlag cwf : compntFlagTable) {
@@ -107,24 +153,17 @@ public abstract class Bot extends AliveObstacle {
 
 	/**
 	 * <p>
-	 * Ordnet einer BotComponent IOFlags zu. Component-Flag-Tabellen sind Arrays
-	 * von diesem Typ. Zum Thema Component-Flag-Arrays siehe $$$
-	 * </p>
-	 * <p>
-	 * Kleingedrucktes: Die Klasse existiert, um mit einem technischen Detail
-	 * umzugehen. F&uuml;r die Component-Flag-Tabellen h&auml;tten wir gern
-	 * Arrays von dem Typ, der hinter dem {@code implements} steht. Dieser Typ
-	 * ist jedoch generisch, und von generischen Typen kann man keine Arrays
-	 * bilden. Daher deklarieren wir diese leere Klasse, damit's nicht mehr
-	 * generisch ist.
+	 * Ordnet einer BotComponent {@link ConnectionFlags} zu.
+	 * Component-Flag-Tabellen sind Arrays von diesem Typ. Siehe
+	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.Bot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
 	 */
-	static class CompntWithFlag {
+	protected static class CompntWithFlag {
 		final Class<? extends BotComponent<?>> compntClass;
-		final IOFlagsEnum[] flags;
+		final ConnectionFlags[] flags;
 
 		CompntWithFlag(Class<? extends BotComponent<?>> compntClass,
-			IOFlagsEnum[] flags) {
+			ConnectionFlags[] flags) {
 
 			this.compntClass = compntClass;
 			this.flags = flags;
@@ -133,22 +172,14 @@ public abstract class Bot extends AliveObstacle {
 
 	/**
 	 * <p>
-	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann:
-	 *
-	 * <pre>
-	 * new CompntWithFlag[] {
-	 *     _(Governor.class),
-	 *     _(Led.class, CON_READ),
-	 *     _(LightSensor.class, CON_READ, CON_WRITE),
-	 * }
-	 * </pre>
-	 *
-	 * Zum Thema Component-Flag-Arrays siehe $$$
+	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann
+	 * &ndash; siehe
+	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.Bot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
 	 */
 	protected static CompntWithFlag _(
 		Class<? extends BotComponent<?>> compntClass,
-		IOFlagsEnum... flags) {
+		ConnectionFlags... flags) {
 
 		return new CompntWithFlag(compntClass, flags);
 	}
@@ -157,7 +188,6 @@ public abstract class Bot extends AliveObstacle {
 
 	private BotPosition posHead;
 
-    private final List<Actuator> acts = new ArrayList<Actuator>();
     private final List<Sensor> sens = new ArrayList<Sensor>();
 
 	/** Liste mit den verschiedenen Aussehen eines Bots */
@@ -218,8 +248,6 @@ public abstract class Bot extends AliveObstacle {
 	/** @return Der Positionsanzeiger */
 	public final BotPosition getBotPosition() { return this.posHead; }
 
-	protected final void addActuator(Actuator act) { acts.add(act); }
-
 	protected final void addSensor(Sensor sen) { sens.add(sen); }
 
 	@Override
@@ -234,8 +262,6 @@ public abstract class Bot extends AliveObstacle {
 			buisitor.visit(c, this);
 		for (Sensor<?> s : sens)
 			buisitor.visit(s, this);
-		for (Actuator<?> a : acts)
-			buisitor.visit(a, this);
 		buisitor.visit(posHead, this);
 	}
 

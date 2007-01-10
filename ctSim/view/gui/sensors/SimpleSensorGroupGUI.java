@@ -37,39 +37,26 @@ import ctSim.model.bots.components.sensors.SimpleSensor;
  * @author Felix Beckwermert
  * @param <E> Typ der Sensoren
  */
-public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI<E> {
-	
-	/**
-	 * 
-	 */
+public class SimpleSensorGroupGUI<E extends SimpleSensor> 
+extends SensorGroupGUI<E> {
 	private static final long serialVersionUID = 1L;
 
 	private Vector<String> columns = new Vector<String>();
 	
 	private TableModel tabData;
 	
-	/** 
-	 * @see ctSim.view.gui.ComponentGroupGUI#initGUI()
-	 */
 	@Override
 	public void initGUI() {
-		
 		this.setBorder(new TitledBorder(new EtchedBorder(), "Sensoren")); //$NON-NLS-1$
 		
-		//System.out.println("Simple: "+this.getAllSensors().size());
 		this.columns.add("Sensor"); //$NON-NLS-1$
 		this.columns.add("Wert"); //$NON-NLS-1$
 		
 		this.tabData = new DefaultTableModel(this.columns, this.getAllSensors().size()) {
-			
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public boolean isCellEditable(@SuppressWarnings("unused") int row, int col) {
-				
 				if(col == 0)
 					return false;
 				return true;
@@ -77,33 +64,19 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 		};
 		
 		Iterator<E> it = this.getAllSensors().iterator();
-		for(int i=0; it.hasNext(); i++) {
+		for(int i=0; it.hasNext(); i++) 
 			this.tabData.setValueAt(it.next().getName(), i, 0);
-		}
 		
 		JTable tab = new JTable(this.tabData);
-		
 		JScrollPane scroll = new JScrollPane(tab);
-		
 		scroll.setMinimumSize(tab.getPreferredSize());
-		
 		this.add(scroll);
 	}
 	
-	/** 
-	 * @see ctSim.view.gui.ComponentGroupGUI#updateGUI()
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateGUI() {
-		
-		//System.out.println("Simple: "+this.getAllSensors().size());
-		
-		Set<E> set = this.getAllSensors();
-		
-		//Vector<Number> data = new Vector<Number>(set.size());
-		
-		Iterator<E> it = set.iterator();
+		Iterator<E> it = getAllSensors().iterator();
 		
 		for(int i=0; it.hasNext(); i++) {
 			// TODO: Hier casten???
@@ -113,9 +86,6 @@ public class SimpleSensorGroupGUI<E extends SimpleSensor> extends SensorGroupGUI
 		}
 	}
 
-	/** 
-	 * @see ctSim.view.gui.ComponentGroupGUI#getSortId()
-	 */
 	@Override
 	public int getSortId() {
 		return 50;

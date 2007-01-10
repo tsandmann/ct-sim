@@ -18,10 +18,16 @@
  */
 package ctSim.model.bots.ctbot.components;
 
+import java.io.IOException;
+import java.net.ProtocolException;
+
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import ctSim.model.Command;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.World;
+import ctSim.model.Command.Code;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.sensors.SimpleSensor;
 

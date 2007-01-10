@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.SystemColor;
 
 import javax.swing.ButtonModel;
 import javax.swing.JCheckBox;
@@ -18,8 +17,6 @@ import ctSim.util.Misc;
 import ctSim.util.RoundGradientPaint;
 
 //$$ doc
-//$$ Reihenfolge richtig? gelb und orange vertauscht?
-//$$ Wieso haben wir eigentlich in echt 3 blaue LEDs (zwei vorn, eine seitlich) und im Sim nur zwei blaue?
 public class Leds extends BotBuisitor {
 	private static final long serialVersionUID = - 8033803343789440470L;
 
@@ -31,18 +28,17 @@ public class Leds extends BotBuisitor {
 		// "Paint" als Nomen, also das, was der Maler an die Wand streicht
 		private final Paint paintWhenOn;
 		private final Paint paintWhenOff;
-		Color highlight;
-		Color rest;
 
-		LedViewer(final ButtonModel model, boolean editable,
+		LedViewer(final ButtonModel model, boolean editable, 
 			final String tooltip, Color colorWhenOn) {
 
 			setModel(model);
 			model.addChangeListener(new ChangeListener() {
 				public void stateChanged(
 					@SuppressWarnings("unused") ChangeEvent e) {
-					LedViewer.this.setToolTipText(tooltip + (model.isSelected()
-						? " (leuchtet)" : " (leuchtet nicht)"));
+					LedViewer.this.setToolTipText(
+						tooltip + " \u2013 " // Strich ("Minuszeichen")
+						+ (model.isSelected() ? "leuchtet" : "leuchtet nicht"));
 				}
 			});
 			setSelected(false); // um initialen Tooltip setzen zu lassen
@@ -94,7 +90,7 @@ public class Leds extends BotBuisitor {
     }
 
 	@Buisit
-	public void buisit(final Led led) { //$$ fin
+	public void buisit(Led led) {
 		setBorder(new TitledBorder("LEDs"));
 		add(new LedViewer(led.getModel(), led.isGuiEditable(), led.getName(),
 			led.getColorWhenOn()));

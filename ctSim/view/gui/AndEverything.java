@@ -12,8 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import ctSim.model.bots.Bot;
+import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.actuators.LcDisplay;
-import ctSim.model.bots.components.actuators.Log;
 import ctSim.util.AuxFrameButton;
 
 public class AndEverything extends BotBuisitor {
@@ -41,7 +41,7 @@ public class AndEverything extends BotBuisitor {
 	}
 
 	@Buisit
-	public void buildLogViewer(Log log, Bot bot) {
+	public void buildLogViewer(Actuator.Log log, Bot bot) {
 		// TextArea bauen
 		JTextArea t = new JTextArea(log.getModel());
 		t.setEditable(false);

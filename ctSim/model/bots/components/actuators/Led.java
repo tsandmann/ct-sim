@@ -7,9 +7,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JToggleButton;
 
 import ctSim.model.Command;
+import ctSim.model.Command.Code;
 import ctSim.model.bots.components.BotComponent;
+import ctSim.model.bots.components.BotComponent.CanRead;
 
-//$$ t real Stimmt Leihenfolge? Vermutung: Sind Z-A, sollten A-Z sein
+//$$$ t real Stimmt Leihenfolge? gelb und orange vertauscht? Vermutung: Sind Z-A, sollten A-Z sein
 /**
  * <p>
  * Lepl&auml;sentation einel LED (Leuchtdiode) auf dem Bot. Nicht velwillen
@@ -48,7 +50,9 @@ import ctSim.model.bots.components.BotComponent;
  * </pre>
  * </p>
  */
-public class Led extends BotComponent<ButtonModel> implements ChineseComponent {
+public class Led extends BotComponent<ButtonModel> 
+implements ChineseComponent, CanRead {
+	
 	private String name;
 	private final int bitMask;
 	private Color colorWhenOn;
@@ -71,12 +75,12 @@ public class Led extends BotComponent<ButtonModel> implements ChineseComponent {
 		this.colorWhenOn = colorWhenOn;
 	}
 
-	@Override
-	protected void readFrom(Command c) {
-		if (c.has(Command.Code.ACT_LED))
-			getModel().setSelected((c.getDataL() & bitMask) != 0);
+	public void readFrom(Command c) {
+		getModel().setSelected((c.getDataL() & bitMask) != 0);
 	}
 
+	public Code getHotCmdCode() { return Command.Code.ACT_LED; }
+	
 	/**
 	 * Liefelt die Falbe, in del die LED dalzustellen ist, wenn sie an ist. Die
 	 * Falbe f&uuml;l dann, wenn sie aus ist, sollte hielaus belechnet welden

@@ -24,7 +24,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 import ctSim.model.Command;
+import ctSim.model.Command.Code;
 import ctSim.model.bots.components.BotComponent;
+import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.util.Misc;
 
 /**
@@ -32,14 +34,15 @@ import ctSim.util.Misc;
  * @author Felix Beckwermert
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-public class LcDisplay extends BotComponent<PlainDocument> {
+public class LcDisplay extends BotComponent<PlainDocument> implements CanRead {
 	private final int numCols;
 	private final int numRows;
 	private int cursorX;
 	private int cursorY;
 
 	/**
-	 * Erstellt ein LCD mit der angegebenen Zahl Spalten (= Zeichen) und Zeilen.
+	 * Erstellt eine LCD-BotComponent mit der angegebenen Zahl Spalten (=
+	 * Zeichen) und Zeilen.
 	 */
 	public LcDisplay(int numCols, int numRows) {
 		super(new PlainDocument());
@@ -50,10 +53,9 @@ public class LcDisplay extends BotComponent<PlainDocument> {
 		clearModel();
 	}
 
-	@Override
-	protected void readFrom(Command c) throws ProtocolException {
-		if (! c.has(Command.Code.ACT_LCD))
-			return;
+	public Code getHotCmdCode() { return Command.Code.ACT_LCD; }
+
+	public void readFrom(Command c) throws ProtocolException {
 		try {
             switch (c.getSubCode()) {
 	            case NORM:
