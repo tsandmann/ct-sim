@@ -59,7 +59,7 @@ import ctSim.util.Misc;
  *                               immer '&gt;'
  *   1           'H' (Ascii 72)  Command-Code, hier der f&uuml;r die
  *                               Helligkeitssensoren
- *   2 Bit 0     0               Richtungsangabe, 0 = Anfrage, 1 = Antwort $$$
+ *   2 Bit 0     0               Richtungsangabe, 0 = Anfrage, 1 = Antwort $$$ direction
  *   2 Bits 1-7  'N' (Ascii 78)  Sub-Command-Code: Nur von einigen Command-Codes
  *                               verwendet, ist normalerweise N (&quot;normal&quot;)
  *   3           0               L&auml;nge der Nutzlast in Byte, hier: keine
@@ -91,7 +91,7 @@ import ctSim.util.Misc;
  * einzelnen Commands behandelt werden, und wie sie im Detail interpretiert
  * werden, ist in den Bot-Komponenten beschrieben, die das Interpretieren
  * vornehmen. Siehe die Abschnitte <strong>c't-Bot-Protokoll</strong> in den
- * Klassen {@link Led}, $$</li>
+ * Klassen {@link Led}, $$ doc c't-Bot-Protokoll </li>
  * <li>Beim Start des Sim &uuml;bertr&auml;gt er ein Command mit dem
  * Command-Code {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * (Zu diesem Zeitpunkt kann der Bot schon laufen, d.h. f&uuml;r den Bot kann
@@ -101,7 +101,7 @@ import ctSim.util.Misc;
  * <li>Jederzeit w&auml;hrend der Verbindung kann der Sim ein Command senden,
  * das das Bild anfordert, das der Maussensor auf der Botunterseite sieht
  * (Command-Code {@link Code#SENS_MOUSE_PICTURE SENS_MOUSE_PICTURE}). Der Bot
- * beantwortet das mit einer Serie von Commands mit dem Aufbau, der in $$$
+ * beantwortet das mit einer Serie von Commands mit dem Aufbau, der in $$$ MousePictureC
  * beschrieben ist. </li>
  * </ul>
  * </p>
@@ -468,8 +468,10 @@ public class Command {
 	/** @return Gib die angehaengten Nutzdaten weiter */
 	public byte[] getPayload() { return payload; }
 
-	/** @return Gibt die Nutzdaten als String zurueck */
-	//$$ Charset doc
+	/**
+	 * @return Gibt die Nutzdaten als String zur&uuml;ck, unter Verwendung des
+	 * Standard-Charset &ndash; siehe {@link String#String(byte[])}.
+	 */
 	public String getPayloadAsString() { return new String(payload); }
 
 	/** @return Gibt die Daten zum Kommando links zurueck */

@@ -32,6 +32,7 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Sensor;
 import ctSim.view.gui.sensors.SensorGroupGUI;
 
+//$$ Doku ConCon nach oben
 /**
  * @author Felix Beckwermert
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
@@ -90,9 +91,11 @@ public class BotViewer extends JScrollPane implements Updatable {
 	}
 
 	private static final Class[] buisitors = {
+		//$$$ Wo ist eigentlich Pos hin?
 		Sens.class,
 		Leds.class,
-		Actuators.class,
+		RunOfTheMill.Actuators.class,
+		RunOfTheMill.Sensors.class,
 		AndEverything.class,
     };
 

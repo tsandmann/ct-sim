@@ -1,6 +1,13 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-11 21:09 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Aufgeraumt (Forts.): CtBotSimTcp
+* Neu: Simulatoren-Infrastruktur im CtBotSimTcp (aber weiss noch nicht, ob die so bleibt)
+* Neu: EncoderSensor ueberarbeitet + samt seinem Simulator
+* Umbenannt: ctSim.view.gui.Actuators -> ctSim.view.gui.RunOfTheMill.Actuators
+* Kleinigkeiten
+
 2007-01-10 17:19 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
 * BotComponent jetzt mit CanRead- und CanWrite-Interfaces, scheint mir besser so
 * Neu: Governor ueberarbeitet, alte Aktuatoren-Gui konnte damit weg

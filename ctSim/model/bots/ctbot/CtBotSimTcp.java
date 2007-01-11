@@ -19,6 +19,7 @@
 package ctSim.model.bots.ctbot;
 
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
+import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES;
 
 import java.awt.Color;
 import java.io.File;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Transform3D;
@@ -34,13 +36,14 @@ import javax.vecmath.Vector3d;
 
 import ctSim.Connection;
 import ctSim.SimUtils;
-import ctSim.TcpConnection;
 import ctSim.model.Command;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.World;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.Sensor;
+import ctSim.model.bots.components.Actuator.Governor;
 import ctSim.model.bots.components.actuators.LcDisplay;
 import ctSim.model.bots.components.actuators.Led;
 import ctSim.model.bots.components.sensors.SimpleSensor;
@@ -72,18 +75,12 @@ public class CtBotSimTcp extends CtBotSim {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.ctbot.CtBotSimTcp");
 
 	/** Die TCP-Verbindung */
-	private TcpConnection connection;
+	private Connection connection;
 
 	private ArrayList<Command> commandBuffer = new ArrayList<Command>();
 
 	/** Sequenznummer der TCP-Pakete */
 	private int seq = 0;
-
-	/** maximale Geschwindigkeit als PWM-Wert */
-	public static final short PWM_MAX = 255;
-
-	/** maximale Geschwindigkeit in Umdrehungen pro Sekunde */
-	public static final float UPS_MAX = (float) 151 / (float) 60;
 
 	/** Umfang eines Rades [m] */
 	public static final double WHEEL_PERIMETER = Math.PI * 0.057d;
@@ -101,11 +98,92 @@ public class CtBotSimTcp extends CtBotSim {
 
 	private int  mouseX, mouseY;
 
-	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR,
-		encL, encR, rc5;
+	private Sensor<?>
+		irL, irR,
+		lineL, lineR,
+		borderL, borderR,
+		lightL, lightR,
+		rc5;
 
-	private Actuator.Governor govL;
-	private Actuator.Governor govR;
+	///////////////////////////////////////////////////////////////////////////
+
+	//$$ deltaT
+	class WheelSimulator {
+		/**
+		 * Maximale Geschwindigkeit als <a
+		 * href="http://en.wikipedia.org/wiki/Pulse-width_modulation">PWM-Wert</a>
+		 */
+		private static final short PWM_MAX = 255;
+
+		/**
+		 * Maximale Geschwindigkeit in Umdrehungen pro Sekunde ("revolutions per
+		 * second")
+		 */
+		private static final float REVS_PER_SEC_MAX = 151f / 60f;
+
+		private final Actuator.Governor governor;
+
+		public WheelSimulator(final Governor governor) {
+			this.governor = governor;
+		}
+
+		/**
+		 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde
+		 *
+		 * @return Umdrehungen pro Sekunde (exakter Wert, d.h. mit Nachkommaanteil)
+		 */
+		protected float revsThisSimStep() {
+			// LODO Die Kennlinien der echten Motoren sind nicht linear
+			float speedRatio = governor.getModel().getValue().floatValue() //$$$ umstaendlich
+				/ PWM_MAX;
+			float speedInRps = speedRatio * REVS_PER_SEC_MAX;
+			float deltaTInSec = getDeltaTInMs() / 1000f;
+			return speedInRps * deltaTInSec;
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	static class EncoderSimulator implements Runnable {
+		/** Anzahl an Encoder-Markierungen auf einem Rad */
+		private static final short ENCODER_MARKS = 60;
+
+		/**
+		 * Bruchteil des Encoder-Schritts, der beim letztem Sim-Schritt
+		 * &uuml;brig geblieben ist [0; 1[
+		 */
+		private double encoderRest = 0;
+
+		private final WheelSimulator wheel;
+		private final EncoderSensor encoder;
+
+		public EncoderSimulator(WheelSimulator wheel, EncoderSensor encoder) {
+			this.wheel = wheel;
+			this.encoder = encoder;
+		}
+
+		public void run() {
+			// Anzahl der Umdrehungen der Raeder
+			double revs = wheel.revsThisSimStep();
+
+			// Encoder-Schritte als Fliesskommazahl errechnen:
+			// Anzahl der Drehungen mal Anzahl der Markierungen,
+			// dazu der Rest der letzten Runde
+			double tmp = (revs * ENCODER_MARKS) + encoderRest;
+			// Der Bot bekommt nur ganze Schritte zu sehen,
+			int encoderSteps = (int)Math.floor(tmp);
+			// aber wir merken uns Teilschritte intern
+			encoderRest = tmp - encoderSteps;
+			// und speichern sie.
+			encoder.getModel().setValue(encoderSteps); // commit //$$$ umstaendlich
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	private final WheelSimulator leftWheel;
+	private final WheelSimulator rightWheel;
+	private final List<Runnable> simulators = new ArrayList<Runnable>();
 
 	/**
 	 * @param w Die Welt
@@ -118,12 +196,19 @@ public class CtBotSimTcp extends CtBotSim {
 		Connection con) {
 
 		super(w, name, pos, head);
-		this.connection = (TcpConnection)con;
+		this.connection = con;
 		this.world = w;
+
+		Actuator.Governor govL;
+		Actuator.Governor govR;
+		final EncoderSensor encL;
+		final EncoderSensor encR;
 
 		components.add(
 			govL = new Actuator.Governor(true),
 			govR = new Actuator.Governor(false),
+			encL = new EncoderSensor(true),
+			encR = new EncoderSensor(false),
 			new LcDisplay(20, 4),
 			new Actuator.Log()
 		);
@@ -137,52 +222,56 @@ public class CtBotSimTcp extends CtBotSim {
         	components.add(new Led(s, numLeds - i - 1, ledColors[i]));
         }
 
+        // Component-Flag-Tabelle
 		components.applyFlagTable(
 			_(Actuator.Governor.class, READS),
+			_(EncoderSensor.class    , WRITES),
 			_(LcDisplay.class        , READS),
 			_(Actuator.Log.class     , READS),
 			_(Led.class              , READS)
 		);
 
-		initSensors();
-	}
+		// Simulation
+		leftWheel = new WheelSimulator(govL);
+		rightWheel = new WheelSimulator(govR);
 
-	private void initSensors() {
-		this.encL = new EncoderSensor("EncL",
-			new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), govL);
-		this.encR = new EncoderSensor("EncR",
-			new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d), govR);
+		simulators.add(new EncoderSimulator(leftWheel , encL));
+		simulators.add(new EncoderSimulator(rightWheel, encR));
 
-		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d));
-		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d));
-		this.irL.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Left.txt"), 100f));
-		this.irR.setCharacteristic(new Characteristic(new File("characteristics/gp2d12Right.txt"), 80f));
+		// ...
 
-		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
-		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.irL = new DistanceSensor(this.world, this, "IrL",
+			new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d));
+		this.irR = new DistanceSensor(this.world, this, "IrR",
+			new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d));
+		this.irL.setCharacteristic(new Characteristic(
+			new File("characteristics/gp2d12Left.txt"), 100f));
+		this.irR.setCharacteristic(new Characteristic(
+			new File("characteristics/gp2d12Right.txt"), 80f));
 
-		this.borderL = new BorderSensor(this.world, this, "BorderL", new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
-		this.borderR = new BorderSensor(this.world, this, "BorderR", new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.lineL = new LineSensor(this.world, this, "LineL",
+			new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2),
+			new Vector3d(0d, 1d, 0d));
+		this.lineR = new LineSensor(this.world, this, "LineR",
+			new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2),
+			new Vector3d(0d, 1d, 0d));
 
-		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
-		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d));
+		this.borderL = new BorderSensor(this.world, this, "BorderL",
+			new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2),
+			new Vector3d(0d, 1d, 0d));
+		this.borderR = new BorderSensor(this.world, this, "BorderR",
+			new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2),
+			new Vector3d(0d, 1d, 0d));
 
-		this.rc5 = new RemoteControlSensor("RC fuer '"+this.getName()+"'", new Point3d(), new Vector3d());
+		this.lightL = new LightSensor(this.world, this, "LightL",
+			new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2),
+			new Vector3d(0d, 1d, 0d));
+		this.lightR = new LightSensor(this.world, this, "LightR",
+			new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2),
+			new Vector3d(0d, 1d, 0d));
 
-		this.addSensor(this.encL);
-		this.addSensor(this.encR);
-
-		this.addSensor(this.irL);
-		this.addSensor(this.irR);
-
-		this.addSensor(this.lineL);
-		this.addSensor(this.lineR);
-
-		this.addSensor(this.borderL);
-		this.addSensor(this.borderR);
-
-		this.addSensor(this.lightL);
-		this.addSensor(this.lightR);
+		this.rc5 = new RemoteControlSensor("RC fuer '"+this.getName()+"'",
+			new Point3d(), new Vector3d());
 
 		this.addSensor(this.rc5);
 
@@ -215,19 +304,18 @@ public class CtBotSimTcp extends CtBotSim {
 				return "Maus-Sensor-Wert Y";
 			}
 		});
-	}
 
-	/**
-	 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde
-	 *
-	 * @param motPWM PWM-Verhaeltnis
-	 * @return Umdrehungen pro Sekunde
-	 */
-	private float calculateWheelSpeed(int motPWM) {
-		float tmp = ((float) motPWM / (float) PWM_MAX);
-		tmp = tmp * UPS_MAX;
-		return tmp;
-		// TODO Die Kennlinien der echten Motoren ist nicht linear
+		this.addSensor(this.irL);
+		this.addSensor(this.irR);
+
+		this.addSensor(this.lineL);
+		this.addSensor(this.lineR);
+
+		this.addSensor(this.borderL);
+		this.addSensor(this.borderR);
+
+		this.addSensor(this.lightL);
+		this.addSensor(this.lightR);
 	}
 
 	/**
@@ -245,119 +333,11 @@ public class CtBotSimTcp extends CtBotSim {
 		return distance * 100 / 2.54 * SENS_MOUSE_DPI;
 	}
 
-	/**
-	 * Variable, die sich merkt, welche Daten wir zueltzt uebertragen haben
-	 */
-	private int lastTransmittedSimulTime =0;
-
-	/**
-	 * Leite Sensordaten an den Bot weiter
-	 */
-	private synchronized void transmitSensors() {
-		try {
-			Command command;
-			command = new Command(Command.Code.SENS_IR);
-			command.setDataL(((Double)this.irL.getValue()).intValue());
-			command.setDataR(((Double)this.irR.getValue()).intValue());
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			command = new Command(Command.Code.SENS_ENC);
-			command.setDataL((Integer)this.encL.getValue());
-			command.setDataR((Integer)this.encR.getValue());
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			command = new Command(Command.Code.SENS_BORDER);
-			command.setDataL(((Short)this.borderL.getValue()).intValue());
-			command.setDataR(((Short)this.borderR.getValue()).intValue());
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			// TODO
-			command = new Command(Command.Code.SENS_DOOR);
-			command.setDataL(0);
-			command.setDataR(0);
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			command = new Command(Command.Code.SENS_LDR);
-			command.setDataL((Integer)this.lightL.getValue());
-			command.setDataR((Integer)this.lightR.getValue());
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			command = new Command(Command.Code.SENS_LINE);
-			command.setDataL(((Short)this.lineL.getValue()).intValue());
-			command.setDataR(((Short)this.lineR.getValue()).intValue());
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			if(this.getObstState() != OBST_STATE_NORMAL) {
-				this.mouseX = 0;
-				this.mouseY = 0;
-			}
-			command = new Command(Command.Code.SENS_MOUSE);
-			command.setDataL(this.mouseX);
-			command.setDataR(this.mouseY);
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			// TODO: nur fuer real-bot
-			command = new Command(Command.Code.SENS_TRANS);
-			command.setDataL(0);
-			command.setDataR(0);
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			Object rc5 = this.rc5.getValue();
-			if(rc5 != null) {
-				Integer val = (Integer)rc5;
-				if(val != 0) {
-					command = new Command(Command.Code.SENS_RC5);
-					command.setDataL(val);
-					command.setDataR(42);
-					command.setSeq(seq++);
-					connection.write(command);
-				}
-			}
-
-			// TODO: nur fuer real-bot
-			command = new Command(Command.Code.SENS_ERROR);
-			command.setDataL(0);
-			command.setDataR(0);
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			lastTransmittedSimulTime= (int)world.getSimTimeInMs();
-			lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
-			command = new Command(Command.Code.DONE);
-			command.setDataL(lastTransmittedSimulTime);
-			command.setDataR(0);
-			command.setSeq(this.seq++);
-			connection.write(command);
-		} catch (IOException e) {
-			lg.severe(e, "Error sending sensor data; dying");
-			die();
-		}
-	}
-
-	/** sendet ein IR-Fernbedienungsklommandoi an den Bot
-	 *
-	 * @param command RC5-Code des Kommandos
-	 */
-	public void sendRCCommand(int command){
-		// TODO Warning entfernen
-		boolean setValue = this.rc5.setValue((Object)(new Integer(command)));
-		if (!setValue) {
-			lg.warn("Kann RC5-Kommando nicht absetzen");
-		}
-	}
+	/** Puffer fuer kleine Mausbewegungen */
+	private double deltaXRest = 0;
 
 	/** Puffer fuer kleine Mausbewegungen */
-	private double deltaXRest=0;
-	/** Puffer fuer kleine Mausbewegungen */
-	private double deltaYRest=0;
+	private double deltaYRest = 0;
 
 	//TODO Bot soll in Loecher reinfahren, in Hindernisse aber nicht. Momentan: calcPos traegt Pos nicht ein, wenn Hindernis oder Loch. Gewuenscht: Bei Loch das erste Mal Pos updaten, alle weiteren Male nicht
 	//TODO calcPos umziehen nach Bot oder CtBotSim
@@ -365,18 +345,11 @@ public class CtBotSimTcp extends CtBotSim {
 		////////////////////////////////////////////////////////////////////
 		// Position und Heading berechnen:
 
-		// Anzahl der Umdrehungen der Raeder
-		double turnsL = calculateWheelSpeed(
-			govL.getModel().getValue().intValue()); //$$$ umstaendlich
-		turnsL = turnsL * getDeltaT() / 1000.0f;
-		double turnsR = calculateWheelSpeed(
-			govR.getModel().getValue().intValue()); //$$$ umstaendlich
-		turnsR = turnsR * getDeltaT() / 1000.0f;
+		// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe pdf //$$ Ja welches pdf?
 
-		// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe pdf
 		// Absolut zurueckgelegte Strecke pro Rad berechnen
-		double s_l = turnsL * WHEEL_PERIMETER;
-		double s_r = turnsR * WHEEL_PERIMETER;
+		double s_l = leftWheel .revsThisSimStep() * WHEEL_PERIMETER;
+		double s_r = rightWheel.revsThisSimStep() * WHEEL_PERIMETER;
 
 		// halben Drehwinkel berechnen
 		double _gamma = (s_l - s_r) / (4.0 * WHEEL_DIST);
@@ -515,6 +488,112 @@ public class CtBotSimTcp extends CtBotSim {
 	}
 
 	/**
+	 * Variable, die sich merkt, wann wir zuletzt Daten &uuml;bertragen haben
+	 */
+	private int lastTransmittedSimulTime =0;
+
+	/** Leite Sensordaten an den Bot weiter */
+	private synchronized void transmitSensors() {
+		try {
+			Command command;
+			command = new Command(Command.Code.SENS_IR);
+			command.setDataL(((Double)this.irL.getValue()).intValue());
+			command.setDataR(((Double)this.irR.getValue()).intValue());
+			command.setSeq(this.seq++);
+			connection.write(command);
+
+			CommandOutputStream s = connection.createCmdOutStream();
+			for (BotComponent<?> c : components)
+				c.askForWrite(s);
+			s.flush();
+			
+			command = new Command(Command.Code.SENS_BORDER);
+			command.setDataL(((Short)this.borderL.getValue()).intValue());
+			command.setDataR(((Short)this.borderR.getValue()).intValue());
+			command.setSeq(this.seq++);
+			connection.write(command);
+
+			// TODO
+			command = new Command(Command.Code.SENS_DOOR);
+			command.setDataL(0);
+			command.setDataR(0);
+			command.setSeq(this.seq++);
+			connection.write(command);
+
+			command = new Command(Command.Code.SENS_LDR);
+			command.setDataL((Integer)this.lightL.getValue());
+			command.setDataR((Integer)this.lightR.getValue());
+			command.setSeq(this.seq++);
+			connection.write(command);
+
+			command = new Command(Command.Code.SENS_LINE);
+			command.setDataL(((Short)this.lineL.getValue()).intValue());
+			command.setDataR(((Short)this.lineR.getValue()).intValue());
+			command.setSeq(this.seq++);
+			connection.write(command);
+
+			if(this.getObstState() != OBST_STATE_NORMAL) {
+				this.mouseX = 0;
+				this.mouseY = 0;
+			}
+			command = new Command(Command.Code.SENS_MOUSE);
+			command.setDataL(this.mouseX);
+			command.setDataR(this.mouseY);
+			command.setSeq(this.seq++);
+			connection.write(command);
+
+			// TODO: nur fuer real-bot
+			command = new Command(Command.Code.SENS_TRANS);
+			command.setDataL(0);
+			command.setDataR(0);
+			command.setSeq(this.seq++);
+			connection.write(command);
+
+			Object rc5 = this.rc5.getValue();
+			if(rc5 != null) {
+				Integer val = (Integer)rc5;
+				if(val != 0) {
+					command = new Command(Command.Code.SENS_RC5);
+					command.setDataL(val);
+					command.setDataR(42);
+					command.setSeq(seq++);
+					connection.write(command);
+				}
+			}
+
+			// TODO: nur fuer real-bot
+			command = new Command(Command.Code.SENS_ERROR);
+			command.setDataL(0);
+			command.setDataR(0);
+			command.setSeq(this.seq++);
+			connection.write(command);
+
+			lastTransmittedSimulTime= (int)world.getSimTimeInMs();
+			lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
+			command = new Command(Command.Code.DONE);
+			command.setDataL(lastTransmittedSimulTime);
+			command.setDataR(0);
+			command.setSeq(this.seq++);
+			connection.write(command);
+		} catch (IOException e) {
+			lg.severe(e, "Error sending sensor data; dying");
+			die();
+		}
+	}
+
+	/** sendet ein IR-Fernbedienungsklommandoi an den Bot
+	 *
+	 * @param command RC5-Code des Kommandos
+	 */
+	public void sendRCCommand(int command){
+		// TODO Warning entfernen
+		boolean setValue = ((Sensor<Integer>)rc5).setValue(new Integer(command));
+		if (!setValue) {
+			lg.warn("Kann RC5-Kommando nicht absetzen");
+		}
+	}
+
+	/**
 	 * Wertet ein empfangenes Kommando aus
 	 *
 	 * @param command Das Kommando
@@ -569,105 +648,70 @@ public class CtBotSimTcp extends CtBotSim {
 	}
 
 	/**
-	*  Hier erfolgt die Aktualisierung der gesamten Simualtion
-	* @see ctSim.model.AliveObstacle#updateSimulation(long)
-	* @param simulTime
-	*/
+	 * Hier erfolgt die Aktualisierung der gesamten Simulation
+	 *
+	 * @see ctSim.model.AliveObstacle#updateSimulation(long)
+	 * @param simulTime
+	 */
 	@Override
 	public void updateSimulation(long simulTime) {
-		super.updateSimulation(simulTime);
+		super.updateSimulation(simulTime); // Da drin auch Alt-Sensoren-Updates (eigentl. Simulation)
+		for (Runnable sim : simulators)
+			sim.run();
 		// TODO Diese Funktion hat hier rein gar nix zu suchen und muss nach ctbotsim
 		calcPos();
 	}
 
-	/**
-	 * Sichert ein Kommando im Puffer
-	 * @param command Das Komamndo
-	 */
+	/** Sichert ein Kommando im Puffer */
 	public int storeCommand(Command command) {
 		int result=0;
 		synchronized (commandBuffer) {
-			// 	TODO verhidnern, dass teilpakete ankommen!!! Achtun geht nicht ohne Aenderungen mit dem C-Code
-
-//			System.out.println("Put CMD: "+command.getCommand()+" DataL: "+command.getDataL()+" Seq: "+command.getSeq());
-
 			commandBuffer.add(command);
-			//System.out.println(command.toString());
-		//	System.out.println("Command: "+(char)command.getCommand()+"  -  "+(char)command.getSubcommand());
-				// Das DONE-kommando ist das letzte in einem Datensatz und beendet ein Paket
+			// Das DONE-kommando ist das letzte in einem Datensatz und beendet ein Paket
 			if (command.has(Command.Code.DONE)) {
-//				System.out.println(world.getRealTime()+"ms: received Frame for "+command.getDataL()+" ms - expected "+lastTransmittedSimulTime+" ms");
-				if (command.getDataL() == lastTransmittedSimulTime){
-//					recvTime=System.nanoTime()/1000;
-					result=1;
-	//				System.out.println("warten auf Bot: "+(recvTime-sendTime)+" usec");
-
-	//				System.out.println("releasing\n");
-				}
+				if (command.getDataL() == lastTransmittedSimulTime)
+					result = 1;
 			}
 		}
 		return result;
 	}
 
-	/**
-	* Verarbeitet alle eingegangenen Daten
-	*/
+	/** Verarbeitet alle eingegangenen Daten */
 	public void processCommands(){
 		synchronized (commandBuffer) {
-//			int i=0;
 			Iterator<Command> it = commandBuffer.iterator();
-//			System.out.println(commandBuffer.size()+" Elemente im Puffer");
 			while (it.hasNext()){
 				Command command = it.next();
-//				System.out.println("GET("+(i++)+") CMD: "+command.getCommand()+" DataL: "+command.getDataL()+" Seq: "+command.getSeq());
 				try {
 					evaluateCommand(command);
 				} catch (ProtocolException e) {
-					lg.warning(e, "Fehler beim Verarbeiten eines Kommandos:%s",
-						command);
+					lg.warning(e, "Fehler beim Verarbeiten eines Kommandos");
 				}
 			}
 			commandBuffer.clear();
-			// resete Signal
-//			waitForCommands= new CountDownLatch(1);
 		}
 	}
 
-	//long t1, t2;
 	public void receiveCommands() {
-//		long start, duration;
-		int run=0;
-
-		//t1= System.nanoTime()/1000;
-
-//		long aussen= t1-t2;
-
-		while (run==0) {
+		int run = 0; //$$ Variable stinkt
+		while (run == 0) {
 			try {
-//				start= System.nanoTime();
 				try {
 					run = storeCommand(new Command(connection));
 				} catch (ProtocolException e) {
 					lg.warn(e, "Ungu\00FCltiges Kommando; ignoriere");
 				}
-//				duration= (System.nanoTime()-start)/1000;
-//				System.out.println("habe auf Kommando "+(char)command.getCommand()+" "+duration+" usec gewartet");
 			} catch (IOException e) {
-				lg.severe(e, "Verbindung unterbrochen -- Bot stirbt");
+				lg.severe(e, "Verbindung unterbrochen -- Bot stirbt"); //$$ Wie, "der stirbt"? Wo ist der die()-Aufruf?
 				setHalted(true);
-				run =-1;
+				run = -1;
 			}
 		}
-
-		//t2 = System.nanoTime()/1000;
-//		System.out.println("zeit in receiveCommands: "+(t2-t1)+" us   --  Zeit ausserhalb :"+aussen+ " us" );
-	//	die();
 	}
 
 	/** Erweitert die() um das Schliessen der TCP-Verbindung */
 	@Override
 	public void die() {
-		// TODO Auto-generated method stub
 		super.die();
 		try {
 			connection.close();
@@ -676,10 +720,10 @@ public class CtBotSimTcp extends CtBotSim {
 		}
 	}
 
+	//$$ Unterschied cleanup() und die()? Zusammenfassen
 	@Override
 	protected void cleanup() {
-		// TODO Auto-generated method stub
 		super.cleanup();
-		world=null;
+		world = null;
 	}
 }

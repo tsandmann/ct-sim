@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-//$$$ komplettieren
+//$$ komplettieren
 public class DecoratororTest {
 	interface A                    { /* some type */ }
 	interface SubA    extends A    { /* some type */ }

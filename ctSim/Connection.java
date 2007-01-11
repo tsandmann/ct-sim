@@ -29,6 +29,7 @@ import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.util.FmtLogger;
 
+//$$ doc
 /**
  * Repr&auml;sentiert eine Verbindung
  *
@@ -54,7 +55,7 @@ public abstract class Connection {
 			output.close();
 	}
 
-	//$$$ ? Umstellen, so dass man Con an Command gibt; Methode weg
+	//$$$ Umstellen, so dass man Con an Command gibt; Methode weg
 	/**
 	 * Uebertraegt Daten
 	 *
@@ -67,6 +68,7 @@ public abstract class Connection {
 		output.flush();
 	}
 
+	//$$ verwendet?
 	public synchronized CommandOutputStream createCmdOutStream() {
 		return new CommandOutputStream(output);
 	}

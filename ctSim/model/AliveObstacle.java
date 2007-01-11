@@ -448,7 +448,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 //		world = null;
 //	}
 
-	// $$$ Bounds ins AObstacle
+	// $$ Bounds ins AObstacle
 	/**
 	 * @return Gibt die Grenzen des Bots zurueck
 	 */
@@ -522,10 +522,12 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	/**
-	 * Liefert die Zeit zwischen dem aktuellen Stand und dem vorhergehenden Aufruf von updateSimulation
-	 * @return Returns the deltaT.
+	 * Liefert die Sim-Zeit, die verstrichen ist seit dem vorigen Aufruf von
+	 * updateSimulation().
+	 * 
+	 * @return Delta-T in Millisekunden
 	 */
-	public long getDeltaT() {
+	public long getDeltaTInMs() {
 		return deltaT;
 	}
 

@@ -114,6 +114,11 @@ public abstract class BotComponent<M> {
 	public BotComponent(M model) { this.model = model; }
 
 	public M getModel() { return model; }
+	
+	private UnsupportedOperationException createUnsuppOp(String s) {
+		return new UnsupportedOperationException("Bot-Komponente "+this+
+			" unterst\u00FCtzt kein "+s);
+	}
 
 	public void setFlags(ConnectionFlags... flags) {
 		// Wenn flags == null wird alles default, also false
@@ -122,29 +127,29 @@ public abstract class BotComponent<M> {
 		// wollen
 		if (f.get(ConnectionFlags.READS)) {
 			if (! (this instanceof CanRead))
-				throw new UnsupportedOperationException();
+				throw createUnsuppOp("Lesen");
 		}
 		if (f.get(ConnectionFlags.WRITES)) {
 			if (! (this instanceof CanWrite))
-				throw new UnsupportedOperationException();
+				throw createUnsuppOp("Schreiben");
 		}
 		this.flags = f;
 	}
 
-	public boolean writesToTcp() {
+	public boolean writesCommands() {
 		return flags.get(ConnectionFlags.WRITES);
 	}
 
-	public boolean readsFromTcp() {
+	public boolean readsCommands() {
 		return flags.get(ConnectionFlags.READS);
 	}
 
 	public boolean isGuiEditable() {
-		return writesToTcp();
+		return writesCommands();
 	}
 
 	public void offerRead(Command c) throws ProtocolException {
-		if (readsFromTcp()) {
+		if (readsCommands()) {
 			// Cast kann nicht in die Hose gehen wegen setFlags()
 			CanRead self = (CanRead)this;
 			if (c.has(self.getHotCmdCode()))
@@ -153,7 +158,7 @@ public abstract class BotComponent<M> {
 	}
 
 	public final void askForWrite(CommandOutputStream s) {
-		if (writesToTcp()) {
+		if (writesCommands()) {
 			// Cast kann nicht in die Hose gehen wegen setFlags()
 			CanWrite self = (CanWrite)this;
 			self.writeTo(s.getCommand(self.getHotCmdCode()));

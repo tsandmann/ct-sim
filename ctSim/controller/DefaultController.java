@@ -26,6 +26,7 @@ import java.lang.reflect.Constructor;
 import java.net.ProtocolException;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -48,6 +49,7 @@ import ctSim.view.View;
 
 //TODO Es passiert Mist, wenn TestBots hinzugefuegt werden, bevor ein Parcours existiert. Untersuchen.
 
+//$$$ Stop-Knopf geht nicht
 /**
  * Zentrale Controller-Klasse des c't-Sim
  */
@@ -454,7 +456,7 @@ public class DefaultController implements Runnable, Controller {
 	                			break;
 
 	                		default:
-	                			throw new ProtocolException(); //$$
+	                			throw new ProtocolException();
 	                	}
 	                } else {
 	                    lg.fine("Kommando, aber kein Willkommen von Verbindung " +
@@ -492,6 +494,8 @@ public class DefaultController implements Runnable, Controller {
     	lg.fine("Verbinde mit %s:%d ...", address, port);
     	try {
 			addBot(new TcpConnection(address, port));
+    	} catch (UnknownHostException e) {
+    		lg.warn(e, "Host nicht gefunden"); //$$$ t Host nicht gefunden
 		} catch (Exception e) {
 			throw new AssertionError(e); //$$$ doof, mindestens timeout und UnknownHost fangen und anzeigen
 		}

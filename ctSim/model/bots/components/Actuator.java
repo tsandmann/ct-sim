@@ -26,14 +26,22 @@ import ctSim.model.Command;
 import ctSim.model.Command.Code;
 import ctSim.model.bots.components.BotComponent.CanRead;
 
-// $$ doc
 /**
+ * Klasse, die nur als Container f&uuml;r innere Klassen dient und selber keine
+ * Methoden oder Felder hat. (F&uuml;r die winzigen inneren Klassen lohnt sich
+ * keine eigene Datei.)
+ * 
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-public interface Actuator {
-
-	public static class Governor extends NumberTwin 
+public abstract class Actuator {
+	/**
+	 * Governor, der die Fahrgeschwindigkeit des Bot regelt (genauer: die
+	 * Drehgeschwindigkeit eines Rads; der c't-Bot hat daher einen linken und
+	 * einen rechten Governor).
+	 */ 
+	public static class Governor extends NumberTwin
 	implements CanRead {
-		
+
 		@Override
 		protected String getBaseDescription() {
 			return "Motorbegrenzer";
@@ -44,9 +52,10 @@ public interface Actuator {
 		public Code getHotCmdCode() { return Code.ACT_MOT; }
 	}
 
+	//$$ doc DoorServo
 	public static class DoorServo extends BotComponent<SpinnerNumberModel>
 	implements CanRead {
-		
+
 		@Override
 		public String getDescription() {
 			return "Servomotor f\u00FCr Klappe";

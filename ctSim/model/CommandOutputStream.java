@@ -39,7 +39,9 @@ public class CommandOutputStream {
 	public synchronized void flush() throws IOException {
 		for (Command c : buffer.values())
 			write(c);
-		write(doneCommand);
+		//$$ doc Normalbetrieb kommt nicht vor
+		if (doneCommand != null)
+			write(doneCommand);
 		buffer.clear();
 	}
 }

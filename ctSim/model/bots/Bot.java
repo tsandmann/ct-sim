@@ -118,7 +118,7 @@ public abstract class Bot extends AliveObstacle {
          *         // Hier die Component-Flag-Tabelle
          *         // Setzen, welche BotComponents lesen/schreiben
          *         components.applyFlagTable(
-         *             _(Plappermaul.class, WRITES),   // schreibt nur ins TCP
+         *             _(Plappermaul.class, WRITES),   // schreibt ins TCP
          *             _(Nervensaegmodul.class, READS, WRITES), // liest + schreibt
          *             _(Goldbein.class)   // weder noch
          *         );
@@ -146,10 +146,10 @@ public abstract class Bot extends AliveObstacle {
         		for (CompntWithFlag cwf : compntFlagTable) {
         			if (cwf.compntClass.isAssignableFrom(compnt.getClass()))
         				compnt.setFlags(cwf.flags);
+        			}
         		}
         	}
         }
-    }
 
 	/**
 	 * <p>
