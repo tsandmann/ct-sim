@@ -10,7 +10,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import ctSim.ConfigManager;
 import ctSim.util.FmtLogger;
 import ctSim.view.TimeLogger;
 import ctSim.view.View;
@@ -103,7 +102,7 @@ public class Main {
 		Config.SourceFile configFile = dependencies.get(
 			Config.SourceFile.class);
 		try {
-			ConfigManager.loadConfigFile(configFile);
+			Config.loadConfigFile(configFile);
 			return;
 		} catch (FileNotFoundException e) {
 			lg.severe(e, "Konfigurationsdatei '"+configFile+"' nicht gefunden");
@@ -134,7 +133,7 @@ public class Main {
 		View view = new MainWindow(c);
 		try {
 			// View um ContestConductor erweitern falls so konfiguriert
-			if (ConfigManager.getValue("useContestConductor").
+			if (Config.getValue("useContestConductor").
 					equalsIgnoreCase("true")) {
 				view = ViewYAdapter.newInstance(view,
 					dependencies.get(ContestConductor.class),

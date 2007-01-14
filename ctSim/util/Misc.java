@@ -99,4 +99,16 @@ public class Misc {
 		// Zweierkomplement (1. Bit gesetzt = negatives Vorzeichen)
 		return (value & 0x7F) + (value < 0 ? 128 : 0);
 	}
+
+	/**
+	 * Liefert das letzte Element des &uuml;bergebenen Arrays.
+	 * 
+	 * @throws ArrayIndexOutOfBoundsException falls das &uuml;bergebene
+	 * Array leer ist (L&auml;nge 0 hat)
+	 * @throws NullPointerException falls das &uuml;bergebene Array
+	 * {@code null} ist.
+	 */
+	public static <T> T lastOf(T[] array) {
+		return array[array.length - 1];
+	}
 }

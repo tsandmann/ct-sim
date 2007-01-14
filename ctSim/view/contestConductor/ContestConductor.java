@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import ctSim.ConfigManager;
+import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.controller.DefaultController;
 import ctSim.controller.Main;
@@ -425,10 +426,10 @@ public class ContestConductor implements View {
 	 * @param f
 	 */
 	private void executeBot(File f){
-		String host = ConfigManager.getValue("host"+nextHost);
-		String user = ConfigManager.getValue("host"+nextHost+"_username");
+		String host = Config.getValue("host"+nextHost);
+		String user = Config.getValue("host"+nextHost+"_username");
 
-		String server = ConfigManager.getValue("ctSimIP");
+		String server = Config.getValue("ctSimIP");
 		if (server == null)
 			server = "localhost"; //$$ umziehen: Sollte in Config
 
@@ -466,9 +467,9 @@ public class ContestConductor implements View {
 	private Bot executeBot(Blob b) throws SQLException, IOException {
 		// Blob in Datei
 		File f = File.createTempFile(
-			ConfigManager.getValue("contestBotFileNamePrefix"),
-			ConfigManager.path2Os(ConfigManager.getValue("contestBotFileNameSuffix")),
-			new File(ConfigManager.getValue("contestBotTargetDir")));
+			Config.getValue("contestBotFileNamePrefix"),
+			ConfigManager.path2Os(Config.getValue("contestBotFileNameSuffix")),
+			new File(Config.getValue("contestBotTargetDir")));
 		f.deleteOnExit(); //$$ deleteOnExit() scheint nicht zu klappen; Theorie:Prozesse noch offen wenn VM das aufrufen will
 		lg.fine("Schreibe Bot nach '"+f.getAbsolutePath()+"'");
 		Misc.copyStreamToStream(b.getBinaryStream(), new FileOutputStream(f));

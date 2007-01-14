@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import ctSim.controller.Config;
+
 /**
  * <p>
  * Serielle Verbindung / USB-Verbindung zu realen Bots (als Hardware vorhandenen
@@ -61,12 +63,12 @@ public class ComConnection extends Connection {
 		NumberFormatException, UnsupportedCommOperationException, IOException {
 
 		CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(
-			ConfigManager.getValue("serialport"));
+			Config.getValue("serialport"));
 		port = (SerialPort)portId.open("CtSim", 2000);
 
 		//TODO Parameter configurierbar machen
 		port.setSerialPortParams(
-			Integer.parseInt(ConfigManager.getValue("serialportBaudrate")),
+			Integer.parseInt(Config.getValue("serialportBaudrate")),
 			SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
 			SerialPort.PARITY_NONE);
 		port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);

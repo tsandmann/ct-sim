@@ -18,24 +18,24 @@
  */
 package ctSim.model;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Group;
 import javax.media.j3d.Node;
-import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import ctSim.ConfigManager;
 import ctSim.SimUtils;
+import ctSim.controller.Config;
 import ctSim.controller.DefaultController;
+import ctSim.util.Closure;
 import ctSim.util.FmtLogger;
 import ctSim.view.gui.Debug;
 
@@ -47,7 +47,11 @@ import ctSim.view.gui.Debug;
 public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
 
-	private List<Runnable> deathListeners = new ArrayList<Runnable>();
+   private static final CountingMap numInstances = new CountingMap();
+
+	private final List<Runnable> deathListeners = new ArrayList<Runnable>();
+	private final List<Closure<Color>> appearanceListeners =
+		new ArrayList<Closure<Color>>();
 
 	/**
 	 * <p>
@@ -90,10 +94,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 	private BranchGroup branchgrp;
 	private TransformGroup transformgrp;
-	private Shape3D shape;
-
-	// TODO: Appearances
-	private HashMap<String, Appearance> apps;
+	private Group shape;
 
 	/** Simultime beim letzten Aufruf */
 	// TODO
@@ -109,15 +110,25 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 * @param heading Blickrichtung des Objekts
 	 */
 	public AliveObstacle(String name, Point3d position, Vector3d heading) {
-
 		this.name = name;
 		this.pos = position;
 		this.head = heading;
+
+		// Instanz-Zahl erhoehen
+		numInstances.increase(getClass());
+		// Wenn wir sterben, Instanz-Zahl reduzieren
+		addDeathListener(new Runnable() {
+			@SuppressWarnings("synthetic-access")
+			public void run() {
+				numInstances.decrease(AliveObstacle.this.getClass());
+			}
+		});
 
 		initBG();
 
 		this.setPosition(this.pos);
 		this.setHeading(this.head);
+		updateAppearance();
 	}
 
 	private void initBG() {
@@ -138,52 +149,28 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 * @return Die 3D-Gestalt des Objekts
 	 */
-	public final Shape3D getShape() {
-
-		return this.shape;
+	public final Group getShape() {
+		return shape;
 	}
 
 	/**
-	 * @param shape1 3D-Gestalt, die das Objekt erhalten soll
+	 * @param s 3D-Gestalt, die das Objekt erhalten soll
 	 */
-	public final void setShape(Shape3D shp) {
-
+	public final void setShape(Group s) {
 		// TODO: Test: Reicht auch einfach "this.shape"-Referenz anzupassen?
-
 		if(this.shape != null)
 			this.transformgrp.removeChild(this.shape);
 
-		this.shape = shp;
-		this.shape.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
-		//this.shape.setName(getName() + " Body");
-		this.shape.setPickable(true);
-		this.shape.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		this.shape = s;
 
 		this.transformgrp.addChild(this.shape);
-	}
-
-	// TODO: Altlast: anders loesen...
-	/**
-	 * @param map
-	 */
-	private final void setAppearances(HashMap<String, Appearance> map) {
-
-		if(map.isEmpty())
-			return;
-
-		this.apps = map;
-
-		this.setAppearance(this.getObstState());
 	}
 
 	/**
 	 * @param ctrl Referenz auf den Controller, die gesetzt werden soll
 	 */
 	public final void setController(DefaultController ctrl) {
-
 		this.controller = ctrl;
-		// setApp darf erst hier passieren (keine Ahnung warum). Es macht unerklaerliche NullPtrExcp, wenn es im Konstruktor ist
-		setAppearances(ConfigManager.getBotAppearances(getName()));
 	}
 
 	public final BranchGroup getBranchGroup() {
@@ -231,18 +218,56 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	/**
-	 * @return Gibt den Namen des Objektes zurueck.
+	 * <p>
+	 * Laufende Nummer des AliveObstacles, und zwar abh&auml;ngig von der
+	 * Subklasse: Laufen z.B. 2 GurkenBots und 3 TomatenBots (alle von
+	 * AliveObstacle abgeleitet), dann sind die Instance-Numbers:
+	 * <ul>
+	 * <li>GurkenBot 0</li>
+	 * <li>GurkenBot 1</li>
+	 * <li>TomatenBot 0</li>
+	 * <li>TomatenBot 1</li>
+	 * <li>TomatenBot 2</li>
+	 * </ul>
+	 * Instance-Numbers fangen immer bei 0 an.
+	 * </p>
+	 *
+	 * @see #getName()
 	 */
-	// TODO: Should be abstract or Interface -> Move to Bot with Pos, Head, ...
-	//       A Bot should be a (big) BotComponent (BotPosition)...
-	public String getName() {
-		return this.name;
+	private int getInstanceNumber() {
+		/*
+		 * Drandenken: Wenn einer ne Subklasse instanziiert, die von
+		 * AliveObstacle abgeleitet ist, wird eine AliveObstacle-Instanz
+		 * automatisch miterzeugt -- Wenn wir hier getClass() aufrufen, liefert
+		 * das aber die exakte Klasse (also in unserm Fall niemals
+		 * AliveObstacle, sondern z.B. BestimmterDingsBot)
+		 */
+		return numInstances.get(getClass());
 	}
 
 	/**
-	 * @return Die Hoehe des Objektes in Metern
+	 * <p>
+	 * Benutzerfreundlicher Name des Bots (wie dem Konstruktor &uuml;bergeben),
+	 * an die falls erforderlich eine laufende Nummer angeh&auml;ngt ist. Laufen
+	 * z.B. 2 AliveObstacle-Instanzen mit Namen &quot;Gurken-Bot&quot; und 3 mit
+	 * &quot;Tomaten-Bot&quot;, sind die R&uuml;ckgabewerte dieser Methode:
+	 * <ul>
+	 * <li>Gurken-Bot</li>
+	 * <li>Gurken-Bot (2)</li>
+	 * <li>Tomaten-Bot</li>
+	 * <li>Tomaten-Bot (2)</li>
+	 * <li>Tomaten-Bot (3)</li>
+	 * </ul>
+	 * </p>
 	 */
-//	abstract public float getHeight();
+	public String getName() {
+		int n = getInstanceNumber() + 1; // 1-based ist benutzerfreundlicher
+		return name + ((n < 2) ? "" : " (" + n + ")");
+	}
+
+	public String getDescription() {
+		return "Was Bewegliches";
+	}
 
 	/**
 	 * Falls eine Subklasse etwas auszuf&uuml;hren hat, bevor der Thread
@@ -318,18 +343,16 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 				lastSafePos.set(pos);
 	}
 
-	public final synchronized void setHeading(Vector3d vec) {
+	//$$ Ziemlicher Quatsch, dass das ein Vector3 ist: double mit dem Winkel drin waere einfacher und wuerde dasselbe leisten
+	public final synchronized void setHeading(Vector3d head) {
+		this.head = head;
 
-		this.head = vec;
+		double angle = this.head.angle(new Vector3d(0, 1, 0));
 
-		double angle = this.head.angle(new Vector3d(1d, 0d, 0d));
-		if (this.head.y < 0)
-			angle = -angle;
-
-		Transform3D transform = new Transform3D();
-		this.transformgrp.getTransform(transform);
-		transform.setRotation(new AxisAngle4d(0d, 0d, 1d, angle));
-		this.transformgrp.setTransform(transform);
+		Transform3D t = new Transform3D();
+		transformgrp.getTransform(t);
+		t.setRotation(new AxisAngle4d(0, 0, 1, angle));
+		transformgrp.setTransform(t);
 	}
 
 	// TODO:
@@ -360,7 +383,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 		int timeout = 0;
 		try {
-			timeout = Integer.parseInt(ConfigManager.getValue("AliveObstacleTimeout"));
+			timeout = Integer.parseInt(Config.getValue("AliveObstacleTimeout"));
 		} catch (Exception e) {
 			// Wenn kein Teimout im Config-File steht, ignorieren wir dieses Feature
 			timeout = 0;
@@ -482,30 +505,31 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 */
 	public void setObstState(int state) {
 		this.obstState = state;
-
-		// TODO: Appearances
-		this.setAppearance(state);
+		updateAppearance();
 	}
 
-	private void setAppearance(int state) {
+	private void updateAppearance() {
+		//$$ Keiner weiss, ob obstState jetzt im Endeffekt ein Flagfeld sein soll oder ein Enum
+		//$$ Also die Strings gehoeren woanders hin; ObstState als Enum, Strings da rein
+		String key = null;
 
-		// TODO: Appearances
-		if(this.apps == null || this.apps.isEmpty())
-			return;
+		if (getObstState() == OBST_STATE_COLLISION)
+			key = "collision";
+		if (getObstState() == OBST_STATE_FALLING)
+			key = "falling";
+		if (getObstState() == OBST_STATE_NORMAL)
+			key = "normal";
+		if ((getObstState() & OBST_STATE_HALTED) != 0)
+			key = "halted";
 
-		String key= null;
+		Color c = Config.getBotColor(getClass(), getInstanceNumber(), key);
 
-		if (state == OBST_STATE_COLLISION)
-			key= "collision";
-		if (state == OBST_STATE_FALLING)
-			key= "falling";
-		if (state == OBST_STATE_NORMAL)
-			key= "normal";
-		if ((state & OBST_STATE_HALTED) != 0)
-			key="halted";
+		for (Closure<Color> listener : appearanceListeners)
+			listener.run(c);
+	}
 
-		if (this.apps.containsKey(key))
-			this.shape.setAppearance(this.apps.get(key));
+	public Color getNormalObstColor() {
+		return Config.getBotColor(getClass(), getInstanceNumber(), "normal");
 	}
 
 	/**
@@ -524,7 +548,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 * Liefert die Sim-Zeit, die verstrichen ist seit dem vorigen Aufruf von
 	 * updateSimulation().
-	 * 
+	 *
 	 * @return Delta-T in Millisekunden
 	 */
 	public long getDeltaTInMs() {
@@ -539,9 +563,39 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		return lastSafePos;
 	}
 
-	public void addDeathListener(Runnable listener) {
-		if (listener == null)
+	public void addDeathListener(Runnable runsWhenAObstDies) {
+		if (runsWhenAObstDies == null)
 			throw new NullPointerException();
-		deathListeners.add(listener);
+		deathListeners.add(runsWhenAObstDies);
 	}
+
+	public void addAppearanceListener(
+	Closure<Color> calledWhenObstStateChanges) {
+		if (calledWhenObstStateChanges == null)
+			throw new NullPointerException();
+		appearanceListeners.add(calledWhenObstStateChanges);
+	}
+
+	public void removeObstStateListener(Closure<Color> listener) {
+		appearanceListeners.remove(listener);
+	}
+
+   public static class CountingMap
+   extends HashMap<Class<? extends AliveObstacle>, Integer> {
+	   private static final long serialVersionUID = 6419402218947363629L;
+
+	   public synchronized void increase(Class<? extends AliveObstacle> c) {
+		   if (containsKey(c))
+			   put(c, get(c) + 1);
+		   else
+			   put(c, 0);
+	   }
+
+	   public synchronized void decrease(Class<? extends AliveObstacle> c) {
+		   if (containsKey(c))
+			   put(c, get(c) - 1);
+		   else
+			   throw new IllegalStateException();
+	   }
+   }
 }

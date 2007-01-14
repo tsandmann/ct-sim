@@ -187,15 +187,12 @@ public class CtBotSimTcp extends CtBotSim {
 
 	/**
 	 * @param w Die Welt
-	 * @param name Der Name des Bot
 	 * @param pos Position
 	 * @param head Blickrichtung
 	 * @param con Verbindung
 	 */
-	public CtBotSimTcp(World w, String name, Point3d pos, Vector3d head,
-		Connection con) {
-
-		super(w, name, pos, head);
+	public CtBotSimTcp(World w, Point3d pos, Vector3d head, Connection con) {
+		super(w, "Sim-Bot", pos, head);
 		this.connection = con;
 		this.world = w;
 
@@ -316,6 +313,11 @@ public class CtBotSimTcp extends CtBotSim {
 
 		this.addSensor(this.lightL);
 		this.addSensor(this.lightR);
+	}
+
+	@Override
+	public String getDescription() {
+		return "Simulierter, in C geschriebener c't-Bot";
 	}
 
 	/**
@@ -506,7 +508,7 @@ public class CtBotSimTcp extends CtBotSim {
 			for (BotComponent<?> c : components)
 				c.askForWrite(s);
 			s.flush();
-			
+
 			command = new Command(Command.Code.SENS_BORDER);
 			command.setDataL(((Short)this.borderL.getValue()).intValue());
 			command.setDataR(((Short)this.borderR.getValue()).intValue());
@@ -642,7 +644,7 @@ public class CtBotSimTcp extends CtBotSim {
 
 	@Override
 	protected void work() {
-		transmitSensors();
+		transmitSensors(); 
 		receiveCommands();
 		processCommands();
 	}

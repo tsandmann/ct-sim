@@ -5,35 +5,31 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import ctSim.controller.Config;
-import ctSim.controller.Main;
 
-//$$ doc ContestDatabase -- ist eigentlich ne Factory
-//$$ Ganze Klasse ueberarbeiten
+/**
+ * Repr&auml;sentiert die Datenbank, die alles &uuml;ber den Wettbewerb
+ * (&quot;contest&quot;) wei&szlig;. Idee: Die Klassen, die die Datenbank
+ * verwenden, holen sie von hier. Daher k&ouml;nnen Unit-Tests einfach diese
+ * Klasse ableiten und getConnection() &uuml;berschreiben, um dem
+ * Contest-Conductor eine Test-Datenbank unterzuschieben. Beispiel siehe
+ * {@link ConductorTestUtil.TestDatabase}.
+ */
 public class ContestDatabase {
-
-	static {
-		Main.dependencies.registerImplementation(Config.class);
-	}
-
-	protected ContestDatabase() {
-
-	}
-
-	public ContestDatabase(Config c)
-	throws ClassNotFoundException {
-		Class.forName("com.mysql.jdbc.Driver");
-	}
-
 	public Connection getConnection()  {
 		try {
-			Config c = Main.dependencies.get(Config.class);
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// "Kann nicht passieren"
+			throw new AssertionError();
+		}
+
+		try {
 		    return DriverManager.getConnection(
-				c.get("contest-database-url"),
-				c.get("contest-database-user"),
-				c.get("contest-database-password"));
+				Config.getValue("contest-database-url"),
+				Config.getValue("contest-database-user"),
+				Config.getValue("contest-database-password"));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
     }
-
 }

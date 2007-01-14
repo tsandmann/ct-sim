@@ -1,6 +1,18 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-14 21:07 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Neu: CtBotShape, zweifarbige Shape des c't-Bot, zu sehen bei Kollisionen/Loechern/abgerissenen TCP-Verbindungen; das neue Aussehen ist auch klarer im Code und nicht mehr um 90° gedreht wie bisher (konsistent mit Headings)
+* AliveObstacle: Heading um 90° gedreht (vorher: Kurs 0° = nach Steuerbord, jetzt: Kurs 0° = geradeaus)
+* AliveObstacle: Appearance-Verwaltung etwas aufgeraeumt
+* Neu: Konsistente und freundliche Bot-Namen
+* Aufgeraeumt: ConfigManager umfassend entschlackt; gesamte Konfig wird jetzt von Klasse Config verwaltet; dort auch neuer Appearance-Parser
+* Daher Aenderungen ueberall: ConfigManager -> Config
+* Fix: XmlDocument hat jetzt klaren Umgang mit nicht vorhandenen Nodes
+* Robustheit: Decoratoror wirft mehr Exceptions
+* Fix: Decoratoror hat Methoden aus Object ignoriert
+* Kleinigkeiten
+
 2007-01-11 21:09 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
 * Aufgeraumt (Forts.): CtBotSimTcp
 * Neu: Simulatoren-Infrastruktur im CtBotSimTcp (aber weiss noch nicht, ob die so bleibt)

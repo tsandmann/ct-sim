@@ -18,6 +18,7 @@ import javax.swing.JToolBar;
 import javax.swing.filechooser.FileFilter;
 
 import ctSim.ConfigManager;
+import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.model.rules.Judge;
 import ctSim.util.Enumerations;
@@ -229,7 +230,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 	private Runnable onInvokeExecutable = new Runnable() {
 		private final JFileChooser botChooser = new JFileChooser(
-			ConfigManager.path2Os(ConfigManager.getValue("botdir")));
+			ConfigManager.path2Os(Config.getValue("botdir")));
 
 		{ // "Konstruktor" des Runnable sozusagen
 			//$$ Sollte nur exes zeigen (Win) bzw. nur elfs (Linux)
@@ -341,7 +342,7 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 
 		public WorldFileChooser() {
-			super(ConfigManager.getValue("worlddir"));
+			super(Config.getValue("worlddir"));
 			setFileFilter(new FileFilter() {
 				@Override
 				public boolean accept(File f) {

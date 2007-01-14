@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 
+/** Hilfsklasse für die Unit-Tests in diesem Package */
 public abstract class ConductorTestUtil {
     protected abstract DatabaseAdapter getDbFromChildClass();
 
@@ -15,7 +16,7 @@ public abstract class ConductorTestUtil {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 return DriverManager.getConnection(
-                    "jdbc:mysql://10.10.22.111:3306/ctbot-contest-unittests",
+                    "jdbc:mysql://10.10.22.179:3306/ctbot-contest-unittests",
                     "root", "geheimdienst");
             } catch (Exception e) {
                 throw new RuntimeException(e);

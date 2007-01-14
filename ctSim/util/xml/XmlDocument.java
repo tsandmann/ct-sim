@@ -22,6 +22,7 @@ import org.xml.sax.SAXParseException;
 
 import ctSim.util.Decoratoror;
 
+//$$ Zur Klarheit umbenennen in XmlDocuments? Oder QueryableDocument?
 /**
  * <p>
  * Klasse, die die Arbeit mit XPath vereinfachen und verertr&auml;glichen soll.
@@ -170,13 +171,26 @@ public class XmlDocument {
 				throw exception;
 			}});
 		Document document = parser.parse(documentStream, baseDir);
-		return Decoratoror.createDecorated(QueryableDocument.class,
-			new QueryableMixin(document), document);
+		try {
+			// document kann nicht null sein
+			return Decoratoror.createDecorated(QueryableDocument.class,
+				new QueryableMixin(document), document);
+		} catch (NoSuchMethodException e) {
+			// "Kann nicht passieren"
+			throw new AssertionError(e);
+		}
 	}
 
 	public static QueryableNode createQueryableNode(Node baseNode) {
-		return Decoratoror.createDecorated(QueryableNode.class,
-			new QueryableMixin(baseNode), baseNode);
+		try {
+			if (baseNode == null)
+				return null;
+			return Decoratoror.createDecorated(QueryableNode.class,
+				new QueryableMixin(baseNode), baseNode);
+		} catch (NoSuchMethodException e) {
+			// "Kann nicht passieren"
+			throw new AssertionError(e);
+		}
 	}
 
 	public static class QueryableMixin implements XPathQueryable {
@@ -185,6 +199,7 @@ public class XmlDocument {
 		 * Dokumente sind auch Knoten
 		 */
 		private Node cocktail;
+
 		/** Hiwi zum Auswerten von XPath-Ausdr&uuml;cken */
 		private XPath evaluator = XPathFactory.newInstance().newXPath();
 
@@ -193,7 +208,7 @@ public class XmlDocument {
 		}
 
 		public IterableNodeList getNodeList(String xPathExpression)
-			throws XPathExpressionException {
+		throws XPathExpressionException {
 			return new IterableNodeList((NodeList)evaluator.evaluate(
 				xPathExpression, cocktail, XPathConstants.NODESET));
 		}
@@ -210,9 +225,14 @@ public class XmlDocument {
 				XPathConstants.STRING);
 		}
 
-		public Number getNumber(String xPathExpression)
+		public Double getNumber(String xPathExpression)
 		throws XPathExpressionException {
-			return (Number)evaluator.evaluate(xPathExpression, cocktail,
+			/*
+			 * Cast nach Double (nicht Number) -- eine XPath-Number mappt in
+			 * Java auf einen Double, siehe
+			 * http://java.sun.com/j2se/1.5.0/docs/api/javax/xml/xpath/XPathConstants.html#NUMBER
+			 */
+			return (Double)evaluator.evaluate(xPathExpression, cocktail,
 				XPathConstants.NUMBER);
 		}
 
@@ -220,6 +240,39 @@ public class XmlDocument {
 		throws XPathExpressionException {
 			return (Boolean)evaluator.evaluate(xPathExpression, cocktail,
 				XPathConstants.BOOLEAN);
+		}
+		
+		private <T> T nullIfNotExists(String xPathExpression, T value) 
+		throws XPathExpressionException {
+			// War der Knoten nicht da oder war er leer?
+			return getNode(xPathExpression) == null ? null : value;
+		}
+		
+		public String getStringOrNull(String xPathExpression)
+		throws XPathExpressionException {
+			String rv = getString(xPathExpression);
+			if ("".equals(rv))
+				return nullIfNotExists(xPathExpression, rv);
+			else
+				return rv;
+		}
+		
+		public Number getNumberOrNull(String xPathExpression)
+		throws XPathExpressionException {
+			Double rv = getNumber(xPathExpression);
+			if (rv.isNaN())
+				return nullIfNotExists(xPathExpression, rv);
+			else
+				return rv;
+		}
+
+		public Boolean getBooleanOrNull(String xPathExpression)
+		throws XPathExpressionException {
+			Boolean rv = getBoolean(xPathExpression);
+			if (rv == false)
+				return nullIfNotExists(xPathExpression, rv);
+			else
+				return rv;
 		}
 	}
 
@@ -241,16 +294,19 @@ public class XmlDocument {
 		 * @return Die selektierten Knoten als {@link NodeList}, wie sie die
 		 * Java-Plattform implementiert, die aber auch {@link Iterable} ist.
 		 * <code>for (Node n : document.getNodeList(...))</code> ist also
-		 * m&ouml;glich.
+		 * m&ouml;glich. Gibt es im Dokument keine Knoten, die von dem
+		 * XPath-Ausdruck selektiert werden, wird eine NodeList
+		 * zur&uuml;ckgegeben, die keine Knoten enth&auml;lt.
 		 */
 		public IterableNodeList getNodeList(String xPathExpression)
-			throws XPathExpressionException;
+		throws XPathExpressionException;
 
 		/**
 		 * <p>
 		 * Selektiert einen einzelnen Knoten. Falls der &uuml;bergebene
 		 * XPath-Ausdruck mehrere Knoten selektiert, wird er erste
-		 * zur&uuml;ckgeliefert.
+		 * zur&uuml;ckgeliefert; falls er keine Knoten selektiert, wird
+		 * {@code null} zur&uuml;ckliefert.
 		 * </p>
 		 * <p>
 		 * <strong>Drandenken:</strong> Knoten m&uuml;ssen nicht Elemente sein
@@ -258,14 +314,17 @@ public class XmlDocument {
 		 * {@link Node}.
 		 * </p>
 		 */
-		public QueryableNode getNode(String xPathExpression) 
+		public QueryableNode getNode(String xPathExpression)
 		throws XPathExpressionException;
 
 		/**
 		 * <p>
 		 * Liefert den &quot;string-value&quot; der Knoten, die vom
-		 * &uuml;bergebenen XPath-Ausdruck selektiert wurden. Der
-		 * &quot;string-value&quot; ist &ndash;
+		 * &uuml;bergebenen XPath-Ausdruck selektiert wurden. Liefert einen
+		 * leeren String (""), falls der &uuml;bergebene XPath-Ausdruck keine
+		 * Knoten selektiert (gem&auml;&szlig; <a
+		 * href="http://www.w3.org/TR/xpath#function-string">XPath-Konvertierungsregeln</a>).
+		 * Der &quot;string-value&quot; ist &ndash;
 		 * <ul>
 		 * <li>f&uuml;r Elemente: s&auml;mtlicher Text, den sie enthalten.
 		 * Beispiel: &quot;wurstbrot&quot;, wenn die Elemente
@@ -286,28 +345,67 @@ public class XmlDocument {
 		 * href="http://www.w3.org/TR/xpath.html#data-model">XPath-Spezifikation
 		 * Abschnitt 5</a>.
 		 * </p>
+		 * 
+		 * @see #getStringOrNull(String)
 		 */
 		public String getString(String xPathExpression)
-			throws XPathExpressionException;
-
-		/**
-		 * Selektiert Knoten, konvertiert sie in einen String (siehe
-		 * {@link #getString(String)}) und konvertiert den String in eine Zahl.
-		 * <a href="http://www.w3.org/TR/xpath#function-number">Details zur
-		 * Konvertierung in eine Zahl</a>
-		 */
-		public Number getNumber(String xPathExpression)
-			throws XPathExpressionException;
+		throws XPathExpressionException;
 
 		/**
 		 * Selektiert Knoten, konvertiert sie in einen String (siehe
 		 * {@link #getString(String)}) und konvertiert den String in einen
-		 * Boolean. <a
+		 * Double. Falls der &uuml;bergebene XPath-Ausdruck keine Knoten
+		 * selektiert, wird {@code NaN} zur&uuml;ckgeliefert (d.h.
+		 * {@code getNumber(...).isNaN() == true}). <a
+		 * href="http://www.w3.org/TR/xpath#function-number">Details zur
+		 * Konvertierung in eine Zahl</a>
+		 * 
+		 * @see #getNumberOrNull(String)
+		 */
+		public Double getNumber(String xPathExpression)
+		throws XPathExpressionException;
+
+		/**
+		 * Selektiert Knoten, konvertiert sie in einen String (siehe
+		 * {@link #getString(String)}) und konvertiert den String in einen
+		 * Boolean. Falls der &uuml;bergebene XPath-Ausdruck keine Knoten
+		 * selektiert, wird {@code false} zur&uuml;ckgeliefert. <a
 		 * href="http://www.w3.org/TR/xpath#function-boolean">Details zur
 		 * Konvertierung in einen Boolean</a>
+		 * 
+		 * @see #getBooleanOrNull(String)
 		 */
 		public Boolean getBoolean(String xPathExpression)
-			throws XPathExpressionException;
+		throws XPathExpressionException;
+		
+		/**
+		 * Wie {@link #getString(String) getString()}, aber falls der
+		 * &uuml;bergebene XPath-Ausdruck keine Knoten selektiert, wird
+		 * {@code null} zur&uuml;ckgeliefert. So kann man auseinanderhalten, ob
+		 * der Knoten nicht existiert ({@code null}) oder ob er existiert,
+		 * aber keinen Text enth&auml;lt ("").
+		 */
+		public String getStringOrNull(String xPathExpression)
+		throws XPathExpressionException;
+		
+		/**
+		 * Wie {@link #getNumber(String) getNumber()}, aber falls der
+		 * &uuml;bergebene XPath-Ausdruck keine Knoten selektiert, wird
+		 * {@code null} zur&uuml;ckgeliefert. So kann man auseinanderhalten, ob
+		 * der Knoten nicht existiert ({@code null}) oder ob er existiert,
+		 * aber etwas anderes als eine Zahl enth&auml;lt.
+		 */
+		public Number getNumberOrNull(String xPathExpression)
+		throws XPathExpressionException;
 
+		/**
+		 * Wie {@link #getBoolean(String) getBoolean()}, aber falls der
+		 * &uuml;bergebene XPath-Ausdruck keine Knoten selektiert, wird
+		 * {@code null} zur&uuml;ckgeliefert. So kann man auseinanderhalten, ob
+		 * der Knoten nicht existiert ({@code null}) oder ob er wirklich da
+		 * ist und {@code false} enth&auml;lt.
+		 */
+		public Boolean getBooleanOrNull(String xPathExpression)
+		throws XPathExpressionException;
 	}
 }

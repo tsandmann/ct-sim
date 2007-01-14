@@ -5,6 +5,7 @@ import ctSim.model.World;
 import ctSim.view.gui.Debug;
 
 //$$ Judges weg, deren einzige Bedeutung: Spielende (Simulationsende) veranlassen. Siehe Wiki
+//$$ Problem: Wenn Judge Bot-hinzufuegen verbietet, wird Bot nicht korrekt de-initialisiert
 /**
  * Abstrakte Superklasse f&uuml;r alle Judges, die pr&uuml;fen,
  * ob die Spielregeln eingehalten werden.

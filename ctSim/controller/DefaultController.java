@@ -74,7 +74,7 @@ public class DefaultController implements Runnable, Controller {
     public void setView(View view) {
 	    this.pause = true;
         this.view = view;
-        setJudge(ConfigManager.getValue("judge"));
+        setJudge(Config.getValue("judge"));
         this.startBotListener();
         BotManager.setView(view);
         init();
@@ -82,7 +82,7 @@ public class DefaultController implements Runnable, Controller {
 
     private void init() {
         try {
-            String parcFile = ConfigManager.getValue("parcours");
+            String parcFile = Config.getValue("parcours");
             openWorldFromFile(new File(parcFile));
         } catch(NullPointerException e) {
             lg.fine("Kein Standardparcours konfiguriert");
@@ -90,8 +90,7 @@ public class DefaultController implements Runnable, Controller {
             lg.warning(e, "Problem beim Instanziieren des Standardparcours");
         }
 
-        String botBin = ConfigManager.path2Os(
-                ConfigManager.getValue("botbinary"));
+        String botBin = ConfigManager.path2Os(Config.getValue("botbinary"));
         if (botBin == null)
             lg.fine("Kein Standardbot konfiguriert");
         else
@@ -132,7 +131,7 @@ public class DefaultController implements Runnable, Controller {
 		int timeout = 10000; //$$ Default lieber in Klasse Config
 
         try {
-        	timeout = Integer.parseInt(ConfigManager.getValue("ctSimTimeout"));
+        	timeout = Integer.parseInt(Config.getValue("ctSimTimeout"));
         } catch(NumberFormatException nfe) {
             lg.warning(nfe, "Problem beim Parsen der Konfiguration: " +
                     "Parameter 'ctSimTimeout' ist keine Ganzzahl");
@@ -299,7 +298,7 @@ public class DefaultController implements Runnable, Controller {
         int p = 10001; //TODO Default sollte hier weg und in ConfigManager umziehen
 
         try {
-            p = Integer.parseInt(ConfigManager.getValue("botport"));
+            p = Integer.parseInt(Config.getValue("botport"));
         } catch(NumberFormatException nfe) {
             lg.warning(nfe, "Problem beim Parsen der Konfiguration: " +
                     "Parameter 'botport' ist keine Ganzzahl");
@@ -397,28 +396,6 @@ public class DefaultController implements Runnable, Controller {
     }
 
     /**
-     * Bennent einen neuen Bot
-     * Achtung, die Namensvergabe wird nicht zurueckgesetzt, wenn ein bot stirbt
-     * @param type Typ des Bots, z.B. der Klassenname
-     * @return Name des neuen Bots
-     */
-    public String getNewBotName(String type) {
-        String name;
-
-        // Schaue nach, wieviele Bots von der Sorte wir schon haben
-        Integer bots = numberBots.get(type);
-        if (bots == null)
-            bots = 0;
-        name=type +"_"+ bots;
-
-        // erhoehen, sichern
-        bots++;
-        numberBots.put(type, bots);
-
-        return name;
-    }
-
-    /**
      * Fuegt einen Bot dazu, sobald die Connection steht
      * @param con Die Verbindung
      */
@@ -437,11 +414,9 @@ public class DefaultController implements Runnable, Controller {
 	                if (cmd.has(Command.Code.WELCOME)) {
 	                	switch (cmd.getSubCode()) {
 	                		case WELCOME_SIM:
-	                			String name = getNewBotName(
-	                				"ctSim.model.bots.CtBotSimTcp");
-	                            bot = new CtBotSimTcp(world, name,
-		                                new Point3d(0.5d, 0d, 0.075d),
-		                                new Vector3d(1.0f, -0.5f, 0f),
+	                            bot = new CtBotSimTcp(world,
+		                                new Point3d(0.5, 0, 0.075),
+		                                new Vector3d(1.0, -0.5, 0),
 		                                con);
 		            			lg.fine("TCP-Verbindung von simuliertem Bot " +
 		            					"eingegangen");
@@ -497,7 +472,7 @@ public class DefaultController implements Runnable, Controller {
     	} catch (UnknownHostException e) {
     		lg.warn(e, "Host nicht gefunden"); //$$$ t Host nicht gefunden
 		} catch (Exception e) {
-			throw new AssertionError(e); //$$$ doof, mindestens timeout und UnknownHost fangen und anzeigen
+			throw new AssertionError(e); //$$$ doof, mindestens timeout fangen und anzeigen
 		}
     }
 
@@ -512,9 +487,8 @@ public class DefaultController implements Runnable, Controller {
      * F&uuml;gt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu
      */
     public void addTestBot() {
-        String name = getNewBotName("CtBotSimTest");
-        Bot bot = new CtBotSimTest(this.world, name,
-                new Point3d(0d, 0d, 0.075d), new Vector3d());
+        Bot bot = new CtBotSimTest(world, new Point3d(0, 0, 0.075),
+        	new Vector3d());
         addBot(bot);
     }
 

@@ -56,6 +56,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import ctSim.ConfigManager;
+import ctSim.controller.Config;
 import ctSim.model.bots.Bot;
 import ctSim.view.gui.Debug;
 
@@ -110,7 +111,7 @@ public class World {
 	 * $$ Dokumentieren: Bot kriegt Zeit in diesen Schritten mitgeteilt; setzt indirekt max. Aufloesung
 	 */
 	private static final int SIM_TIME_PER_STEP =
-		Integer.parseInt(ConfigManager.getValue("simTimePerStep"));
+		Integer.parseInt(Config.getValue("simTimePerStep"));
 
 	/** <p>Gegenw&auml;rtige Simulationszeit. Sie ist gleich <em>Zahl der
 	 * bisher ausgef&uuml;hrten Simulationsschritte &times;
@@ -211,7 +212,7 @@ public class World {
 					throws SAXException, IOException {
 						if (systemId.endsWith("/parcours.dtd")) //TODO: Irgendwann als Konstante statt hardcoded
 							return new InputSource(
-									ConfigManager.getValue("worlddir") +
+									Config.getValue("worlddir") +
 									"/parcours.dtd"); //TODO: Irgendwann als Konstante statt hardcoded
 		                return null; // Standard-EntityResolver verwenden
 		            }
@@ -486,7 +487,7 @@ public class World {
 	public boolean checkCollision(AliveObstacle obst, /*Shape3D botBody,*/ Bounds bounds,
 			Vector3d newPosition) { //, String botName) {
 
-		Shape3D botBody = obst.getShape();
+		Group botBody = obst.getShape();
 //		Bounds bounds = obst.getBounds();
 		//String botName = obst.getName();
 
@@ -913,7 +914,7 @@ public class World {
 	 */
 	// TODO: Ueberarbeiten?
 	synchronized public double watchObstacle(Point3d pos, Vector3d heading,
-			double openingAngle, Shape3D botBody) {
+			double openingAngle, Node botBody) {
 
 		// TODO: Wieder rein??
 		// Falls die Welt verschoben wurde:
