@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Sensor;
+import ctSim.util.Buisitor.Buisit;
 import ctSim.view.gui.sensors.SensorGroupGUI;
 
 //$$ Doku ConCon nach oben

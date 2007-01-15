@@ -15,6 +15,7 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.actuators.LcDisplay;
 import ctSim.util.AuxFrameButton;
+import ctSim.util.Buisitor.Buisit;
 
 public class AndEverything extends BotBuisitor {
 	private static final long serialVersionUID = - 8170321975584432026L;

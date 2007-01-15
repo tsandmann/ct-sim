@@ -68,7 +68,7 @@ public class ViewYAdapter {
 	 * Verwendungsbeispiel siehe {@link ViewYAdapter}.
 	 * </p>
 	 */
-	public static View newInstance(final View... views) {
+	public static View newInstance(final Iterable<View> views) {
 		return (View)Proxy.newProxyInstance(View.class.getClassLoader(),
 		    new Class[] { View.class }, new InvocationHandler() {
 			    public Object invoke(
@@ -79,5 +79,10 @@ public class ViewYAdapter {
 				    return null;
 			    }
 		    });
+	}
+
+	/** Wie {@link #newInstance(Iterable)}, aber kann Varargs. */
+	public static View newInstance(final View... views) {
+		return newInstance(views);
 	}
 }

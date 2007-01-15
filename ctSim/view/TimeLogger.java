@@ -32,7 +32,7 @@ public class TimeLogger implements View {
 	}
 
 	public void onApplicationInited() {
-		lg.fine("TimeLogger l\u00E4uft; Simzeit und Realzeit werden " +
+		lg.info("TimeLogger l\u00E4uft; Simzeit und Realzeit werden " +
 				"w\u00E4hrend der Simulation periodisch ausgegeben");
 	}
 
@@ -46,7 +46,7 @@ public class TimeLogger implements View {
 		long now = System.currentTimeMillis();
 		// Falls minimalMsg verwendet wird, wird das ueberfluessige Argument
 		// ignoriert
-		lg.fine((simTimeAtLastLog == - intervalInSimMs)
+		lg.info((simTimeAtLastLog == - intervalInSimMs)
 			? minimalMsg : normalMsg,
 			simTimeInMs, System.currentTimeMillis(),
 			(now - realTimeAtLastLog) /

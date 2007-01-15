@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Transform3D;
@@ -34,10 +35,10 @@ import javax.vecmath.Vector3d;
 
 import ctSim.Connection;
 import ctSim.SimUtils;
+import ctSim.model.AliveObstacle;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.World;
-import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
@@ -53,8 +54,10 @@ import ctSim.model.bots.ctbot.components.EncoderSensor;
 import ctSim.model.bots.ctbot.components.LightSensor;
 import ctSim.model.bots.ctbot.components.LineSensor;
 import ctSim.model.bots.ctbot.components.RemoteControlSensor;
+import ctSim.util.Buisitor;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
+import ctSim.util.Buisitor.Buisit;
 import ctSim.view.gui.Debug;
 
 //$$$ DONE dataL = 20 wird nie gesendet
@@ -98,6 +101,8 @@ public class CtBotSimTcp extends CtBotSim {
 
 	private World world;
 
+	private final MasterSimulator masterSimulator;
+
 	private int  mouseX, mouseY;
 
 	private Sensor<?>
@@ -105,189 +110,209 @@ public class CtBotSimTcp extends CtBotSim {
 
 	///////////////////////////////////////////////////////////////////////////
 
-	//$$ deltaT
-	class WheelSimulator {
-		/**
-		 * Maximale Geschwindigkeit als <a
-		 * href="http://en.wikipedia.org/wiki/Pulse-width_modulation">PWM-Wert</a>
-		 */
-		private static final short PWM_MAX = 255;
-
-		/**
-		 * Maximale Geschwindigkeit in Umdrehungen pro Sekunde ("revolutions per
-		 * second")
-		 */
-		private static final float REVS_PER_SEC_MAX = 151f / 60f;
-
-		private final Actuator.Governor governor;
-
-		public WheelSimulator(final Governor governor) {
-			this.governor = governor;
-		}
-
-		/**
-		 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde
-		 *
-		 * @return Umdrehungen pro Sekunde (exakter Wert, d.h. mit
-		 * Nachkommaanteil)
-		 */
-		protected float revsThisSimStep() {
-			// LODO Die Kennlinien der echten Motoren sind nicht linear
-			float speedRatio = governor.getModel().getValue().floatValue()
-				/ PWM_MAX;
-			float speedInRps = speedRatio * REVS_PER_SEC_MAX;
-			float deltaTInSec = getDeltaTInMs() / 1000f;
-			return speedInRps * deltaTInSec;
-		}
+	public interface NumberTwinVisitor {
+		public void visit(NumberTwin numberTwin, boolean isLeft);
 	}
 
-	static class EncoderSimulator implements Runnable {
-		/** Anzahl an Encoder-Markierungen auf einem Rad */
-		private static final short ENCODER_MARKS = 60;
+	public static class MasterSimulator	implements NumberTwinVisitor, Runnable {
+		class WheelSimulator {
+			/**
+			 * Maximale Geschwindigkeit als <a
+			 * href="http://en.wikipedia.org/wiki/Pulse-width_modulation">PWM-Wert</a>
+			 */
+			private static final short PWM_MAX = 255;
+
+			/**
+			 * Maximale Geschwindigkeit in Umdrehungen pro Sekunde ("revolutions
+			 * per second")
+			 */
+			private static final float REVS_PER_SEC_MAX = 151f / 60f;
+
+			private Actuator.Governor governor;
+
+			public void setGovernor(Actuator.Governor governor) {
+				this.governor = governor;
+			}
+
+			/**
+			 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde
+			 *
+			 * @return Umdrehungen pro Sekunde (exakter Wert, d.h. mit
+			 * Nachkommaanteil)
+			 */
+			protected float revsThisSimStep() {
+				// LODO Die Kennlinien der echten Motoren sind nicht linear
+				float speedRatio = governor.getModel().getValue().floatValue()
+					/ PWM_MAX;
+				float speedInRps = speedRatio * REVS_PER_SEC_MAX;
+				float deltaTInSec = parent.getDeltaTInMs() / 1000f;
+				return speedInRps * deltaTInSec;
+			}
+		}
 
 		/**
-		 * Bruchteil des Encoder-Schritts, der beim letztem Sim-Schritt
-		 * &uuml;brig geblieben ist [0; 1[
+		 * Repr&auml;sentiert einen optischen Sensore vom Typ CNY70. Beim
+		 * c't-Bot kommt der CNY70 u.a. als Liniensensor (2&times;) und als
+		 * Abgrundsensor (2&times;) zum Einsatz.
 		 */
-		private double encoderRest = 0;
+		class Cny70Simulator implements Runnable {
+			private final double OPENING_ANGLE_IN_RAD = Math.toRadians(80);
+			private static final short PRECISION = 10;
 
-		private final WheelSimulator wheel;
-		private final EncoderSensor encoder;
+			private final Point3d distFromBotCenter;
+			private final Vector3d headingInBotCoord;
+			private final NumberTwin sensor;
 
-		public EncoderSimulator(WheelSimulator wheel, EncoderSensor encoder) {
-			this.wheel = wheel;
-			this.encoder = encoder;
+			public Cny70Simulator(Point3d distFromBotCenter,
+			Vector3d headingInBotCoord, NumberTwin sensor) {
+				this.distFromBotCenter = distFromBotCenter;
+				this.headingInBotCoord = headingInBotCoord;
+				this.sensor = sensor;
+			}
+
+			public void run() {
+				sensor.getModel().setValue(
+					world.sensGroundReflectionCross(
+						parent.worldCoordFromBotCoord(distFromBotCenter),
+						parent.worldCoordFromBotCoord(headingInBotCoord),
+						OPENING_ANGLE_IN_RAD,
+						PRECISION));
+			}
 		}
 
-		public void run() {
-			// Anzahl der Umdrehungen der Raeder
-			double revs = wheel.revsThisSimStep();
+		private final List<Runnable> simulators = Misc.newList();
+		protected final World world;
+		protected final AliveObstacle parent;
+		private final Buisitor buisitor = new Buisitor(this);
 
-			// Encoder-Schritte als Fliesskommazahl errechnen:
-			// Anzahl der Drehungen mal Anzahl der Markierungen,
-			// dazu der Rest der letzten Runde
-			double tmp = (revs * ENCODER_MARKS) + encoderRest;
-			// Der Bot bekommt nur ganze Schritte zu sehen,
-			int encoderSteps = (int)Math.floor(tmp);
-			// aber wir merken uns Teilschritte intern
-			encoderRest = tmp - encoderSteps;
-			// und speichern sie.
-			encoder.getModel().setValue(encoderSteps); // commit
-		}
-	}
+		protected final WheelSimulator leftWheel = new WheelSimulator();
+		protected final WheelSimulator rightWheel = new WheelSimulator();
 
-	static class DistanceSimulator implements Runnable {
-		private static final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
+	    private static Point3d at(double x, double y, double z, boolean flipX) {
+	    	return new Point3d((flipX ? -1 : +1 ) * x, y, z);
+	    }
 
-		private final Point3d distFromBotCenter;
-		private final Vector3d headingInBotCoord;
-		private final World world;
-		private final Bot parent; //$$ Geht das besser ohne die Referenz? Cny70 auch betroffen
-		private final Characteristic charstic;
-		private DistanceSensor sensor;
+	    private static Vector3d looksForward() {
+	    	return new Vector3d(0, 1, 0);
+	    }
 
-		public DistanceSimulator(Point3d distFromBotCenter,
-		Vector3d headingInBotCoord, World world, Bot parent,
-		String characteristicFilename, float characteristicInfinity,
-		DistanceSensor sensor) {
-			this.distFromBotCenter = distFromBotCenter;
-			this.headingInBotCoord = headingInBotCoord;
+		public MasterSimulator(final World world, final AliveObstacle parent) {
 			this.world = world;
 			this.parent = parent;
-			this.charstic = new Characteristic(
-				characteristicFilename, characteristicInfinity);
-			this.sensor = sensor;
+		}
+
+		public void visit(NumberTwin numberTwin, boolean isLeft) {
+			buisitor.dispatchBuisit(numberTwin, isLeft);
+		}
+
+		@Buisit
+		public void initWheel(Governor g, boolean isLeft) {
+			(isLeft ? leftWheel : rightWheel).setGovernor(g);
+		}
+
+		@Buisit
+		public void buildEncoderSim(final EncoderSensor sensor,
+		boolean isLeft) {
+			final WheelSimulator wheel = isLeft
+				? leftWheel
+				: rightWheel;
+
+			simulators.add(new Runnable() {
+				/** Anzahl an Encoder-Markierungen auf einem Rad */
+				private static final short ENCODER_MARKS = 60;
+
+				/**
+				 * Bruchteil des Encoder-Schritts, der beim letztem Sim-Schritt
+				 * &uuml;brig geblieben ist [0; 1[
+				 */
+				private double encoderRest = 0;
+
+				public void run() {
+					// Anzahl der Umdrehungen der Raeder
+					double revs = wheel.revsThisSimStep();
+
+					// Encoder-Schritte als Fliesskommazahl errechnen:
+					// Anzahl der Drehungen mal Anzahl der Markierungen,
+					// dazu der Rest der letzten Runde
+					double tmp = (revs * ENCODER_MARKS) + encoderRest;
+					// Der Bot bekommt nur ganze Schritte zu sehen,
+					int encoderSteps = (int)Math.floor(tmp);
+					// aber wir merken uns Teilschritte intern
+					encoderRest = tmp - encoderSteps;
+					// und speichern sie.
+					sensor.getModel().setValue(encoderSteps); // commit
+				}
+			});
+		}
+
+		@Buisit
+		public void buildDistanceSim(final DistanceSensor sensor,
+		boolean isLeft) {
+			final Point3d distFromBotCenter = isLeft
+				? new Point3d(- 0.036, 0.0554, 0)
+				: new Point3d(+ 0.036, 0.0554, 0);
+			final Vector3d headingInBotCoord = looksForward();
+			final Characteristic charstic = isLeft
+				? new Characteristic("characteristics/gp2d12Left.txt", 100)
+				: new Characteristic("characteristics/gp2d12Right.txt", 80);
+
+			simulators.add(new Runnable() {
+				private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
+
+				public void run() {
+					double distInM = world.watchObstacle(
+						parent.worldCoordFromBotCoord(distFromBotCenter),
+						parent.worldCoordFromBotCoord(headingInBotCoord),
+						OPENING_ANGLE_IN_RAD,
+						parent.getShape());
+					double distInCm = 100 * distInM;
+					double sensorReading = charstic.lookupPrecise(distInCm);
+					sensor.getModel().setValue(sensorReading);
+				}
+			});
+		}
+
+		@Buisit
+		public void buildLineSensorSim(LineSensor s, boolean isLeft) {
+			simulators.add(new Cny70Simulator(
+				at(0.004, 0.009, -0.011 - BOT_HEIGHT / 2, isLeft),
+				looksForward(), s));
+		}
+
+		@Buisit
+		public void buildBorderSensorSim(BorderSensor s, boolean isLeft) {
+			simulators.add(new Cny70Simulator(
+				at(0.036, 0.0384, - BOT_HEIGHT / 2, isLeft),
+				looksForward(), s));
+		}
+
+		@Buisit
+		public void buildLightSim(final LightSensor sensor, boolean isLeft) {
+			final Point3d distFromBotCenter = isLeft
+				? new Point3d(- 0.032, 0.048, 0.060 - BOT_HEIGHT / 2)
+				: new Point3d(+ 0.032, 0.048, 0.060 - BOT_HEIGHT / 2);
+			final Vector3d headingInBotCoord = looksForward();
+
+			simulators.add(new Runnable() {
+				private final double OPENING_ANGLE_IN_RAD = Math.toRadians(180);
+
+				public void run() {
+					sensor.getModel().setValue(
+						world.sensLight(
+							parent.worldCoordFromBotCoord(distFromBotCenter),
+							parent.worldCoordFromBotCoord(headingInBotCoord),
+							OPENING_ANGLE_IN_RAD));
+				}
+			});
 		}
 
 		public void run() {
-			double distInM = world.watchObstacle(
-				parent.worldCoordFromBotCoord(distFromBotCenter),
-				parent.worldCoordFromBotCoord(headingInBotCoord),
-				OPENING_ANGLE_IN_RAD,
-				parent.getShape());
-			double distInCm = 100 * distInM;
-			double sensorReading = charstic.lookupPrecise(distInCm);
-			sensor.getModel().setValue(sensorReading);
+			for (Runnable simulator : simulators)
+				simulator.run();
 		}
-	}
-
-	/**
-	 * Repr&auml;sentiert einen optischen Sensore vom Typ CNY70. Beim c't-Bot
-	 * kommt der CNY70 u.a. als Liniensensor (2&times;) und als Abgrundsensor
-	 * (2&times;) zum Einsatz.
-	 */
-	static class Cny70Simulator implements Runnable {
-		private static final double OPENING_ANGLE_IN_RAD = Math.toRadians(80);
-		private static final short PRECISION = 10;
-
-		private final NumberTwin sensor;
-		private final Point3d distFromBotCenter;
-		private final Vector3d headingInBotCoord;
-		private final World world;
-		private final Bot parent;
-
-		public Cny70Simulator(Point3d distFromBotCenter,
-		Vector3d headingInBotCoord, World world, Bot parent,
-		NumberTwin sensor) {
-			this.distFromBotCenter = distFromBotCenter;
-			this.headingInBotCoord = headingInBotCoord;
-			this.world = world;
-			this.parent = parent;
-			this.sensor = sensor;
-		}
-
-		public void run() {
-			sensor.getModel().setValue(
-				world.sensGroundReflectionCross(
-					parent.worldCoordFromBotCoord(distFromBotCenter),
-					parent.worldCoordFromBotCoord(headingInBotCoord),
-					OPENING_ANGLE_IN_RAD,
-					PRECISION));
-		}
-	}
-
-	static class LightSensorSimulator implements Runnable {
-		private static final double OPENING_ANGLE_IN_RAD = Math.toRadians(180);
-
-		private final Point3d distFromBotCenter;
-		private final Vector3d headingInBotCoord;
-		private final Bot parent;
-		private final World world;
-		private final LightSensor sensor;
-
-		public LightSensorSimulator(Point3d distFromBotCenter,
-		Vector3d headingInBotCoord, World world, Bot parent,
-		LightSensor sensor) {
-			this.distFromBotCenter = distFromBotCenter;
-			this.headingInBotCoord = headingInBotCoord;
-			this.world = world;
-			this.parent = parent;
-			this.sensor = sensor;
-		}
-
-		public void run() {
-			sensor.getModel().setValue(
-				world.sensLight(
-					parent.worldCoordFromBotCoord(distFromBotCenter),
-					parent.worldCoordFromBotCoord(headingInBotCoord),
-					OPENING_ANGLE_IN_RAD));
-		}
-
 	}
 
 	///////////////////////////////////////////////////////////////////////////
-
-	private final WheelSimulator leftWheel;
-	private final WheelSimulator rightWheel;
-	private final BulkList<Runnable> simulators = new BulkList<Runnable>();
-
-    private static Point3d at(double x, double y, double z) {
-    	return new Point3d(x, y, z);
-    }
-
-    private static Vector3d looksForward() {
-    	return new Vector3d(0, 1, 0);
-    }
 
 	/**
 	 * @param w Die Welt
@@ -300,31 +325,19 @@ public class CtBotSimTcp extends CtBotSim {
 		this.connection = con;
 		this.world = w;
 
-		Actuator.Governor govL;
-		Actuator.Governor govR;
-	    EncoderSensor encL;
-	    EncoderSensor encR;
-	    DistanceSensor distL;
-	    DistanceSensor distR;
-	    LineSensor lineL;
-	    LineSensor lineR;
-	    BorderSensor borderL;
-	    BorderSensor borderR;
-	    LightSensor lightL, lightR;
-
 		components.add(
-			govL = new Actuator.Governor(true),
-			govR = new Actuator.Governor(false),
-			encL = new EncoderSensor(true),
-			encR = new EncoderSensor(false),
-			distL = new DistanceSensor(true),
-			distR = new DistanceSensor(false),
-			lineL = new LineSensor(true),
-			lineR = new LineSensor(false),
-			borderL = new BorderSensor(true),
-			borderR = new BorderSensor(false),
-			lightL = new LightSensor(true),
-			lightR = new LightSensor(false),
+			new Actuator.Governor(true),
+			new Actuator.Governor(false),
+			new EncoderSensor(true),
+			new EncoderSensor(false),
+			new DistanceSensor(true),
+			new DistanceSensor(false),
+			new LineSensor(true),
+			new LineSensor(false),
+			new BorderSensor(true),
+			new BorderSensor(false),
+			new LightSensor(true),
+			new LightSensor(false),
 			new LcDisplay(20, 4),
 			new Actuator.Log()
 		);
@@ -352,39 +365,11 @@ public class CtBotSimTcp extends CtBotSim {
 		);
 
 		// Simulation
-		leftWheel = new WheelSimulator(govL);
-		rightWheel = new WheelSimulator(govR);
-
-		simulators.add(
-			new EncoderSimulator(leftWheel, encL),
-			new EncoderSimulator(rightWheel, encR),
-			new DistanceSimulator(
-				at(- 0.036d, 0.0554d, 0d), looksForward(),
-				world, this, "characteristics/gp2d12Left.txt", 100, distL),
-			new DistanceSimulator(
-				at(+ 0.036d, 0.0554d, 0d), looksForward(),
-				world, this, "characteristics/gp2d12Right.txt", 80, distR),
-			// Liniensensoren
-			new Cny70Simulator(
-				at(- 0.004, 0.009, -0.011 - BOT_HEIGHT / 2), looksForward(),
-				world, this, lineL),
-			new Cny70Simulator(
-				at(+ 0.004, 0.009, -0.011 - BOT_HEIGHT / 2), looksForward(),
-				world, this, lineR),
-			// Abgrundsensoren
-			new Cny70Simulator(
-				at(- 0.036, 0.0384, - BOT_HEIGHT / 2), looksForward(),
-				world, this, borderL),
-			new Cny70Simulator(
-				at(+ 0.036, 0.0384, - BOT_HEIGHT / 2), looksForward(),
-				world, this, borderR),
-			new LightSensorSimulator(
-				at(- 0.032, 0.048, 0.060 - BOT_HEIGHT / 2), looksForward(),
-				world, this, lightL),
-			new LightSensorSimulator(
-				at(+ 0.032, 0.048, 0.060 - BOT_HEIGHT / 2), looksForward(),
-				world, this, lightR)
-		);
+		masterSimulator = new MasterSimulator(world, this);
+		for (BotComponent<?> c : components) {
+			if (c instanceof NumberTwin)
+				((NumberTwin)c).accept(masterSimulator);
+		}
 
 		// ...
 
@@ -459,8 +444,8 @@ public class CtBotSimTcp extends CtBotSim {
 		// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe pdf //$$ Ja welches pdf?
 
 		// Absolut zurueckgelegte Strecke pro Rad berechnen
-		double s_l = leftWheel .revsThisSimStep() * WHEEL_PERIMETER;
-		double s_r = rightWheel.revsThisSimStep() * WHEEL_PERIMETER;
+		double s_l = masterSimulator.leftWheel .revsThisSimStep() * WHEEL_PERIMETER;
+		double s_r = masterSimulator.rightWheel.revsThisSimStep() * WHEEL_PERIMETER;
 
 		// halben Drehwinkel berechnen
 		double _gamma = (s_l - s_r) / (4.0 * WHEEL_DIST);
@@ -744,8 +729,7 @@ public class CtBotSimTcp extends CtBotSim {
 	@Override
 	public void updateSimulation(long simulTime) {
 		super.updateSimulation(simulTime); // Da drin auch Alt-Sensoren-Updates (eigentl. Simulation)
-		for (Runnable sim : simulators)
-			sim.run();
+		masterSimulator.run();
 		// TODO Diese Funktion hat hier rein gar nix zu suchen und muss nach ctbotsim
 		calcPos();
 	}

@@ -5,6 +5,7 @@ import javax.swing.SpinnerModel;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotComponent.SimpleActuator;
 import ctSim.model.bots.components.BotComponent.SimpleSensor;
+import ctSim.util.Buisitor.Buisit;
 
 //$$ doc
 public abstract class Simple {

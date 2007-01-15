@@ -3,6 +3,7 @@ package ctSim.controller;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.LogManager;
 
 import javax.swing.UIManager;
@@ -11,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
 import ctSim.view.TimeLogger;
 import ctSim.view.View;
 import ctSim.view.ViewYAdapter;
@@ -129,21 +131,23 @@ public class Main {
 
 		Controller c = dependencies.get(Controller.class);
 
+		List<View> v = Misc.newList();
 		// View der Applikation ist mindestens das MainWindow
-		View view = new MainWindow(c);
+		v.add(new MainWindow(c));
 		try {
 			// View um ContestConductor erweitern falls so konfiguriert
-			if (Config.getValue("useContestConductor").
-					equalsIgnoreCase("true")) {
-				view = ViewYAdapter.newInstance(view,
-					dependencies.get(ContestConductor.class),
-					new TimeLogger());
-			}
+			if (Config.getValue("useContestConductor").equalsIgnoreCase("true"))
+				v.add(dependencies.get(ContestConductor.class));
 		} catch (Exception e) {
-			lg.warn(e, "Probleme beim Instanziieren des ContestConductor");
+			lg.warn(e, "Probleme beim Instanziieren des ContestConductor; " +
+					"starte ohne");
 		}
+		
+		if (Config.getValue("TimeLogger").equalsIgnoreCase("true"))
+			v.add(new TimeLogger());
 
-		c.setView(view);
+		//$$ Optimierung: Wenn nur ein Ding in v kann man sich den Umstand mit YAdapter sparen
+		c.setView(ViewYAdapter.newInstance(v));
 		c.onApplicationInited();
     }
 }

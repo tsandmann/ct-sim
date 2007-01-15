@@ -15,6 +15,7 @@ import javax.swing.event.ChangeListener;
 import ctSim.model.bots.components.actuators.Led;
 import ctSim.util.Misc;
 import ctSim.util.RoundGradientPaint;
+import ctSim.util.Buisitor.Buisit;
 
 //$$ doc
 public class Leds extends BotBuisitor {

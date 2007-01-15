@@ -24,10 +24,15 @@
 	<!-- botdir ist das Verzeichnis, in dem nach Bots gesucht wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt -->
 	<parameter name="botdir" value="..\ct-Bot\Debug-W32"/>
 
-	<!-- judge ist der Klassenname des Judges, den der Sim per default lädt-->
+	<!-- judge ist der Klassenname des Judges, den der Sim per default laedt-->
 	<parameter name="judge" value="ctSim.model.rules.LabyrinthJudge"/>
 
-	<bots>         
+	<!-- Aktiviert/deaktiviert den TimeLogger, der waehrend einer Simulation 
+	einige Performance-Daten auf die Konsole schreibt. Werte: true, false; 
+	Standardwert: false. -->
+	<parameter name="TimeLogger" value="true"/>
+
+	<bots>
 		<bot name="ctSim.model.bots.CtBotSimTest_0">
 			<appearance type="normal">
 				<description>Standard Aussehen des TestBots 1</description>
@@ -94,7 +99,7 @@
 				<color>#008000</color>
 			</appearance>
 		</bot>
-		
+
 		<bot name="default">
 			<appearance type="normal">
 				<description>Standard Aussehen des Standard-Bots</description>

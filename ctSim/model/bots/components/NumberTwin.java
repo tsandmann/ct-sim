@@ -3,6 +3,7 @@ package ctSim.model.bots.components;
 import javax.swing.SpinnerNumberModel;
 
 import ctSim.model.Command;
+import ctSim.model.bots.ctbot.CtBotSimTcp.NumberTwinVisitor;
 
 //$$ doc
 // ist Haelfte eines Paars (z.B. IrL + IrR)
@@ -51,5 +52,9 @@ public abstract class NumberTwin extends BotComponent<NumberTwin.NumberModel> {
 			c.setDataL(value);
 		else
 			c.setDataR(value);
+	}
+
+	public void accept(NumberTwinVisitor visitor) {
+		visitor.visit(this, isLeft);
 	}
 }
