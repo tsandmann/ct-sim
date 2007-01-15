@@ -41,6 +41,7 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
+import ctSim.model.bots.components.NumberTwin;
 import ctSim.model.bots.components.Sensor;
 import ctSim.model.bots.components.Actuator.Governor;
 import ctSim.model.bots.components.actuators.LcDisplay;
@@ -100,7 +101,6 @@ public class CtBotSimTcp extends CtBotSim {
 	private int  mouseX, mouseY;
 
 	private Sensor<?>
-		lineL, lineR,
 		borderL, borderR,
 		lightL, lightR,
 		rc5;
@@ -142,8 +142,6 @@ public class CtBotSimTcp extends CtBotSim {
 			return speedInRps * deltaTInSec;
 		}
 	}
-
-	///////////////////////////////////////////////////////////////////////////
 
 	static class EncoderSimulator implements Runnable {
 		/** Anzahl an Encoder-Markierungen auf einem Rad */
@@ -187,7 +185,7 @@ public class CtBotSimTcp extends CtBotSim {
 		private final Point3d distFromBotCenter;
 		private final Vector3d headingInBotCoord;
 		private final World world;
-		private final Bot parent;
+		private final Bot parent; //$$ Geht das besser ohne die Referenz? Cny70 auch betroffen
 		private final Characteristic charstic;
 		private DistanceSensor sensor;
 
@@ -216,6 +214,37 @@ public class CtBotSimTcp extends CtBotSim {
 		}
 	}
 
+	static class Cny70Simulator implements Runnable {
+		private static final double OPENING_ANGLE_IN_RAD =
+			Math.toRadians(80); // 80°
+		private static final short PRECISION = 10;
+
+		private final NumberTwin sensor;
+		private final Point3d distFromBotCenter;
+		private final Vector3d headingInBotCoord;
+		private final World world;
+		private final Bot parent;
+
+		public Cny70Simulator(Point3d distFromBotCenter,
+		Vector3d headingInBotCoord, World world, Bot parent,
+		NumberTwin sensor) {
+			this.distFromBotCenter = distFromBotCenter;
+			this.headingInBotCoord = headingInBotCoord;
+			this.world = world;
+			this.parent = parent;
+			this.sensor = sensor;
+		}
+
+		public void run() {
+			sensor.getModel().setValue(
+				world.sensGroundReflectionCross(
+					parent.worldCoordFromBotCoord(distFromBotCenter),
+					parent.worldCoordFromBotCoord(headingInBotCoord),
+					OPENING_ANGLE_IN_RAD,
+					PRECISION));
+		}
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 
 	private final WheelSimulator leftWheel;
@@ -230,12 +259,6 @@ public class CtBotSimTcp extends CtBotSim {
     	return new Vector3d(0, 1, 0);
     }
 
-    //$$$ lokal
-    EncoderSensor encL;
-    EncoderSensor encR;
-    DistanceSensor distL;
-    DistanceSensor distR;
-
 	/**
 	 * @param w Die Welt
 	 * @param pos Position
@@ -249,6 +272,12 @@ public class CtBotSimTcp extends CtBotSim {
 
 		Actuator.Governor govL;
 		Actuator.Governor govR;
+	    EncoderSensor encL;
+	    EncoderSensor encR;
+	    DistanceSensor distL;
+	    DistanceSensor distR;
+	    LineSensor lineL;
+	    LineSensor lineR;
 
 		components.add(
 			govL = new Actuator.Governor(true),
@@ -257,6 +286,8 @@ public class CtBotSimTcp extends CtBotSim {
 			encR = new EncoderSensor(false),
 			distL = new DistanceSensor(true),
 			distR = new DistanceSensor(false),
+			lineL = new LineSensor(true),
+			lineR = new LineSensor(false),
 			new LcDisplay(20, 4),
 			new Actuator.Log()
 		);
@@ -275,6 +306,7 @@ public class CtBotSimTcp extends CtBotSim {
 			_(Actuator.Governor.class, READS),
 			_(EncoderSensor.class    , WRITES),
 			_(DistanceSensor.class   , WRITES),
+			_(LineSensor.class       , WRITES),
 			_(LcDisplay.class        , READS),
 			_(Actuator.Log.class     , READS),
 			_(Led.class              , READS)
@@ -292,17 +324,16 @@ public class CtBotSimTcp extends CtBotSim {
 				world, this, "characteristics/gp2d12Left.txt", 100, distL),
 			new DistanceSimulator(
 				at(+ 0.036d, 0.0554d, 0d), looksForward(),
-				world, this, "characteristics/gp2d12Right.txt", 80, distR)
+				world, this, "characteristics/gp2d12Right.txt", 80, distR),
+			new Cny70Simulator(
+				at(- 0.004, 0.009, -0.011 - BOT_HEIGHT / 2), looksForward(),
+				world, this, lineL),
+			new Cny70Simulator(
+				at(+ 0.004, 0.009, -0.011 - BOT_HEIGHT / 2), looksForward(),
+				world, this, lineR)
 		);
 
 		// ...
-
-		this.lineL = new LineSensor(this.world, this, "LineL",
-			new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2),
-			new Vector3d(0d, 1d, 0d));
-		this.lineR = new LineSensor(this.world, this, "LineR",
-			new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2),
-			new Vector3d(0d, 1d, 0d));
 
 		this.borderL = new BorderSensor(this.world, this, "BorderL",
 			new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2),
@@ -352,9 +383,6 @@ public class CtBotSimTcp extends CtBotSim {
 				return "Maus-Sensor-Wert Y";
 			}
 		});
-
-		this.addSensor(this.lineL);
-		this.addSensor(this.lineR);
 
 		this.addSensor(this.borderL);
 		this.addSensor(this.borderR);
@@ -568,12 +596,6 @@ public class CtBotSimTcp extends CtBotSim {
 			command = new Command(Command.Code.SENS_LDR);
 			command.setDataL((Integer)this.lightL.getValue());
 			command.setDataR((Integer)this.lightR.getValue());
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			command = new Command(Command.Code.SENS_LINE);
-			command.setDataL(((Short)this.lineL.getValue()).intValue());
-			command.setDataR(((Short)this.lineR.getValue()).intValue());
 			command.setSeq(this.seq++);
 			connection.write(command);
 

@@ -21,6 +21,7 @@ package ctSim.model.bots.ctbot.components;
 import ctSim.model.Command.Code;
 import ctSim.model.bots.components.NumberTwin;
 import ctSim.model.bots.components.BotComponent.CanWrite;
+import ctSim.model.bots.components.BotComponent.SimpleSensor;
 
 /**
  * Klasse der Rad-Encoder
@@ -29,7 +30,8 @@ import ctSim.model.bots.components.BotComponent.CanWrite;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 //$$ doc
-public class EncoderSensor extends NumberTwin implements CanWrite {
+public class EncoderSensor extends NumberTwin 
+implements SimpleSensor, CanWrite {
 	@Override
 	protected String getBaseDescription() {
 		return "Rad-Encoder-Sensor";

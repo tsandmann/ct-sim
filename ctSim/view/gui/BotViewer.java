@@ -94,8 +94,8 @@ public class BotViewer extends JScrollPane implements Updatable {
 		//$$$ Wo ist eigentlich Pos hin?
 		Sens.class,
 		Leds.class,
-		RunOfTheMill.Actuators.class,
-		RunOfTheMill.Sensors.class,
+		Simple.Actuators.class,
+		Simple.Sensors.class,
 		AndEverything.class,
     };
 

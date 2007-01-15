@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-15 12:16 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Neu: Liniensensor
+* Umbenannt: RunOfTheMill -> Simple (versteht ja keiner)
+
 2007-01-15 01:31 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
 * Neu: Abstandssensor (schwere Geburt)
 * Neu: Listen und Maps kann man einfacher mit Typinferenz erzeugen; Misc.newMap() / Misc.newList(); ueberall umgestellt

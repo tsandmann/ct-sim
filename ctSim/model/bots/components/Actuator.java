@@ -25,6 +25,7 @@ import javax.swing.text.PlainDocument;
 import ctSim.model.Command;
 import ctSim.model.Command.Code;
 import ctSim.model.bots.components.BotComponent.CanRead;
+import ctSim.model.bots.components.BotComponent.SimpleActuator;
 
 /**
  * Klasse, die nur als Container f&uuml;r innere Klassen dient und selber keine
@@ -39,8 +40,8 @@ public abstract class Actuator {
 	 * Drehgeschwindigkeit eines Rads; der c't-Bot hat daher einen linken und
 	 * einen rechten Governor).
 	 */
-	public static class Governor extends NumberTwin implements CanRead {
-
+	public static class Governor extends NumberTwin
+	implements SimpleActuator, CanRead {
 		@Override
 		protected String getBaseDescription() {
 			return "Motorbegrenzer";
@@ -53,8 +54,7 @@ public abstract class Actuator {
 
 	//$$ doc DoorServo
 	public static class DoorServo extends BotComponent<SpinnerNumberModel>
-	implements CanRead {
-
+	implements SimpleActuator, CanRead {
 		@Override
 		public String getDescription() {
 			return "Servomotor f\u00FCr Klappe";
@@ -77,7 +77,6 @@ public abstract class Actuator {
 	 */
 	public static class Log extends BotComponent<PlainDocument>
 	implements CanRead {
-
 		public Log() { super(new PlainDocument()); }
 
 		public void readFrom(Command c) {

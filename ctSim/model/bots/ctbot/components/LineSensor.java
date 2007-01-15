@@ -18,95 +18,25 @@
  */
 package ctSim.model.bots.ctbot.components;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
-import ctSim.model.World;
-import ctSim.model.bots.Bot;
-import ctSim.model.bots.components.sensors.SimpleSensor;
+import ctSim.model.Command.Code;
+import ctSim.model.bots.components.NumberTwin;
+import ctSim.model.bots.components.BotComponent.CanWrite;
+import ctSim.model.bots.components.BotComponent.SimpleSensor;
 
 /**
  * Klasse der Liniensensoren
  *
  * @author Felix Beckwermert
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-public class LineSensor extends SimpleSensor<Short> {
-
-	// TODO:
-	private World world;
-	private Bot bot;
-
-
-	private double angle = Math.PI / 180 * 80;  // 80°
-	private short precision = 10;
-
-	/**
-	 * Der Konstruktor
-	 * @param w Welt
-	 * @param b Bot
-	 * @param name Sensor-Name
-	 * @param relPos relative Position zum Bot
-	 * @param relHead relative Blickrichtung zum Bot
-	 */
-public LineSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead) {
-
-		super(name, relPos, relHead);
-
-		// TODO:
-		this.world = w;
-		this.bot   = b;
-	}
-
-	/**
-	 * @see ctSim.model.bots.components.BotComponent#getDescription()
-	 */
+//	$$ doc
+public class LineSensor extends NumberTwin implements SimpleSensor, CanWrite {
 	@Override
-	public String getDescription() {
-		// TODO: Liniensensor?
-		return "Infrarot Linien-Sensor: "+this.getName(); //$NON-NLS-1$
+	protected String getBaseDescription() {
+		return "Liniensensor [0; 1023]";
 	}
 
-	/**
-	 * @see ctSim.model.bots.components.Sensor#updateValue()
-	 */
-	@SuppressWarnings("boxing")
-	@Override
-	public Short updateValue() {
-
-//		Debug.out.println("Robbi steht an: "+this.bot.getPosition()+" | "+this.bot.getHeading());
-//		Debug.out.println("Sensor ist an relativer Pos.: "+this.getRelPosition()+ " | "+this.getRelHeading());
-//		Debug.out.println("Summe ist: "+this.getAbsPosition(this.bot.getPosition(), this.bot.getHeading())
-//				+ " | "+this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()));
-
-		// TODO: Richtig so?
-		return this.world.sensGroundReflectionCross(
-				this.getAbsPosition(this.bot.getPositionInWorldCoord(), this.bot.getHeadingInWorldCoord()),
-				this.getAbsHeading(this.bot.getPositionInWorldCoord(), this.bot.getHeadingInWorldCoord()),
-				this.angle,
-				this.precision);
-
-
-
-		/* TODO:
-		 *
-		 * Wert updaten aus Welt...
-		 *
-		 * Was wenn Wert von Bot stammen soll?
-		 *    <-!!-> aus XML-Datei einlesen...
-		 *
-		 * Wert aus Welt bestimmen:
-		 *     Pos, Heading reicht (nicht!?)
-		 *     -> Wert an Bot geben
-ss
-		 *     -> ueber Namen?
-		 * Wert ueber Bot bestimmen:
-		 *     ueber Namen (?)
-		 *     -> Bot-Command (o.ae.)
-		 *     -> ... (gleiches Problem wie beim Senden -> s.o.)
-		 *
-		 * -> Kommando in XML-Datei angeben?
-		 *
-		 */
-		//return null;
-	}
+	@Override protected String getBaseName() { return "Line"; }
+	public LineSensor(boolean isLeft) { super(isLeft); }
+	public Code getHotCmdCode() { return Code.SENS_LINE; }
 }

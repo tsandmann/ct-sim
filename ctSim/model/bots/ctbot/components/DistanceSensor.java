@@ -21,14 +21,15 @@ package ctSim.model.bots.ctbot.components;
 import ctSim.model.Command.Code;
 import ctSim.model.bots.components.NumberTwin;
 import ctSim.model.bots.components.BotComponent.CanWrite;
+import ctSim.model.bots.components.BotComponent.SimpleSensor;
 
 /** Abstandssensor vom Typ GP2D12
  * $$ doc
  * @author Felix Beckwermert
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-public class DistanceSensor extends NumberTwin implements CanWrite {
-	
+public class DistanceSensor extends NumberTwin 
+implements SimpleSensor, CanWrite {
 	@Override
 	protected String getBaseDescription() {
 		return "Abstandssensor";

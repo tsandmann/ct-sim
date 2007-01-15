@@ -104,6 +104,14 @@ public abstract class BotComponent<M> {
 		public Code getHotCmdCode();
 	}
 
+	public interface SimpleSensor {
+		// Marker-Interface
+	}
+
+	public interface SimpleActuator {
+		// Marker-Interface
+	}
+
 	public static enum ConnectionFlags { READS, WRITES }
 
 	private final M model;
@@ -114,7 +122,7 @@ public abstract class BotComponent<M> {
 	public BotComponent(M model) { this.model = model; }
 
 	public M getModel() { return model; } //$$$ ? verunumstaendlichen
-	
+
 	private UnsupportedOperationException createUnsuppOp(String s) {
 		return new UnsupportedOperationException("Bot-Komponente "+this+
 			" unterst\u00FCtzt kein "+s);

@@ -38,8 +38,9 @@ public class CtBotSimTest extends CtBotSim {
 	// TODO: weg
 	private World world;
 
-	private Sensor lineL, lineR, borderL, borderR, lightL, lightR;
+	private Sensor borderL, borderR, lightL, lightR;
 	private NumberTwin irL, irR;
+	private NumberTwin lineL, lineR;
 
 	/**
 	 * Der Konstruktor
@@ -62,22 +63,17 @@ public class CtBotSimTest extends CtBotSim {
 	}
 
 	private void initSensors() {
+		irL = new DistanceSensor(true);
+		irR = new DistanceSensor(false);
 
-		this.irL = new DistanceSensor(true);
-		this.irR = new DistanceSensor(false);
-
-		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		lineL = new LineSensor(true);
+		lineR = new LineSensor(false);
 
 		this.borderL = new BorderSensor(this.world, this, "BorderL", new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		this.borderR = new BorderSensor(this.world, this, "BorderR", new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 
 		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-
-		// new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d)); //
-		this.addSensor(this.lineL);
-		this.addSensor(this.lineR);
 
 		this.addSensor(this.borderL);
 		this.addSensor(this.borderR);
