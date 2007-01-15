@@ -35,6 +35,7 @@ import javax.vecmath.Vector3d;
 
 import ctSim.Connection;
 import ctSim.SimUtils;
+import ctSim.controller.Config;
 import ctSim.model.AliveObstacle;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
@@ -43,7 +44,6 @@ import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.NumberTwin;
-import ctSim.model.bots.components.Sensor;
 import ctSim.model.bots.components.Actuator.Governor;
 import ctSim.model.bots.components.actuators.LcDisplay;
 import ctSim.model.bots.components.actuators.Led;
@@ -104,9 +104,6 @@ public class CtBotSimTcp extends CtBotSim {
 	private final MasterSimulator masterSimulator;
 
 	private int  mouseX, mouseY;
-
-	private Sensor<?>
-		rc5;
 
 	///////////////////////////////////////////////////////////////////////////
 
@@ -338,6 +335,7 @@ public class CtBotSimTcp extends CtBotSim {
 			new BorderSensor(false),
 			new LightSensor(true),
 			new LightSensor(false),
+			new RemoteControlSensor(),
 			new LcDisplay(20, 4),
 			new Actuator.Log()
 		);
@@ -359,6 +357,7 @@ public class CtBotSimTcp extends CtBotSim {
 			_(LineSensor.class       , WRITES),
 			_(BorderSensor.class     , WRITES),
 			_(LightSensor.class      , WRITES),
+			_(RemoteControlSensor.class, WRITES),
 			_(LcDisplay.class        , READS),
 			_(Actuator.Log.class     , READS),
 			_(Led.class              , READS)
@@ -371,12 +370,9 @@ public class CtBotSimTcp extends CtBotSim {
 				((NumberTwin)c).accept(masterSimulator);
 		}
 
+		sendRcStartCode();
+
 		// ...
-
-		this.rc5 = new RemoteControlSensor("RC fuer '"+this.getName()+"'",
-			new Point3d(), new Vector3d());
-
-		this.addSensor(this.rc5);
 
 		this.addSensor(new SimpleSensor<Integer>("MouseX", new Point3d(),
 			new Vector3d()) {
@@ -412,6 +408,23 @@ public class CtBotSimTcp extends CtBotSim {
 	@Override
 	public String getDescription() {
 		return "Simulierter, in C geschriebener c't-Bot";
+	}
+
+	//$$$ doc
+	private void sendRcStartCode() {
+		String rawStr = Config.getValue("rcStartCode");
+		try {
+			int rcStartCode = Integer.decode(rawStr);
+			for (BotComponent<?> c : components) {
+				if (c instanceof RemoteControlSensor) {
+					((RemoteControlSensor)c).getModel().setValue(rcStartCode);
+					break;
+				}
+			}
+		} catch (NumberFormatException e) {
+			lg.warn(e, "Konnte rcStartCode '%s' nicht parsen; ignoriere",
+				rawStr);
+		}
 	}
 
 	/**
@@ -622,18 +635,6 @@ public class CtBotSimTcp extends CtBotSim {
 			command.setSeq(this.seq++);
 			connection.write(command);
 
-			Object rc5 = this.rc5.getValue();
-			if(rc5 != null) {
-				Integer val = (Integer)rc5;
-				if(val != 0) {
-					command = new Command(Command.Code.SENS_RC5);
-					command.setDataL(val);
-					command.setDataR(42);
-					command.setSeq(seq++);
-					connection.write(command);
-				}
-			}
-
 			// TODO: nur fuer real-bot
 			command = new Command(Command.Code.SENS_ERROR);
 			command.setDataL(0);
@@ -651,18 +652,6 @@ public class CtBotSimTcp extends CtBotSim {
 		} catch (IOException e) {
 			lg.severe(e, "Error sending sensor data; dying");
 			die();
-		}
-	}
-
-	/** sendet ein IR-Fernbedienungsklommandoi an den Bot
-	 *
-	 * @param command RC5-Code des Kommandos
-	 */
-	public void sendRCCommand(int command){
-		// TODO Warning entfernen
-		boolean setValue = ((Sensor<Integer>)rc5).setValue(new Integer(command));
-		if (!setValue) {
-			lg.warn("Kann RC5-Kommando nicht absetzen");
 		}
 	}
 
@@ -792,7 +781,7 @@ public class CtBotSimTcp extends CtBotSim {
 		}
 	}
 
-	//$$ Unterschied cleanup() und die()? Zusammenfassen
+	//$$ Unterschied cleanup() und die()? Zusammenfassen (Death-Listener)
 	@Override
 	protected void cleanup() {
 		super.cleanup();

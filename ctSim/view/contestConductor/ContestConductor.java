@@ -22,13 +22,11 @@ import ctSim.controller.DefaultController;
 import ctSim.controller.Main;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
-import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 import ctSim.view.View;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
-import ctSim.view.gui.sensors.RemoteControlGroupGUI;
 
 // $$ doc gesamte Klasse
 // $$ die staendigen "assert false" sind nicht so doll. Schoener waere: Exceptions werfen und den Controller exit machen lassen (verbessert auch Testbarkeit (Unit-Tests) des ContestConductor). Ich zieh mir aber nicht den Schuh an, Exception-Handling in den z.Zt. noch chaotischen Controller reinzupopeln.
@@ -535,15 +533,6 @@ public class ContestConductor implements View {
 		if (currentPhase == MAIN_ROUND) {
 			lg.fine("Starte Bot 2");
 			new BotView(executeBot(db.getBot2Binary()), db.getBot2Id(), 1);
-		}
-
-		lg.fine("Go f\u00FCr Bots");
-		// Bots starten
-		//$$ sollte nicht hier sein
-		for(Bot b : BotView.getAllModelObjects()) {
-			if (b instanceof CtBotSimTcp) //$$ sollte CtBot sein, wo sendRCCommand() auch hingehoert
-				((CtBotSimTcp)b).sendRCCommand(
-					RemoteControlGroupGUI.RC5_CODE_5);
 		}
 
 		lg.fine("Go f\u00FCr Controller");

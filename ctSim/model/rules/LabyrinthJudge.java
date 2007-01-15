@@ -22,13 +22,11 @@ import java.util.Set;
 
 import javax.vecmath.Vector3d;
 
+import ctSim.SimUtils;
 import ctSim.controller.DefaultController;
 import ctSim.model.AliveObstacle;
 import ctSim.model.World;
-import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.view.gui.Debug;
-import ctSim.view.gui.sensors.RemoteControlGroupGUI;
-import ctSim.SimUtils;
 
 /**
  * Schiedsrichter fuer Rennen von zwei Bots durch ein Labyrinth
@@ -39,7 +37,6 @@ public class LabyrinthJudge extends Judge {
 	private World world;
 	private int participants = 2;
 	/** Variable umd den ersten Start zu markieren */
-	private boolean first = true;
 
 	public LabyrinthJudge(DefaultController ctrl) {
 		super(ctrl);
@@ -98,27 +95,13 @@ public class LabyrinthJudge extends Judge {
 			return false;
 
 		for(AliveObstacle obst : obsts) {
-
-			if (first ==true){
-				if (obst instanceof CtBotSimTcp)
-					((CtBotSimTcp)obst).sendRCCommand(RemoteControlGroupGUI.RC5_CODE_5);
-			}
-
 			if(this.world.finishReached(new Vector3d(obst.getPositionInWorldCoord()))) {
 				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "
 						+ SimUtils.millis2time(this.getTime()));
 				return true;
 			}
 		}
-		first=false;
 
 		return false;
-	}
-
-	@Override
-    public void reinit() {
-
-		super.reinit();
-		this.first = true;
 	}
 }

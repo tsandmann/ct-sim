@@ -26,6 +26,7 @@ import ctSim.Connection;
 import ctSim.model.bots.components.actuators.Led;
 import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.bots.ctbot.CtBotSim;
+import ctSim.model.bots.ctbot.components.RemoteControlSensor;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -91,7 +92,7 @@ import ctSim.util.Misc;
  * einzelnen Commands behandelt werden, und wie sie im Detail interpretiert
  * werden, ist in den Bot-Komponenten beschrieben, die das Interpretieren
  * vornehmen. Siehe die Abschnitte <strong>c't-Bot-Protokoll</strong> in den
- * Klassen {@link Led}, $$ doc c't-Bot-Protokoll </li>
+ * Klassen {@link Led}, {@link RemoteControlSensor} $$ doc c't-Bot-Protokoll </li>
  * <li>Beim Start des Sim &uuml;bertr&auml;gt er ein Command mit dem
  * Command-Code {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * (Zu diesem Zeitpunkt kann der Bot schon laufen, d.h. f&uuml;r den Bot kann

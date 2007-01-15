@@ -1,6 +1,7 @@
 package ctSim.util;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -46,8 +47,7 @@ public class AuxFrameButton extends JToggleButton {
 	 * die alles weitere enth&auml;lt
 	 */
 	public AuxFrameButton(String buttonLabel, String frameTitle,
-		JComponent frameContent) {
-
+	JComponent frameContent) {
 		super(buttonLabel);
 
 		// Fenster erzeugen; konfigurieren spaeter
@@ -55,11 +55,15 @@ public class AuxFrameButton extends JToggleButton {
 
 		// Uns selber konfigurieren
 		setAlignmentX(Component.CENTER_ALIGNMENT);
-		setToolTipText("Fenster anzeigen mit " + buttonLabel);
+		// Falls wir Platz haben, ausnutzen (keiner hat was von leerem 
+		// nicht-klickbaren Platz) 
+		setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		setToolTipText("Fenster anzeigen mit "+buttonLabel);
 		addActionListener(new ActionListener() {
+			// Fenster anzeigen/verbergen, wenn wir gedrueckt werden
 			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(
-				@SuppressWarnings("unused") ActionEvent e) {
+			@SuppressWarnings("unused") ActionEvent e) {
 				auxFrame.setVisible(AuxFrameButton.this.isSelected());
 			}
 		});
@@ -70,7 +74,7 @@ public class AuxFrameButton extends JToggleButton {
 			// rausspringen
 			@Override
 			public void windowClosing(
-				@SuppressWarnings("unused") WindowEvent e) {
+			@SuppressWarnings("unused") WindowEvent e) {
 				AuxFrameButton.this.setSelected(false);
 			}
 		});

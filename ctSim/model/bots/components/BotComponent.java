@@ -21,6 +21,7 @@ package ctSim.model.bots.components;
 import java.net.ProtocolException;
 
 import javax.media.j3d.Transform3D;
+import javax.swing.SpinnerNumberModel;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -113,6 +114,15 @@ public abstract class BotComponent<M> {
 	}
 
 	public static enum ConnectionFlags { READS, WRITES }
+
+	public static class NumberModel extends SpinnerNumberModel {
+		private static final long serialVersionUID = 15828077642311050L;
+	
+		@Override
+		public Number getValue() {
+			return (Number)super.getValue();
+		}
+	}
 
 	private final M model;
 

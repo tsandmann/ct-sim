@@ -38,7 +38,7 @@ public class Leds extends BotBuisitor {
 				public void stateChanged(
 					@SuppressWarnings("unused") ChangeEvent e) {
 					LedViewer.this.setToolTipText(
-						tooltip + " \u2013 " // Strich ("Minuszeichen")
+						tooltip + " \u2013 " // Streckenstrich ("Minuszeichen")
 						+ (model.isSelected() ? "leuchtet" : "leuchtet nicht"));
 				}
 			});

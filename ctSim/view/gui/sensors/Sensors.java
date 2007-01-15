@@ -20,7 +20,6 @@
 package ctSim.view.gui.sensors;
 
 import ctSim.model.bots.components.sensors.SimpleSensor;
-import ctSim.model.bots.ctbot.components.RemoteControlSensor;
 
 /**
  * Hilfsklasse fuer Sensoren
@@ -36,10 +35,5 @@ public class Sensors {
 	public static SensorGroupGUI getGuiFor(@SuppressWarnings("unused") SimpleSensor sens) {
 		
 		return new SimpleSensorGroupGUI();
-	}
-	
-	public static SensorGroupGUI getGuiFor(@SuppressWarnings("unused") RemoteControlSensor sens) {
-		
-		return new RemoteControlGroupGUI();
 	}
 }

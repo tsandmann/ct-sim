@@ -14,9 +14,12 @@ import javax.swing.JTextArea;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.actuators.LcDisplay;
+import ctSim.model.bots.ctbot.components.RemoteControlSensor;
 import ctSim.util.AuxFrameButton;
 import ctSim.util.Buisitor.Buisit;
 
+//$$ doc
+//$$$ GridLayout, damit wir Reihenfolge der Dinger vorgeben koennen
 public class AndEverything extends BotBuisitor {
 	private static final long serialVersionUID = - 8170321975584432026L;
 
@@ -55,6 +58,15 @@ public class AndEverything extends BotBuisitor {
 			log.getName(),
 			log.getDescription() + " von " + bot.getName(), // Fenster-Titel
 			new JScrollPane(t)));
+		add(Box.createRigidArea(new Dimension(0, 5)));
+	}
+
+	@Buisit
+	public void buildRemoteControl(RemoteControlSensor s, Bot bot) {
+		add(new AuxFrameButton(
+			s.getDescription()+" ("+s.getName()+")",
+			s.getDescription()+" f\u00FCr "+bot.getName(),
+			new RemoteControlViewer(s.getModel())));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 }
