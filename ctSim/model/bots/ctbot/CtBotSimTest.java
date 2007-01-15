@@ -23,7 +23,6 @@ import javax.vecmath.Vector3d;
 
 import ctSim.model.World;
 import ctSim.model.bots.components.NumberTwin;
-import ctSim.model.bots.components.Sensor;
 import ctSim.model.bots.ctbot.components.BorderSensor;
 import ctSim.model.bots.ctbot.components.DistanceSensor;
 import ctSim.model.bots.ctbot.components.LightSensor;
@@ -35,12 +34,10 @@ import ctSim.model.bots.ctbot.components.LineSensor;
  */
 public class CtBotSimTest extends CtBotSim {
 
-	// TODO: weg
-	private World world;
-
-	private Sensor borderL, borderR, lightL, lightR;
 	private NumberTwin irL, irR;
 	private NumberTwin lineL, lineR;
+	private NumberTwin borderL, borderR;
+	private NumberTwin lightL, lightR;
 
 	/**
 	 * Der Konstruktor
@@ -50,8 +47,6 @@ public class CtBotSimTest extends CtBotSim {
 	 */
 	public CtBotSimTest(World w, Point3d pos, Vector3d head) {
 		super(w, "Test-Bot", pos, head);
-
-		this.world = w;
 
 		initSensors(); //$$$ Soll in CtBot passieren
 		initActuators();
@@ -69,17 +64,11 @@ public class CtBotSimTest extends CtBotSim {
 		lineL = new LineSensor(true);
 		lineR = new LineSensor(false);
 
-		this.borderL = new BorderSensor(this.world, this, "BorderL", new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-		this.borderR = new BorderSensor(this.world, this, "BorderR", new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		borderL = new BorderSensor(true);
+		borderR = new BorderSensor(false);
 
-		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-
-		this.addSensor(this.borderL);
-		this.addSensor(this.borderR);
-
-		this.addSensor(this.lightL);
-		this.addSensor(this.lightR);
+		lightL = new LightSensor(true);
+		lightR = new LightSensor(false);
 	}
 
 	private void initActuators() {
@@ -87,11 +76,10 @@ public class CtBotSimTest extends CtBotSim {
 		// TODO!
 	}
 
-	@SuppressWarnings({"boxing","unchecked"})
 	@Override
 	protected void work() {
 
-		// TDO prüfen ob: super.work();
+		// TODO Pruefen ob: super.work();
 
 		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
 
@@ -130,8 +118,8 @@ public class CtBotSimTest extends CtBotSim {
 		}
 
 		// Ist ein Absturz zu befuerchten?
-		short borderl = (Short)this.borderL.getValue();
-		short borderr = (Short)this.borderR.getValue();
+		short borderl = borderL.getModel().getValue().shortValue();
+		short borderr = borderR.getModel().getValue().shortValue();
 		if (borderl > borderr) {
 			ll = 100;
 			rr = -100;

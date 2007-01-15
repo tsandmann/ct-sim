@@ -101,8 +101,6 @@ public class CtBotSimTcp extends CtBotSim {
 	private int  mouseX, mouseY;
 
 	private Sensor<?>
-		borderL, borderR,
-		lightL, lightR,
 		rc5;
 
 	///////////////////////////////////////////////////////////////////////////
@@ -179,8 +177,7 @@ public class CtBotSimTcp extends CtBotSim {
 	}
 
 	static class DistanceSimulator implements Runnable {
-		private static final double OPENING_ANGLE_IN_RAD =
-			Math.toRadians(3); // 3°
+		private static final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
 
 		private final Point3d distFromBotCenter;
 		private final Vector3d headingInBotCoord;
@@ -214,9 +211,13 @@ public class CtBotSimTcp extends CtBotSim {
 		}
 	}
 
+	/**
+	 * Repr&auml;sentiert einen optischen Sensore vom Typ CNY70. Beim c't-Bot
+	 * kommt der CNY70 u.a. als Liniensensor (2&times;) und als Abgrundsensor
+	 * (2&times;) zum Einsatz.
+	 */
 	static class Cny70Simulator implements Runnable {
-		private static final double OPENING_ANGLE_IN_RAD =
-			Math.toRadians(80); // 80°
+		private static final double OPENING_ANGLE_IN_RAD = Math.toRadians(80);
 		private static final short PRECISION = 10;
 
 		private final NumberTwin sensor;
@@ -243,6 +244,35 @@ public class CtBotSimTcp extends CtBotSim {
 					OPENING_ANGLE_IN_RAD,
 					PRECISION));
 		}
+	}
+
+	static class LightSensorSimulator implements Runnable {
+		private static final double OPENING_ANGLE_IN_RAD = Math.toRadians(180);
+
+		private final Point3d distFromBotCenter;
+		private final Vector3d headingInBotCoord;
+		private final Bot parent;
+		private final World world;
+		private final LightSensor sensor;
+
+		public LightSensorSimulator(Point3d distFromBotCenter,
+		Vector3d headingInBotCoord, World world, Bot parent,
+		LightSensor sensor) {
+			this.distFromBotCenter = distFromBotCenter;
+			this.headingInBotCoord = headingInBotCoord;
+			this.world = world;
+			this.parent = parent;
+			this.sensor = sensor;
+		}
+
+		public void run() {
+			sensor.getModel().setValue(
+				world.sensLight(
+					parent.worldCoordFromBotCoord(distFromBotCenter),
+					parent.worldCoordFromBotCoord(headingInBotCoord),
+					OPENING_ANGLE_IN_RAD));
+		}
+
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -278,6 +308,9 @@ public class CtBotSimTcp extends CtBotSim {
 	    DistanceSensor distR;
 	    LineSensor lineL;
 	    LineSensor lineR;
+	    BorderSensor borderL;
+	    BorderSensor borderR;
+	    LightSensor lightL, lightR;
 
 		components.add(
 			govL = new Actuator.Governor(true),
@@ -288,6 +321,10 @@ public class CtBotSimTcp extends CtBotSim {
 			distR = new DistanceSensor(false),
 			lineL = new LineSensor(true),
 			lineR = new LineSensor(false),
+			borderL = new BorderSensor(true),
+			borderR = new BorderSensor(false),
+			lightL = new LightSensor(true),
+			lightR = new LightSensor(false),
 			new LcDisplay(20, 4),
 			new Actuator.Log()
 		);
@@ -307,6 +344,8 @@ public class CtBotSimTcp extends CtBotSim {
 			_(EncoderSensor.class    , WRITES),
 			_(DistanceSensor.class   , WRITES),
 			_(LineSensor.class       , WRITES),
+			_(BorderSensor.class     , WRITES),
+			_(LightSensor.class      , WRITES),
 			_(LcDisplay.class        , READS),
 			_(Actuator.Log.class     , READS),
 			_(Led.class              , READS)
@@ -325,29 +364,29 @@ public class CtBotSimTcp extends CtBotSim {
 			new DistanceSimulator(
 				at(+ 0.036d, 0.0554d, 0d), looksForward(),
 				world, this, "characteristics/gp2d12Right.txt", 80, distR),
+			// Liniensensoren
 			new Cny70Simulator(
 				at(- 0.004, 0.009, -0.011 - BOT_HEIGHT / 2), looksForward(),
 				world, this, lineL),
 			new Cny70Simulator(
 				at(+ 0.004, 0.009, -0.011 - BOT_HEIGHT / 2), looksForward(),
-				world, this, lineR)
+				world, this, lineR),
+			// Abgrundsensoren
+			new Cny70Simulator(
+				at(- 0.036, 0.0384, - BOT_HEIGHT / 2), looksForward(),
+				world, this, borderL),
+			new Cny70Simulator(
+				at(+ 0.036, 0.0384, - BOT_HEIGHT / 2), looksForward(),
+				world, this, borderR),
+			new LightSensorSimulator(
+				at(- 0.032, 0.048, 0.060 - BOT_HEIGHT / 2), looksForward(),
+				world, this, lightL),
+			new LightSensorSimulator(
+				at(+ 0.032, 0.048, 0.060 - BOT_HEIGHT / 2), looksForward(),
+				world, this, lightR)
 		);
 
 		// ...
-
-		this.borderL = new BorderSensor(this.world, this, "BorderL",
-			new Point3d(-0.036d, 0.0384d, 0d - BOT_HEIGHT / 2),
-			new Vector3d(0d, 1d, 0d));
-		this.borderR = new BorderSensor(this.world, this, "BorderR",
-			new Point3d(0.036d, 0.0384d, 0d - BOT_HEIGHT / 2),
-			new Vector3d(0d, 1d, 0d));
-
-		this.lightL = new LightSensor(this.world, this, "LightL",
-			new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2),
-			new Vector3d(0d, 1d, 0d));
-		this.lightR = new LightSensor(this.world, this, "LightR",
-			new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2),
-			new Vector3d(0d, 1d, 0d));
 
 		this.rc5 = new RemoteControlSensor("RC fuer '"+this.getName()+"'",
 			new Point3d(), new Vector3d());
@@ -383,12 +422,6 @@ public class CtBotSimTcp extends CtBotSim {
 				return "Maus-Sensor-Wert Y";
 			}
 		});
-
-		this.addSensor(this.borderL);
-		this.addSensor(this.borderR);
-
-		this.addSensor(this.lightL);
-		this.addSensor(this.lightR);
 	}
 
 	@Override
@@ -580,22 +613,10 @@ public class CtBotSimTcp extends CtBotSim {
 
 			Command command;
 
-			command = new Command(Command.Code.SENS_BORDER);
-			command.setDataL(((Short)this.borderL.getValue()).intValue());
-			command.setDataR(((Short)this.borderR.getValue()).intValue());
-			command.setSeq(this.seq++);
-			connection.write(command);
-
 			// TODO
 			command = new Command(Command.Code.SENS_DOOR);
 			command.setDataL(0);
 			command.setDataR(0);
-			command.setSeq(this.seq++);
-			connection.write(command);
-
-			command = new Command(Command.Code.SENS_LDR);
-			command.setDataL((Integer)this.lightL.getValue());
-			command.setDataR((Integer)this.lightR.getValue());
 			command.setSeq(this.seq++);
 			connection.write(command);
 

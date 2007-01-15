@@ -104,11 +104,11 @@ public abstract class BotComponent<M> {
 		public Code getHotCmdCode();
 	}
 
-	public interface SimpleSensor {
+	public interface SimpleSensor { //$$$ abstract class
 		// Marker-Interface
 	}
 
-	public interface SimpleActuator {
+	public interface SimpleActuator { //$$$ abstract class
 		// Marker-Interface
 	}
 

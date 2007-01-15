@@ -1,6 +1,11 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-15 13:42 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Neu: Abgrundsensoren
+* Neu: Lichtsensoren
+* Kleinigkeiten
+
 2007-01-15 12:16 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
 * Neu: Liniensensor
 * Umbenannt: RunOfTheMill -> Simple (versteht ja keiner)

@@ -11,7 +11,9 @@ import ctSim.model.Command;
  * </p>
  * <p>
  * Verwendung: "botport" in config/ct-sim.xml umstellen auf "10002"; Sim und
- * dieses Tool starten; Bot-Code starten.
+ * dieses Tool starten; Bot-Code starten. Das Hinschreiben der ganzen Commands
+ * verz&ouml;gert alles &ndash; falls der Sim Meldungen wirft "Bot viel zu
+ * langsam", dann den entsprechenden Timeout-Wert in der Konfigdatei hochsetzen.
  * </p>
  */ 
 public class SimBotTcpDump {
