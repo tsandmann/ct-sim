@@ -113,7 +113,7 @@ public abstract class BotComponent<M> {
 
 	public BotComponent(M model) { this.model = model; }
 
-	public M getModel() { return model; }
+	public M getModel() { return model; } //$$$ ? verunumstaendlichen
 	
 	private UnsupportedOperationException createUnsuppOp(String s) {
 		return new UnsupportedOperationException("Bot-Komponente "+this+

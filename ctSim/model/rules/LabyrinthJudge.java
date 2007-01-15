@@ -104,7 +104,7 @@ public class LabyrinthJudge extends Judge {
 					((CtBotSimTcp)obst).sendRCCommand(RemoteControlGroupGUI.RC5_CODE_5);
 			}
 
-			if(this.world.finishReached(new Vector3d(obst.getPosition()))) {
+			if(this.world.finishReached(new Vector3d(obst.getPositionInWorldCoord()))) {
 				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "
 						+ SimUtils.millis2time(this.getTime()));
 				return true;

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 //$$ doc Misc
@@ -34,7 +35,7 @@ public class Misc {
 		rv = Math.min(rv, maxAllowed);
 		return rv;
 	}
-	
+
 	public static boolean startsWith(
 			String fullString, String... whitelistOfBeginnings) {
 		if (whitelistOfBeginnings == null)
@@ -79,16 +80,15 @@ public class Misc {
 		dest.close();
 	}
 
-	private static HashMap<RenderingHints.Key, Object> antiAliasingOn =
-		new HashMap<RenderingHints.Key, Object>();
+	private static HashMap<RenderingHints.Key, Object> antiAliasOn = newMap();
 
 	static {
-		antiAliasingOn.put(RenderingHints.KEY_ANTIALIASING,
+		antiAliasOn.put(RenderingHints.KEY_ANTIALIASING,
 			RenderingHints.VALUE_ANTIALIAS_ON);
 	}
 
 	public static void enableAntiAliasing(Graphics2D g) {
-		g.addRenderingHints(antiAliasingOn);
+		g.addRenderingHints(antiAliasOn);
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class Misc {
 
 	/**
 	 * Liefert das letzte Element des &uuml;bergebenen Arrays.
-	 * 
+	 *
 	 * @throws ArrayIndexOutOfBoundsException falls das &uuml;bergebene
 	 * Array leer ist (L&auml;nge 0 hat)
 	 * @throws NullPointerException falls das &uuml;bergebene Array
@@ -110,5 +110,27 @@ public class Misc {
 	 */
 	public static <T> T lastOf(T[] array) {
 		return array[array.length - 1];
+	}
+
+	/**
+	 * <p>
+	 * Erzeugt eine {@link ArrayList} mit den korrekten Typparametern.
+	 * Verwendung:<br />
+	 * {@code List&lt;EchtLangerAnstrengenderTyp&gt; listInstance = newList();}<br />
+	 * Das ist sch&ouml;ner und leichter &auml;nderbar als:<br />
+	 * {@code List&lt;EchtLangerAnstrengenderTyp&gt; listInstance = new ArrayList&lt;EchtLangerAnstrengenderTyp&gt;();}
+	 * </p>
+	 * <p>
+	 * Nach der hervorragenden Entdeckung von Josh Bloch; siehe <a
+	 * href="http://developers.sun.com/learning/javaoneonline/2006//coreplatform/TS-1512.html">Vortrag
+	 * bei der JavaOne</a>.
+	 */ 
+	public static <T> ArrayList<T> newList() {
+		return new ArrayList<T>();
+	}
+
+	/** Wie {@link #newList()}, aber für eine {@link HashMap}. */
+	public static <K, V> HashMap<K, V> newMap() {
+		return new HashMap<K, V>();
 	}
 }

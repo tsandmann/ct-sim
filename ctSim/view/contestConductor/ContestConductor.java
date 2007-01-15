@@ -86,8 +86,7 @@ public class ContestConductor implements View {
 	public static class ContestJudge extends Judge {
 		class GameOutcome {
 			BotView winner = null;
-			HashMap<BotView, Double> distToFinish =
-				new HashMap<BotView, Double>();
+			HashMap<BotView, Double> distToFinish = Misc.newMap();
 
 			@SuppressWarnings("synthetic-access")
 			GameOutcome() {
@@ -139,7 +138,7 @@ public class ContestConductor implements View {
 		private boolean isAnyoneOnFinishTile()
 		throws NullPointerException, SQLException, TournamentPlanException {
 			for (BotView b : BotView.getAll()) {
-				if (concon.world.finishReached(b.modelObj.getPosition())) {
+				if (concon.world.finishReached(b.modelObj.getPositionInWorldCoord())) {
 					GameOutcome o = new GameOutcome();
 					o.winner = b;
 					o.distToFinish.put(b, 0d); // ueberschreiben
@@ -205,7 +204,7 @@ public class ContestConductor implements View {
 	 * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
 	 */
 	static class BotView {
-		private static ArrayList<BotView> instances = new ArrayList<BotView>();
+		private static ArrayList<BotView> instances = Misc.newList();
 
 		static {
 			instances.add(null);
@@ -236,7 +235,7 @@ public class ContestConductor implements View {
 		}
 
 		static List<BotView> getAll() {
-			ArrayList<BotView> rv = new ArrayList<BotView>();
+			ArrayList<BotView> rv = Misc.newList();
 			for (BotView v : instances) {
 				if (v != null)
 					rv.add(v);
@@ -245,7 +244,7 @@ public class ContestConductor implements View {
 		}
 
 		static List<ctSim.model.bots.Bot> getAllModelObjects() {
-			ArrayList<Bot> rv = new ArrayList<Bot>();
+			ArrayList<Bot> rv = Misc.newList();
 			for (BotView v : getAll())
 				rv.add(v.modelObj);
 			return rv;

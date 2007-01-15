@@ -3,6 +3,7 @@ package ctSim.util;
 import java.util.BitSet;
 
 //$$ doc
+//$$ Glaub ich hab da nur eine seltsame Art EnumSet implementiert
 // Konvention: 0 = LSB, 63 = MSB
 public class Flags<T extends Enum<?>> {
 	private static final long serialVersionUID = 3185762205479976647L;

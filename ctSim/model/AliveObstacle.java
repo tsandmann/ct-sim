@@ -19,7 +19,6 @@
 package ctSim.model;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,11 +31,11 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import ctSim.SimUtils;
 import ctSim.controller.Config;
 import ctSim.controller.DefaultController;
 import ctSim.util.Closure;
 import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
 import ctSim.view.gui.Debug;
 
 /**
@@ -49,9 +48,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
    private static final CountingMap numInstances = new CountingMap();
 
-	private final List<Runnable> deathListeners = new ArrayList<Runnable>();
-	private final List<Closure<Color>> appearanceListeners =
-		new ArrayList<Closure<Color>>();
+	private final List<Runnable> deathListeners = Misc.newList();
+	private final List<Closure<Color>> appearanceListeners = Misc.newList();
 
 	/**
 	 * <p>
@@ -72,7 +70,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private int obstState = OBST_STATE_NORMAL;
 
 	private String name;
-	private Point3d pos;
+	private Point3d posInWorldCoord;
 
 	/**
 	 * Letzte Position, an dem sich das AliveObstacle befand und dabei der
@@ -84,7 +82,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 */
 	private Point3d lastSafePos = new Point3d();
 
-	private Vector3d head;
+	private Vector3d headingInWorldCoord;
 
 	/** Verweis auf den zugehoerigen Controller */
 	// TODO: Verweis auf Controller wirklich noetig?
@@ -111,8 +109,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 */
 	public AliveObstacle(String name, Point3d position, Vector3d heading) {
 		this.name = name;
-		this.pos = position;
-		this.head = heading;
 
 		// Instanz-Zahl erhoehen
 		numInstances.increase(getClass());
@@ -126,8 +122,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 		initBG();
 
-		this.setPosition(this.pos);
-		this.setHeading(this.head);
+		setPosition(position);
+		setHeading(heading);
 		updateAppearance();
 	}
 
@@ -154,22 +150,21 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	/**
-	 * @param s 3D-Gestalt, die das Objekt erhalten soll
+	 * @param shape 3D-Gestalt, die das Objekt erhalten soll
 	 */
-	public final void setShape(Group s) {
+	public final void setShape(Group shape) {
 		// TODO: Test: Reicht auch einfach "this.shape"-Referenz anzupassen?
-		if(this.shape != null)
-			this.transformgrp.removeChild(this.shape);
-
-		this.shape = s;
-
-		this.transformgrp.addChild(this.shape);
+		if (this.shape != null)
+			transformgrp.removeChild(shape);
+		this.shape = shape;
+		transformgrp.addChild(shape);
 	}
 
 	/**
 	 * @param ctrl Referenz auf den Controller, die gesetzt werden soll
 	 */
 	public final void setController(DefaultController ctrl) {
+
 		this.controller = ctrl;
 	}
 
@@ -270,16 +265,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	/**
-	 * Falls eine Subklasse etwas auszuf&uuml;hren hat, bevor der Thread
-	 * &uuml;ber work() seine Arbeit aufnimmt: Diese Methode &uuml;berschreiben.
-	 *
-	 * @see #work()
-	 */
-	protected void init() {
-		// No-op; Kindklassen ueberschreiben bei Bedarf
-	}
-
-	/**
 	 * Diese Methode enthaelt die Routinen, die der Bot waehrend seiner Laufzeit
 	 * immer wieder durchfuehrt. Die Methode darf keine Schleife enthalten!
 	 */
@@ -288,98 +273,73 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/**
 	 * @return Gibt die Position zurueck
 	 */
-	// TODO: Vorsicht: Pose ist relativ zur Welt!
-	public final Point3d getPosition() {
-
-		return this.pos;
+	public final Point3d getPositionInWorldCoord() {
+		return posInWorldCoord;
 	}
 
-	// TODO: Vorsicht: Heading ist relativ zur Welt!
-	public final Vector3d getHeading() {
-
-		return this.head;
-	}
-
-	/**
-	 * @return Die Transformation
-	 */
-	public final Transform3D getTransform() {
-
-//		Transform3D transform = new Transform3D();
-//
-//		transform.setTranslation(new Vector3d(this.getPosition()));
-//
-//		double angle = this.getHeading().angle(new Vector3d(1d, 0d, 0d));
-//		if(this.getHeading().y < 0)
-//			angle = -angle;
-//
-//		transform.setRotation(new AxisAngle4d(0d, 0d, 1d, angle));
-//
-//		return transform;
-
-		return SimUtils.getTransform(this.getPosition(), this.getHeading());
+	public final Vector3d getHeadingInWorldCoord() {
+		return headingInWorldCoord;
 	}
 
 	/**
 	 * Drandenken: State setzen vor Aufruf dieser Methode
 	 *
-	 * @param p
-	 *            Die Position, an die der Bot gesetzt werden soll
+	 * @param posInWorldCoord Die Position, an die der Bot gesetzt werden soll
 	 */
-	public final synchronized void setPosition(Point3d p) {
-
-		// TODO: synchron ist schoen, aber wird eine Pose �ber die GUI denn ueberhaupt verwendet?
-		//synchronized (this) {
-
-			this.pos = p;
-			Vector3d vec = new Vector3d(p);
-
-			Transform3D transform = new Transform3D();
-			this.transformgrp.getTransform(transform);
-			transform.setTranslation(vec);
-			this.transformgrp.setTransform(transform);
-
-			if ((obstState & OBST_STATE_SAFE) == 0)
-				lastSafePos.set(pos);
-	}
-
-	//$$ Ziemlicher Quatsch, dass das ein Vector3 ist: double mit dem Winkel drin waere einfacher und wuerde dasselbe leisten
-	public final synchronized void setHeading(Vector3d head) {
-		this.head = head;
-
-		double angle = this.head.angle(new Vector3d(0, 1, 0));
+	public final synchronized void setPosition(Point3d posInWorldCoord) {
+		this.posInWorldCoord = posInWorldCoord;
 
 		Transform3D t = new Transform3D();
 		transformgrp.getTransform(t);
-		t.setRotation(new AxisAngle4d(0, 0, 1, angle));
+		t.setTranslation(new Vector3d(posInWorldCoord));
+		transformgrp.setTransform(t);
+
+		if ((obstState & OBST_STATE_SAFE) == 0)
+			lastSafePos.set(posInWorldCoord);
+	}
+
+	//$$ Ziemlicher Quatsch, dass das ein Vector3 ist: double mit dem Winkel drin waere einfacher und wuerde dasselbe leisten
+	public final synchronized void setHeading(Vector3d headingInWorldCoord) {
+		/*
+		 * Sinn der Methode: Transform3D aktualisieren, das von Bot- nach
+		 * Weltkoordinaten transformiert. (Dieses steckt in unserer
+		 * TransformGroup.)
+		 */
+		this.headingInWorldCoord = headingInWorldCoord;
+
+		// Winkel zwischen Welt pos. y-Achse und Bot pos. y-Achse
+		double angleInRad = radiansToYAxis(headingInWorldCoord);
+
+		Transform3D t = new Transform3D();
+		transformgrp.getTransform(t);
+		t.setRotation(new AxisAngle4d(0, 0, 1, angleInRad));
 		transformgrp.setTransform(t);
 	}
 
-	// TODO:
-//	public final Transform3D getTransform() {
-//
-//		Transform3D transform = new Transform3D();
-//
-//		this.transformgrp.getTransform(transform);
-//
-//		return transform;
-//	}
-
+	/**
+	 * Winkel zwischen positiver y-Achse der Welt und &uuml;bergebenem Vektor.
+	 * Ergebnis ist im Bogenma&szlig; und liegt im Intervall [&minus;&pi;;
+	 * +&pi;], positive Werte entsprechen der Backbordseite.
+	 */
+	//$$ Was ist mit exakt entgegengesetzt? ist das +Pi oder -Pi? -> Doku
+	private static double radiansToYAxis(Vector3d v) {
+		double rv = v.angle(new Vector3d(0, 1, 0));
+		if (v.x > 0)
+			rv = -rv;
+		return rv;
+	}
 
 	/**
-	 * Ueberschreibt die run() Methode aus der Klasse Thread und arbeitet drei
-	 * Schritte ab: <br/> 1. init() - initialisiert alles <br/> 2. work() - wird
-	 * in einer Schleife immer wieder aufgerufen <br/> 3. cleanup() - raeumt auf
-	 * <br/> Die Methode die() beendet diese Schleife.
+	 * &Uuml;berschreibt die run()-Methode aus der Klasse Thread und arbeitet
+	 * zwei Schritte ab: <br/> 1. {@link #work()} &ndash; wird in einer Schleife
+	 * immer wieder aufgerufen <br/> 2. {@link #cleanup()} &ndash; r&auml;umt
+	 * auf.<br/> Die Schleife l&auml;uft so lang, bis sie von der Methode die()
+	 * beendet wird.
 	 *
-	 * @see AliveObstacle#init()
 	 * @see AliveObstacle#work()
 	 */
 	public final void run() {
-
 		Thread thisThread = Thread.currentThread();
-
-		init();
 
 		int timeout = 0;
 		try {
@@ -511,16 +471,16 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private void updateAppearance() {
 		//$$ Keiner weiss, ob obstState jetzt im Endeffekt ein Flagfeld sein soll oder ein Enum
 		//$$ Also die Strings gehoeren woanders hin; ObstState als Enum, Strings da rein
-		String key = null;
+		String key= null;
 
 		if (getObstState() == OBST_STATE_COLLISION)
-			key = "collision";
+			key= "collision";
 		if (getObstState() == OBST_STATE_FALLING)
-			key = "falling";
+			key= "falling";
 		if (getObstState() == OBST_STATE_NORMAL)
-			key = "normal";
+			key= "normal";
 		if ((getObstState() & OBST_STATE_HALTED) != 0)
-			key = "halted";
+			key="halted";
 
 		Color c = Config.getBotColor(getClass(), getInstanceNumber(), key);
 
@@ -569,7 +529,23 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		deathListeners.add(runsWhenAObstDies);
 	}
 
-	public void addAppearanceListener(
+	public Point3d worldCoordFromBotCoord(Point3d inBotCoord) {
+		Point3d rv = (Point3d)inBotCoord.clone();
+		Transform3D t = new Transform3D();
+		transformgrp.getTransform(t);
+		t.transform(rv);
+		return rv;
+	}
+
+	public Vector3d worldCoordFromBotCoord(Vector3d inBotCoord) {
+		Vector3d rv = (Vector3d)inBotCoord.clone();
+		Transform3D t = new Transform3D();
+		transformgrp.getTransform(t);
+		t.transform(rv);
+		return rv;
+	}
+
+		public void addAppearanceListener(
 	Closure<Color> calledWhenObstStateChanges) {
 		if (calledWhenObstStateChanges == null)
 			throw new NullPointerException();
@@ -580,22 +556,22 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		appearanceListeners.remove(listener);
 	}
 
-   public static class CountingMap
-   extends HashMap<Class<? extends AliveObstacle>, Integer> {
-	   private static final long serialVersionUID = 6419402218947363629L;
+	public static class CountingMap
+	extends HashMap<Class<? extends AliveObstacle>, Integer> {
+		private static final long serialVersionUID = 6419402218947363629L;
 
-	   public synchronized void increase(Class<? extends AliveObstacle> c) {
-		   if (containsKey(c))
-			   put(c, get(c) + 1);
-		   else
-			   put(c, 0);
-	   }
+		public synchronized void increase(Class<? extends AliveObstacle> c) {
+			if (containsKey(c))
+				put(c, get(c) + 1);
+			else
+				put(c, 0);
+		}
 
-	   public synchronized void decrease(Class<? extends AliveObstacle> c) {
-		   if (containsKey(c))
-			   put(c, get(c) - 1);
-		   else
-			   throw new IllegalStateException();
-	   }
-   }
+		public synchronized void decrease(Class<? extends AliveObstacle> c) {
+			if (containsKey(c))
+				put(c, get(c) - 1);
+			else
+				throw new IllegalStateException();
+		}
+	}
 }

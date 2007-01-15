@@ -70,6 +70,10 @@ public class Characteristic {
 		}
 
 	}
+	
+	public Characteristic(String filename, float inf) {
+		this(new File(filename), inf);
+	}
 
 	/**
 	 * Der Konstruktor errechnet aus der lueckenhaften Stuetzwerttabelle den
@@ -84,6 +88,7 @@ public class Characteristic {
 	 * @param inf
 	 *            Sensordatum fuer Messgroessen ausserhalb der Kennlinie	  
 	 */
+	//$$ Wert inf auch in Datei; ist komisch, wenn alles in der Datei ist, nur der Wert im Code
 	public Characteristic(File file, float inf) {
 		// Wert ausserhalb des Messbereichs:
 		this.INF = inf;

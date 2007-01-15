@@ -80,8 +80,8 @@ public LineSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead)
 
 		// TODO: Richtig so?
 		return this.world.sensGroundReflectionCross(
-				this.getAbsPosition(this.bot.getPosition(), this.bot.getHeading()),
-				this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()),
+				this.getAbsPosition(this.bot.getPositionInWorldCoord(), this.bot.getHeadingInWorldCoord()),
+				this.getAbsHeading(this.bot.getPositionInWorldCoord(), this.bot.getHeadingInWorldCoord()),
 				this.angle,
 				this.precision);
 

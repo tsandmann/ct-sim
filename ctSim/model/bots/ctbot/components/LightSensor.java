@@ -89,7 +89,7 @@ public LightSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead
 		/** Abstand Zentrum Lichtsensoren in Hochrichtung (Z) [m] */
 		double SENS_LDR_DIST_Z = 0.060d - BOT_HEIGHT / 2;
 
-		double ang = SimUtils.getRotation(this.bot.getHeading());
+		double ang = SimUtils.getRotation(this.bot.getHeadingInWorldCoord());
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(ang);
 		Point3d ptLdr;
@@ -101,7 +101,7 @@ public LightSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead
 					SENS_LDR_DIST_Z);
 		}
 		rotation.transform(ptLdr);
-		ptLdr.add(new Point3d(this.bot.getPosition()));
+		ptLdr.add(new Point3d(this.bot.getPositionInWorldCoord()));
 		return ptLdr;
 	}
 
@@ -123,7 +123,7 @@ public LightSensor(World w, Bot b, String name, Point3d relPos, Vector3d relHead
 				//this.getAbsPosition(this.bot.getPosition(), this.bot.getHeading()),
 				this.getSensLdrPosition(this.getName()),
 				//this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()),
-				this.bot.getHeading(),
+				this.bot.getHeadingInWorldCoord(),
 				this.angle);
 
 		/* TODO:

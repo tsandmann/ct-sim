@@ -70,6 +70,6 @@ public abstract class CtBot extends Bot {
 	}
 
 	public Bounds getBounds() {
-		return new BoundingSphere(new Point3d(this.getPosition()), BOT_RADIUS);
+		return new BoundingSphere(new Point3d(getPositionInWorldCoord()), BOT_RADIUS);
 	}
 }

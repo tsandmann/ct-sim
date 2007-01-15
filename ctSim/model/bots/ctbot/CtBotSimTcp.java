@@ -22,12 +22,10 @@ import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES;
 
 import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Transform3D;
@@ -39,6 +37,7 @@ import ctSim.SimUtils;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.World;
+import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuator;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
@@ -54,8 +53,10 @@ import ctSim.model.bots.ctbot.components.LightSensor;
 import ctSim.model.bots.ctbot.components.LineSensor;
 import ctSim.model.bots.ctbot.components.RemoteControlSensor;
 import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
 import ctSim.view.gui.Debug;
 
+//$$$ DONE dataL = 20 wird nie gesendet
 /**
  * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator
  * kommunizieren
@@ -77,7 +78,7 @@ public class CtBotSimTcp extends CtBotSim {
 	/** Die TCP-Verbindung */
 	private Connection connection;
 
-	private ArrayList<Command> commandBuffer = new ArrayList<Command>();
+	private ArrayList<Command> commandBuffer = Misc.newList();
 
 	/** Sequenznummer der TCP-Pakete */
 	private int seq = 0;
@@ -99,7 +100,6 @@ public class CtBotSimTcp extends CtBotSim {
 	private int  mouseX, mouseY;
 
 	private Sensor<?>
-		irL, irR,
 		lineL, lineR,
 		borderL, borderR,
 		lightL, lightR,
@@ -130,11 +130,12 @@ public class CtBotSimTcp extends CtBotSim {
 		/**
 		 * Errechnet aus einer PWM die Anzahl an Umdrehungen pro Sekunde
 		 *
-		 * @return Umdrehungen pro Sekunde (exakter Wert, d.h. mit Nachkommaanteil)
+		 * @return Umdrehungen pro Sekunde (exakter Wert, d.h. mit
+		 * Nachkommaanteil)
 		 */
 		protected float revsThisSimStep() {
 			// LODO Die Kennlinien der echten Motoren sind nicht linear
-			float speedRatio = governor.getModel().getValue().floatValue() //$$$ umstaendlich
+			float speedRatio = governor.getModel().getValue().floatValue()
 				/ PWM_MAX;
 			float speedInRps = speedRatio * REVS_PER_SEC_MAX;
 			float deltaTInSec = getDeltaTInMs() / 1000f;
@@ -175,7 +176,43 @@ public class CtBotSimTcp extends CtBotSim {
 			// aber wir merken uns Teilschritte intern
 			encoderRest = tmp - encoderSteps;
 			// und speichern sie.
-			encoder.getModel().setValue(encoderSteps); // commit //$$$ umstaendlich
+			encoder.getModel().setValue(encoderSteps); // commit
+		}
+	}
+
+	static class DistanceSimulator implements Runnable {
+		private static final double OPENING_ANGLE_IN_RAD =
+			Math.toRadians(3); // 3°
+
+		private final Point3d distFromBotCenter;
+		private final Vector3d headingInBotCoord;
+		private final World world;
+		private final Bot parent;
+		private final Characteristic charstic;
+		private DistanceSensor sensor;
+
+		public DistanceSimulator(Point3d distFromBotCenter,
+		Vector3d headingInBotCoord, World world, Bot parent,
+		String characteristicFilename, float characteristicInfinity,
+		DistanceSensor sensor) {
+			this.distFromBotCenter = distFromBotCenter;
+			this.headingInBotCoord = headingInBotCoord;
+			this.world = world;
+			this.parent = parent;
+			this.charstic = new Characteristic(
+				characteristicFilename, characteristicInfinity);
+			this.sensor = sensor;
+		}
+
+		public void run() {
+			double distInM = world.watchObstacle(
+				parent.worldCoordFromBotCoord(distFromBotCenter),
+				parent.worldCoordFromBotCoord(headingInBotCoord),
+				OPENING_ANGLE_IN_RAD,
+				parent.getShape());
+			double distInCm = 100 * distInM;
+			double sensorReading = charstic.lookupPrecise(distInCm);
+			sensor.getModel().setValue(sensorReading);
 		}
 	}
 
@@ -183,7 +220,21 @@ public class CtBotSimTcp extends CtBotSim {
 
 	private final WheelSimulator leftWheel;
 	private final WheelSimulator rightWheel;
-	private final List<Runnable> simulators = new ArrayList<Runnable>();
+	private final BulkList<Runnable> simulators = new BulkList<Runnable>();
+
+    private static Point3d at(double x, double y, double z) {
+    	return new Point3d(x, y, z);
+    }
+
+    private static Vector3d looksForward() {
+    	return new Vector3d(0, 1, 0);
+    }
+
+    //$$$ lokal
+    EncoderSensor encL;
+    EncoderSensor encR;
+    DistanceSensor distL;
+    DistanceSensor distR;
 
 	/**
 	 * @param w Die Welt
@@ -198,14 +249,14 @@ public class CtBotSimTcp extends CtBotSim {
 
 		Actuator.Governor govL;
 		Actuator.Governor govR;
-		final EncoderSensor encL;
-		final EncoderSensor encR;
 
 		components.add(
 			govL = new Actuator.Governor(true),
 			govR = new Actuator.Governor(false),
 			encL = new EncoderSensor(true),
 			encR = new EncoderSensor(false),
+			distL = new DistanceSensor(true),
+			distR = new DistanceSensor(false),
 			new LcDisplay(20, 4),
 			new Actuator.Log()
 		);
@@ -223,6 +274,7 @@ public class CtBotSimTcp extends CtBotSim {
 		components.applyFlagTable(
 			_(Actuator.Governor.class, READS),
 			_(EncoderSensor.class    , WRITES),
+			_(DistanceSensor.class   , WRITES),
 			_(LcDisplay.class        , READS),
 			_(Actuator.Log.class     , READS),
 			_(Led.class              , READS)
@@ -232,19 +284,18 @@ public class CtBotSimTcp extends CtBotSim {
 		leftWheel = new WheelSimulator(govL);
 		rightWheel = new WheelSimulator(govR);
 
-		simulators.add(new EncoderSimulator(leftWheel , encL));
-		simulators.add(new EncoderSimulator(rightWheel, encR));
+		simulators.add(
+			new EncoderSimulator(leftWheel, encL),
+			new EncoderSimulator(rightWheel, encR),
+			new DistanceSimulator(
+				at(- 0.036d, 0.0554d, 0d), looksForward(),
+				world, this, "characteristics/gp2d12Left.txt", 100, distL),
+			new DistanceSimulator(
+				at(+ 0.036d, 0.0554d, 0d), looksForward(),
+				world, this, "characteristics/gp2d12Right.txt", 80, distR)
+		);
 
 		// ...
-
-		this.irL = new DistanceSensor(this.world, this, "IrL",
-			new Point3d(-0.036d, 0.0554d, 0d ), new Vector3d(0d, 1d, 0d));
-		this.irR = new DistanceSensor(this.world, this, "IrR",
-			new Point3d(0.036d, 0.0554d, 0d), new Vector3d(0d, 1d, 0d));
-		this.irL.setCharacteristic(new Characteristic(
-			new File("characteristics/gp2d12Left.txt"), 100f));
-		this.irR.setCharacteristic(new Characteristic(
-			new File("characteristics/gp2d12Right.txt"), 80f));
 
 		this.lineL = new LineSensor(this.world, this, "LineL",
 			new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2),
@@ -301,9 +352,6 @@ public class CtBotSimTcp extends CtBotSim {
 				return "Maus-Sensor-Wert Y";
 			}
 		});
-
-		this.addSensor(this.irL);
-		this.addSensor(this.irR);
 
 		this.addSensor(this.lineL);
 		this.addSensor(this.lineR);
@@ -363,7 +411,7 @@ public class CtBotSimTcp extends CtBotSim {
 
 		// neue Blickrichtung berechnen
 		// ergibt sich aus Rotation der Blickrichtung um 2*_gamma
-		Vector3d _hd = this.getHeading();
+		Vector3d _hd = this.getHeadingInWorldCoord();
 		double _s2g = Math.sin(2 * _gamma);
 		double _c2g = Math.cos(2 * _gamma);
 		Vector3d newHeading = new Vector3d(
@@ -373,7 +421,7 @@ public class CtBotSimTcp extends CtBotSim {
 		newHeading.normalize();
 
 		// Neue Position bestimmen
-		Vector3d newPos = new Vector3d(this.getPosition());
+		Vector3d newPos = new Vector3d(this.getPositionInWorldCoord());
 		double _sg = Math.sin(_gamma);
 		double _cg = Math.cos(_gamma);
 		double moveDistance;
@@ -427,14 +475,14 @@ public class CtBotSimTcp extends CtBotSim {
 		Vector3d vecL = new Vector3d(-newHeading.y,newHeading.x, 0f);
 		vecL.scale((float) WHEEL_DIST);
 		// neue Position linkes Rad
-		Vector3d posRadL = new Vector3d(this.getPosition());
+		Vector3d posRadL = new Vector3d(this.getPositionInWorldCoord());
 		posRadL.add(vecL);
 
 		// Vektor vom Ursprung zum rechten Rad
 		Vector3d vecR = new Vector3d(newHeading.y, -newHeading.x, 0f);
 		vecR.scale((float) WHEEL_DIST);
 		// neue Position rechtes Rad
-		Vector3d posRadR = new Vector3d(this.getPosition());
+		Vector3d posRadR = new Vector3d(this.getPositionInWorldCoord());
 		posRadR.add(vecR);
 
 		// Winkel des heading errechnen
@@ -492,22 +540,17 @@ public class CtBotSimTcp extends CtBotSim {
 	/**
 	 * Variable, die sich merkt, wann wir zuletzt Daten &uuml;bertragen haben
 	 */
-	private int lastTransmittedSimulTime =0;
+	private int lastTransmittedSimulTime = 0;
 
 	/** Leite Sensordaten an den Bot weiter */
 	private synchronized void transmitSensors() {
 		try {
-			Command command;
-			command = new Command(Command.Code.SENS_IR);
-			command.setDataL(((Double)this.irL.getValue()).intValue());
-			command.setDataR(((Double)this.irR.getValue()).intValue());
-			command.setSeq(this.seq++);
-			connection.write(command);
-
 			CommandOutputStream s = connection.createCmdOutStream();
 			for (BotComponent<?> c : components)
 				c.askForWrite(s);
 			s.flush();
+
+			Command command;
 
 			command = new Command(Command.Code.SENS_BORDER);
 			command.setDataL(((Short)this.borderL.getValue()).intValue());
@@ -644,7 +687,7 @@ public class CtBotSimTcp extends CtBotSim {
 
 	@Override
 	protected void work() {
-		transmitSensors(); 
+		transmitSensors();
 		receiveCommands();
 		processCommands();
 	}

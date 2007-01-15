@@ -13,6 +13,7 @@ import javax.vecmath.Vector3d;
 
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
+import ctSim.util.Misc;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
 /**
@@ -186,7 +187,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     		"pos2x, pos2y, head2x, head2y, state2) " +
     		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    	ArrayList<Object> values = new ArrayList<Object>();
+    	ArrayList<Object> values = Misc.newList();
     	values.add(currentGame.getUniqueId());
     	values.add(simTimeElapsed);
         Iterator<Bot> it = bots.iterator();
@@ -207,8 +208,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 
     //$$ doc getFieldValues
     private List<Object> getFieldValues(Bot b) {
-        Point3d pos = b.getPosition();
-        Vector3d head = b.getHeading();
+        Point3d pos = b.getPositionInWorldCoord();
+        Vector3d head = b.getHeadingInWorldCoord();
         return Arrays.asList(new Object[] {
         	pos.x,
         	pos.y,

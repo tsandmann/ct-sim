@@ -6,7 +6,9 @@ import ctSim.model.Command;
 
 //$$ doc
 // ist Haelfte eines Paars (z.B. IrL + IrR)
+//$$$ Ganze links/rechts-Geschichte; statische Factory?
 public abstract class NumberTwin extends BotComponent<NumberTwin.NumberModel> {
+
 	public static class NumberModel extends SpinnerNumberModel {
 		private static final long serialVersionUID = 15828077642311050L;
 

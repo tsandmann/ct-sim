@@ -59,6 +59,7 @@ import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
 
 /**
  * Diese Klasse hilft einen Parcours aus einer ASCII-Datei zu laden
@@ -578,7 +579,7 @@ public class ParcoursLoader {
 	        			String texture = null;
 	        			String clone = null;
 
-	        			HashMap<String,String> colors = new HashMap<String,String>();
+	        			HashMap<String,String> colors = Misc.newMap();
 
 	        			NodeList features = appearance.getChildNodes();
 	        			for (int j=0; j< features.getLength(); j++){

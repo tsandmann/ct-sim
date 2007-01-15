@@ -18,7 +18,6 @@
  */
 package ctSim.model;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -33,6 +32,7 @@ import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3d;
 
 import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
 
 /**
  * Repraesentiert einen Parcours fuer die Bots
@@ -98,7 +98,7 @@ public class Parcours {
 
 	/** Zielpositionen */
 	//private int[] finishPosition = new int[2];
-	private List<Vector2d> finishPositions = new ArrayList<Vector2d>();
+	private List<Vector2d> finishPositions = Misc.newList();
 
 	/** Liste mit allen Abgruenden */
 	private Vector<Vector2d> holes = new Vector<Vector2d>();

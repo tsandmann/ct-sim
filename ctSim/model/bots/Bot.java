@@ -64,6 +64,16 @@ import ctSim.view.gui.BotBuisitor;
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
 public abstract class Bot extends AliveObstacle {
+	//$$ doc
+	public static class BulkList<T> extends ArrayList<T> {
+		private static final long serialVersionUID = - 8179783452023605404L;
+
+		public void add(T... elements) {
+            for (T e : elements)
+                add(e);
+        }
+	}
+
 	/**
 	 * <p>
 	 * Liste von BotComponents; wie ArrayList, aber kann zus&auml;tzlich 1.
@@ -84,14 +94,8 @@ public abstract class Bot extends AliveObstacle {
 	 * @author Hendrik Krau&szlig; &lt;<a
 	 * href="mailto:hkr@heise.de">hkr@heise.de</a>>
 	 */
-	public static class BotComponentList extends ArrayList<BotComponent<?>> {
+	public static class BotComponentList extends BulkList<BotComponent<?>> {
         private static final long serialVersionUID = - 1331425647710880289L;
-
-        // bulk add
-        public void add(BotComponent<?>... elements) {
-            for (BotComponent<?> e : elements)
-                add(e);
-        }
 
         /**
 		 * <p>
@@ -163,8 +167,7 @@ public abstract class Bot extends AliveObstacle {
 		final ConnectionFlags[] flags;
 
 		CompntWithFlag(Class<? extends BotComponent<?>> compntClass,
-			ConnectionFlags[] flags) {
-
+		ConnectionFlags[] flags) {
 			this.compntClass = compntClass;
 			this.flags = flags;
 		}
@@ -178,9 +181,7 @@ public abstract class Bot extends AliveObstacle {
 	 * </p>
 	 */
 	protected static CompntWithFlag _(
-		Class<? extends BotComponent<?>> compntClass,
-		ConnectionFlags... flags) {
-
+	Class<? extends BotComponent<?>> compntClass, ConnectionFlags... flags) {
 		return new CompntWithFlag(compntClass, flags);
 	}
 
@@ -204,7 +205,9 @@ public abstract class Bot extends AliveObstacle {
 	 	// Zu diesem Zeitpunkt ist die ganze 3D-Repraesentation bereits aufgebaut
 //		createViewingPlatform();
 
-		posHead = new BotPosition(getName(), getPosition(), getHeading()) {
+		posHead = new BotPosition(getName(), getPositionInWorldCoord(),
+			getHeadingInWorldCoord()) {
+
 			@Override
 			public String getName() {
 				return Bot.this.getName();
@@ -212,13 +215,13 @@ public abstract class Bot extends AliveObstacle {
 
 			@Override
 			public Point3d getRelPosition() {
-				return getPosition();
+				return getPositionInWorldCoord();
 			}
 
 			@Override
 			public Vector3d getRelHeading() {
 				// TODO Auto-generated method stub
-				return getHeading();
+				return getHeadingInWorldCoord();
 			}
 
 			@Override

@@ -22,6 +22,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.model.World;
+import ctSim.model.bots.components.NumberTwin;
 import ctSim.model.bots.components.Sensor;
 import ctSim.model.bots.ctbot.components.BorderSensor;
 import ctSim.model.bots.ctbot.components.DistanceSensor;
@@ -37,7 +38,8 @@ public class CtBotSimTest extends CtBotSim {
 	// TODO: weg
 	private World world;
 
-	private Sensor irL, irR, lineL, lineR, borderL, borderR, lightL, lightR;
+	private Sensor lineL, lineR, borderL, borderR, lightL, lightR;
+	private NumberTwin irL, irR;
 
 	/**
 	 * Der Konstruktor
@@ -50,7 +52,7 @@ public class CtBotSimTest extends CtBotSim {
 
 		this.world = w;
 
-		initSensors();
+		initSensors(); //$$$ Soll in CtBot passieren
 		initActuators();
 	}
 
@@ -61,8 +63,8 @@ public class CtBotSimTest extends CtBotSim {
 
 	private void initSensors() {
 
-		this.irL = new DistanceSensor(this.world, this, "IrL", new Point3d(-0.036d, 0.0554d, 0.035d-BOT_HEIGHT/2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-		this.irR = new DistanceSensor(this.world, this, "IrR", new Point3d(0.036d, 0.0554d, 0.035d-BOT_HEIGHT/2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
+		this.irL = new DistanceSensor(true);
+		this.irR = new DistanceSensor(false);
 
 		this.lineL = new LineSensor(this.world, this, "LineL", new Point3d(-0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		this.lineR = new LineSensor(this.world, this, "LineR", new Point3d(0.004d, 0.009d, -0.011d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
@@ -72,9 +74,6 @@ public class CtBotSimTest extends CtBotSim {
 
 		this.lightL = new LightSensor(this.world, this, "LightL", new Point3d(-0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
 		this.lightR = new LightSensor(this.world, this, "LightR", new Point3d(0.032d, 0.048d, 0.060d - BOT_HEIGHT / 2), new Vector3d(0d, 1d, 0d)); //$NON-NLS-1$
-
-		this.addSensor(this.irL);
-		this.addSensor(this.irR);
 
 		// new Point3d(0d, 0d, 0d), new Vector3d(0d, 1d, 0d)); //
 		this.addSensor(this.lineL);
@@ -92,12 +91,6 @@ public class CtBotSimTest extends CtBotSim {
 		// TODO!
 	}
 
-	@Override
-	protected void init() {
-		// TODO Auto-generated method stub
-
-	}
-
 	@SuppressWarnings({"boxing","unchecked"})
 	@Override
 	protected void work() {
@@ -106,8 +99,8 @@ public class CtBotSimTest extends CtBotSim {
 
 		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
 
-		double irl = (Double)this.irL.getValue();
-		double irr = (Double)this.irR.getValue();
+		double irl = irL.getModel().getValue().doubleValue();
+		double irr = irR.getModel().getValue().doubleValue();
 
 		// Ansteuerung fuer die Motoren in Abhaengigkeit vom Input
 		// der IR-Abstandssensoren, welche die Entfernung in mm

@@ -400,7 +400,7 @@ public class World {
 		Point3d pos = new Point3d(this.parcours.getStartPosition(this.aliveObsts.size()+1));
 		if (pos != null) {
 			// TODO: Ganz haesslich:
-			pos.z = bot.getPosition().z;	// Achtung die Bots stehen etwas ueber der Spielflaeche
+			pos.z = bot.getPositionInWorldCoord().z;	// Achtung die Bots stehen etwas ueber der Spielflaeche
 			bot.setPosition(pos);
 		}
 
@@ -776,11 +776,11 @@ public class World {
 	 * ausgesetzt und erschrickt sich zu Tode, aber im dritten Schritt hat sich
 	 * der Spuk so schnell verzogen, wie er gekommen ist. Das mag wie Pillepalle
 	 * wirken, aber ein Simschritt lang irrsinnige Sensorwerte wirkt auf manche
-	 * Bot-Steueralgorithmen wie Volksfest im Reinraum. Die
-	 * verkorksten Werte machen sich &ndash; so vermuten wir &ndash; als
-	 * die unerkl&auml;rliche Ausrei&szlig;er in den Kurven der Licht- und
-	 * Distanzsensoren bemerkbar, die ja schon
-	 * <a href="http://de.uncyclopedia.wikia.com/wiki/Ludwig_Wittgenstein">Wittgenstein</a>
+	 * Bot-Steueralgorithmen wie Volksfest im Reinraum. Die verkorksten Werte
+	 * machen sich &ndash; so vermuten wir &ndash; als die unerkl&auml;rliche
+	 * Ausrei&szlig;er in den Kurven der Licht- und Distanzsensoren bemerkbar,
+	 * die ja schon <a
+	 * href="http://de.uncyclopedia.wikia.com/wiki/Ludwig_Wittgenstein">Wittgenstein</a>
 	 * jahrzehntelang vor R&auml;tsel stellten und von zwei verschiedenen
 	 * Messieurs an mindestens drei Stellen dokumentiert wurden:
 	 * <ul>
@@ -794,18 +794,17 @@ public class World {
 	 * einer n&auml;chtlichen Gewaltaktion reproduziert werden (Java3D 1.4.0_01,
 	 * WinXP). Nach geduldigen verdeckten Ermittlungen einem fehlgeschlagenen
 	 * Zugriff unter Einsatz des Sonderkommandos konnte der PickConeRay nach
-	 * einer halsbrecherischen G&auml;nsejagd quer durch den Quelltext als
-	 * der Arsch dingfest gemacht werden.
+	 * einer halsbrecherischen G&auml;nsejagd quer durch den Quelltext als der
+	 * Arsch dingfest gemacht werden.
 	 * </p>
 	 * </li>
 	 * </ul>
 	 * </p>
 	 * <p>
-	 * <strong>Hinweis:</strong>Der {@link PickRay} scheint weniger schwuchtelig
-	 * unterwegs zu sein, also sollte man wohl mal &uuml;berlegen, dem den Job
-	 * zu &uuml;berlassen.
+	 * <strong>Hinweis:</strong> Der {@link PickRay} scheint weniger
+	 * schwuchtelig unterwegs zu sein, also sollte man wohl mal &uuml;berlegen,
+	 * dem den Job zu &uuml;berlassen.
 	 * </p>
-	 *
 	 * <p>
 	 * <strong>Anhang: E-Mail, die auf den Bug hingewiesen hat</strong>
 	 *
@@ -896,11 +895,13 @@ public class World {
 	 *     }
 	 * }
 	 * </pre>
+	 *
 	 * </p>
 	 *
 	 * @param pos Die Position, von der aus der Seh-Strahl verfolgt wird
 	 * @param heading Die Blickrichtung, d.h. die Richtung des Seh-Strahls
-	 * @param openingAngle $$ doc openingAngle
+	 * @param openingAngle Der Sehstrahl ist in Wahrheit ein Kegel;
+	 * {@code openingAngle} gibt seinen &Ouml;ffnungswinkel an (Bogenma&szlig;)
 	 * @param botBody Der K&ouml;rper des Roboter, der anfragt. Dies ist
 	 * erforderlich, da diese Methode mit einem PickConeRay implementiert ist,
 	 * d.h. der K&ouml;rper des Bots muss auf &quot;not pickable&quot; gesetzt
@@ -944,7 +945,7 @@ public class World {
 			botBody.setPickable(true);
 		}
 		if (pickInfo == null)
-			return 100.0;
+			return 100.0; //$$ Ist das dokumentiert? Erwarten die Aufrufer das?
 		double d = pickInfo.getClosestDistance();
 		return d;
 	}

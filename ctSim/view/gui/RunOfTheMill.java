@@ -1,6 +1,7 @@
 package ctSim.view.gui;
 
 import ctSim.model.bots.components.Actuator;
+import ctSim.model.bots.ctbot.components.DistanceSensor;
 import ctSim.model.bots.ctbot.components.EncoderSensor;
 
 //$$ doc
@@ -9,7 +10,7 @@ public abstract class RunOfTheMill {
 	public static class Actuators extends TableOfSpinners {
 		private static final long serialVersionUID = - 7560450995618737095L;
 
-		//$$$ ? Actuator sollte ein i/f sein, hier dann einfacher
+		//$$$ ? sollten 2 i/fs sein, hier dann einfacher
 
 		@Buisit
 		public void buisit(Actuator.Governor a) {
@@ -29,6 +30,11 @@ public abstract class RunOfTheMill {
 
 		@Buisit
 		public void buisit(EncoderSensor s) {
+			model.addBotComponent(s);
+		}
+		
+		@Buisit
+		public void buisit(DistanceSensor s) {
 			model.addBotComponent(s);
 		}
 

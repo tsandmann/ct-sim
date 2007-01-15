@@ -1,6 +1,11 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-15 01:31 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Neu: Abstandssensor (schwere Geburt)
+* Neu: Listen und Maps kann man einfacher mit Typinferenz erzeugen; Misc.newMap() / Misc.newList(); ueberall umgestellt
+* Kleinigkeiten
+
 2007-01-14 21:07 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
 * Neu: CtBotShape, zweifarbige Shape des c't-Bot, zu sehen bei Kollisionen/Loechern/abgerissenen TCP-Verbindungen; das neue Aussehen ist auch klarer im Code und nicht mehr um 90° gedreht wie bisher (konsistent mit Headings)
 * AliveObstacle: Heading um 90° gedreht (vorher: Kurs 0° = nach Steuerbord, jetzt: Kurs 0° = geradeaus)

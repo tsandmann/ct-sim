@@ -6,7 +6,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -109,11 +108,10 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * Tooltips der Schlie&szlig;en-Icons (nicht der Tab-Beschriftung). Indices:
 	 * Wie Tab-Indices, die von JTabbedPane sonst immer verwendet werden.
 	 */
-	private final List<String> closeIconToolTips = new ArrayList<String>();
+	private final List<String> closeIconToolTips = Misc.newList();
 
 	//$$ doc
-	private final List<Closure<Integer>> closeListeners =
-		new ArrayList<Closure<Integer>>();
+	private final List<Closure<Integer>> closeListeners = Misc.newList();
 
 	public ClosableTabsPane(Icon closeIcon) {
 		this(closeIcon, closeIcon);

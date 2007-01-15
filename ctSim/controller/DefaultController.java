@@ -27,7 +27,6 @@ import java.net.ProtocolException;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -66,9 +65,6 @@ public class DefaultController implements Runnable, Controller {
     private Judge judge;
     private View view;
     private World world;
-
-    /** Anzahl der Bots im System */
-    private HashMap<String,Integer> numberBots = new HashMap<String,Integer>();
 
     //$$ Idiotischerweise ist die hauptsaechliche Initialisierung hier
     public void setView(View view) {

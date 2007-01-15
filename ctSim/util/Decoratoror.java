@@ -3,7 +3,6 @@ package ctSim.util;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
 import java.util.Map;
 
 //$$ dococ
@@ -64,7 +63,7 @@ public class Decoratoror {
 				throw new NullPointerException("Decorator #"+i+" is null");
 		}
 
-		final Map<Method, Object> methodImpls = new HashMap<Method, Object>();
+		final Map<Method, Object> methodImpls = Misc.newMap();
 		for (Method ifcMeth : resultInterface.getMethods())
 			methodImpls.put(ifcMeth, findImplementor(decorators, ifcMeth));
 

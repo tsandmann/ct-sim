@@ -30,7 +30,7 @@ import ctSim.model.bots.components.BotComponent.CanRead;
  * Klasse, die nur als Container f&uuml;r innere Klassen dient und selber keine
  * Methoden oder Felder hat. (F&uuml;r die winzigen inneren Klassen lohnt sich
  * keine eigene Datei.)
- * 
+ *
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public abstract class Actuator {
@@ -38,9 +38,8 @@ public abstract class Actuator {
 	 * Governor, der die Fahrgeschwindigkeit des Bot regelt (genauer: die
 	 * Drehgeschwindigkeit eines Rads; der c't-Bot hat daher einen linken und
 	 * einen rechten Governor).
-	 */ 
-	public static class Governor extends NumberTwin
-	implements CanRead {
+	 */
+	public static class Governor extends NumberTwin implements CanRead {
 
 		@Override
 		protected String getBaseDescription() {

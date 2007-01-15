@@ -86,8 +86,8 @@ public class BorderSensor extends SimpleSensor<Short> {
 
 		// TODO: Richtig so?
 		return this.world.sensGroundReflectionCross(
-				this.getAbsPosition(this.bot.getPosition(), this.bot.getHeading()),
-				this.getAbsHeading(this.bot.getPosition(), this.bot.getHeading()),
+				this.getAbsPosition(this.bot.getPositionInWorldCoord(), this.bot.getHeadingInWorldCoord()),
+				this.getAbsHeading(this.bot.getPositionInWorldCoord(), this.bot.getHeadingInWorldCoord()),
 				this.angle,
 				this.precision);
 

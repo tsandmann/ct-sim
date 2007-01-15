@@ -76,7 +76,7 @@ public class SpreadingTree<T> {
 					"Spieler geben, wenn ein Turnierplan erstellt werden " +
 					"soll");
 		}
-		ArrayList<T> payloads = new ArrayList<T>();
+		ArrayList<T> payloads = Misc.newList();
 		levelOrder(desiredLevelId * 2, 1, payloads);
 		return payloads;
 	}

@@ -40,12 +40,12 @@ public abstract interface Obstacle {
 	/**
 	 * @return Gibt die Position zurueck
 	 */
-	public abstract Point3d getPosition() ;
+	public abstract Point3d getPositionInWorldCoord() ;
 	
 	/**
 	 * @return Gibt die Blickrichtung zurueck
 	 */
-	public abstract Vector3d getHeading();
+	public abstract Vector3d getHeadingInWorldCoord();
 	
 	/**
 	 * Erzeugt die 3D-Repraesentation eines Objektes

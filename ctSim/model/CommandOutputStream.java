@@ -2,13 +2,13 @@ package ctSim.model;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
+
+import ctSim.util.Misc;
 
 //$$ doc
 public class CommandOutputStream {
-	private final Map<Command.Code, Command> buffer =
-		new HashMap<Command.Code, Command>();
+	private final Map<Command.Code, Command> buffer = Misc.newMap();
 	private Command doneCommand = null;
 	private final OutputStream underlyingStream;
 	private int seq = 0; //$$ Die Sequenznummer wird irgendwann groesser als 2^16. Spaeter wrappt die auch und wird negativ. Damit sollte man irgendwie umgehen
