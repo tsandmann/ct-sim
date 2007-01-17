@@ -11,8 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-
-import ctSim.model.bots.components.BotComponent.NumberModel;
+import javax.swing.SpinnerNumberModel;
 
 //$$ doc
 //$$ Runde Buttons waeren schoen
@@ -58,7 +57,7 @@ public class RemoteControlViewer extends JPanel {
 		)
 	};
 
-	private final NumberModel model;
+	private final SpinnerNumberModel model;
 	private Color currentDefault = null;
 
 	private JComponent defaultColor(Color c) {
@@ -99,7 +98,7 @@ public class RemoteControlViewer extends JPanel {
 		return rv;
 	}
 
-	public RemoteControlViewer(NumberModel model) {
+	public RemoteControlViewer(SpinnerNumberModel model) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 		this.model = model;

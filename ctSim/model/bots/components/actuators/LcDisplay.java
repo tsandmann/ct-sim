@@ -29,6 +29,7 @@ import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.util.Misc;
 
+//$$ doc proto
 /**
  * Das Liquid Crystal Display (LCD) oben auf dem c't-Bot.
  * @author Felix Beckwermert
@@ -50,34 +51,39 @@ public class LcDisplay extends BotComponent<PlainDocument> implements CanRead {
 			throw new IllegalArgumentException();
 		this.numCols = numCols;
 		this.numRows = numRows;
-		clearModel();
+		try {
+			clearModel();
+		} catch (BadLocationException e) {
+			// "kann nicht passieren"
+			throw new AssertionError(e);
+		}
 	}
 
 	public Code getHotCmdCode() { return Command.Code.ACT_LCD; }
 
 	public void readFrom(Command c) throws ProtocolException {
 		try {
-            switch (c.getSubCode()) {
+    	    switch (c.getSubCode()) {
 	            case NORM:
-	            	setCursor(c.getDataL(), c.getDataR());
-	                overwrite(c.getPayloadAsString());
-	                break;
+            		setCursor(c.getDataL(), c.getDataR());
+        	        overwrite(c.getPayloadAsString());
+    	            break;
 
 	            case LCD_DATA:
-	            	overwrite(c.getPayloadAsString());
-	            	break;
+            		overwrite(c.getPayloadAsString());
+        	    	break;
 
-	            case LCD_CURSOR:
+    	        case LCD_CURSOR:
 	                setCursor(c.getDataL(), c.getDataR());
-	                break;
+                	break;
 
-	            case LCD_CLEAR:
-	            	clearModel();
-	                break;
+            	case LCD_CLEAR:
+        	    	clearModel();
+    	            break;
 
 	            default:
-	            	throw new ProtocolException();
-            }
+            		throw new ProtocolException();
+        	}
 		} catch (BadLocationException e) {
 			// "kann nicht passieren"
 			throw new AssertionError(e);
@@ -87,21 +93,22 @@ public class LcDisplay extends BotComponent<PlainDocument> implements CanRead {
 	/**
 	 * Setzt das Display zur&uuml;ck, so dass es auf ganzer Breite und H&ouml;he
 	 * nur Leerzeichen anzeigt.
+	 *
+	 * @throws BadLocationException nur falls jemand was am Code &auml;ndert;
+	 * sollte normalerweise nie vorkommen.
 	 */
-	protected void clearModel() {
+	protected void clearModel() throws BadLocationException {
 		StringBuilder b = new StringBuilder();
 		for (int i = 0; i < numCols; i++)
 			b.append(' ');
-		try {
-			getModel().remove(0, getModel().getLength());
-			// letzte Zeile ohne \n
-			getModel().insertString(0, b.toString(), null);
-			// 1. bis vorletzte Zeile mit \n
-			for (int i = 0; i < numRows - 1; i++)
-				getModel().insertString(0, b.toString() + "\n", null);
-		} catch (BadLocationException e) {
-			throw new AssertionError(e);
-		}
+		String spaces = b.toString();
+
+		getModel().remove(0, getModel().getLength());
+		// letzte Zeile ohne \n
+		getModel().insertString(0, spaces, null);
+		// 1. bis vorletzte Zeile mit \n
+		for (int i = 0; i < numRows - 1; i++)
+			getModel().insertString(0, spaces + "\n", null);
 	}
 
 	/**
@@ -120,8 +127,8 @@ public class LcDisplay extends BotComponent<PlainDocument> implements CanRead {
     		// abschneiden; wir haben nicht genug Platz in der Zeile
     		text = text.substring(0, numCharsAvail);
 
-    	getModel().remove(offset, text.length());
-    	getModel().insertString(offset, text, null);
+		getModel().remove(offset, text.length());
+		getModel().insertString(offset, text, null);
     }
 
     /**

@@ -31,19 +31,13 @@ import ctSim.model.bots.Bot;
 public abstract class CtBot extends Bot {
 	//$$ Alle Konstanten: verwendet?
 	/** Abstand vom Zentrum zur Aussenkante des Bots [m] */
-	public static final double BOT_RADIUS = 0.060d;
+	protected static final double BOT_RADIUS = 0.060d;
 
 	/** Hoehe des Bots [m] */
-	public static final double BOT_HEIGHT = 0.120d;
-
-	/** Breite des Faches [m] */
-	public static final double POCKET_LENGTH = 0.050d;
-
-	/** Tiefe des Faches [m] */
-	public static final double POCKET_DEPTH = BOT_RADIUS - 0.015d;
+	protected static final double BOT_HEIGHT = 0.120d;
 
 	/** Bodenfreiheit des Bots [m] */
-	public static final double BOT_GROUND_CLEARANCE = 0.015d;
+	protected static final double BOT_GROUND_CLEARANCE = 0.015d;
 
 	/* TODO:
 	 * Pos. u. Head. in Klassenhierarchie weiter nach oben:
@@ -69,7 +63,9 @@ public abstract class CtBot extends Bot {
 //		setHeading(head);
 	}
 
+	//$$ Nirgends verwendet
 	public Bounds getBounds() {
-		return new BoundingSphere(new Point3d(getPositionInWorldCoord()), BOT_RADIUS);
+		return new BoundingSphere(new Point3d(getPositionInWorldCoord()), 
+			BOT_RADIUS);
 	}
 }

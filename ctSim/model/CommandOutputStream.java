@@ -1,5 +1,6 @@
 package ctSim.model;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
@@ -10,11 +11,11 @@ import ctSim.util.Misc;
 public class CommandOutputStream {
 	private final Map<Command.Code, Command> buffer = Misc.newMap();
 	private Command doneCommand = null;
-	private final OutputStream underlyingStream;
+	private final BufferedOutputStream underlyingStream;
 	private int seq = 0; //$$ Die Sequenznummer wird irgendwann groesser als 2^16. Spaeter wrappt die auch und wird negativ. Damit sollte man irgendwie umgehen
 
 	public CommandOutputStream(OutputStream underlyingStream) {
-		this.underlyingStream = underlyingStream;
+		this.underlyingStream = new BufferedOutputStream(underlyingStream);
 	}
 
 	public synchronized Command getCommand(Command.Code c) {
@@ -42,6 +43,7 @@ public class CommandOutputStream {
 		//$$ doc Normalbetrieb kommt nicht vor
 		if (doneCommand != null)
 			write(doneCommand);
+		underlyingStream.flush();
 		buffer.clear();
 	}
 }

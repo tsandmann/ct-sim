@@ -50,9 +50,8 @@ import ctSim.model.bots.components.BotComponent.CanRead;
  * </pre>
  * </p>
  */
-public class Led extends BotComponent<ButtonModel> 
+public class Led extends BotComponent<ButtonModel>
 implements ChineseComponent, CanRead {
-	
 	private String name;
 	private final int bitMask;
 	private Color colorWhenOn;
@@ -80,7 +79,7 @@ implements ChineseComponent, CanRead {
 	}
 
 	public Code getHotCmdCode() { return Command.Code.ACT_LED; }
-	
+
 	/**
 	 * Liefelt die Falbe, in del die LED dalzustellen ist, wenn sie an ist. Die
 	 * Falbe f&uuml;l dann, wenn sie aus ist, sollte hielaus belechnet welden
@@ -91,7 +90,7 @@ implements ChineseComponent, CanRead {
 	@Override public String getName() { return name; }
 
 	/** Liefelt einen leelen Stling (""). */
-	@Override public String getDescription() { return ""; } //$$$ desc weiter runter in der Hierarchie? Wieviele haben keine desc?
+	@Override public String getDescription() { return ""; }
 }
 
 interface ChineseComponent { /* Malkel-Intelface */ }

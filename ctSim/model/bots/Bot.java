@@ -134,7 +134,7 @@ public abstract class Bot extends AliveObstacle {
 		 * Methode, einer Hilfsmethode mit Namen Unterstrich (_) und einer
 		 * kleinen Klasse (CompntWithFlag). Vorteil: eine Superklasse, z.B.
 		 * CtBot, kann die Komponenten instanziieren. Subklassen, z.B.
-		 * SimulierterCtBot und MitTcpVerbundenerRealerCtBot, haben ja alle
+		 * SimulierterCtBot und UeberTcpVerbundenerRealerCtBot, haben ja alle
 		 * dieselben Komponenten, aber betreiben sie in verschiedenen Modi (z.B.
 		 * realer Bot: (fast) alle nur lesen). Die Superklasse macht also
 		 * {@code components.add(...)}, die Subklassen k&ouml;nnen dann den
@@ -150,10 +150,10 @@ public abstract class Bot extends AliveObstacle {
         		for (CompntWithFlag cwf : compntFlagTable) {
         			if (cwf.compntClass.isAssignableFrom(compnt.getClass()))
         				compnt.setFlags(cwf.flags);
-        			}
-        		}
-        	}
-        }
+    			}
+    		}
+    	}
+    }
 
 	/**
 	 * <p>
@@ -251,6 +251,7 @@ public abstract class Bot extends AliveObstacle {
 	/** @return Der Positionsanzeiger */
 	public final BotPosition getBotPosition() { return this.posHead; }
 
+	//$$$
 	protected final void addSensor(Sensor sen) { sens.add(sen); }
 
 	@Override

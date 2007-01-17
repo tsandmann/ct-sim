@@ -83,8 +83,8 @@ public class CtBotSimTest extends CtBotSim {
 
 		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
 
-		double irl = irL.getModel().getValue().doubleValue();
-		double irr = irR.getModel().getValue().doubleValue();
+		double irl = irL.get().doubleValue();
+		double irr = irR.get().doubleValue();
 
 		// Ansteuerung fuer die Motoren in Abhaengigkeit vom Input
 		// der IR-Abstandssensoren, welche die Entfernung in mm
@@ -118,8 +118,8 @@ public class CtBotSimTest extends CtBotSim {
 		}
 
 		// Ist ein Absturz zu befuerchten?
-		short borderl = borderL.getModel().getValue().shortValue();
-		short borderr = borderR.getModel().getValue().shortValue();
+		short borderl = borderL.get().shortValue();
+		short borderr = borderR.get().shortValue();
 		if (borderl > borderr) {
 			ll = 100;
 			rr = -100;

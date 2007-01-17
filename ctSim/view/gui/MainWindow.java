@@ -240,9 +240,13 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/** F&uuml;gt einen neuen Bot hinzu */
 	public void onBotAdded(final Bot bot) {
-		botTabs.addClosableTab(bot.getName(), new BotViewer(bot),
-			bot.getDescription()+
-			" (Klasse "+bot.getClass().getSimpleName()+")");
+		botTabs.addClosableTab(
+			bot.getName(), // Tab-Beschriftung
+			new BotViewer(bot), // Inhalt
+			// Tooltip
+			bot.getDescription()+" (Klasse "+bot.getClass().getSimpleName()+")",
+			// Tooltip des Schliessen-Icon
+			"Verbindung zu Bot beenden"); //$$$ Tooltip Schliessenicon
 		// Listener fuer "Wenn Bot stirbt, Tab weg"
 		bot.addDeathListener(new Runnable() {
 			@SuppressWarnings("synthetic-access")

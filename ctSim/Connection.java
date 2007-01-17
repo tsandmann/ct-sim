@@ -19,6 +19,7 @@
 
 package ctSim;
 
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -39,8 +40,33 @@ import ctSim.util.FmtLogger;
 public abstract class Connection {
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
 
-	/** Ein Ausgabe-Stream */
+	/**
+	 * Hat keinen BufferedOutputStream, denn auf dem muss man (offenbar) immer
+	 * flush() aufrufen. Wir wissen jedoch nicht, wann die Leute, die uns
+	 * verwenden, flushen wollen &amp;ndash; daher m&uuml;ssen die das machen
+	 * mit dem BufferedOutputStream.
+	 */
 	private DataOutputStream output;
+
+	/**
+	 * Aufbau:
+	 *
+	 * <pre>
+	 * .------------------------------------------.
+	 * | DataInputStream                          |
+	 * |                                          |
+	 * | .--------------------------------------. |
+	 * | | BufferedInputStream                  | |
+	 * | |                                      | |
+	 * | | .----------------------------------. | |
+	 * | | | InputStream, den wir von unserer | | |
+	 * | | | Subklasse geholt haben           | | |
+	 * | | | ( getInputStream() )             | | |
+	 * | | `----------------------------------´ | |
+	 * | `--------------------------------------´ |
+	 * `------------------------------------------´
+	 * </pre>
+	 */
 	private DataInputStream input;
 
 	/**
@@ -74,8 +100,10 @@ public abstract class Connection {
 	}
 
 	public void read(byte[] b) throws IOException {
-		if (input == null)
-			input = new DataInputStream(getInputStream());
+		if (input == null) {
+			input = new DataInputStream(new BufferedInputStream(
+				getInputStream()));
+		}
 		input.readFully(b);
 	}
 

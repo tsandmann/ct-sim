@@ -18,11 +18,12 @@
  */
 package ctSim.model.bots.ctbot.components;
 
+import javax.swing.SpinnerNumberModel;
+
 import ctSim.model.Command;
 import ctSim.model.Command.Code;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotComponent.CanWrite;
-import ctSim.model.bots.components.BotComponent.NumberModel;
 import ctSim.view.gui.RemoteControlViewer;
 
 /**
@@ -42,18 +43,22 @@ import ctSim.view.gui.RemoteControlViewer;
  * @author Peter K&ouml;nig
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-public class RemoteControlSensor extends BotComponent<NumberModel>
+public class RemoteControlSensor extends BotComponent<SpinnerNumberModel>
 implements CanWrite {
 	public void writeTo(Command c) {
-		int v = getModel().getValue().intValue();
+		int v = getModel().getNumber().intValue();
 		if (v == 0)
 			return;
 		c.setDataL(v);
 		getModel().setValue(0); //$$$ Wer muss das sonst noch? MausPicture
 	}
 
+	public void set(final Integer rc5Code) {
+		getModel().setValue(rc5Code);
+	}
+
 	@Override public String getName() { return "RC5"; }
 	@Override public String getDescription() { return "Fernbedienung"; }
-	public RemoteControlSensor() { super(new NumberModel()); }
+	public RemoteControlSensor() { super(new SpinnerNumberModel()); }
 	public Code getHotCmdCode() { return Code.SENS_RC5; }
 }

@@ -354,7 +354,8 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 				// Stoppe die Zeit, die work() benoetigt
 				long realTimeBegin = System.currentTimeMillis();
 
-				// Ein AliveObstacle darf nur dann seine work()-Routine ausführen, wenn es nicht Halted ist
+				// Ein AliveObstacle darf nur dann seine work()-Routine 
+				// ausfuehren, wenn es nicht Halted ist
 				if ((this.obstState & OBST_STATE_HALTED) == 0)
 					work();
 
@@ -461,15 +462,32 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 * Setztden Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
 	 * Zustaende sind ein Bitmaske aus den OBST_STATE_ Konstanten
 	 *
-	 * @param state Der Zustand, der gesetzt werden soll
+	 * @param newObstState Der Zustand, der gesetzt werden soll
 	 */
-	public void setObstState(int state) {
-		this.obstState = state;
+	public void setObstState(int newObstState) {
+		if (newObstState == obstState)
+			return;
+
+		if ((newObstState & OBST_STATE_COLLISION) != 0
+		&& ((obstState    & OBST_STATE_COLLISION) == 0))
+			lg.info(getName()+" kollidiert");
+		if ((newObstState & OBST_STATE_COLLISION) == 0
+		&& ((obstState    & OBST_STATE_COLLISION) != 0))
+			lg.info(getName()+" ist nicht mehr kollidiert");
+
+		if ((newObstState & OBST_STATE_FALLING) != 0
+			&& ((obstState    & OBST_STATE_FALLING) == 0))
+			lg.info(getName()+" verliert den Boden unter den F\u00FC\u00DFen");
+		if ((newObstState & OBST_STATE_FALLING) == 0
+			&& ((obstState    & OBST_STATE_FALLING) != 0))
+			lg.info(getName()+" hat wieder Boden unter den F\u00FC\u00DFen");
+
+		this.obstState = newObstState;
 		updateAppearance();
 	}
 
 	private void updateAppearance() {
-		//$$ Keiner weiss, ob obstState jetzt im Endeffekt ein Flagfeld sein soll oder ein Enum
+		//$$ obstState sollte ein Enum werden oder hoechstens ein EnumSet
 		//$$ Also die Strings gehoeren woanders hin; ObstState als Enum, Strings da rein
 		String key= null;
 

@@ -1,6 +1,13 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-17 20:16 Hendrik Krauss [hkr@heise.de]:
+* Neu: Maus-Sensor
+* calcPos() ist jetzt auch ein Simulator
+* Threading-Probleme; lassen Simulation jetzt auf dem Event-Dispatch-Thread laufen; verlangsamt alles
+* E/A ist jetzt buffered (scheint auch was zu helfen, wenn ich die Ausgabe vom Profiler richtig interpretiere)
+* Kleinigkeiten
+
 2007-01-15 21:07 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
 * Neu: Konfigoption, die den RC5-Code angibt, der beim Starten an einen Sim-Bot gehen soll; Default "Taste 5"
 * Neu: Fernbedienungssensor, -gui

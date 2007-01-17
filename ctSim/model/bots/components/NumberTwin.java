@@ -1,17 +1,19 @@
 package ctSim.model.bots.components;
 
 
+import javax.swing.SpinnerNumberModel;
+
 import ctSim.model.Command;
 import ctSim.model.bots.ctbot.CtBotSimTcp.NumberTwinVisitor;
 
 //$$ doc
 // ist Haelfte eines Paars (z.B. IrL + IrR)
 //$$$ Ganze links/rechts-Geschichte; statische Factory?
-public abstract class NumberTwin extends BotComponent<BotComponent.NumberModel> {
+public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	protected final boolean isLeft;
 
 	public NumberTwin(boolean isLeft) {
-		super(new BotComponent.NumberModel());
+		super(new SpinnerNumberModel());
 		this.isLeft = isLeft;
 	}
 
@@ -35,12 +37,20 @@ public abstract class NumberTwin extends BotComponent<BotComponent.NumberModel> 
 	}
 
 	public void writeTo(Command c) {
-		// Verengender Cast double -> int
-		int value = getModel().getValue().intValue();
+		// Verengende Konvertierung double -> int
+		int value = getModel().getNumber().intValue();
 		if (isLeft)
 			c.setDataL(value);
 		else
 			c.setDataR(value);
+	}
+
+	public void set(Number n) {
+		getModel().setValue(n);
+	}
+
+	public Number get() {
+		return getModel().getNumber();
 	}
 
 	public void accept(NumberTwinVisitor visitor) {

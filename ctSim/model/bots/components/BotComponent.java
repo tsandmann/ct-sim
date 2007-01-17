@@ -21,7 +21,6 @@ package ctSim.model.bots.components;
 import java.net.ProtocolException;
 
 import javax.media.j3d.Transform3D;
-import javax.swing.SpinnerNumberModel;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -31,6 +30,7 @@ import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
 import ctSim.model.bots.components.Actuator.Log;
 import ctSim.model.bots.components.actuators.Led;
+import ctSim.model.bots.ctbot.components.MouseSensor;
 import ctSim.model.bots.ctbot.components.RemoteControlSensor;
 import ctSim.util.Flags;
 
@@ -115,15 +115,6 @@ public abstract class BotComponent<M> {
 
 	public static enum ConnectionFlags { READS, WRITES }
 
-	public static class NumberModel extends SpinnerNumberModel {
-		private static final long serialVersionUID = 15828077642311050L;
-	
-		@Override
-		public Number getValue() {
-			return (Number)super.getValue();
-		}
-	}
-
 	private final M model;
 
 	/** Anf&auml;nglich alles false */
@@ -166,21 +157,21 @@ public abstract class BotComponent<M> {
 		return writesCommands();
 	}
 
-	public void offerRead(Command c) throws ProtocolException {
-		if (readsCommands()) {
-			// Cast kann nicht in die Hose gehen wegen setFlags()
-			CanRead self = (CanRead)this;
-			if (c.has(self.getHotCmdCode()))
-				self.readFrom(c);
-		}
+	public void offerRead(final Command c) throws ProtocolException {
+		if (! readsCommands())
+			return;
+		// Cast kann nicht in die Hose gehen wegen setFlags()
+		CanRead self = (CanRead)this;
+		if (c.has(self.getHotCmdCode()))
+			self.readFrom(c);
 	}
 
-	public final void askForWrite(CommandOutputStream s) {
-		if (writesCommands()) {
-			// Cast kann nicht in die Hose gehen wegen setFlags()
-			CanWrite self = (CanWrite)this;
-			self.writeTo(s.getCommand(self.getHotCmdCode()));
-		}
+	public final void askForWrite(final CommandOutputStream s) {
+		if (! writesCommands())
+			return;
+		// Cast kann nicht in die Hose gehen wegen setFlags()
+		CanWrite self = (CanWrite)this;
+		self.writeTo(s.getCommand(self.getHotCmdCode()));
 	}
 
 	/** @return Gibt den Namen der Komponente zur&uuml;ck */
