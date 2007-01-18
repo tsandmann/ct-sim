@@ -32,6 +32,7 @@ public class AndEverything extends BotBuisitor {
 		JTextArea t = new JTextArea(d.getModel(), null,
 			d.getNumRows(), d.getNumCols());
 		t.setEnabled(false);
+		t.setEditable(false); //$$$ t focusable, focus stealing
 		t.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		t.setDisabledTextColor(Color.BLACK);
 		t.setBackground(new Color(170, 200, 90));
@@ -65,7 +66,7 @@ public class AndEverything extends BotBuisitor {
 		add(new AuxFrameButton(
 			s.getDescription()+" ("+s.getName()+")",
 			s.getDescription()+" f\u00FCr "+bot.getName(),
-			new RemoteControlViewer(s.getModel())));
+			new RemoteControlViewer(s)));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 }

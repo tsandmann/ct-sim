@@ -19,6 +19,8 @@
 package ctSim.model.bots.components;
 
 import java.net.ProtocolException;
+import java.util.Arrays;
+import java.util.EnumSet;
 
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Point3d;
@@ -29,7 +31,6 @@ import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
 import ctSim.model.bots.components.Actuators.Log;
-import ctSim.util.Flags;
 
 //$$ doc
 /**
@@ -65,40 +66,40 @@ import ctSim.util.Flags;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public abstract class BotComponent<M> {
-	public interface CanWrite {
+	protected interface CanRead {
 		/**
-		 * Nicht aufrufen. Methode ist public als Nebenwirkung, weil wir gern
-		 * protected h&auml;tten (es soll &uuml;ber Packagegrenzen hinweg
-		 * funktionieren), aber Methoden in Packages nur public oder default
-		 * sein k&ouml;nnen.
-		 */
-		public void writeTo(Command c);
-
-		/**
-		 * Nicht aufrufen. Methode ist public als Nebenwirkung, weil wir gern
-		 * protected h&auml;tten (es soll &uuml;ber Packagegrenzen hinweg
-		 * funktionieren), aber Methoden in Packages nur public oder default
-		 * sein k&ouml;nnen.
-		 */
-		public Code getHotCmdCode();
-	}
-
-	public interface CanRead {
-		/**
-		 * Nicht aufrufen. Methode ist public als Nebenwirkung, weil wir gern
-		 * protected h&auml;tten (es soll &uuml;ber Packagegrenzen hinweg
-		 * funktionieren), aber Methoden in Packages nur public oder default
-		 * sein k&ouml;nnen.
+		 * Nicht aufrufen &ndash; stattdessen
+		 * {@link BotComponent#offerRead(Command)} verwenden.
 		 */
 		public void readFrom(Command c) throws ProtocolException;
 
 		/**
-		 * Nicht aufrufen. Methode ist public als Nebenwirkung, weil wir gern
-		 * protected h&auml;tten (es soll &uuml;ber Packagegrenzen hinweg
-		 * funktionieren), aber Methoden in Packages nur public oder default
-		 * sein k&ouml;nnen.
+		 * Nicht aufrufen &ndash; sollte nur von
+		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
+		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet
+		 * werden.
 		 */
 		public Code getHotCmdCode();
+	}
+
+	protected interface CanWrite {
+		/**
+		 * Nicht aufrufen &ndash; stattdessen
+		 * {@link BotComponent#askForWrite(CommandOutputStream)} verwenden.
+		 */
+		public void writeTo(Command c);
+
+		/**
+		 * Nicht aufrufen &ndash; sollte nur von
+		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
+		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet
+		 * werden.
+		 */
+		public Code getHotCmdCode();
+	}
+
+	protected interface CanWriteAsynchronously {
+		public void setAsyncWriteStream(CommandOutputStream s);
 	}
 
 	public interface SimpleSensor { //$$$ abstract class
@@ -109,12 +110,13 @@ public abstract class BotComponent<M> {
 		// Marker-Interface
 	}
 
-	public static enum ConnectionFlags { READS, WRITES }
+	public static enum ConnectionFlags { READS, WRITES, WRITES_ASYNCLY }
 
 	private final M model;
 
 	/** Anf&auml;nglich alles false */
-	private Flags<ConnectionFlags> flags = new Flags<ConnectionFlags>();
+	private EnumSet<ConnectionFlags> flags =
+		EnumSet.noneOf(ConnectionFlags.class);
 
 	public BotComponent(M model) { this.model = model; }
 
@@ -126,31 +128,42 @@ public abstract class BotComponent<M> {
 	}
 
 	public void setFlags(ConnectionFlags... flags) {
-		// Wenn flags == null wird alles default, also false
-		Flags<ConnectionFlags> f = new Flags<ConnectionFlags>(flags);
+		EnumSet<ConnectionFlags> f = (flags == null || flags.length == 0)
+			? EnumSet.noneOf(ConnectionFlags.class)
+			: EnumSet.copyOf(Arrays.asList(flags));
+
 		// Pruefen, ob dieses Objekt in der Lage ist zu dem, was die von uns
 		// wollen
-		if (f.get(ConnectionFlags.READS)) {
+		if (f.contains(ConnectionFlags.READS)) {
 			if (! (this instanceof CanRead))
 				throw createUnsuppOp("Lesen");
 		}
-		if (f.get(ConnectionFlags.WRITES)) {
+		if (f.contains(ConnectionFlags.WRITES)) {
 			if (! (this instanceof CanWrite))
 				throw createUnsuppOp("Schreiben");
 		}
+		if (f.contains(ConnectionFlags.WRITES_ASYNCLY)) {
+			if (! (this instanceof CanWriteAsynchronously))
+				throw createUnsuppOp("asynchrones Schreiben");
+		}
+
 		this.flags = f;
 	}
 
-	public boolean writesCommands() {
-		return flags.get(ConnectionFlags.WRITES);
+	public boolean writesSynchronously() {
+		return flags.contains(ConnectionFlags.WRITES);
 	}
 
 	public boolean readsCommands() {
-		return flags.get(ConnectionFlags.READS);
+		return flags.contains(ConnectionFlags.READS);
+	}
+
+	public boolean writesAsynchronously() {
+		return flags.contains(ConnectionFlags.WRITES_ASYNCLY);
 	}
 
 	public boolean isGuiEditable() {
-		return writesCommands();
+		return writesSynchronously();
 	}
 
 	public void offerRead(final Command c) throws ProtocolException {
@@ -163,7 +176,7 @@ public abstract class BotComponent<M> {
 	}
 
 	public void askForWrite(final CommandOutputStream s) {
-		if (! writesCommands())
+		if (! writesSynchronously())
 			return;
 		// Cast kann nicht in die Hose gehen wegen setFlags()
 		CanWrite self = (CanWrite)this;
@@ -177,6 +190,7 @@ public abstract class BotComponent<M> {
 	public abstract String getDescription();
 
 	////////////////////////////////////////////////////////////////////////
+	//$$ Nur noch fuer BotPosition wichtig, alles unter der Linie
 
 	private static int ID_COUNT = 0;
 

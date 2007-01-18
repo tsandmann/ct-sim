@@ -1,10 +1,14 @@
 package ctSim.model.bots.components;
 
+import java.io.IOException;
+
 import javax.swing.SpinnerNumberModel;
 
 import ctSim.model.Command;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
 import ctSim.model.bots.components.BotComponent.CanWrite;
+import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
 import ctSim.model.bots.components.BotComponent.SimpleSensor;
 import ctSim.view.gui.RemoteControlViewer;
 
@@ -137,23 +141,37 @@ public class Sensors {
 	 * @author Hendrik Krau&szlig; &lt;<a
 	 * href="mailto:hkr@heise.de">hkr@heise.de</a>>
 	 */
-	public static class RemoteControl extends BotComponent<SpinnerNumberModel>
-	implements CanWrite {
-		public void writeTo(Command c) {
-			int v = getModel().getNumber().intValue();
-			if (v == 0)
-				return;
-			c.setDataL(v);
-			getModel().setValue(0); //$$$ Wer muss das sonst noch? MausPicture
+	public static class RemoteControl extends BotComponent<Void>
+	implements CanWrite, CanWriteAsynchronously {
+		private CommandOutputStream asyncOut;
+		private int syncPendingRcCode = 0;
+
+		public void setAsyncWriteStream(CommandOutputStream s) {
+			asyncOut = s;
 		}
 
-		public void set(final Integer rc5Code) {
-			getModel().setValue(rc5Code);
+		public void writeTo(Command c) {
+			if (syncPendingRcCode == 0)
+				return;
+			c.setDataL(syncPendingRcCode);
+			syncPendingRcCode = 0;
+		}
+
+		public void send(int rc5Code) throws IOException {
+			if (writesAsynchronously()) {
+				// Gleich schreiben
+				synchronized (asyncOut) {
+					asyncOut.getCommand(getHotCmdCode()).setDataL(rc5Code);
+					asyncOut.flush();
+				}
+			} else
+				// Puffern bis zum writeTo
+				syncPendingRcCode = rc5Code;
 		}
 
 		@Override public String getName() { return "RC5"; }
 		@Override public String getDescription() { return "Fernbedienung"; }
-		public RemoteControl() { super(new SpinnerNumberModel()); }
+		public RemoteControl() { super(null); }
 		public Code getHotCmdCode() { return Code.SENS_RC5; }
 	}
 

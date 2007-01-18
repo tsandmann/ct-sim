@@ -44,6 +44,7 @@ import ctSim.model.World;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
+import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.NumberTwin;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.Actuators.Governor;
@@ -505,7 +506,8 @@ public class CtBotSimTcp extends CtBotSim {
         }
 
         @Buisit
-        public void buildMouseSensorSim(final Sensors.Mouse sensor, boolean isX) {
+        public void buildMouseSensorSim(final Sensors.Mouse sensor,
+        boolean isX) {
         	(isX ? mouseSensorX : mouseSensorY).setSensor(sensor);
         }
 
@@ -536,6 +538,7 @@ public class CtBotSimTcp extends CtBotSim {
         this.world = w;
 
         components.add(
+        	new MousePictureComponent(),
             new Actuators.Governor(true),
             new Actuators.Governor(false),
             new Actuators.LcDisplay(20, 4),
@@ -570,6 +573,7 @@ public class CtBotSimTcp extends CtBotSim {
 
         // Component-Flag-Tabelle
         components.applyFlagTable(
+        	_(MousePictureComponent.class),
             _(Actuators.Governor.class   , READS),
             _(Actuators.LcDisplay.class  , READS),
             _(Actuators.Log.class        , READS),
@@ -615,13 +619,15 @@ public class CtBotSimTcp extends CtBotSim {
                 if (c instanceof Sensors.RemoteControl) {
                 	lg.fine("Sende RC5-Code %d (%#x) an %s",
                 		rcStartCode, rcStartCode, getName());
-                    ((Sensors.RemoteControl)c).set(rcStartCode);
+                    ((Sensors.RemoteControl)c).send(rcStartCode);
                     break;
                 }
             }
         } catch (NumberFormatException e) {
             lg.warn(e, "Konnte rcStartCode '%s' aus der Konfigdatei nicht " +
             		"verwerten; ignoriere", rawStr);
+        } catch (IOException e) {
+        	e.printStackTrace(); //$$$ Excp
         }
     }
 

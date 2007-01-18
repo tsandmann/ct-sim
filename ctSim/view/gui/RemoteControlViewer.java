@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -11,14 +12,15 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.SpinnerNumberModel;
+
+import ctSim.model.bots.components.Sensors.RemoteControl;
 
 //$$ doc
 //$$ Runde Buttons waeren schoen
 public class RemoteControlViewer extends JPanel {
 	private static final long serialVersionUID = - 6483687307396837800L;
 
-	private static final Color LIGHT_BLUE = new Color(120, 120, 255);
+	private static final Color LIGHT_BLUE = new Color(150, 150, 255); 
 	private static final Color GR         = new Color(50,  200, 50);
 	private static final Color YE         = new Color(200, 200, 0);
 
@@ -57,7 +59,7 @@ public class RemoteControlViewer extends JPanel {
 		)
 	};
 
-	private final SpinnerNumberModel model;
+	private final RemoteControl sensor;
 	private Color currentDefault = null;
 
 	private JComponent defaultColor(Color c) {
@@ -78,7 +80,11 @@ public class RemoteControlViewer extends JPanel {
 			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(
 			@SuppressWarnings("unused") ActionEvent e) {
-				model.setValue(rcCode);
+				try {
+					sensor.send(rcCode);
+				} catch (IOException e1) {
+					e1.printStackTrace(); //$$$ Excp
+				}
 			}
 		});
 		return rv;
@@ -98,10 +104,10 @@ public class RemoteControlViewer extends JPanel {
 		return rv;
 	}
 
-	public RemoteControlViewer(SpinnerNumberModel model) {
+	public RemoteControlViewer(RemoteControl rcSensor) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-		this.model = model;
+		this.sensor = rcSensor;
 		for (JComponent c : buttonsAndLayout) {
 			if (c != null) {
 				add(c);

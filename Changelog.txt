@@ -1,6 +1,11 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-18 17:32 Hendrik Krauss [hkr@heise.de]:
+* Neu: Asynchrones Schreiben fuer Bot-Komponenten (RemoteControl, MousePicture)
+* Neu: MousePicture wird angezeigt
+* Kleinigkeiten
+
 2007-01-18 12:45 Hendrik Krauss [hkr@heise.de]:
 * Neu: Trans-, Door- und Error-Sensoren
 * Umbenannt: Actuator -> Actuators

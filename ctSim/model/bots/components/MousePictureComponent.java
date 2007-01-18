@@ -7,16 +7,17 @@ import java.awt.image.MemoryImageSource;
 import java.io.IOException;
 import java.util.List;
 
-import ctSim.Connection;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWrite;
+import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
 import ctSim.util.Closure;
 import ctSim.util.Misc;
 
 //$$ dic doc
+//$$$ t real MousePicture
 /**
  * <ul><li>Command-Code SENS_MOUSE_PICTURE</li>
 * <li>Nutzlast: einen Teil der Pixel des Mausbilds, z.B. Pixel Nr. 42 bis 108</li>
@@ -24,7 +25,7 @@ import ctSim.util.Misc;
 * <li></li></ul>
  */
 public class MousePictureComponent extends BotComponent<Void>
-implements CanRead, CanWrite {
+implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * Breite des Maussensorbilds in Pixeln (d.h. unskalierte Pixel, wie sie von
 	 * der Bot-Hardware kommen &amp;ndash; zum Anzeigen wird das Bild ja
@@ -46,23 +47,33 @@ implements CanRead, CanWrite {
 	 * Details siehe dort.
 	 */
 	private final int[] pixels = new int[WIDTH * HEIGHT];
-	private boolean requestPending = false;
+	private boolean syncRequestPending = false;
 	private final List<Closure<Image>> imageLi = Misc.newList();
 	private final List<Runnable> completionLi = Misc.newList();
-	private Connection conn;
+	private CommandOutputStream asyncOut;
 
-	public MousePictureComponent(Connection conn) {
-		super(null);
-		this.conn = conn;
+	public MousePictureComponent() { super(null); }
+
+	public void setAsyncWriteStream(CommandOutputStream s) {
+		asyncOut = s;
 	}
 
-	public void requestPicture() {
-		//$$$ Hack!
-//		requestPending = true;
-		try {
-			conn.write(new Command(Code.SENS_MOUSE_PICTURE));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+	public void requestPicture() throws IOException {
+		if (writesAsynchronously()) {
+			synchronized (asyncOut) {
+				asyncOut.getCommand(getHotCmdCode());
+				asyncOut.flush();
+			}
+		} else
+			syncRequestPending = true;
+	}
+
+	@Override
+	public void askForWrite(CommandOutputStream s) {
+		if (writesSynchronously() && syncRequestPending) {
+			// Anforderung absetzen
+			s.getCommand(getHotCmdCode());
+			syncRequestPending = false;
 		}
 	}
 
@@ -134,15 +145,6 @@ implements CanRead, CanWrite {
 			// Array voll: Listenern bescheidgeben
 			for (Runnable li : completionLi)
 				li.run();
-		}
-	}
-
-	@Override
-	public void askForWrite(CommandOutputStream s) {
-		if (writesCommands() && requestPending) {
-			// Anforderung absetzen
-			s.getCommand(getHotCmdCode());
-			requestPending = false;
 		}
 	}
 

@@ -39,6 +39,7 @@ public class BotViewer extends JScrollPane {
 		Leds.class,
 		Simple.Actuators.class,
 		Simple.Sensors.class,
+		MousePictureViewer.class,
 		AndEverything.class,
     };
 
