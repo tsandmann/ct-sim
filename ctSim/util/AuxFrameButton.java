@@ -57,7 +57,8 @@ public class AuxFrameButton extends JToggleButton {
 		setAlignmentX(Component.CENTER_ALIGNMENT);
 		// Falls wir Platz haben, ausnutzen (keiner hat was von leerem 
 		// nicht-klickbaren Platz) 
-		setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+		setMaximumSize(new Dimension(Integer.MAX_VALUE, 
+			getMaximumSize().height));
 		setToolTipText("Fenster anzeigen mit "+buttonLabel);
 		addActionListener(new ActionListener() {
 			// Fenster anzeigen/verbergen, wenn wir gedrueckt werden

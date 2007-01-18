@@ -28,10 +28,7 @@ import ctSim.SimUtils;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
-import ctSim.model.bots.components.Actuator.Log;
-import ctSim.model.bots.components.actuators.Led;
-import ctSim.model.bots.ctbot.components.MouseSensor;
-import ctSim.model.bots.ctbot.components.RemoteControlSensor;
+import ctSim.model.bots.components.Actuators.Log;
 import ctSim.util.Flags;
 
 //$$ doc
@@ -44,13 +41,13 @@ import ctSim.util.Flags;
  * </p>
  * <p>
  * Manche Bot-Components k&ouml;nnen lesen von der TCP-(oder USB-)Verbindung mit
- * dem Bot (Beispiel: {@link Led}, Gegenbeispiel: {@link MouseSensor}, der
- * immer innerhalb des Sim berechnet und nicht von der Verbindung gelesen wird).
- * Manche Components k&ouml;nnen sich auch aufs TCP (USB) schreiben (Beispiel:
- * {@link RemoteControlSensor}, Gegenbeispiel: {@link Log}, das nie aus dem
- * Sim herausgesendet wird). Die F&auml;higkeiten &quot;kann lesen&quot; und
- * &quot;kann schreiben&quot; sind unabh&auml;ngig, jede Kombination ist
- * m&ouml;glich.&lt;/p&gt;
+ * dem Bot (Beispiel: {@link Actuators.Led}, Gegenbeispiel:
+ * {@link Sensors.Mouse}, der immer innerhalb des Sim berechnet und nicht von
+ * der Verbindung gelesen wird). Manche Components k&ouml;nnen sich auch aufs
+ * TCP (USB) schreiben (Beispiel: {@link Sensors.RemoteControl}, Gegenbeispiel:
+ * {@link Log}, das nie aus dem Sim herausgesendet wird). Die F&auml;higkeiten
+ * &quot;kann lesen&quot; und &quot;kann schreiben&quot; sind unabh&auml;ngig,
+ * jede Kombination ist m&ouml;glich.&lt;/p&gt;
  * <p>
  * Die <em>grunds&auml;tzliche</em> F&auml;higkeit &quot;Lesen
  * k&ouml;nnen&quot; oder &quot;Schreiben k&ouml;nnen&quot; wird durch die
@@ -62,8 +59,7 @@ import ctSim.util.Flags;
  * &quot;nur lesen&quot;, auch wenn sie potentiell schreiben k&ouml;nnten. Beim
  * Setzen der Flags wird gepr&uuml;ft, ob die Component das Flag &uuml;berhaupt
  * unterst&uuml;tzt; andernfalls tritt eine UnsupportedOperationException auf.
- * </p>
- * $$ Aktuatoren vs. Sensoren
+ * </p> $$ Aktuatoren vs. Sensoren
  *
  * @author Felix Beckwermert
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
@@ -166,7 +162,7 @@ public abstract class BotComponent<M> {
 			self.readFrom(c);
 	}
 
-	public final void askForWrite(final CommandOutputStream s) {
+	public void askForWrite(final CommandOutputStream s) {
 		if (! writesCommands())
 			return;
 		// Cast kann nicht in die Hose gehen wegen setFlags()

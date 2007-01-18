@@ -12,7 +12,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import ctSim.model.bots.components.actuators.Led;
+import ctSim.model.bots.components.Actuators;
 import ctSim.util.Misc;
 import ctSim.util.RoundGradientPaint;
 import ctSim.util.Buisitor.Buisit;
@@ -91,7 +91,7 @@ public class Leds extends BotBuisitor {
     }
 
 	@Buisit
-	public void buisit(Led led) {
+	public void buisit(Actuators.Led led) {
 		setBorder(new TitledBorder("LEDs"));
 		add(new LedViewer(led.getModel(), led.isGuiEditable(), led.getName(),
 			led.getColorWhenOn()));

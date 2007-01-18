@@ -1,6 +1,15 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-18 12:45 Hendrik Krauss [hkr@heise.de]:
+* Neu: Trans-, Door- und Error-Sensoren
+* Umbenannt: Actuator -> Actuators
+* Umorganisiert: Aktuatoren alle in Datei Actuators umgezogen (400 Zeilen, vertretbare Groesse)
+* Umorganisiert: Sensoren alle in Datei Sensors umgezogen (210 Zeilen)
+* update()-Calls in MainWindow / WorldViewer waren ueberfluessig
+* Alte Sensoren-Infrastruktur konnte weg
+* Kleinigkeiten
+
 2007-01-17 20:16 Hendrik Krauss [hkr@heise.de]:
 * Neu: Maus-Sensor
 * calcPos() ist jetzt auch ein Simulator

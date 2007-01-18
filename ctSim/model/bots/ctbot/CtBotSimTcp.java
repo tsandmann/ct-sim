@@ -23,7 +23,6 @@ import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,20 +41,12 @@ import ctSim.model.AliveObstacle;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.World;
-import ctSim.model.bots.components.Actuator;
+import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.NumberTwin;
-import ctSim.model.bots.components.Actuator.Governor;
-import ctSim.model.bots.components.actuators.LcDisplay;
-import ctSim.model.bots.components.actuators.Led;
-import ctSim.model.bots.ctbot.components.BorderSensor;
-import ctSim.model.bots.ctbot.components.DistanceSensor;
-import ctSim.model.bots.ctbot.components.EncoderSensor;
-import ctSim.model.bots.ctbot.components.LightSensor;
-import ctSim.model.bots.ctbot.components.LineSensor;
-import ctSim.model.bots.ctbot.components.MouseSensor;
-import ctSim.model.bots.ctbot.components.RemoteControlSensor;
+import ctSim.model.bots.components.Sensors;
+import ctSim.model.bots.components.Actuators.Governor;
 import ctSim.util.Buisitor;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
@@ -114,9 +105,9 @@ public class CtBotSimTcp extends CtBotSim {
              */
             private static final float REVS_PER_SEC_MAX = 151f / 60f;
 
-            private Actuator.Governor governor;
+            private Actuators.Governor governor;
 
-            public void setGovernor(Actuator.Governor governor) {
+            public void setGovernor(Actuators.Governor governor) {
                 this.governor = governor;
             }
 
@@ -151,9 +142,9 @@ public class CtBotSimTcp extends CtBotSim {
 			 */
         	private double valueFraction = 0;
 
-        	private MouseSensor sensor;
+        	private Sensors.Mouse sensor;
 
-        	public void setSensor(MouseSensor sensor) {
+        	public void setSensor(Sensors.Mouse sensor) {
 				this.sensor = sensor;
 			}
 
@@ -416,7 +407,7 @@ public class CtBotSimTcp extends CtBotSim {
         }
 
         @Buisit
-        public void buildEncoderSim(final EncoderSensor sensor,
+        public void buildEncoderSim(final Sensors.Encoder sensor,
         boolean isLeft) {
             final WheelSimulator wheel = isLeft
                 ? leftWheel
@@ -453,7 +444,7 @@ public class CtBotSimTcp extends CtBotSim {
         }
 
         @Buisit
-        public void buildDistanceSim(final DistanceSensor sensor,
+        public void buildDistanceSim(final Sensors.Distance sensor,
         boolean isLeft) {
             final Point3d distFromBotCenter = isLeft
                 ? new Point3d(- 0.036, 0.0554, 0)
@@ -480,21 +471,21 @@ public class CtBotSimTcp extends CtBotSim {
         }
 
         @Buisit
-        public void buildLineSensorSim(LineSensor s, boolean isLeft) {
+        public void buildLineSensorSim(Sensors.Line s, boolean isLeft) {
             simulators.add(new Cny70Simulator(
                 at(0.004, 0.009, -0.011 - BOT_HEIGHT / 2, isLeft),
                 looksForward(), s));
         }
 
         @Buisit
-        public void buildBorderSensorSim(BorderSensor s, boolean isLeft) {
+        public void buildBorderSensorSim(Sensors.Border s, boolean isLeft) {
             simulators.add(new Cny70Simulator(
                 at(0.036, 0.0384, - BOT_HEIGHT / 2, isLeft),
                 looksForward(), s));
         }
 
         @Buisit
-        public void buildLightSim(final LightSensor sensor, boolean isLeft) {
+        public void buildLightSim(final Sensors.Light sensor, boolean isLeft) {
             final Point3d distFromBotCenter = isLeft
                 ? new Point3d(- 0.032, 0.048, 0.060 - BOT_HEIGHT / 2)
                 : new Point3d(+ 0.032, 0.048, 0.060 - BOT_HEIGHT / 2);
@@ -514,7 +505,7 @@ public class CtBotSimTcp extends CtBotSim {
         }
 
         @Buisit
-        public void buildMouseSensorSim(final MouseSensor sensor, boolean isX) {
+        public void buildMouseSensorSim(final Sensors.Mouse sensor, boolean isX) {
         	(isX ? mouseSensorX : mouseSensorY).setSensor(sensor);
         }
 
@@ -545,23 +536,27 @@ public class CtBotSimTcp extends CtBotSim {
         this.world = w;
 
         components.add(
-            new Actuator.Governor(true),
-            new Actuator.Governor(false),
-            new EncoderSensor(true),
-            new EncoderSensor(false),
-            new DistanceSensor(true),
-            new DistanceSensor(false),
-            new LineSensor(true),
-            new LineSensor(false),
-            new BorderSensor(true),
-            new BorderSensor(false),
-            new LightSensor(true),
-            new LightSensor(false),
-            new MouseSensor(true),
-            new MouseSensor(false),
-            new RemoteControlSensor(),
-            new LcDisplay(20, 4),
-            new Actuator.Log()
+            new Actuators.Governor(true),
+            new Actuators.Governor(false),
+            new Actuators.LcDisplay(20, 4),
+            new Actuators.Log(),
+            new Actuators.DoorServo(),
+            new Sensors.Encoder(true),
+            new Sensors.Encoder(false),
+            new Sensors.Distance(true),
+            new Sensors.Distance(false),
+            new Sensors.Line(true),
+            new Sensors.Line(false),
+            new Sensors.Border(true),
+            new Sensors.Border(false),
+            new Sensors.Light(true),
+            new Sensors.Light(false),
+            new Sensors.Mouse(true),
+            new Sensors.Mouse(false),
+            new Sensors.RemoteControl(),
+            new Sensors.Door(),
+            new Sensors.Trans(),
+            new Sensors.Error()
         );
 
         // LEDs
@@ -570,22 +565,26 @@ public class CtBotSimTcp extends CtBotSim {
             String s = "LED " + (i + 1)
                      + (i == 0 ? " (vorn rechts)" :
                         i == 1 ? " (vorn links)" : "");
-            components.add(new Led(s, numLeds - i - 1, ledColors[i]));
+            components.add(new Actuators.Led(s, numLeds - i - 1, ledColors[i]));
         }
 
         // Component-Flag-Tabelle
         components.applyFlagTable(
-            _(Actuator.Governor.class, READS),
-            _(EncoderSensor.class    , WRITES),
-            _(DistanceSensor.class   , WRITES),
-            _(LineSensor.class       , WRITES),
-            _(BorderSensor.class     , WRITES),
-            _(LightSensor.class      , WRITES),
-            _(MouseSensor.class      , WRITES),
-            _(RemoteControlSensor.class, WRITES),
-            _(LcDisplay.class        , READS),
-            _(Actuator.Log.class     , READS),
-            _(Led.class              , READS)
+            _(Actuators.Governor.class   , READS),
+            _(Actuators.LcDisplay.class  , READS),
+            _(Actuators.Log.class        , READS),
+            _(Actuators.DoorServo.class  , READS),
+            _(Actuators.Led.class        , READS),
+            _(Sensors.Encoder.class      , WRITES),
+            _(Sensors.Distance.class     , WRITES),
+            _(Sensors.Line.class         , WRITES),
+            _(Sensors.Border.class       , WRITES),
+            _(Sensors.Light.class        , WRITES),
+            _(Sensors.Mouse.class        , WRITES),
+            _(Sensors.RemoteControl.class, WRITES),
+            _(Sensors.Door.class         , WRITES),
+            _(Sensors.Trans.class        , WRITES),
+            _(Sensors.Error.class        , WRITES)
         );
 
         // Simulation
@@ -613,10 +612,10 @@ public class CtBotSimTcp extends CtBotSim {
         try {
             int rcStartCode = Integer.decode(rawStr);
             for (BotComponent<?> c : components) {
-                if (c instanceof RemoteControlSensor) {
+                if (c instanceof Sensors.RemoteControl) {
                 	lg.fine("Sende RC5-Code %d (%#x) an %s",
                 		rcStartCode, rcStartCode, getName());
-                    ((RemoteControlSensor)c).set(rcStartCode);
+                    ((Sensors.RemoteControl)c).set(rcStartCode);
                     break;
                 }
             }
@@ -640,28 +639,6 @@ public class CtBotSimTcp extends CtBotSim {
             s.flush();
 
             Command command;
-
-            // TODO
-            command = new Command(Command.Code.SENS_DOOR);
-            command.setDataL(0);
-            command.setDataR(0);
-            command.setSeq(this.seq++);
-            connection.write(command);
-
-            // TODO: nur fuer real-bot
-            command = new Command(Command.Code.SENS_TRANS);
-            command.setDataL(0);
-            command.setDataR(0);
-            command.setSeq(this.seq++);
-            connection.write(command);
-
-            // TODO: nur fuer real-bot
-            command = new Command(Command.Code.SENS_ERROR);
-            command.setDataL(0);
-            command.setDataR(0);
-            command.setSeq(this.seq++);
-            connection.write(command);
-
             lastTransmittedSimulTime= (int)world.getSimTimeInMs();
             lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
             command = new Command(Command.Code.DONE);
@@ -670,7 +647,7 @@ public class CtBotSimTcp extends CtBotSim {
             command.setSeq(this.seq++);
             connection.write(command);
         } catch (IOException e) {
-            lg.severe(e, "Error sending sensor data; dying");
+            lg.severe(e, "E/A-Problem beim Senden der Sensordaten; Abbruch");
             die();
         }
     }
@@ -689,11 +666,6 @@ public class CtBotSimTcp extends CtBotSim {
                 // nIx zu tun mit diesem Kommando
                 break;
             case ACT_SERVO:
-//				this.setActServo(command.getDataL());
-                break;
-            case ACT_DOOR:
-//				this.setActDoor(command.getDataL());
-                break;
             case ACT_MOT:
             case ACT_LED:
             case ACT_LCD:
@@ -714,7 +686,7 @@ public class CtBotSimTcp extends CtBotSim {
                 break;
 
             default:
-                lg.warn("Unbekanntes Kommando '%s'", command.toString());
+                lg.warn("Unbekanntes Kommando%s", command);
                 break;
             }
         } else {
@@ -725,13 +697,15 @@ public class CtBotSimTcp extends CtBotSim {
     @Override
     protected void work() {
     	SwingUtilities.invokeLater(new Runnable() {
+			@SuppressWarnings("synthetic-access")
 			public void run() {
 				transmitSensors();
 			}
     	});
         receiveCommands();
         SwingUtilities.invokeLater(new Runnable() {
-        	public void run() {
+        	@SuppressWarnings("synthetic-access")
+			public void run() {
         		processCommands();
         	}
         });
@@ -750,7 +724,7 @@ public class CtBotSimTcp extends CtBotSim {
     }
 
     /** Sichert ein Kommando im Puffer */
-    public int storeCommand(Command command) {
+    private int storeCommand(Command command) {
         int result=0;
         synchronized (commandBuffer) {
             commandBuffer.add(command);
@@ -764,7 +738,7 @@ public class CtBotSimTcp extends CtBotSim {
     }
 
     /** Verarbeitet alle eingegangenen Daten */
-    public void processCommands(){
+    private void processCommands(){
         synchronized (commandBuffer) {
             Iterator<Command> it = commandBuffer.iterator();
             while (it.hasNext()){
@@ -779,7 +753,7 @@ public class CtBotSimTcp extends CtBotSim {
         }
     }
 
-    public void receiveCommands() {
+    private void receiveCommands() {
         int run = 0; //$$ Variable stinkt
         while (run == 0) {
             try {

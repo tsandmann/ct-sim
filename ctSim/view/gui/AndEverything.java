@@ -12,9 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import ctSim.model.bots.Bot;
-import ctSim.model.bots.components.Actuator;
-import ctSim.model.bots.components.actuators.LcDisplay;
-import ctSim.model.bots.ctbot.components.RemoteControlSensor;
+import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.Sensors;
 import ctSim.util.AuxFrameButton;
 import ctSim.util.Buisitor.Buisit;
 
@@ -29,7 +28,7 @@ public class AndEverything extends BotBuisitor {
 	}
 
 	@Buisit
-	public void buildLcdViewer(LcDisplay d) {
+	public void buildLcdViewer(Actuators.LcDisplay d) {
 		JTextArea t = new JTextArea(d.getModel(), null,
 			d.getNumRows(), d.getNumCols());
 		t.setEnabled(false);
@@ -45,7 +44,7 @@ public class AndEverything extends BotBuisitor {
 	}
 
 	@Buisit
-	public void buildLogViewer(Actuator.Log log, Bot bot) {
+	public void buildLogViewer(Actuators.Log log, Bot bot) {
 		// TextArea bauen
 		JTextArea t = new JTextArea(log.getModel());
 		t.setEditable(false);
@@ -62,7 +61,7 @@ public class AndEverything extends BotBuisitor {
 	}
 
 	@Buisit
-	public void buildRemoteControl(RemoteControlSensor s, Bot bot) {
+	public void buildRemoteControl(Sensors.RemoteControl s, Bot bot) {
 		add(new AuxFrameButton(
 			s.getDescription()+" ("+s.getName()+")",
 			s.getDescription()+" f\u00FCr "+bot.getName(),

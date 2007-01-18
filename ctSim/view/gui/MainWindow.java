@@ -221,13 +221,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		split.resetToPreferredSizes();
 	}
 
-	/** Aktualisiert die GUI */
-	public void update() {
-		for (int i = 0; i < botTabs.getTabCount(); i++)
-			((Updatable)botTabs.getComponentAt(i)).update();
-		worldViewer.update();
-	}
-
 	/**
 	 * Aktualisiert die GUI
 	 * @param time Die Zeit, die zur Simulatorzeit hinzugezaehlt wird
@@ -235,7 +228,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	public void onSimulationStep(long time) {
 		// TODO: alles ganz haesslich:
 		statusBar.updateTime(time);
-		update();
 	}
 
 	/** F&uuml;gt einen neuen Bot hinzu */
@@ -265,14 +257,12 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			}
 		});
 
-		update();
 		updateLayout();
 
 		Debug.out.println("Bot \""+bot.getName()+"\" wurde hinzugefuegt.");
 	}
 
 	public void onBotRemoved(Bot bot) {
-		update();
 		updateLayout();
 
 		Debug.out.println("Bot \""+bot.getName()+"\" wurde gel\uu00F6scht.");

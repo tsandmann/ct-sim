@@ -23,10 +23,11 @@ import java.io.IOException;
 import java.net.ProtocolException;
 
 import ctSim.Connection;
-import ctSim.model.bots.components.actuators.Led;
+import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.MousePictureComponent;
+import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.bots.ctbot.CtBotSim;
-import ctSim.model.bots.ctbot.components.RemoteControlSensor;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -52,7 +53,7 @@ import ctSim.util.Misc;
  * </p>
  * <p>
  * <strong>Beispiel</strong> eines Command:
- *
+ * 
  * <pre>
  * Byte#         Wert            Bedeutung
  * im TCP
@@ -81,7 +82,7 @@ import ctSim.util.Misc;
  *                               wenn der Bot den Inhalt des LCD &uuml;bertr&auml;gt oder
  *                               die Bilddaten, was der Maussensor sieht
  * </pre>
- *
+ * 
  * </p>
  * <p>
  * Im <strong>Fall 1</strong> (realer Bot) besteht das Protokoll aus folgenden
@@ -92,7 +93,8 @@ import ctSim.util.Misc;
  * einzelnen Commands behandelt werden, und wie sie im Detail interpretiert
  * werden, ist in den Bot-Komponenten beschrieben, die das Interpretieren
  * vornehmen. Siehe die Abschnitte <strong>c't-Bot-Protokoll</strong> in den
- * Klassen {@link Led}, {@link RemoteControlSensor} $$ doc c't-Bot-Protokoll </li>
+ * Klassen {@link Actuators.Led}, {@link Sensors.RemoteControl} $$ doc
+ * c't-Bot-Protokoll </li>
  * <li>Beim Start des Sim &uuml;bertr&auml;gt er ein Command mit dem
  * Command-Code {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * (Zu diesem Zeitpunkt kann der Bot schon laufen, d.h. f&uuml;r den Bot kann
@@ -102,8 +104,8 @@ import ctSim.util.Misc;
  * <li>Jederzeit w&auml;hrend der Verbindung kann der Sim ein Command senden,
  * das das Bild anfordert, das der Maussensor auf der Botunterseite sieht
  * (Command-Code {@link Code#SENS_MOUSE_PICTURE SENS_MOUSE_PICTURE}). Der Bot
- * beantwortet das mit einer Serie von Commands mit dem Aufbau, der in $$$ MousePictureC
- * beschrieben ist. </li>
+ * beantwortet das mit einer Serie von Commands mit dem Aufbau, der in
+ * {@link MousePictureComponent} beschrieben ist. </li>
  * </ul>
  * </p>
  * <p>
@@ -119,7 +121,7 @@ import ctSim.util.Misc;
  * verwendet intern Little-Endian &ndash; Konvertierung erfolgt zu Fu&szlig; in
  * dieser Klasse.
  * </p>
- *
+ * 
  * @author Benjamin Benz (bbe@heise.de)
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
@@ -171,6 +173,7 @@ public class Command {
 		 * "Steuerung Klappe" beschrieben, aber die Bedeutung hat ja schon
 		 * ACT_SERVO)
 		 */
+		@Deprecated
 		ACT_DOOR('d'),
 
 		/** LEDs */

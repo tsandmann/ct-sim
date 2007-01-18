@@ -23,10 +23,7 @@ import javax.vecmath.Vector3d;
 
 import ctSim.model.World;
 import ctSim.model.bots.components.NumberTwin;
-import ctSim.model.bots.ctbot.components.BorderSensor;
-import ctSim.model.bots.ctbot.components.DistanceSensor;
-import ctSim.model.bots.ctbot.components.LightSensor;
-import ctSim.model.bots.ctbot.components.LineSensor;
+import ctSim.model.bots.components.Sensors;
 
 /**
  * Klasse aller simulierten c't-Bots, die nur innerhalb des Simulators existieren
@@ -58,17 +55,17 @@ public class CtBotSimTest extends CtBotSim {
 	}
 
 	private void initSensors() {
-		irL = new DistanceSensor(true);
-		irR = new DistanceSensor(false);
+		irL = new Sensors.Distance(true);
+		irR = new Sensors.Distance(false);
 
-		lineL = new LineSensor(true);
-		lineR = new LineSensor(false);
+		lineL = new Sensors.Line(true);
+		lineR = new Sensors.Line(false);
 
-		borderL = new BorderSensor(true);
-		borderR = new BorderSensor(false);
+		borderL = new Sensors.Border(true);
+		borderR = new Sensors.Border(false);
 
-		lightL = new LightSensor(true);
-		lightR = new LightSensor(false);
+		lightL = new Sensors.Light(true);
+		lightR = new Sensors.Light(false);
 	}
 
 	private void initActuators() {

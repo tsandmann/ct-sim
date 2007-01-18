@@ -20,7 +20,6 @@
 package ctSim.model.bots;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -28,7 +27,6 @@ import javax.vecmath.Vector3d;
 import ctSim.model.AliveObstacle;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotPosition;
-import ctSim.model.bots.components.Sensor;
 import ctSim.model.bots.components.BotComponent.ConnectionFlags;
 import ctSim.view.gui.BotBuisitor;
 
@@ -189,8 +187,6 @@ public abstract class Bot extends AliveObstacle {
 
 	private BotPosition posHead;
 
-    private final List<Sensor> sens = new ArrayList<Sensor>();
-
 	/** Liste mit den verschiedenen Aussehen eines Bots */
 //	private HashMap appearances;
 
@@ -251,21 +247,9 @@ public abstract class Bot extends AliveObstacle {
 	/** @return Der Positionsanzeiger */
 	public final BotPosition getBotPosition() { return this.posHead; }
 
-	//$$$
-	protected final void addSensor(Sensor sen) { sens.add(sen); }
-
-	@Override
-	public void updateSimulation(long simulTime) {
-		super.updateSimulation(simulTime);
-		for(Sensor s : sens)
-			s.update();
-	}
-
 	public void accept(BotBuisitor buisitor) {
 		for (BotComponent<?> c : components)
 			buisitor.visit(c, this);
-		for (Sensor<?> s : sens)
-			buisitor.visit(s, this);
 		buisitor.visit(posHead, this);
 	}
 

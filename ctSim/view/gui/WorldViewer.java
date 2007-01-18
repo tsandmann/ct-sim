@@ -178,10 +178,6 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     	return offScreenCanvas.getOffScreenBuffer().getImage();
     }
 
-    public void update() { //$$ Ist wohl ueberfluessig: MainWindow koennte auch einfach repaint() auf sich aufrufen, dann werden wir auch nach nem Repaint gefragt
-		repaint();
-    }
-
     /**
 	 * MinimumSize ist (1,1): Erm&ouml;glicht der SplitPane, die uns
 	 * enth&auml;lt, ihren Divider zu &auml;ndern. W&uuml;rden wir unsere
