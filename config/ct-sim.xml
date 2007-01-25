@@ -7,7 +7,7 @@
 	</description>
 
 	<!-- ctSimTimeout ist die Zeit in [ms], die der Controller maximal auf einen Bot wartet -->
-	<parameter name="ctSimTimeout" value="2000"/>
+	<parameter name="ctSimTimeout" value="100"/>
 	<!-- AliveObstacleTimeout ist die Zeit in [ms], die die work()-Methode eines AliveObstacles brauchen darf, um zum ende zu kommen. Wird sie ueberschritten, deakticviert sich das Obstacle selbst. Steht der Timeout auf 0, hat es beliebig viel Zeit -->
 	<parameter name="AliveObstacleTimeout" value="0"/>
 
@@ -20,7 +20,7 @@
 	<parameter name="botport" value="10001"/>
 
 	<!-- botbinary ist die Bot-Datei, die per default gestartet wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt. Angabe unabhaengig von botdir-->
-	<parameter name="botbinary" value="c:/Dokumente und Einstellungen/hkr/Eigene Dateien/ct-bot.exe"/>
+	<parameter name="botbinary" value="..\ct-Bot\Debug-W32\ct-Bot.exe"/>
 	<!-- botdir ist das Verzeichnis, in dem nach Bots gesucht wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt -->
 	<parameter name="botdir" value="..\ct-Bot\Debug-W32"/>
 

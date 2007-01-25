@@ -1,6 +1,8 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-25 20:46 Hendrik Krauss [hkr@heise.de]: Mist -- ct-sim.xml, .classpath, .project versehentlich mitcommittet. Rueckgaengig
+
 2007-01-25 20:46 Hendrik Krauss [hkr@heise.de]:
 * Neu: Split-Model-Ansatz fuer BotComponents (haben jetzt ein internes und ein externes Model), um Threadsicherheit zu garantieren; Doku folgt
 * Neu: Bot-Komponente Uhr (sagt ihm die Simzeit)
