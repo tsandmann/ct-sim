@@ -10,39 +10,40 @@ import ctSim.util.Misc;
 //$$ doc
 public class CommandOutputStream {
 	private final Map<Command.Code, Command> buffer = Misc.newMap();
-	private Command doneCommand = null;
 	private final BufferedOutputStream underlyingStream;
-	private int seq = 0; //$$ Die Sequenznummer wird irgendwann groesser als 2^16. Spaeter wrappt die auch und wird negativ. Damit sollte man irgendwie umgehen
+	private int seq = 0; //$$ Die Sequenznummer wird irgendwann groesser das Feld, in dem sie uebermittelt wird. Spaeter wrappt die auch und wird negativ. Damit sollte man irgendwie umgehen
 
 	public CommandOutputStream(OutputStream underlyingStream) {
 		this.underlyingStream = new BufferedOutputStream(underlyingStream);
 	}
 
 	public synchronized Command getCommand(Command.Code c) {
-		// Spezialfall "DONE"
-		if (c == Command.Code.DONE) {
-			if (doneCommand == null)
-				doneCommand = new Command(Command.Code.DONE);
-			return doneCommand;
-		}
-
-		// Alle andern
 		if (! buffer.containsKey(c))
 			buffer.put(c, new Command(c));
 		return buffer.get(c);
 	}
 
+	// toleriert null schweigend
 	private synchronized void write(Command c) throws IOException {
+		if (c == null)
+			return;
 		c.setSeq(seq++);
 		underlyingStream.write(c.getCommandBytes());
 	}
 
+	// Reihenfolge wichtig, sonst kommt der Bot-Steuercode durcheinander 
+	// 1. Alles ausser SENS_ERROR und DONE
+	// 2. SENS_ERROR
+	// 3. DONE
 	public synchronized void flush() throws IOException {
+		Command error = buffer.remove(Command.Code.SENS_ERROR); // ist evtl null
+		Command done = buffer.remove(Command.Code.DONE); // ist evtl null
+
 		for (Command c : buffer.values())
 			write(c);
-		//$$ doc Normalbetrieb kommt nicht vor
-		if (doneCommand != null)
-			write(doneCommand);
+		write(error); 
+		write(done);
+
 		underlyingStream.flush();
 		buffer.clear();
 	}

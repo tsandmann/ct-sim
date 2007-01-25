@@ -46,7 +46,7 @@ import ctSim.view.gui.Debug;
 public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
 
-   private static final CountingMap numInstances = new CountingMap();
+	private static final CountingMap numInstances = new CountingMap();
 
 	private final List<Runnable> deathListeners = Misc.newList();
 	private final List<Closure<Color>> appearanceListeners = Misc.newList();
@@ -70,7 +70,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private int obstState = OBST_STATE_NORMAL;
 
 	private String name;
-	private Point3d posInWorldCoord;
+	private Point3d posInWorldCoord = new Point3d();
 
 	/**
 	 * Letzte Position, an dem sich das AliveObstacle befand und dabei der
@@ -82,7 +82,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 */
 	private Point3d lastSafePos = new Point3d();
 
-	private Vector3d headingInWorldCoord;
+	private Vector3d headingInWorldCoord = new Vector3d();
 
 	/** Verweis auf den zugehoerigen Controller */
 	// TODO: Verweis auf Controller wirklich noetig?
@@ -287,6 +287,10 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 * @param posInWorldCoord Die Position, an die der Bot gesetzt werden soll
 	 */
 	public final synchronized void setPosition(Point3d posInWorldCoord) {
+		// Optimierung (Transform-Kram ist teuer)
+		if (this.posInWorldCoord.equals(posInWorldCoord))
+			return;
+
 		this.posInWorldCoord = posInWorldCoord;
 
 		Transform3D t = new Transform3D();
@@ -300,6 +304,10 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 	//$$ Ziemlicher Quatsch, dass das ein Vector3 ist: double mit dem Winkel drin waere einfacher und wuerde dasselbe leisten
 	public final synchronized void setHeading(Vector3d headingInWorldCoord) {
+		// Optimierung (Transform-Kram ist teuer)
+		if (this.headingInWorldCoord.equals(headingInWorldCoord))
+			return;
+
 		/*
 		 * Sinn der Methode: Transform3D aktualisieren, das von Bot- nach
 		 * Weltkoordinaten transformiert. (Dieses steckt in unserer
@@ -354,7 +362,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 				// Stoppe die Zeit, die work() benoetigt
 				long realTimeBegin = System.currentTimeMillis();
 
-				// Ein AliveObstacle darf nur dann seine work()-Routine 
+				// Ein AliveObstacle darf nur dann seine work()-Routine
 				// ausfuehren, wenn es nicht Halted ist
 				if ((this.obstState & OBST_STATE_HALTED) == 0)
 					work();

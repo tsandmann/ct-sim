@@ -93,7 +93,7 @@ public class Leds extends BotBuisitor {
 	@Buisit
 	public void buisit(Actuators.Led led) {
 		setBorder(new TitledBorder("LEDs"));
-		add(new LedViewer(led.getModel(), led.isGuiEditable(), led.getName(),
-			led.getColorWhenOn()));
+		add(new LedViewer(led.getExternalModel(), led.isGuiEditable(), 
+			led.getName(), led.getColorWhenOn()));
 	}
 }

@@ -7,9 +7,11 @@ import javax.swing.SpinnerNumberModel;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
+import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWrite;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
 import ctSim.model.bots.components.BotComponent.SimpleSensor;
+import ctSim.util.FmtLogger;
 import ctSim.view.gui.RemoteControlViewer;
 
 //	$$ doc
@@ -88,6 +90,53 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_BORDER; }
 	}
 
+	public static class Clock extends BotComponent<Void>
+	implements CanRead, CanWrite {
+		final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.components");
+
+		private int lastTransmittedSimTime = -1;
+
+		public synchronized void setSimTimeInMs(int simTime) {
+			lastTransmittedSimTime = simTime;
+			// Wir haben nur 16 Bit zur Verfuegung und 10.000 ist ne nette
+			// Zahl ;-)
+			//$$ "Nette Zahl"? Noch alle Nadeln anner Tanne?
+			lastTransmittedSimTime %= 10000;
+		}
+
+		// Hat andere Aufgaben als {@link IntegerComponent#readFrom(Command)}
+		public synchronized void readFrom(Command c) {
+			if (c.getDataL() != lastTransmittedSimTime) {
+				if (lastTransmittedSimTime == -1)
+					// Fuer's allererste DONE-Kommando doch nicht warnen
+					return;
+				lg.warn("Bot-Steuercode hat unerwartete lastTransmitted-Zeit "+
+						"gesendet (erwartet: %d, tats\u00E4chlich: %d); dies "+
+						"deutet darauf hin, dass der Steuercode Simschritte "+
+						"verschlafen hat",
+						lastTransmittedSimTime, c.getDataL());
+			}
+		}
+
+		public synchronized void writeTo(Command c) {
+			c.setDataL(lastTransmittedSimTime);
+		}
+
+		public void updateExternalModel() {
+			// No-op, weil wir werden ja eh nicht angezeigt und operieren
+			// direkt auf dem ExternalModel
+		}
+
+		@Override
+		public String getDescription() {
+			return "Simulationszeit-Uhr (Millisekunden)";
+		}
+
+		public Clock() { super(null); }
+		@Override public String getName() { return "Uhr"; }
+		public Code getHotCmdCode() { return Command.Code.DONE; }
+	}
+
 	public static class Mouse extends NumberTwin
 	implements CanWrite, SimpleSensor {
 		/**
@@ -107,14 +156,16 @@ public class Sensors {
 
 		@Override
 		public String getName() {
-			return "Mouse" + (isX ? "X" : "Y");
+			// Unicode 0394: grosses Delta
+			return "Mouse \u0394" + (isX ? "X" : "Y");
 		}
 
 		@Override
 		public String getDescription() {
-			return "Maus-Sensor (" +
-				(isX ? "X" : "Y") +
-				"-Komponente)";
+			return "Maus-Sensor: " + 
+				(isX 
+				? "Drehgeschwindigkeit (X-Komponente)" 
+				: "Geradeaus-Geschwindigkeit (Y-Komponente)");
 		}
 
 		@Override protected String getBaseDescription() { return ""; }
@@ -126,8 +177,8 @@ public class Sensors {
 	 * <p>
 	 * Software-Emulation der Fernbedienung. Spezielles Verhalten beim
 	 * Schreiben: Nur, wenn sein Wert ungleich 0 ist, sendet der Sensor.
-	 * Anschlie&szlig;end setzt er seinen Wert auf 0 zur&uuml;ck, so dass pro
-	 * Tastendruck in der Fernbedienungs-Gui ein Command auf den Draht gegeben
+	 * Nach dem Senden setzt er seinen Wert auf 0 zur&uuml;ck, so dass pro
+	 * Tastendruck in der Fernbedienungs-Gui ein {@link Command} auf den Draht gegeben
 	 * wird.
 	 * </p>
 	 * <p>
@@ -136,10 +187,6 @@ public class Sensors {
 	 * {@link RemoteControlViewer}). Die Zahl steht im Feld {@code dataL}, die
 	 * &uuml;brigen Felder werden nicht ver&auml;ndert.
 	 * </p>
-	 *
-	 * @author Peter K&ouml;nig
-	 * @author Hendrik Krau&szlig; &lt;<a
-	 * href="mailto:hkr@heise.de">hkr@heise.de</a>>
 	 */
 	public static class RemoteControl extends BotComponent<Void>
 	implements CanWrite, CanWriteAsynchronously {
@@ -150,14 +197,14 @@ public class Sensors {
 			asyncOut = s;
 		}
 
-		public void writeTo(Command c) {
+		public synchronized void writeTo(Command c) {
 			if (syncPendingRcCode == 0)
 				return;
 			c.setDataL(syncPendingRcCode);
 			syncPendingRcCode = 0;
 		}
 
-		public void send(int rc5Code) throws IOException {
+		public synchronized void send(int rc5Code) throws IOException {
 			if (writesAsynchronously()) {
 				// Gleich schreiben
 				synchronized (asyncOut) {
@@ -175,6 +222,7 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_RC5; }
 	}
 
+	// ExModel
 	public static class Door extends BotComponent<SpinnerNumberModel>
 	implements SimpleSensor, CanWrite {
 		@Override
@@ -186,11 +234,12 @@ public class Sensors {
 		public Door() { super(new SpinnerNumberModel()); }
 		public Code getHotCmdCode() { return Code.SENS_DOOR; }
 
-		public void writeTo(Command c) {
-			c.setDataL(getModel().getNumber().intValue());
+		public synchronized void writeTo(Command c) {
+			c.setDataL(getExternalModel().getNumber().intValue()); //$$$ nicht threadsicher: writeTo laeuft nicht aufm EDT
 		}
 	}
 
+	// ExModel
 	public static class Trans extends BotComponent<SpinnerNumberModel>
 	implements SimpleSensor, CanWrite {
 		@Override
@@ -202,11 +251,12 @@ public class Sensors {
 		public Trans() { super(new SpinnerNumberModel()); }
 		public Code getHotCmdCode() { return Code.SENS_TRANS; }
 
-		public void writeTo(Command c) {
-			c.setDataL(getModel().getNumber().intValue());
+		public synchronized void writeTo(Command c) {
+			c.setDataL(getExternalModel().getNumber().intValue()); //$$$ nicht threadsicher: writeTo laeuft nicht aufm EDT
 		}
 	}
 
+	// ExModel
 	public static class Error extends BotComponent<SpinnerNumberModel>
 	implements SimpleSensor, CanWrite {
 		@Override
@@ -218,8 +268,8 @@ public class Sensors {
 		public Error() { super(new SpinnerNumberModel()); }
 		public Code getHotCmdCode() { return Code.SENS_ERROR; }
 
-		public void writeTo(Command c) {
-			c.setDataL(getModel().getNumber().intValue());
+		public synchronized void writeTo(Command c) {
+			c.setDataL(getExternalModel().getNumber().intValue()); //$$$ nicht threadsicher: writeTo laeuft nicht aufm EDT
 		}
 	}
 }

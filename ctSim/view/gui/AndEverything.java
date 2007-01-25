@@ -29,7 +29,7 @@ public class AndEverything extends BotBuisitor {
 
 	@Buisit
 	public void buildLcdViewer(Actuators.LcDisplay d) {
-		JTextArea t = new JTextArea(d.getModel(), null,
+		JTextArea t = new JTextArea(d.getExternalModel(), null,
 			d.getNumRows(), d.getNumCols());
 		t.setEnabled(false);
 		t.setEditable(false); //$$$ t focusable, focus stealing
@@ -47,7 +47,7 @@ public class AndEverything extends BotBuisitor {
 	@Buisit
 	public void buildLogViewer(Actuators.Log log, Bot bot) {
 		// TextArea bauen
-		JTextArea t = new JTextArea(log.getModel());
+		JTextArea t = new JTextArea(log.getExternalModel());
 		t.setEditable(false);
 		t.setColumns(70);
 		t.setRows(25);

@@ -93,8 +93,8 @@ import ctSim.util.Misc;
  * einzelnen Commands behandelt werden, und wie sie im Detail interpretiert
  * werden, ist in den Bot-Komponenten beschrieben, die das Interpretieren
  * vornehmen. Siehe die Abschnitte <strong>c't-Bot-Protokoll</strong> in den
- * Klassen {@link Actuators.Led}, {@link Sensors.RemoteControl} $$ doc
- * c't-Bot-Protokoll </li>
+ * Klassen {@link Actuators.Led}, {@link Sensors.RemoteControl}
+ * $$ doc-c't-Bot-Protokoll </li>
  * <li>Beim Start des Sim &uuml;bertr&auml;gt er ein Command mit dem
  * Command-Code {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * (Zu diesem Zeitpunkt kann der Bot schon laufen, d.h. f&uuml;r den Bot kann
@@ -235,7 +235,8 @@ public class Command {
 				if (c.toUint7() == b)
 					return c;
 			}
-			throw new ProtocolException("Command-Code "+b+" unbekannt");
+			throw new ProtocolException("Command-Code "+formatChar(b)+
+				" unbekannt");
 		}
 	}
 
@@ -290,7 +291,8 @@ public class Command {
 				if (c.toUint7() == b)
 					return c;
 			}
-			throw new ProtocolException("Sub-Command-Code "+b+" unbekannt");
+			throw new ProtocolException("Sub-Command-Code "+formatChar(b)+
+				" unbekannt");
 		}
 	}
 
@@ -431,7 +433,7 @@ public class Command {
 		return data;
 	}
 
-	private static String formatChar(int aChar) {
+	static String formatChar(int aChar) {
 		if (aChar > 32 && aChar <= 255)
 			return String.format("'%c' (%d)", aChar, aChar);
 		else

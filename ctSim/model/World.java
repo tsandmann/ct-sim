@@ -164,6 +164,7 @@ public class World {
 	 * Pause-Knopf gedr&uuml;ckt wird. Simzeit und Realzeit unterscheiden
 	 * sich also sowohl um Summanden als auch um einen Faktor.
 	 */
+    //$$ Sollte int werden, long irrefuehrend
     public long getSimTimeInMs() { //$$ Nachverfolgen, wo das ueberall auftaucht und Doku + Variablennamen klarer machen
 		return simTimeInMs;
     }

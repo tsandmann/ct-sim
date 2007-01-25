@@ -1,6 +1,15 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-25 20:46 Hendrik Krauss [hkr@heise.de]:
+* Neu: Split-Model-Ansatz fuer BotComponents (haben jetzt ein internes und ein externes Model), um Threadsicherheit zu garantieren; Doku folgt
+* Neu: Bot-Komponente Uhr (sagt ihm die Simzeit)
+* Fix: Seit Commit 18. Jan 12:45 war Simulation subtil defekt. Grund: Bot verlaesst sich darauf, dass SENS_ERROR das vorletzte Kommando ist (DONE das letzte). Sim hat es irgendwo geschickt, nicht unbedingt als letztes. CommandOutputStream weiss das jetzt und ist nebenbei einfacher geworden
+* SimBotTcpDump startet neu, wenn es die Verbindung verliert
+* Wieder eigene Datei: LcDisplayTest
+* Umgezogen: MemoryLeakTest
+* Kleinigkeiten
+
 2007-01-18 17:32 Hendrik Krauss [hkr@heise.de]:
 * Neu: Asynchrones Schreiben fuer Bot-Komponenten (RemoteControl, MousePicture)
 * Neu: MousePicture wird angezeigt

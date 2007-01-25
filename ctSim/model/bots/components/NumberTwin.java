@@ -2,6 +2,8 @@ package ctSim.model.bots.components;
 
 
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import ctSim.model.Command;
 import ctSim.model.bots.ctbot.CtBotSimTcp.NumberTwinVisitor;
@@ -10,10 +12,19 @@ import ctSim.model.bots.ctbot.CtBotSimTcp.NumberTwinVisitor;
 // ist Haelfte eines Paars (z.B. IrL + IrR)
 //$$$ Ganze links/rechts-Geschichte; statische Factory?
 public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
+	Number internalModel = Double.valueOf(0); //$$$ visibility
 	protected final boolean isLeft;
 
 	public NumberTwin(boolean isLeft) {
 		super(new SpinnerNumberModel());
+		getExternalModel().addChangeListener(new ChangeListener() {
+			public void stateChanged(
+			@SuppressWarnings("unused") ChangeEvent e) {
+				synchronized(NumberTwin.this) {
+					internalModel = getExternalModel().getNumber();
+				}
+			}
+		});
 		this.isLeft = isLeft;
 	}
 
@@ -32,28 +43,34 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 		       + (isLeft ? "links" : "rechts");
 	}
 
-	public void readFrom(Command c) {
-		getModel().setValue(isLeft ? c.getDataL() : c.getDataR());
+	public synchronized void readFrom(Command c) {
+		internalModel = isLeft ? c.getDataL() : c.getDataR();
 	}
 
-	public void writeTo(Command c) {
-		// Verengende Konvertierung double -> int
-		int value = getModel().getNumber().intValue();
+	public synchronized void writeTo(Command c) {
+		// Verengende Konvertierung Number -> int
+		int value = internalModel.intValue();
 		if (isLeft)
 			c.setDataL(value);
 		else
 			c.setDataR(value);
 	}
 
-	public void set(Number n) {
-		getModel().setValue(n);
+	public synchronized void updateExternalModel() {
+		getExternalModel().setValue(internalModel);
 	}
 
-	public Number get() {
-		return getModel().getNumber();
+	/** Nur auf dem EDT laufenlassen */
+	public synchronized void set(Number n) {
+		getExternalModel().setValue(n);
 	}
 
-	public void accept(NumberTwinVisitor visitor) {
+	/** Nur auf dem EDT laufenlassen */
+	public synchronized Number get() {
+		return getExternalModel().getNumber();
+	}
+
+	public void acceptNumTwinVisitor(NumberTwinVisitor visitor) {
 		visitor.visit(this, isLeft);
 	}
 }

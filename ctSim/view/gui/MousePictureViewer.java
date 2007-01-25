@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -23,6 +24,7 @@ import ctSim.util.Buisitor.Buisit;
 public class MousePictureViewer extends BotBuisitor {
 	private static final long serialVersionUID = - 2167640810854877294L;
 
+	//$$$ Breiter
 	//$$$ t Bei Klick auch holen
 	public static class ImageViewer extends JPanel implements Closure<Image> {
 		private static final long serialVersionUID = 3878110649950448386L;
@@ -34,14 +36,15 @@ public class MousePictureViewer extends BotBuisitor {
 		public ImageViewer(double scaleFactor, MousePictureComponent c) {
 			c.addImageListener(this);
 			setToolTipText(c.getDescription());
-			setBorder(BorderFactory.createLoweredBevelBorder()); //$$$ t bevel mouse picture
+			setBorder(BorderFactory.createLoweredBevelBorder()); //$$$ t bevel, insets
 			targetWidth  = (int)Math.round(scaleFactor * c.getWidth());
 			targetHeight = (int)Math.round(scaleFactor * c.getHeight());
 		}
 
 		// Wir sind ja ein ImageListener, daher brauchen wir eine
 		// run(Image)-Methode
-		public void run(Image img) {
+		/** Methode einer Swing-Komponente, aber thread-sicher */
+		public synchronized void run(Image img) {
 			this.image = img.getScaledInstance(targetWidth, targetHeight,
 				Image.SCALE_SMOOTH);
 			repaint();
@@ -58,9 +61,12 @@ public class MousePictureViewer extends BotBuisitor {
 
 		@Override
 		public Dimension getPreferredSize() {
-			return new Dimension(targetWidth, targetHeight);
+			Insets is = getBorder().getBorderInsets(this);
+			return new Dimension(targetWidth  + is.left + is.right, 
+			                     targetHeight + is.top  + is.bottom);
 		}
 
+		//$$ Koennte beim resize auch wirklich skalieren, wozu haben wir den scaleFactor
 		@Override
 		public Dimension getMinimumSize() {
 			return getPreferredSize();

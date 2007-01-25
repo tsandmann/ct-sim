@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 
 import javax.media.j3d.Transform3D;
+import javax.swing.SwingUtilities;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -30,8 +31,9 @@ import ctSim.SimUtils;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
-import ctSim.model.bots.components.Actuators.Log;
+import ctSim.model.bots.ctbot.CtBotSimTcp.BotComponentVisitor;
 
+//$$$ externes Model: in Subklassen, internes: hier
 //$$ doc
 /**
  * <p>
@@ -46,9 +48,9 @@ import ctSim.model.bots.components.Actuators.Log;
  * {@link Sensors.Mouse}, der immer innerhalb des Sim berechnet und nicht von
  * der Verbindung gelesen wird). Manche Components k&ouml;nnen sich auch aufs
  * TCP (USB) schreiben (Beispiel: {@link Sensors.RemoteControl}, Gegenbeispiel:
- * {@link Log}, das nie aus dem Sim herausgesendet wird). Die F&auml;higkeiten
- * &quot;kann lesen&quot; und &quot;kann schreiben&quot; sind unabh&auml;ngig,
- * jede Kombination ist m&ouml;glich.&lt;/p&gt;
+ * {@link Actuators.Log}, das nie aus dem Sim herausgesendet wird). Die
+ * F&auml;higkeiten &quot;kann lesen&quot; und &quot;kann schreiben&quot; sind
+ * unabh&auml;ngig, jede Kombination ist m&ouml;glich.</p>
  * <p>
  * Die <em>grunds&auml;tzliche</em> F&auml;higkeit &quot;Lesen
  * k&ouml;nnen&quot; oder &quot;Schreiben k&ouml;nnen&quot; wird durch die
@@ -71,7 +73,7 @@ public abstract class BotComponent<M> {
 		 * Nicht aufrufen &ndash; stattdessen
 		 * {@link BotComponent#offerRead(Command)} verwenden.
 		 */
-		public void readFrom(Command c) throws ProtocolException;
+		void readFrom(Command c) throws ProtocolException;
 
 		/**
 		 * Nicht aufrufen &ndash; sollte nur von
@@ -79,15 +81,22 @@ public abstract class BotComponent<M> {
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet
 		 * werden.
 		 */
-		public Code getHotCmdCode();
+		Code getHotCmdCode();
+
+		/** Nur auf dem EDT laufenlassen */
+		void updateExternalModel();
 	}
 
+	/**
+	 * Schreibbare (genauer: von der UI aus &auml;nderbare) Dinger sollten sich
+	 * auf ihrem externen Model als Listener anmelden
+	 */
 	protected interface CanWrite {
 		/**
 		 * Nicht aufrufen &ndash; stattdessen
 		 * {@link BotComponent#askForWrite(CommandOutputStream)} verwenden.
 		 */
-		public void writeTo(Command c);
+		void writeTo(Command c);
 
 		/**
 		 * Nicht aufrufen &ndash; sollte nur von
@@ -95,11 +104,11 @@ public abstract class BotComponent<M> {
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet
 		 * werden.
 		 */
-		public Code getHotCmdCode();
+		Code getHotCmdCode();
 	}
 
 	protected interface CanWriteAsynchronously {
-		public void setAsyncWriteStream(CommandOutputStream s);
+		void setAsyncWriteStream(CommandOutputStream s);
 	}
 
 	public interface SimpleSensor { //$$$ abstract class
@@ -112,15 +121,15 @@ public abstract class BotComponent<M> {
 
 	public static enum ConnectionFlags { READS, WRITES, WRITES_ASYNCLY }
 
-	private final M model;
+	private final M externalModel;
 
 	/** Anf&auml;nglich alles false */
 	private EnumSet<ConnectionFlags> flags =
 		EnumSet.noneOf(ConnectionFlags.class);
 
-	public BotComponent(M model) { this.model = model; }
+	public BotComponent(M externalModel) { this.externalModel = externalModel; }
 
-	public M getModel() { return model; } //$$$ ? verunumstaendlichen
+	public M getExternalModel() { return externalModel; }
 
 	private UnsupportedOperationException createUnsuppOp(String s) {
 		return new UnsupportedOperationException("Bot-Komponente "+this+
@@ -175,6 +184,14 @@ public abstract class BotComponent<M> {
 			self.readFrom(c);
 	}
 
+	public void askToUpdateExternalModel() {
+		if (! readsCommands())
+			return;
+		assert SwingUtilities.isEventDispatchThread();
+		// Cast kann nicht in die Hose gehen wegen setFlags()
+		((CanRead)this).updateExternalModel();
+	}
+
 	public void askForWrite(final CommandOutputStream s) {
 		if (! writesSynchronously())
 			return;
@@ -183,11 +200,22 @@ public abstract class BotComponent<M> {
 		self.writeTo(s.getCommand(self.getHotCmdCode()));
 	}
 
+	public void offerAsyncWriteStream(CommandOutputStream s) {
+		if (! writesAsynchronously())
+			return;
+		// Cast kann nicht in die Hose gehen wegen setFlags()
+		((CanWriteAsynchronously)this).setAsyncWriteStream(s);
+	}
+
 	/** @return Gibt den Namen der Komponente zur&uuml;ck */
 	public String getName() { return name; } //$$$ abstract machen
 
 	/** @return Beschreibung der Komponente */
 	public abstract String getDescription();
+
+	public void acceptCompntVisitor(BotComponentVisitor visitor) {
+		visitor.visit(this);
+	}
 
 	////////////////////////////////////////////////////////////////////////
 	//$$ Nur noch fuer BotPosition wichtig, alles unter der Linie
@@ -206,7 +234,7 @@ public abstract class BotComponent<M> {
 	 * @param rH relative Blickrichtung
 	 */
 	public BotComponent(String n, Point3d rP, Vector3d rH) {
-		model = null;
+		externalModel = null;
 		this.name    = n;
 		this.relPos  = rP;
 		this.relHead = rH;

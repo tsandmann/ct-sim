@@ -49,7 +49,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private final int[] pixels = new int[WIDTH * HEIGHT];
 	private boolean syncRequestPending = false;
 	private final List<Closure<Image>> imageLi = Misc.newList();
+	private boolean imageEventPending = false;
 	private final List<Runnable> completionLi = Misc.newList();
+	private boolean completionEventPending = false;
 	private CommandOutputStream asyncOut;
 
 	public MousePictureComponent() { super(null); }
@@ -58,7 +60,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		asyncOut = s;
 	}
 
-	public void requestPicture() throws IOException {
+	public synchronized void requestPicture() throws IOException {
 		if (writesAsynchronously()) {
 			synchronized (asyncOut) {
 				asyncOut.getCommand(getHotCmdCode());
@@ -69,8 +71,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	@Override
-	public void askForWrite(CommandOutputStream s) {
-		if (writesSynchronously() && syncRequestPending) {
+	public synchronized void askForWrite(CommandOutputStream s) {
+		if (syncRequestPending && writesSynchronously()) {
 			// Anforderung absetzen
 			s.getCommand(getHotCmdCode());
 			syncRequestPending = false;
@@ -114,7 +116,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		return 255 << 24 | r << 16 | g << 8 | b;
 	}
 
-	public void readFrom(Command c) {
+	public synchronized void readFrom(Command c) {
 		//LODO Ist alles ziemlich zerbrechlich. Was zum Beispiel, wenn der Bot aufgrund eines Bug eine dataL ausserhalb des Arrays sendet? -> Mehr Input Validation, wofuer haben wir den ProtocolExceptions
 		if (! c.has(getHotCmdCode()))
 			return;
@@ -135,17 +137,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			pixels[(col * HEIGHT) + row] = colorFromRgb(gray, gray, gray);
 		}
 
-		Image img = Toolkit.getDefaultToolkit().createImage(
-			new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
-
-		for (Closure<Image> li : imageLi)
-			li.run(img);
-
-		if (offset + i == pixels.length) {
-			// Array voll: Listenern bescheidgeben
-			for (Runnable li : completionLi)
-				li.run();
-		}
+		imageEventPending = true;
+		if (offset + i == pixels.length)
+			// Array voll: Flag setzen fuer "Listenern bescheidgeben"
+			completionEventPending = true;
 	}
 
 	/**
@@ -184,5 +179,21 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	public void removeCompletionListener(Runnable li) {
 		completionLi.remove(li);
+	}
+
+	public synchronized void updateExternalModel() {
+		if (imageEventPending) {
+			imageEventPending = false;
+			Image img = Toolkit.getDefaultToolkit().createImage(
+				new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
+			for (Closure<Image> li : imageLi)
+				li.run(img);
+		}
+
+		if (completionEventPending) {
+			completionEventPending = false;
+			for (Runnable li : completionLi)
+				li.run();
+		}
 	}
 }

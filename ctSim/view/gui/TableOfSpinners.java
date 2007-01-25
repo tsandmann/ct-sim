@@ -90,7 +90,7 @@ public abstract class TableOfSpinners extends BotBuisitor {
 
 		public void addBotComponent(BotComponent<? extends SpinnerModel> c) {
 			addRow(c.getName(), c.getDescription(), c.isGuiEditable(),
-				c.getModel());
+				c.getExternalModel());
 		}
     }
 
