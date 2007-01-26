@@ -46,8 +46,8 @@ public abstract class Connection {
 	 * verwenden, flushen wollen &amp;ndash; daher m&uuml;ssen die das machen
 	 * mit dem BufferedOutputStream.
 	 */
-	private DataOutputStream output;
-
+	private DataOutputStream output = null;
+	
 	/**
 	 * Aufbau:
 	 *
@@ -67,8 +67,10 @@ public abstract class Connection {
 	 * `------------------------------------------´
 	 * </pre>
 	 */
-	private DataInputStream input;
+	private DataInputStream input = null;
 
+	private CommandOutputStream cmdOutStream = null;
+	
 	/**
 	 * Beendet die laufende Verbindung
 	 *
@@ -94,9 +96,11 @@ public abstract class Connection {
 		output.flush();
 	}
 
-	//$$ verwendet?
-	public synchronized CommandOutputStream createCmdOutStream() {
-		return new CommandOutputStream(output);
+	// Singleton mit lazy init fuer bessere Performance
+	public synchronized CommandOutputStream getCmdOutStream() {
+		if (cmdOutStream == null)
+			cmdOutStream = new CommandOutputStream(output);
+		return cmdOutStream;
 	}
 
 	public void read(byte[] b) throws IOException {

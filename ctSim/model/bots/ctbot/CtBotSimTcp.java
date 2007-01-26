@@ -24,8 +24,6 @@ import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES;
 import java.awt.Color;
 import java.io.IOException;
 import java.net.ProtocolException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
 import javax.vecmath.Point3d;
@@ -41,8 +39,8 @@ import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.NumberTwin;
 import ctSim.model.bots.components.Sensors;
+import ctSim.model.bots.components.WelcomeReceiver;
 import ctSim.util.FmtLogger;
-import ctSim.util.Misc;
 
 /**
  * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator
@@ -66,26 +64,11 @@ public class CtBotSimTcp extends CtBotSim {
 	/** Die TCP-Verbindung */
 	private final Connection connection;
 
-	private ArrayList<Command> commandBuffer = Misc.newList();
-
-	/** Sequenznummer der TCP-Pakete */
-	private int seq = 0;
-
-	private World world; //$$$ final
+	private World world; //$$$ final 
 
 	private final MasterSimulator masterSimulator;
 
 	///////////////////////////////////////////////////////////////////////////
-
-	//$$$ Verschieben
-	public interface BotComponentVisitor {
-		public void visit(BotComponent<?> compnt);
-	}
-
-	//$$$ Verschieben
-	public interface NumberTwinVisitor {
-		public void visit(NumberTwin numberTwin, boolean isLeft);
-	}
 
 	/**
 	 * @param w Die Welt
@@ -121,7 +104,8 @@ public class CtBotSimTcp extends CtBotSim {
 			new Sensors.RemoteControl(),
 			new Sensors.Door(),
 			new Sensors.Trans(),
-			new Sensors.Error()
+			new Sensors.Error(),
+			new WelcomeReceiver(Command.SubCode.WELCOME_SIM)
 		);
 
 		// LEDs
@@ -151,7 +135,8 @@ public class CtBotSimTcp extends CtBotSim {
 			_(Sensors.RemoteControl.class, WRITES),
 			_(Sensors.Door.class         , WRITES),
 			_(Sensors.Trans.class        , WRITES),
-			_(Sensors.Error.class        , WRITES)
+			_(Sensors.Error.class        , WRITES),
+			_(WelcomeReceiver.class      , READS)
 		);
 
 		// Simulation
@@ -191,33 +176,21 @@ public class CtBotSimTcp extends CtBotSim {
 			lg.warn(e, "Konnte rcStartCode '%s' aus der Konfigdatei nicht " +
 					"verwerten; ignoriere", rawStr);
 		} catch (IOException e) {
-			e.printStackTrace(); //$$$ Excp
+			// Kann nicht passieren, da die RC nur IOExcp wirft, wenn sie
+			// asynchron betrieben wird, was CtBotSimTcp nicht macht
+			throw new AssertionError(e);
 		}
 	}
-
-	/**
-	 * Variable, die sich merkt, wann wir zuletzt Daten &uuml;bertragen haben
-	 */
-	private int lastTransmittedSimulTime = 0; //$$$ hünfurt
 
 	/** Leite Sensordaten an den Bot weiter */
 	private synchronized void transmitSensors() {
 		try {
-			CommandOutputStream s = connection.createCmdOutStream(); //$$$ Konstruktor
+			CommandOutputStream s = connection.getCmdOutStream();
 			for (BotComponent<?> c : components)
 				c.askForWrite(s);
 			s.flush();
-
-            lastTransmittedSimulTime= (int)world.getSimTimeInMs();
-            lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
-//            Command command;
-//            command = new Command(Command.Code.DONE);
-//            command.setDataL(lastTransmittedSimulTime);
-//            command.setDataR(0);
-//            command.setSeq(this.seq++);
-//            connection.write(command);
 		} catch (IOException e) {
-			lg.severe(e, "E/A-Problem beim Senden der Sensordaten; Abbruch");
+			lg.severe(e, "E/A-Problem beim Senden der Sensordaten; sterbe");
 			die();
 		}
 	}
@@ -228,41 +201,21 @@ public class CtBotSimTcp extends CtBotSim {
 	 * @param command Das Kommando
 	 */
 	public void evaluateCommand(Command command) throws ProtocolException {
-		if (command.getDirection() == Command.DIR_REQUEST) {
-
-			switch (command.getCommandCode()) {
-			case DONE:
-			case ACT_SERVO:
-			case ACT_MOT:
-			case ACT_LED:
-			case ACT_LCD:
-			case LOG:
-				for (BotComponent<?> c : components)
-					c.offerRead(command);
-				break;
-
-			//$$$ Welcome-Komponente
-			case WELCOME:
-				if (! command.has(Command.SubCode.WELCOME_SIM)) {
-					lg.severe("Ich bin kein Sim-Bot! Sterbe vor Schreck ;-)");
-					die();
-				}
-				break;
-
-			default:
-				lg.warn("Unbekanntes Kommando%s", command);
-				break;
-			}
-		} else {
-			// TODO: Antworten werden noch nicht gegeben
+		if (command.getDirection() != Command.DIR_REQUEST) {
+			throw new ProtocolException("Kommando ist Unfug: Hat als " +
+					"Richtung nicht 'Anfrage'; ignoriere");
 		}
+
+		for (BotComponent<?> c : components)
+			c.offerRead(command);
+		if (! command.hasBeenProcessed())
+			throw new ProtocolException("Unbekanntes Kommando");
 	}
 
 	@Override
 	protected void work() {
 		transmitSensors();
-		receiveCommands();
-		processCommands();
+		readAndProcessCommands();
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@SuppressWarnings("synthetic-access")
@@ -288,52 +241,22 @@ public class CtBotSimTcp extends CtBotSim {
 		masterSimulator.run();
 	}
 
-	/** Sichert ein Kommando im Puffer */
-	private int storeCommand(Command command) {
-		int result=0;
-		synchronized (commandBuffer) {
-			commandBuffer.add(command);
-			// Das DONE-kommando ist das letzte in einem Datensatz und beendet ein Paket
-			if (command.has(Command.Code.DONE)) {
-//				if (command.getDataL() == lastTransmittedSimulTime) //$$$
-					result = 1;
-//				else
-//					System.out.println("falsches done"); //$$$
-			}
-		}
-		return result;
-	}
-
-	/** Verarbeitet alle eingegangenen Daten */
-	private void processCommands(){
-		synchronized (commandBuffer) {
-			Iterator<Command> it = commandBuffer.iterator();
-			while (it.hasNext()){
-				Command command = it.next();
+	private void readAndProcessCommands() {
+		try {
+			while (true) {
 				try {
-					evaluateCommand(command);
-				} catch (ProtocolException e) {
-					lg.warning(e, "Fehler beim Verarbeiten eines Kommandos");
-				}
-			}
-			commandBuffer.clear();
-		}
-	}
-
-	private void receiveCommands() {
-		int run = 0; //$$ Variable stinkt
-		while (run == 0) {
-			try {
-				try {
-					run = storeCommand(new Command(connection));
+					Command cmd = new Command(connection);
+					evaluateCommand(cmd);
+					if (cmd.has(Command.Code.DONE))
+						break;
 				} catch (ProtocolException e) {
 					lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere");
 				}
-			} catch (IOException e) {
-				lg.severe(e, "Verbindung unterbrochen -- Bot stirbt"); //$$ Wie, "der stirbt"? Wo ist der die()-Aufruf?
-				setHalted(true);
-				run = -1;
 			}
+		} catch (IOException e) {
+			lg.severe(e, "E/A vermurkst: Verbindung unterbrochen; Bot " +
+					"steckengeblieben");
+			setHalted(true);
 		}
 	}
 

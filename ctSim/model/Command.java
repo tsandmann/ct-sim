@@ -129,8 +129,6 @@ import ctSim.util.Misc;
 public class Command {
 	final static FmtLogger lg = FmtLogger.getLogger("ctSim.model.Command");
 
-	/** Verschiedene Konstanten **********************************************/
-
 	/** L&auml;nge eines Kommandos in Byte */
 	public static final int COMMAND_SIZE = 11;
 
@@ -321,6 +319,8 @@ public class Command {
 
 	/** Markiert das Ende des Kommandos */
 	private final int crc;
+	
+	private boolean hasBeenProcessed = false;
 
 	/**
 	 * Erzeugt ein Kommando zum Abschicken (direction=DIR_REQUEST)
@@ -491,6 +491,8 @@ public class Command {
 
 	/** @return Liefert die Command-Sequenznummer */
 	public int getSeq() { return seq; }
+	
+	public boolean hasBeenProcessed() { return hasBeenProcessed; }
 
 	//$$ Kann bald weg
 	/** @return Gibt das Subkommando zurueck */
@@ -504,4 +506,8 @@ public class Command {
 
 	/** @param seq Paketsequenznummer, die gesetzt werden soll */
 	public void setSeq(int seq) { this.seq = seq; }
+	
+	public void setHasBeenProcessed(boolean hasBeenProcessed) {
+		this.hasBeenProcessed = hasBeenProcessed;
+	}
 }

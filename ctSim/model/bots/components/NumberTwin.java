@@ -6,12 +6,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import ctSim.model.Command;
-import ctSim.model.bots.ctbot.CtBotSimTcp.NumberTwinVisitor;
 
 //$$ doc
 // ist Haelfte eines Paars (z.B. IrL + IrR)
 //$$$ Ganze links/rechts-Geschichte; statische Factory?
 public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
+	public interface NumberTwinVisitor {
+		public void visit(NumberTwin numberTwin, boolean isLeft);
+	}
+
 	Number internalModel = Double.valueOf(0); //$$$ visibility
 	protected final boolean isLeft;
 

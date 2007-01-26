@@ -8,7 +8,7 @@ import java.util.logging.LogRecord;
 
 /**
  * <p>
- * Formatter, der ausführliche Log-Meldungen produziert. Baut auf das
+ * Formatter, der ausf&uuml;hrliche Log-Meldungen produziert. Baut auf das
  * {@link java.util.logging}-Framework auf.
  * </p>
  * <p>
@@ -34,7 +34,7 @@ import java.util.logging.LogRecord;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class CtSimFormatter extends Formatter {
-	private SimpleDateFormat timestampFormatter =
+	private final SimpleDateFormat timestampFormatter =
 		new SimpleDateFormat("d MMM y H:mm:ss.SSS");
 
 	@Override
@@ -57,7 +57,7 @@ public class CtSimFormatter extends Formatter {
 		}
 
 		return "[" + timestampFormatter.format(r.getMillis()) + "] " +
-			r.getLevel() + ": " + r.getMessage() +
+			r.getLevel().getName() + ": " + r.getMessage() +
 			" [" + r.getLoggerName() + "."
 		    + r.getSourceMethodName() + "() " +
 		    "Thread " + threadName + "(" + r.getThreadID() + ")" +

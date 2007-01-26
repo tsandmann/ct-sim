@@ -1,7 +1,14 @@
 Changelog fuer c't-Sim
 ======================
 
-2007-01-25 20:46 Hendrik Krauss [hkr@heise.de]: Mist -- ct-sim.xml, .classpath, .project versehentlich mitcommittet. Rueckgaengig
+2007-01-26 1:36 Hendrik Krauss [hkr@heise.de]:
+* CtBotSimTcp: Paar Todos erledigt
+* I/O im CtBotSimTcp vereinfacht
+* Neu: Nichtverarbeitete Kommandos werden erkannt
+* Neu: Welcome-Kommando wird geprueft
+* Kleinigkeiten
+
+2007-01-25 21:05 Hendrik Krauss [hkr@heise.de]: Mist -- ct-sim.xml, .classpath, .project versehentlich mitcommittet. Rueckgaengig
 
 2007-01-25 20:46 Hendrik Krauss [hkr@heise.de]:
 * Neu: Split-Model-Ansatz fuer BotComponents (haben jetzt ein internes und ein externes Model), um Threadsicherheit zu garantieren; Doku folgt

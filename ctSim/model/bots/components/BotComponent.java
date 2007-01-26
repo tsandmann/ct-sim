@@ -31,7 +31,6 @@ import ctSim.SimUtils;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
-import ctSim.model.bots.ctbot.CtBotSimTcp.BotComponentVisitor;
 
 //$$$ externes Model: in Subklassen, internes: hier
 //$$ doc
@@ -121,6 +120,12 @@ public abstract class BotComponent<M> {
 
 	public static enum ConnectionFlags { READS, WRITES, WRITES_ASYNCLY }
 
+	public interface BotComponentVisitor {
+		public void visit(BotComponent<?> compnt);
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
 	private final M externalModel;
 
 	/** Anf&auml;nglich alles false */
@@ -180,8 +185,10 @@ public abstract class BotComponent<M> {
 			return;
 		// Cast kann nicht in die Hose gehen wegen setFlags()
 		CanRead self = (CanRead)this;
-		if (c.has(self.getHotCmdCode()))
+		if (c.has(self.getHotCmdCode())) {
 			self.readFrom(c);
+			c.setHasBeenProcessed(true);
+		}
 	}
 
 	public void askToUpdateExternalModel() {
