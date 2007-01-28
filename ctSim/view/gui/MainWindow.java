@@ -240,7 +240,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			// Tooltip des Schliessen-Icon
 			"Verbindung zu Bot beenden"); //$$$ Tooltip Schliessenicon
 		// Listener fuer "Wenn Bot stirbt, Tab weg"
-		bot.addDeathListener(new Runnable() {
+		bot.addDisposeListener(new Runnable() {
 			@SuppressWarnings("synthetic-access")
 			public void run() { //$$$ SplitPane klappt nicht zusammen, wenn letzter Bot entfernt
 				/*

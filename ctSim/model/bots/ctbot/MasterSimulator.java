@@ -3,6 +3,7 @@
  */
 package ctSim.model.bots.ctbot;
 
+import static ctSim.model.AliveObstacle.ObstState.*;
 import java.util.List;
 
 import javax.media.j3d.BoundingSphere;
@@ -176,24 +177,12 @@ implements BotComponentVisitor, NumberTwinVisitor, Runnable {
 			mouseSensorX.set(2 * _gamma * SENS_MOUSE_DIST_Y);
 			mouseSensorY.set(moveDistance);
 
-			int oldState = parent.getObstState();
-
 			//$$ Wieso BoundingSphere um den Ursprung und nicht um newPos? In dem Zusammenhang: wofuer ist Bot.getBounds() da?
-			boolean noCol = world.checkCollision(parent,
+			boolean isCollided = world.isCollided(parent,
 				new BoundingSphere(new Point3d(0d, 0d, 0d), CtBotSimTcp.BOT_RADIUS),
 				newPos);
-			// Pruefen, ob Kollision erfolgt. Bei einer Kollision wird
-			// der Bot entsprechend gefaerbt
-			if(noCol && (oldState & CtBotSimTcp.OBST_STATE_COLLISION) ==
-				CtBotSimTcp.OBST_STATE_COLLISION) {
-
-				parent.setObstState( oldState & ~CtBotSimTcp.OBST_STATE_COLLISION);
-			} else if (!noCol && (oldState & CtBotSimTcp.OBST_STATE_COLLISION) !=
-				CtBotSimTcp.OBST_STATE_COLLISION) {
-
-				moveDistance = 0; // Wird spaeter noch fuer den Maussensor benoetigt //$$ Bezweifle ich, die Variable wird nicht mehr gelesen
-				parent.setObstState( oldState| CtBotSimTcp.OBST_STATE_COLLISION);
-			}
+			// Wenn Kollision, Bot entsprechend faerben
+			parent.set(COLLIDED, isCollided);
 
 			// Bodenkontakt ueberpruefen
 
@@ -247,30 +236,15 @@ implements BotComponentVisitor, NumberTwinVisitor, Runnable {
 
 			// Wenn einer der Beruehrungspunkte keinen Boden mehr unter
 			// sich hat wird der Bot gestoppt und entsprechend gefaerbt
-			if(isFalling && (CtBotSimTcp.OBST_STATE_FALLING !=
-				(parent.getObstState() & CtBotSimTcp.OBST_STATE_FALLING))) {
+			parent.set(IN_HOLE, isFalling);
 
-				parent.setObstState(parent.getObstState() | CtBotSimTcp.OBST_STATE_FALLING);
-			} else if(!isFalling && (CtBotSimTcp.OBST_STATE_FALLING ==
-				(parent.getObstState() & CtBotSimTcp.OBST_STATE_FALLING))) {
-
-				parent.setObstState(parent.getObstState() & ~CtBotSimTcp.OBST_STATE_FALLING);
-			}
-
-			// Wenn der Bot nicht kollidiert oder ueber einem Abgrund steht Position aktualisieren
-			if ((parent.getObstState() &
-				(CtBotSimTcp.OBST_STATE_COLLISION | CtBotSimTcp.OBST_STATE_FALLING)) == 0 ){
-
+			if (! parent.is(IN_HOLE) && ! parent.is(COLLIDED))
 				parent.setPosition(new Point3d(newPos));
-				parent.setHeading(newHeading);
-			}
-			// Blickrichtung nur aktualisieren, wenn Bot nicht in ein
-			// Loch gefallen ist:
-			if ((parent.getObstState() & CtBotSimTcp.OBST_STATE_FALLING) == 0 ){
-				parent.setHeading(newHeading);
-			}
 
-			if (parent.getObstState() != CtBotSimTcp.OBST_STATE_NORMAL) {
+			if (! parent.is(IN_HOLE))
+				parent.setHeading(newHeading);
+
+			if (! parent.isObstStateNormal()) {
 				//$$ Hack
 				mouseSensorX.sensor.set(0);
 				mouseSensorY.sensor.set(0);
@@ -354,7 +328,7 @@ implements BotComponentVisitor, NumberTwinVisitor, Runnable {
 	}
 
 	@Buisit
-	public void buildEncoderSim(final Sensors.Encoder sensor,
+	public void buildEncoderSim(final Sensors.Encoder encoderSensor,
 	boolean isLeft) {
         final WheelSimulator wheel = isLeft
 			? leftWheel
@@ -385,7 +359,7 @@ implements BotComponentVisitor, NumberTwinVisitor, Runnable {
 				// aber wir merken uns Teilschritte intern
 				encoderRest = tmp - encoderSteps;
 				// und speichern sie.
-				sensor.set(encoderSteps); // commit
+				encoderSensor.set(encoderSteps); // commit
 			}
 		});
 	}

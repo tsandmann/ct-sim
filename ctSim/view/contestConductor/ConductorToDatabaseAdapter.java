@@ -215,7 +215,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
         	pos.y,
         	head.x,
         	head.y,
-        	b.getObstState()});
+        	b.getLegacyObstState()});
     }
 
     //$$ doc resetRunningGames

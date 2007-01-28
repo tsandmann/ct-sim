@@ -18,7 +18,10 @@
  */
 package ctSim.model;
 
+import static ctSim.model.AliveObstacle.ObstState.*;
+
 import java.awt.Color;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,13 +46,25 @@ import ctSim.view.gui.Debug;
  *
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
-public abstract class AliveObstacle implements MovableObstacle, Runnable {
+public abstract class AliveObstacle implements Runnable {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
 
 	private static final CountingMap numInstances = new CountingMap();
+	private final String name;
 
-	private final List<Runnable> deathListeners = Misc.newList();
+	private final List<Runnable> disposeListeners = Misc.newList();
+
 	private final List<Closure<Color>> appearanceListeners = Misc.newList();
+
+	public enum ObstState {
+		/** Das Hindernis hat eine Kollision */
+		COLLIDED(0x001, "collision",
+			"kollidiert",
+			"ist nicht mehr kollidiert"),
+
+		IN_HOLE(0x002, "falling",
+			"hat keinen Boden mehr unter den F\u00FC\u00DFen",
+			"hat wieder Boden unter den F\u00FC\u00DFen"),
 
 	/**
 	 * <p>
@@ -65,11 +80,31 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	 * </ul>
 	 * </p>
 	 */
-	public static final int OBST_STATE_HALTED   = 0x0100;
+		HALTED(0x100, "halted",
+			"wird aus der Simulation ausgeschlossen");
 
-	private int obstState = OBST_STATE_NORMAL;
+		final int legacyValue;
+		final String appearanceKeyInXml;
+		final String messageOnEnter;
+		final String messageOnExit;
 
-	private String name;
+		ObstState(int legacyValue, String appearanceKeyInXml,
+		String messageOnEnter) {
+			this(legacyValue, appearanceKeyInXml, messageOnEnter, null);
+		}
+
+		ObstState(int legacyValue, String appearanceKeyInXml,
+		String messageOnEnter, String messageOnExit) {
+			this.legacyValue = legacyValue;
+			this.appearanceKeyInXml = appearanceKeyInXml;
+			this.messageOnEnter = messageOnEnter;
+			this.messageOnExit = messageOnExit;
+		}
+	}
+
+	private final EnumSet<ObstState> obstState = EnumSet.noneOf(
+		ObstState.class);
+
 	private Point3d posInWorldCoord = new Point3d();
 
 	/**
@@ -84,15 +119,30 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 	private Vector3d headingInWorldCoord = new Vector3d();
 
+	/** Unser Teil des J3D-Szenegraph:
+	 * BranchGroup-Instanz
+	 *
+	 *      |
+	 *      | hat Kind
+	 *      v
+	 *
+	 * TransformGroup-Instanz
+	 *
+	 *      |
+	 *      | hat Kind
+	 *      v
+	 *
+	 *    shape
+	 */
+	private final BranchGroup branchgrp;
+	private final TransformGroup transformgrp;
+	private Group shape = null;
+
 	/** Verweis auf den zugehoerigen Controller */
 	// TODO: Verweis auf Controller wirklich noetig?
 	private DefaultController controller;
 
 	private Thread thrd;
-
-	private BranchGroup branchgrp;
-	private TransformGroup transformgrp;
-	private Group shape;
 
 	/** Simultime beim letzten Aufruf */
 	// TODO
@@ -103,7 +153,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	private long deltaT = 0;
 
 	/**
-	 * @param shape Form des Obstacle
 	 * @param position Position des Objekts
 	 * @param heading Blickrichtung des Objekts
 	 */
@@ -113,33 +162,28 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		// Instanz-Zahl erhoehen
 		numInstances.increase(getClass());
 		// Wenn wir sterben, Instanz-Zahl reduzieren
-		addDeathListener(new Runnable() {
+		addDisposeListener(new Runnable() {
 			@SuppressWarnings("synthetic-access")
 			public void run() {
 				numInstances.decrease(AliveObstacle.this.getClass());
 			}
 		});
 
-		initBG();
+		// Translationsgruppe fuer das Obst
+		transformgrp = new TransformGroup();
+		transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		transformgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
+
+		// Jetzt wird noch alles nett verpackt
+		branchgrp = new BranchGroup();
+		branchgrp.setCapability(BranchGroup.ALLOW_DETACH);
+		branchgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		branchgrp.addChild(this.transformgrp);
 
 		setPosition(position);
 		setHeading(heading);
 		updateAppearance();
-	}
-
-	private void initBG() {
-
-		// Translationsgruppe fuer das Obst
-		this.transformgrp = new TransformGroup();
-		this.transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		this.transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-		this.transformgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
-
-		// Jetzt wird noch alles nett verpackt
-		this.branchgrp = new BranchGroup();
-		this.branchgrp.setCapability(BranchGroup.ALLOW_DETACH);
-		this.branchgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
-		this.branchgrp.addChild(this.transformgrp);
 	}
 
 	/**
@@ -150,14 +194,14 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	/**
-	 * @param shape 3D-Gestalt, die das Objekt erhalten soll
+	 * Setzt die 3D-Gestalt, die das Hindernis hat. Nur einmal aufrufen:
+	 * Wechseln der Gestalt wird nicht unterst&uuml;tzt
 	 */
-	public final void setShape(Group shape) {
-		// TODO: Test: Reicht auch einfach "this.shape"-Referenz anzupassen?
+	public final void initShape(Group theShape) {
 		if (this.shape != null)
-			transformgrp.removeChild(shape);
-		this.shape = shape;
-		transformgrp.addChild(shape);
+			throw new IllegalStateException();
+		this.shape = theShape;
+		transformgrp.addChild(theShape);
 	}
 
 	/**
@@ -208,7 +252,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		this.thrd = null;
 		dummy.interrupt();
 
-		for (Runnable r : deathListeners)
+		for (Runnable r : disposeListeners)
 			r.run();
 	}
 
@@ -282,8 +326,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	}
 
 	/**
-	 * Drandenken: State setzen vor Aufruf dieser Methode
-	 *
 	 * @param posInWorldCoord Die Position, an die der Bot gesetzt werden soll
 	 */
 	public final synchronized void setPosition(Point3d posInWorldCoord) {
@@ -298,8 +340,10 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		t.setTranslation(new Vector3d(posInWorldCoord));
 		transformgrp.setTransform(t);
 
-		if ((obstState & OBST_STATE_SAFE) == 0)
+		if (! is(COLLIDED)
+		&&  ! is(IN_HOLE)) {
 			lastSafePos.set(posInWorldCoord);
+		}
 	}
 
 	//$$ Ziemlicher Quatsch, dass das ein Vector3 ist: double mit dem Winkel drin waere einfacher und wuerde dasselbe leisten
@@ -337,6 +381,43 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		return rv;
 	}
 
+	public void set(ObstState state, boolean setOrClear) {
+		if (setOrClear)
+			set(state);
+		else
+			clear(state);
+	}
+
+	public void set(ObstState state) {
+		if (obstState.add(state)) {
+			lg.info(getName()+" "+state.messageOnEnter);
+			updateAppearance();
+		}
+	}
+
+	public void clear(ObstState state) {
+		if (obstState.remove(state)) {
+			lg.info(getName()+" "+state.messageOnExit);
+			updateAppearance();
+		}
+	}
+
+	public boolean is(ObstState s) {
+		return obstState.contains(s);
+	}
+
+	public boolean isObstStateNormal() {
+		return obstState.isEmpty();
+	}
+
+	// Gemaess dbfeld-ctsim-log-state.txt
+	public int getLegacyObstState() {
+		int rv = 0;
+		for (ObstState s : obstState)
+			rv += s.legacyValue;
+		return rv;
+	}
+
 	/**
 	 * &Uuml;berschreibt die run()-Methode aus der Klasse Thread und arbeitet
 	 * zwei Schritte ab: <br/> 1. {@link #work()} &ndash; wird in einer Schleife
@@ -364,7 +445,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 				// Ein AliveObstacle darf nur dann seine work()-Routine
 				// ausfuehren, wenn es nicht Halted ist
-				if ((this.obstState & OBST_STATE_HALTED) == 0)
+				if (! is(HALTED))
 					work();
 
 				// berechne die Zeit, die work benoetigt hat
@@ -372,7 +453,7 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 
 				// Wenn der Timeout aktiv ist und zuviel Zeit benoetigt wurde, halte dieses Alive Obstacle an
 				if ((timeout > 0) && (elapsedTime > timeout))
-					setHalted(true);
+					set(HALTED);
 
 				if (this.thrd != null)
 					this.controller.waitOnController();
@@ -389,42 +470,9 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 	/** Aufraeumen, wenn Bot stirbt */
 	protected void cleanup() {
 		// TODO Auto-generated method stub
-		branchgrp=null;
-		transformgrp=null;
 		shape=null;
 	}
 
-	/**
-	 * Haelt ein Alive-Obstacle an oder gibt es wieder frei. Ist ein
-	 * Alive-Obstacle halted, so darf es seine work()-Methode nicht mehr
-	 * ausfuehren. Es ist aber ansonsten noch funktionsfaehig und reagiert auch
-	 * auf den Controller
-	 *
-	 * @param halt true, wennd as AliveObstacle angehalten werden soll; false,
-	 * wenn es wieder freigelassen werden soll
-	 */
-	public final void setHalted(boolean halt){
-		if (halt == true) {
-			lg.info("AliveObstcale "+getName()+" wird angehalten und darf " +
-					"ab sofort die work()-Methode nicht mehr ausfuehren");
-			setObstState(getObstState() | OBST_STATE_HALTED);
-		} else {
-			lg.info("AliveObstcale "+getName()+" wird reaktiviert und darf " +
-					"ab sofort die work()-Methode wieder ausfuehren");
-			setObstState(getObstState() & ~OBST_STATE_HALTED);
-		}
-	}
-
-	//$$ Umbenennen: isHalted()
-	/**
-	 * Liefert true zurueck, wenn der OBST_STATE_HALTED gesetzt ist
-	 * @return true, wenn OBST_STATE_HALTED gesetzt, false, wenn nicht
-	 */
-	public final boolean istHalted(){
-		if ((this.obstState & OBST_STATE_HALTED) != 0)
-			return true;
-		return false;
-	}
 
 	/**
 	 * Hier wird aufgeraeumt, wenn die Lebenszeit des AliveObstacle zuende ist:
@@ -440,73 +488,15 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 //		world = null;
 //	}
 
-	// $$ Bounds ins AObstacle
-	/**
-	 * @return Gibt die Grenzen des Bots zurueck
-	 */
-//	public Bounds getBounds() {
-//		return (Bounds) bounds.clone();
-//	}
-//
-//	/**
-//	 * @param bounds
-//	 *            Referenz auf die Grenzen des Bots, die gesetzt werden sollen
-//	 */
-//	public void setBounds(Bounds bounds) {
-//		this.bounds = bounds;
-//	}
-
-	/**
-	 * Liefert den Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
-	 * Zustaende sind ein Bitmaske aus den OBST_STATE_ Konstanten
-	 *
-	 * @return Der Zustand des Objekts
-	 */
-	public int getObstState() {
-		return this.obstState;
-	}
-
-	/**
-	 * Setztden Zustand des Objektes zurueck. z.B. Ob es faellt, oder eine Kollision hat
-	 * Zustaende sind ein Bitmaske aus den OBST_STATE_ Konstanten
-	 *
-	 * @param newObstState Der Zustand, der gesetzt werden soll
-	 */
-	public void setObstState(int newObstState) {
-		if (newObstState == obstState)
-			return;
-
-		if ((newObstState & OBST_STATE_COLLISION) != 0
-		&& ((obstState    & OBST_STATE_COLLISION) == 0))
-			lg.info(getName()+" kollidiert");
-		if ((newObstState & OBST_STATE_COLLISION) == 0
-		&& ((obstState    & OBST_STATE_COLLISION) != 0))
-			lg.info(getName()+" ist nicht mehr kollidiert");
-
-		if ((newObstState & OBST_STATE_FALLING) != 0
-			&& ((obstState    & OBST_STATE_FALLING) == 0))
-			lg.info(getName()+" verliert den Boden unter den F\u00FC\u00DFen");
-		if ((newObstState & OBST_STATE_FALLING) == 0
-			&& ((obstState    & OBST_STATE_FALLING) != 0))
-			lg.info(getName()+" hat wieder Boden unter den F\u00FC\u00DFen");
-
-		this.obstState = newObstState;
-		updateAppearance();
-	}
-
 	private void updateAppearance() {
-		//$$ obstState sollte ein Enum werden oder hoechstens ein EnumSet
-		//$$ Also die Strings gehoeren woanders hin; ObstState als Enum, Strings da rein
-		String key= null;
-
-		if (getObstState() == OBST_STATE_COLLISION)
-			key= "collision";
-		if (getObstState() == OBST_STATE_FALLING)
-			key= "falling";
-		if (getObstState() == OBST_STATE_NORMAL)
+		String key;
+		if (obstState.isEmpty())
 			key= "normal";
-		if ((getObstState() & OBST_STATE_HALTED) != 0)
-			key="halted";
+		else
+			// appearanceKey des ersten gesetzten Elements
+			// Im Fall, dass mehr als ein ObstState gesetzt ist (z.B. COLLIDED
+			// und zugleich HALTED), werden alle ignoriert ausser dem ersten
+			key = obstState.iterator().next().appearanceKeyInXml;
 
 		Color c = Config.getBotColor(getClass(), getInstanceNumber(), key);
 
@@ -549,12 +539,6 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		return lastSafePos;
 	}
 
-	public void addDeathListener(Runnable runsWhenAObstDies) {
-		if (runsWhenAObstDies == null)
-			throw new NullPointerException();
-		deathListeners.add(runsWhenAObstDies);
-	}
-
 	public Point3d worldCoordFromBotCoord(Point3d inBotCoord) {
 		Point3d rv = (Point3d)inBotCoord.clone();
 		Transform3D t = new Transform3D();
@@ -571,15 +555,22 @@ public abstract class AliveObstacle implements MovableObstacle, Runnable {
 		return rv;
 	}
 
-		public void addAppearanceListener(
+	public void addDisposeListener(Runnable runsWhenAObstDisposes) {
+		if (runsWhenAObstDisposes == null)
+			throw new NullPointerException();
+		disposeListeners.add(runsWhenAObstDisposes);
+	}
+
+	public final void dispose() {
+		for (Runnable r : disposeListeners)
+			r.run();
+	}
+
+	public void addAppearanceListener(
 	Closure<Color> calledWhenObstStateChanges) {
 		if (calledWhenObstStateChanges == null)
 			throw new NullPointerException();
 		appearanceListeners.add(calledWhenObstStateChanges);
-	}
-
-	public void removeObstStateListener(Closure<Color> listener) {
-		appearanceListeners.remove(listener);
 	}
 
 	public static class CountingMap

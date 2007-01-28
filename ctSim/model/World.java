@@ -55,7 +55,6 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import ctSim.ConfigManager;
 import ctSim.controller.Config;
 import ctSim.model.bots.Bot;
 import ctSim.view.gui.Debug;
@@ -477,15 +476,15 @@ public class World {
 
 	/**
 	 * Prueft, ob ein Objekt mit irgendeinem anderen Objekt kollidiert
+	 * 
 	 * @param obst das Objekt
-	 * @param bounds
-	 *            die Grenzen des Objekts
-	 * @param newPosition
-	 *            die angestrebte neue Position
-	 * @return True wenn das Objekt sich frei bewegen kann
+	 * @param bounds die Grenzen des Objekts
+	 * @param newPosition die angestrebte neue Position
+	 * @return {@code true} wenn das Objekt kollidiert ist, {@code false} wenn
+	 * es sich frei bewegen kann
 	 */
 	// TODO: Ueberarbeiten?
-	public boolean checkCollision(AliveObstacle obst, /*Shape3D botBody,*/ Bounds bounds,
+	public boolean isCollided(AliveObstacle obst, /*Shape3D botBody,*/ Bounds bounds,
 			Vector3d newPosition) { //, String botName) {
 
 		Group botBody = obst.getShape();
@@ -521,11 +520,11 @@ public class World {
 		}
 
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
-			return true;
+			return false;
 		//System.out.println(botName + " hatte einen Unfall!");
 		//Debug.out.println("Bot \""+botName + "\" hatte einen Unfall!"); //$NON-NLS-1$ //$NON-NLS-2$
 		//obst.stop();
-		return false;
+		return true;
 	}
 
 	/**
@@ -1018,7 +1017,7 @@ public class World {
 
 		while (it.hasNext()){
 			AliveObstacle aliveObstacle = it.next();
-			aliveObstacle.die();
+			aliveObstacle.dispose();
 		}
 
 		views.clear();

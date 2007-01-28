@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-26 23:05 Hendrik Krauss [hkr@heise.de]:
+* Neu: Obststate (AliveObstacle) ist jetzt ein EnumSet, vereinfacht manches im AObst und MasterSim
+* Kleinigkeiten
+
 2007-01-26 1:36 Hendrik Krauss [hkr@heise.de]:
 * CtBotSimTcp: Paar Todos erledigt
 * I/O im CtBotSimTcp vereinfacht

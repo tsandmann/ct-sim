@@ -52,7 +52,7 @@ public abstract class CtBot extends Bot {
 	 */
 	public CtBot(String name, Point3d pos, Vector3d head) {
 		super(name, pos, head);
-		setShape(new CtBotShape(this));
+		initShape(new CtBotShape(this));
 
 		//$$$ Toter Code
 		// Einfachen Konstruktor aufrufen:

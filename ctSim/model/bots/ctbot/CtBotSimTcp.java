@@ -256,7 +256,7 @@ public class CtBotSimTcp extends CtBotSim {
 		} catch (IOException e) {
 			lg.severe(e, "E/A vermurkst: Verbindung unterbrochen; Bot " +
 					"steckengeblieben");
-			setHalted(true);
+			set(ObstState.HALTED);
 		}
 	}
 
