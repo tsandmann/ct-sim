@@ -117,17 +117,16 @@ public class ClosableTabsPane extends JTabbedPane {
 		this(closeIcon, closeIcon);
 	}
 
+	// wird nicht tatsaechlich geschlossen, Event feuert nur
 	public ClosableTabsPane(final Icon closeIcon, final Icon closeIconHover) {
 		addMouseListener(new MouseAdapter() {
 			@SuppressWarnings("synthetic-access")
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int idx = indexOfBoundedIconAt(e.getX(), e.getY());
-
 				if (idx != -1) {
 					for (Closure<Integer> li : closeListeners)
 						li.run(idx);
-					remove(idx);
 				}
 			}
 

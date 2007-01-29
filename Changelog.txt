@@ -1,6 +1,25 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-30 0:11 Hendrik Krauss [hkr@heise.de]: Grosse Umstellung hinsichtlich der Bots (hoffentlich die letzte)
+* Alles instabil, noch nicht gut getestet
+* Weg: BotManager (in World integriert)
+* AliveObstacle aus der Bothierarchie raus: Verwaltet (1) Shape, (2) ObstState/Appearance, (3) Position/Heading und (4) Thread fuer die Simulation. Das sind alles Sachen, die nur Sim-Bots brauchen (Real-Bots nicht)
+* AliveObstacle jetzt ein Wrapper um einen simulierten Bot
+* Umbenannt: AliveObstacle -> ThreeDBot, s.o.
+* Umbenannt: Bot -> BasicBot
+* Umbenannt: CtBotSim -> SimulatedBot (jetzt ein Interface)
+* Neu: Interface Bot, moeglichst leichtgewichtig
+* Bots erstellen jetzt einfacher (Konstruktorsignaturen); braucht aber mehr Klempnerei (Wrapper mit Bot verdrahten, Bot mit Sim usw.); jetzt zentralisiert in der Welt
+* Neu: SimulatorFactory, die Bots mit Simulatoren verknuepft
+* Klarer Mechanismus zum Bots beenden (DisposeListener)
+* Komponenten jetzt wo sie hingehoeren (CtBot)
+* Kommando-Auswerte-Kram jetzt wo er hingehoert (BotComponentsList)
+* Test-Bot nach wie vor ausser Funktion
+* Neu: BotBarrier, um die Bots zu synchronisieren
+* Umbenannt: BotBuisitor -> GuiBotBuisitor
+* Kleinigkeiten
+
 2007-01-26 23:05 Hendrik Krauss [hkr@heise.de]:
 * Neu: Obststate (AliveObstacle) ist jetzt ein EnumSet, vereinfacht manches im AObst und MasterSim
 * Kleinigkeiten

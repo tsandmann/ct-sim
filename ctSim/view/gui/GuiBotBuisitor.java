@@ -3,15 +3,16 @@ package ctSim.view.gui;
 import javax.swing.JPanel;
 
 import ctSim.model.bots.Bot;
+import ctSim.model.bots.BotBuisitor;
 import ctSim.util.Buisitor;
 
 //$$ doc
 //$$ Klasse ist so klein, dass sie ueberfluessig ist (?)
-public abstract class BotBuisitor extends JPanel {
+public abstract class GuiBotBuisitor extends JPanel implements BotBuisitor {
 	private final Buisitor buisitor = new Buisitor(this);
 	private boolean shouldBeDisplayed = false;
 
-	public BotBuisitor() {
+	public GuiBotBuisitor() {
 		super(true); // Double-Buffering an
 	}
 

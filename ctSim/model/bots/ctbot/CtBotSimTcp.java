@@ -21,101 +21,49 @@ package ctSim.model.bots.ctbot;
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.net.ProtocolException;
-
-import javax.swing.SwingUtilities;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
 import ctSim.Connection;
 import ctSim.controller.Config;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
-import ctSim.model.World;
+import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.MousePictureComponent;
-import ctSim.model.bots.components.NumberTwin;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
-import ctSim.util.FmtLogger;
 
 /**
  * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator
  * kommunizieren
  */
-public class CtBotSimTcp extends CtBotSim {
-	private static final Color[] ledColors = {
-		new Color(  0,  84, 255), // blau
-		new Color(  0,  84, 255), // blau
-		Color.RED,
-		new Color(255, 200,   0), // orange
-		Color.YELLOW,
-		Color.GREEN,
-		new Color(  0, 255, 210), // tuerkis
-		Color.WHITE,
-	};
-
-	final FmtLogger lg = FmtLogger.getLogger(
-		"ctSim.model.bots.ctbot.CtBotSimTcp");
-
+public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	/** Die TCP-Verbindung */
 	private final Connection connection;
 
-	private World world; //$$$ final 
-
-	private final MasterSimulator masterSimulator;
-
-	///////////////////////////////////////////////////////////////////////////
-
 	/**
-	 * @param w Die Welt
-	 * @param pos Position
-	 * @param head Blickrichtung
-	 * @param con Verbindung
+	 * @param connection Verbindung
 	 */
-	public CtBotSimTcp(World w, Point3d pos, Vector3d head, Connection con) {
-		super(w, "Sim-Bot", pos, head);
-		this.connection = con;
-		this.world = w;
+	public CtBotSimTcp(final Connection connection) {
+		super("Sim-Bot");
+		this.connection = connection;
+
+		addDisposeListener(new Runnable() {
+			public void run() {
+				try {
+					connection.close();
+				} catch (IOException e) {
+					// uninteressant
+				}
+			}
+		});
 
 		components.add(
-			new MousePictureComponent(),
-			new Actuators.Governor(true),
-			new Actuators.Governor(false),
-			new Actuators.LcDisplay(20, 4),
-			new Actuators.Log(),
-			new Actuators.DoorServo(),
 			new Sensors.Clock(),
-			new Sensors.Encoder(true),
-			new Sensors.Encoder(false),
-			new Sensors.Distance(true),
-			new Sensors.Distance(false),
-			new Sensors.Line(true),
-			new Sensors.Line(false),
-			new Sensors.Border(true),
-			new Sensors.Border(false),
-			new Sensors.Light(true),
-			new Sensors.Light(false),
-			new Sensors.Mouse(true),
-			new Sensors.Mouse(false),
-			new Sensors.RemoteControl(),
-			new Sensors.Door(),
-			new Sensors.Trans(),
-			new Sensors.Error(),
 			new WelcomeReceiver(Command.SubCode.WELCOME_SIM)
 		);
-
-		// LEDs
-		int numLeds = ledColors.length;
-		for (int i = 0; i < numLeds; i++) {
-			String s = "LED " + (i + 1)
-					 + (i == 0 ? " (vorn rechts)" :
-						i == 1 ? " (vorn links)" : "");
-			components.add(new Actuators.Led(s, numLeds - i - 1, ledColors[i]));
-		}
 
 		// Component-Flag-Tabelle
 		components.applyFlagTable(
@@ -139,14 +87,6 @@ public class CtBotSimTcp extends CtBotSim {
 			_(WelcomeReceiver.class      , READS)
 		);
 
-		// Simulation
-		masterSimulator = new MasterSimulator(world, this);
-		for (BotComponent<?> c : components) {
-			c.acceptCompntVisitor(masterSimulator);
-			if (c instanceof NumberTwin)
-				((NumberTwin)c).acceptNumTwinVisitor(masterSimulator);
-		}
-
 		sendRcStartCode();
 	}
 
@@ -167,7 +107,7 @@ public class CtBotSimTcp extends CtBotSim {
 			for (BotComponent<?> c : components) {
 				if (c instanceof Sensors.RemoteControl) {
 					lg.fine("Sende RC5-Code %d (%#x) an %s",
-						rcStartCode, rcStartCode, getName());
+						rcStartCode, rcStartCode, toString());
 					((Sensors.RemoteControl)c).send(rcStartCode);
 					break;
 				}
@@ -182,71 +122,33 @@ public class CtBotSimTcp extends CtBotSim {
 		}
 	}
 
-	/** Leite Sensordaten an den Bot weiter */
-	private synchronized void transmitSensors() {
+	public void doSimStep() 
+	throws InterruptedException, UnrecoverableScrewupException {
+		transmitSensors();
+		processUntilDoneCmd();
+		components.updateView();
+	}
+
+	/** Leite Sensordaten an den Bot weiter
+	 * @throws UnrecoverableScrewupException */
+	private synchronized void transmitSensors()
+	throws UnrecoverableScrewupException {
 		try {
 			CommandOutputStream s = connection.getCmdOutStream();
 			for (BotComponent<?> c : components)
 				c.askForWrite(s);
 			s.flush();
 		} catch (IOException e) {
-			lg.severe(e, "E/A-Problem beim Senden der Sensordaten; sterbe");
-			die();
+			throw new UnrecoverableScrewupException(e);
 		}
 	}
 
-	/**
-	 * Wertet ein empfangenes Kommando aus
-	 *
-	 * @param command Das Kommando
-	 */
-	public void evaluateCommand(Command command) throws ProtocolException {
-		if (command.getDirection() != Command.DIR_REQUEST) {
-			throw new ProtocolException("Kommando ist Unfug: Hat als " +
-					"Richtung nicht 'Anfrage'; ignoriere");
-		}
-
-		for (BotComponent<?> c : components)
-			c.offerRead(command);
-		if (! command.hasBeenProcessed())
-			throw new ProtocolException("Unbekanntes Kommando");
-	}
-
-	@Override
-	protected void work() {
-		transmitSensors();
-		readAndProcessCommands();
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@SuppressWarnings("synthetic-access")
-				public void run() {
-					for (BotComponent<?> c : components)
-						c.askToUpdateExternalModel();
-				}
-			});
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * Hier erfolgt die Aktualisierung der gesamten Simulation
-	 *
-	 * @see ctSim.model.AliveObstacle#updateSimulation(long)
-	 * @param simulTime
-	 */
-	@Override
-	public void updateSimulation(long simulTime) {
-		super.updateSimulation(simulTime);
-		masterSimulator.run();
-	}
-
-	private void readAndProcessCommands() {
+	private void processUntilDoneCmd() throws UnrecoverableScrewupException {
 		try {
 			while (true) {
 				try {
 					Command cmd = new Command(connection);
-					evaluateCommand(cmd);
+					components.processCommand(cmd);
 					if (cmd.has(Command.Code.DONE))
 						break;
 				} catch (ProtocolException e) {
@@ -254,27 +156,11 @@ public class CtBotSimTcp extends CtBotSim {
 				}
 			}
 		} catch (IOException e) {
-			lg.severe(e, "E/A vermurkst: Verbindung unterbrochen; Bot " +
-					"steckengeblieben");
-			set(ObstState.HALTED);
+			throw new UnrecoverableScrewupException(e);
 		}
 	}
 
-	/** Erweitert die() um das Schliessen der TCP-Verbindung */
-	@Override
-	public void die() {
-		super.die();
-		try {
-			connection.close();
-		} catch (IOException e) {
-			// uninteressant
-		}
-	}
-
-	//$$ Unterschied cleanup() und die()? Zusammenfassen (Death-Listener)
-	@Override
-	protected void cleanup() {
-		super.cleanup();
-		world = null;
+	public Class<? extends Runnable> getSimulatorType() {
+		return MasterSimulator.class;
 	}
 }

@@ -120,10 +120,6 @@ public abstract class BotComponent<M> {
 
 	public static enum ConnectionFlags { READS, WRITES, WRITES_ASYNCLY }
 
-	public interface BotComponentVisitor {
-		public void visit(BotComponent<?> compnt);
-	}
-
 	///////////////////////////////////////////////////////////////////////////
 
 	private final M externalModel;
@@ -219,10 +215,6 @@ public abstract class BotComponent<M> {
 
 	/** @return Beschreibung der Komponente */
 	public abstract String getDescription();
-
-	public void acceptCompntVisitor(BotComponentVisitor visitor) {
-		visitor.visit(this);
-	}
 
 	////////////////////////////////////////////////////////////////////////
 	//$$ Nur noch fuer BotPosition wichtig, alles unter der Linie

@@ -3,7 +3,9 @@
  */
 package ctSim.model.bots.ctbot;
 
-import static ctSim.model.AliveObstacle.ObstState.*;
+import static ctSim.model.ThreeDBot.ObstState.COLLIDED;
+import static ctSim.model.ThreeDBot.ObstState.IN_HOLE;
+
 import java.util.List;
 
 import javax.media.j3d.BoundingSphere;
@@ -13,15 +15,16 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.SimUtils;
-import ctSim.model.AliveObstacle;
+import ctSim.model.ThreeDBot;
 import ctSim.model.World;
+import ctSim.model.bots.Bot;
+import ctSim.model.bots.BotBuisitor;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.NumberTwin;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.Actuators.Governor;
-import ctSim.model.bots.components.BotComponent.BotComponentVisitor;
 import ctSim.model.bots.components.NumberTwin.NumberTwinVisitor;
 import ctSim.model.bots.components.Sensors.Clock;
 import ctSim.util.Buisitor;
@@ -29,7 +32,7 @@ import ctSim.util.Misc;
 import ctSim.util.Buisitor.Buisit;
 
 public class MasterSimulator
-implements BotComponentVisitor, NumberTwinVisitor, Runnable {
+implements NumberTwinVisitor, BotBuisitor, Runnable {
     class WheelSimulator {
 		/**
 		 * Maximale Geschwindigkeit als <a
@@ -288,7 +291,7 @@ implements BotComponentVisitor, NumberTwinVisitor, Runnable {
 	private final List<Runnable> simulators = Misc.newList();
 	private final KrautUndRuebenSimulator krautUndRuebenSim;
 	protected final World world;
-	protected final AliveObstacle parent;
+	protected final ThreeDBot parent;
 	private final Buisitor buisitor = new Buisitor(this);
 
     protected final WheelSimulator leftWheel = new WheelSimulator();
@@ -308,14 +311,19 @@ implements BotComponentVisitor, NumberTwinVisitor, Runnable {
 		return new Vector3d(0, 1, 0);
 	}
 
-	public MasterSimulator(final World world, final AliveObstacle parent) {
+	public MasterSimulator(final World world, final ThreeDBot parent) {
 		this.world = world;
 		this.parent = parent;
 		krautUndRuebenSim = new KrautUndRuebenSimulator();
+		parent.accept(this);
 	}
 
-	public void visit(BotComponent<?> compnt) {
-		buisitor.dispatchBuisit(compnt);
+	public void visit(Object o, Bot b) {
+		if (o instanceof BotComponent<?>)
+			buisitor.dispatchBuisit((BotComponent<?>)o);
+		//$$$ das ist zu kompliziert
+		if (o instanceof NumberTwin)
+			((NumberTwin)o).acceptNumTwinVisitor(this);
 	}
 
 	public void visit(NumberTwin numberTwin, boolean isLeft) {

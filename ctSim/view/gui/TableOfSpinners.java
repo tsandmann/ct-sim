@@ -21,7 +21,7 @@ import javax.swing.table.TableCellRenderer;
 import ctSim.model.bots.components.BotComponent;
 
 //$$ doc
-public abstract class TableOfSpinners extends BotBuisitor {
+public abstract class TableOfSpinners extends GuiBotBuisitor {
 	public static class ComponentCellEditor extends AbstractCellEditor
 	implements TableCellEditor {
 		private static final long serialVersionUID = 4073894569366140421L;

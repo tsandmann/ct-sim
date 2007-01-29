@@ -18,35 +18,15 @@
  */
 package ctSim.model.bots.ctbot;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
-import ctSim.model.World;
-import ctSim.model.bots.components.NumberTwin;
-import ctSim.model.bots.components.Sensors;
+import ctSim.model.bots.SimulatedBot;
 
 /**
  * Klasse aller simulierten c't-Bots, die nur innerhalb des Simulators existieren
  *
  */
-public class CtBotSimTest extends CtBotSim {
-
-	private NumberTwin irL, irR;
-	private NumberTwin lineL, lineR;
-	private NumberTwin borderL, borderR;
-	private NumberTwin lightL, lightR;
-
-	/**
-	 * Der Konstruktor
-	 * @param w Die Welt
-	 * @param pos Position
-	 * @param head Blickrichtung
-	 */
-	public CtBotSimTest(World w, Point3d pos, Vector3d head) {
-		super(w, "Test-Bot", pos, head);
-
-		initSensors(); //$$$ Soll in CtBot passieren
-		initActuators();
+public class CtBotSimTest extends CtBot implements SimulatedBot {
+	public CtBotSimTest() {
+		super("Test-Bot");
 	}
 
 	@Override
@@ -54,28 +34,8 @@ public class CtBotSimTest extends CtBotSim {
 		return "Simulierter, in Java geschriebener c't-Bot";
 	}
 
-	private void initSensors() {
-		irL = new Sensors.Distance(true);
-		irR = new Sensors.Distance(false);
-
-		lineL = new Sensors.Line(true);
-		lineR = new Sensors.Line(false);
-
-		borderL = new Sensors.Border(true);
-		borderR = new Sensors.Border(false);
-
-		lightL = new Sensors.Light(true);
-		lightR = new Sensors.Light(false);
-	}
-
-	private void initActuators() {
-
-		// TODO!
-	}
-
-	@Override
-	protected void work() {
-
+	public void doSimStep() {
+/*//$$$ Simulator fuer test-bot
 		// TODO Pruefen ob: super.work();
 
 		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
@@ -135,5 +95,6 @@ public class CtBotSimTest extends CtBotSim {
 		// TODO:
 //		this.setActMotL(ll);
 //		this.setActMotR(rr);
+ */
 	}
 }

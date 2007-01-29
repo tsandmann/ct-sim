@@ -83,9 +83,6 @@ public interface View {
 	// $$ doc onBotAdded
 	public void onBotAdded(Bot bot);
 
-	// $$ doc onBotRemoved
-	public void onBotRemoved(Bot bot); //$$$ nutzt das irgendwer?
-
 	/**
 	 * <p>
 	 * Wird vom Controller einmal pro Simulationsschritt aufgerufen. Wird nie

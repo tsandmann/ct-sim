@@ -66,10 +66,6 @@ public class TimeLogger implements View {
 		// no-op
 	}
 
-	public void onBotRemoved(@SuppressWarnings("unused") Bot bot) {
-		// no-op
-	}
-
 	public void onJudgeSet(@SuppressWarnings("unused") Judge j) {
 		// no-op
 	}

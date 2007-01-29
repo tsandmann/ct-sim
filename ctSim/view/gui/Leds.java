@@ -18,7 +18,7 @@ import ctSim.util.RoundGradientPaint;
 import ctSim.util.Buisitor.Buisit;
 
 //$$ doc
-public class Leds extends BotBuisitor {
+public class Leds extends GuiBotBuisitor {
 	private static final long serialVersionUID = - 8033803343789440470L;
 
 	static class LedViewer extends JCheckBox {

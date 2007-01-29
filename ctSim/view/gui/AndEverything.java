@@ -19,7 +19,7 @@ import ctSim.util.Buisitor.Buisit;
 
 //$$ doc
 //$$$ GridLayout, damit wir Reihenfolge der Dinger vorgeben koennen
-public class AndEverything extends BotBuisitor {
+public class AndEverything extends GuiBotBuisitor {
 	private static final long serialVersionUID = - 8170321975584432026L;
 
 	public AndEverything() {
@@ -30,7 +30,7 @@ public class AndEverything extends BotBuisitor {
 	@Buisit
 	public void buildLcdViewer(Actuators.LcDisplay d) {
 		JTextArea t = new JTextArea(d.getExternalModel(), null,
-			d.getNumRows(), d.getNumCols());
+			d.getNumRows()+1, d.getNumCols()+1);
 		t.setEnabled(false);
 		t.setEditable(false); //$$$ t focusable, focus stealing
 		t.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -56,7 +56,7 @@ public class AndEverything extends BotBuisitor {
 		//$$ Fenster sollte immer zur neuesten Ausgabe scrollen
 		add(new AuxFrameButton(
 			log.getName(),
-			log.getDescription() + " von " + bot.getName(), // Fenster-Titel
+			log.getDescription() + " von " + bot, // Fenster-Titel
 			new JScrollPane(t)));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
@@ -65,7 +65,7 @@ public class AndEverything extends BotBuisitor {
 	public void buildRemoteControl(Sensors.RemoteControl s, Bot bot) {
 		add(new AuxFrameButton(
 			s.getDescription()+" ("+s.getName()+")",
-			s.getDescription()+" f\u00FCr "+bot.getName(),
+			s.getDescription()+" f\u00FCr "+bot,
 			new RemoteControlViewer(s)));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}

@@ -27,7 +27,6 @@ import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.ctbot.CtBot;
-import ctSim.model.bots.ctbot.CtBotSim;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 

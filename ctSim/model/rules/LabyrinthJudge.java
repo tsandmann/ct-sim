@@ -18,13 +18,9 @@
  */
 package ctSim.model.rules;
 
-import java.util.Set;
-
-import javax.vecmath.Vector3d;
-
 import ctSim.SimUtils;
 import ctSim.controller.DefaultController;
-import ctSim.model.AliveObstacle;
+import ctSim.model.ThreeDBot;
 import ctSim.model.World;
 import ctSim.view.gui.Debug;
 
@@ -85,23 +81,16 @@ public class LabyrinthJudge extends Judge {
 	 */
 	@Override
 	public boolean isSimulationFinished(){
-
-		if(this.world == null)
+		if (world == null)
 			return true;
-
-		Set<AliveObstacle> obsts = this.world.getAliveObstacles();
-
-		if (obsts == null || obsts.isEmpty())
+		
+		ThreeDBot winner = world.whoHasWon();
+		if (winner == null)
 			return false;
-
-		for(AliveObstacle obst : obsts) {
-			if(this.world.finishReached(new Vector3d(obst.getPositionInWorldCoord()))) {
-				Debug.out.println("Zieleinlauf \""+obst.getName()+"\" nach "
-						+ SimUtils.millis2time(this.getTime()));
-				return true;
-			}
+		else {
+			Debug.out.println("Zieleinlauf "+winner+" nach "
+				+ SimUtils.millis2time(this.getTime()));
+			return true;
 		}
-
-		return false;
 	}
 }

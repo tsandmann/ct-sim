@@ -20,6 +20,7 @@ import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.controller.DefaultController;
 import ctSim.controller.Main;
+import ctSim.model.ThreeDBot;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.rules.Judge;
@@ -135,17 +136,18 @@ public class ContestConductor implements View {
 		@SuppressWarnings("synthetic-access")
 		private boolean isAnyoneOnFinishTile()
 		throws NullPointerException, SQLException, TournamentPlanException {
-			for (BotView b : BotView.getAll()) {
-				if (concon.world.finishReached(b.modelObj.getPositionInWorldCoord())) {
-					GameOutcome o = new GameOutcome();
-					o.winner = b;
-					o.distToFinish.put(b, 0d); // ueberschreiben
+			ThreeDBot winner = concon.world.whoHasWon();
+			if (winner == null)
+				return false;
+			else {
+				GameOutcome o = new GameOutcome();
+				BotView winnerView = BotView.getViewOf(winner);
+				o.winner = winnerView;
+				o.distToFinish.put(winnerView, 0d); // ueberschreiben
 
-					setWinner(o);
-					return true;
-				}
+				setWinner(o);
+				return true;
 			}
-			return false;
 		}
 
 		@SuppressWarnings("synthetic-access")
@@ -210,11 +212,11 @@ public class ContestConductor implements View {
 		}
 
 		public final int idInDatabase;
-		public final Bot modelObj;
+		public final ThreeDBot modelObj;
 
-		BotView(ctSim.model.bots.Bot modelObj, int idInDatabase, int bot0or1) {
+		BotView(ThreeDBot modelObj, int idInDatabase, int bot0or1) {
 			assert bot0or1 == 0 || bot0or1 == 1
-			: "Parameter muss 0 oder 1 sein, ist aber " + bot0or1;
+				: "Parameter muss 0 oder 1 sein, ist aber " + bot0or1;
 			assert instances.get(bot0or1) == null;
 
 			this.modelObj = modelObj;
@@ -241,11 +243,19 @@ public class ContestConductor implements View {
 			return rv;
 		}
 
-		static List<ctSim.model.bots.Bot> getAllModelObjects() {
-			ArrayList<Bot> rv = Misc.newList();
+		static List<ThreeDBot> getAllModelObjects() {
+			List<ThreeDBot> rv = Misc.newList();
 			for (BotView v : getAll())
 				rv.add(v.modelObj);
 			return rv;
+		}
+
+		static BotView getViewOf(ThreeDBot modelObj) {
+			for (BotView v : instances) {
+				if (v.modelObj == modelObj)
+					return v;
+			}
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -283,7 +293,7 @@ public class ContestConductor implements View {
 	private World world;
 
 	private Object botArrivalLock = new Object();
-	private Bot newlyArrivedBot = null;
+	private ThreeDBot newlyArrivedBot = null;
 
 	public ContestConductor(Controller controller,
 		ConductorToDatabaseAdapter db, TournamentPlanner planner) {
@@ -461,7 +471,7 @@ public class ContestConductor implements View {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	private Bot executeBot(Blob b) throws SQLException, IOException {
+	private ThreeDBot executeBot(Blob b) throws SQLException, IOException {
 		// Blob in Datei
 		File f = File.createTempFile(
 			Config.getValue("contestBotFileNamePrefix"),
@@ -485,16 +495,25 @@ public class ContestConductor implements View {
 				}
 			}
 		}
-		Bot rv = newlyArrivedBot;
-		lg.fine("Gestarteter Bot '"+rv.getName()+"' ist korrekt " +
-		"angemeldet; Go f\u00FCr ContestConductor");
+		final ThreeDBot rv = newlyArrivedBot;
+		rv.addDisposeListener(new Runnable() {
+			public void run() {
+				BotView.remove(rv);				
+			}
+		});
+		lg.fine("Gestarteter Bot '"+rv+"' ist korrekt angemeldet; " +
+				"Go f\u00FCr ContestConductor");
 		newlyArrivedBot = null;
 		return rv;
 	}
 
 	public void onBotAdded(Bot bot) {
+		if (! (bot instanceof ThreeDBot)) {
+			throw new IllegalStateException("Bot angemeldet, ist aber kein " +
+					"ThreeDBot");
+		}
 		synchronized (botArrivalLock) {
-			newlyArrivedBot = bot;
+			newlyArrivedBot = (ThreeDBot)bot;
 			botArrivalLock.notifyAll();
 		}
 	}
@@ -541,10 +560,6 @@ public class ContestConductor implements View {
 
 	public void onWorldOpened(World newWorld) {
 		this.world = newWorld;
-	}
-
-	public void onBotRemoved(Bot bot) {
-		BotView.remove(bot);
 	}
 
 	public void onJudgeSet(@SuppressWarnings("unused") Judge j) {

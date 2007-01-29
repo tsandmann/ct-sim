@@ -30,9 +30,6 @@ import java.net.UnknownHostException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
 import ctSim.ConfigManager;
 import ctSim.Connection;
 import ctSim.TcpConnection;
@@ -40,6 +37,7 @@ import ctSim.model.Command;
 import ctSim.model.ParcoursGenerator;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
+import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.rules.Judge;
@@ -48,11 +46,10 @@ import ctSim.view.View;
 
 //TODO Es passiert Mist, wenn TestBots hinzugefuegt werden, bevor ein Parcours existiert. Untersuchen.
 
-//$$$ Stop-Knopf geht nicht
 /**
  * Zentrale Controller-Klasse des c't-Sim
  */
-public class DefaultController implements Runnable, Controller {
+public class DefaultController implements Controller, BotBarrier, Runnable {
 	protected FmtLogger lg = FmtLogger.getLogger("ctSim.controller");
 
     private SocketListener botListener;
@@ -72,7 +69,6 @@ public class DefaultController implements Runnable, Controller {
         this.view = view;
         setJudge(Config.getValue("judge"));
         this.startBotListener();
-        BotManager.setView(view);
         init();
     }
 
@@ -118,7 +114,7 @@ public class DefaultController implements Runnable, Controller {
 
 		if(!dummy.getState().equals(State.TERMINATED))
 			dummy.interrupt();
-        }
+    }
 
 	/**
 	 * @see java.lang.Runnable#run()
@@ -138,7 +134,7 @@ public class DefaultController implements Runnable, Controller {
 		Thread thisThread = Thread.currentThread();
 
 		startSignal = new CountDownLatch(1);
-		doneSignal = new CountDownLatch(BotManager.getSize());
+		doneSignal = new CountDownLatch(0);
 
 		while(this.ctrlThread == thisThread) {
 	        try {
@@ -160,7 +156,7 @@ public class DefaultController implements Runnable, Controller {
 					// Spiel ist beendet
 					pause();
 					// Alle Bots entfernen
-					BotManager.reinit();
+					world.removeAllBotsNow();
 					view.onSimulationFinished();
 				}
 
@@ -183,7 +179,10 @@ public class DefaultController implements Runnable, Controller {
 				// Add/Start new Bot
 				// + neue Runde einleuten
 				// Ueberschreibt startSignal, aber wir haben mit oldStartSignal eine Referenz aufgehoben
-				startBots();
+				this.doneSignal  = new CountDownLatch(world.getNumAliveObsts());
+				this.startSignal = new CountDownLatch(1);
+
+				world.startBots();
 
 				// Alle Bots wieder freigeben
 				oldStartSignal.countDown();
@@ -204,21 +203,14 @@ public class DefaultController implements Runnable, Controller {
 	}
 
 	private synchronized void cleanup() {
-		BotManager.reinit();
+		world.cleanup();
 		this.botListener.die();
     }
-
-	private synchronized void startBots() {
-		this.doneSignal  = new CountDownLatch(BotManager.getNewSize());
-		this.startSignal = new CountDownLatch(1);
-
-		BotManager.startNstopBots();
-	}
 
 	/**
 	 * @throws InterruptedException
 	 */
-	public void waitOnController() throws InterruptedException {
+	public void awaitNextSimStep() throws InterruptedException {
 		CountDownLatch doneSig = this.doneSignal;
 		CountDownLatch startSig = this.startSignal;
 
@@ -252,14 +244,12 @@ public class DefaultController implements Runnable, Controller {
 	}
 
 	private void setWorld(World world) {
-		this.pause();
+		pause();
 
-		if ((this.world != world) && (this.world != null))
+		if (this.world != null)
 			this.world.cleanup();
 
 		this.world = world;
-        BotManager.reset();
-        BotManager.setWorld(world);
         judge.setWorld(world);
         view.onWorldOpened(world);
         lg.info("Neue Welt ge\u00F6ffnet");
@@ -323,7 +313,7 @@ public class DefaultController implements Runnable, Controller {
          * @param p Port zum Lauschen
          */
         public SocketListener(int p) {
-            super("ctSim/SocketListener");
+            super("ctSim-SocketListener");
             this.port = p;
         }
 
@@ -396,7 +386,7 @@ public class DefaultController implements Runnable, Controller {
      * @param con Die Verbindung
      */
     public void addBot(Connection con) {
-        Bot bot = null; //$$ Variable stinkt
+    	SimulatedBot bot = null; //$$ Variable stinkt
         try {
             // Hallo sagen
             con.write(new Command(Command.Code.WELCOME));
@@ -410,10 +400,7 @@ public class DefaultController implements Runnable, Controller {
 	                if (cmd.has(Command.Code.WELCOME)) {
 	                	switch (cmd.getSubCode()) {
 	                		case WELCOME_SIM:
-	                            bot = new CtBotSimTcp(world,
-		                                new Point3d(0.5, 0, 0.075),
-		                                new Vector3d(1.0, -0.5, 0),
-		                                con);
+	                            bot = new CtBotSimTcp(con);
 		            			lg.fine("TCP-Verbindung von simuliertem Bot " +
 		            					"eingegangen");
 		            			break;
@@ -483,9 +470,7 @@ public class DefaultController implements Runnable, Controller {
      * F&uuml;gt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu
      */
     public void addTestBot() {
-        Bot bot = new CtBotSimTest(world, new Point3d(0, 0, 0.075),
-        	new Vector3d());
-        addBot(bot);
+        addBot(new CtBotSimTest());
     }
 
     public void invokeBot(File file) {
@@ -518,17 +503,23 @@ public class DefaultController implements Runnable, Controller {
         }
     }
 
-	private synchronized Bot addBot(Bot bot){
-		if (bot != null && world != null && judge.isAddingBotsAllowed()) {
-			bot.setController(this);
-			BotManager.addBot(bot);
-			return bot;
-		}
-		return null;
-	}
+    private synchronized void addBot(SimulatedBot bot) {
+    	if (world == null)
+    		throw new NullPointerException();
+    	if (judge.isAddingBotsAllowed()) {
+    		Bot b = world.addBot(bot, this);
+    		view.onBotAdded(b);
+    	}
+    }
+
+    /*
+    private synchronized void addBot(RealBot bot) {
+
+    }
+    */
 
     public int getParticipants() {
-        return BotManager.getNewSize();
+        return world.getNumAliveObsts();
     }
 
 	//$$ Nach Judge-Umbau: kann weg

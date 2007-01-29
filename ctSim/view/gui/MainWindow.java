@@ -32,7 +32,6 @@ import javax.swing.JSplitPane;
 import javax.swing.ToolTipManager;
 import javax.swing.WindowConstants;
 
-import ctSim.controller.BotManager;
 import ctSim.controller.Controller;
 import ctSim.controller.Main;
 import ctSim.model.World;
@@ -65,6 +64,33 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	// TODO: Weg!?
 	private JSplitPane split;
 
+	/**
+	 * <p>
+	 * Enth&auml;lt ein Tab pro Bot. Wenn einer am Tab das Schlie&szlig;en-Icon
+	 * (&quot;X&quot;) klickt, gilt das Prinzip &quot;zust&auml;ndig f&uuml;r
+	 * Bot entfernen ist der Bot, sonst niemand&quot;. Das f&uuml;hrt zu einem
+	 * nicht ganz offensichtlichen Ablauf:
+	 * <ol>
+	 * <li>ClosableTabsPane ruft den CloseListener auf, den MainWindow bei der
+	 * ClosableTabsPane angemeldet hat</li>
+	 * <li>CloseListener sagt Bot &quot;verkr&uuml;mel dich&quot; ({@code dispose()}),
+	 * tut aber sonst nichts &ndash; entfernt keine Tabs oder so </li>
+	 * <li>Bot geht seine Deinitialisierungs-Routine durch</li>
+	 * <li>Bot ruft seine DisposeListener auf. Einer davon ist der, den
+	 * MainWindow beim Bot angemeldet hat: Dieser sagt schlie&szlig;lich dem Tab
+	 * &quot;zeig dich nicht mehr an"</li>
+	 * </ol>
+	 * </p>
+	 * <p>
+	 * Grund: Der CloseListener <em>k&ouml;nnte</em> auch direkt das Tab
+	 * entfernen. Allerdings muss der DisposeListener in jedem Fall das Tab
+	 * entfernen, schon weil das Bot.dispose() ja von woanders ausgel&ouml;st
+	 * werden kann. Daher kommt es zu Problemen, wenn nach einem
+	 * "Schlie&szlig;en"-Klick der CloseListener ein Tab entfernt und der
+	 * DisposeListener auch eins. Deswegen die klare Regelung, dass nur im
+	 * DisposeListener Tabs entfernt werden.
+	 * </p>
+	 */
 	private final ClosableTabsPane botTabs;
 
 	//////////////////////////////////////////////////////////////////////
@@ -118,11 +144,12 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 		botTabs = new ClosableTabsPane(icons.get("schliessen"),
 			icons.get("schliessen-hover"));
+		// Listener wenn einer aufm Tab das Schliessen-Icon klickt
 		botTabs.addCloseListener(new Closure<Integer>() {
 			@SuppressWarnings("synthetic-access")
 			public void run(Integer index) {
 				BotViewer bv = (BotViewer)botTabs.getComponentAt(index);
-				BotManager.removeBotOnNextSimStep(bv.bot);
+				bv.bot.dispose();
 			}
 		});
 
@@ -199,17 +226,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		world.writeParcoursToFile(file);
 	}
 
-	protected void reset() {
-		statusBar.reinit();
-		botTabs.removeAll();
-
-		updateLayout();
-
-		//Ausgabe macht nur Sinn, wenn ueberhaupt ein Bot da ist.
-		if (BotManager.getSize() > 1)
-			Debug.out.println("Alle Bots entfernt.");
-	}
-
 	/**
 	 * @param rate Die neue Zeitbasis fuer den Simulator in Aufrufen alle xxx ms
 	 */
@@ -233,7 +249,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	/** F&uuml;gt einen neuen Bot hinzu */
 	public void onBotAdded(final Bot bot) {
 		botTabs.addClosableTab(
-			bot.getName(), // Tab-Beschriftung
+			bot.toString(), // Tab-Beschriftung
 			new BotViewer(bot), // Inhalt
 			// Tooltip
 			bot.getDescription()+" (Klasse "+bot.getClass().getSimpleName()+")",
@@ -242,7 +258,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		// Listener fuer "Wenn Bot stirbt, Tab weg"
 		bot.addDisposeListener(new Runnable() {
 			@SuppressWarnings("synthetic-access")
-			public void run() { //$$$ SplitPane klappt nicht zusammen, wenn letzter Bot entfernt
+			public void run() {
 				/*
 				 * Zugehoerigen Tab finden und entfernen -- Nicht "optimieren":
 				 * Wir muessen in diesem Listener die Tabs durchsuchen. Sich den
@@ -254,18 +270,14 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 					if (bot == ((BotViewer)botTabs.getComponentAt(i)).bot)
 						botTabs.remove(i);
 				}
+
+				updateLayout();
 			}
 		});
 
 		updateLayout();
 
-		Debug.out.println("Bot \""+bot.getName()+"\" wurde hinzugefuegt.");
-	}
-
-	public void onBotRemoved(Bot bot) {
-		updateLayout();
-
-		Debug.out.println("Bot \""+bot.getName()+"\" wurde gel\uu00F6scht.");
+		Debug.out.println("Bot \""+bot+"\" wurde hinzugefuegt."); //$$$ Debug msg
 	}
 
 	public void onApplicationInited() {

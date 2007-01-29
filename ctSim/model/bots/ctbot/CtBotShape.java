@@ -27,7 +27,7 @@ import com.sun.j3d.utils.geometry.GeometryInfo;
 import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Stripifier;
 
-import ctSim.model.bots.Bot;
+import ctSim.model.ThreeDBot;
 import ctSim.util.Closure;
 
 //$$ doc mit 4 grafiken
@@ -163,7 +163,7 @@ public class CtBotShape extends Group {
     private final Shape3D rightCheek;
     private final Shape3D middle;
 
-    public CtBotShape(Bot parent) {
+    public CtBotShape(Color baseColor, ThreeDBot appearanceEventSource) {
     	// Kann kollidieren -- Gilt auch fuer alle Kinder im Szenegraph
     	setPickable(true);
 
@@ -190,10 +190,10 @@ public class CtBotShape extends Group {
     	leftCheek .setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
     	middle    .setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 
-    	setMiddleColor(parent.getNormalObstColor());
-    	setCheeksColor(parent.getNormalObstColor());
+    	setMiddleColor(baseColor);
+    	setCheeksColor(baseColor);
 
-    	parent.addAppearanceListener(new Closure<Color>() {
+    	appearanceEventSource.addAppearanceListener(new Closure<Color>() {
 			public void run(Color newAppearance) {
 				setCheeksColor(newAppearance);
 			}

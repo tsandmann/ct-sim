@@ -18,11 +18,12 @@
  */
 package ctSim.model;
 
-import static ctSim.model.AliveObstacle.ObstState.*;
+import static ctSim.model.ThreeDBot.ObstState.COLLIDED;
+import static ctSim.model.ThreeDBot.ObstState.HALTED;
+import static ctSim.model.ThreeDBot.ObstState.IN_HOLE;
 
 import java.awt.Color;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.media.j3d.BranchGroup;
@@ -34,25 +35,24 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import ctSim.controller.BotBarrier;
 import ctSim.controller.Config;
-import ctSim.controller.DefaultController;
+import ctSim.model.bots.Bot;
+import ctSim.model.bots.BotBuisitor;
+import ctSim.model.bots.SimulatedBot;
+import ctSim.model.bots.SimulatedBot.UnrecoverableScrewupException;
+import ctSim.model.bots.ctbot.CtBotShape;
 import ctSim.util.Closure;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
-import ctSim.view.gui.Debug;
 
 /**
  * Klasse fuer alle Hindernisse die sich selbst bewegen koennen
  *
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
-public abstract class AliveObstacle implements Runnable {
-	FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
-
-	private static final CountingMap numInstances = new CountingMap();
-	private final String name;
-
-	private final List<Runnable> disposeListeners = Misc.newList();
+public class ThreeDBot implements Bot, Runnable {
+	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
 
 	private final List<Closure<Color>> appearanceListeners = Misc.newList();
 
@@ -136,11 +136,7 @@ public abstract class AliveObstacle implements Runnable {
 	 */
 	private final BranchGroup branchgrp;
 	private final TransformGroup transformgrp;
-	private Group shape = null;
-
-	/** Verweis auf den zugehoerigen Controller */
-	// TODO: Verweis auf Controller wirklich noetig?
-	private DefaultController controller;
+	private final Group shape;
 
 	private Thread thrd;
 
@@ -152,22 +148,23 @@ public abstract class AliveObstacle implements Runnable {
 	// TODO
 	private long deltaT = 0;
 
-	/**
-	 * @param position Position des Objekts
-	 * @param heading Blickrichtung des Objekts
-	 */
-	public AliveObstacle(String name, Point3d position, Vector3d heading) {
-		this.name = name;
+	private final BotBarrier barrier;
 
-		// Instanz-Zahl erhoehen
-		numInstances.increase(getClass());
-		// Wenn wir sterben, Instanz-Zahl reduzieren
-		addDisposeListener(new Runnable() {
-			@SuppressWarnings("synthetic-access")
-			public void run() {
-				numInstances.decrease(AliveObstacle.this.getClass());
-			}
-		});
+	private final SimulatedBot bot;
+
+	private Runnable simulator;
+
+	/**
+	 * @param posInWorldCoord Position des Objekts
+	 * @param headInWorldCoord Blickrichtung des Objekts
+	 */
+	public ThreeDBot(Point3d posInWorldCoord, Vector3d headInWorldCoord,
+	BotBarrier barrier,	SimulatedBot bot) {
+		Color normalColor = Config.getBotColor(bot.getClass(),
+			bot.getInstanceNumber(), "normal");
+		this.shape = new CtBotShape(normalColor, this);
+		this.barrier = barrier;
+		this.bot = bot;
 
 		// Translationsgruppe fuer das Obst
 		transformgrp = new TransformGroup();
@@ -179,11 +176,18 @@ public abstract class AliveObstacle implements Runnable {
 		branchgrp = new BranchGroup();
 		branchgrp.setCapability(BranchGroup.ALLOW_DETACH);
 		branchgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
-		branchgrp.addChild(this.transformgrp);
+		branchgrp.addChild(transformgrp);
 
-		setPosition(position);
-		setHeading(heading);
+		transformgrp.addChild(shape);
+
+		setPosition(posInWorldCoord);
+		setHeading(headInWorldCoord);
 		updateAppearance();
+	}
+
+	//$$$ Rest der Konstruktion (koennte schoener sein)
+	public void setSimulator(Runnable simulator) {
+		this.simulator = simulator;
 	}
 
 	/**
@@ -191,25 +195,6 @@ public abstract class AliveObstacle implements Runnable {
 	 */
 	public final Group getShape() {
 		return shape;
-	}
-
-	/**
-	 * Setzt die 3D-Gestalt, die das Hindernis hat. Nur einmal aufrufen:
-	 * Wechseln der Gestalt wird nicht unterst&uuml;tzt
-	 */
-	public final void initShape(Group theShape) {
-		if (this.shape != null)
-			throw new IllegalStateException();
-		this.shape = theShape;
-		transformgrp.addChild(theShape);
-	}
-
-	/**
-	 * @param ctrl Referenz auf den Controller, die gesetzt werden soll
-	 */
-	public final void setController(DefaultController ctrl) {
-
-		this.controller = ctrl;
 	}
 
 	public final BranchGroup getBranchGroup() {
@@ -233,86 +218,29 @@ public abstract class AliveObstacle implements Runnable {
 	 * Startet den Bot (bzw. dessen Thread).
 	 */
 	public final void start() {
-
-		this.thrd = new Thread(this, "ctSim/"+this.getName());
-
-		this.thrd.start();
+		thrd = new Thread(this, "ctSim-"+toString());
+		thrd.start();
+		lg.fine("Thread "+thrd.getName()+" gestartet");
 	}
 
 	/**
 	 *  Stoppt den Bot (bzw. dessen Thread).
 	 */
-	public void die() {
+	public void dispose() {
+		lg.info("Stoppe "+toString());
+		
+		if (thrd != null) {
+			Thread t = thrd;
+			thrd = null; 
+			t.interrupt();
+		}
 
-		Thread dummy = this.thrd;
-
-		if(dummy == null)
-			return;
-
-		this.thrd = null;
-		dummy.interrupt();
-
-		for (Runnable r : disposeListeners)
-			r.run();
+		bot.dispose();
 	}
 
-	/**
-	 * <p>
-	 * Laufende Nummer des AliveObstacles, und zwar abh&auml;ngig von der
-	 * Subklasse: Laufen z.B. 2 GurkenBots und 3 TomatenBots (alle von
-	 * AliveObstacle abgeleitet), dann sind die Instance-Numbers:
-	 * <ul>
-	 * <li>GurkenBot 0</li>
-	 * <li>GurkenBot 1</li>
-	 * <li>TomatenBot 0</li>
-	 * <li>TomatenBot 1</li>
-	 * <li>TomatenBot 2</li>
-	 * </ul>
-	 * Instance-Numbers fangen immer bei 0 an.
-	 * </p>
-	 *
-	 * @see #getName()
-	 */
-	private int getInstanceNumber() {
-		/*
-		 * Drandenken: Wenn einer ne Subklasse instanziiert, die von
-		 * AliveObstacle abgeleitet ist, wird eine AliveObstacle-Instanz
-		 * automatisch miterzeugt -- Wenn wir hier getClass() aufrufen, liefert
-		 * das aber die exakte Klasse (also in unserm Fall niemals
-		 * AliveObstacle, sondern z.B. BestimmterDingsBot)
-		 */
-		return numInstances.get(getClass());
+	public void addDisposeListener(Runnable runsWhenAObstDisposes) {
+		bot.addDisposeListener(runsWhenAObstDisposes);
 	}
-
-	/**
-	 * <p>
-	 * Benutzerfreundlicher Name des Bots (wie dem Konstruktor &uuml;bergeben),
-	 * an die falls erforderlich eine laufende Nummer angeh&auml;ngt ist. Laufen
-	 * z.B. 2 AliveObstacle-Instanzen mit Namen &quot;Gurken-Bot&quot; und 3 mit
-	 * &quot;Tomaten-Bot&quot;, sind die R&uuml;ckgabewerte dieser Methode:
-	 * <ul>
-	 * <li>Gurken-Bot</li>
-	 * <li>Gurken-Bot (2)</li>
-	 * <li>Tomaten-Bot</li>
-	 * <li>Tomaten-Bot (2)</li>
-	 * <li>Tomaten-Bot (3)</li>
-	 * </ul>
-	 * </p>
-	 */
-	public String getName() {
-		int n = getInstanceNumber() + 1; // 1-based ist benutzerfreundlicher
-		return name + ((n < 2) ? "" : " (" + n + ")");
-	}
-
-	public String getDescription() {
-		return "Was Bewegliches";
-	}
-
-	/**
-	 * Diese Methode enthaelt die Routinen, die der Bot waehrend seiner Laufzeit
-	 * immer wieder durchfuehrt. Die Methode darf keine Schleife enthalten!
-	 */
-	protected abstract void work();
 
 	/**
 	 * @return Gibt die Position zurueck
@@ -390,14 +318,14 @@ public abstract class AliveObstacle implements Runnable {
 
 	public void set(ObstState state) {
 		if (obstState.add(state)) {
-			lg.info(getName()+" "+state.messageOnEnter);
+			lg.info(toString()+" "+state.messageOnEnter);
 			updateAppearance();
 		}
 	}
 
 	public void clear(ObstState state) {
 		if (obstState.remove(state)) {
-			lg.info(getName()+" "+state.messageOnExit);
+			lg.info(toString()+" "+state.messageOnExit);
 			updateAppearance();
 		}
 	}
@@ -445,8 +373,15 @@ public abstract class AliveObstacle implements Runnable {
 
 				// Ein AliveObstacle darf nur dann seine work()-Routine
 				// ausfuehren, wenn es nicht Halted ist
-				if (! is(HALTED))
-					work();
+				if (! is(HALTED)) {
+					try {
+						bot.doSimStep();
+					} catch (UnrecoverableScrewupException e) {
+						lg.warn(toString()+" hat schwere Probleme und ist " +
+							"steckengeblieben");
+						set(ObstState.HALTED);
+					}
+				}
 
 				// berechne die Zeit, die work benoetigt hat
 				long elapsedTime = System.currentTimeMillis() - realTimeBegin;
@@ -455,24 +390,14 @@ public abstract class AliveObstacle implements Runnable {
 				if ((timeout > 0) && (elapsedTime > timeout))
 					set(HALTED);
 
-				if (this.thrd != null)
-					this.controller.waitOnController();
+				if (thrd != null)
+					barrier.awaitNextSimStep();
 			}
 		} catch(InterruptedException ie) {
-			lg.warn("Alive Obstacle '%s' wurde unterbrochen und stirbt",
-				getName());
+			// No-op: nochmal Meldung ausgeben, dann Ende
 		}
-		Debug.out.println("Alive Obstacle \""+this.getName()+"\" stirbt..."); //$NON-NLS-1$ //$NON-NLS-2$
-		// TODO: ???
-		cleanup();
+		lg.info(toString()+" wurde entfernt");
 	}
-
-	/** Aufraeumen, wenn Bot stirbt */
-	protected void cleanup() {
-		// TODO Auto-generated method stub
-		shape=null;
-	}
-
 
 	/**
 	 * Hier wird aufgeraeumt, wenn die Lebenszeit des AliveObstacle zuende ist:
@@ -481,7 +406,7 @@ public abstract class AliveObstacle implements Runnable {
 	 *
 	 * @see AliveObstacle#work()
 	 */
-	// TODO:
+	// $$ Koennte eine gute Idee sein mit dem detach()
 //	protected void cleanup() {
 //		((BranchGroup)getNodeReference(BG)).detach();
 //		world.remove(this);
@@ -490,22 +415,19 @@ public abstract class AliveObstacle implements Runnable {
 
 	private void updateAppearance() {
 		String key;
-		if (obstState.isEmpty())
-			key= "normal";
+		if (isObstStateNormal())
+			key = "normal";
 		else
 			// appearanceKey des ersten gesetzten Elements
 			// Im Fall, dass mehr als ein ObstState gesetzt ist (z.B. COLLIDED
 			// und zugleich HALTED), werden alle ignoriert ausser dem ersten
 			key = obstState.iterator().next().appearanceKeyInXml;
 
-		Color c = Config.getBotColor(getClass(), getInstanceNumber(), key);
+		Color c = Config.getBotColor(bot.getClass(), bot.getInstanceNumber(),
+			key);
 
 		for (Closure<Color> listener : appearanceListeners)
 			listener.run(c);
-	}
-
-	public Color getNormalObstColor() {
-		return Config.getBotColor(getClass(), getInstanceNumber(), "normal");
 	}
 
 	/**
@@ -519,6 +441,7 @@ public abstract class AliveObstacle implements Runnable {
 	public void updateSimulation(long simulTime){
 		deltaT = simulTime - lastSimulTime;
 		lastSimulTime = simulTime;
+		simulator.run();
 	}
 
 	/**
@@ -555,17 +478,6 @@ public abstract class AliveObstacle implements Runnable {
 		return rv;
 	}
 
-	public void addDisposeListener(Runnable runsWhenAObstDisposes) {
-		if (runsWhenAObstDisposes == null)
-			throw new NullPointerException();
-		disposeListeners.add(runsWhenAObstDisposes);
-	}
-
-	public final void dispose() {
-		for (Runnable r : disposeListeners)
-			r.run();
-	}
-
 	public void addAppearanceListener(
 	Closure<Color> calledWhenObstStateChanges) {
 		if (calledWhenObstStateChanges == null)
@@ -573,22 +485,29 @@ public abstract class AliveObstacle implements Runnable {
 		appearanceListeners.add(calledWhenObstStateChanges);
 	}
 
-	public static class CountingMap
-	extends HashMap<Class<? extends AliveObstacle>, Integer> {
-		private static final long serialVersionUID = 6419402218947363629L;
-
-		public synchronized void increase(Class<? extends AliveObstacle> c) {
-			if (containsKey(c))
-				put(c, get(c) + 1);
-			else
-				put(c, 0);
-		}
-
-		public synchronized void decrease(Class<? extends AliveObstacle> c) {
-			if (containsKey(c))
-				put(c, get(c) - 1);
-			else
-				throw new IllegalStateException();
-		}
+	@Override
+	public String toString() {
+		return bot.toString();
 	}
+
+	public String getDescription() {
+		return bot.getDescription();
+	}
+
+	public int getInstanceNumber() {
+		return bot.getInstanceNumber();
+	}
+
+	public void accept(BotBuisitor buisitor) {
+		//$$$ Hier Position-Visit hin
+		bot.accept(buisitor);
+	}
+
+	//$$ Nirgends verwendet, aber waere evtl. sinnvoll
+	/*
+	public Bounds getBounds() {
+		return new BoundingSphere(new Point3d(getPositionInWorldCoord()),
+			BOT_RADIUS);
+	}
+	*/
 }

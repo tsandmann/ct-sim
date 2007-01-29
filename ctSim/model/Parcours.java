@@ -344,12 +344,12 @@ public class Parcours {
 	 * @param bot
 	 * @return Die Startposition
 	 */
-	public Vector3d getStartPosition(int bot){
-		Vector3d pos = null;
+	public Point3d getStartPosition(int bot){
+		Point3d pos = null;
 		if (bot < BOTS)
-			pos= new Vector3d(this.startPositions[bot][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[bot][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
+			pos= new Point3d(this.startPositions[bot][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[bot][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
 		else
-			pos= new Vector3d(this.startPositions[0][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[0][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
+			pos= new Point3d(this.startPositions[0][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[0][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
 
 		return pos;
 	}

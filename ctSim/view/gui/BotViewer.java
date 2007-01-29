@@ -53,7 +53,7 @@ public class BotViewer extends JScrollPane {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		for (Class<?> b : buisitors) {
 			try {
-				BotBuisitor buisitor = (BotBuisitor)b.newInstance();
+				GuiBotBuisitor buisitor = (GuiBotBuisitor)b.newInstance();
 				bot.accept(buisitor);
 				if (buisitor.shouldBeDisplayed()) 
 					panel.add(buisitor);

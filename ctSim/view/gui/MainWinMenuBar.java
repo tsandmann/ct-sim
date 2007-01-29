@@ -271,8 +271,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 	private Runnable onResetSimulation = new Runnable() {
 		public void run() {
-			controller.reset();
-			mainWindow.reset();
+			//$$$ Stop-Knopf geht nicht
 		}
 	};
 

@@ -21,7 +21,7 @@ import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.util.Closure;
 import ctSim.util.Buisitor.Buisit;
 
-public class MousePictureViewer extends BotBuisitor {
+public class MousePictureViewer extends GuiBotBuisitor {
 	private static final long serialVersionUID = - 2167640810854877294L;
 
 	//$$$ Breiter

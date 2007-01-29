@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.media.j3d.AmbientLight;
@@ -55,8 +55,11 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import ctSim.controller.BotBarrier;
 import ctSim.controller.Config;
-import ctSim.model.bots.Bot;
+import ctSim.model.bots.SimulatedBot;
+import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
 import ctSim.view.gui.Debug;
 
 /**
@@ -74,6 +77,7 @@ import ctSim.view.gui.Debug;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class World {
+	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.World");
 
 	/** Breite des Spielfelds in m */
 	public static final float PLAYGROUND_THICKNESS = 0f;
@@ -86,11 +90,7 @@ public class World {
 
 	private Parcours parcours;
 
-	// TODO: joinen?
-	//private Set<Obstacle> obsts;
-	private Set<AliveObstacle> aliveObsts = new HashSet<AliveObstacle>();
-
-	private Set<ViewPlatform> views = new HashSet<ViewPlatform>();
+	private Set<ViewPlatform> viewPlatforms = new HashSet<ViewPlatform>();
 
 	/**
 	 * Die Quelle, aus der der Parcours dieser Welt gelesen wurde. Siehe
@@ -119,6 +119,32 @@ public class World {
 	 * @see #getSimTimeInMs()
 	 */
 	private long simTimeInMs = 0;
+
+	///////////////////////////////////////////////////////////////////////////
+
+	private final List<ThreeDBot> botsRunning = Misc.newList();
+	private final List<ThreeDBot> botsToStart = Misc.newList();
+
+	public synchronized void startBots() {
+		for (ThreeDBot b : botsToStart) {
+			b.start();
+			botsRunning.add(b);
+		}
+		botsToStart.clear();
+	}
+
+	public synchronized int getNumAliveObsts() {
+		return botsRunning.size() + botsToStart.size();
+	}
+
+	public synchronized void removeAllBotsNow() {
+		for(ThreeDBot b : botsToStart)
+			b.dispose();
+		for(ThreeDBot b : botsRunning)
+			b.dispose();
+	}
+
+	///////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * <p>
@@ -380,72 +406,42 @@ public class World {
 	 */
 	public void addViewPlatform(ViewPlatform view) {
 
-		this.views.add(view);
+		this.viewPlatforms.add(view);
 	}
 
-	//  TODO:
-//	public void addObstacle() {
-//
-//
-//	}
-
-	// TODO: Joinen mit den anderen adds
 	/**
 	 * Fuegt einen neuen Bot hinzu
 	 * @param bot Der neue Bot
 	 */
-	public void addBot(Bot bot) {
+	// TODO Fehlermeldung, wenn keine Startpositionen mehr... (siehe Parcours)
+	public ThreeDBot addBot(SimulatedBot bot, BotBarrier barrier) {
+		if (bot == null)
+			throw new NullPointerException();
 
-		// TODO: Hmmm...... woanders hin... Fehlermeldung, wenn keine Pos,Head mehr...
-		Point3d pos = new Point3d(this.parcours.getStartPosition(this.aliveObsts.size()+1));
-		if (pos != null) {
-			// TODO: Ganz haesslich:
-			pos.z = bot.getPositionInWorldCoord().z;	// Achtung die Bots stehen etwas ueber der Spielflaeche
-			bot.setPosition(pos);
-		}
+		Point3d pos = parcours.getStartPosition(getNumAliveObsts() + 1);
+		// Weiss der Himmel warum, aber die Bots sind 7,5 cm ueber Null --hkr
+		pos.z = 0.075;
+		Vector3d head = parcours.getStartHeading(getNumAliveObsts() + 1);
 
-		Vector3d head = new Vector3d(this.parcours.getStartHeading(this.aliveObsts.size()+1));
-		if (head != null) {
-			bot.setHeading(head);
-		}
+		final ThreeDBot botWrapper = new ThreeDBot(pos, head, barrier, bot);
 
-		this.addAliveObstacle(bot);
-	}
+		// Simulation
+		Runnable simulator = SimulatorFactory.createFor(this, botWrapper, bot);
+		botWrapper.setSimulator(simulator);
 
-	/**
-	 * Fuegt ein neues "belebtes" Hindernis hinzu
-	 * @param obst Das Hindernis
-	 */
-	public void addAliveObstacle(AliveObstacle obst) {
+		botsToStart.add(botWrapper);
+		obstBG.addChild(botWrapper.getBranchGroup());
+		botWrapper.updateSimulation(getSimTimeInMs());
 
-		// TODO: mit addObst joinen, bzw. wenigstens verwenden
-		this.aliveObsts.add(obst);
-		this.obstBG.addChild(obst.getBranchGroup());
-	}
+		botWrapper.addDisposeListener(new Runnable() {
+			public void run() {
+				botsToStart.remove(botWrapper);
+				botsRunning.remove(botWrapper);
+				obstBG.removeChild(botWrapper.getBranchGroup());
+			}
+		});
 
-	/**
-	 * @return Die Menge der "belebten" Hindernisse
-	 */
-	public Set<AliveObstacle> getAliveObstacles() {
-
-		return this.aliveObsts;
-	}
-
-	// TODO:
-//	public void removeObstacle() {
-//
-//
-//	}
-
-	/**
-	 * Entfernt ein Hindernis
-	 * @param obst Das Hindernis zu entfernen
-	 */
-	public void removeAliveObstacle(AliveObstacle obst) {
-
-		// TODO: mit remObst joinen, bzw. wenigstens verwenden
-		this.aliveObsts.remove(obst);
-		this.obstBG.removeChild(obst.getBranchGroup());
+		return botWrapper;
 	}
 
 	/* **********************************************************************
@@ -460,23 +456,25 @@ public class World {
 	/** Reichweite des Lichtes in m */
 	private static final float LIGHT_SOURCE_REACH = 1f;
 
-	/**
-	 * Prueft, ob ein Punkt auf dem Zielfeld liegt
-	 * @param pos Die Position zu pruefen
-	 * @return true, falls Ziel erreicht ist
-	 */
-	public boolean finishReached(Vector3d pos){
-		return this.parcours.finishReached(pos);
+	public ThreeDBot whoHasWon() {
+		for (ThreeDBot b : botsRunning) {
+			if (finishReached(b.getPositionInWorldCoord()))
+				return b;
+		}
+		return null;
 	}
 
-	//$$ doc finishReached
-	public boolean finishReached(Point3d pos){
-		return this.parcours.finishReached(new Vector3d(pos));
+	/**
+	 * @return {@code true}, falls pos auf einem der Zielfelder des Parcours
+	 * liegt. {@code false} andernfalls.
+	 */
+	private boolean finishReached(Point3d posInWorldCoord) {
+		return this.parcours.finishReached(new Vector3d(posInWorldCoord));
 	}
 
 	/**
 	 * Prueft, ob ein Objekt mit irgendeinem anderen Objekt kollidiert
-	 * 
+	 *
 	 * @param obst das Objekt
 	 * @param bounds die Grenzen des Objekts
 	 * @param newPosition die angestrebte neue Position
@@ -484,8 +482,8 @@ public class World {
 	 * es sich frei bewegen kann
 	 */
 	// TODO: Ueberarbeiten?
-	public boolean isCollided(AliveObstacle obst, /*Shape3D botBody,*/ Bounds bounds,
-			Vector3d newPosition) { //, String botName) {
+	public boolean isCollided(ThreeDBot obst, Bounds bounds,
+	Vector3d newPosition) {
 
 		Group botBody = obst.getShape();
 //		Bounds bounds = obst.getBounds();
@@ -963,16 +961,15 @@ public class World {
 		// Zeitbasis aktualisieren
 		increaseSimulTime();
 
-
-		Object[] aliveObstacles = aliveObsts.toArray();
+		ThreeDBot[] bots = botsRunning.toArray(new ThreeDBot[] {});
 		// pruefen, ob nicht etwa der Zeiger zu weit steht
-		if (aliveObstaclePtr >= aliveObstacles.length)
+		if (aliveObstaclePtr >= bots.length)
 			aliveObstaclePtr=0;
 
-		for (int i=aliveObstaclePtr; i<aliveObstacles.length; i++)
-			((AliveObstacle)aliveObstacles[i]).updateSimulation(getSimTimeInMs());
+		for (int i=aliveObstaclePtr; i<bots.length; i++)
+			bots[i].updateSimulation(getSimTimeInMs());
 		for (int i=0; i<aliveObstaclePtr; i++)
-			((AliveObstacle)aliveObstacles[i]).updateSimulation(getSimTimeInMs());
+			bots[i].updateSimulation(getSimTimeInMs());
 		aliveObstaclePtr++;
 	}
 
@@ -1013,24 +1010,13 @@ public class World {
 	 *
 	 */
 	public void cleanup() {
-		Iterator<AliveObstacle> it = aliveObsts.iterator();
-
-		while (it.hasNext()){
-			AliveObstacle aliveObstacle = it.next();
-			aliveObstacle.dispose();
-		}
-
-		views.clear();
-		aliveObsts.clear();
-
+		removeAllBotsNow();
+		viewPlatforms.clear();
 		scene = null;
 		lightBG = null;
 		obstBG = null;
 		terrainBG = null;
 		pickConeRay = null;
 		worldTG = null;
-
-
-
 	}
 }

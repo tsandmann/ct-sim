@@ -11,8 +11,8 @@ import java.util.List;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import ctSim.model.ThreeDBot;
 import ctSim.model.World;
-import ctSim.model.bots.Bot;
 import ctSim.util.Misc;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
@@ -153,7 +153,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      *
      * @see World#getSimTimeInMs()
      */
-    public void log(List<Bot> bots, long simTimeElapsed)
+    public void log(List<ThreeDBot> bots, long simTimeElapsed)
     throws IllegalArgumentException, SQLException, NullPointerException {
     	if (discardedLogEntries < logOneIn - 1) {
     		discardedLogEntries++;
@@ -165,7 +165,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     }
 
     //$$ doc logUncond()
-    public void logUnconditionally(List<Bot> bots, long simTimeElapsed)
+    public void logUnconditionally(List<ThreeDBot> bots, long simTimeElapsed)
     throws IllegalArgumentException, SQLException, NullPointerException {
     	// Gesundheitscheck
     	if (bots.size() != 1 && bots.size() != 2) {
@@ -190,14 +190,14 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     	ArrayList<Object> values = Misc.newList();
     	values.add(currentGame.getUniqueId());
     	values.add(simTimeElapsed);
-        Iterator<Bot> it = bots.iterator();
+        Iterator<ThreeDBot> it = bots.iterator();
 
-    	Bot b1 = it.next();
+        ThreeDBot b1 = it.next();
     	values.addAll(getFieldValues(b1));
 
     	if (it.hasNext()) {
     		// wir haben zwei Bots
-    		Bot b2 = it.next();
+    		ThreeDBot b2 = it.next();
     		values.addAll(getFieldValues(b2));
     		execSql(common + twoBots, values.toArray());
     	} else {
@@ -207,7 +207,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     }
 
     //$$ doc getFieldValues
-    private List<Object> getFieldValues(Bot b) {
+    private List<Object> getFieldValues(ThreeDBot b) {
         Point3d pos = b.getPositionInWorldCoord();
         Vector3d head = b.getHeadingInWorldCoord();
         return Arrays.asList(new Object[] {

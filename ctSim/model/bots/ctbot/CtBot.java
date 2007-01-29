@@ -18,17 +18,28 @@
  */
 package ctSim.model.bots.ctbot;
 
-import javax.media.j3d.BoundingSphere;
-import javax.media.j3d.Bounds;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
+import java.awt.Color;
 
-import ctSim.model.bots.Bot;
+import ctSim.model.bots.BasicBot;
+import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.MousePictureComponent;
+import ctSim.model.bots.components.Sensors;
 
 /**
  * Abstrakte Oberklasse fuer alle c't-Bots
  */
-public abstract class CtBot extends Bot {
+public abstract class CtBot extends BasicBot {
+	private static final Color[] ledColors = {
+		new Color(  0,  84, 255), // blau
+		new Color(  0,  84, 255), // blau
+		Color.RED,
+		new Color(255, 200,   0), // orange
+		Color.YELLOW,
+		Color.GREEN,
+		new Color(  0, 255, 210), // tuerkis
+		Color.WHITE,
+	};
+
 	//$$ Alle Konstanten: verwendet?
 	/** Abstand vom Zentrum zur Aussenkante des Bots [m] */
 	protected static final double BOT_RADIUS = 0.060d;
@@ -39,20 +50,43 @@ public abstract class CtBot extends Bot {
 	/** Bodenfreiheit des Bots [m] */
 	protected static final double BOT_GROUND_CLEARANCE = 0.015d;
 
-	/* TODO:
-	 * Pos. u. Head. in Klassenhierarchie weiter nach oben:
-	 * -> Jedes (Alive)Obstacle braucht (initiale) Pos.
-	 *
-	 */
-	/**
-	 * Der Konstruktor
-	 * @param name Name
-	 * @param pos Position
-	 * @param head Blickrichtung
-	 */
-	public CtBot(String name, Point3d pos, Vector3d head) {
-		super(name, pos, head);
-		initShape(new CtBotShape(this));
+	public CtBot(String name) {
+		super(name);
+
+		components.add(
+			new MousePictureComponent(), //$$$ Nur realbot
+			new Actuators.Governor(true),
+			new Actuators.Governor(false),
+			new Actuators.LcDisplay(20, 4),
+			new Actuators.Log(),
+			new Actuators.DoorServo(),
+			new Sensors.Encoder(true),
+			new Sensors.Encoder(false),
+			new Sensors.Distance(true),
+			new Sensors.Distance(false),
+			new Sensors.Line(true),
+			new Sensors.Line(false),
+			new Sensors.Border(true),
+			new Sensors.Border(false),
+			new Sensors.Light(true),
+			new Sensors.Light(false),
+			new Sensors.Mouse(true),
+			new Sensors.Mouse(false),
+			new Sensors.RemoteControl(),
+			new Sensors.Door(),
+			new Sensors.Trans(),
+			new Sensors.Error()
+		);
+
+		// LEDs
+		int numLeds = ledColors.length;
+		for (int i = 0; i < numLeds; i++) {
+			String ledName = "LED " + (i + 1)
+					 + (i == 0 ? " (vorn rechts)" :
+						i == 1 ? " (vorn links)" : "");
+			components.add(
+				new Actuators.Led(ledName, numLeds - i - 1, ledColors[i]));
+		}
 
 		//$$$ Toter Code
 		// Einfachen Konstruktor aufrufen:
@@ -61,11 +95,5 @@ public abstract class CtBot extends Bot {
 //		vec.z += getHeight() / 2 + getGroundClearance();
 //		setPos(vec);
 //		setHeading(head);
-	}
-
-	//$$ Nirgends verwendet
-	public Bounds getBounds() {
-		return new BoundingSphere(new Point3d(getPositionInWorldCoord()), 
-			BOT_RADIUS);
 	}
 }
