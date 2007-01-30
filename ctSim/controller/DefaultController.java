@@ -30,6 +30,7 @@ import java.net.UnknownHostException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import ctSim.ComConnection;
 import ctSim.ConfigManager;
 import ctSim.Connection;
 import ctSim.TcpConnection;
@@ -40,6 +41,7 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.CtBotSimTest;
+import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
 import ctSim.view.View;
@@ -460,10 +462,13 @@ public class DefaultController implements Controller, BotBarrier, Runnable {
     }
 
     public void addComBot() {
-		//$$$ RealBot erstellen
-//		addBot(new RealCtBot(new ComConnection(), world,
-//			"USB-Bot", new Point3d(), 0));
-		lg.fine("Serielle Verbindung von realem Bot eingegangen");
+		try {
+			addBotToView(new RealCtBot(new ComConnection()));
+			lg.fine("Serielle Verbindung von realem Bot eingegangen");
+		} catch (Exception e) {
+			lg.warn(e, "Konnte serielle Verbindung nicht herstellen; Bot " +
+					"nicht hinzugef\u00FCgt");
+		}
     }
 
     /**
@@ -508,15 +513,13 @@ public class DefaultController implements Controller, BotBarrier, Runnable {
     		throw new NullPointerException();
     	if (judge.isAddingBotsAllowed()) {
     		Bot b = world.addBot(bot, this);
-    		view.onBotAdded(b);
+    		addBotToView(b);
     	}
     }
 
-    /*
-    private synchronized void addBot(RealBot bot) {
-
+    private synchronized void addBotToView(Bot bot) {
+    	view.onBotAdded(bot);
     }
-    */
 
     public int getParticipants() {
         return world.getNumAliveObsts();

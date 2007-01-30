@@ -41,14 +41,6 @@ public abstract class Connection {
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
 
 	/**
-	 * Hat keinen BufferedOutputStream, denn auf dem muss man (offenbar) immer
-	 * flush() aufrufen. Wir wissen jedoch nicht, wann die Leute, die uns
-	 * verwenden, flushen wollen &amp;ndash; daher m&uuml;ssen die das machen
-	 * mit dem BufferedOutputStream.
-	 */
-	private DataOutputStream output = null;
-	
-	/**
 	 * Aufbau:
 	 *
 	 * <pre>
@@ -69,8 +61,16 @@ public abstract class Connection {
 	 */
 	private DataInputStream input = null;
 
+	/**
+	 * Hat keinen BufferedOutputStream, denn auf dem muss man (offenbar) immer
+	 * flush() aufrufen. Wir wissen jedoch nicht, wann die Leute, die uns
+	 * verwenden, flushen wollen &amp;ndash; daher m&uuml;ssen die das machen
+	 * mit dem BufferedOutputStream.
+	 */
+	private DataOutputStream output = null;
+
 	private CommandOutputStream cmdOutStream = null;
-	
+
 	/**
 	 * Beendet die laufende Verbindung
 	 *
@@ -90,29 +90,30 @@ public abstract class Connection {
 	 * @throws IOException
 	 */
 	public void write(Command c) throws IOException {
-		if (output == null)
-			output = new DataOutputStream(getOutputStream());
 		output.write(c.getCommandBytes());
 		output.flush();
 	}
 
-	// Singleton mit lazy init fuer bessere Performance
 	public synchronized CommandOutputStream getCmdOutStream() {
-		if (cmdOutStream == null)
-			cmdOutStream = new CommandOutputStream(output);
 		return cmdOutStream;
 	}
 
 	public void read(byte[] b) throws IOException {
-		if (input == null) {
-			input = new DataInputStream(new BufferedInputStream(
-				getInputStream()));
-		}
 		input.readFully(b);
 	}
 
-	protected abstract InputStream getInputStream() throws IOException;
-	protected abstract OutputStream getOutputStream() throws IOException;
+	// Muss waehrend Konstruktion aufgerufen werden
+	protected void setInputStream(InputStream is) {
+		input = new DataInputStream(new BufferedInputStream(is));
+	}
+
+	// Muss waehrend Konstruktion aufgerufen werden
+	protected void setOutputStream(OutputStream os) {
+		output = new DataOutputStream(os);
+		cmdOutStream = new CommandOutputStream(output);
+	}
+
+	public abstract String getShortName();
 
 	public abstract String getName();
 }

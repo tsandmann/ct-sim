@@ -23,10 +23,13 @@ import java.io.IOException;
 import java.net.ProtocolException;
 
 import ctSim.Connection;
+import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.Sensors;
-import ctSim.model.bots.ctbot.CtBot;
+import ctSim.model.bots.ctbot.CtBotSimTcp;
+import ctSim.model.bots.ctbot.CtBotSimTest;
+import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -52,7 +55,7 @@ import ctSim.util.Misc;
  * </p>
  * <p>
  * <strong>Beispiel</strong> eines Command:
- * 
+ *
  * <pre>
  * Byte#         Wert            Bedeutung
  * im TCP
@@ -81,7 +84,7 @@ import ctSim.util.Misc;
  *                               wenn der Bot den Inhalt des LCD &uuml;bertr&auml;gt oder
  *                               die Bilddaten, was der Maussensor sieht
  * </pre>
- * 
+ *
  * </p>
  * <p>
  * Im <strong>Fall 1</strong> (realer Bot) besteht das Protokoll aus folgenden
@@ -120,7 +123,7 @@ import ctSim.util.Misc;
  * verwendet intern Little-Endian &ndash; Konvertierung erfolgt zu Fu&szlig; in
  * dieser Klasse.
  * </p>
- * 
+ *
  * @author Benjamin Benz (bbe@heise.de)
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
@@ -237,6 +240,7 @@ public class Command {
 		}
 	}
 
+	//$$$ R und R
 	public static enum SubCode {
 		/** Das Standard-Subkommando */
 		NORM('N'),
@@ -259,16 +263,16 @@ public class Command {
 		/**
 		 * Subkommando f&uuml;r Handshake mit "real bot"
 		 *
-		 * @see CtBot
-		 * @see CtBotReal
+		 * @see RealCtBot
 		 */
 		WELCOME_REAL('R'),
 
 		/**
 		 * Subkommando f&uuml;r Handshake mit "simbot"
 		 *
-		 * @see CtBot
-		 * @see CtBotSim
+		 * @see SimulatedBot
+		 * @see CtBotSimTcp
+		 * @see CtBotSimTest
 		 */
 		WELCOME_SIM('S');
 
@@ -318,7 +322,7 @@ public class Command {
 
 	/** Markiert das Ende des Kommandos */
 	private final int crc;
-	
+
 	private boolean hasBeenProcessed = false;
 
 	/**
@@ -446,14 +450,14 @@ public class Command {
 		// Synch- oder Lesefehlern mal < 0 wird, explodiert alles. Daher
 		// formatChar() eingefuehrt
 		return
-			String.format("\n\tCommand-Code:\t%s\n\tSubcommand-Code:\t%s\n",
-				commandCode, subCommandCode) +
-			String.format("\tDirection:\t%d\n\tData:\tL %d / R %d\n" +
-				"\tPayload:\t%d Byte\n", direction, dataL, dataR,
-				payload.length) +
-			String.format("\tSeq:\t%d\n\tPayload:\t\"%s\" (%d)\n" +
-				"\tCRC:\t%s",
-				seq, getPayloadAsString(), payload.length, formatChar(crc));
+			"\n\tCommand-Code:\t"+commandCode+
+			"\n\tSubcommand-Code:\t"+subCommandCode+
+			"\n\tDirection:\t"+direction+
+			"\n\tData:\tL "+dataL+" / R "+dataR+
+			"\n\tSeq:\t"+seq+
+			"\n\tPayload:\t"+(payload==null? "" : '"'+getPayloadAsString()+'"')+
+			(payload==null ? "" : " (" + payload.length + " Byte)")+
+			"\n\tCRC:\t"+formatChar(crc);
 	}
 
 	/** Liefert eine kompakte Stringrepr&auml;sentation des Command (1 Zeile) */
@@ -477,7 +481,9 @@ public class Command {
 	 * @return Gibt die Nutzdaten als String zur&uuml;ck, unter Verwendung des
 	 * Standard-Charset &ndash; siehe {@link String#String(byte[])}.
 	 */
-	public String getPayloadAsString() { return new String(payload); }
+	public String getPayloadAsString() {
+		return payload == null ? "(null)" : new String(payload);
+	}
 
 	/** @return Gibt die Daten zum Kommando links zurueck */
 	public int getDataL() { return dataL; }
@@ -490,7 +496,7 @@ public class Command {
 
 	/** @return Liefert die Command-Sequenznummer */
 	public int getSeq() { return seq; }
-	
+
 	public boolean hasBeenProcessed() { return hasBeenProcessed; }
 
 	//$$ Kann bald weg
@@ -505,7 +511,7 @@ public class Command {
 
 	/** @param seq Paketsequenznummer, die gesetzt werden soll */
 	public void setSeq(int seq) { this.seq = seq; }
-	
+
 	public void setHasBeenProcessed(boolean hasBeenProcessed) {
 		this.hasBeenProcessed = hasBeenProcessed;
 	}

@@ -20,8 +20,6 @@
 package ctSim;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 
 /**
@@ -34,8 +32,10 @@ import java.net.Socket;
 public class TcpConnection extends Connection {
 	private Socket socket = null;
 
-	public TcpConnection(Socket sock) {
+	public TcpConnection(Socket sock) throws IOException {
 		this.socket = sock;
+		setInputStream(socket.getInputStream());
+		setOutputStream(socket.getOutputStream());
 	}
 
 	/**
@@ -61,19 +61,14 @@ public class TcpConnection extends Connection {
 	}
 
 	@Override
-	public InputStream getInputStream() throws IOException {
-		return socket.getInputStream();
-	}
-
-	@Override
-	public OutputStream getOutputStream() throws IOException {
-		return socket.getOutputStream();
-	}
-
-	@Override
 	public String getName() {
 		return
 			"TCP "+socket.getLocalAddress()+":"+socket.getLocalPort()+
 			  "->"+socket.getInetAddress() +":"+socket.getPort();
+	}
+
+	@Override
+	public String getShortName() {
+		return "TCP";
 	}
 }

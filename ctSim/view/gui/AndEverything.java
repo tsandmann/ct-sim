@@ -30,9 +30,9 @@ public class AndEverything extends GuiBotBuisitor {
 	@Buisit
 	public void buildLcdViewer(Actuators.LcDisplay d) {
 		JTextArea t = new JTextArea(d.getExternalModel(), null,
-			d.getNumRows()+1, d.getNumCols()+1);
+			d.getNumRows(), d.getNumCols()); 
 		t.setEnabled(false);
-		t.setEditable(false); //$$$ t focusable, focus stealing
+		//$$$ focus-stealing
 		t.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		t.setDisabledTextColor(Color.BLACK);
 		t.setBackground(new Color(170, 200, 90));

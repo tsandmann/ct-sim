@@ -7,8 +7,6 @@ import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import ctSim.controller.Config;
 
@@ -45,37 +43,54 @@ import ctSim.controller.Config;
  */
 public class ComConnection extends Connection {
 	protected final SerialPort port;
-	protected final InputStream in;
-	protected final OutputStream out;
 
 	/**
 	 * Baut eine COM-Verbindung auf (d.h. i.d.R. zum USB-2-Bot-Adapter).
 	 * Verwendet die in der Konfigdatei angegebenen Werte.
 	 *
-	 * @throws NoSuchPortException
-	 * @throws PortInUseException
-	 * @throws UnsupportedCommOperationException
-	 * @throws NumberFormatException
+	 * @throws CouldntOpenTheDamnThingException
 	 * @throws IOException
 	 */
-//	$$$ PortInUseExcp bei Verwendern
-	public ComConnection() throws NoSuchPortException, PortInUseException,
-		NumberFormatException, UnsupportedCommOperationException, IOException {
+	public ComConnection()
+	throws CouldntOpenTheDamnThingException, IOException {
+		String comPortName = Config.getValue("serialport");
 
-		CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(
-			Config.getValue("serialport"));
-		port = (SerialPort)portId.open("CtSim", 2000);
-
+		CommPortIdentifier portId;
+		try {
+			portId = CommPortIdentifier.getPortIdentifier(comPortName);
+		} catch (NoSuchPortException e) {
+			throw new CouldntOpenTheDamnThingException(
+				"COM-Port-Name '"+comPortName+"' stinkt", e);
+		}
+		try {
+			port = (SerialPort)portId.open("CtSim", 2000);
+		} catch (PortInUseException e) {
+			throw new CouldntOpenTheDamnThingException("COM-Port "+comPortName+
+				" wird schon verwendet; l\u00E4uft noch eine alte " +
+				"Sim-Instanz? Eventuell hilft es, den schwarzen Eumel des " +
+				"USB-2-Bot-Adapter vom USB-Kabel abzuziehen und wieder " +
+				"dranzustecken", e);
+		}		
 		//TODO Parameter configurierbar machen
-		port.setSerialPortParams(
-			Integer.parseInt(Config.getValue("serialportBaudrate")),
-			SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-			SerialPort.PARITY_NONE);
-		port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-		port.enableReceiveTimeout(60000);
+		String baudrate = Config.getValue("serialportBaudrate");
+		try {
+			port.setSerialPortParams(
+				Integer.parseInt(baudrate),
+				SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+				SerialPort.PARITY_NONE);
+			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
+			port.enableReceiveTimeout(60000);
+		} catch (NumberFormatException e) {
+			throw new CouldntOpenTheDamnThingException("Die Baud-Rate '"+
+				baudrate+"' ist keine g\u00FCltige Zahl", e);
+		} catch (UnsupportedCommOperationException e) {
+			port.close();
+			throw new CouldntOpenTheDamnThingException("Konnte seriellen " +
+					"Port \u00F6ffnen, aber nicht konfigurieren");
+		}
 
-		in = port.getInputStream();
-		out = port.getOutputStream();
+		setInputStream(port.getInputStream());
+		setOutputStream(port.getOutputStream());
 	}
 
 	/** Schlie&szlig;t den seriellen Port und schlie&szlig;t die Vaterklasse. */
@@ -86,6 +101,30 @@ public class ComConnection extends Connection {
 	}
 
 	@Override public String getName() { return port.getName(); }
-	@Override public InputStream getInputStream() { return in; }
-	@Override public OutputStream getOutputStream() { return out; }
+
+	public static class CouldntOpenTheDamnThingException extends Exception {
+		private static final long serialVersionUID = 4896454703538812700L;
+
+		public CouldntOpenTheDamnThingException() {
+			super();
+		}
+
+		public CouldntOpenTheDamnThingException(String message,
+		Throwable cause) {
+			super(message, cause);
+		}
+
+		public CouldntOpenTheDamnThingException(String message) {
+			super(message);
+		}
+
+		public CouldntOpenTheDamnThingException(Throwable cause) {
+			super(cause);
+		}
+	}
+
+	@Override
+	public String getShortName() {
+		return "USB";
+	}
 }

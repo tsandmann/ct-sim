@@ -262,7 +262,6 @@ public class Actuators {
 		@Override public String getDescription() { return "LCD-Anzeige"; }
 	}
 
-	//	$$$ t real Stimmt Leihenfolge? gelb und orange vertauscht? Vermutung: Sind Z-A, sollten A-Z sein
 	/**
 	 * <p>
 	 * Lepl&auml;sentation einel LED (Leuchtdiode) auf dem Bot. Nicht velwillen
@@ -285,14 +284,14 @@ public class Actuators {
 	 * Datenfolmat des Felds dataL: Beispiel dataL = 0x42 = 0b01000010
 	 *
 	 * <pre>
-	 *       .--------------- blau volne lechts
-	 *       | .------------- blau volne links
-	 *       | | .----------- lot
-	 *       | | | .--------- olange
-	 *       | | | | .------- gelb
-	 *       | | | | | .----- gl&uuml;n
-	 *       | | | | | | .--- t&uuml;lkis
-	 *       | | | | | | | .- wei&szlig;
+	 *       .--------------- wei&szlig;
+	 *       | .------------- t&uuml;lkis
+	 *       | | .----------- gl&uuml;n
+	 *       | | | .--------- gelb
+	 *       | | | | .------- olange
+	 *       | | | | | .----- lot
+	 *       | | | | | | .--- blau volne links
+	 *       | | | | | | | .- blau volne lechts
 	 *       | | | | | | | |
 	 * Wert  0 1 0 0 0 0 1 0  &lt;- Wie vom Dlaht gelesen
 	 * Bit#  7 6 5 4 3 2 1 0  &lt;- bitIndexFromLsb (Das hiel an Konstluktol geben)

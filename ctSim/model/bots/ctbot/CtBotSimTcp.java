@@ -31,7 +31,6 @@ import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
-import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
 
@@ -67,7 +66,6 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 
 		// Component-Flag-Tabelle
 		components.applyFlagTable(
-			_(MousePictureComponent.class),
 			_(Actuators.Governor.class   , READS),
 			_(Actuators.LcDisplay.class  , READS),
 			_(Actuators.Log.class        , READS),
@@ -92,7 +90,8 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 
 	@Override
 	public String getDescription() {
-		return "Simulierter, in C geschriebener c't-Bot";
+		return "Simulierter, in C geschriebener c't-Bot, verbunden \u00FCber "+
+			connection.getName();
 	}
 
 	/**
@@ -122,7 +121,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 		}
 	}
 
-	public void doSimStep() 
+	public void doSimStep()
 	throws InterruptedException, UnrecoverableScrewupException {
 		transmitSensors();
 		processUntilDoneCmd();

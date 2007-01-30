@@ -17,7 +17,7 @@ import ctSim.util.Closure;
 import ctSim.util.Misc;
 
 //$$ dic doc
-//$$$ t real MousePicture
+//$$$ t MousePicture "laufend" reisst manchmal ab: TcpDump ansehen
 /**
  * <ul><li>Command-Code SENS_MOUSE_PICTURE</li>
 * <li>Nutzlast: einen Teil der Pixel des Mausbilds, z.B. Pixel Nr. 42 bis 108</li>

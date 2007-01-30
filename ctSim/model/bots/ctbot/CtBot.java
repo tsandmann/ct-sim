@@ -22,7 +22,6 @@ import java.awt.Color;
 
 import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.components.Actuators;
-import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.Sensors;
 
 /**
@@ -54,7 +53,6 @@ public abstract class CtBot extends BasicBot {
 		super(name);
 
 		components.add(
-			new MousePictureComponent(), //$$$ Nur realbot
 			new Actuators.Governor(true),
 			new Actuators.Governor(false),
 			new Actuators.LcDisplay(20, 4),
@@ -85,7 +83,7 @@ public abstract class CtBot extends BasicBot {
 					 + (i == 0 ? " (vorn rechts)" :
 						i == 1 ? " (vorn links)" : "");
 			components.add(
-				new Actuators.Led(ledName, numLeds - i - 1, ledColors[i]));
+				new Actuators.Led(ledName, i, ledColors[i]));
 		}
 
 		//$$$ Toter Code

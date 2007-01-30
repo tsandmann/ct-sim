@@ -14,6 +14,8 @@ public class CommandOutputStream {
 	private int seq = 0; //$$ Die Sequenznummer wird irgendwann groesser das Feld, in dem sie uebermittelt wird. Spaeter wrappt die auch und wird negativ. Damit sollte man irgendwie umgehen
 
 	public CommandOutputStream(OutputStream underlyingStream) {
+		if (underlyingStream == null)
+			throw new NullPointerException();
 		this.underlyingStream = new BufferedOutputStream(underlyingStream);
 	}
 

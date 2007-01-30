@@ -2,8 +2,6 @@ package ctSim.model.bots.components;
 
 import java.io.IOException;
 
-import javax.swing.SpinnerNumberModel;
-
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
@@ -20,7 +18,7 @@ public class Sensors {
 	 * Klasse der Liniensensoren
 	 */
 	public static class Line extends NumberTwin
-	implements SimpleSensor, CanWrite {
+	implements SimpleSensor, CanRead, CanWrite {
 		@Override
 		protected String getBaseDescription() {
 			return "Liniensensor [0; 1023]";
@@ -35,7 +33,7 @@ public class Sensors {
 	 * Klasse der Lichtsensoren
 	 */
 	public static class Light extends NumberTwin
-	implements SimpleSensor, CanWrite {
+	implements SimpleSensor, CanRead, CanWrite {
 		@Override
 		protected String getBaseDescription() {
 			return "Lichtsensor";
@@ -50,7 +48,7 @@ public class Sensors {
 	 * Klasse der Rad-Encoder
 	 */
 	public static class Encoder extends NumberTwin
-	implements SimpleSensor, CanWrite {
+	implements SimpleSensor, CanRead, CanWrite {
 		@Override
 		protected String getBaseDescription() {
 			return "Rad-Encoder-Sensor";
@@ -64,7 +62,7 @@ public class Sensors {
 	/** Abstandssensor vom Typ GP2D12
 	 */
 	public static class Distance extends NumberTwin
-	implements SimpleSensor, CanWrite {
+	implements SimpleSensor, CanRead, CanWrite {
 		@Override
 		protected String getBaseDescription() {
 			return "Abstandssensor";
@@ -79,7 +77,7 @@ public class Sensors {
 	 * Klasse der Abgrundsensoren
 	 */
 	public static class Border extends NumberTwin
-	implements SimpleSensor, CanWrite {
+	implements SimpleSensor, CanRead, CanWrite {
 		@Override
 		protected String getBaseDescription() {
 			return "Abgrundsensor [0; 1023]";
@@ -138,7 +136,7 @@ public class Sensors {
 	}
 
 	public static class Mouse extends NumberTwin
-	implements CanWrite, SimpleSensor {
+	implements SimpleSensor, CanRead, CanWrite {
 		/**
 		 * {@code true}: Diese Instanz verwaltet die X-Komponente,
 		 * {@code false}: Y-Komponente. Im Konstruktor wird dieser Wert an den
@@ -162,9 +160,9 @@ public class Sensors {
 
 		@Override
 		public String getDescription() {
-			return "Maus-Sensor: " + 
-				(isX 
-				? "Drehgeschwindigkeit (X-Komponente)" 
+			return "Maus-Sensor: " +
+				(isX
+				? "Drehgeschwindigkeit (X-Komponente)"
 				: "Geradeaus-Geschwindigkeit (Y-Komponente)");
 		}
 
@@ -222,54 +220,32 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_RC5; }
 	}
 
-	// ExModel
-	public static class Door extends BotComponent<SpinnerNumberModel>
-	implements SimpleSensor, CanWrite {
-		@Override
-		public String getDescription() {
-			return "Affe-tot-Sensor";
-		}
-
+	public static class Door extends NumberSingleton
+	implements SimpleSensor, CanRead, CanWrite {
+		@Override public String getDescription() { return "Affe-tot-Sensor"; }
 		@Override public String getName() { return "DoorSens"; }
-		public Door() { super(new SpinnerNumberModel()); }
 		public Code getHotCmdCode() { return Code.SENS_DOOR; }
-
-		public synchronized void writeTo(Command c) {
-			c.setDataL(getExternalModel().getNumber().intValue()); //$$$ nicht threadsicher: writeTo laeuft nicht aufm EDT
-		}
 	}
 
-	// ExModel
-	public static class Trans extends BotComponent<SpinnerNumberModel>
-	implements SimpleSensor, CanWrite {
+	public static class Trans extends NumberSingleton
+	implements SimpleSensor, CanRead, CanWrite {
 		@Override
 		public String getDescription() {
 			return "Lichtschranke im Transportfach";
 		}
 
 		@Override public String getName() { return "Trans"; }
-		public Trans() { super(new SpinnerNumberModel()); }
 		public Code getHotCmdCode() { return Code.SENS_TRANS; }
-
-		public synchronized void writeTo(Command c) {
-			c.setDataL(getExternalModel().getNumber().intValue()); //$$$ nicht threadsicher: writeTo laeuft nicht aufm EDT
-		}
 	}
 
-	// ExModel
-	public static class Error extends BotComponent<SpinnerNumberModel>
-	implements SimpleSensor, CanWrite {
+	public static class Error extends NumberSingleton
+	implements SimpleSensor, CanRead, CanWrite {
 		@Override
 		public String getDescription() {
 			return "Sensor f\u00FCr Motor- oder Batteriefehler";
 		}
 
 		@Override public String getName() { return "Error"; }
-		public Error() { super(new SpinnerNumberModel()); }
 		public Code getHotCmdCode() { return Code.SENS_ERROR; }
-
-		public synchronized void writeTo(Command c) {
-			c.setDataL(getExternalModel().getNumber().intValue()); //$$$ nicht threadsicher: writeTo laeuft nicht aufm EDT
-		}
 	}
 }

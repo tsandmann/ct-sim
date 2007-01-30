@@ -15,7 +15,7 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 		public void visit(NumberTwin numberTwin, boolean isLeft);
 	}
 
-	Number internalModel = Double.valueOf(0); //$$$ visibility
+	protected Number internalModel = Double.valueOf(0); 
 	protected final boolean isLeft;
 
 	public NumberTwin(boolean isLeft) {

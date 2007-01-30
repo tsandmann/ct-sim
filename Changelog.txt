@@ -1,6 +1,15 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-30 16:25 Hendrik Krauss [hkr@heise.de]:
+* Neu: RealBot; scheint gut zu klappen ueber USB
+* Neu: Sensoren koennen lesen (wegen RealBot)
+* Fix: LED-Reihenfolge war falschrum
+* Neu: SaferThread, weil das Pattern viel vorkommt im Programm
+* Command robuster gemacht gegen NullPointers
+* Connection + Subklassen: Konstruktionsablauf vereinfacht
+* Besseres Exception-Handling fuer ComConnection
+
 2007-01-30 0:11 Hendrik Krauss [hkr@heise.de]: Grosse Umstellung hinsichtlich der Bots (hoffentlich die letzte)
 * Alles instabil, noch nicht gut getestet
 * Weg: BotManager (in World integriert)
