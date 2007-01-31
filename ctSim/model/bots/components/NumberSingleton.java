@@ -28,6 +28,7 @@ public abstract class NumberSingleton extends BotComponent<SpinnerNumberModel> {
 		internalModel = c.getDataL();
 	}
 
+	@Override
 	public void updateExternalModel() {
 		getExternalModel().setValue(internalModel);
 	}

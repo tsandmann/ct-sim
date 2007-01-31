@@ -253,8 +253,7 @@ public class Config {
 
 		/**
 		 * Modulo, d.h. wenn als Farben Rot, Gr&uuml;n und Hellbordeauxdemousin
-		 * da sind, kommt raus: (bei gleichem botType und appearanceType bleiben
-		 * gleich)
+		 * da sind, kommt raus: (botType und appearanceType bleiben gleich)
 		 * <ul>
 		 * <li>Index 0: Rot</li>
 		 * <li>Index 1: Gr&uuml;n </li>

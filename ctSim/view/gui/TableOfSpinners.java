@@ -2,6 +2,7 @@ package ctSim.view.gui;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Insets;
 
 import javax.swing.AbstractCellEditor;
@@ -65,18 +66,23 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 			else
 				return ((JSpinner)getValueAt(row, column)).isEnabled();
     	}
-
-		public void addRow(String label, String toolTip, boolean editable,
-			SpinnerModel sModel) {
-
+		
+		public void addRow(String label, String toolTip, boolean editable, 
+		SpinnerModel sModel, String decimalFormat) {
+			JSpinner spinner = new JSpinner(sModel);
+			if (decimalFormat != null) {
+				spinner.setEditor(new JSpinner.NumberEditor(spinner, 
+					decimalFormat));
+			}
+			// setEditor() setzt den Font auf Courier, keine Ahnung warum
+			spinner.setFont(Font.decode("SansSerif"));
+			spinner.setEnabled(editable);
+			spinner.setBorder(null);
 			JLabel la = new JLabel(label);
 			la.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
-			JSpinner s = new JSpinner(sModel);
-			s.setEnabled(editable);
-			s.setBorder(null);
 			la.setToolTipText(toolTip);
-			s.setToolTipText(toolTip);
-			addRow(new Object[] {la, s});
+			spinner.setToolTipText(toolTip);
+			addRow(new Object[] {la, spinner});
 
 			// Events aus dem SpinnerModel sollen Neumalen der Tabelle ausloesen
 			final int thisRow = getRowCount() - 1;
@@ -88,9 +94,15 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 			});
 		}
 
-		public void addBotComponent(BotComponent<? extends SpinnerModel> c) {
+		public void addRow(BotComponent<? extends SpinnerModel> c) {
 			addRow(c.getName(), c.getDescription(), c.isGuiEditable(),
-				c.getExternalModel());
+				c.getExternalModel(), null);
+		}
+		
+		public void addRow(BotComponent<? extends SpinnerModel> c, 
+		String decimalFormat) {
+			addRow(c.getName(), c.getDescription(), c.isGuiEditable(),
+				c.getExternalModel(), decimalFormat);
 		}
     }
 

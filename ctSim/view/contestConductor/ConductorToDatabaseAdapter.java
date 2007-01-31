@@ -209,7 +209,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     //$$ doc getFieldValues
     private List<Object> getFieldValues(ThreeDBot b) {
         Point3d pos = b.getPositionInWorldCoord();
-        Vector3d head = b.getHeadingInWorldCoord();
+        Vector3d head = b.getHeadingVectorInWorldCoord();
         return Arrays.asList(new Object[] {
         	pos.x,
         	pos.y,

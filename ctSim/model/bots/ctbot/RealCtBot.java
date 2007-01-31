@@ -18,13 +18,10 @@ import ctSim.util.SaferThread;
 public class RealCtBot extends CtBot {
 	protected class CmdProcessor extends SaferThread {
 		private final Connection connection;
-		private final BotComponentList compnts;
 
-		public CmdProcessor(final Connection connection,
-		BotComponentList compnts) {
+		public CmdProcessor(final Connection connection) {
 			super("ctSim-"+RealCtBot.this.toString());
 			this.connection = connection;
-			this.compnts = compnts;
 		}
 
 		@SuppressWarnings("synthetic-access") // Bei den zwei Logging-Aufrufen ist uns das wurst
@@ -33,8 +30,8 @@ public class RealCtBot extends CtBot {
 			Command cmd = null;
 			try {
 				cmd = new Command(connection);
-				compnts.processCommand(cmd);
-				compnts.updateView(); //$$$ Jedesmal? Performance?
+				components.processCommand(cmd);
+				updateView(); //$$$ Jedesmal? Performance?
 			} catch (ProtocolException e) {
 				lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere%s", cmd);
 			} catch (IOException e) {
@@ -89,7 +86,7 @@ public class RealCtBot extends CtBot {
 		for (BotComponent<?> c : components)
 			c.offerAsyncWriteStream(connection.getCmdOutStream());
 
-		final CmdProcessor cp = new CmdProcessor(connection, components);
+		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
 			public void run() {
 				cp.die();

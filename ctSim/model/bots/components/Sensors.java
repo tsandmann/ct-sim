@@ -120,6 +120,7 @@ public class Sensors {
 			c.setDataL(lastTransmittedSimTime);
 		}
 
+		@Override
 		public void updateExternalModel() {
 			// No-op, weil wir werden ja eh nicht angezeigt und operieren
 			// direkt auf dem ExternalModel
@@ -218,6 +219,11 @@ public class Sensors {
 		@Override public String getDescription() { return "Fernbedienung"; }
 		public RemoteControl() { super(null); }
 		public Code getHotCmdCode() { return Code.SENS_RC5; }
+
+		@Override
+		public void updateExternalModel() {
+			// No-op, wir zeigen nix an
+		}
 	}
 
 	public static class Door extends NumberSingleton

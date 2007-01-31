@@ -22,12 +22,6 @@ import java.net.ProtocolException;
 import java.util.Arrays;
 import java.util.EnumSet;
 
-import javax.media.j3d.Transform3D;
-import javax.swing.SwingUtilities;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-
-import ctSim.SimUtils;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
@@ -81,9 +75,6 @@ public abstract class BotComponent<M> {
 		 * werden.
 		 */
 		Code getHotCmdCode();
-
-		/** Nur auf dem EDT laufenlassen */
-		void updateExternalModel();
 	}
 
 	/**
@@ -173,7 +164,7 @@ public abstract class BotComponent<M> {
 	}
 
 	public boolean isGuiEditable() {
-		return writesSynchronously();
+		return writesSynchronously() || writesAsynchronously();
 	}
 
 	public void offerRead(final Command c) throws ProtocolException {
@@ -187,13 +178,8 @@ public abstract class BotComponent<M> {
 		}
 	}
 
-	public void askToUpdateExternalModel() {
-		if (! readsCommands())
-			return;
-		assert SwingUtilities.isEventDispatchThread();
-		// Cast kann nicht in die Hose gehen wegen setFlags()
-		((CanRead)this).updateExternalModel();
-	}
+	/** Nur auf dem EDT laufenlassen */
+	public abstract void updateExternalModel();
 
 	public void askForWrite(final CommandOutputStream s) {
 		if (! writesSynchronously())
@@ -211,91 +197,8 @@ public abstract class BotComponent<M> {
 	}
 
 	/** @return Gibt den Namen der Komponente zur&uuml;ck */
-	public String getName() { return name; } //$$$ abstract machen
+	public abstract String getName();
 
 	/** @return Beschreibung der Komponente */
 	public abstract String getDescription();
-
-	////////////////////////////////////////////////////////////////////////
-	//$$ Nur noch fuer BotPosition wichtig, alles unter der Linie
-
-	private static int ID_COUNT = 0;
-
-	private int id;
-	private String name;
-	private Point3d relPos;
-	private Vector3d relHead;
-
-	/**
-	 * Der Konstruktor
-	 * @param n Name der Komponente
-	 * @param rP relative Position
-	 * @param rH relative Blickrichtung
-	 */
-	public BotComponent(String n, Point3d rP, Vector3d rH) {
-		externalModel = null;
-		this.name    = n;
-		this.relPos  = rP;
-		this.relHead = rH;
-
-		this.id = ID_COUNT++;
-	}
-
-	/**
-	 * @return Gibt die ID der Komponente zurueck
-	 */
-	public int getId() {
-		return this.id;
-	}
-
-	/**
-	 * @return Gibt die relative Position der Komponente zurueck
-	 */
-	public Point3d getRelPosition() {
-		return this.relPos;
-	}
-
-	/**
-	 * @return Gibt die relative Blickrichtung der Komponente zurueck
-	 */
-	public Vector3d getRelHeading() {
-		return this.relHead;
-	}
-
-	/**
-	 * Gibt die absolute Position der Komponente zurueck
-	 * @param absPos Die absolute Position des Bots
-	 * @param absHead Die absolute Blickrichtung des Bots
-	 * @return Die absolute Position der Komponente
-	 */
-	public Point3d getAbsPosition(Point3d absPos, Vector3d absHead) {
-		Transform3D transform = SimUtils.getTransform(absPos, absHead);
-
-		Point3d pos = new Point3d(this.relPos);
-		transform.transform(pos);
-
-		return pos;
-	}
-
-	/**
-	 * Gibt die absolute Blickrichtung der Komponente zurueck
-	 * @param absPos Die absolute Position des Bots
-	 * @param absHead Die absolute Blickrichtung des Bots
-	 * @return Die absolute Blickrichtung der Komponente
-	 */
-	public Vector3d getAbsHeading(Point3d absPos, Vector3d absHead) {
-		Transform3D transform = SimUtils.getTransform(absPos, absHead);
-
-		Vector3d vec = new Vector3d(this.relHead);
-		transform.transform(vec);
-
-		return vec;
-	}
-
-	/**
-	 * @return Die relative 3D-Transformation
-	 */
-	public Transform3D getRelTransform() {
-		return SimUtils.getTransform(this.getRelPosition(), this.getRelHeading());
-	}
 }

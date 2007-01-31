@@ -67,8 +67,5 @@ public class TcpConnection extends Connection {
 			  "->"+socket.getInetAddress() +":"+socket.getPort();
 	}
 
-	@Override
-	public String getShortName() {
-		return "TCP";
-	}
+	@Override public String getShortName() { return "TCP"; }
 }

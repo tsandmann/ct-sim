@@ -42,7 +42,7 @@ public abstract class Connection {
 
 	/**
 	 * Aufbau:
-	 *
+	 * 
 	 * <pre>
 	 * .------------------------------------------.
 	 * | DataInputStream                          |
@@ -70,7 +70,7 @@ public abstract class Connection {
 	private DataOutputStream output = null;
 
 	private CommandOutputStream cmdOutStream = null;
-
+	
 	/**
 	 * Beendet die laufende Verbindung
 	 *
@@ -95,6 +95,7 @@ public abstract class Connection {
 	}
 
 	public synchronized CommandOutputStream getCmdOutStream() {
+		assert cmdOutStream != null;
 		return cmdOutStream;
 	}
 

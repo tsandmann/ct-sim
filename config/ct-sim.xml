@@ -38,6 +38,9 @@
 	Integer.decode() versteht. -->
 	<parameter name="rcStartCode" value="0x1185"/>
 
+	<parameter name="serialport" value="COM3"/>
+	<parameter name="serialportBaudrate" value="57600"/>
+
 	<bots>
 		<bot name="ctSim.model.bots.CtBotSimTest_0">
 			<appearance type="normal">

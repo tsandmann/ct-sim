@@ -205,7 +205,7 @@ public abstract class BasicBot implements Bot {
     				@SuppressWarnings("synthetic-access")
     				public void run() {
     					for (BotComponent<?> c : BotComponentList.this)
-    						c.askToUpdateExternalModel();
+    						c.updateExternalModel();
     				}
     			});
     		} catch (InvocationTargetException e) {
@@ -246,6 +246,7 @@ public abstract class BasicBot implements Bot {
 
 	private static final CountingMap numInstances = new CountingMap();
 
+	//$$ Schoener waere: fuer alle lg-Ausgaben ein Praefix getName()
 	protected final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots");
 
 	protected final BotComponentList components = new BotComponentList();
@@ -335,6 +336,10 @@ public abstract class BasicBot implements Bot {
 	public void accept(BotBuisitor buisitor) {
 		for (BotComponent<?> c : components)
 			buisitor.visit(c, this);
+	}
+
+	public void updateView() throws InterruptedException {
+		components.updateView();
 	}
 
     //$$ ViewPlatforms: Toter Code

@@ -97,4 +97,8 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 //		this.setActMotR(rr);
  */
 	}
+	
+	public void updateView() throws InterruptedException {
+		components.updateView();
+	}
 }

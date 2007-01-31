@@ -79,7 +79,7 @@ public class ComConnection extends Connection {
 				SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
 				SerialPort.PARITY_NONE);
 			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-			port.enableReceiveTimeout(60000);
+			port.enableReceiveTimeout(60000); //$$$ t receive timeout isReceiveTEna
 		} catch (NumberFormatException e) {
 			throw new CouldntOpenTheDamnThingException("Die Baud-Rate '"+
 				baudrate+"' ist keine g\u00FCltige Zahl", e);
@@ -108,7 +108,7 @@ public class ComConnection extends Connection {
 		public CouldntOpenTheDamnThingException() {
 			super();
 		}
-
+		
 		public CouldntOpenTheDamnThingException(String message,
 		Throwable cause) {
 			super(message, cause);
@@ -123,8 +123,5 @@ public class ComConnection extends Connection {
 		}
 	}
 
-	@Override
-	public String getShortName() {
-		return "USB";
-	}
+	@Override public String getShortName() { return "USB"; }
 }

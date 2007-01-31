@@ -73,6 +73,7 @@ public class Actuators {
 			return "Servomotor f\u00FCr Klappe";
 		}
 
+		@Override
 		public synchronized void updateExternalModel() {
 			getExternalModel().setValue(internalModel);
 		}
@@ -103,6 +104,7 @@ public class Actuators {
 			stuffToAppend = c.getPayloadAsString() + "\n";
 		}
 
+		@Override
 		public synchronized void updateExternalModel() {
 			try {
 				getExternalModel().insertString(getExternalModel().getLength(),
@@ -182,6 +184,7 @@ public class Actuators {
 			}
 		}
 
+		@Override
 		public synchronized void updateExternalModel() {
 			try {
 				getExternalModel().remove(0, getExternalModel().getLength());
@@ -330,6 +333,7 @@ public class Actuators {
 			internalModel = (c.getDataL() & bitMask) != 0;
 		}
 
+		@Override
 		public synchronized void updateExternalModel() {
 			getExternalModel().setSelected(internalModel);
 		}

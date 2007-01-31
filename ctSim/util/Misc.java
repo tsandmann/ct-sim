@@ -1,5 +1,6 @@
 package ctSim.util;
 
+import static java.lang.Math.PI;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;
@@ -13,6 +14,32 @@ import java.util.HashMap;
 public class Misc {
 	public static double log2(double x) {
 		return Math.log(x) / Math.log(2);
+	}
+
+	/**
+	 * Bringt einen Winkel in das Intervall ]&minus;180°; 180°].
+	 * 
+	 * @param angleInDeg Winkel in Grad
+	 */
+	public static double normalizeAngleDeg(double angleInDeg) {
+		while (angleInDeg > 180)
+			angleInDeg -= 360;
+		while (angleInDeg <= -180)
+			angleInDeg += 360;
+		return angleInDeg;
+	}
+
+	/**
+	 * Bringt einen Winkel in das Intervall ]&minus;&pi;; &pi;].
+	 * 
+	 * @param angleInRad Winkel im Bogenma&szlig;
+	 */
+	public static double normalizeAngleRad(double angleInRad) {
+		while (angleInRad > PI)
+			angleInRad -= 2 * PI;
+		while (angleInRad <= -PI)
+			angleInRad += 2 * PI;
+		return angleInRad;
 	}
 
 	/**
@@ -124,7 +151,7 @@ public class Misc {
 	 * Nach der hervorragenden Entdeckung von Josh Bloch; siehe <a
 	 * href="http://developers.sun.com/learning/javaoneonline/2006//coreplatform/TS-1512.html">Vortrag
 	 * bei der JavaOne</a>.
-	 */ 
+	 */
 	public static <T> ArrayList<T> newList() {
 		return new ArrayList<T>();
 	}

@@ -10,7 +10,7 @@ import ctSim.model.bots.components.BotComponent.CanRead;
 //$$ doc
 public class WelcomeReceiver extends BotComponent<Void> implements CanRead {
 	private final SubCode expectedForWelcome;
-	
+
 	public WelcomeReceiver(SubCode expectedForWelcome) {
 		super(null);
 		this.expectedForWelcome = expectedForWelcome;
@@ -33,7 +33,14 @@ public class WelcomeReceiver extends BotComponent<Void> implements CanRead {
 		}
 	}
 
+	@Override
 	public void updateExternalModel() {
 		// No-op
+	}
+
+	@Override
+	public String getName() {
+		// No-op
+		return null;
 	}
 }

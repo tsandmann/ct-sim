@@ -18,6 +18,9 @@
  */
 package ctSim.model;
 
+import static ctSim.model.ThreeDBot.Coord.X;
+import static ctSim.model.ThreeDBot.Coord.Y;
+import static ctSim.model.ThreeDBot.Coord.Z;
 import static ctSim.model.ThreeDBot.ObstState.COLLIDED;
 import static ctSim.model.ThreeDBot.ObstState.HALTED;
 import static ctSim.model.ThreeDBot.ObstState.IN_HOLE;
@@ -31,16 +34,21 @@ import javax.media.j3d.Group;
 import javax.media.j3d.Node;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.controller.BotBarrier;
 import ctSim.controller.Config;
+import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.BotBuisitor;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.SimulatedBot.UnrecoverableScrewupException;
+import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.ctbot.CtBotShape;
 import ctSim.util.Closure;
 import ctSim.util.FmtLogger;
@@ -51,7 +59,7 @@ import ctSim.util.Misc;
  *
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
-public class ThreeDBot implements Bot, Runnable {
+public class ThreeDBot extends BasicBot implements Bot, Runnable {
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
 
 	private final List<Closure<Color>> appearanceListeners = Misc.newList();
@@ -66,20 +74,20 @@ public class ThreeDBot implements Bot, Runnable {
 			"hat keinen Boden mehr unter den F\u00FC\u00DFen",
 			"hat wieder Boden unter den F\u00FC\u00DFen"),
 
-	/**
-	 * <p>
-	 * Das Obstacle ist von der weiteren Simulation ausgeschlossen, d.h. seine
-	 * work()-Methode wird nicht mehr aufgerufen. Es steht damit nur noch rum,
-	 * bis die Simulation irgendwann endet. Dieser Zustand kann eintreten, wenn
-	 * &ndash;
-	 * <ul>
-	 * <li>die work()-Methode l&auml;nger rechnet, als der AliveObstacleTimeout
-	 * in der Konfigdatei erlaubt, oder</li>
-	 * <li>wenn die TCP-Verbindung eines CtBotSimTcp abrei&szlig;t (d.h. der
-	 * CtBotSimTcp gibt sich dann diesen Status).</li>
-	 * </ul>
-	 * </p>
-	 */
+		/**
+		 * <p>
+		 * Das Obstacle ist von der weiteren Simulation ausgeschlossen, d.h.
+		 * seine work()-Methode wird nicht mehr aufgerufen. Es steht damit nur
+		 * noch rum, bis die Simulation irgendwann endet. Dieser Zustand kann
+		 * eintreten, wenn &ndash;
+		 * <ul>
+		 * <li>die work()-Methode l&auml;nger rechnet, als der
+		 * AliveObstacleTimeout in der Konfigdatei erlaubt, oder</li>
+		 * <li>wenn die TCP-Verbindung eines CtBotSimTcp abrei&szlig;t (d.h.
+		 * der CtBotSimTcp gibt sich dann diesen Status).</li>
+		 * </ul>
+		 * </p>
+		 */
 		HALTED(0x100, "halted",
 			"wird aus der Simulation ausgeschlossen");
 
@@ -102,6 +110,115 @@ public class ThreeDBot implements Bot, Runnable {
 		}
 	}
 
+	enum Coord { X, Y, Z }
+
+	public class PositionCompnt extends BotComponent<SpinnerNumberModel> {
+		private final Coord coord;
+
+		public PositionCompnt(final Coord coord) {
+			super(new SpinnerNumberModel());
+			this.coord = coord;
+
+			updateExternalModel(); // Initialen Wert setzen
+			getExternalModel().addChangeListener(new ChangeListener() {
+				public void stateChanged(
+				@SuppressWarnings("unused") ChangeEvent e) {
+					double newValue = getExternalModel().getNumber()
+						.doubleValue();
+					Point3d p = getPositionInWorldCoord();
+					switch (coord) {
+						case X:   p.x = newValue; break;
+						case Y:   p.y = newValue; break;
+						case Z:   p.z = newValue; break;
+					}
+					setPosition(p);
+				}
+			});
+		}
+
+		@Override
+		public boolean isGuiEditable() {
+			return true;
+		}
+
+		@Override
+		public String getName() {
+			return coord+" [m]";
+		}
+
+		@Override
+		public String getDescription() {
+			return coord+"-Koordinate in Meter";
+		}
+
+		@Override
+		public void updateExternalModel() {
+			double newValue = 0;
+			Point3d p = getPositionInWorldCoord();
+			switch (coord) {
+				case X:   newValue = p.x; break;
+				case Y:   newValue = p.y; break;
+				case Z:   newValue = p.z; break;
+			}
+			getExternalModel().setValue(newValue);
+		}
+	}
+
+	public class HeadingCompnt extends BotComponent<SpinnerNumberModel> {
+		protected boolean ignoreStateChange = false;
+
+		public HeadingCompnt() {
+			super(new SpinnerNumberModel());
+
+			updateExternalModel(); // Initialen Wert setzen
+			getExternalModel().addChangeListener(new ChangeListener() {
+				public void stateChanged(
+				@SuppressWarnings("unused") ChangeEvent e) {
+					/*
+					 * $$ ignoreStateChange: setHeading() sollte erkennen, wann
+					 * ein Aufruf ueberfluessig ist (weil das neue Heading sich
+					 * nicht vom alten unterscheidet). Wegen der doofen Sache,
+					 * dass Headings auf zwei Arten ausgedrueckt werden koennen
+					 * (Vector3d, double), funktioniert die Erkennung nicht gut.
+					 * Daher braucht wir ignoreStateChange. Wenn Heading mal
+					 * komplett auf double umgestellt ist, ist ignoreStateChange
+					 * ueberfluessig
+					 */
+					if (ignoreStateChange)
+						return;
+					double newValueDeg = getExternalModel().getNumber()
+						.doubleValue();
+					getExternalModel().setValue(Misc.normalizeAngleDeg(
+						newValueDeg));
+					setHeading(Math.toRadians(newValueDeg));
+				}
+			});
+		}
+
+		@Override
+		public boolean isGuiEditable() {
+			return true;
+		}
+
+		@Override
+		public String getName() {
+			return "Richtung [°]";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Richtung, in die der Bot blickt, gemessen in Grad; " +
+					"Blick nach Norden = 0°; Blick nach Westen = +90°";
+		}
+
+		@Override
+		public void updateExternalModel() {
+			ignoreStateChange = true;
+			getExternalModel().setValue(Math.toDegrees(getHeadingInRad()));
+			ignoreStateChange = false;
+		}
+	}
+
 	private final EnumSet<ObstState> obstState = EnumSet.noneOf(
 		ObstState.class);
 
@@ -119,7 +236,10 @@ public class ThreeDBot implements Bot, Runnable {
 
 	private Vector3d headingInWorldCoord = new Vector3d();
 
-	/** Unser Teil des J3D-Szenegraph:
+	/**
+	 * Unser Teil des J3D-Szenegraph:
+	 *
+	 * <pre>
 	 * BranchGroup-Instanz
 	 *
 	 *      |
@@ -133,6 +253,7 @@ public class ThreeDBot implements Bot, Runnable {
 	 *      v
 	 *
 	 *    shape
+	 * </pre>
 	 */
 	private final BranchGroup branchgrp;
 	private final TransformGroup transformgrp;
@@ -160,6 +281,7 @@ public class ThreeDBot implements Bot, Runnable {
 	 */
 	public ThreeDBot(Point3d posInWorldCoord, Vector3d headInWorldCoord,
 	BotBarrier barrier,	SimulatedBot bot) {
+		super(bot.toString());
 		Color normalColor = Config.getBotColor(bot.getClass(),
 			bot.getInstanceNumber(), "normal");
 		this.shape = new CtBotShape(normalColor, this);
@@ -183,6 +305,15 @@ public class ThreeDBot implements Bot, Runnable {
 		setPosition(posInWorldCoord);
 		setHeading(headInWorldCoord);
 		updateAppearance();
+
+		// Die holen sich die Position in ihren Konstruktoren, daher muss die
+		// schon gesetzt sein
+		components.add(
+			new PositionCompnt(X),
+			new PositionCompnt(Y),
+			new PositionCompnt(Z),
+			new HeadingCompnt()
+		);
 	}
 
 	//$$$ Rest der Konstruktion (koennte schoener sein)
@@ -219,6 +350,16 @@ public class ThreeDBot implements Bot, Runnable {
 	 */
 	public final void start() {
 		thrd = new Thread(this, "ctSim-"+toString());
+		addDisposeListener(new Runnable() {
+			@SuppressWarnings("synthetic-access")
+			public void run() {
+				lg.info("Stoppe "+thrd.getName());
+				Thread t = thrd;
+				thrd = null;
+				t.interrupt();
+			}
+		});
+
 		thrd.start();
 		lg.fine("Thread "+thrd.getName()+" gestartet");
 	}
@@ -226,31 +367,26 @@ public class ThreeDBot implements Bot, Runnable {
 	/**
 	 *  Stoppt den Bot (bzw. dessen Thread).
 	 */
+	@Override
 	public void dispose() {
-		lg.info("Stoppe "+toString());
-		
-		if (thrd != null) {
-			Thread t = thrd;
-			thrd = null; 
-			t.interrupt();
-		}
-
-		bot.dispose();
-	}
-
-	public void addDisposeListener(Runnable runsWhenAObstDisposes) {
-		bot.addDisposeListener(runsWhenAObstDisposes);
+		super.dispose(); // Unsere DisposeListener
+		bot.dispose(); // und die vom Wrappee
 	}
 
 	/**
 	 * @return Gibt die Position zurueck
 	 */
 	public final Point3d getPositionInWorldCoord() {
-		return posInWorldCoord;
+		return new Point3d(posInWorldCoord);
 	}
 
-	public final Vector3d getHeadingInWorldCoord() {
-		return headingInWorldCoord;
+	public final double getHeadingInRad() {
+		return radiansToYAxis(headingInWorldCoord);
+	}
+
+	@Deprecated
+	public final Vector3d getHeadingVectorInWorldCoord() {
+		return new Vector3d(headingInWorldCoord);
 	}
 
 	/**
@@ -274,7 +410,19 @@ public class ThreeDBot implements Bot, Runnable {
 		}
 	}
 
+	public final synchronized void setHeading(double headingInRad) {
+		setHeading(vectorFromAngle(headingInRad));
+	}
+
+	public static Vector3d vectorFromAngle(double headingInRad) {
+		headingInRad = Misc.normalizeAngleRad(headingInRad);
+		return new Vector3d(- Math.sin(headingInRad),
+		                    + Math.cos(headingInRad),
+		                    0);
+	}
+
 	//$$ Ziemlicher Quatsch, dass das ein Vector3 ist: double mit dem Winkel drin waere einfacher und wuerde dasselbe leisten
+	@Deprecated
 	public final synchronized void setHeading(Vector3d headingInWorldCoord) {
 		// Optimierung (Transform-Kram ist teuer)
 		if (this.headingInWorldCoord.equals(headingInWorldCoord))
@@ -297,11 +445,29 @@ public class ThreeDBot implements Bot, Runnable {
 	}
 
 	/**
-	 * Winkel zwischen positiver y-Achse der Welt und &uuml;bergebenem Vektor.
-	 * Ergebnis ist im Bogenma&szlig; und liegt im Intervall [&minus;&pi;;
-	 * +&pi;], positive Werte entsprechen der Backbordseite.
+	 * <p>
+	 * Winkel zu einem Vektor:
+	 *
+	 * <pre>
+	 *          0
+	 *          .
+	 *          .
+	 * +&pi;/2 . . . . . &minus;&pi;/2
+	 *          .
+	 *          .
+	 *         +&pi;
+	 * </pre>
+	 *
+	 * </p>
+	 * <p>
+	 * Liefert den Winkel zwischen positiver y-Achse der Welt und
+	 * &uuml;bergebenem Vektor. Ergebnis ist im Bogenma&szlig; und liegt im
+	 * Intervall ]&minus;&pi;; +&pi;]. Gemessen im Gegenuhrzeigersinn
+	 * ("mathematisch positiver Drehsinn"), d.h. positive Winkel liegen links,
+	 * wenn man in Richtung der y-Achse guckt. Ein Vektor, der exakt in Richtung
+	 * der negativen y-Achse zeigt, produziert +&pi; als Ergebnis.
+	 * </p>
 	 */
-	//$$ Was ist mit exakt entgegengesetzt? ist das +Pi oder -Pi? -> Doku
 	private static double radiansToYAxis(Vector3d v) {
 		double rv = v.angle(new Vector3d(0, 1, 0));
 		if (v.x > 0)
@@ -376,6 +542,7 @@ public class ThreeDBot implements Bot, Runnable {
 				if (! is(HALTED)) {
 					try {
 						bot.doSimStep();
+						updateView();
 					} catch (UnrecoverableScrewupException e) {
 						lg.warn(toString()+" hat schwere Probleme und ist " +
 							"steckengeblieben");
@@ -397,6 +564,12 @@ public class ThreeDBot implements Bot, Runnable {
 			// No-op: nochmal Meldung ausgeben, dann Ende
 		}
 		lg.info(toString()+" wurde entfernt");
+	}
+
+	@Override
+	public void updateView() throws InterruptedException {
+		super.updateView(); // Unsere Komponenten aktualisieren
+		bot.updateView(); // und die vom Wrappee
 	}
 
 	/**
@@ -478,28 +651,31 @@ public class ThreeDBot implements Bot, Runnable {
 		return rv;
 	}
 
-	public void addAppearanceListener(
-	Closure<Color> calledWhenObstStateChanges) {
-		if (calledWhenObstStateChanges == null)
-			throw new NullPointerException();
-		appearanceListeners.add(calledWhenObstStateChanges);
-	}
-
 	@Override
 	public String toString() {
 		return bot.toString();
 	}
 
+	public void addAppearanceListener(
+	Closure<Color> calledWhenObstStateChanged) {
+		if (calledWhenObstStateChanged == null)
+			throw new NullPointerException();
+		appearanceListeners.add(calledWhenObstStateChanged);
+	}
+
+	@Override
 	public String getDescription() {
 		return bot.getDescription();
 	}
 
+	@Override
 	public int getInstanceNumber() {
 		return bot.getInstanceNumber();
 	}
 
+	@Override
 	public void accept(BotBuisitor buisitor) {
-		//$$$ Hier Position-Visit hin
+		super.accept(buisitor);
 		bot.accept(buisitor);
 	}
 

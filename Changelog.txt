@@ -1,6 +1,14 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-01-31 22:43 Hendrik Krauss [hkr@heise.de]:
+* Weg: MovableObstacle (unklar, was Unterschied zu AliveObst sein soll, nirgends verwendet)
+* Neu: Gui fuer Position + Heading
+* Weg: Alte Pos-Gui, BotPosition (hat eigentlich nichts getan)
+* Umbenannt: ctSim.view.gui.Simple -> Tables (ist deskriptiver)
+* Neu: Serial-Port-Einstellungen in der ct-sim.xml (Realbot)
+* Kleinigkeiten
+
 2007-01-30 16:25 Hendrik Krauss [hkr@heise.de]:
 * Neu: RealBot; scheint gut zu klappen ueber USB
 * Neu: Sensoren koennen lesen (wegen RealBot)

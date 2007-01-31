@@ -59,6 +59,7 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 			c.setDataR(value);
 	}
 
+	@Override
 	public synchronized void updateExternalModel() {
 		getExternalModel().setValue(internalModel);
 	}

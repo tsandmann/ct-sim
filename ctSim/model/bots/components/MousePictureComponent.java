@@ -181,6 +181,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		completionLi.remove(li);
 	}
 
+	@Override
 	public synchronized void updateExternalModel() {
 		if (imageEventPending) {
 			imageEventPending = false;

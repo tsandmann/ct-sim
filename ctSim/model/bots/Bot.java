@@ -6,6 +6,7 @@ public interface Bot {
 	public String toString();
 	public String getDescription();
 	public int getInstanceNumber();
+	public void updateView() throws InterruptedException;
 	public void dispose();
 	public void addDisposeListener(Runnable runsWhenAObstDisposes);
 }

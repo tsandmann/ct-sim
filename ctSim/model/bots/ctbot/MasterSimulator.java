@@ -3,9 +3,7 @@
  */
 package ctSim.model.bots.ctbot;
 
-import static ctSim.model.ThreeDBot.ObstState.COLLIDED;
-import static ctSim.model.ThreeDBot.ObstState.IN_HOLE;
-
+import static ctSim.model.ThreeDBot.ObstState.*;
 import java.util.List;
 
 import javax.media.j3d.BoundingSphere;
@@ -31,6 +29,8 @@ import ctSim.util.Buisitor;
 import ctSim.util.Misc;
 import ctSim.util.Buisitor.Buisit;
 
+//$$ doc
+//$$ Der koennte aufgeteilt werden in allgemein (nach CtSim) und spezifisch (hierher)
 public class MasterSimulator
 implements NumberTwinVisitor, BotBuisitor, Runnable {
     class WheelSimulator {
@@ -148,7 +148,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
 			// neue Blickrichtung berechnen
 			// ergibt sich aus Rotation der Blickrichtung um 2*_gamma
-			Vector3d _hd = parent.getHeadingInWorldCoord();
+			Vector3d _hd = parent.getHeadingVectorInWorldCoord();
 			double _s2g = Math.sin(2 * _gamma);
 			double _c2g = Math.cos(2 * _gamma);
 			Vector3d newHeading = new Vector3d(

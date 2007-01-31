@@ -40,7 +40,7 @@ import ctSim.model.bots.components.WelcomeReceiver;
  */
 public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	/** Die TCP-Verbindung */
-	private final Connection connection;
+    private final Connection connection;
 
 	/**
 	 * @param connection Verbindung
@@ -64,7 +64,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			new WelcomeReceiver(Command.SubCode.WELCOME_SIM)
 		);
 
-		// Component-Flag-Tabelle
+		// Wer liest, wer schreibt
 		components.applyFlagTable(
 			_(Actuators.Governor.class   , READS),
 			_(Actuators.LcDisplay.class  , READS),
@@ -125,7 +125,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	throws InterruptedException, UnrecoverableScrewupException {
 		transmitSensors();
 		processUntilDoneCmd();
-		components.updateView();
+		updateView();
 	}
 
 	/** Leite Sensordaten an den Bot weiter

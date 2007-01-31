@@ -35,10 +35,10 @@ public class BotViewer extends JScrollPane {
 	private static final long serialVersionUID = - 7367493564649395707L;
 
 	private static final Class[] buisitors = {
-		//$$$ Wo ist eigentlich Pos hin?
+		Tables.Position.class, 
 		Leds.class,
-		Simple.Actuators.class,
-		Simple.Sensors.class,
+		Tables.Actuators.class,
+		Tables.Sensors.class,
 		MousePictureViewer.class,
 		AndEverything.class,
     };
