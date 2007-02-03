@@ -40,9 +40,7 @@ public interface Controller {
 
 	public void addTestBot();
 
-	public void connectToTcp(String address);
-
-	public void addComBot();
+	public void connectToTcp(String hostname, String port);
 
 	public void openWorldFromFile(File sourceFile);
 

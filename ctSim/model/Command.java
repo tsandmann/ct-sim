@@ -24,9 +24,21 @@ import java.net.ProtocolException;
 
 import ctSim.Connection;
 import ctSim.model.bots.SimulatedBot;
-import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.MousePictureComponent;
-import ctSim.model.bots.components.Sensors;
+import ctSim.model.bots.components.Actuators.DoorServo;
+import ctSim.model.bots.components.Actuators.Governor;
+import ctSim.model.bots.components.Actuators.LcDisplay;
+import ctSim.model.bots.components.Actuators.Led;
+import ctSim.model.bots.components.Actuators.Log;
+import ctSim.model.bots.components.Sensors.Border;
+import ctSim.model.bots.components.Sensors.Distance;
+import ctSim.model.bots.components.Sensors.Door;
+import ctSim.model.bots.components.Sensors.Encoder;
+import ctSim.model.bots.components.Sensors.Light;
+import ctSim.model.bots.components.Sensors.Line;
+import ctSim.model.bots.components.Sensors.Mouse;
+import ctSim.model.bots.components.Sensors.RemoteControl;
+import ctSim.model.bots.components.Sensors.Trans;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.bots.ctbot.RealCtBot;
@@ -49,9 +61,14 @@ import ctSim.util.Misc;
  * &uuml;ber seine TCP-Verbindung vom Sim Sensorwerte gef&uuml;ttert. Der Sim
  * speichert die Werte in einem Command-Objekt, das er anschlie&szlig;end ins
  * TCP schreibt.</li>
- * </ul>
- * </li>
  * </ol>
+ * </p>
+ * <p>
+ * Diese Klasse behandelt das Dekodieren eines Commands aus einem Haufen Bytes
+ * (siehe {@linkplain #Command(Connection) Konstruktor}) und das Enkodieren eines
+ * Commands (siehe {@link #getCommandBytes()}). Verwendet und interpretiert
+ * werden die Commands in den Bot-Komponenten. Die betreffenden Komponenten
+ * stehen in der {@linkplain Code Liste der Command-Codes}.
  * </p>
  * <p>
  * <strong>Beispiel</strong> eines Command:
@@ -63,7 +80,8 @@ import ctSim.util.Misc;
  *                               immer '&gt;'
  *   1           'H' (Ascii 72)  Command-Code, hier der f&uuml;r die
  *                               Helligkeitssensoren
- *   2 Bit 0     0               Richtungsangabe, 0 = Anfrage, 1 = Antwort $$$ direction
+ *   2 Bit 0     0               Richtungsangabe, 0 = Anfrage, 1 = Antwort. Ist
+ *                               historisch und steht immer auf 0.
  *   2 Bits 1-7  'N' (Ascii 78)  Sub-Command-Code: Nur von einigen Command-Codes
  *                               verwendet, ist normalerweise N (&quot;normal&quot;)
  *   3           0               L&auml;nge der Nutzlast in Byte, hier: keine
@@ -87,47 +105,109 @@ import ctSim.util.Misc;
  *
  * </p>
  * <p>
- * Im <strong>Fall 1</strong> (realer Bot) besteht das Protokoll aus folgenden
- * Regeln:
+ * F&uuml;r einen <strong>realen Bot</strong> besteht das Protokoll aus
+ * folgenden Regeln:
  * <ul>
- * <li>Der Steuercode sendet laufend Commands mit Sensor-Messwerten und anderen
- * Statusinformationen, die der Sim auswertet und dem Benutzer anzeigt. Welche
- * einzelnen Commands behandelt werden, und wie sie im Detail interpretiert
- * werden, ist in den Bot-Komponenten beschrieben, die das Interpretieren
- * vornehmen. Siehe die Abschnitte <strong>c't-Bot-Protokoll</strong> in den
- * Klassen {@link Actuators.Led}, {@link Sensors.RemoteControl}
- * $$ doc-c't-Bot-Protokoll </li>
+ * <li>Der Bot-Steuercode sendet laufend Commands mit Sensor-Messwerten und
+ * anderen Statusinformationen, die der Sim auswertet und dem Benutzer anzeigt.
+ * Welche einzelnen Commands behandelt werden, und wie sie im Detail
+ * interpretiert werden, ist Sache der Bot-Komponenten wie in der
+ * {@linkplain Code Command-Code-Liste} beschrieben. </li>
  * <li>Beim Start des Sim &uuml;bertr&auml;gt er ein Command mit dem
  * Command-Code {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
- * (Zu diesem Zeitpunkt kann der Bot schon laufen, d.h. f&uuml;r den Bot kann
- * ein Handshake jederzeit angefordert werden.) Der Bot antwortet mit einem
- * Command, das ihn als realen Bot ausweist (Command-Code WELCOME,
- * Sub-Command-Code {@link SubCode#WELCOME_REAL WELCOME_REAL})</li>
+ * Der Bot antwortet mit einem Command, das ihn als realen Bot ausweist
+ * (Command-Code WELCOME, Sub-Command-Code
+ * {@link SubCode#WELCOME_REAL WELCOME_REAL}). Falls der Bot schon l&auml;uft,
+ * wenn der Sim die Verbindung aufbaut, sendet der Sim trotzdem ein
+ * {@code WELCOME}; bei USB-Verbindungen (COM-Verbindungen) schickt der Sim
+ * kein {@code WELCOME}, da von vornherein klar ist, dass es ein Real-Bot sein
+ * muss. Aus Sicht des Bot kann ein Handshake also jederzeit kommen oder
+ * &uuml;berhaupt nie.</li>
  * <li>Jederzeit w&auml;hrend der Verbindung kann der Sim ein Command senden,
  * das das Bild anfordert, das der Maussensor auf der Botunterseite sieht
  * (Command-Code {@link Code#SENS_MOUSE_PICTURE SENS_MOUSE_PICTURE}). Der Bot
  * beantwortet das mit einer Serie von Commands mit dem Aufbau, der in
- * {@link MousePictureComponent} beschrieben ist. </li>
+ * {@link MousePictureComponent} beschrieben ist</li>
+ * <li>Jederzeit w&auml;hrend der Verbindung kann der Sim ein Command senden,
+ * das einen Befehl der RC5-Fernbedienung repr&auml;sentiert (Command-Code
+ * {@link Code#SENS_RC5 SENS_RC5})</li>
  * </ul>
  * </p>
  * <p>
- * Im <strong>Fall 2</strong> (simulierter Bot) ist das Protokoll:
+ * F&uuml;r einen <strong>simulierten Bot</strong> ist das Protokoll:
  * <ul>
- * <li>$$ doc</li>
- * <li></li>
+ * <li>Der Sim lauscht auf dem TCP-Port, der in der Konfigdatei angegeben ist
+ * (Parameter "botport").</li>
+ * <li>Bot-Steuercode verbindet sich mit dem TCP-Port. Der Sim sendet ein
+ * Command mit dem {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
+ * Der Bot antwortet mit einem Command, das ihn als simulierten Bot ausweist
+ * (Command-Code WELCOME, Sub-Command-Code
+ * {@link SubCode#WELCOME_SIM WELCOME_SIM}).</li>
+ * <li>Der Sim sendet einen Block von Commands, die Sensorwerte beschreiben. Er
+ * ist abgeschlossen mit einem Command, was den Command-Code
+ * {@link Code#DONE DONE} hat. Beispiel:
+ *
+ * <pre>
+ * Richtung  Command-Code         dataL dataR
+ *
+ * Sim->Bot: SENS_MOUSE           L   0 R   0 Payload=''
+ * Sim->Bot: SENS_DOOR            L   0 R   0 Payload=''
+ * Sim->Bot: SENS_BORDER          L 690 R 690 Payload=''
+ * Sim->Bot: SENS_LDR             L 965 R 965 Payload=''
+ * Sim->Bot: SENS_IR              L 100 R  80 Payload=''
+ * Sim->Bot: SENS_ERROR           L   0 R   0 Payload=''
+ * Sim->Bot: SENS_RC5             L   0 R   0 Payload=''
+ * Sim->Bot: SENS_TRANS           L   0 R   0 Payload=''
+ * Sim->Bot: SENS_LINE            L 690 R 690 Payload=''
+ * Sim->Bot: SENS_ENC             L   0 R   0 Payload=''
+ * Sim->Bot: DONE                 L  30 R   0 Payload=''</pre>
+ *
+ * Wenn ein Bot andere Sensoren h&auml;tte als der normale c't-Bot, s&auml;he
+ * die Liste anders aus. Manche Sensoren senden nur, wenn sie etwas zu senden
+ * haben (Beispiel f&uuml;r dieses Verhalten: SENS_MOUSE_PICTURE, also die
+ * {@link MousePictureComponent}). Das DONE-Command enth&auml;lt die aktuelle
+ * Simulatorzeit in Millisekunden, falls der Bot zeitabh&auml;ngige Sachen
+ * rechnen will. </li>
+ * <li>Der Bot berechnet auf Basis der simulierten Sensorwerte seine
+ * n&auml;chsten Aktionen. Dann sendet er einen Block von Commands mit
+ * Aktuatorwerten. Er ist abgeschlossen mit einem Command, was den Command-Code
+ * {@link Code#DONE DONE} hat. Beispiel:
+ *
+ * <pre>
+ * Richtung  CmdCode/SubCmdCode   dataL dataR
+ *
+ * Bot->Sim: ACT_LED              L 128 R 128 Payload=''
+ * Bot->Sim: ACT_MOT              L -24 R  24 Payload=''
+ * Bot->Sim: ACT_LCD/LCD_CURSOR   L   0 R   0 Payload=''
+ * Bot->Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='P=3C5 3C5 D=999 999 '
+ * Bot->Sim: ACT_LCD/LCD_CURSOR   L   0 R   1 Payload=''
+ * Bot->Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='B=2B2 2B2 L=2B2 2B2 '
+ * Bot->Sim: ACT_LCD/LCD_CURSOR   L   0 R   2 Payload=''
+ * Bot->Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='R= 0  0 F=0 K=0 T=0 '
+ * Bot->Sim: ACT_LCD/LCD_CURSOR   L   0 R   3 Payload=''
+ * Bot->Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='I=1005 M=00000 00000'
+ * Bot->Sim: DONE                 L  30 R   0 Payload=''</pre>
+ *
+ * Das DONE-Command enth&auml;lt zur Best&auml;tigung die Simulatorzeit, die vom
+ * c't-Sim zuletzt empfangen wurde. </li>
+ * </li>
+ * Falls der Sim vom Benutzer pausiert wird, kann beliebig viel Armbanduhrenzeit
+ * zwischen einem Block und dem n&auml;chsten liegen. Die Simulatorzeit
+ * (DONE-Command) wird davon jedoch nicht beeinflusst. Bot-Steuercode sollte
+ * sich also auf die Simulatorzeit verlassen, nicht auf Armbanduhrenzeit.
+ * <li>
  * </ul>
  * </p>
  * <p>
  * "Network order&quot;, also die Endianness auf dem Draht, ist <a
  * href="http://de.wikipedia.org/wiki/Big_endian">Big-Endian</a>. Java
- * verwendet intern Little-Endian &ndash; Konvertierung erfolgt zu Fu&szlig; in
+ * verwendet intern Little-Endian. Die Konvertierung erfolgt zu Fu&szlig; in
  * dieser Klasse.
  * </p>
  *
  * @author Benjamin Benz (bbe@heise.de)
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-//$$ mehr doc
 public class Command {
 	final static FmtLogger lg = FmtLogger.getLogger("ctSim.model.Command");
 
@@ -140,31 +220,38 @@ public class Command {
 	/** Markiert das Ende des Kommandos */
 	public static final int CRCCODE = '<';
 
-	/** Richtung Anfrage */
+	/** Direction Anfrage. Commands haben immer das hier gesetzt. */
 	public static final int DIR_REQUEST = 0;
 
-	/** Richtung Antwort */
+	/** Direction Antwort. Nicht verwendet. */
 	public static final int DIR_ANSWER = 1;
 
+	///////////////////////////////////////////////////////////////////////////
+	// Enum Command-Code
+
+	/**
+	 * Ein Command-Code kann einen der Werte in diesem Enum haben. Der
+	 * Command-Code gibt den Typ des Commands an.
+	 */
 	public static enum Code {
-		/** Kommando zum Hallo-Sagen (Handshake)  */
+		/** Zum Hallo-Sagen (Handshake); siehe {@link Command}. */
 		WELCOME('W'),
 
 		/**
-		 * Abschluss eines Packs (nur beim Senden an Sim-Bot, Real-Bot schickt
-		 * uns das nicht)
+		 * Abschluss eines Blocks; Nur f&uuml;r simulierte Bots; siehe
+		 * {@link Command}
 		 */
 		DONE('X'),
 
-		//$$$ Verwirrend: akt-servo, akt-door, sens-door. Was ist der Unterschied?
 		/**
-		 * Steuerung Servo, der die Klappe vorm Transportfach
-		 * &ouml;ffnet/schlie&szlig;t
+		 * Steuerung des Servomotors, der die Klappe vorm Transportfach
+		 * &ouml;ffnet/schlie&szlig;t; siehe {@link DoorServo}.
 		 */
 		ACT_SERVO('S'),
 
 		/**
-		 * &Uuml;berwachung Klappe: Sagt wenn Klappe vorm Transportfach zu.
+		 * &Uuml;berwachung Klappe: Sagt wenn Klappe vorm Transportfach zu;
+		 * siehe {@link Door}.
 		 */
 		SENS_DOOR('D'),
 
@@ -176,60 +263,80 @@ public class Command {
 		@Deprecated
 		ACT_DOOR('d'),
 
-		/** LEDs */
+		/** LEDs (Leuchtdioden); siehe {@link Led}. */
 		ACT_LED('l'),
 
-		/** Motorgeschwindigkeit */
+		/** Motorgeschwindigkeit; siehe {@link Governor}. */
 		ACT_MOT('M'),
 
-		/** LCD-Anzeige */
+		/** LCD-Anzeige; siehe {@link LcDisplay}. */
 		ACT_LCD('c'),
 
-		/** Abgrundsensoren */
+		/** Abgrundsensoren; siehe {@link Border}. */
 		SENS_BORDER('B'),
 
-		/** Radencoder */
+		/** Radencoder; siehe {@link Encoder}. */
 		SENS_ENC('E'),
 
-		/** Motor- oder Batteriefehler */
+		/**
+		 * Motor- oder Batteriefehler, siehe
+		 * {@link ctSim.model.bots.components.Sensors.Error}.
+		 */
 		SENS_ERROR('e'),
 
-		/** Abstandssensoren */
+		/** Abstandssensoren, siehe {@link Distance}. */
 		SENS_IR('I'),
 
-		/** Helligkeitssensoren */
+		/** Helligkeitssensoren, siehe {@link Light}. */
 		SENS_LDR('H'),
 
-		/** Liniensensoren */
+		/** Liniensensoren, siehe {@link Line}. */
 		SENS_LINE('L'),
 
-		/** Maussensor */
+		/** Maussensor, siehe {@link Mouse}. */
 		SENS_MOUSE('m'),
 
-		/** IR-Fernbedienung */
+		/** Fernbedienung, siehe {@link RemoteControl}. */
 		SENS_RC5('R'),
 
-		/** &Uuml;berwachung Transportfach */
+		/** &Uuml;berwachung Transportfach, siehe {@link Trans}. */
 		SENS_TRANS('T'),
 
-		/** &Uuml;bertragung eines Bildes vom Maussensor */
+		/**
+		 * &Uuml;bertragung eines Bildes vom Maussensor, siehe
+		 * {@link MousePictureComponent}.
+		 */
 		SENS_MOUSE_PICTURE('P'),
 
-		/** Logausgaben */
+		/** Logausgaben, siehe {@link Log}. */
 		LOG('O');
 
 		private final byte onTheWire;
 
-		Code(char c) {
+		/**
+		 * Konschtruktor; nicht aufrufbar; stattdessen {@link #fromByte(int)}
+		 * verwenden.
+		 */
+		private Code(char c) {
 			if (c > 127)
 				throw new AssertionError();
 			onTheWire = (byte)c;
 		}
 
+		/**
+		 * Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
+		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
+		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
+		 */
 		protected byte toUint7() { return onTheWire; }
 
 		//$$ Code-Duplikation enum Code <-> enum SubCode
-		/** Akzeptiert ints aus Toleranz. */
+		/**
+		 * Erzeugt eine SubCode-Instanz. Akzeptiert ints aus Toleranz.
+		 *
+		 * @throws ProtocolException falls der Ascii-Wert von {@code b} keiner
+		 * der Werte dieses Enums ist
+		 */
 		public static Code fromByte(int b) throws ProtocolException {
 			for (Code c : Code.values()) {
 				if (c.toUint7() == b)
@@ -240,35 +347,52 @@ public class Command {
 		}
 	}
 
-	//$$$ R und R
+	///////////////////////////////////////////////////////////////////////////
+	// Enum Sub-Command-Code
+
+	/**
+	 * <p>
+	 * Ein Sub-Command-Code kann einen der Werte in diesem Enum haben.
+	 * </p>
+	 * <p>
+	 * <strong>Historischer Hinweis:</strong> Zus&auml;tzlich zu den in diesem
+	 * Enum definierten Werten gibt es noch zwei, die nirgends verwendet werden
+	 * und von denen ich (hkr) nicht wei&szlig;, wof&uuml;r die mal gedacht
+	 * waren:
+	 * <ul>
+	 * <li>{@code LEFT('L')} mit der Bedeutung "nur links".</li>
+	 * <li>{@code RIGHT('R')} mit der Bedeutung &quot;nur rechts&quot;.
+	 * W&uuml;rde in diesem Enum mit WELCOME_REAL kollidieren, was auch dem 'R'
+	 * zugeordnet ist.</li>
+	 * </ul>
+	 */
 	public static enum SubCode {
-		/** Das Standard-Subkommando */
+		/**
+		 * Das Standard-Subkommando. Dieses ist gesetzt, wenn kein anderes
+		 * gesetzt ist.
+		 */
 		NORM('N'),
 
-		/** "Nur links". Wird nirgends verwendet, keine Ahnung was das ist. */
-		LEFT('L'),
-
-		/** "Nur rechts". Wird nirgends verwendet, keine Ahnung was das ist. */
-		RIGHT('R'),
-
-		/** Subkommando Clear Screen */
+		/** F&uuml;r das LCD; {@linkplain LcDisplay siehe dort}. */
 		LCD_CLEAR('c'),
 
-		/** Subkommando Text ohne Cursor */
+		/** F&uuml;r das LCD; {@linkplain LcDisplay siehe dort}. */
 		LCD_DATA('D'),
 
-		/** Subkommando Cursorkoordinaten */
+		/** F&uuml;r das LCD; {@linkplain LcDisplay siehe dort}. */
 		LCD_CURSOR('C'),
 
 		/**
-		 * Subkommando f&uuml;r Handshake mit "real bot"
+		 * Subkommando f&uuml;r Handshake mit "Real-Bot", siehe
+		 * {@linkplain Command}.
 		 *
 		 * @see RealCtBot
 		 */
 		WELCOME_REAL('R'),
 
 		/**
-		 * Subkommando f&uuml;r Handshake mit "simbot"
+		 * Subkommando f&uuml;r Handshake mit "Sim-Bot", siehe
+		 * {@linkplain Command}.
 		 *
 		 * @see SimulatedBot
 		 * @see CtBotSimTcp
@@ -278,15 +402,29 @@ public class Command {
 
 		private final byte onTheWire;
 
-		SubCode(char c) {
+		/**
+		 * Konschtruktor; nicht aufrufbar; stattdessen {@link #fromByte(int)}
+		 * verwenden.
+		 */
+		private SubCode(char c) {
 			if (c > 127)
 				throw new AssertionError();
 			onTheWire = (byte)c;
 		}
 
+		/**
+		 * Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
+		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
+		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
+		 */
 		protected byte toUint7() { return onTheWire; }
 
-		/** Akzeptiert ints aus Toleranz. */
+		/**
+		 * Erzeugt eine SubCode-Instanz. Akzeptiert ints aus Toleranz.
+		 *
+		 * @throws ProtocolException falls der Ascii-Wert von {@code b} keiner
+		 * der Werte dieses Enums ist
+		 */
 		public static SubCode fromByte(int b) throws ProtocolException {
 			for (SubCode c : SubCode.values()) {
 				if (c.toUint7() == b)
@@ -297,15 +435,16 @@ public class Command {
 		}
 	}
 
-	/** Instanzvariablen *****************************************************/
+	///////////////////////////////////////////////////////////////////////////
+	// Instanzvariablen
 
-	/** Kommandocode */
+	/** Command-Code */
 	private final Code commandCode;
 
-	/** Subkommandocode */
+	/** Sub-Command-Code */
 	private final SubCode subCommandCode;
 
-	/** 0 bedeutet Anfrage, 1 bedeutet Antwort. */
+	/** Praktisch nicht verwendet. Kann DIR_REQUEST oder DIR_ANSWER werden. */
 	private final int direction;
 
 	/** Daten, die dem Kommando folgen */
@@ -323,11 +462,14 @@ public class Command {
 	/** Markiert das Ende des Kommandos */
 	private final int crc;
 
+	/**
+	 * Client-Code kann damit markieren, ob das Kommando verarbeitet ist oder
+	 * nicht. Gibt einen Getter und Setter daf&uuml;r, sonst hat diese Klasse
+	 * damit nichts am Hut.
+	 */
 	private boolean hasBeenProcessed = false;
 
-	/**
-	 * Erzeugt ein Kommando zum Abschicken (direction=DIR_REQUEST)
-	 */
+	/** Erzeugt ein Kommando */
 	public Command(Code code) {
 		this.commandCode = code;
 		this.subCommandCode = SubCode.NORM;
@@ -337,11 +479,12 @@ public class Command {
 	}
 
 	/**
-	 * Liest ein Kommando von einer Connection. Sie wird dabei weitergesetzt um
-	 * die Zahl Bytes, die das Kommando lang war.
+	 * Liest und dekodiert ein Kommando von einer Connection. Sie wird dabei
+	 * weitergesetzt um die Zahl Bytes, die das Kommando lang war.
 	 *
 	 * @throws IOException Bei E/A-Fehler w&auml;hrend dem Lesen
-	 * @throws ProtocolException Falls ein ung&uuml;ltiger CRC empfangen wird oder die Direction ungleich $$ ist
+	 * @throws ProtocolException Falls ein ung&uuml;ltiger CRC empfangen wird
+	 * oder die Direction nicht {@link #DIR_REQUEST} ist.
 	 */
 	public Command(Connection con) throws IOException, ProtocolException {
 		byte[] b;
@@ -399,16 +542,25 @@ public class Command {
 		con.read(payload);
 	}
 
-	public boolean has(Code aCommandCode) {
-		return getCommandCode() == aCommandCode;
-	}
-
-	public boolean has(SubCode subCommand) {
-		return getSubCode() == subCommand;
+	/**
+	 * {@code true}, falls dieses Kommando den Command-Code
+	 * {@code someCommandCode} hat. Andernfalls {@code false}.
+	 */
+	public boolean has(Code someCommandCode) {
+		return commandCode == someCommandCode;
 	}
 
 	/**
-	 * Liefert das Kommando als Array von Bytes zurueck
+	 * {@code true}, falls dieses Kommando den Sub-Command-Code
+	 * {@code subCommandCode} hat. Andernfalls {@code false}.
+	 */
+	public boolean has(SubCode subCode) {
+		return getSubCode() == subCode;
+	}
+
+	/**
+	 * Enkodiert das Kommando, so dass es &uuml;ber TCP/USB an einen c't-Bot
+	 * geschickt werden kann.
 	 *
 	 * @return byte[], in dem jeweils ein byte steht
 	 */
@@ -436,6 +588,10 @@ public class Command {
 		return data;
 	}
 
+	/**
+	 * Hilfsmethode: Liefert Char und Ascii-Code zu einem {@code char} oder nur
+	 * den Ascii-Code, falls es non-printable ist.
+	 */
 	static String formatChar(int aChar) {
 		if (aChar > 32 && aChar <= 255)
 			return String.format("'%c' (%d)", aChar, aChar);
@@ -443,7 +599,10 @@ public class Command {
 			return String.format("(%d)", aChar);
 	}
 
-	/** Liefert eine vollst&auml;ndige Stringrepr&auml;sentation des Command */
+	/**
+	 * Liefert eine vollst&auml;ndige Stringrepr&auml;sentation des Command
+	 * (mehrere Zeilen lang).
+	 */
 	@Override
 	public String toString() {
 		// Vorsicht beim Ausgeben; wenn man lustig %c macht und der Wert wegen
@@ -470,48 +629,49 @@ public class Command {
 				replaceAll("\n", "\\\\n"));
 	}
 
-	//$$ Kann bald weg
-	/** @return Gibt Kommando zurueck */
-	public Code getCommandCode() { return commandCode; }
-
-	/** @return Gib die angehaengten Nutzdaten weiter */
+	/** Gibt die angeh&auml;ngten Nutzdaten zur&uuml;ck */
 	public byte[] getPayload() { return payload; }
 
 	/**
-	 * @return Gibt die Nutzdaten als String zur&uuml;ck, unter Verwendung des
+	 * Gibt die Nutzdaten als String zur&uuml;ck, unter Verwendung des
 	 * Standard-Charset &ndash; siehe {@link String#String(byte[])}.
 	 */
 	public String getPayloadAsString() {
 		return payload == null ? "(null)" : new String(payload);
 	}
 
-	/** @return Gibt die Daten zum Kommando links zurueck */
+	/** Gibt das Datenfeld links ({@code dataL}) zur&uuml;ck */
 	public int getDataL() { return dataL; }
 
-	/** @return Gibt die Daten zum Kommando rechts zurueck */
+	/** Gibt das Datenfeld rechts ({@code dataR}) zur&uuml;ck */
 	public int getDataR() { return dataR; }
 
-	/** @return Gibt die Richtung zurueck */
+	/** Gibt die Richtung zurueck */
 	public int getDirection() { return direction; }
 
-	/** @return Liefert die Command-Sequenznummer */
+	/** Liefert die Kommando-Sequenznummer */
 	public int getSeq() { return seq; }
 
+	/** Getter zu {@link #setHasBeenProcessed(boolean)} */
 	public boolean hasBeenProcessed() { return hasBeenProcessed; }
 
-	//$$ Kann bald weg
-	/** @return Gibt das Subkommando zurueck */
+	/** Gibt das Subkommando des Kommandos zur&uuml;ck */
 	public SubCode getSubCode() { return subCommandCode; }
 
-	/** @param dataL Datum f&uuml;r links, das gesetzt werden soll */
+	/** Setzt das Feld dataL */
 	public void setDataL(int dataL) { this.dataL = dataL; }
 
-	/** @param dataR Datum f&uuml;r rechts, das gesetzt werden soll */
+	/** Setzt das Feld dataR */
 	public void setDataR(int dataR) { this.dataR = dataR; }
 
-	/** @param seq Paketsequenznummer, die gesetzt werden soll */
+	/** Setzt die Kommandosequenznummer (wer wei&szlig;, wozu die gut ist) */
 	public void setSeq(int seq) { this.seq = seq; }
 
+	/**
+	 * Flag, ob dieses Kommando fertig verarbeitet ist. N&uuml;tzlich, wenn ein
+	 * Kommando in der Gegend herumgereicht wird und am Schluss festgestellt
+	 * werden soll, ob jemand das jetzt interpretiert hat oder nicht.
+	 */
 	public void setHasBeenProcessed(boolean hasBeenProcessed) {
 		this.hasBeenProcessed = hasBeenProcessed;
 	}

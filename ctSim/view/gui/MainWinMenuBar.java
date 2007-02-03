@@ -5,15 +5,18 @@ import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
-import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.Icon;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileFilter;
 
@@ -21,8 +24,12 @@ import ctSim.ConfigManager;
 import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.model.rules.Judge;
+import ctSim.util.Closure;
 import ctSim.util.Enumerations;
 import ctSim.util.IconHashMap;
+import ctSim.util.Menu;
+import ctSim.util.Menu.Entry;
+import ctSim.util.Menu.Checkbox;
 
 /**
  * <p>
@@ -73,7 +80,7 @@ public class MainWinMenuBar extends JMenuBar {
 	final MainWindow mainWindow;
 
 	//$$ Nach Judge-Umbau: kann weg
-	private static final String[] judgeClassNames = { //LODO Judges hardcoded
+	private static final String[] judgeClassNames = { 
 		"ctSim.model.rules.DefaultJudge",
 		"ctSim.model.rules.LabyrinthJudge"};
 
@@ -87,26 +94,28 @@ public class MainWinMenuBar extends JMenuBar {
 	 * @param icons
 	 */
 	public MainWinMenuBar(Controller controller, MainWindow mainWindow,
-		IconHashMap icons) {
-
+	IconHashMap icons) {
 		this.controller = controller;
 		this.mainWindow = mainWindow;
 
 		// Prinzip: Menue machen; auf dessen Basis dann Toolbar, die
 		// einige der Menues widerspiegelt
-		JMenu worldMenu = buildMenu("Welt",
-			action("\u00D6ffnen ...", icons.get("Open16"), onOpenWorld),
-			action("Generieren", icons.get("New16"), onOpenRandomWorld),
-			action("Speichern als ...", icons.get("SaveAs16"), onSaveWorld),
-			action("Schlie\u00DFen", icons.get("Delete16"), onCloseWorld));
+		JMenu worldMenu = new Menu("Welt",
+			new Entry("\u00D6ffnen ...", icons.get("Open16"), onOpenWorld),
+			new Entry("Generieren", icons.get("New16"), onOpenRandomWorld),
+			new Entry("Speichern als ...", icons.get("SaveAs16"), onSaveWorld),
+			new Entry("Schlie\u00DFen", icons.get("Delete16"), onCloseWorld));
 		add(worldMenu);
-	    add(buildMenu("Verbinde mit Bot",
-    		action("Per USB (COM)", onAddComBot),
-    		action("Per TCP ...", onAddTcpBot)));
-	    add(buildMenu("Simuliere Bot",
-    		action("Testbot", onAddTestBot),
+	    add(new Menu("Verbinde mit Bot",
+	    	new Entry("Per TCP ...", onAddTcpBot),
+	    	// Die Checkbox hat nen Haken und ist unveraenderbar disabled 
+	    	// (ausgegraut). Sinn: Benutzer wissen lassen, dass ctSim das 
+	    	// automatisch macht
+	    	new Checkbox("Per USB (COM) automatisch", noOp).disable().check()));
+	    add(new Menu("Simuliere Bot",
+	    	new Entry("Testbot", onAddTestBot),
     		//$$ os.name-Kram verlagern in eine Klasse fuer plattformabhaengiges Zeug
-    		action(((System.getProperty("os.name").indexOf("Windows") != -1)
+	    	new Entry(((System.getProperty("os.name").indexOf("Windows") != -1)
 				? ".exe" : ".elf") + " starten ...",
     			onInvokeExecutable)));
 
@@ -115,36 +124,13 @@ public class MainWinMenuBar extends JMenuBar {
 	    	m.add(item);
 	    add(m);
 
-	    JMenu simulationMenu = buildMenu("Simulation",
-    		action("Start", icons.get("Play16"), onStartSimulation),
-    		action("Stop", icons.get("Stop16"), onResetSimulation),
-    		action("Pause", icons.get("Pause16"), onPauseSimulation));
+	    JMenu simulationMenu = new Menu("Simulation",
+	    	new Entry("Start", icons.get("Play16"), onStartSimulation),
+	    	new Entry("Stop", icons.get("Stop16"), onResetSimulation),
+	    	new Entry("Pause", icons.get("Pause16"), onPauseSimulation));
 	    add(simulationMenu);
 
 	    toolBar = buildToolBar(worldMenu, simulationMenu);
-	}
-
-	/** Genauso wie {@link #action(Sring, Icon, Runnable)}, nur mit ohne Icon */
-	private Action action(String name, Runnable code) {
-		return action(name, null, code);
-	}
-
-	/**
-	 * Meth&ouml;dchen, um
-	 * {@link #MainWinMenuBar(Controller, MainWindow, IconHashMap) MainWinMenuBar()}
-	 * lesbarer zu machen. Konstruiert eine {@link Action} aus Beschriftung,
-	 * Icon und auszuf&uuml;hrendem Code.
-	 */
-	private Action action(String name, Icon icon, final Runnable code) {
-		return new AbstractAction(name, icon) {
-			private static final long serialVersionUID = 8468636621500013742L;
-
-			public void actionPerformed(
-				@SuppressWarnings("unused") ActionEvent e) {
-
-				code.run();
-			}
-		};
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -154,7 +140,7 @@ public class MainWinMenuBar extends JMenuBar {
 	// dann laeuft einer der folgenden Runnables. Die Zuordnung welcher
 	// Menuepunkt -> welches Runnable findet im Konstruktor statt. (Sind
 	// Runnables, haben mit Threading aber nichts zu tun an der Stelle.)
-
+	
 	private Runnable onOpenWorld = new Runnable() {
 		@SuppressWarnings("synthetic-access")
 		public void run() {
@@ -175,6 +161,7 @@ public class MainWinMenuBar extends JMenuBar {
 		public void run() {
 			File file = worldChooser.showSaveWorldDialog();
 			if (file.exists()) {
+				//$$ t Ist das jemals getestet worden?
 				int result = JOptionPane.showConfirmDialog(
 					mainWindow,
 					// Meldung
@@ -197,28 +184,46 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
-	private Runnable onAddComBot = new Runnable() {
+	private Runnable onAddTcpBot = new Runnable() {
+		//$$$ Welche IP/Port standardmaessig ins Textfeld?
+		private final JTextField host = new JTextField(12);
+		private final JTextField port = new JTextField(5);
+		private JDialog tcpEntryDialog = null;
+		private JOptionPane optionPane = null;
+
 		public void run() {
-			controller.addComBot();
+			if (tcpEntryDialog == null) {
+				//$$ Sieht bekloppt aus, aber ich hab jetzt schon genug Zeit verschwendet
+				JPanel tfields = new JPanel();
+				tfields.add(host);
+				tfields.add(new JLabel(":"));
+				tfields.add(port);
+				
+				JPanel p = new JPanel();
+				p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+				p.add(new JLabel("Host : Port"));
+				p.add(tfields);
+				
+				optionPane = new JOptionPane(
+					p,
+					JOptionPane.QUESTION_MESSAGE,
+					JOptionPane.OK_CANCEL_OPTION);
+				tcpEntryDialog = optionPane.createDialog(
+					mainWindow, // parent
+					"Wohin verbinden?"); // Dialog-Titel
+			}
+
+			tcpEntryDialog.setVisible(true);
+			if (((Integer)optionPane.getValue()) == JOptionPane.YES_OPTION) {
+				// parseInt() muss funktionieren dank MaskFormatter
+				controller.connectToTcp(host.getText(), port.getText());
+			}
 		}
 	};
-
-	private Runnable onAddTcpBot = new Runnable() {
-		public void run() {
-			String address = (String)JOptionPane.showInputDialog(
-				mainWindow,
-				"Adresse:",
-				"Wohin verbinden?",
-				JOptionPane.QUESTION_MESSAGE,
-				null, // Icon
-				null, // Moeglichkeiten == null -> Freitextfeld
-				""); //$$$ Welche IP/Port standardmaessig ins Textfeld?
-
-			if (address == null)
-				// Benutzer hat abgebrochen
-				return;
-
-			controller.connectToTcp(address);
+	
+	private Closure<Boolean> noOp = new Closure<Boolean>() {
+		public void run(@SuppressWarnings("unused") Boolean argument) {
+			// No-Op
 		}
 	};
 
@@ -277,13 +282,6 @@ public class MainWinMenuBar extends JMenuBar {
 
 	///////////////////////////////////////////////////////////////////////////
 	// Hilfsmethoden
-
-	private JMenu buildMenu(String title, Action... items) {
-    	JMenu rv = new JMenu(title);
-    	for (Action a : items)
-    		rv.add(a);
-    	return rv;
-    }
 
 	//$$ Nach Judge-Umbau: kann weg
 	private JMenuItem[] buildJudgeMenuItems() {

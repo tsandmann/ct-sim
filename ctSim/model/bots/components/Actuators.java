@@ -30,9 +30,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
-
 import ctSim.model.Command;
 import ctSim.model.Command.Code;
+import ctSim.model.Command.SubCode;
 import ctSim.model.bots.components.Actuators.Led.ChineseComponent;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.SimpleActuator;
@@ -87,14 +87,9 @@ public class Actuators {
 		public Code getHotCmdCode() { return Code.ACT_SERVO; }
 	}
 
-	//$$$ t real Log
 	/**
 	 * Log eines Bot; hier werden die vom Bot geschickten Log-Ausgaben
 	 * (Textzeilen) gesammelt. Diese Bot-Komponente existiert nicht in Hardware.
-	 *
-	 * @author Felix Beckwermert
-	 * @author Hendrik Krau&szlig; &lt;<a
-	 * href="mailto:hkr@heise.de">hkr@heise.de</a>>
 	 */
 	public static class Log extends BotComponent<PlainDocument>
 	implements CanRead {
@@ -122,9 +117,36 @@ public class Actuators {
 		@Override public String getDescription() { return "Log-Anzeige"; }
 	}
 
-//	$$ doc lcd-proto
 	/**
+	 * <p>
 	 * Das Liquid Crystal Display (LCD) oben auf dem c't-Bot.
+	 * </p>
+	 * <p>
+	 * <h3>{@link Command c't-Bot-Protokoll}</h3>
+	 * Das LCD lauscht auf Kommandos mit dem
+	 * {@linkplain Code#ACT_LCD Command-Code ACT_LCD}. Diese Kommandos
+	 * m&uuml;ssen als Sub-Command-Code einen der folgenden Werte haben:
+	 * <ul>
+	 * <li>{@linkplain SubCode#LCD_CLEAR} &ndash; l&ouml;scht das LCD, so dass
+	 * &uuml;berall nur Leerzeichen stehen. </li>
+	 * <li>{@linkplain SubCode#LCD_CURSOR} &ndash; Bewegt den Cursor in die
+	 * Spalte, die in {@code dataL} angegeben ist, und die Zeile, die in
+	 * {@code dataR} angegeben ist. Beide Angaben zero-based, d.h. 0,0
+	 * bezeichnet das linkeste Zeichen der obersten Zeile. Negative Werte werden
+	 * wie 0 behandelt. Werte rechts au&szlig;erhalb des Display werden wie die
+	 * rechteste Spalte behandelt; Werte unten au&szlig;erhalb des Display wie
+	 * die unterste Zeile. </li>
+	 * <li>{@linkplain SubCode#LCD_DATA} &ndash; Holt die Nutzlast des
+	 * Kommandos und schreibt sie ins Display an die aktuelle Cursor-Position.
+	 * Falls dort schon etwas steht, wird der alte Text &uuml;berschrieben
+	 * (nicht weitergeschoben). Falls der Text rechts aus dem Display
+	 * hinauslaufen w&uuml;rde, wird er abgeschnitten (bricht nicht in die
+	 * n&auml;chste Zeile um). </li>
+	 * <li>{@linkplain SubCode#NORM} &ndash; Kombination von LCD_CURSOR und
+	 * LCD_DATA: Bewegt den Cursor wie ein LCD_CURSOR-Kommando und zeigt dann
+	 * Text an wie ein LCD_DATA-Kommando. </li>
+	 * </ul>
+	 * </p>
 	 */
 	public static class LcDisplay extends BotComponent<PlainDocument>
 	implements CanRead {
@@ -244,7 +266,7 @@ public class Actuators {
 	    }
 
 	    /**
-		 * Setzt den Cursor an eine bestimmte Position im LCD.
+		 * Bewegt den Cursor.
 		 *
 		 * @param col Neue Cursorposition (Spalte). Falls sie au&szlig;erhalb
 		 * der Ausdehnung dieses Displays liegt, wird sie auf den
@@ -276,9 +298,9 @@ public class Actuators {
 	 * kommt dahel, dass Checkboxen in Java von Buttons abgeleitet sind.)
 	 * </p>
 	 * <p>
-	 * <h3>c't-Bot-Plotokoll</h3>
+	 * <h3>{@link Command c't-Bot-Plotokoll}</h3>
 	 * Jede LED lauscht auf {@link Command}s mit Command-Code
-	 * {@link Command.Code#ACT_LED ACT_LED}. Bei diesen Commands gibt das Feld
+	 * {@link Code#ACT_LED ACT_LED}. Bei diesen Commands gibt das Feld
 	 * {@code dataL} den Zustand allel LEDs an: ein Bit plo LED, 1 = an, 0 =
 	 * aus. Jede Instanz diesel Klasse lauscht auf ein Bit und ignolielt die
 	 * andelen; welches Bit wild beim Konstluielen angegeben.

@@ -1,6 +1,14 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-02-03 23:21 Hendrik Krauss [hkr@heise.de]:
+* Neu: Verbindungen per USB (COM) werden automatisch erkannt, kein Menuepunkt mehr noetig
+* Verschoben: Auf Verbindungen horchen (TCP und USB) und Handshaking (TCP) in ComConnection bzw. TcpConnection verlagert und ueberarbeitet. DefaultController daher einfacher. Grund: Wird im Applet auch gebraucht, das keinen DefaultController zur Verfuegung hat
+* Komplettiert: Doku fuer Command; erzaehlt einiges zum Protokoll
+* Neu: ctSim.util.Menu, duenne Abstraktionsschicht ueber Swing, um JMenus / JMenuItems leichter schreiben zu koennen (aus MainWinMenuBar ausgekoppelt)
+* Neu: ComConnection geht davon aus, dass sie ein Singleton ist
+* Kleinigkeiten
+
 2007-01-31 22:43 Hendrik Krauss [hkr@heise.de]:
 * Weg: MovableObstacle (unklar, was Unterschied zu AliveObst sein soll, nirgends verwendet)
 * Neu: Gui fuer Position + Heading

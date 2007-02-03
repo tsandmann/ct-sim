@@ -10,17 +10,25 @@ import java.util.logging.Logger;
 //$$ doc ganze Klasse
 // Kurzschreibweise (throwable) weicht ab von log()-Signatur
 public class FmtLogger extends Logger {
+	public static class Factory {
+		public Logger createLogger(String name) {
+			return Logger.getLogger(name);
+		}
+	}
+	
+	private static Factory loggerFactory = new Factory();
+	
 	private Logger delegate;
 
 	protected FmtLogger(String name, Logger delegate) {
 	    super(name, null);
 	    this.delegate = delegate;
     }
-
+	
 	//TODO auch Aufruf mit .class zulassen; flaechendeckend einfuehren
 	public static FmtLogger getLogger(String name) {
 		//$$ Ist das ok? Wir erzeugen abweichend von Logger.getLoggers Verhalten jedesmal ne neue Instanz
-		return new FmtLogger(name, Logger.getLogger(name));
+		return new FmtLogger(name, loggerFactory.createLogger(name));
 	}
 
 	public void warn(String msg) {

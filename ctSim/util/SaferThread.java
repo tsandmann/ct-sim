@@ -2,6 +2,8 @@ package ctSim.util;
 
 //$$ doc
 public abstract class SaferThread extends Thread {
+	final FmtLogger lg = FmtLogger.getLogger("ctSim.util.SaferThread");
+	
 	private volatile boolean deathPending = false;
 
 	public boolean isDeathPending() {
@@ -28,7 +30,13 @@ public abstract class SaferThread extends Thread {
 	}
 	
 	public void dispose() {
-		// No-op
+		lg.fine("Thread "+getName()+" stirbt");
+	}
+	
+	@Override
+	public synchronized void start() {
+		lg.fine("Thread "+getName()+" startet");
+		super.start();
 	}
 
 	public SaferThread() {

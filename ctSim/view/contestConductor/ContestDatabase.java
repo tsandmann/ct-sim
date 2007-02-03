@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import ctSim.controller.Config;
+import ctSim.view.contestConductor.ConductorTestUtil.TestDatabase;
 
 /**
  * Repr&auml;sentiert die Datenbank, die alles &uuml;ber den Wettbewerb
@@ -12,7 +13,7 @@ import ctSim.controller.Config;
  * verwenden, holen sie von hier. Daher k&ouml;nnen Unit-Tests einfach diese
  * Klasse ableiten und getConnection() &uuml;berschreiben, um dem
  * Contest-Conductor eine Test-Datenbank unterzuschieben. Beispiel siehe
- * {@link ConductorTestUtil.TestDatabase}.
+ * {@link TestDatabase}.
  */
 public class ContestDatabase {
 	public Connection getConnection()  {

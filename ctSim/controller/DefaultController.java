@@ -20,28 +20,19 @@
 package ctSim.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.Thread.State;
 import java.lang.reflect.Constructor;
-import java.net.ProtocolException;
-import java.net.ServerSocket;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import ctSim.ComConnection;
 import ctSim.ConfigManager;
-import ctSim.Connection;
 import ctSim.TcpConnection;
-import ctSim.model.Command;
 import ctSim.model.ParcoursGenerator;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
-import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.CtBotSimTest;
-import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
 import ctSim.view.View;
@@ -51,10 +42,9 @@ import ctSim.view.View;
 /**
  * Zentrale Controller-Klasse des c't-Sim
  */
-public class DefaultController implements Controller, BotBarrier, Runnable {
+public class DefaultController
+implements Controller, BotBarrier, Runnable, BotReceiver {
 	protected FmtLogger lg = FmtLogger.getLogger("ctSim.controller");
-
-    private SocketListener botListener;
 
 	private Thread ctrlThread;
 	private volatile boolean pause;
@@ -70,7 +60,8 @@ public class DefaultController implements Controller, BotBarrier, Runnable {
 	    this.pause = true;
         this.view = view;
         setJudge(Config.getValue("judge"));
-        this.startBotListener();
+        TcpConnection.startListening(this);
+        ComConnection.startListening(this);
         init();
     }
 
@@ -105,7 +96,6 @@ public class DefaultController implements Controller, BotBarrier, Runnable {
      */
 	public void stop() {
 		lg.fine("Terminieren des Sequencer angefordert");
-		this.botListener.die();
 
 		Thread dummy = this.ctrlThread;
 
@@ -206,7 +196,6 @@ public class DefaultController implements Controller, BotBarrier, Runnable {
 
 	private synchronized void cleanup() {
 		world.cleanup();
-		this.botListener.die();
     }
 
 	/**
@@ -278,204 +267,21 @@ public class DefaultController implements Controller, BotBarrier, Runnable {
 		this.pause();
 	}
 
-    // TODO
-    void startBotListener() {
-        /* Der Sim sollte auch auf die TCP-Verbindung lauschen, wenn es Testbots
-         * gibt. Aus diesem Grund ist der thread, der auf TCP-Verbindungen
-         * lauscht, an dieser Stelle eingebaut. */
-        int p = 10001; //TODO Default sollte hier weg und in ConfigManager umziehen
-
-        try {
-            p = Integer.parseInt(Config.getValue("botport"));
-        } catch(NumberFormatException nfe) {
-            lg.warning(nfe, "Problem beim Parsen der Konfiguration: " +
-                    "Parameter 'botport' ist keine Ganzzahl");
-        }
-
-        lg.info("Warte auf Verbindung vom c't-Bot auf Port "+p);
-        this.botListener = new BotSocketListener(p);
-        this.botListener.start();
-    }
-
-    /**
-     * Basisklasse, die auf einem TCP-Port lauscht
-     *
-     * @author bbe (bbe@heise.de)
-     */
-    private abstract class SocketListener extends Thread {
-        int port = 0;
-
-        boolean listen = true;
-
-        int num = 0;
-
-        /**
-         * Eroeffnet einen neuen Lauscher
-         *
-         * @param p Port zum Lauschen
-         */
-        public SocketListener(int p) {
-            super("ctSim-SocketListener");
-            this.port = p;
-        }
-
-        /**
-         * Kuemmert sich um die Bearbeitung eingehnder Requests
-         */
-        @Override
-        public abstract void run();
-
-        /**
-         * Laesst den DefaultController "sterben"
-         */
-        public void die() {
-            this.listen = false;
-            this.interrupt();
-        }
-    }
-
-    /**
-     * Lauscht auf einem Port und instanziiert dann einen Bot
-     *
-     * @author bbe (bbe@heise.de)
-     *
-     */
-    private class BotSocketListener extends SocketListener {
-        /**
-         * Konstruktor
-         * @param p Der TCP-Port auf dem er horcht
-         */
-        public BotSocketListener(int p) {
-            super(p);
-        }
-
-        /**
-         * Diese Routine wartet auf Bots
-         */
-        @Override
-        public void run() {
-            try {
-                ServerSocket server = new ServerSocket(this.port);
-
-                while (this.listen) {
-                    /*
-                     * Da die Klasse TcpConnection staendig den ServerSocket neu
-                     * aufbaut und wieder zerstoert, wird die eingebaute Methode
-                     * listen() uebergangen und der Socket selbst uebergeben. Da
-                     * die TcpConncetion den ServerSocket aber auch nicht wieder
-                     * frei gibt, wurde der urspruenglich vorhandene Aufruf
-                     * gaenzlich entfernt.
-                     */
-                    try {
-                    	TcpConnection tcp = new TcpConnection(server.accept());
-                        lg.fine("Eingehende Verbindung auf dem Bot-Port");
-                        addBot(tcp);
-                    } catch(SocketTimeoutException e) {
-                        //TODO Noch nicht implementiert
-                    }
-                }
-            } catch (IOException e) {
-                lg.warning(e, "Kann nicht an Port "+port+" binden. " +
-                        "M\u00F6glicherweise l\u00E4uft c't-Sim schon.");
-            }
-
-            lg.fine("BotSocketListener beendet sich");
-        }
-    }
-
-    /**
-     * Fuegt einen Bot dazu, sobald die Connection steht
-     * @param con Die Verbindung
-     */
-    public void addBot(Connection con) {
-    	SimulatedBot bot = null; //$$ Variable stinkt
-        try {
-            // Hallo sagen
-            con.write(new Command(Command.Code.WELCOME));
-            // TODO Timeout einfuegen!!
-            while (bot == null) {
-                lg.fine("Warte auf Willkommen ...");
-
-				try {
-					Command cmd = new Command(con);
-
-	                if (cmd.has(Command.Code.WELCOME)) {
-	                	switch (cmd.getSubCode()) {
-	                		case WELCOME_SIM:
-	                            bot = new CtBotSimTcp(con);
-		            			lg.fine("TCP-Verbindung von simuliertem Bot " +
-		            					"eingegangen");
-		            			break;
-
-	                		case WELCOME_REAL:
-	                			//$$$ RealBot erstellen
-//	                			bot = new RealCtBot(con, world, "TCP-Bot",
-//	                				new Point3d(), 0);
-	                			lg.fine("TCP-Verbindung von realem Bot " +
-	                					"eingegangen");
-	                			break;
-
-	                		default:
-	                			throw new ProtocolException();
-	                	}
-	                } else {
-	                    lg.fine("Kommando, aber kein Willkommen von Verbindung " +
-	                    		"gelesen: Bot l\u00E4uft schon oder ist " +
-	                    		"veraltet, schicke Willkommen nochmals. " +
-	                    		"Ignoriertes Kommando folgt" + cmd);
-	                    // Handshake nochmal versuchen
-                        con.write(new Command(Command.Code.WELCOME));
-	                }
-				} catch (ProtocolException e) {
-					lg.warning(e, "Fehlerhaftes Kommando; ignoriere");
-				}
-            }
-        } catch (IOException e) {
-            //LODO Fehlermeldung unverstaendlich
-            lg.warning(e, "TCPConnection unterbrochen -- Verbindung nicht " +
-            		"m\u00F6glich");
-        }
-
-        if (bot != null && this.world != null && this.judge.isAddingBotsAllowed()) {
-            // TODO:
-            addBot(bot);
-            //this.ctSim.addBot(new BotInfo("CTest", bot, new DefBotPanel()));  //$NON-NLS-1$//$NON-NLS-2$
-            //BotManager.addBot(new BotInfo("CTest", bot, new DefBotPanel()));
-        } else
-            try {
-                con.close();
-            } catch (Exception ex) {
-                // Wenn jetzt noch was schief geht interessiert es uns nicht mehr
-            }
-    }
-
-    public void connectToTcp(String address) {
-    	int port = 10002; //$$$ Conf + aus address parsen
-    	lg.fine("Verbinde mit %s:%d ...", address, port);
+    public void connectToTcp(String hostname, String port) {
+    	int p = 10002; //$$ in config tun
     	try {
-			addBot(new TcpConnection(address, port));
-    	} catch (UnknownHostException e) {
-    		lg.warn(e, "Host nicht gefunden"); //$$$ t Host nicht gefunden
-		} catch (Exception e) {
-			throw new AssertionError(e); //$$$ doof, mindestens timeout fangen und anzeigen
-		}
-    }
-
-    public void addComBot() {
-		try {
-			addBotToView(new RealCtBot(new ComConnection()));
-			lg.fine("Serielle Verbindung von realem Bot eingegangen");
-		} catch (Exception e) {
-			lg.warn(e, "Konnte serielle Verbindung nicht herstellen; Bot " +
-					"nicht hinzugef\u00FCgt");
-		}
+    		p = Integer.parseInt(port);
+    	} catch (NumberFormatException e) {
+    		lg.warn("'%s' ist eine doofe TCP-Port-Nummer; ignoriere", port);
+    	}
+    	TcpConnection.connectTo(hostname, p, this);
     }
 
     /**
      * F&uuml;gt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu
      */
     public void addTestBot() {
-        addBot(new CtBotSimTest());
+        onBotAppeared(new CtBotSimTest());
     }
 
     public void invokeBot(File file) {
@@ -508,17 +314,17 @@ public class DefaultController implements Controller, BotBarrier, Runnable {
         }
     }
 
-    private synchronized void addBot(SimulatedBot bot) {
-    	if (world == null)
-    		throw new NullPointerException();
-    	if (judge.isAddingBotsAllowed()) {
-    		Bot b = world.addBot(bot, this);
-    		addBotToView(b);
+    public synchronized void onBotAppeared(Bot bot) {
+    	if (bot instanceof SimulatedBot) {
+    		if (world == null)
+    			throw new NullPointerException();
+    		if (judge.isAddingBotsAllowed()) {
+    			Bot b = world.addBot((SimulatedBot)bot, this);
+    			view.onBotAdded(b);
+    		}
     	}
-    }
-
-    private synchronized void addBotToView(Bot bot) {
-    	view.onBotAdded(bot);
+    	else
+    		view.onBotAdded(bot);
     }
 
     public int getParticipants() {

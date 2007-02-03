@@ -19,10 +19,10 @@ import ctSim.model.Command;
  */
 public class SimBotTcpDump {
 	public static void main(String... args) throws Exception {
-		ServerSocket inSock = new ServerSocket(10001);
+		ServerSocket srvSock = new ServerSocket(10001);
 		while (true) {
 			// Blockiert
-			TcpConnection bot = new TcpConnection(inSock.accept());
+			TcpConnection bot = new TcpConnection(srvSock.accept());
 			// Blockiert auch
 			TcpConnection sim = new TcpConnection("127.0.0.1", 10002);
 			// Go

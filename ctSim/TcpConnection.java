@@ -20,7 +20,19 @@
 package ctSim;
 
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.ProtocolException;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
+
+import ctSim.controller.BotReceiver;
+import ctSim.controller.Config;
+import ctSim.model.Command;
+import ctSim.model.bots.Bot;
+import ctSim.model.bots.ctbot.CtBotSimTcp;
+import ctSim.model.bots.ctbot.RealCtBot;
+import ctSim.util.SaferThread;
 
 /**
  * Repraesentiert eine TCP-Verbindung
@@ -68,4 +80,111 @@ public class TcpConnection extends Connection {
 	}
 
 	@Override public String getShortName() { return "TCP"; }
+
+	public static void startListening(final BotReceiver receiver) {
+        int p = 10001; //TODO Default sollte hier weg und nach Config umziehen
+
+        try {
+            p = Integer.parseInt(Config.getValue("botport"));
+        } catch(NumberFormatException nfe) {
+            lg.warning(nfe, "Problem beim Parsen der Konfiguration: " +
+                    "Parameter 'botport' ist keine Ganzzahl");
+        }
+
+        lg.info("Warte auf Verbindung vom c't-Bot auf TCP-Port "+p);
+
+		try {
+			final ServerSocket srvSocket = new ServerSocket(p);
+			new SaferThread("ctSim-Listener-"+p+"/tcp") {
+				@SuppressWarnings("synthetic-access")
+				@Override
+				public void work() {
+					try {
+						Socket s = srvSocket.accept(); // blockiert
+						lg.fine("Verbindung auf Port "
+							+ srvSocket.getLocalPort() + "/tcp eingegangen");
+						new TcpConnection(s).doHandshake(receiver);
+					} catch (IOException e) {
+						lg.warn(e, "Thread "+getName()+" hat ein E/A-Problem " +
+								"beim Lauschen");
+					}
+				}
+			}.start();
+		} catch (IOException e) {
+			lg.warning(e, "E/A-Problem beim Binden an TCP-Port "+p+"; " +
+				"l\u00E4uft der c't-Sim schon?");
+			return;
+		}
+	}
+
+	public static void connectTo(final String hostname, final int port,
+	final BotReceiver receiver) {
+		final String address = hostname+":"+port; // Nur fuer Meldungen
+    	lg.info("Verbinde mit "+address+" ...");
+		new SaferThread("ctSim-Connect-"+address) {
+			@SuppressWarnings("synthetic-access")
+			@Override
+			public void work() {
+				try {
+					new TcpConnection(hostname, port).doHandshake(receiver);
+		    	} catch (UnknownHostException e) {
+		    		lg.warn("Host '"+e.getMessage()+"' nicht gefunden");
+		    	} catch (ConnectException e) {
+		    		// ConnectExcp deckt so Sachen ab wie "connection refused" 
+		    		// und "connection timed out"
+		    		lg.warn("Konnte Verbindung mit "+address+
+		    			" nicht herstellen ("+e.getLocalizedMessage()+")");
+				} catch (IOException e) {
+					lg.severe(e, "E/A-Problem beim Verbinden mit "+address);
+				}
+				// Arbeit ist getan, ob's funktioniert hat oder nicht
+				die();
+			}
+		}.start();
+	}
+
+	// Blockiert, bis Handshake erfolgreich oder IOException
+	//LODO Fuer connectTo() passt diese Methode, fuer startListening() passt sie nicht ganz: Wenn ein Bot nie einen Handshake zustande kriegt und ein zweiter Bot derweil verbinden will, kommt der zweite nicht zum Zug. Loesung: Timeout oder doHandshake auf neuem Thread laufen lassen
+	private void doHandshake(BotReceiver receiver) {
+		while (true) {
+			try {
+				lg.fine("Sende Willkommen");
+				write(new Command(Command.Code.WELCOME));
+				Command cmd = new Command(this);
+				if (cmd.has(Command.Code.WELCOME)) {
+					receiver.onBotAppeared(createBot(cmd));
+                	return; // Erfolg
+                } else {
+                    lg.fine("Kommando, aber kein Willkommen von Verbindung " +
+                    		"gelesen: Bot l\u00E4uft schon oder ist " +
+                    		"veraltet, schicke Willkommen nochmals; " +
+                    		"ignoriertes Kommando folgt" + cmd);
+                    // Handshake nochmal versuchen
+                    continue;
+                }
+			} catch (ProtocolException e) {
+				lg.severe(e, "Ung\uu00FCltiges Kommando beim Handshake; " +
+						"ignoriere");
+				continue;
+			} catch (IOException e) {
+				lg.severe(e, "E/A-Problem beim Handshake; Abbruch");
+				return;
+			}
+		}
+	}
+
+	private Bot createBot(Command c) throws ProtocolException {
+		switch (c.getSubCode()) {
+    		case WELCOME_SIM:
+    			lg.fine("TCP-Verbindung von simuliertem Bot eingegangen");
+    			return new CtBotSimTcp(this);
+
+    		case WELCOME_REAL:
+    			lg.fine("TCP-Verbindung von realem Bot eingegangen");
+    			return new RealCtBot(this);
+
+    		default:
+    			throw new ProtocolException(c.toString());
+    	}
+	}
 }

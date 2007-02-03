@@ -56,7 +56,7 @@ public class Main {
      */
     public static void main(String... args) {
     	handleCommandLineArgs(args);
-        initLogging();
+        lg = initLogging();
         loadConfig();
         setupViewAndController();
     }
@@ -87,7 +87,7 @@ public class Main {
 		}
 	}
 
-	private static void initLogging() {
+	public static FmtLogger initLogging() {
 		try {
 	        LogManager.getLogManager().readConfiguration(new FileInputStream(
 	        	"config/logging.conf"));
@@ -96,8 +96,9 @@ public class Main {
 			e.printStackTrace();
 			System.exit(1);
 		}
-        lg = FmtLogger.getLogger("");
-		lg.fine("Logging-Subsystem initialisiert");
+		FmtLogger rv = FmtLogger.getLogger("");
+		rv.fine("Logging-Subsystem initialisiert");
+		return rv;
     }
 
 	private static void loadConfig() {

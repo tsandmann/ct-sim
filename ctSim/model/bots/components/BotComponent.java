@@ -25,6 +25,10 @@ import java.util.EnumSet;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
+import ctSim.model.bots.components.Actuators.Led;
+import ctSim.model.bots.components.Actuators.Log;
+import ctSim.model.bots.components.Sensors.Mouse;
+import ctSim.model.bots.components.Sensors.RemoteControl;
 
 //$$$ externes Model: in Subklassen, internes: hier
 //$$ doc
@@ -37,11 +41,11 @@ import ctSim.model.Command.Code;
  * </p>
  * <p>
  * Manche Bot-Components k&ouml;nnen lesen von der TCP-(oder USB-)Verbindung mit
- * dem Bot (Beispiel: {@link Actuators.Led}, Gegenbeispiel:
- * {@link Sensors.Mouse}, der immer innerhalb des Sim berechnet und nicht von
+ * dem Bot (Beispiel: {@link Led}, Gegenbeispiel:
+ * {@link Mouse}, der immer innerhalb des Sim berechnet und nicht von
  * der Verbindung gelesen wird). Manche Components k&ouml;nnen sich auch aufs
- * TCP (USB) schreiben (Beispiel: {@link Sensors.RemoteControl}, Gegenbeispiel:
- * {@link Actuators.Log}, das nie aus dem Sim herausgesendet wird). Die
+ * TCP (USB) schreiben (Beispiel: {@link RemoteControl}, Gegenbeispiel:
+ * {@link Log}, das nie aus dem Sim herausgesendet wird). Die
  * F&auml;higkeiten &quot;kann lesen&quot; und &quot;kann schreiben&quot; sind
  * unabh&auml;ngig, jede Kombination ist m&ouml;glich.</p>
  * <p>

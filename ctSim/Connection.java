@@ -38,25 +38,25 @@ import ctSim.util.FmtLogger;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public abstract class Connection {
-	final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
+	static final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
 
 	/**
 	 * Aufbau:
-	 * 
+	 *
 	 * <pre>
-	 * .------------------------------------------.
-	 * | DataInputStream                          |
-	 * |                                          |
-	 * | .--------------------------------------. |
-	 * | | BufferedInputStream                  | |
-	 * | |                                      | |
-	 * | | .----------------------------------. | |
-	 * | | | InputStream, den wir von unserer | | |
-	 * | | | Subklasse geholt haben           | | |
-	 * | | | ( getInputStream() )             | | |
-	 * | | `----------------------------------´ | |
-	 * | `--------------------------------------´ |
-	 * `------------------------------------------´
+	 * .-------------------------------------------.
+	 * | DataInputStream                           |
+	 * |                                           |
+	 * | .---------------------------------------. |
+	 * | | BufferedInputStream                   | |
+	 * | |                                       | |
+	 * | | .-----------------------------------. | |
+	 * | | | InputStream, den unsere Subklasse | | |
+	 * | | | beim Konstruieren gesetzt hat     | | |
+	 * | | | ( setInputStream() )              | | |
+	 * | | `-----------------------------------´ | |
+	 * | `---------------------------------------´ |
+	 * `-------------------------------------------´
 	 * </pre>
 	 */
 	private DataInputStream input = null;
@@ -70,7 +70,7 @@ public abstract class Connection {
 	private DataOutputStream output = null;
 
 	private CommandOutputStream cmdOutStream = null;
-	
+
 	/**
 	 * Beendet die laufende Verbindung
 	 *

@@ -88,6 +88,7 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_BORDER; }
 	}
 
+	//$$ doc
 	public static class Clock extends BotComponent<Void>
 	implements CanRead, CanWrite {
 		final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.components");
@@ -136,6 +137,7 @@ public class Sensors {
 		public Code getHotCmdCode() { return Command.Code.DONE; }
 	}
 
+	//$$ doc
 	public static class Mouse extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
@@ -174,11 +176,7 @@ public class Sensors {
 
 	/**
 	 * <p>
-	 * Software-Emulation der Fernbedienung. Spezielles Verhalten beim
-	 * Schreiben: Nur, wenn sein Wert ungleich 0 ist, sendet der Sensor.
-	 * Nach dem Senden setzt er seinen Wert auf 0 zur&uuml;ck, so dass pro
-	 * Tastendruck in der Fernbedienungs-Gui ein {@link Command} auf den Draht gegeben
-	 * wird.
+	 * Software-Emulation der Fernbedienung.
 	 * </p>
 	 * <p>
 	 * <strong>c't-Bot-Protokoll:</strong> Der Fernbedienungssensor sendet eine
@@ -197,7 +195,7 @@ public class Sensors {
 		}
 
 		public synchronized void writeTo(Command c) {
-			if (syncPendingRcCode == 0)
+			if (syncPendingRcCode == 0) //$$$ t
 				return;
 			c.setDataL(syncPendingRcCode);
 			syncPendingRcCode = 0;
@@ -226,6 +224,7 @@ public class Sensors {
 		}
 	}
 
+	//$$ doc
 	public static class Door extends NumberSingleton
 	implements SimpleSensor, CanRead, CanWrite {
 		@Override public String getDescription() { return "Affe-tot-Sensor"; }
@@ -233,6 +232,7 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_DOOR; }
 	}
 
+	//$$ doc
 	public static class Trans extends NumberSingleton
 	implements SimpleSensor, CanRead, CanWrite {
 		@Override
@@ -244,11 +244,19 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_TRANS; }
 	}
 
+	//$$ doc
 	public static class Error extends NumberSingleton
 	implements SimpleSensor, CanRead, CanWrite {
 		@Override
 		public String getDescription() {
-			return "Sensor f\u00FCr Motor- oder Batteriefehler";
+			return "Sensor f\u00FCr Motor- oder Batteriefehler; 0 = Fehler; " +
+					"1 = okay";
+		}
+
+		public Error() {
+			// Hat 1 als Standardwert, nicht 0
+			internalModel = Double.valueOf(1);
+			updateExternalModel();
 		}
 
 		@Override public String getName() { return "Error"; }
