@@ -524,7 +524,7 @@ public class Command {
 
 		int payloadSize = Misc.toUnsignedInt8(b[2]);
 		// Shorts (je 2 Byte): Hier Konvertierung Big-Endian -> Little-Endian
-		//LODO Bin nicht ueberzeugt, dass das richtig ist. Vorzeichen korrekt? Laut Ben ist das nach Trial and Error entstanden ... "funktioniert, aber keiner weiss warum"
+		// TODO Bin nicht ueberzeugt, dass das richtig ist. Vorzeichen korrekt? Laut Ben ist das nach Trial and Error entstanden ... "funktioniert, aber keiner weiss warum"
 		dataL = (short) ( ( b[ 4 ] & 0xff ) << 8 | ( b[ 3 ] & 0xff ) );
 		dataR = (short) ( ( b[ 6 ] & 0xff ) << 8 | ( b[ 5 ] & 0xff ) );
 		seq   = (short) ( ( b[ 8 ] & 0xff ) << 8 | ( b[ 7 ] & 0xff ) );
