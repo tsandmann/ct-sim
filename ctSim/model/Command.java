@@ -65,10 +65,10 @@ import ctSim.util.Misc;
  * </p>
  * <p>
  * Diese Klasse behandelt das Dekodieren eines Commands aus einem Haufen Bytes
- * (siehe {@linkplain #Command(Connection) Konstruktor}) und das Enkodieren eines
- * Commands (siehe {@link #getCommandBytes()}). Verwendet und interpretiert
- * werden die Commands in den Bot-Komponenten. Die betreffenden Komponenten
- * stehen in der {@linkplain Code Liste der Command-Codes}.
+ * (siehe {@linkplain #Command(Connection) Konstruktor}) und das Enkodieren
+ * eines Commands (siehe {@link #getCommandBytes()}). Verwendet und
+ * interpretiert werden die Commands in den Bot-Komponenten. Die betreffenden
+ * Komponenten stehen in der {@linkplain Code Liste der Command-Codes}.
  * </p>
  * <p>
  * <strong>Beispiel</strong> eines Command:
@@ -199,10 +199,10 @@ import ctSim.util.Misc;
  * </ul>
  * </p>
  * <p>
- * "Network order&quot;, also die Endianness auf dem Draht, ist <a
- * href="http://de.wikipedia.org/wiki/Big_endian">Big-Endian</a>. Java
- * verwendet intern Little-Endian. Die Konvertierung erfolgt zu Fu&szlig; in
- * dieser Klasse.
+ * Die Endianness auf dem Draht bei uns ist <a
+ * href="http://de.wikipedia.org/wiki/Little_endian">Little-Endian</a>. Java
+ * verwendet intern Big-Endian. Die Konvertierung erfolgt zu Fu&szlig; in dieser
+ * Klasse.
  * </p>
  *
  * @author Benjamin Benz (bbe@heise.de)
@@ -235,7 +235,7 @@ public class Command {
 	 */
 	public static enum Code {
 		/** Zum Hallo-Sagen (Handshake); siehe {@link Command}. */
-		WELCOME('W'),
+		WELCOME('W', SubCode.WELCOME_REAL, SubCode.WELCOME_SIM),
 
 		/**
 		 * Abschluss eines Blocks; Nur f&uuml;r simulierte Bots; siehe
@@ -270,7 +270,8 @@ public class Command {
 		ACT_MOT('M'),
 
 		/** LCD-Anzeige; siehe {@link LcDisplay}. */
-		ACT_LCD('c'),
+		ACT_LCD('c', SubCode.NORM, SubCode.LCD_CLEAR, SubCode.LCD_CURSOR,
+			SubCode.LCD_DATA),
 
 		/** Abgrundsensoren; siehe {@link Border}. */
 		SENS_BORDER('B'),
@@ -309,18 +310,38 @@ public class Command {
 		SENS_MOUSE_PICTURE('P'),
 
 		/** Logausgaben, siehe {@link Log}. */
-		LOG('O');
+		LOG('O'),
+
+		/**
+		 * F&uuml;r Remote-Calls, d.h. wenn der Sim ein Bot-Behavior aufruft.
+		 */
+		REMOTE_CALL('r', SubCode.REMOTE_CALL_LIST, SubCode.REMOTE_CALL_ENTRY,
+			SubCode.REMOTE_CALL_ORDER, SubCode.REMOTE_CALL_DONE);
+
 
 		private final byte onTheWire;
+		private final SubCode[] validSubCodes;
 
 		/**
 		 * Konschtruktor; nicht aufrufbar; stattdessen {@link #fromByte(int)}
-		 * verwenden.
+		 * verwenden. Setzt die zugelassenen SubCodes für diese Code-Instanz auf
+		 * NORM und nichts sonst.
 		 */
 		private Code(char c) {
+			this(c, SubCode.NORM);
+		}
+
+		/**
+		 * Erzeugt eine Enum-Instanz mit dem Array an zul&auml;ssigen SubCodes.
+		 * Die Code-Instanz kennt ihre m&ouml;glichen SubCodes, da etwa ein
+		 * SubCode &quot;L&quot; nach Code ACT_LCD was anderes hei&szlig;t als
+		 * nach Code REMOTE_CALL. Das muss unterschieden werden k&ouml;nnen.
+		 */
+		private Code(char c, SubCode... validSubCodes) {
 			if (c > 127)
 				throw new AssertionError();
 			onTheWire = (byte)c;
+			this.validSubCodes = validSubCodes;
 		}
 
 		/**
@@ -330,7 +351,6 @@ public class Command {
 		 */
 		protected byte toUint7() { return onTheWire; }
 
-		//$$ Code-Duplikation enum Code <-> enum SubCode
 		/**
 		 * Erzeugt eine SubCode-Instanz. Akzeptiert ints aus Toleranz.
 		 *
@@ -345,33 +365,40 @@ public class Command {
 			throw new ProtocolException("Command-Code "+formatChar(b)+
 				" unbekannt");
 		}
+
+		/**
+		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
+		 * SubCodes sind mit dem Code-Enum verkoppelt, da vom Code abh&auml;ngt,
+		 * ob z.B. ein &quot;R&quot; auf dem Draht f&uuml;r den SubCode
+		 * WELCOME_REAL oder f&uuml;r RIGHT steht.
+		 */ 
+		public SubCode getSubCode(int b) throws ProtocolException {
+			for (SubCode c : validSubCodes) {
+				if (c.toUint7() == b)
+					return c;
+			}
+			throw new ProtocolException("Sub-Command-Code "+formatChar(b)+
+				" nicht vorgesehen f\u00FCr Command-Code "+
+				formatChar(toUint7()));
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
 	// Enum Sub-Command-Code
 
-	/**
-	 * <p>
-	 * Ein Sub-Command-Code kann einen der Werte in diesem Enum haben.
-	 * </p>
-	 * <p>
-	 * <strong>Historischer Hinweis:</strong> Zus&auml;tzlich zu den in diesem
-	 * Enum definierten Werten gibt es noch zwei, die nirgends verwendet werden
-	 * und von denen ich (hkr) nicht wei&szlig;, wof&uuml;r die mal gedacht
-	 * waren:
-	 * <ul>
-	 * <li>{@code LEFT('L')} mit der Bedeutung "nur links".</li>
-	 * <li>{@code RIGHT('R')} mit der Bedeutung &quot;nur rechts&quot;.
-	 * W&uuml;rde in diesem Enum mit WELCOME_REAL kollidieren, was auch dem 'R'
-	 * zugeordnet ist.</li>
-	 * </ul>
-	 */
+	/** Ein Sub-Command-Code kann einen der Werte in diesem Enum haben. */
 	public static enum SubCode {
 		/**
 		 * Das Standard-Subkommando. Dieses ist gesetzt, wenn kein anderes
 		 * gesetzt ist.
 		 */
 		NORM('N'),
+
+		/** "Nur links". Wird nirgends verwendet, keine Ahnung was das ist. */
+		LEFT('L'),
+
+		/** "Nur rechts". Wird nirgends verwendet, keine Ahnung was das ist. */
+		RIGHT('R'),
 
 		/** F&uuml;r das LCD; {@linkplain LcDisplay siehe dort}. */
 		LCD_CLEAR('c'),
@@ -398,7 +425,30 @@ public class Command {
 		 * @see CtBotSimTcp
 		 * @see CtBotSimTest
 		 */
-		WELCOME_SIM('S');
+		WELCOME_SIM('S'),
+
+		/**
+		 * Fordert den Bot auf, alle verf&uuml;gbaren Kommandos (Behaviors)
+		 * aufzulisten
+		 */
+		REMOTE_CALL_LIST('L'),
+
+		/**
+		 * Ein Eintrag in der Auflistung der verf&uuml;gbaren Kommandos
+		 * (Behaviors)
+		 */
+		REMOTE_CALL_ENTRY('E'),
+
+		/** Sim gibt damit beim Bot einen Remote-Call in Auftrag */
+		REMOTE_CALL_ORDER('O'),
+
+		/**
+		 * Signalisiert dem Sim, dass ein Remote-Call abgeschlossen wurde.
+		 * Ergebnis des Remote-Call steht in dataL (1 = geklappt, 0 = in die
+		 * Hose gegangen)
+		 */
+		REMOTE_CALL_DONE('D');
+
 
 		private final byte onTheWire;
 
@@ -418,21 +468,6 @@ public class Command {
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
 		protected byte toUint7() { return onTheWire; }
-
-		/**
-		 * Erzeugt eine SubCode-Instanz. Akzeptiert ints aus Toleranz.
-		 *
-		 * @throws ProtocolException falls der Ascii-Wert von {@code b} keiner
-		 * der Werte dieses Enums ist
-		 */
-		public static SubCode fromByte(int b) throws ProtocolException {
-			for (SubCode c : SubCode.values()) {
-				if (c.toUint7() == b)
-					return c;
-			}
-			throw new ProtocolException("Sub-Command-Code "+formatChar(b)+
-				" unbekannt");
-		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -511,7 +546,7 @@ public class Command {
 
 		commandCode = Code.fromByte(b[0]);
 		// Nur 7 least significant bits
-		subCommandCode = SubCode.fromByte(b[1] & 127);
+		subCommandCode = commandCode.getSubCode(b[1] & 127);
 		// 7 least significant Bits weg, nur 8. angucken
 		direction = b[1] >> 7 & 1;
 
@@ -523,8 +558,7 @@ public class Command {
 		}
 
 		int payloadSize = Misc.toUnsignedInt8(b[2]);
-		// Shorts (je 2 Byte): Hier Konvertierung Big-Endian -> Little-Endian
-		// TODO Bin nicht ueberzeugt, dass das richtig ist. Vorzeichen korrekt? Laut Ben ist das nach Trial and Error entstanden ... "funktioniert, aber keiner weiss warum"
+		// Shorts (je 2 Byte): Hier Konvertierung Little-Endian -> Big-Endian
 		dataL = (short) ( ( b[ 4 ] & 0xff ) << 8 | ( b[ 3 ] & 0xff ) );
 		dataR = (short) ( ( b[ 6 ] & 0xff ) << 8 | ( b[ 5 ] & 0xff ) );
 		seq   = (short) ( ( b[ 8 ] & 0xff ) << 8 | ( b[ 7 ] & 0xff ) );
