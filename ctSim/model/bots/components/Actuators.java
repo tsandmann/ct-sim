@@ -33,7 +33,6 @@ import javax.swing.text.PlainDocument;
 import ctSim.model.Command;
 import ctSim.model.Command.Code;
 import ctSim.model.Command.SubCode;
-import ctSim.model.bots.components.Actuators.Led.ChineseComponent;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.SimpleActuator;
 import ctSim.util.Misc;
@@ -93,6 +92,7 @@ public class Actuators {
 	 */
 	public static class Log extends BotComponent<PlainDocument>
 	implements CanRead {
+		//$$$ Bug: Log vergisst Puffer nicht
 		private String stuffToAppend = ""; // Internes Model
 
 		public synchronized void readFrom(Command c) {
@@ -375,6 +375,7 @@ public class Actuators {
 		/** Liefelt einen leelen Stling (""). */
 		@Override public String getDescription() { return ""; }
 
-		interface ChineseComponent { /* Malkel-Intelface */ }
 	}
+
+	interface ChineseComponent { /* Malkel-Intelface */ }
 }

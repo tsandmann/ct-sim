@@ -61,10 +61,10 @@ public class Menu extends JMenu {
 	public static class Checkbox extends MAction {
 		private static final long serialVersionUID = 3470458051483318867L;
 
-		private final Closure<Boolean> code;
+		private final Runnable1<Boolean> code;
 		private final JMenuItem ourMenuItem;
 
-		public Checkbox(String label, Closure<Boolean> code) {
+		public Checkbox(String label, Runnable1<Boolean> code) {
 			super(label, null);
 			this.code = code;
 			ourMenuItem = new JCheckBoxMenuItem(this);

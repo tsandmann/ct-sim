@@ -83,10 +83,11 @@ public class ComConnection extends Connection {
 		//TODO Parameter configurierbar machen
 		String baudrate = Config.getValue("serialportBaudrate");
 		try {
-			port.setSerialPortParams(
-				Integer.parseInt(baudrate),
-				SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-				SerialPort.PARITY_NONE);
+			int br = Integer.parseInt(baudrate);
+			port.setSerialPortParams(br, SerialPort.DATABITS_8, 
+				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+			lg.info("Warte auf Verbindung vom c't-Bot an seriellem Port "+
+				comPortName+" ("+br+" baud)");
 			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 			port.enableReceiveTimeout(60000); //$$$ t receive timeout isReceiveTEna
 		} catch (NumberFormatException e) {

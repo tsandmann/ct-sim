@@ -27,7 +27,6 @@ import ctSim.model.bots.components.NumberTwin.NumberTwinVisitor;
 import ctSim.model.bots.components.Sensors.Clock;
 import ctSim.util.Buisitor;
 import ctSim.util.Misc;
-import ctSim.util.Buisitor.Buisit;
 
 //$$ doc
 //$$ Der koennte aufgeteilt werden in allgemein (nach CtSim) und spezifisch (hierher)
@@ -330,13 +329,11 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		buisitor.dispatchBuisit(numberTwin, isLeft);
 	}
 
-	@Buisit
-	public void initWheel(Governor g, boolean isLeft) {
+	public void buisitWheel(Governor g, boolean isLeft) {
         (isLeft ? leftWheel : rightWheel).setGovernor(g);
 	}
 
-	@Buisit
-	public void buildEncoderSim(final Sensors.Encoder encoderSensor,
+	public void buisitEncoderSim(final Sensors.Encoder encoderSensor,
 	boolean isLeft) {
         final WheelSimulator wheel = isLeft
 			? leftWheel
@@ -372,8 +369,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		});
 	}
 
-	@Buisit
-	public void buildDistanceSim(final Sensors.Distance sensor,
+	public void buisitDistanceSim(final Sensors.Distance sensor,
 	boolean isLeft) {
 		final Point3d distFromBotCenter = isLeft
 			? new Point3d(- 0.036, 0.0554, 0)
@@ -399,22 +395,19 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		});
 	}
 
-	@Buisit
-	public void buildLineSensorSim(Sensors.Line s, boolean isLeft) {
+	public void buisitLineSensorSim(Sensors.Line s, boolean isLeft) {
 		simulators.add(new Cny70Simulator(
 			at(0.004, 0.009, -0.011 - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
 			looksForward(), s));
 	}
 
-	@Buisit
-	public void buildBorderSensorSim(Sensors.Border s, boolean isLeft) {
+	public void buisitBorderSensorSim(Sensors.Border s, boolean isLeft) {
 		simulators.add(new Cny70Simulator(
 			at(0.036, 0.0384, - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
 			looksForward(), s));
 	}
 
-	@Buisit
-	public void buildLightSim(final Sensors.Light sensor, boolean isLeft) {
+	public void buisitLightSim(final Sensors.Light sensor, boolean isLeft) {
 		final Point3d distFromBotCenter = isLeft
 			? new Point3d(- 0.032, 0.048, 0.060 - CtBotSimTcp.BOT_HEIGHT / 2)
 			: new Point3d(+ 0.032, 0.048, 0.060 - CtBotSimTcp.BOT_HEIGHT / 2);
@@ -433,14 +426,12 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		});
 	}
 
-	@Buisit
-	public void buildMouseSensorSim(final Sensors.Mouse sensor,
+	public void buisitMouseSensorSim(final Sensors.Mouse sensor,
 	boolean isX) {
 		(isX ? mouseSensorX : mouseSensorY).setSensor(sensor);
 	}
 
-	@Buisit
-	public void buildClockSim(final Sensors.Clock sensor) {
+	public void buisitClockSim(final Sensors.Clock sensor) {
 		this.clock  = sensor;
 	}
 

@@ -18,8 +18,6 @@
  */
 package ctSim.view.gui;
 
-import java.awt.Dimension;
-
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -46,6 +44,7 @@ public class BotViewer extends JScrollPane {
 	public final Bot bot;
 
 	public BotViewer(Bot bot) {
+		super(VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER);
 		this.bot = bot;
 
 		setBorder(null);
@@ -71,10 +70,5 @@ public class BotViewer extends JScrollPane {
 			}
 		}
 		setViewportView(panel);
-	}
-
-	@Override
-	public Dimension getPreferredSize() {
-		return new Dimension(180, 600);
 	}
 }

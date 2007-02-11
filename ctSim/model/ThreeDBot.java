@@ -50,7 +50,7 @@ import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.SimulatedBot.UnrecoverableScrewupException;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.ctbot.CtBotShape;
-import ctSim.util.Closure;
+import ctSim.util.Runnable1;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -62,7 +62,7 @@ import ctSim.util.Misc;
 public class ThreeDBot extends BasicBot implements Bot, Runnable {
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
 
-	private final List<Closure<Color>> appearanceListeners = Misc.newList();
+	private final List<Runnable1<Color>> appearanceListeners = Misc.newList();
 
 	public enum ObstState {
 		/** Das Hindernis hat eine Kollision */
@@ -599,7 +599,7 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 		Color c = Config.getBotColor(bot.getClass(), bot.getInstanceNumber(),
 			key);
 
-		for (Closure<Color> listener : appearanceListeners)
+		for (Runnable1<Color> listener : appearanceListeners)
 			listener.run(c);
 	}
 
@@ -657,7 +657,7 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 	}
 
 	public void addAppearanceListener(
-	Closure<Color> calledWhenObstStateChanged) {
+	Runnable1<Color> calledWhenObstStateChanged) {
 		if (calledWhenObstStateChanged == null)
 			throw new NullPointerException();
 		appearanceListeners.add(calledWhenObstStateChanged);

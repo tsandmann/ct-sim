@@ -137,10 +137,15 @@ public class World {
 		return botsRunning.size() + botsToStart.size();
 	}
 
+//$$$ t fix concurrentmodification
 	public synchronized void removeAllBotsNow() {
-		for(ThreeDBot b : botsToStart)
-			b.dispose();
-		for(ThreeDBot b : botsRunning)
+		// Listen kopieren: b.dispose() entfernt den Bot aus botsToStart und 
+		// botsRunning, ein Iterator wuerde also eine ConcurrentModificationExcp 
+		// werfen (d.h. for (ThreeDBot b : botsRunning) geht nicht)
+		List<ThreeDBot> lb = Misc.newList();
+		lb.addAll(botsToStart);
+		lb.addAll(botsRunning);
+		for (ThreeDBot b : lb)
 			b.dispose();
 	}
 

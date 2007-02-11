@@ -196,7 +196,7 @@ public abstract class BasicBot implements Bot {
     		for (BotComponent<?> c : this)
     			c.offerRead(command);
     		if (! command.hasBeenProcessed())
-    			throw new ProtocolException("Unbekanntes Kommando");
+    			throw new ProtocolException("Unbekanntes Kommando: "+command);
     	}
 
     	public void updateView() throws InterruptedException {

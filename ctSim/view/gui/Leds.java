@@ -15,7 +15,6 @@ import javax.swing.event.ChangeListener;
 import ctSim.model.bots.components.Actuators;
 import ctSim.util.Misc;
 import ctSim.util.RoundGradientPaint;
-import ctSim.util.Buisitor.Buisit;
 
 //$$ doc
 public class Leds extends GuiBotBuisitor {
@@ -90,7 +89,6 @@ public class Leds extends GuiBotBuisitor {
     	}
     }
 
-	@Buisit
 	public void buisit(Actuators.Led led) {
 		setBorder(new TitledBorder("LEDs"));
 		add(new LedViewer(led.getExternalModel(), led.isGuiEditable(), 

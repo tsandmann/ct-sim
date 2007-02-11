@@ -13,7 +13,7 @@ import ctSim.model.Command.Code;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWrite;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
-import ctSim.util.Closure;
+import ctSim.util.Runnable1;
 import ctSim.util.Misc;
 
 //$$ dic doc
@@ -48,7 +48,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 */
 	private final int[] pixels = new int[WIDTH * HEIGHT];
 	private boolean syncRequestPending = false;
-	private final List<Closure<Image>> imageLi = Misc.newList();
+	private final List<Runnable1<Image>> imageLi = Misc.newList();
 	private boolean imageEventPending = false;
 	private final List<Runnable> completionLi = Misc.newList();
 	private boolean completionEventPending = false;
@@ -116,8 +116,17 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		return 255 << 24 | r << 16 | g << 8 | b;
 	}
 
+	/**
+	 * Erwartet 18&times;18 = 324 Pixel in dieser Reihenfolge:
+	 * <pre>
+	 *  18  36 ... 324
+	 * ... ... ... ...
+	 *   2  20 ... ...
+	 *   1  19 ... 307
+	 * </pre>
+	 */
 	public synchronized void readFrom(Command c) {
-		//LODO Ist alles ziemlich zerbrechlich. Was zum Beispiel, wenn der Bot aufgrund eines Bug eine dataL ausserhalb des Arrays sendet? -> Mehr Input Validation, wofuer haben wir den ProtocolExceptions
+		//LODO Ist alles ziemlich zerbrechlich. Was zum Beispiel, wenn der Bot aufgrund eines Bug eine dataL ausserhalb des Arrays sendet? -> Mehr Input Validation, wofuer haben wir ProtocolExceptions
 		if (! c.has(getHotCmdCode()))
 			return;
 
@@ -132,15 +141,17 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 			int col = (offset + i) % WIDTH;
 			int row = (offset + i) / WIDTH;
+			col = HEIGHT - 1 - col; // spiegeln -- oben und unten vertauschen
 			// Um 90° drehen = Spaltennr. und Zeilennr. vertauschen (siehe ) //$$$ Siehe protokoll-doku
 			// Ohne Drehen waere pixels[col + (row * WIDTH)]
 			pixels[(col * HEIGHT) + row] = colorFromRgb(gray, gray, gray);
 		}
 
 		imageEventPending = true;
-		if (offset + i == pixels.length)
+		if (offset + i == pixels.length) {
 			// Array voll: Flag setzen fuer "Listenern bescheidgeben"
 			completionEventPending = true;
+		}
 	}
 
 	/**
@@ -161,13 +172,13 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		return "Was der Maus-Sensor sieht";
 	}
 
-	public void addImageListener(Closure<Image> li) {
+	public void addImageListener(Runnable1<Image> li) {
 		if (li == null)
 			throw new NullPointerException();
 		imageLi.add(li);
 	}
 
-	public void removeImageListener(Closure<Image> li) {
+	public void removeImageListener(Runnable1<Image> li) {
 		imageLi.remove(li);
 	}
 
@@ -187,7 +198,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			imageEventPending = false;
 			Image img = Toolkit.getDefaultToolkit().createImage(
 				new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
-			for (Closure<Image> li : imageLi)
+			for (Runnable1<Image> li : imageLi)
 				li.run(img);
 		}
 

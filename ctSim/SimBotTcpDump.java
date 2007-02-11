@@ -1,5 +1,6 @@
 package ctSim;
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.net.ServerSocket;
 
 import ctSim.model.Command;
@@ -52,12 +53,16 @@ public class SimBotTcpDump {
 
 		@Override
 		public void run() {
+			System.err.println("Thread " + getName().trim() + " starting");
 			try {
-				System.err.println("Thread " + getName().trim() + " starting");
 				while (! deathRequested) {
-					Command c = new Command(from);
-					System.out.println(getName() + ": " + c.toCompactString());
-					to.write(c);
+					try {
+						Command c = new Command(from);
+						System.out.println(getName() + ": " + c.toCompactString());
+						to.write(c);
+					} catch (ProtocolException e) {
+						e.printStackTrace();
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

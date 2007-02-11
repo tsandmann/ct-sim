@@ -18,15 +18,16 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import ctSim.model.bots.components.MousePictureComponent;
-import ctSim.util.Closure;
-import ctSim.util.Buisitor.Buisit;
+import ctSim.util.Runnable1;
 
+//$$ doc
+//$$$ funktioniert manchmal nicht
 public class MousePictureViewer extends GuiBotBuisitor {
 	private static final long serialVersionUID = - 2167640810854877294L;
 
 	//$$$ Breiter
 	//$$$ t Bei Klick auch holen
-	public static class ImageViewer extends JPanel implements Closure<Image> {
+	public static class ImageViewer extends JPanel implements Runnable1<Image> {
 		private static final long serialVersionUID = 3878110649950448386L;
 
 		private Image image;
@@ -36,7 +37,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		public ImageViewer(double scaleFactor, MousePictureComponent c) {
 			c.addImageListener(this);
 			setToolTipText(c.getDescription());
-			setBorder(BorderFactory.createLoweredBevelBorder()); //$$$ t bevel, insets
+			setBorder(BorderFactory.createLoweredBevelBorder()); //$$$ bevel, insets gehen nicht
 			targetWidth  = (int)Math.round(scaleFactor * c.getWidth());
 			targetHeight = (int)Math.round(scaleFactor * c.getHeight());
 		}
@@ -73,8 +74,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		}
 	}
 
-	@Buisit
-	public void buildMousePictureViewer(final MousePictureComponent compnt) {
+	public void buisitMousePictureViewer(final MousePictureComponent compnt) {
 		// Container
 		JPanel p = new JPanel(new BorderLayout());
 		p.setBorder(BorderFactory.createTitledBorder(compnt.getName()));

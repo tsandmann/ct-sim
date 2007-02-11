@@ -111,7 +111,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	private final List<String> closeIconToolTips = Misc.newList();
 
 	//$$ doc
-	private final List<Closure<Integer>> closeListeners = Misc.newList();
+	private final List<Runnable1<Integer>> closeListeners = Misc.newList();
 
 	public ClosableTabsPane(Icon closeIcon) {
 		this(closeIcon, closeIcon);
@@ -125,7 +125,7 @@ public class ClosableTabsPane extends JTabbedPane {
 			public void mouseClicked(MouseEvent e) {
 				int idx = indexOfBoundedIconAt(e.getX(), e.getY());
 				if (idx != -1) {
-					for (Closure<Integer> li : closeListeners)
+					for (Runnable1<Integer> li : closeListeners)
 						li.run(idx);
 				}
 			}
@@ -228,7 +228,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * @param li
 	 * @throws NullPointerException Falls li == {@code null} ist.
 	 */
-	public void addCloseListener(Closure<Integer> li) {
+	public void addCloseListener(Runnable1<Integer> li) {
 		if (li == null)
 			throw new NullPointerException();
 		closeListeners.add(li);
@@ -236,11 +236,11 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Entfernt einen Listener, den man zuvor registriert hat. Siehe
-	 * {@link #addCloseListener(Closure)}. Der Aufruf wird stillschweigend
+	 * {@link #addCloseListener(Runnable1)}. Der Aufruf wird stillschweigend
 	 * ignoriert, falls der Listener schon entfernt ist oder nie registriert
 	 * wurde.
 	 */
-	public void removeCloseListener(Closure<Integer> li) {
+	public void removeCloseListener(Runnable1<Integer> li) {
 		closeListeners.remove(li);
 	}
 }

@@ -312,11 +312,17 @@ public class Command {
 		/** Logausgaben, siehe {@link Log}. */
 		LOG('O'),
 
+		//$$ REMOTE_CALL NORM scheint nutzlos zu sein
 		/**
 		 * F&uuml;r Remote-Calls, d.h. wenn der Sim ein Bot-Behavior aufruft.
+		 * Keiner wei&szlig;, wof&uuml;r NORM steht, aber der Bot schickt das
+		 * &ouml;fters mal. Um die Warnungen des Sim ("Ung&uuml;ltiges Kommando,
+		 * SubCode NORM passt nicht zu Code REMOTE_CALL") zu unterdr&uuml;cken,
+		 * f&uuml;ge ich das hier dazu.
 		 */
-		REMOTE_CALL('r', SubCode.REMOTE_CALL_LIST, SubCode.REMOTE_CALL_ENTRY,
-			SubCode.REMOTE_CALL_ORDER, SubCode.REMOTE_CALL_DONE);
+		REMOTE_CALL('r', SubCode.NORM, SubCode.REMOTE_CALL_LIST,
+			SubCode.REMOTE_CALL_ENTRY, SubCode.REMOTE_CALL_ORDER,
+			SubCode.REMOTE_CALL_DONE);
 
 
 		private final byte onTheWire;
@@ -380,6 +386,12 @@ public class Command {
 			throw new ProtocolException("Sub-Command-Code "+formatChar(b)+
 				" nicht vorgesehen f\u00FCr Command-Code "+
 				formatChar(toUint7()));
+		}
+
+		public void assertSubCodeValid(SubCode sc) throws ProtocolException {
+			// Wenn SubCode ungueltig, explodiert der folgende Aufruf mit einer 
+			// ProtoExcp
+			getSubCode(sc.toUint7());
 		}
 	}
 
@@ -477,13 +489,13 @@ public class Command {
 	private final Code commandCode;
 
 	/** Sub-Command-Code */
-	private final SubCode subCommandCode;
+	private SubCode subCommandCode;
 
 	/** Praktisch nicht verwendet. Kann DIR_REQUEST oder DIR_ANSWER werden. */
 	private final int direction;
 
 	/** Daten, die dem Kommando folgen */
-	private final byte[] payload;
+	private byte[] payload;
 
 	/** Daten zum Kommando links */
 	private int dataL = 0;
@@ -639,6 +651,13 @@ public class Command {
 	 */
 	@Override
 	public String toString() {
+		String payloadStr;
+		if (payload == null)
+			payloadStr = "";
+		else {
+			payloadStr = "'"+replaceCtrlChars(getPayloadAsString())+
+				"' ("+payload.length+" Byte)";
+		}
 		// Vorsicht beim Ausgeben; wenn man lustig %c macht und der Wert wegen
 		// Synch- oder Lesefehlern mal < 0 wird, explodiert alles. Daher
 		// formatChar() eingefuehrt
@@ -648,8 +667,7 @@ public class Command {
 			"\n\tDirection:\t"+direction+
 			"\n\tData:\tL "+dataL+" / R "+dataR+
 			"\n\tSeq:\t"+seq+
-			"\n\tPayload:\t"+(payload==null? "" : '"'+getPayloadAsString()+'"')+
-			(payload==null ? "" : " (" + payload.length + " Byte)")+
+			"\n\tPayload:\t"+payloadStr+
 			"\n\tCRC:\t"+formatChar(crc);
 	}
 
@@ -659,8 +677,8 @@ public class Command {
 			String.format("%-20s",
 				commandCode + (has(SubCode.NORM) ? "" : "/"+subCommandCode))+
 			String.format(" L %4d R %4d", dataL, dataR)+
-			String.format(" Payload='%s'", getPayloadAsString().
-				replaceAll("\n", "\\\\n"));
+			String.format(" Payload='%s'", 
+				replaceCtrlChars(escapeNewlines(getPayloadAsString())));
 	}
 
 	/** Gibt die angeh&auml;ngten Nutzdaten zur&uuml;ck */
@@ -674,6 +692,24 @@ public class Command {
 		return payload == null ? "(null)" : new String(payload);
 	}
 
+	/**
+	 * Ersetzt jedes Steuerzeichen (Ascii 0 bis inkl. Ascii 31) durch einen
+	 * Punkt (.), so dass man den String gefahrlos ausgeben kann.
+	 */
+	public static String replaceCtrlChars(String s) {
+		// dezimal 0 bis 31 = oktal 0 bis 37
+		return s.replaceAll("[\000-\037]", ".");
+	}
+
+	/**
+	 * Wenn man den Payload in einer Zeile anzeigen will: Ersetzt Newlines, so
+	 * dass der Benutzer keinen Zeilenwechsel sieht, sondern die zwei Zeichen
+	 * "\n".
+	 */
+	public static String escapeNewlines(String s) {
+		return s.replaceAll("\n", "\\\\n");
+	}
+	
 	/** Gibt das Datenfeld links ({@code dataL}) zur&uuml;ck */
 	public int getDataL() { return dataL; }
 
@@ -700,6 +736,28 @@ public class Command {
 
 	/** Setzt die Kommandosequenznummer (wer wei&szlig;, wozu die gut ist) */
 	public void setSeq(int seq) { this.seq = seq; }
+
+	/**
+	 * Setzt den Sub-Command-Code. Nur sinnvoll f&uuml;r Commands, die der Sim
+	 * senden wird.
+	 */
+	public void setSubCmdCode(SubCode sc) {
+		try {
+			commandCode.assertSubCodeValid(sc);
+		} catch (ProtocolException e) {
+			// Das ist ein Fehler des Programmierers, keine Laufzeitsache
+			throw new AssertionError(e);
+		}
+		subCommandCode = sc;
+	}
+
+	/**
+	 * Setzt die Nutzlast, die an das Command angeh&auml;ngt ist. Nur sinnvoll
+	 * f&uuml;r Commands, die der Sim senden wird.
+	 */
+	public void setPayload(byte[] payload) {
+		this.payload = payload;
+	}
 
 	/**
 	 * Flag, ob dieses Kommando fertig verarbeitet ist. N&uuml;tzlich, wenn ein

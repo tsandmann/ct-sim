@@ -24,7 +24,7 @@ import ctSim.ConfigManager;
 import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.model.rules.Judge;
-import ctSim.util.Closure;
+import ctSim.util.Runnable1;
 import ctSim.util.Enumerations;
 import ctSim.util.IconHashMap;
 import ctSim.util.Menu;
@@ -185,7 +185,7 @@ public class MainWinMenuBar extends JMenuBar {
 	};
 
 	private Runnable onAddTcpBot = new Runnable() {
-		//$$$ Welche IP/Port standardmaessig ins Textfeld?
+		//$$$ IP/Port aus config
 		private final JTextField host = new JTextField(12);
 		private final JTextField port = new JTextField(5);
 		private JDialog tcpEntryDialog = null;
@@ -221,7 +221,7 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 	
-	private Closure<Boolean> noOp = new Closure<Boolean>() {
+	private Runnable1<Boolean> noOp = new Runnable1<Boolean>() {
 		public void run(@SuppressWarnings("unused") Boolean argument) {
 			// No-Op
 		}

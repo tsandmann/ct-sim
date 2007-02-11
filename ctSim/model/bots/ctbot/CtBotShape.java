@@ -28,7 +28,7 @@ import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Stripifier;
 
 import ctSim.model.ThreeDBot;
-import ctSim.util.Closure;
+import ctSim.util.Runnable1;
 
 //$$ doc mit 4 grafiken
 //$$ pdf in doc-Ordner
@@ -193,7 +193,7 @@ public class CtBotShape extends Group {
     	setMiddleColor(baseColor);
     	setCheeksColor(baseColor);
 
-    	appearanceEventSource.addAppearanceListener(new Closure<Color>() {
+    	appearanceEventSource.addAppearanceListener(new Runnable1<Color>() {
 			public void run(Color newAppearance) {
 				setCheeksColor(newAppearance);
 			}

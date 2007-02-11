@@ -1,6 +1,14 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-02-11 17:57 Hendrik Krauss [hkr@heise.de]:
+* Nachtrag zum 5.2. -- vergessen im Changelog zu vermerken: Command aktualisiert, SubCodes sind jetzt abhaengig von den Codes
+* Weg: @Buisit-Annotation (Applet-Security mag das nicht; laeuft jetzt ueber Methodenname, wenn das auch weniger offensichtlich ist)
+* Umbenannt: Closure -> Runnable1 (weniger verwirrend)
+* Command: Setter fuer SubCode und Payload
+* SimBotTcpDump toleriert jetzt ProtocolExceptions
+* Kleinigkeiten
+
 2007-02-03 23:21 Hendrik Krauss [hkr@heise.de]:
 * Neu: Verbindungen per USB (COM) werden automatisch erkannt, kein Menuepunkt mehr noetig
 * Verschoben: Auf Verbindungen horchen (TCP und USB) und Handshaking (TCP) in ComConnection bzw. TcpConnection verlagert und ueberarbeitet. DefaultController daher einfacher. Grund: Wird im Applet auch gebraucht, das keinen DefaultController zur Verfuegung hat

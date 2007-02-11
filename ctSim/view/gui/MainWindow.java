@@ -38,7 +38,7 @@ import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.rules.Judge;
 import ctSim.util.ClosableTabsPane;
-import ctSim.util.Closure;
+import ctSim.util.Runnable1;
 import ctSim.util.FmtLogger;
 import ctSim.util.IconHashMap;
 
@@ -145,7 +145,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		botTabs = new ClosableTabsPane(icons.get("schliessen"),
 			icons.get("schliessen-hover"));
 		// Listener wenn einer aufm Tab das Schliessen-Icon klickt
-		botTabs.addCloseListener(new Closure<Integer>() {
+		botTabs.addCloseListener(new Runnable1<Integer>() {
 			@SuppressWarnings("synthetic-access")
 			public void run(Integer index) {
 				BotViewer bv = (BotViewer)botTabs.getComponentAt(index);

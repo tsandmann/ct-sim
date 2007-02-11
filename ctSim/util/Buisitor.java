@@ -1,19 +1,9 @@
 package ctSim.util;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 
 //$$ doc
 public class Buisitor {
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-	public @interface Buisit {
-		// Marker-Annotation
-	}
-
 	private final Object target;
 
 	public Buisitor(Object invocationTarget) {
@@ -27,7 +17,7 @@ public class Buisitor {
 		int numInvocations = 0;
 
 		for (Method m : target.getClass().getMethods()) {
-			if (! m.isAnnotationPresent(Buisit.class))
+			if (! m.getName().startsWith("buisit"))
 				continue;
 			try {
 				if (hasSignature(m, argTypes)) {

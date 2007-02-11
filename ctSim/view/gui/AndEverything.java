@@ -15,7 +15,6 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.Sensors;
 import ctSim.util.AuxFrameButton;
-import ctSim.util.Buisitor.Buisit;
 
 //$$ doc
 //$$$ GridLayout, damit wir Reihenfolge der Dinger vorgeben koennen
@@ -27,8 +26,7 @@ public class AndEverything extends GuiBotBuisitor {
 		setBorder(BorderFactory.createTitledBorder("Und der ganze Rest"));
 	}
 
-	@Buisit
-	public void buildLcdViewer(Actuators.LcDisplay d) {
+	public void buisitLcdViewer(Actuators.LcDisplay d) {
 		JTextArea t = new JTextArea(d.getExternalModel(), null,
 			d.getNumRows(), d.getNumCols()); 
 		t.setEnabled(false);
@@ -44,8 +42,7 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
-	@Buisit
-	public void buildLogViewer(Actuators.Log log, Bot bot) {
+	public void buisitLogViewer(Actuators.Log log, Bot bot) {
 		// TextArea bauen
 		JTextArea t = new JTextArea(log.getExternalModel());
 		t.setEditable(false);
@@ -53,7 +50,8 @@ public class AndEverything extends GuiBotBuisitor {
 		t.setRows(25);
 
 		// Ausliefern
-		//$$ Fenster sollte immer zur neuesten Ausgabe scrollen
+		//$$$ Fenster sollte immer zur neuesten Ausgabe scrollen
+		//$$$ Speichern als txt
 		add(new AuxFrameButton(
 			log.getName(),
 			log.getDescription() + " von " + bot, // Fenster-Titel
@@ -61,8 +59,7 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
-	@Buisit
-	public void buildRemoteControl(Sensors.RemoteControl s, Bot bot) {
+	public void buisitRemoteControl(Sensors.RemoteControl s, Bot bot) {
 		add(new AuxFrameButton(
 			s.getDescription()+" ("+s.getName()+")",
 			s.getDescription()+" f\u00FCr "+bot,

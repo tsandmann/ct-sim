@@ -115,7 +115,8 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 
     public TableOfSpinners() {
         final JTable t = new JTable(model);
-        t.setRowHeight(new JSpinner().getMinimumSize().height);
+        t.setRowHeight(new JSpinner().getMinimumSize().height + 
+        	t.getRowMargin());
         t.setTableHeader(null);
 
         TableCellRenderer renderer = new ComponentCellRenderer();
