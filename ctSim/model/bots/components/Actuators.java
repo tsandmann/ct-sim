@@ -92,18 +92,20 @@ public class Actuators {
 	 */
 	public static class Log extends BotComponent<PlainDocument>
 	implements CanRead {
-		//$$$ Bug: Log vergisst Puffer nicht
-		private String stuffToAppend = ""; // Internes Model
+		/** Internes Model */
+		private final StringBuffer newStuff = new StringBuffer(); 
 
 		public synchronized void readFrom(Command c) {
-			stuffToAppend = c.getPayloadAsString() + "\n";
+			newStuff.append(c.getPayloadAsString());
+			newStuff.append("\n");
 		}
 
 		@Override
 		public synchronized void updateExternalModel() {
 			try {
 				getExternalModel().insertString(getExternalModel().getLength(),
-					stuffToAppend, null);
+					newStuff.toString(), null);
+				newStuff.delete(0, newStuff.length());
 			} catch (BadLocationException e) {
 				// kann nur passieren wenn einer was am Code vermurkst;
 				// weiterwerfen zu Debugzwecken

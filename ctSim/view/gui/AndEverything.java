@@ -10,6 +10,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
 
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuators;
@@ -31,7 +32,17 @@ public class AndEverything extends GuiBotBuisitor {
 		JTextArea t = new JTextArea(d.getExternalModel(), null,
 			d.getNumRows(), d.getNumCols());
 		t.setEnabled(false);
-		//$$$ focus-stealing
+
+		/*
+		 * Fix fuer Bug 8 im Trac ("Kein Scrollen moeglich wenn Sim aktiv").
+		 * Details hab ich nicht rausgekriegt, aber wenn man das Caret (=
+		 * Cursor) abschaltet geht's. Siehe Bug:
+		 * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4201999 und
+		 * zugehoerigen Fix:
+		 * http://java.sun.com/j2se/1.5.0/docs/guide/swing/1.5/#swingText
+		 */
+		setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
+
 		t.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		t.setDisabledTextColor(Color.BLACK);
 		t.setBackground(new Color(170, 200, 90));
@@ -41,6 +52,12 @@ public class AndEverything extends GuiBotBuisitor {
 		t.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(t);
 		add(Box.createRigidArea(new Dimension(0, 5)));
+	}
+
+	private static void setCaretPolicy(JTextArea t, int updatePolicy) {
+		DefaultCaret c = new DefaultCaret();
+		c.setUpdatePolicy(updatePolicy);
+		t.setCaret(c);
 	}
 
 	public void buisitLogViewer(Actuators.Log log, Bot bot) {
