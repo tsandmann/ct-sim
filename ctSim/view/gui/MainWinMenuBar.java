@@ -24,12 +24,11 @@ import ctSim.ConfigManager;
 import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.model.rules.Judge;
-import ctSim.util.Runnable1;
 import ctSim.util.Enumerations;
-import ctSim.util.IconHashMap;
 import ctSim.util.Menu;
-import ctSim.util.Menu.Entry;
+import ctSim.util.Runnable1;
 import ctSim.util.Menu.Checkbox;
+import ctSim.util.Menu.Entry;
 
 /**
  * <p>
@@ -73,7 +72,7 @@ public class MainWinMenuBar extends JMenuBar {
 	private final JToolBar toolBar;
 
 	/**
-	 * Siehe {@link #MainWinMenuBar(Controller, MainWindow, IconHashMap)}.
+	 * Siehe {@link #MainWinMenuBar(Controller, MainWindow)}.
 	 * Default-Sichtbarkeit, um Eclipses synthetic-access-Warnungen zu
 	 * vermeiden.
 	 */
@@ -91,20 +90,18 @@ public class MainWinMenuBar extends JMenuBar {
 	 * @param controller
 	 * @param mainWindow Als 'parent' der modalen Dialoge und f&uuml;r das
 	 * gelegentliche Event, was auch im mainWindow verarbeitet werden muss.
-	 * @param icons
 	 */
-	public MainWinMenuBar(Controller controller, MainWindow mainWindow,
-	IconHashMap icons) {
+	public MainWinMenuBar(Controller controller, MainWindow mainWindow) {
 		this.controller = controller;
 		this.mainWindow = mainWindow;
 
 		// Prinzip: Menue machen; auf dessen Basis dann Toolbar, die
 		// einige der Menues widerspiegelt
 		JMenu worldMenu = new Menu("Welt",
-			new Entry("\u00D6ffnen ...", icons.get("Open16"), onOpenWorld),
-			new Entry("Generieren", icons.get("New16"), onOpenRandomWorld),
-			new Entry("Speichern als ...", icons.get("SaveAs16"), onSaveWorld),
-			new Entry("Schlie\u00DFen", icons.get("Delete16"), onCloseWorld));
+			new Entry("\u00D6ffnen ...", Config.getIcon("Open16"), onOpenWorld),
+			new Entry("Generieren", Config.getIcon("New16"), onOpenRandomWorld),
+			new Entry("Speichern als ...", Config.getIcon("SaveAs16"), onSaveWorld),
+			new Entry("Schlie\u00DFen", Config.getIcon("Delete16"), onCloseWorld));
 		add(worldMenu);
 	    add(new Menu("Verbinde mit Bot",
 	    	new Entry("Per TCP ...", onAddTcpBot),
@@ -125,9 +122,9 @@ public class MainWinMenuBar extends JMenuBar {
 	    add(m);
 
 	    JMenu simulationMenu = new Menu("Simulation",
-	    	new Entry("Start", icons.get("Play16"), onStartSimulation),
-	    	new Entry("Stop", icons.get("Stop16"), onResetSimulation),
-	    	new Entry("Pause", icons.get("Pause16"), onPauseSimulation));
+	    	new Entry("Start", Config.getIcon("Play16"), onStartSimulation),
+	    	new Entry("Stop", Config.getIcon("Stop16"), onResetSimulation),
+	    	new Entry("Pause", Config.getIcon("Pause16"), onPauseSimulation));
 	    add(simulationMenu);
 
 	    toolBar = buildToolBar(worldMenu, simulationMenu);

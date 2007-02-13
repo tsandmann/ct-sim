@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.util.AuxFrameButton;
 
@@ -28,7 +29,7 @@ public class AndEverything extends GuiBotBuisitor {
 
 	public void buisitLcdViewer(Actuators.LcDisplay d) {
 		JTextArea t = new JTextArea(d.getExternalModel(), null,
-			d.getNumRows(), d.getNumCols()); 
+			d.getNumRows(), d.getNumCols());
 		t.setEnabled(false);
 		//$$$ focus-stealing
 		t.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -64,6 +65,14 @@ public class AndEverything extends GuiBotBuisitor {
 			s.getDescription()+" ("+s.getName()+")",
 			s.getDescription()+" f\u00FCr "+bot,
 			new RemoteControlViewer(s)));
+		add(Box.createRigidArea(new Dimension(0, 5)));
+	}
+
+	public void buisitRemoteCallViewer(RemoteCallCompnt c, Bot bot) {
+		add(new AuxFrameButton(
+			c.getName(),
+			c.getName()+" an "+bot,
+			new RemoteCallViewer(c)));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 }

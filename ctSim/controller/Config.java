@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.Icon;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.xml.sax.SAXException;
 
 import ctSim.util.FmtLogger;
+import ctSim.util.IconHashMap;
 import ctSim.util.Misc;
 import ctSim.util.xml.QueryableDocument;
 import ctSim.util.xml.QueryableNode;
@@ -76,6 +78,8 @@ public class Config {
 	private static PlainParameters parameters;
 
 	private static BotAppearances appearances;
+	
+	private static IconHashMap icons;
 
 	/**
 	 * L&auml;dt die <code>&lt;parameter></code>-Tags aus der
@@ -102,6 +106,17 @@ public class Config {
 	public static Color getBotColor(Class<?> botType, int index,
 	String appearanceType) {
 		return appearances.get(botType, appearanceType, index);
+	}
+	
+	public static Icon getIcon(String key) {
+		if (icons == null) {
+			try {
+		        icons = new IconHashMap(new File("images")); //LODO Pfad hardcoded
+	        } catch (Exception e) {
+				throw new AssertionError(e); //$$ Excp-Handling
+	        }
+		}
+		return icons.get(key);
 	}
 
 	static class PlainParameters extends HashMap<String, String> {

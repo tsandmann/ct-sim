@@ -22,6 +22,7 @@ import java.awt.Color;
 
 import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 
 /**
@@ -73,7 +74,8 @@ public abstract class CtBot extends BasicBot {
 			new Sensors.RemoteControl(),
 			new Sensors.Door(),
 			new Sensors.Trans(),
-			new Sensors.Error()
+			new Sensors.Error(),
+			new RemoteCallCompnt()
 		);
 
 		// LEDs

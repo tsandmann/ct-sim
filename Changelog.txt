@@ -2,6 +2,11 @@ Changelog fuer c't-Sim
 ======================
 
 2007-02-11 17:57 Hendrik Krauss [hkr@heise.de]:
+* Neu: RemoteCallCompnt inkl. Gui
+* Verschoben: Icons werden jetzt von Config bereitgestellt
+* Neu: 2 Hilfsklassen
+
+2007-02-11 17:57 Hendrik Krauss [hkr@heise.de]:
 * Nachtrag zum 5.2. -- vergessen im Changelog zu vermerken: Command aktualisiert, SubCodes sind jetzt abhaengig von den Codes
 * Weg: @Buisit-Annotation (Applet-Security mag das nicht; laeuft jetzt ueber Methodenname, wenn das auch weniger offensichtlich ist)
 * Umbenannt: Closure -> Runnable1 (weniger verwirrend)

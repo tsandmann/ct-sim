@@ -32,6 +32,7 @@ import javax.swing.JSplitPane;
 import javax.swing.ToolTipManager;
 import javax.swing.WindowConstants;
 
+import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.controller.Main;
 import ctSim.model.World;
@@ -103,13 +104,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	public MainWindow(final Controller controller) {
 		super("c't-Sim " + Main.VERSION);
 
-		IconHashMap icons;
-		try {
-	        icons = new IconHashMap(new File("images")); //LODO Pfad hardcoded
-        } catch (Exception e) {
-			throw new AssertionError(e);
-        }
-
     	/*
 		 * Riesenspass: Swing (also auch unsere GUI) ist "lightweight", Java3D
 		 * ist jedoch "heavyweight". Daher erscheint die Java3D-Anzeige immer
@@ -137,13 +131,13 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			}
 		});
 
-		menuBar = new MainWinMenuBar(controller, this, icons);
+		menuBar = new MainWinMenuBar(controller, this);
         setJMenuBar(menuBar);
 		add(menuBar.getToolBar(), BorderLayout.NORTH);
 		add(buildStatusBar(), BorderLayout.SOUTH);
 
-		botTabs = new ClosableTabsPane(icons.get("schliessen"),
-			icons.get("schliessen-hover"));
+		botTabs = new ClosableTabsPane(Config.getIcon("schliessen"),
+			Config.getIcon("schliessen-hover"));
 		// Listener wenn einer aufm Tab das Schliessen-Icon klickt
 		botTabs.addCloseListener(new Runnable1<Integer>() {
 			@SuppressWarnings("synthetic-access")

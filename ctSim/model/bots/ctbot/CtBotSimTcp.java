@@ -31,6 +31,7 @@ import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
+import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
 
@@ -82,7 +83,8 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			_(Sensors.Door.class         , WRITES),
 			_(Sensors.Trans.class        , WRITES),
 			_(Sensors.Error.class        , WRITES),
-			_(WelcomeReceiver.class      , READS)
+			_(WelcomeReceiver.class      , READS),
+			_(RemoteCallCompnt.class     , READS, WRITES)
 		);
 
 		sendRcStartCode();
