@@ -1,11 +1,11 @@
 package ctSim.view.gui;
 
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -25,6 +25,7 @@ import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.model.rules.Judge;
 import ctSim.util.Enumerations;
+import ctSim.util.GridBaggins;
 import ctSim.util.Menu;
 import ctSim.util.Runnable1;
 import ctSim.util.Menu.Checkbox;
@@ -182,24 +183,25 @@ public class MainWinMenuBar extends JMenuBar {
 	};
 
 	private Runnable onAddTcpBot = new Runnable() {
-		//$$$ IP/Port aus config
-		private final JTextField host = new JTextField(12);
-		private final JTextField port = new JTextField(5);
+		private final JTextField host = new JTextField(
+			Config.getValue("ipForConnectByTcp"), 12);
+		private final JTextField port = new JTextField(
+			Config.getValue("portForConnectByTcp"), 5);
 		private JDialog tcpEntryDialog = null;
 		private JOptionPane optionPane = null;
 
 		public void run() {
 			if (tcpEntryDialog == null) {
-				//$$ Sieht bekloppt aus, aber ich hab jetzt schon genug Zeit verschwendet
-				JPanel tfields = new JPanel();
-				tfields.add(host);
-				tfields.add(new JLabel(":"));
-				tfields.add(port);
-				
 				JPanel p = new JPanel();
-				p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-				p.add(new JLabel("Host : Port"));
-				p.add(tfields);
+				p.setLayout(new GridBagLayout());
+				p.add(new JLabel("Host"), 
+					new GridBaggins().west().epadx(2).epady(4));
+				p.add(new JLabel("Port"), 
+					new GridBaggins().col(2).west().epadx(2).epady(4)); 
+				
+				p.add(host, new GridBaggins().row(1));
+				p.add(new JLabel(":"), new GridBaggins().row(1).epadx(3));
+				p.add(port, new GridBaggins().row(1));
 				
 				optionPane = new JOptionPane(
 					p,

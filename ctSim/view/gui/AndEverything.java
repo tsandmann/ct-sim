@@ -8,7 +8,6 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 
@@ -17,6 +16,7 @@ import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.util.AuxFrameButton;
+import ctSim.util.Misc;
 
 //$$ doc
 //$$$ GridLayout, damit wir Reihenfolge der Dinger vorgeben koennen
@@ -41,7 +41,7 @@ public class AndEverything extends GuiBotBuisitor {
 		 * zugehoerigen Fix:
 		 * http://java.sun.com/j2se/1.5.0/docs/guide/swing/1.5/#swingText
 		 */
-		setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
+		Misc.setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
 
 		t.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		t.setDisabledTextColor(Color.BLACK);
@@ -54,26 +54,11 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
-	private static void setCaretPolicy(JTextArea t, int updatePolicy) {
-		DefaultCaret c = new DefaultCaret();
-		c.setUpdatePolicy(updatePolicy);
-		t.setCaret(c);
-	}
-
 	public void buisitLogViewer(Actuators.Log log, Bot bot) {
-		// TextArea bauen
-		JTextArea t = new JTextArea(log.getExternalModel());
-		t.setEditable(false);
-		t.setColumns(70);
-		t.setRows(25);
-
-		// Ausliefern
-		//$$$ Fenster sollte immer zur neuesten Ausgabe scrollen
-		//$$$ Speichern als txt
 		add(new AuxFrameButton(
 			log.getName(),
-			log.getDescription() + " von " + bot, // Fenster-Titel
-			new JScrollPane(t)));
+			log.getDescription() + " des " + bot, // Fenster-Titel
+			new LogViewer(log)));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 

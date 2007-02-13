@@ -10,6 +10,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
+
 //$$ doc Misc
 public class Misc {
 	public static double log2(double x) {
@@ -159,5 +162,12 @@ public class Misc {
 	/** Wie {@link #newList()}, aber für eine {@link HashMap}. */
 	public static <K, V> HashMap<K, V> newMap() {
 		return new HashMap<K, V>();
+	}
+
+	//$$ doc
+	public static void setCaretPolicy(JTextArea t, int updatePolicy) {
+		DefaultCaret c = new DefaultCaret();
+		c.setUpdatePolicy(updatePolicy);
+		t.setCaret(c);
 	}
 }

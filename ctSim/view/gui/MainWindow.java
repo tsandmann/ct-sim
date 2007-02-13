@@ -26,22 +26,24 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.WindowConstants;
 
 import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.controller.Main;
+import ctSim.model.ThreeDBot;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.rules.Judge;
 import ctSim.util.ClosableTabsPane;
-import ctSim.util.Runnable1;
 import ctSim.util.FmtLogger;
-import ctSim.util.IconHashMap;
+import ctSim.util.Runnable1;
 
 //$$$ BotViewer zu klein, scheint nur Breite von String Botname zu haben
 //$$ Wenn man BotViewer groesser gezogen hat und noch einen Bot hinzufuegt, springt BotViewer wieder auf Standardgroesse
@@ -147,7 +149,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			}
 		});
 
-		//$$$ SplitPane laesst sich nicht umbegroessen
 		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 			botTabs, buildWorldAndConsole());
 		split.setOneTouchExpandable(true);
@@ -198,11 +199,16 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * Vom Controller aufzurufen, wenn sich die Welt &auml;ndert. Schlie&szlig;t
 	 * die alte Welt und zeigt die neue an.
 	 */
-	public void onWorldOpened(World w) {
-		closeWorld();
-		world = w;
-		worldViewer.show(world);
-		validate(); //$$ validate() noetig?
+	public void onWorldOpened(final World w) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@SuppressWarnings("synthetic-access")
+			public void run() {
+				closeWorld();
+				world = w;
+				worldViewer.show(world);
+				validate(); //$$ validate() noetig?
+			}
+		});
 	}
 
 	protected void closeWorld() {
@@ -227,7 +233,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		world.setSimStepIntervalInMs(rate);
 	}
 
-	public void updateLayout() {
+	protected void updateLayout() {
 		split.resetToPreferredSizes();
 	}
 
@@ -235,43 +241,60 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * Aktualisiert die GUI
 	 * @param time Die Zeit, die zur Simulatorzeit hinzugezaehlt wird
 	 */
-	public void onSimulationStep(long time) {
+	public void onSimulationStep(final long time) {
 		// TODO: alles ganz haesslich:
-		statusBar.updateTime(time);
+		SwingUtilities.invokeLater(new Runnable() {
+			@SuppressWarnings("synthetic-access")
+			public void run() {
+				statusBar.updateTime(time);
+			}
+		});
 	}
 
 	/** F&uuml;gt einen neuen Bot hinzu */
 	public void onBotAdded(final Bot bot) {
-		botTabs.addClosableTab(
-			bot.toString(), // Tab-Beschriftung
-			new BotViewer(bot), // Inhalt
-			// Tooltip
-			bot.getDescription()+" (Klasse "+bot.getClass().getSimpleName()+")",
-			// Tooltip des Schliessen-Icon
-			"Verbindung zu Bot beenden"); //$$$ Tooltip Schliessenicon
-		// Listener fuer "Wenn Bot stirbt, Tab weg"
-		bot.addDisposeListener(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			@SuppressWarnings("synthetic-access")
 			public void run() {
-				/*
-				 * Zugehoerigen Tab finden und entfernen -- Nicht "optimieren":
-				 * Wir muessen in diesem Listener die Tabs durchsuchen. Sich den
-				 * Index des Tabs beim Bot-hinzufuegen zu merken geht nicht
-				 * (Index wenn Bot hinzugefuegt moeglicherweise ungleich Index
-				 * wenn Bot stirbt)
-				 */
-				for (int i = 0; i < botTabs.getTabCount(); i++) {
-					if (bot == ((BotViewer)botTabs.getComponentAt(i)).bot)
-						botTabs.remove(i);
-				}
+				String tabTitle = bot.toString();
+				JComponent tabContent = new BotViewer(bot);
+				String tabTitleTooltip = bot.getDescription()+" (Klasse "+
+					bot.getClass().getSimpleName()+")";
+				String tabIconTooltip = (bot instanceof ThreeDBot
+					? "Bot l\u00F6schen"
+					: "Verbindung zu Bot beenden");
+				botTabs.addClosableTab(
+					tabTitle,
+					tabContent, 
+					tabTitleTooltip,
+					tabIconTooltip);
+				// Listener fuer "Wenn Bot stirbt, Tab weg"
+				bot.addDisposeListener(new Runnable() {
+					@SuppressWarnings("synthetic-access")
+					public void run() {
+						/*
+						 * Zugehoerigen Tab finden und entfernen -- Nicht
+						 * "optimieren": Wir muessen in diesem Listener die Tabs
+						 * durchsuchen. Sich den Index des Tabs beim
+						 * Bot-hinzufuegen zu merken geht nicht (Index wenn Bot
+						 * hinzugefuegt moeglicherweise ungleich Index wenn Bot
+						 * stirbt)
+						 */
+						for (int i = 0; i < botTabs.getTabCount(); i++) {
+							BotViewer bv = (BotViewer)botTabs.getComponentAt(i);
+							if (bot == bv.bot)
+								botTabs.remove(i);
+						}
+
+						updateLayout();
+					}
+				});
 
 				updateLayout();
+
+				Debug.out.println("Bot \""+bot+"\" wurde hinzugefuegt."); //$$$ Debug msg
 			}
 		});
-
-		updateLayout();
-
-		Debug.out.println("Bot \""+bot+"\" wurde hinzugefuegt."); //$$$ Debug msg
 	}
 
 	public void onApplicationInited() {
@@ -279,10 +302,15 @@ public class MainWindow extends JFrame implements ctSim.view.View {
     }
 
 	public void onSimulationFinished() {
-	    // TODO Ueber diese Methode kriegt das MainWindow mit, wenn die Simulation anhaelt. Schoen waere: Knoepfe fuer Play/Pause/Stop ausgrauen, wenn nicht bedienbar. (Man kann nicht was stoppen, was schon gestoppt ist; starten, was schon gestartet ist; usw.)
+	    //TODO Ueber diese Methode kriegt das MainWindow mit, wenn die Simulation anhaelt. Schoen waere: Knoepfe fuer Play/Pause/Stop ausgrauen, wenn nicht bedienbar. (Man kann nicht was stoppen, was schon gestoppt ist; starten, was schon gestartet ist; usw.)
     }
 
-	public void onJudgeSet(Judge judge) {
-		menuBar.onJudgeSet(judge);
+	public void onJudgeSet(final Judge judge) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@SuppressWarnings("synthetic-access")
+			public void run() {
+				menuBar.onJudgeSet(judge);
+			}
+		});
     }
 }

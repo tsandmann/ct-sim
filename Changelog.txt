@@ -1,11 +1,21 @@
 Changelog fuer c't-Sim
 ======================
 
-2007-02-12 12:29 Hendrik Krauss [hkr@heise.de]:
+2007-02-13 12:29 Hendrik Krauss [hkr@heise.de]:
+* Fix fuer Bug 4: Auto-Scrolling im Sim-Log-Fenster
+* Fix fuer Bug 5: Sim-Log-Fenster: "Speichern als txt"
+* daher Neu: LogViewer
+* Zu Bug 7: ct-Sim-Probleme OSX 10.4.x -- MainWindow leitet alle Calls, die von aussen (Controller) kommen, jetzt auf den EDT um. Vielleicht ist das die Loesung des Bug. Mal testen
+* Dialog "Verbinden / Per TCP" ueberarbeitet; IP/Port werden jetzt aus Konfig geholt (neue Parameter eingefuehrt)
+* Neu: Icon Save16
+* Neu: BackslashNConverterStream
+* Weg: ComponentGroupGUI war noch von einer Aufraeumaktion uebriggeblieben
+
+2007-02-13 12:29 Hendrik Krauss [hkr@heise.de]:
 * Fix fuer Bug 8: Kein Scrollen moeglich, wenn Sim aktiv
 * Fix fuer Bug 3: Logging zum Sim fehlerhaft
 
-2007-02-12 2:04 Hendrik Krauss [hkr@heise.de]:
+2007-02-13 2:04 Hendrik Krauss [hkr@heise.de]:
 * Neu: RemoteCallCompnt inkl. Gui
 * Verschoben: Icons werden jetzt von Config bereitgestellt
 * Neu: 2 Hilfsklassen
