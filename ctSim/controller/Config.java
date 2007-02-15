@@ -2,6 +2,7 @@ package ctSim.controller;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,8 +14,9 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.xml.sax.SAXException;
 
+import ctSim.util.FileIconMap;
 import ctSim.util.FmtLogger;
-import ctSim.util.IconHashMap;
+import ctSim.util.IconProvider;
 import ctSim.util.Misc;
 import ctSim.util.xml.QueryableDocument;
 import ctSim.util.xml.QueryableNode;
@@ -78,8 +80,8 @@ public class Config {
 	private static PlainParameters parameters;
 
 	private static BotAppearances appearances;
-	
-	private static IconHashMap icons;
+
+	private static IconProvider icons;
 
 	/**
 	 * L&auml;dt die <code>&lt;parameter></code>-Tags aus der
@@ -99,6 +101,16 @@ public class Config {
 		appearances = new BotAppearances(doc);
 	}
 
+	public static void loadIcons(File iconsBaseDirectory)
+	throws NullPointerException, FileNotFoundException,
+	IllegalArgumentException {
+		setIconProvider(new FileIconMap(iconsBaseDirectory));
+	}
+
+	public static void setIconProvider(IconProvider iconProvider) {
+		icons = iconProvider;
+	}
+
 	public static String getValue(String key) {
 		return parameters.get(key);
 	}
@@ -107,15 +119,8 @@ public class Config {
 	String appearanceType) {
 		return appearances.get(botType, appearanceType, index);
 	}
-	
+
 	public static Icon getIcon(String key) {
-		if (icons == null) {
-			try {
-		        icons = new IconHashMap(new File("images")); //LODO Pfad hardcoded
-	        } catch (Exception e) {
-				throw new AssertionError(e); //$$ Excp-Handling
-	        }
-		}
 		return icons.get(key);
 	}
 

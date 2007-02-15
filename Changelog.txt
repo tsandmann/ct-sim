@@ -1,7 +1,15 @@
 Changelog fuer c't-Sim
 ======================
 
-2007-02-13 12:29 Hendrik Krauss [hkr@heise.de]:
+2007-02-15 15:52 Hendrik Krauss [hkr@heise.de]:
+* Neu: Applet (ctSim.applet.Main); wie man's baut siehe Wiki
+* Neu: make-applet.xml, applet.html, java.policy.applet (letztere uninteressant, nur Eclipse-intern noetig)
+* Fix fuer Bug 10: Sim-Bug beim Schliessen von Welten
+* Keine "Synch verloren"-Warnungen mehr beim Verbinden mit Real-Bots
+* Icon-Bereitstellung umorganisiert (wegen Applet-Sicherheitsbeschraenkungen); IconHashMap umbenannt nach FileIconMap
+* Kleinigkeiten
+
+2007-02-13 19:22 Hendrik Krauss [hkr@heise.de]:
 * Fix fuer Bug 4: Auto-Scrolling im Sim-Log-Fenster
 * Fix fuer Bug 5: Sim-Log-Fenster: "Speichern als txt"
 * daher Neu: LogViewer

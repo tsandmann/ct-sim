@@ -265,27 +265,14 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 					: "Verbindung zu Bot beenden");
 				botTabs.addClosableTab(
 					tabTitle,
-					tabContent, 
+					tabContent,
 					tabTitleTooltip,
 					tabIconTooltip);
 				// Listener fuer "Wenn Bot stirbt, Tab weg"
 				bot.addDisposeListener(new Runnable() {
 					@SuppressWarnings("synthetic-access")
 					public void run() {
-						/*
-						 * Zugehoerigen Tab finden und entfernen -- Nicht
-						 * "optimieren": Wir muessen in diesem Listener die Tabs
-						 * durchsuchen. Sich den Index des Tabs beim
-						 * Bot-hinzufuegen zu merken geht nicht (Index wenn Bot
-						 * hinzugefuegt moeglicherweise ungleich Index wenn Bot
-						 * stirbt)
-						 */
-						for (int i = 0; i < botTabs.getTabCount(); i++) {
-							BotViewer bv = (BotViewer)botTabs.getComponentAt(i);
-							if (bot == bv.bot)
-								botTabs.remove(i);
-						}
-
+						removeBotTab(bot);
 						updateLayout();
 					}
 				});
@@ -293,6 +280,19 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 				updateLayout();
 
 				Debug.out.println("Bot \""+bot+"\" wurde hinzugefuegt."); //$$$ Debug msg
+			}
+		});
+	}
+
+	private void removeBotTab(final Bot bot) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@SuppressWarnings("synthetic-access")
+			public void run() {
+				for (int i = 0; i < botTabs.getTabCount(); i++) {
+					BotViewer bv = (BotViewer)botTabs.getComponentAt(i);
+					if (bot == bv.bot)
+						botTabs.remove(i);
+				}
 			}
 		});
 	}

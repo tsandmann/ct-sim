@@ -377,7 +377,7 @@ public class Command {
 		 * SubCodes sind mit dem Code-Enum verkoppelt, da vom Code abh&auml;ngt,
 		 * ob z.B. ein &quot;R&quot; auf dem Draht f&uuml;r den SubCode
 		 * WELCOME_REAL oder f&uuml;r RIGHT steht.
-		 */ 
+		 */
 		public SubCode getSubCode(int b) throws ProtocolException {
 			for (SubCode c : validSubCodes) {
 				if (c.toUint7() == b)
@@ -389,7 +389,7 @@ public class Command {
 		}
 
 		public void assertSubCodeValid(SubCode sc) throws ProtocolException {
-			// Wenn SubCode ungueltig, explodiert der folgende Aufruf mit einer 
+			// Wenn SubCode ungueltig, explodiert der folgende Aufruf mit einer
 			// ProtoExcp
 			getSubCode(sc.toUint7());
 		}
@@ -526,14 +526,38 @@ public class Command {
 	}
 
 	/**
+	 * Wie {@link #Command(Connection, boolean)} mit
+	 * {@code suppressSyncWarnings == false} (dem Normalwert).
+	 */
+	public Command(Connection con) throws IOException, ProtocolException {
+		this(con, false);
+	}
+
+	/**
+	 * <p>
 	 * Liest und dekodiert ein Kommando von einer Connection. Sie wird dabei
 	 * weitergesetzt um die Zahl Bytes, die das Kommando lang war.
+	 * </p>
+	 * <p>
+	 * Falls das erste gelesene Byte nicht der Startcode ist, wird eine Warnung
+	 * ausgegeben ("Synchronisierung verloren") und das Zeichen ignoriert. Im
+	 * Normalbetrieb kommt sie nicht vor, da auf einen CRC-Code ohne weiteren
+	 * Zwischenkram der Startcode des n&auml;chsten Kommandos folgen muss.
+	 * </p>
 	 *
+	 * @param suppressSyncWarnings Unterdr&uuml;ckt die &quot;Synchronisierung
+	 * verloren&quot;-Warnung (s.o.), d.h. gibt sie auf Log-Level {@code FINE}
+	 * aus statt auf {@code WARNING}. Das ist sinnvoll f&uuml;r den Handshake
+	 * mit einem realen Bot: Wenn der Bot schon Kommandos sendet, wenn der Sim
+	 * sich mit ihm verbindet, dann ist es leicht m&ouml;glich, dass der Sim
+	 * mitten in einem Kommando dazukommt. In diesem Fall verwirrt die Meldung
+	 * mehr, als sie hilft.
 	 * @throws IOException Bei E/A-Fehler w&auml;hrend dem Lesen
 	 * @throws ProtocolException Falls ein ung&uuml;ltiger CRC empfangen wird
 	 * oder die Direction nicht {@link #DIR_REQUEST} ist.
 	 */
-	public Command(Connection con) throws IOException, ProtocolException {
+	public Command(Connection con, boolean suppressSyncWarnings)
+	throws IOException, ProtocolException {
 		byte[] b;
 
 		// Startcode
@@ -541,8 +565,13 @@ public class Command {
 		con.read(b);
 		byte startCode = b[0];
 		if (startCode != STARTCODE) {
-			lg.warn("Unerwartetes Zeichen als Startcode; Synchronisierung " +
-				"verloren; synchronisiere neu");
+			String msg = "Unerwartetes Zeichen als Startcode; " +
+					"Synchronisierung verloren; synchronisiere neu";
+			if (suppressSyncWarnings)
+				lg.fine(msg);
+			else
+				lg.warn(msg);
+
 			while (startCode != STARTCODE) {
 				b = new byte[1];
 				con.read(b);
@@ -677,7 +706,7 @@ public class Command {
 			String.format("%-20s",
 				commandCode + (has(SubCode.NORM) ? "" : "/"+subCommandCode))+
 			String.format(" L %4d R %4d", dataL, dataR)+
-			String.format(" Payload='%s'", 
+			String.format(" Payload='%s'",
 				replaceCtrlChars(escapeNewlines(getPayloadAsString())));
 	}
 
@@ -709,7 +738,7 @@ public class Command {
 	public static String escapeNewlines(String s) {
 		return s.replaceAll("\n", "\\\\n");
 	}
-	
+
 	/** Gibt das Datenfeld links ({@code dataL}) zur&uuml;ck */
 	public int getDataL() { return dataL; }
 

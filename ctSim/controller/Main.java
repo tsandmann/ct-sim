@@ -1,5 +1,6 @@
 package ctSim.controller;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -58,6 +59,7 @@ public class Main {
     	handleCommandLineArgs(args);
         lg = initLogging();
         loadConfig();
+        loadIcons();
         setupViewAndController();
     }
 
@@ -122,6 +124,16 @@ public class Main {
 		System.exit(1);
 	}
 
+	private static void loadIcons() {
+		try {
+			Config.loadIcons(new File("images")); //LODO Pfad hardcoded
+			return;
+		} catch (Exception e) {
+			lg.severe(e, "Fehler beim Laden der Icons");
+		}
+		System.exit(1);
+	}
+
 	private static void setupViewAndController() {
 		//$$ kann einfacher werden mit pico (Startable ifc)
 		try {
@@ -143,7 +155,7 @@ public class Main {
 			lg.warn(e, "Probleme beim Instanziieren des ContestConductor; " +
 					"starte ohne");
 		}
-		
+
 		if (Config.getValue("TimeLogger").equalsIgnoreCase("true"))
 			v.add(new TimeLogger());
 
