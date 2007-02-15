@@ -2,6 +2,9 @@
 <!-- Ant-Task zum Erstellen der Jars fuer das Applet. Legt ein Verzeichnis
 build-applet an. Wenn es schon etwas enthaelt, wird's geloescht.
 
+Anleitung zum Applet-Bau und -Deployment:
+https://www.heise.de/trac/ctbot/wiki/AppletHowto
+
 Die Ant-Datei erwartet, im Projekt-Verzeichnis zu sein (eine Stufe oberhalb
 des Ordners ctSim).
 
@@ -34,9 +37,14 @@ zu erreichen. -->
 		  <attribute name="Built-By" value="${user.name}"/>
 		</manifest>
 
-		<!-- Mehrere Jars erzeugen; keins darf >64K sein, weil's sonst der WiPort
-		nicht packt; wir rufen die unten definierte "Funktion" namens
-		make-jar auf -->
+		<!--
+		Mehrere Jars erzeugen
+
+		Keins darf >64K sein, weil's sonst der WiPort nicht packt - siehe
+		https://www.heise.de/trac/ctbot/wiki/AppletHowto#Detail:Die64KBGrenze
+
+		Wir rufen mehrfach die unten definierte "Funktion" namens make-jar auf
+		-->
 		<antcall target="make-jar">
 			<param name="num" value="1"/>
 			<param name="subdirs" value="
