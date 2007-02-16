@@ -72,7 +72,14 @@ public class Main extends JApplet implements BotReceiver {
 			}
 		});
 
-		mainLogger.setLevel(Level.INFO);
+		Level level;
+		try {
+			level = Level.parse(getParameter("logLevel"));
+		} catch (IllegalArgumentException e) {
+			level = Level.INFO;
+		}
+
+		mainLogger.setLevel(level);
 		Handler h = new Handler() {
 			@Override public void close() { /* No-op */ }
 			@Override public void flush() { /* No-op */ }
@@ -123,7 +130,7 @@ public class Main extends JApplet implements BotReceiver {
 				String title = getParameter("windowTitle");
 				if (title == null || title.trim().length() == 0)
 					title = "c't-Bot";
-				JFrame f = new JFrame(title);
+				final JFrame f = new JFrame(title);
 				BotViewer bv = new BotViewer(b);
 				f.addWindowListener(new WindowAdapter() {
 					@Override
@@ -131,6 +138,7 @@ public class Main extends JApplet implements BotReceiver {
 					@SuppressWarnings("unused") WindowEvent e) {
 						bot.dispose();
 						mainLogger.info("Bot-Fenster geschlossen");
+						f.dispose();
 					}
 				});
 				f.add(bv);

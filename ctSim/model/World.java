@@ -133,14 +133,13 @@ public class World {
 		botsToStart.clear();
 	}
 
-	public synchronized int getNumAliveObsts() {
+	public synchronized int getFutureNumOfBots() {
 		return botsRunning.size() + botsToStart.size();
 	}
 
-//$$$ t fix concurrentmodification
 	public synchronized void removeAllBotsNow() {
-		// Listen kopieren: b.dispose() entfernt den Bot aus botsToStart und 
-		// botsRunning, ein Iterator wuerde also eine ConcurrentModificationExcp 
+		// Listen kopieren: b.dispose() entfernt den Bot aus botsToStart und
+		// botsRunning, ein Iterator wuerde also eine ConcurrentModificationExcp
 		// werfen (d.h. for (ThreeDBot b : botsRunning) geht nicht)
 		List<ThreeDBot> lb = Misc.newList();
 		lb.addAll(botsToStart);
@@ -423,10 +422,10 @@ public class World {
 		if (bot == null)
 			throw new NullPointerException();
 
-		Point3d pos = parcours.getStartPosition(getNumAliveObsts() + 1);
+		Point3d pos = parcours.getStartPosition(getFutureNumOfBots() + 1);
 		// Weiss der Himmel warum, aber die Bots sind 7,5 cm ueber Null --hkr
 		pos.z = 0.075;
-		Vector3d head = parcours.getStartHeading(getNumAliveObsts() + 1);
+		Vector3d head = parcours.getStartHeading(getFutureNumOfBots() + 1);
 
 		final ThreeDBot botWrapper = new ThreeDBot(pos, head, barrier, bot);
 
@@ -439,6 +438,7 @@ public class World {
 		botWrapper.updateSimulation(getSimTimeInMs());
 
 		botWrapper.addDisposeListener(new Runnable() {
+			@SuppressWarnings("synthetic-access")
 			public void run() {
 				botsToStart.remove(botWrapper);
 				botsRunning.remove(botWrapper);
@@ -953,29 +953,32 @@ public class World {
 		return d;
 	}
 
-	/** Damit jedes Obstacle fair behandelt wird, merken wir uns, wer das letztemal zuerst dran war */
-	private int aliveObstaclePtr=0;
+	/**
+	 * Damit jedes Obstacle fair behandelt wird, merken wir uns, wer das
+	 * letzte Mal zuerst dran war
+	 */
+	private int runningBotsPtr = 0;
 
 	private PickConeRay pickConeRay = new PickConeRay();
 
 	/**
-	 * Diese Methode aktualisiert die gesamte Simualtion
-	 * @see AliveObstacle#updateSimulation()
+	 * Diese Methode setzt die Simulation um einen Simulationsschritt weiter.
+	 * Siehe {@link ctSim.controller.DefaultController#run()}.
 	 */
 	public void updateSimulation() {
-		// Zeitbasis aktualisieren
+		// Simzeit um einen Schritt weiter
 		increaseSimulTime();
 
 		ThreeDBot[] bots = botsRunning.toArray(new ThreeDBot[] {});
-		// pruefen, ob nicht etwa der Zeiger zu weit steht
-		if (aliveObstaclePtr >= bots.length)
-			aliveObstaclePtr=0;
+		// Zeiger koennte zu weit stehen
+		if (runningBotsPtr >= bots.length)
+			runningBotsPtr = 0;
 
-		for (int i=aliveObstaclePtr; i<bots.length; i++)
+		for (int i = runningBotsPtr; i < bots.length; i++)
 			bots[i].updateSimulation(getSimTimeInMs());
-		for (int i=0; i<aliveObstaclePtr; i++)
+		for (int i = 0; i < runningBotsPtr; i++)
 			bots[i].updateSimulation(getSimTimeInMs());
-		aliveObstaclePtr++;
+		runningBotsPtr++;
 	}
 
 	/** Schreibt den Parcours der Welt in eine Datei. Es wird dasselbe XML

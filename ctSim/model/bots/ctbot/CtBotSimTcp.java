@@ -107,8 +107,6 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			int rcStartCode = Integer.decode(rawStr);
 			for (BotComponent<?> c : components) {
 				if (c instanceof Sensors.RemoteControl) {
-					lg.fine("Sende RC5-Code %d (%#x) an %s",
-						rcStartCode, rcStartCode, toString());
 					((Sensors.RemoteControl)c).send(rcStartCode);
 					break;
 				}

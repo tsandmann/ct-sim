@@ -14,20 +14,24 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import ctSim.model.bots.components.Sensors.RemoteControl;
+import ctSim.util.FmtLogger;
 
 //$$ doc
 //$$ Runde Buttons waeren schoen
 public class RemoteControlViewer extends JPanel {
 	private static final long serialVersionUID = - 6483687307396837800L;
 
-	private static final Color LIGHT_BLUE = new Color(150, 150, 255); 
+	static final FmtLogger lg = FmtLogger.getLogger(
+		"ctSim.view.gui.RemoteControlViewer");
+
+	private static final Color LIGHT_BLUE = new Color(150, 150, 255);
 	private static final Color GR         = new Color(50,  200, 50);
 	private static final Color YE         = new Color(200, 200, 0);
 
 	// 25A1: Quadrat fuer "Stop"
 	private static final String qdrt  = "\u25A1";
 	// 25CF: Dicker Punkt fuer "Record"
-	private static final String punkt = "\u25CF";
+	private static final String recrd = "\u25CF";
 
 	private final JComponent[] buttonsAndLayout = {
 		defaultColor(LIGHT_BLUE),
@@ -50,7 +54,7 @@ public class RemoteControlViewer extends JPanel {
 			null,            null,          b("||",0x11A9),null,          null,
 			null,            b("<<",0x11B2),b(">", 0x11B5),b(">>",0x11B4),null,
 			null,            null,          b(qdrt,0x11B6),null,          null,
-			b(punkt,0x11AB), null,          null,          null,          b("CH*P/P",0x11BF)
+			b(recrd,0x11AB), null,          null,          null,          b("CH*P/P",0x11BF)
 		),
 		defaultColor(LIGHT_BLUE),
 		grid(3, 2,
@@ -71,7 +75,7 @@ public class RemoteControlViewer extends JPanel {
 		// Bindestrich durch Streckenstrich ersetzen (ist laenger, Bindestrich
 		// sieht so doof aus neben den grossen Pluszeichen)
 		label = label.replaceAll("-", "\u2013");
-		JButton rv = new JButton(label);
+		final JButton rv = new JButton(label);
 		rv.setToolTipText("Code "+rcCode+
 			" (0x"+Integer.toHexString(rcCode)+")");
 		rv.setForeground(color);
@@ -80,6 +84,8 @@ public class RemoteControlViewer extends JPanel {
 			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(
 			@SuppressWarnings("unused") ActionEvent e) {
+				lg.fine("Fernbedienungsknopf '%s' gedr\u00FCckt; sende " +
+						"RC5-Code %d (%#x)", rv.getText(), rcCode, rcCode);
 				try {
 					sensor.send(rcCode);
 				} catch (IOException e1) {

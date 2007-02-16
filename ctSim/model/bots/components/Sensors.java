@@ -14,6 +14,9 @@ import ctSim.view.gui.RemoteControlViewer;
 
 //	$$ doc
 public class Sensors {
+	static final FmtLogger lg = FmtLogger.getLogger(
+		"ctSim.model.bots.components.Sensors");
+
 	/**
 	 * Klasse der Liniensensoren
 	 */
@@ -91,8 +94,6 @@ public class Sensors {
 	//$$ doc
 	public static class Clock extends BotComponent<Void>
 	implements CanRead, CanWrite {
-		final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.components");
-
 		private int lastTransmittedSimTime = -1;
 
 		public synchronized void setSimTimeInMs(int simTime) {
@@ -195,8 +196,6 @@ public class Sensors {
 		}
 
 		public synchronized void writeTo(Command c) {
-			if (syncPendingRcCode == 0) //$$$ t
-				return;
 			c.setDataL(syncPendingRcCode);
 			syncPendingRcCode = 0;
 		}

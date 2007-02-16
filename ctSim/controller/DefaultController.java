@@ -109,7 +109,16 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
 	/**
-	 * @see java.lang.Runnable#run()
+	 * Sequencer: F&uuml;hrt die Simulation aus. W&auml;hrend der Simulation
+	 * erledigt er pro Simschritt zwei Hauptaufgaben:
+	 * <ul>
+	 * <li>"updateSimulation": Sagt der Welt bescheid, die den ThreeDBots
+	 * bescheidsagt, die den Simulatoren bescheidsagen. Die Simulation rechnen
+	 * einen Simschritt, z.B. wird abh&auml;ngig von der Motorgeschwindigkeit
+	 * die Position des Bot weitergesetzt</li>
+	 * <li>Die Bots &uuml;bertragen die Sensordaten zum C-Code, warten auf
+	 * Antwort, und verarbeiten die Antwort. </li>
+	 * </ul>
 	 */
 	public void run() {
 		int timeout = 10000; //$$ Default lieber in Klasse Config
@@ -170,9 +179,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 				// Add/Start new Bot
 				// + neue Runde einleuten
-				// Ueberschreibt startSignal, aber wir haben mit oldStartSignal eine Referenz aufgehoben
-				this.doneSignal  = new CountDownLatch(world.getNumAliveObsts());
-				this.startSignal = new CountDownLatch(1);
+				// Ueberschreibt startSignal, aber wir haben mit oldStartSignal
+				// eine Referenz aufgehoben
+				doneSignal  = new CountDownLatch(world.getFutureNumOfBots());
+				startSignal = new CountDownLatch(1);
 
 				world.startBots();
 
@@ -328,7 +338,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
     public int getParticipants() {
-        return world.getNumAliveObsts();
+        return world.getFutureNumOfBots();
     }
 
 	//$$ Nach Judge-Umbau: kann weg

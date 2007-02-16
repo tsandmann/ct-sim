@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-02-16 13:56 Hendrik Krauss [hkr@heise.de]:
+* Applet: Log-Level einstellbar zur Fehlersuche
+* Kleinigkeiten
+
 2007-02-15 18:40 Hendrik Krauss [hkr@heise.de]: Goldene Regel: Erst testen, dann einchecken
 
 2007-02-15 18:32 Hendrik Krauss [hkr@heise.de]: Bisschen Updates am Applet-Bauen
