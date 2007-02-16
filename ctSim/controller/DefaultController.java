@@ -177,6 +177,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				//TODO Warum _nach_ dem view.update()? Heisst das nicht, die Anzeige hinkt der Simulation immer um einen Schritt hinterher?
 				world.updateSimulation();
 
+				// Fix fuer Bug 12
+				if (world.getFutureNumOfBots() == 0) {
+					lg.info("Keine Bots mehr in der Simulation, pausiere");
+					pause();
+				}
+
 				// Add/Start new Bot
 				// + neue Runde einleuten
 				// Ueberschreibt startSignal, aber wir haben mit oldStartSignal
@@ -327,7 +333,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     public synchronized void onBotAppeared(Bot bot) {
     	if (bot instanceof SimulatedBot) {
     		if (world == null)
-    			throw new NullPointerException();
+    			throw new NullPointerException(); //$$$ warnung ausgeben, bot ignorieren, bot de-initialisieren
     		if (judge.isAddingBotsAllowed()) {
     			Bot b = world.addBot((SimulatedBot)bot, this);
     			view.onBotAdded(b);
