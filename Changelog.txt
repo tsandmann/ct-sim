@@ -1,6 +1,8 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-02-17 0:38 Hendrik Krauss [hkr@heise.de]: Remote-Calls getestet und verbessert, sind jetzt recht stabil
+
 2007-02-16 16:47 Hendrik Krauss [hkr@heise.de]: Fix fuer Bug 12: Sim-Absturz beim schliessen eines Bots
 
 2007-02-16 13:58 Hendrik Krauss [hkr@heise.de]: Nachtrag zum letzten Checkin

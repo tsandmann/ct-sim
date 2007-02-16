@@ -26,18 +26,21 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		"ctSim.model.bots.components.RemoteCallCompnt");
 
 	public class Behavior implements Cloneable {
-		private final byte[] name;
+		private final String name;
 		// Waere auch final, aber clone() muss das aendern koennen
 		private List<Parameter> parameters = Misc.newList();
 
 		Behavior(final byte[] name) {
-			this.name = name;
+			// Letztes Byte muss terminierendes Nullbyte sein
+			assert name[name.length - 1] == 0;
+			// Trim schneidet die ganzen Nullbytes ab, die zum Padding da sind
+			this.name = new String(name).trim();
 		}
 
 		public void call() throws IOException {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 			String msg = "Sende Remote-Call "+getName();
-			bytes.write(name);
+			bytes.write(name.getBytes());
 			bytes.write(0); // terminierendes Nullbyte
 			for (Parameter p : parameters) {
 				msg += ", "+p.fullName+" = "+p.getNumber();
@@ -91,7 +94,13 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 
 		public void writeTo(ByteArrayOutputStream bytes) {
-			bytes.write(Integer.reverseBytes(getIntRepresentation()));
+			int value = getIntRepresentation();
+			// Gemaess Remote-Call-Protokoll 32 Bit (4 Byte) schreiben
+			// Konvertierung nach Little Endian
+			bytes.write((value >>  0) & 255);
+			bytes.write((value >>  8) & 255);
+			bytes.write((value >> 16) & 255);
+			bytes.write((value >> 24) & 255);
 		}
 
 		abstract int getIntRepresentation();
@@ -217,6 +226,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	public void requestRemoteCallList() throws IOException {
+		lg.info("Fordere beim Bot eine Liste der m\u00F6glichen " +
+			"Remote-Calls an");
 		if (writesAsynchronously()) {
 			prepareListCmd(asyncOut.getCommand(getHotCmdCode()));
 			asyncOut.flush();
@@ -264,7 +275,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	public void readFrom(Command c) throws ProtocolException {
 		if (c.has(Command.SubCode.REMOTE_CALL_ENTRY))
-			newBehaviors.add(decodeBehavior(c.getPayload()));
+			newBehaviors.add(decodeBehavior(c));
 		else if (c.has(Command.SubCode.REMOTE_CALL_DONE))
 			fireDoneEvent(c.getDataL());
 	}
@@ -276,18 +287,23 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			li.run(rCallExitStatus);
 	}
 
-	private Behavior decodeBehavior(byte[] payload) throws ProtocolException {
-		ByteArrayInputStream b = new ByteArrayInputStream(payload);
-		b.skip(4); // Pointer (4 Byte) ignorieren
+	private Behavior decodeBehavior(Command command) throws ProtocolException {
+		ByteArrayInputStream b = new ByteArrayInputStream(command.getPayload());
 		int numParms = b.read();
-		// Parameterlaengen ignorieren -- wir parsen die spaeter ausm String
-		b.skip(numParms);
+		// Da kommen irgendwelche komischen 3 Bytes, ignorieren
+		b.skip(3);
+		// 20 Byte + terminierendes Nullbyte
 		Behavior rv = new Behavior(readArray(b, 20+1));
 		// Parameterangaben lesen in jedem Fall, verarbeiten vielleicht
 		String[] parmNames = new String(readArray(b, 40+1)).split(",");
 		if (numParms > 0) {
-			if (numParms != parmNames.length)
-				throw new ProtocolException(numParms+" != "+parmNames.length);
+			if (numParms != parmNames.length) {
+				lg.warn("Bot-Code scheint fehlerhaft; hat " +
+						"angek\u00FCndigt, der Remote-Call hat "+numParms+
+						" Parameter; tats\u00E4chlich hat er "+parmNames.length+
+						" Parameter; Gehe von "+parmNames.length+
+						" Parametern aus; Kommando folgt"+command);
+			}
 			for (int i = 0; i < parmNames.length; i++) {
 				String name = parmNames[i].trim();
 				Parameter p;
