@@ -37,8 +37,6 @@ import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
 import ctSim.view.View;
 
-//TODO Es passiert Mist, wenn TestBots hinzugefuegt werden, bevor ein Parcours existiert. Untersuchen.
-
 /**
  * Zentrale Controller-Klasse des c't-Sim
  */
@@ -46,7 +44,6 @@ public class DefaultController
 implements Controller, BotBarrier, Runnable, BotReceiver {
 	protected FmtLogger lg = FmtLogger.getLogger("ctSim.controller");
 
-	private Thread ctrlThread;
 	private volatile boolean pause;
 
 	private CountDownLatch startSignal, doneSignal;
@@ -54,6 +51,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     private Judge judge;
     private View view;
     private World world;
+    /** Thread, der die Simulation macht: Siehe {@link #run()}. */
+    private Thread sequencer;
 
     //$$ Idiotischerweise ist die hauptsaechliche Initialisierung hier
     public void setView(View view) {
@@ -80,32 +79,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
             lg.fine("Kein Standardbot konfiguriert");
         else
             invokeBot(botBin);
-    }
-
-	private void start() {
-		if(this.world == null)
-			return;
-
-		lg.fine("Initialisiere Sequencer");
-		this.ctrlThread = new Thread(this, "ctSim/Sequencer");
-		this.ctrlThread.start();
-	}
-
-    /**
-	 * Haelt den DefaultController an
-     */
-	public void stop() {
-		lg.fine("Terminieren des Sequencer angefordert");
-
-		Thread dummy = this.ctrlThread;
-
-		if(dummy == null)
-            return;
-
-		this.ctrlThread = null;
-
-		if(!dummy.getState().equals(State.TERMINATED))
-			dummy.interrupt();
     }
 
 	/**
@@ -137,7 +110,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		startSignal = new CountDownLatch(1);
 		doneSignal = new CountDownLatch(0);
 
-		while(this.ctrlThread == thisThread) {
+		while(this.sequencer == thisThread) {
 	        try {
 				long realTimeBeginInMs = System.currentTimeMillis();
 
@@ -206,13 +179,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	            e.printStackTrace();
 	        }
 	    }
-		cleanup();
+		world.cleanup();
+		world = null;
 		lg.fine("Sequencer beendet");
 	}
-
-	private synchronized void cleanup() {
-		world.cleanup();
-    }
 
 	/**
 	 * @throws InterruptedException
@@ -226,7 +196,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	}
 
 	/**
-	 * Laesst DefaultController pausieren
+	 * L&auml;sst den Sequencer (= die Simulation) pausieren. Keine Wirkung,
+	 * falls keine Welt geladen ist.
 	 */
 	public void pause() {
 		lg.fine("Pause angefordert");
@@ -234,15 +205,14 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	}
 
 	/**
-	 * Beendet die Pause
+	 * Beendet die Pause des Sequencers (= der Simulation)
 	 */
 	public synchronized void unpause() {
 		lg.fine("Pausenende angefordert");
 		if(this.world == null)
 			return;
 
-		if(this.ctrlThread == null)
-			this.start();
+		// Wenn world != null haben wir einen Sequencer-Thread laufen
 
 		if(this.pause && this.judge.isStartingSimulationAllowed()) {
 			this.pause = false;
@@ -250,41 +220,44 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		}
 	}
 
+	/**
+	 * Setzt die Welt. Prinzip: Sequencer und Welt werden gemeinsam erstellt und
+	 * gemeinsam gekillt. setWorld() startet einen Sequencer-Thread, der
+	 * pausiert bleibt bis jemand unpause() aufruft.
+	 */
 	private void setWorld(World world) {
-		pause();
+		if (world == null)
+			throw new NullPointerException();
 
-		if (this.world != null)
-			this.world.cleanup();
-
+		closeWorld();
 		this.world = world;
-        judge.setWorld(world);
-        view.onWorldOpened(world);
-        lg.info("Neue Welt ge\u00F6ffnet");
+		judge.setWorld(world);
+		view.onWorldOpened(world);
+		lg.info("Neue Welt ge\u00F6ffnet");
+
+		lg.fine("Initialisiere Sequencer");
+		pause = true; // Immer pausiert starten
+		sequencer = new Thread(this, "ctSim-Sequencer");
+		sequencer.start();
     }
 
+	/** Schlie&szlig;t die Welt und h&auml;lt den Sequencer an */
     public void closeWorld() {
-		this.reset();
-		this.world = null;
+    	if (sequencer == null) // Keine Welt geladen, d.h. kein Sequencer laeuft
+    		return;
+
+    	lg.fine("Terminieren des Sequencer angefordert");
+
+    	Thread dummy = sequencer;
+    	sequencer = null;
+    	if (! dummy.getState().equals(State.TERMINATED))
+    		dummy.interrupt();
+
+    	judge.reinit();
     }
-
-	//TODO Um Himmels Willen, was soll das denn sein?
-	public void reset() {
-		this.start();
-		this.pause = false;
-		this.stop();
-		this.judge.reinit();
-
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		this.pause();
-	}
 
     public void connectToTcp(String hostname, String port) {
-    	int p = 10002; //$$ in config tun
+    	int p = 10002;
     	try {
     		p = Integer.parseInt(port);
     	} catch (NumberFormatException e) {
@@ -333,7 +306,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     public synchronized void onBotAppeared(Bot bot) {
     	if (bot instanceof SimulatedBot) {
     		if (world == null)
-    			throw new NullPointerException(); //$$$ warnung ausgeben, bot ignorieren, bot de-initialisieren
+    			throw new NullPointerException();
     		if (judge.isAddingBotsAllowed()) {
     			Bot b = world.addBot((SimulatedBot)bot, this);
     			view.onBotAdded(b);
@@ -347,7 +320,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         return world.getFutureNumOfBots();
     }
 
-	//$$ Nach Judge-Umbau: kann weg
+	//$$ Wenn Bug 22 erledigt: Methode kann weg
     /**
      * @param judgeClassName Die Art des Schiedrichters zu setzen
      * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist

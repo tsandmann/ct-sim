@@ -13,7 +13,7 @@ public abstract class Tables {
 	public static class Position extends TableOfSpinners {
 		private static final long serialVersionUID = 4158210694642007178L;
 
-		//$$$ t MouseWheel auf Spinnern
+		//$$ Reagieren Spinner auf das Mouse-Wheel? Wenn nein, ihnen beibringen
 	    public void buisit(PositionCompnt c) {
 			c.getExternalModel().setStepSize(0.05);
 			// vorm Semikolon: Pattern fuer positive Zahlen, nachm ; negative
@@ -24,7 +24,7 @@ public abstract class Tables {
 			c.getExternalModel().setStepSize(6);
 			model.addRow(c, "0.0;\u22120.0");
 		}
-		
+
 		@Override protected String getPanelTitle() { return "Position"; }
 	}
 

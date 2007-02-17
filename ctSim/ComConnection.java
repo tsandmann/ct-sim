@@ -17,6 +17,7 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.SaferThread;
 
+//$$ doc
 /**
  * <p>
  * Serielle Verbindung / USB-Verbindung zu realen Bots (als Hardware vorhandenen
@@ -80,16 +81,15 @@ public class ComConnection extends Connection {
 				"USB-2-Bot-Adapter vom USB-Kabel abzuziehen und wieder " +
 				"dranzustecken", e);
 		}
-		//TODO Parameter configurierbar machen
 		String baudrate = Config.getValue("serialportBaudrate");
 		try {
 			int br = Integer.parseInt(baudrate);
-			port.setSerialPortParams(br, SerialPort.DATABITS_8, 
+			port.setSerialPortParams(br, SerialPort.DATABITS_8,
 				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 			lg.info("Warte auf Verbindung vom c't-Bot an seriellem Port "+
 				comPortName+" ("+br+" baud)");
 			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-			port.enableReceiveTimeout(60000); //$$$ t receive timeout isReceiveTEna
+			port.enableReceiveTimeout(60000);
 		} catch (NumberFormatException e) {
 			throw new CouldntOpenTheDamnThingException("Die Baud-Rate '"+
 				baudrate+"' ist keine g\u00FCltige Zahl", e);
@@ -111,19 +111,12 @@ public class ComConnection extends Connection {
 		class OurEventListener implements SerialPortEventListener {
 			public void serialEvent(SerialPortEvent evt) {
 				if (evt.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+					// Es gibt was zu lesen
 					synchronized (inputAvailMutex) {
 						inputAvailable = true;
 						inputAvailMutex.notify();
 					}
 				}
-				/*//$$$ BI
-					case SerialPortEvent.BI: // BI = Break Interrupt
-						// Jemand hat was an den USB-Adapter angeschlossen
-						if (acceptListener == null)
-							return;
-						acceptListener.someoneConnected(ComConnection.this);
-						break;
-				 */
 			}
 		}
 
@@ -144,21 +137,21 @@ public class ComConnection extends Connection {
 			}
 		}
 	}
-	
+
 	@Override
 	public void read(byte[] b) throws IOException {
 		inputAvailable = false;
 		super.read(b);
 	}
 
-	/** Schlie&szlig;t den seriellen Port und schlie&szlig;t die Vaterklasse. */
+	/**
+	 * Tut nichts: ComConnection ist ein Singleton und soll nie geschlossen
+	 * werden. Wir verhindern durch den Override auch, dass die Vaterklasse was
+	 * schlie&szlig;t.
+	 */
 	@Override
 	public synchronized void close() {
-		//$$$ comconn close
-		/*
-		port.close();
-		super.close();
-		*/
+		// No-op
 	}
 
 	@Override public String getName() { return port.getName(); }

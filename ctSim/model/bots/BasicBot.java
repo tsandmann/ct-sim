@@ -276,7 +276,7 @@ public abstract class BasicBot implements Bot {
 	}
 
 	public void dispose() {
-		lg.info("Bot %s verkr\u00FCmelt sich", toString());
+		lg.info(toString() + " verkr\u00FCmelt sich");
 		for (Runnable r : disposeListeners)
 			r.run();
 	}

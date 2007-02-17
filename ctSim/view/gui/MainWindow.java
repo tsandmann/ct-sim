@@ -101,7 +101,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	private WorldViewer worldViewer = new WorldViewer();
 
-	private MainWinMenuBar menuBar; //$$ Nach Judge-Umbau: Kann lokale Var werden
+	private MainWinMenuBar menuBar; //$$ Wenn Bug 22 gefixt: Kann lokale Var werden
 
 	public MainWindow(final Controller controller) {
 		super("c't-Sim " + Main.VERSION);
@@ -127,7 +127,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
             @Override
 			public void windowClosing(
 					@SuppressWarnings("unused") WindowEvent e) {
-				controller.stop();
+				controller.closeWorld();
 				dispose();
 				System.exit(0);
 			}

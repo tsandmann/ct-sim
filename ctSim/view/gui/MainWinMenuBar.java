@@ -79,12 +79,12 @@ public class MainWinMenuBar extends JMenuBar {
 	 */
 	final MainWindow mainWindow;
 
-	//$$ Nach Judge-Umbau: kann weg
-	private static final String[] judgeClassNames = { 
+	//$$ Wenn Bug 22 erledigt: kann weg
+	private static final String[] judgeClassNames = {
 		"ctSim.model.rules.DefaultJudge",
 		"ctSim.model.rules.LabyrinthJudge"};
 
-	//$$ Nach Judge-Umbau: kann weg
+	//$$ Wenn Bug 22 erledigt: kann weg
 	private ButtonGroup judgesButtonGroup = new ButtonGroup();
 
 	/**
@@ -106,8 +106,8 @@ public class MainWinMenuBar extends JMenuBar {
 		add(worldMenu);
 	    add(new Menu("Verbinde mit Bot",
 	    	new Entry("Per TCP ...", onAddTcpBot),
-	    	// Die Checkbox hat nen Haken und ist unveraenderbar disabled 
-	    	// (ausgegraut). Sinn: Benutzer wissen lassen, dass ctSim das 
+	    	// Die Checkbox hat nen Haken und ist unveraenderbar disabled
+	    	// (ausgegraut). Sinn: Benutzer wissen lassen, dass ctSim das
 	    	// automatisch macht
 	    	new Checkbox("Per USB (COM) automatisch", noOp).disable().check()));
 	    add(new Menu("Simuliere Bot",
@@ -124,7 +124,6 @@ public class MainWinMenuBar extends JMenuBar {
 
 	    JMenu simulationMenu = new Menu("Simulation",
 	    	new Entry("Start", Config.getIcon("Play16"), onStartSimulation),
-	    	new Entry("Stop", Config.getIcon("Stop16"), onResetSimulation),
 	    	new Entry("Pause", Config.getIcon("Pause16"), onPauseSimulation));
 	    add(simulationMenu);
 
@@ -138,7 +137,7 @@ public class MainWinMenuBar extends JMenuBar {
 	// dann laeuft einer der folgenden Runnables. Die Zuordnung welcher
 	// Menuepunkt -> welches Runnable findet im Konstruktor statt. (Sind
 	// Runnables, haben mit Threading aber nichts zu tun an der Stelle.)
-	
+
 	private Runnable onOpenWorld = new Runnable() {
 		@SuppressWarnings("synthetic-access")
 		public void run() {
@@ -194,15 +193,15 @@ public class MainWinMenuBar extends JMenuBar {
 			if (tcpEntryDialog == null) {
 				JPanel p = new JPanel();
 				p.setLayout(new GridBagLayout());
-				p.add(new JLabel("Host"), 
+				p.add(new JLabel("Host"),
 					new GridBaggins().west().epadx(2).epady(4));
-				p.add(new JLabel("Port"), 
-					new GridBaggins().col(2).west().epadx(2).epady(4)); 
-				
+				p.add(new JLabel("Port"),
+					new GridBaggins().col(2).west().epadx(2).epady(4));
+
 				p.add(host, new GridBaggins().row(1));
 				p.add(new JLabel(":"), new GridBaggins().row(1).epadx(3));
 				p.add(port, new GridBaggins().row(1));
-				
+
 				optionPane = new JOptionPane(
 					p,
 					JOptionPane.QUESTION_MESSAGE,
@@ -219,7 +218,7 @@ public class MainWinMenuBar extends JMenuBar {
 			}
 		}
 	};
-	
+
 	private Runnable1<Boolean> noOp = new Runnable1<Boolean>() {
 		public void run(@SuppressWarnings("unused") Boolean argument) {
 			// No-Op
@@ -273,16 +272,10 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
-	private Runnable onResetSimulation = new Runnable() {
-		public void run() {
-			//$$$ Stop-Knopf geht nicht
-		}
-	};
-
 	///////////////////////////////////////////////////////////////////////////
 	// Hilfsmethoden
 
-	//$$ Nach Judge-Umbau: kann weg
+	//$$ Wenn Bug 22 erledigt: kann weg
 	private JMenuItem[] buildJudgeMenuItems() {
 		JMenuItem[] rv = new JMenuItem[judgeClassNames.length];
 		for (int i = 0; i < judgeClassNames.length; i++) {
@@ -308,7 +301,7 @@ public class MainWinMenuBar extends JMenuBar {
 		return toolBar;
 	}
 
-	//$$ Nach Judge-Umbau: Kann weg
+	//$$ Wenn Bug 22 erledigt: Kann weg
 	public void onJudgeSet(Judge judge) {
 		for (AbstractButton b : Enumerations.asIterable(
 			judgesButtonGroup.getElements())) {
@@ -322,7 +315,7 @@ public class MainWinMenuBar extends JMenuBar {
 	// Hilfsklasse
 
 	/** Siehe {@link #worldChooser} */
-	class WorldFileChooser extends JFileChooser {
+	private class WorldFileChooser extends JFileChooser {
 		private static final long serialVersionUID = 6693056925110674157L;
 
 		public File showOpenWorldDialog() {
@@ -360,8 +353,8 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	}
 
-	//$$ Nach Judge-Umbau: Kann weg
-    class JudgeMenuItem extends JRadioButtonMenuItem {
+	//$$ Wenn Bug 22 erledigt: Kann weg
+    private class JudgeMenuItem extends JRadioButtonMenuItem {
         private static final long serialVersionUID = - 8177774672896579874L;
 
         public final String fqJudgeClassName;

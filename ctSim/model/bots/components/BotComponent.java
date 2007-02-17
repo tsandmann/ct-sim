@@ -30,7 +30,6 @@ import ctSim.model.bots.components.Actuators.Log;
 import ctSim.model.bots.components.Sensors.Mouse;
 import ctSim.model.bots.components.Sensors.RemoteControl;
 
-//$$$ externes Model: in Subklassen, internes: hier
 //$$ doc
 /**
  * <p>

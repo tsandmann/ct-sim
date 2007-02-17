@@ -60,7 +60,7 @@ import ctSim.util.Misc;
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
 public class ThreeDBot extends BasicBot implements Bot, Runnable {
-	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.AliveObstacle");
+	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.ThreeDBot");
 
 	private final List<Runnable1<Color>> appearanceListeners = Misc.newList();
 
@@ -353,7 +353,7 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 		addDisposeListener(new Runnable() {
 			@SuppressWarnings("synthetic-access")
 			public void run() {
-				lg.info("Stoppe "+thrd.getName());
+				lg.fine("Stoppe Thread "+thrd.getName());
 				Thread t = thrd;
 				thrd = null;
 				t.interrupt();
@@ -563,7 +563,7 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 		} catch(InterruptedException ie) {
 			// No-op: nochmal Meldung ausgeben, dann Ende
 		}
-		lg.info(toString()+" wurde entfernt");
+		lg.fine("Thread "+Thread.currentThread().getName()+" wurde beendet");
 	}
 
 	@Override

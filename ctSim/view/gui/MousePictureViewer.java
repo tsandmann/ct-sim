@@ -21,12 +21,9 @@ import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.util.Runnable1;
 
 //$$ doc
-//$$$ funktioniert manchmal nicht
 public class MousePictureViewer extends GuiBotBuisitor {
 	private static final long serialVersionUID = - 2167640810854877294L;
 
-	//$$$ Breiter
-	//$$$ t Bei Klick auch holen
 	public static class ImageViewer extends JPanel implements Runnable1<Image> {
 		private static final long serialVersionUID = 3878110649950448386L;
 
@@ -63,7 +60,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		@Override
 		public Dimension getPreferredSize() {
 			Insets is = getBorder().getBorderInsets(this);
-			return new Dimension(targetWidth  + is.left + is.right, 
+			return new Dimension(targetWidth  + is.left + is.right,
 			                     targetHeight + is.top  + is.bottom);
 		}
 

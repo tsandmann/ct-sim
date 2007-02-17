@@ -58,12 +58,6 @@ public interface Controller {
 	// $$ Vorlaeufige Methode
 	public void unpause();
 
-	// $$ Vorlaeufige Methode
-	public void stop();
-
-	// $$ Vorlaeufige Methode
-	public void reset();
-
 	/**
 	 * Von au&szlig;en, d.h. von einer Bootstrap-Komponente, aufzurufen, sobald
 	 * die Hauptkomponenten der Applikation (Controller und View) initialisiert

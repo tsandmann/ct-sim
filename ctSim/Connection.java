@@ -83,7 +83,7 @@ public abstract class Connection {
 			output.close();
 	}
 
-	//$$$ Umstellen, so dass man Con an Command gibt; Methode weg
+	//$$ ? Umstellen, so dass man Con an Command gibt; Methode weg
 	/**
 	 * Uebertraegt Daten
 	 *

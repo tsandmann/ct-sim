@@ -35,7 +35,7 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 	}
 
 	public void doSimStep() {
-/*//$$$ Simulator fuer test-bot
+/*
 		// TODO Pruefen ob: super.work();
 
 		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
@@ -97,7 +97,7 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 //		this.setActMotR(rr);
  */
 	}
-	
+
 	public void updateView() throws InterruptedException {
 		components.updateView();
 	}
