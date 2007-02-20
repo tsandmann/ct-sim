@@ -1,7 +1,9 @@
 Changelog fuer c't-Sim
 ======================
 
-2007-02-17 0:50 Hendrik Krauss [hkr@heise.de]:
+2007-02-20 15:35 Hendrik Krauss [hkr@heise.de]: Log-Fenster per Default breiter (80 Spalten)
+
+2007-02-20 15:08 Hendrik Krauss [hkr@heise.de]:
 * Fix fuer 33: Laufenden Remote-Call abbrechen
 * Fix fuer 25: Warnung, wenn keine Welt da und SimulatedBot hinzugefuegt
 * Kleinigkeiten

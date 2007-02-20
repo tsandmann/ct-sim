@@ -96,6 +96,7 @@ public class LogViewer extends JPanel {
 		setLayout(new BorderLayout());
 		logContent = log.getExternalModel();
 		final JTextArea t = new JTextArea(logContent);
+		t.setColumns(80);
 		t.setEditable(false);
 		Misc.setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
 
@@ -132,10 +133,16 @@ public class LogViewer extends JPanel {
 			public void removeUpdate (DocumentEvent e) { scrollTo(e); }
 		});
 
+		// Gesamtgroesse setzen
+		JScrollPane s = new JScrollPane(t);
+		int w = getInsets().left + s.getInsets().left +
+			s.getPreferredSize().width +
+			s.getInsets().right + getInsets().right;
+		setPreferredSize(new Dimension(w, w));
+
+		// Ausliefern
 		add(toolbar, BorderLayout.NORTH);
-		int w = toolbar.getPreferredSize().width;
-		setPreferredSize(new Dimension(w, 2 * w));
-		add(new JScrollPane(t), BorderLayout.CENTER);
+		add(s, BorderLayout.CENTER);
 	}
 
 	private static void equalizeHeight(JComponent c1, JComponent c2) {
