@@ -322,7 +322,7 @@ public class Command {
 		 */
 		REMOTE_CALL('r', SubCode.NORM, SubCode.REMOTE_CALL_LIST,
 			SubCode.REMOTE_CALL_ENTRY, SubCode.REMOTE_CALL_ORDER,
-			SubCode.REMOTE_CALL_DONE);
+			SubCode.REMOTE_CALL_DONE, SubCode.REMOTE_CALL_ABORT);
 
 
 		private final byte onTheWire;
@@ -459,7 +459,13 @@ public class Command {
 		 * Ergebnis des Remote-Call steht in dataL (1 = geklappt, 0 = in die
 		 * Hose gegangen)
 		 */
-		REMOTE_CALL_DONE('D');
+		REMOTE_CALL_DONE('D'),
+
+		/**
+		 * Sendet der Sim an den Bot, wenn der Remote-Call abgebrochen werden
+		 * soll, der angefangen, aber noch nicht beendet wurde.
+		 */
+		REMOTE_CALL_ABORT('A');
 
 
 		private final byte onTheWire;

@@ -28,6 +28,7 @@ import javax.swing.table.TableModel;
 import ctSim.controller.Config;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.RemoteCallCompnt.Behavior;
+import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
 import ctSim.model.bots.components.RemoteCallCompnt.Parameter;
 import ctSim.util.ComponentTable;
 import ctSim.util.FmtLogger;
@@ -131,8 +132,8 @@ public class RemoteCallViewer extends JPanel {
 		}
 	}
 
-	static class PlannedBhvModel extends BehaviorModel {
-		abstract static class StatusLabel extends JLabel {
+	class PlannedBhvModel extends BehaviorModel {
+		abstract class StatusLabel extends JLabel {
 			public StatusLabel(String label, String tooltip, Color c) {
 				super(label);
 				setToolTipText(tooltip);
@@ -157,12 +158,12 @@ public class RemoteCallViewer extends JPanel {
 
 			@Override
 			public void setEnabled(@SuppressWarnings("unused") boolean b) {
-				// No-op: Wir setzen das im Konstruktor, die Tabelle soll's ab
-				// dann nicht mehr aendern
+				// No-op: Wir sind auf enabled und das soll so bleiben, weil
+				// sonst der Text grau wird
 			}
 		}
 
-		static class Waiting extends StatusLabel {
+		class Waiting extends StatusLabel {
 			private static final long serialVersionUID = - 1396203136406798134L;
 
 			public Waiting() {
@@ -171,7 +172,7 @@ public class RemoteCallViewer extends JPanel {
 			}
 		}
 
-		static class Running extends StatusLabel {
+		class Running extends StatusLabel {
 			private static final long serialVersionUID = - 7019340883477925888L;
 
 			public Running() {
@@ -180,27 +181,11 @@ public class RemoteCallViewer extends JPanel {
 			}
 		}
 
-		abstract static class Done extends StatusLabel {
+		class Done extends StatusLabel {
+			private static final long serialVersionUID = - 2082537920466563306L;
+
 			public Done(String label, String tooltip, Color c) {
 				super(label, tooltip, c);
-			}
-		}
-
-		static class DoneSuccess extends Done {
-			private static final long serialVersionUID = 4012930442824710705L;
-
-			public DoneSuccess() {
-				super("OK", "Remote-Call erfolgreich abgeschlossen",
-					new Color(0, 160, 0));
-			}
-		}
-
-		static class DoneFailure extends Done {
-			private static final long serialVersionUID = - 7327825924461955645L;
-
-			public DoneFailure() {
-				super("Fehler", "Remote-Call ist in die Hose gegangen",
-					Color.RED);
 			}
 		}
 
@@ -216,29 +201,52 @@ public class RemoteCallViewer extends JPanel {
 
 		private static final long serialVersionUID = 2841437768966488801L;
 
-		protected JComponent buildDelButton() {
-			JButton rv = new JButton(
-				new AbstractAction("", Config.getIcon("schliessen-hover")) {
-					private static final long serialVersionUID =
-						8772641798764190954L;
+		class DeleteButton extends JButton implements ActionListener {
+			private static final long serialVersionUID = 1802551443502887184L;
 
-					public void actionPerformed(ActionEvent e) {
-						for (int row = 0; row < getRowCount(); row++) {
-							if (getValueAt(row, 3) == e.getSource()) {
-								removeRow(row);
-								return;
-							}
-						}
-						throw new IllegalStateException(
-							"Interner Fehler (Selbstfindungsproblem): " +
-							"L\u00F6schen-Knopf funktioniert nicht");
+			private boolean isRunning;
+
+			public DeleteButton() {
+				setIcon(Config.getIcon("schliessen-hover"));
+				addActionListener(this);
+
+				setMaximumSize(new Dimension(24, 24));
+				setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+			}
+
+			@SuppressWarnings("synthetic-access")
+			public void actionPerformed(
+			@SuppressWarnings("unused") ActionEvent e) {
+				if (isRunning) {
+					try {
+						rcCompnt.abortCurrentBehavior();
+					} catch (IOException excp) {
+						lg.warn(excp, "E/A-Problem beim Senden des " +
+								"Abbruchkommandos");
 					}
-			});
-			rv.setBorder(null);
-			rv.setToolTipText("Remote-Call l\u00F6schen");
-			rv.setMaximumSize(new Dimension(24, 24));
-			rv.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-			return rv;
+				}
+				else
+					removeThisRowFromTable();
+			}
+
+			private void removeThisRowFromTable() {
+				for (int row = 0; row < getRowCount(); row++) {
+					if (getValueAt(row, 3) == this) {
+						removeRow(row);
+						return;
+					}
+				}
+				throw new IllegalStateException("Interner Fehler " +
+						"(Selbstfindungsproblem): L\u00F6schen-Knopf " +
+						"funktioniert nicht");
+			}
+
+			public void setRunning(boolean isRunning) {
+				this.isRunning = isRunning;
+				setToolTipText(isRunning
+					? "Ausf\u00FChrung des Remote-Call abbrechen"
+					: "Remote-Call l\u00F6schen");
+			}
 		}
 
 		@Override
@@ -247,7 +255,7 @@ public class RemoteCallViewer extends JPanel {
 				new Waiting(),
 				buildName(b),
 				buildBhvViewer(b),
-				buildDelButton() });
+				new DeleteButton() });
 			if (nowRunning == null)
 				callNextBehavior();
 		}
@@ -261,45 +269,88 @@ public class RemoteCallViewer extends JPanel {
 				if (! (getValueAt(row, 0) instanceof Waiting))
 					throw new IllegalStateException("Interner Fehler");
 
-				callBehavior(row);
+				setRunningLabel(row);
+				disableRow(row);
+				setDeleteButton(row, true);
+				sendBehaviorRequest(row);
 
 				return;
 			}
 			lg.fine("Keine Remote-Calls mehr abzuarbeiten");
 		}
 
-		protected void lastCallIsDone(boolean errorOccurred) {
+		private void setRunningLabel(int row) {
+			nowRunning = new Running();
+			setValueAt(nowRunning, row, 0);
+		}
+
+		private void disableRow(int row) {
+			for (int col = 0; col < getColumnCount(); col++) {
+				// Spalte 3 (Loeschen-Button) nicht anfassen
+				if (col != 3)
+					((JComponent)getValueAt(row, col)).setEnabled(false);
+			}
+		}
+
+		private void sendBehaviorRequest(int row) {
+			try {
+				((BehaviorViewer)getValueAt(row, 2)).getBehavior().call();
+			} catch (IOException e) {
+				lg.warn(e, "Schlimm: E/A-Problem beim Senden des " +
+				"Remote-Call; ignoriere Remote-Call und fahre fort");
+			}
+		}
+
+		protected void setLastCallDone(BehaviorExitStatus status) {
 			for (int row = 0; row < getRowCount(); row++) {
 				if (getValueAt(row, 0) == nowRunning) {
-					setBhvDone(row, errorOccurred);
+					setDoneLabel(row, status);
+					enableRow(row);
+					setDeleteButton(row, false);
 					return;
 				}
 			}
 			throw new IllegalStateException("Interner Fehler");
 		}
 
-		private void callBehavior(int row) {
-			nowRunning = new Running();
-			setValueAt(nowRunning, row, 0);
-			for (int col = 0; col < getColumnCount(); col++)
-				((JComponent)getValueAt(row, col)).setEnabled(false);
+		private void setDoneLabel(int row, BehaviorExitStatus status) {
+			String tooltip;
+			Color color;
+			switch (status) {
+				case SUCCESS:
+					tooltip = "Remote-Call erfolgreich abgeschlossen";
+					color = new Color(0, 160, 0);
+					break;
+				case FAILURE:
+					tooltip = "Remote-Call ist in die Hose gegangen";
+					color = Color.RED;
+					break;
+				case CANCELLED:
+					tooltip = "Remote-Call abgebrochen";
+					color = Color.ORANGE;
+					break;
+				default:
+					throw new IllegalStateException();
+			}
 
-			try {
-				((BehaviorViewer)getValueAt(row, 2)).getBehavior().call();
-			} catch (IOException e) {
-				lg.warn(e, "Schlimm: E/A-Problem beim Senden des " +
-						"Remote-Call; ignoriere Remote-Call und fahre fort");
+			nowRunning = null;
+			setValueAt(new Done(status.toString(), tooltip, color), row, 0);
+		}
+
+		private void enableRow(int row) {
+			for (int col = 0; col < getColumnCount(); col++) {
+				// Spalte 3 (Loeschen-Button) nicht anfassen
+				if (col != 3)
+					((JComponent)getValueAt(row, col)).setEnabled(true);
 			}
 		}
 
-		private void setBhvDone(int row, boolean errorOccurred) {
-			nowRunning = null;
-			setValueAt(errorOccurred ? new DoneFailure() : new DoneSuccess(),
-				row, 0);
-			for (int col = 0; col < getColumnCount(); col++)
-				((JComponent)getValueAt(row, col)).setEnabled(true);
+		private void setDeleteButton(int row, boolean isRunning) {
+			((DeleteButton)getValueAt(row, 3)).setRunning(isRunning);
 		}
 	}
+
+	private final RemoteCallCompnt rcCompnt;
 
 	private ComponentTable buildCompntTable(TableModel m) {
 		final ComponentTable rv = new ComponentTable(m);
@@ -314,7 +365,7 @@ public class RemoteCallViewer extends JPanel {
 
 	private void requestRCallList(RemoteCallCompnt c) {
 		try {
-			c.requestRemoteCallList();
+			c.listRemoteCalls();
 		} catch (IOException e) {
 			lg.warn(e, "E/A-Problem aufgetreten, als die Anforderung der " +
 				"Remote-Call-Liste gesendet wurde; wer wei\u00DF, ob " +
@@ -323,6 +374,8 @@ public class RemoteCallViewer extends JPanel {
 	}
 
 	public RemoteCallViewer(final RemoteCallCompnt rcCompnt) {
+		this.rcCompnt = rcCompnt;
+
 		requestRCallList(rcCompnt);
 
 		final BehaviorModel availM = new BehaviorModel(2) {
@@ -371,7 +424,7 @@ public class RemoteCallViewer extends JPanel {
 		add(availHeading, new GridBaggins().row(0).col(0).epady(3));
 
 		add(new JScrollPane(availBhvs),
-			new GridBaggins().row(1).col(0).weightx(0.5).weighty(1).fillHV()
+			new GridBaggins().row(1).col(0).weightx(0.4).weighty(1).fillHV()
 			.epadx(10));
 
 		final ComponentTable plannedBhvs = buildCompntTable(plannedM);
@@ -421,20 +474,13 @@ public class RemoteCallViewer extends JPanel {
 		plannedBhvs.setTableHeader(null);
 
 		add(new JScrollPane(plannedBhvs),
-			new GridBaggins().row(1).col(2).weightx(0.5).weighty(1).fillHV()
+			new GridBaggins().row(1).col(2).weightx(0.6).weighty(1).fillHV()
 			.epadx(10));
 
-		rcCompnt.addDoneListener(new Runnable1<Integer>() {
-			public void run(Integer exitStatus) {
-				// Gesundheitscheck
-				if (exitStatus != 0 && exitStatus != 1) {
-					lg.warn("Unerwarteter Exit-Status bei Remote-Call (Wert: " +
-							"%d, erwartet: 0 oder 1); behandle wie " +
-							"Exit-Status f\u00FCr Fehler", exitStatus);
-				}
-
+		rcCompnt.addDoneListener(new Runnable1<BehaviorExitStatus>() {
+			public void run(BehaviorExitStatus status) {
 				// Hauptarbeit
-				plannedM.lastCallIsDone(exitStatus != 1);
+				plannedM.setLastCallDone(status);
 				plannedM.callNextBehavior();
 			}
 		});

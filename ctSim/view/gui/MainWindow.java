@@ -165,7 +165,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
     	Debug.registerDebugWindow(rv); //$$ Legacy: Debug-Klasse
     	//$$$ Temporaer auskommentiert, da terminate-Bug damit zusammenhing (sehr seltsame Abhaengigkeit)
     	// Wir melden uns als Handler fuer den Root-Logger an;
-//    	Handler h = rv.new LoggingHandler();
+//    	Handler h = rv.new LoggingHandler();//$$ syntax obskur
 //    	h.setLevel(INFO);
 //    	FmtLogger.getLogger("").addHandler(h);
     	return rv;

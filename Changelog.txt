@@ -2,6 +2,11 @@ Changelog fuer c't-Sim
 ======================
 
 2007-02-17 0:50 Hendrik Krauss [hkr@heise.de]:
+* Fix fuer 33: Laufenden Remote-Call abbrechen
+* Fix fuer 25: Warnung, wenn keine Welt da und SimulatedBot hinzugefuegt
+* Kleinigkeiten
+
+2007-02-17 0:50 Hendrik Krauss [hkr@heise.de]:
 * DefaultController vereinfacht, Prinzip ist: Sequencer-Thread laeuft genau dann, wenn eine Welt geladen ist
 * Das fixt hoffentlich Bug 10
 * Stop-Knopf weg (fixt Bug 13)

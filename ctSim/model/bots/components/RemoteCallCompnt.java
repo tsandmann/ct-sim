@@ -20,26 +20,112 @@ import ctSim.util.Misc;
 import ctSim.util.Runnable1;
 
 //$$ doc
+/**
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ */
 public class RemoteCallCompnt extends BotComponent<Void>
 implements CanRead, CanWrite, CanWriteAsynchronously {
-	final FmtLogger lg = FmtLogger.getLogger(
+	static final FmtLogger lg = FmtLogger.getLogger(
 		"ctSim.model.bots.components.RemoteCallCompnt");
 
+	public enum BehaviorExitStatus {
+		FAILURE(0, "Fehler"),
+		SUCCESS(1, "Fertig"),
+		CANCELLED(3, "Abgebrochen");
+
+		private final int onTheWire;
+		private final String displayableName;
+
+		private BehaviorExitStatus(int onTheWire, String displayableName) {
+			this.onTheWire = onTheWire;
+			this.displayableName = displayableName;
+		}
+
+		public static BehaviorExitStatus decode(int received) {
+			for (BehaviorExitStatus b : values()) {
+				if (received == b.onTheWire)
+					return b;
+			}
+			lg.warn("Ung\u00FCltiger Exit-Status '"+received+"' empfangen; " +
+					"behandle wie Exit-Status f\u00FCr Fehler");
+			return FAILURE;
+		}
+
+		@Override
+		public String toString() {
+			return displayableName;
+		}
+	}
+
+	/**
+	 * Repr&auml;sentiert ein Behavior, wie es vom Bot geliefert wurde. Ein
+	 * Behavior ist eine Funktion (Routine), die vom Sim aus aufgerufen werden
+	 * kann. Es hat:
+	 * <ul>
+	 * <li>einen Namen</li>
+	 * <li>eine Liste von {@link Parameter}n (jeder Parameter hat einen Namen
+	 * und als Typ int oder float)</li>
+	 * <li>eine Methode, um ihn aufzurufen, d.h. an den Bot die Anforderung
+	 * abzusetzen "f&uuml;hr dieses Behavior aus".</li>
+	 * </ul>
+	 */
 	public class Behavior implements Cloneable {
+		/**
+		 * Name des Behavior. Wird dem Benutzer angezeigt und dient dem
+		 * Bot-Steuercode gegen&uuml;ber als eindeutiger Bezeichner des
+		 * Behavior. Wenn der Bot die Liste schickt, welche Behaviors er
+		 * unterst&uuml;tzt, steht der Name in einem Feld mit fester L&auml;nge:
+		 * Nach dem Namen an sich kommt eine Anzahl Null-Bytes, um auf die im
+		 * Protokoll vorgeschriebenen soundsoviel Bytes zu kommen. Trotzdem
+		 * enth&auml;lt diese Variable nur den Namen an sich, die Null-Bytes
+		 * werden abgeschnitten.
+		 */
 		private final String name;
+
+		/** Die Parameter des Behavior. */
 		// Waere auch final, aber clone() muss das aendern koennen
 		private List<Parameter> parameters = Misc.newList();
 
-		Behavior(final byte[] name) {
+		/**
+		 * Erstellt eine {@code Behavior}-Instanz mit dem angegebenen Namen.
+		 * Hinten am Namen h&auml;ngende Null-Bytes werden ignoriert.
+		 */
+		private Behavior(final byte[] name) {
 			// Letztes Byte muss terminierendes Nullbyte sein
 			assert name[name.length - 1] == 0;
-			// Trim schneidet die ganzen Nullbytes ab, die zum Padding da sind
+			// trim() schneidet die ganzen Nullbytes ab, die zum Padding da sind
 			this.name = new String(name).trim();
 		}
 
+		/**
+		 * <p>
+		 * F&uuml;hrt das Behavior mit den gegenw&auml;rtigen Parameterwerten
+		 * aus. Der Behavior serialisiert sich und seine Parameter in ein
+		 * Byte-Array. In diesem stehen:
+		 * <ol>
+		 * <li>Name des Behavior (variable L&auml;nge)</li>
+		 * <li>ein Null-Byte</li>
+		 * <li>vier Byte f&uuml;r den serialisierten Parameter 1 ({@linkplain Parameter#writeTo(ByteArrayOutputStream) Wie serialisiert der sich?})</li>
+		 * <li>vier Byte f&uuml;r den serialisierten Parameter 2</li>
+		 * <li>&hellip;</li>
+		 * <li>vier Byte f&uuml;r den serialisierten letzten Parameter.</li>
+		 * </ol>
+		 * </p>
+		 * <p>
+		 * Das Behavior &uuml;bergibt das Byte-Array an seine
+		 * {@link RemoteCallCompnt}, die es an den Bot sendet. Das Senden
+		 * erfolgt nicht sofort, sondern zu einem sp&auml;teren Zeitpunkt, falls
+		 * die {@code RemoteCallCompnt} im synchronen Modus l&auml;uft.
+		 * </p>
+		 *
+		 * @throws IOException Falls die {@code RemoteCallCompnt} im asynchronen
+		 * Modus l&auml;uft und beim Senden ein E/A-Problem auftritt.
+		 */
+		@SuppressWarnings("synthetic-access")
 		public void call() throws IOException {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-			String msg = "Sende Remote-Call "+getName();
+			String msg = "Sende Remote-Call, um Behavior "+getName()+
+				" aufzurufen";
 			bytes.write(name.getBytes());
 			bytes.write(0); // terminierendes Nullbyte
 			for (Parameter p : parameters) {
@@ -47,7 +133,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				p.writeTo(bytes);
 			}
 			lg.info(msg);
-			doRemoteCall(bytes.toByteArray());
+			executeBehavior(bytes.toByteArray());
 		}
 
 		@Override
@@ -68,7 +154,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 
 		public String getName() {
-			return new String(name).trim();
+			return name;
 		}
 
 		public List<Parameter> getParameters() {
@@ -93,9 +179,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			}
 		}
 
+		// Gemaess Remote-Call-Protokoll 32 Bit (4 Byte) schreiben -- LE
 		public void writeTo(ByteArrayOutputStream bytes) {
 			int value = getIntRepresentation();
-			// Gemaess Remote-Call-Protokoll 32 Bit (4 Byte) schreiben
 			// Konvertierung nach Little Endian
 			bytes.write((value >>  0) & 255);
 			bytes.write((value >>  8) & 255);
@@ -131,8 +217,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	static class IntParam extends Parameter {
-		private static final long serialVersionUID =
-			1030435953303383535L;
+		private static final long serialVersionUID = 1030435953303383535L;
 
 		public IntParam(String name) throws ProtocolException {
 			super(name);
@@ -164,7 +249,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 					setMaximum(+2^bitCount - 1);
 				}
 			} catch (NumberFormatException e) {
-				// ignorieren
+				// ignorieren, dann halt ohne Minimum + Maximum
 			}
 		}
 
@@ -175,8 +260,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	static class FloatParam extends Parameter {
-		private static final long serialVersionUID =
-			9039021104381285572L;
+		private static final long serialVersionUID = 9039021104381285572L;
 
 		public FloatParam(String name) throws ProtocolException {
 			super(name);
@@ -189,10 +273,13 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	private CommandOutputStream asyncOut;
-	private boolean syncCallListPending = false;
-	private byte[] syncRCallPayload = null;
+	private boolean syncListCallsPending = false;
+	private byte[] syncOrderPayload = null;
+	private boolean syncAbortCurrentPending = false;
+
 	private final List<Runnable1<Behavior>> behaviorListeners = Misc.newList();
-	private final List<Runnable1<Integer>> doneListeners = Misc.newList();
+	private final List<Runnable1<BehaviorExitStatus>> doneListeners =
+		Misc.newList();
 	// Internes Model; cacht Behavior-Instanzen nachdem sie empfangen wurden
 	// und bis sie an die behaviorListener gegeben werden
 	private final List<Behavior> newBehaviors = Misc.newList();
@@ -221,57 +308,83 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 	}
 
-	private void prepareListCmd(Command c) {
-		c.setSubCmdCode(Command.SubCode.REMOTE_CALL_LIST);
+	public Code getHotCmdCode() { return Command.Code.REMOTE_CALL; }
+
+	// E/A -- Schreiben ///////////////////////////////////////////////////////
+
+	public void setAsyncWriteStream(CommandOutputStream s) {
+		asyncOut = s;
 	}
 
-	public void requestRemoteCallList() throws IOException {
-		lg.info("Fordere beim Bot eine Liste der m\u00F6glichen " +
-			"Remote-Calls an");
+	@Override
+	public void askForWrite(CommandOutputStream s) {
+		if (! writesSynchronously())
+			return;
+
+		if (syncAbortCurrentPending) {
+			prepareAbortCmd(s);
+			syncAbortCurrentPending = false;
+		} else if (syncListCallsPending) {
+			prepareListCmd(s);
+			syncListCallsPending = false;
+		} else if (syncOrderPayload != null) {
+			prepareOrderCmd(s, syncOrderPayload);
+			syncOrderPayload = null;
+		}
+	}
+
+	public void abortCurrentBehavior() throws IOException {
+		lg.info("Breche gegenw\u00E4rtig laufendes Behavior ab");
 		if (writesAsynchronously()) {
-			prepareListCmd(asyncOut.getCommand(getHotCmdCode()));
+			prepareAbortCmd(asyncOut);
 			asyncOut.flush();
 		} else
-			syncCallListPending = true;
+			syncAbortCurrentPending = true;
 	}
 
-	private void prepareRCallCmd(Command c, byte[] payload) {
+	public void listRemoteCalls() throws IOException {
+		lg.info("Fordere beim Bot eine Liste der m\u00F6glichen " +
+			"Behaviors an");
+		if (writesAsynchronously()) {
+			prepareListCmd(asyncOut);
+			asyncOut.flush();
+		} else
+			syncListCallsPending = true;
+	}
+
+	private void executeBehavior(byte[] payload) throws IOException {
+		if (writesAsynchronously()) {
+			prepareOrderCmd(asyncOut, payload);
+			asyncOut.flush();
+		} else
+			syncOrderPayload = payload;
+	}
+
+	private void prepareListCmd(CommandOutputStream s) {
+		s.getCommand(getHotCmdCode()).setSubCmdCode(
+			Command.SubCode.REMOTE_CALL_LIST);
+	}
+
+	private void prepareAbortCmd(CommandOutputStream s) {
+		s.getCommand(getHotCmdCode()).setSubCmdCode(
+			Command.SubCode.REMOTE_CALL_ABORT);
+	}
+
+	private void prepareOrderCmd(CommandOutputStream s, byte[] payload) {
+		Command c = s.getCommand(getHotCmdCode());
 		c.setSubCmdCode(Command.SubCode.REMOTE_CALL_ORDER);
 		c.setPayload(payload);
 	}
 
-	void doRemoteCall(byte[] payload) throws IOException {
-		if (writesAsynchronously()) {
-			prepareRCallCmd(asyncOut.getCommand(getHotCmdCode()), payload);
-			asyncOut.flush();
-		} else
-			syncRCallPayload = payload;
-	}
+	/**
+	 * No-op: Wir implementieren die, weil wir laut Interface m&uuml;ssen, aber
+	 * wir brauchen die nicht weil wir ja
+	 * {@link #askForWrite(CommandOutputStream) askForWrite()}
+	 * &uuml;berschrieben haben.
+	 */
+	public void writeTo(@SuppressWarnings("unused") Command c) { /* No-op */ }
 
-	public void writeTo(Command c) {
-		if (syncCallListPending) {
-			syncCallListPending = false;
-			c.setSubCmdCode(Command.SubCode.REMOTE_CALL_LIST);
-		}
-		else if (syncRCallPayload != null) {
-			prepareRCallCmd(c, syncRCallPayload);
-			syncRCallPayload = null;
-		}
-	}
-
-	public Code getHotCmdCode() { return Command.Code.REMOTE_CALL; }
-
-	private byte[] readArray(ByteArrayInputStream is, int lengthOfString)
-	throws ProtocolException {
-		byte[] rv = new byte[lengthOfString];
-		try {
-			is.read(rv);
-		} catch (IOException e) {
-			throw new ProtocolException("Remote Call Entry: Ung\u00FCltige " +
-					"Payload");
-		}
-		return rv;
-	}
+	// E/A -- Lesen ///////////////////////////////////////////////////////////
 
 	public void readFrom(Command c) throws ProtocolException {
 		if (c.has(Command.SubCode.REMOTE_CALL_ENTRY))
@@ -280,14 +393,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			fireDoneEvent(c.getDataL());
 	}
 
-	private void fireDoneEvent(int rCallExitStatus) {
-		lg.info("Bot meldet: Remote-Call erledigt; Status "+
-			(rCallExitStatus == 1 ? "ok" : "Fehler"));
-		for (Runnable1<Integer> li : doneListeners )
-			li.run(rCallExitStatus);
-	}
-
-	private Behavior decodeBehavior(Command command) throws ProtocolException {
+	@SuppressWarnings("synthetic-access")
+	private Behavior decodeBehavior(Command command)
+	throws ProtocolException {
 		ByteArrayInputStream b = new ByteArrayInputStream(command.getPayload());
 		int numParms = b.read();
 		// Da kommen irgendwelche komischen 3 Bytes, ignorieren
@@ -322,11 +430,29 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		return rv;
 	}
 
-	public void setAsyncWriteStream(CommandOutputStream s) {
-		asyncOut = s;
+	private byte[] readArray(ByteArrayInputStream is, int lengthOfString)
+	throws ProtocolException {
+		byte[] rv = new byte[lengthOfString];
+		try {
+			is.read(rv);
+		} catch (IOException e) {
+			throw new ProtocolException("Remote Call Entry: Ung\u00FCltige " +
+					"Payload");
+		}
+		return rv;
 	}
 
-	public void addDoneListener(Runnable1<Integer> willBeCalledWhenRCallDone) {
+	private void fireDoneEvent(int rCallExitStatus) {
+		BehaviorExitStatus status = BehaviorExitStatus.decode(rCallExitStatus);
+		lg.info("Bot meldet: Behavior erledigt; Status "+status);
+		for (Runnable1<BehaviorExitStatus> li : doneListeners)
+			li.run(status);
+	}
+
+	// Listenerverwaltung /////////////////////////////////////////////////////
+
+	public void addDoneListener(
+	Runnable1<BehaviorExitStatus> willBeCalledWhenRCallDone) {
 		if (willBeCalledWhenRCallDone == null)
 			throw new NullPointerException();
 		doneListeners.add(willBeCalledWhenRCallDone);

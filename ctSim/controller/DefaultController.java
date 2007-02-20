@@ -175,8 +175,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				if (timeToSleep > 0)
 					Thread.sleep(timeToSleep);
 	        } catch (InterruptedException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
+	            // Wird von wait() geworfen, wenn jemand closeWorld() macht
+				// waehrend wait() noch laeuft (closeWorld() ruft interrupt()
+				// auf). Man bittet uns, unsere while-Bedingung auszuwerten,
+				// weil die false geworden ist. Also normal weitergehen
 	        }
 	    }
 		world.cleanup();
@@ -305,11 +307,17 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
     public synchronized void onBotAppeared(Bot bot) {
     	if (bot instanceof SimulatedBot) {
-    		if (world == null)
-    			throw new NullPointerException();
+    		if (world == null) {
+    			lg.info("Weise "+bot.toString()+" ab: Es gibt keine Welt, zu " +
+    					"der man ihn hinzuf\u00FCgen k\u00F6nnte");
+    			bot.dispose(); // Bot abweisen
+    			return;
+    		}
     		if (judge.isAddingBotsAllowed()) {
     			Bot b = world.addBot((SimulatedBot)bot, this);
     			view.onBotAdded(b);
+    		} else {
+    			bot.dispose(); // Bot abweisen
     		}
     	}
     	else
