@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-02-21 19:40 Hendrik Krauß [hkr@heise.de]:
+* Applet etwas robuster, läuft wieder im Applet Viewer
+* Neues Project Setting: Encoding auf UTF-8 (auch für Windows). Jetzt sollten Umlaute plattformübergreifend gehen
+
 2007-02-21 18:58 Hendrik Krauss [hkr@heise.de]:
 * ct-sim.xml hat jetzt "os"-Attribut, Doku folgt
 * In Eclipse /parcours, /tmp usw. aus dem Build-Path genommen (sind ja keine Packages, sondern Ordner) -- Datei .classpath

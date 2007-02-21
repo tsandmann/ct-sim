@@ -3,6 +3,7 @@ package ctSim.applet;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -75,7 +76,7 @@ public class Main extends JApplet implements BotReceiver {
 		Level level;
 		try {
 			level = Level.parse(getParameter("logLevel"));
-		} catch (IllegalArgumentException e) {
+		} catch (Exception e) {
 			level = Level.INFO;
 		}
 
@@ -104,8 +105,12 @@ public class Main extends JApplet implements BotReceiver {
 			public Icon get(String key) {
 				// Icon aus jar-Datei laden; Annahme: jar enthaelt Icon in
 				// seinem Root-Verzeichnis
-				return new ImageIcon(getClass().getClassLoader().getResource(
-					key+".gif"));
+				URL u = getClass().getClassLoader().getResource(key+".gif");
+				// NullPointerException vermeiden
+				if (u == null)
+					return new ImageIcon(); // leeres Icon
+				else
+					return new ImageIcon(u);
 			}
 		});
 	}

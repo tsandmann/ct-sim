@@ -1,0 +1,6 @@
+#Wed Feb 21 19:17:30 CET 2007
+
+#UTF-8 für alle! Das sollte endlich das Problem lösen, dass Umlaute usw.
+#kaputtgehen, wenn man zwischen Linux und Windows wechselt
+eclipse.preferences.version=1
+encoding/<project>=UTF-8
