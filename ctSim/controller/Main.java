@@ -60,6 +60,7 @@ public class Main {
         lg = initLogging();
         loadConfig();
         loadIcons();
+        setLookAndFeel();
         setupViewAndController();
     }
 
@@ -134,14 +135,34 @@ public class Main {
 		System.exit(1);
 	}
 
+	private static void setLookAndFeel() {
+		// Ubuntu 6.10 + Gnome: Stelle fest, dass c't-Sim absolut bekackt 
+		// aussieht mit dem Look+Feel des Systems, daher lieber gleich Metal
+		// nehmen
+		if (System.getProperty("os.name").equals("Linux"))
+			useMetalLookAndFeel();
+		else {
+			try {
+				UIManager.setLookAndFeel(
+					UIManager.getSystemLookAndFeelClassName());
+				lg.fine("Verwende Look and Feel des Systems");
+			} catch (Exception e) {
+				useMetalLookAndFeel();
+			}
+		}
+	}
+	
+	private static void useMetalLookAndFeel() {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			lg.fine("Verwende Metal als Look and Feel");
+		} catch (Exception e) {
+			lg.fine(e, "Problem beim Setzen des Look and Feel");
+		}
+	}
+
 	private static void setupViewAndController() {
 		//$$ kann einfacher werden mit pico (Startable ifc)
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			lg.warning(e, "Problem beim Setzen des Look and Feel");
-		}
-
 		Controller c = dependencies.get(Controller.class);
 
 		List<View> v = Misc.newList();

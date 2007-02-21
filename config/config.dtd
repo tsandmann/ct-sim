@@ -4,6 +4,7 @@
 		<!ATTLIST parameter 
 			name CDATA #REQUIRED
 			value CDATA #REQUIRED
+			os CDATA #IMPLIED
 		>		
 		
 	<!ELEMENT bots (bot*)>

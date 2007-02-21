@@ -1,6 +1,12 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-02-21 18:58 Hendrik Krauss [hkr@heise.de]:
+* ct-sim.xml hat jetzt "os"-Attribut, Doku folgt
+* In Eclipse /parcours, /tmp usw. aus dem Build-Path genommen (sind ja keine Packages, sondern Ordner) -- Datei .classpath
+* Cross-Plattform: Look and Feel fuer Linux auf Metal
+* Umlaute und so, an denen sich Linux verschluckt, geaendert
+
 2007-02-20 15:35 Hendrik Krauss [hkr@heise.de]: Log-Fenster per Default breiter (80 Spalten)
 
 2007-02-20 15:08 Hendrik Krauss [hkr@heise.de]:
@@ -177,8 +183,8 @@ Changelog fuer c't-Sim
 * Kleinigkeiten
 
 2007-01-14 21:07 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
-* Neu: CtBotShape, zweifarbige Shape des c't-Bot, zu sehen bei Kollisionen/Loechern/abgerissenen TCP-Verbindungen; das neue Aussehen ist auch klarer im Code und nicht mehr um 90° gedreht wie bisher (konsistent mit Headings)
-* AliveObstacle: Heading um 90° gedreht (vorher: Kurs 0° = nach Steuerbord, jetzt: Kurs 0° = geradeaus)
+* Neu: CtBotShape, zweifarbige Shape des c't-Bot, zu sehen bei Kollisionen/Loechern/abgerissenen TCP-Verbindungen; das neue Aussehen ist auch klarer im Code und nicht mehr um 90ï¿½ gedreht wie bisher (konsistent mit Headings)
+* AliveObstacle: Heading um 90ï¿½ gedreht (vorher: Kurs 0ï¿½ = nach Steuerbord, jetzt: Kurs 0ï¿½ = geradeaus)
 * AliveObstacle: Appearance-Verwaltung etwas aufgeraeumt
 * Neu: Konsistente und freundliche Bot-Namen
 * Aufgeraeumt: ConfigManager umfassend entschlackt; gesamte Konfig wird jetzt von Klasse Config verwaltet; dort auch neuer Appearance-Parser
@@ -256,7 +262,7 @@ vorletzten Check-in zurueck (Stand 6. Dez, denn am 5. war der vorletzte
 Check-in). Dann gehen wir das nochmal ruhiger an.
 
 2006-12-18 Hendrik Krauss [hkr@heise.de]: Entwicklungsversion, UNSTABLE
-* Blickrichtung (Heading) wird jetzt fast ueberall in Grad (Uhrzeigersinn und 0° = Norden) ausgedrueckt, das ist einfacher und weniger irrefuehrend als der bisherige Vector3d. Funktioniert in Gui noch nicht
+* Blickrichtung (Heading) wird jetzt fast ueberall in Grad (Uhrzeigersinn und 0ï¿½ = Norden) ausgedrueckt, das ist einfacher und weniger irrefuehrend als der bisherige Vector3d. Funktioniert in Gui noch nicht
 * Position + Blickrichtung eines AliveObstacle gesammelt in neuer Klasse NavState (J3D-Modularisierung)
 * Alten Code in Bot und CtBot geloescht
 * Alle Sensoren/Aktuatoren: Methode getType() weg, wurde nie aufgerufen

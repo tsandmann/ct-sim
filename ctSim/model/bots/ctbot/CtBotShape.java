@@ -144,7 +144,7 @@ public class CtBotShape extends Group {
      *   |    |
      *   |    `-- Appearance 1
      *   |
-     *   +-- TransformGroup (rotiert 180° um z-Achse)
+     *   +-- TransformGroup (rotiert 180 Grad um z-Achse)
      *   |    |
      *   |    `-- rightCheek (instanceof Shape3D)
      *   |         |
@@ -175,7 +175,7 @@ public class CtBotShape extends Group {
     	rightCheek = buildRightCheek();
     	addChild(rightCheek);
 
-    	// Linke Backe: Shape der rechten, um 180° gedreht
+    	// Linke Backe: Shape der rechten, um 180 Grad gedreht
     	leftCheek = (Shape3D)rightCheek.cloneNode(false);
     	TransformGroup g = new TransformGroup(z180aboutCenter());
     	g.addChild(leftCheek);

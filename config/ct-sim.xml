@@ -20,9 +20,11 @@
 	<parameter name="botport" value="10001"/>
 
 	<!-- botbinary ist die Bot-Datei, die per default gestartet wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt. Angabe unabhaengig von botdir-->
-	<parameter name="botbinary" value="..\ct-Bot\Debug-W32\ct-Bot.exe"/>
+	<parameter name="botbinary" os="Windows" value="../ct-Bot/Debug-W32/ct-Bot.exe"/>
+	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
 	<!-- botdir ist das Verzeichnis, in dem nach Bots gesucht wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt -->
-	<parameter name="botdir" value="..\ct-Bot\Debug-W32"/>
+	<parameter name="botdir" os="Windows" value="../ct-Bot/Debug-W32"/>
+	<parameter name="botdir" os="Linux" value="../ct-Bot/Debug-Linux"/>
 
 	<!-- judge ist der Klassenname des Judges, den der Sim per default laedt-->
 	<parameter name="judge" value="ctSim.model.rules.LabyrinthJudge"/>
@@ -40,7 +42,8 @@
 
 	<!-- Serieller Anschluss. Der Sim verbindet sich mit ihm und erwartet 
 	dort einen USB-2-Bot-Adapter -->
-	<parameter name="serialport" value="COM3"/>
+	<parameter name="serialport" os="Windows" value="COM3"/>
+	<parameter name="serialport" os="Linux" value="/dev/ttyUSB0"/>
 	<!-- Geschwindigkeit des 'serialport' in baud, default 57600 -->
 	<parameter name="serialportBaudrate" value="57600"/>
 	

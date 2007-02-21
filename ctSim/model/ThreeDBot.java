@@ -202,13 +202,16 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 
 		@Override
 		public String getName() {
-			return "Richtung [°]";
+			// Unicode 00B0: Grad-Zeichen
+			return "Richtung [\u00B0]";
 		}
 
 		@Override
 		public String getDescription() {
+			// Unicode 00B0: Grad-Zeichen
 			return "Richtung, in die der Bot blickt, gemessen in Grad; " +
-					"Blick nach Norden = 0°; Blick nach Westen = +90°";
+					"Blick nach Norden = 0\u00B0; " +
+					"Blick nach Westen = +90\u00B0";
 		}
 
 		@Override

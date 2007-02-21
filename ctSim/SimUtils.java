@@ -79,7 +79,7 @@ public class SimUtils {
 	public static Vector3d intToVec3d(int deg) {
 		double rad = Math.toRadians(deg);
 		// Sinus und Cosinus sind hier vertauscht, weil
-		// 0° in Richtung der positiven Y-Achse zeigen soll!
+		// 0 Grad in Richtung der positiven Y-Achse zeigen soll!
 		double x = Math.sin(rad);
 		double y = Math.cos(rad);
 		Vector3d newHead = new Vector3d(new Point3d(x, y, 0d));
@@ -98,7 +98,7 @@ public class SimUtils {
 	public static Vector3d doubleToVec3d(double deg) {
 		double rad = Math.toRadians(deg);
 		// Sinus und Cosinus sind hier vertauscht, weil
-		// 0° in Richtung der positiven Y-Achse zeigen soll!
+		// 0 Grad in Richtung der positiven Y-Achse zeigen soll!
 		double x = Math.sin(rad);
 		double y = Math.cos(rad);
 		Vector3d newHead = new Vector3d(new Point3d(x, y, 0d));

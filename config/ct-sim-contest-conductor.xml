@@ -34,7 +34,8 @@
 
 	<parameter name="contestBotTargetDir" value="tmp"/>
 	<parameter name="contestBotFileNamePrefix" value="tmp-contest-bot"/>
-	<parameter name="contestBotFileNameSuffix" value=".exe"/>
+	<parameter name="contestBotFileNameSuffix" os="Windows" value=".exe"/>
+	<parameter name="contestBotFileNameSuffix" os="Linux" value=".elf"/>
 
 	<!-- ctSimIP ist der Rechner, auf dem der Sim laeuft -->
 	<parameter name="ctSimIP" value="192.168.123.252"/>

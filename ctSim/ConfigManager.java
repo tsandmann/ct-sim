@@ -2,7 +2,7 @@ package ctSim;
 
 import ctSim.util.FmtLogger;
 
-//$$ Uffraeumen, evtl. umbenennen
+//$$$ Kann weg dank neuem os="..."-Attribut in der Konfig
 public class ConfigManager {
 	static FmtLogger lg = FmtLogger.getLogger("ctSim.ConfigManager");
 

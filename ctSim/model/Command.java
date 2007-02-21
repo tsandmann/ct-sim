@@ -330,8 +330,8 @@ public class Command {
 
 		/**
 		 * Konschtruktor; nicht aufrufbar; stattdessen {@link #fromByte(int)}
-		 * verwenden. Setzt die zugelassenen SubCodes für diese Code-Instanz auf
-		 * NORM und nichts sonst.
+		 * verwenden. Setzt die zugelassenen SubCodes f&uuml;r diese
+		 * Code-Instanz auf NORM und nichts sonst.
 		 */
 		private Code(char c) {
 			this(c, SubCode.NORM);

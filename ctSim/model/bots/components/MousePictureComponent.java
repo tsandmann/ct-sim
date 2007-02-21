@@ -21,7 +21,7 @@ import ctSim.util.Misc;
 /**
  * <ul><li>Command-Code SENS_MOUSE_PICTURE</li>
 * <li>Nutzlast: einen Teil der Pixel des Mausbilds, z.B. Pixel Nr. 42 bis 108</li>
-* <li>In diesem Fall wäre dataL == 42 und die Nutzlastlänge == 64</li>
+* <li>In diesem Fall w&auml;re dataL == 42 und die Nutzlastl&auml;nge == 64</li>
 * <li></li></ul>
  */
 public class MousePictureComponent extends BotComponent<Void>
@@ -142,7 +142,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			int col = (offset + i) % WIDTH;
 			int row = (offset + i) / WIDTH;
 			col = HEIGHT - 1 - col; // spiegeln -- oben und unten vertauschen
-			// Um 90° drehen = Spaltennr. und Zeilennr. vertauschen (siehe ) //$$$ Siehe protokoll-doku
+			// Um 90 Grad drehen = Spaltennr. und Zeilennr. vertauschen (siehe ) //$$$ Siehe protokoll-doku
 			// Ohne Drehen waere pixels[col + (row * WIDTH)]
 			pixels[(col * HEIGHT) + row] = colorFromRgb(gray, gray, gray);
 		}

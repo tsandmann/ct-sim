@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="ctSim/view/contestConductor/contest-database|ctSim/EchoTest.java|ctSim/TestServer.java" kind="src" path=""/>
+	<classpathentry excluding="ctSim/view/contestConductor/contest-database|ctSim/EchoTest.java|ctSim/TestServer.java|characteristics/|config/|contrib/|images/|parcours/|textures/|tmp/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="contrib/junit-4.1.jar">
 		<attributes>
@@ -13,6 +13,6 @@
 			<attribute name="javadoc_location" value="http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="contrib/rxtx.jar"/>
+	<classpathentry kind="lib" path="contrib/rxtx.jar" sourcepath="contrib/rxtx/src.zip"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

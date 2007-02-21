@@ -142,8 +142,19 @@ public class Config {
 
 			// XML laden
 			try {
-				for(QueryableNode n : doc.getNodeList("/ct-sim/parameter"))
+				for(QueryableNode n : doc.getNodeList("/ct-sim/parameter")) {
+					String os = n.getStringOrNull("@os");
+					// Bezieht sich Parameter auf ein anderes Betriebssystem?
+					// "os.name"-Werte: "Windows", "Linux"
+					// Weitere auf http://tolstoy.com/samizdat/sysprops.html
+					if (os != null 
+					&& ! os.equalsIgnoreCase(System.getProperty("os.name")))
+						continue;
+					
+					// Attribut os nicht vorhanden (= alle Betriebsysteme), oder
+					// vorhanden und System passt
 					put(n.getString("@name"), n.getString("@value"));
+				}
 			} catch (XPathExpressionException e) {
 				// "Kann nicht passieren"
 				throw new AssertionError(e);

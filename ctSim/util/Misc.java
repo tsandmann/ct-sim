@@ -20,7 +20,7 @@ public class Misc {
 	}
 
 	/**
-	 * Bringt einen Winkel in das Intervall ]&minus;180°; 180°].
+	 * Bringt einen Winkel in das Intervall ]&minus;180&deg;; 180&deg;].
 	 * 
 	 * @param angleInDeg Winkel in Grad
 	 */
@@ -46,7 +46,7 @@ public class Misc {
 	}
 
 	/**
-	 * Liefert den &uuml;bergebenen Wert <code>value</code> zurück, falls 0
+	 * Liefert den &uuml;bergebenen Wert <code>value</code> zur&uuml;ck, falls 0
 	 * &lt; <code>value</code> &lt; <code>maxAllowed</code> gilt. Falls
 	 * nicht, liefert den Wert aus dem Intervall [0; <code>maxAllowed</code>],
 	 * der <code>value</code> am n&auml;chsten liegt.
@@ -159,7 +159,7 @@ public class Misc {
 		return new ArrayList<T>();
 	}
 
-	/** Wie {@link #newList()}, aber für eine {@link HashMap}. */
+	/** Wie {@link #newList()}, aber f&uuml;r eine {@link HashMap}. */
 	public static <K, V> HashMap<K, V> newMap() {
 		return new HashMap<K, V>();
 	}

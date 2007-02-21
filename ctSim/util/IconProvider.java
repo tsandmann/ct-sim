@@ -11,7 +11,7 @@ import javax.swing.Icon;
  * <pre>
  * .--------.  verwendet einen   .--------------.
  * | Config | -----------------> | IconProvider |
- * `--------´                    `--------------´
+ * '--------'                    '--------------'
  *                                 ^          ^
  *                                 |          |
  *                   implementiert |          | implementiert
@@ -20,7 +20,7 @@ import javax.swing.Icon;
  *                  | FileIconMap       | | Ding, das Icons     |
  *                  | Liest Icons aus   | | aus einer Jar-Datei |
  *                  | einem Verzeichnis | | anfordert           |
- *                  `-------------------´ `---------------------´
+ *                  '-------------------' '---------------------'
  * </pre>
  *
  * Der c't-Sim verwendet die Klasse {@link FileIconMap}; das Applet l&auml;dt

@@ -25,7 +25,8 @@ import ctSim.util.Decoratoror;
 //$$ Zur Klarheit umbenennen in XmlDocuments? Oder QueryableDocument?
 /**
  * <p>
- * Klasse, die die Arbeit mit XPath vereinfachen und verertr&auml;glichen soll.
+ * Klasse, die die Arbeit mit XPath vereinfachen und verertr&auml;glichen
+ * soll.
  * </p>
  * <h3>XPath?</h3>
  * <p>
@@ -33,8 +34,8 @@ import ctSim.util.Decoratoror;
  * sind regul&auml;re Ausdr&uuml;cke: So, wie regul&auml;re Ausdr&uuml;cke
  * Teilstrings in einem langen String fangen, f&auml;ngt XPath Teile aus einem
  * XML-Dokument. XPath l&auml;sst sich rubbeldiekatz lernen durch die <a
- * href="http://www.w3.org/TR/xpath.html#path-abbrev">Anwendungsbeispiele in der
- * Spezifikation</a> (&quot;context node&quot; hei&szlig;t in aller Regel
+ * href="http://www.w3.org/TR/xpath.html#path-abbrev">Anwendungsbeispiele in
+ * der Spezifikation</a> (&quot;context node&quot; hei&szlig;t in aller Regel
  * Root-Knoten des XML-Dokuments.)
  * </p>
  * <h3>Verwendungsbeispiel</h3>
@@ -44,14 +45,15 @@ import ctSim.util.Decoratoror;
  * <li><code>Node r = d.<a href="#getNode(java.lang.String)">getNode</a>("//ruebe[12]"); // Einzelknoten: zw&ouml;lfte R&uuml;be</code></li>
  * <li><code>for (Node node : d.<a href="#getNodeList(java.lang.String)">getNodeList</a>("//gurke")) { ... } // Liste aller Gurken im XML</code></li>
  * </ul>
- * <code>getNodeList()</code> liefert dabei eine {@link org.w3c.dom.NodeList}
- * gemäß der Java-Plattform-API, die aber als Verbesserung auch {@link Iterable}
- * implementiert. Daher ist sie in der gezeigten Weise in for-each-Schleifen
- * verwendbar, im Gegensatz zur normalen NodeList.
+ * <code>getNodeList()</code> liefert dabei eine
+ * {@link org.w3c.dom.NodeList} gem&auml;&szlig; der Java-Plattform-API, die
+ * aber als Verbesserung auch {@link Iterable} implementiert. Daher ist sie in
+ * der gezeigten Weise in for-each-Schleifen verwendbar, im Gegensatz zur
+ * normalen NodeList.
  * </p>
  * <h3>Spezifikation</h3>
  * <p>
- * Diese Klasse greift zurück auf die XPath-API aus der Java-Plattform ({@link javax.xml.xpath}).
+ * Diese Klasse greift zur&uuml;ck auf die XPath-API aus der Java-Plattform ({@link javax.xml.xpath}).
  * Es ist der Dokumentation nicht zu entnehmen, welche XPath-Version die
  * Plattform-API implementiert, aber ich glaube es ist 1.0 (das wird zumindest
  * bei {@link XPath} angedeutet). &rarr; <a
@@ -60,9 +62,9 @@ import ctSim.util.Decoratoror;
  * <h3>Motivation</h3>
  * <p>
  * Die Handhabung von XPath in der normalen Java-Plattform ist leider sehr
- * javaig (d.h. umst&auml;ndlich und b&uuml;rokratisch). Eine Routineaufgabe wie
- * "bitte mal <code>//tomate</code> auf gemuese.xml anwenden" erfordert, wenn
- * ich das richtig sehe, mindestens folgende Monstrosität:
+ * javaig (d.h. umst&auml;ndlich und b&uuml;rokratisch). Eine Routineaufgabe
+ * wie "bitte mal <code>//tomate</code> auf gemuese.xml anwenden" erfordert,
+ * wenn ich das richtig sehe, mindestens folgende Monstrosit&auml;t:
  * <code>XPathFactory.newInstance().newXPath().evaluate(DocumentBuilderFactory.newDocumentBuilder().parse("gemuese.xml"), "//tomate");</code>
  * &ndash; und ist dann noch nicht mal typsicher. (Bei der verwendeten Methode
  * handelt es sich &uuml;brigens um eine "convenience&quot;-Methode, d.h. das
@@ -72,11 +74,11 @@ import ctSim.util.Decoratoror;
  * </p>
  * <p>
  * Diese Klasse vereinfacht die o.g. Routineaufgabe zu:
- * <code>new XmlDocument("gemuese.xml",).getNodeList("//tomate")</code>. Sie
- * bietet au&szlig;erdem Typsicherheit beim Umgang mit XPath, im Gegensatz zur
- * Java-Plattform.
+ * <code>new XmlDocument("gemuese.xml").getNodeList("//tomate")</code>.
+ * Sie bietet au&szlig;erdem Typsicherheit beim Umgang mit XPath, im Gegensatz
+ * zur Java-Plattform.
  * </p>
- *
+ * 
  * @see javax.xml.xpath
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
