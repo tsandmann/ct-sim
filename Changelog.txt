@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2007-02-22 00:16 Timo Sandmann [mail@timosandmann.de]:
+* OS-Parameter fuer Mac OS X ergaenzt
 
 2007-02-21 19:40 Hendrik Krauß [hkr@heise.de]:
 * Applet etwas robuster, läuft wieder im Applet Viewer
