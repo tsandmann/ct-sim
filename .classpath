@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="ctSim/view/contestConductor/contest-database|ctSim/EchoTest.java|ctSim/TestServer.java|characteristics/|config/|contrib/|images/|parcours/|textures/|tmp/" kind="src" path=""/>
+	<classpathentry excluding="characteristics/|config/|contrib/|ctSim/EchoTest.java|ctSim/TestServer.java|ctSim/view/contestConductor/contest-database|documentation/|images/|parcours/|textures/|tmp/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="contrib/junit-4.1.jar">
 		<attributes>

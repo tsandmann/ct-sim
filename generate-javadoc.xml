@@ -13,7 +13,7 @@ ueber Run > External Tools zu erreichen. -->
 	access="package"
 	author="true"
 	classpath="C:\Programme\eclipse\plugins\org.junit4_4.1.0\junit-4.1.jar"
-	destdir="doc"
+	destdir="documentation/api"
 	nodeprecated="false"
 	nodeprecatedlist="false"
 	noindex="false"

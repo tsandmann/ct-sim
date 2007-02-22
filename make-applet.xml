@@ -3,7 +3,7 @@
 build-applet an. Wenn es schon etwas enthaelt, wird's geloescht.
 
 Anleitung zum Applet-Bau und -Deployment:
-https://www.heise.de/trac/ctbot/wiki/AppletHowto
+documentation/applet-howto/applet-howto.html
 
 Die Ant-Datei erwartet, im Projekt-Verzeichnis zu sein (eine Stufe oberhalb
 des Ordners ctSim).

@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-02-22 18:38 Hendrik Krauß [hkr@heise.de]: Releasevorbereitung 2
+* Applet-Howto rein
+* Javadoc-Ant-Task: Ausgabeverzeichnis geändert
+
 2007-02-22 18:38 Hendrik Krauß [hkr@heise.de]: Releasevorbereitung
 * contrib/rxtx wieder eingecheckt (war irgendwie nicht mehr da)
 * Version 2.1b -> 2.1
