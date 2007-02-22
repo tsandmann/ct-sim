@@ -18,10 +18,9 @@
  */
 package ctSim.view.gui;
 
-import java.io.OutputStream;
 import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.LogRecord;
-import java.util.logging.StreamHandler;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
@@ -47,25 +46,23 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 		setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
 	}
 	
-	/** 
-	 * @see ctSim.view.gui.DebugWindow#print(java.lang.String)
-	 */
 	public synchronized void print(String msg) {
 		textArea.append(msg);
 		textArea.setCaretPosition(textArea.getText().length());
 	}
 
-	/** 
-	 * @see ctSim.view.gui.DebugWindow#println(java.lang.String)
-	 */
 	public synchronized void println(String msg) {
 		print(msg + "\n");
 	}
 	
-	public class LoggingHandler extends StreamHandler {
+	public Handler createLoggingHandler() {
+		return new LoggingHandler();
+	}
+	
+	private class LoggingHandler extends Handler {
 		@SuppressWarnings("synthetic-access")
         public LoggingHandler() {
-			super(new ConsoleComponentOutputStream(), new Formatter() {
+			setFormatter(new Formatter() {
 				@Override
                 public String format(LogRecord r) {
 					String lvl = r.getLevel().getLocalizedName();
@@ -77,22 +74,20 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
                 }});
 		}
 
-		// Workaround fuer das sehr merkwuerdige Verhalten von
-		// LoggingHandler. Er scheint normalerweise irgendwie zu 
-		// puffern (Meldungen kommen stark verspaetet durch)
 		@Override
 		public synchronized void publish(LogRecord record) {
-			    super.publish(record);
-			    flush();
+			if (record.getLevel().intValue() >= getLevel().intValue())
+				print(getFormatter().format(record));
 		}
-	}
-	
-	private class ConsoleComponentOutputStream extends OutputStream {
+
 		@Override
-		public void write(int b) {
-			// 24 MSB ignorieren, siehe Doku OutputStream.write(int)
-			b &= 0x000000ff;
-			ConsoleComponent.this.print(new String(new byte[] { (byte)b }));
+		public void close() throws SecurityException {
+			// No-op
+		}
+
+		@Override
+		public void flush() {
+			// No-op
 		}
 	}
 }

@@ -1,6 +1,14 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-02-22 18:22 Hendrik Krauß [hkr@heise.de]:
+* Fix für 55: Absturz Knopf "Welt generieren"
+* Fix für 23: Logging in Konsole anzeigen
+* Aufgeräumt: ConsoleComponent
+* ct-sim.xml: Timeout jetzt 500 ms
+* Cross-Plattform: Applet unter Linux jetzt auch im Metal-Look-And-Feel
+* Neu: Klasse Init weil Main des Applet und Main der Applikation bisschen gemeinsamen Code haben
+
 2007-02-22 13:53 Hendrik Krauß [hkr@heise.de]:
 * Fix für 39: Simbots sterben nicht
 * Fix für 44: Steckengebliebene Bots von Simulation ausschließen

@@ -631,7 +631,24 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 			return;
 		deltaT = simTimeInMs - lastSimulTime;
 		lastSimulTime = simTimeInMs;
-		simulator.run();
+		/*$$$ Simulator sollte ein Runnable sein, das Excp werfen kann, so 
+		 * dass es InterruptedExcp wirft, denn sonst kann passieren:
+		 * 
+Exception in thread "ctSim-Sequencer" java.lang.RuntimeException: java.lang.InterruptedException
+	at ctSim.model.bots.ctbot.MasterSimulator.run(MasterSimulator.java:446)
+	at ctSim.model.ThreeDBot.updateSimulation(ThreeDBot.java:634)
+	at ctSim.model.World.updateSimulation(World.java:978)
+	at ctSim.controller.DefaultController.run(DefaultController.java:181)
+	at java.lang.Thread.run(Thread.java:595)
+Caused by: java.lang.InterruptedException
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:474)
+	at java.awt.EventQueue.invokeAndWait(EventQueue.java:846)
+	at javax.swing.SwingUtilities.invokeAndWait(SwingUtilities.java:1257)
+	at ctSim.model.bots.ctbot.MasterSimulator.run(MasterSimulator.java:444)
+	... 4 more
+		 */
+		simulator.run(); 
 	}
 
 	/**

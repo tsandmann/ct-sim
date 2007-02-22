@@ -95,6 +95,9 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 */
 	public void run() {
 		int timeout = 10000; //$$ Default lieber in Klasse Config
+		
+		// Sequencer-Thread hat eigene Referenz auf die Welt -- siehe Bug 55
+		final World sequencersWorld = world;
 
         try {
         	timeout = Integer.parseInt(Config.getValue("ctSimTimeout"));
@@ -125,18 +128,18 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				CountDownLatch oldStartSignal = this.startSignal;
 
 				// Judge pruefen:
-				if (judge.isSimulationFinished(world.getSimTimeInMs())) {
+				if (judge.isSimulationFinished(sequencersWorld.getSimTimeInMs())) {
 					lg.fine("Sequencer: Simulationsende");
 					// Spiel ist beendet
 					pause();
 					// Alle Bots entfernen
-					world.removeAllBotsNow();
+					sequencersWorld.removeAllBotsNow();
 					view.onSimulationFinished();
 				}
 
 				// View(s) bescheidsagen
 				//TODO Wieso wird das nochmal gemacht, wenn die Simulation (per Judge-Urteil) schon beendet wurde?
-				view.onSimulationStep(world.getSimTimeInMs());
+				view.onSimulationStep(sequencersWorld.getSimTimeInMs());
 
 				if(this.pause) {
 					lg.fine("Pause beginnt: Sequencer blockiert");
@@ -148,10 +151,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 				// Die ganze Simulation aktualisieren
 				//TODO Warum _nach_ dem view.update()? Heisst das nicht, die Anzeige hinkt der Simulation immer um einen Schritt hinterher?
-				world.updateSimulation();
+				sequencersWorld.updateSimulation();
 
 				// Fix fuer Bug 12
-				if (world.getFutureNumOfBots() == 0) {
+				if (sequencersWorld.getFutureNumOfBots() == 0) {
 					lg.info("Keine Bots mehr in der Simulation, pausiere");
 					pause();
 				}
@@ -160,17 +163,18 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				// + neue Runde einleuten
 				// Ueberschreibt startSignal, aber wir haben mit oldStartSignal
 				// eine Referenz aufgehoben
-				doneSignal  = new CountDownLatch(world.getFutureNumOfBots());
+				doneSignal  = new CountDownLatch(sequencersWorld
+					.getFutureNumOfBots());
 				startSignal = new CountDownLatch(1);
 
-				world.startBots();
+				sequencersWorld.startBots();
 
 				// Alle Bots wieder freigeben
 				oldStartSignal.countDown();
 
 				// Schlafe nur, wenn nicht schon zuviel Zeit "verbraucht" wurde
 				// Felix: !!!Finger weg von den folgenden Zeilen !!!
-				long timeToSleep = world.getSimStepIntervalInMs() -
+				long timeToSleep = sequencersWorld.getSimStepIntervalInMs() -
 						(System.currentTimeMillis() - realTimeBeginInMs);
 				if (timeToSleep > 0)
 					Thread.sleep(timeToSleep);
@@ -181,8 +185,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				// weil die false geworden ist. Also normal weitergehen
 	        }
 	    }
-		world.cleanup();
-		world = null;
+		sequencersWorld.cleanup();
 		lg.fine("Sequencer beendet");
 	}
 
@@ -231,7 +234,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		if (world == null)
 			throw new NullPointerException();
 
-		closeWorld();
+		closeWorld(); // Beendet Thread
 		this.world = world;
 		judge.setWorld(world);
 		view.onWorldOpened(world);
@@ -243,9 +246,9 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		sequencer.start();
     }
 
-	/** Schlie&szlig;t die Welt und h&auml;lt den Sequencer an */
+	/** H&auml;lt den Sequencer-Thread an */
     public void closeWorld() {
-    	if (sequencer == null) // Keine Welt geladen, d.h. kein Sequencer laeuft
+    	if (sequencer == null) // Keine Welt geladen, d.h. kein Sequencer läuft
     		return;
 
     	lg.fine("Terminieren des Sequencer angefordert");
@@ -274,37 +277,36 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     public void addTestBot() {
         onBotAppeared(new CtBotSimTest());
     }
-
-    public void invokeBot(File file) {
-        invokeBot(file.getAbsolutePath());
-    }
+    
+	public void invokeBot(File file) {
+		invokeBot(file.getAbsolutePath());
+	}
 
     public void invokeBot(String filename) {
-        if (filename == null)
-            return;
-
         if (! new File(filename).exists()) {
             lg.warning("Bot-Datei '"+filename+"' nicht gefunden");
             return;
         }
-
         lg.info("Starte externen Bot '"+filename+"'");
         try {
     		if (System.getProperty("os.name").indexOf("Linux") >= 0){
-    			Process p = Runtime.getRuntime().exec("chmod ugo+x "+filename);
+    			Process p = Runtime.getRuntime().exec(
+    				new String[] { "chmod", "ugo+x", filename });
     			p.waitFor(); // Warten bis der gelaufen ist
     			if (p.exitValue() != 0) {
     				lg.warning("Fehler beim Setzen der execute-Permission: " +
     						"chmod lieferte %d zur\u00FCck", p.exitValue());
     			}
     		}
-    		// Bot ausfuehren
-            Runtime.getRuntime().exec(filename);
+    		// Bot ausführen
+    		// String[] weil sonst trennt er das nach dem ersten Leerzeichen ab,
+    		// dann geht's nicht, wenn der Pfad mal ein Leerzeichen enthält
+            Runtime.getRuntime().exec(new String[] { filename });
         } catch (Exception e){
             lg.warning(e, "Fehler beim Starten von Bot '"+filename+"'");
         }
     }
-
+    
     public synchronized void onBotAppeared(Bot bot) {
     	if (bot instanceof SimulatedBot) {
     		if (world == null) {

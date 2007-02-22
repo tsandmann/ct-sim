@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import ctSim.Init;
 import ctSim.TcpConnection;
 import ctSim.controller.BotReceiver;
 import ctSim.controller.Config;
@@ -46,13 +47,8 @@ public class Main extends JApplet implements BotReceiver {
 
 	@Override
 	public void init() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			// Ignorieren; dann halt den normalen Look and Feel
-		}
-
 		initLogging();
+		Init.setLookAndFeel();
 		initIcons();
 
 		status.setAlignmentX(CENTER_ALIGNMENT);
@@ -105,7 +101,7 @@ public class Main extends JApplet implements BotReceiver {
 			public Icon get(String key) {
 				// Icon aus jar-Datei laden; Annahme: jar enthaelt Icon in
 				// seinem Root-Verzeichnis
-				URL u = getClass().getClassLoader().getResource(key+".gif");
+				URL u = getClass().getClassLoader().getResource(key+".gif");//$$ images-unterverz
 				// NullPointerException vermeiden
 				if (u == null)
 					return new ImageIcon(); // leeres Icon

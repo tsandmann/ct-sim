@@ -20,7 +20,7 @@
 	-->
 
 	<!-- ctSimTimeout ist die Zeit in [ms], die der Controller maximal auf einen Bot wartet -->
-	<parameter name="ctSimTimeout" value="100"/>
+	<parameter name="ctSimTimeout" value="500"/>
 
 	<!-- Nur Simulierte Bots: Was passiert, wenn ein schwerer Fehler auftritt?
 	(z.B. die TCP-Verbindung abbricht weil der Bot-Code abgestürzt ist)

@@ -28,14 +28,12 @@ public interface Controller {
 	public void setView(View view);
 
 	public void closeWorld();
-
+	
 	/**
 	 * Startet einen externen Bot
 	 *
-	 * @param filename Pfad zum Binary des Bots
+	 * @param file Zeigt auf die Binary des Bots
 	 */
-	public void invokeBot(String filename);
-
 	public void invokeBot(File file);
 
 	public void addTestBot();

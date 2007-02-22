@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.LogManager;
 
-import javax.swing.UIManager;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import ctSim.Init;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 import ctSim.view.TimeLogger;
@@ -60,7 +60,7 @@ public class Main {
         lg = initLogging();
         loadConfig();
         loadIcons();
-        setLookAndFeel();
+        Init.setLookAndFeel();
         setupViewAndController();
     }
 
@@ -133,32 +133,6 @@ public class Main {
 			lg.severe(e, "Fehler beim Laden der Icons");
 		}
 		System.exit(1);
-	}
-
-	private static void setLookAndFeel() {
-		// Ubuntu 6.10 + Gnome: Stelle fest, dass c't-Sim absolut bekackt 
-		// aussieht mit dem Look+Feel des Systems, daher lieber gleich Metal
-		// nehmen
-		if (System.getProperty("os.name").equals("Linux"))
-			useMetalLookAndFeel();
-		else {
-			try {
-				UIManager.setLookAndFeel(
-					UIManager.getSystemLookAndFeelClassName());
-				lg.fine("Verwende Look and Feel des Systems");
-			} catch (Exception e) {
-				useMetalLookAndFeel();
-			}
-		}
-	}
-	
-	private static void useMetalLookAndFeel() {
-		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-			lg.fine("Verwende Metal als Look and Feel");
-		} catch (Exception e) {
-			lg.fine(e, "Problem beim Setzen des Look and Feel");
-		}
 	}
 
 	private static void setupViewAndController() {

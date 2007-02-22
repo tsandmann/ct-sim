@@ -30,7 +30,7 @@ public interface View {
 	/**
 	 * <p>
 	 * Wird vom Controller einmalig kurz nach Programmstart aufgerufen, um
-	 * mitzuteilen, dass die Applikation nun vollst‰ndig initialisiert ist.
+	 * mitzuteilen, dass die Applikation nun vollst√§ndig initialisiert ist.
 	 * </p>
 	 * <p>
 	 * <strong>Typische Implementierungen</strong> dieser Methode
