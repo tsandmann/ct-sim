@@ -32,7 +32,7 @@ import ctSim.view.gui.MainWindow;
  * </p>
  */
 public class Main {
-	public static final String VERSION = "2.1b";
+	public static final String VERSION = "2.1";
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
 
 	static FmtLogger lg;
