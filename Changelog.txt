@@ -1,5 +1,14 @@
 Changelog fuer c't-Sim
 ======================
+
+2007-02-22 13:53 Hendrik Krauß [hkr@heise.de]:
+* Fix für 39: Simbots sterben nicht
+* Fix für 44: Steckengebliebene Bots von Simulation ausschließen
+* Fix für 52: Parameter AliveObstacleTimeout raus
+* ct-sim.xml: Bisschen mehr Doku
+* Config matcht jetzt für die neuen os-Attribute nicht volle Strings, sondern Anfänge ("Windows" matcht "Windows XP", "Windows 2000" usw.)
+* ThreeDBot etwas aufgeräumt (mehr Doku, paar Umbenennungen, Warnungen erledigt)
+
 2007-02-22 00:16 Timo Sandmann [mail@timosandmann.de]:
 * OS-Parameter fuer Mac OS X ergaenzt
 

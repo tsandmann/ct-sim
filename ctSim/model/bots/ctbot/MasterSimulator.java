@@ -3,7 +3,7 @@
  */
 package ctSim.model.bots.ctbot;
 
-import static ctSim.model.ThreeDBot.ObstState.*;
+import static ctSim.model.ThreeDBot.State.*;
 import java.util.List;
 
 import javax.media.j3d.BoundingSphere;

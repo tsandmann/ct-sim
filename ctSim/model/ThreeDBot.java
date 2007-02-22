@@ -21,9 +21,9 @@ package ctSim.model;
 import static ctSim.model.ThreeDBot.Coord.X;
 import static ctSim.model.ThreeDBot.Coord.Y;
 import static ctSim.model.ThreeDBot.Coord.Z;
-import static ctSim.model.ThreeDBot.ObstState.COLLIDED;
-import static ctSim.model.ThreeDBot.ObstState.HALTED;
-import static ctSim.model.ThreeDBot.ObstState.IN_HOLE;
+import static ctSim.model.ThreeDBot.State.COLLIDED;
+import static ctSim.model.ThreeDBot.State.HALTED;
+import static ctSim.model.ThreeDBot.State.IN_HOLE;
 
 import java.awt.Color;
 import java.util.EnumSet;
@@ -50,43 +50,64 @@ import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.SimulatedBot.UnrecoverableScrewupException;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.ctbot.CtBotShape;
+import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.util.Runnable1;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
 /**
- * Klasse fuer alle Hindernisse die sich selbst bewegen koennen
+ * <p>
+ * Klasse für alle Bots, die eine 3D-Darstellung haben (= simulierte Bots, für
+ * reale ist das unnötig). Fungiert als Wrapper um eine {@link SimulatedBot}-Instanz,
+ * d.h. diese Klasse hat eine Referenz auf einen {@code SimulatedBot} und ist
+ * selbst ein Bot.
+ * </p>
+ * <p>
+ * Die beiden Methoden, die für die Simulation zentral sind:
+ * <ul>
+ * <li>{@link #run()}, die als eigener Thread läuft. Sie macht periodisch zwei
+ * Dinge: Warten und dem SimulatedBot sagen "jetzt Simschritt machen" (für den
+ * {@link CtBotSimTcp} heißt das er überträgt Sensordaten, wartet auf Antwort
+ * vom C-Code, und aktualisiert dann die Aktuatoren wie vom C-Code gewünscht)</li>
+ * <li>{@link #updateSimulation(long)}, die von außen aufgerufen wird. Die
+ * Methode betrachtet die Aktuator-Werte (z.B. Motorgeschwindigkeit) und nimmt
+ * an der Simulation die relevanten Änderungen vor (im Beispiel: eine
+ * Positions-/Drehungsänderung). Außerhalb dieser Klasse wird sichergestellt,
+ * dass {@code updateSimulation()} immer dann aufgerufen wird, wenn der Thread
+ * dieser Klasse gerade wartet, nicht wenn er gerade einen Simschritt macht.
+ * </li>
+ * </ul>
+ * </p>
  *
  * @author Benjamin Benz (bbe@ctmagazin.de)
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class ThreeDBot extends BasicBot implements Bot, Runnable {
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.ThreeDBot");
 
 	private final List<Runnable1<Color>> appearanceListeners = Misc.newList();
 
-	public enum ObstState {
-		/** Das Hindernis hat eine Kollision */
+	public enum State {
+		/** Der Bot ist kollidiert (mit der Wand oder mit einem anderen Bot) */
 		COLLIDED(0x001, "collision",
 			"kollidiert",
 			"ist nicht mehr kollidiert"),
 
+		/**
+		 * Der Bot hängt in einem Loch, d.h. eins der Räder ist in eine Grube
+		 * gerutscht. In diesem State kann sich der Bot noch drehen, aber nicht
+		 * mehr bewegen.
+		 */
 		IN_HOLE(0x002, "falling",
 			"hat keinen Boden mehr unter den F\u00FC\u00DFen",
 			"hat wieder Boden unter den F\u00FC\u00DFen"),
 
 		/**
-		 * <p>
-		 * Das Obstacle ist von der weiteren Simulation ausgeschlossen, d.h.
-		 * seine work()-Methode wird nicht mehr aufgerufen. Es steht damit nur
-		 * noch rum, bis die Simulation irgendwann endet. Dieser Zustand kann
-		 * eintreten, wenn &ndash;
-		 * <ul>
-		 * <li>die work()-Methode l&auml;nger rechnet, als der
-		 * AliveObstacleTimeout in der Konfigdatei erlaubt, oder</li>
-		 * <li>wenn die TCP-Verbindung eines CtBotSimTcp abrei&szlig;t (d.h.
-		 * der CtBotSimTcp gibt sich dann diesen Status).</li>
-		 * </ul>
-		 * </p>
+		 * Der Bot ist von der weiteren Simulation ausgeschlossen, d.h. seine
+		 * work()-Methode wird nicht mehr aufgerufen. Es steht damit nur noch
+		 * rum, bis die Simulation irgendwann endet. Dieser Zustand kann
+		 * eintreten, wenn die TCP-Verbindung abrei&szlig;t (Bot-Code
+		 * abgestürzt) oder ein anderer I/O-Fehler auftritt.
 		 */
 		HALTED(0x100, "halted",
 			"wird aus der Simulation ausgeschlossen");
@@ -96,12 +117,12 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 		final String messageOnEnter;
 		final String messageOnExit;
 
-		ObstState(int legacyValue, String appearanceKeyInXml,
+		State(int legacyValue, String appearanceKeyInXml,
 		String messageOnEnter) {
 			this(legacyValue, appearanceKeyInXml, messageOnEnter, null);
 		}
 
-		ObstState(int legacyValue, String appearanceKeyInXml,
+		State(int legacyValue, String appearanceKeyInXml,
 		String messageOnEnter, String messageOnExit) {
 			this.legacyValue = legacyValue;
 			this.appearanceKeyInXml = appearanceKeyInXml;
@@ -222,18 +243,16 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 		}
 	}
 
-	private final EnumSet<ObstState> obstState = EnumSet.noneOf(
-		ObstState.class);
+	private final EnumSet<State> obstState = EnumSet.noneOf(State.class);
 
 	private Point3d posInWorldCoord = new Point3d();
 
 	/**
-	 * Letzte Position, an dem sich das AliveObstacle befand und dabei der
-	 * obstState &quot;SAFE&quot; war. Sinn: Dieses Feld wird verwendet zur
-	 * Berechnung des Abstands zum Ziel, was auch funktionieren soll, wenn der
-	 * Bot z.B. in ein Loch gefallen ist (d.h. jetzt un-&quot;SAFE&quot; ist).
-	 * Daher wird in dieser Variablen die letzte Position gehalten, wo der Bot
-	 * noch au&szlig;erhalb des Lochs war.
+	 * Letzte Position, an der der Bot nicht kollidiert oder ins Loch gefallen
+	 * war. Wird verwendet zur Berechnung des Abstands zum Ziel, was auch dann
+	 * funktionieren soll, wenn der Bot z.B. in ein Loch gefallen ist. Daher
+	 * wird in dieser Variablen die letzte Position gehalten, wo der Bot noch
+	 * au&szlig;erhalb des Lochs war.
 	 */
 	private Point3d lastSafePos = new Point3d();
 
@@ -478,28 +497,28 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 		return rv;
 	}
 
-	public void set(ObstState state, boolean setOrClear) {
+	public void set(State state, boolean setOrClear) {
 		if (setOrClear)
 			set(state);
 		else
 			clear(state);
 	}
 
-	public void set(ObstState state) {
+	public void set(State state) {
 		if (obstState.add(state)) {
 			lg.info(toString()+" "+state.messageOnEnter);
 			updateAppearance();
 		}
 	}
 
-	public void clear(ObstState state) {
+	public void clear(State state) {
 		if (obstState.remove(state)) {
 			lg.info(toString()+" "+state.messageOnExit);
 			updateAppearance();
 		}
 	}
 
-	public boolean is(ObstState s) {
+	public boolean is(State s) {
 		return obstState.contains(s);
 	}
 
@@ -510,55 +529,35 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 	// Gemaess dbfeld-ctsim-log-state.txt
 	public int getLegacyObstState() {
 		int rv = 0;
-		for (ObstState s : obstState)
+		for (State s : obstState)
 			rv += s.legacyValue;
 		return rv;
 	}
 
 	/**
-	 * &Uuml;berschreibt die run()-Methode aus der Klasse Thread und arbeitet
-	 * zwei Schritte ab: <br/> 1. {@link #work()} &ndash; wird in einer Schleife
-	 * immer wieder aufgerufen <br/> 2. {@link #cleanup()} &ndash; r&auml;umt
-	 * auf.<br/> Die Schleife l&auml;uft so lang, bis sie von der Methode die()
-	 * beendet wird.
-	 *
-	 * @see AliveObstacle#work()
+	 * &Uuml;berschreibt die run()-Methode aus der Klasse Thread und arbeitet in
+	 * einer Endlosschleife zwei Schritte ab:
+	 * <ul>
+	 * <li>auf unserem SimulatedBot
+	 * {@link SimulatedBot#doSimStep() doSimStep()} aufrufen</li>
+	 * <li>{@link #updateView()} aufrufen</li>
+	 * </ul>
+	 * Die Schleife l&auml;uft so lang, bis sie von der Methode
+	 * {@link #dispose()} beendet wird.
 	 */
 	public final void run() {
 		Thread thisThread = Thread.currentThread();
 
-		int timeout = 0;
-		try {
-			timeout = Integer.parseInt(Config.getValue("AliveObstacleTimeout"));
-		} catch (Exception e) {
-			// Wenn kein Teimout im Config-File steht, ignorieren wir dieses Feature
-			timeout = 0;
-		}
-
 		try {
 			while (this.thrd == thisThread) {
-				// Stoppe die Zeit, die work() benoetigt
-				long realTimeBegin = System.currentTimeMillis();
-
-				// Ein AliveObstacle darf nur dann seine work()-Routine
-				// ausfuehren, wenn es nicht Halted ist
 				if (! is(HALTED)) {
 					try {
 						bot.doSimStep();
 						updateView();
 					} catch (UnrecoverableScrewupException e) {
-						lg.warn(toString()+" hat schwere Probleme und ist " +
-							"steckengeblieben");
-						set(ObstState.HALTED);
+						dieOrHalt();
 					}
 				}
-
-				// berechne die Zeit, die work benoetigt hat
-				long elapsedTime = System.currentTimeMillis() - realTimeBegin;
-
-				// Wenn der Timeout aktiv ist und zuviel Zeit benoetigt wurde, halte dieses Alive Obstacle an
-				if ((timeout > 0) && (elapsedTime > timeout))
-					set(HALTED);
 
 				if (thrd != null)
 					barrier.awaitNextSimStep();
@@ -567,6 +566,20 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 			// No-op: nochmal Meldung ausgeben, dann Ende
 		}
 		lg.fine("Thread "+Thread.currentThread().getName()+" wurde beendet");
+	}
+
+	/** Implementiert Bug 39 (http://www.heise.de/trac/ctbot/ticket/39) */
+	private void dieOrHalt() {
+		String eh = Config.getValue("simBotErrorHandling");
+		String warning = toString()+" hat ein E/A-Problem: " +
+				"Bot-Code ist wohl abgestürzt; ";
+		if ("kill".equals(eh)) {
+			lg.warn(warning+"entferne Bot");
+			dispose();
+		} else if ("halt".equals(eh)) {
+			lg.warn(warning+"Bot ist steckengeblieben");
+			set(HALTED);
+		}
 	}
 
 	@Override
@@ -607,16 +620,17 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 	}
 
 	/**
-	 * Diese Methode wird von au&szlig;en aufgerufen und erledigt die ganze
-	 * Aktualisierung der Simulation. Steuerung des Bots hat hier jedoch nichts
-	 * zu suchen. Die geh&ouml;rt in work().
+	 * Diese Methode wird von au&szlig;en aufgerufen und erledigt die
+	 * Aktualisierung der Simulation: Bot-Position weitersetzen je nach dem,
+	 * wie schnell die Motoren gerade drehen usw.
 	 *
-	 * @param simulTime
-	 * @see AliveObstacle#work()
+	 * @param simTimeInMs Aktuelle Simulation in Millisekunden
 	 */
-	public void updateSimulation(long simulTime){
-		deltaT = simulTime - lastSimulTime;
-		lastSimulTime = simulTime;
+	public void updateSimulation(long simTimeInMs) {
+		if (is(HALTED)) // Fix für Bug 44
+			return;
+		deltaT = simTimeInMs - lastSimulTime;
+		lastSimulTime = simTimeInMs;
 		simulator.run();
 	}
 

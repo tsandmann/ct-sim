@@ -48,13 +48,14 @@ public class Config {
 		"botport", "10001",
 		"judge", "ctSim.model.rules.DefaultJudge",
 		"worlddir", ".", //$$ besser dokumentieren in ct-sim.xml und Co.
-		"botdir", ".", //$$ besser dokumentieren in ct-sim.xml und Co.
+		"botdir", ".",
 		"useContestConductor", "false",
 		"contestBotTargetDir", "tmp",
 		"contestBotFileNamePrefix", "tmp-contest-bot",
 		"contestBotFileNameSuffix", ".exe",
 		"simTimePerStep", "10",
 		"ctSimTimeout", "10000",
+		"simBotErrorHandling", "kill",
 	};
 
 	static final Color botColorFallback = Color.GRAY;
@@ -62,7 +63,6 @@ public class Config {
 	//$$ Typbewusstsein implementieren
 	static final ParameterType[] parameterTypes = {
 		new ParameterType("ctSimTimeout", Integer.class),
-		new ParameterType("AliveObstacleTimeout", Integer.class),
 		new ParameterType("parcours", File.class),
 		new ParameterType("worlddir", File.class),
 		new ParameterType("botport", Integer.class),
@@ -143,17 +143,18 @@ public class Config {
 			// XML laden
 			try {
 				for(QueryableNode n : doc.getNodeList("/ct-sim/parameter")) {
-					String os = n.getStringOrNull("@os");
-					// Bezieht sich Parameter auf ein anderes Betriebssystem?
-					// "os.name"-Werte: "Windows", "Linux"
-					// Weitere auf http://tolstoy.com/samizdat/sysprops.html
-					if (os != null 
-					&& ! os.equalsIgnoreCase(System.getProperty("os.name")))
-						continue;
-					
+					String parmOs = n.getString("@os").toLowerCase();
+					// Beispiele für os.name: "Windows XP", "Linux", "Mac OS X"
+					// Siehe http://tolstoy.com/samizdat/sysprops.html
+					String currentOs = System.getProperty("os.name")
+						.toLowerCase();
+
 					// Attribut os nicht vorhanden (= alle Betriebsysteme), oder
 					// vorhanden und System passt
-					put(n.getString("@name"), n.getString("@value"));
+					// startsWith() damit "Windows" in der ct-sim.xml das
+					// von System.getProperty() gelieferte "Windows XP" matcht
+					if ("".equals(parmOs) || Misc.startsWith(currentOs, parmOs))
+						put(n.getString("@name"), n.getString("@value"));
 				}
 			} catch (XPathExpressionException e) {
 				// "Kann nicht passieren"

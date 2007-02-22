@@ -6,10 +6,28 @@
 		Dieses ist die zentrale Konfigurationsdatei für den c't-Sim
 	</description>
 
+	<!--
+	Jeder Parameter kann bei Bedarf ein Attribut "os" haben. So kann man
+	verschiedene Werte für verschiedene Betriebssysteme angeben. Hat ein
+	Parameter (wie bisher üblich) kein os-Attribut, gilt er für alle Systeme.
+
+	Beispiele für systemabhängige Parameter sind der serielle Port und manche
+	Pfadnamen.
+
+	Sinn: Die bisherige Regelung, dass der Java-Code undurchsichtig in den
+	Pfaden ruminterpretiert, kann entfallen. Auf jedem unterstützen System
+	kann man nach dem Auschecken sofort starten (normalerweise).
+	-->
+
 	<!-- ctSimTimeout ist die Zeit in [ms], die der Controller maximal auf einen Bot wartet -->
 	<parameter name="ctSimTimeout" value="100"/>
-	<!-- AliveObstacleTimeout ist die Zeit in [ms], die die work()-Methode eines AliveObstacles brauchen darf, um zum ende zu kommen. Wird sie ueberschritten, deakticviert sich das Obstacle selbst. Steht der Timeout auf 0, hat es beliebig viel Zeit -->
-	<parameter name="AliveObstacleTimeout" value="0"/>
+
+	<!-- Nur Simulierte Bots: Was passiert, wenn ein schwerer Fehler auftritt?
+	(z.B. die TCP-Verbindung abbricht weil der Bot-Code abgestürzt ist)
+	"kill" = Bot aus Simulation entfernen (Standardverhalten)
+	"halt" = Bot in Simulation lassen, auch wenn er sich nicht mehr bewegen kann
+	Siehe auch http://www.heise.de/trac/ctbot/ticket/39 -->
+	<parameter name="simBotErrorHandling" value="kill"/>
 
 	<!-- parcours ist die Welt, die per default geladen wird. Angabe unabhaengig von worlddir -->
 	<parameter name="parcours" value="parcours/testparcours2.xml"/>
@@ -19,11 +37,13 @@
 	<!-- botport ist der TCP-Port, auf dem der sim auf Bots lauscht-->
 	<parameter name="botport" value="10001"/>
 
-	<!-- botbinary ist die Bot-Datei, die per default gestartet wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt. Angabe unabhaengig von botdir-->
+	<!-- botbinary ist die Bot-Datei, die beim Sim-Start gestartet wird.
+	Hat nichts zu tun mit dem Parameter botdir -->
 	<parameter name="botbinary" os="Windows" value="../ct-Bot/Debug-W32/ct-Bot.exe"/>
 	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
 	<parameter name="botbinary" os="Mac OS X" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
-	<!-- botdir ist das Verzeichnis, in dem nach Bots gesucht wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt -->
+
+	<!-- Verzeichnis, das der Dialog "Bot-Datei öffnen" anfangs anzeigt -->
 	<parameter name="botdir" os="Windows" value="../ct-Bot/Debug-W32"/>
 	<parameter name="botdir" os="Linux" value="../ct-Bot/Debug-Linux"/>
 	<parameter name="botdir" os="Mac OS X" value="../ct-Bot/Debug-Linux"/>
@@ -38,19 +58,19 @@
 
 	<!-- Fernbedienungscode, der an simulierte Bots gesendet wird, wenn man
 	"Play" drueckt. 0 = nichts senden, 0x1185 = wie Knopf "5", weitere Codes
-	in ctSim/view/gui/RemoteControlViewer.java. Wert: Irgendwas was
-	Integer.decode() versteht. -->
+	in ctSim/view/gui/RemoteControlViewer.java. Wert: Integer dezimal oder
+	in hex (genauer: irgendwas was Integer.decode() versteht) -->
 	<parameter name="rcStartCode" value="0x1185"/>
 
-	<!-- Serieller Anschluss. Der Sim verbindet sich mit ihm und erwartet 
+	<!-- Serieller Anschluss. Der Sim verbindet sich mit ihm und erwartet
 	dort einen USB-2-Bot-Adapter -->
 	<parameter name="serialport" os="Windows" value="COM3"/>
 	<parameter name="serialport" os="Linux" value="/dev/ttyUSB0"/>
 	<parameter name="serialport" os="Mac OS X" value="/dev/tty.usbserial-A1000NvX"/>
 	<!-- Geschwindigkeit des 'serialport' in baud, default 57600 -->
 	<parameter name="serialportBaudrate" value="57600"/>
-	
-	<!-- IP, die standardmaessig im Textfeld steht, wenn man "Verbinden / Per 
+
+	<!-- IP, die standardmaessig im Textfeld steht, wenn man "Verbinden / Per
 	TCP" waehlt -->
 	<parameter name="ipForConnectByTcp" value="10.10.22.58"/>
 	<!-- Zugehoeriger Port. Default: 10002 -->
