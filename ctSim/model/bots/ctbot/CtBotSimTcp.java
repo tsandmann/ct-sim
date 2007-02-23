@@ -101,6 +101,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	 * ist. Methode tut nichts, falls nichts, 0 oder ein nicht von
 	 * {@link Integer#decode(String)} verwertbarer Code angegeben ist.
 	 */
+	@SuppressWarnings("cast")
 	private void sendRcStartCode() {
 		String rawStr = Config.getValue("rcStartCode");
 		try {
