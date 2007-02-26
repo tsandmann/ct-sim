@@ -45,7 +45,7 @@ public class CtSimFormatter extends Formatter {
 			r.getThrown().printStackTrace(new PrintWriter(s));
 			throwable = s.toString();
 		}
-		// TODO "* 2" ist quick and dirty. Kommt daher, dass Thread.activeCount() nur Schaetzungen ueber die Groesse zurueckgibt ... Details siehe Doku der Methode //$$ Ist sowieso Kaese; man kann doch einfach Thread.currentThread().getName() machen, oder?
+		// TODO "* 2" ist quick and dirty. Kommt daher, dass Thread.activeCount() nur Schaetzungen ueber die Groesse zurueckgibt ... Details siehe Doku der Methode
 		Thread[] threads = new Thread[Thread.activeCount() * 2];
 		Thread.enumerate(threads);
 		String threadName = "";

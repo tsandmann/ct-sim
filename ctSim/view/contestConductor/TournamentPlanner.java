@@ -8,51 +8,25 @@ import java.util.ArrayList;
 import ctSim.util.FmtLogger;
 import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 
-/** <p>High-Level-Klasse, die die Spiele eines Turniers plant. Arbeitet eng
- * mit der Klasse {@link ContestConductor} zusammen.</p>
- *
- * <p><strong>Verwendungsbeispiel:</strong>
+/**
+ * <p>
+ * High-Level-Klasse, die die Spiele eines Turniers plant. Arbeitet eng mit der
+ * Klasse {@link ContestConductor} zusammen. Plant einen vollstÃ¤ndigen
+ * Wettbewerb: Schreibt den Turnierbaum in die Datenbank (<a
+ * href="package-summary.html#turnierbaum">Was ist der Turnierbaum?</a>)
+ * </p>
+ * <p>
+ * <strong>Verwendungsbeispiel:</strong>
  * <ol>
  * <li><code>TournamentPlanner planner = new TournamentPlanner();</code></li>
  * <li><code>planner.{@link #planPrelimRound()};</code></li>
- * <li>Durchf&uuml;hren der Vorrundenspiele (durch die Klasse
- * ContestConductor)</li>
+ * <li>Durchf&uuml;hren der Vorrundenspiele (durch die Klasse ContestConductor)</li>
  * <li><code>planner.{@link #planMainRound()};</code></li>
  * <li>Durchf&uuml;hren der Hauptrundenspiele (durch die Klasse
  * ContestConductor)</li>
  * </ol>
  *
- * <p><a name="turnier-zwei-phasen" /><strong>Hintergrund:</strong> Das Turnier
- * wird in zwei Phasen abgewickelt: Zun&auml;chst wird in einer
- * Vorrunde jeder Bot einzeln durch einen Parcours geschickt und die
- * ben&ouml;tigte Zeit gestoppt, was eine Rangliste ergibt. In der
- * Hauptphase kommt dann das K.o.-System zum Einsatz, d.h. dass
- * sich jeweils der Gewinner eines Duells f&uuml;r das n&auml;chste
- * qualifiziert. Nur unter den vier besten werden alle Pl&auml;tze
- * ausgespielt.</p>
- *
- * <p>Die Rangliste aus der Vorrunde erm&ouml;glicht Ausgewogenheit im
- * Turnierplan der Hauptphase: Die Spieler werden so platziert, dass
- * sich der schnellste und der zweitschnellste aus der Vorrunde erst
- * im Finale begegnen k&ouml;nnen, der schnellste und der drittschnellste
- * erst im Halbfinale usw. So werden allzu verzerrte
- * Wettbewerbsergebnisse vermieden &ndash; g&auml;be es z.B. eine
- * einfache Auslosung statt einer Vorrunde, k&ouml;nnten zuf&auml;llig die
- * beiden besten Implementierungen in der ersten Runde aufeinandertreffen.
- * Das w&uuml;rde hei&szlig;en, dass einer der beiden Schnellsten schon
- * im ersten Durchgang ausscheidet, was seine tats&auml;chliche St&auml;rke
- * verf&auml;lscht widerspiegelt. Die Vorrunde soll das vermeiden
- * und helfen, die Spannung bis zuletzt aufrechtzuerhalten.</p>
- *
- * <p>F&uuml;r die Hauptphase gilt: Treten nicht gen&uuml;gend Teams an, um
- * alle Zweik&auml;mpfe des ersten Durchgangs zu f&uuml;llen, erhalten
- * m&ouml;glichst viele Bots ein Freilos, das sie automatisch f&uuml;r die
- * n&auml;chste Runde qualifiziert. Im Extremfall findet somit in der
- * ersten Runde des Turniers nur ein einziges Duell statt &ndash;
- * daf&uuml;r sind alle anschlie&szlig;enden Durchg&auml;nge voll besetzt.</p>
- *
- * @author Hendrik Krau&szlig; &lt;<a
- * href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class TournamentPlanner {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.contestConductor");
@@ -205,7 +179,7 @@ public class TournamentPlanner {
 	 * trotzdem angelegt.
 	 *
 	 * @param players Eine Liste von Bot-IDs, die die Spieler
-	 * repr&auml;sentieren. <code>null</code> bedeutet, das für dieses Spiel
+	 * repr&auml;sentieren. <code>null</code> bedeutet, das fï¿½r dieses Spiel
 	 * (noch) kein Spieler vorgesehen ist.
 	 * @param levelId Nummer des zu schreibenden Levels.
 	 * @throws TournamentPlanException Falls

@@ -105,7 +105,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     			/*
 				 * Syntaxhinweis zu den doppelten Schweifklammern: Es handelt
 				 * sich um "instance initializer", die den Code kompakter machen
-				 * sollen -- siehe JLS §8.6 und
+				 * sollen -- siehe JLS Â§8.6 und
 				 * http://www.c2.com/cgi/wiki?DoubleBraceInitialization
 				 */
     			addMouseBehavior(new MouseRotate(MouseBehavior.INVERT_INPUT)
@@ -159,7 +159,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		 * einfacheren Weg gefunden. Was man mit Google findet sind i.d.R.
 		 * Beispiele, die java.awt.Robot.createScreenCapture() verwenden -- was
 		 * aber einen "echten Screenshot" macht, d.h. wenn einer ein anderes
-		 * Fenster über den ctSim geschoben hat, wird eben das abgelichtet. Die
+		 * Fenster Ã¼ber den ctSim geschoben hat, wird eben das abgelichtet. Die
 		 * Alternative, auf dem Canvas3D oder auf diesem Objekt paint(...)
 		 * aufzurufen, funktioniert nicht (ergibt immer einfarbig schwarze
 		 * Screenshots -- vermutlich ist Canvas3D eben doch keine ganz so
@@ -182,7 +182,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	 * MinimumSize ist (1,1): Erm&ouml;glicht der SplitPane, die uns
 	 * enth&auml;lt, ihren Divider zu &auml;ndern. W&uuml;rden wir unsere
 	 * MinimumSize nicht auf was sehr kleines setzen, ginge das nicht.
-	 */ 
+	 */
     @Override
     public Dimension getMinimumSize() {
         return new Dimension(1,1);

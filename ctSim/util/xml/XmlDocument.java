@@ -78,7 +78,7 @@ import ctSim.util.Decoratoror;
  * Sie bietet au&szlig;erdem Typsicherheit beim Umgang mit XPath, im Gegensatz
  * zur Java-Plattform.
  * </p>
- * 
+ *
  * @see javax.xml.xpath
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
@@ -183,7 +183,8 @@ public class XmlDocument {
 		}
 	}
 
-	public static QueryableNode createQueryableNode(Node baseNode) {
+	//$$ doc
+	static QueryableNode createQueryableNode(Node baseNode) {
 		try {
 			if (baseNode == null)
 				return null;
@@ -243,13 +244,13 @@ public class XmlDocument {
 			return (Boolean)evaluator.evaluate(xPathExpression, cocktail,
 				XPathConstants.BOOLEAN);
 		}
-		
-		private <T> T nullIfNotExists(String xPathExpression, T value) 
+
+		private <T> T nullIfNotExists(String xPathExpression, T value)
 		throws XPathExpressionException {
 			// War der Knoten nicht da oder war er leer?
 			return getNode(xPathExpression) == null ? null : value;
 		}
-		
+
 		public String getStringOrNull(String xPathExpression)
 		throws XPathExpressionException {
 			String rv = getString(xPathExpression);
@@ -258,7 +259,7 @@ public class XmlDocument {
 			else
 				return rv;
 		}
-		
+
 		public Number getNumberOrNull(String xPathExpression)
 		throws XPathExpressionException {
 			Double rv = getNumber(xPathExpression);
@@ -347,7 +348,7 @@ public class XmlDocument {
 		 * href="http://www.w3.org/TR/xpath.html#data-model">XPath-Spezifikation
 		 * Abschnitt 5</a>.
 		 * </p>
-		 * 
+		 *
 		 * @see #getStringOrNull(String)
 		 */
 		public String getString(String xPathExpression)
@@ -361,7 +362,7 @@ public class XmlDocument {
 		 * {@code getNumber(...).isNaN() == true}). <a
 		 * href="http://www.w3.org/TR/xpath#function-number">Details zur
 		 * Konvertierung in eine Zahl</a>
-		 * 
+		 *
 		 * @see #getNumberOrNull(String)
 		 */
 		public Double getNumber(String xPathExpression)
@@ -374,12 +375,12 @@ public class XmlDocument {
 		 * selektiert, wird {@code false} zur&uuml;ckgeliefert. <a
 		 * href="http://www.w3.org/TR/xpath#function-boolean">Details zur
 		 * Konvertierung in einen Boolean</a>
-		 * 
+		 *
 		 * @see #getBooleanOrNull(String)
 		 */
 		public Boolean getBoolean(String xPathExpression)
 		throws XPathExpressionException;
-		
+
 		/**
 		 * Wie {@link #getString(String) getString()}, aber falls der
 		 * &uuml;bergebene XPath-Ausdruck keine Knoten selektiert, wird
@@ -389,7 +390,7 @@ public class XmlDocument {
 		 */
 		public String getStringOrNull(String xPathExpression)
 		throws XPathExpressionException;
-		
+
 		/**
 		 * Wie {@link #getNumber(String) getNumber()}, aber falls der
 		 * &uuml;bergebene XPath-Ausdruck keine Knoten selektiert, wird

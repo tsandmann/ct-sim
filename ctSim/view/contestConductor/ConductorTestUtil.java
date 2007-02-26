@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 
-/** Hilfsklasse für die Unit-Tests in diesem Package */
+/** Hilfsklasse fÃ¼r die Unit-Tests in diesem Package */
 public abstract class ConductorTestUtil {
     protected abstract DatabaseAdapter getDbFromChildClass();
 

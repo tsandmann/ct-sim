@@ -69,7 +69,7 @@ class DatabaseAdapter {
 
 	/**
 	 * <p>
-	 * Repr&auml;sentiert die möglichen Zust&auml;nde eines Spiels. Die Enum
+	 * Repr&auml;sentiert die mÃ¶glichen Zust&auml;nde eines Spiels. Die Enum
 	 * funktioniert Map-artig: sie umfasst Paare aus einem Symbol im Code und
 	 * einem String zugeordnet. Letzterer ist die Repr&auml;sentation, wie der
 	 * Spielzustand in der Datenbank dargestellt wird.
@@ -200,11 +200,11 @@ class DatabaseAdapter {
 	 * Syntax wie in {@link PreparedStatement} dokumentiert). Im wesentlichen
 	 * gilt: Die Fragezeichen im String werden reihenfolgenrichtig durch die
 	 * Parameter ersetzt: Erstes Fragezeichen = erster Parameter, zweites =
-	 * zweiter Parameter, usw. Für die Ersetzung wird
+	 * zweiter Parameter, usw. FÃ¼r die Ersetzung wird
 	 * {@link PreparedStatement#setObject(int, Object)} verwendet; Details siehe
 	 * dessen Dokumentation und dessen Beschreibung in der <a
 	 * href="http://java.sun.com/products/jdbc/download.html">JDBC-Spezifikation</a>
-	 * (für Java&nbsp;1.5 gilt JDBC&nbsp;3.0, Sektion&nbsp;13.2.2.2 und
+	 * (fÃ¼r Java&nbsp;1.5 gilt JDBC&nbsp;3.0, Sektion&nbsp;13.2.2.2 und
 	 * Anhang&nbsp;B-4).
 	 * </p>
 	 * <p>

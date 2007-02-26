@@ -9,19 +9,21 @@ ueber Run > External Tools zu erreichen. -->
 <project default="javadoc">
 <target name="javadoc">
 <javadoc
+	sourcepath="."
+	packagenames="ctSim.*"
+	destdir="documentation/api"
+	encoding="utf-8"
 	additionalparam=" -J-Dhttp.proxyHost=wwwproxy.heise.de -J-Dhttp.proxyPort=8080 -link http://java.sun.com/j2se/1.5.0/docs/api/"
 	access="package"
 	author="true"
-	classpath="C:\Programme\eclipse\plugins\org.junit4_4.1.0\junit-4.1.jar"
-	destdir="documentation/api"
+	classpath="contrib/rxtx.jar;contrib/mysql-connector-java-3.1.13-bin.jar;contrib/picocontainer-1.2.jar;contrib/junit-4.1.jar"
+	doctitle="ct-Sim-API"
 	nodeprecated="false"
 	nodeprecatedlist="false"
 	noindex="false"
 	nonavbar="false"
 	notree="false"
-	packagenames="ctSim.model.bots.components.sensors,jd2xx,ctSim.model.bots.ctbot,ctSim.view,ctSim.model.bots.components.actuators,ctSim.view.gui,ctSim.model.bots.components,ctSim,ctSim.model.rules,ctSim.view.gui.sensors,ctSim.model,ctSim.controller,ctSim.model.bots,ctSim.view.gui.actuators,ctSim.util,ctSim.model.bots.ctbot.components,mindprod.ledatastream,ctSim.model.scene,ctSim.view.contestConductor"
 	source="1.5"
-	sourcepath="."
 	splitindex="true"
 	use="true"
 	version="true"/>

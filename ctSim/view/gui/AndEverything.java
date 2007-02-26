@@ -18,8 +18,11 @@ import ctSim.model.bots.components.Sensors;
 import ctSim.util.AuxFrameButton;
 import ctSim.util.Misc;
 
-//$$ doc
 //$$$ GridLayout, damit wir Reihenfolge der Dinger vorgeben koennen
+/**
+ * Zeigt Log-Knopf, LCD, Fernbedienungsknopf, Remote-Call-Knopf. Gehört zu dem
+ * Bereich, wo Informationen über einen Bot angezeigt werden.
+ */
 public class AndEverything extends GuiBotBuisitor {
 	private static final long serialVersionUID = - 8170321975584432026L;
 
@@ -28,6 +31,7 @@ public class AndEverything extends GuiBotBuisitor {
 		setBorder(BorderFactory.createTitledBorder("Und der ganze Rest"));
 	}
 
+	/** Erstellt die Textarea, die das LCD des Bot zeigt */
 	public void buisitLcdViewer(Actuators.LcDisplay d) {
 		JTextArea t = new JTextArea(d.getExternalModel(), null,
 			d.getNumRows(), d.getNumCols());
@@ -54,6 +58,7 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
+	/** Baut den Knopf, der zum Log-Fenster führt */
 	public void buisitLogViewer(Actuators.Log log, Bot bot) {
 		add(new AuxFrameButton(
 			log.getName(),
@@ -62,6 +67,7 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
+	/** Baut den Knopf, der zum Fernbedienungs-Fenster führt */
 	public void buisitRemoteControl(Sensors.RemoteControl s, Bot bot) {
 		add(new AuxFrameButton(
 			s.getDescription()+" ("+s.getName()+")",
@@ -70,6 +76,7 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
+	/** Baut den Knopf, der zum Remote-Call-Fenster führt */
 	public void buisitRemoteCallViewer(RemoteCallCompnt c, Bot bot) {
 		add(new AuxFrameButton(
 			c.getName(),

@@ -29,52 +29,8 @@ import ctSim.util.Misc;
 import ctSim.view.View;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
-// $$ doc gesamte Klasse
+// $$ doc
 // $$ die staendigen "assert false" sind nicht so doll. Schoener waere: Exceptions werfen und den Controller exit machen lassen (verbessert auch Testbarkeit (Unit-Tests) des ContestConductor). Ich zieh mir aber nicht den Schuh an, Exception-Handling in den z.Zt. noch chaotischen Controller reinzupopeln.
-// $$ doc ConCon-Package
-/**
- * <p>
- * Erm&ouml;glicht die Durchf&uuml;hrung eines ctBot-Wettbewerbs wie den im
- * Oktober 2006.
- * </p>
- * <p>
- * <strong>Architektur</strong> des ContestConductor-Subsystems: <!-- Ascii-Art
- * NICHT "reparieren"! Die Verschiebungen durch die
- * Link-Tags sind okay, siehe Ausgabe im Browser -->
- *
- * <pre>
- *   Au&szlig;enwelt
- *   (Controller)
- *      |
- *      |
- *      |
- *      |
- *      v                     hat einen
- *   {@link ContestConductor} -------------------------&gt; {@link TournamentPlanner}
- *          |                                            |
- *          |                                            |
- *          | hat einen                                  | hat einen
- *          |                                            |
- *          v                                            v
- * {@link ConductorToDatabaseAdapter} ----.     .---- {@link PlannerToDatabaseAdapter}
- *                                |     |
- *                                |     |
- *             ist abgeleitet von |     | ist abgeleitet von
- *                                |     |
- *                                v     v
- *                            {@link DatabaseAdapter}
- *                                   |
- *                                   |
- *                                   | ist verbunden mit
- *                                   |
- *                                   v
- *                            MySQL-Datenbank
- * </pre>
- *
- * </p>
- *
- * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
- */
 public class ContestConductor implements View {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.contestConductor");
 
@@ -160,7 +116,7 @@ public class ContestConductor implements View {
 			}
 
 			concon.lg.info("Spielzeit abgelaufen; Ermittle Bot, der dem " +
-			"Ziel am n\u00E4chsten ist");
+				"Ziel am n\u00E4chsten ist");
 
 			GameOutcome o = new GameOutcome();
 			o.winner = BotView.getAll().get(0);
@@ -200,8 +156,6 @@ public class ContestConductor implements View {
 	 * Merkt sich zu einem Bot (aus dem Model) die Datenbank-ID und, ob es sich
 	 * um bot1 oder bot2 handelt (wichtig in der ctsim_game-Tabelle / in der
 	 * ctsim_log-Tabelle).
-	 *
-	 * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
 	 */
 	static class BotView {
 		private static ArrayList<BotView> instances = Misc.newList();
@@ -498,7 +452,7 @@ public class ContestConductor implements View {
 		final ThreeDBot rv = newlyArrivedBot;
 		rv.addDisposeListener(new Runnable() {
 			public void run() {
-				BotView.remove(rv);				
+				BotView.remove(rv);
 			}
 		});
 		lg.fine("Gestarteter Bot '"+rv+"' ist korrekt angemeldet; " +
