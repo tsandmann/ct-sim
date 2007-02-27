@@ -1,6 +1,12 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-02-27 18:55 Hendrik Krauß [hkr@heise.de]:
+* generate-javadoc.xml vereinfacht: Proxy wird jetzt automatisch erkannt
+* Fix für Bug 73: "Log leeren" ruft Exceptions hervor
+* Wenn kein COM-Port konfiguriert, kleine Meldung "lausche nicht auf COM" statt Riesen-Exception
+* Kleinigkeiten
+
 2007-02-26 19:56 Hendrik Krauß [hkr@heise.de]:
 * generate-javadoc.xml verbessert
 * Bisschen mehr Doku

@@ -37,7 +37,7 @@ public class RealCtBot extends CtBot {
 				lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere%s", cmd);
 			} catch (IOException e) {
 				lg.severe(e, "E/A-Problem; Verbindung zu Bot verloren");
-				die();
+				die(); //$$ Das klappt nicht. Wenn die Verbindung abreißt, läuft alles weiter. Untersuchen
 			}
 		}
 

@@ -92,7 +92,7 @@ public class LogViewer extends JPanel {
 		}
 	};
 
-	public LogViewer(Log log) {
+	public LogViewer(final Log log) {
 		setLayout(new BorderLayout());
 		logContent = log.getExternalModel();
 		final JTextArea t = new JTextArea(logContent);
@@ -123,14 +123,25 @@ public class LogViewer extends JPanel {
 
 		// Auto-Scrolling
 		log.getExternalModel().addDocumentListener(new DocumentListener() {
-			private void scrollTo(DocumentEvent e) {
+			private void scrollToEnd() {
 				if (cb.isSelected())
-					t.setCaretPosition(e.getOffset() + e.getLength());
+					t.setCaretPosition(log.getExternalModel().getLength());
 			}
 
-			public void changedUpdate(DocumentEvent e) { scrollTo(e); }
-			public void insertUpdate (DocumentEvent e) { scrollTo(e); }
-			public void removeUpdate (DocumentEvent e) { scrollTo(e); }
+			public void changedUpdate(
+			@SuppressWarnings("unused") DocumentEvent e) {
+				// No-op, keine Ahnung was das ist
+			}
+
+			public void insertUpdate(
+			@SuppressWarnings("unused") DocumentEvent e) {
+				scrollToEnd();
+			}
+
+			public void removeUpdate(
+			@SuppressWarnings("unused") DocumentEvent e) {
+				scrollToEnd();
+			}
 		});
 
 		// Gesamtgroesse setzen

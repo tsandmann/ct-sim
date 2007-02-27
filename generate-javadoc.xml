@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Ant-Task, der das Javadoc des ctSim erzeugt.
 
-Wer das ausserhalb von Heise verwenden moechte, muss wohl die
-Proxyeinstellungen anpassen oder wegnehmen (siehe Attribut "additionalparam").
+Was heißen die ganzen Parameter?
+http://ant.apache.org/manual/CoreTasks/javadoc.html
 
-Ausfuehren in Eclipse: Alt-Shift-X, dann Q. Auch
-ueber Run > External Tools zu erreichen. -->
+Wie führt man diese Datei aus?
+In Eclipse Alt-Shift-X, dann Q. Auch über Run > External Tools zu erreichen
+-->
+
 <project default="javadoc">
 <target name="javadoc">
 <javadoc
@@ -13,7 +15,8 @@ ueber Run > External Tools zu erreichen. -->
 	packagenames="ctSim.*"
 	destdir="documentation/api"
 	encoding="utf-8"
-	additionalparam=" -J-Dhttp.proxyHost=wwwproxy.heise.de -J-Dhttp.proxyPort=8080 -link http://java.sun.com/j2se/1.5.0/docs/api/"
+	additionalparam="-J-Djava.net.useSystemProxies=true"
+	link="http://java.sun.com/j2se/1.5.0/docs/api/"
 	access="package"
 	author="true"
 	classpath="contrib/rxtx.jar;contrib/mysql-connector-java-3.1.13-bin.jar;contrib/picocontainer-1.2.jar;contrib/junit-4.1.jar"

@@ -60,7 +60,11 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         this.view = view;
         setJudge(Config.getValue("judge"));
         TcpConnection.startListening(this);
-        ComConnection.startListening(this);
+        if (Config.getValue("serialport") == null) {
+        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstützung " +
+        			"für serielle Schnittstellen deaktiviert");
+        } else
+        	ComConnection.startListening(this);
         init();
     }
 
@@ -95,7 +99,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 */
 	public void run() {
 		int timeout = 10000; //$$ Default lieber in Klasse Config
-		
+
 		// Sequencer-Thread hat eigene Referenz auf die Welt -- siehe Bug 55
 		final World sequencersWorld = world;
 
@@ -277,7 +281,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     public void addTestBot() {
         onBotAppeared(new CtBotSimTest());
     }
-    
+
 	public void invokeBot(File file) {
 		invokeBot(file.getAbsolutePath());
 	}
@@ -306,7 +310,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
             lg.warning(e, "Fehler beim Starten von Bot '"+filename+"'");
         }
     }
-    
+
     public synchronized void onBotAppeared(Bot bot) {
     	if (bot instanceof SimulatedBot) {
     		if (world == null) {
