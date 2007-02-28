@@ -3,7 +3,31 @@ package ctSim.util;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
-//$$ doc
+/**
+ * Provides a <a href="http://en.wikipedia.org/wiki/Fluent_interface">fluent
+ * interface</a> for {@link GridBagConstraints} objects. Allows to work with
+ * GridBagConstraints in a sane way, and provides a few naming clarifications.
+ * Example:
+ *
+ * <pre>
+ * GridBagConstraints gbc = new GridBaggins().row(4).col(3).northwest().fillH();
+ * </pre>
+ *
+ * is equivalent to:
+ *
+ * <pre>
+ * GridBagConstraints gbc = new GridBagConstraints();
+ * gbc.gridy = 4;
+ * gbc.gridx = 3;
+ * gbc.anchor = GridBagConstraints.NORTHWEST;
+ * gbc.fill = GridBagConstraints.HORIZONTAL;
+ * </pre>
+ *
+ * Note: Documentation of most methods is copied from the corresponding
+ * {@link GridBagConstraints} field or constant.
+ *
+ * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ */
 public class GridBaggins extends GridBagConstraints {
 	private static final long serialVersionUID = - 1427751556874174611L;
 
@@ -12,7 +36,7 @@ public class GridBaggins extends GridBagConstraints {
 		anchor = CENTER;
 		return this;
 	}
-	
+
 	/**
 	 * Put the component on the right side of its display area, centered
 	 * vertically.
@@ -21,7 +45,7 @@ public class GridBaggins extends GridBagConstraints {
 		anchor = EAST;
 		return this;
 	}
-	
+
 	/**
 	 * Put the component at the top of its display area, centered
 	 * horizontally.
@@ -30,25 +54,25 @@ public class GridBaggins extends GridBagConstraints {
 		anchor = NORTH;
 		return this;
 	}
-	
+
 	/** Put the component at the top-right corner of its display area. */
 	public GridBaggins northeast() {
-		anchor = NORTHEAST; 
+		anchor = NORTHEAST;
 		return this;
 	}
-	
+
 	/** Put the component at the top-left corner of its display area. */
 	public GridBaggins northwest() {
-		anchor = NORTHWEST; 
+		anchor = NORTHWEST;
 		return this;
 	}
-	
+
 	/** Put the component at the bottom-right corner of its display area. */
 	public GridBaggins southeast() {
-		anchor = SOUTHEAST; 
+		anchor = SOUTHEAST;
 		return this;
 	}
-	
+
 	/**
 	 * Put the component at the bottom of its display area, centered
 	 * horizontally.
@@ -57,13 +81,13 @@ public class GridBaggins extends GridBagConstraints {
 		anchor = SOUTH;
 		return this;
 	}
-	
-	/**			 Put the component at the bottom-left corner of its display area.			 */
+
+	/** Put the component at the bottom-left corner of its display area. */
 	public GridBaggins southwest() {
 		anchor = SOUTHWEST;
 		return this;
 	}
-	
+
 	/**
 	 * Put the component on the left side of its display area, centered
 	 * vertically.
@@ -72,31 +96,31 @@ public class GridBaggins extends GridBagConstraints {
 		anchor = WEST;
 		return this;
 	}
-	
+
 	/** Do not resize the component. */
 	public GridBaggins nofill() {
 		fill = NONE;
 		return this;
 	}
-	
+
 	/** Resize the component horizontally but not vertically. */
 	public GridBaggins fillH() {
 		fill = HORIZONTAL;
 		return this;
 	}
-	
+
 	/** Resize the component vertically but not horizontally. */
 	public GridBaggins fillV() {
 		fill = VERTICAL;
 		return this;
 	}
-	
+
 	/** Resize the component both horizontally and vertically. */
 	public GridBaggins fillHV() {
 		fill = BOTH;
 		return this;
 	}
-	
+
 	/**
 	 * Specifies the number of cells in a column for the component's display
 	 * area.
@@ -114,15 +138,15 @@ public class GridBaggins extends GridBagConstraints {
 		gridheight = numRows;
 		return this;
 	}
-	
+
 	/**
 	 * Alias for {@link #gridheight(int)}. HTML people will find this name
 	 * more intuitive.
-	 */ 
+	 */
 	public GridBaggins rowspan(int numRows) {
 		return gridheight(numRows);
 	}
-	
+
 	/**
 	 * Specifies the number of cells in a row for the component's display
 	 * area.
@@ -140,15 +164,15 @@ public class GridBaggins extends GridBagConstraints {
 		gridwidth = numCols;
 		return this;
 	}
-	
+
 	/**
 	 * Alias for {@link #gridwidth(int)}. HTML people will find this name
 	 * more intuitive.
-	 */ 
+	 */
 	public GridBaggins colspan(int numCols) {
 		return gridwidth(numCols);
 	}
-	
+
 	/**
 	 * Specifies the cell containing the leading edge of the component's
 	 * display area, where the first cell in a row has <code>gridx=0</code>.
@@ -166,12 +190,12 @@ public class GridBaggins extends GridBagConstraints {
 		gridx = col;
 		return this;
 	}
-	
-	//$$ doc
+
+	/** Alias for {@link #gridx(int)} ("column"). Seems more intuitive to me. */
 	public GridBaggins col(int col) {
 		return gridx(col);
 	}
-	
+
 	/**
 	 * <p>
 	 * Specifies the cell at the top of the component's display area, where
@@ -189,12 +213,12 @@ public class GridBaggins extends GridBagConstraints {
 		gridy = row;
 		return this;
 	}
-	
-	//$$ doc
+
+	/** Alias for {@link #gridy(int)}. Seems more intuitive to me. */
 	public GridBaggins row(int row) {
 		return gridy(row);
 	}
-	
+
    /**
 	 * <p>
 	 * This field specifies the external padding of the component, the
@@ -209,17 +233,17 @@ public class GridBaggins extends GridBagConstraints {
 		insets = is;
 		return this;
 	}
-	
+
 	//$$ doc
 	public GridBaggins epadx(int padding) {
 		return insets(new Insets(insets.top, padding, insets.bottom, padding));
 	}
-	
+
 	//$$ doc
 	public GridBaggins epady(int padding) {
 		return insets(new Insets(padding, insets.left, padding, insets.right));
 	}
-	
+
 	/**
 	 * This field specifies the internal padding of the component, how much
 	 * space to add to the minimum width of the component. The width of the
@@ -232,7 +256,7 @@ public class GridBaggins extends GridBagConstraints {
 		ipadx = padding;
 		return this;
 	}
-	
+
 	/**
 	 * This field specifies the internal padding, that is, how much space to
 	 * add to the minimum height of the component. The height of the
@@ -245,7 +269,7 @@ public class GridBaggins extends GridBagConstraints {
 		ipady = padding;
 		return this;
 	}
-	
+
 	/**
 	 * Specifies how to distribute extra horizontal space.
 	 * <p>
@@ -266,7 +290,7 @@ public class GridBaggins extends GridBagConstraints {
 		weightx = weight;
 		return this;
 	}
-	
+
 	/**
 	 * Specifies how to distribute extra vertical space.
 	 * <p>

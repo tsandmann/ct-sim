@@ -1,6 +1,10 @@
 Changelog fuer c't-Sim
 ======================
 
+2007-02-28 15:56 Hendrik Krauß [hkr@heise.de]:
+* Raus: Klasse Flags (nirgends verwendet)
+* Paar Todos erledigt
+
 2007-02-27 18:55 Hendrik Krauß [hkr@heise.de]:
 * generate-javadoc.xml vereinfacht: Proxy wird jetzt automatisch erkannt
 * Fix für Bug 73: "Log leeren" ruft Exceptions hervor

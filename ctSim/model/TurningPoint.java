@@ -37,7 +37,7 @@ public class TurningPoint {
 	 * Position. Das hei&szlig;t, dass
 	 * {@link #getShortestPathTo(TurningPoint, int[][])} zur&uuml;ckliefert, es
 	 * g&auml;be keinen g&uuml;ltigen Weg von der Botposition zum Ziel, obwohl
-	 * laut {@link AliveObstacle} der Bot noch lang nicht in ein Loch gefallen
+	 * laut {@link ThreeDBot} der Bot noch lang nicht in ein Loch gefallen
 	 * ist. </li>
 	 * <li> Es ist nicht empfehlenswert, diesen Wert auf 0 zu setzen.
 	 * Angenommen, solche Stellen kommen auf der Karte (XML) vor:<br /> #<br />
@@ -69,27 +69,16 @@ public class TurningPoint {
 	/** Basis des Vektors */
 	Vector2d pos;
 
-	/**
-	 * Konstruktor
-	 *
-	 * @param x
-	 * @param y
-	 */
 	TurningPoint(double x, double y) {
 		pos = new Vector2d();
 		pos.x = x;
 		pos.y = y;
 	}
 
-	/**
-	 * Konstruktor
-	 *
-	 * @param x
-	 * @param y
-	 */
 	TurningPoint(Vector2d p) {
 		pos = new Vector2d(p);
 	}
+
 	/**
 	 * Testet ob this mit p2 in der parcoursMapSimple auf direktem Wege vom Bot
 	 * erreicht werden koennen

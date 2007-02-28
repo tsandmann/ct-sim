@@ -31,11 +31,8 @@ import ctSim.model.ThreeDBot;
 import ctSim.util.Runnable1;
 
 //$$ doc mit 4 grafiken
-//$$ pdf in doc-Ordner
 /**
- * <a
- * href="http://www.heise.de/ct/ftp/projekte/ct-bot/pdf/grundplatte_bemassung.pdf">Grundplatte
- * mit Bema&szlig;ung</a>
+ * <a href="doc-files/grundplatte_bemassung.pdf">Grundplatte mit Bemaßung</a>
  */
 public class CtBotShape extends Group {
 	/** Abstand zwischen Zentrum und Au&szlig;enkante des Bots [m] laut PDF */

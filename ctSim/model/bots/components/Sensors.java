@@ -183,7 +183,9 @@ public class Sensors {
 	 * <strong>c't-Bot-Protokoll:</strong> Der Fernbedienungssensor sendet eine
 	 * Ganzzahl, die f&uuml;r einen Knopf steht (Zuordnung siehe
 	 * {@link RemoteControlViewer}). Die Zahl steht im Feld {@code dataL}, die
-	 * &uuml;brigen Felder werden nicht ver&auml;ndert.
+	 * &uuml;brigen Felder werden nicht ver&auml;ndert. Falls der Benutzer einen
+	 * Knopf gedrückt hat, sendet die Instanz den entsprechenden Code. Falls
+	 * nicht, sendet sie ein Command, das {@code dataL} == 0 hat.
 	 * </p>
 	 */
 	public static class RemoteControl extends BotComponent<Void>

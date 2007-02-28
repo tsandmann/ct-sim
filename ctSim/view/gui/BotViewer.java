@@ -24,7 +24,6 @@ import javax.swing.JScrollPane;
 
 import ctSim.model.bots.Bot;
 
-//$$ Doku ConCon nach oben
 /**
  * @author Felix Beckwermert
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
@@ -33,7 +32,7 @@ public class BotViewer extends JScrollPane {
 	private static final long serialVersionUID = - 7367493564649395707L;
 
 	private static final Class[] buisitors = {
-		Tables.Position.class, 
+		Tables.Position.class,
 		Leds.class,
 		Tables.Actuators.class,
 		Tables.Sensors.class,
@@ -54,7 +53,7 @@ public class BotViewer extends JScrollPane {
 			try {
 				GuiBotBuisitor buisitor = (GuiBotBuisitor)b.newInstance();
 				bot.accept(buisitor);
-				if (buisitor.shouldBeDisplayed()) 
+				if (buisitor.shouldBeDisplayed())
 					panel.add(buisitor);
 			} catch (IllegalAccessException e) {
 				/*

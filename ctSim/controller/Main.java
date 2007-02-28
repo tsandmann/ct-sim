@@ -50,11 +50,15 @@ public class Main {
 	}
 
 	/**
-     * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu
-     * starten.
-     *
-     * @param args Siehe {@link #handleCommandLineArgs(String[])}
-     */
+	 * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu
+	 * starten.
+	 *
+	 * @param args Als Kommandozeilenargumente sind momentan zulässig:
+	 * <ul>
+	 * <li>{@code -conf pfad/zur/konfigdatei.xml}: Andere Konfigurationsdatei
+	 * als die standardm&auml;&szlig;ige config/ct-sim.xml verwenden</li>
+	 * </ul>
+	 */
     public static void main(String... args) {
     	handleCommandLineArgs(args);
         lg = initLogging();
@@ -65,17 +69,7 @@ public class Main {
     }
 
 	//TODO "Usage"-Meldung waere gut
-	/**
-	 * Behandelt die Kommandozeilenargumente. Momentan zul&auml;ssig:
-	 * <ul>
-	 * <li><code>-conf pfad/zur/konfigdatei.xml</code>: Andere
-	 * Konfigurationsdatei als die standardm&auml;&szlig;ige config/ct-sim.xml
-	 * verwenden</li>
-	 * </ul>
-	 *
-	 * @param args Kommandozeilenargumente, wie sie main() &uuml;bergeben
-	 *            bekommen hat
-	 */
+	/** Siehe {@link #main(String...)}. */
 	private static void handleCommandLineArgs(String[] args) {
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].toLowerCase().equals("-conf")) {
