@@ -55,7 +55,13 @@
 				<color type="ambient">#606060</color>
 				<color type="diffuse">#606060</color>
 			</appearance>
-			
+
+			<appearance type="L"> 
+				<description>Fussboden mit Loch</description>
+				<color type="ambient">#000000</color>
+				<color type="diffuse">#000000</color>
+			</appearance>			
+						
 			<appearance type="1"> 
 				<description>Fussboden des Startfeldes 1</description>
 				<color type="ambient">#993030</color>
@@ -117,6 +123,13 @@
 				<clone>-</clone>
 			</appearance>
 			
+			<appearance type="p"> 
+				<description>Linie</description>
+				<color type="ambient">#FF0000</color>
+				<color type="diffuse">#FF0000</color>
+				<color type="specular">#000000</color>
+				<color type="emmissive">#000000</color>
+			</appearance>
 		</optics>
 
 

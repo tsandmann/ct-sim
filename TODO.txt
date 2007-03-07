@@ -1,0 +1,144 @@
+Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
+================================================================================
+
+Known Bugs:   
+-----------
+
+* Bot kann sich aus Loch "befreien"
+
+* Bots werden gekillt, nach Reset und Neustart
+
+* wenn ct-Bot beendet wird (TCP-Verbindung beendet), soll der Bot aus der Welt entfernt werden
+
+* Maussensor liefert bei kleinen Geschwindigkeiten (PWM < 4) keine Werte
+  -> erledigt?
+
+* FB-Kommandos kommen gelegentlich nicht durch. Das passiert auch beim LabyrinthJudge, der eigentlich allen Bots zu Beginn das Fernbedienungssignal "5" schickt. 
+  -> sollte nur passieren, wenn ein Bot ins timeout kommt (aktuell also eigentlich nicht mehr)
+
+* Bei neuem Welt-Generieren in einem Rennen wird die Zeit öffters ins neue Level mit übernommen
+  -> bei mir nicht? kann da mal einer genauere angaben machen? (fbe)
+
+Requested Features:
+-------------------
+
+
+--- Alles oberhalb dieser Linie fuer naechstes Release fertigmachen!!! ---
+
+* Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek)
+  -> erledigt?
+
+* FB-Kommandos können (so nicht) vom Judge geschickt werden
+
+* Manipulation von Pos. und Sensoren unterbinden
+
+* Bot-Namen grausam
+
+* Positionen überarbeiten
+
+* Controller überarbeiten
+
+* Characteristic verallgemeinern
+
+* Grafiken fuer Fernbedienung (pek)
+
+* FB soll sich Position merken; FileChooser sollten sich Verz. merken (für eine Sitzung?)...
+
+* FB-Position? --> eventuelle eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
+
+* Sim kann vom Simulator selbst abgespeicherten Welten nur laden, wenn 
+sie im Ordner parcours innerhalb des Projekts gespeichert worden sind.
+Der Sim findet sonst parcours.dtd nicht.
+
+* Verzeichnis-Angabe fuer die DTD in der Config
+
+* TabbedPane -> TabbedPaneWithCloseIcons: Icons rechts?
+
+* Was machen bei Mangel an Startplaetzen?
+
+* Beim hinzufuegen von Bots pruefen, ob der Platz leer ist und wenn nicht einen neuen Spawn-Punkt suchen
+
+* Klassenstruktur wieder aufraeumen (fbe)
+
+* Real-Bot (USB-2-Bot) reparieren (fbe)
+
+* Bitte pruefen, was alles beim Wechsel auf den neuen Sim verloren gegangen ist (fbe)
+
+* Es gibt immer noch undokumentierte Fkts im Code [wo?]
+
+* Letzte Compilerwarnings entfernen
+
+* Mausbild
+
+ERLEDIGT:
+=========
+
+* ContestJudge wieder einbauen (fbe)
+
+* Zielerkennung (des Judge) nicht immer korrekt (fbe)
+
+* Gleitpinn fällt, obwohl er nicht fällt? (fbe)
+  -> Durch Mithilfe aus dem Forum (auch ein Bug zum linken Rad gefixt)
+
+* TabbedPane -> TabbedPaneWithCloseIcons (fbe)
+
+* Hinzufuegen von Bots ist auch ohne Welt moeglich (fbe)
+  -> erledigt
+
+* Appearnaces werden noch nicht wieder gesetzt! (fbe)
+
+* Sensor-Daten werden oefters in einem Zyklus gesendet
+  -> lag an mangelnder Sync.
+  -> behoben (fbe)
+
+* Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe) --> wenn dieser der alten Struktur entspricht, werden auch wieder die richtigen Appearances aus der config gelesen
+Das Namensschema bitte aus der letzten Version des alten Sims uebernehmen. Ein Teil davon ist auch schon wieder eingebaut, so dass die Appearances wieder gelesen werden
+  -> die tollen alten Strukturen sind da
+  -> die App. wird wie zuvor gesetzt
+
+* Probleme mit dem timeOut -> ist wohl jetzt erledigt? (fbe)
+
+* Bot-Name wird in FB angezeigt (fbe)
+
+* Durch die staendigen Ausgaben bei Unfaellen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren koennte das der andere Bot sich nicht mehr bewegt.
+  -> Das ist wohl das performante Java-IO; was soll man da jetzt machen?
+
+* Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab (fbe)
+
+* Beim hinzufuegen von neuen Bots den Judge fragen, ob das zulaessig ist
+  --> war doch längst erledigt? (fbe)
+
+* FB schliessen, wenn Bot stirbt (fbe)
+
+* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird können keine Bots mehr hinzugefügt werden. (fbe)
+
+* Nach dem Ende eines Rennens kï¿½nnen keine Bots wieder hinzugefï¿½gt werden --> Erst neues Level generieren. (fbe)
+
+* JudgeChooser sollte aktuell gewaehlten Jugde anzeigen (fbe)
+
+* Fernbedienungs-Optik verbessern (pek)
+
+* Wenn ct-Sim.xml ein Botbinary vorsieht, soll dieses nicht von selbst bei Sim-Start platziert werden, sondern bei jedem Klick auf "Bot hinzufuegen/C-Bot" [von pek]
+  -> es gibt ein DefaultDirectory fuer die BotBins (sowie fuer die world-files), dass ueber die Config angegeben werden kann (fbe)
+
+* Threads syncen (bbe)
+
+* Kommunikation ueberarbeiten (bbe)
+
+* Characteristics.lookupPrecise() nimmt Number
+
+* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten ï¿½bernommen werden (fbe)
+
+* wenn der Stop-Button gedrï¿½ckt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
+
+* Parcours und Binaries im XML-Config-File festlegen (fbe)
+
+* Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz) (fbe)
+
+* Slider fuer Position (fbe) -> Spinner ï¿½ndern Wert jetzt mit jedem Klick
+
+* Bodenplatte im Sim korrigieren -- ist manchmal verschoben (pek)
+
+* ParcoursGenerator static machen (pek)
+
+* Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (bbe) 

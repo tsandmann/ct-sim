@@ -1,285 +1,603 @@
-CHANGELOG fuer c't-Sim
+Changelog fuer c't-Sim
 ======================
-2006-10-26 Benjamin Benz (bbe@heise.de) Kommunikation an neuen Bot-code angepasst
+2007-03-06 Benjamin Benz [bbe@heise.de]: Standardmaessig ist nun der DefaultJudge an und nicht mehr der LabyrinthJudge
+
+2007-02-28 15:56 Hendrik Krauß [hkr@heise.de]:
+* Raus: Klasse Flags (nirgends verwendet)
+* Paar Todos erledigt
+
+2007-02-27 18:55 Hendrik Krauß [hkr@heise.de]:
+* generate-javadoc.xml vereinfacht: Proxy wird jetzt automatisch erkannt
+* Fix für Bug 73: "Log leeren" ruft Exceptions hervor
+* Wenn kein COM-Port konfiguriert, kleine Meldung "lausche nicht auf COM" statt Riesen-Exception
+* Kleinigkeiten
+
+2007-02-26 19:56 Hendrik Krauß [hkr@heise.de]:
+* generate-javadoc.xml verbessert
+* Bisschen mehr Doku
+* Die letzten falsch encodierten Zeichen repariert
+
+2007-02-22 Timo Sandmann [mail@timosandmann.de]: Applet-Bug in sendRcStartCode() korrigiert.
+
+2007-02-22 Benjamin Benz [bbe@heise.de]: internes CVS in externes gespiegelt fuer ct-sim-mit-applet-release
+
+2007-02-22 18:38 Hendrik Krauß [hkr@heise.de]: Releasevorbereitung 2
+* Applet-Howto rein
+* Javadoc-Ant-Task: Ausgabeverzeichnis geändert
+
+2007-02-22 18:38 Hendrik Krauß [hkr@heise.de]: Releasevorbereitung
+* contrib/rxtx wieder eingecheckt (war irgendwie nicht mehr da)
+* Version 2.1b -> 2.1
+
+2007-02-22 18:22 Hendrik Krauß [hkr@heise.de]:
+* Fix für 55: Absturz Knopf "Welt generieren"
+* Fix für 23: Logging in Konsole anzeigen
+* Aufgeräumt: ConsoleComponent
+* ct-sim.xml: Timeout jetzt 500 ms
+* Cross-Plattform: Applet unter Linux jetzt auch im Metal-Look-And-Feel
+* Neu: Klasse Init weil Main des Applet und Main der Applikation bisschen gemeinsamen Code haben
+
+2007-02-22 13:53 Hendrik Krauß [hkr@heise.de]:
+* Fix für 39: Simbots sterben nicht
+* Fix für 44: Steckengebliebene Bots von Simulation ausschließen
+* Fix für 52: Parameter AliveObstacleTimeout raus
+* ct-sim.xml: Bisschen mehr Doku
+* Config matcht jetzt für die neuen os-Attribute nicht volle Strings, sondern Anfänge ("Windows" matcht "Windows XP", "Windows 2000" usw.)
+* ThreeDBot etwas aufgeräumt (mehr Doku, paar Umbenennungen, Warnungen erledigt)
+
+2007-02-22 00:16 Timo Sandmann [mail@timosandmann.de]:
+* OS-Parameter fuer Mac OS X ergaenzt
+
+2007-02-21 19:40 Hendrik Krauß [hkr@heise.de]:
+* Applet etwas robuster, läuft wieder im Applet Viewer
+* Neues Project Setting: Encoding auf UTF-8 (auch für Windows). Jetzt sollten Umlaute plattformübergreifend gehen
+
+2007-02-21 18:58 Hendrik Krauss [hkr@heise.de]:
+* ct-sim.xml hat jetzt "os"-Attribut, Doku folgt
+* In Eclipse /parcours, /tmp usw. aus dem Build-Path genommen (sind ja keine Packages, sondern Ordner) -- Datei .classpath
+* Cross-Plattform: Look and Feel fuer Linux auf Metal
+* Umlaute und so, an denen sich Linux verschluckt, geaendert
+
+2007-02-20 15:35 Hendrik Krauss [hkr@heise.de]: Log-Fenster per Default breiter (80 Spalten)
+
+2007-02-20 15:08 Hendrik Krauss [hkr@heise.de]:
+* Fix fuer 33: Laufenden Remote-Call abbrechen
+* Fix fuer 25: Warnung, wenn keine Welt da und SimulatedBot hinzugefuegt
+* Kleinigkeiten
+
+2007-02-17 0:50 Hendrik Krauss [hkr@heise.de]:
+* DefaultController vereinfacht, Prinzip ist: Sequencer-Thread laeuft genau dann, wenn eine Welt geladen ist
+* Das fixt hoffentlich Bug 10
+* Stop-Knopf weg (fixt Bug 13)
+* Etliche Todo-Marker durchgesehen
+* Level etlicher Logausgaben angepasst
+
+2007-02-17 0:38 Hendrik Krauss [hkr@heise.de]: Remote-Calls getestet und verbessert, sind jetzt recht stabil
+
+2007-02-16 16:47 Hendrik Krauss [hkr@heise.de]: Fix fuer Bug 12: Sim-Absturz beim schliessen eines Bots
+
+2007-02-16 13:58 Hendrik Krauss [hkr@heise.de]: Nachtrag zum letzten Checkin
+
+2007-02-16 13:56 Hendrik Krauss [hkr@heise.de]:
+* Applet: Log-Level einstellbar zur Fehlersuche
+* Kleinigkeiten
+
+2007-02-15 18:40 Hendrik Krauss [hkr@heise.de]: Goldene Regel: Erst testen, dann einchecken
+
+2007-02-15 18:32 Hendrik Krauss [hkr@heise.de]: Bisschen Updates am Applet-Bauen
+
+2007-02-15 15:52 Hendrik Krauss [hkr@heise.de]:
+* Neu: Applet (ctSim.applet.Main); wie man's baut siehe Wiki
+* Neu: make-applet.xml, applet.html, java.policy.applet (letztere uninteressant, nur Eclipse-intern noetig)
+* Fix fuer Bug 10: Sim-Bug beim Schliessen von Welten
+* Keine "Synch verloren"-Warnungen mehr beim Verbinden mit Real-Bots
+* Icon-Bereitstellung umorganisiert (wegen Applet-Sicherheitsbeschraenkungen); IconHashMap umbenannt nach FileIconMap
+* Kleinigkeiten
+
+2007-02-13 19:22 Hendrik Krauss [hkr@heise.de]:
+* Fix fuer Bug 4: Auto-Scrolling im Sim-Log-Fenster
+* Fix fuer Bug 5: Sim-Log-Fenster: "Speichern als txt"
+* daher Neu: LogViewer
+* Zu Bug 7: ct-Sim-Probleme OSX 10.4.x -- MainWindow leitet alle Calls, die von aussen (Controller) kommen, jetzt auf den EDT um. Vielleicht ist das die Loesung des Bug. Mal testen
+* Dialog "Verbinden / Per TCP" ueberarbeitet; IP/Port werden jetzt aus Konfig geholt (neue Parameter eingefuehrt)
+* Neu: Icon Save16
+* Neu: BackslashNConverterStream
+* Weg: ComponentGroupGUI war noch von einer Aufraeumaktion uebriggeblieben
+
+2007-02-13 12:29 Hendrik Krauss [hkr@heise.de]:
+* Fix fuer Bug 8: Kein Scrollen moeglich, wenn Sim aktiv
+* Fix fuer Bug 3: Logging zum Sim fehlerhaft
+
+2007-02-13 2:04 Hendrik Krauss [hkr@heise.de]:
+* Neu: RemoteCallCompnt inkl. Gui
+* Verschoben: Icons werden jetzt von Config bereitgestellt
+* Neu: 2 Hilfsklassen
+
+2007-02-11 17:57 Hendrik Krauss [hkr@heise.de]:
+* Nachtrag zum 5.2. -- vergessen im Changelog zu vermerken: Command aktualisiert, SubCodes sind jetzt abhaengig von den Codes
+* Weg: @Buisit-Annotation (Applet-Security mag das nicht; laeuft jetzt ueber Methodenname, wenn das auch weniger offensichtlich ist)
+* Umbenannt: Closure -> Runnable1 (weniger verwirrend)
+* Command: Setter fuer SubCode und Payload
+* SimBotTcpDump toleriert jetzt ProtocolExceptions
+* Kleinigkeiten
+
+2007-02-03 23:21 Hendrik Krauss [hkr@heise.de]:
+* Neu: Verbindungen per USB (COM) werden automatisch erkannt, kein Menuepunkt mehr noetig
+* Verschoben: Auf Verbindungen horchen (TCP und USB) und Handshaking (TCP) in ComConnection bzw. TcpConnection verlagert und ueberarbeitet. DefaultController daher einfacher. Grund: Wird im Applet auch gebraucht, das keinen DefaultController zur Verfuegung hat
+* Komplettiert: Doku fuer Command; erzaehlt einiges zum Protokoll
+* Neu: ctSim.util.Menu, duenne Abstraktionsschicht ueber Swing, um JMenus / JMenuItems leichter schreiben zu koennen (aus MainWinMenuBar ausgekoppelt)
+* Neu: ComConnection geht davon aus, dass sie ein Singleton ist
+* Kleinigkeiten
+
+2007-01-31 22:43 Hendrik Krauss [hkr@heise.de]:
+* Weg: MovableObstacle (unklar, was Unterschied zu AliveObst sein soll, nirgends verwendet)
+* Neu: Gui fuer Position + Heading
+* Weg: Alte Pos-Gui, BotPosition (hat eigentlich nichts getan)
+* Umbenannt: ctSim.view.gui.Simple -> Tables (ist deskriptiver)
+* Neu: Serial-Port-Einstellungen in der ct-sim.xml (Realbot)
+* Kleinigkeiten
+
+2007-01-30 16:25 Hendrik Krauss [hkr@heise.de]:
+* Neu: RealBot; scheint gut zu klappen ueber USB
+* Neu: Sensoren koennen lesen (wegen RealBot)
+* Fix: LED-Reihenfolge war falschrum
+* Neu: SaferThread, weil das Pattern viel vorkommt im Programm
+* Command robuster gemacht gegen NullPointers
+* Connection + Subklassen: Konstruktionsablauf vereinfacht
+* Besseres Exception-Handling fuer ComConnection
+
+2007-01-30 0:11 Hendrik Krauss [hkr@heise.de]: Grosse Umstellung hinsichtlich der Bots (hoffentlich die letzte)
+* Alles instabil, noch nicht gut getestet
+* Weg: BotManager (in World integriert)
+* AliveObstacle aus der Bothierarchie raus: Verwaltet (1) Shape, (2) ObstState/Appearance, (3) Position/Heading und (4) Thread fuer die Simulation. Das sind alles Sachen, die nur Sim-Bots brauchen (Real-Bots nicht)
+* AliveObstacle jetzt ein Wrapper um einen simulierten Bot
+* Umbenannt: AliveObstacle -> ThreeDBot, s.o.
+* Umbenannt: Bot -> BasicBot
+* Umbenannt: CtBotSim -> SimulatedBot (jetzt ein Interface)
+* Neu: Interface Bot, moeglichst leichtgewichtig
+* Bots erstellen jetzt einfacher (Konstruktorsignaturen); braucht aber mehr Klempnerei (Wrapper mit Bot verdrahten, Bot mit Sim usw.); jetzt zentralisiert in der Welt
+* Neu: SimulatorFactory, die Bots mit Simulatoren verknuepft
+* Klarer Mechanismus zum Bots beenden (DisposeListener)
+* Komponenten jetzt wo sie hingehoeren (CtBot)
+* Kommando-Auswerte-Kram jetzt wo er hingehoert (BotComponentsList)
+* Test-Bot nach wie vor ausser Funktion
+* Neu: BotBarrier, um die Bots zu synchronisieren
+* Umbenannt: BotBuisitor -> GuiBotBuisitor
+* Kleinigkeiten
+
+2007-01-26 23:05 Hendrik Krauss [hkr@heise.de]:
+* Neu: Obststate (AliveObstacle) ist jetzt ein EnumSet, vereinfacht manches im AObst und MasterSim
+* Kleinigkeiten
+
+2007-01-26 1:36 Hendrik Krauss [hkr@heise.de]:
+* CtBotSimTcp: Paar Todos erledigt
+* I/O im CtBotSimTcp vereinfacht
+* Neu: Nichtverarbeitete Kommandos werden erkannt
+* Neu: Welcome-Kommando wird geprueft
+* Kleinigkeiten
+
+2007-01-25 21:05 Hendrik Krauss [hkr@heise.de]: Mist -- ct-sim.xml, .classpath, .project versehentlich mitcommittet. Rueckgaengig
+
+2007-01-25 20:46 Hendrik Krauss [hkr@heise.de]:
+* Neu: Split-Model-Ansatz fuer BotComponents (haben jetzt ein internes und ein externes Model), um Threadsicherheit zu garantieren; Doku folgt
+* Neu: Bot-Komponente Uhr (sagt ihm die Simzeit)
+* Fix: Seit Commit 18. Jan 12:45 war Simulation subtil defekt. Grund: Bot verlaesst sich darauf, dass SENS_ERROR das vorletzte Kommando ist (DONE das letzte). Sim hat es irgendwo geschickt, nicht unbedingt als letztes. CommandOutputStream weiss das jetzt und ist nebenbei einfacher geworden
+* SimBotTcpDump startet neu, wenn es die Verbindung verliert
+* Wieder eigene Datei: LcDisplayTest
+* Umgezogen: MemoryLeakTest
+* Kleinigkeiten
+
+2007-01-18 17:32 Hendrik Krauss [hkr@heise.de]:
+* Neu: Asynchrones Schreiben fuer Bot-Komponenten (RemoteControl, MousePicture)
+* Neu: MousePicture wird angezeigt
+* Kleinigkeiten
+
+2007-01-18 12:45 Hendrik Krauss [hkr@heise.de]:
+* Neu: Trans-, Door- und Error-Sensoren
+* Umbenannt: Actuator -> Actuators
+* Umorganisiert: Aktuatoren alle in Datei Actuators umgezogen (400 Zeilen, vertretbare Groesse)
+* Umorganisiert: Sensoren alle in Datei Sensors umgezogen (210 Zeilen)
+* update()-Calls in MainWindow / WorldViewer waren ueberfluessig
+* Alte Sensoren-Infrastruktur konnte weg
+* Kleinigkeiten
+
+2007-01-17 20:16 Hendrik Krauss [hkr@heise.de]:
+* Neu: Maus-Sensor
+* calcPos() ist jetzt auch ein Simulator
+* Threading-Probleme; lassen Simulation jetzt auf dem Event-Dispatch-Thread laufen; verlangsamt alles
+* E/A ist jetzt buffered (scheint auch was zu helfen, wenn ich die Ausgabe vom Profiler richtig interpretiere)
+* Kleinigkeiten
+
+2007-01-15 21:07 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Neu: Konfigoption, die den RC5-Code angibt, der beim Starten an einen Sim-Bot gehen soll; Default "Taste 5"
+* Neu: Fernbedienungssensor, -gui
+* Kleinigkeiten
+
+2007-01-15 13:42 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Neue, vereinfachte Infrastruktur fuer Simulation
+* TimeLogger hat jetzt Konfig-Einstellung
+* Neu: Buisitor, der Builder+Visitor-Pattern ermoeglicht (Doku folgt)
+* Kleinigkeiten
+
+2007-01-15 13:42 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Neu: Abgrundsensoren
+* Neu: Lichtsensoren
+* Kleinigkeiten
+
+2007-01-15 12:16 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Neu: Liniensensor
+* Umbenannt: RunOfTheMill -> Simple (versteht ja keiner)
+
+2007-01-15 01:31 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Neu: Abstandssensor (schwere Geburt)
+* Neu: Listen und Maps kann man einfacher mit Typinferenz erzeugen; Misc.newMap() / Misc.newList(); ueberall umgestellt
+* Kleinigkeiten
+
+2007-01-14 21:07 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Neu: CtBotShape, zweifarbige Shape des c't-Bot, zu sehen bei Kollisionen/Loechern/abgerissenen TCP-Verbindungen; das neue Aussehen ist auch klarer im Code und nicht mehr um 90� gedreht wie bisher (konsistent mit Headings)
+* AliveObstacle: Heading um 90� gedreht (vorher: Kurs 0� = nach Steuerbord, jetzt: Kurs 0� = geradeaus)
+* AliveObstacle: Appearance-Verwaltung etwas aufgeraeumt
+* Neu: Konsistente und freundliche Bot-Namen
+* Aufgeraeumt: ConfigManager umfassend entschlackt; gesamte Konfig wird jetzt von Klasse Config verwaltet; dort auch neuer Appearance-Parser
+* Daher Aenderungen ueberall: ConfigManager -> Config
+* Fix: XmlDocument hat jetzt klaren Umgang mit nicht vorhandenen Nodes
+* Robustheit: Decoratoror wirft mehr Exceptions
+* Fix: Decoratoror hat Methoden aus Object ignoriert
+* Kleinigkeiten
+
+2007-01-11 21:09 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Aufgeraumt (Forts.): CtBotSimTcp
+* Neu: Simulatoren-Infrastruktur im CtBotSimTcp (aber weiss noch nicht, ob die so bleibt)
+* Neu: EncoderSensor ueberarbeitet + samt seinem Simulator
+* Umbenannt: ctSim.view.gui.Actuators -> ctSim.view.gui.RunOfTheMill.Actuators
+* Kleinigkeiten
+
+2007-01-10 17:19 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* BotComponent jetzt mit CanRead- und CanWrite-Interfaces, scheint mir besser so
+* Neu: Governor ueberarbeitet, alte Aktuatoren-Gui konnte damit weg
+* Neu: Unterstuetzung fuer DoorServo
+* Verschoben: Log-Komponente -> freigewordene Actuator-Klasse (die kurzen Klassen kann man gut in einer Datei zusammenfassen)
+* Dokumentiert: Component-Flag-Tabellen
+* Kleinigkeiten
+
+2007-01-09 21:46 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Fix: Aktuatoren/Sensoren zeigen wieder Werte
+* Neu: LEDs (Indicators umbenannt und aktualisiert)
+* Neu: Entwicklertool ctSim.SimBotTcpDump (Macht die Command-Objekte sichtbar, die durch die TCP-Verbindung zwischen c't-Sim und Steuercode laufen)
+* Aufgeraeumt: Connection: toter Code weg, Methoden umbenannt wie in Java ueblich (send -> write, disconnect -> close); wirkt sich auf Commands + deren Verwender aus
+* Aufgeraeumt: TcpConnection: Vereinfacht
+* Neu: ComConnection: Unterstuetzung fuer serielle Verbindungen
+* DefaultController: Unterstuetzung fuer Real-Bots
+* RXTX im Eclipse-Projekt als Library angemeldet
+* Kleinigkeiten
+
+2007-01-09 15:03 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Bot: Infrastruktur fuer Component-Flag-Tabellen (Doku folgt)
+* Neuer Log-Aktuator (Klasse Log); noch ungetestet, da Sim-Bot sowas nicht sendet und Real-Bot noch nicht geht
+* CtBotSimTcp: Log- und LCD-Kram weg
+* Kleinigkeiten
+
+2007-01-09 13:20 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Gui-Bauen-Infrastruktur jetzt Builder/Visitor-Pattern (BotViewer angepasst, BotBuisitor dazu, AndEverything dazu); Doku folgt
+* BotComponent: Neue Infrastruktur vorbereitet, Klasse Flags erstellt
+* Erste neue Komponente: LcDisplay, die andern werden nach und nach upgedated
+* CtBotSimTcp: LCD-Verwaltungs-Kram in LcDisplay verlagert (da gehoert's ja wohl hin)
+* Bot + AliveObst aufgeraeumt
+* Interface TcpBot weg (keine Bedeutung mehr ohne AnsweringMachine)
+* Kleinigkeiten
+
+2007-01-08 20:07 Hendrik Krauss [hkr@heise.de]: Mehr Sachen aus meinem lokalen Prototyp eingebaut
+* Klasse Command ueberarbeitet, vereinfacht, teilweise dokumentiert. Wirkt sich auf alle Stellen aus, wo sie verwendet wird
+* CtBotSimTcp: bisschen aufgeraeumt
+* AnsweringMachine raus, hat keinen Sinn (Streams puffern eh alles)
+* EchoTest und TestServer werden nicht mehr mitkompiliert
+* BotComponent.getType() weg (nirgends verwendet), wirkt sich auf alle BotComponents aus
+* Aktuatorklasse Display aufgeraeumt, umbenannt: LcDisplay
+* Kleinigkeiten
+
+2007-01-08 1:03 Hendrik Krauss [hkr@heise.de]: Einige Sachen aus meinem lokalen Prototyp eingebaut
+* RX/TX-Bibliothek wieder eingecheckt (Vorbereitung fuer RealBot-Restauration)
+* CtSimFrame aufgeteilt: MainWindow und MainWinMenuBar
+* JTabbedPaneWithCloseIcons neu implementiert (ClosableTabsPane: kuerzer, einfacher, kann bisschen mehr), 2 Icons hinzugefuegt
+* Bot: stop() und die() waren Synonyme, stop() entfernt
+* AObst hat death listener bekommen (wird benachrichtigt, wenn AObst stirbt)
+* BotInfo weg (bestand im Endeffekt nur aus 2 Feldern)
+* BotPanel, DefBotPanel unter dem Namen BotViewer zusammengefasst und vereinfacht
+* ControlBar ist aufgrund der Vereinfachungen ueberfluessig geworden
+* Kleinigkeiten
+
+2007-01-07 18:50 Hendrik Krauss [hkr@heise.de]:
+Ok, mein letzter Check-in (18. Dez) war Mist. Der ganze NavState klappt nicht
+und ich weiss nicht woran's liegt. Verwerfe den letzten Commit: gehe auf den
+vorletzten Check-in zurueck (Stand 6. Dez, denn am 5. war der vorletzte
+Check-in). Dann gehen wir das nochmal ruhiger an.
+
+2006-12-18 Hendrik Krauss [hkr@heise.de]: Entwicklungsversion, UNSTABLE
+* Blickrichtung (Heading) wird jetzt fast ueberall in Grad (Uhrzeigersinn und 0� = Norden) ausgedrueckt, das ist einfacher und weniger irrefuehrend als der bisherige Vector3d. Funktioniert in Gui noch nicht
+* Position + Blickrichtung eines AliveObstacle gesammelt in neuer Klasse NavState (J3D-Modularisierung)
+* Alten Code in Bot und CtBot geloescht
+* Alle Sensoren/Aktuatoren: Methode getType() weg, wurde nie aufgerufen
+* Diverses
+
+2006-12-05 Hendrik Krauss [hkr@heise.de]:
+* FacadeFactory umbenannt in Decoratoror, viel davon umgeschrieben, jetzt klarer und weniger umstaendlich
+* Config.java bisschen vereinfacht
+* Bug entdeckt (nicht gefixt, aber ich will das hier dokumentieren): Beim Laden von Parcours von Platte treten MalformedURLExceptions auf; keine Ahnung seit wann, mindestens seit dem letzten CVS-Tag; da es in meiner lokalen Entwicklungskopie nicht auftritt, rechne damit, dass das Problem in der naechsten Zeit weggeht
+
+2006-12-01 Hendrik Krauss [hkr@heise.de]: Beginn der Operation Java3D-Modularisierung, Tag erstellt (weil das geplante Applet kein J3D haben wird, muss der ganze J3D benutzende Code so geschickt zusammengefasst sein, dass man durch Weglassen eines Sim-Moduls ueberhaupt keine Abhaengigkeit zu J3D mehr hat)
+* Unnoetige Abhaengigkeit von Bot auf J3D weg
+* Dito Sensoren und Aktuatoren
+* Fix: Javadoc-Warning in WorldViewer
+
+2006-11-24-B Hendrik Krauss [hkr@heise.de]:
+* Infrastruktur: FacadeFactory ermoeglicht Mixins, so ganz generell
+* XmlDocument glorifiziert mit Hilfe von Mixins, liefert jetzt bessere Nodes zurueck
+
+2006-11-24 Hendrik Krauss [hkr@heise.de]:
+* Mikro-Aenderung, nur ein paar Kommentare
+
+2006-10-25 Hendrik Krauss [hkr@heise.de]:
+* Alle Parcours des Wettbewerbs eingecheckt
+* Kleinigkeiten hier und da
+
+2006-10-19 Benjamin Benz [bbe@heise.de] / Hendrik Krauss [hkr@heise.de]:
+* Fix: Restwegfindung beachtet jetzt alle Zielfelder, nicht nur das ganz links
+
+2006-10-18-C Hendrik Krauss [hkr@heise.de]:
+* ContestConductor und Subsysteme beachten jetzt die Reihenfolge der Bots (vorher war es Glueckssache, ob der, der in ctsim_game.bot1 steht auch in ctsim_log.pos1x/pos1y/usw. geschrieben wurde)
+* Abgerissene SQL-Verbindungen werden neu aufgebaut (nach Erichs nonchalantem Hinweis "och das kann schon mal passieren")
+* Wiedereinstieg in abgebrochene Turniere verbessert: Findet jetzt auch wieder rein, wenn Vorrunde komplett, aber Hauptrunde noch nicht geplant
+
+2006-10-18-B Hendrik Krauss [hkr@heise.de]:
+* Logschritt ganz am Ende eines Spiels wird jetzt erzwungen, um Forentrollen den Wind aus den Segeln zu nehmen ("Der ist ja gar nicht ganz im Ziel")
+
+2006-10-18 Hendrik Krauss [hkr@heise.de]:
+* 10 Sekunden Pause zwischen Spielen
+* Sortierung Vorrunden-Rangliste nicht nach "finishtime", sondern "finishtime, bot1restweg"
+
+2006-10-17 Hendrik Krauss [hkr@heise.de]:
+* Absturzresistenz: abgebrochene Contests werden erkannt und wiederaufgenommen
+* Wenn einer auf dem Zielfeld steht, kriegt er Restweg = 0
+* Aenderung in TurningPoint vom letzten Checkin rueckgaengig -- hat wohl mit den komisch gewordenen Restwegen zu tun
+* Kleinigkeiten
+
+2006-10-16 Hendrik Krauss [hkr@heise.de]:
+* Parcours, ParcoursLoader und TurningPoint leicht veraendert auf der Suche nach dem Restweg-Minus-1-Fehler; schliesslich gefixt
+* Weiter Vorbereitungen fuer Screenshot-Kram
+* Tool gestrickt, was ein Verzeichnis voller Screenshots in die Datenbank laedt (ctSim.view.contestConductor.ScreenshotUploadTool)
+* Kleinigkeiten
+
+2006-10-11 Hendrik Krauss [hkr@heise.de]:
+* BotManager: race condition beseitigt, die zu intermittierenden Abstuerzen beim Level-Wechseln gefuehrt hat
+* Vorbereitungen fuer Screenshot-Kram getroffen
+* Kleinigkeiten
+
+2006-10-10-D Hendrik Krauss [hkr@heise.de]:
+* AliveObstacle hat jetzt keine Liste von ViewPlatforms mehr, da die zugehoerigen Methoden ohne einen Zweck zu erfuellen eine NullPtrExcp erzeugen
+
+2006-10-10-C Hendrik Krauss [hkr@heise.de]:
+* Wenn ein CtBotSimTcp die TCP-Verbindung verliert, stirbt er nicht, sondern setzt sich auf Status "halted"
+* ContestConductor schreibt jetzt Restwege (DB: ctsim_game.bot1restweg und bot2restweg)
+* Spielstand wird nach Ruecksprache mit ws nur noch alle 200 ms in die DB geloggt
+
+2006-10-10-B Hendrik Krauss [hkr@heise.de]:
+* Fix: TimeLogger funktioniert auch fuer mehrere Spiele
+* Loggen des letzten Schritts nochmal umgestellt
+
+2006-10-10 Hendrik Krauss [hkr@heise.de]:
+* Neuer kleiner View (Klasse TimeLogger) gibt Sim- und Realzeit periodisch aus; aktiv nur in Contest-Modus
+* DB-Schema: Neues Feld gametime_real, TournamentPlanner beachtet es
+* Logging erfolgt jetzt standardmaessig in ctsim-N.log, wobei N rotiert durch 0, 1, und 2 (= die letzten drei ctSim-Laeufe sind als Log verfuegbar)
+* Hab die Geduld mit dem ErrorHandler verloren -- ist rausgeflogen, ersetzt durch Log-Methoden
+* Fix: Letzter Simschritt eines Spiels wird jetzt auch in die DB geloggt
+* Logging-Subsystem wird jetzt ueber die Datei config/logging.conf konfiguriert, nicht mehr hardcoded
+
+2006-10-09 Hendrik Krauss [hkr@heise.de]:
+* Turnierbaum neu gestrickt; macht Baeume jetzt so, wie's laut Maildiskussion sein soll
+* Schema fuer Contest-Datenbank inkl. umfangreicher Doku eingecheckt
+* Diverse Verbesserungen
+
+2006-10-06 Hendrik Krauss [hkr@heise.de]:
+* angle-world-lamps.xml eingecheckt als Testparcours fuer den PickConeRay-Bug; siehe Doku in der Klasse World
+* CtSimFrame hat jetzt einen Screenshot-Button, der ins Temp-Verzeichnis des Systems einen Screenshot legt (Linux: /tmp Windows: /Dokumente und Einstellungen/Kasimir/Lokale Einstellungen/Temp)
+* PicoContainer bewirkt, dass ConfigManager sich vereinfacht. Neue Klasse Config.
+
+2006-10-06 Hendrik Krauss [hkr@heise.de]: Funktion neuimplementiert, die pro Simschritt in die DB loggt: unkomplizierter, kein Speicherleck mehr
+
+2006-10-05 Benjamin Benz [bbe@heise.de]: remote-Ausfuehrung von Bots geht
+
+2006-10-05 Benjamin Benz [bbe@heise.de]: Begonen mit der remote-Ausfuehrung von Bots
+
+2006-10-05 Hendrik Krauss [hkr@heise.de]: IP der Test-Datenbank stimmt jetzt wieder
+
+2006-10-04 Hendrik Krauss [hkr@heise.de]: Verschiedene Verbesserungen; CtSimFrame bringt keine Logausgaben aus java.util.logging mehr, da das als Fehlerquelle des terminate-Bug ausgemacht wurde
+
+2006-10-14 Peter Koenig [pek@heise.de]: Bots drehen sich nicht mehr, wenn sie in ein Loch gefallen sind
+
+2006-10-04 Hendrik Krauss [hkr@heise.de]: Versehentlicher Check-in rueckgaengig: Datei ContestConductorRecoveryTest weg
+
+2006-10-04 Benjamin Benz [bbe@heise.de]: ContestConductor startet nun auch unter Linux die Bots sauber
+
+2006-10-04 Benjamin Benz [bbe@heise.de]: Die/Routinen des Botlisteners bearbeitet, Contest-config abgepasst
+
+2006-10-03 Benjamin Benz [bbe@heise.de]: Es gibt nun einen eigenen Timeout fuer Alive Obstacles, der per Config festgesetzt werden darf. ueberschreitet ein work()-Zyklus diesen, wird das Obstacle "halted". Steht der Timeout auf 0, wird er ignoriert
+
+2006-10-03 Benjamin Benz [bbe@heise.de]: AliveObstacles kennen nun einen neune Zustand Halted, wenn dieser gesetzt ist, dürfen sie ihre work()-Methode nicht ausfuehren
+
+2006-10-03 Benjamin Benz [bbe@heise.de]: Config-Datei kommentiert
+
+2006-10-03 Benjamin Benz [bbe@heise.de]: Der Controller wartet nun nur noch die Zeit, die noch nicht verstrichen ist und nicht pauschal einen vollen Zyklus
+
+2006-10-03 Benjamin Benz [bbe@heise.de]: Timeout im Controller ist nun per Config-Datei konfigurierbar
+
+2006-10-02 Hendrik Krauss [hkr@heise.de]:
+* Neue Dependency PicoContainer inkl. Klasse ctSim.controller.InitializingPicoContainer; betrifft Initialisierung von ctSim und leichte Testbarkeit; Doku folgt
+* Neuimplementierung: ctSim.view.gui.WorldViewer ersetzt WorldPanel und WorldView; kuerzer, einfacher, fehlerfreier.
+* ConductorToDatabaseAdapter und DatabaseAdapter grossflaechig umgestellt zur Performance-Steigerung, nachdem Profiler-Laeufe ergeben haben, dass dort Probleme bzgl. memory footprint sind
+* World: Groessen-Getter umbenannt, um Klarheit zu schaffen
+* Characteristic: main()-Methode wieder funktionsfaehig gemacht zum Testen, aufgeraeumt
+* Diverse Verbesserungen
+
+2006-09-28 Benjamin Benz [bbe@heise.de]: Timeouts in den Judge eingefuegt, LastSavePostion in AliveObstacles hinzugefuegt
+
+2006-09-25 Hendrik Krauss [hkr@heise.de]:
+* TournamentTree hat jetzt ein ein kleines Demoprogramm (Klasse TournamentTreeGuiTest)
+* Mikroskopische Aenderungen hier und da
+
+2006-09-22-B Hendrik Krauss [hkr@heise.de]: Klasse MemoryLeakTest erstellt
+
+2006-09-22 Hendrik Krauss [hkr@heise.de]: Umbau Etappe 4 (vorher Tag erstellt):
+* ContestConductor vereinfacht; ist jetzt Beta; Test-Durchlaeufe des Wettbewerbs scheinen zu funktionieren; Testen wird fortgesetzt
+* neuer Einstiegspunkt: ctSim.view.contestConductor.ContestConductorTest, der einen Wettbewerb durchlaufen laesst, wobei in jedem Spiel sofort Bot 1 gewinnt
+* View-Interface ausgebaut, damit die neue ContestConductor-Version arbeiten kann
+* View-Interface ausgebaut, damit CtSimFrame immer korrekt anzeigen kann, welcher Judge gewaehlt ist
+* DefaultController angepasst, um die neuen View-Methoden zu nutzen
+* Konfig wird jetzt wieder geparst und gegen DTD gecheckt (vorher: nur Parsen)
+* MySQL-Treiber in Verzeichnis contrib (der Vollstaendigkeit halber); .classpath angepasst
+* Weitere 4 unbenutzte Klassen geloescht
+* Diverse Verbesserungen
+
+2006-09-20 Benjamin Benz [bbe@heise.de]: Parcours um Routinen zur Bestimmung der kuerzesten Distanz zwischen einem Punkt und dem Ziel erweitert (dazu einen Leserpatch von Michael Prähofer verwendet)
+
+2006-09-19 Hendrik Krauss [hkr@heise.de]: Umbau Etappe 3 (vorher Tag erstellt):
+* World: Zeitvariablen und -methoden nach oben verschoben, umbenannt, besser bzw. ueberhaupt mal dokumentiert. Semantik nicht veraendert.
+* ParcoursLoader, Parcours, World: Vorbereitungen getroffen fuer Einbau des Shortest-Path-Patch
+* Subsystem ctSim.view.contestConductor weiterhin experimentell
+* Konvention zur besseren Unterscheidung von Threads im Debugger: Alle von unserem Code direkt erzeugten Threads haben jetzt Namen, die mit "ctSim/" anfangen
+* Alle 3 Judges: Straffungen; Arbeit an der Stelle muss aber noch weitergehen
+* Logging-System auf java.util.logging-Basis eingefuehrt (Hauptklasse fuer uns: ctSim.util.FmtLogger). Sinn: Nach und nach das Gestruepp aus System.out, System.err, Debug.out, ErrorHandler und e.printStackTrace vereinheitlichen + professionalisieren
+* Weitere 11 unbenutzte Klassen geloescht
+* Diverse Verbesserungen
+
+2006-09-?? Hendrik Krauss [hkr@heise.de]: Etappe 2 des Umbaus/Aufraeumens: Grosse Umbenennungen und Verschiebungen; vorher auch Tag erstellt zur Sicherheit.
+* neuer Einstriegspunkt ins Programm ist die Klasse ctSim.controller.Main nach Reorganisation des Controller
+* GUI aus Package ctSim.view in Package ctSim.view.gui
+* ContestJudge heisst jetzt ContestConductor und ist ein View im Package ctSim.view.contestConductor (das sollte die endgueltige Architektur sein)
+* Es existieren jetzt Interfaces, ueber die Controller und View aufeinander zugreifen, um dieses Objektgestruepp aus Controller, CtSimFrame, World, Judge etc. zu strukturieren; Arbeit in dieser Richtung wird fortgesetzt
+* diverse Vereinfachungen in der GUI und andernorts
+* ueberfluessige Dateien weg (jd2xx, mindprod, manches aus der GUI)
+
+2006-0?-?? Hendrik Krauss [hkr@heise.de]: Etappe 1 vom Umbau des ContestJudge (ehemals LabyrinthContestJudge); einige damit verknuepfte Aenderungen hier und da; generelles Aufraeumen. ContestJudge ist experimentell: kompiliert, aber ist nicht weiter getestet und tut noch nicht das, was er soll
+
+2006-08-23 Felix Beckwermert [felix@beckwermert.de]: ContestJudge zum testen eingecheckt
+
+2006-08-23 Felix Beckwermert [felix@beckwermert.de]: BotManager eingef�hrt; Ctrl. und View auf diesen angepasst
+
+2006-08-23 Felix Beckwermert [felix@beckwermert.de]: Kleinere (Sch�nheits-)Anpassungen
+
+2006-08-13 Felix Beckwermert [felix@beckwermert.de]: Bug in der Ziel-Erkennung behoben
+
+2006-08-11 Felix Beckwermert [felix@beckwermert.de]: "Gleitpin-f�llt"-Bug gefixt (dank forum); au�erdem einen Bug zur Berechnung der Pos. des linken Rades gefixt (fehlte ein "-")
+
+2006-08-11 Felix Beckwermert [felix@beckwermert.de]: Tabs schlie�en jetzt korrekt (beenden auch den Bot)
+
+2006-08-08 Timo Sandmann [mail@timosandmann.de]: Sensordaten gesammelt verschicken
 
-2006-06-28 Peter Koenig (pek@heise.de) ParcoursGenerator gibt jetzt regelkonforme Labyrinthe aus.
+2006-08-08 Felix Beckwermert [felix@beckwermert.de]: Bug-fixes...
 
-2006-06-26 Peter Koenig (pek@heise.de) ParcoursGenerator gibt jetzt einen korrekten XML-String zurueck.
+2006-08-08 Felix Beckwermert [felix@beckwermert.de]: App. werden wieder (wie f�rher) verwendet
 
-2006-06-26 Peter Koenig (pek@heise.de) ParcoursGenerator gibt jetzt einen XML-String zurueck.
+2006-08-04 Timo Sandmann [mail@timosandmann.de]: ConfigManager fuer OS X erweitert
 
-2006-06-23 Peter Koenig (pek@heise.de) ParcoursGenerator verwendet jetzt auch die richtigen Zeichen und baut senkrechte und waagerechte Waende
+2006-08-03 Felix Beckwermert [felix@beckwermert.de]: Tabs haben "X"e zum schlie�en (funktonieren aber noch nicht korrekt)
 
-2006-06-22 Peter Koenig (pek@heise.de) Erste Version des Parcours-Generators eingebaut, schreibt noch kein XML
+2006-08-03 Felix Beckwermert [felix@beckwermert.de]: Timing-Ausagben eingebaut
 
-2006-06-14 Benjamin Benz (bbe@heise.de) DTD und xml-files angepasst
+2006-08-03 Felix Beckwermert [felix@beckwermert.de]: Alte Ctrl.-Sync wieder hergestellt
 
-2006-06-13 Benjamin Benz (bbe@heise.de) LabyrinthcontestJudge kann nun loggen
+2006-08-03 Felix Beckwermert [felix@beckwermert.de]: TestServer erweiter um "korrekte" Connection (die des Bots)
 
-2006-06-13 Benjamin Benz (bbe@heise.de) Alle Obstacle haben nun einen State
+2006-08-02 Benjamin Benz [bbe@heise.de]: Maussensor macht keine Rundungsfehler mehr, da er sich die "Reste" fuer den naechsten Zyklus merkt
 
-2006-05-27 Benjamin Benz (bbe@heise.de) Judge fuer den Labyrinthcontest weitgehend fertiggestellt (inkl. Anbindung an mysql)
+2006-08-01 Markus Stoeber [mst@heise.de]: In der Controller reset()-Funktion unpause() auskommentiert und nur die wichtigsten Funktionen darauf uebernommen um Debug Ausgaben zu sparen.
 
-2006-05-27 Benjamin Benz (bbe@heise.de) Man kann nun auch den Namen der Bots im Vorfeld festlegen
+2006-08-01 Benjamin Benz [bbe@heise.de]: Testserver ueberatrbeitet, ports wieder auf 10001
 
-2006-05-27 Benjamin Benz (bbe@heise.de) Der Controller kann nun Parcours wechseln
+2006-08-01 Felix Beckwermert [felix@beckwermert.de]: TestServer hinzugef�gt
 
-2006-05-12 Benjamin Benz (bbe@heise.de) Kommentare aktualisiert
+2006-07-28 Felix Beckwermert [felix@beckwermert.de]: Bot-Name wird in FB angezeigt
 
-2006-05-12 Benjamin Benz (bbe@heise.de) RXTX-Bibliothek umgestellt als jar-Datei ==> weniger Warnings
+2006-07-28 Felix Beckwermert [felix@beckwermert.de]: Bots haben nur noch _einen_ Namen
 
-2006-05-12 Benjamin Benz (bbe@heise.de) Code bereinigt
+2006-07-27 Peter Koenig [pek@heise.de]: Characteristic.lookupPrecise() gibt jetzt auf ganze Zahlen gerundete doubles zurueck, Sensor.update() gibt ungerundete cm-Entfernungen in die Kennlinie hinein.
 
-2006-05-12 Benjamin Benz (bbe@heise.de) RXTX-Bibliothek in den Source-Tree mit aufgenommen. Binaries in contrib/rxtx
+2006-07-27 Felix Beckwermert [felix@beckwermert.de]: Bot-Status-Ausgaben nur noch "einmal"
 
-2006-05-12 Benjamin Benz (bbe@heise.de) DTD der Confog-Datei korrigiert
+2006-07-27 Benjamin Benz [bbe@heise.de]: Die Namen werden wieder mit system vergeben, wenn auch das System noch nicht wieder voellig repariert ist. ==>Appearances werden wieder einglesen
 
-2006-05-12 Benjamin Benz (bbe@heise.de) Initialisierung der Bots aufgeraeumt, RXTX-Kommunikation eingebaut
+2006-07-27 Felix Beckwermert [felix@beckwermert.de]: Aktuell gewaehlter Judge wird (im Auswahl-Dialog) angezeigt
 
-2006-05-20 Max Odendahl (maximilian.odendahl@rwth-aachen.de) GUI Buttons und Klasse ComConnection hinzugefgt, Verbindung zu realen Bots ueber seriellen Port moeglich
+2006-07-27 Felix Beckwermert [felix@beckwermert.de]: FB wird geschlossen, wenn Bot entfernt wird...
 
-2006-05-15 Holger Schiller (h.schiller@online.de) build.xml fuer config und parcours ergaenzt
+2006-07-27 Felix Beckwermert [felix@beckwermert.de]: lookupPrecise eingebaut...
 
-2006-05-06 Benjamin Benz (bbe@heise.de) Man kann nun auswaehlen, ob man die Welt aus der Vogelperspektive oder aus der Sicht der Bots sehen will
+2006-07-27 Felix Beckwermert [felix@beckwermert.de]: Bugs behoben...
 
-2006-05-05 Benjamin Benz (bbe@heise.de) Jeder Bot traegt jetzt eine ViewPlatform mit sich rum, man kann also bald auch die Kameras wechseln
+2006-07-27 Benjamin Benz [bbe@heise.de]: Beim Start eines Rennen bekommen die Bots das Fernbedigungsbefehl 5, sodass Sie sofort anfangen zu Fahren
 
-2006-05-12 Benjamin Benz (bbe@heise.de) Release fuer c't 11/06 rausgespiegelt
+2006-07-26 Peter Koenig [pek@heise.de]: Fernbedienungs-Optik korrigiert
 
-2006-05-05 Benjamin Benz (bbe@heise.de) Viele der HashMaps typisiert 
+2006-07-26 Peter Koenig [pek@heise.de]: Fernbedienungs-Optik verbessert
 
-2006-04-28 Achim Pankalla (achim.pankalla@gmx.de) 
-		   View Taste fuer die Umschaltung des Verhaltenscreens integriert. Siehe auch: select-behaviours.txt
-		   unter ct-bot->Documentation.
-	
-2006-04-27 Fabian Recktenwald (fabian.recktenwald@ct-bot.teschpfad.de) Dem Controlfenster wurde ein ScrollPane hinzugefuegt.
+2006-07-26 Benjamin Benz [bbe@heise.de]: Timeouts nochmal veraendert
 
-2006-04-26 Benjamin Benz (bbe@heise.de) Sim schickt nun auch ein "Welcome" an den Bot und nimmt nur noch sauber angemeldete Bots an
+2006-07-26 Benjamin Benz [bbe@heise.de]: Bot faellt jetzt auch ausserhalb des Labyrinths
 
-2006-04-26 Benjamin Benz (bbe@heise.de) Bug aus der Anzeige von IR-Sensordaten entfernt
+2006-07-26 Benjamin Benz [bbe@heise.de]: Command_evaluate entmistet
 
-2006-04-26 Benjamin Benz (bbe@heise.de) BugsNFeatures erweitert, TODO entfernt
+2006-07-26 Benjamin Benz [bbe@heise.de]: Config ist nun einheitlich fuer Linux und Windows, Pfade werden umgewandelt
 
-2006-04-26 Benjamin Benz (bbe@heise.de) Anzeige fuer Mauskamerabilder entkaefert
+2006-07-25 Felix Beckwermert [felix@beckwermert.de]: config.xml umd "botdir" und "worlddir" erweitert
 
-2006-04-26 Benjamin Benz (bbe@heise.de) Anzeige fuer Mauskamerabilder eingefuehrt
+2006-07-25 Felix Beckwermert [felix@beckwermert.de]: statische ConfigManager-Klasse eingefuehrt
 
-2006-04-18 Torsten Evers (tevers@onlinehome.de) maze.xml dazugefuegt
+2006-07-24 Peter Koenig [pek@heise.de]: An Bot angepasst: CtBotSimTcp.WHEEL_PERIMETER = Math.PI * 0.057d;
 
-2006-04-17 Benjamin Benz (bbe@heise.de) Vererbungshierarchie von Bot umgekrempelt, so dass es jetzt AliveObstacles gibt
+2006-07-24 Peter Koenig [pek@heise.de]: Characteristics.lookupPrecise() nimmt Number
 
-2006-04-17 Benjamin Benz (bbe@heise.de) Alle Hooks in die Szenegraphen werden nun generisch verwaltet. keine festen Variablen mehr
+2006-07-24 Peter Koenig [pek@heise.de]: Text der GPL eingefuegt
 
-2006-04-17 Benjamin Benz (bbe@heise.de) RemoteViews beherschen nun hinzufuegen und loeschen von Bots
+2006-07-24 Felix Beckwermert [felix@beckwermert.de]:
 
-2006-04-17 Benjamin Benz (bbe@heise.de) RemoteViews in Betrieb genommen, noch rudimentaer (keine Farb-wechsel)
+	* beim Generieren/Laden einer neuen Welt, bzw. Schliessen der alten werden alle Bots beendet
+	* es gibt nur noch einen "staendigen" Controller
+	* Judge u. TickRate bleiben erhalten (bei Kartenwechsel -> reinit des Judges beachten!!)
+	* wenn der Stop-Button gedrueckt wird, werden alle Bots beendet
+	* Parcours und Binaries werden im XML-Config-File festgelegt
+	* Alte Threads werden beendet, um HeapOverflow bei zu haeufigem Generieren zu vermeiden
+	* Slider fuer Position -> Spinner aendern Wert jetzt mit jedem Klick
+	* Bots koennen jetzt ueber rechts Klick auf den Tab gekillt werden
+	* kleinere Anpassungen beim Controller, Judge, View vorgenommen
 
-2006-04-17 Benjamin Benz (bbe@heise.de) Package-Struktur aufgeraeumt, gefixte Version von SceneGraphStreamReader/Writer eingebaut
+2006-07-20 Benjamin Benz [bbe@heise.de]: zeitfunktion praezisiert
 
-2006-04-16 Benjamin Benz (bbe@heise.de) RC5-Tastendefinitionen in CtBot umgezogen
+2006-07-20 Benjamin Benz [bbe@heise.de]: Kleinigkeit im Sleep veraendert
 
-2006-04-16 Benjamin Benz (bbe@heise.de) Es gibt jetzt auch einen Knopf, um Bots wieder zu entfernen
+2006-07-20 Peter Koenig [pek@heise.de]: Fernbedienung folgt in den Codes der Standardfernbedienung RC Univers29 Geraetecode 334
 
-2006-04-16 Benjamin Benz (bbe@heise.de) Judges haben nun ein eigenes Tab fuer die Ergebnisse
+2006-07-20 Benjamin Benz [bbe@heise.de]: Warnings entfernt
 
-2006-04-15 Benjamin Benz (bbe@heise.de) Judge wird nun generisch von einem Klassennamen aus der Config-Datei geladen 
+2006-07-20 Benjamin Benz [bbe@heise.de]: Thread-Modell grundlegend ueberarbeitet. Bot und sim nun synchron
 
-2006-04-15 Benjamin Benz (bbe@heise.de) Bots sterben nun sauber unt entfernen sich auch wieder aus der Welt
+2006-07-19 Peter Koenig [pek@heise.de]: Fernbedienung folgt in Layout und Codes der Standardfernbedienung RC Univers29
 
-2006-04-15 Benjamin Benz (bbe@heise.de) Schiedsrichter in eigenen Thread ausgelagert und mit Klassenstruktur versehen
+2006-07-19 Peter Koenig [pek@heise.de]: ParcoursGenerator ist jetzt statische Klasse
 
-2006-04-15 Benjamin Benz (bbe@heise.de) rudimentaeren Schiedsrichter eingefuehrt
+2006-07-19 Peter Koenig [pek@heise.de]: Bodenplatte passt jetzt immer genau unter den Parcours
 
-2006-04-15 Benjamin Benz (bbe@heise.de) C't-Sim kann nun auch C-Bots starten
+2006-07-18 Felix Beckwermert [felix@beckwermert.de]: Fernbedienung hinzugefuegt (noch haesslich)
 
-2006-04-15 Benjamin Benz (bbe@heise.de) C't-Sim liest nun alle wesentlichen Parameter aus der Config datei
+2006-07-17 Peter Koenig [pek@heise.de]: Angefangen, Fernbedienung einzubauen, noch keine Tasten-Anzeige
 
-2006-04-15 Benjamin Benz (bbe@heise.de) Controller aufgeraeumt. Es gibt jetzt keine Fragen mehr beim Bot-Start, dafuer zwei neue Knoepfe, um Bots hinzuzufuegen. Bots Starten jetzt mit dem Gesicht zum Eingangsbereich., an im Parcours definierten Positionen, die alten Uewbergabeparameter (pos, head) werden ignoriert Bots lesen ihre Appearance aus der xml-Config. Bots werden automatisch bennant. Jeder Bot kann nun sein eigenes Aussehen haben.
+2006-07-16 Christian Isensee [isensee.christian@web.de]: Es wird auch tatsaechlich der Wert des rechten Distanzsensors an den Bot uebertragen und nicht der Wert des linken Sensors.
 
-2006-04-14 Benjamin Benz (bbe@heise.de) ParcoursLoader liest nun auch die Farben aus der XML-Datei
+2006-07-14  Benjamin Benz [bbe@heise.de]: Parcoursloader laedt nun eine massive Bodenplatte, Loecher werden getrennt behandelt
 
-2006-04-13 Benjamin Benz (bbe@heise.de) ParcoursLoader aufgeraumt und besser in world integriert. Welt steht jetzt nicht mehr um den Ursprungspunkt herum. World.java ausgemistet. Bots starten jetzt auf ihren Startplätzen.
+2006-07-3	Peter Koenig [pek@heise.de]: Kennlinien werden jetzt aus Files gelesen.
 
-2006-04-11 Benjamin (bbe@heise.de) Der Code fuer Client-Views scheitert noch an einem java3d-Bug in SceneGraphStreamWriter und Co., sowie an Texturen
+2006-06-30	Peter Koenig [pek@heise.de]: Kennlinien werden jetzt aus Strings gelesen, deren Eintraege durch ; getrennt sind, Textfelder werden uebersprungen
 
-2006-04-10 Andreas Merkle (mail@blue-andi.de) Der c't-Sim kann nun auch Log-Informationen darstellen
+2006-06-30	Peter Koenig [pek@heise.de]: Klasse fuer Kennlinie hinzugefuegt
 
-2006-03-28 Peter Koenig (pek@heise.de) Konstanten nach Code-Richtlinien umbenannt ('akt' fuer Aktuator wurde zu englisch Actuator und daher 'act')
+2006-06-30	Peter Koenig [pek@heise.de]: Changelog hinzugefuegt
 
-2006-03-19 Benjamin Benz (bbe@heise.de) ClientViews eingefuehrt (angefangen)
-
-2006-03-19 Benjamin Benz (bbe@heise.de) Boden-Bug beseitigt, FileChooser eingebaut, Code aufgeraeumt, viel altes auskommentiert
-
-2006-03-21 Peter Koenig (pek@heise.de)
-Konstanten in CtBot konsequent englisch umbenannt, Patch fuer die 
-korrekte Positionsberechnung von Fabian Recktenwald (Fabian.Recktenwald@ct-bot.teschpfad.de)
-eingepflegt, ebenso den darauf aufbauenden Maus-Patch
-
-2006-03-20 Markus Lang (lang@repulse.de)
-Kontrollfenster und World-Fenster mittels einer SplitPane zu einem 
-grossen c't-Sim Hauptfenster zusammengefuegt. Weniger Fensterwald :)
-
-2006-03-19 Benjamin Benz (bbe@heise.de) ParcoursLoader fast fertig
-
-2006-03-19 Benjamin Benz (bbe@heise.de) updatelcdText in botsimtest verschoben
-
-2006-03-16 Peter Koenig (pek@heise.de)
-Lampen vergroessert (verbessert die Erkennung der Saeulen)
-
-2006-03-16 Peter Koenig (pek@heise.de)
-Umlaute entfernt, Kommentare ergaenzt und Formatierungen geaendert
-
-2006-03-16  Stefan Geuken (mail@stefan-geuken.de)
-- Bugfix: Einer der CtBot-Konstruktoren hat bisher das Display nicht initialisiert
-- Der integrierte Testbot zeigt seine Daten auf dem Display an
-
-2006-03-12 Peter Koenig (pek@heise.de) Bugfix in World.sensGroundReflectionCross (Zeile 1096): 
-Der Wert von absorption wird nicht neu gesetzt, sondern zum alten dazuaddiert
-('absorption += ...' statt 'absorption = ...')
-
-2006-03-12 Benjamin Benz (bbe@heise.de) ParcoursLoader begonnen
-
-2006-03-12 Benjamin Benz (bbe@heise.de) Grosse Aufraeumaktion zwischen World, WorldView und Controller. 
-World braucht keine Referenz auf WorldView mehr. Alles vorbereitet, damit Views auch extern laufen koennen.
-
-2006-03-12 Benjamin Benz (bbe@heise.de) CommConnection wieder entfernt
-
-2006-03-12 Benjamin Benz (bbe@heise.de) Button fuer Screenshots wieder entfernt
-
-2006-03-09 Benjamin Benz (bbe@heise.de) Reale TCPBots eingefuehrt, Connections umstrukturiert
-
-2006-03-03	Heinrich Peters (Heinrich-Peters@gmx.net)
-- LCD-Ausgabe ueberarbeitet
-- LEDs werden jetzt im Simulator angezeigt
-- die 4 Farbtasten hinzugefuegt
-
-2006-02.22  Peter Koenig (pek@heise.de), Benjamin Benz (bbe@heise.de) Bugfix in watchObstacle():
-Abstandssensoren haben gelegentlich die Huelle des Bot als naechstes
-Hindernis detektiert haben, Messwert fiel regelmaessig auf 0. Jetzt ist die Huelle nicht pickable, 
-sobald der Bot seinen Peilstrahl losschickt.
-
-
-2006-02-18	Rolf Ebert (Rolf.Ebert@gmx.net) LCD-Ausgabe kann nun auch im Simulator erscheinen
-
-2006-02-21 Peter Koenig (pek@ctmagazin.de)
-- Code ist jetzt auf Java 5.0 umgestellt (List bots in World ist eine List<Bot>); auch das build.xml ist darauf vorbereitet.
-
-2006-02-18 Benjamin Benz (bbe@heise.de) Einen Button fuer Screenshots eingefuegt
-
-2006-02-13 Christoph Grimmer (c.grimmer@futurio.de)
-- Sim lauscht jetzt dauerhaft auf TCP-Verbindungen und nimmt diese an, auch wenn schon simulierte Bots unterwegs sind
-- Erweiterung von TcpConnection
-- Code Makeup
-
-2006-02-01  Lasse Schwarten (lasse@schwarten.org)
-- neue Lichtquelle im rechten Durchgang
-- Die Bots aendern nun ihre Farbe, wenn sie einen Unfall haben.
-  -> rote Bots sind "gesund"
-  -> blaue Bots sind gerade gegen ein Hindernis gefahren
-  -> gruene Bots haben den Boden unter ihren Raedern verloren
-- Code Makeup
-- Abfrage hinzugefuegt, ob ein oder drei Bots ausgesetzt werden sollen.
-
-2006-02-01 Peter Koenig (pek@ctmagazin.de)
-- XML- und howto-Dateien fuer Ant Build von Dominik Kalb (dominik@dkalb.com)
-hinzugefuegt.
-
-2006-02-01  Lasse Schwarten (lasse@schwarten.org)
-- Bugfix eines Nebenlaeufigkeitsproblems
-  -> Sensor- und Kollisionsabfragen verstecken Teile des Szenengraphen.
-     Bei mehr als einem Bot muss das Picking synchronisiert werden.
-
-2006-02-01  Lasse Schwarten (lasse@schwarten.org)
-- Positions-Slider auf dem CtControlPanel werden jetzt dynamisch an die Groesse des 
-  Spielfeldes angepasst.
-- Die Lichtsensoren wurden implementiert.
-  -> Mit World.LIGHT_SOURCE_REACH laesst sich die Reichweite/Intensitaet des 
-     Lichtes bestimmen.
-  -> CtBot.SENS_LDR_HEADING bestimmt, ob die Lichtsensoren nach vorne oder 
-     oben zeigen.
-- Die Lichtquelle in der nordoestlichen Ecke hat ein winziges 3D-Objekt 
-  bekommen, damit die Lichtsensoren arbeiten koennen.
-- Dem CtControlPanel wurden die noetigen Sensoranzeigen hinzugefuegt und
-  das Layout gefixt.
-- Die Anfangsposition von CtBots, die ueber TCP angeschlossen sind, wurde 
-  an die neue Welt angepasst.
-
-2006-01-31  Lasse Schwarten (lasse@schwarten.org)
-- Es wurden Lichtquellen hinzugefuegt.
-- Die Liniensensoren wurden implementiert.
-- Die Abgrundsensoren wurden implementiert.
-- Bots werden nun unter die obstBG BranchGroup gehaengt.
-- Die Objekte haben Materialangaben bekommen.
-- Die Kamara stellt sich zu Beginn nun automatisch so ein, dass das gesamte
-  Spielfeld des Bots zu sehen ist.
-- Die Flaeche der Welt wurde vergroessert und es gibt jetzt einen weiteren Raum im Sueden.
-- Die Box, die den Boden dargestellt hat, wurde durch einen neuen Boden
-  mit einem Loch im suedlichen Bereich ersetzt.
-- Linien auf dem Boden hinzugefuegt.
-- Hindernis im suedlichen Raum.
-- ueberfluessige (float)-Casts in World entfernt.
-- Bot-Steuerung angepasst.
-
-2006-01-30 Peter Koenig (pek@heise.de)
-- Die Welt hat im Szenegraphen direkt unter obstBG eine neue Transformationsgruppe 
-  tgO hinzugefuegt bekommen. Damit ist es moeglich, alle vier Randhindernisse der Welt
-  (north, south, ... ) gemeinsam zu verschieben. Diese Aenderung erfolgte zwecks 
-  besserer Darstellbarkeit des Szenegraph-Konzepts im Artikel.
-
-2006-01-29  Lasse Schwarten (lasse@schwarten.org)
-- Die Welt wurde ein wenig abgeaendert.
-  -> Die suedliche Wand wurde entfernt.
-  -> Der Boden wurde abgesenkt, so dass er nun bei z=0 liegt.
-- Der Bodenkontakt der beiden Raeder und des Schleifsporns wird nun ueberprueft.
-  Wenn einer der drei Punkte keinen Boden mehr unter sich hat, wird der Bot 
-  gestoppt.
-- Der Maussensor wurde implementiert. Er sitzt mittig 15 mm hinter der Achse 
-  unter dem ct-Bot. Es werden DeltaX und DeltaY berechnet. 
-  -> Die Groessen werden in Dots pro Simulationsschritt angegeben. 
-  -> Die Konstante CtBot.SENS_MOUSE_DPI = 400 legt die Aufloesung des Sensors 
-     fest und bestimmt wie viele Dots pro Inch ausgegeben werden. 
-  -> DeltaX gibt die in Fahrtrichtung zurueckgelegte Strecke an. 
-  -> DeltaY hingegen die seitliche Verschiebung, die der Maussensor bei einer 
-     Rotation des Bots abfaehrt. Bei einer 360-Grad-Wendung die innerhalb nur eines 
-     Simulationsschrittes absolviert wird, wuerde DeltaY 1484 dots betragen.
-      ---
-         2*Pi*1,5cm = 9,42cm
-         9,42cm/2,54cm/in = 3,71in
-         3,71in * 400DPI  = 1484 dots
-      ---
-  -> Dreht sich der Bot nach links, ist DeltaY negativ. Dreht er sich hingegen 
-     nach rechts, ist DeltaY positiv.
-- Damit das Kontrollfenster auch weiterhin auf Bildschirmen mit einer 
-  vertikalen Aufloesung von nur 800 Pixeln komplett zu sehen ist, wurde eine 
-  zweite Spalte hinzugefuegt. Diese enthaelt bis jetzt nur die neuen Maussensor-
-  daten.
-   
-2006-01-26 Zeitlupen Modus: 
-Werner Pirkl (Morpheus.the.real@gmx.de) hat einen Modus hinzugefuegt, um den Bot in Zeitlupe zu bewegen. 
-Man kann nun ueber einen Schieberegler den Faktor der Realzeit einstellen. Dabei bedeutet: 
-1 -- keine Zeitlupe 
-10 -- 10fache Zeitverzoegerung.
-Intern wird Wert von "baseTimeReal" bei 10-facher Zeitlupe 10 mal hoeher 
-gesetzt als der Wert der Simulatorzeit "baseTimeVirtual".
-
-2006-01-24  Lasse Schwarten (lasse@schwarten.org) 
-- Die Bots sind jetzt "pickable" und erkennen sich so gegenseitig als 
-  Hindernisse. Damit ein Bot sich nicht faelschlich selber findet, wird 
-  sein Koerper versteckt, waehrend seine Kollisionsabfrage durchgefuehrt 
-  wird. (Der ct-Sim ist somit nun multi-Bot-faehig.)
-- Die ViewPlatform laesst sich nun durch die Maus im Raum verschieben. 
-  Dazu muss in das 3D-Fenster geklickt werden und die Grafik in eine 
-  gewuenschte Richtung gezogen werden.
-  -> Die linke Maustaste dreht die Kamera um sich selbst.
-  -> Die rechte Maustaste verschiebt die Kamera parallel zu ihrer Position
-  -> Die mittlere Maustaste(oder die linke + ALT) verschiebt die Kamera 
-     nach vorne und hinten
-  (Anmerkung: Diese Navigation ist bei weitem nicht perfekt und muss 
-              ueberarbeitet werden. Ich habe das Paket 
-              org.j3d.ui.navigation ausprobiert, konnte aber keine 
-              besseren Ergebnisse erzielen. Der Code hierfuer ist noch 
-              im Source enthalten und lediglich auskommentiert.) 
-- Der Bot hat einen neuen Koerper bekommen, der aus einzelnen Polygonen 
-  zusammengebaut wird und eine echtes Fach hat.
-
-2006-01-24	Benjamin Benz (bbe@heise.de) Schreibweise des Changelogs nochmal veraendert

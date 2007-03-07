@@ -1,0 +1,20 @@
+Hinweis: Datei ist unwichtig, weil Bug http://www.heise.de/trac/ctbot/ticket/54 
+erledigt ist. Wenn dann http://www.heise.de/trac/ctbot/ticket/64 gemacht ist, 
+kann man die Datei ganz löschen.
+
+-- 
+
+Umlaute und wie man sie in Java escapt
+
+Ä u00C4
+ä u00E4
+Ö u00D6
+ö u00F6
+Ü u00DC
+ü u00FC
+ß u00DF
+
+
+Beispiel:
+System.out.println("Dieser Java-String enth\u00E4lt einen Umlaut");
+

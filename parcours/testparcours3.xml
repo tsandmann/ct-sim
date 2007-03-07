@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE world SYSTEM "parcours.dtd">
+<!DOCTYPE collection SYSTEM "parcours.dtd">
 
 <world>
 	<description>
 		Dieses ist ein Testparcours fuer ein Labyrinth fuer zwei Bots
 	</description>
-
+		
 	<parcours>
 		<line>*======Z==================*</line>
 		<line>#                      00 #</line>

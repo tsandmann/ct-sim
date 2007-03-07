@@ -1,0 +1,68 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>Applet Howto</title>
+</head>
+<body>
+
+
+  
+<h3>Inhalt</h3><ol><li><a href="#Was">Was?</a></li><li>
+<a href="#WiekommtdasAppletaufdenBot">Wie kommt das Applet auf den Bot?</a></li><li>
+<a href="#Troubleshooting:DasWiPortSetupistweg">Troubleshooting: Das WiPort-Setup ist weg</a></li><li>
+<a href="#Detail:Die64KBGrenze">Detail: Die 64-KB-Grenze</a>
+</li></ol></div>
+</p>
+<h3 id="Was">Was?</h3>
+<p>
+Das c't-Bot-Applet kann man auf einen Wlan-fähigen c't-Bot laden. Wenn man ihn dann im Browser anspricht, sendet er das Applet, das laufend seinen Status anzeigt:
+</p>
+<p>
+<a href="applet.png" style="padding:0; border:none"><img src="applet.png?format=raw" width="60" /></a>
+</p>
+<h3 id="WiekommtdasAppletaufdenBot">Wie kommt das Applet auf den Bot?</h3>
+<ol><li>c't-Sim-Code auschecken (<a class="ext-link" href="http://www.heise.de/ct/ftp/projekte/ct-bot/installationsanleitung.shtml#cvs"><span class="icon"></span>Wie geht das?</a>)
+</li><li>Rechtsklick auf <strong>make-applet.xml</strong> / Run As / Ant Build -- <i>Ant ist für Java, was make für C ist. make-applet.xml ist ein "Makefile"</i>
+</li><li>Warten, bis Ant gelaufen ist -- <i>Details: Ant legt für den Java-Code (.class-Dateien) mehrere .jar-Dateien an, ein Jar mit den Icons, und die index.html, die einfach die rüberkopierte applet.html aus dem Projekt-Hauptverzeichnis ist</i>
+</li><li>Die Dateien im Verzeichnis <strong>applet-build</strong> auf den Bot hochladen. Unter Windows geschieht das mit dem "DeviceInstaller"-Tool. Unter anderen Betriebssystemen haben wir das noch nicht gemacht; Ergänzungen sind willkommen
+<ol><li><a class="ext-link" href="http://ltxfaq.custhelp.com/cgi-bin/ltxfaq.cfg/php/enduser/std_adp.php?p_faqid=644"><span class="icon"></span>DeviceInstaller (Win) herunterladen</a>
+</li><li>Bot an
+</li><li>Im DeviceInstaller <strong>Search</strong> klicken, warten
+</li><li>Den erschienenen Listeneintrag wählen und <strong>Upgrade</strong>
+</li><li>"Create a custom installation by specifying ...", Next, nochmal Next
+</li><li>"Install files individually", Next
+</li><li>"Add Files", alles aus applet-build wählen, Next<br /><a href="deviceinstaller-step4.png" style="padding:0; border:none"><img src="deviceinstaller-step4.png?format=raw" width="300" /></a>
+</li><li>Im folgenden Schritt kann man nochmal alles auf Vollständigkeit kontrollieren: Weil das WiPort-Modul nur 64 KB große Dateien kann (s.u.), werden größere Dateien vom DeviceInstaller ignoriert. Das kann man daran erkennen, dass sie in dieser Liste nicht mehr angezeigt werden. Es macht nichts, wenn der DeviceInstaller mehrere Dateien in eine Partition legt (wie im Bild bei #4). <br /><a href="deviceinstaller-step5.png" style="padding:0; border:none"><img src="deviceinstaller-step5.png?format=raw" width="300" /></a><br />
+</li><li>Achtung: Beim Hochladen wird <strong>alles gelöscht</strong>, was bisher auf dem WiPort-Webserver war, auch das <strong>ab Werk vorhandene Webinterface</strong>
+</li><li>Next, Next, und warten bis alles hochgeladen ist
+</li><li>Im Browser die IP (oder Hostname) des Bot eingeben. Es sollte eine index.html geladen werden, in der das Applet wohnt
+</li></ol></li></ol><h3 id="Troubleshooting:DasWiPortSetupistweg">Troubleshooting: Das WiPort-Setup ist weg</h3>
+<p>
+<a href="webmanager.png" style="padding:0; border:none"><img src="webmanager.png?format=raw" style="float:right" /></a> 
+Der rechts abgebildete "WebManager" ist das Webinterface des WiPort, das man zum Einstellen verschiedener Sachen verwenden kann (z.B. TCP-Port, auf dem der WiPort lauscht). Es ist ab Werk auf dem WiPort vorhanden, ging bei uns aber verschütt, als wir des Applet hochgeladen haben. Wir vermuten, der WebManager liegt ab Werk in den ersten Partitionen auf dem WiPort, wo das Applet ja hingeschrieben wird. Man kann den WebManager so wiederbeleben:
+</p>
+<ol><li><a class="ext-link" href="http://ltxfaq.custhelp.com/cgi-bin/ltxfaq.cfg/php/enduser/std_adp.php?p_faqid=1213"><span class="icon"></span>WebManager-Archiv (.cob) herunterladen</a>
+</li><li>Mit dem DeviceInstaller die .cob-Datei auf den WiPort laden. Dazu:
+<ol><li>Schritte 1-5 wie oben, dann:
+</li><li>"Install files contained in COB partitions"
+</li><li>Eine Partition weit hinten wählen, z.B #10
+</li><li>"Set Partition" und die .cob-Datei mit dem WebManager wählen, Größenfrage mit "Ja" beantworten<br /><a href="cob-hochladen.png" style="padding:0; border:none"><img src="cob-hochladen.png?format=raw" width="300" /></a>
+</li><li>Next, Next
+</li></ol></li><li>Jetzt sollte der WebManager wieder da sein. Weil er in Partition 10ff. liegt, das Applet aber nur die Partitionen 1-4 belegt, sollte er auch künftiges Applet-Hochladen überleben. Er ist erreichbar über den Link unter dem Applet oder über http://&lt;Bot-Adresse&gt;/secure/ltx_conf.htm.
+</li></ol><h3 id="Detail:Die64KBGrenze">Detail: Die 64-KB-Grenze</h3>
+<p>
+Der Webserver des c't-Bot-Wlan-Moduls (WiPort-Moduls) kann nur Dateien kleiner als 64 KB speichern. Normalerweise würde man alle Java-.class-Dateien des Applet in eine .jar-Datei packen, aber aufgrund der Einschränkung müssen wir sie auf mehrere Dateien verteilen. Die Ant-Datei make-applet.xml kopiert alles im Package ctSim.util.* in ein Jar, alles in ctSim.view.* in ein zweites Jar usw. Das ist unkompliziert, aber hat eine Schwäche: make-applet.xml könnte zu große Dateien erzeugen, wenn nach und nach z.B. ctSim.util immer weiter vergrößert wird (Dateien wachsen, neue Dateien kommen hinzu). In diesem Fall muss man in make-applet.xml die Aufteilung anpassen: 
+</p>
+<ul><li>In den <tt>&lt;antcall&gt;</tt>-Tags den <tt>exclude</tt>-Parameter benutzen, um Dateien anzugeben, die das Applet nicht braucht und die weggelassen werden können
+</li><li>Oder ein weiteres Jar einführen, indem man einen zusätzlichen <tt>&lt;antcall&gt;</tt>-Tag einführt. Nicht vergessen: In der applet.html muss man das neue Jar im <tt>archive</tt>-Parameter eintragen, sonst wird es vom Browser später nicht gefunden.
+</li></ul><p>
+Langfristig könnte man make-applet.xml so umstellen, dass das zum WiPort gehörige Tool "web2cob" verwendet wird (<a class="ext-link" href="http://www.heise.de/ct/04/13/200/"><span class="icon"></span>siehe c't-Artikel</a>, Abschnitt "Webfrontend für serielle Geräte"). Damit erstellte cob-Dateien verarbeitet der DeviceInstaller auch, wenn sie größer 64 KB sind, d.h. das umständliche Aufteilen in make-applet.xml könnte entfallen. Das Tool liegt unserer Kenntnis nach aber nur für Windows vor, und wir wollten nicht noch mehr Windows-Abhängigkeiten einführen.
+</p>
+</div>
+   </div>
+
+ </body>
+</html>
+

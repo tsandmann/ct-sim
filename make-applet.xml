@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ant-Task zum Erstellen der Jars fuer das Applet. Legt ein Verzeichnis
+build-applet an. Wenn es schon etwas enthaelt, wird's geloescht.
+
+Anleitung zum Applet-Bau und -Deployment:
+documentation/applet-howto/applet-howto.html
+
+Die Ant-Datei erwartet, im Projekt-Verzeichnis zu sein (eine Stufe oberhalb
+des Ordners ctSim).
+
+Ausfuehren in Eclipse: Alt-Shift-X, dann Q. Auch ueber Run > External Tools
+zu erreichen. -->
+
+<project default="make-applet">
+
+<!-- Zwei Variablen -->
+<property name="builddir" location="applet-build" />
+<property name="iconsdir" location="./images" />
+<property name="jar-base-filename" value="ctsim-applet" />
+
+<target name="make-applet">
+	<!-- Builddir samt Inhalt loeschen falls vorhanden -->
+	<delete dir="${builddir}" />
+
+	<!-- Builddir und META-INF machen falls noetig -->
+	<mkdir dir="${builddir}/META-INF" />
+
+	<!-- Wenn man das Ant-File debuggen will
+	<echoproperties />
+	-->
+
+	<!-- Ding kompilieren samt allen Abhaengigkeiten -->
+		<javac srcdir="ctSim/applet" sourcepath="." destdir="${builddir}" />
+
+		<!-- Manifest fuer die Jars schreiben -->
+		<manifest file="${builddir}/META-INF/MANIFEST.MF">
+		  <attribute name="Built-By" value="${user.name}"/>
+		</manifest>
+
+		<!--
+		Mehrere Jars erzeugen
+
+		Keins darf >64K sein, weil's sonst der WiPort nicht packt - siehe
+		https://www.heise.de/trac/ctbot/wiki/AppletHowto#Detail:Die64KBGrenze
+
+		Wir rufen mehrfach die unten definierte "Funktion" namens make-jar auf
+		-->
+		<antcall target="make-jar">
+			<param name="num" value="1"/>
+			<param name="subdirs" value="
+				ctSim/*.class,
+				ctSim/applet/**/*.class,
+				ctSim/controller/**/*.class,
+				ctSim/model/*.class"/>
+		</antcall>
+		<antcall target="make-jar">
+			<param name="num" value="2"/>
+			<param name="subdirs" value="
+				ctSim/model/bots/**/*.class"/>
+			<param name="exclude" value="
+				**/CtBotSimTcp.class"/>
+		</antcall>
+		<antcall target="make-jar">
+			<param name="num" value="3"/>
+			<param name="subdirs" value="
+				ctSim/view/**/*.class"/>
+		</antcall>
+		<antcall target="make-jar">
+			<param name="num" value="4"/>
+			<param name="subdirs" value="
+				ctSim/util/**/*.class"/>
+		</antcall>
+
+		<jar destfile="${builddir}/icons.jar"
+			basedir="${iconsdir}"
+			includes="${builddir}/ctSim/META-INF,*.gif"
+		/>
+
+		<!-- Ok Kompilat ist eingepackt, also kann das unkomprimierte jetzt weg
+		(verwirrt nur beim Hochladen) -->
+		<delete dir="${builddir}/ctSim" />
+		<delete dir="${builddir}/META-INF" />
+
+		<copy file="applet.html" tofile="${builddir}/index.html" />
+</target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<target name="make-jar">
+	<jar destfile="${builddir}/${jar-base-filename}-${num}.jar"
+		basedir="${builddir}"
+		includes="${builddir}/ctSim/META-INF,${subdirs}"
+		excludes="${exclude}"
+	/>
+</target>
+
+</project>

@@ -3,25 +3,82 @@
 
 <ct-sim>
 	<description>
-		Dieses ist die zentreale Konfigurationsdatei für den c't-Sim
+		Dieses ist die zentrale Konfigurationsdatei für den c't-Sim
 	</description>
 
-	<parameter name="parcours" value="parcours/contest01.xml"/>
-	<parameter name="viewport" value="10002"/>
+	<!--
+	Jeder Parameter kann bei Bedarf ein Attribut "os" haben. So kann man
+	verschiedene Werte für verschiedene Betriebssysteme angeben. Hat ein
+	Parameter (wie bisher üblich) kein os-Attribut, gilt er für alle Systeme.
+
+	Beispiele für systemabhängige Parameter sind der serielle Port und manche
+	Pfadnamen.
+
+	Sinn: Die bisherige Regelung, dass der Java-Code undurchsichtig in den
+	Pfaden ruminterpretiert, kann entfallen. Auf jedem unterstützen System
+	kann man nach dem Auschecken sofort starten (normalerweise).
+	-->
+
+	<!-- ctSimTimeout ist die Zeit in [ms], die der Controller maximal auf einen Bot wartet -->
+	<parameter name="ctSimTimeout" value="500"/>
+
+	<!-- Nur Simulierte Bots: Was passiert, wenn ein schwerer Fehler auftritt?
+	(z.B. die TCP-Verbindung abbricht weil der Bot-Code abgestürzt ist)
+	"kill" = Bot aus Simulation entfernen (Standardverhalten)
+	"halt" = Bot in Simulation lassen, auch wenn er sich nicht mehr bewegen kann
+	Siehe auch http://www.heise.de/trac/ctbot/ticket/39 -->
+	<parameter name="simBotErrorHandling" value="kill"/>
+
+	<!-- parcours ist die Welt, die per default geladen wird. Angabe unabhaengig von worlddir -->
+	<parameter name="parcours" value="parcours/testparcours2.xml"/>
+	<!-- worlddir ist das Verzeichnis, in dem alle Weltdateien liegen -->
+	<parameter name="worlddir" value="./parcours"/>
+
+	<!-- botport ist der TCP-Port, auf dem der sim auf Bots lauscht-->
 	<parameter name="botport" value="10001"/>
 
-	<parameter name="serialport" value="/dev/ttyUSB0"/>
-	<parameter name="serialportBaudrate" value="9600"/>
+	<!-- botbinary ist die Bot-Datei, die beim Sim-Start gestartet wird.
+	Hat nichts zu tun mit dem Parameter botdir -->
+	<parameter name="botbinary" os="Windows" value="../ct-Bot/Debug-W32/ct-Bot.exe"/>
+	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
+	<parameter name="botbinary" os="Mac OS X" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
 
-	<parameter name="botbinary" value="C:\Dokumente und Einstellungen\pek\Eigene Dateien\ctSim_2006\workspace\devel_ct-Bot\Debug-W32\ct-bot.exe"/>
-<!-- <parameter name="botbinary" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/> -->
+	<!-- Verzeichnis, das der Dialog "Bot-Datei öffnen" anfangs anzeigt -->
+	<parameter name="botdir" os="Windows" value="../ct-Bot/Debug-W32"/>
+	<parameter name="botdir" os="Linux" value="../ct-Bot/Debug-Linux"/>
+	<parameter name="botdir" os="Mac OS X" value="../ct-Bot/Debug-Linux"/>
 
-<!-- LabyrinthJudge wickelt einen Zweikampf ab, LabyrinthContestJudge ein komplettes Roboterturnier mit vielen Teilnehmern -->
+	<!-- judge ist der Klassenname des Judges, den der Sim per default laedt-->
+	<!-- <parameter name="judge" value="ctSim.model.rules.LabyrinthJudge"/> -->
+	<parameter name="judge" value="ctSim.model.rules.DefaultJudge"/>
 
-	<parameter name="judge" value="ctSim.Model.Rules.LabyrinthJudge"/>
-	
-	<bots>         
-		<bot name="ctSim.Model.Bots.CtBotSimTest_0">
+	<!-- Aktiviert/deaktiviert den TimeLogger, der waehrend einer Simulation
+	einige Performance-Daten auf die Konsole schreibt. Werte: true, false;
+	Standardwert: false. -->
+	<parameter name="TimeLogger" value="true"/>
+
+	<!-- Fernbedienungscode, der an simulierte Bots gesendet wird, wenn man
+	"Play" drueckt. 0 = nichts senden, 0x1185 = wie Knopf "5", weitere Codes
+	in ctSim/view/gui/RemoteControlViewer.java. Wert: Integer dezimal oder
+	in hex (genauer: irgendwas was Integer.decode() versteht) -->
+	<parameter name="rcStartCode" value="0x1185"/>
+
+	<!-- Serieller Anschluss. Der Sim verbindet sich mit ihm und erwartet
+	dort einen USB-2-Bot-Adapter -->
+	<parameter name="serialport" os="Windows" value="COM3"/>
+	<parameter name="serialport" os="Linux" value="/dev/ttyUSB0"/>
+	<parameter name="serialport" os="Mac OS X" value="/dev/tty.usbserial-A1000NvX"/>
+	<!-- Geschwindigkeit des 'serialport' in baud, default 57600 -->
+	<parameter name="serialportBaudrate" value="57600"/>
+
+	<!-- IP, die standardmaessig im Textfeld steht, wenn man "Verbinden / Per
+	TCP" waehlt -->
+	<parameter name="ipForConnectByTcp" value="10.10.22.58"/>
+	<!-- Zugehoeriger Port. Default: 10002 -->
+	<parameter name="portForConnectByTcp" value="10002"/>
+
+	<bots>
+		<bot name="ctSim.model.bots.CtBotSimTest_0">
 			<appearance type="normal">
 				<description>Standard Aussehen des TestBots 1</description>
 				<color>#FF0000</color>
@@ -35,7 +92,7 @@
 				<color>#5000FF</color>
 			</appearance>
 		</bot>
-		<bot name="ctSim.Model.Bots.CtBotSimTest_1">
+		<bot name="ctSim.model.bots.CtBotSimTest_1">
 			<appearance type="normal">
 				<description>Standard Aussehen des TestBots 2</description>
 				<color>#00FF00</color>
@@ -50,7 +107,7 @@
 			</appearance>
 		</bot>
 
-		<bot name="ctSim.Model.Bots.CtBotSimTcp_0">
+		<bot name="ctSim.model.bots.CtBotSimTcp_0">
 			<appearance type="normal">
 				<description>Standard Aussehen des simulierten Bots 1</description>
 				<color>#800000</color>
@@ -63,23 +120,31 @@
 				<description>Aussehen des  simulierten Bots 1 bei Absturz</description>
 				<color>#4000FF</color>
 			</appearance>
+			<appearance type="halted">
+				<description>Aussehen des  simulierten Bots 1 wenn er angehalten ist</description>
+				<color>#000000</color>
+			</appearance>
 		</bot>
 
-		<bot name="ctSim.Model.Bots.CtBotSimTcp_1">
+		<bot name="ctSim.model.bots.CtBotSimTcp_1">
 			<appearance type="normal">
 				<description>Standard Aussehen des  simulierten Bots 2</description>
-				<color>#800000</color>
+				<color>#808000</color>
 			</appearance>
 			<appearance type="collision">
 				<description>Aussehen des  simulierten Bots 2 bei Kollision</description>
-				<color>#8000FF</color>
+				<color>#8080FF</color>
 			</appearance>
 			<appearance type="falling">
 				<description>Aussehen des  simulierten Bots 2 bei Absturz</description>
-				<color>#4000FF</color>
+				<color>#4080FF</color>
+			</appearance>
+			<appearance type="halted">
+				<description>Aussehen des  simulierten Bots 2 wenn er angehalten ist</description>
+				<color>#008000</color>
 			</appearance>
 		</bot>
-		
+
 		<bot name="default">
 			<appearance type="normal">
 				<description>Standard Aussehen des Standard-Bots</description>

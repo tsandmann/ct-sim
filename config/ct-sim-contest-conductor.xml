@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ct-sim SYSTEM "config.dtd">
+
+<ct-sim>
+	<description>
+		Dies ist eine Konfigurationsdatei für den c't-Sim, die den Sim in
+		Wettbewerbskonfiguration versetzt. Das bedeutet, dass als Judge der
+		ContestJudge eingesetzt wird. Die Wettbewerbskonfig umfasst auch
+		einige ContestJudge-spezifische Parameter, auf welcher Datenbank
+		gearbeitet werden soll.
+
+		Mit der Kommandozeilenoption -conf config/ct-sim-contest-conductor.xml
+		kann der Controller veranlasst werden, diese Datei statt der
+		standardmaessigen zu verwenden. Zum einfachen Ausfuehren beider
+		Varianten lassen sich in Eclipse zwei Run Configurations einrichten
+		(eine mit der o.g. Option, eine ohne).
+	</description>
+
+	<!-- ctSimTimeout ist die Zeit in [ms], die der Controller maximal auf einen Bot wartet -->
+	<parameter name="ctSimTimeout" value="100"/>
+	<!-- AliveObstacleTimeout ist die Zeit in [ms], die die work()-Methode eines AliveObstacles brauchen darf, um zum ende zu kommen. Wird sie ueberschritten, deakticviert sich das Obstacle selbst. Steht der Timeout auf 0, hat es beliebig viel Zeit -->
+	<parameter name="AliveObstacleTimeout" value="0"/>
+
+	<!-- worlddir ist das Verzeichnis, in dem alle Weltdateien liegen -->
+	<parameter name="worlddir" value="./parcours"/>
+
+	<!-- botport ist der TCP-Port, auf dem der sim auf Bots lauscht-->
+	<parameter name="botport" value="10001"/>
+	<!-- botdir ist das Verzeichnis, in dem nach Bots gesucht wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt -->
+	<parameter name="botdir" value="..\ct-Bot\Debug-W32"/>
+
+	<!-- Uebergeht einen eventuellen "judge"-Parameter -->
+	<parameter name="useContestConductor" value="true"/>
+
+	<parameter name="contestBotTargetDir" value="tmp"/>
+	<parameter name="contestBotFileNamePrefix" value="tmp-contest-bot"/>
+	<parameter name="contestBotFileNameSuffix" os="Windows" value=".exe"/>
+	<parameter name="contestBotFileNameSuffix" os="Linux" value=".elf"/>
+
+	<!-- ctSimIP ist der Rechner, auf dem der Sim laeuft -->
+	<parameter name="ctSimIP" value="192.168.123.252"/>
+
+
+	<!-- host1 ist der Rechner, der den Bot1 ausfuehrt Achtung dort muss ein ssh-Daemon laufen-->
+	<parameter name="host1" value="192.168.123.253"/>
+	<!-- host1_username ist der Bnutzername für den Rechner, der den Bot1 ausfuehrt. Authorisiert wird der User per Provate/Public-RSA Keys. diese muessen bereits uebertragen sein -->
+	<parameter name="host1_username" value="ctbot"/>
+	<!-- host2 ist der Rechner, der den Bot2 ausfuehrt. Achtung dort muss ein ssh-Daemon laufen -->
+	<parameter name="host2" value="192.168.123.254"/>
+	<!-- host2_username ist der Bnutzername für den Rechner, der den Bot2 ausfuehrt Authorisiert wird der User per Provate/Public-RSA Keys. diese muessen bereits uebertragen sein-->
+	<parameter name="host2_username" value="ctbot"/>
+
+
+	<!-- URL, Username und Passwort der Datenbank, mit der die Klasse
+	ctSim.view.contestConductor.ContestConductor reden soll (Format der URL
+	wie es java.sql.DriverManager.getConnection() erwartet) -->
+	<parameter name="contest-database-url"
+		value="jdbc:mysql://10.10.22.111:3306/ctbot-contest-test-6"/>
+	<parameter name="contest-database-user" value="root"/>
+	<parameter name="contest-database-password" value="geheimdienst"/>
+
+	<bots>
+		<bot name="ctSim.model.bots.CtBotSimTest_0">
+			<appearance type="normal">
+				<description>Standard Aussehen des TestBots 1</description>
+				<color>#FF0000</color>
+			</appearance>
+			<appearance type="collision">
+				<description>Aussehen des TestBots 1 bei Kollision</description>
+				<color>#800000</color>
+			</appearance>
+			<appearance type="falling">
+				<description>Aussehen des TestBots 1 bei Absturz</description>
+				<color>#5000FF</color>
+			</appearance>
+		</bot>
+		<bot name="ctSim.model.bots.CtBotSimTest_1">
+			<appearance type="normal">
+				<description>Standard Aussehen des TestBots 2</description>
+				<color>#00FF00</color>
+			</appearance>
+			<appearance type="collision">
+				<description>Aussehen des TestBots 2 bei Kollision</description>
+				<color>#008000</color>
+			</appearance>
+			<appearance type="falling">
+				<description>Aussehen des TestBots 2 bei Absturz</description>
+				<color>#0050FF</color>
+			</appearance>
+		</bot>
+
+		<bot name="ctSim.model.bots.CtBotSimTcp_0">
+			<appearance type="normal">
+				<description>Standard Aussehen des simulierten Bots 1</description>
+				<color>#800000</color>
+			</appearance>
+			<appearance type="collision">
+				<description>Aussehen des  simulierten Bots 1 bei Kollision</description>
+				<color>#8000FF</color>
+			</appearance>
+			<appearance type="falling">
+				<description>Aussehen des  simulierten Bots 1 bei Absturz</description>
+				<color>#4000FF</color>
+			</appearance>
+			<appearance type="halted">
+				<description>Aussehen des  simulierten Bots 1 wenn er angehalten ist</description>
+				<color>#000000</color>
+			</appearance>
+		</bot>
+
+		<bot name="ctSim.model.bots.CtBotSimTcp_1">
+			<appearance type="normal">
+				<description>Standard Aussehen des  simulierten Bots 2</description>
+				<color>#808000</color>
+			</appearance>
+			<appearance type="collision">
+				<description>Aussehen des  simulierten Bots 2 bei Kollision</description>
+				<color>#8080FF</color>
+			</appearance>
+			<appearance type="falling">
+				<description>Aussehen des  simulierten Bots 2 bei Absturz</description>
+				<color>#4080FF</color>
+			</appearance>
+			<appearance type="halted">
+				<description>Aussehen des  simulierten Bots 2 wenn er angehalten ist</description>
+				<color>#008000</color>
+			</appearance>
+		</bot>
+
+		<bot name="default">
+			<appearance type="normal">
+				<description>Standard Aussehen des Standard-Bots</description>
+				<color>#FF0000</color>
+			</appearance>
+			<appearance type="collision">
+				<description>Aussehen des Standard-Bots bei Kollision</description>
+				<color>#FF00FF</color>
+			</appearance>
+			<appearance type="falling">
+				<description>Aussehen des Standard-Bots bei Absturz</description>
+				<color>#5000FF</color>
+			</appearance>
+		</bot>
+	</bots>
+</ct-sim>

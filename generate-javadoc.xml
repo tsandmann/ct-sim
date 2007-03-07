@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ant-Task, der das Javadoc des ctSim erzeugt.
+
+Was heißen die ganzen Parameter?
+http://ant.apache.org/manual/CoreTasks/javadoc.html
+
+Wie führt man diese Datei aus?
+In Eclipse Alt-Shift-X, dann Q. Auch über Run > External Tools zu erreichen
+-->
+
+<project default="javadoc">
+<target name="javadoc">
+<javadoc
+	sourcepath="."
+	packagenames="ctSim.*"
+	destdir="documentation/api"
+	encoding="utf-8"
+	additionalparam="-J-Djava.net.useSystemProxies=true"
+	link="http://java.sun.com/j2se/1.5.0/docs/api/"
+	access="package"
+	author="true"
+	classpath="contrib/rxtx.jar;contrib/mysql-connector-java-3.1.13-bin.jar;contrib/picocontainer-1.2.jar;contrib/junit-4.1.jar"
+	doctitle="ct-Sim-API"
+	nodeprecated="false"
+	nodeprecatedlist="false"
+	noindex="false"
+	nonavbar="false"
+	notree="false"
+	source="1.5"
+	splitindex="true"
+	use="true"
+	version="true"/>
+</target>
+</project>
