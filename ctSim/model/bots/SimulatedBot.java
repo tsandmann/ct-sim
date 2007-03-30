@@ -3,6 +3,12 @@ package ctSim.model.bots;
 //$$ doc
 public interface SimulatedBot extends Bot {
 	
+	/**
+	 * Diese Routine kommt pro Simulationsschritt einmal dran. 
+	 * Hier muss daher alles rein, was ein Bot tun soll
+	 * @throws InterruptedException
+	 * @throws UnrecoverableScrewupException
+	 */
 	public void doSimStep() 
 	throws InterruptedException, UnrecoverableScrewupException;
 

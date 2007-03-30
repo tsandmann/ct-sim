@@ -19,6 +19,9 @@
 package ctSim.model.bots.ctbot;
 
 import ctSim.model.bots.SimulatedBot;
+import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.BotComponent;
+import ctSim.model.bots.components.Sensors;
 
 /**
  * Klasse aller simulierten c't-Bots, die nur innerhalb des Simulators existieren
@@ -34,15 +37,36 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 		return "Simulierter, in Java geschriebener c't-Bot";
 	}
 
-	public void doSimStep() {
-/*
-		// TODO Pruefen ob: super.work();
+	
+	public void doSimStep() throws InterruptedException {
 
 		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
+		
+		double irl = 0;
+		double irr = 0;
+		short borderl = 0;
+		short borderr = 0;
 
-		double irl = irL.get().doubleValue();
-		double irr = irR.get().doubleValue();
+		Actuators.Governor govL = null;
+		Actuators.Governor govR = null;
+		
+		for (BotComponent<?> c : components){
+			if (c.getName().equals("IrL"))
+					irl=((Sensors.Distance)c).get().doubleValue();
+			if (c.getName().equals("IrR"))			
+				irr=((Sensors.Distance)c).get().doubleValue();
+			if (c.getName().equals("BorderL"))			
+				borderl=((Sensors.Border)c).get().shortValue();
+			if (c.getName().equals("BorderR"))			
+				borderr=((Sensors.Border)c).get().shortValue();
+			if (c.getName().equals("GovL"))
+				govL=(Actuators.Governor)c;
+			if (c.getName().equals("GovR"))
+				govR=(Actuators.Governor)c;
+		}
 
+		System.out.println("IrL="+irl+" IrR="+irr);
+		
 		// Ansteuerung fuer die Motoren in Abhaengigkeit vom Input
 		// der IR-Abstandssensoren, welche die Entfernung in mm
 		// zum naechsten Hindernis in Blickrichtung zurueckgeben
@@ -75,8 +99,6 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 		}
 
 		// Ist ein Absturz zu befuerchten?
-		short borderl = borderL.get().shortValue();
-		short borderr = borderR.get().shortValue();
 		if (borderl > borderr) {
 			ll = 100;
 			rr = -100;
@@ -92,13 +114,10 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 			rr = 100;
 		}
 
-		// TODO:
-//		this.setActMotL(ll);
-//		this.setActMotR(rr);
- */
+		govL.set(10);
+		govR.set(-10);
+		
+		updateView();
 	}
 
-	public void updateView() throws InterruptedException {
-		components.updateView();
-	}
 }
