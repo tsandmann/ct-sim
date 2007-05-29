@@ -82,7 +82,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         if (botBin == null)
             lg.fine("Kein Standardbot konfiguriert");
         else
-            invokeBot(botBin);
+            invokeBot(new File(botBin));	// mit botBin als String funktioniert es nicht 
     }
 
 	/**
@@ -305,7 +305,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     		// Bot ausführen
     		// String[] weil sonst trennt er das nach dem ersten Leerzeichen ab,
     		// dann geht's nicht, wenn der Pfad mal ein Leerzeichen enthält
-            Runtime.getRuntime().exec(new String[] { filename });
+    		File dir = new File(filename).getAbsoluteFile().getParentFile();
+            Runtime.getRuntime().exec(new String[] { filename }, null, dir);
         } catch (Exception e){
             lg.warning(e, "Fehler beim Starten von Bot '"+filename+"'");
         }

@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2007-05-29 Timo Sandmann [mail@timosandmann.de]: Arbeitsverzeichnis eines gestarteten Bots ist jetzt der Ort seines Binaries
+
 2007-04-16 Timo Sandmann [mail@timosandmann.de]: Mindestbreite des Bot-Viewers auf Breite seiner Inhaltselemente eingestellt
 
 2007-03-30 Benjamin Benz [bbe@heise.de]: Versucht den Testbot zu reaktivieren
