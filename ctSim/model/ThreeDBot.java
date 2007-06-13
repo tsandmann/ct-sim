@@ -406,7 +406,7 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 		return radiansToYAxis(headingInWorldCoord);
 	}
 
-	@Deprecated
+	//@Deprecated
 	public final Vector3d getHeadingVectorInWorldCoord() {
 		return new Vector3d(headingInWorldCoord);
 	}
@@ -444,7 +444,7 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 	}
 
 	//$$ Ziemlicher Quatsch, dass das ein Vector3 ist: double mit dem Winkel drin waere einfacher und wuerde dasselbe leisten
-	@Deprecated
+	//@Deprecated
 	public final synchronized void setHeading(Vector3d headingInWorldCoord) {
 		// Optimierung (Transform-Kram ist teuer)
 		if (this.headingInWorldCoord.equals(headingInWorldCoord))

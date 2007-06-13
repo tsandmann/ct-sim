@@ -48,6 +48,7 @@ public class Decoratoror {
 				"method '"+m+"'");
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T> T createDecorated(
 	Class<T> resultInterface, Object... decorators)
 	throws NoSuchMethodException {

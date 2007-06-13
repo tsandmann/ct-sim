@@ -28,7 +28,7 @@ public class AndEverything extends GuiBotBuisitor {
 
 	public AndEverything() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setBorder(BorderFactory.createTitledBorder("Und der ganze Rest"));
+		setBorder(BorderFactory.createTitledBorder("Display & Remote-Control"));
 	}
 
 	/** Erstellt die Textarea, die das LCD des Bot zeigt */

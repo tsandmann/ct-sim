@@ -36,10 +36,10 @@ public class BotViewer extends JScrollPane {
 	private static final Class[] buisitors = {
 		Tables.Position.class,
 		Leds.class,
-		Tables.Actuators.class,
-		Tables.Sensors.class,
-		MousePictureViewer.class,
 		AndEverything.class,
+		Tables.Sensors.class,
+		Tables.Actuators.class,
+		MousePictureViewer.class,
     };
 
 	public final Bot bot;

@@ -19,9 +19,9 @@
 package ctSim.model.bots.ctbot;
 
 import ctSim.model.bots.SimulatedBot;
-import ctSim.model.bots.components.Actuators;
-import ctSim.model.bots.components.BotComponent;
-import ctSim.model.bots.components.Sensors;
+//import ctSim.model.bots.components.Actuators;
+//import ctSim.model.bots.components.BotComponent;
+//import ctSim.model.bots.components.Sensors;
 
 /**
  * Klasse aller simulierten c't-Bots, die nur innerhalb des Simulators existieren
@@ -39,7 +39,7 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 
 	
 	public void doSimStep() throws InterruptedException {
-
+/*
 		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
 		
 		double irl = 0;
@@ -118,6 +118,6 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 		govR.set(-10);
 		
 		updateView();
-	}
+*/	}
 
 }
