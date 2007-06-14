@@ -310,7 +310,8 @@ public class RemoteCallViewer extends JPanel {
 					return;
 				}
 			}
-			throw new IllegalStateException("Interner Fehler");
+			lg.warn("Ein Remote Call wurde beendet, der laut Liste gar nicht läuft");
+			//throw new IllegalStateException("Interner Fehler");
 		}
 
 		private void setDoneLabel(int row, BehaviorExitStatus status) {
