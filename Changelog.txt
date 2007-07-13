@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2007-07-13 Timo Sandmann [mail@timosandmann.de]: Anpassungen fuer Bot-Target "Mac OS X" und Log-Fenster auf sinnvolle Groesse reduziert
+
 2007-06-14 Benjamin Benz [bbe@heise.de]: Korrektur bei den remote-calls
 
 2007-06-13 Timo Sandmann [mail@timosandmann.de]: GUI neu sortiert (#21, wichtiges nach oben)

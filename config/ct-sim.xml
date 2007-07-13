@@ -41,12 +41,12 @@
 	Hat nichts zu tun mit dem Parameter botdir -->
 	<parameter name="botbinary" os="Windows" value="../ct-Bot/Debug-W32/ct-Bot.exe"/>
 	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
-	<parameter name="botbinary" os="Mac OS X" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
+	<parameter name="botbinary" os="Mac OS X" value="../ct-Bot/Debug-Mac/ct-Bot"/>
 
 	<!-- Verzeichnis, das der Dialog "Bot-Datei öffnen" anfangs anzeigt -->
 	<parameter name="botdir" os="Windows" value="../ct-Bot/Debug-W32"/>
 	<parameter name="botdir" os="Linux" value="../ct-Bot/Debug-Linux"/>
-	<parameter name="botdir" os="Mac OS X" value="../ct-Bot/Debug-Linux"/>
+	<parameter name="botdir" os="Mac OS X" value="../ct-Bot/Debug-Mac"/>
 
 	<!-- judge ist der Klassenname des Judges, den der Sim per default laedt-->
 	<!-- <parameter name="judge" value="ctSim.model.rules.LabyrinthJudge"/> -->
@@ -55,13 +55,13 @@
 	<!-- Aktiviert/deaktiviert den TimeLogger, der waehrend einer Simulation
 	einige Performance-Daten auf die Konsole schreibt. Werte: true, false;
 	Standardwert: false. -->
-	<parameter name="TimeLogger" value="true"/>
+	<parameter name="TimeLogger" value="false"/>
 
 	<!-- Fernbedienungscode, der an simulierte Bots gesendet wird, wenn man
 	"Play" drueckt. 0 = nichts senden, 0x1185 = wie Knopf "5", weitere Codes
 	in ctSim/view/gui/RemoteControlViewer.java. Wert: Integer dezimal oder
 	in hex (genauer: irgendwas was Integer.decode() versteht) -->
-	<parameter name="rcStartCode" value="0x1185"/>
+	<parameter name="rcStartCode" value="0"/>
 
 	<!-- Serieller Anschluss. Der Sim verbindet sich mit ihm und erwartet
 	dort einen USB-2-Bot-Adapter -->
@@ -73,7 +73,7 @@
 
 	<!-- IP, die standardmaessig im Textfeld steht, wenn man "Verbinden / Per
 	TCP" waehlt -->
-	<parameter name="ipForConnectByTcp" value="10.10.22.58"/>
+	<parameter name="ipForConnectByTcp" value="192.168.1.24"/>
 	<!-- Zugehoeriger Port. Default: 10002 -->
 	<parameter name="portForConnectByTcp" value="10002"/>
 

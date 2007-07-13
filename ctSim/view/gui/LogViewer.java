@@ -96,7 +96,7 @@ public class LogViewer extends JPanel {
 		setLayout(new BorderLayout());
 		logContent = log.getExternalModel();
 		final JTextArea t = new JTextArea(logContent);
-		t.setColumns(80);
+		t.setColumns(50);
 		t.setEditable(false);
 		Misc.setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
 

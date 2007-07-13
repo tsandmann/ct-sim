@@ -241,7 +241,7 @@ public class MainWinMenuBar extends JMenuBar {
 				@Override
 				public boolean accept(File f) {
 					return (f.isDirectory() || f.getName().endsWith(".exe")
-							|| f.getName().endsWith(".elf"));
+							|| f.getName().endsWith(".elf") || f.getName().lastIndexOf('.') == -1);
 				}
 
 				@Override
