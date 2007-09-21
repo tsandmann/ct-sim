@@ -63,10 +63,15 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     public void show(World world) {
     	deinit();
 
-    	if (world == null)
-    		((CardLayout)getLayout()).show(this, NOTHING); //$$ falscher platz, vgl MODEL
-    	else
+    	if (world == null) {
+    		//((CardLayout)getLayout()).show(this, NOTHING); //$$ falscher platz, vgl MODEL
+    		/* CardLayout.show() bewirkt Absturz unter Mac OS X, wenn kein Universum da ist => Dummy-Universum benutzen, falls keine Welt offen */
+    		universe = new SimpleUniverse(onScreenCanvas);
+            universe.getViewer().getView().addCanvas3D(offScreenCanvas);
+    	}
+    	else {
     		init(world);
+    	}
     }
 
     /**

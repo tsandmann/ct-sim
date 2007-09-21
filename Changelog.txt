@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2007-09-21 Timo Sandmann [mail@timosandmann.de]: Bugfix gegen Absturz beim Schliessen, Oeffnen oder Generieren von Welten unter Mac OS X (#10)
+
 2007-07-13 Timo Sandmann [mail@timosandmann.de]: Anpassungen fuer Bot-Target "Mac OS X" und Log-Fenster auf sinnvolle Groesse reduziert
 
 2007-06-14 Benjamin Benz [bbe@heise.de]: Korrektur bei den remote-calls
