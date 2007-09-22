@@ -314,7 +314,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
     public synchronized void onBotAppeared(Bot bot) {
     	if (bot instanceof SimulatedBot) {
-    		if (world == null) {
+    		if (sequencer == null) {
     			lg.info("Weise "+bot.toString()+" ab: Es gibt keine Welt, zu " +
     					"der man ihn hinzuf\u00FCgen k\u00F6nnte");
     			bot.dispose(); // Bot abweisen
