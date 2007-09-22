@@ -256,17 +256,21 @@ public abstract class BasicBot implements Bot {
 	private final List<Runnable> disposeListeners = Misc.newList();
 
 	public BasicBot(String name) {
-		this.name = name;
-
 		// Instanz-Zahl erhoehen
 		numInstances.increase(getClass());
-		// Wenn wir sterben, Instanz-Zahl reduzieren
-		addDisposeListener(new Runnable() {
-			@SuppressWarnings("synthetic-access")
-			public void run() {
-				numInstances.decrease(BasicBot.this.getClass());
-			}
-		});
+		int num = numInstances.get(getClass()) + 1;
+		if (num > 1 && !name.contains("(")) {
+			this.name = name + " (" + num + ")";
+		} else {
+			this.name = name;
+		}
+//		// Wenn wir sterben, Instanz-Zahl reduzieren
+//		addDisposeListener(new Runnable() {
+//			@SuppressWarnings("synthetic-access")
+//			public void run() {
+//				numInstances.decrease(BasicBot.this.getClass());
+//			}
+//		});
     }
 
 	public void addDisposeListener(Runnable runsWhenAObstDisposes) {
@@ -276,7 +280,10 @@ public abstract class BasicBot implements Bot {
 	}
 
 	public void dispose() {
-		lg.info(toString() + " verkr\u00FCmelt sich");
+		// keine Ausgabe fuer 3D-Bots, den zu jedem 3D-Bot gibt es auch einen Sim-Bot
+		if (!this.getClass().getName().contains("ThreeDBot")) {
+			lg.info(name + " verkr\u00FCmelt sich");
+		}
 		for (Runnable r : disposeListeners)
 			r.run();
 	}
@@ -326,8 +333,7 @@ public abstract class BasicBot implements Bot {
 	 */
 	@Override
 	public String toString() {
-		int n = getInstanceNumber() + 1; // 1-based ist benutzerfreundlicher
-		return name + ((n < 2) ? "" : " (" + n + ")");
+		return name;
 	}
 
 	public String getDescription() {

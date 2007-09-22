@@ -713,6 +713,10 @@ Caused by: java.lang.InterruptedException
 		bot.accept(buisitor);
 	}
 
+	public SimulatedBot getSimBot() {
+		return this.bot;
+	}
+
 	//$$ Nirgends verwendet, aber waere evtl. sinnvoll
 	/*
 	public Bounds getBounds() {

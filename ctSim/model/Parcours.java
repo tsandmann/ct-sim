@@ -31,6 +31,7 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3d;
 
+import ctSim.model.bots.Bot;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -91,6 +92,7 @@ public class Parcours {
 
 	/** Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots), zweite Dimension X, Y*/
 	private int[][] startPositions = new int[BOTS][2];
+	private Bot[] startPositionsUsed = new Bot[BOTS];
 
 	/** Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots), zweite Dimension X, Y*/
 	private int[][] startHeadings = new int[BOTS][2];
@@ -133,6 +135,24 @@ public class Parcours {
 		this.startPositions[0][1] =0;
 	}
 
+	public void setStartFieldUsed(Bot bot) {
+		for (int i=1; i<BOTS; i++) {
+			if (startPositionsUsed[i] == null)	{
+				startPositionsUsed[i] = bot;
+				break;
+			}
+		}
+	}
+	
+	public void setStartFieldUnused(Bot bot) {
+		for (int i=1; i<BOTS; i++) {
+			if (startPositionsUsed[i] == bot) {
+				startPositionsUsed[i] = null;
+				break;
+			}
+		}
+	}
+	
 	/**
 	 * @return Liefert die Parcoursbreite in Gittereinheiten zur&uuml;ck
 	 */
@@ -346,8 +366,12 @@ public class Parcours {
 	 */
 	public Point3d getStartPosition(int bot){
 		Point3d pos = null;
+		int i;
+		for (i=1; i<BOTS; i++) {
+			if (startPositionsUsed[i] == null) break;
+		}
 		if (bot < BOTS)
-			pos= new Point3d(this.startPositions[bot][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[bot][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
+			pos= new Point3d(this.startPositions[i][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[i][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
 		else
 			pos= new Point3d(this.startPositions[0][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[0][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
 

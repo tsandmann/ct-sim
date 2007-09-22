@@ -57,6 +57,7 @@ import org.xml.sax.SAXException;
 
 import ctSim.controller.BotBarrier;
 import ctSim.controller.Config;
+import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
@@ -421,11 +422,13 @@ public class World {
 	public ThreeDBot addBot(SimulatedBot bot, BotBarrier barrier) {
 		if (bot == null)
 			throw new NullPointerException();
-
-		Point3d pos = parcours.getStartPosition(getFutureNumOfBots() + 1);
+		
+		int newBot = getFutureNumOfBots() + 1;
+		Point3d pos = parcours.getStartPosition(newBot);
+		parcours.setStartFieldUsed(bot);
 		// Weiss der Himmel warum, aber die Bots sind 7,5 cm ueber Null --hkr
 		pos.z = 0.075;
-		Vector3d head = parcours.getStartHeading(getFutureNumOfBots() + 1);
+		Vector3d head = parcours.getStartHeading(newBot);
 
 		final ThreeDBot botWrapper = new ThreeDBot(pos, head, barrier, bot);
 
@@ -1026,5 +1029,9 @@ public class World {
 		terrainBG = null;
 		pickConeRay = null;
 		worldTG = null;
+	}
+
+	public void deleteBot(Bot bot) {
+		parcours.setStartFieldUnused(bot);
 	}
 }
