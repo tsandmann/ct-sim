@@ -20,10 +20,11 @@
 package ctSim.model;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.HashSet;
@@ -94,10 +95,9 @@ public class World {
 	private Set<ViewPlatform> viewPlatforms = new HashSet<ViewPlatform>();
 
 	/**
-	 * Die Quelle, aus der der Parcours dieser Welt gelesen wurde. Siehe
-	 * {@link #World(InputSource, EntityResolver)}.
+	 * Die Quelle, aus der der Parcours dieser Welt gelesen wurde.
 	 */
-	private InputSource source;
+	private static String sourceString;
 
 	///////////////////////////////////////////////////////////////////////////
 	// "Geerbte" Zeit-Sachen
@@ -219,8 +219,14 @@ public class World {
 	 */
 	public static World buildWorldFromFile(File sourceFile)
 	throws SAXException, IOException {
-		return new World(new InputSource(sourceFile.toURI().toString()),
-				null);
+	    BufferedReader in = new BufferedReader(new FileReader(sourceFile));
+	    String line;
+	    sourceString = new String();
+		while ((line = in.readLine()) != null) {
+			sourceString += line + "\r\n";
+		}
+		in.close();
+		return new World(new InputSource(sourceFile.toURI().toString()), null);
 	}
 
 	/** L&auml;dt einen Parcours aus einem String und baut damit eine Welt.
@@ -230,6 +236,7 @@ public class World {
 	 * Methode im Unterverzeichnis "parcours" gesucht. */
 	public static World buildWorldFromXmlString(String parcoursAsXml)
 	throws SAXException, IOException {
+		sourceString = new String(parcoursAsXml);
 		return new World(
 				new InputSource(new StringReader(parcoursAsXml)),
 				/* Der EntityResolver hat den Sinn, dem Parser zu sagen,
@@ -276,9 +283,6 @@ public class World {
 	 */
 	private World(InputSource source, EntityResolver resolver)
 	throws SAXException, IOException {
-		//TODO: Wann wird source wieder geschlossen?
-		this.source = source;
-
 		ParcoursLoader pL = new ParcoursLoader();
 		pL.loadParcours(source, resolver);
 		Parcours p = pL.getParcours();
@@ -996,12 +1000,10 @@ public class World {
 		try {
 			OutputStream out = new BufferedOutputStream(new FileOutputStream(
 					targetFile));
-			InputStream in = source.getByteStream(); //$$ Klappt nicht: liefert dauernd NullPtr
-			while (in.available() > 0)
-				out.write(in.read());
-			out.close();
-			Debug.out.println("Welt wurde gespeichert als \""+
-					targetFile.getName()+"\".");
+				out.write(sourceString.getBytes());
+				out.close();
+				Debug.out.println("Welt wurde gespeichert als \""+
+						targetFile.getName()+"\".");
 		} catch(IOException e) {
 			Debug.out.println("Fehler: Datei konnte nicht gespeichert werden!");
 			e.printStackTrace();

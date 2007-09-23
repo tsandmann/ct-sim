@@ -140,6 +140,7 @@ public class ParcoursLoader {
 	private static final float WALL_HEIGHT = 0.2f;
 
 	/** Verwaltet alle Aussehen */
+	@SuppressWarnings("unchecked")
 	HashMap appearances = new HashMap();
 
 	private int[][] parcoursMap = null;
