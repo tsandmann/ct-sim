@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Remote-Call-Fenster ueberarbeitet (#56 und #58) und Button zum Loeschen aller fertigen Remote-Calls hinzugefuegt (#72)
+
 2007-09-23 Timo Sandmann [mail@timosandmann.de]: Warnings unterdrueckt (#127)
 
 2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bug #138 behoben, geoeffnete und generierte Parcours koennen jetzt wieder in eine Datei geschrieben werden. 

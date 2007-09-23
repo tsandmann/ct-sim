@@ -399,8 +399,7 @@ public class RemoteCallViewer extends JPanel {
         availBhvs.getColumnClass(getComponentCount());
         // Nur 1 Zeile markierbar
         availBhvs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        // Ganze Zeile markieren, nicht nur Zelle
-        availBhvs.setColumnSelectionAllowed(false);
+        availBhvs.setColumnSelectionAllowed(true);
         availBhvs.setRowSelectionAllowed(true);
 
 		setLayout(new GridBagLayout());
@@ -469,9 +468,25 @@ public class RemoteCallViewer extends JPanel {
 		b.setFont(f.deriveFont(f.getSize() * 3f));
 		add(b, new GridBaggins().row(1).col(1).epadx(10).fillV());
 
-		add(new JLabel("Geplante Remote-Calls"),
-			new GridBaggins().row(0).col(2).epady(3));
+		JPanel plannedHeading = new JPanel();
+		plannedHeading.add(new JLabel("Geplante Remote-Calls"));
 
+		JButton clearAll = new JButton("Alle entfernen");
+		clearAll.addActionListener(new ActionListener() {
+			@SuppressWarnings("synthetic-access")
+			public void actionPerformed(
+			@SuppressWarnings("unused") ActionEvent e) {
+				Debug.out.println("alle Zeilen = " + plannedM.getRowCount());
+				for (int row=plannedM.getRowCount()-1; row>=0; row--) {
+					if (plannedM.getValueAt(row, 0) instanceof PlannedBhvModel.Done) {
+						plannedM.removeRow(row);
+					}
+				}
+			}
+		});
+		plannedHeading.add(clearAll);
+		add(plannedHeading, new GridBaggins().row(0).col(2).epady(3));
+		
 		plannedBhvs.setTableHeader(null);
 
 		add(new JScrollPane(plannedBhvs),

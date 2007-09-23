@@ -2,6 +2,7 @@ package ctSim.util;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -82,7 +83,17 @@ public class AuxFrameButton extends JToggleButton {
 		// HIDE, damit sich das Fenster Position + Groesse merkt
 		auxFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		auxFrame.add(frameContent);
-		auxFrame.pack(); // auf die Groesse, die der Inhalt will
+		if (!frameContent.getClass().toString().contains("RemoteCallViewer")) {
+			auxFrame.pack(); // auf die Groesse, die der Inhalt will
+		} else {
+			/* Remote-Call-Fenster groesser */
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			if (dim.width > 1300) {
+				auxFrame.setSize(new Dimension(1300, 500));
+			} else {
+				auxFrame.setSize(new Dimension(dim.width, 500));
+			}
+		}
 	}
 
 	// wenn der Knopf aus der Anzeige entfernt wird (z.B. weil der Container,
