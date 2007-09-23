@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Warnings unterdrueckt (#127)
+
 2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bug #138 behoben, geoeffnete und generierte Parcours koennen jetzt wieder in eine Datei geschrieben werden. 
 
 2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bug #136 behoben, Schiedsrichter kann nur bei geschlossener Welt umgeschaltet werden.

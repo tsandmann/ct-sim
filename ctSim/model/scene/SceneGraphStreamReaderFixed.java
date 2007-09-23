@@ -50,12 +50,12 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	 */
 	public SceneGraphStreamReaderFixed(InputStream arg0) throws IOException {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @see com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader#readBranchGraph(java.util.HashMap)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public BranchGroup readBranchGraph(HashMap map) throws IOException {
 		BranchGroup bg = super.readBranchGraph(map);
@@ -97,6 +97,7 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	private SceneGraphObject findInScenegraph(Group group,String name){
 		if (group.getUserData() != null)
 				if (((String)group.getUserData()).equals(name))

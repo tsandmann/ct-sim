@@ -473,6 +473,7 @@ public class Parcours {
 	 * @param pos
 	 * @return true, wenn der Bot ueber dem loch steht
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean checkHole(Point3d pos){
 		if ((pos.x < 0) || (pos.y <0) || (pos.x > dimX* blockSizeInM) || (pos.y > dimY* blockSizeInM))
 			return true;

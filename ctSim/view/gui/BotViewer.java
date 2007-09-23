@@ -33,6 +33,7 @@ import ctSim.model.bots.Bot;
 public class BotViewer extends JScrollPane {
 	private static final long serialVersionUID = - 7367493564649395707L;
 
+	@SuppressWarnings("unchecked")
 	private static final Class[] buisitors = {
 		Tables.Position.class,
 		Leds.class,

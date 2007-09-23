@@ -65,6 +65,7 @@ public class TournamentTreeGuiTest extends JFrame {
 			return isLeaf(parent) ? 0 : 2;
 		}
 
+		@SuppressWarnings("unchecked")
 		public Object getChild(Object parent, int index) {
 			if (index < 0 || index > 1)
 				throw new IllegalArgumentException();
@@ -81,6 +82,7 @@ public class TournamentTreeGuiTest extends JFrame {
 	        return carrier;
         }
 
+		@SuppressWarnings("unchecked")
 		public boolean isLeaf(Object node) {
 	        return ((SpreadingTree)node).payload != null;
         }

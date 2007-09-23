@@ -31,8 +31,7 @@ public abstract class Tables {
 	public static class Actuators extends TableOfSpinners {
 		private static final long serialVersionUID = - 7560450995618737095L;
 
-		//$$$ Casts sind superdoof
-
+		@SuppressWarnings("unchecked")
 		public void buisit(SimpleActuator a) {
 			model.addRow((BotComponent<? extends SpinnerModel>)a);
 		}
@@ -43,6 +42,7 @@ public abstract class Tables {
 	public static class Sensors extends TableOfSpinners {
 		private static final long serialVersionUID = - 1275101280635052797L;
 
+		@SuppressWarnings("unchecked")
 		public void buisit(SimpleSensor s) {
 			model.addRow((BotComponent<? extends SpinnerModel>)s);
 		}

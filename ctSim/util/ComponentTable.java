@@ -52,6 +52,7 @@ public class ComponentTable extends JTable {
 		init();
 	}
 
+	@SuppressWarnings("unchecked")
 	public ComponentTable(Vector rowData, Vector columnNames) {
 		super(rowData, columnNames);
 		init();
