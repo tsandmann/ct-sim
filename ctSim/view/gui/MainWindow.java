@@ -63,10 +63,8 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	//////////////////////////////////////////////////////////////////////
 	// GUI-Components:
-	// TODO
 	private StatusBar statusBar;
 
-	// TODO: Weg!?
 	private JSplitPane split;
 
 	/**
@@ -103,7 +101,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	private WorldViewer worldViewer = new WorldViewer();
 
-	private MainWinMenuBar menuBar; //$$ Wenn Bug 22 gefixt: Kann lokale Var werden
+	private MainWinMenuBar menuBar;
 
 	public MainWindow(final Controller controller) {
 		super("c't-Sim " + Main.VERSION);
@@ -167,7 +165,8 @@ public class MainWindow extends JFrame implements ctSim.view.View {
     	Debug.registerDebugWindow(rv); //$$ Legacy: Debug-Klasse
     	// Wir melden uns als Handler fuer den Root-Logger an
     	Handler h = rv.createLoggingHandler();
-    	h.setLevel(Level.INFO);
+    	String logLevel = Config.getValue("LogLevel");
+    	h.setLevel(Level.parse(logLevel));
     	FmtLogger.getLogger("").addHandler(h);
     	return rv;
     }

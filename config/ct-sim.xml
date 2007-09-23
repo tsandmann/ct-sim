@@ -56,6 +56,10 @@
 	einige Performance-Daten auf die Konsole schreibt. Werte: true, false;
 	Standardwert: false. -->
 	<parameter name="TimeLogger" value="false"/>
+	
+	<!-- Stellt das Log-Level ein. 
+	Werte: SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST -->
+	<parameter name="LogLevel" value="INFO"/>
 
 	<!-- Fernbedienungscode, der an simulierte Bots gesendet wird, wenn man
 	"Play" drueckt. 0 = nichts senden, 0x1185 = wie Knopf "5", weitere Codes
