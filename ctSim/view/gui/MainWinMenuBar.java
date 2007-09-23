@@ -301,15 +301,15 @@ public class MainWinMenuBar extends JMenuBar {
 		return toolBar;
 	}
 
-	//$$ Wenn Bug 22 erledigt: Kann weg
-	public void onJudgeSet(Judge judge) {
-		for (AbstractButton b : Enumerations.asIterable(
-			judgesButtonGroup.getElements())) {
-			if (judge.getClass().getName().equals(
-				((JudgeMenuItem)b).fqJudgeClassName))
-				b.setSelected(true);
-		}
-    }
+//	public void onJudgeSet(Judge judge) {
+//		if (!controller.setJudge(judge.toString())) return;
+//		for (AbstractButton b : Enumerations.asIterable(
+//			judgesButtonGroup.getElements())) {
+//			if (judge.getClass().getName().equals(
+//				((JudgeMenuItem)b).fqJudgeClassName))
+//				b.setSelected(true);
+//		}
+//   }
 
 	///////////////////////////////////////////////////////////////////////////
 	// Hilfsklasse
@@ -353,8 +353,7 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	}
 
-	//$$ Wenn Bug 22 erledigt: Kann weg
-    private class JudgeMenuItem extends JRadioButtonMenuItem {
+    private class JudgeMenuItem extends JMenuItem {
         private static final long serialVersionUID = - 8177774672896579874L;
 
         public final String fqJudgeClassName;

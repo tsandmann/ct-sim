@@ -307,12 +307,12 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	    //TODO Ueber diese Methode kriegt das MainWindow mit, wenn die Simulation anhaelt. Schoen waere: Knoepfe fuer Play/Pause/Stop ausgrauen, wenn nicht bedienbar. (Man kann nicht was stoppen, was schon gestoppt ist; starten, was schon gestartet ist; usw.)
     }
 
-	public void onJudgeSet(final Judge judge) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@SuppressWarnings("synthetic-access")
-			public void run() {
-				menuBar.onJudgeSet(judge);
-			}
-		});
+	public void onJudgeSet(final Judge judge) {	
+//		SwingUtilities.invokeLater(new Runnable() {
+//			@SuppressWarnings("synthetic-access")
+//			public void run() {
+//				menuBar.onJudgeSet(judge);
+//			}
+//		});
     }
 }

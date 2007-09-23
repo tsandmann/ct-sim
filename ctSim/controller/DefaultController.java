@@ -335,13 +335,16 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         return world.getFutureNumOfBots();
     }
 
-	//$$ Wenn Bug 22 erledigt: Methode kann weg
     /**
      * @param judgeClassName Die Art des Schiedrichters zu setzen
      * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist
      */
     public void setJudge(String judgeClassName) {
-    	//$$ Wenn ein Spiel laeuft vielleicht folgendes: throw new IllegalStateException("Aendern des Judge ist waehrend eines Spiels nicht moeglich")
+    	/* Kein Jugde-Wechsel, wenn eine Welt offen ist */
+    	if (sequencer != null) {
+    		lg.info("Kein Wechsel erlaubt, weil noch eine Welt offen ist");
+    		return;
+    	}    	
     	Judge j = null;
         try {
             Class<?> cl = Class.forName(judgeClassName);
@@ -360,10 +363,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
     public void setJudge(Judge judge) {
-        if (judge == null)
+    	if (judge == null)
             throw new NullPointerException();
         this.judge = judge;
-        view.onJudgeSet(judge);
+//      view.onJudgeSet(judge);
     }
 
     public void openWorldFromFile(File sourceFile) {
