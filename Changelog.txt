@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bugfix #123 - Log-Speichern schreibt nun den kompletten Log-Inhalt in die Datei
+
 2007-09-23 Timo Sandmann [mail@timosandmann.de]: Neu hinzugefuegter Bot erscheint nun automatisch im Vordergrund des Panels (#86) 
 
 2007-09-23 Timo Sandmann [mail@timosandmann.de]: Log-Level in config.xml einstellbar (#66)

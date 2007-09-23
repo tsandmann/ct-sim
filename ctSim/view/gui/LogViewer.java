@@ -68,6 +68,7 @@ public class LogViewer extends JPanel {
 					new BackslashNConverterStream(new FileOutputStream(f)),
 					"UTF-8");
 				out.write(logContent.getText(0, logContent.getLength()));
+				out.flush();
 				lg.info("Log-Ausgabe in Datei "+f.getAbsolutePath()+
 					" geschrieben ("+f.length()+" Byte)");
 			} catch (IOException e) {
