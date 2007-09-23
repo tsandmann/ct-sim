@@ -276,6 +276,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 						updateLayout();
 					}
 				});
+				botTabs.setSelectedIndex(botTabs.getTabCount()-1);
 
 				updateLayout();
 
