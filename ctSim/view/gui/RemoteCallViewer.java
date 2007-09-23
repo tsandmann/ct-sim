@@ -476,7 +476,6 @@ public class RemoteCallViewer extends JPanel {
 			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(
 			@SuppressWarnings("unused") ActionEvent e) {
-				Debug.out.println("alle Zeilen = " + plannedM.getRowCount());
 				for (int row=plannedM.getRowCount()-1; row>=0; row--) {
 					if (plannedM.getValueAt(row, 0) instanceof PlannedBhvModel.Done) {
 						plannedM.removeRow(row);
@@ -485,6 +484,22 @@ public class RemoteCallViewer extends JPanel {
 			}
 		});
 		plannedHeading.add(clearAll);
+		
+		JButton kill = new JButton("aktiven RC stornieren");
+		kill.addActionListener(new ActionListener() {
+			@SuppressWarnings("synthetic-access")
+			public void actionPerformed(
+			@SuppressWarnings("unused") ActionEvent e) {
+				try {
+					rcCompnt.abortCurrentBehavior();
+				} catch (IOException excp) {
+					lg.warn(excp, "E/A-Problem beim Senden des Abbruchkommandos");
+				}
+				rcCompnt.fireDoneEvent(0);
+			}
+		});
+		plannedHeading.add(kill);
+		
 		add(plannedHeading, new GridBaggins().row(0).col(2).epady(3));
 		
 		plannedBhvs.setTableHeader(null);

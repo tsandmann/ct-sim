@@ -442,7 +442,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		return rv;
 	}
 
-	private void fireDoneEvent(int rCallExitStatus) {
+	public void fireDoneEvent(int rCallExitStatus) {
 		BehaviorExitStatus status = BehaviorExitStatus.decode(rCallExitStatus);
 		lg.info("Bot meldet: Behavior erledigt; Status "+status);
 		for (Runnable1<BehaviorExitStatus> li : doneListeners)
