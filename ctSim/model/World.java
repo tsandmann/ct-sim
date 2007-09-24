@@ -545,8 +545,6 @@ public class World {
 	 *            Die Position, von der aus nach unten gemessen wird
 	 * @param groundClearance
 	 *            Die als normal anzusehende Bodenfreiheit
-	 * @param message
-	 *            Name des Beruehrungspunktes, welcher getestet wird
 	 * @return True wenn Bodenkontakt besteht.
 	 */
 	// TODO: Ueberarbeiten... (GroundClearance?)
@@ -719,7 +717,7 @@ public class World {
 	 * <p>
 	 * Da diese Methode unter Verwendung des PickConeRay implementiert ist, ist
 	 * sie seinen Bugs unterworfen. Ausf&uuml;hrliche Dokumentation siehe
-	 * {@link #watchObstacle(Point3d, Vector3d, double, Shape3D)}.
+	 * watchObstacle(Point3d, Vector3d, double, Shape3D).
 	 * </p>
 	 *
 	 * @param pos Die Position des Lichtsensors

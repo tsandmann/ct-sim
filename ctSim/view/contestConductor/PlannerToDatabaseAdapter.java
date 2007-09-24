@@ -57,7 +57,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	}
 
 	/** Legt ein Hauptrundenspiel an. Die Methode weist ihm den
-	 * {@link GameState#NOT_INITIALIZED} zu.
+	 *  GameState#NOT_INITIALIZED zu.
 	 *
 	 * @param levelId Schl&uuml;ssel des Levels, auf dem das Spiel angelegt
 	 * werden soll.

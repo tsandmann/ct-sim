@@ -175,8 +175,7 @@ public class TurningPoint {
 	/**
 	 * gibt die Laenge des durch path gegebenen Streckenzugs zurueck
 	 *
-	 * @param path
-	 * @param M
+	 * @param path der Streckenzug
 	 * @return laenge von path bezueglich M
 	 */
 	static double getLengthOfPath(Vector<TurningPoint> path) {
@@ -197,13 +196,12 @@ public class TurningPoint {
 	/**
 	 * die kuerzeste Verbindung von this zu p2 wird rekursiv bestimmt
 	 *
-	 * @param p2
-	 *            Zielpunkt
-	 * @param initPath
-	 *            der bisher untersuchte Weg
-	 * @param upperbound
-	 *            ist der untersuchte Weg laenger wird abgebrochen
+	 * @param s	?
+	 * @param f	?
+	 * @param initPath	der bisher untersuchte Weg
+	 * @param cutoff	ist der untersuchte Weg laenger wird abgebrochen
 	 * @param M Inzidenzmatrix
+	 * @param N	?
 	 * @return die kuerzeste Verbindung von this zu p2 unter Vermeidung von
 	 *         initialPath
 	 */

@@ -42,7 +42,7 @@ public class Menu extends JMenu {
 			ourMenuItem = new JMenuItem(this);
 		}
 
-		/** Wie {@link #Entry(String, Icon, Runnable)}, nur mit ohne Icon */
+		/** Wie Entry(String, Icon, Runnable), nur mit ohne Icon */
 		public Entry(String name, Runnable code) {
 			this(name, null, code);
 		}

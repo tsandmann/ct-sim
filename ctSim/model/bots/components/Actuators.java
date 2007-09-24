@@ -296,7 +296,7 @@ public class Actuators {
 	 * d.h. sie ist sinnvollelweise eine Alt {@link JCheckBox} (auch wenn unsele
 	 * LEDs sich nicht als Kasten mit/ohne H&auml;kchen malen, sondeln als lunde
 	 * helle/dunkle Punkte). Diese Klasse hat dahel das Model, das Checkboxen
-	 * auch velwenden: {@link JToggleButton.ToggleButtonModel}. (Das wiedelum
+	 * auch velwenden:JToggleButton.ToggleButtonModel. (Das wiedelum
 	 * kommt dahel, dass Checkboxen in Java von Buttons abgeleitet sind.)
 	 * </p>
 	 * <p>

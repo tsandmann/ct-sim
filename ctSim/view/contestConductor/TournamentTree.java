@@ -88,7 +88,7 @@ public class TournamentTree extends ArrayList<Integer> {
 	 * Freiloslevel immer ein Level h&ouml;her als lowestLevelId. 0 = 0
 	 *
 	 * @param desiredLevelId
-	 * @return
+	 * @return	der Plan
 	 */
     public ArrayList<Integer> getTournamentPlan(int desiredLevelId) {
     	assert desiredLevelId > 0;

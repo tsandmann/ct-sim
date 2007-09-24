@@ -127,11 +127,10 @@ public class Config {
 	static class PlainParameters extends HashMap<String, String> {
 		private static final long serialVersionUID = - 6931464910390788433L;
 
-		//LODO t Klappt der Link "#get" im Javadoc? get ist geerbt
 		/**
 		 * L&auml;dt die <code>&lt;parameter&gt;</code>-Tags aus der
 		 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
-		 * {@link #get(String)} verf&uuml;gbar.
+		 * get(String) verf&uuml;gbar.
 		 */
 		PlainParameters(QueryableDocument doc) {
 			if (parameterFallbacks.length % 2 != 0)

@@ -9,7 +9,7 @@ public class ConfigManager {
 	/**
 	 * Wandelt einen Pfad mit Bot-Binary von Windows zu Linux
 	 * @param in der Originalstring
-	 * @return
+	 * @return der "Linux-String"
 	 */
 	private static String botPathWin2Lin(String in){
 		if (in == null)
@@ -22,7 +22,7 @@ public class ConfigManager {
 	/**
 	 * Wandelt einen Pfad mit Bot-Binary von Linux zu Windows
 	 * @param in der Originalstring
-	 * @return
+	 * @return der "Windows-String"
 	 */
 	private static String botPathLin2Win(String in){
 		if (in == null)
@@ -35,7 +35,7 @@ public class ConfigManager {
 	/**
 	 * Passt einen Pfad an das aktuelle OS an
 	 * @param in der Originalstring
-	 * @return
+	 * @return der angepasste String
 	 */
 	public static String path2Os(String in){
 		if (System.getProperty("os.name").indexOf("Linux") >=0)
