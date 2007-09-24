@@ -126,7 +126,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	throws InterruptedException, UnrecoverableScrewupException {
 		transmitSensors();
 		processUntilDoneCmd();
-		updateView();
+//		updateView();	// macht die ThreeDBot-Instanz bereits
 	}
 
 	/** Leite Sensordaten an den Bot weiter

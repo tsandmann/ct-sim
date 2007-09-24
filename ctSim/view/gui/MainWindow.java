@@ -242,13 +242,12 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * @param time Die Zeit, die zur Simulatorzeit hinzugezaehlt wird
 	 */
 	public void onSimulationStep(final long time) {
-		// TODO: alles ganz haesslich:
-		SwingUtilities.invokeLater(new Runnable() {
-			@SuppressWarnings("synthetic-access")
-			public void run() {
-				statusBar.updateTime(time);
-			}
-		});
+//		SwingUtilities.invokeLater(new Runnable() {
+//			@SuppressWarnings("synthetic-access")
+//			public void run() {
+		statusBar.updateTime(time);
+//			}
+//		});
 	}
 
 	/** F&uuml;gt einen neuen Bot hinzu */

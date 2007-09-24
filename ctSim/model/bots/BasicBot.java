@@ -19,13 +19,10 @@
 
 package ctSim.model.bots;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.swing.SwingUtilities;
 
 import ctSim.model.Command;
 import ctSim.model.bots.components.BotComponent;
@@ -200,17 +197,17 @@ public abstract class BasicBot implements Bot {
     	}
 
     	public void updateView() throws InterruptedException {
-    		try {
-    			SwingUtilities.invokeAndWait(new Runnable() {
-    				@SuppressWarnings("synthetic-access")
-    				public void run() {
-    					for (BotComponent<?> c : BotComponentList.this)
-    						c.updateExternalModel();
-    				}
-    			});
-    		} catch (InvocationTargetException e) {
-    			throw new RuntimeException(e);
-    		}
+//    		try {
+//    			SwingUtilities.invokeAndWait(new Runnable() {
+//    				@SuppressWarnings("synthetic-access")
+//    				public void run() {
+    		for (BotComponent<?> c : BotComponentList.this)
+    			c.updateExternalModel();
+//    				}
+//    			});
+//    		} catch (InvocationTargetException e) {
+//    			throw new RuntimeException(e);
+//    		}
         }
     }
 

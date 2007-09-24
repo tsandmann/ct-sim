@@ -582,10 +582,10 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 		}
 	}
 
-	@Override
+	//@Override
 	public void updateView() throws InterruptedException {
-		super.updateView(); // Unsere Komponenten aktualisieren
-		bot.updateView(); // und die vom Wrappee
+		//super.updateView(); // NOP
+		bot.updateView();
 	}
 
 	/**

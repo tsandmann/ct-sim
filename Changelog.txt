@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2007-09-24 Timo Sandmann [mail@timosandmann.de]: doppelte updateView()-Aufrufe und unsinnige new-Operationen entfernt 
+
 2007-09-24 Timo Sandmann [mail@timosandmann.de]: NullPointerException beim Schliessen von Welten verhindert.
 
 2007-09-24 Timo Sandmann [mail@timosandmann.de]: Links zu www.ct-bot.de, Trac und Forum eingebaut (#70) und neue Versionsnummer 2.2
