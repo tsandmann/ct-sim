@@ -26,6 +26,9 @@ import ctSim.util.Menu;
 import ctSim.util.Runnable1;
 import ctSim.util.Menu.Checkbox;
 import ctSim.util.Menu.Entry;
+import edu.stanford.ejalbert.BrowserLauncher;
+import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
+import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 
 /**
  * <p>
@@ -123,6 +126,13 @@ public class MainWinMenuBar extends JMenuBar {
 	    	new Entry("Pause", Config.getIcon("Pause16"), onPauseSimulation));
 	    add(simulationMenu);
 
+	    //TODO:	Icons
+		JMenu supportMenu = new Menu("Support", 
+			new Entry("Webseite", onSiteLink),
+			new Entry("Trac", onTracLink),
+			new Entry("Forum", onForumLink));
+		add(supportMenu);
+	    
 	    toolBar = buildToolBar(worldMenu, simulationMenu);
 	}
 
@@ -133,7 +143,7 @@ public class MainWinMenuBar extends JMenuBar {
 	// dann laeuft einer der folgenden Runnables. Die Zuordnung welcher
 	// Menuepunkt -> welches Runnable findet im Konstruktor statt. (Sind
 	// Runnables, haben mit Threading aber nichts zu tun an der Stelle.)
-
+	
 	private Runnable onOpenWorld = new Runnable() {
 		@SuppressWarnings("synthetic-access")
 		public void run() {
@@ -267,6 +277,45 @@ public class MainWinMenuBar extends JMenuBar {
 			controller.pause();
 		}
 	};
+	
+	private Runnable onSiteLink = new Runnable() {
+		public void run() {
+			try {
+				BrowserLauncher launcher = new BrowserLauncher();
+				launcher.openURLinBrowser("http://www.ct-bot.de");
+			} catch (BrowserLaunchingInitializingException e) {
+				e.printStackTrace();
+			} catch (UnsupportedOperatingSystemException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	
+	private Runnable onTracLink = new Runnable() {
+		public void run() {
+			try {
+				BrowserLauncher launcher = new BrowserLauncher();
+				launcher.openURLinBrowser("http://www.heise.de/ct/projekte/machmit/ctbot/wiki");
+			} catch (BrowserLaunchingInitializingException e) {
+				e.printStackTrace();
+			} catch (UnsupportedOperatingSystemException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	
+	private Runnable onForumLink = new Runnable() {
+		public void run() {
+			try {
+				BrowserLauncher launcher = new BrowserLauncher();
+				launcher.openURLinBrowser("http://www.heise.de/ct/foren/go.shtml?list=1&forum_id=89813");
+			} catch (BrowserLaunchingInitializingException e) {
+				e.printStackTrace();
+			} catch (UnsupportedOperatingSystemException e) {
+				e.printStackTrace();
+			}
+		}
+	};	
 
 	///////////////////////////////////////////////////////////////////////////
 	// Hilfsmethoden

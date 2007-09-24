@@ -14,5 +14,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="contrib/rxtx.jar" sourcepath="contrib/rxtx/src.zip"/>
+	<classpathentry kind="lib" path="contrib/BrowserLauncher2-1_3.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

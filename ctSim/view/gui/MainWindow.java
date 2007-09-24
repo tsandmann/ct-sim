@@ -294,7 +294,9 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 					if (bot == bv.bot)
 						botTabs.remove(i);
 				}
-				world.deleteBot(((ThreeDBot)bot).getSimBot());
+				if (world != null) {
+					world.deleteBot(((ThreeDBot)bot).getSimBot());
+				}
 			}
 		});
 	}
