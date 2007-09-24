@@ -1,6 +1,6 @@
 Changelog fuer c't-Sim
 ======================
-2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bugfix im Init-Code (#139): Exception falls rxtxSerial-Lib nicht vorhanden wurde nicht abgefangen => DefaultController.sinit() wurde nie ausgefuehrt!
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bugfix im Init-Code (#139): Exception falls rxtxSerial-Lib nicht vorhanden wurde nicht abgefangen => DefaultController.init() wurde nie ausgefuehrt!
 
 2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bugfix #123 - Log-Speichern schreibt nun den kompletten Log-Inhalt in die Datei
 
