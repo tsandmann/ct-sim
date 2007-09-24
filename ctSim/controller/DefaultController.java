@@ -60,12 +60,18 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         this.view = view;
         setJudge(Config.getValue("judge"));
         TcpConnection.startListening(this);
-        if (Config.getValue("serialport") == null) {
-        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstützung " +
-        			"für serielle Schnittstellen deaktiviert");
-        } else
-        	ComConnection.startListening(this);
-        init();
+        try {
+	        if (Config.getValue("serialport") == null) {
+	        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstützung " +
+	        			"für serielle Schnittstellen deaktiviert");
+	        } else
+	        	ComConnection.startListening(this);
+        } catch (Error e) {
+        	lg.warn("Serielle Schnittstelle konnte nicht geladen werden:");
+        	lg.warn(e.toString());
+        } finally {
+        	init();
+        }
     }
 
     private void init() {
