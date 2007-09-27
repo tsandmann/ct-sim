@@ -92,6 +92,7 @@ public class Parcours {
 
 	/** Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots), zweite Dimension X, Y*/
 	private int[][] startPositions = new int[BOTS][2];
+	/** Info, welcher Bot wo gestartet ist oder starten wird */
 	private Bot[] startPositionsUsed = new Bot[BOTS];
 
 	/** Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots), zweite Dimension X, Y*/
@@ -135,6 +136,10 @@ public class Parcours {
 		this.startPositions[0][1] =0;
 	}
 
+	/**
+	 * Setzt ein Startfeld auf belegt
+	 * @param bot	Zeiger auf Bot, der das Startfeld belegt
+	 */
 	public void setStartFieldUsed(Bot bot) {
 		for (int i=1; i<BOTS; i++) {
 			if (startPositionsUsed[i] == null)	{
@@ -144,6 +149,10 @@ public class Parcours {
 		}
 	}
 	
+	/**
+	 * Gibt ein Startfeld wieder frei
+	 * @param bot	Zeiger auf Bot, der auf dem Startfeld steht oder gestartet ist
+	 */
 	public void setStartFieldUnused(Bot bot) {
 		for (int i=1; i<BOTS; i++) {
 			if (startPositionsUsed[i] == bot) {
@@ -364,7 +373,7 @@ public class Parcours {
 	 * @param bot
 	 * @return Die Startposition
 	 */
-	public Point3d getStartPosition(int bot){
+	public Point3d getStartPosition(int bot) {
 		Point3d pos = null;
 		int i;
 		for (i=1; i<BOTS; i++) {

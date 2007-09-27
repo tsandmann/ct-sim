@@ -284,11 +284,9 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 	private Thread thrd;
 
 	/** Simultime beim letzten Aufruf */
-	// TODO
 	private long lastSimulTime = 0;
 
 	/** Zeit zwischen letztem Aufruf von UpdateSimulation und jetzt*/
-	// TODO
 	private long deltaT = 0;
 
 	private final BotBarrier barrier;
@@ -584,8 +582,8 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 
 	//@Override
 	public void updateView() throws InterruptedException {
-		//super.updateView(); // NOP
-		bot.updateView();
+		super.updateView();	// Positionsanzeige updaten
+		bot.updateView();	// Anzeige der Bot-Komponenten updaten
 	}
 
 	/**
@@ -629,25 +627,15 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 	public void updateSimulation(long simTimeInMs) {
 		if (is(HALTED)) // Fix für Bug 44
 			return;
+		
+		/* Zeit aktualisieren */
 		deltaT = simTimeInMs - lastSimulTime;
+		if (lastSimulTime == 0) {
+			sendRcStartCode();
+		}
 		lastSimulTime = simTimeInMs;
-		/*$$$ Simulator sollte ein Runnable sein, das Excp werfen kann, so 
-		 * dass es InterruptedExcp wirft, denn sonst kann passieren:
-		 * 
-Exception in thread "ctSim-Sequencer" java.lang.RuntimeException: java.lang.InterruptedException
-	at ctSim.model.bots.ctbot.MasterSimulator.run(MasterSimulator.java:446)
-	at ctSim.model.ThreeDBot.updateSimulation(ThreeDBot.java:634)
-	at ctSim.model.World.updateSimulation(World.java:978)
-	at ctSim.controller.DefaultController.run(DefaultController.java:181)
-	at java.lang.Thread.run(Thread.java:595)
-Caused by: java.lang.InterruptedException
-	at java.lang.Object.wait(Native Method)
-	at java.lang.Object.wait(Object.java:474)
-	at java.awt.EventQueue.invokeAndWait(EventQueue.java:846)
-	at javax.swing.SwingUtilities.invokeAndWait(SwingUtilities.java:1257)
-	at ctSim.model.bots.ctbot.MasterSimulator.run(MasterSimulator.java:444)
-	... 4 more
-		 */
+
+		/* Simulatoren des Bots ausfuehren */
 		simulator.run(); 
 	}
 
@@ -715,6 +703,15 @@ Caused by: java.lang.InterruptedException
 
 	public SimulatedBot getSimBot() {
 		return this.bot;
+	}
+
+	/**
+	 * sendet Fernbedienungs-Startcode an den einen (TCP-)c't-Bot
+	 */
+	public void sendRcStartCode() {
+		if (bot instanceof CtBotSimTcp) {
+			((CtBotSimTcp)bot).sendRcStartCode();
+		}
 	}
 
 	//$$ Nirgends verwendet, aber waere evtl. sinnvoll

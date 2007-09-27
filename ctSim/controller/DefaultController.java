@@ -19,7 +19,11 @@
 
 package ctSim.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.Thread.State;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.CountDownLatch;
@@ -77,7 +81,15 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     private void init() {
         try {
             String parcFile = Config.getValue("parcours");
-            openWorldFromFile(new File(parcFile));
+    		InputStream openStream = ClassLoader.getSystemResource(parcFile).openStream();
+    		BufferedReader in = new BufferedReader(new InputStreamReader(openStream));
+    	    String line;
+    	    String sourceString = new String();
+    		while ((line = in.readLine()) != null) {
+    			sourceString += line + "\r\n";
+    		}
+    		in.close();
+    		openWorldFromXmlString(sourceString);
         } catch(NullPointerException e) {
             lg.fine("Kein Standardparcours konfiguriert");
         } catch(Exception e) {
@@ -285,6 +297,22 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
      * F&uuml;gt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu
      */
     public void addTestBot() {
+    	if (sequencer == null) {
+    		try {
+    			InputStream openStream;
+				openStream = ClassLoader.getSystemResource("parcours/testbots_home.xml").openStream();
+	    		BufferedReader in = new BufferedReader(new InputStreamReader(openStream));
+	    	    String line;
+	    	    String sourceString = new String();
+	    		while ((line = in.readLine()) != null) {
+	    			sourceString += line + "\r\n";
+	    		}
+	    		in.close();            
+	    		openWorldFromXmlString(sourceString);
+			} catch (IOException e) {
+				lg.info("Testbot-Home konnte nicht geladen werden");
+			}
+    	}
         onBotAppeared(new CtBotSimTest());
     }
 

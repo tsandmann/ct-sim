@@ -102,13 +102,14 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	 * {@link Integer#decode(String)} verwertbarer Code angegeben ist.
 	 */
 	@SuppressWarnings("cast")
-	private void sendRcStartCode() {
+	public void sendRcStartCode() {
 		String rawStr = Config.getValue("rcStartCode");
 		try {
 			int rcStartCode = Integer.decode(rawStr);
 			for (BotComponent<?> c : components) {
 				if ((Object)c instanceof Sensors.RemoteControl) {
 					((Sensors.RemoteControl)((Object)c)).send(rcStartCode);
+					lg.fine("StartCode "+rcStartCode+" gesendet");
 					break;
 				}
 			}

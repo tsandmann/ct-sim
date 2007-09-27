@@ -13,15 +13,14 @@ public abstract class SimulatorFactory {
 
 	public static Runnable createFor(World world, ThreeDBot botWrapper,
 	SimulatedBot bot) {
-		if (bot instanceof CtBotSimTcp)
+		/* ct-Bot per TCP-Verbindung (C-Binary) */
+		if (bot instanceof CtBotSimTcp) {
 			return new MasterSimulator(world, botWrapper);
-
+		}
+		
+		/* Testbot (Java-Klasse) */
 		if (bot instanceof CtBotSimTest) {
-			return new Runnable() {
-				public void run() {
-
-				}
-			};
+			return new MasterSimulator(world, botWrapper);
 		}
 
 		return new Runnable() {

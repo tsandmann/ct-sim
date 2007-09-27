@@ -62,7 +62,6 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
-import ctSim.view.gui.Debug;
 
 /**
  * <p>Welt-Modell, kuemmert sich um die globale Simulation und das
@@ -81,6 +80,9 @@ import ctSim.view.gui.Debug;
 public class World {
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.World");
 
+	/** Name des XML-Schemas fuer Parcours */
+	private static final String PARCOURS_DTD = "/parcours.dtd";
+	
 	/** Breite des Spielfelds in m */
 	public static final float PLAYGROUND_THICKNESS = 0f;
 
@@ -93,10 +95,8 @@ public class World {
 	private Parcours parcours;
 
 	private Set<ViewPlatform> viewPlatforms = new HashSet<ViewPlatform>();
-
-	/**
-	 * Die Quelle, aus der der Parcours dieser Welt gelesen wurde.
-	 */
+	
+	/** Die Quelle, aus der der Parcours dieser Welt gelesen wurde */
 	private static String sourceString;
 
 	///////////////////////////////////////////////////////////////////////////
@@ -194,8 +194,7 @@ public class World {
 	 * Pause-Knopf gedr&uuml;ckt wird. Simzeit und Realzeit unterscheiden
 	 * sich also sowohl um Summanden als auch um einen Faktor.
 	 */
-    //$$ Sollte int werden, long irrefuehrend
-    public long getSimTimeInMs() { //$$ Nachverfolgen, wo das ueberall auftaucht und Doku + Variablennamen klarer machen
+    public long getSimTimeInMs() {
 		return simTimeInMs;
     }
 
@@ -248,10 +247,10 @@ public class World {
 							String publicId,
 							String systemId)
 					throws SAXException, IOException {
-						if (systemId.endsWith("/parcours.dtd")) //TODO: Irgendwann als Konstante statt hardcoded
-							return new InputSource(
-									Config.getValue("worlddir") +
-									"/parcours.dtd"); //TODO: Irgendwann als Konstante statt hardcoded
+						if (systemId.endsWith(PARCOURS_DTD))
+							return new InputSource(ClassLoader.getSystemResource(
+									// "./" darf hier nicht enthalten sein
+									Config.getValue("worlddir").substring(2) + PARCOURS_DTD).openStream());
 		                return null; // Standard-EntityResolver verwenden
 		            }
 				});
@@ -430,7 +429,7 @@ public class World {
 		int newBot = getFutureNumOfBots() + 1;
 		Point3d pos = parcours.getStartPosition(newBot);
 		parcours.setStartFieldUsed(bot);
-		// Weiss der Himmel warum, aber die Bots sind 7,5 cm ueber Null --hkr
+		// Die Bots schweben 7,5 cm ueber Null, damit keine Kollision mit der Grundflaeche erkannt wird
 		pos.z = 0.075;
 		Vector3d head = parcours.getStartHeading(newBot);
 
@@ -442,7 +441,7 @@ public class World {
 
 		botsToStart.add(botWrapper);
 		obstBG.addChild(botWrapper.getBranchGroup());
-		botWrapper.updateSimulation(getSimTimeInMs());
+		//botWrapper.updateSimulation(getSimTimeInMs());
 
 		botWrapper.addDisposeListener(new Runnable() {
 			@SuppressWarnings("synthetic-access")
@@ -459,8 +458,6 @@ public class World {
 	/* **********************************************************************
 	 * **********************************************************************
 	 * WORLD_FUNCTIONS
-	 *
-	 * TODO: Auslagern in eigene Klasse?
 	 *
 	 * Funktionen fuer die Sensoren usw. (Abstandsfunktionen u.ae.)
 	 *
@@ -1000,10 +997,10 @@ public class World {
 					targetFile));
 				out.write(sourceString.getBytes());
 				out.close();
-				Debug.out.println("Welt wurde gespeichert als \""+
+				lg.info("Welt wurde gespeichert als \""+
 						targetFile.getName()+"\".");
 		} catch(IOException e) {
-			Debug.out.println("Fehler: Datei konnte nicht gespeichert werden!");
+			lg.warn("Fehler: Datei konnte nicht gespeichert werden!");
 			e.printStackTrace();
 		}
 	}

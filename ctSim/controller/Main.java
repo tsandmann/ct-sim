@@ -1,7 +1,5 @@
 package ctSim.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -63,7 +61,7 @@ public class Main {
     	handleCommandLineArgs(args);
         lg = initLogging();
         loadConfig();
-        loadIcons();
+//      loadIcons();	// on demand
         Init.setLookAndFeel();
         setupViewAndController();
     }
@@ -86,8 +84,8 @@ public class Main {
 
 	public static FmtLogger initLogging() {
 		try {
-	        LogManager.getLogManager().readConfiguration(new FileInputStream(
-	        	"config/logging.conf"));
+			java.net.URL url = ClassLoader.getSystemResource("config/logging.conf");
+	        LogManager.getLogManager().readConfiguration(url.openStream());
 		} catch (Exception e) {
 			System.err.println("Logging konnte nicht initialisiert werden");
 			e.printStackTrace();
@@ -119,15 +117,18 @@ public class Main {
 		System.exit(1);
 	}
 
-	private static void loadIcons() {
-		try {
-			Config.loadIcons(new File("images")); //LODO Pfad hardcoded
-			return;
-		} catch (Exception e) {
-			lg.severe(e, "Fehler beim Laden der Icons");
-		}
-		System.exit(1);
-	}
+// wir machen das jetzt pro Icon, damit es auch aus dem Jar funktioniert.
+//	private static void loadIcons() {
+//		try {
+//			java.net.URL url = ClassLoader.getSystemResource("images");
+//			//Config.loadIcons(new File("images")); //LODO Pfad hardcoded
+//			Config.loadIcons(new File(url.getFile() + "/"));
+//			return;
+//		} catch (Exception e) {
+//			lg.severe(e, "Fehler beim Laden der Icons");
+//		}
+//		System.exit(1);
+//	}
 
 	private static void setupViewAndController() {
 		//$$ kann einfacher werden mit pico (Startable ifc)

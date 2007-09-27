@@ -4,11 +4,13 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -81,6 +83,7 @@ public class Config {
 
 	private static BotAppearances appearances;
 
+	@SuppressWarnings("unused")
 	private static IconProvider icons;
 
 	/**
@@ -95,7 +98,8 @@ public class Config {
 	 */
 	public static void loadConfigFile(Config.SourceFile file)
 	throws SAXException, IOException, ParserConfigurationException {
-		QueryableDocument doc = XmlDocument.parse(file);
+		java.net.URL url = ClassLoader.getSystemResource(file.toString());
+		QueryableDocument doc = XmlDocument.parse(url.openStream(), url.toString());
 		lg.info("Lade Konfigurationsdatei '"+file+"'");
 		parameters = new PlainParameters(doc);
 		appearances = new BotAppearances(doc);
@@ -121,7 +125,12 @@ public class Config {
 	}
 
 	public static Icon getIcon(String key) {
-		return icons.get(key);
+		URL u = ClassLoader.getSystemResource("images/" + key+".gif");
+		// NullPointerException vermeiden
+		if (u == null)
+			return new ImageIcon(); // leeres Icon
+		else
+			return new ImageIcon(u);		
 	}
 
 	static class PlainParameters extends HashMap<String, String> {

@@ -71,10 +71,80 @@ public class Characteristic {
 
 	}
 	
-	public Characteristic(String filename, float inf) {
-		this(new File(filename), inf);
+	public Characteristic(String filename, float inf) throws IOException {
+		this(ClassLoader.getSystemResource(filename).openStream(), inf);
 	}
 
+	public Characteristic(InputStream openStream, float inf) {
+		this.INF = inf;
+	    BufferedReader in = new BufferedReader(new InputStreamReader(openStream));
+	    String line;
+	    String c = new String();
+		try {
+			while ((line = in.readLine()) != null) {
+				c += line + "\r\n";
+			}
+			in.close();
+		} catch (FileNotFoundException e1) {
+			System.err.println("Kennlinien-Datei nicht gefunden");
+		} catch (IOException e1) {
+			System.err.println("I/O-Fehler");
+		}
+		
+		Number[] charac = csv2array(c); 
+		// Numbers in primitive floats verwandeln:
+		this.characteristic = new float[charac.length]; 
+		for (int i=0; i<charac.length; i++){
+			this.characteristic[i] = charac[i].floatValue();
+		}
+		
+		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
+		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
+		// den 0-Index:
+		this.lookup = new float[1 + Math.round(Math.round(Math
+				.floor(this.characteristic[this.characteristic.length - 2])))];
+		// Lookup-Table jetzt fuellen:
+		int firstMeas = Math.round(Math.round(Math.floor(this.characteristic[0])));
+		// Alles vor der ersten Messgroesse mit INF fuellen:
+		for (int i = 0; i < firstMeas; i++) {
+			this.lookup[i] = this.INF;
+		}
+		// Dann jeweils in Zweierschritten voran:
+		for (int i = 0; i < this.characteristic.length; i += 2) {
+			// Zwei aufeinanderfolgende Messgroessen heraussuchen:
+			int firMea = Math.round(Math.round(Math.floor(this.characteristic[i])));
+			// Wert am ersten Index eintragen:
+			this.lookup[firMea] = this.characteristic[i + 1];
+			try { // Klappt nicht, wenn schon das Ende erreicht ist.
+				int secMea = Math.round(Math.round(Math
+						.floor(this.characteristic[i + 2])));
+				// Wie viele Schritte lassen die Messgroessen aus?
+				int diff = secMea - firMea;
+				// Und wie veraendert sich der zugeordnete Wert zwischen den
+				// Messgroessen?
+				float valDiff = this.characteristic[i + 3] - this.characteristic[i + 1];
+				// Das ist pro Schritt gleich der Wertdifferenz durch
+				// Messgroessendifferenz:
+				float delta = valDiff / diff;
+				// Zwischenwerte addieren, fuer jeden weiteren
+				// einmal delta auf lookup[firMea] draufrechnen:
+				for (int j = 1; j < diff; j++) {
+					this.lookup[firMea + j] = this.lookup[firMea] + j * delta;
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				// Tja, das war wohl zu weit 8-)
+			}
+		}
+
+		// Es wird ein zweiter Lookup-Table erstellt, fuer Sensorwerte, die 
+		// nur aus ganzen Zahlen bestehen:
+		this.intLookup = new int[this.lookup.length]; 
+		for (int i = 0; i<this.lookup.length; i++){
+				this.intLookup[i] = Math.round(this.lookup[i]);
+			}
+		// printLookup();		
+	}
+	
 	/**
 	 * Der Konstruktor errechnet aus der lueckenhaften Stuetzwerttabelle den
 	 * kompletten Lookup-Table mit Zwischenwerten fuer alle ganzzahligen

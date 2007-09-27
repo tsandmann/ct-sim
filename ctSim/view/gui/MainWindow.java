@@ -190,7 +190,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	        ImageIO.write(worldViewer.getScreenshot(), "png",
 	        	File.createTempFile("screenshot", ".png"));
         } catch (IOException e) {
-	        // TODO Auto-generated catch block
 	        e.printStackTrace();
         }
 	}
@@ -279,7 +278,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 				updateLayout();
 
-				Debug.out.println("Bot \""+bot+"\" wurde hinzugefuegt."); //$$$ Debug msg
+				lg.info("Bot \""+bot+"\" wurde hinzugefuegt.");
 			}
 		});
 	}

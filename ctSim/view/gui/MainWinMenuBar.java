@@ -110,11 +110,8 @@ public class MainWinMenuBar extends JMenuBar {
 	    	// automatisch macht
 	    	new Checkbox("Per USB (COM) automatisch", noOp).disable().check()));
 	    add(new Menu("Simuliere Bot",
-	    	new Entry("Testbot", onAddTestBot),
-    		//$$ os.name-Kram verlagern in eine Klasse fuer plattformabhaengiges Zeug
-	    	new Entry(((System.getProperty("os.name").indexOf("Windows") != -1)
-				? ".exe" : ".elf") + " starten ...",
-    			onInvokeExecutable)));
+	    	new Entry("Testbot starten", onAddTestBot),
+	    	new Entry("c't-Bot Binary starten", onInvokeExecutable)));
 
 	    JMenu m = new JMenu("Schiedsrichter");
 	    for (JMenuItem item : buildJudgeMenuItems())
