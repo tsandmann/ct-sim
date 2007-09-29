@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2007-09-29 Timo Sandmann [mail@timosandmann.de]: Config-Datei-Parser fuer Windows korrigiert 
+
 2007-09-27 Timo Sandmann [mail@timosandmann.de]: Performance verbessert (#11), Testbot wieder eingebaut (#26), Ant-Script zum Jar-Build ergaenzt und Dateilade-Operationen jar-kompatibel gemacht (#80)	
 
 2007-09-24 Timo Sandmann [mail@timosandmann.de]: Ant-Script zum Applet-Bau korrigiert

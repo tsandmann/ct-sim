@@ -96,9 +96,9 @@ public class Config {
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	public static void loadConfigFile(Config.SourceFile file)
+	public static void loadConfigFile(String file)
 	throws SAXException, IOException, ParserConfigurationException {
-		java.net.URL url = ClassLoader.getSystemResource(file.toString());
+		java.net.URL url = ClassLoader.getSystemResource(file);
 		QueryableDocument doc = XmlDocument.parse(url.openStream(), url.toString());
 		lg.info("Lade Konfigurationsdatei '"+file+"'");
 		parameters = new PlainParameters(doc);

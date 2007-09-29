@@ -97,22 +97,22 @@ public class Main {
     }
 
 	private static void loadConfig() {
-		Config.SourceFile configFile = dependencies.get(
-			Config.SourceFile.class);
+//		Config.SourceFile configFile = dependencies.get(
+//			Config.SourceFile.class);
 		try {
-			Config.loadConfigFile(configFile);
+			Config.loadConfigFile(DEFAULT_CONFIGFILE);
 			return;
 		} catch (FileNotFoundException e) {
-			lg.severe(e, "Konfigurationsdatei '"+configFile+"' nicht gefunden");
+			lg.severe(e, "Konfigurationsdatei '"+DEFAULT_CONFIGFILE+"' nicht gefunden");
 		} catch (SAXException e) {
 			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
-				configFile);
+				DEFAULT_CONFIGFILE);
 		} catch (IOException e) {
 			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'",
-				configFile);
+				DEFAULT_CONFIGFILE);
 		} catch (ParserConfigurationException e) {
 			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
-				configFile);
+				DEFAULT_CONFIGFILE);
 		}
 		System.exit(1);
 	}
