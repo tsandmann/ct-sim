@@ -367,7 +367,7 @@ public class Sensors {
 		public void send(String key) throws IOException {
 			Integer rc5 = RC5Keys.get(key);
 			if (rc5 != null) {
-				lg.fine("sende RC5-Code " + rc5);
+				lg.fine("sende RC5-Code 0x%x", rc5);
 				send(rc5);
 			}
 		}
