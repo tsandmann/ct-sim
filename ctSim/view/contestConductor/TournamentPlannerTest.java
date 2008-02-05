@@ -15,10 +15,18 @@ import ctSim.controller.Main;
 import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
+/**
+ * Testklasse
+ */
 public class TournamentPlannerTest extends ConductorTestUtil {
+	/** Datenbank */
 	private PlannerToDatabaseAdapter db;
+	/** Test */
 	private TournamentPlanner testee;
 
+	/**
+	 * @see ctSim.view.contestConductor.ConductorTestUtil#getDbFromChildClass()
+	 */
 	@Override
     protected DatabaseAdapter getDbFromChildClass() {
 	    return db;
@@ -28,6 +36,9 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	// JUnit die und meldet nur unverstaendlich "No runnable methods". Im
 	// Zweifel main()-Methode schreiben, die das hier aufruft, und als
 	// Applikation (nicht Unit-Test) laufenlassen
+	/**
+	 * Tests
+	 */
 	public TournamentPlannerTest() {
 		Main.dependencies.reRegisterImplementation(ContestDatabase.class,
 			TestDatabase.class);
@@ -35,6 +46,10 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		testee = Main.dependencies.get(TournamentPlanner.class);
     }
 
+	/**
+	 * Tests
+	 * @throws SQLException
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void prelimRoundWithMissingLevel() throws SQLException {
 		db.execSql("delete from ctsim_bot");
@@ -45,6 +60,10 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		testee.planPrelimRound();
 	}
 
+	/**
+	 * Tests
+	 * @throws SQLException
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void prelimRoundWithMissingBots() throws SQLException {
 		db.execSql("delete from ctsim_bot");
@@ -53,6 +72,10 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		testee.planPrelimRound();
 	}
 
+	/**
+	 * Tests
+	 * @throws SQLException
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void prelimRoundWithTooFewBots() throws SQLException {
 		db.execSql("delete from ctsim_bot");
@@ -62,6 +85,10 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		testee.planPrelimRound();
 	}
 
+	/**
+	 * Tests
+	 * @throws SQLException
+	 */
 	@Test
 	public void planPrelimRound() throws SQLException {
 		int gameIntervalInS = 9876;
@@ -97,6 +124,11 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		assertScheduledRightInterval(-1, gameIntervalInS);
 	}
 
+	/**
+	 * Tests
+	 * @throws SQLException
+	 * @throws TournamentPlanException
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void mainRoundWithNoPrelim()
 	throws SQLException, TournamentPlanException {
@@ -108,6 +140,11 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		testee.planMainRound();
 	}
 
+	/**
+	 * Tests
+	 * @throws SQLException
+	 * @throws TournamentPlanException
+	 */
 	@Test(expected=TournamentPlanException.class)
 	public void mainRoundWithIncompletePrelim()
 	throws SQLException, TournamentPlanException {
@@ -122,6 +159,11 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		testee.planMainRound();
 	}
 
+	/**
+	 * Tests
+	 * @throws SQLException
+	 * @throws TournamentPlanException
+	 */
 	@Test(expected=TournamentPlanException.class)
 	public void mainRoundWithMissingWinners()
 	throws SQLException, TournamentPlanException {
@@ -136,6 +178,11 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		testee.planMainRound();
 	}
 
+	/**
+	 * Tests
+	 * @throws SQLException
+	 * @throws TournamentPlanException
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void mainRoundWithMissingLevels()
 	throws SQLException, TournamentPlanException {
@@ -147,9 +194,13 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		testee.planMainRound();
 	}
 
-	/** Pr&uuml;ft 1. ob die playerIds ungleich 0 sind und 2. ob alle playerIds
+	/** 
+	 * Pr&uuml;ft 1. ob die playerIds ungleich 0 sind und 2. ob alle playerIds
 	 * unterschiedlich sind. (Es w&auml;re falsch, wenn der Planner einen Bot
-	 * f&uuml;r zwei Spiele vorsehen w&uuml;rde.) */
+	 * f&uuml;r zwei Spiele vorsehen w&uuml;rde.) 
+	 * @param playerIdField playerID
+	 * @throws SQLException 
+	 */
 	private void checkPlayerId(String playerIdField) throws SQLException {
 		// zur Erinnerung: count() und count(distinct) zaehlen NULL nicht mit
 		ResultSet rs = db.execSql("select count(" + playerIdField + ") " +
@@ -166,6 +217,11 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		assertEquals(playerIdCount, playerIdDistinctCount);
 	}
 
+	/**
+	 * Tests
+	 * @throws SQLException
+	 * @throws TournamentPlanException
+	 */
 	@Test
 	public void mainRound() throws SQLException, TournamentPlanException {
 		int gameIntervalInS = 1234;
@@ -221,6 +277,12 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 			assertScheduledRightInterval(i, gameIntervalInS);
 	}
 
+	/**
+	 * Testmethode
+	 * @param levelId
+	 * @param gameIntervalExpected
+	 * @throws SQLException
+	 */
 	private void assertScheduledRightInterval(int levelId,
 		long gameIntervalExpected)
 	throws SQLException {

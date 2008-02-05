@@ -20,17 +20,31 @@ import javax.swing.JPanel;
 import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.util.Runnable1;
 
-//$$ doc
+/**
+ * Mausbild-Anzeige 
+ */
 public class MousePictureViewer extends GuiBotBuisitor {
+	/** UID */
 	private static final long serialVersionUID = - 2167640810854877294L;
 
+	/**
+	 * Bild-Anzeige
+	 */
 	public static class ImageViewer extends JPanel implements Runnable1<Image> {
+		/** UID */
 		private static final long serialVersionUID = 3878110649950448386L;
 
+		/** Bild */
 		private Image image;
+		/** Breite */
 		private final int targetWidth;
+		/** Hoehe */
 		private final int targetHeight;
 
+		/**
+		 * @param scaleFactor Skalierung
+		 * @param c Mausbild-Komponente
+		 */
 		public ImageViewer(double scaleFactor, MousePictureComponent c) {
 			c.addImageListener(this);
 			setToolTipText(c.getDescription());
@@ -41,13 +55,19 @@ public class MousePictureViewer extends GuiBotBuisitor {
 
 		// Wir sind ja ein ImageListener, daher brauchen wir eine
 		// run(Image)-Methode
-		/** Methode einer Swing-Komponente, aber thread-sicher */
+		/** 
+		 * Methode einer Swing-Komponente, aber thread-sicher 
+		 * @param img Bild
+		 */
 		public synchronized void run(Image img) {
 			this.image = img.getScaledInstance(targetWidth, targetHeight,
 				Image.SCALE_SMOOTH);
 			repaint();
 		}
 
+		/**
+		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
+		 */
 		@Override
 		public void paint(Graphics g) {
 			// Loeschen
@@ -57,6 +77,9 @@ public class MousePictureViewer extends GuiBotBuisitor {
 			g.drawImage(image, 0, 0, null);
 		}
 
+		/**
+		 * @see javax.swing.JComponent#getPreferredSize()
+		 */
 		@Override
 		public Dimension getPreferredSize() {
 			Insets is = getBorder().getBorderInsets(this);
@@ -64,13 +87,18 @@ public class MousePictureViewer extends GuiBotBuisitor {
 			                     targetHeight + is.top  + is.bottom);
 		}
 
-		//$$ Koennte beim resize auch wirklich skalieren, wozu haben wir den scaleFactor
+		/**
+		 * @see javax.swing.JComponent#getMinimumSize()
+		 */
 		@Override
 		public Dimension getMinimumSize() {
 			return getPreferredSize();
 		}
 	}
 
+	/**
+	 * @param compnt Mausbild-Komponente
+	 */
 	public void buisitMousePictureViewer(final MousePictureComponent compnt) {
 		// Container
 		JPanel p = new JPanel(new BorderLayout());

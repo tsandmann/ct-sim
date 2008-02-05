@@ -17,7 +17,6 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.SaferThread;
 
-//$$ doc
 /**
  * <p>
  * Serielle Verbindung / USB-Verbindung zu realen Bots (als Hardware vorhandenen
@@ -50,8 +49,11 @@ import ctSim.util.SaferThread;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class ComConnection extends Connection {
+	/** Input verfuegbar? */
 	protected boolean inputAvailable = false;
+	/** Mutex */
 	protected final Object inputAvailMutex = new Object();
+	/** Port */
 	private final SerialPort port;
 
 	/**
@@ -105,6 +107,9 @@ public class ComConnection extends Connection {
 		registerEventListener();
 	}
 
+	/**
+	 * Registriert einen Listener
+	 */
 	private void registerEventListener() {
 		port.notifyOnDataAvailable(true);
 
@@ -128,6 +133,10 @@ public class ComConnection extends Connection {
 		}
 	}
 
+	/**
+	 * Wartet, bis neue Daten eingetroffen sind
+	 * @throws InterruptedException
+	 */
 	public void blockUntilDataAvailable() throws InterruptedException {
 		synchronized (inputAvailMutex) {
 			while (! inputAvailable) {
@@ -138,6 +147,10 @@ public class ComConnection extends Connection {
 		}
 	}
 
+	/**
+	 * Liest Daten aus einem Inputstream
+	 * @throws IOException
+	 */
 	@Override
 	public void read(byte[] b) throws IOException {
 		inputAvailable = false;
@@ -154,23 +167,52 @@ public class ComConnection extends Connection {
 		// No-op
 	}
 
-	@Override public String getName() { return port.getName(); }
+	/**
+	 * Gibt den Namen des Ports unserer Connection zurueck
+	 * @return	Name 
+	 */
+	@Override 
+	public String getName() {
+		return port.getName(); 
+	}
 
-	@Override public String getShortName() { return "USB"; }
+	/**
+	 * Gibt den Kurznamen unserer Connection zurueck
+	 * @return	"USB"
+	 */
+	@Override 
+	public String getShortName() { 
+		return "USB"; 
+	}
 
 	///////////////////////////////////////////////////////////////////////////
 	// Auto-detect-Kram
 
+	/**
+	 * COM-Verbindung
+	 */
 	private static ComConnection comConnSingleton = null;
 
+	/**
+	 * Thread, der die COM-Connection ueberwacht
+	 */
 	static class ComListenerThread extends SaferThread {
+		/** Bot-Receiver */
 		private final BotReceiver botReceiver;
-
+		
+		/**
+		 * Erzeugt einen Thread, der auf COM-Connections lauscht
+		 * @param receiver	BotReceiver fuer den neuen Bot
+		 */
 		public ComListenerThread(BotReceiver receiver) {
 			super("ctSim-Listener-COM");
 			this.botReceiver = receiver;
 		}
-
+		
+		/**
+		 * work-Methode des Threads
+		 * @throws InterruptedException
+		 */
 		@SuppressWarnings("synthetic-access")
 		@Override
 		public void work() throws InterruptedException {
@@ -186,7 +228,11 @@ public class ComConnection extends Connection {
 			die();
 		}
 	}
-
+	
+	/**
+	 * Startet das Lauschen fuer neue Bots
+	 * @param receiver	BotReceiver fuer neuen Bot
+	 */
 	public static void startListening(final BotReceiver receiver) {
 		if (comConnSingleton != null)
 			throw new IllegalStateException();
@@ -198,28 +244,52 @@ public class ComConnection extends Connection {
 		}
 	}
 
+	/**
+	 * Neuer Thread
+	 * @param receiver Bot-Receiver
+	 */
 	private static void spawnThread(BotReceiver receiver) {
 		new ComListenerThread(receiver).start();
 	}
 
 	///////////////////////////////////////////////////////////////////////////
 
+	/**
+	 * Exception-Klasse fuer ComConnection
+	 */
 	public static class CouldntOpenTheDamnThingException extends Exception {
+		/** UID */
 		private static final long serialVersionUID = 4896454703538812700L;
 
+		/**
+		 * Erzeugt eine neue Exception
+		 */
 		public CouldntOpenTheDamnThingException() {
 			super();
 		}
 
+		/**
+		 * Erzeugt eine neue Exception
+		 * @param message	Text der Exception
+		 * @param cause		
+		 */
 		public CouldntOpenTheDamnThingException(String message,
 		Throwable cause) {
 			super(message, cause);
 		}
 
+		/**
+		 * Erzeugt eine neue Exception
+		 * @param message	Text der Exception
+		 */
 		public CouldntOpenTheDamnThingException(String message) {
 			super(message);
 		}
 
+		/**
+		 * Erzeugt eine neue Exception
+		 * @param cause
+		 */
 		public CouldntOpenTheDamnThingException(Throwable cause) {
 			super(cause);
 		}

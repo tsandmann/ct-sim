@@ -29,15 +29,17 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class TournamentPlanner {
+	/** Logger */
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.contestConductor");
 
+	/** Datenbank */
 	private PlannerToDatabaseAdapter db;
 
-	//$$ doc TournamentPlanner(...)
 	/** Konstruiert einen TournamentPlanner, der mit der &uuml;bergebenen
 	 * Datenbank verbunden ist. N&uuml;tzlich f&uuml;r Unit-Tests, die dem
 	 * Planner &uuml;ber diesen Konstruktor eine Testdatenbank unterschieben
 	 * k&ouml;nnen.
+	 * @param database 
 	 */
 	public TournamentPlanner(PlannerToDatabaseAdapter database) {
 		this.db = database;
@@ -49,6 +51,7 @@ public class TournamentPlanner {
 	 *
 	 * @param levelId Prim&auml;rschl&uuml;ssel des Levels, f&uuml;r das die
 	 * Zeiten gesetzt werden sollen.
+	 * @throws SQLException 
 	 */
 	private void scheduleGames(int levelId) throws SQLException {
 		ResultSet games = db.getGames(levelId, "game");
@@ -69,6 +72,7 @@ public class TournamentPlanner {
 	 * F&uuml;r jeden Bot, f&uuml;r den eine Binary in der Datenbank steht,
 	 * wird ein Vorrundenspiel angelegt. Jeder Bot durchl&auml;uft ein
 	 * Vorrundenspiel einzeln.
+	 * @throws SQLException 
 	 *
 	 * @throws IllegalStateException Falls in der DB-Tabelle ctsim_level
 	 * keine Angaben &uuml;ber die Vorrunde zu finden sind, oder falls
@@ -103,6 +107,7 @@ public class TournamentPlanner {
 	}
 
 	/** Plant die Hauptrunde. Sie besteht aus $$ doc planMainRound
+	 * @throws SQLException 
 	 *
 	 * @throws TournamentPlanException
 	 * @throws IllegalStateException
@@ -182,6 +187,7 @@ public class TournamentPlanner {
 	 * repr&auml;sentieren. <code>null</code> bedeutet, das f�r dieses Spiel
 	 * (noch) kein Spieler vorgesehen ist.
 	 * @param levelId Nummer des zu schreibenden Levels.
+	 * @throws SQLException 
 	 * @throws TournamentPlanException Falls
 	 * {@link DatabaseAdapter#placeBot(Integer, int, int)} diese Exception
 	 * wirft.
@@ -204,11 +210,28 @@ public class TournamentPlanner {
 	 * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
 	 */
 	static class TournamentPlanException extends Exception {
+		/** UID */
 		private static final long serialVersionUID = -9195564639022108463L;
 
+		/**
+		 * Exception
+		 */
 		public TournamentPlanException() { super(); }
+		/**
+		 * Exception
+		 * @param message Text
+		 */
 		public TournamentPlanException(String message) { super(message); }
+		/**
+		 * Exception
+		 * @param cause
+		 */
 		public TournamentPlanException(Throwable cause) { super(cause); }
+		/**
+		 * Exception
+		 * @param message Text
+		 * @param cause
+		 */
 		public TournamentPlanException(String message, Throwable cause) {
 			super(message, cause);
 		}

@@ -31,23 +31,42 @@ import ctSim.model.bots.Bot;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class BotViewer extends JScrollPane {
+	/** UID */
 	private static final long serialVersionUID = - 7367493564649395707L;
 
+	/** Buisitors */
 	@SuppressWarnings("unchecked")
-	private static final Class[] buisitors = {
-		Tables.Position.class,
-		Leds.class,
-		AndEverything.class,
-		Tables.Sensors.class,
-		Tables.Actuators.class,
-		MousePictureViewer.class,
-    };
+	private Class[] buisitors;
 
+	/** zugehoeriger Bot */
 	public final Bot bot;
 
+	/**
+	 * @param bot	Bot, zu dem der Viewer gehoert
+	 */
 	public BotViewer(Bot bot) {
 		super(VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER);
 		this.bot = bot;
+		
+		/* buisitors nach Bot-Art anlegen */
+		if (bot.toString().contains("Test-Bot")) {
+			/* Test-Bots haben kein LCD, LOG, RemoteCall, ABL, Mausbild */
+			buisitors = new Class[] {
+					Tables.Position.class,
+					Tables.Sensors.class,
+					Tables.Actuators.class,
+				};
+		} else {
+			buisitors = new Class[] {
+					Tables.Position.class,
+					Leds.class,
+					AndEverything.class,
+					Tables.Sensors.class,
+					Tables.Actuators.class,
+					MousePictureViewer.class,
+				};
+		}
+		
 		/* Panelbreite soll mindestens so gross sein, dass alle Elemente darin komplett sichtbar sind */
 		this.setMinimumSize(new Dimension(200, this.getHeight()));
 

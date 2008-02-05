@@ -30,25 +30,22 @@ import java.util.Date;
 /**
  * Sorgt fuer Debug-Ausgaben
  * @author Felix Beckwermert
- *
  */
 public class Debug {
 	
-	/**
-	 * 
-	 */
+	/** Output */
 	public static final Debug out = new Debug();
-	
-	private final String LOG_FILE = "debug.txt"; //$NON-NLS-1$
-	
-	private final String TIME_PREFIX = "[HH:mm:ss] ";  //$NON-NLS-1$
-	
+	/** Log-File */
+	private final String LOG_FILE = "debug.txt";
+	/** Zeitformat */
+	private final String TIME_PREFIX = "[HH:mm:ss] ";
+	/** Writer */
 	private BufferedWriter bw;
-	
+	/** Fenster */
 	private DebugWindow win;
-	
+	/** Datumsformat */
 	private DateFormat timeFormatter;
-	
+	/** Neue Zeile? */
 	private boolean isNewLine = true;
 	
 	/**
@@ -70,8 +67,11 @@ public class Debug {
 		}
 	}
 	
+	/**
+	 * Setzt das Debug-Fenster
+	 * @param window
+	 */
 	private void setDebugWindow(DebugWindow window) {
-		
 		this.win = window;
 	}
 	

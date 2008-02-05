@@ -1,10 +1,13 @@
 package ctSim.controller;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.LogManager;
 
+import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
@@ -17,6 +20,7 @@ import ctSim.view.View;
 import ctSim.view.ViewYAdapter;
 import ctSim.view.contestConductor.ContestConductor;
 import ctSim.view.gui.MainWindow;
+import ctSim.view.gui.SplashWindow;
 
 //$$ doc Grobe Architektur beschreiben; wer verdrahtet M, V und C? -> auch Pico beschreiben
 /**
@@ -30,11 +34,15 @@ import ctSim.view.gui.MainWindow;
  * </p>
  */
 public class Main {
-	public static final String VERSION = "2.2";
+	/** Versionsnummer */
+	public static final String VERSION = "2.3";
+	/** Konfigurationsdatei */
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
 
+	/** Logger */
 	static FmtLogger lg;
 
+	/** Init-Container */
 	public static final InitializingPicoContainer dependencies =
 		new InitializingPicoContainer();
 
@@ -58,16 +66,43 @@ public class Main {
 	 * </ul>
 	 */
     public static void main(String... args) {
-    	handleCommandLineArgs(args);
-        lg = initLogging();
-        loadConfig();
-//      loadIcons();	// on demand
-        Init.setLookAndFeel();
-        setupViewAndController();
-    }
+    	final String[] cmdArgs = args;
+    	/* Splash-Screen anzeigen */
+		java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
+		SplashWindow.splash(url, "Version " + VERSION);
+		SplashWindow.setMessage("Initialisierung...");
+		/* Inits ausfuehren */
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				public void run() {
+					handleCommandLineArgs(cmdArgs);
+					lg = initLogging();
+					loadConfig();
+					Init.setLookAndFeel();
+					setupViewAndController();
+				}
+			});
+		} catch (Exception e) {
+			System.err.println("Initialisierungen in Main fehlgeschlagen");
+			e.printStackTrace();
+			/* Programm erst nach Klick auf Splash schliessen */
+			MouseAdapter disposeOnClick = new MouseAdapter() {
+				public void mouseClicked(MouseEvent evt) {
+					System.exit(1);
+				}
+			};
+			SplashWindow.getWindow().addMouseListener(disposeOnClick);			
+			return;
+		}
+		/* Splash-Screen weg */
+		SplashWindow.disposeSplash();
+	}
 
-	//TODO "Usage"-Meldung waere gut
-	/** Siehe {@link #main(String...)}. */
+	/**
+	 * Siehe {@link #main(String...)}.
+	 * 
+	 * @param args Command-Line-Argumente
+	 */
 	private static void handleCommandLineArgs(String[] args) {
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].toLowerCase().equals("-conf")) {
@@ -75,13 +110,18 @@ public class Main {
 				dependencies.reRegisterInstance(
 					new Config.SourceFile(args[i]));
 			} else {
-				System.out.println(
-					"Ung\u00FCltiges Argument '" + args[i] + "'");
+				System.out.println("Ung\u00FCltiges Argument '" + args[i] + "'");
+				System.out.println("USAGE: ct-Sim [-conf configfile]");
+				System.out.println("\t-conf configfile.xml\tPfad zu alternativer Konfigurationsdatei");
 				System.exit(1);
 			}
 		}
 	}
 
+	/**
+	 * Initialisiert den Logger
+	 * @return	Logger-Instanz
+	 */
 	public static FmtLogger initLogging() {
 		try {
 			java.net.URL url = ClassLoader.getSystemResource("config/logging.conf");
@@ -93,12 +133,14 @@ public class Main {
 		}
 		FmtLogger rv = FmtLogger.getLogger("");
 		rv.fine("Logging-Subsystem initialisiert");
+		rv.addHandler(SplashWindow.getLogHandler());
 		return rv;
     }
 
+	/**
+	 * Laedt die Konfiguration
+	 */
 	private static void loadConfig() {
-//		Config.SourceFile configFile = dependencies.get(
-//			Config.SourceFile.class);
 		try {
 			Config.loadConfigFile(DEFAULT_CONFIGFILE);
 			return;
@@ -114,24 +156,12 @@ public class Main {
 			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
 				DEFAULT_CONFIGFILE);
 		}
-		System.exit(1);
 	}
 
-// wir machen das jetzt pro Icon, damit es auch aus dem Jar funktioniert.
-//	private static void loadIcons() {
-//		try {
-//			java.net.URL url = ClassLoader.getSystemResource("images");
-//			//Config.loadIcons(new File("images")); //LODO Pfad hardcoded
-//			Config.loadIcons(new File(url.getFile() + "/"));
-//			return;
-//		} catch (Exception e) {
-//			lg.severe(e, "Fehler beim Laden der Icons");
-//		}
-//		System.exit(1);
-//	}
-
+	/**
+	 * Initialisierung von View und Controller
+	 */
 	private static void setupViewAndController() {
-		//$$ kann einfacher werden mit pico (Startable ifc)
 		Controller c = dependencies.get(Controller.class);
 
 		List<View> v = Misc.newList();
@@ -149,7 +179,6 @@ public class Main {
 		if (Config.getValue("TimeLogger").equalsIgnoreCase("true"))
 			v.add(new TimeLogger());
 
-		//$$ Optimierung: Wenn nur ein Ding in v kann man sich den Umstand mit YAdapter sparen
 		c.setView(ViewYAdapter.newInstance(v));
 		c.onApplicationInited();
     }

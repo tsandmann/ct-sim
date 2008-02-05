@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2008-02-02 Timo Sandmann [mail@timosandmann.de]: Fernbedienung neu implementiert (#158), Splash-Screen gebaut, Code teilweise aufgeraeumt, massig Doku ergaenzt, einige TODOs erledigt, ABL-Unterstuetzung eingebaut fuer CtBotSimTcp und RealCtBot (noch deaktiviert)
+
 2007-09-29 Timo Sandmann [mail@timosandmann.de]: Config-Datei-Parser fuer Windows korrigiert 
 
 2007-09-27 Timo Sandmann [mail@timosandmann.de]: Performance verbessert (#11), Testbot wieder eingebaut (#26), Ant-Script zum Jar-Build ergaenzt und Dateilade-Operationen jar-kompatibel gemacht (#80)	

@@ -29,25 +29,36 @@ import ctSim.view.gui.Debug;
  *
  */
 public class LabyrinthJudge extends Judge {
+	/** Controller */
 	private DefaultController controller;
+	/** Welt */
 	private World world;
+	/** Teilnehmerzahl */
 	private int participants = 2;
-	/** Variable umd den ersten Start zu markieren */
-
+	
+	/** 
+	 * Variable um den ersten Start zu markieren 
+	 * @param ctrl Controller 
+	 */
 	public LabyrinthJudge(DefaultController ctrl) {
 		super(ctrl);
 		this.controller = ctrl;
 	}
 
+	/**
+	 * @see ctSim.model.rules.Judge#setWorld(ctSim.model.World)
+	 */
 	@Override
     public void setWorld(World world) {
 		this.world = world;
 		super.setWorld(world);
 	}
 
+	/**
+	 * @see ctSim.model.rules.Judge#isAddingBotsAllowed()
+	 */
 	@Override
 	public boolean isAddingBotsAllowed() {
-		// TODO: Bot-Anzahl pruefen
 		if(this.controller.getParticipants() >= this.participants) {
 			Debug.out.println("Fehler: Es sind schon "+this.participants+" Bots auf der Karte.");
 			return false;
@@ -64,12 +75,12 @@ public class LabyrinthJudge extends Judge {
 
 		// TODO: Bot-Anzahl pruefen
 		if(this.controller.getParticipants() < this.participants) {
-			Debug.out.println("Fehler: Noch nicht genuegend Bots auf der Karte."); //$NON-NLS-1$
+			Debug.out.println("Fehler: Noch nicht genuegend Bots auf der Karte.");
 			return false;
 		}
 
 		if(this.controller.getParticipants() > this.participants) {
-			Debug.out.println("Fehler: Es sind zu viele Bots auf der Karte."); //$NON-NLS-1$
+			Debug.out.println("Fehler: Es sind zu viele Bots auf der Karte.");
 			return false;
 		}
 

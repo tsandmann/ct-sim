@@ -14,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 
-//$$$ rechts oder links docken ueber setLocation, parent.getLocation
 /**
  * <p>
  * Eine Art {@link JToggleButton}, der ein extra Fenster zeigt/verbirgt.
@@ -31,8 +30,9 @@ import javax.swing.JToggleButton;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class AuxFrameButton extends JToggleButton {
-	//$$ SerialVersionUID mal generell dokumentieren
+	/** UID */
 	private static final long serialVersionUID = - 7629302258050583L;
+	/** Frame */
 	private final JFrame auxFrame;
 
 	/**
@@ -99,6 +99,9 @@ public class AuxFrameButton extends JToggleButton {
 	// wenn der Knopf aus der Anzeige entfernt wird (z.B. weil der Container,
 	// der ihn enthaelt, aus der UI entfernt wird), dann auch das Fenster
 	// schliessen
+	/**
+	 * @see javax.swing.JComponent#removeNotify()
+	 */
 	@Override
 	public void removeNotify() {
 		auxFrame.dispose();

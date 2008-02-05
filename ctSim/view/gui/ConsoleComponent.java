@@ -31,12 +31,15 @@ import javax.swing.JTextArea;
  * 
  * @author Felix Beckwermert
  */
-//$$ Umbenennen (irgendwasViewer)
-//$$$ Sollte immer zur letzten Ausgabe scrollen
 public class ConsoleComponent extends JScrollPane implements DebugWindow {
-    private static final long serialVersionUID = 7743090247891316572L;
+	/** UID */
+	private static final long serialVersionUID = 7743090247891316572L;
+	/** Textfeld */
 	private JTextArea textArea;
 	
+	/**
+	 * Neue Textconsole
+	 */
 	public ConsoleComponent() {
 		super(new JTextArea(3, 40), 
 				VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -46,20 +49,37 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 		setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
 	}
 	
+	/**
+	 * Gibt einen Text aus
+	 * @param msg Text
+	 */
 	public synchronized void print(String msg) {
 		textArea.append(msg);
 		textArea.setCaretPosition(textArea.getText().length());
 	}
 
+	/**
+	 * Gibt einen Text und ein Zeilenende aus
+	 * @param msg Text
+	 */
 	public synchronized void println(String msg) {
 		print(msg + "\n");
 	}
 	
+	/**
+	 *@return Neuer Logging-Hanlder
+	 */
 	public Handler createLoggingHandler() {
 		return new LoggingHandler();
 	}
 	
+	/**
+	 * Log-Handler fuer Konsolenausgabe
+	 */
 	private class LoggingHandler extends Handler {
+		/**
+		 * Logging-Handler
+		 */
 		@SuppressWarnings("synthetic-access")
         public LoggingHandler() {
 			setFormatter(new Formatter() {
@@ -74,17 +94,27 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
                 }});
 		}
 
+		/**
+		 * @param record LogRecord
+		 */
 		@Override
 		public synchronized void publish(LogRecord record) {
 			if (record.getLevel().intValue() >= getLevel().intValue())
 				print(getFormatter().format(record));
 		}
 
+		/**
+		 * Schliessen
+		 * @throws SecurityException
+		 */
 		@Override
 		public void close() throws SecurityException {
 			// No-op
 		}
 
+		/**
+		 * Flush
+		 */
 		@Override
 		public void flush() {
 			// No-op

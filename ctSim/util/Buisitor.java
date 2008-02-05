@@ -2,14 +2,24 @@ package ctSim.util;
 
 import java.lang.reflect.Method;
 
-//$$ doc
+/**
+ * Buisitor-Klasse
+ */
 public class Buisitor {
+	/** Ziel */
 	private final Object target;
 
+	/**
+	 * @param invocationTarget
+	 */
 	public Buisitor(Object invocationTarget) {
 		this.target = invocationTarget;
 	}
 
+	/**
+	 * @param args Objekte
+	 * @return Anzahl
+	 */
 	@SuppressWarnings("unchecked")
 	public int dispatchBuisit(Object... args) {
 		Class[] argTypes = new Class[args.length];
@@ -33,6 +43,12 @@ public class Buisitor {
 		return numInvocations;
 	}
 
+	/**
+	 * Checkt eine Signatur
+	 * @param m Methode
+	 * @param types Typen
+	 * @return true / false
+	 */
 	@SuppressWarnings("unchecked")
 	private static boolean hasSignature(Method m, Class... types) {
 		Class[] pt = m.getParameterTypes();
@@ -45,6 +61,12 @@ public class Buisitor {
 		return true;
 	}
 
+	/**
+	 * Checkt einen Tyen
+	 * @param supertype
+	 * @param subtype
+	 * @return true / false 
+	 */
 	private static boolean isSupertype(Class<?> supertype, Class<?> subtype) {
 		// isAssignableFrom() geht mit Referenztypen richtig um; beruecksichtigt
 		// Autoboxing/-unboxing aber nicht
@@ -59,6 +81,10 @@ public class Buisitor {
 		}
 	}
 
+	/**
+	 * @param type
+	 * @return true, falls type ein boolean ist
+	 */
 	private static boolean isBoolean(Class<?> type) {
 		return type.equals(Boolean.class) || type.equals(boolean.class);
 	}

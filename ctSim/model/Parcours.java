@@ -44,20 +44,8 @@ import ctSim.util.Misc;
  *
  */
 public class Parcours {
+	/** Logger */
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.Parcours");
-/*	private class Hole{
-		int x;
-		int y;
-		*//**
-		 * @param x
-		 * @param y
-		 *//*
-		public Hole(int x, int y) {
-			super();
-			this.x = x;
-			this.y = y;
-		}
-	}*/
 
 	/**
 	 * <p>
@@ -74,7 +62,7 @@ public class Parcours {
 	private float blockSizeInM = 0.24f;
 
 	/** Anzahl der Startpositionen fuer Bots. Dir Position 0 ist die Default Position, ab 1 für die Wettkampfbots.*/
-	public static int BOTS = 3;
+	public static int BOTS = 3;	// ParcoursLoader kann max 2 Startplaetze erzeugen, darum hardcoded auf 3
 
 	/** enthaelt alle Hindernisse */
 	private BranchGroup ObstBG;
@@ -100,7 +88,6 @@ public class Parcours {
 
 
 	/** Zielpositionen */
-	//private int[] finishPosition = new int[2];
 	private List<Vector2d> finishPositions = Misc.newList();
 
 	/** Liste mit allen Abgruenden */
@@ -323,9 +310,9 @@ public class Parcours {
 
 	/**
 	 * Legt die Startposition eines Bots fest
-	 * @param bot Nummer des Bots (faengt bei 0 an zu zaehlen)
-	 * @param x
-	 * @param y
+	 * @param bot	Nummer des Bots (faengt bei 0 an zu zaehlen)
+	 * @param x		X-Koordinate
+	 * @param y		Y-Koordinate
 	 */
 	public void setStartPosition(int bot, int x, int y){
 		if (bot <= BOTS-1){
@@ -411,17 +398,6 @@ public class Parcours {
 		return pos;
 	}
 
-
-	/**
-	 * Legt die Zielposition fest
-	 * @param x
-	 * @param y
-	 */
-//	public void setFinishPosition(int x, int y){
-//		this.finishPosition[0]=x;
-//		this.finishPosition[1]=y;
-//	}
-
 	/**
 	 * Fuegt eine neue Zielposition hinzu
 	 * @param x
@@ -445,16 +421,7 @@ public class Parcours {
 	 * @param pos
 	 * @return true, falls ja
 	 */
-	public boolean finishReached(Vector3d pos){
-//		float minX = this.finishPosition[0]*this.grid ;
-//		float maxX = this.finishPosition[0]*this.grid + this.grid;
-//		float minY = this.finishPosition[1]*this.grid ;
-//		float maxY = this.finishPosition[1]*this.grid + this.grid;
-//
-//		if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY))
-//			return true;
-//		return false;
-
+	public boolean finishReached(Vector3d pos) {
 		for(Vector2d p : this.finishPositions) {
 
 			double minX = p.x*this.blockSizeInM ;
@@ -502,6 +469,10 @@ public class Parcours {
 		return false;
 	}
 
+	/**
+	 * Setzt eine Parcours-Map
+	 * @param parcoursMap die neue Map
+	 */
 	void setParcoursMap(int[][] parcoursMap) {
 	    this.parcoursMap = parcoursMap;
     }
@@ -510,15 +481,15 @@ public class Parcours {
 	 * Liefert eine Referenz auf die Rohversion der Karte dieses Parcours (wie
 	 * aus dem XML gelesen). Das Format ist so, wie der {@link ParcoursLoader}
 	 * die parcoursMap erstellt hat.
+	 * @return die ParcoursMap
 	 */
 	public int[][] getParcoursMap() {
     	return parcoursMap;
     }
 
 	/**
-	 * Liefert einen stark verienfachten Parcours zurück.
+	 * @return Liefert einen stark verienfachten Parcours zurück.
 	 * das Array enthaelt nur 0 (freies Feld) und 1 (blockiertes Feld)
-	 *
 	 */
 	int[][] getFlatParcours() {
 		int[][] parcoursMapSimple = new int[this.getWidthInBlocks()][this.getHeightInBlocks()];

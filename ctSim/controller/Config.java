@@ -24,18 +24,28 @@ import ctSim.util.xml.QueryableDocument;
 import ctSim.util.xml.QueryableNode;
 import ctSim.util.xml.XmlDocument;
 
-//$$ doc Config
-// Theoretisch kann man mehr als einmal initialisieren (Konfig laden), aber das ist ungetestet
+/**
+ * Managed die Konfiguration des ct-Sim
+ * Theoretisch kann man mehr als einmal initialisieren (Konfig laden), aber das ist ungetestet
+ */
 public class Config {
-	//$$ Das ist auch zu undurchsichtig mit dem SourceFile
+	/**
+	 * Fuer Dateien
+	 */
 	public static class SourceFile extends File {
+		/** UID */
 		private static final long serialVersionUID = 3022935037996253818L;
 
+		/**
+		 * Neues Dateihandle
+		 * @param pathAndName Pfad
+		 */
 		public SourceFile(String pathAndName) {
 			super(pathAndName);
 		}
 	}
 
+	/** Logger */
 	static FmtLogger lg = FmtLogger.getLogger("ctSim.controller.Config");
 
 	/** <p>Default-Werte der Konfiguration. Ist ein Array, um sie im Quelltext
@@ -60,9 +70,10 @@ public class Config {
 		"simBotErrorHandling", "kill",
 	};
 
+	/** Fallback-Farbe */
 	static final Color botColorFallback = Color.GRAY;
 
-	//$$ Typbewusstsein implementieren
+	/** moegliche Parametertypen */
 	static final ParameterType[] parameterTypes = {
 		new ParameterType("ctSimTimeout", Integer.class),
 		new ParameterType("parcours", File.class),
@@ -81,8 +92,10 @@ public class Config {
 	 * dann m&ouml;glicherweise &uuml;berschrieben.</p> */
 	private static PlainParameters parameters;
 
+	/** Bot-Appearances */
 	private static BotAppearances appearances;
 
+	/** Icons */
 	@SuppressWarnings("unused")
 	private static IconProvider icons;
 
@@ -98,32 +111,60 @@ public class Config {
 	 */
 	public static void loadConfigFile(String file)
 	throws SAXException, IOException, ParserConfigurationException {
-		java.net.URL url = ClassLoader.getSystemResource(file);
-		QueryableDocument doc = XmlDocument.parse(url.openStream(), url.toString());
 		lg.info("Lade Konfigurationsdatei '"+file+"'");
-		parameters = new PlainParameters(doc);
-		appearances = new BotAppearances(doc);
+		java.net.URL url = ClassLoader.getSystemResource(file);
+		if (url != null) {
+			QueryableDocument doc = XmlDocument.parse(url.openStream(), url.toString());
+			parameters = new PlainParameters(doc);
+			appearances = new BotAppearances(doc);
+		} else {
+			throw new FileNotFoundException();
+		}
 	}
 
+	/**
+	 * Laedt Icons
+	 * @param iconsBaseDirectory Verzeichnis
+	 * @throws NullPointerException
+	 * @throws FileNotFoundException
+	 * @throws IllegalArgumentException
+	 */
 	public static void loadIcons(File iconsBaseDirectory)
 	throws NullPointerException, FileNotFoundException,
 	IllegalArgumentException {
 		setIconProvider(new FileIconMap(iconsBaseDirectory));
 	}
 
+	/**
+	 * @param iconProvider
+	 */
 	public static void setIconProvider(IconProvider iconProvider) {
 		icons = iconProvider;
 	}
 
+	/**
+	 * @param key
+	 * @return Wert zum Key
+	 */
 	public static String getValue(String key) {
 		return parameters.get(key);
 	}
 
+	/**
+	 * @param botType	Bot-Typ
+	 * @param index		Bot-Nummer
+	 * @param appearanceType Appearance
+	 * @return Farbe
+	 */
 	public static Color getBotColor(Class<?> botType, int index,
 	String appearanceType) {
 		return appearances.get(botType, appearanceType, index);
 	}
 
+	/**
+	 * @param key
+	 * @return Icon zum Key
+	 */
 	public static Icon getIcon(String key) {
 		URL u = ClassLoader.getSystemResource("images/" + key+".gif");
 		// NullPointerException vermeiden
@@ -133,13 +174,18 @@ public class Config {
 			return new ImageIcon(u);		
 	}
 
+	/**
+	 * HashMap fuer Plain-Parameter
+	 */
 	static class PlainParameters extends HashMap<String, String> {
+		/** UID */
 		private static final long serialVersionUID = - 6931464910390788433L;
 
 		/**
 		 * L&auml;dt die <code>&lt;parameter&gt;</code>-Tags aus der
 		 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
 		 * get(String) verf&uuml;gbar.
+		 * @param doc Config-Dokument
 		 */
 		PlainParameters(QueryableDocument doc) {
 			if (parameterFallbacks.length % 2 != 0)
@@ -171,21 +217,38 @@ public class Config {
 		}
 	}
 
+	/**
+	 * Hash-Map fuer Bot-Appearances
+	 */
 	static class BotAppearances
 	extends HashMap<BotAppearances.AppearanceKey, List<Color>> {
+		/** UID */
 		private static final long serialVersionUID = 8690190797733423514L;
 
+		/**
+		 * Appearance-Key
+		 */
 		class AppearanceKey {
+			/** Bot-Typ */
 			final Class<?> botType;
+			/** Appearance-Typ */
 			final String appearanceType;
 
+			/**
+			 * Neue Appearance
+			 * @param botType			Bot-Typ
+			 * @param appearanceType	Appearance
+			 */
 			public AppearanceKey(final Class<?> botType,
 				final String appearanceType) {
 				this.botType = botType;
 				this.appearanceType = appearanceType;
 			}
 
-			// Wichtig, weil wir's als Schluessel in der Map verwenden
+			/**
+			 * Wichtig, weil wir's als Schluessel in der Map verwenden
+			 * @see java.lang.Object#equals(java.lang.Object)
+			 */
 			@Override
 			public boolean equals(Object o) {
 				if (! (o instanceof AppearanceKey))
@@ -202,9 +265,12 @@ public class Config {
 				return true;
 			}
 
-			// Wichtig, weil wir's als Schluessel in der Map verwenden
-			// Implementiert nach Josh Bloch: "Effective Java",
-			// http://developer.java.sun.com/developer/Books/effectivejava/Chapter3.pdf
+			/**
+			 * Wichtig, weil wir's als Schluessel in der Map verwenden
+			 * Implementiert nach Josh Bloch: "Effective Java",
+			 * http://developer.java.sun.com/developer/Books/effectivejava/Chapter3.pdf
+			 * @see java.lang.Object#hashCode()
+			 */
 			@Override
 			public int hashCode() {
 				int rv = 17; // beliebiger Wert
@@ -213,16 +279,24 @@ public class Config {
 				return rv;
 			}
 
+			/**
+			 * Hashwert des Objekts berechnen
+			 * @param o Objekt
+			 * @return Hashwert
+			 */
 			private int hash(Object o) {
 				return o == null ? 42 : o.hashCode();
 			}
 		}
 
+		/**
+		 * @param d Document
+		 */
 		BotAppearances(QueryableDocument d) {
 			try {
 				for (QueryableNode botTag : d.getNodeList("/ct-sim/bots/bot")) {
 					// Neues Format versuchen
-					String className = botTag.getString("@class"); //$$ XML anpassen
+					String className = botTag.getString("@class");
 					if ("".equals(className))
 						// Altes Format
 						className = botTag.getString("@name");
@@ -243,6 +317,12 @@ public class Config {
 			}
 		}
 
+		/**
+		 * Laedt Appearances
+		 * @param botTag Tag
+		 * @param botType Typ
+		 * @throws XPathExpressionException
+		 */
 		private void loadAppearances(QueryableNode botTag, Class<?> botType)
 		throws XPathExpressionException {
 			for (QueryableNode appNode : botTag.getNodeList("appearance")) {
@@ -253,6 +333,11 @@ public class Config {
 			}
 		}
 
+		/**
+		 * @param classNameFromXml Klasse als XML
+		 * @return Klasse
+		 * @throws ClassNotFoundException
+		 */
 		private static Class<?> getClass(String classNameFromXml)
 		throws ClassNotFoundException {
 			// 1. Versuch
@@ -275,6 +360,11 @@ public class Config {
 
 		// Das alte Format erlaubte z.B. "CtBotSimTcp_3";
 		// probieren wir's ohne Unterstrich und Nummer
+		/**
+		 * @param classNameFromXml Klasse als XML
+		 * @return Klasse
+		 * @throws ClassNotFoundException
+		 */
 		private static Class<?> getClassTolerateNumber(String classNameFromXml)
 		throws ClassNotFoundException {
 			// 1. Versuch: Klassenname exakt wie angegeben
@@ -285,6 +375,11 @@ public class Config {
 			return Class.forName(classNameFromXml.split("_")[0]); //$$ XML anpassen
 		}
 
+		/**
+		 * Fuegt eine Appearance hinzu
+		 * @param key Schluessel
+		 * @param value Farbe
+		 */
 		void add(AppearanceKey key, Color value) {
 			if (! containsKey(key))
 				put(key, new ArrayList<Color>());
@@ -302,6 +397,10 @@ public class Config {
 		 * <li>Index 4: Gr&uuml;n</li>
 		 * <li>usw. </li>
 		 * </ul>
+		 * @param botType Bot-Typ
+		 * @param appearanceType Appearance-Typ
+		 * @param index Nr
+		 * @return Farbe
 		 */
 		Color get(Class<?> botType, String appearanceType, int index) {
 			List<Color> cList = get(new AppearanceKey(botType, appearanceType));
@@ -327,10 +426,20 @@ public class Config {
 		}
 	}
 
+	/**
+	 *Parameter-Typen
+	 */
 	static class ParameterType {
+		/** Name */
 		final String name;
+		/** Typ */
 		final Class<?> type;
 
+		/**
+		 * Parameter-Typ
+		 * @param name	Name
+		 * @param type	Typ
+		 */
 		public ParameterType(final String name, final Class<?> type) {
 			this.name = name;
 			this.type = type;

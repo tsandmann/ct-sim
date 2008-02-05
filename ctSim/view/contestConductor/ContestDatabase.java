@@ -16,6 +16,9 @@ import ctSim.view.contestConductor.ConductorTestUtil.TestDatabase;
  * {@link TestDatabase}.
  */
 public class ContestDatabase {
+	/**
+	 * @return Connection
+	 */
 	public Connection getConnection()  {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");

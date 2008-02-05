@@ -1,6 +1,3 @@
-/**
- *
- */
 package ctSim.model.bots.ctbot;
 
 import static ctSim.model.ThreeDBot.State.*;
@@ -28,10 +25,14 @@ import ctSim.model.bots.components.Sensors.Clock;
 import ctSim.util.Buisitor;
 import ctSim.util.Misc;
 
-//$$ doc
-//$$ Der koennte aufgeteilt werden in allgemein (nach CtSim) und spezifisch (hierher)
+/**
+ * Master-Simulator (CNY70, Maus, Raeder, Mater, Rest)
+ */
 public class MasterSimulator
 implements NumberTwinVisitor, BotBuisitor, Runnable {
+    /**
+     * Rad-Simulator
+     */
     class WheelSimulator {
         /**
         * Maximale Geschwindigkeit als <a
@@ -45,8 +46,13 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         */
         private static final float REVS_PER_SEC_MAX = 151f / 60f;
 
+        /** Governor des Simulators */
         private Actuators.Governor governor;
 
+        /**
+         * Setzt den governor
+         * @param governor
+         */
         public void setGovernor(Actuators.Governor governor) {
             this.governor = governor;
         }
@@ -71,6 +77,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         }
     }
 
+    /**
+     * Maussensor-Simulator
+     */
     class MouseSensorSimulator {
         /** Aufl&ouml;sung des Maussensors [dpi] */
         private static final int SENS_MOUSE_DPI = 400;
@@ -84,8 +93,13 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         */
         private double valueFraction = 0;
 
+        /** Maussensor des Simulators */
         private Sensors.Mouse sensor;
 
+        /**
+         * Setzt den Maussensor
+         * @param sensor
+         */
         public void setSensor(Sensors.Mouse sensor) {
             this.sensor = sensor;
         }
@@ -104,6 +118,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             return distanceInM * 100 / 2.54 * SENS_MOUSE_DPI;
         }
 
+        /**
+         * Setzt den Sensor auf value
+         * @param value
+         */
         public void set(double value) {
             double tmp = meter2Dots(value) + valueFraction;
             int valueInteger = (int)Math.floor(tmp); // Vorkommaanteil
@@ -112,7 +130,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         }
     }
 
-    //$$ Dieses Ding sollte aufgeteilt und gruendlich vereinfacht werden. Wieso nicht J3D die Transformationen machen lassen, statt manuell an irgendwelchen Vektoren rumzupopeln? Beim Lichtsensor ist das z.B. auch so
+    /**
+     * Simulation der Botbewegung
+     */
     class KrautUndRuebenSimulator implements Runnable {
         /** Umfang eines Rades [m] */
         private static final double WHEEL_CIRCUMFERENCE = Math.PI * 0.057d;
@@ -124,12 +144,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         private static final double SENS_MOUSE_DIST_Y = -0.015d;
 
         //TODO Bot soll in Loecher reinfahren, in Hindernisse aber nicht. Momentan: calcPos traegt Pos nicht ein, wenn Hindernis oder Loch. Gewuenscht: Bei Loch das erste Mal Pos updaten, alle weiteren Male nicht
+        /**
+         * @see java.lang.Runnable#run()
+         */
         public void run() {
             // Position und Heading berechnen:
 
             // Fuer ausfuehrliche Erlaeuterung der Positionsberechnung
             // siehe pdf
-            // $$ Ja welches pdf?
 
             // Absolut zurueckgelegte Strecke pro Rad berechnen
             double s_l = leftWheel .revsThisSimStep() * WHEEL_CIRCUMFERENCE;
@@ -165,9 +187,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
                 // Bewegung geradeaus
                 moveDistance = s_l; // = s_r
             } else {
-                // anderfalls die Distanz laut Formel berechnen
+                // andernfalls die Distanz laut Formel berechnen
                 moveDistance = 0.5 * (s_l + s_r) * Math.sin(_gamma) / _gamma;
             }
+            
             // Den Bewegungsvektor berechnen ...
             Vector3d moveDirection = new Vector3d((_hd.x * _cg + _hd.y
                     * _sg), (-_hd.x * _sg + _hd.y * _cg), 0f);
@@ -179,7 +202,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             mouseSensorX.set(2 * _gamma * SENS_MOUSE_DIST_Y);
             mouseSensorY.set(moveDistance);
 
-            //$$ Wieso BoundingSphere um den Ursprung und nicht um newPos? In dem Zusammenhang: wofuer ist Bot.getBounds() da?
             boolean isCollided = world.isCollided(parent,
                 new BoundingSphere(new Point3d(0d, 0d, 0d), CtBotSimTcp.BOT_RADIUS),
                 newPos);
@@ -247,12 +269,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
                 parent.setHeading(newHeading);
 
             if (! parent.isObstStateNormal()) {
-                //$$ Hack
                 mouseSensorX.sensor.set(0);
                 mouseSensorY.sensor.set(0);
             }
 
-            //$$ Hack
             clock.setSimTimeInMs((int)world.getSimTimeInMs());
         }
     }
@@ -263,13 +283,24 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     * Abgrundsensor (2&times;) zum Einsatz.
     */
     class Cny70Simulator implements Runnable {
-        private final double OPENING_ANGLE_IN_RAD = Math.toRadians(80);
-        private static final short PRECISION = 10;
+        /** Oeffnungswinkel (rad) */
+    	private final double OPENING_ANGLE_IN_RAD = Math.toRadians(80);
+        /** Genauigkeit */
+    	private static final short PRECISION = 10;
 
+    	/** Distanz zur Mitte */
         private final Point3d distFromBotCenter;
+        /** Heading */
         private final Vector3d headingInBotCoord;
+         /** interne Daten */
         private final NumberTwin sensor;
 
+        /**
+         * CNY70-Simulator
+         * @param distFromBotCenter
+         * @param headingInBotCoord
+         * @param sensor
+         */
         public Cny70Simulator(Point3d distFromBotCenter,
         Vector3d headingInBotCoord, NumberTwin sensor) {
             this.distFromBotCenter = distFromBotCenter;
@@ -277,6 +308,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             this.sensor = sensor;
         }
 
+        /**
+         * @see java.lang.Runnable#run()
+         */
         public void run() {
             sensor.set(
                 world.sensGroundReflectionCross(
@@ -287,29 +321,53 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         }
     }
 
+    /** Simulatoren */
     private final List<Runnable> simulators = Misc.newList();
+     /** Simulator fuer Position */
     private final KrautUndRuebenSimulator krautUndRuebenSim;
+    /** Welt */
     protected final World world;
+    /** 3D-Repraesentation des Bots */
     protected final ThreeDBot parent;
+    /** Bot-Buisitor*/
     private final Buisitor buisitor = new Buisitor(this);
 
+    /** Rad links */
     protected final WheelSimulator leftWheel = new WheelSimulator();
+    /** Rad rechts */
     protected final WheelSimulator rightWheel = new WheelSimulator();
 
+    /** Maussensor-X */
     protected final MouseSensorSimulator mouseSensorX =
         new MouseSensorSimulator();
+    /** Maussensor-Y */
     protected final MouseSensorSimulator mouseSensorY =
         new MouseSensorSimulator();
+    /** Uhr / Systemzeit */
     private Clock clock;
 
+    /**
+     * @param x
+     * @param y
+     * @param z
+     * @param flipX
+     * @return 3D-Punkt aus Koordinaten
+     */
     private static Point3d at(double x, double y, double z, boolean flipX) {
         return new Point3d((flipX ? -1 : +1 ) * x, y, z);
     }
 
+    /**
+     * @return Einheitsvektor nach vorn
+     */
     private static Vector3d looksForward() {
         return new Vector3d(0, 1, 0);
     }
 
+    /**
+     * @param world		Welt, in der simuliert wird
+     * @param parent	ThreeDBot
+     */
     public MasterSimulator(final World world, final ThreeDBot parent) {
         this.world = world;
         this.parent = parent;
@@ -317,22 +375,35 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         parent.accept(this);
     }
 
+    /**
+     * @see ctSim.model.bots.BotBuisitor#visit(java.lang.Object, ctSim.model.bots.Bot)
+     */
     public void visit(Object o, Bot b) {
         if (o instanceof BotComponent<?>)
             buisitor.dispatchBuisit((BotComponent<?>)o);
-        //$$$ das ist zu kompliziert
         if (o instanceof NumberTwin)
             ((NumberTwin)o).acceptNumTwinVisitor(this);
     }
 
+    /**
+     * @see ctSim.model.bots.components.NumberTwin.NumberTwinVisitor#visit(ctSim.model.bots.components.NumberTwin, boolean)
+     */
     public void visit(NumberTwin numberTwin, boolean isLeft) {
         buisitor.dispatchBuisit(numberTwin, isLeft);
     }
 
+    /**
+     * @param g	governor
+     * @param isLeft links?
+     */
     public void buisitWheel(Governor g, boolean isLeft) {
         (isLeft ? leftWheel : rightWheel).setGovernor(g);
     }
 
+    /**
+     * @param encoderSensor	Encoder
+     * @param isLeft	links?
+     */
     public void buisitEncoderSim(final Sensors.Encoder encoderSensor,
     boolean isLeft) {
         final WheelSimulator wheel = isLeft
@@ -369,6 +440,11 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         });
     }
 
+    /**
+     * @param sensor Distanzsensor
+     * @param isLeft links?
+     * @throws IOException
+     */
     public void buisitDistanceSim(final Sensors.Distance sensor,
     boolean isLeft) throws IOException {
         final Point3d distFromBotCenter = isLeft
@@ -395,18 +471,30 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         });
     }
 
+    /**
+     * @param s Liniensensor
+     * @param isLeft links?
+     */
     public void buisitLineSensorSim(Sensors.Line s, boolean isLeft) {
         simulators.add(new Cny70Simulator(
             at(0.004, 0.009, -0.011 - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
             looksForward(), s));
     }
 
+    /**
+     * @param s Border-Sensor
+     * @param isLeft links?
+     */
     public void buisitBorderSensorSim(Sensors.Border s, boolean isLeft) {
         simulators.add(new Cny70Simulator(
             at(0.036, 0.0384, - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
             looksForward(), s));
     }
 
+    /**
+     * @param sensor Lichtsensor
+     * @param isLeft links?
+     */
     public void buisitLightSim(final Sensors.Light sensor, boolean isLeft) {
         final Point3d distFromBotCenter = isLeft
             ? new Point3d(- 0.032, 0.048, 0.060 - CtBotSimTcp.BOT_HEIGHT / 2)
@@ -426,15 +514,25 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         });
     }
 
+    /**
+     * @param sensor Maussensor
+     * @param isX X? (sonst Y)
+     */
     public void buisitMouseSensorSim(final Sensors.Mouse sensor,
     boolean isX) {
         (isX ? mouseSensorX : mouseSensorY).setSensor(sensor);
     }
 
+    /**
+     * @param sensor Clock
+     */
     public void buisitClockSim(final Sensors.Clock sensor) {
         this.clock  = sensor;
     }
 
+    /**
+     * @see java.lang.Runnable#run()
+     */
     public void run() {
         // Wichtig: Zuerst die Sensoren, dann Kraut + Rueben     
         for (Runnable simulator : simulators) {

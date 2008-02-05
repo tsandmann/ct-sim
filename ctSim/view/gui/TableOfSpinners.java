@@ -21,18 +21,31 @@ import javax.swing.table.TableCellRenderer;
 
 import ctSim.model.bots.components.BotComponent;
 
-//$$ doc
+/**
+ * Tabellen fuer Komponenten
+ */
 public abstract class TableOfSpinners extends GuiBotBuisitor {
+	/**
+	 * Komponenteneditor
+	 */
 	public static class CompntEditor extends AbstractCellEditor
 	implements TableCellEditor {
+		/** UID */
 		private static final long serialVersionUID = 4073894569366140421L;
 
+		/** letzte aktive Komponente */
 		private Component lastActive = null;
 
+		/**
+		 * @see javax.swing.CellEditor#getCellEditorValue()
+		 */
 		public Object getCellEditorValue() {
 			return lastActive;
 		}
 
+		/**
+		 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
+		 */
 		@SuppressWarnings("unused")
 		public Component getTableCellEditorComponent(JTable table,
 		Object value, boolean isSelected, int row, int column) {
@@ -41,7 +54,13 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		}
 	}
 
+	/**
+	 * Komponenten-Renderer
+	 */
 	public static class CompntRenderer implements TableCellRenderer {
+		/**
+		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+		 */
 		@SuppressWarnings("unused")
 		public Component getTableCellRendererComponent(JTable table,
 		Object value, boolean isSelected, boolean hasFocus, int row,
@@ -50,13 +69,23 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		}
 	}
 
+    /**
+     * Bot-Komponenten-Tabelle
+     */
     public static class BotComponentTableModel extends DefaultTableModel {
+    	/** UID */
     	private static final long serialVersionUID = 3066982780978636288L;
 
+    	/**
+    	 * Neue Tabelle fuer Bot-Komponenten
+    	 */
     	public BotComponentTableModel() {
     		super(0, 2);
     	}
 
+		/**
+		 * @see javax.swing.table.DefaultTableModel#isCellEditable(int, int)
+		 */
 		@Override
     	public boolean isCellEditable(int row, int column) {
 			if (column == 0)
@@ -65,6 +94,14 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 				return ((JSpinner)getValueAt(row, column)).isEnabled();
     	}
 
+		/**
+		 * Fuegt eine neue Zeile hinzu
+		 * @param label			Text
+		 * @param toolTip		Tooltip
+		 * @param editable		editierbar?
+		 * @param sModel		Spinner
+		 * @param decimalFormat	Format
+		 */
 		public void addRow(String label, String toolTip, boolean editable,
 		SpinnerModel sModel, String decimalFormat) {
 			JSpinner spinner = new JSpinner(sModel);
@@ -92,11 +129,18 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 			});
 		}
 
+		/**
+		 * @param c Bot-Komponente
+		 */
 		public void addRow(BotComponent<? extends SpinnerModel> c) {
 			addRow(c.getName(), c.getDescription(), c.isGuiEditable(),
 				c.getExternalModel(), null);
 		}
 
+		/**
+		 * @param c Bot-Komponente
+		 * @param decimalFormat Format
+		 */
 		public void addRow(BotComponent<? extends SpinnerModel> c,
 		String decimalFormat) {
 			addRow(c.getName(), c.getDescription(), c.isGuiEditable(),
@@ -104,13 +148,20 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		}
     }
 
+    /** Modell */
     protected BotComponentTableModel model = new BotComponentTableModel();
 
+    /**
+     * @see ctSim.view.gui.GuiBotBuisitor#shouldBeDisplayed()
+     */
     @Override
     public boolean shouldBeDisplayed() {
     	return model.getRowCount() > 0;
     }
 
+    /**
+     * Tabellen fuer Komponenten
+     */
     public TableOfSpinners() {
         final JTable t = new JTable(model);
         t.setRowHeight(new JSpinner().getMinimumSize().height +
@@ -157,5 +208,8 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
         });
     }
 
+    /**
+     * @return Panel-Titel
+     */
     protected abstract String getPanelTitle();
 }

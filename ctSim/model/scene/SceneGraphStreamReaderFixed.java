@@ -41,6 +41,7 @@ import ctSim.util.FmtLogger;
  *
  */
 public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
+	/** Logger */
 	FmtLogger lg = FmtLogger.getLogger(
 		"ctSim.model.scene.SceneGraphStreamReaderFixed");
 
@@ -63,6 +64,11 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 		return bg;
 	}
 
+	/**
+	 * Rekonstruiert eine Map
+	 * @param scene Gruppe
+	 * @param map Map
+	 */
 	@SuppressWarnings("unchecked")
 	private void reconstructMap(Group scene, HashMap map){
 		if (scene == null){
@@ -77,10 +83,10 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 		while (it.hasNext()){
 			String name = (String)it.next();
 			SceneGraphObject so = findInScenegraph(scene,name);
-			String string = "Key "; //$NON-NLS-1$
+			String string = "Key ";
 			if (so != null){
 				map.put(name,so);
-				System.out.println(string+name+" rekonstruiert");  //$NON-NLS-1$//$NON-NLS-2$
+				System.out.println(string+name+" rekonstruiert");
 			} else {
 				lg.warn(string+name+" konnte nach der \u00DCbertragung nicht " +
 						"rekonstruiert werden");
@@ -97,6 +103,12 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	}
 
 	
+	/**
+	 * Sucht etwas im Szenegraphen
+	 * @param group Gruppe
+	 * @param name gesuchter Name
+	 * @return SceneGraphObject
+	 */
 	@SuppressWarnings("unchecked")
 	private SceneGraphObject findInScenegraph(Group group,String name){
 		if (group.getUserData() != null)

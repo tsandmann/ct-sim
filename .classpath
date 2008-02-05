@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="characteristics/|config/|contrib/|ctSim/EchoTest.java|ctSim/TestServer.java|ctSim/view/contestConductor/contest-database|documentation/|images/|parcours/|textures/|tmp/" kind="src" path=""/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="contrib/junit-4.1.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://junit.sourceforge.net/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="contrib/mysql-connector-java-3.1.13-bin.jar"/>
-	<classpathentry kind="lib" path="contrib/picocontainer-1.2.jar">
+	<classpathentry exported="true" kind="lib" path="contrib/mysql-connector-java-3.1.13-bin.jar"/>
+	<classpathentry exported="true" kind="lib" path="contrib/picocontainer-1.2.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="contrib/rxtx.jar" sourcepath="contrib/rxtx/src.zip"/>
-	<classpathentry kind="lib" path="contrib/BrowserLauncher2-1_3.jar"/>
+	<classpathentry exported="true" kind="lib" path="contrib/rxtx.jar" sourcepath="contrib/rxtx/src.zip"/>
+	<classpathentry exported="true" kind="lib" path="contrib/BrowserLauncher2-1_3.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

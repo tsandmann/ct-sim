@@ -29,20 +29,31 @@ import ctSim.model.bots.components.Sensors;
  *
  */
 public class CtBotSimTest extends CtBot implements SimulatedBot {
+	/**
+	 * neuer Test-Bot
+	 */
 	public CtBotSimTest() {
 		super("Test-Bot");
 	
 		components.add(new Sensors.Clock());	
 	}
 
+	/**
+	 * @see ctSim.model.bots.BasicBot#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return "Simulierter, in Java geschriebener c't-Bot";
 	}
 
+	/** letzter Status */
 	private int lastState = 0;
+	/** Zufallsgenerator */
 	private Random rand = new Random();
 	
+	/**
+	 * @see ctSim.model.bots.SimulatedBot#doSimStep()
+	 */
 	public void doSimStep() throws InterruptedException {		
 		double irl = 0;
 		double irr = 0;

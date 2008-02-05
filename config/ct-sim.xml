@@ -61,10 +61,14 @@
 	Werte: SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST -->
 	<parameter name="LogLevel" value="INFO"/>
 
+	<!-- Fernbedienung, die verwendet werden soll.
+	Namen wie in rc5-codes.h beim Bot-Code (Standard: RC_HAVE_HQ_RC_UNIVERS29_334) -->
+	<parameter name="RC5-type" value="RC_HAVE_HQ_RC_UNIVERS29_334"/>
+
 	<!-- Fernbedienungscode, der an simulierte Bots gesendet wird, wenn man
-	"Play" drueckt. 0 = nichts senden, 0x1185 = wie Knopf "5", weitere Codes
-	in ctSim/view/gui/RemoteControlViewer.java. Wert: Integer dezimal oder
-	in hex (genauer: irgendwas was Integer.decode() versteht) -->
+	"Play" drueckt. 0 = nichts senden, 5 = wie Knopf "5", weitere Codes
+	in ctSim/model/bots/components/Sensor.java :: setType().
+	Wert: Beschreibung der Taste -->
 	<parameter name="rcStartCode" value="0"/>
 
 	<!-- Serieller Anschluss. Der Sim verbindet sich mit ihm und erwartet

@@ -6,10 +6,16 @@ import org.junit.Test;
 
 import ctSim.model.bots.components.Actuators.LcDisplay;
 
-/** Unit-Test fuer LcDisplay */
+/** 
+ * Unit-Test fuer LcDisplay 
+ */
 public class LcDisplayTest extends LcDisplay {
+	/** Testdaten */
 	private final String twentyFourLines;
 
+	/**
+	 * Display-Test
+	 */
 	public LcDisplayTest() {
 		super(42, 24);
 		String fortyTwoSpaces = "";
@@ -21,18 +27,29 @@ public class LcDisplayTest extends LcDisplay {
 		twentyFourLines = s.substring(0, s.length() - 1);
 	}
 
+	/**
+	 * Testcode
+	 */
 	@Test
 	public void ctor() {
 		assertEquals(42, getNumCols());
 		assertEquals(24, getNumRows());
 	}
 
+	/**
+	 * Testcode
+	 * @throws Exception
+	 */
 	@Test
 	public void clearModel() throws Exception {
 		clearModel(getExternalModel());
 		assertEquals(twentyFourLines, getAllText(getExternalModel()));
 	}
 	
+	/**
+	 * Testcode
+	 * @throws Exception
+	 */
 	@Test
 	public void internalModelIsDifferentFromExternalOne() 
 	throws Exception {
@@ -43,8 +60,13 @@ public class LcDisplayTest extends LcDisplay {
 		assertEquals(twentyFourLines, getExText());
 	}
 
+	/** Testdaten */
 	private String insertion = "beeblebrox";
 	
+	/**
+	 * Testcode
+	 * @throws Exception
+	 */
 	@Test
 	public void setTextAtAll() throws Exception {
 		// Einfuegen bei 0,0 -- geht's ueberhaupt
@@ -56,6 +78,10 @@ public class LcDisplayTest extends LcDisplay {
 		assertEquals(expected, getExText());
 	}
 	
+	/**
+	 * Testcode
+	 * @throws Exception
+	 */
 	@Test
 	public void setTextColCorrect() throws Exception {
 		// Einfuegen bei 10,0 -- kommt das in der richtigen Spalte an
@@ -68,6 +94,10 @@ public class LcDisplayTest extends LcDisplay {
 		assertEquals(expected, getExText());
 	}
 	
+	/**
+	 * Testcode
+	 * @throws Exception
+	 */
 	@Test
 	public void setTextRowCorrect() throws Exception {
 		// Einfuegen bei 0,8 -- kommt das in der richtigen Zeile an
@@ -81,6 +111,10 @@ public class LcDisplayTest extends LcDisplay {
 		assertEquals(expected, getExText());
 	}
 	
+	/**
+	 * Testcode
+	 * @throws Exception
+	 */
 	@Test
 	public void setTextTruncate() throws Exception {
 		// Einfuegen bei 38,23 -- wird das richtig abgeschnitten
@@ -93,6 +127,10 @@ public class LcDisplayTest extends LcDisplay {
 		assertEquals(expected, getExText());
 	}
 	
+	/**
+	 * @return Text
+	 * @throws Exception
+	 */
 	private String getExText() throws Exception {
 		return getAllText(getExternalModel());
 	}

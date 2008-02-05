@@ -26,26 +26,26 @@ Requested Features:
 
 * FB-Position? --> eventuelle eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
 
+* Klassenstruktur wieder aufraeumen (fbe)
+
+ERLEDIGT:
+=========
+
+* Es gibt immer noch undokumentierte Fkts im Code [wo?]
+
 * Sim kann vom Simulator selbst abgespeicherten Welten nur laden, wenn 
-sie im Ordner parcours innerhalb des Projekts gespeichert worden sind.
-Der Sim findet sonst parcours.dtd nicht.
+  sie im Ordner parcours innerhalb des Projekts gespeichert worden sind.
+  Der Sim findet sonst parcours.dtd nicht.
 
 * Verzeichnis-Angabe fuer die DTD in der Config
 
 * Was machen bei Mangel an Startplaetzen?
 
-* Klassenstruktur wieder aufraeumen (fbe)
-
-* Es gibt immer noch undokumentierte Fkts im Code [wo?]
-
-ERLEDIGT:
-=========
-
 * ContestJudge wieder einbauen (fbe)
 
 * Zielerkennung (des Judge) nicht immer korrekt (fbe)
 
-* Gleitpinn f�llt, obwohl er nicht f�llt? (fbe)
+* Gleitpinn faellt, obwohl er nicht faellt? (fbe)
   -> Durch Mithilfe aus dem Forum (auch ein Bug zum linken Rad gefixt)
 
 * TabbedPane -> TabbedPaneWithCloseIcons (fbe)
@@ -74,13 +74,13 @@ Das Namensschema bitte aus der letzten Version des alten Sims uebernehmen. Ein T
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab (fbe)
 
 * Beim hinzufuegen von neuen Bots den Judge fragen, ob das zulaessig ist
-  --> war doch l�ngst erledigt? (fbe)
+  --> war doch laengst erledigt? (fbe)
 
 * FB schliessen, wenn Bot stirbt (fbe)
 
-* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird k�nnen keine Bots mehr hinzugef�gt werden. (fbe)
+* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird koennen keine Bots mehr hinzugefuegt werden. (fbe)
 
-* Nach dem Ende eines Rennens k�nnen keine Bots wieder hinzugef�gt werden --> Erst neues Level generieren. (fbe)
+* Nach dem Ende eines Rennens koennen keine Bots wieder hinzugefuegt werden --> Erst neues Level generieren. (fbe)
 
 * JudgeChooser sollte aktuell gewaehlten Jugde anzeigen (fbe)
 
@@ -95,15 +95,15 @@ Das Namensschema bitte aus der letzten Version des alten Sims uebernehmen. Ein T
 
 * Characteristics.lookupPrecise() nimmt Number
 
-* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten �bernommen werden (fbe)
+* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten uebernommen werden (fbe)
 
-* wenn der Stop-Button gedr�ckt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
+* wenn der Stop-Button gedrueckt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
 
 * Parcours und Binaries im XML-Config-File festlegen (fbe)
 
 * Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz) (fbe)
 
-* Slider fuer Position (fbe) -> Spinner �ndern Wert jetzt mit jedem Klick
+* Slider fuer Position (fbe) -> Spinner aendern Wert jetzt mit jedem Klick
 
 * Bodenplatte im Sim korrigieren -- ist manchmal verschoben (pek)
 

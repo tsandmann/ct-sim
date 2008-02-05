@@ -67,6 +67,7 @@ import ctSim.util.Misc;
  * @author bbe (bbe@heise.de)
  */
 public class ParcoursLoader {
+	/** Logger */
 	FmtLogger lg = FmtLogger.getLogger("ctSim.model.ParcoursLoader");
 
 	/** Z-Koorndinate der Lampen */
@@ -137,12 +138,14 @@ public class ParcoursLoader {
 													  0f +LINEWIDTH/2 , 0.5f			   ,0f,  // lange Linie nach oben
 	};
 
+	/** Wand-Hoehe */
 	private static final float WALL_HEIGHT = 0.2f;
 
 	/** Verwaltet alle Aussehen */
 	@SuppressWarnings("unchecked")
 	HashMap appearances = new HashMap();
 
+	/** Parcours-Map */
 	private int[][] parcoursMap = null;
 
 	/** Der eigentliche Parcours */
@@ -164,7 +167,8 @@ public class ParcoursLoader {
 	 * @param x  Position in X-Richtung
 	 * @param y  Position in X-Richtung
 	 * @param lengthX Laenge der Wand in X-Richtung
-	 * @param lengthX Laenge der Wand in Y-Richtung
+	 * @param lengthY Laenge der Wand in Y-Richtung 
+	 * @param appearance Die Appearance
 	 */
 	private void createWall(int x, int y, int lengthX, int lengthY, Appearance appearance) {
 		Box box = new Box(
@@ -227,7 +231,8 @@ public class ParcoursLoader {
 	 *
 	 * @param x  Position in X-Richtung
 	 * @param y  Position in Y-Richtung
-	 * @param type Art der Linie
+	 * @param points Punkte der Linie
+	 * @param appearance Art der Linie 
 	 */
 	private void createLine(int x, int y, float[] points, Appearance appearance) {
 		// zwei Polygone (Deckel und Boden) mit N Ecken
@@ -268,6 +273,8 @@ public class ParcoursLoader {
 	 * Erzeugt eine Sauele mit Lichtquelle obendrauf
 	 * @param x X-Koordinate
 	 * @param y Y-Koordinate
+	 * @param wallAppearance Saeulen-Appearance
+	 * @param lightAppearance Licht-Appearance
 	 */
 	private void createPillar(int x, int y,Appearance wallAppearance, Appearance lightAppearance){
 		Cylinder pillar = new Cylinder(0.05f, 0.5f, wallAppearance);
@@ -288,8 +295,9 @@ public class ParcoursLoader {
 	 * Fuegt ein Licht ein
 	 * @param pointLightBounds
 	 * @param pointLightColor
-	 * @param x
-	 * @param y
+	 * @param x X-Koordinate 
+	 * @param y Y-Koordinate
+	 * @param appearance Die Appearance
 	 */
 	private void createLight(BoundingSphere pointLightBounds,Color3f pointLightColor, int x, int y,Appearance appearance) {
 		// Lichter bestehen aus dem echten Licht
@@ -439,7 +447,7 @@ public class ParcoursLoader {
 //			 TODO: Hier wird testweise ein Boden aus einem Stueck eingefuegt!
 			createWholeFloor(getAppearance(' '));
 			//TODO Hat mit dem Einzeichnen des Wegs bis zum Ziel zu tun; sollte ordentlich integriert werden: Menueeintrag in GUI, der das Einzeichnen ein-/ausschaltet. Aus Gruenden der Klarheit sollten die Linien vorher ihre eigene BranchGroup bekommen
-			/**
+			/*
 			for (int i=0; i<Parcours.BOTS; i++){
 				double dist= this.parcours.getShortestDistanceToFinish(this.parcours.getStartPosition(i));
 
@@ -697,8 +705,12 @@ public class ParcoursLoader {
 		this.appearances.put(item,appearance);
 	}
 
-	//TODO Was soll diese Methode? (Wird nirgends aufgerufen)
-	  static void print(Node node, PrintStream out) {
+	/**
+	 * Debug-Methode
+	 * @param node Node
+	 * @param out Output-Stream
+	 */
+	static void print(Node node, PrintStream out) {
 		    int type = node.getNodeType();
 		    switch (type) {
 		      case Node.ELEMENT_NODE:

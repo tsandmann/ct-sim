@@ -80,7 +80,10 @@ public interface View {
 	 */
 	public void onJudgeSet(Judge j);
 
-	// $$ doc onBotAdded
+	/**
+	 * Handler fuer neuer Bot da
+	 * @param bot Bot
+	 */
 	public void onBotAdded(Bot bot);
 
 	/**
@@ -100,7 +103,6 @@ public interface View {
 	 */
 	public void onSimulationStep(long simTimeInMs);
 
-	//$$ sollte die hier nicht auch aufgerufen werden, wenn einer stop geklickt hat und sowas?
 	/**
 	 * Wird vom Controller aufgerufen, wenn die Simulation beendet wurde.
 	 * Simulationen werden beendet, wenn der aktive Judge angeordnet hat, das

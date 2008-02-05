@@ -29,12 +29,10 @@ public interface DebugWindow {
 	/**
 	 * @param str Text, der in das Debug-Fenster geschrieben werden soll
 	 */
-	// TODO: should be sync.
 	public void print(String str);
 	
 	/**
 	 * @param str Textzeile, die in das Debug-Fenster geschrieben werden soll
 	 */
-	// TODO: should be sync.
 	public void println(String str);
 }

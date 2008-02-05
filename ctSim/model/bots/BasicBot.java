@@ -30,7 +30,6 @@ import ctSim.model.bots.components.BotComponent.ConnectionFlags;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
-//$$ doc
 /**
  * <p>
  * Superklasse f&uuml;r alle Bots, unabh&auml;ngig davon, ob sie &ndash;
@@ -63,20 +62,35 @@ import ctSim.util.Misc;
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
 public abstract class BasicBot implements Bot {
-	//$$ nach util?
+	/**
+	 * Liste
+	 * @param <T> Typ
+	 */
 	public static class BulkList<T> extends ArrayList<T> {
+		/** UID */
 		private static final long serialVersionUID = - 8179783452023605404L;
 
+		/**
+		 * Fuegt Elemente hinzu
+		 * @param elements Die Elemente
+		 */
 		public void add(T... elements) {
             for (T e : elements)
                 add(e);
         }
 	}
 
+	/**
+	 * Zaehlklasse
+	 */
 	public static class CountingMap
 	extends HashMap<Class<? extends BasicBot>, Integer> {
+		/** UID */
 		private static final long serialVersionUID = 6419402218947363629L;
 
+		/**
+		 * @param c Bot
+		 */
 		public synchronized void increase(Class<? extends BasicBot> c) {
 			if (containsKey(c))
 				put(c, get(c) + 1);
@@ -84,6 +98,9 @@ public abstract class BasicBot implements Bot {
 				put(c, 0);
 		}
 
+		/**
+		 * @param c Bot
+		 */
 		public synchronized void decrease(Class<? extends BasicBot> c) {
 			if (containsKey(c))
 				put(c, get(c) - 1);
@@ -113,7 +130,8 @@ public abstract class BasicBot implements Bot {
 	 * href="mailto:hkr@heise.de">hkr@heise.de</a>>
 	 */
 	public static class BotComponentList extends BulkList<BotComponent<?>> {
-        private static final long serialVersionUID = - 1331425647710880289L;
+        /** UID */
+		private static final long serialVersionUID = - 1331425647710880289L;
 
         /**
 		 * <p>
@@ -162,6 +180,7 @@ public abstract class BasicBot implements Bot {
 		 * Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von
 		 * ihnen allen betroffen.
 		 * </p>
+         * @param compntFlagTable Flags
 		 */
         public void applyFlagTable(CompntWithFlag... compntFlagTable) {
         	for (BotComponent<?> compnt : this) {
@@ -183,6 +202,8 @@ public abstract class BasicBot implements Bot {
 		 * Implementiert das <a
 		 * href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-Responsibility-Pattern</a>.
 		 * </p>
+    	 * @param command Kommando
+    	 * @throws ProtocolException 
 		 */
     	public void processCommand(Command command) throws ProtocolException {
     		if (command.getDirection() != Command.DIR_REQUEST) {
@@ -196,18 +217,13 @@ public abstract class BasicBot implements Bot {
     			throw new ProtocolException("Unbekanntes Kommando: "+command);
     	}
 
+    	/**
+    	 * View-Update durchfuehren
+    	 * @throws InterruptedException
+    	 */
     	public void updateView() throws InterruptedException {
-//    		try {
-//    			SwingUtilities.invokeAndWait(new Runnable() {
-//    				@SuppressWarnings("synthetic-access")
-//    				public void run() {
     		for (BotComponent<?> c : BotComponentList.this)
     			c.updateExternalModel();
-//    				}
-//    			});
-//    		} catch (InvocationTargetException e) {
-//    			throw new RuntimeException(e);
-//    		}
         }
     }
 
@@ -219,9 +235,15 @@ public abstract class BasicBot implements Bot {
 	 * </p>
 	 */
 	protected static class CompntWithFlag {
+		/** Bot-Komponenten */
 		final Class<? extends BotComponent<?>> compntClass;
+		/** Flags der Verbindung */
 		final ConnectionFlags[] flags;
 
+		/**
+		 * @param compntClass Bot-Komponente
+		 * @param flags Connection-Flags
+		 */
 		CompntWithFlag(Class<? extends BotComponent<?>> compntClass,
 		ConnectionFlags[] flags) {
 			this.compntClass = compntClass;
@@ -235,23 +257,33 @@ public abstract class BasicBot implements Bot {
 	 * &ndash; siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
+	 * @param compntClass Bot-Komponente
+	 * @param flags Connection-Flags
+	 * @return Component-Flag-Tabelle
 	 */
 	protected static CompntWithFlag _(
 	Class<? extends BotComponent<?>> compntClass, ConnectionFlags... flags) {
 		return new CompntWithFlag(compntClass, flags);
 	}
 
+	/** Instanz-Nummer */
 	private static final CountingMap numInstances = new CountingMap();
 
-	//$$ Schoener waere: fuer alle lg-Ausgaben ein Praefix getName()
+	/** Logger */
 	protected final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots");
 
+	/** Komponenten-Liste */
 	protected final BotComponentList components = new BotComponentList();
 
+	/** Name */
 	private final String name;
 
+	/** Dispose-Listener */
 	private final List<Runnable> disposeListeners = Misc.newList();
 
+	/**
+	 * @param name Bot-Name
+	 */
 	public BasicBot(String name) {
 		// Instanz-Zahl erhoehen
 		numInstances.increase(getClass());
@@ -270,12 +302,18 @@ public abstract class BasicBot implements Bot {
 //		});
     }
 
+	/**
+	 * @see ctSim.model.bots.Bot#addDisposeListener(java.lang.Runnable)
+	 */
 	public void addDisposeListener(Runnable runsWhenAObstDisposes) {
 		if (runsWhenAObstDisposes == null)
 			throw new NullPointerException();
 		disposeListeners.add(runsWhenAObstDisposes);
 	}
 
+	/**
+	 * @see ctSim.model.bots.Bot#dispose()
+	 */
 	public void dispose() {
 		// keine Ausgabe fuer 3D-Bots, den zu jedem 3D-Bot gibt es auch einen Sim-Bot
 		if (!this.getClass().getName().contains("ThreeDBot")) {
@@ -299,6 +337,7 @@ public abstract class BasicBot implements Bot {
 	 * </ul>
 	 * Instance-Numbers fangen immer bei 0 an.
 	 * </p>
+	 * @return Nummer
 	 *
 	 * @see #toString()
 	 */
@@ -333,59 +372,25 @@ public abstract class BasicBot implements Bot {
 		return name;
 	}
 
+	/**
+	 * @see ctSim.model.bots.Bot#getDescription()
+	 */
 	public String getDescription() {
 		return "Unbekannter Bottyp";
 	}
 
+	/**
+	 * @see ctSim.model.bots.Bot#accept(ctSim.model.bots.BotBuisitor)
+	 */
 	public void accept(BotBuisitor buisitor) {
 		for (BotComponent<?> c : components)
 			buisitor.visit(c, this);
 	}
 
+	/**
+	 * @see ctSim.model.bots.Bot#updateView()
+	 */
 	public void updateView() throws InterruptedException {
 		components.updateView();
 	}
-
-    //$$ ViewPlatforms: Toter Code
-/*//		Vector3f p= new Vector3f(getPos());
-		Vector3f p= new Vector3f(0f,0f,0f);
-//		p.sub(new Vector3f(0f,0.3f,1.8f));
-
-		Transform3D transform = new Transform3D();
-		//controller.getWorldView().getUniverse().getViewingPlatform().getViewPlatformTransform().getTransform(transform);
-
-		transform.setTranslation(p);
-
-		transform.rotX(Math.PI/2);
-		transform.rotY(Math.PI/2);
-		transform.rotZ(0);
-		getController().getWorldView().getUniverse().getViewingPlatform().getViewPlatformTransform().setTransform(transform);
-*/
-//	}
-
-//	/** Fuegt eine Kameraplatform fuer den Bot ein */
-//	private void createViewingPlatform(){
-//		TransformGroup tg = new TransformGroup();
-//		Transform3D translate = new Transform3D();
-////		translate.setTranslation(new Vector3f(0f,0f,1f));
-//		tg.setTransform(translate);
-//
-//		TransformGroup rg = new TransformGroup();
-//		Transform3D rotate = new Transform3D();
-//		Transform3D tmp= new Transform3D();
-//
-//		rotate.setRotation(new AxisAngle4d(0d, 0d, 1d, -Math.PI/2));
-//		tmp.rotX(Math.PI/2);
-//		rotate.mul(tmp);
-//
-//		rg.setTransform(rotate);
-//		tg.addChild(rg);
-//
-//	 	ViewPlatform  viewPlatform = new ViewPlatform();	// Erzeuge eine neue Platform
-//	 	rg.addChild(viewPlatform);
-//
-//	 	((TransformGroup)getNodeReference(TG)).addChild(tg); // Fuege sie ein
-//	 	addNodeReference(VP,viewPlatform);	// Trage sie in die Map ein
-//
-//	}
 }

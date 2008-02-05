@@ -22,7 +22,6 @@ import org.xml.sax.SAXParseException;
 
 import ctSim.util.Decoratoror;
 
-//$$ Zur Klarheit umbenennen in XmlDocuments? Oder QueryableDocument?
 /**
  * <p>
  * Klasse, die die Arbeit mit XPath vereinfachen und verertr&auml;glichen
@@ -100,6 +99,7 @@ public class XmlDocument {
 	 * eben genannten Zeile parst und z.B. als baseDir &quot;wurst&quot;
 	 * &uuml;bergeben wurde, wird der Parser versuchen, die Datei
 	 * wurst/parcours.dtd zu &ouml;ffnen und als DTD zu verwenden.
+	 * @return das Dokument
 	 * @throws SAXException Falls die &uuml;bergebene Datei nicht geparst werden
 	 * kann, etwa weil das enthaltene XML nicht wohlgeformt ist oder nicht gegen
 	 * die DTD validiert. Eine SAXException wird unter genau den Umst&auml;nden
@@ -123,6 +123,10 @@ public class XmlDocument {
 	 *
 	 * @param fileToParse Die XML-Datei, die geparst und validiert werden soll,
 	 * z.B. <code>new File("sachen/gemuese/gurken.xml")</code>.
+	 * @return Das Dokument
+	 * @throws SAXException 
+	 * @throws IOException 
+	 * @throws ParserConfigurationException 
 	 */
 	public static QueryableDocument parse(File fileToParse)
 	throws SAXException, IOException, ParserConfigurationException {
@@ -134,6 +138,10 @@ public class XmlDocument {
 	 *
 	 * @param fileToParse Name und ggf. Pfad der XML-Datei, die geparst und
 	 * validiert werden soll, z.B. "sachen/gemuese/gurken.xml".
+	 * @return Das Dokument
+	 * @throws SAXException 
+	 * @throws IOException 
+	 * @throws ParserConfigurationException 
 	 */
 	public static QueryableDocument parse(String fileToParse)
 		throws SAXException, IOException, ParserConfigurationException {
@@ -143,6 +151,12 @@ public class XmlDocument {
 	/**
 	 * Wie {@link #parse(java.io.File, java.lang.String)}, aber liest die
 	 * Datei aus dem &uuml;bergebenen InputStream.
+	 * @param documentStream 
+	 * @param baseDir 
+	 * @return Das Dokument
+	 * @throws SAXException 
+	 * @throws IOException 
+	 * @throws ParserConfigurationException 
 	 */
 	public static QueryableDocument parse(
 		InputStream documentStream, String baseDir)
@@ -183,7 +197,10 @@ public class XmlDocument {
 		}
 	}
 
-	//$$ doc
+	/**
+	 * @param baseNode Node
+	 * @return QueryableNode
+	 */
 	static QueryableNode createQueryableNode(Node baseNode) {
 		try {
 			if (baseNode == null)
@@ -196,6 +213,9 @@ public class XmlDocument {
 		}
 	}
 
+	/**
+	 * Mixin
+	 */
 	public static class QueryableMixin implements XPathQueryable {
 		/**
 		 * Dieser Mixin wird in diesen Knoten hineingemixt; Drandenken:
@@ -206,28 +226,43 @@ public class XmlDocument {
 		/** Hiwi zum Auswerten von XPath-Ausdr&uuml;cken */
 		private XPath evaluator = XPathFactory.newInstance().newXPath();
 
+		/**
+		 * @param forWhichNode	Knoten
+		 */
 		public QueryableMixin(Node forWhichNode) {
 			this.cocktail = forWhichNode;
 		}
 
+		/**
+		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNodeList(java.lang.String)
+		 */
 		public IterableNodeList getNodeList(String xPathExpression)
 		throws XPathExpressionException {
 			return new IterableNodeList((NodeList)evaluator.evaluate(
 				xPathExpression, cocktail, XPathConstants.NODESET));
 		}
 
+		/**
+		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNode(java.lang.String)
+		 */
 		public QueryableNode getNode(String xPathExpression)
 		throws XPathExpressionException {
 			return createQueryableNode((Node)evaluator.evaluate(
 				xPathExpression, cocktail, XPathConstants.NODE));
 		}
 
+		/**
+		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getString(java.lang.String)
+		 */
 		public String getString(String xPathExpression)
 		throws XPathExpressionException {
 			return (String)evaluator.evaluate(xPathExpression, cocktail,
 				XPathConstants.STRING);
 		}
 
+		/**
+		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNumber(java.lang.String)
+		 */
 		public Double getNumber(String xPathExpression)
 		throws XPathExpressionException {
 			/*
@@ -239,18 +274,32 @@ public class XmlDocument {
 				XPathConstants.NUMBER);
 		}
 
+		/**
+		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getBoolean(java.lang.String)
+		 */
 		public Boolean getBoolean(String xPathExpression)
 		throws XPathExpressionException {
 			return (Boolean)evaluator.evaluate(xPathExpression, cocktail,
 				XPathConstants.BOOLEAN);
 		}
 
+		/**
+		 * Knoten vorhanden?
+		 * @param <T>
+		 * @param xPathExpression
+		 * @param value
+		 * @return Knoten oder null
+		 * @throws XPathExpressionException
+		 */
 		private <T> T nullIfNotExists(String xPathExpression, T value)
 		throws XPathExpressionException {
 			// War der Knoten nicht da oder war er leer?
 			return getNode(xPathExpression) == null ? null : value;
 		}
 
+		/**
+		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getStringOrNull(java.lang.String)
+		 */
 		public String getStringOrNull(String xPathExpression)
 		throws XPathExpressionException {
 			String rv = getString(xPathExpression);
@@ -260,6 +309,9 @@ public class XmlDocument {
 				return rv;
 		}
 
+		/**
+		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNumberOrNull(java.lang.String)
+		 */
 		public Number getNumberOrNull(String xPathExpression)
 		throws XPathExpressionException {
 			Double rv = getNumber(xPathExpression);
@@ -269,6 +321,9 @@ public class XmlDocument {
 				return rv;
 		}
 
+		/**
+		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getBooleanOrNull(java.lang.String)
+		 */
 		public Boolean getBooleanOrNull(String xPathExpression)
 		throws XPathExpressionException {
 			Boolean rv = getBoolean(xPathExpression);
@@ -279,6 +334,9 @@ public class XmlDocument {
 		}
 	}
 
+	/**
+	 * Selektiert mehrere Knoten
+	 */
 	public interface XPathQueryable {
 		/**
 		 * <p>
@@ -293,6 +351,7 @@ public class XmlDocument {
 		 * &ndash; Attribute, CData-Abschnitte usw. sind auch Knoten. Siehe
 		 * {@link Node}.
 		 * </p>
+		 * @param xPathExpression 
 		 *
 		 * @return Die selektierten Knoten als {@link NodeList}, wie sie die
 		 * Java-Plattform implementiert, die aber auch {@link Iterable} ist.
@@ -300,6 +359,7 @@ public class XmlDocument {
 		 * m&ouml;glich. Gibt es im Dokument keine Knoten, die von dem
 		 * XPath-Ausdruck selektiert werden, wird eine NodeList
 		 * zur&uuml;ckgegeben, die keine Knoten enth&auml;lt.
+		 * @throws XPathExpressionException 
 		 */
 		public IterableNodeList getNodeList(String xPathExpression)
 		throws XPathExpressionException;
@@ -316,6 +376,9 @@ public class XmlDocument {
 		 * &ndash; Attribute, CData-Abschnitte usw. sind auch Knoten. Siehe
 		 * {@link Node}.
 		 * </p>
+		 * @param xPathExpression 
+		 * @return Knoten
+		 * @throws XPathExpressionException 
 		 */
 		public QueryableNode getNode(String xPathExpression)
 		throws XPathExpressionException;
@@ -348,6 +411,9 @@ public class XmlDocument {
 		 * href="http://www.w3.org/TR/xpath.html#data-model">XPath-Spezifikation
 		 * Abschnitt 5</a>.
 		 * </p>
+		 * @param xPathExpression 
+		 * @return String
+		 * @throws XPathExpressionException 
 		 *
 		 * @see #getStringOrNull(String)
 		 */
@@ -362,6 +428,9 @@ public class XmlDocument {
 		 * {@code getNumber(...).isNaN() == true}). <a
 		 * href="http://www.w3.org/TR/xpath#function-number">Details zur
 		 * Konvertierung in eine Zahl</a>
+		 * @param xPathExpression 
+		 * @return Zahl
+		 * @throws XPathExpressionException 
 		 *
 		 * @see #getNumberOrNull(String)
 		 */
@@ -375,6 +444,9 @@ public class XmlDocument {
 		 * selektiert, wird {@code false} zur&uuml;ckgeliefert. <a
 		 * href="http://www.w3.org/TR/xpath#function-boolean">Details zur
 		 * Konvertierung in einen Boolean</a>
+		 * @param xPathExpression 
+		 * @return Boolean
+		 * @throws XPathExpressionException 
 		 *
 		 * @see #getBooleanOrNull(String)
 		 */
@@ -387,6 +459,9 @@ public class XmlDocument {
 		 * {@code null} zur&uuml;ckgeliefert. So kann man auseinanderhalten, ob
 		 * der Knoten nicht existiert ({@code null}) oder ob er existiert,
 		 * aber keinen Text enth&auml;lt ("").
+		 * @param xPathExpression 
+		 * @return String / null
+		 * @throws XPathExpressionException 
 		 */
 		public String getStringOrNull(String xPathExpression)
 		throws XPathExpressionException;
@@ -397,6 +472,9 @@ public class XmlDocument {
 		 * {@code null} zur&uuml;ckgeliefert. So kann man auseinanderhalten, ob
 		 * der Knoten nicht existiert ({@code null}) oder ob er existiert,
 		 * aber etwas anderes als eine Zahl enth&auml;lt.
+		 * @param xPathExpression 
+		 * @return Zahl / null
+		 * @throws XPathExpressionException 
 		 */
 		public Number getNumberOrNull(String xPathExpression)
 		throws XPathExpressionException;
@@ -407,6 +485,9 @@ public class XmlDocument {
 		 * {@code null} zur&uuml;ckgeliefert. So kann man auseinanderhalten, ob
 		 * der Knoten nicht existiert ({@code null}) oder ob er wirklich da
 		 * ist und {@code false} enth&auml;lt.
+		 * @param xPathExpression 
+		 * @return Boolean / null
+		 * @throws XPathExpressionException 
 		 */
 		public Boolean getBooleanOrNull(String xPathExpression)
 		throws XPathExpressionException;

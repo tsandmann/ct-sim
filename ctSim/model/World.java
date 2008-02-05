@@ -45,7 +45,6 @@ import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.ViewPlatform;
-import javax.media.j3d.VirtualUniverse;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
@@ -78,6 +77,7 @@ import ctSim.util.Misc;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class World {
+	/** Logger */
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.World");
 
 	/** Name des XML-Schemas fuer Parcours */
@@ -86,14 +86,21 @@ public class World {
 	/** Breite des Spielfelds in m */
 	public static final float PLAYGROUND_THICKNESS = 0f;
 
+	/** Transforgroup der Welt */
 	private TransformGroup worldTG;
 
-	private BranchGroup lightBG, terrainBG, obstBG;
-
+	/** Branchgroup fuer Licht */
+	private BranchGroup lightBG;
+	/** Brachgroup fuer Terrain */
+	private BranchGroup terrainBG;
+	/** Branchgroup fuer Hindernisse */
+	private BranchGroup obstBG;
+	/** Branchgroup fuer Szene */
 	private BranchGroup scene;
-
+	/** Branchgroup fuer Parcours */
 	private Parcours parcours;
 
+	/** Viewer */
 	private Set<ViewPlatform> viewPlatforms = new HashSet<ViewPlatform>();
 	
 	/** Die Quelle, aus der der Parcours dieser Welt gelesen wurde */
@@ -123,9 +130,15 @@ public class World {
 
 	///////////////////////////////////////////////////////////////////////////
 
+	/** aktive Bots */
 	private final List<ThreeDBot> botsRunning = Misc.newList();
+	/** zu startende Bots */
 	private final List<ThreeDBot> botsToStart = Misc.newList();
 
+	
+	/**
+	 * Startet die neuen Bots
+	 */
 	public synchronized void startBots() {
 		for (ThreeDBot b : botsToStart) {
 			b.start();
@@ -134,10 +147,17 @@ public class World {
 		botsToStart.clear();
 	}
 
+	/**
+	 * Ermittelt die neue Anzahl an Bots (aktive + neue)
+	 * @return Botanzahl
+	 */
 	public synchronized int getFutureNumOfBots() {
 		return botsRunning.size() + botsToStart.size();
 	}
 
+	/**
+	 * Entfernt alle Bots
+	 */
 	public synchronized void removeAllBotsNow() {
 		// Listen kopieren: b.dispose() entfernt den Bot aus botsToStart und
 		// botsRunning, ein Iterator wuerde also eine ConcurrentModificationExcp
@@ -161,6 +181,7 @@ public class World {
 	 * <p>
 	 * N&auml;heres siehe {@link #setSimStepIntervalInMs(int)}.
 	 * </p>
+	 * @return Zeitintervall
 	 */
 	public int getSimStepIntervalInMs() {
 		return this.simStepIntervalInMs;
@@ -215,6 +236,9 @@ public class World {
 	 * L&auml;dt einen Parcours aus einer Datei und baut damit eine Welt.
 	 * @param sourceFile Die zu &ouml;ffnende Datei. Sie
 	 * hat in dem f&uuml;r Parcours vorgesehenen Schema zu sein.
+	 * @return Die neue Welt
+	 * @throws SAXException 
+	 * @throws IOException 
 	 */
 	public static World buildWorldFromFile(File sourceFile)
 	throws SAXException, IOException {
@@ -225,14 +249,34 @@ public class World {
 			sourceString += line + "\r\n";
 		}
 		in.close();
-		return new World(new InputSource(sourceFile.toURI().toString()), null);
+		return new World(new InputSource(sourceFile.toURI().toString()), 
+				/* Der EntityResolver hat den Sinn, dem Parser zu sagen,
+				 * er soll die parcours.dtd bitte im Verzeichnis "parcours"
+				 * suchen. */
+				new EntityResolver() {
+					@SuppressWarnings("unused")
+                    public InputSource resolveEntity(
+							String publicId,
+							String systemId)
+					throws SAXException, IOException {
+						if (systemId.endsWith(PARCOURS_DTD))
+							return new InputSource(ClassLoader.getSystemResource(
+									// "./" darf hier nicht enthalten sein
+									Config.getValue("worlddir").substring(2) + PARCOURS_DTD).openStream());
+		                return null; // Standard-EntityResolver verwenden
+		            }
+				}
+			);
 	}
 
 	/** L&auml;dt einen Parcours aus einem String und baut damit eine Welt.
 	 * @param parcoursAsXml Der String, der die XML-Darstellung des Parcours
 	 * enth&auml;lt. Das XML muss in dem f&uuml;r Parcours vorgesehenen Schema
 	 * sein. Die in Zeile&nbsp;2 des XML angegebene DTD-Datei wird von dieser
-	 * Methode im Unterverzeichnis "parcours" gesucht. */
+	 * Methode im Unterverzeichnis "parcours" gesucht. 
+	 * @return Die neue Welt
+	 * @throws SAXException 
+	 * @throws IOException */
 	public static World buildWorldFromXmlString(String parcoursAsXml)
 	throws SAXException, IOException {
 		sourceString = new String(parcoursAsXml);
@@ -278,6 +322,8 @@ public class World {
 	 * @param resolver Der Xerces-EntityResolver, der beim Parsen des XML
 	 * verwendet werden soll. Details siehe
 	 * {@link ParcoursLoader#loadParcours(InputSource, EntityResolver)}.
+	 * @throws SAXException 
+	 * @throws IOException 
 	 * @see ParcoursLoader#loadParcours(InputSource, EntityResolver)
 	 */
 	private World(InputSource source, EntityResolver resolver)
@@ -290,10 +336,18 @@ public class World {
 		setParcours(p);
 	}
 
+	/**
+	 * Breite in Bloecken
+	 * @return Breite
+	 */
 	public int getWidthInGridBlocks() {
 		return parcours.getWidthInBlocks();
 	}
 
+	/**
+	 * Hoehe in Bloecken
+	 * @return Hoehe
+	 */
 	public int getHeightInGridBlocks() {
 		return parcours.getHeightInBlocks();
 	}
@@ -314,7 +368,7 @@ public class World {
 
 	/**
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
-	 * @param parcoursFile Dateinamen des Parcours
+	 * @param parc Der Parcours
 	 */
 	private void setParcours(Parcours parc) {
 
@@ -334,19 +388,20 @@ public class World {
 	    this.lightBG.addChild(parc.getLightBG());
 	    this.terrainBG.addChild(parc.getTerrainBG());
 
-//	    this.sceneLight.getObstBG().setCapability(Node.ENABLE_PICK_REPORTING);
-//	    this.sceneLight.getObstBG().setCapability(Node.ALLOW_PICKABLE_READ);
 	    this.obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
 	    this.obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
 	}
 
+	/**
+	 * Initialisiert die Welt
+	 */
 	private void init() {
-		VirtualUniverse.setJ3DThreadPriority(1); //$$ setJ3DThreadPriority() gehoert hier nicht hin
+//		VirtualUniverse.setJ3DThreadPriority(1);
 
 		// Die Wurzel des Ganzen:
 		this.scene = new BranchGroup();
-		this.scene.setName("World"); //$NON-NLS-1$
-		this.scene.setUserData(new String("World")); //$NON-NLS-1$
+		this.scene.setName("World");
+		this.scene.setUserData(new String("World"));
 
 		Transform3D worldTransform = new Transform3D();
 		worldTransform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));
@@ -383,13 +438,7 @@ public class World {
 		this.terrainBG.setPickable(true);
 		this.worldTG.addChild(this.terrainBG);
 
-		// Die TranformGroup fuer alle Hindernisse:
-//		this.sceneLight.setObstBG(new BranchGroup());
-//		// Damit spaeter Bots hinzugefuegt werden koennen:
-//		this.sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-//		this.sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_DETACH);
-//		this.sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-//		this.sceneLight.getObstBG().setCapability(BranchGroup.ALLOW_PICKABLE_WRITE);
+		// Damit spaeter Bots hinzugefuegt werden koennen:
 		this.obstBG = new BranchGroup();
 		this.obstBG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 		this.obstBG.setCapability(BranchGroup.ALLOW_DETACH);
@@ -399,12 +448,10 @@ public class World {
 		this.worldTG.addChild(this.obstBG);
 	}
 
-	// TODO: Besser weg -> WorldPanel, WorldView ueberarbeiten...
 	/**
 	 * @return Gibt die BranchGroup der Szene zurueck
 	 */
 	public BranchGroup getScene() {
-
 		return this.scene;
 	}
 
@@ -413,15 +460,15 @@ public class World {
 	 * @param view Die neue Ansicht
 	 */
 	public void addViewPlatform(ViewPlatform view) {
-
 		this.viewPlatforms.add(view);
 	}
 
 	/**
 	 * Fuegt einen neuen Bot hinzu
-	 * @param bot Der neue Bot
+	 * @param bot 		Der neue Bot
+	 * @param barrier 	Barrier fuer den Bot
+	 * @return Neue ThreeDBot-Instanz
 	 */
-	// TODO Fehlermeldung, wenn keine Startpositionen mehr... (siehe Parcours)
 	public ThreeDBot addBot(SimulatedBot bot, BotBarrier barrier) {
 		if (bot == null)
 			throw new NullPointerException();
@@ -446,9 +493,11 @@ public class World {
 		botWrapper.addDisposeListener(new Runnable() {
 			@SuppressWarnings("synthetic-access")
 			public void run() {
-				botsToStart.remove(botWrapper);
-				botsRunning.remove(botWrapper);
-				obstBG.removeChild(botWrapper.getBranchGroup());
+				if (botWrapper != null) {
+					botsToStart.remove(botWrapper);
+					botsRunning.remove(botWrapper);
+					obstBG.removeChild(botWrapper.getBranchGroup());
+				}
 			}
 		});
 
@@ -465,6 +514,10 @@ public class World {
 	/** Reichweite des Lichtes in m */
 	private static final float LIGHT_SOURCE_REACH = 1f;
 
+	/**
+	 * Gibt den Gewinner zurueck
+	 * @return ThreeDBot, der gewonnen hat
+	 */
 	public ThreeDBot whoHasWon() {
 		for (ThreeDBot b : botsRunning) {
 			if (finishReached(b.getPositionInWorldCoord()))
@@ -474,6 +527,7 @@ public class World {
 	}
 
 	/**
+	 * @param posInWorldCoord Position
 	 * @return {@code true}, falls pos auf einem der Zielfelder des Parcours
 	 * liegt. {@code false} andernfalls.
 	 */
@@ -490,7 +544,6 @@ public class World {
 	 * @return {@code true} wenn das Objekt kollidiert ist, {@code false} wenn
 	 * es sich frei bewegen kann
 	 */
-	// TODO: Ueberarbeiten?
 	public boolean isCollided(ThreeDBot obst, Bounds bounds,
 	Vector3d newPosition) {
 
@@ -961,6 +1014,7 @@ public class World {
 	 */
 	private int runningBotsPtr = 0;
 
+	/** PickConeRay der Welt */
 	private PickConeRay pickConeRay = new PickConeRay();
 
 	/**
@@ -1005,10 +1059,20 @@ public class World {
 		}
 	}
 
+	/**
+	 * Ermittelt die kuerzestet Distanz zum Ziel
+	 * @param fromWhere	Anfangsposition
+	 * @return	Entfernung
+	 */
 	public double getShortestDistanceToFinish(Point3d fromWhere) {
 		return getShortestDistanceToFinish(new Vector3d(fromWhere));
 	}
 
+	/**
+	 * Ermittelt die kuerzestet Distanz zum Ziel
+	 * @param fromWhere	Anfangsposition
+	 * @return	Entfernung
+	 */
 	public double getShortestDistanceToFinish(Vector3d fromWhere) {
 		return parcours.getShortestDistanceToFinish(fromWhere);
 	}
@@ -1028,6 +1092,10 @@ public class World {
 		worldTG = null;
 	}
 
+	/**
+	 * Loescht einen Bot
+	 * @param bot der zu loeschende Bot
+	 */
 	public void deleteBot(Bot bot) {
 		parcours.setStartFieldUnused(bot);
 	}

@@ -13,8 +13,14 @@ import java.util.HashMap;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 
-//$$ doc Misc
+/**
+ * Tools
+ */
 public class Misc {
+	/**
+	 * @param x 
+	 * @return log2(x)
+	 */
 	public static double log2(double x) {
 		return Math.log(x) / Math.log(2);
 	}
@@ -23,6 +29,7 @@ public class Misc {
 	 * Bringt einen Winkel in das Intervall ]&minus;180&deg;; 180&deg;].
 	 * 
 	 * @param angleInDeg Winkel in Grad
+	 * @return Winkel
 	 */
 	public static double normalizeAngleDeg(double angleInDeg) {
 		while (angleInDeg > 180)
@@ -36,6 +43,7 @@ public class Misc {
 	 * Bringt einen Winkel in das Intervall ]&minus;&pi;; &pi;].
 	 * 
 	 * @param angleInRad Winkel im Bogenma&szlig;
+	 * @return Winkel
 	 */
 	public static double normalizeAngleRad(double angleInRad) {
 		while (angleInRad > PI)
@@ -50,6 +58,9 @@ public class Misc {
 	 * &lt; <code>value</code> &lt; <code>maxAllowed</code> gilt. Falls
 	 * nicht, liefert den Wert aus dem Intervall [0; <code>maxAllowed</code>],
 	 * der <code>value</code> am n&auml;chsten liegt.
+	 * @param value 
+	 * @param maxAllowed 
+	 * @return Wert
 	 */
 	public static int clamp(int value, int maxAllowed) {
 		int rv = value;
@@ -58,7 +69,12 @@ public class Misc {
 		return rv;
 	}
 
-	/** Wie {@link #clamp(int, int)} */
+	/** 
+	 * Wie {@link #clamp(int, int)} 
+	 * @param value 
+	 * @param maxAllowed 
+	 * @return Wert 
+	 */
 	public static double clamp(double value, double maxAllowed) {
 		double rv = value;
 		rv = Math.max(rv, 0);
@@ -66,6 +82,11 @@ public class Misc {
 		return rv;
 	}
 
+	/**
+	 * @param fullString
+	 * @param whitelistOfBeginnings
+	 * @return true/falls
+	 */
 	public static boolean startsWith(
 			String fullString, String... whitelistOfBeginnings) {
 		if (whitelistOfBeginnings == null)
@@ -82,6 +103,12 @@ public class Misc {
 	}
 
 	// throws NullPtr wenn separator == null
+	/**
+	 * @param <T>
+	 * @param separator
+	 * @param stuff
+	 * @return T
+	 */
 	@SuppressWarnings("unchecked")
     public static <T> T[] intersperse(T separator, T... stuff) {
 		T[] rv = (T[])Array.newInstance(separator.getClass(),
@@ -94,6 +121,10 @@ public class Misc {
 		return rv;
 	}
 
+	/**
+	 * @param strings
+	 * @return neuer String
+	 */
 	public static String join(String... strings) {
 		StringBuilder b = new StringBuilder();
 		for (String s : strings)
@@ -101,6 +132,11 @@ public class Misc {
 		return b.toString();
 	}
 
+	/**
+	 * @param source
+	 * @param dest
+	 * @throws IOException
+	 */
 	public static void copyStreamToStream(InputStream source,
 		OutputStream dest) throws IOException {
 		byte[] buf = new byte[4096];
@@ -110,6 +146,7 @@ public class Misc {
 		dest.close();
 	}
 
+	/** ??? */
 	private static HashMap<RenderingHints.Key, Object> antiAliasOn = newMap();
 
 	static {
@@ -117,6 +154,9 @@ public class Misc {
 			RenderingHints.VALUE_ANTIALIAS_ON);
 	}
 
+	/**
+	 * @param g Graphics2D
+	 */
 	public static void enableAntiAliasing(Graphics2D g) {
 		g.addRenderingHints(antiAliasOn);
 	}
@@ -124,6 +164,8 @@ public class Misc {
 	/**
 	 * Konvertiert ein Byte (Wertebereich [&minus;128; +127]) in ein
 	 * <em>unsigned byte</em> (Wertebereich [0; 255]).
+	 * @param value 
+	 * @return uByte
 	 */
 	public static int toUnsignedInt8(byte value) {
 		// Zweierkomplement (1. Bit gesetzt = negatives Vorzeichen)
@@ -132,6 +174,9 @@ public class Misc {
 
 	/**
 	 * Liefert das letzte Element des &uuml;bergebenen Arrays.
+	 * @param array 
+	 * @param <T> 
+	 * @return letztes Element
 	 *
 	 * @throws ArrayIndexOutOfBoundsException falls das &uuml;bergebene
 	 * Array leer ist (L&auml;nge 0 hat)
@@ -154,17 +199,28 @@ public class Misc {
 	 * Nach der hervorragenden Entdeckung von Josh Bloch; siehe <a
 	 * href="http://developers.sun.com/learning/javaoneonline/2006//coreplatform/TS-1512.html">Vortrag
 	 * bei der JavaOne</a>.
+	 * @param <T> 
+	 * @return ArrayList
 	 */
 	public static <T> ArrayList<T> newList() {
 		return new ArrayList<T>();
 	}
 
-	/** Wie {@link #newList()}, aber f&uuml;r eine {@link HashMap}. */
+	/** 
+	 * Wie {@link #newList()}, aber f&uuml;r eine {@link HashMap}. 
+	 * @param <K> 
+	 * @param <V> 
+	 * @return HashMap 
+	 */
 	public static <K, V> HashMap<K, V> newMap() {
 		return new HashMap<K, V>();
 	}
 
-	//$$ doc
+	/**
+	 * 
+	 * @param t
+	 * @param updatePolicy
+	 */
 	public static void setCaretPolicy(JTextArea t, int updatePolicy) {
 		DefaultCaret c = new DefaultCaret();
 		c.setUpdatePolicy(updatePolicy);

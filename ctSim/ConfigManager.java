@@ -2,8 +2,11 @@ package ctSim;
 
 import ctSim.util.FmtLogger;
 
-//$$$ Kann weg dank neuem os="..."-Attribut in der Konfig
+/**
+ * OS-spezifische Anpassungen fuer das Einlesen der Config
+ */
 public class ConfigManager {
+	/** Logger */
 	static FmtLogger lg = FmtLogger.getLogger("ctSim.ConfigManager");
 
 	/**

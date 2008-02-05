@@ -40,10 +40,15 @@ import ctSim.util.SaferThread;
  * @author Benjamin Benz (bbe@heise.de)
  * @author Christoph Grimmer (c.grimmer@futurio.de)
  */
-
 public class TcpConnection extends Connection {
+	/** Socket der Connection */
 	private Socket socket = null;
 
+	/**
+	 * TCP-Verbindung
+	 * @param sock	Socket
+	 * @throws IOException
+	 */
 	public TcpConnection(Socket sock) throws IOException {
 		this.socket = sock;
 		setInputStream(socket.getInputStream());
@@ -72,6 +77,9 @@ public class TcpConnection extends Connection {
 		super.close();
 	}
 
+	/**
+	 * @see ctSim.Connection#getName()
+	 */
 	@Override
 	public String getName() {
 		return
@@ -79,10 +87,17 @@ public class TcpConnection extends Connection {
 			  "->"+socket.getInetAddress() +":"+socket.getPort();
 	}
 
+	/**
+	 * @see ctSim.Connection#getShortName()
+	 */
 	@Override public String getShortName() { return "TCP"; }
 
+	/**
+	 * Beginnt zu lauschen
+	 * @param receiver	Bot-Receiver
+	 */
 	public static void startListening(final BotReceiver receiver) {
-        int p = 10001; //TODO Default sollte hier weg und nach Config umziehen
+        int p = 10001;
 
         try {
             p = Integer.parseInt(Config.getValue("botport"));
@@ -117,6 +132,12 @@ public class TcpConnection extends Connection {
 		}
 	}
 
+	/**
+	 * Verbindet zu Host:Port
+	 * @param hostname	Host-Name des Bots
+	 * @param port		Port
+	 * @param receiver	Bot-Receiver
+	 */
 	public static void connectTo(final String hostname, final int port,
 	final BotReceiver receiver) {
 		final String address = hostname+":"+port; // Nur fuer Meldungen
@@ -143,8 +164,11 @@ public class TcpConnection extends Connection {
 		}.start();
 	}
 
-	// Blockiert, bis Handshake erfolgreich oder IOException
 	//LODO Fuer connectTo() passt diese Methode, fuer startListening() passt sie nicht ganz: Wenn ein Bot nie einen Handshake zustande kriegt und ein zweiter Bot derweil verbinden will, kommt der zweite nicht zum Zug. Loesung: Timeout oder doHandshake auf neuem Thread laufen lassen
+	/**
+	 * Blockiert, bis Handshake erfolgreich oder IOException 
+	 * @param receiver Bot-Receiver
+	 */
 	private void doHandshake(BotReceiver receiver) {
 		while (true) {
 			try {
@@ -173,6 +197,12 @@ public class TcpConnection extends Connection {
 		}
 	}
 
+	/**
+	 * Erzeugt einen Bot
+	 * @param c Kommando
+	 * @return Bot
+	 * @throws ProtocolException
+	 */
 	private Bot createBot(Command c) throws ProtocolException {
 		switch (c.getSubCode()) {
     		case WELCOME_SIM:

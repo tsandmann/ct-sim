@@ -5,37 +5,54 @@ import ctSim.model.bots.Bot;
 import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
 
-//$$ doc TimeLogger
+/**
+ *  Zeit-Logger
+ */
 public class TimeLogger implements View {
-	private static final int intervalInSimMs = 10000; //TODO Koennte man in Config-Datei, auch zum Ein-/Ausschalten der ganzen Klasse
+	/** Intervall */
+	private static final int intervalInSimMs = 10000;
+	/** verkuerzte Ausgabe */
 	private static final String minimalMsg =
 		"Simzeit %d ms; Armbanduhrenzeit %tT.%<tL";
+	/** komplette Ausgabe */
 	private static final String normalMsg = minimalMsg +
 			"; Verh\u00E4ltnis 1 : %.1f seit letzter " +
 			"TimeLogger-Ausgabe; 1 : %.1f seit Simulationsbeginn";
 
+	/** Logger */
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.TimeLogger");
 	// sicherstellen, dass beim ersten Schritt geloggt wird
+	/** letzte Sim-Zeit */
 	private long simTimeAtLastLog;
+	/** letzte Real-Zeit */
 	private long realTimeAtLastLog;
-	//TODO Wann der Simulationsstart ist, wird ueber bloedsinnige Detektivarbeit herausgefunden. Besser: DefaultController macht auf den Views einen Aufruf "onSimulationBegins" oder so
+	/** Real-Zeit beim Start*/
 	private long realTimeAtSimulationStart;
 
 	{ // instance initializer
 		initVariables();
 	}
 
+	/**
+	 * Initialisierung
+	 */
 	private void initVariables() {
 		realTimeAtSimulationStart = Long.MIN_VALUE;
 		simTimeAtLastLog = - intervalInSimMs;
 		realTimeAtLastLog = 0;
 	}
 
+	/**
+	 * @see ctSim.view.View#onApplicationInited()
+	 */
 	public void onApplicationInited() {
 		lg.info("TimeLogger l\u00E4uft; Simzeit und Realzeit werden " +
 				"w\u00E4hrend der Simulation periodisch ausgegeben");
 	}
 
+	/**
+	 * @see ctSim.view.View#onSimulationStep(long)
+	 */
 	public void onSimulationStep(long simTimeInMs) {
 		if (realTimeAtSimulationStart == Long.MIN_VALUE)
 			realTimeAtSimulationStart = System.currentTimeMillis();
@@ -57,19 +74,30 @@ public class TimeLogger implements View {
 		realTimeAtLastLog = now;
     }
 
+	/**
+	 * @see ctSim.view.View#onSimulationFinished()
+	 */
 	public void onSimulationFinished() {
-		//$$ nochmal ein log()?
 		initVariables();
 	}
 
+	/**
+	 * @see ctSim.view.View#onBotAdded(ctSim.model.bots.Bot)
+	 */
 	public void onBotAdded(@SuppressWarnings("unused") Bot bot) {
 		// no-op
 	}
 
+	/**
+	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
+	 */
 	public void onJudgeSet(@SuppressWarnings("unused") Judge j) {
 		// no-op
 	}
 
+	/**
+	 * @see ctSim.view.View#onWorldOpened(ctSim.model.World)
+	 */
 	public void onWorldOpened(@SuppressWarnings("unused") World newWorld) {
 		// no-op
 	}

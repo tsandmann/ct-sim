@@ -56,6 +56,10 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 		super.writeBranchGraph(bg, map);
 	}
 
+	/**
+	 * Bereitet eine map vor
+	 * @param map Map
+	 */
 	@SuppressWarnings("unchecked")
 	private void prepareMap(HashMap map){
 		Iterator it = map.keySet().iterator();
@@ -65,7 +69,7 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 			SceneGraphObject so = (SceneGraphObject)map.get(name);
 			so.setUserData(new String(name));
 			
-			System.out.println("Key "+name+" vorbereitet"); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("Key "+name+" vorbereitet");
 
 		}
 	}

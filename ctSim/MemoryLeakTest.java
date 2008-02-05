@@ -10,13 +10,24 @@ import ctSim.controller.Main;
  * World-Objekte geladen werden. Als Hauptprogramm auszuführen.
  */
 public class MemoryLeakTest {
+	/**
+	 * main
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception {
 		Main.dependencies.reRegisterImplementation(
 			Controller.class, TestController.class);
 		Main.main();
 	}
 
+	/**
+	 * Testklasse
+	 */
 	public static class TestController extends DefaultController {
+		/**
+		 * @see ctSim.controller.DefaultController#onApplicationInited()
+		 */
 		@Override
         public void onApplicationInited() {
 			super.onApplicationInited();

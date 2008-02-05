@@ -18,20 +18,26 @@ import ctSim.model.bots.components.Sensors;
 import ctSim.util.AuxFrameButton;
 import ctSim.util.Misc;
 
-//$$$ GridLayout, damit wir Reihenfolge der Dinger vorgeben koennen
 /**
- * Zeigt Log-Knopf, LCD, Fernbedienungsknopf, Remote-Call-Knopf. Gehört zu dem
+ * Zeigt Log-Knopf, LCD, Fernbedienungsknopf, Remote-Call-Knopf, ABL-Knopf. Gehört zu dem
  * Bereich, wo Informationen über einen Bot angezeigt werden.
  */
 public class AndEverything extends GuiBotBuisitor {
+	/** UID */
 	private static final long serialVersionUID = - 8170321975584432026L;
 
+	/**
+	 * Anzeige fuer "Rest"
+	 */
 	public AndEverything() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(BorderFactory.createTitledBorder("Display & Remote-Control"));
 	}
 
-	/** Erstellt die Textarea, die das LCD des Bot zeigt */
+	/** 
+	 * Erstellt die Textarea, die das LCD des Bot zeigt 
+	 * @param d Display 
+	 */
 	public void buisitLcdViewer(Actuators.LcDisplay d) {
 		JTextArea t = new JTextArea(d.getExternalModel(), null,
 			d.getNumRows(), d.getNumCols());
@@ -58,7 +64,11 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
-	/** Baut den Knopf, der zum Log-Fenster führt */
+	/** 
+	 * Baut den Knopf, der zum Log-Fenster führt 
+	 * @param log Log
+	 * @param bot Bot
+	 */
 	public void buisitLogViewer(Actuators.Log log, Bot bot) {
 		add(new AuxFrameButton(
 			log.getName(),
@@ -67,7 +77,11 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
-	/** Baut den Knopf, der zum Fernbedienungs-Fenster führt */
+	/** 
+	 * Baut den Knopf, der zum Fernbedienungs-Fenster führt 
+	 * @param s RC5-Control
+	 * @param bot Bot
+	 */
 	public void buisitRemoteControl(Sensors.RemoteControl s, Bot bot) {
 		add(new AuxFrameButton(
 			s.getDescription()+" ("+s.getName()+")",
@@ -76,12 +90,29 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
-	/** Baut den Knopf, der zum Remote-Call-Fenster führt */
+	/** 
+	 * Baut den Knopf, der zum Remote-Call-Fenster führt 
+	 * @param c Remote-Call Komponente
+	 * @param bot Bot
+	 */
 	public void buisitRemoteCallViewer(RemoteCallCompnt c, Bot bot) {
 		add(new AuxFrameButton(
 			c.getName(),
 			c.getName()+" an "+bot,
 			new RemoteCallViewer(c)));
+		add(Box.createRigidArea(new Dimension(0, 5)));
+	}
+	
+	/** 
+	 * Baut den Knopf, der zum ABL-Fenster führt 
+	 * @param abl ABL-Komponente
+	 * @param bot Bot
+	 */
+	public void buisitABLViewer(Actuators.Abl abl, Bot bot) {
+		add(new AuxFrameButton(
+			abl.getName(),
+			abl.getDescription() + " von " + bot, // Fenster-Titel
+			new AblViewer(abl, bot)));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 }

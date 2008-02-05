@@ -20,7 +20,9 @@ package ctSim.model.bots.ctbot;
 
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES;
+//import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES_ASYNCLY;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ProtocolException;
 
@@ -34,6 +36,9 @@ import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
+import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
+import ctSim.util.Runnable1;
+import ctSim.view.gui.AblViewer;
 
 /**
  * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator
@@ -42,6 +47,8 @@ import ctSim.model.bots.components.WelcomeReceiver;
 public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	/** Die TCP-Verbindung */
     private final Connection connection;
+    /** Referenz eines AblViewer, der bei bei Bedarf ein RemoteCall-Ergebnis anzeigen kann */
+	private AblViewer ablResult;
 
 	/**
 	 * @param connection Verbindung
@@ -49,6 +56,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	public CtBotSimTcp(final Connection connection) {
 		super("Sim-Bot");
 		this.connection = connection;
+		this.ablResult = null;
 
 		addDisposeListener(new Runnable() {
 			public void run() {
@@ -84,12 +92,32 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			_(Sensors.Trans.class        , WRITES),
 			_(Sensors.Error.class        , WRITES),
 			_(WelcomeReceiver.class      , READS),
+			//_(Actuators.Abl.class		 , WRITES_ASYNCLY),
 			_(RemoteCallCompnt.class     , READS, WRITES)
 		);
+		
+		for (BotComponent<?> c : components) {
+			c.offerAsyncWriteStream(connection.getCmdOutStream());
 
+			/* RemoteCall-Componente suchen und DoneListener registrieren (AblViewer) */
+			if (c instanceof RemoteCallCompnt) {
+				RemoteCallCompnt rc = (RemoteCallCompnt)c;			
+				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
+					public void run(BehaviorExitStatus status) {
+						if (ablResult != null) {
+							ablResult.setSyntaxCheck(status == BehaviorExitStatus.SUCCESS);
+						}
+					}
+				});	
+			}
+		}
+		
 		sendRcStartCode();
 	}
 
+	/**
+	 * @see ctSim.model.bots.BasicBot#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return "Simulierter, in C geschriebener c't-Bot, verbunden \u00FCber "+
@@ -103,9 +131,8 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	 */
 	@SuppressWarnings("cast")
 	public void sendRcStartCode() {
-		String rawStr = Config.getValue("rcStartCode");
+		String rcStartCode = Config.getValue("rcStartCode");
 		try {
-			int rcStartCode = Integer.decode(rawStr);
 			for (BotComponent<?> c : components) {
 				if ((Object)c instanceof Sensors.RemoteControl) {
 					((Sensors.RemoteControl)((Object)c)).send(rcStartCode);
@@ -113,16 +140,61 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 					break;
 				}
 			}
-		} catch (NumberFormatException e) {
-			lg.warn(e, "Konnte rcStartCode '%s' aus der Konfigdatei nicht " +
-					"verwerten; ignoriere", rawStr);
 		} catch (IOException e) {
 			// Kann nicht passieren, da die RC nur IOExcp wirft, wenn sie
 			// asynchron betrieben wird, was CtBotSimTcp nicht macht
 			throw new AssertionError(e);
 		}
 	}
+	
+	/**
+	 * Sendet den RC5-Code, um ein ABL-Programm zu starten
+	 */
+	public void startABL() {
+		lg.info("Starte ABL-Programm auf dem Bot...");
+		for (BotComponent<?> c : components) {
+			if ((Object)c instanceof Sensors.RemoteControl) {
+				try {
+					((Sensors.RemoteControl)((Object)c)).send(">");
+					lg.fine("RC5-Code fuer Taste \">\" gesendet");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+		}		
+	}
+	
+	/**
+	 * Startet das Verhalten "name" per RemoteCall
+	 * @param name	Das zu startende Verhalten
+	 * @param param	Int-Parameter fuer das Verhalten (16 Bit)
+	 * @param ref	Referenz auf den ABL-Viewer, falls das Ergebnis dort angezeigt werden soll
+	 */
+	public void startRemoteCall(String name, int param, AblViewer ref) {
+		for (BotComponent<?> c : components) {
+			if (c instanceof RemoteCallCompnt) {
+				try {
+					ablResult = ref;
+					RemoteCallCompnt rc = (RemoteCallCompnt)c;
+					ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+					bytes.write(name.getBytes());
+					bytes.write(0);
+					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
+					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
+					par.setValue(param);
+					beh.getParameters().add(par);
+					beh.call();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
+	/**
+	 * @see ctSim.model.bots.SimulatedBot#doSimStep()
+	 */
 	public void doSimStep()
 	throws InterruptedException, UnrecoverableScrewupException {
 		transmitSensors();
@@ -144,6 +216,10 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 		}
 	}
 
+	/**
+	 * Alle Kommandos verarbeiten
+	 * @throws UnrecoverableScrewupException
+	 */
 	private void processUntilDoneCmd() throws UnrecoverableScrewupException {
 		try {
 			while (true) {
@@ -161,6 +237,9 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 		}
 	}
 
+	/**
+	 * @return Simulator-Klasse
+	 */
 	public Class<? extends Runnable> getSimulatorType() {
 		return MasterSimulator.class;
 	}

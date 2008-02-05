@@ -37,7 +37,6 @@ import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
  * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class ConductorToDatabaseAdapter extends DatabaseAdapter {
-	//$$ doc Game, 2 Methoden high-performance
 	// Annahme: Keiner modifiziert ctsim_game waehrend wir laufen
 	/** 8 fuer Achtelfinale, 4 fuer Viertelfinale usw. Ist zusammen mit
      * 'currentGameId' DB-Schl&uuml;ssel f&uuml;r ein Spiel.
@@ -52,23 +51,34 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * NullPointerException mitgeteilt zu bekommen (sonst w&uuml;rde im SQL
      * einfach id == 0 auftauchen) */
 	class Game {
-		// null-bedeutung
+		/** Game-ID */
 		private Integer gameId;
-		// null-bedeutung
+		/** Level-ID */
 		private Integer levelId;
-		// null-bedeutung
+		/** UID */
 		private Integer cachedUniqueId;
-		// null-bedeutung
+		/** Cache-Zeit */
 		private Integer cachedMaxLengthInMs;
 
+		/**
+		 * @return LevelID
+		 */
 		public Integer getLevelId() {
         	return levelId;
         }
 
+		/**
+		 * @return GameID
+		 */
 		public Integer getGameId() {
 			return gameId;
 		}
 
+		/**
+		 * Setter
+		 * @param levelId
+		 * @param gameId
+		 */
 		public void set(Integer levelId, Integer gameId) {
 			if ((levelId == null && gameId != null)
 				|| (levelId != null && gameId == null)) {
@@ -82,6 +92,11 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 			this.gameId = gameId;
         }
 
+		/**
+		 * @return ID
+		 * @throws SQLException
+		 * @throws IllegalStateException
+		 */
 		public Integer getUniqueId()
 		throws SQLException, IllegalStateException {
 			if (gameId == null)
@@ -104,6 +119,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 		 * @return Geplante Simzeit [ms], wie lange ein Spiel des Levels dieses
 		 * Spiels maximal dauern darf.
 		 * @throws SQLException
+		 * @throws IllegalStateException 
 		 * @see World#getSimTimeInMs()
 		 */
 		public int getMaxLengthInMs()
@@ -122,12 +138,13 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 		}
 	}
 
-	//$$ doc logonein
+	/**  */
 	private static final int logOneIn = 20;
 
-	//$$ doc discardedlogentries
+	/** max Log-Entries */
 	private int discardedLogEntries = 0;
 
+	/** Game */
 	private final Game currentGame = new Game();
 
 	/** Hat dieselbe Funktion wie {@link
@@ -146,6 +163,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * @param simTimeElapsed Simulatorzeit [ms] seit Beginn des Spiels
      * @throws IllegalArgumentException Falls der Parameter <code>bots</code>
      * weniger als ein oder mehr als zwei Elemente enth&auml;lt.
+     * @throws SQLException 
      * @throws NullPointerException Falls zur Zeit kein Spiel l&auml;ft, d.h.
      * falls noch nie <code>setGameRunning</code> aufgerufen wurde oder falls
      * seit dem letzten <code>setGameRunning</code>-Aufruf das Spiel durch
@@ -164,7 +182,14 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     	logUnconditionally(bots, simTimeElapsed);
     }
 
-    //$$ doc logUncond()
+    /**
+     * 
+     * @param bots
+     * @param simTimeElapsed
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     * @throws NullPointerException
+     */
     public void logUnconditionally(List<ThreeDBot> bots, long simTimeElapsed)
     throws IllegalArgumentException, SQLException, NullPointerException {
     	// Gesundheitscheck
@@ -206,7 +231,11 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     	}
     }
 
-    //$$ doc getFieldValues
+    /**
+     * Gibt die Daten eines Bots zurueck
+     * @param b Bot
+     * @return Liste der Daten
+     */
     private List<Object> getFieldValues(ThreeDBot b) {
         Point3d pos = b.getPositionInWorldCoord();
         Vector3d head = b.getHeadingVectorInWorldCoord();
@@ -218,7 +247,12 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
         	b.getLegacyObstState()});
     }
 
-    //$$ doc resetRunningGames
+
+    /**
+     * Reset
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     */
     public void resetRunningGames()
     throws IllegalArgumentException, SQLException {
     	ResultSet rs = execSql(
@@ -232,13 +266,21 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     		GameState.READY_TO_RUN, GameState.RUNNING);
     }
 
-    //$$ doc gamesExist()
+    /**
+     * @return true/false
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     */
     public boolean gamesExist()
     throws IllegalArgumentException, SQLException {
     	return execSql("SELECT * FROM ctsim_game").next();
     }
 
-    //$$ doc isPrelimIncomplete()
+    /**
+     * @return Crash?
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     */
     public boolean wasCrashDuringMainRound()
     throws IllegalArgumentException, SQLException {
     	boolean incompletePrelimGamesExist = execSql(
@@ -256,6 +298,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * angefordert wird.
      * @return	Das XML-Dokument, das den Parcours beschreibt (selbes Schema
      * wie das on-disk-Parcours-Schema).
+	 * @throws SQLException 
      */
     public String getParcours(int levelId) throws SQLException {
         ResultSet rs = execSql(
@@ -264,7 +307,11 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
         return rs.getString("parcours");
     }
 
-    //$$ doc writeDistanceToFinish
+   	/**
+   	 * @param botId
+   	 * @param distanceToFinishInM
+   	 * @throws SQLException
+   	 */
     public void writeDistanceToFinish(int botId, double distanceToFinishInM)
     throws SQLException {
     	// Feld "bot1restweg" oder "bot2restweg" setzen
@@ -275,7 +322,11 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     		currentGame.getLevelId(), currentGame.getGameId());
     }
 
-    //$$ doc getColumnName
+    /**
+     * @param botId
+     * @return Spaltenname
+     * @throws SQLException
+     */
     private String getColumnName(int botId) throws SQLException {
     	ResultSet rs = execSql("SELECT bot1, bot2 FROM ctsim_game " +
     			"WHERE level = ? AND game = ?",
@@ -309,6 +360,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * gewonnen hat.
      * @param finishSimTime	Nach wieviel Simulatorzeit [ms] seit Beginn des
      * Spiels wurde die Ziellinie &uuml;berschritten?
+     * @throws SQLException 
      * @throws TournamentPlanException Falls das aktuelle Spiel ein
      * Hauptrundenspiel ist und der Gewinner in ein Level weitergesetzt wird,
      * f&uuml;r das schon zwei Spieler eingetragen sind. Mit anderen Worten,
@@ -344,6 +396,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      *
      * @param winnerBotId Bot-ID des Gewinners des aktuellen Spiels
      * @return Bot-ID des Verlierers des aktuellen Spiels
+     * @throws SQLException 
      * @throws IllegalStateException Wenn in den beiden botIds des aktuellen
      * Spiels der Wert NULL in der Datenbank auftaucht. (Wirft daher auch
      * diese Exception, wenn die Methode aufgerufen wird, w&auml;hrend ein
@@ -375,6 +428,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     /**
      * Setzt den Gewinner des Spiels ein Level h&ouml;her. Tut nichts, falls
      * das aktuelle Spiel ein Vorrundenspiel ist.
+     * @param winnerBotId ID des Gewinners
+     * @throws SQLException 
      *
      * @throws TournamentPlanException Falls in dem Spiel, in das der Gewinner
      * des aktuellen Spiels gesetzt werden soll, bereits zwei Spieler
@@ -416,6 +471,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * gegenw&auml;rtigen DB-Schema "bot1" oder "bot2" sein.
 	 * @return Die mit dem gew&auml;hlten Bot im aktuellen Spiel assoziierte
 	 * Binary (ELF).
+     * @throws SQLException 
 	 * @throws NullPointerException Falls zur Zeit kein Spiel l&auml;ft, d.h.
 	 * falls noch nie <code>setGameRunning</code> aufgerufen wurde oder falls
 	 * seit dem letzten <code>setGameRunning</code>-Aufruf das Spiel durch
@@ -440,6 +496,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      *
      * @return Die mit Teilnehmer 1 des aktuellen Spiels assoziierte
      * Binary (ELF).
+     * @throws SQLException 
      *
      * @throws NullPointerException Falls zur Zeit kein Spiel l&auml;ft, d.h.
      * falls noch nie <code>setGameRunning</code> aufgerufen wurde oder falls
@@ -454,6 +511,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      *
      * @return Die mit Teilnehmer 2 des aktuellen Spiels assoziierte
      * Binary (ELF).
+     * @throws SQLException 
      *
      * @throws NullPointerException Falls zur Zeit kein Spiel l&auml;ft, d.h.
      * falls noch nie <code>setGameRunning</code> aufgerufen wurde oder falls
@@ -469,6 +527,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 *
 	 * @param whichPlayer Gibt das DB-Feld an, das den gew&uuml;nschten
 	 * Schl&uuml;ssel enth&auml;lt. Kann "bot1" oder "bot2" sein.
+     * @return Bot-ID
+     * @throws SQLException 
 	 * @throws NullPointerException Falls zur Zeit kein Spiel l&auml;ft, d.h.
 	 * falls noch nie <code>setGameRunning</code> aufgerufen wurde oder falls
 	 * seit dem letzten <code>setGameRunning</code>-Aufruf das Spiel durch
@@ -485,6 +545,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 
     /** Liefert den DB-Schl&uuml;ssel von Spieler 1 des zur Zeit laufenden
      * Spiels.
+     * @return Bot-ID
+     * @throws SQLException 
      */
     public int getBot1Id() throws SQLException {
         return getBotId("bot1");
@@ -492,12 +554,18 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 
     /** Liefert den DB-Schl&uuml;ssel von Spieler 2 des zur Zeit laufenden
      * Spiels.
+     * @return Bot-ID
+     * @throws SQLException 
      */
     public int getBot2Id() throws SQLException {
         return getBotId("bot2");
     }
 
-    //$$ doc getBotName
+    /**
+     * @param botId
+     * @return Botname
+     * @throws SQLException
+     */
     public String getBotName(int botId) throws SQLException {
     	ResultSet rs = execSql("SELECT * FROM ctsim_bot WHERE id = ?", botId);
     	if (rs.next())
@@ -506,7 +574,10 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     		return null;
     }
 
-    //$$ doc Methode, NullP und alles
+    /**
+     * @return Game-Laenge in ms
+     * @throws SQLException
+     */
     public int getMaxGameLengthInMs() throws SQLException {
         return currentGame.getMaxLengthInMs();
     }
@@ -519,6 +590,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * Aufruf auf dem ResultSet den Wert <code>false</code> liefert, gibt es
      * keine Spiele
      * mehr, die bereit zur Durchf&uuml;hrung w&auml;ren.
+     * @throws SQLException 
      */
     public ResultSet getReadyGames() throws SQLException {
         // Nur Spiele waehlen, die READY_TO_RUN haben
@@ -533,6 +605,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      *
      * @param levelId Level des zu startenden Spiels.
      * @param gameId Nummer des zu startenden Spiels innerhalb seines Levels.
+     * @throws SQLException 
      */
     public void setGameRunning(int levelId, int gameId) throws SQLException {
         execSql("UPDATE ctsim_game " +

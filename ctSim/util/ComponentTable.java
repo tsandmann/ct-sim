@@ -15,54 +15,94 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-//$$ doc
+/**
+ * Komponenten-Tabelle
+ */
 public class ComponentTable extends JTable {
+	/** UID */
 	private static final long serialVersionUID = 2766695602066190632L;
 
 	// Konstruktoren wie in der Superklasse ///////////////////////////////////
 
+	/**
+	 * Komponenten-Tabelle
+	 */
 	public ComponentTable() {
 		super();
 		init();
 	}
 
+	/**
+	 * @param numRows
+	 * @param numColumns
+	 */
 	public ComponentTable(int numRows, int numColumns) {
 		super(numRows, numColumns);
 		init();
 	}
 
+	/**
+	 * @param rowData
+	 * @param columnNames
+	 */
 	public ComponentTable(Object[][] rowData, Object[] columnNames) {
 		super(rowData, columnNames);
 		init();
 	}
 
+	/**
+	 * @param dm
+	 * @param cm
+	 * @param sm
+	 */
 	public ComponentTable(TableModel dm, TableColumnModel cm,
 	ListSelectionModel sm) {
 		super(dm, cm, sm);
 		init();
 	}
 
+	/**
+	 * @param dm
+	 * @param cm
+	 */
 	public ComponentTable(TableModel dm, TableColumnModel cm) {
 		super(dm, cm);
 		init();
 	}
 
+	/**
+	 * @param dm
+	 */
 	public ComponentTable(TableModel dm) {
 		super(dm);
 		init();
 	}
 
+	/**
+	 * @param rowData
+	 * @param columnNames
+	 */
 	@SuppressWarnings("unchecked")
 	public ComponentTable(Vector rowData, Vector columnNames) {
 		super(rowData, columnNames);
 		init();
 	}
 
+	/**
+	 * Init
+	 */
 	private void init() {
 		setDefaultRenderer(Object.class, new CellRenderer());
 		setDefaultEditor(Object.class, new CellEditor());
 	}
 
+	/**
+	 * Konfiguration
+	 * @param compnt Komponente
+	 * @param table Tabelle
+	 * @param isSelected ausgewaehlt?
+	 * @return Component
+	 */
 	protected Component configure(JComponent compnt, JTable table,
 	boolean isSelected) {
 		Color bg = isSelected ? table.getSelectionBackground()
@@ -74,7 +114,7 @@ public class ComponentTable extends JTable {
 		return compnt;
 	}
 
-	/* $$$ doc
+	/**
 	 * In der Tabelle: Falls das hinzugefuegte Ding breiter ist als die
 	 * Spalte, dann diese Spalte verbreitern; Falls das hinzugefuegte
 	 * Ding hoeher ist als die Zeile, dann alle (!) Zeilen hoeher machen
@@ -108,6 +148,9 @@ public class ComponentTable extends JTable {
 
 	// when the viewport shrinks below the preferred size, stop tracking the
 	// viewport width
+	/**
+	 * @see javax.swing.JTable#getScrollableTracksViewportWidth()
+	 */
 	@Override
 	public boolean getScrollableTracksViewportWidth() {
 		if (autoResizeMode != AUTO_RESIZE_OFF) {
@@ -119,6 +162,9 @@ public class ComponentTable extends JTable {
 
 	// when the viewport shrinks below the preferred size, return the minimum
 	// size so that scrollbars will be shown
+	/**
+	 * @see javax.swing.JComponent#getPreferredSize()
+	 */
 	@Override
 	public Dimension getPreferredSize() {
 		if (getParent() instanceof JViewport) {
@@ -130,7 +176,13 @@ public class ComponentTable extends JTable {
 
 	// Hilfsklassen ///////////////////////////////////////////////////////////
 
+	/**
+	 * Zellen-Renderer
+	 */
 	class CellRenderer implements TableCellRenderer {
+		/**
+		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+		 */
 		@SuppressWarnings("unused")
 		public Component getTableCellRendererComponent(JTable table,
 		Object value, boolean isSelected, boolean hasFocus, int row,
@@ -139,15 +191,25 @@ public class ComponentTable extends JTable {
 	    }
 	}
 
+	/**
+	 * Zellen-Editor
+	 */
 	class CellEditor extends AbstractCellEditor implements TableCellEditor {
+		/** UID */
 		private static final long serialVersionUID = 4073894569366140421L;
-
+		/** zuletzt aktive Komponente */
 		private Component lastActive = null;
 
+		/**
+		 * @see javax.swing.CellEditor#getCellEditorValue()
+		 */
 		public Object getCellEditorValue() {
 			return lastActive;
 		}
 
+		/**
+		 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
+		 */
 		@SuppressWarnings("unused")
 		public Component getTableCellEditorComponent(JTable table,
 		Object value, boolean isSelected, int row, int column) {

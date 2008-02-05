@@ -44,24 +44,27 @@ import javax.swing.text.NumberFormatter;
  */
 public class StatusBar extends Box {
 	
-	/**
-	 * 
-	 */
+	/** UID */
 	private static final long serialVersionUID = 1L;
+	/** kleineste Tickrate */
 	private static final int MIN_TICK_RATE = 0;
-	private static final int INIT_TICK_RATE = 0; //TODO: Gefaehrlich: sollte nicht hardcoded sein, sondern von World geholt werden
+	/** Default-Tickrate*/
+	private static final int INIT_TICK_RATE = 0;
+	/** groesste Tickrate */
 	private static final int MAX_TICK_RATE = 400;
+	/** Intervall */
 	private static final int MAJOR_TICK = 10;
 	
+	/** Main-Fenster */
 	private MainWindow parent;
 	
-//	private DateFormat timeFormatter;
-	private final long TIME_TO_SUB = 1000*60*60; // Eine Stunde abziehen fuer Anzeige
-	
-//	private JTextField timeField;
+	/** Eine Stunde abziehen fuer Anzeige */
+	private final long TIME_TO_SUB = 1000*60*60;
+	/** Zeit-Feld */
 	private JLabel timeLabel;
-	
+	/** Tickrate-Feld */
 	private JFormattedTextField tickRateField;
+	/** Tickrate-Slider */
 	private JSlider tickRateSlider;
 	
 	/**

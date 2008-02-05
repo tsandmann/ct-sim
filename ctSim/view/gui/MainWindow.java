@@ -47,10 +47,8 @@ import ctSim.util.ClosableTabsPane;
 import ctSim.util.FmtLogger;
 import ctSim.util.Runnable1;
 
-//$$$ BotViewer zu klein, scheint nur Breite von String Botname zu haben
 //$$ Wenn man BotViewer groesser gezogen hat und noch einen Bot hinzufuegt, springt BotViewer wieder auf Standardgroesse
 //LODO Crasht, wenn Icon-Dateien nicht da
-//$$ doc
 /**
  * Die GUI-Hauptklasse fuer den c't-Sim
  *
@@ -58,13 +56,16 @@ import ctSim.util.Runnable1;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class MainWindow extends JFrame implements ctSim.view.View {
-    private static final long serialVersionUID = 3689470428407624063L;
+    /** UID */
+	private static final long serialVersionUID = 3689470428407624063L;
+    /** Logger */
     final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui");
 
 	//////////////////////////////////////////////////////////////////////
 	// GUI-Components:
-	private StatusBar statusBar;
-
+	/** Statusbar */
+    private StatusBar statusBar;
+    /** Split-Pane */
 	private JSplitPane split;
 
 	/**
@@ -97,12 +98,17 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	private final ClosableTabsPane botTabs;
 
 	//////////////////////////////////////////////////////////////////////
+	/** Welt */
 	private World world;
-
+	/** Welt-Viewer */
 	private WorldViewer worldViewer = new WorldViewer();
-
+	/** Menuzeile */
 	private MainWinMenuBar menuBar;
 
+	/**
+	 * Main-Fenster
+	 * @param controller Controller fuer das Fenster
+	 */
 	public MainWindow(final Controller controller) {
 		super("c't-Sim " + Main.VERSION);
 
@@ -160,6 +166,10 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		setVisible(true);
 	}
 
+	/**
+	 * Baut den LogViewer
+	 * @return LogViewer
+	 */
 	private ConsoleComponent buildLogViewer() {
     	ConsoleComponent rv = new ConsoleComponent();
     	Debug.registerDebugWindow(rv); //$$ Legacy: Debug-Klasse
@@ -171,6 +181,10 @@ public class MainWindow extends JFrame implements ctSim.view.View {
     	return rv;
     }
 
+	/**
+	 * Baut Welt und LogViwer
+	 * @return Split-Pane
+	 */
 	private JSplitPane buildWorldAndConsole() {
 		JSplitPane rv = new JSplitPane(
 			JSplitPane.VERTICAL_SPLIT, worldViewer, buildLogViewer());
@@ -179,12 +193,18 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		return rv;
 	}
 
+	/**
+	 * Baut die Statuszeile
+	 * @return Statuszeile
+	 */
 	private StatusBar buildStatusBar() {
 		statusBar = new StatusBar(this);
 		return statusBar;
 	}
 
-	//$$ Methode vorlaeufig; weiss nicht, ob die im Endeffekt drin sein soll
+	/**
+	 * Screenshot-Handler
+	 */
 	public void onScreenshot() {
 		try {
 	        ImageIO.write(worldViewer.getScreenshot(), "png",
@@ -197,6 +217,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	/**
 	 * Vom Controller aufzurufen, wenn sich die Welt &auml;ndert. Schlie&szlig;t
 	 * die alte Welt und zeigt die neue an.
+	 * @param w Die Welt
 	 */
 	public void onWorldOpened(final World w) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -205,11 +226,14 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 				closeWorld();
 				world = w;
 				worldViewer.show(world);
-				validate(); //$$ validate() noetig?
+//				validate();
 			}
 		});
 	}
 
+	/**
+	 * Schliesst die Welt
+	 */
 	protected void closeWorld() {
 		if (world == null)
 			return;
@@ -221,6 +245,10 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		lg.info("Welt geschlossen");
 	}
 
+	/**
+	 * Schreibt den Parcours in eine Datei
+	 * @param file Ausgabedatei
+	 */
 	protected void writeParcoursToFile(File file) {
 		world.writeParcoursToFile(file);
 	}
@@ -232,6 +260,9 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		world.setSimStepIntervalInMs(rate);
 	}
 
+	/**
+	 * Updated das Layout
+	 */
 	protected void updateLayout() {
 		split.resetToPreferredSizes();
 	}
@@ -249,7 +280,10 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 //		});
 	}
 
-	/** F&uuml;gt einen neuen Bot hinzu */
+	/** 
+	 * F&uuml;gt einen neuen Bot hinzu 
+	 * @param bot der neue Bot
+	 * */
 	public void onBotAdded(final Bot bot) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@SuppressWarnings("synthetic-access")
@@ -283,6 +317,10 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		});
 	}
 
+	/**
+	 * Entfernt einen Bot
+	 * @param bot Bot
+	 */
 	private void removeBotTab(final Bot bot) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@SuppressWarnings("synthetic-access")
@@ -293,20 +331,30 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 						botTabs.remove(i);
 				}
 				if (world != null) {
-					world.deleteBot(((ThreeDBot)bot).getSimBot());
+					if (bot instanceof ThreeDBot) {
+						world.deleteBot(((ThreeDBot)bot).getSimBot());
+					}
 				}
 			}
 		});
 	}
 
+	/**
+	 * @see ctSim.view.View#onApplicationInited()
+	 */
 	public void onApplicationInited() {
-	    //TODO Schoen waere: Bis hierhin Splashscreen anzeigen mit Konsole und sonst nur einen Unendlich-Prozentbalken. Ab dem Eintritt in diese Methode dann das Hauptfenster sichtbar machen.
     }
 
+	/**
+	 * @see ctSim.view.View#onSimulationFinished()
+	 */
 	public void onSimulationFinished() {
 	    //TODO Ueber diese Methode kriegt das MainWindow mit, wenn die Simulation anhaelt. Schoen waere: Knoepfe fuer Play/Pause/Stop ausgrauen, wenn nicht bedienbar. (Man kann nicht was stoppen, was schon gestoppt ist; starten, was schon gestartet ist; usw.)
     }
 
+	/**
+	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
+	 */
 	public void onJudgeSet(final Judge judge) {	
 //		SwingUtilities.invokeLater(new Runnable() {
 //			@SuppressWarnings("synthetic-access")

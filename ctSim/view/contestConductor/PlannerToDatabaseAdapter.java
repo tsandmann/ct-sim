@@ -34,7 +34,12 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 		return rs.getTimestamp("scheduled");
 	}
 
-	//$$ doc getGameInterval
+	/**
+	 * Getter
+	 * @param levelId
+	 * @return Sekunden
+	 * @throws SQLException
+	 */
 	public int getGameIntervalInS(int levelId) throws SQLException {
 		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?",
 			levelId);
@@ -47,6 +52,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @param gameId Die Nummer des Spiels (innerhalb der Vorrunde).
 	 * @param player1botId Bot-Prim&auml;rschl&uuml;ssel des Spielers.
 	 * (Vorrundenspiele haben nur einen Spieler.)
+	 * @throws SQLException 
 	 */
 	public void createPrelimGame(int gameId, int player1botId)
 	throws SQLException {
@@ -62,6 +68,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @param levelId Schl&uuml;ssel des Levels, auf dem das Spiel angelegt
 	 * werden soll.
 	 * @param gameId Schl&uuml;ssel des Spiels innerhalb eines Levels.
+	 * @throws SQLException 
 	 */
 	public void createMainGame(int levelId, int gameId)
 	throws SQLException {
@@ -71,7 +78,9 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 				levelId, gameId, GameState.NOT_INITIALIZED);
 	}
 
-	/**L&ouml;scht alle Spiele.
+	/**
+	 * L&ouml;scht alle Spiele.
+	 * @throws SQLException 
 	 */
 	public void clearGames() throws SQLException {
 		execSql("DELETE FROM ctsim_game");
@@ -83,6 +92,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @return Ein ResultSet, das die Bots repr&auml;sentiert, die als
 	 * Spieler bereitstehen. Das ResultSet folgt dem Schema
 	 * der Tabelle ctsim_bot.
+	 * @throws SQLException 
 	 */
 	public ResultSet getBotsWithBinary() throws SQLException {
 		return execSql("SELECT * from ctsim_bot WHERE bin !=''");
@@ -93,6 +103,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @param levelId Schl&uuml;ssel des Levels des Spiels.
 	 * @param gameId Schl&uuml;ssel des Spiels innerhalb eines Levels.
 	 * @param time Zeit, zu der das Spiel beginnen soll.
+	 * @throws SQLException 
 	 */
 	public void scheduleGame(int levelId, int gameId, Timestamp time)
 	throws SQLException {
@@ -105,6 +116,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @param levelId Prim&auml;rschl&uuml;ssel des Levels.
 	 * @return <code>true</code>, falls das Level existiert;
 	 * <code>false</code> falls nicht.
+	 * @throws SQLException 
 	 */
 	public boolean doesLevelExist(int levelId) throws SQLException {
 		ResultSet rs = execSql("SELECT * FROM ctsim_level WHERE id = "+levelId);
@@ -117,6 +129,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
      * @param sortKey Ein Spaltenname in der Datenbanktabelle ctsim_game,
      * nach dem der R&uuml;ckgabewert sortiert wird.
      * @return Ein ResultSet im Format der DB-Tabelle ctsim_game.
+	 * @throws SQLException 
      */
     public ResultSet getGames(int levelId, String sortKey) throws SQLException {
     	return execSql("SELECT * FROM ctsim_game" +

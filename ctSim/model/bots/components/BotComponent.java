@@ -30,7 +30,6 @@ import ctSim.model.bots.components.Actuators.Log;
 import ctSim.model.bots.components.Sensors.Mouse;
 import ctSim.model.bots.components.Sensors.RemoteControl;
 
-//$$ doc
 /**
  * <p>
  * Superklasse f&uuml;r alle Bot-Komponenten. Diese lassen sich in zwei Gruppen
@@ -62,12 +61,18 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
  *
  * @author Felix Beckwermert
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @param <M> Typ der Komponente
  */
 public abstract class BotComponent<M> {
+	/**
+	 * Interface fuer lesende Komponenten
+	 */
 	protected interface CanRead {
 		/**
 		 * Nicht aufrufen &ndash; stattdessen
 		 * {@link BotComponent#offerRead(Command)} verwenden.
+		 * @param c Kommando
+		 * @throws ProtocolException 
 		 */
 		void readFrom(Command c) throws ProtocolException;
 
@@ -76,6 +81,7 @@ public abstract class BotComponent<M> {
 		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet
 		 * werden.
+		 * @return Command-Code
 		 */
 		Code getHotCmdCode();
 	}
@@ -88,6 +94,7 @@ public abstract class BotComponent<M> {
 		/**
 		 * Nicht aufrufen &ndash; stattdessen
 		 * {@link BotComponent#askForWrite(CommandOutputStream)} verwenden.
+		 * @param c Kommando
 		 */
 		void writeTo(Command c);
 
@@ -96,41 +103,79 @@ public abstract class BotComponent<M> {
 		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet
 		 * werden.
+		 * @return Command-Code
 		 */
 		Code getHotCmdCode();
 	}
 
+	/**
+	 * Interface fuer Komponenten, die asynchron schreiben
+	 */
 	protected interface CanWriteAsynchronously {
+		/**
+		 * Setzt Asynchronen-Schreib-Stream
+		 * @param s OutputStream
+		 */
 		void setAsyncWriteStream(CommandOutputStream s);
 	}
 
+	/**
+	 * Einfacher Sensor
+	 */
 	public interface SimpleSensor { //$$$ abstract class
 		// Marker-Interface
 	}
 
+	/**
+	 * Einfacher Aktuator
+	 */
 	public interface SimpleActuator { //$$$ abstract class
 		// Marker-Interface
 	}
 
-	public static enum ConnectionFlags { READS, WRITES, WRITES_ASYNCLY }
+	/**
+	 * Connection-Eigenschaften
+	 */
+	public static enum ConnectionFlags { 
+		/** liest */
+		READS, 
+		/** schreibt */
+		WRITES, 
+		/** schreibt asynchron */
+		WRITES_ASYNCLY }
 
 	///////////////////////////////////////////////////////////////////////////
 
+	/** externes Modell */
 	private final M externalModel;
 
 	/** Anf&auml;nglich alles false */
 	private EnumSet<ConnectionFlags> flags =
 		EnumSet.noneOf(ConnectionFlags.class);
 
+	/**
+	 * @param externalModel externes Modell vom Typ M
+	 */
 	public BotComponent(M externalModel) { this.externalModel = externalModel; }
 
+	/**
+	 * @return Liefert das externe Modell
+	 */
 	public M getExternalModel() { return externalModel; }
 
+	/**
+	 * @param s nicht unterstuetzte Operation
+	 * @return Exception
+	 */
 	private UnsupportedOperationException createUnsuppOp(String s) {
 		return new UnsupportedOperationException("Bot-Komponente "+this+
 			" unterst\u00FCtzt kein "+s);
 	}
 
+	/**
+	 * Setzt die Connection-Flags
+	 * @param flags	Flags
+	 */
 	public void setFlags(ConnectionFlags... flags) {
 		EnumSet<ConnectionFlags> f = (flags == null || flags.length == 0)
 			? EnumSet.noneOf(ConnectionFlags.class)
@@ -154,22 +199,39 @@ public abstract class BotComponent<M> {
 		this.flags = f;
 	}
 
+	/**
+	 * @return schreibt synchron?
+	 */
 	public boolean writesSynchronously() {
 		return flags.contains(ConnectionFlags.WRITES);
 	}
 
+	/**
+	 * @return liest Kommandos?
+	 */
 	public boolean readsCommands() {
 		return flags.contains(ConnectionFlags.READS);
 	}
 
+	/**
+	 * @return schreibt asynchron?
+	 */
 	public boolean writesAsynchronously() {
 		return flags.contains(ConnectionFlags.WRITES_ASYNCLY);
 	}
 
+	/**
+	 * @return kann schreiben?
+	 */
 	public boolean isGuiEditable() {
 		return writesSynchronously() || writesAsynchronously();
 	}
 
+	/**
+	 * Liest Daten vom Kommando
+	 * @param c Kommando
+	 * @throws ProtocolException
+	 */
 	public void offerRead(final Command c) throws ProtocolException {
 		if (! readsCommands())
 			return;
@@ -184,6 +246,10 @@ public abstract class BotComponent<M> {
 	/** Nur auf dem EDT laufenlassen */
 	public abstract void updateExternalModel();
 
+	/**
+	 * Schreibanforderung
+	 * @param s CommandOutputStream
+	 */
 	public void askForWrite(final CommandOutputStream s) {
 		if (! writesSynchronously())
 			return;
@@ -192,6 +258,10 @@ public abstract class BotComponent<M> {
 		self.writeTo(s.getCommand(self.getHotCmdCode()));
 	}
 
+	/**
+	 * async Write-Stream setzen
+	 * @param s	CommandOutputStream
+	 */
 	public void offerAsyncWriteStream(CommandOutputStream s) {
 		if (! writesAsynchronously())
 			return;

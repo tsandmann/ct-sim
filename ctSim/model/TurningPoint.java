@@ -3,7 +3,6 @@ package ctSim.model;
 import java.util.Vector;
 import javax.vecmath.Vector2d;
 
-//TODO Doku ganze Klasse! Wenn Code zu unverstaendlich zum Dokumentieren, neu implementieren.
 /**
  * Diese Klasse beschreibt die Position eines Knicks im Pfad des Roboters, wenn
  * er an einem Hindernis abbiegt. Ausserdem enthaelt sie Methoden um die
@@ -69,12 +68,19 @@ public class TurningPoint {
 	/** Basis des Vektors */
 	Vector2d pos;
 
+	/**
+	 * @param x X-Koordinate
+	 * @param y Y-Koordinate
+	 */
 	TurningPoint(double x, double y) {
 		pos = new Vector2d();
 		pos.x = x;
 		pos.y = y;
 	}
 
+	/**
+	 * @param p x/Y als Vektor
+	 */
 	TurningPoint(Vector2d p) {
 		pos = new Vector2d(p);
 	}
@@ -83,9 +89,8 @@ public class TurningPoint {
 	 * Testet ob this mit p2 in der parcoursMapSimple auf direktem Wege vom Bot
 	 * erreicht werden koennen
 	 *
-	 * @param p2
-	 *            Zu testender Punkt
-	 * @param parcoursMapSimple
+	 * @param p2 Zu testender Punkt
+	 * @param parcoursMapSimple ParcoursMap
 	 * @return true wenn direkt erreichbar
 	 */
 	boolean isDirectlyConnectedTo(TurningPoint p2, int[][] parcoursMapSimple) {

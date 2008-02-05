@@ -20,6 +20,7 @@ package ctSim.model.bots.components;
 
 
 import java.awt.Color;
+import java.io.IOException;
 import java.net.ProtocolException;
 
 import javax.swing.ButtonModel;
@@ -31,9 +32,11 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
 import ctSim.model.Command;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
 import ctSim.model.Command.SubCode;
 import ctSim.model.bots.components.BotComponent.CanRead;
+import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
 import ctSim.model.bots.components.BotComponent.SimpleActuator;
 import ctSim.util.Misc;
 
@@ -52,37 +55,75 @@ public class Actuators {
 	 */
 	public static class Governor extends NumberTwin
 	implements SimpleActuator, CanRead {
+		/**
+		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
+		 */
 		@Override
 		protected String getBaseDescription() {
 			return "Motorbegrenzer";
 		}
 
+		/**
+		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
+		 */
 		@Override protected String getBaseName() { return "Gov"; }
+		
+		/**
+		 * @param isLeft	links?
+		 */
 		public Governor(boolean isLeft) { super(isLeft); }
+		
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
+		 */
 		public Code getHotCmdCode() { return Code.ACT_MOT; }
 	}
 
-	//$$ doc DoorServo
+	/**
+	 * Servor fuer Klappe
+	 */
 	public static class DoorServo extends BotComponent<SpinnerNumberModel>
 	implements SimpleActuator, CanRead {
+		/** Zahlenwert */
 		private Number internalModel = Double.valueOf(0);
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
 		@Override
 		public String getDescription() {
 			return "Servomotor f\u00FCr Klappe";
 		}
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
+		 */
 		@Override
 		public synchronized void updateExternalModel() {
 			getExternalModel().setValue(internalModel);
 		}
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
+		 */
 		public synchronized void readFrom(Command c) {
 			internalModel = c.getDataL();
 		}
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
 		@Override public String getName() { return "DoorServo"; }
+		
+		/**
+		 * Servor fuer Klappe
+		 */
 		public DoorServo() { super(new SpinnerNumberModel()); }
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
+		 */
 		public Code getHotCmdCode() { return Code.ACT_SERVO; }
 	}
 
@@ -95,11 +136,17 @@ public class Actuators {
 		/** Internes Model */
 		private final StringBuffer newStuff = new StringBuffer(); 
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
+		 */
 		public synchronized void readFrom(Command c) {
 			newStuff.append(c.getPayloadAsString());
 			newStuff.append("\n");
 		}
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
+		 */
 		@Override
 		public synchronized void updateExternalModel() {
 			try {
@@ -113,12 +160,104 @@ public class Actuators {
 			}
 		}
 
+		/**
+		 * Logfenster
+		 */
 		public Log() { super(new PlainDocument()); }
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
+		 */
 		public Code getHotCmdCode() { return Command.Code.LOG; }
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
 		@Override public String getName() { return "Log"; }
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
 		@Override public String getDescription() { return "Log-Anzeige"; }
 	}
+	
+	/**
+	 * ABL-Fenster eines Bots. Kann ABL-Programme aus Textdateien laden, in Textdateien
+	 * schreiben und zum simulierten oder echten Bot senden.
+	 * @author Timo Sandmann (mail@timosandmann.de)
+	 */
+	public static class Abl extends BotComponent<PlainDocument>
+	implements CanWriteAsynchronously {
+		/** asynchroner Outputstream */
+		private CommandOutputStream asyncOut;
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
+		 */
+		public synchronized void updateExternalModel() {
+			// NOP
+		}
+
+		/**
+		 * ABL-Fenster eines Bots
+		 */
+		public Abl() { 
+			super(new PlainDocument()); 
+		}
+		
+		/**
+		 * @return Command-Code fuer ABL == REMOTE_CALL (Unterscheidung per Subcommand)
+		 */
+		public Code getHotCmdCode() {
+			return Command.Code.REMOTE_CALL; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override public String getName() {
+			return "ABL"; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override public String getDescription() { 
+			return "ABL-Control"; 
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
+		 */
+		public void setAsyncWriteStream(CommandOutputStream s) {
+			asyncOut = s;
+		}
+
+		/**
+		 * Sendet den Inhalt des Fensters als ABL-Programm zum Bot.
+		 * @param data	Das Programm
+		 * @throws IOException
+		 */
+		public void sendAblData(String data) throws IOException {
+			prepareAblCmd(asyncOut, data.getBytes());
+			asyncOut.flush();
+		}
+		
+		/**
+		 * Bereitet den Transfer eines ABL-Programms zum Bot vor.
+		 * @param s			OutputStream fuer die Daten
+		 * @param payload	Das Programm als Byte-Array
+		 */
+		private void prepareAblCmd(CommandOutputStream s, byte[] payload) {
+			Command c = s.getCommand(getHotCmdCode());
+			c.setSubCmdCode(Command.SubCode.REMOTE_CALL_ABL);
+			c.setDataL(payload.length & 0xFFFFFFFF);
+			c.setDataR(payload.length >> 16);
+			c.setPayload(payload);
+		}
+	}
+	
+	
 	/**
 	 * <p>
 	 * Das Liquid Crystal Display (LCD) oben auf dem c't-Bot.
@@ -152,15 +291,22 @@ public class Actuators {
 	 */
 	public static class LcDisplay extends BotComponent<PlainDocument>
 	implements CanRead {
+		/** Anzahl der Spalten */
 		private final int numCols;
+		/** Anzahl der Zeilen */
 		private final int numRows;
+		/** Cursor-Position X */
 		private int cursorX;
+		/** Cursor-Position X */
 		private int cursorY;
+		/** Daten */
 		private final PlainDocument internalModel = new PlainDocument();
 
 		/**
 		 * Erstellt eine LCD-BotComponent mit der angegebenen Zahl Spalten (=
 		 * Zeichen) und Zeilen.
+		 * @param numCols Spalten
+		 * @param numRows Zeilen
 		 */
 		public LcDisplay(int numCols, int numRows) {
 			super(new PlainDocument());
@@ -177,8 +323,14 @@ public class Actuators {
 			}
 		}
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
+		 */
 		public Code getHotCmdCode() { return Command.Code.ACT_LCD; }
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
+		 */
 		public synchronized void readFrom(Command c) throws ProtocolException {
 			try {
 	    	    switch (c.getSubCode()) {
@@ -208,6 +360,9 @@ public class Actuators {
 			}
 		}
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
+		 */
 		@Override
 		public synchronized void updateExternalModel() {
 			try {
@@ -220,6 +375,11 @@ public class Actuators {
 			}
 		}
 
+		/**
+		 * @param d Document
+		 * @return Text von d
+		 * @throws BadLocationException
+		 */
 		protected synchronized String getAllText(Document d)
 		throws BadLocationException {
 			return d.getText(0, d.getLength());
@@ -228,6 +388,7 @@ public class Actuators {
 		/**
 		 * Setzt das Display zur&uuml;ck, so dass es auf ganzer Breite und
 		 * H&ouml;he nur Leerzeichen anzeigt.
+		 * @param d Document des Displays
 		 *
 		 * @throws BadLocationException nur falls jemand was am Code
 		 * &auml;ndert; sollte normalerweise nie vorkommen.
@@ -280,48 +441,62 @@ public class Actuators {
 	        cursorY = Misc.clamp(row, numRows - 1);
 	    }
 
-		/** Wieviele Spalten breit ist das Display? (1 Zeichen pro Spalte) */
+		/** 
+		 * Wieviele Spalten breit ist das Display? (1 Zeichen pro Spalte) 
+		 * @return Spaltenanzahl 
+		 */
 		public synchronized int getNumCols() { return numCols; }
 
-		/** Wieviele Zeilen hoch ist das Display? */
+		/** 
+		 * Wieviele Zeilen hoch ist das Display? 
+		 * @return Zeilenanzahl
+		 */
 		public synchronized int getNumRows() { return numRows; }
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
 		@Override public String getName() { return "LCD"; }
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
 		@Override public String getDescription() { return "LCD-Anzeige"; }
 	}
 
 	/**
 	 * <p>
-	 * Lepl&auml;sentation einel LED (Leuchtdiode) auf dem Bot. Nicht velwillen
-	 * lassen wegen dem Model: Eine LED ist etwas, was an odel aus sein kann,
-	 * d.h. sie ist sinnvollelweise eine Alt {@link JCheckBox} (auch wenn unsele
-	 * LEDs sich nicht als Kasten mit/ohne H&auml;kchen malen, sondeln als lunde
-	 * helle/dunkle Punkte). Diese Klasse hat dahel das Model, das Checkboxen
-	 * auch velwenden:JToggleButton.ToggleButtonModel. (Das wiedelum
-	 * kommt dahel, dass Checkboxen in Java von Buttons abgeleitet sind.)
+	 * Repr&auml;sentation einer LED (Leuchtdiode) auf dem Bot. Nicht verwirren
+	 * lassen wegen dem Model: Eine LED ist etwas, was an oder aus sein kann,
+	 * d.h. sie ist sinnvollerweise eine Art {@link JCheckBox} (auch wenn unsere
+	 * LEDs sich nicht als Kasten mit/ohne H&auml;kchen malen, sondern als runde
+	 * helle/dunkle Punkte). Diese Klasse hat daher das Model, das Checkboxen
+	 * auch verwenden:JToggleButton.ToggleButtonModel. (Das wiederum
+	 * kommt daher, dass Checkboxen in Java von Buttons abgeleitet sind.)
 	 * </p>
 	 * <p>
 	 * <h3>{@link Command c't-Bot-Plotokoll}</h3>
 	 * Jede LED lauscht auf {@link Command}s mit Command-Code
 	 * {@link Code#ACT_LED ACT_LED}. Bei diesen Commands gibt das Feld
-	 * {@code dataL} den Zustand allel LEDs an: ein Bit plo LED, 1 = an, 0 =
-	 * aus. Jede Instanz diesel Klasse lauscht auf ein Bit und ignolielt die
-	 * andelen; welches Bit wild beim Konstluielen angegeben.
+	 * {@code dataL} den Zustand aller LEDs an: ein Bit pro LED, 1 = an, 0 =
+	 * aus. Jede Instanz dieser Klasse lauscht auf ein Bit und ignoriert die
+	 * anderen; welches Bit wird beim Konstruieren angegeben.
 	 * </p>
 	 * <p>
-	 * Datenfolmat des Felds dataL: Beispiel dataL = 0x42 = 0b01000010
+	 * Datenformat des Felds dataL: Beispiel dataL = 0x42 = 0b01000010
 	 *
 	 * <pre>
 	 *       .--------------- wei&szlig;
-	 *       | .------------- t&uuml;lkis
-	 *       | | .----------- gl&uuml;n
+	 *       | .------------- t&uuml;rkis
+	 *       | | .----------- gr&uuml;n
 	 *       | | | .--------- gelb
-	 *       | | | | .------- olange
-	 *       | | | | | .----- lot
-	 *       | | | | | | .--- blau volne links
-	 *       | | | | | | | .- blau volne lechts
+	 *       | | | | .------- orange
+	 *       | | | | | .----- rot
+	 *       | | | | | | .--- blau vorne links
+	 *       | | | | | | | .- blau vorne rechts
 	 *       | | | | | | | |
-	 * Wert  0 1 0 0 0 0 1 0  &lt;- Wie vom Dlaht gelesen
-	 * Bit#  7 6 5 4 3 2 1 0  &lt;- bitIndexFromLsb (Das hiel an Konstluktol geben)
+	 * Wert  0 1 0 0 0 0 1 0  &lt;- Wie vom Draht gelesen
+	 * Bit#  7 6 5 4 3 2 1 0  &lt;- bitIndexFromLsb (Das hier an Konstruktor geben)
 	 *       |             |
 	 *      MSB           LSB
 	 * </pre>
@@ -329,22 +504,26 @@ public class Actuators {
 	 * </p>
 	 */
 	public static class Led extends BotComponent<ButtonModel>
-	implements ChineseComponent, CanRead {
+	implements CanRead {
+		/** an oder aus? */
 		private boolean internalModel = false;
+		/** Name */
 		private final String name;
+		/** LED-Auswahl */
 		private final int bitMask;
+		/** Farbe, wenn LED an */
 		private final Color colorWhenOn;
 
 		/**
-		 * Elstellt eine LED.
+		 * Erstellt eine LED.
 		 *
-		 * @param name Name del LED, wie el dem Benutzel pl&auml;sentielt wild
-		 * @param bitIndexFromLsb Welches Bit del LED-Statusangaben soll die LED
-		 * beachten? 0 = LSB, N&auml;heles siehe {@link Led oben}, Abschnitt
-		 * &quot;c't-Bot-Plotokoll&quot;
-		 * @param colorWhenOn Falbe del LED, wenn sie leuchtet. Eine dunklele
-		 * Valiante f&uuml;l dann, wenn sie nicht leuchtet, wild automatisch
-		 * belechnet
+		 * @param name Name der LED, wie er dem Benutzer pr&auml;sentiert wird
+		 * @param bitIndexFromLsb Welches Bit der LED-Statusangaben soll die LED
+		 * beachten? 0 = LSB, N&auml;heres siehe {@link Led oben}, Abschnitt
+		 * &quot;c't-Bot-Protokoll&quot;
+		 * @param colorWhenOn Farbe der LED, wenn sie leuchtet. Eine dunklere
+		 * Valiante f&uuml;r dann, wenn sie nicht leuchtet, wird automatisch
+		 * berechnet
 		 */
 		public Led(String name, int bitIndexFromLsb, Color colorWhenOn) {
 			super(new JToggleButton.ToggleButtonModel());
@@ -353,31 +532,44 @@ public class Actuators {
 			this.colorWhenOn = colorWhenOn;
 		}
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
+		 */
 		public synchronized void readFrom(Command c) {
 			internalModel = (c.getDataL() & bitMask) != 0;
 		}
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
+		 */
 		@Override
 		public synchronized void updateExternalModel() {
 			getExternalModel().setSelected(internalModel);
 		}
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
+		 */
 		public Code getHotCmdCode() { return Command.Code.ACT_LED; }
 
 		/**
-		 * Liefelt die Falbe, in del die LED dalzustellen ist, wenn sie an ist.
-		 * Die Falbe f&uuml;l dann, wenn sie aus ist, sollte hielaus belechnet
-		 * welden (typischelweise dulch Leduzielen del S&auml;ttigung und/odel
+		 * Liefert die Farbe, in der die LED darzustellen ist, wenn sie an ist.
+		 * Die Farbe f&uuml;r dann, wenn sie aus ist, sollte hieraus berechnet
+		 * werden (typischerweise durch Reduzieren der S&auml;ttigung und/oder
 		 * Helligkeit).
+		 * @return Farbe
 		 */
 		public Color getColorWhenOn() { return colorWhenOn; }
 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
 		@Override public String getName() { return name; }
 
-		/** Liefelt einen leelen Stling (""). */
+		/** 
+		 * Liefert einen leeren String (""). 
+		 */
 		@Override public String getDescription() { return ""; }
 
 	}
-
-	interface ChineseComponent { /* Malkel-Intelface */ }
 }

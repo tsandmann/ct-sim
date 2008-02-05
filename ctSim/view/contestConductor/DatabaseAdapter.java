@@ -38,11 +38,17 @@ import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 class DatabaseAdapter {
-	//$$ doc StatementCache
+	/**
+	 * HashMap fuer Statements
+	 */
 	class StatementCache extends HashMap<String, PreparedStatement> {
-        private static final long serialVersionUID =
+        /** UID */
+		private static final long serialVersionUID =
         	- 293074803104060506L;
 
+		/**
+		 * @see java.util.HashMap#get(java.lang.Object)
+		 */
 		@SuppressWarnings("synthetic-access")
         @Override
 		public PreparedStatement get(Object key) {
@@ -103,8 +109,13 @@ class DatabaseAdapter {
 		/** Zeigt an, dass das Spiel abgeschlossen ist. */
 		GAME_OVER("game over");
 
+		/** Gamestate in DB */
 		private final String representationInDb;
 
+		/**
+		 * Zustand des Spiels
+		 * @param representationInDb Zustand
+		 */
 		GameState(String representationInDb) {
 			this.representationInDb = representationInDb;
 		}
@@ -127,6 +138,7 @@ class DatabaseAdapter {
 		}
 	}
 
+	/** Logger */
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.contestConductor");
 
 	static {
@@ -137,12 +149,17 @@ class DatabaseAdapter {
 	 * weiss. */
 	private Connection dbConn = null;
 
-	//$$ doc statementCache
+	/** Statement-Cache */
 	protected StatementCache statementCache = new StatementCache();
-
+	
+	/** Datenbank */
 	private ContestDatabase connFactory;
 
 
+	/**
+	 * DB-Verbidung
+	 * @param connFactory DB
+	 */
 	protected DatabaseAdapter(ContestDatabase connFactory) {
 		this.connFactory = connFactory;
 		try {
@@ -153,6 +170,10 @@ class DatabaseAdapter {
         }
 	}
 
+	/**
+	 * Connection setzen
+	 * @throws SQLException
+	 */
 	protected void acquireConn() throws SQLException {
 		statementCache.clear();
 		if (dbConn != null)
@@ -160,7 +181,12 @@ class DatabaseAdapter {
 		dbConn = connFactory.getConnection();
 	}
 
-	//$$ doc getPS
+	/**
+	 * @param sqlWithInParams
+	 * @param inValues
+	 * @return PreparedStatement
+	 * @throws SQLException
+	 */
 	protected PreparedStatement buildPreparedStatement(String sqlWithInParams,
 		Object... inValues) throws SQLException {
 		PreparedStatement rv = statementCache.get(sqlWithInParams);
@@ -245,6 +271,7 @@ class DatabaseAdapter {
 	 * SQL-Befehl zur&uuml;ckgegeben h&auml;tte. Falls der genannte Parameter
 	 * mit "insert", "update" oder "delete" beginnt, wird <code>null</code>
 	 * zur&uuml;ckgegeben.
+	 * @throws SQLException 
 	 * @throws IllegalArgumentException Falls der Parameter
 	 * <code>sqlWithParams</code> weder mit SELECT noch mit INSERT, UPDATE
 	 * oder DELETE beginnt. (Gro&szlig;-/Kleinschreibung irrelevant.)
@@ -271,7 +298,14 @@ class DatabaseAdapter {
 		}
 	}
 
-	//$$ doc tryExecSql
+	/**
+	 * Fuehrt ein SQL-Kommando aus
+	 * @param sqlWithInParams Kommando
+	 * @param inValues Werte
+	 * @return Result
+	 * @throws SQLException
+	 * @throws IllegalArgumentException
+	 */
 	private ResultSet tryExecSql(String sqlWithInParams, Object... inValues)
 	throws SQLException, IllegalArgumentException {
 		if (sqlWithInParams.toLowerCase().startsWith("select")) {
@@ -297,6 +331,7 @@ class DatabaseAdapter {
      * <code>null</code> tut die Methode nichts.
      * @param levelId Das Level, in das der Bot platziert werden soll
      * @param gameId Die Nummer des Spiels im jeweiligen Level
+	 * @throws SQLException 
      * @throws TournamentPlanException Wenn f&uuml;r das &uuml;bergebene Spiel
      * bereits zwei Spieler eingetragen sind
      */

@@ -5,7 +5,6 @@ import java.util.List;
 
 import ctSim.util.Misc;
 
-//$$ doc TournamentTree
 /**
  * <p>
  * Baut den grundlegenden Turnierbaum der Hauptrunde. Mit anderen Worten, plant
@@ -39,27 +38,46 @@ import ctSim.util.Misc;
  */
 // level: 2er-Potenzen
 public class TournamentTree extends ArrayList<Integer> {
+	/**
+	 * Spieler
+	 */
 	public static class Player {
+		/**
+		 * Rank
+		 */
 		public final int rankNo;
+		/**
+		 * Bot
+		 */
 		public final int botId;
 
+		/**
+		 * Player
+		 * @param rankNo Rank
+		 * @param botId Bot-ID
+		 */
 		protected Player(int rankNo, int botId) {
 	        this.rankNo = rankNo;
 	        this.botId = botId;
         }
 	}
 
+	/** UID */
     private static final long serialVersionUID = - 6908062086416166612L;
 
 	/**
 	 * Level, auf das die Spieler mit Freilos kommen. (Sprachlicher Hinweis:
 	 * "bye" = "Freilos", siehe
 	 * http://en.wikipedia.org/wiki/Single-elimination_tournament )
+	 * @return Level
 	 */
     public int getByeLevelId() {
     	return getLowestLevelId() / 2;
     }
 
+    /**
+     * @return kleinstes Level
+     */
     public int getLowestLevelId() {
     	assert size() >= 2;
     	int numLevels = (int)Math.ceil(Misc.log2(size())) - 1;
@@ -141,6 +159,11 @@ public class TournamentTree extends ArrayList<Integer> {
     	}
     }
 
+    /**
+     * Gibt die Bot-IDs zu den Playern zurueck
+     * @param li Player-Liste
+     * @return Liste der Bot-IDs
+     */
     private ArrayList<Integer> botIdsFromPlayers(List<Player> li) {
     	ArrayList<Integer> rv = new ArrayList<Integer>();
     	for (Player p : li) {
@@ -152,6 +175,10 @@ public class TournamentTree extends ArrayList<Integer> {
     	return rv;
     }
 
+    /**
+     * main
+     * @param args
+     */
     public static void main(String... args) {
     	TournamentTree r = new TournamentTree();
     	for (int i = 1; i <= 21; i++)

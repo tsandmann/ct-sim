@@ -8,45 +8,79 @@ import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotComponent.SimpleActuator;
 import ctSim.model.bots.components.BotComponent.SimpleSensor;
 
-//$$ doc
+/**
+ * Tabellen fuer GUI
+ */
 public abstract class Tables {
+	/**
+	 * Positionen
+	 */
 	public static class Position extends TableOfSpinners {
+		/** UID */
 		private static final long serialVersionUID = 4158210694642007178L;
 
-		//$$ Reagieren Spinner auf das Mouse-Wheel? Wenn nein, ihnen beibringen
+	    /**
+	     * @param c Positions-Komponente
+	     */
 	    public void buisit(PositionCompnt c) {
 			c.getExternalModel().setStepSize(0.05);
 			// vorm Semikolon: Pattern fuer positive Zahlen, nachm ; negative
 			model.addRow(c, "0.000;\u22120.000");
 		}
 
+		/**
+		 * @param c Heading-Kompomente
+		 */
 		public void buisit(HeadingCompnt c) {
 			c.getExternalModel().setStepSize(6);
 			model.addRow(c, "0.0;\u22120.0");
 		}
 
+		/**
+		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
+		 */
 		@Override protected String getPanelTitle() { return "Position"; }
 	}
 
+	/**
+	 * Aktuatoren-Anzeige
+	 */
 	public static class Actuators extends TableOfSpinners {
+		/** UID */
 		private static final long serialVersionUID = - 7560450995618737095L;
 
+		/**
+		 * @param a Aktuator
+		 */
 		@SuppressWarnings("unchecked")
 		public void buisit(SimpleActuator a) {
 			model.addRow((BotComponent<? extends SpinnerModel>)a);
 		}
 
+		/**
+		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
+		 */
 		@Override protected String getPanelTitle() { return "Aktuatoren"; }
 	}
 
+	/**
+	 * Sensoren-Anzeige
+	 */
 	public static class Sensors extends TableOfSpinners {
+		/** UID */
 		private static final long serialVersionUID = - 1275101280635052797L;
 
+		/**
+		 * @param s Sensor
+		 */
 		@SuppressWarnings("unchecked")
 		public void buisit(SimpleSensor s) {
 			model.addRow((BotComponent<? extends SpinnerModel>)s);
 		}
 
+		/**
+		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
+		 */
 		@Override protected String getPanelTitle() { return "Sensoren"; }
 	}
 }

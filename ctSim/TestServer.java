@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
 import ctSim.model.Command;
 import ctSim.util.FmtLogger;
 
-/*
+/**
  * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim
  * gehoert. Hab keine Ahnung, wofuer das sein soll. Ich nehm die Datei aus dem
  * Build Path, damit man bei Namensaenderungen in Sim-Klassen das nicht immer
@@ -26,13 +26,13 @@ public class TestServer implements Runnable {
 	public static final String  HOST        = "localhost";
 	public static final int     PORT        = 10001;
 	
-	/* 
+	/** 
 	 * Content, der hin und her geschickt wird...
 	 * 
 	 */
 	public static final String  CONTENT     = "Test";
 	
-	/* 
+	/**
 	 * Will man einen Java-Client?
 	 * 
 	 * Ansonsten C-Client "von Hand" starten...
@@ -40,7 +40,7 @@ public class TestServer implements Runnable {
 	 */
 	public static final boolean JAVA_CLIENT = true;
 	
-	/* 
+	/** 
 	 * Wie oft soll der Java-Client "flushen"?
 	 * 
 	 * Wenn TRUE, dann jedes byte, sonst
@@ -49,14 +49,14 @@ public class TestServer implements Runnable {
 	 */
 	public static final boolean FLUSH_ALL   = false;
 	
-	/* 
-	 * TRUE: Server -> Client -> Server
-	 * FALSE: Client -> Server -> Client
-	 * 
-	 */
+//	/** 
+//	 * TRUE: Server -> Client -> Server
+//	 * FALSE: Client -> Server -> Client
+//	 * 
+//	 */
 //	public static final boolean SERVER_TIME = true;
 	
-	/* 
+	/** 
 	 * Soll der Server einen Worker-Thread
 	 * benutzen, der den Ctrl. im Sim simuliert?
 	 * 
@@ -65,7 +65,7 @@ public class TestServer implements Runnable {
 	 */
 	public static final boolean USE_WORKER  = true;
 	
-	/* 
+	/**
 	 * Wie lange der Worker pro Zyklus warten soll,
 	 * bevor er den Com-Thread wieder laufen lässt
 	 * (simuliert Arbeit des Ctrl.)
@@ -73,7 +73,7 @@ public class TestServer implements Runnable {
 	 */
 	public static final long    WORKER_WAIT = 100;
 	
-	/* 
+	/**
 	 * Tick-Rate im Simulator: Jede Runde wird
 	 * mindestens diese Zeit gewartet
 	 * (+ simulierte Arbeit -- s.o.)
@@ -81,7 +81,7 @@ public class TestServer implements Runnable {
 	 */
 	public static final long    TICK_RATE   = 10;
 	
-	/* 
+	/**
 	 * Server-Connection mit _einem_ Client. Diese entspricht einem
 	 * Java-Bot im Simulator.
 	 * 
@@ -427,7 +427,7 @@ public class TestServer implements Runnable {
 		}
 	}
 	
-	/* 
+	/**
 	 * Optional einzustellender Worker. Dieser simuliert
 	 * den Controller des Sim.
 	 * 
@@ -527,7 +527,7 @@ public class TestServer implements Runnable {
 	private Socket       clientSocket;
 	private ServerSocket serverSocket;
 	
-	/* 
+	/**
 	 * Der TestServer lauscht auf Connections auf dem
 	 * global angegebenen Port.
 	 * 
@@ -595,6 +595,7 @@ public class TestServer implements Runnable {
 	}
 	
 	/**
+	 * main
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -612,7 +613,7 @@ public class TestServer implements Runnable {
 	}
 }
 
-/* 
+/** 
  * Der TestClient schickt einfach ein ankommendes Datum zurück
  * an den Server, der dann die Zeit stoppt und ausgibt (SERVER_TIME).
  * 

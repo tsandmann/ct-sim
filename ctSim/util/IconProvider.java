@@ -36,6 +36,7 @@ public interface IconProvider {
 	 * @param key Der Dateiname (ohne Extension) des zur&uuml;ckzuliefernden
 	 * Icons. F&uuml;r ein Icon "fruehstueck/Marmelade.gif" w&auml;re das
 	 * "Marmelade". Volles Verwendungsbeispiel siehe {@link FileIconMap}.
+	 * @return Icon
 	 */
 	public Icon get(String key);
 }

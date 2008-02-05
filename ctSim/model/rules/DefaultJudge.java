@@ -7,7 +7,7 @@ import ctSim.view.gui.Debug;
  * einem einzelnen Bot
  */
 public class DefaultJudge extends Judge {
-
+	/** Controller */
 	private DefaultController controller;
 
 	/**
@@ -19,11 +19,17 @@ public class DefaultJudge extends Judge {
 		this.controller = ctrl;
 	}
 
+	/**
+	 * @see ctSim.model.rules.Judge#isAddingBotsAllowed()
+	 */
 	@Override
 	public boolean isAddingBotsAllowed() {
 		return true;
 	}
 
+	/**
+	 * @see ctSim.model.rules.Judge#isStartingSimulationAllowed()
+	 */
 	@Override
 	public boolean isStartingSimulationAllowed() {
 		if (controller.getParticipants() < 1) {
@@ -33,6 +39,9 @@ public class DefaultJudge extends Judge {
 		return true;
 	}
 
+	/**
+	 * @see ctSim.model.rules.Judge#isSimulationFinished()
+	 */
 	@Override
 	protected boolean isSimulationFinished() {
 		return false;
