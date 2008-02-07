@@ -44,7 +44,7 @@ public class RemoteControlCodes {
 	}
 
 	/**
-	 * Gibt die Tastenbelegung der erzeugeten Fernbedienung zurueck
+	 * Gibt die Tastenbelegung der erzeugten Fernbedienung zurueck
 	 * @return	HashMap mit Tastenzuordnungen
 	 */
 	public Map<String, Integer> getKeyMap() {

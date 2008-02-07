@@ -11,6 +11,7 @@ import ctSim.model.bots.components.BotComponent.CanWrite;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
 import ctSim.model.bots.components.BotComponent.SimpleSensor;
 import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
 import ctSim.view.gui.RemoteControlViewer;
 
 /**
@@ -398,6 +399,7 @@ public class Sensors {
 				RC5Keys = RC5Type.getKeyMap();
 			} catch (Exception e) {
 				lg.warn("Konnte Fernbedienung nicht erzeugen: " + e.getMessage());
+				RC5Keys = Misc.newMap();	// unbekannter Typ -> leere Zuordnung verwenden
 			}
 		}
 		
