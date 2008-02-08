@@ -38,6 +38,8 @@ public class Main {
 	public static final String VERSION = "2.3";
 	/** Konfigurationsdatei */
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
+    /** Flag, welches die Anzeige des Splashscreens bewirkt (DEFAULT: TRUE) */
+    private static boolean showSplash = true;
 
 	/** Logger */
 	static FmtLogger lg;
@@ -67,36 +69,45 @@ public class Main {
 	 */
     public static void main(String... args) {
     	final String[] cmdArgs = args;
-    	/* Splash-Screen anzeigen */
-		java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
-		SplashWindow.splash(url, "Version " + VERSION);
-		SplashWindow.setMessage("Initialisierung...");
-		/* Inits ausfuehren */
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				public void run() {
-					handleCommandLineArgs(cmdArgs);
-					lg = initLogging();
-					loadConfig();
-					Init.setLookAndFeel();
-					setupViewAndController();
-				}
-			});
-		} catch (Exception e) {
-			System.err.println("Initialisierungen in Main fehlgeschlagen");
-			e.printStackTrace();
-			/* Programm erst nach Klick auf Splash schliessen */
-			MouseAdapter disposeOnClick = new MouseAdapter() {
-				public void mouseClicked(MouseEvent evt) {
-					System.exit(1);
-				}
-			};
-			SplashWindow.getWindow().addMouseListener(disposeOnClick);			
-			return;
+		handleCommandLineArgs(cmdArgs);
+	
+		if (showSplash) {
+		    /* Splash-Screen anzeigen */
+		    java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
+		    SplashWindow.splash(url, "Version " + VERSION);
+		    SplashWindow.setMessage("Initialisierung...");
+		    /* Inits ausfuehren */
+		    try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+			    	public void run() {
+						lg = initLogging();
+						loadConfig();
+						Init.setLookAndFeel();
+						setupViewAndController();
+				    }
+				});
+		    } catch (Exception e) {
+				System.err.println("Initialisierungen in Main fehlgeschlagen");
+				e.printStackTrace();
+				/* Programm erst nach Klick auf Splash schliessen */
+				MouseAdapter disposeOnClick = new MouseAdapter() {
+				    public void mouseClicked(MouseEvent evt) {
+				    	System.exit(1);
+				    }
+				};
+				SplashWindow.getWindow().addMouseListener(disposeOnClick);
+				return;
+		    }
+		    /* Splash-Screen weg */
+		    SplashWindow.disposeSplash();
+		} else {
+		    /* Starten von ct-Sim ohne Splash-Screen */
+		    lg = initLogging();
+		    loadConfig();
+		    Init.setLookAndFeel();
+		    setupViewAndController();
 		}
-		/* Splash-Screen weg */
-		SplashWindow.disposeSplash();
-	}
+    }
 
 	/**
 	 * Siehe {@link #main(String...)}.
@@ -107,12 +118,14 @@ public class Main {
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].toLowerCase().equals("-conf")) {
 				i++;
-				dependencies.reRegisterInstance(
-					new Config.SourceFile(args[i]));
+				dependencies.reRegisterInstance(new Config.SourceFile(args[i]));
+		    } else if (args[i].toLowerCase().equals("-nosplash")) {
+				showSplash = false;
 			} else {
 				System.out.println("Ung\u00FCltiges Argument '" + args[i] + "'");
-				System.out.println("USAGE: ct-Sim [-conf configfile]");
+				System.out.println("USAGE: ct-Sim [-conf configfile][-nosplash]");
 				System.out.println("\t-conf configfile.xml\tPfad zu alternativer Konfigurationsdatei");
+				System.out.println("\t-nosplash\t\tStartet ct-Sim ohne Splash-Screen");
 				System.exit(1);
 			}
 		}
@@ -133,7 +146,10 @@ public class Main {
 		}
 		FmtLogger rv = FmtLogger.getLogger("");
 		rv.fine("Logging-Subsystem initialisiert");
-		rv.addHandler(SplashWindow.getLogHandler());
+
+		if (showSplash) {
+		    rv.addHandler(SplashWindow.getLogHandler());
+		}
 		return rv;
     }
 
