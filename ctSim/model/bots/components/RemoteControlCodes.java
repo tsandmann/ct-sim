@@ -100,7 +100,7 @@ public class RemoteControlCodes {
 			
 			addKey("GR \u2013", 0x01BA);
 			addKey("RE +", 0x01BD);
-			addKey("YE  \u2013", 0x01B1);
+			addKey("YE \u2013", 0x01B1);
 			addKey("BL +", 0x01B0);
 			
 			addKey("I/II", 0x11AB);
