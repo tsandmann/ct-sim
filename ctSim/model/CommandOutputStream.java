@@ -16,7 +16,7 @@ public class CommandOutputStream {
 	/** der Strean */
 	private final BufferedOutputStream underlyingStream;
 	/** Sequenznummer */
-	private int seq = 0; //$$ Die Sequenznummer wird irgendwann groesser das Feld, in dem sie uebermittelt wird. Spaeter wrappt die auch und wird negativ. Damit sollte man irgendwie umgehen
+	private byte seq = 0;
 
 	/**
 	 * @param underlyingStream

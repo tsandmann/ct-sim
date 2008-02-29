@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2008-02-29 Benjamin Benz [bbe@heise.de]: Datenstruktur fuer Kommunikation auf Sender-IDs erweitert
+
 2008-02-08 Stefan Ehrhardt [stefan.e.ehrhardt@googlemail.com]: Commandline Parameter "-nosplash" zum Start ohne Splashscreen hinzugefuegt.
 
 2008-02-02 Timo Sandmann [mail@timosandmann.de]: Fernbedienung neu implementiert (#158), Splash-Screen gebaut, Code teilweise aufgeraeumt, massig Doku ergaenzt, einige TODOs erledigt, ABL-Unterstuetzung eingebaut fuer CtBotSimTcp und RealCtBot (noch deaktiviert)

@@ -95,10 +95,11 @@ import ctSim.util.Misc;
  *   8           61              Sequenznummer LSB, bei aufeinanderfolgenden
  *                               Commands erh&ouml;ht sich die Sequenznummer immer
  *                               um eins
- *   9           17              Sequenznummer MSB
- *  10           '&lt;' (Ascii 60)  CRC-Code, markiert Command-Ende, ist immer '&lt;'
+ *   9          0               Absender-Id des Paketes
+ *  10          0               Empaenger-Id des Paketes
+ *  11           '&lt;' (Ascii 60)  CRC-Code, markiert Command-Ende, ist immer '&lt;'
  *                               (Name &quot;CRC&quot; irref&uuml;hrend)
- *  11 und folgende              Nutzlast falls vorhanden. Wird z.B. verwendet,
+ *  12 und folgende              Nutzlast falls vorhanden. Wird z.B. verwendet,
  *                               wenn der Bot den Inhalt des LCD &uuml;bertr&auml;gt oder
  *                               die Bilddaten, was der Maussensor sieht
  * </pre>
@@ -213,7 +214,7 @@ public class Command {
 	final static FmtLogger lg = FmtLogger.getLogger("ctSim.model.Command");
 
 	/** L&auml;nge eines Kommandos in Byte */
-	public static final int COMMAND_SIZE = 11;
+	public static final int COMMAND_SIZE = 12; // Fuer die alte Version ohne Sender-Ids =11 neu 12
 
 	/** Markiert den Beginn eines Kommandos */
 	public static final int STARTCODE = '>';
@@ -531,10 +532,16 @@ public class Command {
 	private int dataR = 0;
 
 	/** Paketsequenznummer */
-	private int seq = 0;
+	private byte seq = 0;
+
+	/** Absender des Paketes */
+	private byte from = 0;
+
+	/** Empfaenger des Paketes */
+	private byte to = 0;
 
 	/** Markiert das Ende des Kommandos */
-	private final int crc;
+	private final byte crc;
 
 	/**
 	 * Client-Code kann damit markieren, ob das Kommando verarbeitet ist oder
@@ -619,11 +626,13 @@ public class Command {
 		b = new byte[COMMAND_SIZE - 1]; // -1: Startcode haben wir schon
 		con.read(b);
 
-		commandCode = Code.fromByte(b[0]);
+		byte i =0;
+		
+		commandCode = Code.fromByte(b[i++]);
 		// Nur 7 least significant bits
-		subCommandCode = commandCode.getSubCode(b[1] & 127);
+		subCommandCode = commandCode.getSubCode(b[i] & 127);
 		// 7 least significant Bits weg, nur 8. angucken
-		direction = b[1] >> 7 & 1;
+		direction = b[i++] >> 7 & 1;
 
 		// Sinnvollitaet pruefen
 		if (direction != DIR_REQUEST) {
@@ -632,12 +641,22 @@ public class Command {
 				"sollen); Kommando folgt%s", direction, this));
 		}
 
-		int payloadSize = Misc.toUnsignedInt8(b[2]);
+		int payloadSize = Misc.toUnsignedInt8(b[i++]);
 		// Shorts (je 2 Byte): Hier Konvertierung Little-Endian -> Big-Endian
-		dataL = (short) ( ( b[ 4 ] & 0xff ) << 8 | ( b[ 3 ] & 0xff ) );
-		dataR = (short) ( ( b[ 6 ] & 0xff ) << 8 | ( b[ 5 ] & 0xff ) );
-		seq   = (short) ( ( b[ 8 ] & 0xff ) << 8 | ( b[ 7 ] & 0xff ) );
-		crc = b[9];
+		dataL = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) );
+		i+=2;
+		dataR = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) );
+		i+=2;
+		
+		seq=b[i++];	// neue Version mit Adressen und kurzer seq
+		// alte version seq   = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) );	i++;
+				
+		
+		from = b[i++];	// neue Version mit Adressen
+		to = b[i++]; // neue Version mit Adressen		
+		
+		// und noch die Pruefsumme
+		crc = b[i];
 
 		// Sinnvollitaet pruefen
 		if (crc != CRCCODE) {
@@ -693,7 +712,12 @@ public class Command {
 		data[i++] = (byte)(dataR & 255);
 		data[i++] = (byte)(dataR >> 8);
 		data[i++] = (byte)(seq & 255);
-		data[i++] = (byte)(seq >> 8);
+	//	data[i++] = (byte)(seq >> 8); // alte Version mit 16-Bit seq
+		
+		// neue Version mit Sender-Ids
+		data[i++] = (byte)from;
+		data[i++] = (byte)to;
+		
 		data[i++] = CRCCODE;
 
 		System.arraycopy(payload, 0, data, i, payload.length);
@@ -736,6 +760,8 @@ public class Command {
 			"\n\tDirection:\t"+direction+
 			"\n\tData:\tL "+dataL+" / R "+dataR+
 			"\n\tSeq:\t"+seq+
+			"\n\tFrom:\t"+from+
+			"\n\tTo:\t"+to+
 			"\n\tPayload:\t"+payloadStr+
 			"\n\tCRC:\t"+formatChar(crc);
 	}
@@ -808,7 +834,7 @@ public class Command {
 	/** 
 	 * @return Liefert die Kommando-Sequenznummer 
 	 */
-	public int getSeq() { return seq; }
+	public byte getSeq() { return seq; }
 
 	/** 
 	 * @return Getter zu {@link #setHasBeenProcessed(boolean)} 
@@ -830,13 +856,13 @@ public class Command {
 	 * Setzt das Feld dataR 
 	 * @param dataR 
 	 */
-	public void setDataR(int dataR) { this.dataR = dataR; }
-
+	public void setDataR(int dataR) { this.dataR = dataR; } 
+	
 	/** 
 	 * Setzt die Kommandosequenznummer
 	 * @param seq 
 	 */
-	public void setSeq(int seq) { this.seq = seq; }
+	public void setSeq(byte seq) { this.seq = seq; }
 
 	/**
 	 * Setzt den Sub-Command-Code. Nur sinnvoll f&uuml;r Commands, die der Sim
@@ -870,5 +896,37 @@ public class Command {
 	 */
 	public void setHasBeenProcessed(boolean hasBeenProcessed) {
 		this.hasBeenProcessed = hasBeenProcessed;
+	}
+
+	/**
+	 * Liest den Absender des Paketes aus
+	 * @return Absender-Id
+	 */
+	public byte getFrom() {
+		return from;
+	}
+
+	/**
+	 * Setzt den Absender
+	 * @param from Absender-ID
+	 */
+	public void setFrom(byte from) {
+		this.from = from;
+	}
+
+	/**
+	 * Liest die Empfaenger-ID des Paketes aus
+	 * @return Empfaenger-ID
+	 */
+	public byte getTo() {
+		return to;
+	}
+
+	/** 
+	 * Setzt die Empfaenger-ID
+	 * @param to Empfaenger-ID
+	 */
+	public void setTo(byte to) {
+		this.to = to;
 	}
 }
