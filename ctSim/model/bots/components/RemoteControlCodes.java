@@ -98,9 +98,9 @@ public class RemoteControlCodes {
 			addKey("11", 0x118A);
 			addKey("12", 0x11A3);
 			
-			addKey("GR -", 0x01BA);
+			addKey("GR \u2013", 0x01BA);
 			addKey("RE +", 0x01BD);
-			addKey("YE -", 0x01B1);
+			addKey("YE \u2013", 0x01B1);
 			addKey("BL +", 0x01B0);
 			
 			addKey("I/II", 0x11AB);
@@ -116,8 +116,8 @@ public class RemoteControlCodes {
 			addKey("Vol+", 0x1190);
 			addKey("Mute", 0x01BF);
 			addKey("Ch+",  0x11A0);
-			addKey("Vol-", 0x1191);
-			addKey("Ch-",  0x11A1);			
+			addKey("Vol\u2013", 0x1191);
+			addKey("Ch\u2013",  0x11A1);			
 		}
 	}
 	
