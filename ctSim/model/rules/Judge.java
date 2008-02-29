@@ -4,7 +4,6 @@ import ctSim.controller.DefaultController;
 import ctSim.model.World;
 import ctSim.view.gui.Debug;
 
-//$$ Judges weg, deren einzige Bedeutung: Spielende (Simulationsende) veranlassen. Siehe Wiki
 //$$ Problem: Wenn Judge Bot-hinzufuegen verbietet, wird Bot nicht korrekt de-initialisiert
 /**
  * Abstrakte Superklasse f&uuml;r alle Judges, die pr&uuml;fen,
@@ -43,7 +42,9 @@ public abstract class Judge {
 		this.controller = ctrl;
 	}
 
-	/** Gibt an, ob es erlaubt ist, Bots zum Spiel hinzuzufuegen.
+	/** 
+	 * Gibt an, ob es erlaubt ist, Bots zum Spiel hinzuzufuegen.
+	 * @return true/false
 	 */
 	public boolean isAddingBotsAllowed() {
 		return this.time == this.startTime;
@@ -60,11 +61,16 @@ public abstract class Judge {
 		return this.start;
 	}
 
+	/**
+	 * Setzt eine Welt
+	 * @param w Welt
+	 */
 	public void setWorld(World w) {
     	time = startTime = w.getSimTimeInMs();
     }
 
 	/** Stellt fest, ob die momentane Simulation beendet werden soll.
+	 * @param t Zeit
 	 *
 	 * @return <code>true</code>, falls die Simulation beendet werden soll
 	 * &ndash; typischerweise, weil ein Bot das Ziel erreicht hat.
@@ -77,16 +83,24 @@ public abstract class Judge {
 		return rv;
 	}
 
-	/** Hier kommen die eigentlichen Schiedsrichteraufgaben rein. */
+	/** 
+	 * Hier kommen die eigentlichen Schiedsrichteraufgaben rein. 
+	 * @return true / false
+	 */
 	protected abstract boolean isSimulationFinished();
 
+	/**
+	 * Neu-Initialisierung
+	 */
 	public void reinit() {
 		this.start = true;
 		this.time = 0;
 		this.startTime = 0;
 	}
 
-	/** Liefert die Simulatorzeit [ms] seit Beginn des aktuellen Spiels. */
+	/** 
+	 * @return Liefert die Simulatorzeit [ms] seit Beginn des aktuellen Spiels. 
+	 */
 	public long getTime() {
 		return this.time - this.startTime;
 	}

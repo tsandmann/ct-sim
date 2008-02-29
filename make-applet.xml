@@ -56,7 +56,8 @@ zu erreichen. -->
 		<antcall target="make-jar">
 			<param name="num" value="2"/>
 			<param name="subdirs" value="
-				ctSim/model/bots/**/*.class"/>
+				ctSim/model/bots/*.class,
+				ctSim/model/bots/ctbot/*.class"/>
 			<param name="exclude" value="
 				**/CtBotSimTcp.class"/>
 		</antcall>
@@ -70,7 +71,13 @@ zu erreichen. -->
 			<param name="subdirs" value="
 				ctSim/util/**/*.class"/>
 		</antcall>
-
+	    <antcall target="make-jar">
+				<param name="num" value="5"/>
+				<param name="subdirs" value="
+					ctSim/model/bots/components/*.class"/>
+				<param name="exclude" value="
+					**/CtBotSimTcp.class"/>
+		</antcall>
 		<jar destfile="${builddir}/icons.jar"
 			basedir="${iconsdir}"
 			includes="${builddir}/ctSim/META-INF,*.gif"

@@ -19,6 +19,11 @@ import ctSim.model.Command;
  * </p>
  */
 public class SimBotTcpDump {
+	/**
+	 * main
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String... args) throws Exception {
 		ServerSocket srvSock = new ServerSocket(10001);
 		while (true) {
@@ -38,12 +43,25 @@ public class SimBotTcpDump {
 		}
 	}
 
+	/**
+	 * Forwarder-Thread
+	 */
 	static class Forwarder extends Thread {
+		/** Quelle */
 		TcpConnection from;
+		/** Ziel */
 		TcpConnection to;
+		/** Abbruchbedingung */
 		volatile boolean deathRequested = false;
+		/** Peer */
 		Forwarder peer;
 
+		/**
+		 * Forwarder
+		 * @param name
+		 * @param from
+		 * @param to
+		 */
 		public Forwarder(String name, TcpConnection from, TcpConnection to) {
 			super(name);
 			this.from = from;
@@ -51,6 +69,9 @@ public class SimBotTcpDump {
 			start();
 		}
 
+		/**
+		 * @see java.lang.Thread#run()
+		 */
 		@Override
 		public void run() {
 			System.err.println("Thread " + getName().trim() + " starting");

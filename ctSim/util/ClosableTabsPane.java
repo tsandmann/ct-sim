@@ -54,28 +54,53 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * das Icon gemalt wurde)
 	 */
     public static class BoundedIcon implements Icon {
+    	/** Icon */
     	private Icon wrappee;
+    	/** X-Koordinate */
     	private int lastX;
+    	/** Y-Koordinate */
 		private int lastY;
 
+		/**
+		 * @param wrappee Inhalt
+		 */
 		public BoundedIcon(Icon wrappee) {
     		this.wrappee = wrappee;
 		}
 
+		/**
+		 * @return Rechteck
+		 */
 		public Rectangle getLastBounds() {
 			return new Rectangle(lastX, lastY, getIconWidth(), getIconHeight());
 		}
 
+		/**
+		 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
+		 */
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			lastX = x;
 			lastY = y;
 			wrappee.paintIcon(c, g, x, y);
 		}
 
+		/**
+		 * @return Wrappee
+		 */
 		public Icon getWrappee() { return wrappee; }
+		/**
+		 * Warppee-Icon setzen
+		 * @param wrappee
+		 */
 		public void setWrappee(Icon wrappee) { this.wrappee = wrappee; }
 
+		/**
+		 * @see javax.swing.Icon#getIconHeight()
+		 */
 		public int getIconHeight() { return wrappee.getIconHeight(); }
+		/**
+		 * @see javax.swing.Icon#getIconWidth()
+		 */
 		public int getIconWidth() { return wrappee.getIconWidth(); }
     }
 
@@ -89,7 +114,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * austauscht, um den Hover-Effekt (mouseover / mouseout) zu erzielen. Die
 	 * Tooltips der Icons werden aehnlich gemacht.
 	 */
-
+    /** UID */
 	private static final long serialVersionUID = 1030593683059736787L;
 
 	/**
@@ -110,14 +135,21 @@ public class ClosableTabsPane extends JTabbedPane {
 	 */
 	private final List<String> closeIconToolTips = Misc.newList();
 
-	//$$ doc
+	/** Schliessen-Listener */
 	private final List<Runnable1<Integer>> closeListeners = Misc.newList();
 
+	/**
+	 * @param closeIcon	Icon
+	 */
 	public ClosableTabsPane(Icon closeIcon) {
 		this(closeIcon, closeIcon);
 	}
 
-	// wird nicht tatsaechlich geschlossen, Event feuert nur
+	/**
+	 * wird nicht tatsaechlich geschlossen, Event feuert nur
+	 * @param closeIcon
+	 * @param closeIconHover
+	 */
 	public ClosableTabsPane(final Icon closeIcon, final Icon closeIconHover) {
 		addMouseListener(new MouseAdapter() {
 			@SuppressWarnings("synthetic-access")
@@ -150,6 +182,10 @@ public class ClosableTabsPane extends JTabbedPane {
 		this.rawCloseIconHover = closeIconHover;
 	}
 
+	/**
+	 * Behandelt das MouseMotion-Event
+	 * @param e Event
+	 */
 	private void handleMouseMotionEvent(MouseEvent e) {
 		int mouseOverIdx = indexOfBoundedIconAt(e.getX(), e.getY());
 
@@ -168,6 +204,9 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * X/Y relativ zu dieser TabbedPane, d.h. man kann die Koordinaten, wie sie
 	 * ein MouseEvent liefert, direkt weiterverwursten. Gibt einen Tab-Index
 	 * zur&uuml;ck wie die {@code index...()}-Methoden in JTabbedPane.
+	 * @param x X-Koordinate
+	 * @param y Y-Koordinate
+	 * @return Tab-Index
 	 */
 	private int indexOfBoundedIconAt(int x, int y) {
 		// Tab mit welcher Indexnr. geklickt?
@@ -182,6 +221,9 @@ public class ClosableTabsPane extends JTabbedPane {
 			idx : -1;
 	}
 
+	/**
+	 * @see javax.swing.JTabbedPane#getToolTipText(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public String getToolTipText(MouseEvent e) {
 		int idx = indexOfBoundedIconAt(e.getX(), e.getY());
@@ -190,16 +232,34 @@ public class ClosableTabsPane extends JTabbedPane {
 		return super.getToolTipText(e);
 	}
 
+	/**
+	 * Fuegt neuen Tab hinzu
+	 * @param title		Titel
+	 * @param component	Komponente
+	 */
 	public void addClosableTab(String title, Component component) {
 		addClosableTab(title, component, null);
 	}
 
+	/**
+	 * Fuegt neuen Tab hinzu
+	 * @param title		Titel
+	 * @param component	Komponente
+	 * @param toolTip	Tooltip
+	 */
 	public void addClosableTab(String title, Component component,
 		String toolTip) {
 
 		addClosableTab(title, component, toolTip, "Tab schlie\u00DFen");
 	}
 
+	/**
+	 * Fuegt neuen Tab hinzu
+	 * @param title		Titel
+	 * @param component	Komponente
+	 * @param toolTip	Tooltip
+	 * @param closeIconToolTip	Icon-Tooltip
+	 */
 	public void addClosableTab(String title, Component component,
 		String toolTip, String closeIconToolTip) {
 
@@ -239,6 +299,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * {@link #addCloseListener(Runnable1)}. Der Aufruf wird stillschweigend
 	 * ignoriert, falls der Listener schon entfernt ist oder nie registriert
 	 * wurde.
+	 * @param li Listener
 	 */
 	public void removeCloseListener(Runnable1<Integer> li) {
 		closeListeners.remove(li);

@@ -31,26 +31,33 @@ import ctSim.controller.Main;
 import ctSim.model.World;
 import ctSim.view.ScreenshotProvider;
 
-//$$ doc WorldViewer
-//$$ Kandidat fuer architektonischen Umbau: Wieso instanziiert _diese Klasse_ das Universe? Gehoert das nicht ins Model?
+/**
+ * Klasse zur Darstellung einer Welt
+ */
 public class WorldViewer extends JPanel implements ScreenshotProvider {
-    private static final long serialVersionUID = - 2085097216130758546L;
-
+    /** UID */
+	private static final long serialVersionUID = - 2085097216130758546L;
+	/** nichts-Meldung */
     private static final String NOTHING = "showing nothing";
+    /** model-Meldung */
     private static final String MODEL = "showing a model";
 
-    // Hilfsding fuer die J3D-Buerokratie
-    //$$ ist SimpleUniverse.getPreferredConfiguration() besser?
+    /** Hilfsding fuer die J3D-Buerokratie */
     protected GraphicsConfiguration gc = GraphicsEnvironment.
 	    getLocalGraphicsEnvironment().getDefaultScreenDevice().
 	    getBestConfiguration(new GraphicsConfigTemplate3D());
 
+    /** OnScreen Flaeche */
     protected final Canvas3D onScreenCanvas = new Canvas3D(gc, false);
+    /** OffScreen Flaeche */
     protected final Canvas3D offScreenCanvas = new Canvas3D(gc, true);
 
-    // wird mit jedem neuen Model ausgetauscht
+    /** wird mit jedem neuen Model ausgetauscht */
     protected SimpleUniverse universe;
 
+    /**
+     * Erzeugt einen neuen WorldViewer, der erstmal leer ist
+     */
     public WorldViewer() {
     	setLayout(new CardLayout());
     	JPanel p = new JPanel(new GridBagLayout()); // nur zum Zentrieren
@@ -60,13 +67,24 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     	Main.dependencies.registerInstance(ScreenshotProvider.class, this);
     }
 
+    /**
+     * Zeigt eine Welt an, oder einen dummy, falls world == null
+     * @param world	Die Welt
+     */
     public void show(World world) {
     	deinit();
 
-    	if (world == null)
-    		((CardLayout)getLayout()).show(this, NOTHING); //$$ falscher platz, vgl MODEL
-    	else
+    	if (world == null) {
+    		//((CardLayout)getLayout()).show(this, NOTHING); //$$ falscher platz, vgl MODEL
+    		/* CardLayout.show() bewirkt Absturz unter Mac OS X, wenn kein Universum da ist => Dummy-Universum benutzen, falls keine Welt offen */
+    		universe = new SimpleUniverse(onScreenCanvas);
+            universe.getViewer().getView().addCanvas3D(offScreenCanvas);
+    	}
+    	else {
     		init(world);
+    		/* einmal rendern erzwingen, damit sofort die Welt angezeit wird */
+    		universe.getViewer().getCanvas3D().print(universe.getCanvas().getGraphics());
+    	}
     }
 
     /**
@@ -88,6 +106,10 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     		universe.cleanup();
     }
 
+    /**
+     * Initialisiert eine Welt
+     * @param w die Welt
+     */
     protected void init(World w) {
     	universe = new SimpleUniverse(onScreenCanvas);
         universe.getViewer().getView().addCanvas3D(offScreenCanvas);
@@ -131,13 +153,16 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		((CardLayout)getLayout()).show(this, MODEL);
     }
 
-    // Position: X/Y: zentriert, Z: so, dass der Parcours
-    // vollstaendig im Blick ist
-    private void initPerspective(World m) {
-    	double centerX = m.getWidthInM() / 2;
-    	double centerY = m.getHeightInM() / 2;
+    /**
+     * Position: X/Y: zentriert, Z: so, dass der Parcours
+     * vollstaendig im Blick ist
+     * @param w Welt
+     */
+    private void initPerspective(World w) {
+    	double centerX = w.getWidthInM() / 2;
+    	double centerY = w.getHeightInM() / 2;
     	double longerSide = Math.max(
-    		m.getWidthInM(), m.getHeightInM());
+    		w.getWidthInM(), w.getHeightInM());
     	// Winkel im Bogenmass
     	double field = universe.getViewer().getView().getFieldOfView();
 
@@ -151,8 +176,11 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     	tg.setTransform(targetTfm);
     }
 
-    // null wenn nix geladen
-    // Bsp: ImageIO.write(worldViewer.getScreenshot(), "png", File.createTempFile("screenshot", ".png"));
+    /**
+     * Baut einen Screenshot
+     * @return	null wenn nix geladen, sonst Screenshot
+	 * Bsp: ImageIO.write(worldViewer.getScreenshot(), "png", File.createTempFile("screenshot", ".png"));
+     */
     public BufferedImage getScreenshot() {
     	/*
 		 * Das hier ist sehr buerokratisch, aber leider hab ich keinen

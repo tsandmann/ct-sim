@@ -13,6 +13,9 @@ import ctSim.util.Misc;
  * hochl&auml;dt. Sollte weitgehend selbstdokumentierend sein (hua hua).
  */
 public class ScreenshotUploadTool {
+    /**
+     * usage-Meldung
+     */
     public static void usage() {
         System.out.println(
         	"Syntax:   java ScreenshotUploadTool dburl dbuser dbpassword");
@@ -22,6 +25,11 @@ public class ScreenshotUploadTool {
         System.exit(1);
     }
 
+    /**
+     * Bereitet eine URL vor
+     * @param rawUrl URL
+     * @return String
+     */
     private static String preprocessUrl(String rawUrl) {
    		if (Misc.startsWith(rawUrl, "jdbc:mysql://"))
    			return rawUrl;
@@ -30,6 +38,11 @@ public class ScreenshotUploadTool {
         return "jdbc:mysql://" + rawUrl;
     }
 
+    /**
+     * main
+     * @param args
+     * @throws Exception
+     */
     public static void main(String... args) throws Exception {
         if (args.length != 3)
             usage();

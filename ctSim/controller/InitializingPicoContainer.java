@@ -10,24 +10,43 @@ import org.picocontainer.Parameter;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
-//$$ doc InitializingPicoContainer
-// initiert Impls, aber nicht Keys (braucht man das jemals?)
+/**
+ * Initialisierter Pico-Container 
+ */
 public class InitializingPicoContainer extends DefaultPicoContainer {
-    private static final long serialVersionUID = - 6940983694133437239L;
+    /** UID */
+	private static final long serialVersionUID = - 6940983694133437239L;
 
+    /**
+     * Initialisierter Pico-Container 
+     */
     public InitializingPicoContainer() {
     	super();
     }
 
+    /**
+     * Initialisierter Pico-Container 
+     * @param parent 
+     */
 	public InitializingPicoContainer(PicoContainer parent) {
 		super(parent);
     }
 
+	/**
+	 * Getter
+	 * @param <T>
+	 * @param componentKey
+	 * @return T
+	 */
 	@SuppressWarnings("unchecked")
     public <T> T get(Class<T> componentKey) {
 	    return (T)super.getComponentInstance(componentKey);
 	}
 
+	/**
+	 * Klasse initialisiert?
+	 * @param classToInitialize Klasse
+	 */
 	private void ensureInitialized(Class<?> classToInitialize) {
 		try {
 	        Class.forName(classToInitialize.getName());
@@ -37,7 +56,9 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
         }
 	}
 
-	//$$ Methode weg?
+	/**
+	 * @param classMap
+	 */
 	public void registerImplementationMap(Class<?>... classMap) {
 		if (classMap.length % 2 != 0)
 			throw new IllegalArgumentException();
@@ -45,11 +66,17 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 			registerComponentImplementation(classMap[i], classMap[i + 1]);
     }
 
+	/**
+	 * @param classes
+	 */
 	public void registerImplementations(Class<?>... classes) {
 		for (Class<?> c : classes)
 			registerComponentImplementation(c);
 	}
 
+	/**
+	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Class)
+	 */
 	@SuppressWarnings("unchecked") // Geerbter Class-, nicht Class<?>-Parameter
     @Override
     public ComponentAdapter registerComponentImplementation(
@@ -58,6 +85,9 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	    return super.registerComponentImplementation(componentImplementation);
     }
 
+	/**
+	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class)
+	 */
 	@SuppressWarnings("unchecked") // Geerbter Class-, nicht Class<?>-Parameter
 	@Override
     public ComponentAdapter registerComponentImplementation(
@@ -67,6 +97,9 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	        componentImplementation);
     }
 
+	/**
+	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, java.util.List)
+	 */
 	@SuppressWarnings("unchecked") // Geerbter Class-, nicht Class<?>-Parameter
 	@Override
     public ComponentAdapter registerComponentImplementation(
@@ -76,6 +109,9 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	        componentImplementation, parameters);
     }
 
+	/**
+	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, org.picocontainer.Parameter[])
+	 */
 	@SuppressWarnings("unchecked") // Geerbter Class-, nicht Class<?>-Parameter
 	@Override
     public ComponentAdapter registerComponentImplementation(
@@ -86,33 +122,59 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	        componentImplementation, parameters);
     }
 
+	/**
+	 * @param componentImplementation
+	 * @return ComponentAdapter
+	 */
 	public ComponentAdapter registerImplementation(
 		Class<?> componentImplementation) {
     	return registerComponentImplementation(componentImplementation);
     }
 
+	/**
+	 * @param componentKey
+	 * @param componentImplementation
+	 * @return ComponentAdapter
+	 */
 	public ComponentAdapter registerImplementation(
 		Object componentKey, Class<?> componentImplementation) {
 		return registerComponentImplementation(
 			componentKey, componentImplementation);
 	}
 
+	/**
+	 * @param componentInstance
+	 * @return ComponentAdapter
+	 */
 	public ComponentAdapter registerInstance(Object componentInstance) {
         return registerComponentInstance(componentInstance);
     }
 
+	/**
+	 * @param componentKey
+	 * @param componentInstance
+	 * @return ComponentAdapter
+	 */
 	public ComponentAdapter registerInstance(
     	Object componentKey, Object componentInstance) {
     	return registerComponentInstance(componentKey, componentInstance);
     }
 
-	//$$ reRegister-Methoden koennen vielleicht weg und in die normalen register-Methoden integriert werden; man muss nachdenken ob diese Aenderung der Pico-Semantik wuenschenswert ist
+	/**
+	 * @param componentImplementation
+	 * @return ComponentAdapter
+	 */
 	public ComponentAdapter reRegisterImplementation(
 		Class<?> componentImplementation) {
 		return reRegisterImplementation(
 			componentImplementation, componentImplementation);
 	}
 
+	/**
+	 * @param componentKey
+	 * @param componentImplementation
+	 * @return ComponentAdapter
+	 */
 	public ComponentAdapter reRegisterImplementation(
 		Object componentKey, Class<?> componentImplementation) {
 		unregisterComponent(componentKey);
@@ -120,11 +182,20 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 			componentImplementation);
 	}
 
+	/**
+	 * @param componentInstance
+	 * @return ComponentAdapter
+	 */
 	public ComponentAdapter reRegisterInstance(Object componentInstance) {
 		return reRegisterInstance(
 			componentInstance.getClass(), componentInstance);
 	}
 
+	/**
+	 * @param componentKey
+	 * @param componentInstance
+	 * @return ComponentAdapter
+	 */
 	public ComponentAdapter reRegisterInstance(
 		Object componentKey, Object componentInstance) {
 		unregisterComponent(componentKey);

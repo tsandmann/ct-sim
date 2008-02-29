@@ -16,19 +16,36 @@ import ctSim.model.bots.components.Actuators;
 import ctSim.util.Misc;
 import ctSim.util.RoundGradientPaint;
 
-//$$ doc
+/**
+ * LED-GUI 
+ */
 public class Leds extends GuiBotBuisitor {
+	/** UID */
 	private static final long serialVersionUID = - 8033803343789440470L;
 
+	/**
+	 * LED-Viewer
+	 */
 	static class LedViewer extends JCheckBox {
+		/** UID */
     	private static final long serialVersionUID = 5975141457176705163L;
 
+    	/** Radius */
 		private static int RADIUS = 11;
 
 		// "Paint" als Nomen, also das, was der Maler an die Wand streicht
+		/** an */
 		private final Paint paintWhenOn;
+		/** aus */
 		private final Paint paintWhenOff;
 
+		/**
+		 * LED-Viewer
+		 * @param model Button
+		 * @param editable editierbar?
+		 * @param tooltip Tooltip
+		 * @param colorWhenOn An-Farbe
+		 */
 		LedViewer(final ButtonModel model, boolean editable, 
 			final String tooltip, Color colorWhenOn) {
 
@@ -53,6 +70,11 @@ public class Leds extends GuiBotBuisitor {
 				colorWhenOn, radius, colorWhenOn.darker().darker());
 		}
 
+		/**
+		 * Berechnet aus einer Farbe eine Dunklere
+		 * @param c Farbe
+		 * @return neue Farbe
+		 */
 		private static Color reduceSaturation(Color c) {
 			float[] rv = new float[3];
 			Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), rv);
@@ -60,6 +82,9 @@ public class Leds extends GuiBotBuisitor {
 			return Color.getHSBColor(rv[0], rv[1], rv[2]);
 		}
 
+		/**
+		 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+		 */
 		@Override
 		protected void paintComponent(Graphics graphics) {
 			Graphics2D g = (Graphics2D)graphics;
@@ -78,17 +103,26 @@ public class Leds extends GuiBotBuisitor {
 			g.drawOval(0, 0, RADIUS - 1, RADIUS - 1);
 		}
 
+		/**
+		 * @return Groesse
+		 */
 		@Override
 		public Dimension getPreferredSize() {
 			return getMinimumSize();
 		}
 
+		/**
+		 * @return Groesse
+		 */
     	@Override
     	public Dimension getMinimumSize() {
     		return new Dimension(RADIUS, RADIUS);
     	}
     }
 
+	/**
+	 * @param led LED-Buisitor
+	 */
 	public void buisit(Actuators.Led led) {
 		setBorder(new TitledBorder("LEDs"));
 		add(new LedViewer(led.getExternalModel(), led.isGuiEditable(), 

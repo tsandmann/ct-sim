@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -15,7 +14,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileFilter;
@@ -23,13 +21,15 @@ import javax.swing.filechooser.FileFilter;
 import ctSim.ConfigManager;
 import ctSim.controller.Config;
 import ctSim.controller.Controller;
-import ctSim.model.rules.Judge;
-import ctSim.util.Enumerations;
+import ctSim.controller.Main;
 import ctSim.util.GridBaggins;
 import ctSim.util.Menu;
 import ctSim.util.Runnable1;
 import ctSim.util.Menu.Checkbox;
 import ctSim.util.Menu.Entry;
+import edu.stanford.ejalbert.BrowserLauncher;
+import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
+import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 
 /**
  * <p>
@@ -48,6 +48,7 @@ import ctSim.util.Menu.Entry;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class MainWinMenuBar extends JMenuBar {
+	/** UID */
 	private static final long serialVersionUID = - 5927950169956191902L;
 
 	/**
@@ -79,14 +80,14 @@ public class MainWinMenuBar extends JMenuBar {
 	 */
 	final MainWindow mainWindow;
 
-	//$$ Wenn Bug 22 erledigt: kann weg
+	/** Jugde-Namen */
 	private static final String[] judgeClassNames = {
 		"ctSim.model.rules.DefaultJudge",
 		"ctSim.model.rules.LabyrinthJudge"};
-
-	//$$ Wenn Bug 22 erledigt: kann weg
+	
+	/** Buttons fuer Jugde */
 	private ButtonGroup judgesButtonGroup = new ButtonGroup();
-
+	
 	/**
 	 * @param controller
 	 * @param mainWindow Als 'parent' der modalen Dialoge und f&uuml;r das
@@ -111,22 +112,28 @@ public class MainWinMenuBar extends JMenuBar {
 	    	// automatisch macht
 	    	new Checkbox("Per USB (COM) automatisch", noOp).disable().check()));
 	    add(new Menu("Simuliere Bot",
-	    	new Entry("Testbot", onAddTestBot),
-    		//$$ os.name-Kram verlagern in eine Klasse fuer plattformabhaengiges Zeug
-	    	new Entry(((System.getProperty("os.name").indexOf("Windows") != -1)
-				? ".exe" : ".elf") + " starten ...",
-    			onInvokeExecutable)));
+	    	new Entry("Testbot starten", onAddTestBot),
+	    	new Entry("c't-Bot Binary starten", onInvokeExecutable)));
 
 	    JMenu m = new JMenu("Schiedsrichter");
 	    for (JMenuItem item : buildJudgeMenuItems())
 	    	m.add(item);
 	    add(m);
-
-	    JMenu simulationMenu = new Menu("Simulation",
-	    	new Entry("Start", Config.getIcon("Play16"), onStartSimulation),
-	    	new Entry("Pause", Config.getIcon("Pause16"), onPauseSimulation));
+	    
+	    JMenu simulationMenu = new Menu("Simulation", 
+	    		new Entry("Start", Config.getIcon("Play16"), onStartSimulation), 
+	    		new Entry("Pause", Config.getIcon("Pause16"), onPauseSimulation)
+	    );
 	    add(simulationMenu);
 
+	    //TODO:	Icons
+		JMenu supportMenu = new Menu("Support",
+			new Entry("About", onAbout),
+			new Entry("Webseite", onSiteLink),
+			new Entry("Trac", onTracLink),
+			new Entry("Forum", onForumLink));
+		add(supportMenu);
+	    
 	    toolBar = buildToolBar(worldMenu, simulationMenu);
 	}
 
@@ -137,7 +144,10 @@ public class MainWinMenuBar extends JMenuBar {
 	// dann laeuft einer der folgenden Runnables. Die Zuordnung welcher
 	// Menuepunkt -> welches Runnable findet im Konstruktor statt. (Sind
 	// Runnables, haben mit Threading aber nichts zu tun an der Stelle.)
-
+		
+	/**
+	 * Handler fuer Welt Oeffnen
+	 */
 	private Runnable onOpenWorld = new Runnable() {
 		@SuppressWarnings("synthetic-access")
 		public void run() {
@@ -147,12 +157,18 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
+	/**
+	 * Handler fuer neue Zufallswelt
+	 */
 	private Runnable onOpenRandomWorld = new Runnable() {
 		public void run() {
 			controller.openRandomWorld();
 		}
 	};
 
+	/**
+	 * Handler fuer Welt speichern
+	 */
 	private Runnable onSaveWorld = new Runnable() {
 		@SuppressWarnings("synthetic-access")
 		public void run() {
@@ -174,6 +190,9 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
+	/**
+	 * Handler fuer Welt schliessen
+	 */
 	private Runnable onCloseWorld = new Runnable() {
 		public void run() {
 			controller.closeWorld();
@@ -181,6 +200,9 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
+	/**
+	 * Handler fuer neuen Bot
+	 */
 	private Runnable onAddTcpBot = new Runnable() {
 		private final JTextField host = new JTextField(
 			Config.getValue("ipForConnectByTcp"), 12);
@@ -219,18 +241,27 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
+	/**
+	 * NOP
+	 */
 	private Runnable1<Boolean> noOp = new Runnable1<Boolean>() {
 		public void run(@SuppressWarnings("unused") Boolean argument) {
 			// No-Op
 		}
 	};
 
+	/**
+	 * Handler fuer neuen Testbot
+	 */
 	private Runnable onAddTestBot = new Runnable() {
 		public void run() {
 			controller.addTestBot();
 		}
 	};
 
+	/**
+	 * Handler zum ausfuehren eines Binaries
+	 */
 	private Runnable onInvokeExecutable = new Runnable() {
 		private final JFileChooser botChooser = new JFileChooser(
 			ConfigManager.path2Os(Config.getValue("botdir")));
@@ -241,7 +272,7 @@ public class MainWinMenuBar extends JMenuBar {
 				@Override
 				public boolean accept(File f) {
 					return (f.isDirectory() || f.getName().endsWith(".exe")
-							|| f.getName().endsWith(".elf"));
+							|| f.getName().endsWith(".elf") || f.getName().lastIndexOf('.') == -1);
 				}
 
 				@Override
@@ -260,22 +291,92 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
+	/**
+	 * Handler fuer Simulation starten
+	 */
 	private Runnable onStartSimulation = new Runnable() {
 		public void run() {
 			controller.unpause();
 		}
 	};
 
+	/**
+	 * Handler fuer Simulation anhalten
+	 */
 	private Runnable onPauseSimulation = new Runnable() {
 		public void run() {
 			controller.pause();
 		}
 	};
+	
+	/**
+	 * Handler fuer About-Eintrag
+	 */
+	private Runnable onAbout = new Runnable() {
+		public void run() {
+			/* Splash-Screen anzeigen */
+			java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
+			SplashWindow.splash(url, "Version " + Main.VERSION);
+			SplashWindow.setMessage("                                                      " +
+				"c't-Bot Projekt 2006-2008");
+		}
+	};
+	
+	/**
+	 * Handler fuer Webseite-Link
+	 */
+	private Runnable onSiteLink = new Runnable() {
+		public void run() {
+			try {
+				BrowserLauncher launcher = new BrowserLauncher();
+				launcher.openURLinBrowser("http://www.ct-bot.de");
+			} catch (BrowserLaunchingInitializingException e) {
+				e.printStackTrace();
+			} catch (UnsupportedOperatingSystemException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	
+	/**
+	 * Handler fuer Trac-Link
+	 */
+	private Runnable onTracLink = new Runnable() {
+		public void run() {
+			try {
+				BrowserLauncher launcher = new BrowserLauncher();
+				launcher.openURLinBrowser("http://www.heise.de/ct/projekte/machmit/ctbot/wiki");
+			} catch (BrowserLaunchingInitializingException e) {
+				e.printStackTrace();
+			} catch (UnsupportedOperatingSystemException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	
+	/**
+	 * Handler fuer Forum-Link
+	 */
+	private Runnable onForumLink = new Runnable() {
+		public void run() {
+			try {
+				BrowserLauncher launcher = new BrowserLauncher();
+				launcher.openURLinBrowser("http://www.heise.de/ct/foren/go.shtml?list=1&forum_id=89813");
+			} catch (BrowserLaunchingInitializingException e) {
+				e.printStackTrace();
+			} catch (UnsupportedOperatingSystemException e) {
+				e.printStackTrace();
+			}
+		}
+	};	
 
 	///////////////////////////////////////////////////////////////////////////
 	// Hilfsmethoden
 
-	//$$ Wenn Bug 22 erledigt: kann weg
+	/**
+	 * Baut das Jugde-Menue
+	 * @return Menue
+	 */
 	private JMenuItem[] buildJudgeMenuItems() {
 		JMenuItem[] rv = new JMenuItem[judgeClassNames.length];
 		for (int i = 0; i < judgeClassNames.length; i++) {
@@ -285,6 +386,11 @@ public class MainWinMenuBar extends JMenuBar {
 		return rv;
 	}
 
+	/**
+	 * Baut die Toolbar
+	 * @param menus Menues
+	 * @return Toolbar
+	 */
 	private JToolBar buildToolBar(JMenu... menus) {
 		JToolBar rv = new JToolBar();
 		for (JMenu menu : menus) {
@@ -297,39 +403,52 @@ public class MainWinMenuBar extends JMenuBar {
 		return rv;
 	}
 
+	/**
+	 * @return Toolbar
+	 */
 	public JToolBar getToolBar() {
 		return toolBar;
 	}
 
-	//$$ Wenn Bug 22 erledigt: Kann weg
-	public void onJudgeSet(Judge judge) {
-		for (AbstractButton b : Enumerations.asIterable(
-			judgesButtonGroup.getElements())) {
-			if (judge.getClass().getName().equals(
-				((JudgeMenuItem)b).fqJudgeClassName))
-				b.setSelected(true);
-		}
-    }
+//	public void onJudgeSet(Judge judge) {
+//		if (!controller.setJudge(judge.toString())) return;
+//		for (AbstractButton b : Enumerations.asIterable(
+//			judgesButtonGroup.getElements())) {
+//			if (judge.getClass().getName().equals(
+//				((JudgeMenuItem)b).fqJudgeClassName))
+//				b.setSelected(true);
+//		}
+//   }
 
 	///////////////////////////////////////////////////////////////////////////
 	// Hilfsklasse
 
 	/** Siehe {@link #worldChooser} */
 	private class WorldFileChooser extends JFileChooser {
+		/** UID */
 		private static final long serialVersionUID = 6693056925110674157L;
 
+		/**
+		 * @return Datei zum Welt-Oeffnen
+		 */
 		public File showOpenWorldDialog() {
 			if (showOpenDialog(mainWindow) == APPROVE_OPTION)
 				return getSelectedXmlFile();
 			return null;
 		}
 
+		/**
+		 * @return Datei zum Welt-Speichern
+		 */
 		public File showSaveWorldDialog() {
 			if (showSaveDialog(mainWindow) == APPROVE_OPTION)
 				return getSelectedXmlFile();
 			return null;
 		}
 
+		/**
+		 * Waehlt eine Welt-Datei aus
+		 */
 		public WorldFileChooser() {
 			super(Config.getValue("worlddir"));
 			setFileFilter(new FileFilter() {
@@ -345,6 +464,9 @@ public class MainWinMenuBar extends JMenuBar {
 			});
 		}
 
+		/**
+		 * @return File-Objekt einer XML-Datei
+		 */
 		private File getSelectedXmlFile() {
 			File f = getSelectedFile();
 			if (! f.exists() && ! f.getName().endsWith(".xml"))
@@ -353,12 +475,21 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	}
 
-	//$$ Wenn Bug 22 erledigt: Kann weg
-    private class JudgeMenuItem extends JRadioButtonMenuItem {
-        private static final long serialVersionUID = - 8177774672896579874L;
+    /**
+     * Judge-Menue
+     */
+    private class JudgeMenuItem extends JMenuItem {
+        /** UID */
+    	private static final long serialVersionUID = - 8177774672896579874L;
 
+        /**
+         * Judge-Klassenname
+         */
         public final String fqJudgeClassName;
 
+		/**
+		 * @param fqName Judge-Name
+		 */
 		public JudgeMenuItem(final String fqName) {
 			// Fuers Anzeigen Packagename weg, nur Klassenname
 	        super(new AbstractAction(fqName.replaceAll("^.*\\.(.*)$", "$1"))

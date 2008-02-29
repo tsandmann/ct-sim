@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  c't-Sim - Robotersimulator fuer den c't-Bot
+  
+  This program is free software; you can redistribute it
+  and/or modify it under the terms of the GNU General
+  Public License as published by the Free Software
+  Foundation; either version 2 of the License, or (at your
+  option) any later version. 
+  This program is distributed in the hope that it will be 
+  useful, but WITHOUT ANY WARRANTY; without even the implied
+  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+  PURPOSE. See the GNU General Public License for more details.
+  You should have received a copy of the GNU General Public 
+  License along with this program; if not, write to the Free 
+  Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+  MA 02111-1307, USA.
+  
+  Autor: Dominik Kalb (dominik@dkalb.com)
+  		 Timo Sandmann (mail@timosandmann.de)
+
+
+
+==================================================================
+
+Um ein JAR-Archiv des c't-Sim zu erstellen, ruft man dieses 
+Ant-Script in Eclipse ueber Rechtsklick -> "Run As" -> "Ant Build"
+auf. Anschliessend befindet sich im Unterverzeichnis "build" das
+Verzeichnis "ct-Sim", in dem das c't-Sim-JAR und die Libs liegen.
+Ein Aufruf von "ct-Sim-xx.jar" startet den c't-Sim.
+
+Das build-Verzeichnis kann man problemlos loeschen, wenn es nicht
+mehr benoetigt wird.
+
+==================================================================
+
+-->
+
+<project default="build-jar" basedir=".">
+
+	<!--
+	===================================================================
+		Externes environment und externe Ant Properties holen.
+	===================================================================
+	-->
+	<property file=".ant.properties" />
+	<property file="${user.home}/.ant.properties" />
+	<property environment="env" />
+
+	<!--
+	===================================================================
+		ct-Sim Namen und Versionen vergeben
+	===================================================================
+	-->
+	<property name="Name" value="ctSim" />
+	<property name="name" value="ct-Sim" />
+	<property name="version" value="14" />
+	<property name="manifest-version" value="1.0" />
+
+	<!--
+	===================================================================
+		Hier werden alle benoetigten Compilerschalter gesetzt.
+	===================================================================
+	-->
+	<property name="debug" value="true" />
+	<property name="deprecation" value="false" />
+	<property name="optimize" value="true" />
+	<property name="javac.source" value="1.5" />
+	<property name="javac.target" value="1.5" />	
+	<property name="compile.option" value="-Xlint:unchecked" />
+	
+	<!--
+	===================================================================
+		Alle benoetigten Quell- und Zielnamen vergeben
+	===================================================================
+	-->
+	<property name="src.name" value="ctSim" />
+	<property name="config.name" value="config" />
+	<property name="parcours.name" value="parcours"/>
+	<property name="characteristics.name" value="characteristics"/>
+	<property name="images.name" value="images"/>
+	<property name="textures.name" value="textures" />
+	<property name="contrib.name" value="contrib"/>
+		
+	<property name="build.name" value="build" />
+	<property name="build.classes.name" value="classes" />
+	<property name="build.lib.name" value="ct-Sim" />
+	
+	<property name="main.class.name" value="ctSim.controller.Main" />
+	
+	<!--
+	===================================================================
+		Die Quellverzeichnisse zuweisen.
+	===================================================================
+	-->
+	<property name="src.dir" location="${src.name}" />
+	<property name="config.dir" location="${config.name}"/>
+	<property name="parcours.dir" location="${parcours.name}"/>
+	<property name="characteristics.dir" location="${characteristics.name}"/>
+	<property name="images.dir" location="${images.name}"/>
+	<property name="textures.dir" location="${textures.name}" />   
+	<property name="contrib.dir" location="${contrib.name}"/>
+	
+	<!--
+	===================================================================
+		Die Zielverzeichnisse zuweisen.
+		Build Verzeichnisstruktur:
+		
+		build
+			classes (compilierte Klassen)
+			ct-Sim (ct-Sim-xx.jar Archiv und Libs)
+	===================================================================
+	-->
+	<property name="build.dir" location="${build.name}" />
+	<property name="build.classes.dir" location="${build.dir}/${build.classes.name}" />
+	<property name="build.textures.dir" location="${build.classes.dir}/${textures.name}" />
+	<property name="build.config.dir" location="${build.classes.dir}/${config.name}" />
+	<property name="build.parcours.dir" location="${build.classes.dir}/${parcours.name}" />
+	<property name="build.images.dir" location="${build.classes.dir}/${images.name}" />	
+	<property name="build.characteristics.dir" location="${build.classes.dir}/${characteristics.name}" />
+	<property name="build.lib.dir" location="${build.dir}/${build.lib.name}" />
+	
+	<!--
+	===================================================================
+		Der Klassenpfad
+	===================================================================
+	-->
+	<path id="ctSim.classpath">
+		<path location="." />
+		<path location="contrib/BrowserLauncher2-1_3.jar" />
+		<path location="contrib/junit-4.1.jar" />
+		<path location="contrib/mysql-connector-java-3.1.13-bin.jar" />
+		<path location="contrib/picocontainer-1.2.jar" />		
+		<path location="contrib/rxtx.jar" />
+	</path>
+	
+	<!--
+	===================================================================
+		Initialisiert den Ant-Build 
+	===================================================================
+	-->
+	<target name="init">	
+		<mkdir dir="${build.dir}" />
+	</target>
+	
+	<!--
+	===================================================================
+		Kompiliert alle Java Quelldateien und Abhaengigkeiten
+	===================================================================
+	-->
+	<target name="build"
+		description="--> compiles ct-Sim project"
+		depends="init" >
+		
+		<!--
+		Zielverzeichnis erzeugen
+		-->
+		<mkdir dir="${build.classes.dir}" />
+		
+		<!--
+		Texturen kopieren
+		-->
+		<copy todir="${build.textures.dir}">
+			<fileset dir="${textures.dir}" />
+		</copy>
+		
+		<!--
+		Config kopieren
+		-->
+		<copy todir="${build.config.dir}">
+			<fileset dir="${config.dir}" />
+		</copy>
+		
+		<!--
+		Parcour kopieren
+		-->
+		<copy todir="${build.parcours.dir}">
+			<fileset dir="${parcours.dir}" />
+		</copy>
+
+		<!--
+		Images kopieren
+		-->
+		<copy todir="${build.images.dir}">
+			<fileset dir="${images.dir}" />
+		</copy>
+
+		<!--
+		Characteristics kopieren
+		-->
+		<copy todir="${build.characteristics.dir}">
+			<fileset dir="${characteristics.dir}" />
+		</copy>
+				
+		<!--
+		Libs kopieren
+		-->
+		<copy file="${contrib.dir}/BrowserLauncher2-1_3.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/junit-4.1.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/mysql-connector-java-3.1.13-bin.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/picocontainer-1.2.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/rxtx.jar" todir="${build.lib.dir}" />
+		
+		<!--
+		ct-Sim compilieren
+		-->
+		<compile src="${src.dir}" 
+			dest="${build.classes.dir}" 
+			classpath="ctSim.classpath" /> 
+
+	</target>
+	
+	<!--
+	===================================================================
+		Erzeugt das ct-Sim-xx.jar Archiv
+	===================================================================
+	-->
+	<target name="build-jar"
+		description="--> create jar libaries"
+		depends="clean, build" >
+		
+		<mkdir dir="${build.lib.dir}" />
+		
+		<jar destfile="${build.lib.dir}/${name}-${version}.jar"
+			basedir="${build.classes.dir}">
+		
+			<!--
+			Ausfuehrbare Hauptklasse mit main-Methode setzen
+			-->
+			<manifest>
+				<attribute name="Main-Class" value="${main.class.name}" />
+				<attribute name="Class-Path" value="BrowserLauncher2-1_3.jar : junit-4.1.jar : mysql-connector-java-3.1.13-bin.jar : picocontainer-1.2.jar : rxtx.jar" />
+			</manifest>
+		
+		</jar>
+		
+		<!--
+		.class-Dateien wieder loeschen
+		-->
+		<delete dir="${build.classes.dir}" includeEmptyDirs="true" quiet="true" />		
+	</target>
+	
+	<!--
+	===================================================================
+		Loescht alle erzeugten Klassen und Archive
+	===================================================================
+	-->
+	<target name="clean"
+		description="--> clean up" >
+
+		<delete dir="${build.dir}" includeEmptyDirs="true" quiet="true" />
+	</target>
+	
+	<!--
+	===================================================================
+		Wiederverwendbares Makro zum Kompilieren.
+		Aufruf:
+		<compile src="srcFolder" 
+			dest="destFolder" 
+			classpath="classpath" />
+	===================================================================
+	-->	
+	<macrodef name="compile">
+		<!-- Quellverzeichnis -->
+		<attribute name="src" default="needed" />
+		<!-- Zielverzeichnis -->
+		<attribute name="dest" default="needed" />
+		<!-- Klassenpfad verwenden -->
+		<attribute name="classpath" default="needed" />
+		<sequential>
+			
+			<!--
+			Zielverzeichnis erzeugen, wenn nicht vorhanden.
+			-->
+			<mkdir dir="@{dest}" />
+			
+			<!--
+			Compiler aufrufen.
+			-->
+			<javac srcdir="@{src}"
+				destdir="@{dest}"
+				excludes="TestServer.java,EchoTest.java"
+				debug="${debug}"
+				deprecation="${deprecation}"
+				source="${javac.source}"
+				target="${javac.target}"
+				optimize="${optimize}"
+				nowarn="false" >
+				
+				<!--
+				Wenn der Java 1.5 Compiler verwendet wird, sollte diese
+				Option mit angegeben werden.
+				-->
+				<compilerarg value="${compile.option}" />
+				
+				<!--
+				Diesen Klassenpfad verwenden.
+				-->
+				<classpath>
+					<path refid="@{classpath}" />
+				</classpath>
+			</javac>
+		</sequential>
+	</macrodef>
+
+</project>

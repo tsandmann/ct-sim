@@ -29,9 +29,13 @@ import java.awt.Insets;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class GridBaggins extends GridBagConstraints {
+	/** UID */
 	private static final long serialVersionUID = - 1427751556874174611L;
 
-	/** Put the component in the center of its display area. */
+	/** 
+	 * Put the component in the center of its display area. 
+	 * @return GridBaggin
+	 */
 	public GridBaggins center() {
 		anchor = CENTER;
 		return this;
@@ -40,6 +44,7 @@ public class GridBaggins extends GridBagConstraints {
 	/**
 	 * Put the component on the right side of its display area, centered
 	 * vertically.
+	 * @return GridBaggin
 	 */
 	public GridBaggins east() {
 		anchor = EAST;
@@ -49,25 +54,35 @@ public class GridBaggins extends GridBagConstraints {
 	/**
 	 * Put the component at the top of its display area, centered
 	 * horizontally.
+	 * @return GridBaggin
 	 */
 	public GridBaggins north() {
 		anchor = NORTH;
 		return this;
 	}
 
-	/** Put the component at the top-right corner of its display area. */
+	/** 
+	 * Put the component at the top-right corner of its display area. 
+	 * @return GridBaggin
+	 */
 	public GridBaggins northeast() {
 		anchor = NORTHEAST;
 		return this;
 	}
 
-	/** Put the component at the top-left corner of its display area. */
+	/** 
+	 * Put the component at the top-left corner of its display area. 
+	 * @return GridBaggin
+	 */
 	public GridBaggins northwest() {
 		anchor = NORTHWEST;
 		return this;
 	}
 
-	/** Put the component at the bottom-right corner of its display area. */
+	/** 
+	 * Put the component at the bottom-right corner of its display area. 
+	 * @return GridBaggin
+	 */
 	public GridBaggins southeast() {
 		anchor = SOUTHEAST;
 		return this;
@@ -76,13 +91,17 @@ public class GridBaggins extends GridBagConstraints {
 	/**
 	 * Put the component at the bottom of its display area, centered
 	 * horizontally.
+	 * @return GridBaggin
 	 */
 	public GridBaggins south() {
 		anchor = SOUTH;
 		return this;
 	}
 
-	/** Put the component at the bottom-left corner of its display area. */
+	/** 
+	 * Put the component at the bottom-left corner of its display area. 
+	 * @return GridBaggin 
+	 */
 	public GridBaggins southwest() {
 		anchor = SOUTHWEST;
 		return this;
@@ -91,31 +110,44 @@ public class GridBaggins extends GridBagConstraints {
 	/**
 	 * Put the component on the left side of its display area, centered
 	 * vertically.
+	 * @return GridBaggin
 	 */
 	public GridBaggins west() {
 		anchor = WEST;
 		return this;
 	}
 
-	/** Do not resize the component. */
+	/** 
+	 * Do not resize the component. 
+	 * @return GridBaggin
+	 */
 	public GridBaggins nofill() {
 		fill = NONE;
 		return this;
 	}
 
-	/** Resize the component horizontally but not vertically. */
+	/** 
+	 * Resize the component horizontally but not vertically. 
+	 * @return GridBaggin
+	 */
 	public GridBaggins fillH() {
 		fill = HORIZONTAL;
 		return this;
 	}
 
-	/** Resize the component vertically but not horizontally. */
+	/** 
+	 * Resize the component vertically but not horizontally. 
+	 * @return GridBaggin 
+	 */
 	public GridBaggins fillV() {
 		fill = VERTICAL;
 		return this;
 	}
 
-	/** Resize the component both horizontally and vertically. */
+	/** 
+	 * Resize the component both horizontally and vertically. 
+	 * @return GridBaggin
+	 */
 	public GridBaggins fillHV() {
 		fill = BOTH;
 		return this;
@@ -133,6 +165,8 @@ public class GridBaggins extends GridBagConstraints {
 	 * <p>
 	 * <code>gridheight</code> should be a non-negative value and the
 	 * default value is 1.
+	 * @param numRows 
+	 * @return GridBaggin
 	 */
 	public GridBaggins gridheight(int numRows) {
 		gridheight = numRows;
@@ -142,6 +176,8 @@ public class GridBaggins extends GridBagConstraints {
 	/**
 	 * Alias for {@link #gridheight(int)}. HTML people will find this name
 	 * more intuitive.
+	 * @param numRows 
+	 * @return GridBaggin
 	 */
 	public GridBaggins rowspan(int numRows) {
 		return gridheight(numRows);
@@ -159,6 +195,8 @@ public class GridBaggins extends GridBagConstraints {
 	 * <p>
 	 * <code>gridwidth</code> should be non-negative and the default value
 	 * is 1.
+	 * @param numCols 
+	 * @return GridBaggin
 	 */
 	public GridBaggins gridwidth(int numCols) {
 		gridwidth = numCols;
@@ -168,6 +206,8 @@ public class GridBaggins extends GridBagConstraints {
 	/**
 	 * Alias for {@link #gridwidth(int)}. HTML people will find this name
 	 * more intuitive.
+	 * @param numCols 
+	 * @return GridBaggin
 	 */
 	public GridBaggins colspan(int numCols) {
 		return gridwidth(numCols);
@@ -185,13 +225,19 @@ public class GridBaggins extends GridBagConstraints {
 	 * <p>
 	 * The default value is <code>RELATIVE</code>. <code>gridx</code>
 	 * should be a non-negative value.
+	 * @param col 
+	 * @return GridBaggin
 	 */
 	public GridBaggins gridx(int col) {
 		gridx = col;
 		return this;
 	}
 
-	/** Alias for {@link #gridx(int)} ("column"). Seems more intuitive to me. */
+	/** 
+	 * Alias for {@link #gridx(int)} ("column"). Seems more intuitive to me. 
+	 * @param col 
+	 * @return GridBaggin
+	 */
 	public GridBaggins col(int col) {
 		return gridx(col);
 	}
@@ -208,13 +254,19 @@ public class GridBaggins extends GridBagConstraints {
 	 * The default value is <code>RELATIVE</code>. <code>gridy</code>
 	 * should be a non-negative value.
 	 * </p>
+	 * @param row 
+	 * @return GridBaggin
 	 */
 	public GridBaggins gridy(int row) {
 		gridy = row;
 		return this;
 	}
 
-	/** Alias for {@link #gridy(int)}. Seems more intuitive to me. */
+	/** 
+	 * Alias for {@link #gridy(int)}. Seems more intuitive to me. 
+	 * @param row 
+	 * @return GridBaggin 
+	 */
 	public GridBaggins row(int row) {
 		return gridy(row);
 	}
@@ -228,18 +280,28 @@ public class GridBaggins extends GridBagConstraints {
 	 * <p>
 	 * The default value is <code>new Insets(0, 0, 0, 0)</code>.
 	 * </p>
+	 * @param is 
+	 * @return GridBaggin
 	 */
 	public GridBaggins insets(Insets is) {
 		insets = is;
 		return this;
 	}
 
-	//$$ doc
+	/**
+	 * 
+	 * @param padding
+	 * @return GridBaggin
+	 */
 	public GridBaggins epadx(int padding) {
 		return insets(new Insets(insets.top, padding, insets.bottom, padding));
 	}
 
-	//$$ doc
+	/**
+	 * 
+	 * @param padding
+	 * @return GridBaggin
+	 */
 	public GridBaggins epady(int padding) {
 		return insets(new Insets(padding, insets.left, padding, insets.right));
 	}
@@ -251,6 +313,8 @@ public class GridBaggins extends GridBagConstraints {
 	 * pixels.
 	 * <p>
 	 * The default value is <code>0</code>.
+	 * @param padding 
+	 * @return GridBaggin
 	 */
 	public GridBaggins ipadx(int padding) {
 		ipadx = padding;
@@ -264,6 +328,8 @@ public class GridBaggins extends GridBagConstraints {
 	 * pixels.
 	 * <p>
 	 * The default value is 0.
+	 * @param padding 
+	 * @return GridBaggin
 	 */
 	public GridBaggins ipady(int padding) {
 		ipady = padding;
@@ -285,6 +351,8 @@ public class GridBaggins extends GridBagConstraints {
 	 * <p>
 	 * The default value of this field is <code>0</code>.
 	 * <code>weightx</code> should be a non-negative value.
+	 * @param weight 
+	 * @return GridBaggin
 	 */
 	public GridBaggins weightx(double weight) {
 		weightx = weight;
@@ -305,6 +373,8 @@ public class GridBaggins extends GridBagConstraints {
 	 * <p>
 	 * The default value of this field is <code>0</code>.
 	 * <code>weighty</code> should be a non-negative value.
+	 * @param weight 
+	 * @return GridBaggin
 	 */
 	public GridBaggins weighty(double weight) {
 		weighty = weight;

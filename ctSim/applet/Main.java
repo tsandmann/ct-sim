@@ -27,8 +27,11 @@ import ctSim.util.FmtLogger;
 import ctSim.util.IconProvider;
 import ctSim.view.gui.BotViewer;
 
-//$$ doc
+/**
+ * Main-Klasse fuer das c't-Bot-Applet 
+ */
 public class Main extends JApplet implements BotReceiver {
+	/** UID */
 	private static final long serialVersionUID = - 2381362461560258968L;
 
 	/**
@@ -39,12 +42,18 @@ public class Main extends JApplet implements BotReceiver {
 	 */
 	private static final String fallbackAddress = "10.10.22.58";
 
+	/** Logger */
 	final Logger mainLogger = Logger.getAnonymousLogger();
 
+	/** Statusanzeige */
 	private final JLabel status = new JLabel();
 
+	/** Bot-Referenz */
 	private Bot bot = null;
 
+	/**
+	 * Initialiserung des Applets
+	 */
 	@Override
 	public void init() {
 		initLogging();
@@ -60,6 +69,9 @@ public class Main extends JApplet implements BotReceiver {
 		getContentPane().add(p);
 	}
 
+	/**
+	 * Logging initialisieren
+	 */
 	private void initLogging() {
 		FmtLogger.setFactory(new FmtLogger.Factory() {
 			@Override
@@ -96,6 +108,9 @@ public class Main extends JApplet implements BotReceiver {
 		mainLogger.addHandler(h);
 	}
 
+	/**
+	 * Icons initialisieren
+	 */
 	private void initIcons() {
 		Config.setIconProvider(new IconProvider() {
 			public Icon get(String key) {
@@ -111,6 +126,9 @@ public class Main extends JApplet implements BotReceiver {
 		});
 	}
 
+	/**
+	 * Startet die TCP-Connection
+	 */
 	@Override
 	public void start() {
 		int port;
@@ -124,6 +142,10 @@ public class Main extends JApplet implements BotReceiver {
 			port, this);
 	}
 
+	/**
+	 * Fuegt einen neuen (bereits erstellten) Bot in das Fenster ein
+	 * @param b	Referenz auf den neuen Bot
+	 */
 	public void onBotAppeared(final Bot b) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@SuppressWarnings("synthetic-access")
@@ -160,6 +182,9 @@ public class Main extends JApplet implements BotReceiver {
 		bot = b;
 	}
 
+	/**
+	 * Beendet das c't-Bot-Applet
+	 */
 	@Override
 	public void destroy() {
 		SwingUtilities.invokeLater(new Runnable() {

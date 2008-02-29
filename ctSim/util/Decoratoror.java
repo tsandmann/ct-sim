@@ -5,9 +5,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
 
-//$$ dococ
+/**
+ * Decoratoror
+ */
 public class Decoratoror {
-	//$$ Geht das nicht einfacher? Sind Method-Objekte nicht Singletons oder so? Dann wuerde "==" reichen
+	/**
+	 * @param concreteMethod
+	 * @param abstractMethod
+	 * @return true / false
+	 */
 	public static boolean doesImplement(Method concreteMethod,
 	Method abstractMethod) {
 		if (! concreteMethod.getName().equals(abstractMethod.getName()))
@@ -28,6 +34,11 @@ public class Decoratoror {
 		return true;
 	}
 
+	/**
+	 * @param o
+	 * @param abstractMethod
+	 * @return true / false
+	 */
 	public static boolean providesImplementationOf(Object o,
 	Method abstractMethod) {
 		for (Method m : o.getClass().getMethods()) {
@@ -37,7 +48,12 @@ public class Decoratoror {
 		return false;
 	}
 
-	// throws NoSuchMethodException like e.g. Class.getMethod() does
+	/**
+	 * @param decorators Objekte
+	 * @param m Methode
+	 * @return Objekt
+	 * @throws NoSuchMethodException
+	 */
 	private static Object findImplementor(Object[] decorators, Method m)
 	throws NoSuchMethodException {
 		for (int i = decorators.length - 1; i >= 0; i--) {
@@ -48,6 +64,14 @@ public class Decoratoror {
 				"method '"+m+"'");
 	}
 
+	/**
+	 * @param <T>
+	 * @param resultInterface
+	 * @param decorators
+	 * @return T
+	 * @throws NoSuchMethodException
+	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T createDecorated(
 	Class<T> resultInterface, Object... decorators)
 	throws NoSuchMethodException {

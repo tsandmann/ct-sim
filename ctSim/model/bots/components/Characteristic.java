@@ -36,23 +36,26 @@ import java.util.*;
 
 public class Characteristic {
 
-	// Das Array mit ausgewaehlten Messgroessen (M) und Sensordaten (S), Format:
-	// M1, S1, M2, S2 ....
-	// wobei Mx ganzzahlige, positive Werte sind und M(x+1) > Mx sein muss
-	// (Luecken sind aber erlaubt)
-	// Sx sind die Sensordaten als Gleitkommazahlen (floats)
+	/** Das Array mit ausgewaehlten Messgroessen (M) und Sensordaten (S), Format:
+	 * M1, S1, M2, S2 ....
+	 * wobei Mx ganzzahlige, positive Werte sind und M(x+1) > Mx sein muss
+	 * (Luecken sind aber erlaubt)
+	 * Sx sind die Sensordaten als Gleitkommazahlen (floats)
+	 */
 	private float[] characteristic;
 
-	// Ein Lookup-Table, ist eine ergaenzte Form von characteristic;
-	// hier uebernimmt der Array-Index die Funktion der Mx-Werte.
-	// Diese sind hier lueckenlos, Zwischenwerte werden extrapoliert.
+	/** Eine Lookup-Table, ist eine ergaenzte Form von characteristic;
+	 * hier uebernimmt der Array-Index die Funktion der Mx-Werte.
+	 * Diese sind hier lueckenlos, Zwischenwerte werden extrapoliert.
+	 */
 	private float[] lookup;
 	
-	// Kopie des Lookup-Tables, der auf ganze Zahlen gerundete Sensorwerte 
-	// zurueckgibt
+	/** Kopie der Lookup-Tables, der auf ganze Zahlen gerundete Sensorwerte 
+	 * zurueckgibt
+	 */
 	private int[] intLookup;
 
-	// Sensordatum fuer alle Messgroessen ausserhalb der Kennlinie
+	/** Sensordatum fuer alle Messgroessen ausserhalb der Kennlinie */
 	private float INF;	
 	
 	/**
@@ -61,20 +64,99 @@ public class Characteristic {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Characteristic charac = new Characteristic(new File("characteristics\\gp2d12Right.txt"), 999f); //$NON-NLS-1$
-		System.out.println("Praezise Werte"); //$NON-NLS-1$
+		Characteristic charac = new Characteristic(new File("characteristics\\gp2d12Right.txt"), 999f);
+		System.out.println("Praezise Werte");
 		for (float f = 0f; f < 100; f = f + 0.1f) {
-			System.out.printf("\n%12f", f); //$NON-NLS-1$
+			System.out.printf("\n%12f", f);
 			for (int i = 0; i < charac.lookupPrecise(f)/5; i++)
 				System.out.print("*");
 		}
 
 	}
 	
-	public Characteristic(String filename, float inf) {
-		this(new File(filename), inf);
+	/**
+	 * @param filename Pfad zur charac-Datei
+	 * @param inf Sensordatum fuer Messgroessen ausserhalb der Kennlinie
+	 * @throws IOException
+	 */
+	public Characteristic(String filename, float inf) throws IOException {
+		this(ClassLoader.getSystemResource(filename).openStream(), inf);
 	}
 
+	/**
+	 * @param openStream Stream der chrac-Datei
+	 * @param inf Sensordatum fuer Messgroessen ausserhalb der Kennlinie
+	 */
+	public Characteristic(InputStream openStream, float inf) {
+		this.INF = inf;
+	    BufferedReader in = new BufferedReader(new InputStreamReader(openStream));
+	    String line;
+	    String c = new String();
+		try {
+			while ((line = in.readLine()) != null) {
+				c += line + "\r\n";
+			}
+			in.close();
+		} catch (FileNotFoundException e1) {
+			System.err.println("Kennlinien-Datei nicht gefunden");
+		} catch (IOException e1) {
+			System.err.println("I/O-Fehler");
+		}
+		
+		Number[] charac = csv2array(c); 
+		// Numbers in primitive floats verwandeln:
+		this.characteristic = new float[charac.length]; 
+		for (int i=0; i<charac.length; i++){
+			this.characteristic[i] = charac[i].floatValue();
+		}
+		
+		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
+		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
+		// den 0-Index:
+		this.lookup = new float[1 + Math.round(Math.round(Math
+				.floor(this.characteristic[this.characteristic.length - 2])))];
+		// Lookup-Table jetzt fuellen:
+		int firstMeas = Math.round(Math.round(Math.floor(this.characteristic[0])));
+		// Alles vor der ersten Messgroesse mit INF fuellen:
+		for (int i = 0; i < firstMeas; i++) {
+			this.lookup[i] = this.INF;
+		}
+		// Dann jeweils in Zweierschritten voran:
+		for (int i = 0; i < this.characteristic.length; i += 2) {
+			// Zwei aufeinanderfolgende Messgroessen heraussuchen:
+			int firMea = Math.round(Math.round(Math.floor(this.characteristic[i])));
+			// Wert am ersten Index eintragen:
+			this.lookup[firMea] = this.characteristic[i + 1];
+			try { // Klappt nicht, wenn schon das Ende erreicht ist.
+				int secMea = Math.round(Math.round(Math
+						.floor(this.characteristic[i + 2])));
+				// Wie viele Schritte lassen die Messgroessen aus?
+				int diff = secMea - firMea;
+				// Und wie veraendert sich der zugeordnete Wert zwischen den
+				// Messgroessen?
+				float valDiff = this.characteristic[i + 3] - this.characteristic[i + 1];
+				// Das ist pro Schritt gleich der Wertdifferenz durch
+				// Messgroessendifferenz:
+				float delta = valDiff / diff;
+				// Zwischenwerte addieren, fuer jeden weiteren
+				// einmal delta auf lookup[firMea] draufrechnen:
+				for (int j = 1; j < diff; j++) {
+					this.lookup[firMea + j] = this.lookup[firMea] + j * delta;
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				// Tja, das war wohl zu weit 8-)
+			}
+		}
+
+		// Es wird ein zweiter Lookup-Table erstellt, fuer Sensorwerte, die 
+		// nur aus ganzen Zahlen bestehen:
+		this.intLookup = new int[this.lookup.length]; 
+		for (int i = 0; i<this.lookup.length; i++){
+				this.intLookup[i] = Math.round(this.lookup[i]);
+			}
+		// printLookup();		
+	}
+	
 	/**
 	 * Der Konstruktor errechnet aus der lueckenhaften Stuetzwerttabelle den
 	 * kompletten Lookup-Table mit Zwischenwerten fuer alle ganzzahligen
@@ -88,7 +170,6 @@ public class Characteristic {
 	 * @param inf
 	 *            Sensordatum fuer Messgroessen ausserhalb der Kennlinie	  
 	 */
-	//$$ Wert inf auch in Datei; ist komisch, wenn alles in der Datei ist, nur der Wert im Code
 	public Characteristic(File file, float inf) {
 		// Wert ausserhalb des Messbereichs:
 		this.INF = inf;
@@ -97,9 +178,9 @@ public class Characteristic {
 		try {
 			c = readFile(file);
 		} catch (FileNotFoundException e1) {
-			System.err.println("Kennlinien-Datei nicht gefunden"); //$NON-NLS-1$
+			System.err.println("Kennlinien-Datei nicht gefunden");
 		} catch (IOException e1) {
-			System.err.println("I/O-Fehler"); //$NON-NLS-1$
+			System.err.println("I/O-Fehler");
 		}			 
 		
 		Number[] charac = csv2array(c); 
@@ -196,9 +277,9 @@ public class Characteristic {
 	 */
 	@SuppressWarnings("unused")
 	private void printLookup() {
-		System.out.println("Lookup-Table"); //$NON-NLS-1$
+		System.out.println("Lookup-Table");
 		for (int i = 0; i < this.lookup.length; i++) {
-			System.out.println("Zeile\t" + i + "\t" + this.lookup[i]+ "\t" + this.intLookup[i]);   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+			System.out.println("Zeile\t" + i + "\t" + this.lookup[i]+ "\t" + this.intLookup[i]);
 		}
 	}
 
@@ -210,7 +291,7 @@ public class Characteristic {
 	 */
 	private static Number[] csv2array(String input) {
 
-		StringTokenizer st = new StringTokenizer(input, ";"); //$NON-NLS-1$
+		StringTokenizer st = new StringTokenizer(input, ";");
 		Vector<Number> num = new Vector<Number>();
 		Number curr;
 		while (st.hasMoreTokens()) {

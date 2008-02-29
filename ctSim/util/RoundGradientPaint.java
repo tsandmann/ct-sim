@@ -42,23 +42,41 @@ import java.awt.image.WritableRaster;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class RoundGradientPaint implements Paint {
+	/**
+	 * RoundGradientPaint
+	 */
 	public class RoundGradientContext implements PaintContext {
+		/** Mittelpunkt */
 		protected final Point2D center;
+		/** Radius */
 		protected final double radius;
 
+		/**
+		 * @param center
+		 * @param radius
+		 */
 		public RoundGradientContext(Point2D center, double radius) {
 			this.center = center;
 			this.radius = radius;
 		}
 
+		/**
+		 * @see java.awt.PaintContext#dispose()
+		 */
 		public void dispose() {
 			// no-op
 		}
 
+		/**
+		 * @see java.awt.PaintContext#getColorModel()
+		 */
 		public ColorModel getColorModel() {
 			return ColorModel.getRGBdefault();
 		}
 
+		/**
+		 * @see java.awt.PaintContext#getRaster(int, int, int, int)
+		 */
 		public Raster getRaster(int baseX, int baseY, int width, int height) {
 			WritableRaster raster = getColorModel()
 				.createCompatibleWritableRaster(width, height);
@@ -73,6 +91,10 @@ public class RoundGradientPaint implements Paint {
 			return raster;
 		}
 
+		/**
+		 * @param ratio
+		 * @return Pixelfarbe
+		 */
 		private double[] getPixelColor(double ratio) {
 			return new double[] {
 				interpolate(centerColor.getRed()  , ratio, bgColor.getRed()),
@@ -82,17 +104,34 @@ public class RoundGradientPaint implements Paint {
 			};
 		}
 
+		/**
+		 * @param a
+		 * @param ratio
+		 * @param b
+		 * @return Interpolation
+		 */
 		private double interpolate(int a, double ratio, int b) {
 			return a + ratio * (b - a);
 		}
 
 	}
 
+	/** Center */
 	protected final Point2D rawCenter;
+	/** Radius */
 	protected final double rawRadius;
+	/** Center-Farbe */
 	protected final Color centerColor;
+	/** Farbe */
 	protected final Color bgColor;
 
+	/**
+	 * @param centerX
+	 * @param centerY
+	 * @param centerColor
+	 * @param radius
+	 * @param backgroundColor
+	 */
 	public RoundGradientPaint(double centerX, double centerY, Color centerColor,
 		double radius, Color backgroundColor) {
 
@@ -105,6 +144,9 @@ public class RoundGradientPaint implements Paint {
 		this.bgColor = backgroundColor;
 	}
 
+	/**
+	 * @see java.awt.Paint#createContext(java.awt.image.ColorModel, java.awt.Rectangle, java.awt.geom.Rectangle2D, java.awt.geom.AffineTransform, java.awt.RenderingHints)
+	 */
 	@SuppressWarnings("unused") // fuer die Parameter
 	public PaintContext createContext(ColorModel cm, Rectangle deviceBounds,
 		Rectangle2D userBounds, AffineTransform aff, RenderingHints h) {
@@ -115,6 +157,9 @@ public class RoundGradientPaint implements Paint {
 			aff.transform(rawCenter, null), transformedRadius.distance(0, 0));
 	}
 
+	/**
+	 * @see java.awt.Transparency#getTransparency()
+	 */
 	public int getTransparency() {
 		if (centerColor.getTransparency() == OPAQUE
 		&&  bgColor.getTransparency() == OPAQUE)

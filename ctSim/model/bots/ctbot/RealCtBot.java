@@ -3,6 +3,7 @@ package ctSim.model.bots.ctbot;
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES_ASYNCLY;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ProtocolException;
 
@@ -14,17 +15,33 @@ import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
+import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
+import ctSim.util.Runnable1;
 import ctSim.util.SaferThread;
+import ctSim.view.gui.AblViewer;
 
+/**
+ * Reale Bots
+ */
 public class RealCtBot extends CtBot {
+	/**
+	 * Kommando-Auswerter
+	 */
 	protected class CmdProcessor extends SaferThread {
+		/** Verbindung zum Sim */
 		private final Connection connection;
 
+		/**
+		 * @param connection Connection zum Bot
+		 */
 		public CmdProcessor(final Connection connection) {
 			super("ctSim-"+RealCtBot.this.toString());
 			this.connection = connection;
 		}
 
+		/**
+		 * @see ctSim.util.SaferThread#work()
+		 */
 		@SuppressWarnings("synthetic-access") // Bei den zwei Logging-Aufrufen ist uns das wurst
 		@Override
 		public void work() throws InterruptedException {
@@ -41,6 +58,9 @@ public class RealCtBot extends CtBot {
 			}
 		}
 
+		/**
+		 * @see ctSim.util.SaferThread#dispose()
+		 */
 		@Override
 		public void dispose() {
 			try {
@@ -51,13 +71,20 @@ public class RealCtBot extends CtBot {
 			}
 		}
 	}
-
+	
+	/** Name der Verbindung */
 	private final String connectionName;
+	/** Referenz eines AblViewer, der bei bei Bedarf ein RemoteCall-Ergebnis anzeigen kann */
+	private AblViewer ablResult;
 
+	/**
+	 * @param connection Connection zum Bot
+	 */
 	public RealCtBot(Connection connection) {
 		super(connection.getShortName()+"-Bot");
 
 		connectionName = connection.getName();
+		this.ablResult = null;
 
 		components.add(
 			new MousePictureComponent(),
@@ -82,11 +109,25 @@ public class RealCtBot extends CtBot {
 			_(Sensors.Trans.class        , READS),
 			_(Sensors.Error.class        , READS),
 			_(WelcomeReceiver.class      , READS),
+			//_(Actuators.Abl.class		 , WRITES_ASYNCLY),
 			_(RemoteCallCompnt.class     , READS, WRITES_ASYNCLY)
 		);
 
-		for (BotComponent<?> c : components)
+		for (BotComponent<?> c : components) {
 			c.offerAsyncWriteStream(connection.getCmdOutStream());
+			
+			/* RemoteCall-Componente suchen und DoneListener registrieren (AblViewer) */
+			if (c instanceof RemoteCallCompnt) {
+				RemoteCallCompnt rc = (RemoteCallCompnt)c;			
+				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
+					public void run(BehaviorExitStatus status) {
+						if (ablResult != null) {
+							ablResult.setSyntaxCheck(status == BehaviorExitStatus.SUCCESS);
+						}
+					}
+				});	
+			}
+		}
 
 		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
@@ -97,8 +138,56 @@ public class RealCtBot extends CtBot {
 		cp.start();
 	}
 
+	/**
+	 * @see ctSim.model.bots.BasicBot#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return "Realer c't-Bot, verbunden \u00FCber "+connectionName;
 	}
+	
+	/**
+	 * Sendet den RC5-Code, um ein ABL-Programm zu starten
+	 */
+	public void startABL() {
+		lg.info("Starte ABL-Programm auf dem Bot...");
+		for (BotComponent<?> c : components) {
+			if ((Object)c instanceof Sensors.RemoteControl) {
+				try {
+					((Sensors.RemoteControl)((Object)c)).send(">");
+					lg.fine("RC5-Code fuer Taste \">\" gesendet");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+		}		
+	}
+	
+	/**
+	 * Startet das Verhalten "name" per RemoteCall
+	 * @param name	Das zu startende Verhalten
+	 * @param param	Int-Parameter fuer das Verhalten (16 Bit)
+	 * @param ref	Referenz auf den ABL-Viewer, falls das Ergebnis dort angezeigt werden soll
+	 */
+	public void startRemoteCall(String name, int param, AblViewer ref) {
+		for (BotComponent<?> c : components) {
+			if (c instanceof RemoteCallCompnt) {
+				try {
+					ablResult = ref;
+					RemoteCallCompnt rc = (RemoteCallCompnt)c;
+					ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+					bytes.write(name.getBytes());
+					bytes.write(0);
+					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
+					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
+					par.setValue(param);
+					beh.getParameters().add(par);					
+					beh.call();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}	
 }

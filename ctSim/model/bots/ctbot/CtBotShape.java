@@ -30,7 +30,6 @@ import com.sun.j3d.utils.geometry.Stripifier;
 import ctSim.model.ThreeDBot;
 import ctSim.util.Runnable1;
 
-//$$ doc mit 4 grafiken
 /**
  * <a href="doc-files/grundplatte_bemassung.pdf">Grundplatte mit Bemaßung</a>
  */
@@ -64,9 +63,18 @@ public class CtBotShape extends Group {
 	 */
 	private static final double CORNER_INTERVAL_IN_DEG = 10;
 
-    public static class PointList extends ArrayList<Point3d> { //$$ vielleicht util
-        private static final long serialVersionUID = 436180486157724410L;
+    /**
+     * Punkt-Liste
+     */
+    public static class PointList extends ArrayList<Point3d> {
+        /** UID */
+    	private static final long serialVersionUID = 436180486157724410L;
 
+        /**
+         * interleave
+         * @param other
+         * @return PointList
+         */
         public PointList interleave(PointList other) {
             if (size() != other.size())
                 throw new IllegalArgumentException();
@@ -80,6 +88,9 @@ public class CtBotShape extends Group {
             return rv;
         }
 
+        /**
+         * reverse
+         */
         public void reverse() {
         	Point3d p;
             for (int i = 0; i < size() / 2; i++) {
@@ -89,24 +100,40 @@ public class CtBotShape extends Group {
             }
         }
 
+        /**
+         * @return last Point
+         */
         public Point3d last() {
             return get(size() - 1);
         }
 
+        /**
+         * transform
+         * @param t
+         */
         public void transform(Transform3D t) {
         	for (Point3d p : this)
         		t.transform(p, p);
         }
 
+        /**
+         * @return GeometryArray
+         */
         public GeometryArray toStripGeometry () {
             return toGeometry(GeometryInfo.TRIANGLE_STRIP_ARRAY);
         }
 
+        /**
+         * @return GeometryArray
+         */
         public GeometryArray toFanGeometry() {
             return toGeometry(GeometryInfo.TRIANGLE_FAN_ARRAY);
         }
 
-        //$$ nur fuer debug
+        
+        /**
+         * @return GeometryArray
+         */
         public GeometryArray toLineGeometry() {
             LineStripArray a = new LineStripArray(size(),
                 GeometryArray.COORDINATES, new int[] { size() });
@@ -114,6 +141,10 @@ public class CtBotShape extends Group {
 			return a;
         }
 
+        /**
+         * @param geometryInfoPrimitive
+         * @return GeometryArray
+         */
         public GeometryArray toGeometry(int geometryInfoPrimitive) {
             GeometryInfo gi = new GeometryInfo(geometryInfoPrimitive);
             gi.setCoordinates(toArray(new Point3d[] {}));
@@ -157,9 +188,15 @@ public class CtBotShape extends Group {
 	 * </p>
 	 */
     private final Shape3D leftCheek;
+    /** rechts */
     private final Shape3D rightCheek;
+    /** Mitte */
     private final Shape3D middle;
 
+    /**
+     * @param baseColor	Farbe
+     * @param appearanceEventSource ThreeDBot
+     */
     public CtBotShape(Color baseColor, ThreeDBot appearanceEventSource) {
     	// Kann kollidieren -- Gilt auch fuer alle Kinder im Szenegraph
     	setPickable(true);
@@ -197,6 +234,10 @@ public class CtBotShape extends Group {
     	});
     }
 
+    /**
+     * Seite bauen
+     * @return 3D-Shape
+     */
     protected static Shape3D buildRightCheek() {
     	// Shape (= Backe) besteht aus 3 Teilen: Boden, Decke, Mantel
     	Shape3D rv = new Shape3D();
@@ -231,6 +272,10 @@ public class CtBotShape extends Group {
         return rv;
     }
 
+    /**
+     * Mitte bauen
+     * @return 3D-Shape
+     */
     protected static Shape3D buildMiddle() {
     	// Shape (= Mittelteil) besteht aus 5 Teilen: Zylinderboden, Zyl.-Decke,
     	// Abschnitt eines Zyl.-Mantel, 1. Quaderviertel, 2. Quaderviertel
@@ -275,24 +320,41 @@ public class CtBotShape extends Group {
         return rv;
     }
 
+    /**
+     * @return 180 Grad Drehung um Z
+     */
     protected static Transform3D z180aboutCenter() {
         Transform3D rv = new Transform3D();
         rv.rotZ(PI);
         return rv;
     }
 
+    /**
+     * @param z Z
+     * @return Punktliste
+     */
     protected static PointList buildStern(double z) {
         return buildBotCircumference(z,
             180 - MOUTH_OPENING_ANGLE_IN_DEG,
             180 + MOUTH_OPENING_ANGLE_IN_DEG);
     }
 
+    /**
+     * @param z Z
+     * @return Punktliste
+     */
     protected static PointList buildCheekArc(double z) {
         return buildBotCircumference(z,
             MOUTH_OPENING_ANGLE_IN_DEG,
             180 - MOUTH_OPENING_ANGLE_IN_DEG);
     }
 
+    /**
+     * @param z Z
+     * @param fromAngleInDeg von (Winkel in Deg)
+     * @param toAngleInDeg bis (Winkel in Deg)
+     * @return Punktliste
+     */
     protected static PointList buildBotCircumference(double z,
     double fromAngleInDeg, double toAngleInDeg) {
         PointList rv = new PointList();
@@ -307,6 +369,11 @@ public class CtBotShape extends Group {
         return rv;
     }
 
+    /**
+     * @param z Z
+     * @param angleInDeg Winkel
+     * @return 3D-Punkt
+     */
     protected static Point3d buildPointOnCircumference(double z,
    	double angleInDeg) {
         double angleInRad = toRadians(angleInDeg);
@@ -316,7 +383,12 @@ public class CtBotShape extends Group {
             z);
     }
 
-    //$$ util?
+    /**
+     * transformiert einen Punkt
+     * @param p 3D-Punkt
+     * @param transforms Transformierung(en)
+     * @return 3D-Punkt
+     */
     private static Point3d transformPoint(Point3d p,
     Transform3D... transforms) {
     	Point3d rv = (Point3d)p.clone();
@@ -325,15 +397,25 @@ public class CtBotShape extends Group {
         return rv;
     }
 
+    /**
+     * @param c Farbe
+     */
     protected void setMiddleColor(Color c) {
     	middle.setAppearance(getBotAppearance(c));
     }
 
+    /**
+     * @param c Farbe
+     */
     protected void setCheeksColor(Color c) {
     	leftCheek .setAppearance(getBotAppearance(c));
     	rightCheek.setAppearance(getBotAppearance(c));
     }
 
+    /**
+     * @param c Farbe
+     * @return Bot-Appearance
+     */
     protected Appearance getBotAppearance(Color c) {
     	Appearance rv = new Appearance();
     	rv.setColoringAttributes(new ColoringAttributes(new Color3f(c),

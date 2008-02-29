@@ -19,7 +19,11 @@
 
 package ctSim.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.Thread.State;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.CountDownLatch;
@@ -42,36 +46,64 @@ import ctSim.view.View;
  */
 public class DefaultController
 implements Controller, BotBarrier, Runnable, BotReceiver {
+	/** Logger */
 	protected FmtLogger lg = FmtLogger.getLogger("ctSim.controller");
 
+	/** Flag fuer Pause */
 	private volatile boolean pause;
 
-	private CountDownLatch startSignal, doneSignal;
+	/** Latch fuer Start */
+	private CountDownLatch startSignal;
+	/** Latch fuer Done */
+	private CountDownLatch doneSignal;
 
+	/** Jugde */
     private Judge judge;
+    /** View */
     private View view;
+    /** Welt */
     private World world;
     /** Thread, der die Simulation macht: Siehe {@link #run()}. */
     private Thread sequencer;
 
-    //$$ Idiotischerweise ist die hauptsaechliche Initialisierung hier
+    /**
+     * Setzt das View und initialisiert alles noetige dafuer
+     * @param view	unser View
+     */
     public void setView(View view) {
 	    this.pause = true;
         this.view = view;
         setJudge(Config.getValue("judge"));
         TcpConnection.startListening(this);
-        if (Config.getValue("serialport") == null) {
-        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstützung " +
-        			"für serielle Schnittstellen deaktiviert");
-        } else
-        	ComConnection.startListening(this);
-        init();
+        try {
+	        if (Config.getValue("serialport") == null) {
+	        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstützung " +
+	        			"für serielle Schnittstellen deaktiviert");
+	        } else
+	        	ComConnection.startListening(this);
+        } catch (Error e) {
+        	lg.warn("Serielle Schnittstelle konnte nicht geladen werden:");
+        	lg.warn(e.toString());
+        } finally {
+        	init();
+        }
     }
 
+    /**
+     * Initialiserung
+     */
     private void init() {
         try {
             String parcFile = Config.getValue("parcours");
-            openWorldFromFile(new File(parcFile));
+    		InputStream openStream = ClassLoader.getSystemResource(parcFile).openStream();
+    		BufferedReader in = new BufferedReader(new InputStreamReader(openStream));
+    	    String line;
+    	    String sourceString = new String();
+    		while ((line = in.readLine()) != null) {
+    			sourceString += line + "\r\n";
+    		}
+    		in.close();
+    		openWorldFromXmlString(sourceString);
         } catch(NullPointerException e) {
             lg.fine("Kein Standardparcours konfiguriert");
         } catch(Exception e) {
@@ -82,7 +114,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         if (botBin == null)
             lg.fine("Kein Standardbot konfiguriert");
         else
-            invokeBot(botBin);
+            invokeBot(new File(botBin));	// mit botBin als String funktioniert es nicht 
     }
 
 	/**
@@ -98,7 +130,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * </ul>
 	 */
 	public void run() {
-		int timeout = 10000; //$$ Default lieber in Klasse Config
+		int timeout = 10000;
 
 		// Sequencer-Thread hat eigene Referenz auf die Welt -- siehe Bug 55
 		final World sequencersWorld = world;
@@ -233,6 +265,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * Setzt die Welt. Prinzip: Sequencer und Welt werden gemeinsam erstellt und
 	 * gemeinsam gekillt. setWorld() startet einen Sequencer-Thread, der
 	 * pausiert bleibt bis jemand unpause() aufruft.
+	 * @param world Die Welt
 	 */
 	private void setWorld(World world) {
 		if (world == null)
@@ -265,6 +298,11 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     	judge.reinit();
     }
 
+    /**
+     * Verbindet zu Host:Port
+     * @param hostname	Ziel der Verbindung (Name)
+     * @param port		Ziel der Verbindung (Port)
+     */
     public void connectToTcp(String hostname, String port) {
     	int p = 10002;
     	try {
@@ -279,13 +317,37 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
      * F&uuml;gt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu
      */
     public void addTestBot() {
+    	if (sequencer == null) {
+    		try {
+    			InputStream openStream;
+				openStream = ClassLoader.getSystemResource("parcours/testbots_home.xml").openStream();
+	    		BufferedReader in = new BufferedReader(new InputStreamReader(openStream));
+	    	    String line;
+	    	    String sourceString = new String();
+	    		while ((line = in.readLine()) != null) {
+	    			sourceString += line + "\r\n";
+	    		}
+	    		in.close();            
+	    		openWorldFromXmlString(sourceString);
+			} catch (IOException e) {
+				lg.info("Testbot-Home konnte nicht geladen werden");
+			}
+    	}
         onBotAppeared(new CtBotSimTest());
     }
 
+    /**
+     * Startet einen externen Bot
+     * @param file	File-Objekt des Bots
+     */
 	public void invokeBot(File file) {
 		invokeBot(file.getAbsolutePath());
 	}
 
+	/**
+	 * Startet einen externen Bot
+	 * @param filename	Pfad zum Bot als String
+	 */
     public void invokeBot(String filename) {
         if (! new File(filename).exists()) {
             lg.warning("Bot-Datei '"+filename+"' nicht gefunden");
@@ -305,15 +367,20 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     		// Bot ausführen
     		// String[] weil sonst trennt er das nach dem ersten Leerzeichen ab,
     		// dann geht's nicht, wenn der Pfad mal ein Leerzeichen enthält
-            Runtime.getRuntime().exec(new String[] { filename });
+    		File dir = new File(filename).getAbsoluteFile().getParentFile();
+            Runtime.getRuntime().exec(new String[] { filename }, null, dir);
         } catch (Exception e){
             lg.warning(e, "Fehler beim Starten von Bot '"+filename+"'");
         }
     }
 
+    /**
+     * Handler, falls neuer Bot hinzugefuegt wurde
+     * @param bot	Der neue Bot
+     */
     public synchronized void onBotAppeared(Bot bot) {
     	if (bot instanceof SimulatedBot) {
-    		if (world == null) {
+    		if (sequencer == null) {
     			lg.info("Weise "+bot.toString()+" ab: Es gibt keine Welt, zu " +
     					"der man ihn hinzuf\u00FCgen k\u00F6nnte");
     			bot.dispose(); // Bot abweisen
@@ -321,6 +388,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     		}
     		if (judge.isAddingBotsAllowed()) {
     			Bot b = world.addBot((SimulatedBot)bot, this);
+    			if (b == null) {
+    				bot.dispose();	// Bot abweisen, weil kein Platz mehr
+    				return;
+    			}
     			view.onBotAdded(b);
     		} else {
     			bot.dispose(); // Bot abweisen
@@ -330,17 +401,24 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     		view.onBotAdded(bot);
     }
 
+    /**
+     * Gibt die Anzahl der zurzeit geladenen Bots zurueck
+     * @return	Anzahl der Bots
+     */
     public int getParticipants() {
         return world.getFutureNumOfBots();
     }
 
-	//$$ Wenn Bug 22 erledigt: Methode kann weg
     /**
      * @param judgeClassName Die Art des Schiedrichters zu setzen
      * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist
      */
     public void setJudge(String judgeClassName) {
-    	//$$ Wenn ein Spiel laeuft vielleicht folgendes: throw new IllegalStateException("Aendern des Judge ist waehrend eines Spiels nicht moeglich")
+    	/* Kein Jugde-Wechsel, wenn eine Welt offen ist */
+    	if (sequencer != null) {
+    		lg.info("Kein Wechsel erlaubt, weil noch eine Welt offen ist");
+    		return;
+    	}    	
     	Judge j = null;
         try {
             Class<?> cl = Class.forName(judgeClassName);
@@ -358,15 +436,22 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         setJudge(j); // wird nur erreicht, wenn der try-Block geklappt hat
     }
 
+    /**
+     * Setzt den Schiedsrichter
+     * @param judge	gewuenschte Judge-Instanz
+     */
     public void setJudge(Judge judge) {
-        if (judge == null)
+    	if (judge == null)
             throw new NullPointerException();
         this.judge = judge;
-        view.onJudgeSet(judge);
+//      view.onJudgeSet(judge);
     }
-
+    
+    /**
+     * Laedt eine Welt aus einer Datei
+     * @param sourceFile	File-Objekt der Welt
+     */
     public void openWorldFromFile(File sourceFile) {
-        // TODO: Wenn kein DTD-file gegeben, besser Fehlermeldung!
         try {
             setWorld(World.buildWorldFromFile(sourceFile));
         } catch (Exception e) {
@@ -375,6 +460,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         }
     }
 
+    /**
+     * Laedt eine Welt aus einem String
+     * @param parcoursAsXml	String mit den XML-Dater der Welt
+     */
     public void openWorldFromXmlString(String parcoursAsXml) {
         try {
             setWorld(World.buildWorldFromXmlString(parcoursAsXml));
@@ -383,6 +472,9 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         }
     }
 
+    /**
+     * Erzeugt eine zufaellige Welt
+     */
     public void openRandomWorld() {
         try {
             String p = ParcoursGenerator.generateParc();
@@ -394,6 +486,9 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         }
     }
 
+    /**
+     * Init-Handler
+     */
     public void onApplicationInited() {
         view.onApplicationInited();
     }

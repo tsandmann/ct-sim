@@ -33,7 +33,9 @@ import ctSim.view.contestConductor.ContestConductor.ContestJudge;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class ContestConductorTest {
-	/** Siehe {@link ContestConductorTest}. */
+	/** Siehe {@link ContestConductorTest}. 
+	 * @param args 
+	 * @throws Exception */
 	public static void main(String[] args) throws Exception {
 		Main.dependencies.reRegisterImplementation(
 			ContestJudge.class, MockContestJudge.class);
@@ -45,11 +47,18 @@ public class ContestConductorTest {
 	 * Simulationsschritt zum Sieger erkl&auml;rt.
 	 */
 	public static class MockContestJudge extends ContestJudge {
+		/**
+		 * @param controller
+		 * @param concon
+		 */
 		public MockContestJudge(Controller controller,
 			ContestConductor concon) {
 			super(controller, concon);
 	    }
 
+		/**
+		 * @see ctSim.view.contestConductor.ContestConductor.ContestJudge#isSimulationFinished()
+		 */
 		@Override
         public boolean isSimulationFinished() {
 			concon.lg.fine("ContestJudge-Attrappe: Bot 1 gewinnt, " +

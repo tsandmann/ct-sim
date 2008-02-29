@@ -24,12 +24,19 @@ import org.w3c.dom.NodeList;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class IterableNodeList implements NodeList, Iterable<QueryableNode> {
+	/** Node-Liste */
 	private NodeList wrappee;
 
+	/**
+	 * @param wrappee Inhalt
+	 */
 	public IterableNodeList(NodeList wrappee) {
 		this.wrappee = wrappee;
 	}
 
+	/**
+	 * @see java.lang.Iterable#iterator()
+	 */
 	public Iterator<QueryableNode> iterator() {
 		return new Iterator<QueryableNode>() {
 			private int lastIdx = -1;
@@ -51,10 +58,16 @@ public class IterableNodeList implements NodeList, Iterable<QueryableNode> {
 		};
 	}
 
+	/**
+	 * @see org.w3c.dom.NodeList#getLength()
+	 */
 	public int getLength() {
 		return wrappee.getLength();
 	}
 
+	/**
+	 * @see org.w3c.dom.NodeList#item(int)
+	 */
 	public QueryableNode item(int index) {
 		return XmlDocument.createQueryableNode(wrappee.item(index));
 	}

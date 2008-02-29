@@ -16,91 +16,84 @@ import javax.swing.JPanel;
 import ctSim.model.bots.components.Sensors.RemoteControl;
 import ctSim.util.FmtLogger;
 
-//$$ doc
-//$$ Runde Buttons waeren schoen
+/**
+ * Fernbedienungs-GUI
+ */
 public class RemoteControlViewer extends JPanel {
+	/** UID */
 	private static final long serialVersionUID = - 6483687307396837800L;
 
+	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger(
 		"ctSim.view.gui.RemoteControlViewer");
 
+	/** blau */
 	private static final Color LIGHT_BLUE = new Color(150, 150, 255);
+	/** gruen */
 	private static final Color GR         = new Color(50,  200, 50);
+	/** gelb */
 	private static final Color YE         = new Color(200, 200, 0);
 
-	// 25A1: Quadrat fuer "Stop"
-	private static final String qdrt  = "\u25A1";
-	// 25CF: Dicker Punkt fuer "Record"
-	private static final String recrd = "\u25CF";
-
-	private final JComponent[] buttonsAndLayout = {
-		defaultColor(LIGHT_BLUE),
-		grid(3, 5,
-			// 03A6: "Power-Symbol" (wie Kombination von O und | )
-			null,            null,            b("\u03A6", 0x118C, GR),
-			b("1" , 0x1181), b("2" , 0x1182), b("3" , 0x1183),
-			b("4" , 0x1184), b("5" , 0x1185), b("6" , 0x1186),
-			b("7" , 0x1187), b("8" , 0x1188), b("9" , 0x1189),
-			b("10", 0x1180), b("11", 0x118A), b("12", 0x11A3)
-		),
-		defaultColor(null),
-		grid(4, 1,
-			b("GR -", 0x01BA, GR), b("RE +", 0x01BD, new Color(200, 50, 50)),
-			b("YE -", 0x01B1, YE), b("BL +", 0x01B0, LIGHT_BLUE)
-		),
-		defaultColor(Color.LIGHT_GRAY),
-		grid(5, 5,
-			b("I/II",0x11AB),null,          null,          null,          b("TV/VCR",0x11B8),
-			null,            null,          b("||",0x11A9),null,          null,
-			null,            b("<<",0x11B2),b(">", 0x11B5),b(">>",0x11B4),null,
-			null,            null,          b(qdrt,0x11B6),null,          null,
-			b(recrd,0x11AB), null,          null,          null,          b("CH*P/P",0x11BF)
-		),
-		defaultColor(LIGHT_BLUE),
-		grid(3, 2,
-			b("Vol+", 0x1190), b("Mute", 0x01BF), b("Ch+", 0x11A0),
-			b("Vol-", 0x1191), null,              b("Ch-", 0x11A1)
-		)
-	};
-
+	/** Fernbedienungs-Komponente */
 	private final RemoteControl sensor;
+	/** Defaut-Color */
 	private Color currentDefault = null;
 
+	/**
+	 * Setzt die Standardfarbe
+	 * @param c Farbe
+	 * @return null
+	 */
 	private JComponent defaultColor(Color c) {
 		currentDefault = c;
 		return null;
 	}
 
-	private JButton b(String label, final int rcCode, Color color) {
+	/**
+	 * Button bauen
+	 * @param label Label
+	 * @param color Farbe
+	 * @return Button
+	 */
+	private JButton b(String label, Color color) {
 		// Bindestrich durch Streckenstrich ersetzen (ist laenger, Bindestrich
 		// sieht so doof aus neben den grossen Pluszeichen)
-		label = label.replaceAll("-", "\u2013");
-		final JButton rv = new JButton(label);
-		rv.setToolTipText("Code "+rcCode+
-			" (0x"+Integer.toHexString(rcCode)+")");
+		final String key = label.replaceAll("-", "\u2013");
+		final JButton rv = new JButton(key);
+		rv.setToolTipText("Taste "+ key);
 		rv.setForeground(color);
 		rv.setBackground(Color.DARK_GRAY);
 		rv.addActionListener(new ActionListener() {
 			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(
 			@SuppressWarnings("unused") ActionEvent e) {
-				lg.fine("Fernbedienungsknopf '%s' gedr\u00FCckt; sende " +
-						"RC5-Code %d (%#x)", rv.getText(), rcCode, rcCode);
+				lg.fine("Fernbedienungsknopf '%s' gedr\u00FCckt", rv.getText());
 				try {
-					sensor.send(rcCode);
+					sensor.send(key);
 				} catch (IOException e1) {
-					e1.printStackTrace(); //$$$ Excp
+					e1.printStackTrace();
 				}
 			}
 		});
 		return rv;
 	}
 
-	private JButton b(String label, final int rcCode) {
-		return b(label, rcCode,
-			currentDefault == null ? Color.LIGHT_GRAY : currentDefault);
+	/**
+	 * Button bauen
+	 * @param label Label
+	 * @return Button
+	 */
+	private JButton b(String label) {
+		return b(label, currentDefault == null ? Color.LIGHT_GRAY : currentDefault);
 	}
 
+	/**
+	 * Baut das Panel
+	 * @param width Breite
+	 * @param height Hoehe
+	 * @param buttons Buttons
+	 * @return Panel
+	 */
 	private JComponent grid(int width, int height, JButton... buttons) {
 		// Aufpassen: GridLayout(rows, cols), also (Y, X)
 		JPanel rv = new JPanel(new GridLayout(height, width, 8, 8));
@@ -110,11 +103,44 @@ public class RemoteControlViewer extends JPanel {
 		return rv;
 	}
 
+	/** Layout der Fernbedienung */
+	private JComponent[] layout = new JComponent[] {
+		defaultColor(LIGHT_BLUE),
+		grid(3, 5,
+			null,		null,		b("\u03A6", GR),	// 03A6: "Power-Symbol" (wie Kombination von O und |)
+			b( "1"),	b( "2"),	b( "3"),
+			b( "4"),	b( "5"),	b( "6"),
+			b( "7"),	b( "8"),	b( "9"),
+			b("10"),	b("11"),	b("12")
+		),
+		defaultColor(null),
+		grid(4, 1,
+			b("GR -", GR),	b("RE +", new Color(200, 50, 50)),
+			b("YE -", YE),	b("BL +", LIGHT_BLUE)
+		),
+		defaultColor(Color.LIGHT_GRAY),
+		grid(5, 5,
+			b("I/II"),	null,		null,		null,		b("TV/VCR"),
+			null,		null,		b("||"),	null,		null,
+			null,		b("<<"),	b(">"),		b(">>"),	null,
+			null,		null,		b("\u25A1"),null,		null,			// 25A1: Quadrat fuer "Stop"
+			b("\u25CF"),null,		null,		null,		b("CH*P/P")		// 25CF: Dicker Punkt fuer "Record"
+		),
+		defaultColor(LIGHT_BLUE),
+		grid(3, 2,
+			b("Vol+"),	b("Mute"),	b("Ch+"),
+			b("Vol-"),	null,		b("Ch-")
+		)
+	};	
+	
+	/**
+	 * @param rcSensor RC5-Komponente
+	 */
 	public RemoteControlViewer(RemoteControl rcSensor) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 		this.sensor = rcSensor;
-		for (JComponent c : buttonsAndLayout) {
+		for (JComponent c : layout) {
 			if (c != null) {
 				add(c);
 				add(Box.createVerticalStrut(8));

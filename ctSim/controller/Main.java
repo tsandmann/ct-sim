@@ -1,12 +1,13 @@
 package ctSim.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.LogManager;
 
+import javax.swing.SwingUtilities;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
@@ -19,6 +20,7 @@ import ctSim.view.View;
 import ctSim.view.ViewYAdapter;
 import ctSim.view.contestConductor.ContestConductor;
 import ctSim.view.gui.MainWindow;
+import ctSim.view.gui.SplashWindow;
 
 //$$ doc Grobe Architektur beschreiben; wer verdrahtet M, V und C? -> auch Pico beschreiben
 /**
@@ -32,11 +34,17 @@ import ctSim.view.gui.MainWindow;
  * </p>
  */
 public class Main {
-	public static final String VERSION = "2.1";
+	/** Versionsnummer */
+	public static final String VERSION = "2.3";
+	/** Konfigurationsdatei */
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
+    /** Flag, welches die Anzeige des Splashscreens bewirkt (DEFAULT: TRUE) */
+    private static boolean showSplash = true;
 
+	/** Logger */
 	static FmtLogger lg;
 
+	/** Init-Container */
 	public static final InitializingPicoContainer dependencies =
 		new InitializingPicoContainer();
 
@@ -60,34 +68,77 @@ public class Main {
 	 * </ul>
 	 */
     public static void main(String... args) {
-    	handleCommandLineArgs(args);
-        lg = initLogging();
-        loadConfig();
-        loadIcons();
-        Init.setLookAndFeel();
-        setupViewAndController();
+    	final String[] cmdArgs = args;
+		handleCommandLineArgs(cmdArgs);
+	
+		if (showSplash) {
+		    /* Splash-Screen anzeigen */
+		    java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
+		    SplashWindow.splash(url, "Version " + VERSION);
+		    SplashWindow.setMessage("Initialisierung...");
+		    /* Inits ausfuehren */
+		    try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+			    	public void run() {
+						lg = initLogging();
+						loadConfig();
+						Init.setLookAndFeel();
+						setupViewAndController();
+				    }
+				});
+		    } catch (Exception e) {
+				System.err.println("Initialisierungen in Main fehlgeschlagen");
+				e.printStackTrace();
+				/* Programm erst nach Klick auf Splash schliessen */
+				MouseAdapter disposeOnClick = new MouseAdapter() {
+				    public void mouseClicked(MouseEvent evt) {
+				    	System.exit(1);
+				    }
+				};
+				SplashWindow.getWindow().addMouseListener(disposeOnClick);
+				return;
+		    }
+		    /* Splash-Screen weg */
+		    SplashWindow.disposeSplash();
+		} else {
+		    /* Starten von ct-Sim ohne Splash-Screen */
+		    lg = initLogging();
+		    loadConfig();
+		    Init.setLookAndFeel();
+		    setupViewAndController();
+		}
     }
 
-	//TODO "Usage"-Meldung waere gut
-	/** Siehe {@link #main(String...)}. */
+	/**
+	 * Siehe {@link #main(String...)}.
+	 * 
+	 * @param args Command-Line-Argumente
+	 */
 	private static void handleCommandLineArgs(String[] args) {
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].toLowerCase().equals("-conf")) {
 				i++;
-				dependencies.reRegisterInstance(
-					new Config.SourceFile(args[i]));
+				dependencies.reRegisterInstance(new Config.SourceFile(args[i]));
+		    } else if (args[i].toLowerCase().equals("-nosplash")) {
+				showSplash = false;
 			} else {
-				System.out.println(
-					"Ung\u00FCltiges Argument '" + args[i] + "'");
+				System.out.println("Ung\u00FCltiges Argument '" + args[i] + "'");
+				System.out.println("USAGE: ct-Sim [-conf configfile][-nosplash]");
+				System.out.println("\t-conf configfile.xml\tPfad zu alternativer Konfigurationsdatei");
+				System.out.println("\t-nosplash\t\tStartet ct-Sim ohne Splash-Screen");
 				System.exit(1);
 			}
 		}
 	}
 
+	/**
+	 * Initialisiert den Logger
+	 * @return	Logger-Instanz
+	 */
 	public static FmtLogger initLogging() {
 		try {
-	        LogManager.getLogManager().readConfiguration(new FileInputStream(
-	        	"config/logging.conf"));
+			java.net.URL url = ClassLoader.getSystemResource("config/logging.conf");
+	        LogManager.getLogManager().readConfiguration(url.openStream());
 		} catch (Exception e) {
 			System.err.println("Logging konnte nicht initialisiert werden");
 			e.printStackTrace();
@@ -95,42 +146,38 @@ public class Main {
 		}
 		FmtLogger rv = FmtLogger.getLogger("");
 		rv.fine("Logging-Subsystem initialisiert");
+
+		if (showSplash) {
+		    rv.addHandler(SplashWindow.getLogHandler());
+		}
 		return rv;
     }
 
+	/**
+	 * Laedt die Konfiguration
+	 */
 	private static void loadConfig() {
-		Config.SourceFile configFile = dependencies.get(
-			Config.SourceFile.class);
 		try {
-			Config.loadConfigFile(configFile);
+			Config.loadConfigFile(DEFAULT_CONFIGFILE);
 			return;
 		} catch (FileNotFoundException e) {
-			lg.severe(e, "Konfigurationsdatei '"+configFile+"' nicht gefunden");
+			lg.severe(e, "Konfigurationsdatei '"+DEFAULT_CONFIGFILE+"' nicht gefunden");
 		} catch (SAXException e) {
 			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
-				configFile);
+				DEFAULT_CONFIGFILE);
 		} catch (IOException e) {
 			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'",
-				configFile);
+				DEFAULT_CONFIGFILE);
 		} catch (ParserConfigurationException e) {
 			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
-				configFile);
+				DEFAULT_CONFIGFILE);
 		}
-		System.exit(1);
 	}
 
-	private static void loadIcons() {
-		try {
-			Config.loadIcons(new File("images")); //LODO Pfad hardcoded
-			return;
-		} catch (Exception e) {
-			lg.severe(e, "Fehler beim Laden der Icons");
-		}
-		System.exit(1);
-	}
-
+	/**
+	 * Initialisierung von View und Controller
+	 */
 	private static void setupViewAndController() {
-		//$$ kann einfacher werden mit pico (Startable ifc)
 		Controller c = dependencies.get(Controller.class);
 
 		List<View> v = Misc.newList();
@@ -148,7 +195,6 @@ public class Main {
 		if (Config.getValue("TimeLogger").equalsIgnoreCase("true"))
 			v.add(new TimeLogger());
 
-		//$$ Optimierung: Wenn nur ein Ding in v kann man sich den Umstand mit YAdapter sparen
 		c.setView(ViewYAdapter.newInstance(v));
 		c.onApplicationInited();
     }

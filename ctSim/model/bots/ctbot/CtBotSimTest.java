@@ -18,87 +18,107 @@
  */
 package ctSim.model.bots.ctbot;
 
+import java.util.Random;
 import ctSim.model.bots.SimulatedBot;
+import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.BotComponent;
+import ctSim.model.bots.components.Sensors;
 
 /**
- * Klasse aller simulierten c't-Bots, die nur innerhalb des Simulators existieren
+ * Klasse aller simulierten c't-Bots ("Testbots"), die nur innerhalb des Simulators existieren
  *
  */
 public class CtBotSimTest extends CtBot implements SimulatedBot {
+	/**
+	 * neuer Test-Bot
+	 */
 	public CtBotSimTest() {
 		super("Test-Bot");
+	
+		components.add(new Sensors.Clock());	
 	}
 
+	/**
+	 * @see ctSim.model.bots.BasicBot#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return "Simulierter, in Java geschriebener c't-Bot";
 	}
 
-	public void doSimStep() {
-/*
-		// TODO Pruefen ob: super.work();
+	/** letzter Status */
+	private int lastState = 0;
+	/** Zufallsgenerator */
+	private Random rand = new Random();
+	
+	/**
+	 * @see ctSim.model.bots.SimulatedBot#doSimStep()
+	 */
+	public void doSimStep() throws InterruptedException {		
+		double irl = 0;
+		double irr = 0;
 
-		@SuppressWarnings({"unused"}) double ll = 100d, rr = 100d;
-
-		double irl = irL.get().doubleValue();
-		double irr = irR.get().doubleValue();
-
-		// Ansteuerung fuer die Motoren in Abhaengigkeit vom Input
-		// der IR-Abstandssensoren, welche die Entfernung in mm
-		// zum naechsten Hindernis in Blickrichtung zurueckgeben
-
-		// Solange die Wand weit weg ist, wird Stoff gegeben:
-		if (irl >= 500) {
-			ll = 255;
-		}
-		if (irr >= 500) {
-			rr = 255;
-		}
-
-		// Vorsicht, die Wand kommt naeher:
-		// Jetzt den Motor auf der Seite, die weiter entfernt ist,
-		// langsamer laufen lassen als den auf der anderen Seite
-		// - dann bewegt sich der Bot selbst
-		// bei Wandkollisionen noch etwas und kommt eventuell
-		// wieder frei:
-		if (irl < 500 && irl >= 200) {
-			if (irl <= irr)
-				ll = 80;
-			else
-				ll = 50;
-		}
-		if (irr < 500 && irr >= 200) {
-			if (irl > irr)
-				rr = 80;
-			else
-				rr = 50;
+		Actuators.Governor govL = null;
+		Actuators.Governor govR = null;
+		
+		for (BotComponent<?> c : components) {
+			if (c.getName().equals("IrL")) {
+				irl=((Sensors.Distance)(Object)c).get().doubleValue();
+			}
+			if (c.getName().equals("IrR")) {			
+				irr=((Sensors.Distance)(Object)c).get().doubleValue();
+			}
+			if (c.getName().equals("GovL")) {
+				govL=(Actuators.Governor)(Object)c;
+			}
+			if (c.getName().equals("GovR")) {
+				govR=(Actuators.Governor)(Object)c;
+			}
 		}
 
-		// Ist ein Absturz zu befuerchten?
-		short borderl = borderL.get().shortValue();
-		short borderr = borderR.get().shortValue();
-		if (borderl > borderr) {
-			ll = 100;
-			rr = -100;
-		} else if (borderl < borderr) {
-			ll = -100;
-			rr = 100;
+		/* Ansteuerung fuer die Motoren in Abhaengigkeit vom Input der IR-Abstandssensoren */
+
+		/* Solange die Wand weit weg ist, wird Stoff gegeben */
+		double ll = 255, rr = 255;
+		
+		/* Falls Wand in Sicht, per Zufall nach links oder rechts drehen */
+		if (irl > 160 || irr > 130) {
+			switch (lastState) {
+			/* Wenn wir bereits drehen, dann in die gleiche Richtung weiterdrehen */
+			case 0: {
+				if (rand.nextInt(42) < 25) {
+					/* linksrum */
+					ll = -255;
+					rr = 200;
+					lastState = 1;
+				} else {
+					/* rechtsrum */
+					ll = 200;
+					rr = -255;
+					lastState = 2;
+				}
+				break;
+			}
+			case 1: {
+				/* linksrum */
+				ll = -255;
+				rr = 200;
+				break;
+			}
+			case 2: {
+				/* rechtsrum */
+				ll = 200;
+				rr = -255;
+				break;
+			}
+			}
+		} else {
+			/* Drehen beendet */
+			lastState = 0;
 		}
-
-		// Kollision oder Abgrund droht: Auf dem Teller rausdrehen,
-		// und zwar immer nach links!
-		if (irl < 200 || irr < 200 || borderl > 1000 || borderr > 1000) {
-			ll = -100;
-			rr = 100;
-		}
-
-		// TODO:
-//		this.setActMotL(ll);
-//		this.setActMotR(rr);
- */
-	}
-
-	public void updateView() throws InterruptedException {
-		components.updateView();
+		
+		/* Gewschwindigkeiten an die Motoren weitergeben */
+		govL.set(ll);
+		govR.set(rr);
 	}
 }

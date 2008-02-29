@@ -29,20 +29,37 @@ import ctSim.util.Misc;
 import ctSim.view.View;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
-// $$ doc
-// $$ die staendigen "assert false" sind nicht so doll. Schoener waere: Exceptions werfen und den Controller exit machen lassen (verbessert auch Testbarkeit (Unit-Tests) des ContestConductor). Ich zieh mir aber nicht den Schuh an, Exception-Handling in den z.Zt. noch chaotischen Controller reinzupopeln.
+/**
+ * ContestConductor-View
+ */
 public class ContestConductor implements View {
+	/** Logger */
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.contestConductor");
 
+	/**
+	 * NoMoreGamesException
+	 */
 	public static class NoMoreGamesException extends Exception {
+		/** UID */
 		private static final long serialVersionUID = - 930001102842406374L;
 	}
 
+	/**
+	 * ContestJudge
+	 */
 	public static class ContestJudge extends Judge {
+		/**
+		 * Fuer Entfernung zun Ziel
+		 */
 		class GameOutcome {
+			/** Gewinner */
 			BotView winner = null;
+			/** Ziel-Entferungen */
 			HashMap<BotView, Double> distToFinish = Misc.newMap();
 
+			/**
+			 * Alle Entfernungen zum Ziel berechnen
+			 */
 			@SuppressWarnings("synthetic-access")
 			GameOutcome() {
 				for (BotView b : BotView.getAll()) {
@@ -54,19 +71,29 @@ public class ContestConductor implements View {
 			}
 		}
 
+		/** Conductor */
 		protected ContestConductor concon;
 
+		/**
+		 * @param controller	Controller des Sims
+		 * @param concon		ContestConductor
+		 */
 		public ContestJudge(Controller controller, ContestConductor concon) {
-			super((DefaultController)controller); //$$ Das ist Mist. Judge und die davon abgeleiteten Klassen muessen aufgeraeumt und vereinfacht werden
+			super((DefaultController)controller);
 			this.concon = concon;
 		}
 
+		/**
+		 * @see ctSim.model.rules.Judge#isStartingSimulationAllowed()
+		 */
 		@Override
 		public boolean isStartingSimulationAllowed() {
-			//$$ Doofe Methode, keine Ahnung wofuer die ueberhaupt da ist
 			return true;
 		}
 
+		/**
+		 * @see ctSim.model.rules.Judge#isSimulationFinished()
+		 */
 		@Override
 		public boolean isSimulationFinished() {
 			try {
@@ -89,6 +116,13 @@ public class ContestConductor implements View {
 			return false;
 		}
 
+		/**
+		 * Jemand am Ziel?
+		 * @return true / false
+		 * @throws NullPointerException
+		 * @throws SQLException
+		 * @throws TournamentPlanException
+		 */
 		@SuppressWarnings("synthetic-access")
 		private boolean isAnyoneOnFinishTile()
 		throws NullPointerException, SQLException, TournamentPlanException {
@@ -106,6 +140,12 @@ public class ContestConductor implements View {
 			}
 		}
 
+		/**
+		 * Timeout?
+		 * @return true / false
+		 * @throws SQLException
+		 * @throws TournamentPlanException
+		 */
 		@SuppressWarnings("synthetic-access")
 		private boolean isGameTimeoutElapsed()
 		throws SQLException, TournamentPlanException {
@@ -129,6 +169,13 @@ public class ContestConductor implements View {
 			return true;
 		}
 
+		/**
+		 * Setzt den Gewinner
+		 * @param outcome GameOutcome 
+		 * @throws NullPointerException
+		 * @throws SQLException
+		 * @throws TournamentPlanException
+		 */
 		@SuppressWarnings("synthetic-access")
 		protected void setWinner(GameOutcome outcome)
 		throws NullPointerException, SQLException, TournamentPlanException {
@@ -158,6 +205,7 @@ public class ContestConductor implements View {
 	 * ctsim_log-Tabelle).
 	 */
 	static class BotView {
+		/** Bot-Instanzen */
 		private static ArrayList<BotView> instances = Misc.newList();
 
 		static {
@@ -165,9 +213,21 @@ public class ContestConductor implements View {
 			instances.add(null);
 		}
 
+		/**
+		 * ID
+		 */
 		public final int idInDatabase;
+		
+		/**
+		 * 3D-Bot 
+		 */
 		public final ThreeDBot modelObj;
 
+		/**
+		 * @param modelObj ThreeDBot
+		 * @param idInDatabase ID fuer Datenbank
+		 * @param bot0or1 Welcher Bot?
+		 */
 		BotView(ThreeDBot modelObj, int idInDatabase, int bot0or1) {
 			assert bot0or1 == 0 || bot0or1 == 1
 				: "Parameter muss 0 oder 1 sein, ist aber " + bot0or1;
@@ -178,6 +238,10 @@ public class ContestConductor implements View {
 			instances.set(bot0or1, this);
 		}
 
+		/**
+		 * Enterfernt einen Bot
+		 * @param b Bot
+		 */
 		static void remove(ctSim.model.bots.Bot b) {
 			for (int i = 0; i < instances.size(); i++) {
 				if (instances.get(i) != null && instances.get(i).modelObj == b) {
@@ -188,6 +252,9 @@ public class ContestConductor implements View {
 			assert false;
 		}
 
+		/**
+		 * @return Alle BotViews
+		 */
 		static List<BotView> getAll() {
 			ArrayList<BotView> rv = Misc.newList();
 			for (BotView v : instances) {
@@ -197,6 +264,9 @@ public class ContestConductor implements View {
 			return rv;
 		}
 
+		/**
+		 * @return Alle ThreeDBots
+		 */
 		static List<ThreeDBot> getAllModelObjects() {
 			List<ThreeDBot> rv = Misc.newList();
 			for (BotView v : getAll())
@@ -204,6 +274,10 @@ public class ContestConductor implements View {
 			return rv;
 		}
 
+		/**
+		 * @param modelObj ThreeDBot
+		 * @return BotView eines ThreeDBots
+		 */
 		static BotView getViewOf(ThreeDBot modelObj) {
 			for (BotView v : instances) {
 				if (v.modelObj == modelObj)
@@ -221,7 +295,13 @@ public class ContestConductor implements View {
 	 * </pre>
 	 */
 	enum Phase {
+		/**
+		 * Status des ContestConductor-Subsystems
+		 */
 		PRELIM_ROUND,
+		/**
+		 * Status des ContestConductor-Subsystems
+		 */
 		MAIN_ROUND,
 	}
 
@@ -234,21 +314,28 @@ public class ContestConductor implements View {
 		);
 	}
 
-	/** Siehe {@link #Phase} */
+	/** Siehe {@link Phase} */
 	private Phase currentPhase = PRELIM_ROUND;
 
 	/** Abstrahiert die Datenbank */
 	private ConductorToDatabaseAdapter db;
-
+	/** Planer */
 	private TournamentPlanner planner;
 
 	/** Referenz auf den Controller */
 	private Controller controller;
+	/** Welt */
 	private World world;
-
+	/** Lock */
 	private Object botArrivalLock = new Object();
+	/** neuester Bot */
 	private ThreeDBot newlyArrivedBot = null;
 
+	/**
+	 * @param controller
+	 * @param db
+	 * @param planner
+	 */
 	public ContestConductor(Controller controller,
 		ConductorToDatabaseAdapter db, TournamentPlanner planner) {
 		this.controller = controller;
@@ -256,6 +343,9 @@ public class ContestConductor implements View {
 		this.planner = planner;
 	}
 
+	/**
+	 * @see ctSim.view.View#onApplicationInited()
+	 */
 	public void onApplicationInited() {
 		controller.setJudge(Main.dependencies.get(ContestJudge.class));
 
@@ -278,6 +368,11 @@ public class ContestConductor implements View {
 		}
 	}
 
+	/**
+	 * Crash-Recover
+	 * @throws IllegalArgumentException
+	 * @throws SQLException
+	 */
 	private void recoverFromCrash()
 	throws IllegalArgumentException, SQLException {
 		lg.info("Abgebrochenes Turnier gefunden; versuche Wiederaufnahme");
@@ -289,6 +384,9 @@ public class ContestConductor implements View {
 		}
 	}
 
+	/**
+	 * @see ctSim.view.View#onSimulationStep(long)
+	 */
 	public void onSimulationStep(
 		@SuppressWarnings("unused") long simTimeInMs) {
 		try {
@@ -298,6 +396,9 @@ public class ContestConductor implements View {
 		}
 	}
 
+	/**
+	 * @see ctSim.view.View#onSimulationFinished()
+	 */
 	public void onSimulationFinished() {
 		lg.info("Spiel beendet; 10 Sekunden Unterbrechung");
 		try {
@@ -314,6 +415,12 @@ public class ContestConductor implements View {
 		}
 	}
 
+	/**
+	 * Weite rmit naechstem Spiel
+	 * @throws SQLException
+	 * @throws IOException
+	 * @throws TournamentPlanException
+	 */
 	private void proceedWithNextGame()
 	throws SQLException, IOException, TournamentPlanException {
 		try {
@@ -343,8 +450,7 @@ public class ContestConductor implements View {
 	}
 
 	/**
-	 *
-	 * @param game
+	 * Neues Spiel
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws NoMoreGamesException
@@ -372,6 +478,12 @@ public class ContestConductor implements View {
 		startNextGame();
 	}
 
+	/**
+	 * Startet einem Prozess
+	 * @param commandAndArgs Binary-Name und Argumente 
+	 * @return Prozess zum Binary
+	 * @throws IOException
+	 */
 	private Process execute(String commandAndArgs) throws IOException {
 		lg.fine("Starte " + commandAndArgs);
 		return Runtime.getRuntime().exec(commandAndArgs);
@@ -422,6 +534,7 @@ public class ContestConductor implements View {
 	/**
 	 * Annahme: Keiner ausser uns startet Bots. Wenn jemand gleichzeitig
 	 * @param b
+	 * @return ThreeDBot-Instanz des Bots
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -461,6 +574,10 @@ public class ContestConductor implements View {
 		return rv;
 	}
 
+	/**
+	 * Handler fuer neuer Bot da
+	 * @param bot	Bot
+	 */
 	public void onBotAdded(Bot bot) {
 		if (! (bot instanceof ThreeDBot)) {
 			throw new IllegalStateException("Bot angemeldet, ist aber kein " +
@@ -512,11 +629,16 @@ public class ContestConductor implements View {
 		controller.unpause();
 	}
 
+	/**
+	 * @see ctSim.view.View#onWorldOpened(ctSim.model.World)
+	 */
 	public void onWorldOpened(World newWorld) {
 		this.world = newWorld;
 	}
 
+	/**
+	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
+	 */
 	public void onJudgeSet(@SuppressWarnings("unused") Judge j) {
-		// $$ onJudgeSet()
 	}
 }

@@ -17,18 +17,24 @@ import java.io.OutputStream;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class BackslashNConverterStream extends OutputStream {
+	/** Output-Stream */
 	private final OutputStream underlyingStream;
+	/** Zeilenende */
 	private final byte[] lineEnding =
 		System.getProperty("line.separator").getBytes();
 
 	/**
 	 * Erzeugt eine Instanz, die Eingaben konvertiert und an den übergebenen
 	 * Stream weiterreicht.
+	 * @param underlyingStream 
 	 */
 	public BackslashNConverterStream(OutputStream underlyingStream) {
 		this.underlyingStream = underlyingStream;
 	}
 
+	/**
+	 * @see java.io.OutputStream#write(int)
+	 */
 	@Override
 	public void write(int b) throws IOException {
 		if (b == '\n')

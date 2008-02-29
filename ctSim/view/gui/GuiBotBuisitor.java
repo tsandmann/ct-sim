@@ -6,16 +6,27 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.BotBuisitor;
 import ctSim.util.Buisitor;
 
-//$$ doc
-//$$ Klasse ist so klein, dass sie ueberfluessig ist (?)
+/**
+ * GUI der Buisitors 
+ */
 public abstract class GuiBotBuisitor extends JPanel implements BotBuisitor {
+	/** Buisitor */
 	private final Buisitor buisitor = new Buisitor(this);
+	/** Anzeige? */
 	private boolean shouldBeDisplayed = false;
 
+	/**
+	 * neuer GUI-Buisitor
+	 */
 	public GuiBotBuisitor() {
 		super(true); // Double-Buffering an
 	}
 
+	/**
+	 * 
+	 * @param o Objekt
+	 * @param bot Bot
+	 */
 	public void visit(Object o, Bot bot) {
 		if (buisitor.dispatchBuisit(o) > 0)
 			shouldBeDisplayed = true;
@@ -23,6 +34,9 @@ public abstract class GuiBotBuisitor extends JPanel implements BotBuisitor {
 			shouldBeDisplayed = true;
 	}
 
+	/**
+	 * @return shouldBeDisplayed
+	 */
 	public boolean shouldBeDisplayed() {
 		return shouldBeDisplayed;
 	}

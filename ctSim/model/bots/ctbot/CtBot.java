@@ -20,6 +20,7 @@ package ctSim.model.bots.ctbot;
 
 import java.awt.Color;
 
+import ctSim.controller.Config;
 import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.RemoteCallCompnt;
@@ -29,6 +30,7 @@ import ctSim.model.bots.components.Sensors;
  * Abstrakte Oberklasse fuer alle c't-Bots
  */
 public abstract class CtBot extends BasicBot {
+	/** LED-Farben */
 	private static final Color[] ledColors = {
 		new Color(  0,  84, 255), // blau
 		new Color(  0,  84, 255), // blau
@@ -40,7 +42,6 @@ public abstract class CtBot extends BasicBot {
 		Color.WHITE,
 	};
 
-	//$$ Alle Konstanten: verwendet?
 	/** Abstand vom Zentrum zur Aussenkante des Bots [m] */
 	protected static final double BOT_RADIUS = 0.060d;
 
@@ -50,6 +51,10 @@ public abstract class CtBot extends BasicBot {
 	/** Bodenfreiheit des Bots [m] */
 	protected static final double BOT_GROUND_CLEARANCE = 0.015d;
 
+	/**
+	 * Neuer Bot "name"
+	 * @param name
+	 */
 	public CtBot(String name) {
 		super(name);
 
@@ -71,10 +76,11 @@ public abstract class CtBot extends BasicBot {
 			new Sensors.Light(false),
 			new Sensors.Mouse(true),
 			new Sensors.Mouse(false),
-			new Sensors.RemoteControl(),
+			new Sensors.RemoteControl(Config.getValue("RC5-type")),
 			new Sensors.Door(),
 			new Sensors.Trans(),
 			new Sensors.Error(),
+			//new Actuators.Abl(),
 			new RemoteCallCompnt()
 		);
 
@@ -87,13 +93,5 @@ public abstract class CtBot extends BasicBot {
 			components.add(
 				new Actuators.Led(ledName, i, ledColors[i]));
 		}
-
-		//$$$ Toter Code
-		// Einfachen Konstruktor aufrufen:
-//		Vector3f vec = new Vector3f(pos);
-//		// TODO: Was das!?
-//		vec.z += getHeight() / 2 + getGroundClearance();
-//		setPos(vec);
-//		setHeading(head);
 	}
 }

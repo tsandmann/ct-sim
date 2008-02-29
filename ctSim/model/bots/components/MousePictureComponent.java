@@ -16,7 +16,6 @@ import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
 import ctSim.util.Runnable1;
 import ctSim.util.Misc;
 
-//$$ dic doc
 /**
  * <ul><li>Command-Code SENS_MOUSE_PICTURE</li>
 * <li>Nutzlast: einen Teil der Pixel des Mausbilds, z.B. Pixel Nr. 42 bis 108</li>
@@ -46,19 +45,35 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Details siehe dort.
 	 */
 	private final int[] pixels = new int[WIDTH * HEIGHT];
+	/** Sync austehend? */
 	private boolean syncRequestPending = false;
+	/** Image-Listener */
 	private final List<Runnable1<Image>> imageLi = Misc.newList();
+	/** Image-Event austehend? */
 	private boolean imageEventPending = false;
+	/** Completion-Listener */
 	private final List<Runnable> completionLi = Misc.newList();
+	/** Completion-Event ausstehend? */
 	private boolean completionEventPending = false;
+	/** async. Outputstream */
 	private CommandOutputStream asyncOut;
 
+	/**
+	 * Mausbild-Komponente
+	 */
 	public MousePictureComponent() { super(null); }
 
+	/**
+	 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
+	 */
 	public void setAsyncWriteStream(CommandOutputStream s) {
 		asyncOut = s;
 	}
 
+	/**
+	 * Bild anfordern
+	 * @throws IOException
+	 */
 	public synchronized void requestPicture() throws IOException {
 		if (writesAsynchronously()) {
 			synchronized (asyncOut) {
@@ -69,6 +84,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			syncRequestPending = true;
 	}
 
+	/**
+	 * @see ctSim.model.bots.components.BotComponent#askForWrite(ctSim.model.CommandOutputStream)
+	 */
 	@Override
 	public synchronized void askForWrite(CommandOutputStream s) {
 		if (syncRequestPending && writesSynchronously()) {
@@ -106,6 +124,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Sind die &uuml;bergebenen Parameter au&szlig;erhalb des Wertebereichs [0;
 	 * 255], wird geclampt (255 wenn zu gro&szlig;, 0 wenn zu klein).
 	 * </p>
+	 * @param r rot
+	 * @param g gruen
+	 * @param b blau
+	 * @return Farbe
 	 */
 	private int colorFromRgb(int r, int g, int b) {
 		r = Misc.clamp(r, 255);
@@ -123,6 +145,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 *   2  20 ... ...
 	 *   1  19 ... 307
 	 * </pre>
+	 * @param c Command
 	 */
 	public synchronized void readFrom(Command c) {
 		//LODO Ist alles ziemlich zerbrechlich. Was zum Beispiel, wenn der Bot aufgrund eines Bug eine dataL ausserhalb des Arrays sendet? -> Mehr Input Validation, wofuer haben wir ProtocolExceptions
@@ -158,39 +181,73 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * wir brauchen die nicht weil wir ja
 	 * {@link #askForWrite(CommandOutputStream) askForWrite()}
 	 * &uuml;berschrieben haben.
+	 * @param c Command
 	 */
 	public void writeTo(@SuppressWarnings("unused") Command c) { /* No-op */ }
 
+	/**
+	 * @return Breite
+	 */
 	public int getWidth() { return WIDTH; }
+	
+	/**
+	 * @return Hoehe
+	 */
 	public int getHeight() { return HEIGHT; }
+	
+	/**
+	 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
+	 */
 	public Code getHotCmdCode() { return Code.SENS_MOUSE_PICTURE; }
+	
+	/**
+	 * @see ctSim.model.bots.components.BotComponent#getName()
+	 */
 	@Override public String getName() { return "Mausbild"; }
 
+	/**
+	 * @see ctSim.model.bots.components.BotComponent#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return "Was der Maus-Sensor sieht";
 	}
 
+	/**
+	 * @param li Listener
+	 */
 	public void addImageListener(Runnable1<Image> li) {
 		if (li == null)
 			throw new NullPointerException();
 		imageLi.add(li);
 	}
 
+	/**
+	 * @param li Listener
+	 */
 	public void removeImageListener(Runnable1<Image> li) {
 		imageLi.remove(li);
 	}
 
+	/**
+	 * @param li Listener
+	 */
 	public void addCompletionListener(Runnable li) {
 		if (li == null)
 			throw new NullPointerException();
 		completionLi.add(li);
 	}
 
+	/**
+	 * @param li Listener
+	 */
 	public void removeCompletionListener(Runnable li) {
 		completionLi.remove(li);
 	}
 
+	/**
+	 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
+	 */
 	@Override
 	public synchronized void updateExternalModel() {
 		if (imageEventPending) {

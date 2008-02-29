@@ -30,7 +30,6 @@ import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.util.FmtLogger;
 
-//$$ doc
 /**
  * Repr&auml;sentiert eine Verbindung
  *
@@ -38,6 +37,7 @@ import ctSim.util.FmtLogger;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public abstract class Connection {
+	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
 
 	/**
@@ -69,6 +69,7 @@ public abstract class Connection {
 	 */
 	private DataOutputStream output = null;
 
+	/** OutputStream fuer Kommandos */
 	private CommandOutputStream cmdOutStream = null;
 
 	/**
@@ -83,10 +84,9 @@ public abstract class Connection {
 			output.close();
 	}
 
-	//$$ ? Umstellen, so dass man Con an Command gibt; Methode weg
 	/**
-	 * Uebertraegt Daten
-	 *
+	 * Uebertraegt ein Kommando
+	 * @param c	das Kommando
 	 * @throws IOException
 	 */
 	public void write(Command c) throws IOException {
@@ -94,27 +94,50 @@ public abstract class Connection {
 		output.flush();
 	}
 
+	/**
+	 * Liefert den Cmd-Stream
+	 * @return	der CommandOutputStream
+	 */
 	public synchronized CommandOutputStream getCmdOutStream() {
 		assert cmdOutStream != null;
 		return cmdOutStream;
 	}
 
+	/**
+	 * Liest Daten aus dem InputStream
+	 * @param b	Daten
+	 * @throws IOException
+	 */
 	public void read(byte[] b) throws IOException {
 		input.readFully(b);
 	}
 
-	// Muss waehrend Konstruktion aufgerufen werden
+	/** 
+	 * Muss waehrend Konstruktion aufgerufen werden
+	 * @param is InputStream
+	 */
 	protected void setInputStream(InputStream is) {
 		input = new DataInputStream(new BufferedInputStream(is));
 	}
 
-	// Muss waehrend Konstruktion aufgerufen werden
+	/**
+	 * Muss waehrend Konstruktion aufgerufen werden
+	 * @param os OutputStream
+	 */
 	protected void setOutputStream(OutputStream os) {
 		output = new DataOutputStream(os);
 		cmdOutStream = new CommandOutputStream(output);
 	}
 
+	/**
+	 * Gibt den Kurznamen der Connection zurueck
+	 * @return	Name
+	 */
 	public abstract String getShortName();
 
+	/**
+	 * Gibt den Namen der Connection zurueck
+	 * @return	Name
+	 */
 	public abstract String getName();
 }

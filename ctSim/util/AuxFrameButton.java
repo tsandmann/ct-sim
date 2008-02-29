@@ -2,6 +2,7 @@ package ctSim.util;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -13,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 
-//$$$ rechts oder links docken ueber setLocation, parent.getLocation
 /**
  * <p>
  * Eine Art {@link JToggleButton}, der ein extra Fenster zeigt/verbirgt.
@@ -30,8 +30,9 @@ import javax.swing.JToggleButton;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class AuxFrameButton extends JToggleButton {
-	//$$ SerialVersionUID mal generell dokumentieren
+	/** UID */
 	private static final long serialVersionUID = - 7629302258050583L;
+	/** Frame */
 	private final JFrame auxFrame;
 
 	/**
@@ -82,12 +83,25 @@ public class AuxFrameButton extends JToggleButton {
 		// HIDE, damit sich das Fenster Position + Groesse merkt
 		auxFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		auxFrame.add(frameContent);
-		auxFrame.pack(); // auf die Groesse, die der Inhalt will
+		if (!frameContent.getClass().toString().contains("RemoteCallViewer")) {
+			auxFrame.pack(); // auf die Groesse, die der Inhalt will
+		} else {
+			/* Remote-Call-Fenster groesser */
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			if (dim.width > 1300) {
+				auxFrame.setSize(new Dimension(1300, 500));
+			} else {
+				auxFrame.setSize(new Dimension(dim.width, 500));
+			}
+		}
 	}
 
 	// wenn der Knopf aus der Anzeige entfernt wird (z.B. weil der Container,
 	// der ihn enthaelt, aus der UI entfernt wird), dann auch das Fenster
 	// schliessen
+	/**
+	 * @see javax.swing.JComponent#removeNotify()
+	 */
 	@Override
 	public void removeNotify() {
 		auxFrame.dispose();

@@ -6,7 +6,13 @@ import org.junit.Test;
 import static ctSim.util.Misc.*;
 import static org.junit.Assert.*;
 
+/**
+ * Test-Klasse
+ */
 public class MiscTest {
+	/**
+	 * Tests
+	 */
 	@Test
 	public void beginWith() {
 		// einer auf der Whitelist
@@ -32,11 +38,17 @@ public class MiscTest {
 		assertFalse(startsWith("222", "9", "7", null, "2222"));
 	}
 
+	/**
+	 * Tests
+	 */
 	@Test(expected=NullPointerException.class)
 	public void intersperseWithNullSep() {
 		intersperse(null, "a");
 	}
 
+	/**
+	 * Tests
+	 */
 	@Test
 	public void testIntersperse() {
 		String[] str;
@@ -67,6 +79,9 @@ public class MiscTest {
 		assertTrue(Arrays.equals(intg, new Integer[] {1, 42, 2}));
 	}
 
+	/**
+	 * Tests
+	 */
 	@Test
 	public void testJoin() {
 		assertEquals("a", join("a"));

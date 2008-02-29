@@ -43,6 +43,7 @@ public class Enumerations {
 	 * zugrunde liegt.
 	 * @param <T> Elementtyp der &uuml;bergebenen Enumeration und damit
 	 * auch des zur&uuml;ckgelieferten Iterable.
+	 * @return T
 	 */
 	public static <T> Iterable<T> asIterable(final Enumeration<T> source) {
 		return new Iterable<T>() {

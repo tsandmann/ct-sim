@@ -209,6 +209,7 @@ import ctSim.util.Misc;
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class Command {
+	/** Logger */
 	final static FmtLogger lg = FmtLogger.getLogger("ctSim.model.Command");
 
 	/** L&auml;nge eines Kommandos in Byte */
@@ -255,13 +256,13 @@ public class Command {
 		 */
 		SENS_DOOR('D'),
 
-		/**
-		 * Nicht verwendet, weder im ctSim noch im C-Code (wird dort als
-		 * "Steuerung Klappe" beschrieben, aber die Bedeutung hat ja schon
-		 * ACT_SERVO)
-		 */
-		@Deprecated
-		ACT_DOOR('d'),
+//		/**
+//		 * Nicht verwendet, weder im ctSim noch im C-Code (wird dort als
+//		 * "Steuerung Klappe" beschrieben, aber die Bedeutung hat ja schon
+//		 * ACT_SERVO)
+//		 */
+//		@Deprecated
+//		ACT_DOOR('d'),
 
 		/** LEDs (Leuchtdioden); siehe {@link Led}. */
 		ACT_LED('l'),
@@ -312,7 +313,6 @@ public class Command {
 		/** Logausgaben, siehe {@link Log}. */
 		LOG('O'),
 
-		//$$ REMOTE_CALL NORM scheint nutzlos zu sein
 		/**
 		 * F&uuml;r Remote-Calls, d.h. wenn der Sim ein Bot-Behavior aufruft.
 		 * Keiner wei&szlig;, wof&uuml;r NORM steht, aber der Bot schickt das
@@ -322,16 +322,20 @@ public class Command {
 		 */
 		REMOTE_CALL('r', SubCode.NORM, SubCode.REMOTE_CALL_LIST,
 			SubCode.REMOTE_CALL_ENTRY, SubCode.REMOTE_CALL_ORDER,
-			SubCode.REMOTE_CALL_DONE, SubCode.REMOTE_CALL_ABORT);
+			SubCode.REMOTE_CALL_DONE, SubCode.REMOTE_CALL_ABORT,
+			SubCode.REMOTE_CALL_ABL);
 
 
+		/** Code auf der Leitung */
 		private final byte onTheWire;
+		/** gueltige SubCodes */
 		private final SubCode[] validSubCodes;
 
 		/**
 		 * Konschtruktor; nicht aufrufbar; stattdessen {@link #fromByte(int)}
 		 * verwenden. Setzt die zugelassenen SubCodes f&uuml;r diese
 		 * Code-Instanz auf NORM und nichts sonst.
+		 * @param c Code
 		 */
 		private Code(char c) {
 			this(c, SubCode.NORM);
@@ -342,6 +346,8 @@ public class Command {
 		 * Die Code-Instanz kennt ihre m&ouml;glichen SubCodes, da etwa ein
 		 * SubCode &quot;L&quot; nach Code ACT_LCD was anderes hei&szlig;t als
 		 * nach Code REMOTE_CALL. Das muss unterschieden werden k&ouml;nnen.
+		 * @param c Subcode
+		 * @param validSubCodes Subcode-Instanz
 		 */
 		private Code(char c, SubCode... validSubCodes) {
 			if (c > 127)
@@ -351,7 +357,7 @@ public class Command {
 		}
 
 		/**
-		 * Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
+		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
 		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
@@ -359,6 +365,8 @@ public class Command {
 
 		/**
 		 * Erzeugt eine SubCode-Instanz. Akzeptiert ints aus Toleranz.
+		 * @param b Byte
+		 * @return SubCode
 		 *
 		 * @throws ProtocolException falls der Ascii-Wert von {@code b} keiner
 		 * der Werte dieses Enums ist
@@ -377,6 +385,9 @@ public class Command {
 		 * SubCodes sind mit dem Code-Enum verkoppelt, da vom Code abh&auml;ngt,
 		 * ob z.B. ein &quot;R&quot; auf dem Draht f&uuml;r den SubCode
 		 * WELCOME_REAL oder f&uuml;r RIGHT steht.
+		 * @param b Int
+		 * @return SubCude
+		 * @throws ProtocolException 
 		 */
 		public SubCode getSubCode(int b) throws ProtocolException {
 			for (SubCode c : validSubCodes) {
@@ -388,6 +399,10 @@ public class Command {
 				formatChar(toUint7()));
 		}
 
+		/**
+		 * @param sc Subcode
+		 * @throws ProtocolException
+		 */
 		public void assertSubCodeValid(SubCode sc) throws ProtocolException {
 			// Wenn SubCode ungueltig, explodiert der folgende Aufruf mit einer
 			// ProtoExcp
@@ -465,14 +480,20 @@ public class Command {
 		 * Sendet der Sim an den Bot, wenn der Remote-Call abgebrochen werden
 		 * soll, der angefangen, aber noch nicht beendet wurde.
 		 */
-		REMOTE_CALL_ABORT('A');
+		REMOTE_CALL_ABORT('A'),
+		
+		/**
+		 * Schickt ein ABL-Programm an den Bot
+		 */
+		REMOTE_CALL_ABL('I');
 
-
+		/** SubCode auf der Leitung */
 		private final byte onTheWire;
 
 		/**
-		 * Konschtruktor; nicht aufrufbar; stattdessen {@link #fromByte(int)}
+		 * Konschtruktor; nicht aufrufbar; stattdessen {@link Command.Code#getSubCode(int)}
 		 * verwenden.
+		 * @param c Subcode
 		 */
 		private SubCode(char c) {
 			if (c > 127)
@@ -481,7 +502,7 @@ public class Command {
 		}
 
 		/**
-		 * Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
+		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
 		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
@@ -522,7 +543,10 @@ public class Command {
 	 */
 	private boolean hasBeenProcessed = false;
 
-	/** Erzeugt ein Kommando */
+	/** 
+	 * Erzeugt ein Kommando 
+	 * @param code des Kommandos 
+	 */
 	public Command(Code code) {
 		this.commandCode = code;
 		this.subCommandCode = SubCode.NORM;
@@ -534,6 +558,9 @@ public class Command {
 	/**
 	 * Wie {@link #Command(Connection, boolean)} mit
 	 * {@code suppressSyncWarnings == false} (dem Normalwert).
+	 * @param con Connection fuer das Kommando
+	 * @throws IOException 
+	 * @throws ProtocolException 
 	 */
 	public Command(Connection con) throws IOException, ProtocolException {
 		this(con, false);
@@ -550,6 +577,7 @@ public class Command {
 	 * Normalbetrieb kommt sie nicht vor, da auf einen CRC-Code ohne weiteren
 	 * Zwischenkram der Startcode des n&auml;chsten Kommandos folgen muss.
 	 * </p>
+	 * @param con Connection fuer das Kommando
 	 *
 	 * @param suppressSyncWarnings Unterdr&uuml;ckt die &quot;Synchronisierung
 	 * verloren&quot;-Warnung (s.o.), d.h. gibt sie auf Log-Level {@code FINE}
@@ -626,6 +654,8 @@ public class Command {
 	/**
 	 * {@code true}, falls dieses Kommando den Command-Code
 	 * {@code someCommandCode} hat. Andernfalls {@code false}.
+	 * @param someCommandCode 
+	 * @return true/false
 	 */
 	public boolean has(Code someCommandCode) {
 		return commandCode == someCommandCode;
@@ -634,6 +664,8 @@ public class Command {
 	/**
 	 * {@code true}, falls dieses Kommando den Sub-Command-Code
 	 * {@code subCommandCode} hat. Andernfalls {@code false}.
+	 * @param subCode 
+	 * @return true/false
 	 */
 	public boolean has(SubCode subCode) {
 		return getSubCode() == subCode;
@@ -672,6 +704,8 @@ public class Command {
 	/**
 	 * Hilfsmethode: Liefert Char und Ascii-Code zu einem {@code char} oder nur
 	 * den Ascii-Code, falls es non-printable ist.
+	 * @param aChar Der char
+	 * @return Char- und ASCII-Code
 	 */
 	static String formatChar(int aChar) {
 		if (aChar > 32 && aChar <= 255)
@@ -706,7 +740,10 @@ public class Command {
 			"\n\tCRC:\t"+formatChar(crc);
 	}
 
-	/** Liefert eine kompakte Stringrepr&auml;sentation des Command (1 Zeile) */
+	/** 
+	 * Liefert eine kompakte Stringrepr&auml;sentation des Command (1 Zeile) 
+	 * @return String 
+	 */
 	public String toCompactString() {
 		return
 			String.format("%-20s",
@@ -716,12 +753,16 @@ public class Command {
 				replaceCtrlChars(escapeNewlines(getPayloadAsString())));
 	}
 
-	/** Gibt die angeh&auml;ngten Nutzdaten zur&uuml;ck */
+	/** 
+	 * Gibt die angeh&auml;ngten Nutzdaten zur&uuml;ck 
+	 * @return Payload als byte-Array 
+	 */
 	public byte[] getPayload() { return payload; }
 
 	/**
 	 * Gibt die Nutzdaten als String zur&uuml;ck, unter Verwendung des
 	 * Standard-Charset &ndash; siehe {@link String#String(byte[])}.
+	 * @return Payload als String
 	 */
 	public String getPayloadAsString() {
 		return payload == null ? "(null)" : new String(payload);
@@ -730,6 +771,8 @@ public class Command {
 	/**
 	 * Ersetzt jedes Steuerzeichen (Ascii 0 bis inkl. Ascii 31) durch einen
 	 * Punkt (.), so dass man den String gefahrlos ausgeben kann.
+	 * @param s Input-String
+	 * @return Output-String
 	 */
 	public static String replaceCtrlChars(String s) {
 		// dezimal 0 bis 31 = oktal 0 bis 37
@@ -740,41 +783,65 @@ public class Command {
 	 * Wenn man den Payload in einer Zeile anzeigen will: Ersetzt Newlines, so
 	 * dass der Benutzer keinen Zeilenwechsel sieht, sondern die zwei Zeichen
 	 * "\n".
+	 * @param s Input-String
+	 * @return Output-String
 	 */
 	public static String escapeNewlines(String s) {
 		return s.replaceAll("\n", "\\\\n");
 	}
 
-	/** Gibt das Datenfeld links ({@code dataL}) zur&uuml;ck */
+	/** 
+	 * @return Gibt das Datenfeld links ({@code dataL}) zur&uuml;ck 
+	 */
 	public int getDataL() { return dataL; }
 
-	/** Gibt das Datenfeld rechts ({@code dataR}) zur&uuml;ck */
+	/** 
+	 * @return Gibt das Datenfeld rechts ({@code dataR}) zur&uuml;ck 
+	 */
 	public int getDataR() { return dataR; }
 
-	/** Gibt die Richtung zurueck */
+	/** 
+	 * @return Gibt die Richtung zurueck 
+	 */
 	public int getDirection() { return direction; }
 
-	/** Liefert die Kommando-Sequenznummer */
+	/** 
+	 * @return Liefert die Kommando-Sequenznummer 
+	 */
 	public int getSeq() { return seq; }
 
-	/** Getter zu {@link #setHasBeenProcessed(boolean)} */
+	/** 
+	 * @return Getter zu {@link #setHasBeenProcessed(boolean)} 
+	 */
 	public boolean hasBeenProcessed() { return hasBeenProcessed; }
 
-	/** Gibt das Subkommando des Kommandos zur&uuml;ck */
+	/** 
+	 * @return Gibt das Subkommando des Kommandos zur&uuml;ck 
+	 */
 	public SubCode getSubCode() { return subCommandCode; }
 
-	/** Setzt das Feld dataL */
+	/** 
+	 * Setzt das Feld dataL 
+	 * @param dataL 
+	 */
 	public void setDataL(int dataL) { this.dataL = dataL; }
 
-	/** Setzt das Feld dataR */
+	/** 
+	 * Setzt das Feld dataR 
+	 * @param dataR 
+	 */
 	public void setDataR(int dataR) { this.dataR = dataR; }
 
-	/** Setzt die Kommandosequenznummer (wer wei&szlig;, wozu die gut ist) */
+	/** 
+	 * Setzt die Kommandosequenznummer
+	 * @param seq 
+	 */
 	public void setSeq(int seq) { this.seq = seq; }
 
 	/**
 	 * Setzt den Sub-Command-Code. Nur sinnvoll f&uuml;r Commands, die der Sim
 	 * senden wird.
+	 * @param sc SubCode
 	 */
 	public void setSubCmdCode(SubCode sc) {
 		try {
@@ -789,6 +856,7 @@ public class Command {
 	/**
 	 * Setzt die Nutzlast, die an das Command angeh&auml;ngt ist. Nur sinnvoll
 	 * f&uuml;r Commands, die der Sim senden wird.
+	 * @param payload Payload als byte-Array
 	 */
 	public void setPayload(byte[] payload) {
 		this.payload = payload;
@@ -798,6 +866,7 @@ public class Command {
 	 * Flag, ob dieses Kommando fertig verarbeitet ist. N&uuml;tzlich, wenn ein
 	 * Kommando in der Gegend herumgereicht wird und am Schluss festgestellt
 	 * werden soll, ob jemand das jetzt interpretiert hat oder nicht.
+	 * @param hasBeenProcessed 
 	 */
 	public void setHasBeenProcessed(boolean hasBeenProcessed) {
 		this.hasBeenProcessed = hasBeenProcessed;

@@ -35,17 +35,30 @@ import ctSim.util.FmtLogger;
 import ctSim.util.GridBaggins;
 import ctSim.util.Runnable1;
 
-//$$ doc
+/**
+ * Remote-Call-Fenster 
+ */
 public class RemoteCallViewer extends JPanel {
+	/** UID */
 	private static final long serialVersionUID = - 3844905681548769569L;
 
+	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger(
 		"ctSim.view.gui.RemoteCallViewer");
 
+	/**
+	 * Behaviour-Viewer
+	 */
 	static class BehaviorViewer extends JPanel {
+		/** UID */
 		private static final long serialVersionUID = 4518196039674033397L;
+		/** Verhalten */
 		private final Behavior behavior;
 
+		/**
+		 * Behaviour-Anzeige
+		 * @param b Behaviour
+		 */
 		public BehaviorViewer(Behavior b) {
 			this.behavior = b;
 			setLayout(new FlowLayout(FlowLayout.LEADING)); // linksbuendig
@@ -91,6 +104,9 @@ public class RemoteCallViewer extends JPanel {
 		}
 
 		// An alle Kinder weitergeben
+		/**
+		 * @see javax.swing.JComponent#setForeground(java.awt.Color)
+		 */
 		@Override
 		public void setForeground(Color fg) {
 			for (int i = 0; i < getComponentCount(); i++)
@@ -98,32 +114,60 @@ public class RemoteCallViewer extends JPanel {
 		}
 
 		// An alle Kinder weitergeben
+		/**
+		 * @see javax.swing.JComponent#setEnabled(boolean)
+		 */
 		@Override
 		public void setEnabled(boolean enabled) {
 			for (int i = 0; i < getComponentCount(); i++)
 				getComponent(i).setEnabled(enabled);
 		}
 
+		/**
+		 * @return Das Verhalten
+		 */
 		Behavior getBehavior() {
 			return behavior;
 		}
 	}
 
+	/**
+	 * Behaviour-Modell
+	 */
 	static class BehaviorModel extends DefaultTableModel {
+		/** UID */
 		private static final long serialVersionUID = - 3091736642693972956L;
 
+		/**
+		 * Behaviour-Model
+		 * @param numCols Anzahl der Spalten
+		 */
 		public BehaviorModel(int numCols) {
 			super(0, numCols);
 		}
 
+		/**
+		 * Fuegt ein Verhalten hinzu
+		 * @param b Verhalten
+		 */
 		protected void addBehavior(Behavior b) {
 			addRow(new Object[] { buildName(b), buildBhvViewer(b) });
 		}
 
+		/**
+		 * Baut den Verhaltens-Viewer zum Verhalten
+		 * @param b Verhalten
+		 * @return Viewer
+		 */
 		protected JComponent buildBhvViewer(Behavior b) {
 			return new BehaviorViewer(b);
 		}
 
+		/**
+		 * Name zum Verhalten erzeugen
+		 * @param b Verhalten
+		 * @return Name
+		 */
 		protected JLabel buildName(Behavior b) {
     		JLabel rv = new JLabel(b.getName());
     		rv.setOpaque(true);
@@ -132,8 +176,20 @@ public class RemoteCallViewer extends JPanel {
 		}
 	}
 
+	/**
+	 * Modell der geplanten Verhalten
+	 */
 	class PlannedBhvModel extends BehaviorModel {
+		/**
+		 * Statusanzeige
+		 */
 		abstract class StatusLabel extends JLabel {
+			/**
+			 * Statusanzeige
+			 * @param label		Text
+			 * @param tooltip	Tooltip
+			 * @param c			Farbe
+			 */
 			public StatusLabel(String label, String tooltip, Color c) {
 				super(label);
 				setToolTipText(tooltip);
@@ -144,18 +200,27 @@ public class RemoteCallViewer extends JPanel {
 				setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
 			}
 
+			/**
+			 * @see javax.swing.JComponent#setForeground(java.awt.Color)
+			 */
 			@Override
 			public void setForeground(@SuppressWarnings("unused") Color fg) {
 				// No-op: Wir setzen das im Konstruktor, die Tabelle soll's ab
 				// dann nicht mehr aendern
 			}
 
+			/**
+			 * @see javax.swing.JComponent#setBackground(java.awt.Color)
+			 */
 			@Override
 			public void setBackground(@SuppressWarnings("unused") Color bg) {
 				// No-op: Wir setzen das im Konstruktor, die Tabelle soll's ab
 				// dann nicht mehr aendern
 			}
 
+			/**
+			 * @see javax.swing.JComponent#setEnabled(boolean)
+			 */
 			@Override
 			public void setEnabled(@SuppressWarnings("unused") boolean b) {
 				// No-op: Wir sind auf enabled und das soll so bleiben, weil
@@ -163,27 +228,51 @@ public class RemoteCallViewer extends JPanel {
 			}
 		}
 
+		/**
+		 * Status wartend
+		 */
 		class Waiting extends StatusLabel {
+			/** UID */
 			private static final long serialVersionUID = - 1396203136406798134L;
 
+			/**
+			 * Wartestatus
+			 */
 			public Waiting() {
 				super("Wartet", "Remote-Call wartet, bis alle Calls " +
 						"\u00FCber ihm abgeschlossen sind", Color.GRAY);
 			}
 		}
 
+		/**
+		 * Status laufend
+		 */
 		class Running extends StatusLabel {
+			/** UID */
 			private static final long serialVersionUID = - 7019340883477925888L;
 
+			/**
+			 * Aktivstatus
+			 */
 			public Running() {
 				super("L\u00E4uft", "Remote-Call wird vom Bot " +
 						"gegenw\u00E4rtig ausgef\u00FChrt", Color.BLUE);
 			}
 		}
 
+		/**
+		 * Status fertig
+		 */
 		class Done extends StatusLabel {
+			/** UID */
 			private static final long serialVersionUID = - 2082537920466563306L;
 
+			/**
+			 * Fertig
+			 * @param label		Text
+			 * @param tooltip	Tooltip
+			 * @param c			Farbe
+			 */
 			public Done(String label, String tooltip, Color c) {
 				super(label, tooltip, c);
 			}
@@ -195,17 +284,29 @@ public class RemoteCallViewer extends JPanel {
 		 */
 		private StatusLabel nowRunning = null;
 
+		/**
+		 * Geplante Verhalten
+		 */
 		public PlannedBhvModel() {
 			super(4);
 		}
-
+		
+		/** UID */
 		private static final long serialVersionUID = 2841437768966488801L;
 
+		/**
+		 * Loesch-Button
+		 */
 		class DeleteButton extends JButton implements ActionListener {
+			/** UID */
 			private static final long serialVersionUID = 1802551443502887184L;
 
+			/** laueft grad? */
 			private boolean isRunning;
 
+			/**
+			 * Loeschen-Button
+			 */
 			public DeleteButton() {
 				setIcon(Config.getIcon("schliessen-hover"));
 				addActionListener(this);
@@ -214,6 +315,9 @@ public class RemoteCallViewer extends JPanel {
 				setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 			}
 
+			/**
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(
 			@SuppressWarnings("unused") ActionEvent e) {
@@ -229,6 +333,9 @@ public class RemoteCallViewer extends JPanel {
 					removeThisRowFromTable();
 			}
 
+			/**
+			 * Entfernt Objekt aus der Tabelle
+			 */
 			private void removeThisRowFromTable() {
 				for (int row = 0; row < getRowCount(); row++) {
 					if (getValueAt(row, 3) == this) {
@@ -241,6 +348,10 @@ public class RemoteCallViewer extends JPanel {
 						"funktioniert nicht");
 			}
 
+			/**
+			 * Setzt den running-Status
+			 * @param isRunning true oder false
+			 */
 			public void setRunning(boolean isRunning) {
 				this.isRunning = isRunning;
 				setToolTipText(isRunning
@@ -249,6 +360,9 @@ public class RemoteCallViewer extends JPanel {
 			}
 		}
 
+		/**
+		 * @see ctSim.view.gui.RemoteCallViewer.BehaviorModel#addBehavior(ctSim.model.bots.components.RemoteCallCompnt.Behavior)
+		 */
 		@Override
 		protected void addBehavior(Behavior b) {
 			addRow(new Object[] {
@@ -260,6 +374,9 @@ public class RemoteCallViewer extends JPanel {
 				callNextBehavior();
 		}
 
+		/**
+		 * Ruft das naechste Verhalten in der Liste auf
+		 */
 		protected void callNextBehavior() {
 			for (int row = 0; row < getRowCount(); row++) {
 				if (getValueAt(row, 0) instanceof Done)
@@ -279,11 +396,19 @@ public class RemoteCallViewer extends JPanel {
 			lg.fine("Keine Remote-Calls mehr abzuarbeiten");
 		}
 
+		/**
+		 * Setzt ein Label auf laufend
+		 * @param row Zeile
+		 */
 		private void setRunningLabel(int row) {
 			nowRunning = new Running();
 			setValueAt(nowRunning, row, 0);
 		}
 
+		/**
+		 * Deaktiviert eine Zeile
+		 * @param row Zeile
+		 */
 		private void disableRow(int row) {
 			for (int col = 0; col < getColumnCount(); col++) {
 				// Spalte 3 (Loeschen-Button) nicht anfassen
@@ -292,6 +417,10 @@ public class RemoteCallViewer extends JPanel {
 			}
 		}
 
+		/**
+		 * Sendet ein Verhalten
+		 * @param row Zeile mit dem Verhalten
+		 */
 		private void sendBehaviorRequest(int row) {
 			try {
 				((BehaviorViewer)getValueAt(row, 2)).getBehavior().call();
@@ -301,6 +430,10 @@ public class RemoteCallViewer extends JPanel {
 			}
 		}
 
+		/**
+		 * Setzt das letzte Verhalten auf einen Exit-Status
+		 * @param status gewuenschter Status
+		 */
 		protected void setLastCallDone(BehaviorExitStatus status) {
 			for (int row = 0; row < getRowCount(); row++) {
 				if (getValueAt(row, 0) == nowRunning) {
@@ -310,9 +443,15 @@ public class RemoteCallViewer extends JPanel {
 					return;
 				}
 			}
-			throw new IllegalStateException("Interner Fehler");
+			//lg.warn("Ein Remote Call wurde beendet, der laut Liste gar nicht läuft");
+			// unproblematisch
 		}
 
+		/**
+		 * Setzt das Done-Label
+		 * @param row Zeile
+		 * @param status Exit-Status
+		 */
 		private void setDoneLabel(int row, BehaviorExitStatus status) {
 			String tooltip;
 			Color color;
@@ -337,6 +476,10 @@ public class RemoteCallViewer extends JPanel {
 			setValueAt(new Done(status.toString(), tooltip, color), row, 0);
 		}
 
+		/**
+		 * Aktiviert eine Zeile
+		 * @param row Zeile
+		 */
 		private void enableRow(int row) {
 			for (int col = 0; col < getColumnCount(); col++) {
 				// Spalte 3 (Loeschen-Button) nicht anfassen
@@ -345,13 +488,24 @@ public class RemoteCallViewer extends JPanel {
 			}
 		}
 
+		/**
+		 * Setzt den Loeschen-Knopf
+		 * @param row Zeile
+		 * @param isRunning laeuft grad?
+		 */
 		private void setDeleteButton(int row, boolean isRunning) {
 			((DeleteButton)getValueAt(row, 3)).setRunning(isRunning);
 		}
 	}
 
+	/** RemoteCall-Komponente */
 	private final RemoteCallCompnt rcCompnt;
 
+	/**
+	 * Baut die Tabelle
+	 * @param m Modell
+	 * @return Tabelle
+	 */
 	private ComponentTable buildCompntTable(TableModel m) {
 		final ComponentTable rv = new ComponentTable(m);
 		m.addTableModelListener(new TableModelListener() {
@@ -363,6 +517,10 @@ public class RemoteCallViewer extends JPanel {
 		return rv;
 	}
 
+	/**
+	 * Fordert beim Bot eine Liste aller RemoteCalls an
+	 * @param c RemoteCall-Komponente
+	 */
 	private void requestRCallList(RemoteCallCompnt c) {
 		try {
 			c.listRemoteCalls();
@@ -373,8 +531,13 @@ public class RemoteCallViewer extends JPanel {
 		}
 	}
 
+	/**
+	 * Remote-Call Anzeige
+	 * @param rcCompnt RemoteCall-Komponente
+	 */
 	public RemoteCallViewer(final RemoteCallCompnt rcCompnt) {
 		this.rcCompnt = rcCompnt;
+		if (rcCompnt == null) return;
 
 		requestRCallList(rcCompnt);
 
@@ -398,8 +561,7 @@ public class RemoteCallViewer extends JPanel {
         availBhvs.getColumnClass(getComponentCount());
         // Nur 1 Zeile markierbar
         availBhvs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        // Ganze Zeile markieren, nicht nur Zelle
-        availBhvs.setColumnSelectionAllowed(false);
+        availBhvs.setColumnSelectionAllowed(true);
         availBhvs.setRowSelectionAllowed(true);
 
 		setLayout(new GridBagLayout());
@@ -468,9 +630,40 @@ public class RemoteCallViewer extends JPanel {
 		b.setFont(f.deriveFont(f.getSize() * 3f));
 		add(b, new GridBaggins().row(1).col(1).epadx(10).fillV());
 
-		add(new JLabel("Geplante Remote-Calls"),
-			new GridBaggins().row(0).col(2).epady(3));
+		JPanel plannedHeading = new JPanel();
+		plannedHeading.add(new JLabel("Geplante Remote-Calls"));
 
+		JButton clearAll = new JButton("Alle entfernen");
+		clearAll.addActionListener(new ActionListener() {
+			@SuppressWarnings("synthetic-access")
+			public void actionPerformed(
+			@SuppressWarnings("unused") ActionEvent e) {
+				for (int row=plannedM.getRowCount()-1; row>=0; row--) {
+					if (plannedM.getValueAt(row, 0) instanceof PlannedBhvModel.Done) {
+						plannedM.removeRow(row);
+					}
+				}
+			}
+		});
+		plannedHeading.add(clearAll);
+		
+		JButton kill = new JButton("aktiven RC stornieren");
+		kill.addActionListener(new ActionListener() {
+			@SuppressWarnings("synthetic-access")
+			public void actionPerformed(
+			@SuppressWarnings("unused") ActionEvent e) {
+				try {
+					rcCompnt.abortCurrentBehavior();
+				} catch (IOException excp) {
+					lg.warn(excp, "E/A-Problem beim Senden des Abbruchkommandos");
+				}
+				rcCompnt.fireDoneEvent(0);
+			}
+		});
+		plannedHeading.add(kill);
+		
+		add(plannedHeading, new GridBaggins().row(0).col(2).epady(3));
+		
 		plannedBhvs.setTableHeader(null);
 
 		add(new JScrollPane(plannedBhvs),

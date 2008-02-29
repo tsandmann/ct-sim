@@ -19,7 +19,7 @@ In Eclipse Alt-Shift-X, dann Q. Auch über Run > External Tools zu erreichen
 	link="http://java.sun.com/j2se/1.5.0/docs/api/"
 	access="package"
 	author="true"
-	classpath="contrib/rxtx.jar;contrib/mysql-connector-java-3.1.13-bin.jar;contrib/picocontainer-1.2.jar;contrib/junit-4.1.jar"
+	classpath="contrib/rxtx.jar;contrib/mysql-connector-java-3.1.13-bin.jar;contrib/picocontainer-1.2.jar;contrib/junit-4.1.jar;contrib/BrowserLauncher2-1_3.jar"
 	doctitle="ct-Sim-API"
 	nodeprecated="false"
 	nodeprecatedlist="false"

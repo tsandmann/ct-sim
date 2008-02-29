@@ -1,5 +1,57 @@
 Changelog fuer c't-Sim
 ======================
+2008-02-08 Stefan Ehrhardt [stefan.e.ehrhardt@googlemail.com]: Commandline Parameter "-nosplash" zum Start ohne Splashscreen hinzugefuegt.
+
+2008-02-02 Timo Sandmann [mail@timosandmann.de]: Fernbedienung neu implementiert (#158), Splash-Screen gebaut, Code teilweise aufgeraeumt, massig Doku ergaenzt, einige TODOs erledigt, ABL-Unterstuetzung eingebaut fuer CtBotSimTcp und RealCtBot (noch deaktiviert)
+
+2007-09-29 Timo Sandmann [mail@timosandmann.de]: Config-Datei-Parser fuer Windows korrigiert 
+
+2007-09-27 Timo Sandmann [mail@timosandmann.de]: Performance verbessert (#11), Testbot wieder eingebaut (#26), Ant-Script zum Jar-Build ergaenzt und Dateilade-Operationen jar-kompatibel gemacht (#80)	
+
+2007-09-24 Timo Sandmann [mail@timosandmann.de]: Ant-Script zum Applet-Bau korrigiert
+
+2007-09-24 Timo Sandmann [mail@timosandmann.de]: doppelte updateView()-Aufrufe und unsinnige new-Operationen entfernt 
+
+2007-09-24 Timo Sandmann [mail@timosandmann.de]: NullPointerException beim Schliessen von Welten verhindert.
+
+2007-09-24 Timo Sandmann [mail@timosandmann.de]: Links zu www.ct-bot.de, Trac und Forum eingebaut (#70) und neue Versionsnummer 2.2
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bugfix im Init-Code (#139): Exception falls rxtxSerial-Lib nicht vorhanden wurde nicht abgefangen => DefaultController.init() wurde nie ausgefuehrt!
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bugfix #123 - Log-Speichern schreibt nun den kompletten Log-Inhalt in die Datei
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Neu hinzugefuegter Bot erscheint nun automatisch im Vordergrund des Panels (#86) 
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Log-Level in config.xml einstellbar (#66)
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Remote-Calls um hartes Abbrechen (wartet nicht auf Bestaetigung) erweitert (#48)
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Remote-Call-Fenster ueberarbeitet (#56 und #58) und Button zum Loeschen aller fertigen Remote-Calls hinzugefuegt (#72)
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Warnings unterdrueckt (#127)
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bug #138 behoben, geoeffnete und generierte Parcours koennen jetzt wieder in eine Datei geschrieben werden. 
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bug #136 behoben, Schiedsrichter kann nur bei geschlossener Welt umgeschaltet werden.
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: Bug #131 behoben. Bots werden abgewiesen, wenn keine Welt geladen ist.
+
+2007-09-23 Timo Sandmann [mail@timosandmann.de]: #24 Bug "Kollision auf Startfeld" gefixt, Vergabe der Bot-Nummern korrigiert, doppelte Log-Ausgabe beim Bot-Loeschen abgestellt
+
+2007-09-21 Timo Sandmann [mail@timosandmann.de]: Bugfix gegen Absturz beim Schliessen, Oeffnen oder Generieren von Welten unter Mac OS X (#10)
+
+2007-07-13 Timo Sandmann [mail@timosandmann.de]: Anpassungen fuer Bot-Target "Mac OS X" und Log-Fenster auf sinnvolle Groesse reduziert
+
+2007-06-14 Benjamin Benz [bbe@heise.de]: Korrektur bei den remote-calls
+
+2007-06-13 Timo Sandmann [mail@timosandmann.de]: GUI neu sortiert (#21, wichtiges nach oben)
+
+2007-05-29 Timo Sandmann [mail@timosandmann.de]: Arbeitsverzeichnis eines gestarteten Bots ist jetzt der Ort seines Binaries
+
+2007-04-16 Timo Sandmann [mail@timosandmann.de]: Mindestbreite des Bot-Viewers auf Breite seiner Inhaltselemente eingestellt
+
+2007-03-30 Benjamin Benz [bbe@heise.de]: Versucht den Testbot zu reaktivieren
+
 2007-03-06 Benjamin Benz [bbe@heise.de]: Standardmaessig ist nun der DefaultJudge an und nicht mehr der LabyrinthJudge
 
 2007-02-28 15:56 Hendrik Krauß [hkr@heise.de]:

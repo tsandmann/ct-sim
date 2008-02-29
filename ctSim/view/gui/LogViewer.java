@@ -30,16 +30,32 @@ import ctSim.util.BackslashNConverterStream;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
-//$$ doc
+/**
+ * LOG-Fenster 
+ */
 public class LogViewer extends JPanel {
+	/** UID */
 	private static final long serialVersionUID = 2371285729455694008L;
+	/** Logger */
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.LogViewer");
 
+	/** Log-Text */
 	private final Document logContent;
 
+	/**
+	 * Buttons
+	 */
 	class Button extends JButton {
+		/** UID */
 		private static final long serialVersionUID = 6172889032677505851L;
 
+		/**
+		 * Button-Klasse
+		 * @param label			Name
+		 * @param toolTipText	Tooltip
+		 * @param icon			Icon
+		 * @param onClick		onClick-Handler
+		 */
 		public Button(String label, String toolTipText, Icon icon,
 		final Runnable onClick) {
 			super(label);
@@ -54,6 +70,9 @@ public class LogViewer extends JPanel {
 		}
 	}
 
+	/**
+	 * Save-Hanlder
+	 */
 	private final Runnable onSaveLog = new Runnable() {
 		@SuppressWarnings("synthetic-access")
 		public void run() {
@@ -68,6 +87,7 @@ public class LogViewer extends JPanel {
 					new BackslashNConverterStream(new FileOutputStream(f)),
 					"UTF-8");
 				out.write(logContent.getText(0, logContent.getLength()));
+				out.flush();
 				lg.info("Log-Ausgabe in Datei "+f.getAbsolutePath()+
 					" geschrieben ("+f.length()+" Byte)");
 			} catch (IOException e) {
@@ -80,6 +100,9 @@ public class LogViewer extends JPanel {
 		}
 	};
 
+	/**
+	 * Clear-Handler
+	 */
 	private final Runnable onClearLog = new Runnable() {
 		@SuppressWarnings("synthetic-access")
 		public void run() {
@@ -92,11 +115,15 @@ public class LogViewer extends JPanel {
 		}
 	};
 
+	/**
+	 * Log-Viewer
+	 * @param log Log-Kompomente
+	 */
 	public LogViewer(final Log log) {
 		setLayout(new BorderLayout());
 		logContent = log.getExternalModel();
 		final JTextArea t = new JTextArea(logContent);
-		t.setColumns(80);
+		t.setColumns(50);
 		t.setEditable(false);
 		Misc.setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
 
@@ -148,7 +175,7 @@ public class LogViewer extends JPanel {
 		JScrollPane s = new JScrollPane(t);
 		int w = getInsets().left + s.getInsets().left +
 			s.getPreferredSize().width +
-			s.getInsets().right + getInsets().right;
+			s.getInsets().right + getInsets().right + 20;
 		setPreferredSize(new Dimension(w, w));
 
 		// Ausliefern
@@ -156,6 +183,11 @@ public class LogViewer extends JPanel {
 		add(s, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Gleicht die Hoehe von zwei Komponenten an
+	 * @param c1
+	 * @param c2
+	 */
 	private static void equalizeHeight(JComponent c1, JComponent c2) {
 		int prefHeight = Math.max(
 			c1.getPreferredSize().height,
@@ -164,6 +196,11 @@ public class LogViewer extends JPanel {
 		setPrefHeight(c2, prefHeight);
 	}
 
+	/**
+	 * Setzt eine Komponente auf eine gewuenschte Hoehe
+	 * @param c
+	 * @param preferredHeight
+	 */
 	private static void setPrefHeight(JComponent c, int preferredHeight) {
 		c.setPreferredSize(new Dimension(
 			c.getPreferredSize().width, preferredHeight));
