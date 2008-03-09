@@ -463,10 +463,12 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 		addDisposeListener(new Runnable() {
 			@SuppressWarnings("synthetic-access")
 			public void run() {
-				lg.fine("Stoppe Thread "+thrd.getName());
-				Thread t = thrd;
-				thrd = null;
-				t.interrupt();
+				if (thrd != null) {
+					lg.fine("Stoppe Thread "+thrd.getName());
+					Thread t = thrd;
+					thrd = null;
+					t.interrupt();
+				}
 			}
 		});
 
