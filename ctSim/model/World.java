@@ -1099,4 +1099,23 @@ public class World {
 	public void deleteBot(Bot bot) {
 		parcours.setStartFieldUnused(bot);
 	}
+	
+	/**
+	 * Setzt alle Bots auf ihre Startpplaetze zurueck.
+	 * Hier werden nur simulierte Bots (ThreeDBot-Instanzen) beruecksichtigt, weil
+	 * sonstige Bots in World nicht bekannt sind! 
+	 */
+	public void resetAllBots() {
+		for (ThreeDBot b : botsRunning) {
+			Bot bot = b.getSimBot();
+			/* Startfeld des Bots ermitteln */
+			int startField = parcours.getStartPositionNumber(bot);
+			/* Position und Heading des Startfelds setzen */
+			Point3d pos = parcours.getUsedStartPosition(startField);
+			pos.z = 0.075;
+			Vector3d head = parcours.getStartHeading(startField);
+			b.setHeading(head);
+			b.setPosition(pos);
+		}
+	}
 }

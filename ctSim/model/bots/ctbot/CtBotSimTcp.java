@@ -125,18 +125,15 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	}
 
 	/**
-	 * Sendet den Fernbedienungs-(RC5-)Code, der in der Konfigdatei angegeben
-	 * ist. Methode tut nichts, falls nichts, 0 oder ein nicht von
-	 * {@link Integer#decode(String)} verwertbarer Code angegeben ist.
+	 * Sendet einen Fernbedienungscode an den Bot
+	 * @param code	zu sendender RC5-Code als String
 	 */
-	@SuppressWarnings("cast")
-	public void sendRcStartCode() {
-		String rcStartCode = Config.getValue("rcStartCode");
+	public void sendRC5Code(String code) {
 		try {
 			for (BotComponent<?> c : components) {
 				if ((Object)c instanceof Sensors.RemoteControl) {
-					((Sensors.RemoteControl)((Object)c)).send(rcStartCode);
-					lg.fine("StartCode "+rcStartCode+" gesendet");
+					((Sensors.RemoteControl)((Object)c)).send(code);
+					lg.fine("RC5Code fuer Taste \"" + code + "\" gesendet");
 					break;
 				}
 			}
@@ -144,7 +141,17 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			// Kann nicht passieren, da die RC nur IOExcp wirft, wenn sie
 			// asynchron betrieben wird, was CtBotSimTcp nicht macht
 			throw new AssertionError(e);
-		}
+		}		
+	}
+	
+	/**
+	 * Sendet den Fernbedienungs-(RC5-)Code, der in der Konfigdatei angegeben
+	 * ist. Methode tut nichts, falls nichts, 0 oder ein nicht von
+	 * {@link Integer#decode(String)} verwertbarer Code angegeben ist.
+	 */
+	public void sendRcStartCode() {
+		String rcStartCode = Config.getValue("rcStartCode");
+		sendRC5Code(rcStartCode);
 	}
 	
 	/**
@@ -152,17 +159,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	 */
 	public void startABL() {
 		lg.info("Starte ABL-Programm auf dem Bot...");
-		for (BotComponent<?> c : components) {
-			if ((Object)c instanceof Sensors.RemoteControl) {
-				try {
-					((Sensors.RemoteControl)((Object)c)).send(">");
-					lg.fine("RC5-Code fuer Taste \">\" gesendet");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			}
-		}		
+		sendRC5Code(">");	
 	}
 	
 	/**

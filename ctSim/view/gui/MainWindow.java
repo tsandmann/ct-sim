@@ -42,13 +42,13 @@ import ctSim.controller.Main;
 import ctSim.model.ThreeDBot;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
+import ctSim.model.bots.ctbot.CtBotSimTcp;
+import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.model.rules.Judge;
 import ctSim.util.ClosableTabsPane;
 import ctSim.util.FmtLogger;
 import ctSim.util.Runnable1;
 
-//$$ Wenn man BotViewer groesser gezogen hat und noch einen Bot hinzufuegt, springt BotViewer wieder auf Standardgroesse
-//LODO Crasht, wenn Icon-Dateien nicht da
 /**
  * Die GUI-Hauptklasse fuer den c't-Sim
  *
@@ -264,7 +264,10 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * Updated das Layout
 	 */
 	protected void updateLayout() {
-		split.resetToPreferredSizes();
+		// kein resize, falls BotViewer vergroessert wurde
+		if (split.getSize().width <= split.getPreferredSize().width) {
+			split.resetToPreferredSizes();
+		}
 	}
 
 	/**
@@ -272,12 +275,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * @param time Die Zeit, die zur Simulatorzeit hinzugezaehlt wird
 	 */
 	public void onSimulationStep(final long time) {
-//		SwingUtilities.invokeLater(new Runnable() {
-//			@SuppressWarnings("synthetic-access")
-//			public void run() {
 		statusBar.updateTime(time);
-//			}
-//		});
 	}
 
 	/** 
@@ -363,4 +361,35 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 //			}
 //		});
     }
+	
+	/**
+	 * Veranlasst einen Reset aller Bots.
+	 * Die Bots werden ueber ihren BotViewer gefunden. TCP-Bots
+	 * (simuliert und real) erhalten das Reset-Signal per RC5-Code.
+	 * Anschliessend werden alle Bots in der Welt zurueck auf ihre 
+	 * Startplaetze gesetzt. 
+	 */
+	public void onResetAllBots() {
+		/* Bots das Reset-Signal schicken */
+		for (int i=0; i<botTabs.getTabCount(); i++) {
+			/* BotViewer des Tabs holen... */
+			BotViewer bv = (BotViewer)botTabs.getComponentAt(i);
+			/* dann Bot zum BotViewer verwenden */
+			Bot bot = bv.bot;
+			if (bot instanceof ThreeDBot) {
+				/* Sim-Bots das Reset-Signal senden */
+				Bot b = ((ThreeDBot) bot).getSimBot();
+				if (b instanceof CtBotSimTcp) {
+				((CtBotSimTcp) b).sendRC5Code("CH*P/P");
+				}
+				
+			} else if (bot instanceof RealCtBot) {
+				/* Realen Bots das Reset-Signal senden */
+				((RealCtBot) bot).sendRC5Code("CH*P/P");
+			}
+
+		}
+		/* Alle Bots in der Welt auf die Startplaetze zurueck */
+		world.resetAllBots();
+	}
 }

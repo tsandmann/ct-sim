@@ -641,4 +641,10 @@ public class ContestConductor implements View {
 	 */
 	public void onJudgeSet(@SuppressWarnings("unused") Judge j) {
 	}
+	
+	/**
+	 * @see ctSim.view.View#onResetAllBots()
+	 */
+	public void onResetAllBots() {
+	}
 }

@@ -145,23 +145,31 @@ public class RealCtBot extends CtBot {
 	public String getDescription() {
 		return "Realer c't-Bot, verbunden \u00FCber "+connectionName;
 	}
+
+	/**
+	 * Sendet einen Fernbedienungscode an den Bot
+	 * @param code	zu sendender RC5-Code als String
+	 */
+	public void sendRC5Code(String code) {
+		try {
+			for (BotComponent<?> c : components) {
+				if ((Object)c instanceof Sensors.RemoteControl) {
+					((Sensors.RemoteControl)((Object)c)).send(code);
+					lg.fine("RC5Code fuer Taste \"" + code + "\" gesendet");
+					break;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}	
 	
 	/**
 	 * Sendet den RC5-Code, um ein ABL-Programm zu starten
 	 */
 	public void startABL() {
 		lg.info("Starte ABL-Programm auf dem Bot...");
-		for (BotComponent<?> c : components) {
-			if ((Object)c instanceof Sensors.RemoteControl) {
-				try {
-					((Sensors.RemoteControl)((Object)c)).send(">");
-					lg.fine("RC5-Code fuer Taste \">\" gesendet");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			}
-		}		
+		sendRC5Code(">");	
 	}
 	
 	/**

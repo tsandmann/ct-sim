@@ -101,4 +101,10 @@ public class TimeLogger implements View {
 	public void onWorldOpened(@SuppressWarnings("unused") World newWorld) {
 		// no-op
 	}
+
+	/**
+	 * @see ctSim.view.View#onResetAllBots()
+	 */
+	public void onResetAllBots() {
+	}
 }

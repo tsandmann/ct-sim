@@ -352,22 +352,50 @@ public class Parcours {
 		}
 	}
 
-
-
 	/**
-	 * Liefert die Startposition eines Bots
+	 * Liefert die Startposition fuer einen neuen Bots
 	 * Wenn keine festgelegt wurde, dann die Default-Position  (0)
-	 * @param bot
-	 * @return Die Startposition
+	 * @param bot	Bot-Nummer
+	 * @return 		Die Startposition
 	 */
 	public Point3d getStartPosition(int bot) {
 		Point3d pos = null;
-		int i;
-		for (i=1; i<BOTS; i++) {
-			if (startPositionsUsed[i] == null) break;
+		if (bot < BOTS) {
+			int i;
+			for (i=1; i<BOTS; i++) {
+				if (startPositionsUsed[i] == null) break;
+			}
+			if (i == BOTS) {
+				i = 0;
+			}
+			pos = new Point3d(this.startPositions[i][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[i][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
+		} else {
+			pos = new Point3d(this.startPositions[0][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[0][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
 		}
-		if (bot < BOTS)
-			pos= new Point3d(this.startPositions[i][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[i][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
+		return pos;
+	}
+	
+	/**
+	 * Liefert die Nummer des Startfeldes zu einem Bot
+	 * @param bot	Referenz auf Bot
+	 * @return		Nummer des Startfeldes, oder 0, falls Bot unbekannt
+	 */
+	public int getStartPositionNumber(Bot bot) {
+		for (int i=1; i<startPositionsUsed.length; i++) {
+			if (startPositionsUsed[i] == bot) return i;
+		}
+		return 0;
+	}
+	
+	/**
+	 * Liefert die Startposition eines vorhandenen Bots
+	 * @param bot	Bot-Nummer
+	 * @return		Die Startposition
+	 */
+	public Point3d getUsedStartPosition(int bot) {
+		Point3d pos = null;
+		if (bot < BOTS) 
+			pos= new Point3d(this.startPositions[bot][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[bot][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
 		else
 			pos= new Point3d(this.startPositions[0][0]*this.blockSizeInM + this.blockSizeInM/2,this.startPositions[0][1]*this.blockSizeInM + this.blockSizeInM/2,0.0f);
 

@@ -99,4 +99,9 @@ public interface Controller {
 	 * die Verantwortung f&uuml;r den Programmablauf beim Controller.
 	 */
 	void onApplicationInited();
+	
+	/**
+     * Setzt alle Bots zurueck
+     */
+    public void resetAllBots();
 }

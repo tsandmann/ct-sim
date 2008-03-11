@@ -66,6 +66,9 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     /** Thread, der die Simulation macht: Siehe {@link #run()}. */
     private Thread sequencer;
 
+    /** Flag fuer Bot-Reset */
+	private boolean reset = false;
+
     /**
      * Setzt das View und initialisiert alles noetige dafuer
      * @param view	unser View
@@ -163,6 +166,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 				CountDownLatch oldStartSignal = this.startSignal;
 
+				/* Reset gewuenscht? */
+				if (this.reset) {
+					this.reset = false;
+					view.onResetAllBots();
+				}
+				
 				// Judge pruefen:
 				if (judge.isSimulationFinished(sequencersWorld.getSimTimeInMs())) {
 					lg.fine("Sequencer: Simulationsende");
@@ -491,5 +500,15 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
      */
     public void onApplicationInited() {
         view.onApplicationInited();
+    }
+    
+    /**
+     * Setzt alle Bots im naechsten Sim-Schritt zurueck.
+     * Dadurch, dass hier nur das Reset-Flag gesetzt wird, eruebriegt sich das 
+     * Synchronisieren der (Bot-)Threads; der Reset erfolgt einfach beim naechsten
+     * Zeitschritt.
+     */
+    public void resetAllBots() {
+    	this.reset = true;
     }
 }

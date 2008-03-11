@@ -112,4 +112,9 @@ public interface View {
 	 * @see Judge#isSimulationFinished(long)
 	 */
 	public void onSimulationFinished();
+	
+	/**
+	 * Veranlasst einen Reset aller Bots
+	 */
+	public void onResetAllBots();
 }

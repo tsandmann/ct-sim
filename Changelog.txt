@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2008-03-10 Timo Sandmann [mail@timosandmann.de]: Reset-Funktion fuer Bots eingebaut, Icons ergaenzt, ToDo "BotViewer-Resize" erledigt
+
 2008-03-08 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Zombie-Problem (nicht mehr vorhandener Bot wurde noch angezeigt und lies sich nicht schliessen) - war NullPointerException im Dispose-Listener
 
 2008-02-29 Benjamin Benz [bbe@heise.de]: Datenstruktur fuer Kommunikation auf Sender-IDs erweitert
