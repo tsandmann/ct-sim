@@ -19,8 +19,12 @@
 package ctSim.model.bots.ctbot;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.net.ProtocolException;
 
+import ctSim.Connection;
 import ctSim.controller.Config;
+import ctSim.model.Command;
 import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.RemoteCallCompnt;
@@ -30,6 +34,12 @@ import ctSim.model.bots.components.Sensors;
  * Abstrakte Oberklasse fuer alle c't-Bots
  */
 public abstract class CtBot extends BasicBot {
+	
+	/**
+	 * Die Connection an der der Bot hängt
+	 */
+	Connection connection;
+
 	/** LED-Farben */
 	private static final Color[] ledColors = {
 		new Color(  0,  84, 255), // blau
@@ -50,7 +60,27 @@ public abstract class CtBot extends BasicBot {
 
 	/** Bodenfreiheit des Bots [m] */
 	protected static final double BOT_GROUND_CLEARANCE = 0.015d;
-
+	
+	/**
+	 * Verarbeitet ein Kommando und leitet es an den angehängten Bot weiter
+	 * @param command das Kommando
+	 * @throws ProtocolException Wenn was nicht klappt
+	 */
+	public void receiveCommand(Command command) throws ProtocolException {
+		if (command.getTo() != this.getId())
+			throw new ProtocolException("Bot "+this.getId()+" weiß mit dem Command "+command.toCompactString()+" nix anzufangen");
+		
+		if (connection == null)
+			throw new ProtocolException("Bot "+this.getId()+" hat gar keine Connection");
+		
+		//Wir werfen das Kommando direkt an den angehängten Bot
+		try{ 
+			connection.write(command);
+		} catch (IOException e) {
+			lg.warn("Es gab Probleme beim Erreichen des Bots");
+		}
+	}
+	
 	/**
 	 * Neuer Bot "name"
 	 * @param name
@@ -94,4 +124,5 @@ public abstract class CtBot extends BasicBot {
 				new Actuators.Led(ledName, i, ledColors[i]));
 		}
 	}
+
 }

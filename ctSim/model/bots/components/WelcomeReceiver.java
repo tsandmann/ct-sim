@@ -2,24 +2,31 @@ package ctSim.model.bots.components;
 
 import java.net.ProtocolException;
 
+import javax.swing.SpinnerNumberModel;
+
 import ctSim.model.Command;
 import ctSim.model.Command.Code;
 import ctSim.model.Command.SubCode;
 import ctSim.model.bots.components.BotComponent.CanRead;
+import ctSim.model.bots.components.BotComponent.SimpleActuator;
 
 /**
  * Handshake fuer Bot-Sim Connection
  */
-public class WelcomeReceiver extends BotComponent<Void> implements CanRead {
+public class WelcomeReceiver extends BotComponent<SpinnerNumberModel> implements SimpleActuator, CanRead {
 	/** Subcode */
 	private final SubCode expectedForWelcome;
 
+	/** Zahlenwert */
+	private Number internalModel = Double.valueOf(0);	
+	
 	/**
 	 * Handshake fuer Connection
 	 * @param expectedForWelcome Subcode fuer neue Connection
 	 */
 	public WelcomeReceiver(SubCode expectedForWelcome) {
-		super(null);
+		//super(null);
+		super(new SpinnerNumberModel());
 		this.expectedForWelcome = expectedForWelcome;
 	}
 
@@ -47,6 +54,7 @@ public class WelcomeReceiver extends BotComponent<Void> implements CanRead {
 					"das nicht den erwarteten Subcode "+expectedForWelcome+
 					" hatte");
 		}
+		internalModel = c.getFrom();
 	}
 
 	/**
@@ -54,7 +62,7 @@ public class WelcomeReceiver extends BotComponent<Void> implements CanRead {
 	 */
 	@Override
 	public void updateExternalModel() {
-		// No-op
+			getExternalModel().setValue(internalModel);
 	}
 
 	/**
@@ -63,6 +71,15 @@ public class WelcomeReceiver extends BotComponent<Void> implements CanRead {
 	@Override
 	public String getName() {
 		// No-op
-		return null;
+		return "Bot-Id";
+	}
+
+	
+	/**
+	 * Erlaubt den Zugriff auf die Id
+	 * @return Id
+	 */
+	public Number getInternalModel() {
+		return internalModel;
 	}
 }

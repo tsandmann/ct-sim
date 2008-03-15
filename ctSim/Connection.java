@@ -36,7 +36,7 @@ import ctSim.util.FmtLogger;
  * @author bbe (bbe@heise.de)
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-public abstract class Connection {
+public abstract class Connection {	
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
 

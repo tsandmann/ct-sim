@@ -83,6 +83,9 @@ public class RealCtBot extends CtBot {
 	public RealCtBot(Connection connection) {
 		super(connection.getShortName()+"-Bot");
 
+		// connection speichern
+		this.connection = connection;
+		
 		connectionName = connection.getName();
 		this.ablResult = null;
 
@@ -129,6 +132,8 @@ public class RealCtBot extends CtBot {
 			}
 		}
 
+		// Und einen CommandProcessor herstellen
+	
 		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
 			public void run() {

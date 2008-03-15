@@ -1,5 +1,7 @@
 package ctSim.model.bots;
 
+import ctSim.controller.Controller;
+
 /**
  * Interface fuer alle Bots
  */
@@ -40,4 +42,16 @@ public interface Bot {
 	 * @param runsWhenAObstDisposes
 	 */
 	public void addDisposeListener(Runnable runsWhenAObstDisposes);
+	
+	/**
+	 * Liefert den Controller zurueck, der den Bot verwaltet
+	 * @return Controller Der Controller
+	 */
+	public Controller getController();
+	
+	/**
+	 * Setzt den Controller, der den Bot verwaltet
+	 * @param controller Der Controller
+	 */
+	public void setController(Controller controller);
 }

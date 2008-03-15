@@ -28,6 +28,7 @@ import java.net.ProtocolException;
 
 import ctSim.Connection;
 import ctSim.controller.Config;
+import ctSim.controller.Controller;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.SimulatedBot;
@@ -45,8 +46,8 @@ import ctSim.view.gui.AblViewer;
  * kommunizieren
  */
 public class CtBotSimTcp extends CtBot implements SimulatedBot {
-	/** Die TCP-Verbindung */
-    private final Connection connection;
+	///** Die TCP-Verbindung */
+    //private final Connection connection;
     /** Referenz eines AblViewer, der bei bei Bedarf ein RemoteCall-Ergebnis anzeigen kann */
 	private AblViewer ablResult;
 
@@ -222,9 +223,37 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			while (true) {
 				try {
 					Command cmd = new Command(connection);
-					components.processCommand(cmd);
+					if (cmd.has(Command.Code.WELCOME))
+						setId(cmd.getFrom());
+
+					if (cmd.getFrom() != getId())
+						throw new ProtocolException("Nachricht von einem unerwarteten Absender ("+cmd.getFrom()+") erhalten. Erwartet: "+getId());
+				
+					if (cmd.getTo() == Command.SIM_ID) {
+						components.processCommand(cmd);
+					} else {
+						// Diese Nachricht ist nicht fuer den Sim, sondern fuer einen anderen Bot
+						// Also weiterleiten
+						Controller controller =	this.getController();
+						
+						if (controller != null) 
+							controller.deliverMessage(cmd);
+						else {
+							throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id="
+											+cmd.getTo()+
+											") gehen sollte. Hab4e aber keinen Controller!");
+						}
+						//	lg.warn(cmd.toString());
+						//	lg.warn("Nachricht empfangen, die an einen anderen Bot (Id="
+						//		+cmd.getTo()+
+						//		") gehen sollte. Weiterleitungen noch nicht implementiert!");
+						//throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id="
+						//		+cmd.getTo()+
+						//		") gehen sollte. Weiterleitungen noch nicht implementiert!");
+					}
+
 					if (cmd.has(Command.Code.DONE))
-						break;
+							break;
 				} catch (ProtocolException e) {
 					lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere");
 				}

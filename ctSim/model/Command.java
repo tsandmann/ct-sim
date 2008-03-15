@@ -228,9 +228,12 @@ public class Command {
 	/** Direction Antwort. Nicht verwendet. */
 	public static final int DIR_ANSWER = 1;
 
+	/** Id des Sims */
+	public static final byte SIM_ID = (byte)0xFE;
+
 	///////////////////////////////////////////////////////////////////////////
 	// Enum Command-Code
-
+	
 	/**
 	 * Ein Command-Code kann einen der Werte in diesem Enum haben. Der
 	 * Command-Code gibt den Typ des Commands an.

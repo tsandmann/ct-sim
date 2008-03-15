@@ -1,7 +1,9 @@
 package ctSim.controller;
 
 import java.io.File;
+import java.net.ProtocolException;
 
+import ctSim.model.Command;
 import ctSim.model.rules.Judge;
 import ctSim.view.View;
 
@@ -104,4 +106,13 @@ public interface Controller {
      * Setzt alle Bots zurueck
      */
     public void resetAllBots();
+	
+	/**
+	 * Liefert ein Kommando an einen Bot aus.
+	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben
+	 * Sender und Empfänger stehen in dem command drin 
+	 * @param command das zu übertragende Kommando
+	 * @throws ProtocolException Falls kein passender empfaenger gefunden wurde
+	 */
+	public void deliverMessage(Command command) throws ProtocolException;
 }

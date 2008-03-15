@@ -19,6 +19,7 @@
 package ctSim.model.bots.ctbot;
 
 import java.util.Random;
+
 import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;

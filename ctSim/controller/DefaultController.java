@@ -26,19 +26,25 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.Thread.State;
 import java.lang.reflect.Constructor;
+import java.net.ProtocolException;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
 
 import ctSim.ComConnection;
 import ctSim.ConfigManager;
 import ctSim.TcpConnection;
+import ctSim.model.Command;
 import ctSim.model.ParcoursGenerator;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
+import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
 import ctSim.view.View;
 
 /**
@@ -66,9 +72,11 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     /** Thread, der die Simulation macht: Siehe {@link #run()}. */
     private Thread sequencer;
 
+	/** Bots */
+	private final List<Bot> bots = Misc.newList();
+
     /** Flag fuer Bot-Reset */
 	private boolean reset = false;
-
     /**
      * Setzt das View und initialisiert alles noetige dafuer
      * @param view	unser View
@@ -316,10 +324,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     	int p = 10002;
     	try {
     		p = Integer.parseInt(port);
+    		TcpConnection.connectTo(hostname, p, this);
     	} catch (NumberFormatException e) {
     		lg.warn("'%s' ist eine doofe TCP-Port-Nummer; ignoriere", port);
     	}
-    	TcpConnection.connectTo(hostname, p, this);
     }
 
     /**
@@ -408,6 +416,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     	}
     	else
     		view.onBotAdded(bot);
+    	
+    	// Fuer den Kommunikationsproxy brauchen wir eine Liste aller Bots
+    	bots.add(bot);
+    	bot.setController(this);
     }
 
     /**
@@ -502,6 +514,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         view.onApplicationInited();
     }
     
+        
     /**
      * Setzt alle Bots im naechsten Sim-Schritt zurueck.
      * Dadurch, dass hier nur das Reset-Flag gesetzt wird, eruebriegt sich das 
@@ -511,4 +524,27 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     public void resetAllBots() {
     	this.reset = true;
     }
+    
+	/**
+	 * Liefert ein Kommando an einen Bot aus.
+	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben
+	 * Sender und Empfänger stehen in dem command drin 
+	 * @param command das zu übertragende Kommando
+	 * @throws ProtocolException Falls kein passender empfaenger gefunden wurde
+	 */
+	public void deliverMessage(Command command) throws ProtocolException {
+		for (Bot b : bots) {
+			// Wir betrachten hier nur CtBot
+			if (b instanceof CtBot) {			
+				if (((CtBot)b).getId() == command.getTo()) {
+					((CtBot)b).receiveCommand(command);
+					return;
+				}
+			}
+		}	
+		
+		// Es fühlt sich wohl kein Bot aus der Liste zuständig ==> Fehler 
+		throw new ProtocolException("Nachricht an Empfänger "+command.getTo()+" nicht zustellbar. " +
+				"Kein Bot mit passender Id angemeldet");
+	}
 }

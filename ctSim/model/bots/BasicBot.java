@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ctSim.controller.Controller;
 import ctSim.model.Command;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotComponent.ConnectionFlags;
@@ -62,6 +63,32 @@ import ctSim.util.Misc;
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
 public abstract class BasicBot implements Bot {
+
+	/**
+	 * Hier ist der Controller gespeichert, der den Bot verwaltet
+	 */
+	private Controller controller;
+
+	
+	/** ID des Bots, wenn er per TCp Kommandis empfangen soll */
+	protected int id =0;
+
+	/**
+	 * Liefert die Id eines Bots fuer die Adressierung der Commands zurück
+	 * @return Id des Bots
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * Setzt die Id des Bots fuer die Adressierung der Commands 
+	 * @param id ID des Bots
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	/**
 	 * Liste
 	 * @param <T> Typ
@@ -69,7 +96,7 @@ public abstract class BasicBot implements Bot {
 	public static class BulkList<T> extends ArrayList<T> {
 		/** UID */
 		private static final long serialVersionUID = - 8179783452023605404L;
-
+		
 		/**
 		 * Fuegt Elemente hinzu
 		 * @param elements Die Elemente
@@ -79,7 +106,7 @@ public abstract class BasicBot implements Bot {
                 add(e);
         }
 	}
-
+	
 	/**
 	 * Zaehlklasse
 	 */
@@ -210,7 +237,6 @@ public abstract class BasicBot implements Bot {
     			throw new ProtocolException("Kommando ist Unfug: Hat als " +
     					"Richtung nicht 'Anfrage'; ignoriere");
     		}
-
     		for (BotComponent<?> c : this)
     			c.offerRead(command);
     		if (! command.hasBeenProcessed())
@@ -285,6 +311,8 @@ public abstract class BasicBot implements Bot {
 	 * @param name Bot-Name
 	 */
 	public BasicBot(String name) {
+		super();
+		this.controller = null;
 		// Instanz-Zahl erhoehen
 		numInstances.increase(getClass());
 		int num = numInstances.get(getClass()) + 1;
@@ -392,5 +420,21 @@ public abstract class BasicBot implements Bot {
 	 */
 	public void updateView() throws InterruptedException {
 		components.updateView();
+	}
+
+	/**
+	 * Liefert den Controller zurueck, der diesen Bot verwaltet
+	 * @return Controller der Controller
+	 */
+	public Controller getController() {
+		return controller;
+	}
+
+	/**
+	 * Setzt den zustaendigen Controller
+	 * @param controller
+	 */
+	public void setController(Controller controller) {
+		this.controller = controller;
 	}
 }
