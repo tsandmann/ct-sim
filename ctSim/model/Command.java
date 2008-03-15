@@ -538,7 +538,7 @@ public class Command {
 	private byte seq = 0;
 
 	/** Absender des Paketes */
-	private byte from = 0;
+	private byte from = SIM_ID;
 
 	/** Empfaenger des Paketes */
 	private byte to = 0;
