@@ -18,6 +18,9 @@ public class CommandOutputStream {
 	/** Sequenznummer */
 	private byte seq = 0;
 
+	/** An wen gehen all die schoenen Pakete? */
+	private byte to = 0;
+	
 	/**
 	 * @param underlyingStream
 	 */
@@ -46,6 +49,7 @@ public class CommandOutputStream {
 		if (c == null)
 			return;
 		c.setSeq(seq++);
+		c.setTo(to);
 		underlyingStream.write(c.getCommandBytes());
 	}
 
@@ -67,5 +71,21 @@ public class CommandOutputStream {
 
 		underlyingStream.flush();
 		buffer.clear();
+	}
+
+	/** 
+	 * Setzt den Empfaenger all der schoenen Kommandos
+	 * @param to
+	 */
+	public void setTo(byte to) {
+		this.to = to;
+	}
+
+	/** 
+	 * Liefert den Empfaenger all der schoenen Kommandos
+	 * @return Empfaenger-Id
+	 */
+	public byte getTo() {
+		return to;
 	}
 }

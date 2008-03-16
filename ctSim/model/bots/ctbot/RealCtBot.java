@@ -48,8 +48,11 @@ public class RealCtBot extends CtBot {
 			Command cmd = null;
 			try {
 				cmd = new Command(connection);
-				components.processCommand(cmd);
-				updateView(); //$$$ Jedesmal? Performance?
+				
+				if (!preProcessCommands(cmd)){
+					components.processCommand(cmd);
+					updateView(); //$$$ Jedesmal? Performance?
+				}
 			} catch (ProtocolException e) {
 				lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere%s", cmd);
 			} catch (IOException e) {
@@ -79,12 +82,16 @@ public class RealCtBot extends CtBot {
 
 	/**
 	 * @param connection Connection zum Bot
+	 * @param newId Id für die Kommunikation 
 	 */
-	public RealCtBot(Connection connection) {
+	public RealCtBot(Connection connection,byte newId) {
 		super(connection.getShortName()+"-Bot");
-
+		
+		setId(newId);
+		
+		
 		// connection speichern
-		this.connection = connection;
+		setConnection(connection);
 		
 		connectionName = connection.getName();
 		this.ablResult = null;

@@ -30,6 +30,7 @@ import ctSim.controller.BotReceiver;
 import ctSim.controller.Config;
 import ctSim.model.Command;
 import ctSim.model.bots.Bot;
+import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.SaferThread;
@@ -204,17 +205,20 @@ public class TcpConnection extends Connection {
 	 * @throws ProtocolException
 	 */
 	private Bot createBot(Command c) throws ProtocolException {
+		CtBot bot;
 		switch (c.getSubCode()) {
     		case WELCOME_SIM:
     			lg.fine("TCP-Verbindung von simuliertem Bot eingegangen");
-    			return new CtBotSimTcp(this);
-
+    			bot = new CtBotSimTcp(this,c.getFrom());  			
+    			break;
     		case WELCOME_REAL:
     			lg.fine("TCP-Verbindung von realem Bot eingegangen");
-    			return new RealCtBot(this);
-
+    			bot= new RealCtBot(this,c.getFrom());
+    			break;
     		default:
     			throw new ProtocolException(c.toString());
     	}
+		
+		return bot;
 	}
 }

@@ -218,7 +218,7 @@ public class ComConnection extends Connection {
 		public void work() throws InterruptedException {
 			comConnSingleton.blockUntilDataAvailable();
 			lg.fine("Serielle Verbindung eingegangen");
-			Bot b = new RealCtBot(comConnSingleton);
+			Bot b = new RealCtBot(comConnSingleton,(byte)0);
 			b.addDisposeListener(new Runnable() {
 				public void run() {
 					spawnThread(botReceiver);

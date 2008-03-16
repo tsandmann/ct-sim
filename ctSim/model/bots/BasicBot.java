@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ctSim.Connection;
 import ctSim.controller.Controller;
 import ctSim.model.Command;
 import ctSim.model.bots.components.BotComponent;
@@ -63,30 +64,31 @@ import ctSim.util.Misc;
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
 public abstract class BasicBot implements Bot {
-
+	/**
+	 * Die Connection an der der Bot hängt
+	 */
+	private Connection connection;
+	
 	/**
 	 * Hier ist der Controller gespeichert, der den Bot verwaltet
 	 */
 	private Controller controller;
 
-	
-	/** ID des Bots, wenn er per TCp Kommandis empfangen soll */
-	protected int id =0;
-
 	/**
 	 * Liefert die Id eines Bots fuer die Adressierung der Commands zurück
 	 * @return Id des Bots
 	 */
-	public int getId() {
-		return id;
+	public byte getId() {
+		return getConnection().getCmdOutStream().getTo();
 	}
 
 	/**
 	 * Setzt die Id des Bots fuer die Adressierung der Commands 
 	 * @param id ID des Bots
 	 */
-	public void setId(int id) {
-		this.id = id;
+	public void setId(byte id) {
+		//this.id = id;
+		getConnection().getCmdOutStream().setTo(id);
 	}
 	
 	/**
@@ -437,4 +439,21 @@ public abstract class BasicBot implements Bot {
 	public void setController(Controller controller) {
 		this.controller = controller;
 	}
+	
+	/**
+	 * Liefert die Connection zurueck über die der Bot zu erreichen ist
+	 * @return connection
+	 */
+	public Connection getConnection() {
+		return connection;
+	}
+
+	/**
+	 * Setzt die Connection über die der Bot zu erreichen ist
+	 * @param connection
+	 */
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+
 }

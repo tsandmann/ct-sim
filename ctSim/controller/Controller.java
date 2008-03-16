@@ -115,4 +115,11 @@ public interface Controller {
 	 * @throws ProtocolException Falls kein passender empfaenger gefunden wurde
 	 */
 	public void deliverMessage(Command command) throws ProtocolException;
+	
+	/**
+	 * Liefert eine Id aus dem Adresspoll zurück
+	 * @return Die neue Id
+	 * @throws ProtocolException Wenn keine Adresse mehr frei
+	 */
+	public byte generateBotId() throws ProtocolException;
 }

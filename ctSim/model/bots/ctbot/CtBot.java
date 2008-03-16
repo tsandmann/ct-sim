@@ -22,8 +22,8 @@ import java.awt.Color;
 import java.io.IOException;
 import java.net.ProtocolException;
 
-import ctSim.Connection;
 import ctSim.controller.Config;
+import ctSim.controller.Controller;
 import ctSim.model.Command;
 import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.components.Actuators;
@@ -35,11 +35,6 @@ import ctSim.model.bots.components.Sensors;
  */
 public abstract class CtBot extends BasicBot {
 	
-	/**
-	 * Die Connection an der der Bot hängt
-	 */
-	Connection connection;
-
 	/** LED-Farben */
 	private static final Color[] ledColors = {
 		new Color(  0,  84, 255), // blau
@@ -62,20 +57,91 @@ public abstract class CtBot extends BasicBot {
 	protected static final double BOT_GROUND_CLEARANCE = 0.015d;
 	
 	/**
+	 * Vorverarbeitung der Kommandos 
+	 * z.B. Weiterleiten von Kommandos für andere Bots
+	 * Adressvergabe, etc.
+	 * @param cmd
+	 * @return True, Wenn das Kommando abgearbeitet wurde, sonst False
+	 * @throws IOException 
+	 */
+	protected boolean preProcessCommands(Command cmd) throws IOException{
+		// TODO: Ist das sinnvoll von einem Welcome die ID zu übernehmen????
+		if (cmd.has(Command.Code.ID)){	// Von einem Welcome nehmen wir sicherheitshalber erstmal die ID an.
+			lg.info("Nehme für Bot "+getDescription()+" erstmal die ID des Welcome-Paketes:"+cmd.getFrom());
+			setId(cmd.getFrom());
+		}
+		
+		if (cmd.has(Command.Code.ID)){
+			// Will der Bot seine ID selbst setzen?
+			if (cmd.getSubCode() == Command.SubCode.ID_SET){
+				lg.info("Bot "+getDescription()+" setzt seine ID selbst auf:"+cmd.getDataL());
+				setId((byte)cmd.getDataL());
+				return true;
+			}
+			
+			// Will der Bot eine ID aus dem Pool?
+			if (cmd.getSubCode() == Command.SubCode.ID_REQUEST){
+				lg.info("Bot ("+getDescription()+") fordert eine ID aus dem Pool an");
+
+				
+				byte newId= getController().generateBotId();
+				
+				Command answer = getConnection().getCmdOutStream().getCommand(Command.Code.ID);
+				answer.setSubCmdCode(Command.SubCode.ID_OFFER);
+				answer.setDataL(newId); // Die neue kommt in das Datenfeld
+				getConnection().getCmdOutStream().flush(); // Und raus damit
+				
+				lg.info("Schlage Bot die Adresse "+newId+" vor");
+				return true;
+			}
+		}
+
+		if (cmd.getFrom() != getId()){
+			lg.warn("Nachricht von einem unerwarteten Absender ("+cmd.getFrom()+") erhalten. Erwartet: "+getId());
+			return true;
+		}
+
+		if (cmd.getTo() != Command.SIM_ID) {
+			// Diese Nachricht ist nicht fuer den Sim, sondern fuer einen anderen Bot
+			// Also weiterleiten
+			Controller controller =	this.getController();
+			
+			if (controller != null) 
+				controller.deliverMessage(cmd);
+			else {
+				throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id="
+								+cmd.getTo()+
+								") gehen sollte. Habe aber keinen Controller!");
+			}
+			//	lg.warn(cmd.toString());
+			//	lg.warn("Nachricht empfangen, die an einen anderen Bot (Id="
+			//		+cmd.getTo()+
+			//		") gehen sollte. Weiterleitungen noch nicht implementiert!");
+			//throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id="
+			//		+cmd.getTo()+
+			//		") gehen sollte. Weiterleitungen noch nicht implementiert!");
+			return true;
+		}		
+		
+		return false;
+	}
+
+	
+	/**
 	 * Verarbeitet ein Kommando und leitet es an den angehängten Bot weiter
 	 * @param command das Kommando
 	 * @throws ProtocolException Wenn was nicht klappt
 	 */
 	public void receiveCommand(Command command) throws ProtocolException {
 		if (command.getTo() != this.getId())
-			throw new ProtocolException("Bot "+this.getId()+" weiß mit dem Command "+command.toCompactString()+" nix anzufangen");
+			throw new ProtocolException("Bot "+this.getId()+" hat ein Kommando "+command.toCompactString()+" empfangen, dass nicht für ihn ist");
 		
-		if (connection == null)
+		if (getConnection() == null)
 			throw new ProtocolException("Bot "+this.getId()+" hat gar keine Connection");
 		
 		//Wir werfen das Kommando direkt an den angehängten Bot
 		try{ 
-			connection.write(command);
+			getConnection().write(command);
 		} catch (IOException e) {
 			lg.warn("Es gab Probleme beim Erreichen des Bots");
 		}
@@ -124,5 +190,6 @@ public abstract class CtBot extends BasicBot {
 				new Actuators.Led(ledName, i, ledColors[i]));
 		}
 	}
+
 
 }

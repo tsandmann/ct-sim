@@ -242,6 +242,9 @@ public class Command {
 		/** Zum Hallo-Sagen (Handshake); siehe {@link Command}. */
 		WELCOME('W', SubCode.WELCOME_REAL, SubCode.WELCOME_SIM),
 
+		/** Der Bot fordert eine Adresse an */ 
+		ID('A', SubCode.ID_SET, SubCode.ID_REQUEST, SubCode.ID_OFFER),
+		
 		/**
 		 * Abschluss eines Blocks; Nur f&uuml;r simulierte Bots; siehe
 		 * {@link Command}
@@ -489,8 +492,25 @@ public class Command {
 		/**
 		 * Schickt ein ABL-Programm an den Bot
 		 */
-		REMOTE_CALL_ABL('I');
+		REMOTE_CALL_ABL('I'),
 
+		/**
+		 * Setzt die ID
+		 */
+		ID_SET('S'),
+		
+		/**
+		 * Offeriert eine ID
+		 */
+		ID_OFFER('O'),
+		
+		/**
+		 * Fordert die ID an
+		 */
+		ID_REQUEST('R');
+		
+		
+		
 		/** SubCode auf der Leitung */
 		private final byte onTheWire;
 

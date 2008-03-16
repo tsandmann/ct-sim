@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2008-03-16 Benjamin Benz [bbe@heise.de]: Automatische Adressvergabe für Bots
+
 2008-02-29 Benjamin Benz [bbe@heise.de]: Sim kann nun auch Nachrichten weiterleiten
 
 2008-03-11 Timo Sandmann [mail@timosandmann.de]: Logging in Datei per default aus (einstellbar in config/logging.conf), Debug-Ausgabe in Datei deaktiviert

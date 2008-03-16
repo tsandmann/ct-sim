@@ -38,6 +38,7 @@ import ctSim.TcpConnection;
 import ctSim.model.Command;
 import ctSim.model.ParcoursGenerator;
 import ctSim.model.World;
+import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.ctbot.CtBot;
@@ -392,10 +393,22 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
     /**
+     * Handler, falls ein Bot stirbt
+     * @param bot	Der sterbende Bot
+     */
+    public synchronized void onBotDisappeared(Bot bot) {
+    	if (bot != null){
+	    	lg.info("Bot "+bot.toString()+" ("+bot.getDescription()+") meldet sich beim " +
+	    			"Controller ab!");
+	    	bots.remove(bot);
+    	}
+    }
+    
+    /**
      * Handler, falls neuer Bot hinzugefuegt wurde
      * @param bot	Der neue Bot
      */
-    public synchronized void onBotAppeared(Bot bot) {
+    public synchronized void onBotAppeared(final Bot bot) {
     	if (bot instanceof SimulatedBot) {
     		if (sequencer == null) {
     			lg.info("Weise "+bot.toString()+" ab: Es gibt keine Welt, zu " +
@@ -419,6 +432,15 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     	
     	// Fuer den Kommunikationsproxy brauchen wir eine Liste aller Bots
     	bots.add(bot);
+    	
+    	// Und einen Dispose-Handler installieren, damit wir Bots auch wieder sauber beenden
+    	bot.addDisposeListener(new Runnable() {
+    			@SuppressWarnings("synthetic-access")
+    			public void run() {
+    				onBotDisappeared(bot);
+   				}
+    		});
+    	
     	bot.setController(this);
     }
 
@@ -546,5 +568,43 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		// Es fühlt sich wohl kein Bot aus der Liste zuständig ==> Fehler 
 		throw new ProtocolException("Nachricht an Empfänger "+command.getTo()+" nicht zustellbar. " +
 				"Kein Bot mit passender Id angemeldet");
+	}
+	
+	/**
+	 * Testet, ob bereits ein Bot diese Id hat
+	 * @param id zu testende Id
+	 * @return True, wenn noch kein Bot diese Id nutzt 
+	 */
+	private boolean isIdFree(byte id){
+		for (Bot b : bots) 
+			if (b instanceof BasicBot) 			
+				if (((BasicBot)b).getId() == id)
+					return false;
+		return true;
+	}
+	
+	/** Offset fuer die Adressvergabe, damit wir nicht jedesmal mit den schon vergebene2n Adressen beginnen */
+	private int poolOffset =0;
+	
+	/**
+	 * Liefert eine Id aus dem Adresspoll zurück
+	 * @return Die neue Id
+	 * @throws ProtocolException Wenn keine Adresse mehr frei
+	 */
+	public byte generateBotId() throws ProtocolException{
+		byte poolSize= (byte)64;
+		byte poolAdress= (byte) 128;
+		byte newId;
+		
+		for (byte i=0; i< poolSize; i++){
+			newId = (byte) (((i+ poolOffset) % poolSize) + poolAdress);
+			if (isIdFree(newId)){
+				poolOffset++;
+				return newId;
+			}				
+		}
+		
+		throw new ProtocolException("Keine Id im Pool mehr frei");
+		//return 0;
 	}
 }
