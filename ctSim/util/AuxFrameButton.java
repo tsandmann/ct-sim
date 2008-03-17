@@ -14,6 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 
+import ctSim.view.gui.RemoteCallViewer;
+
 /**
  * <p>
  * Eine Art {@link JToggleButton}, der ein extra Fenster zeigt/verbirgt.
@@ -48,7 +50,7 @@ public class AuxFrameButton extends JToggleButton {
 	 * die alles weitere enth&auml;lt
 	 */
 	public AuxFrameButton(String buttonLabel, String frameTitle,
-	JComponent frameContent) {
+	final JComponent frameContent) {
 		super(buttonLabel);
 
 		// Fenster erzeugen; konfigurieren spaeter
@@ -67,6 +69,13 @@ public class AuxFrameButton extends JToggleButton {
 			public void actionPerformed(
 			@SuppressWarnings("unused") ActionEvent e) {
 				auxFrame.setVisible(AuxFrameButton.this.isSelected());
+				if (frameContent instanceof RemoteCallViewer) {
+					/* RemoteCall-Liste holen, falls noch nicht geschehen */
+					RemoteCallViewer rcViewer = (RemoteCallViewer) frameContent;
+					if (!rcViewer.getListReceived()) {
+						rcViewer.requestRCallList();
+					}
+				}
 			}
 		});
 
@@ -83,7 +92,7 @@ public class AuxFrameButton extends JToggleButton {
 		// HIDE, damit sich das Fenster Position + Groesse merkt
 		auxFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		auxFrame.add(frameContent);
-		if (!frameContent.getClass().toString().contains("RemoteCallViewer")) {
+		if (!(frameContent instanceof RemoteCallViewer)) {
 			auxFrame.pack(); // auf die Groesse, die der Inhalt will
 		} else {
 			/* Remote-Call-Fenster groesser */

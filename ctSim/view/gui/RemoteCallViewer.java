@@ -501,6 +501,16 @@ public class RemoteCallViewer extends JPanel {
 	/** RemoteCall-Komponente */
 	private final RemoteCallCompnt rcCompnt;
 
+	/** Wurde schon eine Liste der RemoteCalls angefordert? */
+	private boolean listReceived = false;
+	
+	/**
+	 * @return True, falls schon eine RemoteCall-Liste angefordert wurde
+	 */
+	public boolean getListReceived() {
+		return listReceived;
+	}
+
 	/**
 	 * Baut die Tabelle
 	 * @param m Modell
@@ -519,11 +529,11 @@ public class RemoteCallViewer extends JPanel {
 
 	/**
 	 * Fordert beim Bot eine Liste aller RemoteCalls an
-	 * @param c RemoteCall-Komponente
 	 */
-	private void requestRCallList(RemoteCallCompnt c) {
+	public void requestRCallList() {
 		try {
-			c.listRemoteCalls();
+			rcCompnt.listRemoteCalls();
+			this.listReceived = true;
 		} catch (IOException e) {
 			lg.warn(e, "E/A-Problem aufgetreten, als die Anforderung der " +
 				"Remote-Call-Liste gesendet wurde; wer wei\u00DF, ob " +
@@ -538,8 +548,6 @@ public class RemoteCallViewer extends JPanel {
 	public RemoteCallViewer(final RemoteCallCompnt rcCompnt) {
 		this.rcCompnt = rcCompnt;
 		if (rcCompnt == null) return;
-
-		requestRCallList(rcCompnt);
 
 		final BehaviorModel availM = new BehaviorModel(2) {
 			private static final long serialVersionUID = 3932551442111274878L;
@@ -578,7 +586,7 @@ public class RemoteCallViewer extends JPanel {
 			@SuppressWarnings("unused") ActionEvent e) {
 				while (availM.getRowCount() > 0)
 					availM.removeRow(0);
-				requestRCallList(rcCompnt);
+				requestRCallList();
 			}
 		});
 		availHeading.add(refresh);
