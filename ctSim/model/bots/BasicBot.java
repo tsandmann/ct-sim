@@ -85,10 +85,17 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * Setzt die Id des Bots fuer die Adressierung der Commands 
 	 * @param id ID des Bots
+	 * @throws ProtocolException Wenn die Id bereits vergeben ist
 	 */
-	public void setId(byte id) {
+	public void setId(byte id) throws ProtocolException {
 		//this.id = id;
+		if (controller != null){
+			if (!controller.isIdFree(getId()))
+				throw new ProtocolException("Die Id dieses Bots existiert schon im Controller!");
+		}
 		getConnection().getCmdOutStream().setTo(id);
+		
+		
 	}
 	
 	/**
@@ -435,9 +442,14 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * Setzt den zustaendigen Controller
 	 * @param controller
+	 * @throws ProtocolException Wenn die Id dieses Bots im Controller schon belegt ist
 	 */
-	public void setController(Controller controller) {
+	public void setController(Controller controller) throws ProtocolException {
 		this.controller = controller;
+		if (controller != null){
+			if (!controller.isIdFree(getId()))
+				throw new ProtocolException("Die Id dieses Bots existiert schon im Controller!");
+		}
 	}
 	
 	/**

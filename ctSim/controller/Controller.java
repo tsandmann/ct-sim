@@ -122,4 +122,11 @@ public interface Controller {
 	 * @throws ProtocolException Wenn keine Adresse mehr frei
 	 */
 	public byte generateBotId() throws ProtocolException;
+	
+	/**
+	 * Testet, ob bereits ein Bot diese Id hat
+	 * @param id zu testende Id
+	 * @return True, wenn noch kein Bot diese Id nutzt 
+	 */
+	public boolean isIdFree(byte id);
 }

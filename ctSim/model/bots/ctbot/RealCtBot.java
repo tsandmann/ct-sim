@@ -83,8 +83,9 @@ public class RealCtBot extends CtBot {
 	/**
 	 * @param connection Connection zum Bot
 	 * @param newId Id für die Kommunikation 
+	 * @throws ProtocolException 
 	 */
-	public RealCtBot(Connection connection,byte newId) {
+	public RealCtBot(Connection connection,byte newId) throws ProtocolException {
 		super(connection.getShortName()+"-Bot");
 		
 		setId(newId);

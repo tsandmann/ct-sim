@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2008-03-17 Benjamin Benz [bbe@heise.de]: Sim nimmt keine Bots mehr an, deren Ids bereits vergeben sind
+
 2008-03-17 Benjamin Benz [bbe@heise.de]: Weiterleitung von Broadcasts eingebaut & ComConnections mit den anderen Gleichgestellt
 
 2008-03-16 Benjamin Benz [bbe@heise.de]: Automatische Adressvergabe für Bots

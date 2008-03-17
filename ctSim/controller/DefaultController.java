@@ -351,7 +351,11 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				lg.info("Testbot-Home konnte nicht geladen werden");
 			}
     	}
-        onBotAppeared(new CtBotSimTest());
+		try {
+			onBotAppeared(new CtBotSimTest());
+		} catch (ProtocolException e) {
+			lg.warn("Probleme beim erzeugen eines Testbots "+e);
+		}
     }
 
     /**
@@ -407,8 +411,9 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     /**
      * Handler, falls neuer Bot hinzugefuegt wurde
      * @param bot	Der neue Bot
+     * @throws ProtocolException 
      */
-    public synchronized void onBotAppeared(final Bot bot) {
+    public synchronized void onBotAppeared(final Bot bot) throws ProtocolException {
     	if (bot instanceof SimulatedBot) {
     		if (sequencer == null) {
     			lg.info("Weise "+bot.toString()+" ab: Es gibt keine Welt, zu " +
@@ -575,7 +580,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * @param id zu testende Id
 	 * @return True, wenn noch kein Bot diese Id nutzt 
 	 */
-	private boolean isIdFree(byte id){
+	public boolean isIdFree(byte id){
 		for (Bot b : bots) 
 			if (b instanceof BasicBot) 			
 				if (((BasicBot)b).getId() == id)

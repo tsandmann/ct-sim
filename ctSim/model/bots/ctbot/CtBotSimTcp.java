@@ -53,9 +53,14 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	/**
 	 * @param connection Verbindung
 	 * @param newId Id für die Kommunikation 
+	 * @throws ProtocolException 
 	 */
-	public CtBotSimTcp(final Connection connection, byte newId) {
+	public CtBotSimTcp(final Connection connection, byte newId) throws ProtocolException {
 		super("Sim-Bot");
+		
+		if (connection == null) 
+			throw new ProtocolException("Connection ist null");
+		
 		setConnection(connection);
 		lg.info("Id ist erstmal "+newId);
 		setId(newId);

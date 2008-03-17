@@ -1,5 +1,7 @@
 package ctSim.model.bots;
 
+import java.net.ProtocolException;
+
 import ctSim.controller.Controller;
 
 /**
@@ -52,6 +54,7 @@ public interface Bot {
 	/**
 	 * Setzt den Controller, der den Bot verwaltet
 	 * @param controller Der Controller
+	 * @throws ProtocolException 
 	 */
-	public void setController(Controller controller);
+	public void setController(Controller controller) throws ProtocolException;
 }

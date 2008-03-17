@@ -74,9 +74,14 @@ public abstract class CtBot extends BasicBot {
 		if (cmd.has(Command.Code.ID)){
 			// Will der Bot seine ID selbst setzen?
 			if (cmd.getSubCode() == Command.SubCode.ID_SET){
-				lg.info("Bot "+getDescription()+" setzt seine ID selbst auf:"+cmd.getDataL());
-				setId((byte)cmd.getDataL());
-				return true;
+				byte newId = (byte)cmd.getDataL();
+				if (getController().isIdFree(newId)){
+					lg.info("Bot "+getDescription()+" setzt seine ID selbst auf:"+newId);
+					setId(newId);
+					return true;
+				} else
+					throw new ProtocolException("Bot hat versucht eine schon belegte Id ("+newId+") zu setzen.");
+
 			}
 			
 			// Will der Bot eine ID aus dem Pool?
