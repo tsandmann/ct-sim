@@ -27,8 +27,10 @@ import java.util.List;
 import ctSim.Connection;
 import ctSim.controller.Controller;
 import ctSim.model.Command;
+import ctSim.model.ThreeDBot;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotComponent.ConnectionFlags;
+import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -88,7 +90,6 @@ public abstract class BasicBot implements Bot {
 	 * @throws ProtocolException Wenn die Id bereits vergeben ist
 	 */
 	public void setId(byte newId) throws ProtocolException {
-		//this.id = id;
 		if (controller != null){
 			if (!controller.isIdFree(getId())){
 				lg.warn("Die neue Id dieses Bots ("+newId+") existiert schon im Controller!");
@@ -97,8 +98,6 @@ public abstract class BasicBot implements Bot {
 		}
 		lg.info("Setze die Id von Bot " + toString() + " auf " + newId);
 		getConnection().getCmdOutStream().setTo(newId);
-		
-		
 	}
 	
 	/**
@@ -356,8 +355,12 @@ public abstract class BasicBot implements Bot {
 	 */
 	public void dispose() {
 		// keine Ausgabe fuer 3D-Bots, den zu jedem 3D-Bot gibt es auch einen Sim-Bot
-		if (!this.getClass().getName().contains("ThreeDBot")) {
-			lg.info(name + " verkr\u00FCmelt sich");
+		if (!(this instanceof ThreeDBot)) {
+			try {
+				lg.info(name + " verkr\u00FCmelt sich");
+			} catch (Exception e) {
+				// egal
+			}
 		}
 		for (Runnable r : disposeListeners)
 			r.run();
@@ -449,6 +452,8 @@ public abstract class BasicBot implements Bot {
 	 */
 	public void setController(Controller controller) throws ProtocolException {
 		this.controller = controller;
+		if (this instanceof CtBotSimTest)
+			return;	// Test-Bots unterstuetzen keine IDs!
 		if (controller != null){
 			if (!controller.isIdFree(getId()))
 				throw new ProtocolException("Die Id dieses Bots existiert schon im Controller!");

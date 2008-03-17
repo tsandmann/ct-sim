@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.SwingUtilities;
 
 import ctSim.ComConnection;
 import ctSim.ConfigManager;
@@ -351,11 +352,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				lg.info("Testbot-Home konnte nicht geladen werden");
 			}
     	}
-		try {
-			onBotAppeared(new CtBotSimTest());
-		} catch (ProtocolException e) {
-			lg.warn("Probleme beim erzeugen eines Testbots "+e);
-		}
+		onBotAppeared(new CtBotSimTest());
     }
 
     /**
@@ -409,45 +406,58 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
     
     /**
-     * Handler, falls neuer Bot hinzugefuegt wurde
-     * @param bot	Der neue Bot
-     * @throws ProtocolException 
-     */
-    public synchronized void onBotAppeared(final Bot bot) throws ProtocolException {
-    	if (bot instanceof SimulatedBot) {
-    		if (sequencer == null) {
-    			lg.info("Weise "+bot.toString()+" ab: Es gibt keine Welt, zu " +
-    					"der man ihn hinzuf\u00FCgen k\u00F6nnte");
-    			bot.dispose(); // Bot abweisen
-    			return;
-    		}
-    		if (judge.isAddingBotsAllowed()) {
-    			Bot b = world.addBot((SimulatedBot)bot, this);
-    			if (b == null) {
-    				bot.dispose();	// Bot abweisen, weil kein Platz mehr
-    				return;
-    			}
-    			view.onBotAdded(b);
-    		} else {
-    			bot.dispose(); // Bot abweisen
-    		}
-    	}
-    	else
-    		view.onBotAdded(bot);
-    	
-    	// Fuer den Kommunikationsproxy brauchen wir eine Liste aller Bots
-    	bots.add(bot);
-    	
-    	// Und einen Dispose-Handler installieren, damit wir Bots auch wieder sauber beenden
-    	bot.addDisposeListener(new Runnable() {
-    			@SuppressWarnings("synthetic-access")
-    			public void run() {
-    				onBotDisappeared(bot);
-   				}
-    		});
-    	
-    	bot.setController(this);
-    }
+	 * Handler, falls neuer Bot hinzugefuegt wurde
+	 * @param bot	Der neue Bot
+	 */
+	public synchronized void onBotAppeared(final Bot bot) {
+		if (bot instanceof SimulatedBot) {
+			if (sequencer == null) {
+				lg.info("Weise " + bot.toString()
+						+ " ab: Es gibt keine Welt, zu "
+						+ "der man ihn hinzuf\u00FCgen k\u00F6nnte");
+				bot.dispose(); // Bot abweisen
+				return;
+			}
+			if (judge.isAddingBotsAllowed()) {
+				Bot b = world.addBot((SimulatedBot) bot, this);
+				if (b == null) {
+					bot.dispose(); // Bot abweisen, weil kein Platz mehr
+					return;
+				}
+				view.onBotAdded(b);
+			} else {
+				bot.dispose(); // Bot abweisen
+			}
+		} else
+			view.onBotAdded(bot);
+
+		try {
+			bot.setController(this);
+		} catch (ProtocolException e) {
+			lg.severe("Fehler: Bot " + bot.toString()
+					+ " wurde vom Controller abgewiesen! Bot-ID falsch?");
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() { // invokeLater, weil sonst der
+					// dispose-Listener der GUI noch nicht eingetragen ist!
+					bot.dispose(); // Bot ist unerwuenscht => weg
+				}
+			});
+			return; // keine Exception, wir weisen den Bot einfach ab und
+			// alles andere laeuft normal weiter
+		}
+
+		// Fuer den Kommunikationsproxy brauchen wir eine Liste aller Bots
+		bots.add(bot);
+
+		// Und einen Dispose-Handler installieren, damit wir Bots auch wieder
+		// sauber beenden
+		bot.addDisposeListener(new Runnable() {
+			@SuppressWarnings("synthetic-access")
+			public void run() {
+				onBotDisappeared(bot);
+			}
+		});
+	}
 
     /**
      * Gibt die Anzahl der zurzeit geladenen Bots zurueck
