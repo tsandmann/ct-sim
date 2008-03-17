@@ -67,7 +67,7 @@ public abstract class CtBot extends BasicBot {
 	protected boolean preProcessCommands(Command cmd) throws IOException{
 		// TODO: Ist das sinnvoll von einem Welcome die ID zu übernehmen????
 		if (cmd.has(Command.Code.ID)){	// Von einem Welcome nehmen wir sicherheitshalber erstmal die ID an.
-			lg.info("Nehme für Bot "+getDescription()+" erstmal die ID des Welcome-Paketes:"+cmd.getFrom());
+			lg.info("Nehme für Bot "+toString()+" erstmal die ID des Welcome-Paketes:"+cmd.getFrom());
 			setId(cmd.getFrom());
 		}
 		
@@ -76,7 +76,7 @@ public abstract class CtBot extends BasicBot {
 			if (cmd.getSubCode() == Command.SubCode.ID_SET){
 				byte newId = (byte)cmd.getDataL();
 				if (getController().isIdFree(newId)){
-					lg.info("Bot "+getDescription()+" setzt seine ID selbst auf:"+newId);
+					lg.info("Bot "+toString()+" setzt seine ID selbst auf:"+newId);
 					setId(newId);
 					return true;
 				} else
@@ -86,7 +86,7 @@ public abstract class CtBot extends BasicBot {
 			
 			// Will der Bot eine ID aus dem Pool?
 			if (cmd.getSubCode() == Command.SubCode.ID_REQUEST){
-				lg.info("Bot ("+getDescription()+") fordert eine ID aus dem Pool an");
+				lg.info("Bot ("+toString()+") fordert eine ID aus dem Pool an");
 
 				
 				byte newId= getController().generateBotId();
