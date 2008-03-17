@@ -230,6 +230,9 @@ public class Command {
 
 	/** Id des Sims */
 	public static final byte SIM_ID = (byte)0xFE;
+	
+	/** Broadcast Adresse */
+	public static final byte BROADCAST_ID = (byte)0xFF;
 
 	///////////////////////////////////////////////////////////////////////////
 	// Enum Command-Code

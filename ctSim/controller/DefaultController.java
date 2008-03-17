@@ -558,7 +558,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		for (Bot b : bots) {
 			// Wir betrachten hier nur CtBot
 			if (b instanceof CtBot) {			
-				if (((CtBot)b).getId() == command.getTo()) {
+				if ((((CtBot)b).getId() == command.getTo()) || (command.getTo()== Command.BROADCAST_ID)  ) {
 					((CtBot)b).receiveCommand(command);
 					return;
 				}
