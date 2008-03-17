@@ -21,18 +21,12 @@ package ctSim;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.ProtocolException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 import ctSim.controller.BotReceiver;
 import ctSim.controller.Config;
-import ctSim.model.Command;
-import ctSim.model.bots.Bot;
-import ctSim.model.bots.ctbot.CtBot;
-import ctSim.model.bots.ctbot.CtBotSimTcp;
-import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.SaferThread;
 
 /**
@@ -163,62 +157,5 @@ public class TcpConnection extends Connection {
 				die();
 			}
 		}.start();
-	}
-
-	//LODO Fuer connectTo() passt diese Methode, fuer startListening() passt sie nicht ganz: Wenn ein Bot nie einen Handshake zustande kriegt und ein zweiter Bot derweil verbinden will, kommt der zweite nicht zum Zug. Loesung: Timeout oder doHandshake auf neuem Thread laufen lassen
-	/**
-	 * Blockiert, bis Handshake erfolgreich oder IOException 
-	 * @param receiver Bot-Receiver
-	 */
-	private void doHandshake(BotReceiver receiver) {
-		while (true) {
-			try {
-				lg.fine("Sende Willkommen");
-				write(new Command(Command.Code.WELCOME));
-				Command cmd = new Command(this, true);
-				if (cmd.has(Command.Code.WELCOME)) {
-					receiver.onBotAppeared(createBot(cmd));
-                	return; // Erfolg
-                } else {
-                    lg.fine("Kommando, aber kein Willkommen von Verbindung " +
-                    		"gelesen: Bot l\u00E4uft schon oder ist " +
-                    		"veraltet, schicke Willkommen nochmals; " +
-                    		"ignoriertes Kommando folgt" + cmd);
-                    // Handshake nochmal versuchen
-                    continue;
-                }
-			} catch (ProtocolException e) {
-				lg.severe(e, "Ung\uu00FCltiges Kommando beim Handshake; " +
-						"ignoriere");
-				continue;
-			} catch (IOException e) {
-				lg.severe(e, "E/A-Problem beim Handshake; Abbruch");
-				return;
-			}
-		}
-	}
-
-	/**
-	 * Erzeugt einen Bot
-	 * @param c Kommando
-	 * @return Bot
-	 * @throws ProtocolException
-	 */
-	private Bot createBot(Command c) throws ProtocolException {
-		CtBot bot;
-		switch (c.getSubCode()) {
-    		case WELCOME_SIM:
-    			lg.fine("TCP-Verbindung von simuliertem Bot eingegangen");
-    			bot = new CtBotSimTcp(this,c.getFrom());  			
-    			break;
-    		case WELCOME_REAL:
-    			lg.fine("TCP-Verbindung von realem Bot eingegangen");
-    			bot= new RealCtBot(this,c.getFrom());
-    			break;
-    		default:
-    			throw new ProtocolException(c.toString());
-    	}
-		
-		return bot;
 	}
 }
