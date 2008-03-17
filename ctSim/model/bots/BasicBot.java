@@ -95,6 +95,7 @@ public abstract class BasicBot implements Bot {
 				throw new ProtocolException("Die neue Id dieses Bots ("+newId+") existiert schon im Controller!");
 			}
 		}
+		lg.info("Setze die Id von Bot"+ getDescription() auf "+newId);
 		getConnection().getCmdOutStream().setTo(newId);
 		
 		
