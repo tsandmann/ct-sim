@@ -88,11 +88,10 @@ public class RealCtBot extends CtBot {
 	public RealCtBot(Connection connection,byte newId) throws ProtocolException {
 		super(connection.getShortName()+"-Bot");
 		
-		setId(newId);
-		
-		
 		// connection speichern
 		setConnection(connection);
+		
+		setId(newId);
 		
 		connectionName = connection.getName();
 		this.ablResult = null;

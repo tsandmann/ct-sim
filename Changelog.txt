@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2008-03-17 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Null-Pointer-Exception bei USB-Bots
+
 2008-03-17 Timo Sandmann [mail@timosandmann.de]: Syntaxfehler in BasicBot.java korrigiert, Debug-Ausgaben einheitlich auf Bot-Kurzname inkl. Nummer umgestellt
 
 2008-03-17 Benjamin Benz [bbe@heise.de]: Sim nimmt keine Bots mehr an, deren Ids bereits vergeben sind
