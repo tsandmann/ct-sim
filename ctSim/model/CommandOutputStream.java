@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
+import ctSim.util.BotID;
 import ctSim.util.Misc;
 
 /**
@@ -19,7 +20,7 @@ public class CommandOutputStream {
 	private byte seq = 0;
 
 	/** An wen gehen all die schoenen Pakete? */
-	private byte to = 0;
+	private BotID to = new BotID();
 	
 	/**
 	 * @param underlyingStream
@@ -77,7 +78,7 @@ public class CommandOutputStream {
 	 * Setzt den Empfaenger all der schoenen Kommandos
 	 * @param to
 	 */
-	public void setTo(byte to) {
+	public void setTo(BotID to) {
 		this.to = to;
 	}
 
@@ -85,7 +86,7 @@ public class CommandOutputStream {
 	 * Liefert den Empfaenger all der schoenen Kommandos
 	 * @return Empfaenger-Id
 	 */
-	public byte getTo() {
-		return to;
+	public BotID getTo() {
+		return new BotID(to);
 	}
 }

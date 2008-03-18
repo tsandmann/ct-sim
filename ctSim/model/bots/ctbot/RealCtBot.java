@@ -16,6 +16,7 @@ import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
 import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
+import ctSim.util.BotID;
 import ctSim.util.Runnable1;
 import ctSim.util.SaferThread;
 import ctSim.view.gui.AblViewer;
@@ -85,7 +86,7 @@ public class RealCtBot extends CtBot {
 	 * @param newId Id für die Kommunikation 
 	 * @throws ProtocolException 
 	 */
-	public RealCtBot(Connection connection,byte newId) throws ProtocolException {
+	public RealCtBot(Connection connection, BotID newId) throws ProtocolException {
 		super(connection.getShortName()+"-Bot");
 		
 		// connection speichern

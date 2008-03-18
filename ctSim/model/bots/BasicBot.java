@@ -31,6 +31,7 @@ import ctSim.model.ThreeDBot;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotComponent.ConnectionFlags;
 import ctSim.model.bots.ctbot.CtBotSimTest;
+import ctSim.util.BotID;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -80,7 +81,11 @@ public abstract class BasicBot implements Bot {
 	 * Liefert die Id eines Bots fuer die Adressierung der Commands zurück
 	 * @return Id des Bots
 	 */
-	public byte getId() {
+	public BotID getId() {
+		if (getConnection() == null) {
+			/* bei Testbots gibt's keine Connection / ID */
+			return new BotID(Command.getBroadcastId());
+		}
 		return getConnection().getCmdOutStream().getTo();
 	}
 
@@ -89,11 +94,15 @@ public abstract class BasicBot implements Bot {
 	 * @param newId ID des Bots
 	 * @throws ProtocolException Wenn die Id bereits vergeben ist
 	 */
-	public void setId(byte newId) throws ProtocolException {
-		if (controller != null){
-			if (!controller.isIdFree(getId())){
-				lg.warn("Die neue Id dieses Bots ("+newId+") existiert schon im Controller!");
-				throw new ProtocolException("Die neue Id dieses Bots ("+newId+") existiert schon im Controller!");
+	public void setId(BotID newId) throws ProtocolException {
+		if (newId.equals(this.getId()))
+			return; // ID ist schon gesetzt
+		if (controller != null) {
+			if (!controller.isIdFree(newId)) {
+				lg.warn("Die neue Id dieses Bots (" + newId
+						+ ") existiert schon im Controller!");
+				throw new ProtocolException("Die neue Id dieses Bots (" + newId
+						+ ") existiert schon im Controller!");
 			}
 		}
 		lg.info("Setze die Id von Bot " + toString() + " auf " + newId);

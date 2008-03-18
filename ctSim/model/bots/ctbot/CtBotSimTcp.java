@@ -37,6 +37,7 @@ import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
 import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
+import ctSim.util.BotID;
 import ctSim.util.Runnable1;
 import ctSim.view.gui.AblViewer;
 
@@ -55,7 +56,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	 * @param newId Id für die Kommunikation 
 	 * @throws ProtocolException 
 	 */
-	public CtBotSimTcp(final Connection connection, byte newId) throws ProtocolException {
+	public CtBotSimTcp(final Connection connection, BotID newId) throws ProtocolException {
 		super("Sim-Bot");
 		
 		if (connection == null) 

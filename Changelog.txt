@@ -1,5 +1,9 @@
 Changelog fuer c't-Sim
 ======================
+2008-03-18 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Adressvergabe und isIdFree(),
+	Klasse BotID gebaut und als Datentyp fuer alle Bot-IDs verwendet. 
+	Ausgaben der Bot-Adressen sind nun intuitiv verstaendliche, positive Zahlen (wie unsigned byte)
+
 2008-03-17 Timo Sandmann [mail@timosandmann.de]: RemoteCall-Liste wird nun erst geholt, wenn erstmalig auf den RemoteCall-Fenster-Knopf geklickt wird
 
 2008-03-17 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Connection-Problem aller Bots

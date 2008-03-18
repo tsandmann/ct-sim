@@ -45,6 +45,7 @@ import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.rules.Judge;
+import ctSim.util.BotID;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 import ctSim.view.View;
@@ -573,7 +574,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		for (Bot b : bots) {
 			// Wir betrachten hier nur CtBot
 			if (b instanceof CtBot) {			
-				if ((((CtBot)b).getId() == command.getTo()) || (command.getTo()== Command.BROADCAST_ID)  ) {
+				if ((((CtBot)b).getId().equals(command.getTo())) || (command.getTo().equals(Command.getBroadcastId()))) {
 					((CtBot)b).receiveCommand(command);
 					return;
 				}
@@ -590,10 +591,13 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * @param id zu testende Id
 	 * @return True, wenn noch kein Bot diese Id nutzt 
 	 */
-	public boolean isIdFree(byte id){
+	public boolean isIdFree(BotID id){
+		if (id.equals(Command.getBroadcastId()))
+			// Broadcast ist immer frei
+			return true;
 		for (Bot b : bots) 
 			if (b instanceof BasicBot) 			
-				if (((BasicBot)b).getId() == id)
+				if (((BasicBot)b).getId().equals(id))
 					return false;
 		return true;
 	}
@@ -606,13 +610,13 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * @return Die neue Id
 	 * @throws ProtocolException Wenn keine Adresse mehr frei
 	 */
-	public byte generateBotId() throws ProtocolException{
+	public BotID generateBotId() throws ProtocolException{
 		byte poolSize= (byte)64;
 		byte poolAdress= (byte) 128;
-		byte newId;
+		BotID newId = new BotID();
 		
 		for (byte i=0; i< poolSize; i++){
-			newId = (byte) (((i+ poolOffset) % poolSize) + poolAdress);
+			newId.set(((i+ poolOffset) % poolSize) + poolAdress);
 			if (isIdFree(newId)){
 				poolOffset++;
 				return newId;
@@ -620,6 +624,5 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		}
 		
 		throw new ProtocolException("Keine Id im Pool mehr frei");
-		//return 0;
 	}
 }

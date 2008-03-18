@@ -5,6 +5,7 @@ import java.net.ProtocolException;
 
 import ctSim.model.Command;
 import ctSim.model.rules.Judge;
+import ctSim.util.BotID;
 import ctSim.view.View;
 
 /**
@@ -121,12 +122,12 @@ public interface Controller {
 	 * @return Die neue Id
 	 * @throws ProtocolException Wenn keine Adresse mehr frei
 	 */
-	public byte generateBotId() throws ProtocolException;
+	public BotID generateBotId() throws ProtocolException;
 	
 	/**
 	 * Testet, ob bereits ein Bot diese Id hat
 	 * @param id zu testende Id
 	 * @return True, wenn noch kein Bot diese Id nutzt 
 	 */
-	public boolean isIdFree(byte id);
+	public boolean isIdFree(BotID id);
 }

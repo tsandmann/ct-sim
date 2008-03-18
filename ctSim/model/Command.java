@@ -42,6 +42,7 @@ import ctSim.model.bots.components.Sensors.Trans;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.bots.ctbot.RealCtBot;
+import ctSim.util.BotID;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -229,10 +230,10 @@ public class Command {
 	public static final int DIR_ANSWER = 1;
 
 	/** Id des Sims */
-	public static final byte SIM_ID = (byte)0xFE;
+	private static final BotID SIM_ID = new BotID(0xFE);
 	
 	/** Broadcast Adresse */
-	public static final byte BROADCAST_ID = (byte)0xFF;
+	private static final BotID BROADCAST_ID = new BotID(0xFF);
 
 	///////////////////////////////////////////////////////////////////////////
 	// Enum Command-Code
@@ -561,10 +562,10 @@ public class Command {
 	private byte seq = 0;
 
 	/** Absender des Paketes */
-	private byte from = SIM_ID;
+	private BotID from = new BotID(SIM_ID);
 
 	/** Empfaenger des Paketes */
-	private byte to = 0;
+	private BotID to = new BotID();
 
 	/** Markiert das Ende des Kommandos */
 	private final byte crc;
@@ -678,8 +679,8 @@ public class Command {
 		// alte version seq   = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) );	i++;
 				
 		
-		from = b[i++];	// neue Version mit Adressen
-		to = b[i++]; // neue Version mit Adressen		
+		from.set(b[i++]);	// neue Version mit Adressen
+		to.set(b[i++]); // neue Version mit Adressen		
 		
 		// und noch die Pruefsumme
 		crc = b[i];
@@ -741,8 +742,8 @@ public class Command {
 	//	data[i++] = (byte)(seq >> 8); // alte Version mit 16-Bit seq
 		
 		// neue Version mit Sender-Ids
-		data[i++] = (byte)from;
-		data[i++] = (byte)to;
+		data[i++] = from.byteValue();
+		data[i++] = to.byteValue();
 		
 		data[i++] = CRCCODE;
 
@@ -928,15 +929,15 @@ public class Command {
 	 * Liest den Absender des Paketes aus
 	 * @return Absender-Id
 	 */
-	public byte getFrom() {
-		return from;
+	public BotID getFrom() {
+		return new BotID(from);
 	}
 
 	/**
 	 * Setzt den Absender
 	 * @param from Absender-ID
 	 */
-	public void setFrom(byte from) {
+	public void setFrom(BotID from) {
 		this.from = from;
 	}
 
@@ -944,15 +945,29 @@ public class Command {
 	 * Liest die Empfaenger-ID des Paketes aus
 	 * @return Empfaenger-ID
 	 */
-	public byte getTo() {
-		return to;
+	public BotID getTo() {
+		return new BotID(to);
 	}
 
 	/** 
 	 * Setzt die Empfaenger-ID
 	 * @param to Empfaenger-ID
 	 */
-	public void setTo(byte to) {
+	public void setTo(BotID to) {
 		this.to = to;
+	}
+	
+	/**
+	 * @return Bot-ID des Sims
+	 */
+	public static BotID getSimId() {
+		return new BotID(SIM_ID);
+	}
+	
+	/**
+	 * @return Bot-ID fuer Broadcast
+	 */
+	public static BotID getBroadcastId() {
+		return new BotID(BROADCAST_ID);
 	}
 }

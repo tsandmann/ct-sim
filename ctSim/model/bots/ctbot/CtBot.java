@@ -29,6 +29,7 @@ import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
+import ctSim.util.BotID;
 
 /**
  * Abstrakte Oberklasse fuer alle c't-Bots
@@ -60,74 +61,87 @@ public abstract class CtBot extends BasicBot {
 	 * Vorverarbeitung der Kommandos 
 	 * z.B. Weiterleiten von Kommandos für andere Bots
 	 * Adressvergabe, etc.
-	 * @param cmd
+	 * @param cmd das Kommando
 	 * @return True, Wenn das Kommando abgearbeitet wurde, sonst False
-	 * @throws IOException 
+	 * @throws IOException falls Output-Stream.flush() fehlschlaegt
+	 * @throws ProtocolException falls kein Controller vorhanden zum Weiterleiten
 	 */
-	protected boolean preProcessCommands(Command cmd) throws IOException{
-		// TODO: Ist das sinnvoll von einem Welcome die ID zu übernehmen????
-		if (cmd.has(Command.Code.ID)){	// Von einem Welcome nehmen wir sicherheitshalber erstmal die ID an.
-			lg.info("Nehme für Bot "+toString()+" erstmal die ID des Welcome-Paketes:"+cmd.getFrom());
-			setId(cmd.getFrom());
-		}
-		
-		if (cmd.has(Command.Code.ID)){
-			// Will der Bot seine ID selbst setzen?
-			if (cmd.getSubCode() == Command.SubCode.ID_SET){
-				byte newId = (byte)cmd.getDataL();
-				if (getController().isIdFree(newId)){
-					lg.info("Bot "+toString()+" setzt seine ID selbst auf:"+newId);
-					setId(newId);
-					return true;
-				} else
-					throw new ProtocolException("Bot hat versucht eine schon belegte Id ("+newId+") zu setzen.");
-
+	protected boolean preProcessCommands(Command cmd) throws IOException,
+			ProtocolException {
+		BotID id = cmd.getFrom();
+		if (cmd.has(Command.Code.ID)) { // Von einem Welcome nehmen wir
+			// sicherheitshalber erstmal die ID an.
+			lg.info("Nehme für Bot " + toString()
+					+ " erstmal die ID des Welcome-Paketes:"
+					+ id);
+			try {
+				setId(cmd.getFrom());
+			} catch (ProtocolException e) {
+				lg.warn("ID " + id
+						+ " konnte nicht gesetzt werden");
 			}
-			
-			// Will der Bot eine ID aus dem Pool?
-			if (cmd.getSubCode() == Command.SubCode.ID_REQUEST){
-				lg.info("Bot ("+toString()+") fordert eine ID aus dem Pool an");
+		}
 
-				
-				byte newId= getController().generateBotId();
-				
-				Command answer = getConnection().getCmdOutStream().getCommand(Command.Code.ID);
+		if (cmd.has(Command.Code.ID)) {
+			// Will der Bot seine ID selbst setzen?
+			if (cmd.getSubCode() == Command.SubCode.ID_SET) {
+				BotID newId = new BotID(cmd.getDataL());
+				lg.info("Bot " + toString() + " setzt seine ID selbst auf:"
+						+ id);
+				try {
+					setId(newId);
+				} catch (ProtocolException e) {
+					lg.warn("ID " + newId
+							+ " konnte nicht gesetzt werden");
+				}
+				return true;
+			}
+
+			// Will der Bot eine ID aus dem Pool?
+			if (cmd.getSubCode() == Command.SubCode.ID_REQUEST) {
+				lg.info("Bot (" + toString()
+						+ ") fordert eine ID aus dem Pool an");
+
+				BotID newId = getController().generateBotId();
+
+				Command answer = getConnection().getCmdOutStream().getCommand(
+						Command.Code.ID);
 				answer.setSubCmdCode(Command.SubCode.ID_OFFER);
-				answer.setDataL(newId); // Die neue kommt in das Datenfeld
+				answer.setDataL(newId.intValue()); // Die neue kommt in das Datenfeld
 				getConnection().getCmdOutStream().flush(); // Und raus damit
-				
-				lg.info("Schlage Bot die Adresse "+newId+" vor");
+
+				lg.info("Schlage Bot die Adresse " + newId + " vor");
 				return true;
 			}
 		}
 
-		if (cmd.getFrom() != getId()){
-			lg.warn("Nachricht von einem unerwarteten Absender ("+cmd.getFrom()+") erhalten. Erwartet: "+getId());
+		if (!cmd.getFrom().equals(getId())) {
+			lg.warn("Nachricht von einem unerwarteten Absender ("
+					+ cmd.getFrom() + ") erhalten. Erwartet: "
+					+ getId());
 			return true;
 		}
 
-		if (cmd.getTo() != Command.SIM_ID) {
-			// Diese Nachricht ist nicht fuer den Sim, sondern fuer einen anderen Bot
+		if (!cmd.getTo().equals(Command.getSimId())) {
+			lg.info("Nachricht ist fuer " + cmd.getTo());
+			// Diese Nachricht ist nicht fuer den Sim, sondern fuer einen
+			// anderen Bot
 			// Also weiterleiten
-			Controller controller =	this.getController();
-			
-			if (controller != null) 
+			Controller controller = this.getController();
+
+			if (controller != null)
 				controller.deliverMessage(cmd);
+			else if (cmd.getFrom().equals(Command.getBroadcastId()))
+				// ungueltiger Absender => Paket verwerfen
+				return true;
 			else {
-				throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id="
-								+cmd.getTo()+
-								") gehen sollte. Habe aber keinen Controller!");
+				throw new ProtocolException(
+						"Nachricht empfangen, die an einen anderen Bot (Id="
+								+ cmd.getTo()
+								+ ") gehen sollte. Habe aber keinen Controller!");
 			}
-			//	lg.warn(cmd.toString());
-			//	lg.warn("Nachricht empfangen, die an einen anderen Bot (Id="
-			//		+cmd.getTo()+
-			//		") gehen sollte. Weiterleitungen noch nicht implementiert!");
-			//throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id="
-			//		+cmd.getTo()+
-			//		") gehen sollte. Weiterleitungen noch nicht implementiert!");
 			return true;
-		}		
-		
+		}
 		return false;
 	}
 
@@ -138,11 +152,11 @@ public abstract class CtBot extends BasicBot {
 	 * @throws ProtocolException Wenn was nicht klappt
 	 */
 	public void receiveCommand(Command command) throws ProtocolException {
-		if (command.getTo() != this.getId())
-			throw new ProtocolException("Bot "+this.getId()+" hat ein Kommando "+command.toCompactString()+" empfangen, dass nicht für ihn ist");
+		if (!command.getTo().equals(this.getId()))
+			throw new ProtocolException("Bot "+ this.getId() +" hat ein Kommando "+command.toCompactString()+" empfangen, dass nicht für ihn ist");
 		
 		if (getConnection() == null)
-			throw new ProtocolException("Bot "+this.getId()+" hat gar keine Connection");
+			throw new ProtocolException("Bot "+ this.getId() +" hat gar keine Connection");
 		
 		//Wir werfen das Kommando direkt an den angehängten Bot
 		try{ 
