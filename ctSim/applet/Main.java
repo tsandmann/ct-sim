@@ -3,6 +3,7 @@ package ctSim.applet;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -22,6 +23,8 @@ import ctSim.Init;
 import ctSim.TcpConnection;
 import ctSim.controller.BotReceiver;
 import ctSim.controller.Config;
+import ctSim.controller.Controller;
+import ctSim.controller.DefaultController;
 import ctSim.model.bots.Bot;
 import ctSim.util.FmtLogger;
 import ctSim.util.IconProvider;
@@ -40,7 +43,7 @@ public class Main extends JApplet implements BotReceiver {
 	 * man es lokal im Browser aufgerufen hat (file:///home/dings/...), dann
 	 * wird ersatzweise diese Adresse genommen, um testen zu k&ouml;nnen.
 	 */
-	private static final String fallbackAddress = "10.10.22.58";
+	private static final String fallbackAddress = "192.168.1.24";
 
 	/** Logger */
 	final Logger mainLogger = Logger.getAnonymousLogger();
@@ -50,6 +53,9 @@ public class Main extends JApplet implements BotReceiver {
 
 	/** Bot-Referenz */
 	private Bot bot = null;
+
+	/** Controller-Referenz */
+	private Controller controller = null;
 
 	/**
 	 * Initialiserung des Applets
@@ -67,6 +73,9 @@ public class Main extends JApplet implements BotReceiver {
 		JPanel p = new JPanel();
 		p.add(status);
 		getContentPane().add(p);
+		
+		// Controller wird fuer Bot-ID-Vergabe benoetigt!
+		controller = new DefaultController();
 	}
 
 	/**
@@ -180,6 +189,13 @@ public class Main extends JApplet implements BotReceiver {
 			}
 		});
 		bot = b;
+		/* Der Bot braucht nen Controller! */
+		try {
+			bot.setController(controller);
+		} catch (ProtocolException e) {
+			// kann eigentlich nicht passieren...
+			destroy();
+		}
 	}
 
 	/**
