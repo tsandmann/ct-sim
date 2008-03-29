@@ -259,15 +259,21 @@ public class Command {
 	}
 	
 	/**
-	 * hmm
+	 * Klasse fuer Kommandos mit beliebigen (Sub-)Codes.
+	 * Wird fuer Bot-2-Bot-Kommunikation benutzt, der Sim
+	 * kann somit auch Kommandos weiterleiten, die er selbst
+	 * gar nicht kennt. 
+	 * Erstellt werden koennen aber weiterhin nur Kommandos,
+	 * die fuer Bot-2-Sim gueltig sind (siehe Klasse Command)
 	 * @author Timo Sandmmann (mail@timosandmann.de)
 	 */
 	public static class Bot2BotCode implements BotCodes {
-		/**  */
+		/** /** Code auf der Leitung */
 		private byte onTheWire;
 		
 		/**
-		 * @param code
+		 * @param code Code des Kommandos als byte 
+		 * (wird nicht weiter geprueft)
 		 */
 		public Bot2BotCode(byte code) {
 			onTheWire = code;
@@ -275,11 +281,9 @@ public class Command {
 		
 		/**
 		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
-		 * SubCodes sind mit dem Code-Enum verkoppelt, da vom Code abh&auml;ngt,
-		 * ob z.B. ein &quot;R&quot; auf dem Draht f&uuml;r den SubCode
-		 * WELCOME_REAL oder f&uuml;r RIGHT steht.
-		 * @param b Int
-		 * @return SubCude
+		 * Erzeugt immer SubCode.NORM
+		 * @param b Dummy
+		 * @return SubCode
 		 * @throws ProtocolException 
 		 */
 		public SubCode getSubCode(int b) throws ProtocolException {
