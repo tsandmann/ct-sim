@@ -147,35 +147,43 @@ public abstract class Connection {
 	 */
 	public abstract String getName();
 	
-	//LODO Fuer connectTo() passt diese Methode, fuer startListening() passt sie nicht ganz: Wenn ein Bot nie einen Handshake zustande kriegt und ein zweiter Bot derweil verbinden will, kommt der zweite nicht zum Zug. Loesung: Timeout oder doHandshake auf neuem Thread laufen lassen
 	/**
-	 * Blockiert, bis Handshake erfolgreich oder IOException 
+	 * Blockiert, bis Handshake erfolgreich oder IOException
+	 * Abbruch nach 100 Versuchen 
 	 * @param receiver Bot-Receiver
 	 */
 	protected void doHandshake(BotReceiver receiver) {
-		while (true) {
+		for (int i=0; i<100; i++) {
+			lg.fine("Sende Willkommen");
 			try {
-				lg.fine("Sende Willkommen");
 				write(new Command(Command.Code.WELCOME));
-				Command cmd = new Command(this, true);
-				if (cmd.has(Command.Code.WELCOME)) {
-					receiver.onBotAppeared(createBot(cmd));
-                	return; // Erfolg
-                } else {
-                    lg.fine("Kommando, aber kein Willkommen von Verbindung " +
-                    		"gelesen: Bot l\u00E4uft schon oder ist " +
-                    		"veraltet, schicke Willkommen nochmals; " +
-                    		"ignoriertes Kommando folgt" + cmd);
-                    // Handshake nochmal versuchen
-                    continue;
-                }
-			} catch (ProtocolException e) {
-				lg.severe(e, "Ung\uu00FCltiges Kommando beim Handshake; " +
-						"ignoriere");
-				continue;
 			} catch (IOException e) {
 				lg.severe(e, "E/A-Problem beim Handshake; Abbruch");
 				return;
+			}
+			/* Warten auf Antwort */
+			for (int j=0; j<20; j++) {
+				try {
+					Command cmd = new Command(this, true);
+					if (cmd.has(Command.Code.WELCOME)) {
+						receiver.onBotAppeared(createBot(cmd));
+						return; // Erfolg
+					} else {
+						lg.fine("Kommando, aber kein Willkommen von Verbindung "
+										+ "gelesen: Bot l\u00E4uft schon oder ist "
+										+ "veraltet, schicke Willkommen nochmals; "
+										+ "ignoriertes Kommando folgt" + cmd);
+						// Handshake nochmal versuchen
+						continue;
+					}
+				} catch (ProtocolException e) {
+					lg.severe(e, "Ung\uu00FCltiges Kommando beim Handshake; "
+							+ "ignoriere");
+					continue;
+				} catch (IOException e) {
+					lg.severe(e, "E/A-Problem beim Handshake; Abbruch");
+					return;
+				}
 			}
 		}
 	}

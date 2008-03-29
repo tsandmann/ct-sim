@@ -69,17 +69,18 @@ public abstract class CtBot extends BasicBot {
 	protected boolean preProcessCommands(Command cmd) throws IOException,
 			ProtocolException {
 		BotID id = cmd.getFrom();
-		if (cmd.has(Command.Code.ID)) { // Von einem Welcome nehmen wir
+		if (cmd.has(Command.Code.WELCOME)) { // Von einem Welcome nehmen wir
 			// sicherheitshalber erstmal die ID an.
 			lg.info("Nehme für Bot " + toString()
 					+ " erstmal die ID des Welcome-Paketes:"
 					+ id);
 			try {
-				setId(cmd.getFrom());
+				setId(id);
 			} catch (ProtocolException e) {
 				lg.warn("ID " + id
 						+ " konnte nicht gesetzt werden");
 			}
+			return false;
 		}
 
 		if (cmd.has(Command.Code.ID)) {
@@ -102,6 +103,14 @@ public abstract class CtBot extends BasicBot {
 				lg.info("Bot (" + toString()
 						+ ") fordert eine ID aus dem Pool an");
 
+				//TODO:	unschoene Loesung
+				while (getController() == null) {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						
+					}
+				}
 				BotID newId = getController().generateBotId();
 
 				Command answer = getConnection().getCmdOutStream().getCommand(
@@ -116,6 +125,11 @@ public abstract class CtBot extends BasicBot {
 		}
 
 		if (!cmd.getFrom().equals(getId())) {
+			if (cmd.getFrom().equals(Command.getBroadcastId())) {
+				lg.warn("Nachricht mit Broadcast-ID als Absender "
+						+ " erhalten, ignoriere Absender");
+				return false;
+			}
 			lg.warn("Nachricht von einem unerwarteten Absender ("
 					+ cmd.getFrom() + ") erhalten. Erwartet: "
 					+ getId());
@@ -129,12 +143,13 @@ public abstract class CtBot extends BasicBot {
 			// Also weiterleiten
 			Controller controller = this.getController();
 
-			if (controller != null)
+			if (controller != null) {
+				if (cmd.getFrom().equals(Command.getBroadcastId())) {
+					// ungueltiger Absender => Paket verwerfen
+					return true;
+				}
 				controller.deliverMessage(cmd);
-			else if (cmd.getFrom().equals(Command.getBroadcastId()))
-				// ungueltiger Absender => Paket verwerfen
-				return true;
-			else {
+			} else {
 				throw new ProtocolException(
 						"Nachricht empfangen, die an einen anderen Bot (Id="
 								+ cmd.getTo()
@@ -152,7 +167,7 @@ public abstract class CtBot extends BasicBot {
 	 * @throws ProtocolException Wenn was nicht klappt
 	 */
 	public void receiveCommand(Command command) throws ProtocolException {
-		if (!command.getTo().equals(this.getId()))
+		if (!command.getTo().equals(this.getId()) && !command.getTo().equals(Command.getBroadcastId()))
 			throw new ProtocolException("Bot "+ this.getId() +" hat ein Kommando "+command.toCompactString()+" empfangen, dass nicht für ihn ist");
 		
 		if (getConnection() == null)

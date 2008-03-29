@@ -573,17 +573,23 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	public void deliverMessage(Command command) throws ProtocolException {
 		for (Bot b : bots) {
 			// Wir betrachten hier nur CtBot
-			if (b instanceof CtBot) {			
-				if ((((CtBot)b).getId().equals(command.getTo())) || (command.getTo().equals(Command.getBroadcastId()))) {
+			if (b instanceof CtBot) {
+				/* direkte Nachrichten an Empfaenger */
+				if (((CtBot)b).getId().equals(command.getTo())) {
 					((CtBot)b).receiveCommand(command);
 					return;
 				}
+				/* Broadcasts an alle */
+				if (command.getTo().equals(Command.getBroadcastId())) {
+					((CtBot)b).receiveCommand(command);
+				}
 			}
 		}	
-		
-		// Es fühlt sich wohl kein Bot aus der Liste zuständig ==> Fehler 
-		throw new ProtocolException("Nachricht an Empfänger "+command.getTo()+" nicht zustellbar. " +
-				"Kein Bot mit passender Id angemeldet");
+		if (!command.getTo().equals(Command.getBroadcastId())) {
+			// Es fühlt sich wohl kein Bot aus der Liste zuständig ==> Fehler 
+			throw new ProtocolException("Nachricht an Empfänger "+command.getTo()+" nicht zustellbar. " +
+					"Kein Bot mit passender Id angemeldet");
+		}
 	}
 	
 	/**

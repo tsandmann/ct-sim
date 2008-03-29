@@ -49,10 +49,14 @@ public class RealCtBot extends CtBot {
 			Command cmd = null;
 			try {
 				cmd = new Command(connection);
+				if (cmd.has(Command.Code.DONE)) {
+					updateView();
+					return;
+				}
 				
 				if (!preProcessCommands(cmd)){
 					components.processCommand(cmd);
-					updateView(); //$$$ Jedesmal? Performance?
+					//updateView();
 				}
 			} catch (ProtocolException e) {
 				lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere%s", cmd);

@@ -1,5 +1,12 @@
 Changelog fuer c't-Sim
 ======================
+2008-03-28 Timo Sandmann [mail@timosandmann.de]: Broadcast-Nachrichten implementiert,
+												 Workaround fuer Synchronisationsproblem bei generateBotId(),
+												 DONE-Paket-Auswertung bei realen Bots (spart View-Updates),
+												 Command-Klasse um unbekannte Kommandos, die nicht fuer den Sim sind, erweitert: Sim kann nun auch Kommandos verarbeiten, die nicht dem Bot-2-Sim-Protokoll entsprechen, diese aber NUR weiterleiten,
+												 Timeout fuer doHandshake() hinzugefuegt, 
+												 Bugfix fuer Sim-Applet, macht aber immer noch Probleme
+
 2008-03-18 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Adressvergabe und isIdFree(),
 	Klasse BotID gebaut und als Datentyp fuer alle Bot-IDs verwendet. 
 	Ausgaben der Bot-Adressen sind nun intuitiv verstaendliche, positive Zahlen (wie unsigned byte)

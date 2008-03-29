@@ -235,6 +235,67 @@ public class Command {
 	/** Broadcast Adresse */
 	private static final BotID BROADCAST_ID = new BotID(0xFF);
 
+	/**
+	 * Basisklasse fuer Codes
+	 */
+	public static interface BotCodes {
+		/**
+		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
+		 * SubCodes sind mit dem Code-Enum verkoppelt, da vom Code abh&auml;ngt,
+		 * ob z.B. ein &quot;R&quot; auf dem Draht f&uuml;r den SubCode
+		 * WELCOME_REAL oder f&uuml;r RIGHT steht.
+		 * @param b Int
+		 * @return SubCude
+		 * @throws ProtocolException 
+		 */
+		public SubCode getSubCode(int b) throws ProtocolException;
+		
+		/**
+		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
+		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
+		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
+		 */
+		public byte toUint7();
+	}
+	
+	/**
+	 * hmm
+	 * @author Timo Sandmmann (mail@timosandmann.de)
+	 */
+	public static class Bot2BotCode implements BotCodes {
+		/**  */
+		private byte onTheWire;
+		
+		/**
+		 * @param code
+		 */
+		public Bot2BotCode(byte code) {
+			onTheWire = code;
+		}
+		
+		/**
+		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
+		 * SubCodes sind mit dem Code-Enum verkoppelt, da vom Code abh&auml;ngt,
+		 * ob z.B. ein &quot;R&quot; auf dem Draht f&uuml;r den SubCode
+		 * WELCOME_REAL oder f&uuml;r RIGHT steht.
+		 * @param b Int
+		 * @return SubCude
+		 * @throws ProtocolException 
+		 */
+		public SubCode getSubCode(int b) throws ProtocolException {
+			return SubCode.NORM;
+		}
+		
+		/**
+		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
+		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
+		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
+		 */
+		public byte toUint7() { 
+			return onTheWire; 
+		}
+	}
+	
 	///////////////////////////////////////////////////////////////////////////
 	// Enum Command-Code
 	
@@ -242,7 +303,7 @@ public class Command {
 	 * Ein Command-Code kann einen der Werte in diesem Enum haben. Der
 	 * Command-Code gibt den Typ des Commands an.
 	 */
-	public static enum Code {
+	public static enum Code implements BotCodes {
 		/** Zum Hallo-Sagen (Handshake); siehe {@link Command}. */
 		WELCOME('W', SubCode.WELCOME_REAL, SubCode.WELCOME_SIM),
 
@@ -266,14 +327,6 @@ public class Command {
 		 * siehe {@link Door}.
 		 */
 		SENS_DOOR('D'),
-
-//		/**
-//		 * Nicht verwendet, weder im ctSim noch im C-Code (wird dort als
-//		 * "Steuerung Klappe" beschrieben, aber die Bedeutung hat ja schon
-//		 * ACT_SERVO)
-//		 */
-//		@Deprecated
-//		ACT_DOOR('d'),
 
 		/** LEDs (Leuchtdioden); siehe {@link Led}. */
 		ACT_LED('l'),
@@ -372,7 +425,7 @@ public class Command {
 		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
-		protected byte toUint7() { return onTheWire; }
+		public byte toUint7() { return onTheWire; }
 
 		/**
 		 * Erzeugt eine SubCode-Instanz. Akzeptiert ints aus Toleranz.
@@ -541,7 +594,7 @@ public class Command {
 	// Instanzvariablen
 
 	/** Command-Code */
-	private final Code commandCode;
+	private final BotCodes commandCode;
 
 	/** Sub-Command-Code */
 	private SubCode subCommandCode;
@@ -654,10 +707,9 @@ public class Command {
 		con.read(b);
 
 		byte i =0;
-		
-		commandCode = Code.fromByte(b[i++]);
+		byte code = b[i++];
 		// Nur 7 least significant bits
-		subCommandCode = commandCode.getSubCode(b[i] & 127);
+		int subcode = b[i] & 127;
 		// 7 least significant Bits weg, nur 8. angucken
 		direction = b[i++] >> 7 & 1;
 
@@ -681,6 +733,13 @@ public class Command {
 		
 		from.set(b[i++]);	// neue Version mit Adressen
 		to.set(b[i++]); // neue Version mit Adressen		
+		
+		if (to.equals(Command.getSimId())) {
+			commandCode = Code.fromByte(code);
+		} else {
+			commandCode = new Bot2BotCode(code);
+		}
+		subCommandCode = commandCode.getSubCode(subcode);
 		
 		// und noch die Pruefsumme
 		crc = b[i];
@@ -898,7 +957,7 @@ public class Command {
 	 */
 	public void setSubCmdCode(SubCode sc) {
 		try {
-			commandCode.assertSubCodeValid(sc);
+			((Code) commandCode).assertSubCodeValid(sc);
 		} catch (ProtocolException e) {
 			// Das ist ein Fehler des Programmierers, keine Laufzeitsache
 			throw new AssertionError(e);

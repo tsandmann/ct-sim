@@ -30,7 +30,8 @@ zu erreichen. -->
 	-->
 
 	<!-- Ding kompilieren samt allen Abhaengigkeiten -->
-		<javac srcdir="ctSim/applet" sourcepath="." destdir="${builddir}" />
+		<javac srcdir="ctSim/applet" sourcepath="." destdir="${builddir}" 
+			classpath="contrib/rxtx.jar" />
 
 		<!-- Manifest fuer die Jars schreiben -->
 		<manifest file="${builddir}/META-INF/MANIFEST.MF">
@@ -50,16 +51,13 @@ zu erreichen. -->
 			<param name="subdirs" value="
 				ctSim/*.class,
 				ctSim/applet/**/*.class,
-				ctSim/controller/**/*.class,
-				ctSim/model/*.class"/>
+				ctSim/controller/**/*.class"/>
 		</antcall>
 		<antcall target="make-jar">
 			<param name="num" value="2"/>
 			<param name="subdirs" value="
-				ctSim/model/bots/*.class,
-				ctSim/model/bots/ctbot/*.class"/>
-			<param name="exclude" value="
-				**/CtBotSimTcp.class"/>
+				ctSim/model/*.class,
+				ctSim/model/bots/*.class"/>
 		</antcall>
 		<antcall target="make-jar">
 			<param name="num" value="3"/>
@@ -69,14 +67,13 @@ zu erreichen. -->
 		<antcall target="make-jar">
 			<param name="num" value="4"/>
 			<param name="subdirs" value="
+				ctSim/model/bots/ctbot/*.class,
 				ctSim/util/**/*.class"/>
 		</antcall>
 	    <antcall target="make-jar">
 				<param name="num" value="5"/>
 				<param name="subdirs" value="
 					ctSim/model/bots/components/*.class"/>
-				<param name="exclude" value="
-					**/CtBotSimTcp.class"/>
 		</antcall>
 		<jar destfile="${builddir}/icons.jar"
 			basedir="${iconsdir}"
