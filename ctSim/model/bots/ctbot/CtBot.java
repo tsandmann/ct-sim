@@ -218,8 +218,8 @@ public abstract class CtBot extends BasicBot {
 		int numLeds = ledColors.length;
 		for (int i = 0; i < numLeds; i++) {
 			String ledName = "LED " + (i + 1)
-					 + (i == 0 ? " (vorn rechts)" :
-						i == 1 ? " (vorn links)" : "");
+					 + (i == 1 ? " (vorn rechts)" :
+						i == 0 ? " (vorn links)" : "");
 			components.add(
 				new Actuators.Led(ledName, i, ledColors[i]));
 		}

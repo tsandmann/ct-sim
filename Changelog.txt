@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2008-04-01 Timo Sandmann [mail@timosandmann.de]: LEDs vorne (links/rechts) vertauscht, so dass die linke LED links angezeigt wird und die Rechte rechts
+
 2008-03-29 Timo Sandmann [mail@timosandmann.de]: Sim-Applet geht nun wieder (hatte keinen Controller!)
 
 2008-03-28 Timo Sandmann [mail@timosandmann.de]: Broadcast-Nachrichten implementiert,
