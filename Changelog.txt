@@ -1,6 +1,7 @@
 Changelog fuer c't-Sim
 ======================
-2008-06-30 Frank Menzel [menzelfr@gmx.net]: Neue Linienkreuzungen, X und T-Kreuzungen (alle 4 Richtungen), neuer Parcours testline_crossings, Beschreibung am Anfang von ParcoursLoader.java 
+2008-06-30 Frank Menzel [menzelfr@gmx.net]: Neue Linienkreuzungen, X und T-Kreuzungen (alle 4 Richtungen), neuer Parcours testline_crossings, 
+											Beschreibung am Anfang von ParcoursLoader.java, siehe auch documentation/simlines/lines.html 
 
 2008-04-01 Timo Sandmann [mail@timosandmann.de]: LEDs vorne (links/rechts) vertauscht, so dass die linke LED links angezeigt wird und die Rechte rechts
 
