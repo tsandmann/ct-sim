@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2008-06-30 Frank Menzel [menzelfr@gmx.net]: Neue Linienkreuzungen, X und T-Kreuzungen (alle 4 Richtungen), neuer Parcour testline_crossings, Beschreibung am Anfang von ParcoursLoader.java 
+
 2008-04-01 Timo Sandmann [mail@timosandmann.de]: LEDs vorne (links/rechts) vertauscht, so dass die linke LED links angezeigt wird und die Rechte rechts
 
 2008-03-29 Timo Sandmann [mail@timosandmann.de]: Sim-Applet geht nun wieder (hatte keinen Controller!)
