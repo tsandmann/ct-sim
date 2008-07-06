@@ -29,10 +29,10 @@ zu erreichen.
 	Die IP-Adresse des WiPorts traegt man eine Zeile tiefer ein
 -->
 
-<property name="upload" value="1" /> 
 <!--
-<property name="botaddress" value="192.168.1.22" />
+<property name="upload" value="1" /> 
 -->
+<property name="botaddress" value="192.168.1.22" />
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
