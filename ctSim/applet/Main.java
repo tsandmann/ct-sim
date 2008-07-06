@@ -43,7 +43,7 @@ public class Main extends JApplet implements BotReceiver {
 	 * man es lokal im Browser aufgerufen hat (file:///home/dings/...), dann
 	 * wird ersatzweise diese Adresse genommen, um testen zu k&ouml;nnen.
 	 */
-	private static final String fallbackAddress = "192.168.1.24";
+	private static final String fallbackAddress = "192.168.1.22";
 
 	/** Logger */
 	final Logger mainLogger = Logger.getAnonymousLogger();
@@ -84,8 +84,7 @@ public class Main extends JApplet implements BotReceiver {
 	private void initLogging() {
 		FmtLogger.setFactory(new FmtLogger.Factory() {
 			@Override
-			public Logger createLogger(
-			@SuppressWarnings("unused") String name) {
+			public Logger createLogger(String name) {
 				return mainLogger;
 			}
 		});
@@ -166,8 +165,7 @@ public class Main extends JApplet implements BotReceiver {
 				BotViewer bv = new BotViewer(b);
 				f.addWindowListener(new WindowAdapter() {
 					@Override
-					public void windowClosing(
-					@SuppressWarnings("unused") WindowEvent e) {
+					public void windowClosing(WindowEvent e) {
 						bot.dispose();
 						mainLogger.info("Bot-Fenster geschlossen");
 						f.dispose();

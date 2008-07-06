@@ -1,0 +1,217 @@
+#!/usr/bin/perl
+#####
+#
+# This file is part of makecob.
+# Author: Mathias Kussinger
+#
+# It has been put under GPL by the author.
+# See COPYING and README in the base directory.
+# You may use it without any warranty or leave it.
+#
+#####
+
+# makecob: packs multiple files into a cob file for the XPort web server.
+# XPort is a very nice small web appliance with serial interface, port pins and a 
+# web server for static pages. See http://www.lantronix.com .
+# This script is only based on information i have got from the analysis of
+# a few cob files and without any guarantee.
+#
+# The cob file format looks like:
+#   "CoB1" {ToC_entry}+ 0x00 {http_header file_contents}+
+# the structure of a ToC entry is:
+#   1 byte: filename length (0: end og ToC)
+#   2 byte: response (=heder + file) length, LSB first
+#   4 byte: absolute file offset of response, LSB first
+#   n byte: filename, may contain a path
+# the html header is built of the html version tag, a mime type line and an empty line.
+#
+#  0.0  03.12.06 MK new
+#  0.1  05.12.06 MK /r/n for /n in headers, fixing missspelled var names
+#  1.0  05.12.06 MK first public release
+
+$VERSION = "1.0";
+
+if ($#ARGV<0 || $ARGV[0] eq "-h") {
+   print "This is makecob V$VERSION\n";
+   print "\n";
+   print "Usage:\n";
+   print "  makecob [options] {files}\n";
+   print "  Options:\n";
+   print "  -h               this help text\n";
+   print "  -L               print mime types and exit\n";
+   print "  -m ext minetype  add or change the mime type of a file extension\n";
+   print "  -o filename      output (cob) file name (default: web.cob)\n";
+   print "  -p path          base path to be removed from file paths (default: \"\")\n";
+   print "  -v 	             be verbose\n";
+   exit 0;
+}
+
+########################
+######## Defines + Vars
+########################
+
+$cob_filename = "web.cob";
+$base_path = "";
+
+%mime_types = (
+   txt => 'text/plain',      text => 'text/plain',     xml => 'text/xml',
+   xsl => 'text/xml',        html => 'text/html',      htm => 'text/html',
+   shtml => 'text/html',     plg => 'text/html',       bmp => 'image/bmp',
+   dib => 'image/bmp',       gif => 'image/gif',       jpeg => 'image/jpeg',
+   jpg => 'image/jpeg',      jpe => 'image/jpeg',      jfif => 'image/jpeg',
+   pjpeg => 'image/jpeg',    pjp => 'image/jpeg',      tif => 'image/tiff',
+   tiff => 'image/tiff',     hta => 'application/hta', js => 'application/x-javascript',
+   mocha => 'application/x-javascript', class => 'application/octet-stream',
+   zip => 'application/zip', rmi => 'audio/mid',       mid => 'audio/mid',
+   mp3 => 'audio/mpeg',	     mp2 => 'audio/x-mpeg',    mpa => 'audio/x-mpeg',
+   abs => 'audio/x-mpeg',    mpega => 'audio/x-mpeg',  jar => 'application/java-archive' );
+
+$print_mime_flag =0;               
+$verbose_flag =0;
+
+@file_name = ();
+@file_header = ();
+@file_url = ();
+@file_url_len = ();
+@file_offset = ();
+@file_len = ();
+@file_resp_len = ();
+$files_count =0;
+$toc_size =0;
+
+########################
+######## Functions
+########################
+
+########################
+######## Main code
+########################
+
+##### init
+#####
+
+#### parse cmdl
+
+while ($ARGV[0] =~ '^-.*') {
+   if ($ARGV[0] eq '-v') {
+      $verbose_flag++;
+      print "- set verbose to $verbose_flag\n";
+   } elsif ($ARGV[0] eq '-L') {
+      $print_mime_flag = 1;
+      if ($verbose_flag) { print "- set list mime types\n"; }
+   } elsif ($ARGV[0] eq '-o') {
+      shift @ARGV;
+      $cob_filename = $ARGV[0];
+      if ($verbose_flag) { print "- set cob filename to \"$cob_filename\"\n"; }
+   } elsif ($ARGV[0] eq '-m') {
+      shift @ARGV;
+      $f_ext = shift @ARGV;
+      $f_mime = $ARGV[0];
+      $mime_types{$f_ext} = $f_mime;
+      if ($verbose_flag) { print "- set mime type \"$f_mime\" for extension \"$f_ext\"\n"; }
+   } elsif ($ARGV[0] eq '-p') {
+      shift @ARGV;
+      $base_path = $ARGV[0];
+      if ($verbose_flag) { print "- set base path to \"$base_path\"\n"; }
+   } else {
+      die "ERROR: unknown option \"$ARGV[0]\"";
+   }
+   shift @ARGV;
+}
+
+#### print mime types
+
+if ($print_mime_flag) {
+   if ($verbose_flag) { print "extension ----  mime type\n"; }
+   foreach $key (sort keys %mime_types) {
+      print "$key     $mime_types{$key}\n";
+   }
+   exit 0;
+}
+
+##### collect files
+#####
+
+if($#ARGV<0) { die "ERROR: No files"; }
+
+$f_offset =0;        # without toc, in the array sequence
+while ($#ARGV>=0) {
+   $f_path = shift @ARGV;
+   if ($verbose_flag) { print "- processing file \"$f_path\"\n"; }
+   ## mime type and url
+   $f_ext = $f_path;
+   $f_ext =~ s/[^.]*\.//g;
+   $f_mime = $mime_types{$f_ext};
+   if($f_mime eq "") { die "ERROR: no mime type for \"$f_ext\""; }
+   $f_url = $f_path;
+   if($base_path ne "") { $f_url =~ s/^$base_path//; }
+   $f_url_len = length $f_url;
+   if ($verbose_flag) { print "  ext:\"$f_ext\" mime:\"$f_mime\" url[$f_url_len]:\"$f_url\"\n"; }
+   ## size
+   ($foo1,$foo2,$foo3,$foo4,$foo5,$foo6,$foo7,$f_size,$foo8) = stat $f_path;
+   if($f_size>65535) { die "ERROR: file size $f_size bigger than 65535"; }
+   ## header
+   $f_header = "HTTP/1.0 200\r\n";
+   $f_header .= "Content-type: $f_mime\r\n";
+   $f_header .= "\r\n";
+   $f_header_len = length($f_header);
+   if ($verbose_flag) { print "  size:$f_size header_len:$f_header_len\n"; }
+   if ($verbose_flag>=2) { print "Header:\n>>>\n$f_header<<<\n"; }
+   $file_name[$files_count] = $f_path;
+   $file_header[$files_count] = $f_header;
+   $file_url[$files_count] = $f_url;
+   $file_url_len[$files_count] = $f_url_len;
+   $file_offset[$files_count] = $f_offset;
+   $file_len[$files_count] = $f_size;
+   $file_resp_len[$files_count] = $f_size + $f_header_len;
+   $f_offset += $f_size + $f_header_len;
+   if ($verbose_flag) { print "  count:$files_count offset:$f_offset\n"; }
+   $toc_size += 7 + $f_url_len;
+   $files_count++;
+}
+if ($verbose_flag) { print "- toc size: $toc_size\n"; }
+
+##### create cob file and append toc and data files
+#####
+
+$data_offset = $toc_size + 5;
+
+if ($verbose_flag) { print "- open cop file \"$cob_filename\"\n"; }
+open(COBFILE,">:raw","$cob_filename") or die "ERROR: Can't open cob file \"$cob_filename\": $!";
+
+#### write file tag and toc
+  
+if ($verbose_flag) { print "- writing toc\n"; }
+print COBFILE "CoB1";
+for($file_nr=0;$file_nr<$files_count;$file_nr++) {
+   $f_url_len = $file_url_len[$file_nr];
+   print COBFILE chr($f_url_len);
+   $f_resp_len = $file_resp_len[$file_nr];
+   print COBFILE chr($f_resp_len&0x00ff);
+   print COBFILE chr(($f_resp_len>>8)&0x00ff);
+   $f_resp_off = $file_offset[$file_nr] + $data_offset;
+   print COBFILE chr($f_resp_off&0x00ff);
+   print COBFILE chr(($f_resp_off>>8)&0x00ff);
+   print COBFILE chr(($f_resp_off>>16)&0x00ff);
+   print COBFILE chr(($f_resp_off>>24)&0x00ff);
+   $f_url = $file_url[$file_nr];
+   print COBFILE $f_url;
+   if ($verbose_flag>=2) { print "  $f_url_len|$f_resp_len|$f_resp_off|$f_url\n"; }
+}
+print COBFILE chr(0);
+
+#### append data
+
+for($file_nr=0;$file_nr<$files_count;$file_nr++) {
+   if ($verbose_flag) { print "- writing file data \"$file_name[$file_nr]\"\n"; }
+   print COBFILE "$file_header[$file_nr]";
+   open (IN,'<:raw',$file_name[$file_nr]) or die "ERROR: Can't open \"$file_name[$file_nr]\": $!";
+   print COBFILE $buffer while (read (IN,$buffer,65536));
+}
+
+##### clean up
+#####
+
+close(COBFILE);
+
+

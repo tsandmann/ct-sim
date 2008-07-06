@@ -1,5 +1,8 @@
 Changelog fuer c't-Sim
 ======================
+2008-07-06 Timo Sandmann [mail@timosandmann.de]: Ant-Script fuer Applet-Bau erweitert, so dass das Applet automatisch per tftp auf den WiPort geladen werden kann.
+												 Hierzu muss man lediglich die <property name="upload" value="1" /> einkommentieren und die IP-Adresse eintragen.
+
 2008-06-30 Frank Menzel [menzelfr@gmx.net]: Neue Linienkreuzungen, X und T-Kreuzungen (alle 4 Richtungen), neuer Parcours testline_crossings, 
 											Beschreibung am Anfang von ParcoursLoader.java, siehe auch documentation/simlines/lines.html 
 

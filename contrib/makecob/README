@@ -1,0 +1,12 @@
+makecob is a little utility that converts a list of files into a cob file
+that can be loaded into the XPort web server. makecob is the free and portable
+replacement of web2cob.exe provided by Lantronix.
+
+XPort is a very nice web server and ether to serial interface module made
+by Lantronix. See www.lantronix.com
+
+
+
+
+
+
