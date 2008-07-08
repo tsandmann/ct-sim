@@ -129,10 +129,8 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
-			@SuppressWarnings("synthetic-access")
-            @Override
-			public void windowClosing(
-					@SuppressWarnings("unused") WindowEvent e) {
+			@Override
+			public void windowClosing(WindowEvent e) {
 				controller.closeWorld();
 				dispose();
 				System.exit(0);
@@ -300,7 +298,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 					tabIconTooltip);
 				// Listener fuer "Wenn Bot stirbt, Tab weg"
 				bot.addDisposeListener(new Runnable() {
-					@SuppressWarnings("synthetic-access")
 					public void run() {
 						removeBotTab(bot);
 						updateLayout();
@@ -341,14 +338,19 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * @see ctSim.view.View#onApplicationInited()
 	 */
 	public void onApplicationInited() {
+		// NOP
     }
 
+	//TODO:	Ueber diese Methode kriegt das MainWindow mit, wenn die Simulation
+	// anhaelt. Schoen waere: Knoepfe fuer Play/Pause/Stop ausgrauen, wenn nicht
+	// bedienbar. (Man kann nicht was stoppen, was schon gestoppt ist; starten,
+	// was schon gestartet ist; usw.)
 	/**
 	 * @see ctSim.view.View#onSimulationFinished()
 	 */
 	public void onSimulationFinished() {
-	    //TODO Ueber diese Methode kriegt das MainWindow mit, wenn die Simulation anhaelt. Schoen waere: Knoepfe fuer Play/Pause/Stop ausgrauen, wenn nicht bedienbar. (Man kann nicht was stoppen, was schon gestoppt ist; starten, was schon gestartet ist; usw.)
-    }
+		// NOP
+	}
 
 	/**
 	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)

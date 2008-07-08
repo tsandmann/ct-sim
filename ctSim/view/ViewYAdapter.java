@@ -71,16 +71,15 @@ public class ViewYAdapter {
 	 * @return Das neue View
 	 */
 	public static View newInstance(final Iterable<View> views) {
-		return (View)Proxy.newProxyInstance(View.class.getClassLoader(),
-		    new Class[] { View.class }, new InvocationHandler() {
-			    public Object invoke(
-			    	@SuppressWarnings("unused") Object proxy,
-			    	Method method, Object[] args) throws Throwable {
-				    for (View v : views)
-					    method.invoke(v, args);
-				    return null;
-			    }
-		    });
+		return (View) Proxy.newProxyInstance(View.class.getClassLoader(),
+				new Class[] { View.class }, new InvocationHandler() {
+					public Object invoke(Object proxy, Method method,
+							Object[] args) throws Throwable {
+						for (View v : views)
+							method.invoke(v, args);
+						return null;
+					}
+				});
 	}
 
 	/** 

@@ -183,7 +183,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * &uuml;berschrieben haben.
 	 * @param c Command
 	 */
-	public void writeTo(@SuppressWarnings("unused") Command c) { /* No-op */ }
+	public void writeTo(Command c) { 
+		/* No-op */ 
+	}
 
 	/**
 	 * @return Breite

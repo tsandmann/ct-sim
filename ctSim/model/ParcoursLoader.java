@@ -718,6 +718,9 @@ public class ParcoursLoader {
 			int x = 0; // Anzahl der Spalten im File
 
 			// Eine Liste aller Kinder des Parcours-Eitnrags organsisieren
+			if (n == null) {
+				throw new SAXException("kein Node gefunden!");
+			}
 			NodeList children = n.getChildNodes();
 
 			// Anzahl der Zeilen und spalten bestimmen
@@ -764,6 +767,9 @@ public class ParcoursLoader {
 			// jetzt haben wir ihn
 
 			// Eine Liste aller Kinder des Parcours-Eintrags organsisieren
+			if (n == null) {
+				throw new SAXException("kein Node gefunden!");
+			}			
 			children = n.getChildNodes();
 
 			// HashMap mit den Apearances aufbauen

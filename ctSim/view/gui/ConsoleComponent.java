@@ -80,8 +80,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 		/**
 		 * Logging-Handler
 		 */
-		@SuppressWarnings("synthetic-access")
-        public LoggingHandler() {
+		public LoggingHandler() {
 			setFormatter(new Formatter() {
 				@Override
                 public String format(LogRecord r) {

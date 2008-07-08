@@ -64,16 +64,16 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 		
 		for (BotComponent<?> c : components) {
 			if (c.getName().equals("IrL")) {
-				irl=((Sensors.Distance)(Object)c).get().doubleValue();
+				irl=((Sensors.Distance)c).get().doubleValue();
 			}
 			if (c.getName().equals("IrR")) {			
-				irr=((Sensors.Distance)(Object)c).get().doubleValue();
+				irr=((Sensors.Distance)c).get().doubleValue();
 			}
 			if (c.getName().equals("GovL")) {
-				govL=(Actuators.Governor)(Object)c;
+				govL=(Actuators.Governor)c;
 			}
 			if (c.getName().equals("GovR")) {
-				govR=(Actuators.Governor)(Object)c;
+				govR=(Actuators.Governor)c;
 			}
 		}
 
@@ -119,6 +119,9 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 		}
 		
 		/* Gewschwindigkeiten an die Motoren weitergeben */
+		if (govL == null || govR == null) {
+			return;
+		}
 		govL.set(ll);
 		govR.set(rr);
 	}

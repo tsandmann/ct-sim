@@ -140,8 +140,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     				{{ setFactor(0.3); }});
     		}
 
-    		@SuppressWarnings("synthetic-access")
-            private void addMouseBehavior(MouseBehavior b) {
+    		private void addMouseBehavior(MouseBehavior b) {
     			b.setTransformGroup(
     				universe.getViewingPlatform().getViewPlatformTransform());
     			b.setSchedulingBounds(new BoundingSphere(new Point3d(), 1000)); //LODO Koennte besser sein: Was, wenn irgendne Welt mal > 1000 ist?

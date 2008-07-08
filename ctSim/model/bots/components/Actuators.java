@@ -194,6 +194,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		@Override
 		public synchronized void updateExternalModel() {
 			// NOP
 		}

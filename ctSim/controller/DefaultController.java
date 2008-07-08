@@ -453,7 +453,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		// Und einen Dispose-Handler installieren, damit wir Bots auch wieder
 		// sauber beenden
 		bot.addDisposeListener(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				onBotDisappeared(bot);
 			}

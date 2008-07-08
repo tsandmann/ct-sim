@@ -506,10 +506,7 @@ public class MainWinMenuBar extends JMenuBar {
 					private static final long serialVersionUID =
 						-1873920690635293756L;
 
-					@SuppressWarnings("synthetic-access")
-	                public void actionPerformed(
-	                	@SuppressWarnings("unused") ActionEvent e) {
-
+					public void actionPerformed(ActionEvent e) {
 						controller.setJudge(fqName);
 					}
 				}

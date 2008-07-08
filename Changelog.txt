@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2008-07-08 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt (#169)
+
 2008-07-06 Timo Sandmann [mail@timosandmann.de]: Ant-Script fuer Applet-Bau erweitert, so dass das Applet automatisch per tftp auf den WiPort geladen werden kann.
 												 Hierzu muss man lediglich die <property name="upload" value="1" /> einkommentieren und die IP-Adresse eintragen.
 

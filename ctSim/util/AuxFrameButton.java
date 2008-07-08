@@ -66,8 +66,7 @@ public class AuxFrameButton extends JToggleButton {
 		addActionListener(new ActionListener() {
 			// Fenster anzeigen/verbergen, wenn wir gedrueckt werden
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(
-			@SuppressWarnings("unused") ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				auxFrame.setVisible(AuxFrameButton.this.isSelected());
 				if (frameContent instanceof RemoteCallViewer) {
 					/* RemoteCall-Liste holen, falls noch nicht geschehen */
@@ -84,8 +83,7 @@ public class AuxFrameButton extends JToggleButton {
 			// Wenn Fenster geschlossen wird soll der gedrueckte Button wieder
 			// rausspringen
 			@Override
-			public void windowClosing(
-			@SuppressWarnings("unused") WindowEvent e) {
+			public void windowClosing(WindowEvent e) {
 				AuxFrameButton.this.setSelected(false);
 			}
 		});

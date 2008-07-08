@@ -46,7 +46,6 @@ public class IterableNodeList implements NodeList, Iterable<QueryableNode> {
 				return lastIdx + 1 < wrappee.getLength();
 			}
 
-			@SuppressWarnings("synthetic-access")
 			public QueryableNode next() {
 				lastIdx++;
 				return IterableNodeList.this.item(lastIdx);

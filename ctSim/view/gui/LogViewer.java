@@ -62,8 +62,7 @@ public class LogViewer extends JPanel {
 			setToolTipText(toolTipText);
 			setIcon(icon);
 			addActionListener(new ActionListener() {
-				public void actionPerformed(
-				@SuppressWarnings("unused") ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
 					onClick.run();
 				}
 			});
@@ -155,18 +154,15 @@ public class LogViewer extends JPanel {
 					t.setCaretPosition(log.getExternalModel().getLength());
 			}
 
-			public void changedUpdate(
-			@SuppressWarnings("unused") DocumentEvent e) {
+			public void changedUpdate(DocumentEvent e) {
 				// No-op, keine Ahnung was das ist
 			}
 
-			public void insertUpdate(
-			@SuppressWarnings("unused") DocumentEvent e) {
+			public void insertUpdate(DocumentEvent e) {
 				scrollToEnd();
 			}
 
-			public void removeUpdate(
-			@SuppressWarnings("unused") DocumentEvent e) {
+			public void removeUpdate(DocumentEvent e) {
 				scrollToEnd();
 			}
 		});

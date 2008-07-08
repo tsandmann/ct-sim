@@ -44,7 +44,6 @@ import javax.vecmath.Vector3d;
 import ctSim.controller.BotBarrier;
 import ctSim.controller.Config;
 import ctSim.model.bots.BasicBot;
-import ctSim.model.bots.Bot;
 import ctSim.model.bots.BotBuisitor;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.SimulatedBot.UnrecoverableScrewupException;
@@ -82,7 +81,7 @@ import ctSim.util.Misc;
  * @author Benjamin Benz (bbe@ctmagazin.de)
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-public class ThreeDBot extends BasicBot implements Bot, Runnable {
+public class ThreeDBot extends BasicBot implements Runnable {
 	/** Logger */
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.ThreeDBot");
 
@@ -182,8 +181,7 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 
 			updateExternalModel(); // Initialen Wert setzen
 			getExternalModel().addChangeListener(new ChangeListener() {
-				public void stateChanged(
-				@SuppressWarnings("unused") ChangeEvent e) {
+				public void stateChanged(ChangeEvent e) {
 					double newValue = getExternalModel().getNumber()
 						.doubleValue();
 					Point3d p = getPositionInWorldCoord();
@@ -252,8 +250,7 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 
 			updateExternalModel(); // Initialen Wert setzen
 			getExternalModel().addChangeListener(new ChangeListener() {
-				public void stateChanged(
-				@SuppressWarnings("unused") ChangeEvent e) {
+				public void stateChanged(ChangeEvent e) {
 					/*
 					 * $$ ignoreStateChange: setHeading() sollte erkennen, wann
 					 * ein Aufruf ueberfluessig ist (weil das neue Heading sich
@@ -716,6 +713,7 @@ public class ThreeDBot extends BasicBot implements Bot, Runnable {
 	/**
 	 * @see ctSim.model.bots.BasicBot#updateView()
 	 */
+	@Override
 	public void updateView() throws InterruptedException {
 		super.updateView();	// Positionsanzeige updaten
 		bot.updateView();	// Anzeige der Bot-Komponenten updaten

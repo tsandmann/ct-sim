@@ -35,8 +35,7 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	public NumberTwin(boolean isLeft) {
 		super(new SpinnerNumberModel());
 		getExternalModel().addChangeListener(new ChangeListener() {
-			public void stateChanged(
-			@SuppressWarnings("unused") ChangeEvent e) {
+			public void stateChanged(ChangeEvent e) {
 				synchronized(NumberTwin.this) {
 					internalModel = getExternalModel().getNumber();
 				}

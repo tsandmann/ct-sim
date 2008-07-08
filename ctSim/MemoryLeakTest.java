@@ -13,9 +13,8 @@ public class MemoryLeakTest {
 	/**
 	 * main
 	 * @param args
-	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		Main.dependencies.reRegisterImplementation(
 			Controller.class, TestController.class);
 		Main.main();

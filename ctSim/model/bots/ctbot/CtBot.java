@@ -108,7 +108,7 @@ public abstract class CtBot extends BasicBot {
 					try {
 						Thread.sleep(10);
 					} catch (InterruptedException e) {
-						
+						// NOP
 					}
 				}
 				BotID newId = getController().generateBotId();

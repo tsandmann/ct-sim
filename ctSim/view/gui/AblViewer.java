@@ -83,8 +83,7 @@ public class AblViewer extends JPanel {
 			setToolTipText(toolTipText);
 			setIcon(icon);
 			addActionListener(new ActionListener() {
-				public void actionPerformed(
-				@SuppressWarnings("unused") ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
 					onClick.run();
 				}
 			});
@@ -115,7 +114,8 @@ public class AblViewer extends JPanel {
 	    /**
 	     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
 	     */
-	    public boolean accept(File f) {
+	    @Override
+		public boolean accept(File f) {
 	        if (f.isDirectory()) {
 	            return true;
 	        }
@@ -135,7 +135,8 @@ public class AblViewer extends JPanel {
 	    /**
 	     * @see javax.swing.filechooser.FileFilter#getDescription()
 	     */
-	    public String getDescription() {
+	    @Override
+		public String getDescription() {
 	        return "Textdateien";
 	    }
 	}

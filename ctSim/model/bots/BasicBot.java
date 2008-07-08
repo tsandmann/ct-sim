@@ -265,9 +265,8 @@ public abstract class BasicBot implements Bot {
 
     	/**
     	 * View-Update durchfuehren
-    	 * @throws InterruptedException
     	 */
-    	public void updateView() throws InterruptedException {
+    	public void updateView() {
     		for (BotComponent<?> c : BotComponentList.this)
     			c.updateExternalModel();
         }

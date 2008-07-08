@@ -254,8 +254,7 @@ public class World {
 				 * er soll die parcours.dtd bitte im Verzeichnis "parcours"
 				 * suchen. */
 				new EntityResolver() {
-					@SuppressWarnings("unused")
-                    public InputSource resolveEntity(
+					public InputSource resolveEntity(
 							String publicId,
 							String systemId)
 					throws SAXException, IOException {
@@ -286,8 +285,7 @@ public class World {
 				 * er soll die parcours.dtd bitte im Verzeichnis "parcours"
 				 * suchen. */
 				new EntityResolver() {
-					@SuppressWarnings("unused")
-                    public InputSource resolveEntity(
+					public InputSource resolveEntity(
 							String publicId,
 							String systemId)
 					throws SAXException, IOException {
@@ -493,11 +491,9 @@ public class World {
 		botWrapper.addDisposeListener(new Runnable() {
 			@SuppressWarnings("synthetic-access")
 			public void run() {
-				if (botWrapper != null) {
-					botsToStart.remove(botWrapper);
-					botsRunning.remove(botWrapper);
-					obstBG.removeChild(botWrapper.getBranchGroup());
-				}
+				botsToStart.remove(botWrapper);
+				botsRunning.remove(botWrapper);
+				obstBG.removeChild(botWrapper.getBranchGroup());
 			}
 		});
 

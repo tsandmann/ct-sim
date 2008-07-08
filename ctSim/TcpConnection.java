@@ -106,7 +106,6 @@ public class TcpConnection extends Connection {
 		try {
 			final ServerSocket srvSocket = new ServerSocket(p);
 			new SaferThread("ctSim-Listener-"+p+"/tcp") {
-				@SuppressWarnings("synthetic-access")
 				@Override
 				public void work() {
 					try {
@@ -138,7 +137,6 @@ public class TcpConnection extends Connection {
 		final String address = hostname+":"+port; // Nur fuer Meldungen
     	lg.info("Verbinde mit "+address+" ...");
 		new SaferThread("ctSim-Connect-"+address) {
-			@SuppressWarnings("synthetic-access")
 			@Override
 			public void work() {
 				try {

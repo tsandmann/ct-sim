@@ -205,6 +205,7 @@ public class ComConnection extends Connection {
 	 * @return Bot
 	 * @throws ProtocolException
 	 */
+	@Override
 	protected Bot createBot(Command c) throws ProtocolException {
 		CtBot bot;
 		switch (c.getSubCode()) {

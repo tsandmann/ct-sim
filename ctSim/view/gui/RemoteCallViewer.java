@@ -185,6 +185,11 @@ public class RemoteCallViewer extends JPanel {
 		 */
 		abstract class StatusLabel extends JLabel {
 			/**
+			 * UID
+			 */
+			private static final long serialVersionUID = -4299460609018762995L;
+
+			/**
 			 * Statusanzeige
 			 * @param label		Text
 			 * @param tooltip	Tooltip
@@ -204,7 +209,7 @@ public class RemoteCallViewer extends JPanel {
 			 * @see javax.swing.JComponent#setForeground(java.awt.Color)
 			 */
 			@Override
-			public void setForeground(@SuppressWarnings("unused") Color fg) {
+			public void setForeground(Color fg) {
 				// No-op: Wir setzen das im Konstruktor, die Tabelle soll's ab
 				// dann nicht mehr aendern
 			}
@@ -213,7 +218,7 @@ public class RemoteCallViewer extends JPanel {
 			 * @see javax.swing.JComponent#setBackground(java.awt.Color)
 			 */
 			@Override
-			public void setBackground(@SuppressWarnings("unused") Color bg) {
+			public void setBackground(Color bg) {
 				// No-op: Wir setzen das im Konstruktor, die Tabelle soll's ab
 				// dann nicht mehr aendern
 			}
@@ -222,7 +227,7 @@ public class RemoteCallViewer extends JPanel {
 			 * @see javax.swing.JComponent#setEnabled(boolean)
 			 */
 			@Override
-			public void setEnabled(@SuppressWarnings("unused") boolean b) {
+			public void setEnabled(boolean b) {
 				// No-op: Wir sind auf enabled und das soll so bleiben, weil
 				// sonst der Text grau wird
 			}
@@ -319,8 +324,7 @@ public class RemoteCallViewer extends JPanel {
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
 			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(
-			@SuppressWarnings("unused") ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				if (isRunning) {
 					try {
 						rcCompnt.abortCurrentBehavior();
@@ -519,8 +523,7 @@ public class RemoteCallViewer extends JPanel {
 	private ComponentTable buildCompntTable(TableModel m) {
 		final ComponentTable rv = new ComponentTable(m);
 		m.addTableModelListener(new TableModelListener() {
-			public void tableChanged(
-			@SuppressWarnings("unused") TableModelEvent e) {
+			public void tableChanged(TableModelEvent e) {
 				rv.accomodateContent();
 			}
 		});
@@ -553,8 +556,7 @@ public class RemoteCallViewer extends JPanel {
 			private static final long serialVersionUID = 3932551442111274878L;
 
 			@Override
-			public boolean isCellEditable(@SuppressWarnings("unused") int row,
-			int column) {
+			public boolean isCellEditable(int row, int column) {
 				return column == 1;
 			}
 		};
@@ -581,9 +583,7 @@ public class RemoteCallViewer extends JPanel {
 
 		JButton refresh = new JButton("Holen");
 		refresh.addActionListener(new ActionListener() {
-			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(
-			@SuppressWarnings("unused") ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				while (availM.getRowCount() > 0)
 					availM.removeRow(0);
 				requestRCallList();
@@ -621,8 +621,7 @@ public class RemoteCallViewer extends JPanel {
 		JButton b = new JButton(new AbstractAction("\u2192") {
 			private static final long serialVersionUID = - 3903803946116099232L;
 
-			public void actionPerformed(
-			@SuppressWarnings("unused") ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				int selected = availBhvs.getSelectedRow();
 				if (selected == -1)
 					return;
@@ -643,9 +642,7 @@ public class RemoteCallViewer extends JPanel {
 
 		JButton clearAll = new JButton("Alle entfernen");
 		clearAll.addActionListener(new ActionListener() {
-			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(
-			@SuppressWarnings("unused") ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				for (int row=plannedM.getRowCount()-1; row>=0; row--) {
 					if (plannedM.getValueAt(row, 0) instanceof PlannedBhvModel.Done) {
 						plannedM.removeRow(row);
@@ -657,9 +654,7 @@ public class RemoteCallViewer extends JPanel {
 		
 		JButton kill = new JButton("aktiven RC stornieren");
 		kill.addActionListener(new ActionListener() {
-			@SuppressWarnings("synthetic-access")
-			public void actionPerformed(
-			@SuppressWarnings("unused") ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				try {
 					rcCompnt.abortCurrentBehavior();
 				} catch (IOException excp) {

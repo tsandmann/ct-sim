@@ -153,8 +153,7 @@ public class TournamentTreeGuiTest extends JFrame {
     	setLayout(new BorderLayout());
     	JButton her = new JButton("+");
     	her.addActionListener(new ActionListener() {
-            public void actionPerformed(@SuppressWarnings("unused")
-				ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
 	            tm.addLevel();
 	            for (int i = 0; i < t.getRowCount(); i++)
 	            	t.expandRow(i);
@@ -163,8 +162,7 @@ public class TournamentTreeGuiTest extends JFrame {
     	});
     	JButton weg = new JButton("\u2013");
     	weg.addActionListener(new ActionListener() {
-    		public void actionPerformed(@SuppressWarnings("unused")
-    			ActionEvent e) {
+    		public void actionPerformed(ActionEvent e) {
     			tm.removeNode();
     			for (int i = 0; i < t.getRowCount(); i++)
     				t.expandRow(i);

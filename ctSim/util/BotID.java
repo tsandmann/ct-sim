@@ -86,6 +86,7 @@ public class BotID extends java.lang.Number {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return String.valueOf(intValue());
 	}

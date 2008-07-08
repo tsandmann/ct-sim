@@ -51,8 +51,7 @@ public class Leds extends GuiBotBuisitor {
 
 			setModel(model);
 			model.addChangeListener(new ChangeListener() {
-				public void stateChanged(
-					@SuppressWarnings("unused") ChangeEvent e) {
+				public void stateChanged(ChangeEvent e) {
 					LedViewer.this.setToolTipText(
 						tooltip + " \u2013 " // Streckenstrich ("Minuszeichen")
 						+ (model.isSelected() ? "leuchtet" : "leuchtet nicht"));

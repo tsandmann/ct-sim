@@ -140,8 +140,8 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	public void sendRC5Code(String code) {
 		try {
 			for (BotComponent<?> c : components) {
-				if ((Object)c instanceof Sensors.RemoteControl) {
-					((Sensors.RemoteControl)((Object)c)).send(code);
+				if (c instanceof Sensors.RemoteControl) {
+					((Sensors.RemoteControl)c).send(code);
 					lg.fine("RC5Code fuer Taste \"" + code + "\" gesendet");
 					break;
 				}
