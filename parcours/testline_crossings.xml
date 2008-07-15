@@ -51,14 +51,14 @@
 		
 		<appearance type="1"> 
 			<description>Fussboden des Startfeldes 1</description>
-			<color type="ambient">990000</color>
-			<color type="diffuse">#CCFFFF</color>
+			<color type="ambient">#993030</color>
+			<color type="diffuse">#993030</color>
 		</appearance>
 		
 		<appearance type="2"> 
 			<description>Fussboden des Startfeldes 2</description>
 			<color type="ambient">#000099</color>
-			<color type="diffuse">#CCFFFF</color>
+			<color type="diffuse">#000099</color>
 		</appearance>
 
 		<appearance type="0"> 
@@ -70,7 +70,7 @@
 		<appearance type="Z"> 
 			<description>Fussboden des Zielfeldes 0</description>
 			<color type="ambient">#66FF00</color>
-			<color type="diffuse">#CCFFFF</color>
+			<color type="diffuse">#66FF00</color>
 		</appearance>
 	
 		<appearance type="*"> 
