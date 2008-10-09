@@ -67,12 +67,12 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         * @return Umdrehungen pro Sekunde (exakter Wert, d.h. mit
         * Nachkommaanteil)
         */
-        protected float revsThisSimStep() {
+        protected double revsThisSimStep() {
             // LODO Die Kennlinien der echten Motoren sind nicht linear
-            float speedRatio = governor.get().floatValue()
+            double speedRatio = governor.get().floatValue()
                 / PWM_MAX;
-            float speedInRps = speedRatio * REVS_PER_SEC_MAX;
-            float deltaTInSec = parent.getDeltaTInMs() / 1000f;
+            double speedInRps = speedRatio * REVS_PER_SEC_MAX;
+            double deltaTInSec = parent.getDeltaTInMs() / 1000.0d;
             return speedInRps * deltaTInSec;
         }
     }
@@ -416,7 +416,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
             /**
             * Bruchteil des Encoder-Schritts, der beim letztem Sim-Schritt
-            * &uuml;brig geblieben ist [-1; 1]. Wird hier gespeichert, um zu
+            * &uuml;brig geblieben ist (-1; 1). Wird hier gespeichert, um zu
             * verhindern, dass sich der Rundungsfehler mit der Zeit
             * anh&auml;uft.
             */
