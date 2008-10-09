@@ -416,7 +416,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
             /**
             * Bruchteil des Encoder-Schritts, der beim letztem Sim-Schritt
-            * &uuml;brig geblieben ist [0; 1[. Wird hier gespeichert, um zu
+            * &uuml;brig geblieben ist [-1; 1]. Wird hier gespeichert, um zu
             * verhindern, dass sich der Rundungsfehler mit der Zeit
             * anh&auml;uft.
             */
