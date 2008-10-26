@@ -54,9 +54,9 @@ import ctSim.util.Misc;
  * <ol>
  * <li>Ein realer (in Hardware existierender) Bot, der per USB oder TCP
  * verbunden ist, sendet laufend Messwerte der Sensoren und andere
- * Statusinformationen. 11 Byte auf dem Draht stellen die Messwerte eines
+ * Statusinformationen. 12 Byte auf dem Draht stellen die Messwerte eines
  * Sensorpaars dar, z.B. linker und rechter Distanzsensor; die Aufgabe dieser
- * Klasse ist das Lesen und Repr&auml;sentieren dieser 11 Byte innerhalb des
+ * Klasse ist das Lesen und Repr&auml;sentieren dieser 12 Byte innerhalb des
  * Sim.</li>
  * <li>Ein simulierter Bot (Bot-Steuercode, auf einem PC l&auml;uft) bekommt
  * &uuml;ber seine TCP-Verbindung vom Sim Sensorwerte gef&uuml;ttert. Der Sim
@@ -116,7 +116,7 @@ import ctSim.util.Misc;
  * interpretiert werden, ist Sache der Bot-Komponenten wie in der
  * {@linkplain Code Command-Code-Liste} beschrieben. </li>
  * <li>Beim Start des Sim &uuml;bertr&auml;gt er ein Command mit dem
- * Command-Code {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
+ * Command-Code {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * Der Bot antwortet mit einem Command, das ihn als realen Bot ausweist
  * (Command-Code WELCOME, Sub-Command-Code
  * {@link SubCode#WELCOME_REAL WELCOME_REAL}). Falls der Bot schon l&auml;uft,
@@ -127,12 +127,12 @@ import ctSim.util.Misc;
  * &uuml;berhaupt nie.</li>
  * <li>Jederzeit w&auml;hrend der Verbindung kann der Sim ein Command senden,
  * das das Bild anfordert, das der Maussensor auf der Botunterseite sieht
- * (Command-Code {@link Code#SENS_MOUSE_PICTURE SENS_MOUSE_PICTURE}). Der Bot
+ * (Command-Code {@link Command.Code#SENS_MOUSE_PICTURE SENS_MOUSE_PICTURE}). Der Bot
  * beantwortet das mit einer Serie von Commands mit dem Aufbau, der in
  * {@link MousePictureComponent} beschrieben ist</li>
  * <li>Jederzeit w&auml;hrend der Verbindung kann der Sim ein Command senden,
  * das einen Befehl der RC5-Fernbedienung repr&auml;sentiert (Command-Code
- * {@link Code#SENS_RC5 SENS_RC5})</li>
+ * {@link Command.Code#SENS_RC5 SENS_RC5})</li>
  * </ul>
  * </p>
  * <p>
@@ -141,13 +141,13 @@ import ctSim.util.Misc;
  * <li>Der Sim lauscht auf dem TCP-Port, der in der Konfigdatei angegeben ist
  * (Parameter "botport").</li>
  * <li>Bot-Steuercode verbindet sich mit dem TCP-Port. Der Sim sendet ein
- * Command mit dem {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
+ * Command mit dem {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * Der Bot antwortet mit einem Command, das ihn als simulierten Bot ausweist
  * (Command-Code WELCOME, Sub-Command-Code
  * {@link SubCode#WELCOME_SIM WELCOME_SIM}).</li>
  * <li>Der Sim sendet einen Block von Commands, die Sensorwerte beschreiben. Er
  * ist abgeschlossen mit einem Command, was den Command-Code
- * {@link Code#DONE DONE} hat. Beispiel:
+ * {@link Command.Code#DONE DONE} hat. Beispiel:
  *
  * <pre>
  * Richtung  Command-Code         dataL dataR
@@ -173,7 +173,7 @@ import ctSim.util.Misc;
  * <li>Der Bot berechnet auf Basis der simulierten Sensorwerte seine
  * n&auml;chsten Aktionen. Dann sendet er einen Block von Commands mit
  * Aktuatorwerten. Er ist abgeschlossen mit einem Command, was den Command-Code
- * {@link Code#DONE DONE} hat. Beispiel:
+ * {@link Command.Code#DONE DONE} hat. Beispiel:
  *
  * <pre>
  * Richtung  CmdCode/SubCmdCode   dataL dataR
