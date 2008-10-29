@@ -24,9 +24,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ctSim.Connection;
+import ctSim.controller.Controller;
 import ctSim.model.Command;
+import ctSim.model.ThreeDBot;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotComponent.ConnectionFlags;
+import ctSim.model.bots.ctbot.CtBotSimTest;
+import ctSim.util.BotID;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -63,13 +68,55 @@ import ctSim.util.Misc;
  */
 public abstract class BasicBot implements Bot {
 	/**
+	 * Die Connection an der der Bot hängt
+	 */
+	private Connection connection;
+	
+	/**
+	 * Hier ist der Controller gespeichert, der den Bot verwaltet
+	 */
+	private Controller controller;
+
+	/**
+	 * Liefert die Id eines Bots fuer die Adressierung der Commands zurück
+	 * @return Id des Bots
+	 */
+	public BotID getId() {
+		if (getConnection() == null) {
+			/* bei Testbots gibt's keine Connection / ID */
+			return new BotID(Command.getBroadcastId());
+		}
+		return getConnection().getCmdOutStream().getTo();
+	}
+
+	/**
+	 * Setzt die Id des Bots fuer die Adressierung der Commands 
+	 * @param newId ID des Bots
+	 * @throws ProtocolException Wenn die Id bereits vergeben ist
+	 */
+	public void setId(BotID newId) throws ProtocolException {
+		if (newId.equals(this.getId()))
+			return; // ID ist schon gesetzt
+		if (controller != null) {
+			if (!controller.isIdFree(newId)) {
+				lg.warn("Die neue Id dieses Bots (" + newId
+						+ ") existiert schon im Controller!");
+				throw new ProtocolException("Die neue Id dieses Bots (" + newId
+						+ ") existiert schon im Controller!");
+			}
+		}
+		lg.info("Setze die Id von Bot " + toString() + " auf " + newId);
+		getConnection().getCmdOutStream().setTo(newId);
+	}
+	
+	/**
 	 * Liste
 	 * @param <T> Typ
 	 */
 	public static class BulkList<T> extends ArrayList<T> {
 		/** UID */
 		private static final long serialVersionUID = - 8179783452023605404L;
-
+		
 		/**
 		 * Fuegt Elemente hinzu
 		 * @param elements Die Elemente
@@ -79,7 +126,7 @@ public abstract class BasicBot implements Bot {
                 add(e);
         }
 	}
-
+	
 	/**
 	 * Zaehlklasse
 	 */
@@ -210,7 +257,6 @@ public abstract class BasicBot implements Bot {
     			throw new ProtocolException("Kommando ist Unfug: Hat als " +
     					"Richtung nicht 'Anfrage'; ignoriere");
     		}
-
     		for (BotComponent<?> c : this)
     			c.offerRead(command);
     		if (! command.hasBeenProcessed())
@@ -219,9 +265,8 @@ public abstract class BasicBot implements Bot {
 
     	/**
     	 * View-Update durchfuehren
-    	 * @throws InterruptedException
     	 */
-    	public void updateView() throws InterruptedException {
+    	public void updateView() {
     		for (BotComponent<?> c : BotComponentList.this)
     			c.updateExternalModel();
         }
@@ -285,6 +330,8 @@ public abstract class BasicBot implements Bot {
 	 * @param name Bot-Name
 	 */
 	public BasicBot(String name) {
+		super();
+		this.controller = null;
 		// Instanz-Zahl erhoehen
 		numInstances.increase(getClass());
 		int num = numInstances.get(getClass()) + 1;
@@ -316,8 +363,12 @@ public abstract class BasicBot implements Bot {
 	 */
 	public void dispose() {
 		// keine Ausgabe fuer 3D-Bots, den zu jedem 3D-Bot gibt es auch einen Sim-Bot
-		if (!this.getClass().getName().contains("ThreeDBot")) {
-			lg.info(name + " verkr\u00FCmelt sich");
+		if (!(this instanceof ThreeDBot)) {
+			try {
+				lg.info(name + " verkr\u00FCmelt sich");
+			} catch (Exception e) {
+				// egal
+			}
 		}
 		for (Runnable r : disposeListeners)
 			r.run();
@@ -393,4 +444,44 @@ public abstract class BasicBot implements Bot {
 	public void updateView() throws InterruptedException {
 		components.updateView();
 	}
+
+	/**
+	 * Liefert den Controller zurueck, der diesen Bot verwaltet
+	 * @return Controller der Controller
+	 */
+	public Controller getController() {
+		return controller;
+	}
+
+	/**
+	 * Setzt den zustaendigen Controller
+	 * @param controller
+	 * @throws ProtocolException Wenn die Id dieses Bots im Controller schon belegt ist
+	 */
+	public void setController(Controller controller) throws ProtocolException {
+		this.controller = controller;
+		if (this instanceof CtBotSimTest)
+			return;	// Test-Bots unterstuetzen keine IDs!
+		if (controller != null){
+			if (!controller.isIdFree(getId()))
+				throw new ProtocolException("Die Id dieses Bots existiert schon im Controller!");
+		}
+	}
+	
+	/**
+	 * Liefert die Connection zurueck über die der Bot zu erreichen ist
+	 * @return connection
+	 */
+	public Connection getConnection() {
+		return connection;
+	}
+
+	/**
+	 * Setzt die Connection über die der Bot zu erreichen ist
+	 * @param connection
+	 */
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+
 }

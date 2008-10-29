@@ -35,7 +35,7 @@ import ctSim.view.gui.SplashWindow;
  */
 public class Main {
 	/** Versionsnummer */
-	public static final String VERSION = "2.3";
+	public static final String VERSION = "2.4";
 	/** Konfigurationsdatei */
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
     /** Flag, welches die Anzeige des Splashscreens bewirkt (DEFAULT: TRUE) */
@@ -91,7 +91,8 @@ public class Main {
 				e.printStackTrace();
 				/* Programm erst nach Klick auf Splash schliessen */
 				MouseAdapter disposeOnClick = new MouseAdapter() {
-				    public void mouseClicked(MouseEvent evt) {
+				    @Override
+					public void mouseClicked(MouseEvent evt) {
 				    	System.exit(1);
 				    }
 				};

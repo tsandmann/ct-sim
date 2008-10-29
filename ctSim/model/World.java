@@ -254,8 +254,7 @@ public class World {
 				 * er soll die parcours.dtd bitte im Verzeichnis "parcours"
 				 * suchen. */
 				new EntityResolver() {
-					@SuppressWarnings("unused")
-                    public InputSource resolveEntity(
+					public InputSource resolveEntity(
 							String publicId,
 							String systemId)
 					throws SAXException, IOException {
@@ -286,8 +285,7 @@ public class World {
 				 * er soll die parcours.dtd bitte im Verzeichnis "parcours"
 				 * suchen. */
 				new EntityResolver() {
-					@SuppressWarnings("unused")
-                    public InputSource resolveEntity(
+					public InputSource resolveEntity(
 							String publicId,
 							String systemId)
 					throws SAXException, IOException {
@@ -493,11 +491,9 @@ public class World {
 		botWrapper.addDisposeListener(new Runnable() {
 			@SuppressWarnings("synthetic-access")
 			public void run() {
-				if (botWrapper != null) {
-					botsToStart.remove(botWrapper);
-					botsRunning.remove(botWrapper);
-					obstBG.removeChild(botWrapper.getBranchGroup());
-				}
+				botsToStart.remove(botWrapper);
+				botsRunning.remove(botWrapper);
+				obstBG.removeChild(botWrapper.getBranchGroup());
 			}
 		});
 
@@ -1098,5 +1094,24 @@ public class World {
 	 */
 	public void deleteBot(Bot bot) {
 		parcours.setStartFieldUnused(bot);
+	}
+	
+	/**
+	 * Setzt alle Bots auf ihre Startpplaetze zurueck.
+	 * Hier werden nur simulierte Bots (ThreeDBot-Instanzen) beruecksichtigt, weil
+	 * sonstige Bots in World nicht bekannt sind! 
+	 */
+	public void resetAllBots() {
+		for (ThreeDBot b : botsRunning) {
+			Bot bot = b.getSimBot();
+			/* Startfeld des Bots ermitteln */
+			int startField = parcours.getStartPositionNumber(bot);
+			/* Position und Heading des Startfelds setzen */
+			Point3d pos = parcours.getUsedStartPosition(startField);
+			pos.z = 0.075;
+			Vector3d head = parcours.getStartHeading(startField);
+			b.setHeading(head);
+			b.setPosition(pos);
+		}
 	}
 }

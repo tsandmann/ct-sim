@@ -222,7 +222,7 @@ mehr benoetigt wird.
 		
 		<mkdir dir="${build.lib.dir}" />
 		
-		<jar destfile="${build.lib.dir}/${name}-${version}.jar"
+		<jar destfile="${build.lib.dir}/${name}.jar"
 			basedir="${build.classes.dir}">
 		
 			<!--

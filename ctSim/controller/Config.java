@@ -147,6 +147,9 @@ public class Config {
 	 * @return Wert zum Key
 	 */
 	public static String getValue(String key) {
+		if (parameters == null) {
+			return "";
+		}
 		return parameters.get(key);
 	}
 

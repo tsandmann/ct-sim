@@ -122,7 +122,7 @@ public class StatusBar extends Box {
 		this.tickRateSlider.addChangeListener(new ChangeListener() {
 
 			@SuppressWarnings({"synthetic-access","boxing"})
-			public void stateChanged(@SuppressWarnings("unused") ChangeEvent e) {
+			public void stateChanged(ChangeEvent e) {
 				
 				if(StatusBar.this.tickRateSlider.getValueIsAdjusting()) {
 					StatusBar.this.tickRateField.setText(String.valueOf(StatusBar.this.tickRateSlider.getValue()));

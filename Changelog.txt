@@ -1,5 +1,56 @@
 Changelog fuer c't-Sim
 ======================
+2008-10-29 Timo Sandmann [mail@timosandmann.de]: Release 15
+
+2008-07-10 Frank Menzel [menzelfr@gmx.net]: In Parcours testline_crossings Start- und Zielfeld mit der korrekten Zielfarbe versehen
+
+2008-07-08 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt (#169)
+
+2008-07-06 Timo Sandmann [mail@timosandmann.de]: Ant-Script fuer Applet-Bau erweitert, so dass das Applet automatisch per tftp auf den WiPort geladen werden kann.
+												 Hierzu muss man lediglich die <property name="upload" value="1" /> einkommentieren und die IP-Adresse eintragen.
+
+2008-06-30 Frank Menzel [menzelfr@gmx.net]: Neue Linienkreuzungen, X und T-Kreuzungen (alle 4 Richtungen), neuer Parcours testline_crossings, 
+											Beschreibung am Anfang von ParcoursLoader.java, siehe auch documentation/simlines/lines.html 
+
+2008-04-01 Timo Sandmann [mail@timosandmann.de]: LEDs vorne (links/rechts) vertauscht, so dass die linke LED links angezeigt wird und die Rechte rechts
+
+2008-03-29 Timo Sandmann [mail@timosandmann.de]: Sim-Applet geht nun wieder (hatte keinen Controller!)
+
+2008-03-28 Timo Sandmann [mail@timosandmann.de]: Broadcast-Nachrichten implementiert,
+												 Workaround fuer Synchronisationsproblem bei generateBotId(),
+												 DONE-Paket-Auswertung bei realen Bots (spart View-Updates),
+												 Command-Klasse um unbekannte Kommandos, die nicht fuer den Sim sind, erweitert: Sim kann nun auch Kommandos verarbeiten, die nicht dem Bot-2-Sim-Protokoll entsprechen, diese aber NUR weiterleiten,
+												 Timeout fuer doHandshake() hinzugefuegt, 
+												 Bugfix fuer Sim-Applet, macht aber immer noch Probleme
+
+2008-03-18 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Adressvergabe und isIdFree(),
+	Klasse BotID gebaut und als Datentyp fuer alle Bot-IDs verwendet. 
+	Ausgaben der Bot-Adressen sind nun intuitiv verstaendliche, positive Zahlen (wie unsigned byte)
+
+2008-03-17 Timo Sandmann [mail@timosandmann.de]: RemoteCall-Liste wird nun erst geholt, wenn erstmalig auf den RemoteCall-Fenster-Knopf geklickt wird
+
+2008-03-17 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Connection-Problem aller Bots
+
+2008-03-17 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Null-Pointer-Exception bei USB-Bots
+
+2008-03-17 Timo Sandmann [mail@timosandmann.de]: Syntaxfehler in BasicBot.java korrigiert, Debug-Ausgaben einheitlich auf Bot-Kurzname inkl. Nummer umgestellt
+
+2008-03-17 Benjamin Benz [bbe@heise.de]: Sim nimmt keine Bots mehr an, deren Ids bereits vergeben sind
+
+2008-03-17 Benjamin Benz [bbe@heise.de]: Weiterleitung von Broadcasts eingebaut & ComConnections mit den anderen Gleichgestellt
+
+2008-03-16 Benjamin Benz [bbe@heise.de]: Automatische Adressvergabe für Bots
+
+2008-02-29 Benjamin Benz [bbe@heise.de]: Sim kann nun auch Nachrichten weiterleiten
+
+2008-03-11 Timo Sandmann [mail@timosandmann.de]: Logging in Datei per default aus (einstellbar in config/logging.conf), Debug-Ausgabe in Datei deaktiviert
+
+2008-03-10 Timo Sandmann [mail@timosandmann.de]: Reset-Funktion fuer Bots eingebaut, Icons ergaenzt, ToDo "BotViewer-Resize" erledigt
+
+2008-03-08 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Zombie-Problem (nicht mehr vorhandener Bot wurde noch angezeigt und lies sich nicht schliessen) - war NullPointerException im Dispose-Listener
+
+2008-02-29 Benjamin Benz [bbe@heise.de]: Datenstruktur fuer Kommunikation auf Sender-IDs erweitert
+
 2008-02-08 Stefan Ehrhardt [stefan.e.ehrhardt@googlemail.com]: Commandline Parameter "-nosplash" zum Start ohne Splashscreen hinzugefuegt.
 
 2008-02-02 Timo Sandmann [mail@timosandmann.de]: Fernbedienung neu implementiert (#158), Splash-Screen gebaut, Code teilweise aufgeraeumt, massig Doku ergaenzt, einige TODOs erledigt, ABL-Unterstuetzung eingebaut fuer CtBotSimTcp und RealCtBot (noch deaktiviert)

@@ -1,8 +1,11 @@
 package ctSim.controller;
 
 import java.io.File;
+import java.net.ProtocolException;
 
+import ctSim.model.Command;
 import ctSim.model.rules.Judge;
+import ctSim.util.BotID;
 import ctSim.view.View;
 
 /**
@@ -99,4 +102,32 @@ public interface Controller {
 	 * die Verantwortung f&uuml;r den Programmablauf beim Controller.
 	 */
 	void onApplicationInited();
+	
+	/**
+     * Setzt alle Bots zurueck
+     */
+    public void resetAllBots();
+	
+	/**
+	 * Liefert ein Kommando an einen Bot aus.
+	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben
+	 * Sender und Empfänger stehen in dem command drin 
+	 * @param command das zu übertragende Kommando
+	 * @throws ProtocolException Falls kein passender empfaenger gefunden wurde
+	 */
+	public void deliverMessage(Command command) throws ProtocolException;
+	
+	/**
+	 * Liefert eine Id aus dem Adresspoll zurück
+	 * @return Die neue Id
+	 * @throws ProtocolException Wenn keine Adresse mehr frei
+	 */
+	public BotID generateBotId() throws ProtocolException;
+	
+	/**
+	 * Testet, ob bereits ein Bot diese Id hat
+	 * @param id zu testende Id
+	 * @return True, wenn noch kein Bot diese Id nutzt 
+	 */
+	public boolean isIdFree(BotID id);
 }

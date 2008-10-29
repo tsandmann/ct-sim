@@ -105,7 +105,7 @@ public class Decoratoror {
 			ClassLoader.getSystemClassLoader(),
 			new Class[] { resultInterface },
 			new InvocationHandler() {
-				public Object invoke(@SuppressWarnings("unused") Object proxy,
+				public Object invoke(Object proxy,
 					Method method, Object[] args) throws Throwable {
 					return method.invoke(methodImpls.get(method), args);
 				}

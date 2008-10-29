@@ -21,8 +21,7 @@ public abstract class NumberSingleton extends BotComponent<SpinnerNumberModel> {
 	public NumberSingleton() {
 		super(new SpinnerNumberModel());
 		getExternalModel().addChangeListener(new ChangeListener() {
-			public void stateChanged(
-			@SuppressWarnings("unused") ChangeEvent e) {
+			public void stateChanged(ChangeEvent e) {
 				internalModel = getExternalModel().getNumber();
 			}
 		});

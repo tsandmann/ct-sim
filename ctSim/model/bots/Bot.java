@@ -1,5 +1,9 @@
 package ctSim.model.bots;
 
+import java.net.ProtocolException;
+
+import ctSim.controller.Controller;
+
 /**
  * Interface fuer alle Bots
  */
@@ -40,4 +44,17 @@ public interface Bot {
 	 * @param runsWhenAObstDisposes
 	 */
 	public void addDisposeListener(Runnable runsWhenAObstDisposes);
+	
+	/**
+	 * Liefert den Controller zurueck, der den Bot verwaltet
+	 * @return Controller Der Controller
+	 */
+	public Controller getController();
+	
+	/**
+	 * Setzt den Controller, der den Bot verwaltet
+	 * @param controller Der Controller
+	 * @throws ProtocolException 
+	 */
+	public void setController(Controller controller) throws ProtocolException;
 }

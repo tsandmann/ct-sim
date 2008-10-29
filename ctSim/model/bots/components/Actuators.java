@@ -194,6 +194,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		@Override
 		public synchronized void updateExternalModel() {
 			// NOP
 		}
@@ -528,6 +529,13 @@ public class Actuators {
 		public Led(String name, int bitIndexFromLsb, Color colorWhenOn) {
 			super(new JToggleButton.ToggleButtonModel());
 			this.name = name;
+			
+			/* LED 0 und 1 vertauschen (vorne links/rechts) */
+			if (bitIndexFromLsb == 0)
+				bitIndexFromLsb = 1;
+			else if (bitIndexFromLsb == 1)
+				bitIndexFromLsb = 0;
+			
 			bitMask = (int)Math.pow(2, bitIndexFromLsb);
 			this.colorWhenOn = colorWhenOn;
 		}

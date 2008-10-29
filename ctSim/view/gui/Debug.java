@@ -20,8 +20,8 @@
 package ctSim.view.gui;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+//import java.io.File;
+//import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,6 +36,7 @@ public class Debug {
 	/** Output */
 	public static final Debug out = new Debug();
 	/** Log-File */
+	@SuppressWarnings("unused")
 	private final String LOG_FILE = "debug.txt";
 	/** Zeitformat */
 	private final String TIME_PREFIX = "[HH:mm:ss] ";
@@ -55,16 +56,16 @@ public class Debug {
 		
 		this.timeFormatter = new SimpleDateFormat(this.TIME_PREFIX);
 		
-		try {
-			File file = new File(this.LOG_FILE);
-			
-			FileWriter fw = new FileWriter(file);
-			
-			this.bw = new BufferedWriter(fw);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			File file = new File(this.LOG_FILE);
+//			
+//			FileWriter fw = new FileWriter(file);
+//			
+//			this.bw = new BufferedWriter(fw);
+//			
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	/**

@@ -84,21 +84,28 @@ public class TimeLogger implements View {
 	/**
 	 * @see ctSim.view.View#onBotAdded(ctSim.model.bots.Bot)
 	 */
-	public void onBotAdded(@SuppressWarnings("unused") Bot bot) {
+	public void onBotAdded(Bot bot) {
 		// no-op
 	}
 
 	/**
 	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
 	 */
-	public void onJudgeSet(@SuppressWarnings("unused") Judge j) {
+	public void onJudgeSet(Judge j) {
 		// no-op
 	}
 
 	/**
 	 * @see ctSim.view.View#onWorldOpened(ctSim.model.World)
 	 */
-	public void onWorldOpened(@SuppressWarnings("unused") World newWorld) {
+	public void onWorldOpened(World newWorld) {
 		// no-op
+	}
+
+	/**
+	 * @see ctSim.view.View#onResetAllBots()
+	 */
+	public void onResetAllBots() {
+		// NOP
 	}
 }

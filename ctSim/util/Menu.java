@@ -30,6 +30,11 @@ public class Menu extends JMenu {
 	 */
 	public static abstract class MAction extends AbstractAction {
 		/**
+		 * UID
+		 */
+		private static final long serialVersionUID = -8593361086944554328L;
+
+		/**
 		 * @param label	Text
 		 * @param icon	Icon
 		 */
@@ -89,7 +94,7 @@ public class Menu extends JMenu {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(
-		@SuppressWarnings("unused") ActionEvent e) {
+		ActionEvent e) {
 			code.run();
 		}
 	}

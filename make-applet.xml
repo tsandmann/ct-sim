@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Ant-Task zum Erstellen der Jars fuer das Applet. Legt ein Verzeichnis
+<!-- 
+Ant-Task zum Erstellen der Jars fuer das Applet. Legt ein Verzeichnis
 build-applet an. Wenn es schon etwas enthaelt, wird's geloescht.
 
 Anleitung zum Applet-Bau und -Deployment:
@@ -9,15 +10,32 @@ Die Ant-Datei erwartet, im Projekt-Verzeichnis zu sein (eine Stufe oberhalb
 des Ordners ctSim).
 
 Ausfuehren in Eclipse: Alt-Shift-X, dann Q. Auch ueber Run > External Tools
-zu erreichen. -->
+zu erreichen. 
+-->
 
 <project default="make-applet">
 
-<!-- Zwei Variablen -->
+<!-- Variablen -->
 <property name="builddir" location="applet-build" />
 <property name="iconsdir" location="./images" />
 <property name="jar-base-filename" value="ctsim-applet" />
+<property name="makecobdir" location="./contrib/makecob" />
 
+<!--
+	Soll das Applet automatisch auf den Bot geladen werden, 
+	kommentiert man die folgende Zeile wieder ein. (<!-  und -> weg)
+	Achtung, Perl muss installiert sein! Unter Windows hilft z.B.
+	http://www.activestate.com/Products/activeperl/
+	Die IP-Adresse des WiPorts traegt man eine Zeile tiefer ein
+-->
+
+<!--
+<property name="upload" value="1" /> 
+-->
+<property name="botaddress" value="192.168.1.22" />
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
 <target name="make-applet">
 	<!-- Builddir samt Inhalt loeschen falls vorhanden -->
 	<delete dir="${builddir}" />
@@ -30,65 +48,66 @@ zu erreichen. -->
 	-->
 
 	<!-- Ding kompilieren samt allen Abhaengigkeiten -->
-		<javac srcdir="ctSim/applet" sourcepath="." destdir="${builddir}" />
+	<javac srcdir="ctSim/applet" sourcepath="." destdir="${builddir}" 
+		classpath="contrib/rxtx.jar" />
 
-		<!-- Manifest fuer die Jars schreiben -->
-		<manifest file="${builddir}/META-INF/MANIFEST.MF">
-		  <attribute name="Built-By" value="${user.name}"/>
-		</manifest>
+	<!-- Manifest fuer die Jars schreiben -->
+	<manifest file="${builddir}/META-INF/MANIFEST.MF">
+	  <attribute name="Built-By" value="${user.name}"/>
+	</manifest>
 
-		<!--
-		Mehrere Jars erzeugen
+	<!--
+	Mehrere Jars erzeugen
 
-		Keins darf >64K sein, weil's sonst der WiPort nicht packt - siehe
-		https://www.heise.de/trac/ctbot/wiki/AppletHowto#Detail:Die64KBGrenze
+	Keins darf >64K sein, weil's sonst der WiPort nicht packt - siehe
+	http://www.heise.de/ct/projekte/machmit/ctbot/wiki/AppletHowto#Detail:Die64-KB-Grenze
 
-		Wir rufen mehrfach die unten definierte "Funktion" namens make-jar auf
-		-->
-		<antcall target="make-jar">
-			<param name="num" value="1"/>
+	Wir rufen mehrfach die unten definierte "Funktion" namens make-jar auf
+	-->
+	<antcall target="make-jar">
+		<param name="num" value="1"/>
+		<param name="subdirs" value="
+			ctSim/*.class,
+			ctSim/applet/**/*.class,
+			ctSim/controller/**/*.class"/>
+	</antcall>
+	<antcall target="make-jar">
+		<param name="num" value="2"/>
+		<param name="subdirs" value="
+			ctSim/model/*.class,
+			ctSim/model/bots/*.class"/>
+	</antcall>
+	<antcall target="make-jar">
+		<param name="num" value="3"/>
+		<param name="subdirs" value="
+			ctSim/view/**/*.class"/>
+	</antcall>
+	<antcall target="make-jar">
+		<param name="num" value="4"/>
+		<param name="subdirs" value="
+			ctSim/model/bots/ctbot/*.class,
+			ctSim/util/**/*.class"/>
+	</antcall>
+    <antcall target="make-jar">
+			<param name="num" value="5"/>
 			<param name="subdirs" value="
-				ctSim/*.class,
-				ctSim/applet/**/*.class,
-				ctSim/controller/**/*.class,
-				ctSim/model/*.class"/>
-		</antcall>
-		<antcall target="make-jar">
-			<param name="num" value="2"/>
-			<param name="subdirs" value="
-				ctSim/model/bots/*.class,
-				ctSim/model/bots/ctbot/*.class"/>
-			<param name="exclude" value="
-				**/CtBotSimTcp.class"/>
-		</antcall>
-		<antcall target="make-jar">
-			<param name="num" value="3"/>
-			<param name="subdirs" value="
-				ctSim/view/**/*.class"/>
-		</antcall>
-		<antcall target="make-jar">
-			<param name="num" value="4"/>
-			<param name="subdirs" value="
-				ctSim/util/**/*.class"/>
-		</antcall>
-	    <antcall target="make-jar">
-				<param name="num" value="5"/>
-				<param name="subdirs" value="
-					ctSim/model/bots/components/*.class"/>
-				<param name="exclude" value="
-					**/CtBotSimTcp.class"/>
-		</antcall>
-		<jar destfile="${builddir}/icons.jar"
-			basedir="${iconsdir}"
-			includes="${builddir}/ctSim/META-INF,*.gif"
-		/>
+				ctSim/model/bots/components/*.class"/>
+	</antcall>
+	<jar destfile="${builddir}/icons.jar"
+		basedir="${iconsdir}"
+		includes="${builddir}/ctSim/META-INF,*.gif"
+	/>
 
-		<!-- Ok Kompilat ist eingepackt, also kann das unkomprimierte jetzt weg
-		(verwirrt nur beim Hochladen) -->
-		<delete dir="${builddir}/ctSim" />
-		<delete dir="${builddir}/META-INF" />
+	<!-- Ok Kompilat ist eingepackt, also kann das unkomprimierte jetzt weg
+	(verwirrt nur beim Hochladen) -->
+	<delete dir="${builddir}/ctSim" />
+	<delete dir="${builddir}/META-INF" />
 
-		<copy file="applet.html" tofile="${builddir}/index.html" />
+	<copy file="applet.html" tofile="${builddir}/index.html" />
+
+	<!-- Bei Bedarf das Applet gleich auf den Bot laden -->
+	<antcall target="upload-applet" />
+	
 </target>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -99,6 +118,120 @@ zu erreichen. -->
 		includes="${builddir}/ctSim/META-INF,${subdirs}"
 		excludes="${exclude}"
 	/>
+</target>	
+	
+<!-- Erstellt eine cob-Datei fuer den WiPort -->
+<target name="make-cob">
+	<exec executable="perl" dir="${builddir}">
+		<arg value="makecob" />
+		<arg value="-v" />
+		<arg value="${file}" />
+	</exec>
+	<copy file="${builddir}/web.cob" tofile="${builddir}/web${num}.cob" />
+	<delete file="${builddir}/web.cob" />
+</target>
+
+<!-- Erstellt eine cob-Datei aus jar-Archiv Nr. "num" -->
+<target name="make-cob-step">
+	<antcall target="make-cob">
+		<param name="file" value="${jar-base-filename}-${i}.jar"/>
+		<param name="num" value="${i}"/>				
+	</antcall>	
+</target>
+
+<!-- Erstellt alle cob-Dateien -->
+<target name="make-all-cobs">
+	<copy file="${makecobdir}/makecob" tofile="${builddir}/makecob" />
+	
+	<antcall target="make-cob">
+		<param name="file" value="index.html" />
+		<param name="num" value="10"/>
+	</antcall>	
+	<antcall target="make-cob">
+		<param name="file" value="icons.jar" />
+		<param name="num" value="11"/>
+	</antcall>	
+	
+	<!-- es gibt keine for-Schleife, also ausrollen -->
+	<antcall target="make-cob-step">
+		<param name="i" value="1"/>
+	</antcall>
+	<antcall target="make-cob-step">
+		<param name="i" value="2"/>
+	</antcall>
+	<antcall target="make-cob-step">
+		<param name="i" value="3"/>
+	</antcall>
+	<antcall target="make-cob-step">
+		<param name="i" value="4"/>
+	</antcall>
+	<antcall target="make-cob-step">
+		<param name="i" value="5"/>
+	</antcall>
+	
+	<delete file="${builddir}/makecob" />
+</target>
+
+<!-- Laedt die cob-Dateien per tftp auf den Bot -->
+<target name="tftp-upload">
+	<!-- Linux benutzt das Sh-Script -->
+	<exec executable="sh" dir="${builddir}" os="Linux">
+		<arg value="${makecobdir}/upload.sh" />
+		<arg value="${botaddress}" />
+		<arg value="binary\nput ${src} ${dest}" />
+	</exec>
+
+	<!-- Mac OS X benutzt das Sh-Script -->
+	<exec executable="sh" dir="${builddir}" os="Mac OS X">
+		<arg value="${makecobdir}/upload.sh" />
+		<arg value="-e ${botaddress}" />
+		<arg value="put ${src} ${dest}" />
+	</exec>
+	
+	<!-- Windows bekommt die Parameter direkt -->
+	<exec executable="tftp" dir="${builddir}" os="Windows XP">
+		<arg value="-i" />
+		<arg value="${botaddress}" />
+		<arg value="PUT" />
+		<arg value="${src}" />
+		<arg value="${dest}" />
+	</exec>
+</target>
+		
+<!-- Erstellt cob-Dateien aus dem Applet und laedt sie per tftp auf den WiPort -->
+<target name="upload-applet" if="upload">	
+	<!-- web{i}.cob bauen -->
+	<antcall target="make-all-cobs" />
+	
+	<!-- Dateien auf den WiPport laden -->
+	<antcall target="tftp-upload">
+		<param name="src" value="web10.cob" />
+		<param name="dest" value="WEB1" />
+	</antcall>
+	<antcall target="tftp-upload">
+		<param name="src" value="web11.cob" />
+		<param name="dest" value="WEB2" />
+	</antcall>
+	<antcall target="tftp-upload">
+		<param name="src" value="web1.cob" />
+		<param name="dest" value="WEB3" />
+	</antcall>	
+	<antcall target="tftp-upload">
+		<param name="src" value="web2.cob" />
+		<param name="dest" value="WEB4" />
+	</antcall>	
+	<antcall target="tftp-upload">
+		<param name="src" value="web3.cob" />
+		<param name="dest" value="WEB5" />
+	</antcall>	
+	<antcall target="tftp-upload">
+		<param name="src" value="web4.cob" />
+		<param name="dest" value="WEB6" />
+	</antcall>	
+	<antcall target="tftp-upload">
+		<param name="src" value="web5.cob" />
+		<param name="dest" value="WEB7" />
+	</antcall>		
 </target>
 
 </project>

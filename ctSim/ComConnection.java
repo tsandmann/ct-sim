@@ -9,11 +9,14 @@ import gnu.io.SerialPortEventListener;
 import gnu.io.UnsupportedCommOperationException;
 
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.util.TooManyListenersException;
 
 import ctSim.controller.BotReceiver;
 import ctSim.controller.Config;
+import ctSim.model.Command;
 import ctSim.model.bots.Bot;
+import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.SaferThread;
 
@@ -192,42 +195,35 @@ public class ComConnection extends Connection {
 	 * COM-Verbindung
 	 */
 	private static ComConnection comConnSingleton = null;
-
+	/** Der empfänger der Bots */
+	private static BotReceiver botReceiver = null; 
+	
 	/**
-	 * Thread, der die COM-Connection ueberwacht
+	 * Erzeugt einen Bot
+	 * Überschreibt die entsprechende Methode von Connection, weil hier ein paar Sondersachen dazukommen
+	 * @param c Kommando
+	 * @return Bot
+	 * @throws ProtocolException
 	 */
-	static class ComListenerThread extends SaferThread {
-		/** Bot-Receiver */
-		private final BotReceiver botReceiver;
+	@Override
+	protected Bot createBot(Command c) throws ProtocolException {
+		CtBot bot;
+		switch (c.getSubCode()) {
+    		case WELCOME_REAL:
+    			lg.fine("COM-Verbindung von realem Bot eingegangen");
+    			bot= new RealCtBot(comConnSingleton,c.getFrom());
+    			bot.addDisposeListener(new Runnable() {
+    				public void run() {
+    					spawnThread(botReceiver);
+    				}
+    			});
+    			break;
+    		default:
+    			throw new ProtocolException(c.toString());
+    	}
 		
-		/**
-		 * Erzeugt einen Thread, der auf COM-Connections lauscht
-		 * @param receiver	BotReceiver fuer den neuen Bot
-		 */
-		public ComListenerThread(BotReceiver receiver) {
-			super("ctSim-Listener-COM");
-			this.botReceiver = receiver;
-		}
-		
-		/**
-		 * work-Methode des Threads
-		 * @throws InterruptedException
-		 */
-		@SuppressWarnings("synthetic-access")
-		@Override
-		public void work() throws InterruptedException {
-			comConnSingleton.blockUntilDataAvailable();
-			lg.fine("Serielle Verbindung eingegangen");
-			Bot b = new RealCtBot(comConnSingleton);
-			b.addDisposeListener(new Runnable() {
-				public void run() {
-					spawnThread(botReceiver);
-				}
-			});
-			botReceiver.onBotAppeared(b);
-			die();
-		}
-	}
+		return bot;
+	}	
 	
 	/**
 	 * Startet das Lauschen fuer neue Bots
@@ -238,6 +234,7 @@ public class ComConnection extends Connection {
 			throw new IllegalStateException();
 		try {
 			comConnSingleton = new ComConnection();
+			botReceiver = receiver;
 			spawnThread(receiver);
 		} catch (Exception e) {
 			lg.severe(e, "Konnte serielle Verbindung nicht aufbauen");
@@ -292,6 +289,47 @@ public class ComConnection extends Connection {
 		 */
 		public CouldntOpenTheDamnThingException(Throwable cause) {
 			super(cause);
+		}
+	}
+	
+	/**
+	 * Thread, der die COM-Connection ueberwacht
+	 */
+	static class ComListenerThread extends SaferThread {
+		/** Bot-Receiver */
+		private final BotReceiver botReceiver;
+		
+		/**
+		 * Erzeugt einen Thread, der auf COM-Connections lauscht
+		 * @param receiver	BotReceiver fuer den neuen Bot
+		 */
+		public ComListenerThread(BotReceiver receiver) {
+			super("ctSim-Listener-COM");
+			this.botReceiver = receiver;
+		}
+		
+		/**
+		 * work-Methode des Threads
+		 * @throws InterruptedException
+		 */
+		@SuppressWarnings("synthetic-access")
+		@Override
+		public void work() throws InterruptedException {
+			comConnSingleton.blockUntilDataAvailable();
+			lg.fine("Serielle Verbindung eingegangen");
+			
+			comConnSingleton.doHandshake(botReceiver);
+			
+			////////////////
+			
+//			Bot b = new RealCtBot(comConnSingleton,(byte)0);
+//			b.addDisposeListener(new Runnable() {
+//				public void run() {
+//					spawnThread(botReceiver);
+//				}
+//			});
+//			botReceiver.onBotAppeared(b);
+			die();
 		}
 	}
 }

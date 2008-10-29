@@ -34,9 +34,8 @@ import ctSim.view.contestConductor.ContestConductor.ContestJudge;
  */
 public class ContestConductorTest {
 	/** Siehe {@link ContestConductorTest}. 
-	 * @param args 
-	 * @throws Exception */
-	public static void main(String[] args) throws Exception {
+	 * @param args */
+	public static void main(String[] args) {
 		Main.dependencies.reRegisterImplementation(
 			ContestJudge.class, MockContestJudge.class);
 		Main.main("-conf", "config/ct-sim-contest-conductor-local.xml");

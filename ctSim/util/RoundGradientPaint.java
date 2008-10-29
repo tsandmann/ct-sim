@@ -147,7 +147,6 @@ public class RoundGradientPaint implements Paint {
 	/**
 	 * @see java.awt.Paint#createContext(java.awt.image.ColorModel, java.awt.Rectangle, java.awt.geom.Rectangle2D, java.awt.geom.AffineTransform, java.awt.RenderingHints)
 	 */
-	@SuppressWarnings("unused") // fuer die Parameter
 	public PaintContext createContext(ColorModel cm, Rectangle deviceBounds,
 		Rectangle2D userBounds, AffineTransform aff, RenderingHints h) {
 

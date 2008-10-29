@@ -522,7 +522,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * &uuml;berschrieben haben.
 	 * @param c Command
 	 */
-	public void writeTo(@SuppressWarnings("unused") Command c) { /* No-op */ }
+	public void writeTo(Command c) {
+		/* No-op */ 
+	}
 
 	// E/A -- Lesen ///////////////////////////////////////////////////////////
 
@@ -542,7 +544,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @return Verhalten
 	 * @throws ProtocolException
 	 */
-	@SuppressWarnings("synthetic-access")
 	private Behavior decodeBehavior(Command command)
 	throws ProtocolException {
 		ByteArrayInputStream b = new ByteArrayInputStream(command.getPayload());

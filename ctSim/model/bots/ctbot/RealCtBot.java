@@ -16,6 +16,7 @@ import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
 import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
+import ctSim.util.BotID;
 import ctSim.util.Runnable1;
 import ctSim.util.SaferThread;
 import ctSim.view.gui.AblViewer;
@@ -48,8 +49,15 @@ public class RealCtBot extends CtBot {
 			Command cmd = null;
 			try {
 				cmd = new Command(connection);
-				components.processCommand(cmd);
-				updateView(); //$$$ Jedesmal? Performance?
+				if (cmd.has(Command.Code.DONE)) {
+					updateView();
+					return;
+				}
+				
+				if (!preProcessCommands(cmd)){
+					components.processCommand(cmd);
+					//updateView();
+				}
 			} catch (ProtocolException e) {
 				lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere%s", cmd);
 			} catch (IOException e) {
@@ -79,10 +87,17 @@ public class RealCtBot extends CtBot {
 
 	/**
 	 * @param connection Connection zum Bot
+	 * @param newId Id für die Kommunikation 
+	 * @throws ProtocolException 
 	 */
-	public RealCtBot(Connection connection) {
+	public RealCtBot(Connection connection, BotID newId) throws ProtocolException {
 		super(connection.getShortName()+"-Bot");
-
+		
+		// connection speichern
+		setConnection(connection);
+		
+		setId(newId);
+		
 		connectionName = connection.getName();
 		this.ablResult = null;
 
@@ -129,6 +144,8 @@ public class RealCtBot extends CtBot {
 			}
 		}
 
+		// Und einen CommandProcessor herstellen
+	
 		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
 			public void run() {
@@ -145,23 +162,31 @@ public class RealCtBot extends CtBot {
 	public String getDescription() {
 		return "Realer c't-Bot, verbunden \u00FCber "+connectionName;
 	}
+
+	/**
+	 * Sendet einen Fernbedienungscode an den Bot
+	 * @param code	zu sendender RC5-Code als String
+	 */
+	public void sendRC5Code(String code) {
+		try {
+			for (BotComponent<?> c : components) {
+				if (c instanceof Sensors.RemoteControl) {
+					((Sensors.RemoteControl)c).send(code);
+					lg.fine("RC5Code fuer Taste \"" + code + "\" gesendet");
+					break;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}	
 	
 	/**
 	 * Sendet den RC5-Code, um ein ABL-Programm zu starten
 	 */
 	public void startABL() {
 		lg.info("Starte ABL-Programm auf dem Bot...");
-		for (BotComponent<?> c : components) {
-			if ((Object)c instanceof Sensors.RemoteControl) {
-				try {
-					((Sensors.RemoteControl)((Object)c)).send(">");
-					lg.fine("RC5-Code fuer Taste \">\" gesendet");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			}
-		}		
+		sendRC5Code(">");	
 	}
 	
 	/**

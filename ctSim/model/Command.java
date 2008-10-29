@@ -42,6 +42,7 @@ import ctSim.model.bots.components.Sensors.Trans;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.bots.ctbot.RealCtBot;
+import ctSim.util.BotID;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -53,9 +54,9 @@ import ctSim.util.Misc;
  * <ol>
  * <li>Ein realer (in Hardware existierender) Bot, der per USB oder TCP
  * verbunden ist, sendet laufend Messwerte der Sensoren und andere
- * Statusinformationen. 11 Byte auf dem Draht stellen die Messwerte eines
+ * Statusinformationen. 12 Byte auf dem Draht stellen die Messwerte eines
  * Sensorpaars dar, z.B. linker und rechter Distanzsensor; die Aufgabe dieser
- * Klasse ist das Lesen und Repr&auml;sentieren dieser 11 Byte innerhalb des
+ * Klasse ist das Lesen und Repr&auml;sentieren dieser 12 Byte innerhalb des
  * Sim.</li>
  * <li>Ein simulierter Bot (Bot-Steuercode, auf einem PC l&auml;uft) bekommt
  * &uuml;ber seine TCP-Verbindung vom Sim Sensorwerte gef&uuml;ttert. Der Sim
@@ -95,10 +96,11 @@ import ctSim.util.Misc;
  *   8           61              Sequenznummer LSB, bei aufeinanderfolgenden
  *                               Commands erh&ouml;ht sich die Sequenznummer immer
  *                               um eins
- *   9           17              Sequenznummer MSB
- *  10           '&lt;' (Ascii 60)  CRC-Code, markiert Command-Ende, ist immer '&lt;'
+ *   9          0               Absender-Id des Paketes
+ *  10          0               Empaenger-Id des Paketes
+ *  11           '&lt;' (Ascii 60)  CRC-Code, markiert Command-Ende, ist immer '&lt;'
  *                               (Name &quot;CRC&quot; irref&uuml;hrend)
- *  11 und folgende              Nutzlast falls vorhanden. Wird z.B. verwendet,
+ *  12 und folgende              Nutzlast falls vorhanden. Wird z.B. verwendet,
  *                               wenn der Bot den Inhalt des LCD &uuml;bertr&auml;gt oder
  *                               die Bilddaten, was der Maussensor sieht
  * </pre>
@@ -114,7 +116,7 @@ import ctSim.util.Misc;
  * interpretiert werden, ist Sache der Bot-Komponenten wie in der
  * {@linkplain Code Command-Code-Liste} beschrieben. </li>
  * <li>Beim Start des Sim &uuml;bertr&auml;gt er ein Command mit dem
- * Command-Code {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
+ * Command-Code {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * Der Bot antwortet mit einem Command, das ihn als realen Bot ausweist
  * (Command-Code WELCOME, Sub-Command-Code
  * {@link SubCode#WELCOME_REAL WELCOME_REAL}). Falls der Bot schon l&auml;uft,
@@ -125,12 +127,12 @@ import ctSim.util.Misc;
  * &uuml;berhaupt nie.</li>
  * <li>Jederzeit w&auml;hrend der Verbindung kann der Sim ein Command senden,
  * das das Bild anfordert, das der Maussensor auf der Botunterseite sieht
- * (Command-Code {@link Code#SENS_MOUSE_PICTURE SENS_MOUSE_PICTURE}). Der Bot
+ * (Command-Code {@link Command.Code#SENS_MOUSE_PICTURE SENS_MOUSE_PICTURE}). Der Bot
  * beantwortet das mit einer Serie von Commands mit dem Aufbau, der in
  * {@link MousePictureComponent} beschrieben ist</li>
  * <li>Jederzeit w&auml;hrend der Verbindung kann der Sim ein Command senden,
  * das einen Befehl der RC5-Fernbedienung repr&auml;sentiert (Command-Code
- * {@link Code#SENS_RC5 SENS_RC5})</li>
+ * {@link Command.Code#SENS_RC5 SENS_RC5})</li>
  * </ul>
  * </p>
  * <p>
@@ -139,13 +141,13 @@ import ctSim.util.Misc;
  * <li>Der Sim lauscht auf dem TCP-Port, der in der Konfigdatei angegeben ist
  * (Parameter "botport").</li>
  * <li>Bot-Steuercode verbindet sich mit dem TCP-Port. Der Sim sendet ein
- * Command mit dem {@link Code#WELCOME WELCOME}, das einen Handshake anfordert.
+ * Command mit dem {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * Der Bot antwortet mit einem Command, das ihn als simulierten Bot ausweist
  * (Command-Code WELCOME, Sub-Command-Code
  * {@link SubCode#WELCOME_SIM WELCOME_SIM}).</li>
  * <li>Der Sim sendet einen Block von Commands, die Sensorwerte beschreiben. Er
  * ist abgeschlossen mit einem Command, was den Command-Code
- * {@link Code#DONE DONE} hat. Beispiel:
+ * {@link Command.Code#DONE DONE} hat. Beispiel:
  *
  * <pre>
  * Richtung  Command-Code         dataL dataR
@@ -171,7 +173,7 @@ import ctSim.util.Misc;
  * <li>Der Bot berechnet auf Basis der simulierten Sensorwerte seine
  * n&auml;chsten Aktionen. Dann sendet er einen Block von Commands mit
  * Aktuatorwerten. Er ist abgeschlossen mit einem Command, was den Command-Code
- * {@link Code#DONE DONE} hat. Beispiel:
+ * {@link Command.Code#DONE DONE} hat. Beispiel:
  *
  * <pre>
  * Richtung  CmdCode/SubCmdCode   dataL dataR
@@ -213,7 +215,7 @@ public class Command {
 	final static FmtLogger lg = FmtLogger.getLogger("ctSim.model.Command");
 
 	/** L&auml;nge eines Kommandos in Byte */
-	public static final int COMMAND_SIZE = 11;
+	public static final int COMMAND_SIZE = 12; // Fuer die alte Version ohne Sender-Ids =11 neu 12
 
 	/** Markiert den Beginn eines Kommandos */
 	public static final int STARTCODE = '>';
@@ -227,17 +229,91 @@ public class Command {
 	/** Direction Antwort. Nicht verwendet. */
 	public static final int DIR_ANSWER = 1;
 
+	/** Id des Sims */
+	private static final BotID SIM_ID = new BotID(0xFE);
+	
+	/** Broadcast Adresse */
+	private static final BotID BROADCAST_ID = new BotID(0xFF);
+
+	/**
+	 * Basisklasse fuer Codes
+	 */
+	public static interface BotCodes {
+		/**
+		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
+		 * SubCodes sind mit dem Code-Enum verkoppelt, da vom Code abh&auml;ngt,
+		 * ob z.B. ein &quot;R&quot; auf dem Draht f&uuml;r den SubCode
+		 * WELCOME_REAL oder f&uuml;r RIGHT steht.
+		 * @param b Int
+		 * @return SubCude
+		 * @throws ProtocolException 
+		 */
+		public SubCode getSubCode(int b) throws ProtocolException;
+		
+		/**
+		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
+		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
+		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
+		 */
+		public byte toUint7();
+	}
+	
+	/**
+	 * Klasse fuer Kommandos mit beliebigen (Sub-)Codes.
+	 * Wird fuer Bot-2-Bot-Kommunikation benutzt, der Sim
+	 * kann somit auch Kommandos weiterleiten, die er selbst
+	 * gar nicht kennt. 
+	 * Erstellt werden koennen aber weiterhin nur Kommandos,
+	 * die fuer Bot-2-Sim gueltig sind (siehe Klasse Command)
+	 * @author Timo Sandmmann (mail@timosandmann.de)
+	 */
+	public static class Bot2BotCode implements BotCodes {
+		/** /** Code auf der Leitung */
+		private byte onTheWire;
+		
+		/**
+		 * @param code Code des Kommandos als byte 
+		 * (wird nicht weiter geprueft)
+		 */
+		public Bot2BotCode(byte code) {
+			onTheWire = code;
+		}
+		
+		/**
+		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
+		 * Erzeugt immer SubCode.NORM
+		 * @param b Dummy
+		 * @return SubCode
+		 * @throws ProtocolException 
+		 */
+		public SubCode getSubCode(int b) throws ProtocolException {
+			return SubCode.NORM;
+		}
+		
+		/**
+		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
+		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
+		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
+		 */
+		public byte toUint7() { 
+			return onTheWire; 
+		}
+	}
+	
 	///////////////////////////////////////////////////////////////////////////
 	// Enum Command-Code
-
+	
 	/**
 	 * Ein Command-Code kann einen der Werte in diesem Enum haben. Der
 	 * Command-Code gibt den Typ des Commands an.
 	 */
-	public static enum Code {
+	public static enum Code implements BotCodes {
 		/** Zum Hallo-Sagen (Handshake); siehe {@link Command}. */
 		WELCOME('W', SubCode.WELCOME_REAL, SubCode.WELCOME_SIM),
 
+		/** Der Bot fordert eine Adresse an */ 
+		ID('A', SubCode.ID_SET, SubCode.ID_REQUEST, SubCode.ID_OFFER),
+		
 		/**
 		 * Abschluss eines Blocks; Nur f&uuml;r simulierte Bots; siehe
 		 * {@link Command}
@@ -255,14 +331,6 @@ public class Command {
 		 * siehe {@link Door}.
 		 */
 		SENS_DOOR('D'),
-
-//		/**
-//		 * Nicht verwendet, weder im ctSim noch im C-Code (wird dort als
-//		 * "Steuerung Klappe" beschrieben, aber die Bedeutung hat ja schon
-//		 * ACT_SERVO)
-//		 */
-//		@Deprecated
-//		ACT_DOOR('d'),
 
 		/** LEDs (Leuchtdioden); siehe {@link Led}. */
 		ACT_LED('l'),
@@ -361,7 +429,7 @@ public class Command {
 		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
-		protected byte toUint7() { return onTheWire; }
+		public byte toUint7() { return onTheWire; }
 
 		/**
 		 * Erzeugt eine SubCode-Instanz. Akzeptiert ints aus Toleranz.
@@ -485,8 +553,25 @@ public class Command {
 		/**
 		 * Schickt ein ABL-Programm an den Bot
 		 */
-		REMOTE_CALL_ABL('I');
+		REMOTE_CALL_ABL('I'),
 
+		/**
+		 * Setzt die ID
+		 */
+		ID_SET('S'),
+		
+		/**
+		 * Offeriert eine ID
+		 */
+		ID_OFFER('O'),
+		
+		/**
+		 * Fordert die ID an
+		 */
+		ID_REQUEST('R');
+		
+		
+		
 		/** SubCode auf der Leitung */
 		private final byte onTheWire;
 
@@ -513,7 +598,7 @@ public class Command {
 	// Instanzvariablen
 
 	/** Command-Code */
-	private final Code commandCode;
+	private final BotCodes commandCode;
 
 	/** Sub-Command-Code */
 	private SubCode subCommandCode;
@@ -531,10 +616,16 @@ public class Command {
 	private int dataR = 0;
 
 	/** Paketsequenznummer */
-	private int seq = 0;
+	private byte seq = 0;
+
+	/** Absender des Paketes */
+	private BotID from = new BotID(SIM_ID);
+
+	/** Empfaenger des Paketes */
+	private BotID to = new BotID();
 
 	/** Markiert das Ende des Kommandos */
-	private final int crc;
+	private final byte crc;
 
 	/**
 	 * Client-Code kann damit markieren, ob das Kommando verarbeitet ist oder
@@ -619,11 +710,12 @@ public class Command {
 		b = new byte[COMMAND_SIZE - 1]; // -1: Startcode haben wir schon
 		con.read(b);
 
-		commandCode = Code.fromByte(b[0]);
+		byte i =0;
+		byte code = b[i++];
 		// Nur 7 least significant bits
-		subCommandCode = commandCode.getSubCode(b[1] & 127);
+		int subcode = b[i] & 127;
 		// 7 least significant Bits weg, nur 8. angucken
-		direction = b[1] >> 7 & 1;
+		direction = b[i++] >> 7 & 1;
 
 		// Sinnvollitaet pruefen
 		if (direction != DIR_REQUEST) {
@@ -632,12 +724,29 @@ public class Command {
 				"sollen); Kommando folgt%s", direction, this));
 		}
 
-		int payloadSize = Misc.toUnsignedInt8(b[2]);
+		int payloadSize = Misc.toUnsignedInt8(b[i++]);
 		// Shorts (je 2 Byte): Hier Konvertierung Little-Endian -> Big-Endian
-		dataL = (short) ( ( b[ 4 ] & 0xff ) << 8 | ( b[ 3 ] & 0xff ) );
-		dataR = (short) ( ( b[ 6 ] & 0xff ) << 8 | ( b[ 5 ] & 0xff ) );
-		seq   = (short) ( ( b[ 8 ] & 0xff ) << 8 | ( b[ 7 ] & 0xff ) );
-		crc = b[9];
+		dataL = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) );
+		i+=2;
+		dataR = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) );
+		i+=2;
+		
+		seq=b[i++];	// neue Version mit Adressen und kurzer seq
+		// alte version seq   = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) );	i++;
+				
+		
+		from.set(b[i++]);	// neue Version mit Adressen
+		to.set(b[i++]); // neue Version mit Adressen		
+		
+		if (to.equals(Command.getSimId())) {
+			commandCode = Code.fromByte(code);
+		} else {
+			commandCode = new Bot2BotCode(code);
+		}
+		subCommandCode = commandCode.getSubCode(subcode);
+		
+		// und noch die Pruefsumme
+		crc = b[i];
 
 		// Sinnvollitaet pruefen
 		if (crc != CRCCODE) {
@@ -693,7 +802,12 @@ public class Command {
 		data[i++] = (byte)(dataR & 255);
 		data[i++] = (byte)(dataR >> 8);
 		data[i++] = (byte)(seq & 255);
-		data[i++] = (byte)(seq >> 8);
+	//	data[i++] = (byte)(seq >> 8); // alte Version mit 16-Bit seq
+		
+		// neue Version mit Sender-Ids
+		data[i++] = from.byteValue();
+		data[i++] = to.byteValue();
+		
 		data[i++] = CRCCODE;
 
 		System.arraycopy(payload, 0, data, i, payload.length);
@@ -736,6 +850,8 @@ public class Command {
 			"\n\tDirection:\t"+direction+
 			"\n\tData:\tL "+dataL+" / R "+dataR+
 			"\n\tSeq:\t"+seq+
+			"\n\tFrom:\t"+from+
+			"\n\tTo:\t"+to+
 			"\n\tPayload:\t"+payloadStr+
 			"\n\tCRC:\t"+formatChar(crc);
 	}
@@ -808,7 +924,7 @@ public class Command {
 	/** 
 	 * @return Liefert die Kommando-Sequenznummer 
 	 */
-	public int getSeq() { return seq; }
+	public byte getSeq() { return seq; }
 
 	/** 
 	 * @return Getter zu {@link #setHasBeenProcessed(boolean)} 
@@ -830,13 +946,13 @@ public class Command {
 	 * Setzt das Feld dataR 
 	 * @param dataR 
 	 */
-	public void setDataR(int dataR) { this.dataR = dataR; }
-
+	public void setDataR(int dataR) { this.dataR = dataR; } 
+	
 	/** 
 	 * Setzt die Kommandosequenznummer
 	 * @param seq 
 	 */
-	public void setSeq(int seq) { this.seq = seq; }
+	public void setSeq(byte seq) { this.seq = seq; }
 
 	/**
 	 * Setzt den Sub-Command-Code. Nur sinnvoll f&uuml;r Commands, die der Sim
@@ -845,7 +961,7 @@ public class Command {
 	 */
 	public void setSubCmdCode(SubCode sc) {
 		try {
-			commandCode.assertSubCodeValid(sc);
+			((Code) commandCode).assertSubCodeValid(sc);
 		} catch (ProtocolException e) {
 			// Das ist ein Fehler des Programmierers, keine Laufzeitsache
 			throw new AssertionError(e);
@@ -870,5 +986,51 @@ public class Command {
 	 */
 	public void setHasBeenProcessed(boolean hasBeenProcessed) {
 		this.hasBeenProcessed = hasBeenProcessed;
+	}
+
+	/**
+	 * Liest den Absender des Paketes aus
+	 * @return Absender-Id
+	 */
+	public BotID getFrom() {
+		return new BotID(from);
+	}
+
+	/**
+	 * Setzt den Absender
+	 * @param from Absender-ID
+	 */
+	public void setFrom(BotID from) {
+		this.from = from;
+	}
+
+	/**
+	 * Liest die Empfaenger-ID des Paketes aus
+	 * @return Empfaenger-ID
+	 */
+	public BotID getTo() {
+		return new BotID(to);
+	}
+
+	/** 
+	 * Setzt die Empfaenger-ID
+	 * @param to Empfaenger-ID
+	 */
+	public void setTo(BotID to) {
+		this.to = to;
+	}
+	
+	/**
+	 * @return Bot-ID des Sims
+	 */
+	public static BotID getSimId() {
+		return new BotID(SIM_ID);
+	}
+	
+	/**
+	 * @return Bot-ID fuer Broadcast
+	 */
+	public static BotID getBroadcastId() {
+		return new BotID(BROADCAST_ID);
 	}
 }

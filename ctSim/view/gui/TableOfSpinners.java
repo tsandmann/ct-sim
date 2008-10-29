@@ -26,6 +26,11 @@ import ctSim.model.bots.components.BotComponent;
  */
 public abstract class TableOfSpinners extends GuiBotBuisitor {
 	/**
+	 * UID
+	 */
+	private static final long serialVersionUID = -4717996663435641535L;
+
+	/**
 	 * Komponenteneditor
 	 */
 	public static class CompntEditor extends AbstractCellEditor
@@ -46,7 +51,6 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
 		 */
-		@SuppressWarnings("unused")
 		public Component getTableCellEditorComponent(JTable table,
 		Object value, boolean isSelected, int row, int column) {
 			lastActive = (Component)value;
@@ -61,7 +65,6 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 		 */
-		@SuppressWarnings("unused")
 		public Component getTableCellRendererComponent(JTable table,
 		Object value, boolean isSelected, boolean hasFocus, int row,
 		int column) {
@@ -122,8 +125,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 			// Events aus dem SpinnerModel sollen Neumalen der Tabelle ausloesen
 			final int thisRow = getRowCount() - 1;
 			sModel.addChangeListener(new ChangeListener() {
-				public void stateChanged(
-				@SuppressWarnings("unused") ChangeEvent e) {
+				public void stateChanged(ChangeEvent e) {
 					fireTableCellUpdated(thisRow, 1);
 				}
 			});

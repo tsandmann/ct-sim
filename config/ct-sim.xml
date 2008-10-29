@@ -66,10 +66,10 @@
 	<parameter name="RC5-type" value="RC_HAVE_HQ_RC_UNIVERS29_334"/>
 
 	<!-- Fernbedienungscode, der an simulierte Bots gesendet wird, wenn man
-	"Play" drueckt. 0 = nichts senden, 5 = wie Knopf "5", weitere Codes
-	in ctSim/model/bots/components/Sensor.java :: setType().
+	"Play" drueckt. "" = nichts senden, "5" = wie Knopf "5", weitere Codes
+	in ctSim/model/bots/components/RemoteControlCodes.java.
 	Wert: Beschreibung der Taste -->
-	<parameter name="rcStartCode" value="0"/>
+	<parameter name="rcStartCode" value=""/>
 
 	<!-- Serieller Anschluss. Der Sim verbindet sich mit ihm und erwartet
 	dort einen USB-2-Bot-Adapter -->

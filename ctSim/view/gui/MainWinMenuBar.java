@@ -24,8 +24,8 @@ import ctSim.controller.Controller;
 import ctSim.controller.Main;
 import ctSim.util.GridBaggins;
 import ctSim.util.Menu;
-import ctSim.util.Runnable1;
-import ctSim.util.Menu.Checkbox;
+//import ctSim.util.Runnable1;
+//import ctSim.util.Menu.Checkbox;
 import ctSim.util.Menu.Entry;
 import edu.stanford.ejalbert.BrowserLauncher;
 import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
@@ -105,15 +105,17 @@ public class MainWinMenuBar extends JMenuBar {
 			new Entry("Speichern als ...", Config.getIcon("SaveAs16"), onSaveWorld),
 			new Entry("Schlie\u00DFen", Config.getIcon("Delete16"), onCloseWorld));
 		add(worldMenu);
-	    add(new Menu("Verbinde mit Bot",
-	    	new Entry("Per TCP ...", onAddTcpBot),
+		JMenu connectMenu = new Menu("Verbinde mit Bot",
+	    	new Entry("Per TCP ...", Config.getIcon("tcpbot16"), onAddTcpBot)/*,
 	    	// Die Checkbox hat nen Haken und ist unveraenderbar disabled
 	    	// (ausgegraut). Sinn: Benutzer wissen lassen, dass ctSim das
 	    	// automatisch macht
-	    	new Checkbox("Per USB (COM) automatisch", noOp).disable().check()));
-	    add(new Menu("Simuliere Bot",
-	    	new Entry("Testbot starten", onAddTestBot),
-	    	new Entry("c't-Bot Binary starten", onInvokeExecutable)));
+	    	new Checkbox("Per USB (COM) automatisch", noOp).disable().check()*/);
+		add(connectMenu);
+		JMenu botMenu = new Menu("Simuliere Bot",
+	    	new Entry("Testbot", onAddTestBot),
+	    	new Entry("c't-Bot", onInvokeExecutable));
+		add(botMenu);
 
 	    JMenu m = new JMenu("Schiedsrichter");
 	    for (JMenuItem item : buildJudgeMenuItems())
@@ -122,19 +124,19 @@ public class MainWinMenuBar extends JMenuBar {
 	    
 	    JMenu simulationMenu = new Menu("Simulation", 
 	    		new Entry("Start", Config.getIcon("Play16"), onStartSimulation), 
-	    		new Entry("Pause", Config.getIcon("Pause16"), onPauseSimulation)
+	    		new Entry("Pause", Config.getIcon("Pause16"), onPauseSimulation),
+	    		new Entry("Reset", Config.getIcon("reset16"), onResetBots)
 	    );
 	    add(simulationMenu);
 
-	    //TODO:	Icons
 		JMenu supportMenu = new Menu("Support",
-			new Entry("About", onAbout),
-			new Entry("Webseite", onSiteLink),
-			new Entry("Trac", onTracLink),
-			new Entry("Forum", onForumLink));
+			new Entry("Webseite", Config.getIcon("website16"), onSiteLink),
+			new Entry("Trac", Config.getIcon("trac16"), onTracLink),
+			new Entry("Forum", Config.getIcon("forum16"), onForumLink),
+			new Entry("About", Config.getIcon("about16"), onAbout));
 		add(supportMenu);
 	    
-	    toolBar = buildToolBar(worldMenu, simulationMenu);
+	    toolBar = buildToolBar(worldMenu, connectMenu, botMenu, simulationMenu, supportMenu);
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -174,7 +176,6 @@ public class MainWinMenuBar extends JMenuBar {
 		public void run() {
 			File file = worldChooser.showSaveWorldDialog();
 			if (file.exists()) {
-				//$$ t Ist das jemals getestet worden?
 				int result = JOptionPane.showConfirmDialog(
 					mainWindow,
 					// Meldung
@@ -241,14 +242,14 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
-	/**
-	 * NOP
-	 */
-	private Runnable1<Boolean> noOp = new Runnable1<Boolean>() {
-		public void run(@SuppressWarnings("unused") Boolean argument) {
-			// No-Op
-		}
-	};
+//	/**
+//	 * NOP
+//	 */
+//	private Runnable1<Boolean> noOp = new Runnable1<Boolean>() {
+//		public void run(@SuppressWarnings("unused") Boolean argument) {
+//			// No-Op
+//		}
+//	};
 
 	/**
 	 * Handler fuer neuen Testbot
@@ -267,7 +268,6 @@ public class MainWinMenuBar extends JMenuBar {
 			ConfigManager.path2Os(Config.getValue("botdir")));
 
 		{ // "Konstruktor" des Runnable sozusagen
-			//$$ Sollte nur exes zeigen (Win) bzw. nur elfs (Linux)
 			botChooser.setFileFilter(new FileFilter() {
 				@Override
 				public boolean accept(File f) {
@@ -368,7 +368,16 @@ public class MainWinMenuBar extends JMenuBar {
 				e.printStackTrace();
 			}
 		}
-	};	
+	};
+	
+	/**
+	 * Handler fuer Bots resetten
+	 */
+	private Runnable onResetBots = new Runnable() {
+		public void run() {
+			controller.resetAllBots();
+		}
+	};
 
 	///////////////////////////////////////////////////////////////////////////
 	// Hilfsmethoden
@@ -497,10 +506,7 @@ public class MainWinMenuBar extends JMenuBar {
 					private static final long serialVersionUID =
 						-1873920690635293756L;
 
-					@SuppressWarnings("synthetic-access")
-	                public void actionPerformed(
-	                	@SuppressWarnings("unused") ActionEvent e) {
-
+					public void actionPerformed(ActionEvent e) {
 						controller.setJudge(fqName);
 					}
 				}

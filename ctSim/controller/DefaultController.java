@@ -26,19 +26,28 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.Thread.State;
 import java.lang.reflect.Constructor;
+import java.net.ProtocolException;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import javax.swing.SwingUtilities;
 
 import ctSim.ComConnection;
 import ctSim.ConfigManager;
 import ctSim.TcpConnection;
+import ctSim.model.Command;
 import ctSim.model.ParcoursGenerator;
 import ctSim.model.World;
+import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
+import ctSim.model.bots.ctbot.CtBot;
 import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.rules.Judge;
+import ctSim.util.BotID;
 import ctSim.util.FmtLogger;
+import ctSim.util.Misc;
 import ctSim.view.View;
 
 /**
@@ -66,6 +75,11 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     /** Thread, der die Simulation macht: Siehe {@link #run()}. */
     private Thread sequencer;
 
+	/** Bots */
+	private final List<Bot> bots = Misc.newList();
+
+    /** Flag fuer Bot-Reset */
+	private boolean reset = false;
     /**
      * Setzt das View und initialisiert alles noetige dafuer
      * @param view	unser View
@@ -163,6 +177,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 				CountDownLatch oldStartSignal = this.startSignal;
 
+				/* Reset gewuenscht? */
+				if (this.reset) {
+					this.reset = false;
+					view.onResetAllBots();
+				}
+				
 				// Judge pruefen:
 				if (judge.isSimulationFinished(sequencersWorld.getSimTimeInMs())) {
 					lg.fine("Sequencer: Simulationsende");
@@ -307,10 +327,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     	int p = 10002;
     	try {
     		p = Integer.parseInt(port);
+    		TcpConnection.connectTo(hostname, p, this);
     	} catch (NumberFormatException e) {
     		lg.warn("'%s' ist eine doofe TCP-Port-Nummer; ignoriere", port);
     	}
-    	TcpConnection.connectTo(hostname, p, this);
     }
 
     /**
@@ -333,7 +353,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				lg.info("Testbot-Home konnte nicht geladen werden");
 			}
     	}
-        onBotAppeared(new CtBotSimTest());
+		onBotAppeared(new CtBotSimTest());
     }
 
     /**
@@ -375,31 +395,69 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
     /**
-     * Handler, falls neuer Bot hinzugefuegt wurde
-     * @param bot	Der neue Bot
+     * Handler, falls ein Bot stirbt
+     * @param bot	Der sterbende Bot
      */
-    public synchronized void onBotAppeared(Bot bot) {
-    	if (bot instanceof SimulatedBot) {
-    		if (sequencer == null) {
-    			lg.info("Weise "+bot.toString()+" ab: Es gibt keine Welt, zu " +
-    					"der man ihn hinzuf\u00FCgen k\u00F6nnte");
-    			bot.dispose(); // Bot abweisen
-    			return;
-    		}
-    		if (judge.isAddingBotsAllowed()) {
-    			Bot b = world.addBot((SimulatedBot)bot, this);
-    			if (b == null) {
-    				bot.dispose();	// Bot abweisen, weil kein Platz mehr
-    				return;
-    			}
-    			view.onBotAdded(b);
-    		} else {
-    			bot.dispose(); // Bot abweisen
-    		}
+    public synchronized void onBotDisappeared(Bot bot) {
+    	if (bot != null){
+	    	lg.info("Bot "+bot.toString()+" ("+bot.getDescription()+") meldet sich beim " +
+	    			"Controller ab!");
+	    	bots.remove(bot);
     	}
-    	else
-    		view.onBotAdded(bot);
     }
+    
+    /**
+	 * Handler, falls neuer Bot hinzugefuegt wurde
+	 * @param bot	Der neue Bot
+	 */
+	public synchronized void onBotAppeared(final Bot bot) {
+		if (bot instanceof SimulatedBot) {
+			if (sequencer == null) {
+				lg.info("Weise " + bot.toString()
+						+ " ab: Es gibt keine Welt, zu "
+						+ "der man ihn hinzuf\u00FCgen k\u00F6nnte");
+				bot.dispose(); // Bot abweisen
+				return;
+			}
+			if (judge.isAddingBotsAllowed()) {
+				Bot b = world.addBot((SimulatedBot) bot, this);
+				if (b == null) {
+					bot.dispose(); // Bot abweisen, weil kein Platz mehr
+					return;
+				}
+				view.onBotAdded(b);
+			} else {
+				bot.dispose(); // Bot abweisen
+			}
+		} else
+			view.onBotAdded(bot);
+
+		try {
+			bot.setController(this);
+		} catch (ProtocolException e) {
+			lg.severe("Fehler: Bot " + bot.toString()
+					+ " wurde vom Controller abgewiesen! Bot-ID falsch?");
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() { // invokeLater, weil sonst der
+					// dispose-Listener der GUI noch nicht eingetragen ist!
+					bot.dispose(); // Bot ist unerwuenscht => weg
+				}
+			});
+			return; // keine Exception, wir weisen den Bot einfach ab und
+			// alles andere laeuft normal weiter
+		}
+
+		// Fuer den Kommunikationsproxy brauchen wir eine Liste aller Bots
+		bots.add(bot);
+
+		// Und einen Dispose-Handler installieren, damit wir Bots auch wieder
+		// sauber beenden
+		bot.addDisposeListener(new Runnable() {
+			public void run() {
+				onBotDisappeared(bot);
+			}
+		});
+	}
 
     /**
      * Gibt die Anzahl der zurzeit geladenen Bots zurueck
@@ -492,4 +550,84 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     public void onApplicationInited() {
         view.onApplicationInited();
     }
+    
+        
+    /**
+     * Setzt alle Bots im naechsten Sim-Schritt zurueck.
+     * Dadurch, dass hier nur das Reset-Flag gesetzt wird, eruebriegt sich das 
+     * Synchronisieren der (Bot-)Threads; der Reset erfolgt einfach beim naechsten
+     * Zeitschritt.
+     */
+    public void resetAllBots() {
+    	this.reset = true;
+    }
+    
+	/**
+	 * Liefert ein Kommando an einen Bot aus.
+	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben
+	 * Sender und Empfänger stehen in dem command drin 
+	 * @param command das zu übertragende Kommando
+	 * @throws ProtocolException Falls kein passender empfaenger gefunden wurde
+	 */
+	public void deliverMessage(Command command) throws ProtocolException {
+		for (Bot b : bots) {
+			// Wir betrachten hier nur CtBot
+			if (b instanceof CtBot) {
+				/* direkte Nachrichten an Empfaenger */
+				if (((CtBot)b).getId().equals(command.getTo())) {
+					((CtBot)b).receiveCommand(command);
+					return;
+				}
+				/* Broadcasts an alle */
+				if (command.getTo().equals(Command.getBroadcastId())) {
+					((CtBot)b).receiveCommand(command);
+				}
+			}
+		}	
+		if (!command.getTo().equals(Command.getBroadcastId())) {
+			// Es fühlt sich wohl kein Bot aus der Liste zuständig ==> Fehler 
+			throw new ProtocolException("Nachricht an Empfänger "+command.getTo()+" nicht zustellbar. " +
+					"Kein Bot mit passender Id angemeldet");
+		}
+	}
+	
+	/**
+	 * Testet, ob bereits ein Bot diese Id hat
+	 * @param id zu testende Id
+	 * @return True, wenn noch kein Bot diese Id nutzt 
+	 */
+	public boolean isIdFree(BotID id){
+		if (id.equals(Command.getBroadcastId()))
+			// Broadcast ist immer frei
+			return true;
+		for (Bot b : bots) 
+			if (b instanceof BasicBot) 			
+				if (((BasicBot)b).getId().equals(id))
+					return false;
+		return true;
+	}
+	
+	/** Offset fuer die Adressvergabe, damit wir nicht jedesmal mit den schon vergebene2n Adressen beginnen */
+	private int poolOffset =0;
+	
+	/**
+	 * Liefert eine Id aus dem Adresspoll zurück
+	 * @return Die neue Id
+	 * @throws ProtocolException Wenn keine Adresse mehr frei
+	 */
+	public BotID generateBotId() throws ProtocolException{
+		byte poolSize= (byte)64;
+		byte poolAdress= (byte) 128;
+		BotID newId = new BotID();
+		
+		for (byte i=0; i< poolSize; i++){
+			newId.set(((i+ poolOffset) % poolSize) + poolAdress);
+			if (isIdFree(newId)){
+				poolOffset++;
+				return newId;
+			}				
+		}
+		
+		throw new ProtocolException("Keine Id im Pool mehr frei");
+	}
 }

@@ -387,8 +387,7 @@ public class ContestConductor implements View {
 	/**
 	 * @see ctSim.view.View#onSimulationStep(long)
 	 */
-	public void onSimulationStep(
-		@SuppressWarnings("unused") long simTimeInMs) {
+	public void onSimulationStep(long simTimeInMs) {
 		try {
 			db.log(BotView.getAllModelObjects(), world.getSimTimeInMs());
 		} catch (Exception e) {
@@ -639,6 +638,14 @@ public class ContestConductor implements View {
 	/**
 	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
 	 */
-	public void onJudgeSet(@SuppressWarnings("unused") Judge j) {
+	public void onJudgeSet(Judge j) {
+		// NOP
+	}
+	
+	/**
+	 * @see ctSim.view.View#onResetAllBots()
+	 */
+	public void onResetAllBots() {
+		// NOP
 	}
 }

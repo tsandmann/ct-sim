@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
+import ctSim.util.BotID;
 import ctSim.util.Misc;
 
 /**
@@ -16,8 +17,11 @@ public class CommandOutputStream {
 	/** der Strean */
 	private final BufferedOutputStream underlyingStream;
 	/** Sequenznummer */
-	private int seq = 0; //$$ Die Sequenznummer wird irgendwann groesser das Feld, in dem sie uebermittelt wird. Spaeter wrappt die auch und wird negativ. Damit sollte man irgendwie umgehen
+	private byte seq = 0;
 
+	/** An wen gehen all die schoenen Pakete? */
+	private BotID to = new BotID();
+	
 	/**
 	 * @param underlyingStream
 	 */
@@ -46,6 +50,7 @@ public class CommandOutputStream {
 		if (c == null)
 			return;
 		c.setSeq(seq++);
+		c.setTo(to);
 		underlyingStream.write(c.getCommandBytes());
 	}
 
@@ -67,5 +72,21 @@ public class CommandOutputStream {
 
 		underlyingStream.flush();
 		buffer.clear();
+	}
+
+	/** 
+	 * Setzt den Empfaenger all der schoenen Kommandos
+	 * @param to
+	 */
+	public void setTo(BotID to) {
+		this.to = to;
+	}
+
+	/** 
+	 * Liefert den Empfaenger all der schoenen Kommandos
+	 * @return Empfaenger-Id
+	 */
+	public BotID getTo() {
+		return new BotID(to);
 	}
 }

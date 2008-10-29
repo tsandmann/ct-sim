@@ -110,7 +110,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		p.add(v, BorderLayout.CENTER);
 		v.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(@SuppressWarnings("unused") MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {
 				try {
 					compnt.requestPicture();
 				} catch (IOException e1) {
@@ -124,8 +124,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		bt.setToolTipText("Fordert beim Bot ein Bild dessen an, was der " +
 			"Maussensor sieht");
 		bt.addActionListener(new ActionListener() {
-			public void actionPerformed(
-			@SuppressWarnings("unused") ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				try {
 					compnt.requestPicture();
 				} catch (IOException e1) {
@@ -140,8 +139,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		cb.setToolTipText("Fordert das n\u00E4chste an, sobald ein Mausbild " +
 			"\u00FCbertragen ist");
 		cb.addActionListener(new ActionListener() {
-			public void actionPerformed(
-			@SuppressWarnings("unused") ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				// Wenn Checkbox an, Button deaktivieren
 				bt.setEnabled(! cb.isSelected());
 				try {

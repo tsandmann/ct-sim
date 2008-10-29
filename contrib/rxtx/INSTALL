@@ -19,6 +19,8 @@ librxtxSerial.jnilib goes in /Library/Java/Extensions
 Run fixperm.sh thats in the directory.  Fix perms is in the Mac_OS_X
 subdirectory.
 
+/var/lock und /var/spool/uucp muessen existieren und beschreibbar sein!
+
 Linux (only x86, x86_64, ia64 here but more in the ToyBox)
 
 RXTXcomm.jar goes in /jre/lib/ext (under java)

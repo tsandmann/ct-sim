@@ -25,9 +25,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ProtocolException;
 
+import ctSim.controller.BotReceiver;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
+import ctSim.model.bots.Bot;
+import ctSim.model.bots.ctbot.CtBot;
+import ctSim.model.bots.ctbot.CtBotSimTcp;
+import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.FmtLogger;
 
 /**
@@ -36,7 +42,7 @@ import ctSim.util.FmtLogger;
  * @author bbe (bbe@heise.de)
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
-public abstract class Connection {
+public abstract class Connection {	
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
 
@@ -140,4 +146,69 @@ public abstract class Connection {
 	 * @return	Name
 	 */
 	public abstract String getName();
+	
+	/**
+	 * Blockiert, bis Handshake erfolgreich oder IOException
+	 * Abbruch nach 100 Versuchen 
+	 * @param receiver Bot-Receiver
+	 */
+	protected void doHandshake(BotReceiver receiver) {
+		for (int i=0; i<100; i++) {
+			lg.fine("Sende Willkommen");
+			try {
+				write(new Command(Command.Code.WELCOME));
+			} catch (IOException e) {
+				lg.severe(e, "E/A-Problem beim Handshake; Abbruch");
+				return;
+			}
+			/* Warten auf Antwort */
+			for (int j=0; j<20; j++) {
+				try {
+					Command cmd = new Command(this, true);
+					if (cmd.has(Command.Code.WELCOME)) {
+						receiver.onBotAppeared(createBot(cmd));
+						return; // Erfolg
+					} else {
+						lg.fine("Kommando, aber kein Willkommen von Verbindung "
+										+ "gelesen: Bot l\u00E4uft schon oder ist "
+										+ "veraltet, schicke Willkommen nochmals; "
+										+ "ignoriertes Kommando folgt" + cmd);
+						// Handshake nochmal versuchen
+						continue;
+					}
+				} catch (ProtocolException e) {
+					lg.severe(e, "Ung\uu00FCltiges Kommando beim Handshake; "
+							+ "ignoriere");
+					continue;
+				} catch (IOException e) {
+					lg.severe(e, "E/A-Problem beim Handshake; Abbruch");
+					return;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Erzeugt einen Bot
+	 * @param c Kommando
+	 * @return Bot
+	 * @throws ProtocolException
+	 */
+	protected Bot createBot(Command c) throws ProtocolException {
+		CtBot bot;
+		switch (c.getSubCode()) {
+    		case WELCOME_SIM:
+    			lg.fine("TCP-Verbindung von simuliertem Bot eingegangen");
+    			bot = new CtBotSimTcp(this,c.getFrom());  			
+    			break;
+    		case WELCOME_REAL:
+    			lg.fine("TCP-Verbindung von realem Bot eingegangen");
+    			bot= new RealCtBot(this,c.getFrom());
+    			break;
+    		default:
+    			throw new ProtocolException(c.toString());
+    	}
+		
+		return bot;
+	}	
 }

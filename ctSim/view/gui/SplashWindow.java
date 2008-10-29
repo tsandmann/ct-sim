@@ -68,6 +68,7 @@ public class SplashWindow extends Window {
 		try {
 			mt.waitForID(0);
 		} catch (InterruptedException ie) {
+			// egal
 		}
 
 		/* Bei Fehler Abbruch */
@@ -90,6 +91,7 @@ public class SplashWindow extends Window {
 
 		/* Schliessen des Splash-Screens per Mausklick */
 		MouseAdapter disposeOnClick = new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent evt) {
 				synchronized (SplashWindow.this) {
 					SplashWindow.this.paintCalled = true;
@@ -107,6 +109,7 @@ public class SplashWindow extends Window {
 	 * Aktualisiert den Splash-Screen
 	 * @param g Graphics
 	 */
+	@Override
 	public void update(Graphics g) {
 		paint(g);
 	}
@@ -115,6 +118,7 @@ public class SplashWindow extends Window {
 	 * Zeichnet den Splash-Screen
 	 * @param g  Graphics-Objekt
 	 */
+	@Override
 	public void paint(Graphics g) {
 		g.drawImage(image, 0, 0, this);
 		g.drawString(version, image.getWidth(null) / 2 - 40, 95);
@@ -174,7 +178,9 @@ public class SplashWindow extends Window {
 	public static void disposeSplash() {
 		try {
 			Thread.sleep(1000);
-		} catch (InterruptedException e) {}
+		} catch (InterruptedException e) {
+			// egal
+		}
 		if (instance != null) {
 			FmtLogger.getLogger("").removeHandler(logHandler);
 			instance.getOwner().dispose();
