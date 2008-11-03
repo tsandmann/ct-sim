@@ -472,6 +472,10 @@ public class RemoteCallViewer extends JPanel {
 					tooltip = "Remote-Call abgebrochen";
 					color = Color.ORANGE;
 					break;
+				case BACKGRND:
+					tooltip = "Remote-Call laeuft im Hintergrund";
+					color = Color.GRAY;
+					break;
 				default:
 					throw new IllegalStateException();
 			}

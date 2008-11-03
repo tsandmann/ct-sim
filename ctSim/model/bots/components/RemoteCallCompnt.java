@@ -44,7 +44,11 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/**
 		 * Abgebrochen
 		 */
-		CANCELLED(3, "Abgebrochen");
+		CANCELLED(3, "Abgebrochen"),
+		/**
+		 * Verhalten laeuft im Hintergrund weiter
+		 */
+		BACKGRND(4, "Im Hintergrund");
 
 		/** Status auf der Leitung */
 		private final int onTheWire;
