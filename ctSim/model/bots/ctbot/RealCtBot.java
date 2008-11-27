@@ -11,6 +11,7 @@ import ctSim.Connection;
 import ctSim.model.Command;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
+import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
@@ -125,6 +126,7 @@ public class RealCtBot extends CtBot {
 			_(Sensors.Error.class        , READS),
 			_(WelcomeReceiver.class      , READS),
 			//_(Actuators.Abl.class		 , WRITES_ASYNCLY),
+			_(MapComponent.class		 , READS, WRITES_ASYNCLY),
 			_(RemoteCallCompnt.class     , READS, WRITES_ASYNCLY)
 		);
 

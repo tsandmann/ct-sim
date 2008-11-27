@@ -13,6 +13,7 @@ import javax.swing.text.DefaultCaret;
 
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.util.AuxFrameButton;
@@ -104,7 +105,20 @@ public class AndEverything extends GuiBotBuisitor {
 	}
 	
 	/** 
-	 * Baut den Knopf, der zum ABL-Fenster führt 
+	 * Baut den Knopf, der das Map-Fenster anzeigt 
+	 * @param map Map-Komponente
+	 * @param bot Bot
+	 */
+	public void buisitMapViewer(MapComponent map, Bot bot) {
+		add(new AuxFrameButton(
+			map.getName(),
+			map.getDescription() + " von " + bot, // Fenster-Titel
+			new MapViewer(map, bot)));
+		add(Box.createRigidArea(new Dimension(0, 5)));
+	}
+	
+	/** 
+	 * Baut den Knopf, der zum ABL-Fenster f&uumo;hrt 
 	 * @param abl ABL-Komponente
 	 * @param bot Bot
 	 */

@@ -391,7 +391,13 @@ public class Command {
 		REMOTE_CALL('r', SubCode.NORM, SubCode.REMOTE_CALL_LIST,
 			SubCode.REMOTE_CALL_ENTRY, SubCode.REMOTE_CALL_ORDER,
 			SubCode.REMOTE_CALL_DONE, SubCode.REMOTE_CALL_ABORT,
-			SubCode.REMOTE_CALL_ABL);
+			SubCode.REMOTE_CALL_ABL),
+			
+		/**
+		 * Map-&Uuml;bertragung 
+		 */
+		MAP('Q', SubCode.MAP_DATA_1, SubCode.MAP_DATA_2, SubCode.MAP_DATA_3,
+				SubCode.MAP_DATA_4, SubCode.MAP_FLUSH, SubCode.MAP_REQUEST);
 
 
 		/** Code auf der Leitung */
@@ -568,8 +574,37 @@ public class Command {
 		/**
 		 * Fordert die ID an
 		 */
-		ID_REQUEST('R');
+		ID_REQUEST('R'),
 		
+		/**
+		 * Fordert die komplette Map an
+		 */
+		MAP_REQUEST('R'),
+		
+		/**
+		 * Uebertraegt die ersten 128 Byte der Map-Daten eines Blocks (vier Kommandos fuer einen kompletten Block noetig)
+		 */
+		MAP_DATA_1('D'),
+		
+		/**
+		 * Map-Daten Teil 2 (Byte 128 bis 255)
+		 */
+		MAP_DATA_2('E'),
+		
+		/**
+		 * Map-Daten Teil 3 (Byte 256 bis 383)
+		 */
+		MAP_DATA_3('F'),
+		
+		/**
+		 * Map-Daten Teil 4 (Byte 384 bis 511)
+		 */
+		MAP_DATA_4('G'),
+		
+		/**
+		 * Erzwingt das sofortige Uebertragen aller ausstehenden Daten
+		 */
+		MAP_FLUSH('F');
 		
 		
 		/** SubCode auf der Leitung */

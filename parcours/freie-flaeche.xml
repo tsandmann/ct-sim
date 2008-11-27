@@ -9,41 +9,39 @@
 	</description>
 		
 	<parcours>
-		<line>################################</line>
-		<line>#                              #</line>
-		<line>*  .    .    .    .    .    .1 *</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#  .    .    .    .    .    .  #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>*  .    .    .    .    .    .  *</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#  .    .    .    .    .    .  #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>*  .    .    .    .    .    .  *</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#  .    .    .    .    .    .  #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>#                              #</line>
-		<line>* 2.    .    .    .    .    .  *</line>
-		<line>#                              #</line>
-		<line>################################</line>
+		<line> ################################# </line>
+		<line> #                               # </line>
+		<line>*#   .   .    .    .    .    .   #*</line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #   .   .    .    .    .    .   # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line>*#   .   .    .    .    .    .   #*</line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #               .               # </line>
+		<line> #   .   .    .  1 .    .    .   # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line>*#   .   .    .    .    .    .   #*</line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #   .   .    .    .    .    .   # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line> #                               # </line>
+		<line>*#2.     .    .    .    .    .   #*</line>
+		<line> #                               # </line>
+		<line> ################################# </line>
 	
 	</parcours>
 		<optics>

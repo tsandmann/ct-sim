@@ -7,25 +7,25 @@
 	</description>
 		
 	<parcours>
-		<line>============#</line>
-		<line>#  #  Z  #  #</line>
-		<line>#  #  |  #  #</line>
-		<line>#  #X | X#  #</line>
-		<line>#     |     #</line>
-		<line>#X    |    X#</line>
-		<line>#    LLL    #</line>
-		<line>#   =====   #</line>
-		<line>#     *     #</line>
-		<line>#           #</line>
-		<line>#====...====#</line>
-		<line>#...........#</line>
-		<line>#...........#</line>
-		<line>#..*=====*..#</line>
-		<line>#.....#.....#</line>
-		<line>#.....#.....#</line>
-		<line>#....0#.....#</line>
-		<line>#==1.===.2==#</line>
-	    <line>LL====L====LL</line>
+		<line>==============#</line>
+		<line>#   #     #   #</line>
+		<line>#   #  |  #   #</line>
+		<line>#   #X | X#   #</line>
+		<line>#      |      #</line>
+		<line>#X     |     X#</line>
+		<line>#     LLL     #</line>
+		<line>#   =======   #</line>
+		<line>#      *      #</line>
+		<line>#             #</line>
+		<line>#=====...=====#</line>
+		<line>#.............#</line>
+		<line>#.............#</line>
+		<line>#....=====....#</line>
+		<line>#......#......#</line>
+		<line>#......#......#</line>
+		<line>#.....0#......#</line>
+		<line>#===1.===.2===#</line>
+	    <line>LL=====L=====LL</line>
 	</parcours>
 		
 		<optics>

@@ -196,12 +196,13 @@ public class Sensors {
 			if (c.getDataL() != lastTransmittedSimTime) {
 				if (lastTransmittedSimTime == -1)
 					// Fuer's allererste DONE-Kommando doch nicht warnen
-					return;
+					return;		
 				lg.warn("Bot-Steuercode hat unerwartete lastTransmitted-Zeit "+
 						"gesendet (erwartet: %d, tats\u00E4chlich: %d); dies "+
 						"deutet darauf hin, dass der Steuercode Simschritte "+
 						"verschlafen hat",
 						lastTransmittedSimTime, c.getDataL());
+				
 			}
 		}
 
