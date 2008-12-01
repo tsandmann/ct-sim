@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2008-12-01 Timo Sandmann [mail@timosandmann.de]: Inaktives Anzeigefeld "Bot-Id" entfernt
+
 2008-11-21 Timo Sandmann [mail@timosandmann.de]: Online Map-Anzeige eingebaut. MAP_2_SIM_AVAILABLE muss dazu im Bot-Code eingeschaltet sein.
 
 2008-11-03 Timo Sandmann [mail@timosandmann.de]: Remote-Calls unterstuetzen Hintergrundausfuehrung von Verhalten

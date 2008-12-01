@@ -24,7 +24,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import ctSim.model.ThreeDBot;
 import ctSim.model.bots.Bot;
+import ctSim.model.bots.ctbot.CtBotSimTest;
+import ctSim.model.bots.ctbot.RealCtBot;
 
 /**
  * @author Felix Beckwermert
@@ -49,7 +52,17 @@ public class BotViewer extends JScrollPane {
 		this.bot = bot;
 		
 		/* buisitors nach Bot-Art anlegen */
-		if (bot.toString().contains("Test-Bot")) {
+		Bot botinstance = null;
+		if (bot instanceof ThreeDBot) {
+			/* simulierter Bot */
+			botinstance = ((ThreeDBot) bot).getSimBot();
+		} else if (bot instanceof RealCtBot) {
+			/* echter Bot */
+			botinstance = bot;
+		} else {
+			throw new AssertionError("Unbekannter Bot-Typ");
+		}
+		if (botinstance instanceof CtBotSimTest) {
 			/* Test-Bots haben kein LCD, LOG, RemoteCall, ABL, Mausbild */
 			buisitors = new Class[] {
 					Tables.Position.class,
@@ -68,7 +81,7 @@ public class BotViewer extends JScrollPane {
 		}
 		
 		/* Panelbreite soll mindestens so gross sein, dass alle Elemente darin komplett sichtbar sind */
-		this.setMinimumSize(new Dimension(200, this.getHeight()));
+		this.setMinimumSize(new Dimension(220, this.getHeight()));
 
 		setBorder(null);
 		JPanel panel = new JPanel();

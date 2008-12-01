@@ -36,8 +36,8 @@ public class Buisitor {
 					numInvocations++;
 				}
 			} catch (Exception e) {
-				// kann nicht passieren ... eigentlich ...
-				throw new AssertionError(e);
+				/* keine Anzeige */
+				return 0;
 			}
 		}
 		return numInvocations;

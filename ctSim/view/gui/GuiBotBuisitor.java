@@ -10,9 +10,7 @@ import ctSim.util.Buisitor;
  * GUI der Buisitors 
  */
 public abstract class GuiBotBuisitor extends JPanel implements BotBuisitor {
-	/**
-	 * UID
-	 */
+	/** UID */
 	private static final long serialVersionUID = 1654996309645415223L;
 	/** Buisitor */
 	private final Buisitor buisitor = new Buisitor(this);
