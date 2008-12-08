@@ -16,8 +16,8 @@ public class TimeLogger implements View {
 		"Simzeit %d ms; Armbanduhrenzeit %tT.%<tL";
 	/** komplette Ausgabe */
 	private static final String normalMsg = minimalMsg +
-			"; Verh\u00E4ltnis 1 : %.1f seit letzter " +
-			"TimeLogger-Ausgabe; 1 : %.1f seit Simulationsbeginn";
+			"; Verh\u00E4ltnis 1 : %.3f seit letzter " +
+			"TimeLogger-Ausgabe; 1 : %.3f seit Simulationsbeginn";
 
 	/** Logger */
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.TimeLogger");
@@ -67,8 +67,8 @@ public class TimeLogger implements View {
 			? minimalMsg : normalMsg,
 			simTimeInMs, System.currentTimeMillis(),
 			(now - realTimeAtLastLog) /
-			(float)(simTimeInMs - simTimeAtLastLog),
-			(now - realTimeAtSimulationStart) / (float)simTimeInMs);
+			(double)(simTimeInMs - simTimeAtLastLog),
+			(now - realTimeAtSimulationStart) / (double)simTimeInMs);
 
 		simTimeAtLastLog = simTimeInMs;
 		realTimeAtLastLog = now;

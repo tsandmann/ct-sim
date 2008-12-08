@@ -105,6 +105,9 @@ public class ComponentTable extends JTable {
 	 */
 	protected Component configure(JComponent compnt, JTable table,
 	boolean isSelected) {
+		if (compnt == null) {
+			return null;
+		}
 		Color bg = isSelected ? table.getSelectionBackground()
                               : table.getBackground();
 		Color fg = isSelected ? table.getSelectionForeground()
