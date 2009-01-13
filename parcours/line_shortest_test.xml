@@ -3,23 +3,20 @@
 
 <world>
 	<description>
-		Dieses ist ein Linien-Testparcours mit Kreuzungen und zyklenfrei
+		Dieses ist ein Linien-Testparcours fuer behaviour_line_shortest_way mit Kreuzungen und zyklenfrei
 	</description>
 		
 	<parcours>
 		
-		<line>=============#</line>
-		<line>#            #</line>
-		<line>#*    ZZ Z  *#</line>
-		<line>#    Z[[-[Z  #</line>
-		<line>#     Z| Z   #</line>
-		<line>#   /--[-\   #</line>
-		<line># Z-[-Z| |   #</line>
-		<line>#   Z  | |   #</line>
-		<line>#   /--[Z[--Z#</line>
-		<line>#   Z  Z |   #</line>
-		<line>#*  .    .  *#</line>
-		<line>====1====2===#</line>
+		<line>=============</line>
+		<line>#*     Z   *#</line>
+		<line>#  Z   |    #</line>
+		<line>#  | /-[--Z #</line>
+		<line># Z[-[Z|    #</line>
+		<line>#  | +-[--Z #</line>
+		<line>#  Z   |    #</line>
+		<line>#*     .   *#</line>
+		<line>=======1=====</line>
 	</parcours>
 
 	<optics>
@@ -56,18 +53,6 @@
 			<color type="diffuse">#993030</color>
 		</appearance>
 		
-		<appearance type="2"> 
-			<description>Fussboden des Startfeldes 2</description>
-			<color type="ambient">#000099</color>
-			<color type="diffuse">#000099</color>
-		</appearance>
-
-		<appearance type="0"> 
-			<description>Fussboden des Default-Startfeldes</description>
-			<color type="ambient">#FFFFFF</color>
-			<color type="diffuse">#CCFFFF</color>
-		</appearance>
-		
 		<appearance type="Z"> 
 			<description>Fussboden des Zielfeldes 0</description>
 			<color type="ambient">#66FF00</color>
@@ -97,11 +82,6 @@
 			<clone>-</clone>
 		</appearance>
 
-		<appearance type="\"> 
-			<description>Linie</description>
-			<clone>-</clone>
-		</appearance>
-
 		<appearance type="+"> 
 			<description>Linie</description>
 			<clone>-</clone>
@@ -111,34 +91,7 @@
 			<description>Linie</description>
 			<clone>-</clone>
 		</appearance>
-		<appearance type="T"> 
-			<description>Linie</description>
-			<clone>-</clone>
-		</appearance>
-		<appearance type="]"> 
-			<description>Linie</description>
-			<clone>-</clone>
-		</appearance>
-		<appearance type="}"> 
-			<description>Linie</description>
-			<clone>-</clone>
-		</appearance>
-		<appearance type="{"> 
-			<description>Linie</description>
-			<clone>-</clone>
-		</appearance>
-
-		<appearance type="~"> 
-			<description>Linie</description>
-			<clone>-</clone>
-		</appearance>
-		
-		<appearance type="L">
-		        <description>Fussboden mit Loch</description>
-			<color type="ambient">#000000</color>
-			<color type="diffuse">#000000</color>
-		</appearance>
-		
+				
 	</optics>
 
 

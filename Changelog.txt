@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2009-01-13 Frank Menzel [Menzelfr@gmx.net]: Neuer Parcours "crossings_shortest_way.xml" fuer neuen Linienfolger
+
 2008-12-01 Timo Sandmann [mail@timosandmann.de]: Inaktives Anzeigefeld "Bot-Id" entfernt
 
 2008-11-21 Timo Sandmann [mail@timosandmann.de]: Online Map-Anzeige eingebaut. MAP_2_SIM_AVAILABLE muss dazu im Bot-Code eingeschaltet sein.
