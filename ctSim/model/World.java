@@ -996,7 +996,11 @@ public class World {
 			pickInfo = this.obstBG.pickClosest(
 					PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE,
 					pickConeRay);
-			botBody.setPickable(true);
+			try {
+				botBody.setPickable(true);
+			} catch (Exception e) {
+				// NOP
+			}
 		}
 		if (pickInfo == null)
 			return 100.0; //$$ Ist das dokumentiert? Erwarten die Aufrufer das?

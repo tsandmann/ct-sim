@@ -399,10 +399,15 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
      * @param bot	Der sterbende Bot
      */
     public synchronized void onBotDisappeared(Bot bot) {
-    	if (bot != null){
-	    	lg.info("Bot "+bot.toString()+" ("+bot.getDescription()+") meldet sich beim " +
+    	if (bot != null) {
+    		try {
+    			lg.info("Bot "+bot.toString()+" ("+bot.getDescription()+") meldet sich beim " +
 	    			"Controller ab!");
-	    	bots.remove(bot);
+    		} catch (Exception e) {
+    			// NOP
+    		} finally {
+    			bots.remove(bot);
+    		}
     	}
     }
     

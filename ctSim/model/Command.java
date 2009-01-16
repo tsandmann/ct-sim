@@ -234,9 +234,9 @@ public class Command {
 	
 	/** Broadcast Adresse */
 	private static final BotID BROADCAST_ID = new BotID(0xFF);
-
+	
 	/**
-	 * Basisklasse fuer Codes
+	 * Interface fuer Codes
 	 */
 	public static interface BotCodes {
 		/**
@@ -248,8 +248,19 @@ public class Command {
 		 * @return SubCude
 		 * @throws ProtocolException 
 		 */
-		public SubCode getSubCode(int b) throws ProtocolException;
+		public BotSubCodes getSubCode(int b) throws ProtocolException;
 		
+		/**
+		 * @return Liefert das Byte, wie dieser Code auf dem Draht (im TCP oder USB)
+		 * dargestellt werden soll. 
+		 */
+		public byte toUint7();
+	}
+	
+	/**
+	 * Interface fuer Subcodes 
+	 */
+	public static interface BotSubCodes {
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
 		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
@@ -268,26 +279,49 @@ public class Command {
 	 * @author Timo Sandmmann (mail@timosandmann.de)
 	 */
 	public static class Bot2BotCode implements BotCodes {
-		/** /** Code auf der Leitung */
-		private byte onTheWire;
+		/**
+		 * Klasse fuer Subkommandos mit beliebigem SubCode.
+		 */
+		public static class Bot2BotSubCode implements BotSubCodes {
+			/** SubCode auf der Leitung */
+			private final byte onTheWire;
+
+			/**
+			 * @param c Subcode [0; 127]
+			 */
+			public Bot2BotSubCode(byte c) {
+				if (c > 127)
+					throw new AssertionError();
+				onTheWire = c;
+			}
+			
+			/**
+			 * @see ctSim.model.Command.BotSubCodes#toUint7()
+			 */
+			public byte toUint7() {
+				return onTheWire; 
+			}	
+		}	
+		
+		/** Code auf der Leitung */
+		private byte codeOnTheWire;
 		
 		/**
-		 * @param code Code des Kommandos als byte 
+		 * @param code	Code des Kommandos als byte
 		 * (wird nicht weiter geprueft)
 		 */
 		public Bot2BotCode(byte code) {
-			onTheWire = code;
+			codeOnTheWire = code;
 		}
 		
 		/**
 		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
-		 * Erzeugt immer SubCode.NORM
-		 * @param b Dummy
-		 * @return SubCode
+		 * @param b Subcode als int
+		 * @return Bot2BotSubCode-Instanz
 		 * @throws ProtocolException 
 		 */
-		public SubCode getSubCode(int b) throws ProtocolException {
-			return SubCode.NORM;
+		public Bot2BotSubCode getSubCode(int b) throws ProtocolException {
+			return new Bot2BotSubCode((byte)b);
 		}
 		
 		/**
@@ -296,7 +330,7 @@ public class Command {
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
 		public byte toUint7() { 
-			return onTheWire; 
+			return codeOnTheWire; 
 		}
 	}
 	
@@ -463,7 +497,7 @@ public class Command {
 		 * @return SubCude
 		 * @throws ProtocolException 
 		 */
-		public SubCode getSubCode(int b) throws ProtocolException {
+		public BotSubCodes getSubCode(int b) throws ProtocolException {
 			for (SubCode c : validSubCodes) {
 				if (c.toUint7() == b)
 					return c;
@@ -488,18 +522,12 @@ public class Command {
 	// Enum Sub-Command-Code
 
 	/** Ein Sub-Command-Code kann einen der Werte in diesem Enum haben. */
-	public static enum SubCode {
+	public static enum SubCode implements BotSubCodes {
 		/**
 		 * Das Standard-Subkommando. Dieses ist gesetzt, wenn kein anderes
 		 * gesetzt ist.
 		 */
 		NORM('N'),
-
-		/** "Nur links". Wird nirgends verwendet, keine Ahnung was das ist. */
-		LEFT('L'),
-
-		/** "Nur rechts". Wird nirgends verwendet, keine Ahnung was das ist. */
-		RIGHT('R'),
 
 		/** F&uuml;r das LCD; {@linkplain LcDisplay siehe dort}. */
 		LCD_CLEAR('c'),
@@ -626,7 +654,9 @@ public class Command {
 		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
-		protected byte toUint7() { return onTheWire; }
+		public byte toUint7() { 
+			return onTheWire; 
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -636,7 +666,7 @@ public class Command {
 	private final BotCodes commandCode;
 
 	/** Sub-Command-Code */
-	private SubCode subCommandCode;
+	private BotSubCodes subCommandCode;
 
 	/** Praktisch nicht verwendet. Kann DIR_REQUEST oder DIR_ANSWER werden. */
 	private final int direction;
@@ -969,7 +999,14 @@ public class Command {
 	/** 
 	 * @return Gibt das Subkommando des Kommandos zur&uuml;ck 
 	 */
-	public SubCode getSubCode() { return subCommandCode; }
+	public SubCode getSubCode() {
+		if (subCommandCode instanceof SubCode) {
+			return (SubCode)subCommandCode;
+		} else {
+			/* Subcode von Bot-2-Bot-Kommandos wird nicht ausgewertet */
+			return null;
+		}
+	}
 
 	/** 
 	 * Setzt das Feld dataL 

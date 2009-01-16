@@ -1,6 +1,8 @@
 Changelog fuer c't-Sim
 ======================
-2009-01-13 Frank Menzel [Menzelfr@gmx.net]: Neuer Parcours "crossings_shortest_way.xml" fuer neuen Linienfolger
+2008-12-16 Timo Sandmann [mail@timosandmann.de]: Individuelle Subcommands fuer Bot-2-Bot-Kommunikation implementiert.
+
+2009-01-13 Frank Menzel [Menzelfr@gmx.net]:      Neuer Parcours "crossings_shortest_way.xml" fuer neuen Linienfolger
 
 2008-12-01 Timo Sandmann [mail@timosandmann.de]: Inaktives Anzeigefeld "Bot-Id" entfernt
 
