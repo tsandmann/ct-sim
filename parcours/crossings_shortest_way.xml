@@ -10,13 +10,13 @@
 		
 		<line>============#</line>
 		<line>#*         *#</line>
-		<line>#     Z     #</line>
+		<line>#           #</line>
 		<line>#     |     #</line>
 		<line>#  /--[-\   #</line>
-		<line># Z[-Z| |   #</line>
-		<line>#  Z  | |   #</line>
-		<line>#  /--[Z[--Z#</line>
-		<line>#  |  Z Z   #</line>
+		<line>#  [- | |   #</line>
+		<line>#     | |   #</line>
+		<line>#  /--[ [--Z#</line>
+		<line>#  |    |   #</line>
 		<line>#* .    .  *#</line>
 		<line>===1====2===#</line>
 	</parcours>

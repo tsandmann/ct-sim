@@ -3,7 +3,6 @@ package ctSim.model.bots.components;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -21,6 +20,7 @@ import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWrite;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
 import ctSim.util.FmtLogger;
+import ctSim.util.MapLines;
 import ctSim.util.Misc;
 import ctSim.util.Runnable2;
 
@@ -41,14 +41,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private static final int HEIGHT = 1536;
 	/** Rohe Mapdaten; ein Int pro Pixel. */
 	private final int[] pixels = new int[WIDTH * HEIGHT];
+	/** eingezeichnete Linien */
+	private List<MapLines> lines = Misc.newList();
 	/** Mitte des Ausschnitts, der angezeigt werden soll (= aktuelle Botposition), Hoehe und Breite werden hier nicht benutzt */
-	private final Rectangle center = new Rectangle(768, 768, 0, 0);
+	private final MapLines center = new MapLines(768, 768, 0, 0, 0);
 	/** SyncRequest austehend? */
 	private boolean syncRequestPending = false;
 	/** SyncFlush austehend? */
 	private boolean syncFlushPending = false;
 	/** Image-Listener */
-	private final List<Runnable2<Image, Rectangle>> imageLi = Misc.newList();
+	private final List<Runnable2<Image, MapLines[]>> imageLi = Misc.newList();
 	/** Image-Event austehend? */
 	private boolean imageEventPending = false;
 	/** async. Outputstream */
@@ -64,6 +66,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private int bot_pos_x = 0;
 	/** Y-Komponente der aktuellen Bot-Position */
 	private int bot_pos_y = 0;
+	/** aktuelle Bot-Ausrichtung */
+	private int bot_heading = 0;
 	/** Kleinste belegte X-Koordinate */
 	private int min_x = 0xffffff;
 	/** Kleinste belegte Y-Koordinate */
@@ -192,7 +196,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			for (int i=0; i<16; i++) {	// Spalten
 				pic_x = y + i;	// Spaltenindex im Block berechnen
 				pic_x = WIDTH - pic_x;	// Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
-				if (pic_x > WIDTH || pic_y > HEIGHT) {
+				if (pic_x >= WIDTH || pic_y >= HEIGHT) {
 					/* ungueltige Daten :( */
 					lg.warn("(pic_x=" + pic_x + " | pic_y=" + pic_y + ") liegt ausserhalb der Karte! Breche Map-Update ab.");
 					return;
@@ -221,6 +225,20 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		} else if (pic_y > max_y) {
 			max_y = pic_y;
 		}
+	}
+	
+	/**
+	 * Traegt uebertragene Zeichnungsdaten in die interne Datenstruktur ein
+	 * @param color	Farbe der Linie
+	 * @param data	Rohdaten vom Kommando
+	 */
+	private final void updateDrawings(int color, byte[] data) {
+		int y1 = WIDTH - (Misc.toUnsignedInt8(data[0]) | Misc.toUnsignedInt8(data[1]) << 8);
+		int x1 = HEIGHT - (Misc.toUnsignedInt8(data[2]) | Misc.toUnsignedInt8(data[3]) << 8);
+		int y2 = WIDTH - (Misc.toUnsignedInt8(data[4]) | Misc.toUnsignedInt8(data[5]) << 8);
+		int x2 = HEIGHT - (Misc.toUnsignedInt8(data[6]) | Misc.toUnsignedInt8(data[7]) << 8);
+		lines.add(new MapLines(x1, y1, x2, y2, color));
+		lg.fine("Linie von (" + x1 + "|" + y1 + ") bis (" + x2 + "|" + y2 + ")");
 	}
 	
 	/**
@@ -266,7 +284,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				receiveState = 0;
 				return;
 			}
-			// DataR ist nicht belegt
+			bot_heading = c.getDataR();
 			updateInternalModel(c.getPayload(), block, 16, 23);	// macht die eigentliche Arbeit
 			receiveState = 3;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_4)) {
@@ -282,9 +300,19 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			receiveState = 0;
 			
 			/* Bot-Position fuer Auto-Scrolling verwenden */
-			center.x = bot_pos_x;
-			center.y = bot_pos_y;
+			center.x1 = bot_pos_x;
+			center.y1 = bot_pos_y;
+			center.x2 = bot_heading;
 			/* GUI-Update freigeben */
+			imageEventPending = true;
+		} else if (sub.equals(Command.SubCode.MAP_LINE)) {
+			updateDrawings(block, c.getPayload());
+			imageEventPending = true;
+		} else if (sub.equals(Command.SubCode.SUB_MAP_CLEAR_LINES)) {
+			int from = lines.size() - c.getDataL();
+			if (from < 0) from = 0;
+			int to = lines.size();
+			lines = lines.subList(from, to);
 			imageEventPending = true;
 		} else {
 			lg.warn("Abbruch, ungueltiger SubCode");
@@ -337,7 +365,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Fuegt einen Listener hinzu, der ausgefuehrt wird, wenn sich die Karte veraendert hat 
 	 * @param li Listener
 	 */
-	public void addImageListener(Runnable2<Image, Rectangle> li) {
+	public void addImageListener(Runnable2<Image, MapLines[]> li) {
 		if (li == null) {
 			throw new NullPointerException();
 		}
@@ -360,8 +388,11 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				Image img = Toolkit.getDefaultToolkit().createImage(
 					new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
 				
-				for (Runnable2<Image, Rectangle> li : imageLi) {
-					li.run(img, center);
+				for (Runnable2<Image, MapLines[]> li : imageLi) {
+					MapLines[] tmp2 = new MapLines[lines.size() + 1];
+					lines.toArray(tmp2);
+					tmp2[tmp2.length - 1] = center;
+					li.run(img, tmp2);
 				}
 			}
 		}

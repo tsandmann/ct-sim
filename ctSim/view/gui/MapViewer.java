@@ -25,6 +25,7 @@ import javax.swing.filechooser.FileFilter;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.MapComponent;
 import ctSim.util.FmtLogger;
+import ctSim.util.MapLines;
 import ctSim.util.Misc;
 import ctSim.util.Runnable2;
 
@@ -86,7 +87,7 @@ public class MapViewer extends JPanel {
 	        int i = s.lastIndexOf('.');
 
 	        if (i > 0 &&  i < s.length() - 1) {
-	            ext = s.substring(i+1).toLowerCase();
+	            ext = s.substring(i + 1).toLowerCase();
 	        }
 	        return ext;
 	    }
@@ -186,7 +187,7 @@ public class MapViewer extends JPanel {
 	/**
 	 * Map-Anzeige
 	 */
-	public static class ImageViewer extends JPanel implements Runnable2<Image, Rectangle> {
+	public static class ImageViewer extends JPanel implements Runnable2<Image, MapLines[]> {
 		/** UID */
 		private static final long serialVersionUID = -4764621960629937298L;
 		/** Bild */
@@ -195,12 +196,12 @@ public class MapViewer extends JPanel {
 		private final int targetWidth;
 		/** Hoehe */
 		private final int targetHeight;
-		/** aktuelle Position des Bots */
-		private Rectangle botPosition = new Rectangle();
 		/** Bereich, der immer sichtbar sein soll */
 		private final Rectangle scrollPosition = new Rectangle(250, 250);
 		/** Farbe der Bot-Position */
 		private final Color botColor = new Color(255, 0, 0);
+		/** Liste fuer einzuzeichnende Linien */
+		private MapLines[] lines;
 		
 		/**
 		 * @param c Map-Komponente
@@ -215,17 +216,18 @@ public class MapViewer extends JPanel {
 
 		/** 
 		 * Methode einer Swing-Komponente, aber thread-sicher 
-		 * @param img		Bild
-		 * @param center	Rechteck ueber der Bot-Position (zum Scrollen)
+		 * @param img	Image
+		 * @param mapLines	Punkte fuer Bot-Position und Linien	
 		 */
-		public synchronized void run(Image img, Rectangle center) {
+		public synchronized void run(Image img, MapLines[] mapLines) {			
 			this.image = img;
-			this.botPosition = center;
+			MapLines center = mapLines[mapLines.length - 1];
+			this.lines = mapLines;
 			repaint();
 			
 			/* Bereich um den Bot in den sichtbaren Bereich scrollen */
-			this.scrollPosition.x = Misc.clamp(center.x - 125, 1535);
-			this.scrollPosition.y = Misc.clamp(center.y - 125, 1535);
+			this.scrollPosition.x = Misc.clamp(center.x1 - 125, 1535);
+			this.scrollPosition.y = Misc.clamp(center.y1 - 125, 1535);
 			scrollRectToVisible(this.scrollPosition);
 		}
 		
@@ -236,10 +238,31 @@ public class MapViewer extends JPanel {
 		public void paint(Graphics g) {
 			/* Image zeichnen */
 			g.drawImage(image, 0, 0, null);
-			
-			/* Bot-Position einzeichnen */
-			g.setColor(botColor);
-			g.fillOval(botPosition.x - 5, botPosition.y - 5, 10, 10);
+
+			/* Linien einzeichnen */
+			if (lines != null) {
+				for (int i=0; i<lines.length-1; i++) {
+					Color color;
+					switch (lines[i].color) {
+					case 0:
+						color = Color.GREEN;
+						break;
+					case 1:
+						color = Color.RED;
+						break;
+					default:
+						color = Color.BLACK;
+						break;
+					}
+					g.setColor(color);
+					g.drawLine(lines[i].x1, lines[i].y1, lines[i].x2, lines[i].y2);
+				}
+				
+				/* Bot-Position einzeichnen */
+				g.setColor(botColor);
+				g.fillArc(lines[lines.length - 1].x1 - 7, lines[lines.length - 1].y1 - 7, 14, 14, lines[lines.length - 1].x2 + 120, 300);
+
+			}			
 		}
 
 		/**

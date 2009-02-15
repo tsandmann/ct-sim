@@ -135,15 +135,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      */
     class KrautUndRuebenSimulator implements Runnable {
         /** Umfang eines Rades [m] */
-        private static final double WHEEL_CIRCUMFERENCE = Math.PI * 0.057d;
+        private static final double WHEEL_CIRCUMFERENCE = 0.1781283d;
 
         /** Abstand Mittelpunkt Bot zum Rad [m] */
-        private static final double WHEEL_DIST = 0.0485d;
+        private static final double WHEEL_DIST = 0.0486d;
 
         /** Abstand Zentrum Maussensor in Vorausrichtung (Y) [m] */
         private static final double SENS_MOUSE_DIST_Y = -0.015d;
 
-        //TODO Bot soll in Loecher reinfahren, in Hindernisse aber nicht. Momentan: calcPos traegt Pos nicht ein, wenn Hindernis oder Loch. Gewuenscht: Bei Loch das erste Mal Pos updaten, alle weiteren Male nicht
         /**
          * @see java.lang.Runnable#run()
          */

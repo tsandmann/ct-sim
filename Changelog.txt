@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2009-02-15 Timo Sandmann [mail@timosandmann.de]: Map-Anzeige um Debug-Linien und heading-Anzeige erweitert
+
 2008-12-16 Timo Sandmann [mail@timosandmann.de]: Individuelle Subcommands fuer Bot-2-Bot-Kommunikation implementiert.
 
 2009-01-13 Frank Menzel [Menzelfr@gmx.net]:      Neuer Parcours "crossings_shortest_way.xml" fuer neuen Linienfolger

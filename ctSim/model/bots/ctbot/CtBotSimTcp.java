@@ -216,8 +216,9 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	throws UnrecoverableScrewupException {
 		try {
 			CommandOutputStream s = getConnection().getCmdOutStream();
-			for (BotComponent<?> c : components)
+			for (BotComponent<?> c : components) {
 				c.askForWrite(s);
+			}
 			s.flush();
 		} catch (IOException e) {
 			throw new UnrecoverableScrewupException(e);

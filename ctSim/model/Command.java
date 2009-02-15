@@ -431,7 +431,8 @@ public class Command {
 		 * Map-&Uuml;bertragung 
 		 */
 		MAP('Q', SubCode.MAP_DATA_1, SubCode.MAP_DATA_2, SubCode.MAP_DATA_3,
-				SubCode.MAP_DATA_4, SubCode.MAP_FLUSH, SubCode.MAP_REQUEST);
+				SubCode.MAP_DATA_4, SubCode.MAP_FLUSH, SubCode.MAP_LINE,
+				SubCode.SUB_MAP_CLEAR_LINES, SubCode.MAP_REQUEST);
 
 
 		/** Code auf der Leitung */
@@ -632,7 +633,15 @@ public class Command {
 		/**
 		 * Erzwingt das sofortige Uebertragen aller ausstehenden Daten
 		 */
-		MAP_FLUSH('F');
+		MAP_FLUSH('F'),
+		
+		/**
+		 * Linie zeichnen
+		 */
+		MAP_LINE('L'),
+		
+		/** Linien loeschen */
+		SUB_MAP_CLEAR_LINES('X');
 		
 		
 		/** SubCode auf der Leitung */
