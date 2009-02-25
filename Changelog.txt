@@ -1,5 +1,9 @@
 Changelog fuer c't-Sim
 ======================
+2009-02-25 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Map-Fenster (#183)
+
+2009-02-25 Frank Menzel [Menzelfr@gmx.de]: 		 Parcours "follow_line_enh.xml" fuer bot_follow_line_enhanced()
+
 2009-02-15 Timo Sandmann [mail@timosandmann.de]: Map-Anzeige um Debug-Linien und heading-Anzeige erweitert
 
 2008-12-16 Timo Sandmann [mail@timosandmann.de]: Individuelle Subcommands fuer Bot-2-Bot-Kommunikation implementiert.

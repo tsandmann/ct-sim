@@ -85,10 +85,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 */
 	public MapComponent() { 
 		super(null);
-//TODO:	Hintergrundfarbe auf Map-Farbe fuer Wert 0 (so sieht man aber erstmal besser, wann ein Update ausgefuehrt wurde)		
-//		for (int i=0; i<pixels.length; i++) {
-//			pixels[i] = colorFromRgb(128, 128, 128);
-//		}
+		int color = colorFromRgb(128, 128, 128);
+		for (int i=0; i<pixels.length; i++) {
+			pixels[i] = color;
+		}
 	}
 
 	/**
@@ -383,8 +383,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			if (now > lastUpdate + 200) {
 				lastUpdate = now;
 	
-				imageEventPending = false;	
-//TODO:	Nur belegte Bereiche zeichnen
+				imageEventPending = false;
 				Image img = Toolkit.getDefaultToolkit().createImage(
 					new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
 				
