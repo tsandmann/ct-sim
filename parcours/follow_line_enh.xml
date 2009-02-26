@@ -8,15 +8,16 @@
 		
 	<parcours>
 		
-		<line>===========</line>
-		<line>#*       *#</line>
-		<line>#    |    #</line>
-		<line>#    |    #</line>
-		<line>#    #    #</line>
-		<line>#    |    #</line>
-		<line>#    |    #</line>
-		<line>#*   .   *#</line>
-		<line>=====1=====</line>
+		<line>==============</line>
+		<line>#*          *#</line>
+		<line>#   /%  %\   #</line>
+		<line>#   !    !   #</line>
+		<line>#   |    |   #</line>
+		<line>#   #    #   #</line>
+		<line>#   |    |   #</line>
+		<line>#   !    !   #</line>
+		<line>#*  .    .  *#</line>
+		<line>====1====2====</line>
 	</parcours>
 
 	<optics>
@@ -76,10 +77,25 @@
 			<description>Linie</description>
 			<clone>-</clone>
 		</appearance>
+		
+		<appearance type="!"> 
+		  <description>Linie</description>
+		  <clone>-</clone>
+		</appearance>
+		
+		<appearance type="%"> 
+		  <description>Linie</description>
+		  <clone>-</clone>
+		</appearance>				
+		
 
 		<appearance type="/"> 
 			<description>Linie</description>
 			<clone>-</clone>
+		</appearance>
+		<appearance type="\"> 
+					<description>Linie</description>
+					<clone>-</clone>
 		</appearance>
 
 		<appearance type="+"> 

@@ -627,6 +627,8 @@ public class Parcours {
 				case '}':
 				case 'T':
 				case '~':
+				case '!':
+				case '%':
 					parcoursMapSimple[x][y] = 0;
 					break;
 				default:
