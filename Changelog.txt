@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2009-03-30 Timo Sandmann [mail@timosandmann.de]: Verzeichnis "maps" fuer Bot-Karten angelegt 
+
 2009-02-26 Frank Menzel [menzelfr@gmx.de]: 		 Linienunterbrechungen ermoeglicht mit den Zeichen ! und %
 
 2009-02-25 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Map-Fenster (#183)
