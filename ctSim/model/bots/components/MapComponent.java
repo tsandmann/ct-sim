@@ -47,8 +47,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private final MapLines center = new MapLines(768, 768, 0, 0, 0);
 	/** SyncRequest austehend? */
 	private boolean syncRequestPending = false;
-	/** SyncFlush austehend? */
-	private boolean syncFlushPending = false;
 	/** Image-Listener */
 	private final List<Runnable2<Image, MapLines[]>> imageLi = Misc.newList();
 	/** Image-Event austehend? */
@@ -105,7 +103,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	public synchronized void requestMap() throws IOException {
 		if (writesAsynchronously()) {
 			synchronized (asyncOut) {
-				asyncOut.getCommand(getHotCmdCode());
+				asyncOut.getCommand(getHotCmdCode()).setSubCmdCode(Command.SubCode.MAP_REQUEST);
 				asyncOut.flush();
 			}
 		} else {
@@ -124,13 +122,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		if (syncRequestPending) {
 			s.getCommand(getHotCmdCode()).setSubCmdCode(Command.SubCode.MAP_REQUEST);
 			syncRequestPending = false;
-		} else if (syncFlushPending) {
-			s.getCommand(getHotCmdCode()).setSubCmdCode(Command.SubCode.MAP_FLUSH);
-			syncFlushPending = false;			
 		}
 	}
 
-//TODO: Auslagern, ist zur Methode vom Mausbild identisch
 	/**
 	 * <p>
 	 * Konvertiert ein RGB-Wertetripel in nen Integer, wie er im Array
@@ -257,8 +251,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		Command.SubCode sub = c.getSubCode();
 		if (sub.equals(Command.SubCode.MAP_DATA_1)) {
 			if (receiveState != 0) {
+				lg.warn("Abbruch bei SubCode MAP_DATA_1:");
+				lg.warn(" State=:" + receiveState + "/soll:0");
+				lg.warn("  block=" + block);
 				receiveState = 0;
-				lg.warn("Abbruch bei SubCode MAP_DATA_1");
 				return;
 			}
 			bot_pos_y = HEIGHT - c.getDataR();	// Bot-Position, X-Komponente, wird im Bild in Y-Richtung gezaehlt
@@ -267,9 +263,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			lastBlock = block;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_2)) {
 			if (receiveState != 1 || lastBlock != block) {
-				lg.warn("Abbruch bei SubCode MAP_DATA_2");
-				lg.warn("State=" + receiveState);
-				lg.warn("block=" + block + "; last_block=" + lastBlock);
+				lg.warn("Abbruch bei SubCode MAP_DATA_2:");
+				lg.warn(" State=" + receiveState + "/soll:1");
+				lg.warn("  block=" + block + "; last_block=" + lastBlock);
 				receiveState = 0;
 				return;
 			}
@@ -278,9 +274,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			receiveState = 2;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_3)) {
 			if (receiveState != 2 || lastBlock != block) {
-				lg.warn("Abbruch bei SubCode MAP_DATA_3");
-				lg.warn("State=" + receiveState);
-				lg.warn("block=" + block + "; last_block=" + lastBlock);
+				lg.warn("Abbruch bei SubCode MAP_DATA_3:");
+				lg.warn(" State=" + receiveState + "/soll:2");
+				lg.warn("  block=" + block + "; last_block=" + lastBlock);
 				receiveState = 0;
 				return;
 			}
@@ -289,9 +285,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			receiveState = 3;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_4)) {
 			if (receiveState != 3 || lastBlock != block) {
-				lg.warn("Abbruch bei SubCode MAP_DATA_4");
-				lg.warn("State=" + receiveState);
-				lg.warn("block=" + block + "; last_block=" + lastBlock);
+				lg.warn("Abbruch bei SubCode MAP_DATA_4:");
+				lg.warn(" State=" + receiveState + "/soll:3");
+				lg.warn("  block=" + block + "; last_block=" + lastBlock);
 				receiveState = 0;
 				return;
 			}

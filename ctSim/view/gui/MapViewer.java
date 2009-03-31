@@ -123,6 +123,19 @@ public class MapViewer extends JPanel {
 	}	
 	
 	/**
+	 * Fordert die komplette Karte neu an
+	 */
+	private final Runnable onReload = new Runnable() {
+		public void run() {
+			try {
+				mapCompnt.requestMap();
+			} catch (IOException e) {
+				lg.warn("Konnte Karte nicht anfordern");
+			}
+		}
+	};
+	
+	/**
 	 * Speichert die Karte als png-Bild
 	 */
 	private final Runnable onSave = new Runnable() {
@@ -162,9 +175,11 @@ public class MapViewer extends JPanel {
 		
 		/* Button bauen */
 		JButton save = new Button("speichern", "Karte als png-Bild speichern", null, onSave);
+		JButton reload = new Button("neu laden", "Karte komplett (neu) übertragen", null, onReload);
 		
 		/* Toolbar bauen */
 		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		toolbar.add(reload);
 		toolbar.add(save);
 		
 		/* Gesamtgroesse setzen */

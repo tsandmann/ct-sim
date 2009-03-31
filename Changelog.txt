@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2009-03-31 Timo Sandmann [mail@timosandmann.de]: Map-2-Sim-Code erweitert, Sim kann jetzt die komplette Karte anfordern; Bugfix fuer #184
+
 2009-03-30 Timo Sandmann [mail@timosandmann.de]: Verzeichnis "maps" fuer Bot-Karten angelegt 
 
 2009-02-26 Frank Menzel [menzelfr@gmx.de]: 		 Linienunterbrechungen ermoeglicht mit den Zeichen ! und %

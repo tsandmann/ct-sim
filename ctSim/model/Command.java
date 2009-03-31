@@ -255,6 +255,12 @@ public class Command {
 		 * dargestellt werden soll. 
 		 */
 		public byte toUint7();
+		
+		/**
+		 * Kommando-Code als String
+		 * @return Code des Kommandos
+		 */
+		public String toString();
 	}
 	
 	/**
@@ -267,6 +273,12 @@ public class Command {
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
 		public byte toUint7();
+		
+		/**
+		 * Subkommando-Code als String
+		 * @return Code des Subkommandos
+		 */
+		public String toString();
 	}
 	
 	/**
@@ -301,6 +313,14 @@ public class Command {
 			public byte toUint7() {
 				return onTheWire; 
 			}	
+			
+			/**
+			 * @see ctSim.model.Command.BotSubCodes#toString()
+			 */
+			@Override
+			public String toString() {
+				return formatChar(onTheWire);
+			}
 		}	
 		
 		/** Code auf der Leitung */
@@ -331,6 +351,14 @@ public class Command {
 		 */
 		public byte toUint7() { 
 			return codeOnTheWire; 
+		}
+		
+		/**
+		 * @see ctSim.model.Command.BotCodes#toString()
+		 */
+		@Override
+		public String toString() {
+			return formatChar(codeOnTheWire);
 		}
 	}
 	
@@ -431,7 +459,7 @@ public class Command {
 		 * Map-&Uuml;bertragung 
 		 */
 		MAP('Q', SubCode.MAP_DATA_1, SubCode.MAP_DATA_2, SubCode.MAP_DATA_3,
-				SubCode.MAP_DATA_4, SubCode.MAP_FLUSH, SubCode.MAP_LINE,
+				SubCode.MAP_DATA_4, SubCode.MAP_REQUEST, SubCode.MAP_LINE,
 				SubCode.SUB_MAP_CLEAR_LINES, SubCode.MAP_REQUEST);
 
 
@@ -631,11 +659,6 @@ public class Command {
 		MAP_DATA_4('G'),
 		
 		/**
-		 * Erzwingt das sofortige Uebertragen aller ausstehenden Daten
-		 */
-		MAP_FLUSH('F'),
-		
-		/**
 		 * Linie zeichnen
 		 */
 		MAP_LINE('L'),
@@ -822,16 +845,16 @@ public class Command {
 		// und noch die Pruefsumme
 		crc = b[i];
 
+		// Nutzlast (Payload)
+		payload = new byte[payloadSize];
+		con.read(payload);
+		
 		// Sinnvollitaet pruefen
 		if (crc != CRCCODE) {
 			throw new ProtocolException(String.format("Ung\u00FCltiges " +
 				"Kommando (verkehrter CRC, h\u00E4tte %s sein " +
 				"sollen); Kommando folgt%s", formatChar(CRCCODE), this));
 		}
-
-		// Nutzlast (Payload)
-		payload = new byte[payloadSize];
-		con.read(payload);
 	}
 
 	/**

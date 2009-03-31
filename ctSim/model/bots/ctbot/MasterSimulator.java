@@ -147,134 +147,129 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          * @see java.lang.Runnable#run()
          */
         public void run() {
-            // Position und Heading berechnen:
+			// Position und Heading berechnen:
 
-            // Fuer ausfuehrliche Erlaeuterung der Positionsberechnung
-            // siehe pdf
+			// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung
+			// siehe pdf
 
-            // Absolut zurueckgelegte Strecke pro Rad berechnen
-            double s_l = leftWheel .revsThisSimStep() * WHEEL_CIRCUMFERENCE;
-            double s_r = rightWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
+			// Absolut zurueckgelegte Strecke pro Rad berechnen
+			double s_l = leftWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
+			double s_r = rightWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
 
-            // Haelfte des Drehwinkels, den der Bot in diesem Simschritt
-            // hinzubekommt
-            double _gamma = (s_l - s_r) / (4.0 * WHEEL_DIST);
+			// Haelfte des Drehwinkels, den der Bot in diesem Simschritt
+			// hinzubekommt
+			double _gamma = (s_l - s_r) / (4.0 * WHEEL_DIST);
 
-            /*
-            * // Jetzt fehlt noch die neue Blickrichtung
-            * Vector3f newHeading = new
-            * Vector3f(-mid.y, mid.x, 0);
-            */
+			// neue Blickrichtung berechnen
+			// ergibt sich aus Rotation der Blickrichtung um 2*_gamma
+			Vector3d _hd = parent.getHeadingVectorInWorldCoord();
+			double _s2g = Math.sin(2 * _gamma);
+			double _c2g = Math.cos(2 * _gamma);
+			Vector3d newHeading = new Vector3d((_hd.x * _c2g + _hd.y * _s2g),
+					(-_hd.x * _s2g + _hd.y * _c2g), 0f);
 
-            // neue Blickrichtung berechnen
-            // ergibt sich aus Rotation der Blickrichtung um 2*_gamma
-            Vector3d _hd = parent.getHeadingVectorInWorldCoord();
-            double _s2g = Math.sin(2 * _gamma);
-            double _c2g = Math.cos(2 * _gamma);
-            Vector3d newHeading = new Vector3d(
-                    (_hd.x * _c2g + _hd.y * _s2g),
-                    (-_hd.x * _s2g + _hd.y * _c2g), 0f);
+			newHeading.normalize();
 
-            newHeading.normalize();
+			// Neue Position bestimmen
+			Vector3d newPos = new Vector3d(parent.getPositionInWorldCoord());
+			double _sg = Math.sin(_gamma);
+			double _cg = Math.cos(_gamma);
+			double moveDistance;
+			if (_gamma == 0) {
+				// Bewegung geradeaus
+				moveDistance = s_l; // = s_r
+			} else {
+				// andernfalls die Distanz laut Formel berechnen
+				moveDistance = 0.5 * (s_l + s_r) * Math.sin(_gamma) / _gamma;
+			}
 
-            // Neue Position bestimmen
-            Vector3d newPos = new Vector3d(parent.getPositionInWorldCoord());
-            double _sg = Math.sin(_gamma);
-            double _cg = Math.cos(_gamma);
-            double moveDistance;
-            if (_gamma == 0) {
-                // Bewegung geradeaus
-                moveDistance = s_l; // = s_r
-            } else {
-                // andernfalls die Distanz laut Formel berechnen
-                moveDistance = 0.5 * (s_l + s_r) * Math.sin(_gamma) / _gamma;
-            }
-            
-            // Den Bewegungsvektor berechnen ...
-            Vector3d moveDirection = new Vector3d((_hd.x * _cg + _hd.y
-                    * _sg), (-_hd.x * _sg + _hd.y * _cg), 0f);
-            moveDirection.normalize();
-            moveDirection.scale(moveDistance);
-            // ... und die alte Position entsprechend veraendern.
-            newPos.add(moveDirection);
+			// Den Bewegungsvektor berechnen ...
+			Vector3d moveDirection = new Vector3d((_hd.x * _cg + _hd.y * _sg),
+					(-_hd.x * _sg + _hd.y * _cg), 0f);
+			moveDirection.normalize();
+			moveDirection.scale(moveDistance);
+			// ... und die alte Position entsprechend veraendern.
+			newPos.add(moveDirection);
 
-            mouseSensorX.set(2 * _gamma * SENS_MOUSE_DIST_Y);
-            mouseSensorY.set(moveDistance);
+			mouseSensorX.set(2 * _gamma * SENS_MOUSE_DIST_Y);
+			mouseSensorY.set(moveDistance);
 
-            boolean isCollided = world.isCollided(parent,
-                new BoundingSphere(new Point3d(0d, 0d, 0d), CtBotSimTcp.BOT_RADIUS),
-                newPos);
-            // Wenn Kollision, Bot entsprechend faerben
-            parent.set(COLLIDED, isCollided);
+			boolean isCollided = world.isCollided(parent, new BoundingSphere(
+					new Point3d(0d, 0d, 0d), CtBotSimTcp.BOT_RADIUS), newPos);
+			// Wenn Kollision, Bot entsprechend faerben
+			parent.set(COLLIDED, isCollided);
 
-            // Bodenkontakt ueberpruefen
+			// Bodenkontakt ueberpruefen
 
-            // Vektor vom Ursprung zum linken Rad
-            Vector3d vecL = new Vector3d(-newHeading.y,newHeading.x, 0f);
-            vecL.scale((float) WHEEL_DIST);
-            // neue Position linkes Rad
-            Vector3d posRadL = new Vector3d(parent.getPositionInWorldCoord());
-            posRadL.add(vecL);
+			// Vektor vom Ursprung zum linken Rad
+			Vector3d vecL = new Vector3d(-newHeading.y, newHeading.x, 0f);
+			vecL.scale((float) WHEEL_DIST);
+			// neue Position linkes Rad
+			Vector3d posRadL = new Vector3d(parent.getPositionInWorldCoord());
+			posRadL.add(vecL);
 
-            // Vektor vom Ursprung zum rechten Rad
-            Vector3d vecR = new Vector3d(newHeading.y, -newHeading.x, 0f);
-            vecR.scale((float) WHEEL_DIST);
-            // neue Position rechtes Rad
-            Vector3d posRadR = new Vector3d(parent.getPositionInWorldCoord());
-            posRadR.add(vecR);
+			// Vektor vom Ursprung zum rechten Rad
+			Vector3d vecR = new Vector3d(newHeading.y, -newHeading.x, 0f);
+			vecR.scale((float) WHEEL_DIST);
+			// neue Position rechtes Rad
+			Vector3d posRadR = new Vector3d(parent.getPositionInWorldCoord());
+			posRadR.add(vecR);
 
-            // Winkel des heading errechnen
-            double angle = SimUtils.getRotation(newHeading);
-            // Transformations-Matrix fuer die Rotation erstellen
-            Transform3D rotation = new Transform3D();
-            rotation.rotZ(angle);
+			// Winkel des heading errechnen
+			double angle = SimUtils.getRotation(newHeading);
+			// Transformations-Matrix fuer die Rotation erstellen
+			Transform3D rotation = new Transform3D();
+			rotation.rotZ(angle);
 
-            /** Abstand Zentrum Gleitpin in Achsrichtung (X) [m] */
-            double BOT_SKID_X = 0d;
+			/** Abstand Zentrum Gleitpin in Achsrichtung (X) [m] */
+			double BOT_SKID_X = 0d;
 
-            /** Abstand Zentrum Gleitpin in Vorausrichtung (Y) [m] */
-            double BOT_SKID_Y = -0.054d;
+			/** Abstand Zentrum Gleitpin in Vorausrichtung (Y) [m] */
+			double BOT_SKID_Y = -0.054d;
 
-            // Bodenkontakt des Gleitpins ueberpruefen
-            Vector3d skidVec = new Vector3d(
-                BOT_SKID_X, BOT_SKID_Y, -CtBotSimTcp.BOT_HEIGHT / 2);
-            // Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
-            rotation.transform(skidVec);
-            skidVec.add(new Point3d(newPos));
+			// Bodenkontakt des Gleitpins ueberpruefen
+			Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y,
+					-CtBotSimTcp.BOT_HEIGHT / 2);
+			// Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
+			rotation.transform(skidVec);
+			skidVec.add(new Point3d(newPos));
 
-            boolean isFalling = !world.checkTerrain(new Point3d(skidVec),
-                CtBotSimTcp.BOT_GROUND_CLEARANCE);
+			boolean isFalling = !world.checkTerrain(new Point3d(skidVec),
+					CtBotSimTcp.BOT_GROUND_CLEARANCE);
 
-            // Bodenkontakt des linken Reifens ueberpruefen
-            posRadL.z -= CtBotSimTcp.BOT_HEIGHT / 2;
+			// Bodenkontakt des linken Reifens ueberpruefen
+			posRadL.z -= CtBotSimTcp.BOT_HEIGHT / 2;
 
-            isFalling |= !world.checkTerrain(new Point3d(posRadL),
-                CtBotSimTcp.BOT_GROUND_CLEARANCE);
+			isFalling |= !world.checkTerrain(new Point3d(posRadL),
+					CtBotSimTcp.BOT_GROUND_CLEARANCE);
 
-            // Bodenkontakt des rechten Reifens ueberpruefen
-            posRadR.z -= CtBotSimTcp.BOT_HEIGHT / 2;
+			// Bodenkontakt des rechten Reifens ueberpruefen
+			posRadR.z -= CtBotSimTcp.BOT_HEIGHT / 2;
 
-            isFalling |= !world.checkTerrain(new Point3d(posRadR),
-                CtBotSimTcp.BOT_GROUND_CLEARANCE);
+			isFalling |= !world.checkTerrain(new Point3d(posRadR),
+					CtBotSimTcp.BOT_GROUND_CLEARANCE);
 
-            // Wenn einer der Beruehrungspunkte keinen Boden mehr unter
-            // sich hat wird der Bot gestoppt und entsprechend gefaerbt
-            parent.set(IN_HOLE, isFalling);
+			// Wenn einer der Beruehrungspunkte keinen Boden mehr unter
+			// sich hat wird der Bot gestoppt und entsprechend gefaerbt
+			parent.set(IN_HOLE, isFalling);
 
-            if (! parent.is(IN_HOLE) && ! parent.is(COLLIDED))
-                parent.setPosition(new Point3d(newPos));
+			if (!parent.is(IN_HOLE) && !parent.is(COLLIDED))
+				parent.setPosition(new Point3d(newPos));
 
-            if (! parent.is(IN_HOLE))
-                parent.setHeading(newHeading);
+			if (!parent.is(IN_HOLE)) {
+				parent.setHeading(newHeading);
+			} else {
+				mouseSensorX.sensor.set(0);
+			}
 
-            if (! parent.isObstStateNormal()) {
-                mouseSensorX.sensor.set(0);
-                mouseSensorY.sensor.set(0);
-            }
+			if (!parent.isObstStateNormal()) {
+//				mouseSensorX.sensor.set(0);
+				mouseSensorY.sensor.set(0);
+			}
 
-            clock.setSimTimeInMs((int)world.getSimTimeInMs());
-        }
-    }
+			clock.setSimTimeInMs((int) world.getSimTimeInMs());
+		}
+	}
 
     /**
     * Repr&auml;sentiert einen optischen Sensor vom Typ CNY70. Beim c't-Bot

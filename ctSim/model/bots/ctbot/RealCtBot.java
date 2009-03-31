@@ -60,7 +60,7 @@ public class RealCtBot extends CtBot {
 					//updateView();
 				}
 			} catch (ProtocolException e) {
-				lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere%s", cmd);
+				lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere");
 			} catch (IOException e) {
 				lg.severe(e, "E/A-Problem; Verbindung zu Bot verloren");
 				die(); //$$ Das klappt nicht. Wenn die Verbindung abreißt, läuft alles weiter. Untersuchen
