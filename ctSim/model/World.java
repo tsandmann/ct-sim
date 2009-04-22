@@ -57,6 +57,7 @@ import org.xml.sax.SAXException;
 
 import ctSim.controller.BotBarrier;
 import ctSim.controller.Config;
+import ctSim.model.Map.MapException;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.util.FmtLogger;
@@ -1117,5 +1118,32 @@ public class World {
 			b.setHeading(head);
 			b.setPosition(pos);
 		}
+	}
+	
+	/**
+	 * Exportiert die aktuelle Welt in eine Bot-Map-Datei 
+	 * @param bot Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird
+	 * @param free Wert, mit dem freie Felder eingetragen werden (z.B. 100)
+	 * @param occupied Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
+	 * @throws IOException falls Fehler beim Schreiben der Datei
+	 * @throws MapException falls keine Daten in der Map
+	 */
+	public void toMap(int bot, int free, int occupied) throws IOException, MapException {
+		
+		float size = Float.parseFloat(Config.getValue("mapSize"));
+		int resolution = Integer.parseInt(Config.getValue("mapResolution"));
+		int section_points = Integer.parseInt(Config.getValue("mapSectionSize"));
+		int macroblock_length = Integer.parseInt(Config.getValue("mapMacroblockSize"));
+		
+		Map map = new Map(size, resolution, section_points, macroblock_length);
+		
+		try {
+			map.createFromParcours(parcours, bot, free, occupied);
+		} catch (MapException e) {
+			lg.warn("Konnte Parcours nicht in die Map schreiben:");
+			lg.warn(e.getMessage());
+			throw map.new MapException();
+		}
+		map.export();
 	}
 }

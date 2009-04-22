@@ -1,8 +1,28 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
+
 package ctSim.view.gui;
 
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
@@ -22,6 +42,8 @@ import ctSim.ConfigManager;
 import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.controller.Main;
+import ctSim.model.Map.MapException;
+import ctSim.util.FmtLogger;
 import ctSim.util.GridBaggins;
 import ctSim.util.Menu;
 //import ctSim.util.Runnable1;
@@ -50,6 +72,9 @@ import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 public class MainWinMenuBar extends JMenuBar {
 	/** UID */
 	private static final long serialVersionUID = - 5927950169956191902L;
+	
+	 /** Logger */
+    final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.MainWinMenuBar");
 
 	/**
 	 * Je nach dem, was der Benutzer im Men&uuml; klickt, m&uuml;ssen wir oft im
@@ -103,6 +128,7 @@ public class MainWinMenuBar extends JMenuBar {
 			new Entry("\u00D6ffnen ...", Config.getIcon("Open16"), onOpenWorld),
 			new Entry("Generieren", Config.getIcon("New16"), onOpenRandomWorld),
 			new Entry("Speichern als ...", Config.getIcon("SaveAs16"), onSaveWorld),
+			new Entry("Als Map exportieren...", Config.getIcon("ToMap16"), onWorldToMap),
 			new Entry("Schlie\u00DFen", Config.getIcon("Delete16"), onCloseWorld));
 		add(worldMenu);
 		JMenu connectMenu = new Menu("Verbinde mit Bot",
@@ -379,6 +405,57 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
+	/**
+	 * Handler fuer Welt als Bot-Map exportieren
+	 */
+	private Runnable onWorldToMap = new Runnable() {
+		private final JTextField bot = new JTextField("1", 8);
+		private final JTextField free = new JTextField("100", 5);
+		private final JTextField occupied = new JTextField("-100", 5);
+		private JDialog mapDialog = null;
+		private JOptionPane optionPane = null;
+
+		public void run() {
+			if (mapDialog == null) {
+				JPanel p = new JPanel();
+				p.setLayout(new GridBagLayout());
+				p.add(new JLabel("Startfeld"),
+						new GridBaggins().west().epadx(2).epady(4));
+				p.add(new JLabel("Wert frei"),
+					new GridBaggins().col(1).west().epadx(2).epady(4));
+				p.add(new JLabel("Wert belegt"),
+					new GridBaggins().col(2).west().epadx(2).epady(4));
+
+				p.add(bot, new GridBaggins().row(1));
+				p.add(free, new GridBaggins().row(1));
+				p.add(occupied, new GridBaggins().row(1));
+
+				optionPane = new JOptionPane(
+					p,
+					JOptionPane.QUESTION_MESSAGE,
+					JOptionPane.OK_CANCEL_OPTION);
+				mapDialog = optionPane.createDialog(
+					mainWindow, // parent
+					"Parcours als Map exportieren"); // Dialog-Titel
+			}
+
+			mapDialog.setVisible(true);
+			if (((Integer)optionPane.getValue()) == JOptionPane.YES_OPTION) {
+				try {
+					controller.worldToMap(Integer.parseInt(bot.getText()), Integer.parseInt(free.getText()), Integer.parseInt(occupied.getText()));
+					lg.info("Welt wurde korrekt als Bot-Map exportiert");
+				} catch (NumberFormatException e) {
+					lg.warn("Ungueltige Eingabewerte: " + e.getMessage());
+				} catch (IOException e) {
+					lg.warn("Fehler beim Schreiben der Datei: " + e.getMessage());
+				} catch (MapException e) {
+					lg.warn("Map enthaelt keine Daten, die exportiert werden koennten");
+				}
+			}
+		}
+	};
+
+	
 	///////////////////////////////////////////////////////////////////////////
 	// Hilfsmethoden
 
