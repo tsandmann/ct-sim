@@ -526,7 +526,7 @@ public class Parcours {
 	 *         Breite und H&ouml;he gleich.)
 	 */
 	public int getBlockSizeInMM() {
-		return (int)(blockSizeInM * 1000.0);
+		return (int)(blockSizeInM * 1000.0f);
 	}
 
 	/**
@@ -786,7 +786,7 @@ public class Parcours {
 	 * @return Welt-Koordinate [mm]
 	 */
 	public int blockToWorld(int koord) {
-		return koord * (int)(this.blockSizeInM * 1000);
+		return koord * (int)(this.blockSizeInM * 1000.0f);
 	}
 	
 	/**
