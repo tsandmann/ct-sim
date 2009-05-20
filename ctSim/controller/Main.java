@@ -201,7 +201,15 @@ public class Main {
 
 		List<View> v = Misc.newList();
 		// View der Applikation ist mindestens das MainWindow
-		v.add(new MainWindow(c));
+		try {
+			v.add(new MainWindow(c));
+		} catch (Exception e) {
+			/* Fehler abfangen, z.B. von Java3D */
+			lg.warn("Fenster konnte nicht erzeugt werden (Java3D-Fehler?)");
+			lg.warn(e.getMessage());
+			lg.warn("ct-Sim wird beendet");
+			System.exit(1);
+		}
 		try {
 			// View um ContestConductor erweitern falls so konfiguriert
 			if (Config.getValue("useContestConductor").equalsIgnoreCase("true"))

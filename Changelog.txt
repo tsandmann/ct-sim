@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2009-05-20 Timo Sandmann [mail@timosandmann.de]: Java3D-Fehler (z.B. keine OpenGL-Unterstuetzung) werden abgefangen und ausgegeben
+
 2009-05-16 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Parcours.getBlockSizeInMM(): Liefert jetzt 240 und nicht mehr 239 
 
 2009-04-22 Timo Sandmann [mail@timosandmann.de]: Parcours-Export als Bot-Map hinzugefuegt
