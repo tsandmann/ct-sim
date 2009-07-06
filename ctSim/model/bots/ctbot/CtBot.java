@@ -27,6 +27,7 @@ import ctSim.controller.Controller;
 import ctSim.model.Command;
 import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.util.BotID;
@@ -211,6 +212,7 @@ public abstract class CtBot extends BasicBot {
 			new Sensors.Trans(),
 			new Sensors.Error(),
 			//new Actuators.Abl(),
+			new MapComponent(),
 			new RemoteCallCompnt()
 		);
 

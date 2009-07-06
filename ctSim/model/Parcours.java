@@ -59,13 +59,13 @@ public class Parcours {
 	 * gerade keine zwei Bots mehr aneinander vorbeik&ouml;nnen.
 	 * </p>
 	 */
-	private float blockSizeInM = 0.24f;
+	private final float blockSizeInM = 0.24f;
 
 	/**
 	 * Anzahl der Startpositionen fuer Bots. Dir Position 0 ist die Default
 	 * Position, ab 1 für die Wettkampfbots.
 	 */
-	public static int BOTS = 3; // ParcoursLoader kann max 2 Startplaetze
+	public static final int BOTS = 3; // ParcoursLoader kann max 2 Startplaetze
 								// erzeugen, darum hardcoded auf 3
 
 	/** enthaelt alle Hindernisse */
@@ -521,6 +521,15 @@ public class Parcours {
 	}
 
 	/**
+	 * @return Liefert die Breite/H&ouml;he einer Gittereinheit (eines Blocks)
+	 *         in Millimeter zur&uuml;ck. (Da die Bl&ouml;cke quadratisch sind, sind
+	 *         Breite und H&ouml;he gleich.)
+	 */
+	public int getBlockSizeInMM() {
+		return (int)(blockSizeInM * 1000.0f);
+	}
+
+	/**
 	 * Prueft, ob ein Punkt innerhalb des Zielfeldes liegt
 	 * 
 	 * @param pos
@@ -627,6 +636,8 @@ public class Parcours {
 				case '}':
 				case 'T':
 				case '~':
+				case '!':
+				case '%':
 					parcoursMapSimple[x][y] = 0;
 					break;
 				default:
@@ -638,6 +649,52 @@ public class Parcours {
 		return parcoursMapSimple;
 	}
 
+	/**
+	 * @return Liefert einen stark vereinfachten Parcours zurück. Das Array
+	 *         enthaelt nur 0 (freies Feld), 1 (blockiertes Feld) und 2 (Loch)
+	 */
+	public int[][] getFlatParcoursWithHoles() {
+		int[][] parcoursMapSimple = new int[this.getWidthInBlocks()][this
+				.getHeightInBlocks()];
+		for (int y=0; y<parcoursMapSimple[0].length; y++) {
+			for (int x=0; x<parcoursMapSimple.length; x++) {
+				switch (parcoursMap[x][y]) {
+				case '.':
+				case ' ':
+				case '1':
+				case '2':
+				case '0':
+				case 'Z':
+				case '-':
+				case '|':
+				case '/':
+				case '\\':
+				case '+':
+				case '[':
+				case ']':
+				case '{':
+				case '}':
+				case 'T':
+				case '~':
+				case '!':
+				case '%':
+					/* frei */
+					parcoursMapSimple[x][y] = 0;
+					break;
+				case 'L':
+					/* Loch */
+					parcoursMapSimple[x][y] = 2;
+					break;
+				default:
+					/* Hindernis */
+					parcoursMapSimple[x][y] = 1;
+					break;
+				}
+			}
+		}
+		return parcoursMapSimple;
+	}	
+	
 	/**
 	 * Liefert die kuerzeste Distanz von einem gegebenen Punkt (in
 	 * Gitterkoordinaten) zum Ziel
@@ -721,5 +778,27 @@ public class Parcours {
 
 		// finde die kuerzeste Verbindung
 		return shortestPath;
+	}
+	
+	/** 
+	 * Rechnet eine Block-Koordinate in eine Welt-Koordinate um
+	 * @param koord Block-Koordinate
+	 * @return Welt-Koordinate [mm]
+	 */
+	public int blockToWorld(int koord) {
+		return koord * (int)(this.blockSizeInM * 1000.0f);
+	}
+	
+	/**
+	 * Liefert die Startposition zu einer Bot-Nr.
+	 * @param bot Nummer des Bots [0, 2]
+	 * @return {X, Y}
+	 */
+	public int[] getStartPositions(int bot) {
+		if (bot < this.startPositions.length) {
+			return this.startPositions[bot];
+		} else {
+			return null;
+		}
 	}
 }

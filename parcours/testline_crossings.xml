@@ -8,17 +8,18 @@
 		
 	<parcours>
 		
-		<line>============#</line>
-		<line>#*   L  L  *#</line>
-		<line>#    }T-{   #</line>
-		<line>#    L| L   #</line>
-		<line>#  /--[-\   #</line>
-		<line>#L-]-L| |   #</line>
-		<line>#     | |   #</line>
-		<line>#  /--[L[--Z#</line>
-		<line>#  |  L |   #</line>
-		<line>#* .    .  *#</line>
-		<line>===1====2===#</line>
+		<line>=============#</line>
+		<line>#            #</line>
+		<line>#*    ZZ Z  *#</line>
+		<line>#    Z[[-[Z  #</line>
+		<line>#     Z| Z   #</line>
+		<line>#   /--[-\   #</line>
+		<line># Z-[-Z| |   #</line>
+		<line>#   Z  | |   #</line>
+		<line>#   /--[Z[--Z#</line>
+		<line>#   Z  Z |   #</line>
+		<line>#*  .    .  *#</line>
+		<line>====1====2===#</line>
 	</parcours>
 
 	<optics>
@@ -112,7 +113,7 @@
 		</appearance>
 		<appearance type="T"> 
 			<description>Linie</description>
-							<clone>-</clone>
+			<clone>-</clone>
 		</appearance>
 		<appearance type="]"> 
 			<description>Linie</description>

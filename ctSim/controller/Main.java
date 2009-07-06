@@ -1,3 +1,22 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ *
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ * This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ *
+ */
+
 package ctSim.controller;
 
 import java.awt.event.MouseAdapter;
@@ -22,7 +41,6 @@ import ctSim.view.contestConductor.ContestConductor;
 import ctSim.view.gui.MainWindow;
 import ctSim.view.gui.SplashWindow;
 
-//$$ doc Grobe Architektur beschreiben; wer verdrahtet M, V und C? -> auch Pico beschreiben
 /**
  * <p>
  * Haupt-Einsprungpunkt in den ctSim. Der normale Weg, das Programm zu starten,
@@ -35,7 +53,7 @@ import ctSim.view.gui.SplashWindow;
  */
 public class Main {
 	/** Versionsnummer */
-	public static final String VERSION = "2.4";
+	public static final String VERSION = "2.5";
 	/** Konfigurationsdatei */
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
     /** Flag, welches die Anzeige des Splashscreens bewirkt (DEFAULT: TRUE) */
@@ -183,7 +201,15 @@ public class Main {
 
 		List<View> v = Misc.newList();
 		// View der Applikation ist mindestens das MainWindow
-		v.add(new MainWindow(c));
+		try {
+			v.add(new MainWindow(c));
+		} catch (Exception e) {
+			/* Fehler abfangen, z.B. von Java3D */
+			lg.warn("Fenster konnte nicht erzeugt werden (Java3D-Fehler?)");
+			lg.warn(e.getMessage());
+			lg.warn("ct-Sim wird beendet");
+			System.exit(1);
+		}
 		try {
 			// View um ContestConductor erweitern falls so konfiguriert
 			if (Config.getValue("useContestConductor").equalsIgnoreCase("true"))

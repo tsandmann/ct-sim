@@ -234,9 +234,9 @@ public class Command {
 	
 	/** Broadcast Adresse */
 	private static final BotID BROADCAST_ID = new BotID(0xFF);
-
+	
 	/**
-	 * Basisklasse fuer Codes
+	 * Interface fuer Codes
 	 */
 	public static interface BotCodes {
 		/**
@@ -248,14 +248,37 @@ public class Command {
 		 * @return SubCude
 		 * @throws ProtocolException 
 		 */
-		public SubCode getSubCode(int b) throws ProtocolException;
+		public BotSubCodes getSubCode(int b) throws ProtocolException;
 		
+		/**
+		 * @return Liefert das Byte, wie dieser Code auf dem Draht (im TCP oder USB)
+		 * dargestellt werden soll. 
+		 */
+		public byte toUint7();
+		
+		/**
+		 * Kommando-Code als String
+		 * @return Code des Kommandos
+		 */
+		public String toString();
+	}
+	
+	/**
+	 * Interface fuer Subcodes 
+	 */
+	public static interface BotSubCodes {
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
 		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
 		public byte toUint7();
+		
+		/**
+		 * Subkommando-Code als String
+		 * @return Code des Subkommandos
+		 */
+		public String toString();
 	}
 	
 	/**
@@ -268,26 +291,57 @@ public class Command {
 	 * @author Timo Sandmmann (mail@timosandmann.de)
 	 */
 	public static class Bot2BotCode implements BotCodes {
-		/** /** Code auf der Leitung */
-		private byte onTheWire;
+		/**
+		 * Klasse fuer Subkommandos mit beliebigem SubCode.
+		 */
+		public static class Bot2BotSubCode implements BotSubCodes {
+			/** SubCode auf der Leitung */
+			private final byte onTheWire;
+
+			/**
+			 * @param c Subcode [0; 127]
+			 */
+			public Bot2BotSubCode(byte c) {
+				if (c > 127)
+					throw new AssertionError();
+				onTheWire = c;
+			}
+			
+			/**
+			 * @see ctSim.model.Command.BotSubCodes#toUint7()
+			 */
+			public byte toUint7() {
+				return onTheWire; 
+			}	
+			
+			/**
+			 * @see ctSim.model.Command.BotSubCodes#toString()
+			 */
+			@Override
+			public String toString() {
+				return formatChar(onTheWire);
+			}
+		}	
+		
+		/** Code auf der Leitung */
+		private byte codeOnTheWire;
 		
 		/**
-		 * @param code Code des Kommandos als byte 
+		 * @param code	Code des Kommandos als byte
 		 * (wird nicht weiter geprueft)
 		 */
 		public Bot2BotCode(byte code) {
-			onTheWire = code;
+			codeOnTheWire = code;
 		}
 		
 		/**
 		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
-		 * Erzeugt immer SubCode.NORM
-		 * @param b Dummy
-		 * @return SubCode
+		 * @param b Subcode als int
+		 * @return Bot2BotSubCode-Instanz
 		 * @throws ProtocolException 
 		 */
-		public SubCode getSubCode(int b) throws ProtocolException {
-			return SubCode.NORM;
+		public Bot2BotSubCode getSubCode(int b) throws ProtocolException {
+			return new Bot2BotSubCode((byte)b);
 		}
 		
 		/**
@@ -296,7 +350,15 @@ public class Command {
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
 		public byte toUint7() { 
-			return onTheWire; 
+			return codeOnTheWire; 
+		}
+		
+		/**
+		 * @see ctSim.model.Command.BotCodes#toString()
+		 */
+		@Override
+		public String toString() {
+			return formatChar(codeOnTheWire);
 		}
 	}
 	
@@ -391,7 +453,14 @@ public class Command {
 		REMOTE_CALL('r', SubCode.NORM, SubCode.REMOTE_CALL_LIST,
 			SubCode.REMOTE_CALL_ENTRY, SubCode.REMOTE_CALL_ORDER,
 			SubCode.REMOTE_CALL_DONE, SubCode.REMOTE_CALL_ABORT,
-			SubCode.REMOTE_CALL_ABL);
+			SubCode.REMOTE_CALL_ABL),
+			
+		/**
+		 * Map-&Uuml;bertragung 
+		 */
+		MAP('Q', SubCode.MAP_DATA_1, SubCode.MAP_DATA_2, SubCode.MAP_DATA_3,
+				SubCode.MAP_DATA_4, SubCode.MAP_REQUEST, SubCode.MAP_LINE,
+				SubCode.SUB_MAP_CLEAR_LINES, SubCode.MAP_REQUEST);
 
 
 		/** Code auf der Leitung */
@@ -457,7 +526,7 @@ public class Command {
 		 * @return SubCude
 		 * @throws ProtocolException 
 		 */
-		public SubCode getSubCode(int b) throws ProtocolException {
+		public BotSubCodes getSubCode(int b) throws ProtocolException {
 			for (SubCode c : validSubCodes) {
 				if (c.toUint7() == b)
 					return c;
@@ -482,18 +551,12 @@ public class Command {
 	// Enum Sub-Command-Code
 
 	/** Ein Sub-Command-Code kann einen der Werte in diesem Enum haben. */
-	public static enum SubCode {
+	public static enum SubCode implements BotSubCodes {
 		/**
 		 * Das Standard-Subkommando. Dieses ist gesetzt, wenn kein anderes
 		 * gesetzt ist.
 		 */
 		NORM('N'),
-
-		/** "Nur links". Wird nirgends verwendet, keine Ahnung was das ist. */
-		LEFT('L'),
-
-		/** "Nur rechts". Wird nirgends verwendet, keine Ahnung was das ist. */
-		RIGHT('R'),
 
 		/** F&uuml;r das LCD; {@linkplain LcDisplay siehe dort}. */
 		LCD_CLEAR('c'),
@@ -568,8 +631,40 @@ public class Command {
 		/**
 		 * Fordert die ID an
 		 */
-		ID_REQUEST('R');
+		ID_REQUEST('R'),
 		
+		/**
+		 * Fordert die komplette Map an
+		 */
+		MAP_REQUEST('R'),
+		
+		/**
+		 * Uebertraegt die ersten 128 Byte der Map-Daten eines Blocks (vier Kommandos fuer einen kompletten Block noetig)
+		 */
+		MAP_DATA_1('D'),
+		
+		/**
+		 * Map-Daten Teil 2 (Byte 128 bis 255)
+		 */
+		MAP_DATA_2('E'),
+		
+		/**
+		 * Map-Daten Teil 3 (Byte 256 bis 383)
+		 */
+		MAP_DATA_3('F'),
+		
+		/**
+		 * Map-Daten Teil 4 (Byte 384 bis 511)
+		 */
+		MAP_DATA_4('G'),
+		
+		/**
+		 * Linie zeichnen
+		 */
+		MAP_LINE('L'),
+		
+		/** Linien loeschen */
+		SUB_MAP_CLEAR_LINES('X');
 		
 		
 		/** SubCode auf der Leitung */
@@ -591,7 +686,9 @@ public class Command {
 		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
 		 * wird ein 7 Bit langer unsigned Int zur&uuml;ckgegeben.
 		 */
-		protected byte toUint7() { return onTheWire; }
+		public byte toUint7() { 
+			return onTheWire; 
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -601,7 +698,7 @@ public class Command {
 	private final BotCodes commandCode;
 
 	/** Sub-Command-Code */
-	private SubCode subCommandCode;
+	private BotSubCodes subCommandCode;
 
 	/** Praktisch nicht verwendet. Kann DIR_REQUEST oder DIR_ANSWER werden. */
 	private final int direction;
@@ -748,16 +845,16 @@ public class Command {
 		// und noch die Pruefsumme
 		crc = b[i];
 
+		// Nutzlast (Payload)
+		payload = new byte[payloadSize];
+		con.read(payload);
+		
 		// Sinnvollitaet pruefen
 		if (crc != CRCCODE) {
 			throw new ProtocolException(String.format("Ung\u00FCltiges " +
 				"Kommando (verkehrter CRC, h\u00E4tte %s sein " +
 				"sollen); Kommando folgt%s", formatChar(CRCCODE), this));
 		}
-
-		// Nutzlast (Payload)
-		payload = new byte[payloadSize];
-		con.read(payload);
 	}
 
 	/**
@@ -934,7 +1031,14 @@ public class Command {
 	/** 
 	 * @return Gibt das Subkommando des Kommandos zur&uuml;ck 
 	 */
-	public SubCode getSubCode() { return subCommandCode; }
+	public SubCode getSubCode() {
+		if (subCommandCode instanceof SubCode) {
+			return (SubCode)subCommandCode;
+		} else {
+			/* Subcode von Bot-2-Bot-Kommandos wird nicht ausgewertet */
+			return null;
+		}
+	}
 
 	/** 
 	 * Setzt das Feld dataL 

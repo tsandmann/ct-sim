@@ -33,6 +33,7 @@ import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
+import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
@@ -102,6 +103,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			_(Sensors.Error.class        , WRITES),
 			_(WelcomeReceiver.class      , READS),
 			//_(Actuators.Abl.class		 , WRITES_ASYNCLY),
+			_(MapComponent.class		 , READS, WRITES),	
 			_(RemoteCallCompnt.class     , READS, WRITES)
 		);
 		
@@ -214,8 +216,9 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	throws UnrecoverableScrewupException {
 		try {
 			CommandOutputStream s = getConnection().getCmdOutStream();
-			for (BotComponent<?> c : components)
+			for (BotComponent<?> c : components) {
 				c.askForWrite(s);
+			}
 			s.flush();
 		} catch (IOException e) {
 			throw new UnrecoverableScrewupException(e);

@@ -39,6 +39,7 @@ import ctSim.TcpConnection;
 import ctSim.model.Command;
 import ctSim.model.ParcoursGenerator;
 import ctSim.model.World;
+import ctSim.model.Map.MapException;
 import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
@@ -399,10 +400,15 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
      * @param bot	Der sterbende Bot
      */
     public synchronized void onBotDisappeared(Bot bot) {
-    	if (bot != null){
-	    	lg.info("Bot "+bot.toString()+" ("+bot.getDescription()+") meldet sich beim " +
+    	if (bot != null) {
+    		try {
+    			lg.info("Bot "+bot.toString()+" ("+bot.getDescription()+") meldet sich beim " +
 	    			"Controller ab!");
-	    	bots.remove(bot);
+    		} catch (Exception e) {
+    			// NOP
+    		} finally {
+    			bots.remove(bot);
+    		}
     	}
     }
     
@@ -629,5 +635,17 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		}
 		
 		throw new ProtocolException("Keine Id im Pool mehr frei");
+	}
+	
+	/**
+	 * Exportiert die aktuelle Welt in eine Bot-Map-Datei
+	 * @param bot Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird 
+	 * @param free Wert, mit dem freie Felder eingetragen werden (z.B. 100)
+	 * @param occupied Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
+	 * @throws IOException falls Fehler beim Schreiben der Datei
+	 * @throws MapException falls keine Daten in der Map
+	 */
+	public void worldToMap(int bot, int free, int occupied) throws IOException, MapException {
+		this.world.toMap(bot, free, occupied);
 	}
 }

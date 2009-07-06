@@ -1,3 +1,22 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
+
 package ctSim.view;
 
 import ctSim.model.World;
@@ -16,8 +35,8 @@ public class TimeLogger implements View {
 		"Simzeit %d ms; Armbanduhrenzeit %tT.%<tL";
 	/** komplette Ausgabe */
 	private static final String normalMsg = minimalMsg +
-			"; Verh\u00E4ltnis 1 : %.1f seit letzter " +
-			"TimeLogger-Ausgabe; 1 : %.1f seit Simulationsbeginn";
+			"; Verh\u00E4ltnis 1 : %.3f seit letzter " +
+			"TimeLogger-Ausgabe; 1 : %.3f seit Simulationsbeginn";
 
 	/** Logger */
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.TimeLogger");
@@ -67,8 +86,8 @@ public class TimeLogger implements View {
 			? minimalMsg : normalMsg,
 			simTimeInMs, System.currentTimeMillis(),
 			(now - realTimeAtLastLog) /
-			(float)(simTimeInMs - simTimeAtLastLog),
-			(now - realTimeAtSimulationStart) / (float)simTimeInMs);
+			(double)(simTimeInMs - simTimeAtLastLog),
+			(now - realTimeAtSimulationStart) / (double)simTimeInMs);
 
 		simTimeAtLastLog = simTimeInMs;
 		realTimeAtLastLog = now;

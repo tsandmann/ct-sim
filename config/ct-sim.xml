@@ -3,19 +3,19 @@
 
 <ct-sim>
 	<description>
-		Dieses ist die zentrale Konfigurationsdatei für den c't-Sim
+		Dieses ist die zentrale Konfigurationsdatei fuer den c't-Sim
 	</description>
 
 	<!--
 	Jeder Parameter kann bei Bedarf ein Attribut "os" haben. So kann man
-	verschiedene Werte für verschiedene Betriebssysteme angeben. Hat ein
-	Parameter (wie bisher üblich) kein os-Attribut, gilt er für alle Systeme.
+	verschiedene Werte fuer verschiedene Betriebssysteme angeben. Hat ein
+	Parameter (wie bisher ueblich) kein os-Attribut, gilt er für alle Systeme.
 
-	Beispiele für systemabhängige Parameter sind der serielle Port und manche
+	Beispiele für systemabhaengige Parameter sind der serielle Port und manche
 	Pfadnamen.
 
 	Sinn: Die bisherige Regelung, dass der Java-Code undurchsichtig in den
-	Pfaden ruminterpretiert, kann entfallen. Auf jedem unterstützen System
+	Pfaden ruminterpretiert, kann entfallen. Auf jedem unterstuetzen System
 	kann man nach dem Auschecken sofort starten (normalerweise).
 	-->
 
@@ -23,7 +23,7 @@
 	<parameter name="ctSimTimeout" value="500"/>
 
 	<!-- Nur Simulierte Bots: Was passiert, wenn ein schwerer Fehler auftritt?
-	(z.B. die TCP-Verbindung abbricht weil der Bot-Code abgestürzt ist)
+	(z.B. die TCP-Verbindung abbricht weil der Bot-Code abgestuerzt ist)
 	"kill" = Bot aus Simulation entfernen (Standardverhalten)
 	"halt" = Bot in Simulation lassen, auch wenn er sich nicht mehr bewegen kann
 	Siehe auch http://www.heise.de/trac/ctbot/ticket/39 -->
@@ -43,7 +43,7 @@
 	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
 	<parameter name="botbinary" os="Mac OS X" value="../ct-Bot/Debug-Mac/ct-Bot"/>
 
-	<!-- Verzeichnis, das der Dialog "Bot-Datei öffnen" anfangs anzeigt -->
+	<!-- Verzeichnis, das der Dialog "Bot-Datei oeffnen" anfangs anzeigt -->
 	<parameter name="botdir" os="Windows" value="../ct-Bot/Debug-W32"/>
 	<parameter name="botdir" os="Linux" value="../ct-Bot/Debug-Linux"/>
 	<parameter name="botdir" os="Mac OS X" value="../ct-Bot/Debug-Mac"/>
@@ -76,14 +76,21 @@
 	<parameter name="serialport" os="Windows" value="COM3"/>
 	<parameter name="serialport" os="Linux" value="/dev/ttyUSB0"/>
 	<parameter name="serialport" os="Mac OS X" value="/dev/tty.usbserial-A1000NvX"/>
-	<!-- Geschwindigkeit des 'serialport' in baud, default 57600 -->
-	<parameter name="serialportBaudrate" value="57600"/>
+	<!-- Geschwindigkeit des 'serialport' in Baud, default 115200 -->
+	<parameter name="serialportBaudrate" value="115200"/>
 
 	<!-- IP, die standardmaessig im Textfeld steht, wenn man "Verbinden / Per
 	TCP" waehlt -->
-	<parameter name="ipForConnectByTcp" value="192.168.1.24"/>
+	<parameter name="ipForConnectByTcp" value="192.168.1.22"/>
 	<!-- Zugehoeriger Port. Default: 10002 -->
 	<parameter name="portForConnectByTcp" value="10002"/>
+	
+	<!-- Parameter der Map (fuer Export). 
+	Muessen mit den Werten aus map.h (Bot-Projekt) uebereinstimmen! -->
+	<parameter name="mapSize" value="12.288f"/>
+	<parameter name="mapResolution" value="125"/>
+	<parameter name="mapSectionSize" value="16"/>
+	<parameter name="mapMacroblockSize" value="512"/>
 
 	<bots>
 		<bot name="ctSim.model.bots.CtBotSimTest_0">

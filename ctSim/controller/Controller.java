@@ -1,9 +1,30 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ * 
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version. 
+ * This program is distributed in the hope that it will be 
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public 
+ * License along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ * 
+ */
+
 package ctSim.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.ProtocolException;
 
 import ctSim.model.Command;
+import ctSim.model.Map.MapException;
 import ctSim.model.rules.Judge;
 import ctSim.util.BotID;
 import ctSim.view.View;
@@ -130,4 +151,14 @@ public interface Controller {
 	 * @return True, wenn noch kein Bot diese Id nutzt 
 	 */
 	public boolean isIdFree(BotID id);
+	
+	/**
+	 * Exportiert die aktuelle Welt in eine Bot-Map-Datei 
+	 * @param bot Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird
+	 * @param free Wert, mit dem freie Felder eingetragen werden (z.B. 100)
+	 * @param occupied Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
+	 * @throws IOException falls Fehler beim Schreiben der Datei
+	 * @throws MapException falls keine Daten in der Map
+	 */
+	public void worldToMap(int bot, int free, int occupied) throws IOException, MapException;
 }

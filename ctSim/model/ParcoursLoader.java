@@ -240,6 +240,42 @@ public class ParcoursLoader {
 		0f - LINEWIDTH/2,	-0.5f,				0f,	// Linie runter zum Ausgangspunkt
 	};
 	
+	/**
+	 * Linie -- mit Unterbrechung vertikal
+	 * besteht aus 2 untereinander liegenden Teillinien
+	 */
+	public static final float[] LINE_BREAK_VERT = {
+		0f +LINEWIDTH/2 , 0.5f               ,0f,	// Start oben rechts
+		0f -LINEWIDTH/2 , 0.5f               ,0f,	// kurze Linie nach links
+		0f -LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,	// Linie runter bis oberhalb Mitte
+		0f +LINEWIDTH/2	, 0.0f + LINEWIDTH/2 ,0f,	// Linie nach rechts
+		0f +LINEWIDTH/2	, 0.5f               ,0f,	// Linie wieder nach oben
+
+		0f +LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,	// Start rechts unterhalb Mitte
+		0f -LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,	// kurze Linie nach links
+		0f -LINEWIDTH/2 , -0.5f               ,0f,	// Linie ganz runter 
+		0f +LINEWIDTH/2 , -0.5f               ,0f,	// kurze Linie unten nach rechts
+		0f +LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,	// Linie wieder hoch bis unterhalb Mitte
+	};
+	
+	/**
+	 * Linie -- mit Unterbrechung horizontal
+	 * besteht aus 2 nebeneinander liegenden Teillinien
+	 */ 
+	public static final float[] LINE_BREAK_HOR = {
+		-0.5f           , 0.0f + LINEWIDTH/2 ,0f,	// Start links oberhalb Mitte 
+		-0.5f           , 0.0f - LINEWIDTH/2 ,0f,	// kurze Linie links runter
+		0f -LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,	// Linie nach rechts bis links von Mitte
+		0f -LINEWIDTH/2	, 0.0f + LINEWIDTH/2 ,0f,	// kurze Linie hoch
+        -0.5f			, 0.0f + LINEWIDTH/2 ,0f,	// Linie wieder nach Links
+		
+        0f +LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,	// Start Linie oberhalb Mitte rechts
+		0f +LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,	// Kurze Linie runter
+		0.5f            , 0.0f - LINEWIDTH/2 ,0f,	// Linie bis ganz rechts
+		0.5f            , 0.0f + LINEWIDTH/2 ,0f,	// kurze Linie rechts hoch
+		0f +LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,	// Linie wieder links bis kurz vor Mitte
+	};
+	
 	/** Wand-Hoehe */
 	private static final float WALL_HEIGHT = 0.2f;
 
@@ -616,6 +652,14 @@ public class ParcoursLoader {
 						break;
 					case '{':
 						createLine(x, y, LINE_CROSSING_T_ROT_CLOCKWISE,
+								getAppearance(this.parcoursMap[x][y]));
+						break;
+					case '!':
+						createLine(x, y, LINE_BREAK_VERT,
+								getAppearance(this.parcoursMap[x][y]));
+						break;
+					case '%':
+						createLine(x, y, LINE_BREAK_HOR,
 								getAppearance(this.parcoursMap[x][y]));
 						break;
 					}

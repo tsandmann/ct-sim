@@ -1,32 +1,46 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ *
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ * This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ *
+ */
+
 package ctSim.model.bots.components;
 
 import java.net.ProtocolException;
-
-import javax.swing.SpinnerNumberModel;
 
 import ctSim.model.Command;
 import ctSim.model.Command.Code;
 import ctSim.model.Command.SubCode;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.SimpleActuator;
+import ctSim.util.BotID;
 
 /**
  * Handshake fuer Bot-Sim Connection
  */
-public class WelcomeReceiver extends BotComponent<SpinnerNumberModel> implements SimpleActuator, CanRead {
+public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuator, CanRead {
 	/** Subcode */
 	private final SubCode expectedForWelcome;
-
-	/** Zahlenwert */
-	private Number internalModel = Double.valueOf(0);	
 	
 	/**
 	 * Handshake fuer Connection
 	 * @param expectedForWelcome Subcode fuer neue Connection
 	 */
 	public WelcomeReceiver(SubCode expectedForWelcome) {
-		//super(null);
-		super(new SpinnerNumberModel());
+		super(null);
 		this.expectedForWelcome = expectedForWelcome;
 	}
 
@@ -54,7 +68,6 @@ public class WelcomeReceiver extends BotComponent<SpinnerNumberModel> implements
 					"das nicht den erwarteten Subcode "+expectedForWelcome+
 					" hatte");
 		}
-		internalModel = c.getFrom();
 	}
 
 	/**
@@ -62,7 +75,7 @@ public class WelcomeReceiver extends BotComponent<SpinnerNumberModel> implements
 	 */
 	@Override
 	public void updateExternalModel() {
-			getExternalModel().setValue(internalModel);
+		// NOP
 	}
 
 	/**
@@ -70,16 +83,6 @@ public class WelcomeReceiver extends BotComponent<SpinnerNumberModel> implements
 	 */
 	@Override
 	public String getName() {
-		// No-op
-		return "Bot-Id";
-	}
-
-	
-	/**
-	 * Erlaubt den Zugriff auf die Id
-	 * @return Id
-	 */
-	public Number getInternalModel() {
-		return internalModel;
+		return "Bot-ID";
 	}
 }

@@ -1,3 +1,22 @@
+/*
+ * c't-Sim - Robotersimulator fuer den c't-Bot
+ *
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ * This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307, USA.
+ *
+ */
+
 package ctSim.model.bots.ctbot;
 
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
@@ -11,6 +30,7 @@ import ctSim.Connection;
 import ctSim.model.Command;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
+import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
@@ -59,7 +79,7 @@ public class RealCtBot extends CtBot {
 					//updateView();
 				}
 			} catch (ProtocolException e) {
-				lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere%s", cmd);
+				lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere");
 			} catch (IOException e) {
 				lg.severe(e, "E/A-Problem; Verbindung zu Bot verloren");
 				die(); //$$ Das klappt nicht. Wenn die Verbindung abreißt, läuft alles weiter. Untersuchen
@@ -125,6 +145,7 @@ public class RealCtBot extends CtBot {
 			_(Sensors.Error.class        , READS),
 			_(WelcomeReceiver.class      , READS),
 			//_(Actuators.Abl.class		 , WRITES_ASYNCLY),
+			_(MapComponent.class		 , READS, WRITES_ASYNCLY),
 			_(RemoteCallCompnt.class     , READS, WRITES_ASYNCLY)
 		);
 

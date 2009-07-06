@@ -1,5 +1,35 @@
 Changelog fuer c't-Sim
 ======================
+2009-07-06 Timo Sandmann [mail@timosandmann.de]: Release 16
+
+2009-05-20 Timo Sandmann [mail@timosandmann.de]: Java3D-Fehler (z.B. keine OpenGL-Unterstuetzung) werden abgefangen und ausgegeben
+
+2009-05-16 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Parcours.getBlockSizeInMM(): Liefert jetzt 240 und nicht mehr 239 
+
+2009-04-22 Timo Sandmann [mail@timosandmann.de]: Parcours-Export als Bot-Map hinzugefuegt
+
+2009-03-31 Timo Sandmann [mail@timosandmann.de]: Map-2-Sim-Code erweitert, Sim kann jetzt die komplette Karte anfordern; Bugfix fuer #184
+
+2009-03-30 Timo Sandmann [mail@timosandmann.de]: Verzeichnis "maps" fuer Bot-Karten angelegt 
+
+2009-02-26 Frank Menzel [menzelfr@gmx.de]: 		 Linienunterbrechungen ermoeglicht mit den Zeichen ! und %
+
+2009-02-25 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Map-Fenster (#183)
+
+2009-02-25 Frank Menzel [Menzelfr@gmx.de]: 		 Parcours "follow_line_enh.xml" fuer bot_follow_line_enhanced()
+
+2009-02-15 Timo Sandmann [mail@timosandmann.de]: Map-Anzeige um Debug-Linien und heading-Anzeige erweitert
+
+2008-12-16 Timo Sandmann [mail@timosandmann.de]: Individuelle Subcommands fuer Bot-2-Bot-Kommunikation implementiert.
+
+2009-01-13 Frank Menzel [Menzelfr@gmx.net]:      Neuer Parcours "crossings_shortest_way.xml" fuer neuen Linienfolger
+
+2008-12-01 Timo Sandmann [mail@timosandmann.de]: Inaktives Anzeigefeld "Bot-Id" entfernt
+
+2008-11-21 Timo Sandmann [mail@timosandmann.de]: Online Map-Anzeige eingebaut. MAP_2_SIM_AVAILABLE muss dazu im Bot-Code eingeschaltet sein.
+
+2008-11-03 Timo Sandmann [mail@timosandmann.de]: Remote-Calls unterstuetzen Hintergrundausfuehrung von Verhalten
+
 2008-10-29 Timo Sandmann [mail@timosandmann.de]: Release 15
 
 2008-07-10 Frank Menzel [menzelfr@gmx.net]: In Parcours testline_crossings Start- und Zielfeld mit der korrekten Zielfarbe versehen
