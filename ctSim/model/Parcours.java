@@ -72,6 +72,8 @@ public class Parcours {
 	private BranchGroup ObstBG;
 	/** Enthaelt alle Lichter */
 	private BranchGroup lightBG;
+	/** Enthaelt alle Landmarken */
+	private BranchGroup bpsBG;
 	/** Enthaelt den Boden */
 	private BranchGroup terrainBG;
 
@@ -120,6 +122,10 @@ public class Parcours {
 		this.lightBG = new BranchGroup();
 		this.lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.lightBG.setPickable(true);
+		
+		// Die Branchgroup fuer die BPS-Landmarken
+		this.bpsBG = new BranchGroup();
+		this.bpsBG.setPickable(true);
 
 		// Die Branchgroup fuer die Lichtquellen
 		this.terrainBG = new BranchGroup();
@@ -277,7 +283,6 @@ public class Parcours {
 		Transform3D translate = new Transform3D();
 
 		node.setPickable(true);
-		// node.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
 
 		translate.set(new Vector3d(x * this.blockSizeInM,
 				y * this.blockSizeInM, z));
@@ -330,9 +335,28 @@ public class Parcours {
 	public void addLight(Node light) {
 		this.lightBG.addChild(light);
 	}
+	
+	/**
+	 * Fuegt eine Darstellung der Landmarke ein
+	 * 
+	 * @param bps Die Landmarke
+	 * @param x   X-Achse im Parcours-Gitter
+	 * @param y   Y-Achse im Parcours-Gitter
+	 * @param z   Z-Achse im Parcours-Gitter
+	 */
+	public void addBPSLight(Node bps, float x, float y, float z) {
+		addNode(bps, x, y, z, this.bpsBG);
+	}
+	
+	/**
+	 * Fuegt eine Landmarke fuer BPS ein
+	 * @param bps Landmarke
+	 */
+	public void addBPSLight(Node bps) {
+		this.bpsBG.addChild(bps);
+	}
 
 	/**
-	 * 
 	 * @return Liefert die Licht-Branchgroup zurueck
 	 */
 	public BranchGroup getLightBG() {
@@ -340,7 +364,13 @@ public class Parcours {
 	}
 
 	/**
-	 * 
+	 * @return Liefert die Branchgroup mit den Landmarken fuer BPS zurueck 
+	 */
+	public BranchGroup getBpsBG() {
+		return this.bpsBG;
+	}
+	
+	/**
 	 * @return Liefert die Hindernis-Branchgroup zurueck
 	 */
 	public BranchGroup getObstBG() {
@@ -348,7 +378,6 @@ public class Parcours {
 	}
 
 	/**
-	 * 
 	 * @return Liefert die Boden-Branchgroup zurueck
 	 */
 	public BranchGroup getTerrainBG() {

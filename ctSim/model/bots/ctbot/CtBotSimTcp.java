@@ -101,6 +101,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			_(Sensors.Door.class         , WRITES),
 			_(Sensors.Trans.class        , WRITES),
 			_(Sensors.Error.class        , WRITES),
+			_(Sensors.BPSReceiver.class  , WRITES),
 			_(WelcomeReceiver.class      , READS),
 			//_(Actuators.Abl.class		 , WRITES_ASYNCLY),
 			_(MapComponent.class		 , READS, WRITES),	

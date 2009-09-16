@@ -58,6 +58,7 @@ import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
+import ctSim.model.BPS.Beacon;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -479,16 +480,38 @@ public class ParcoursLoader {
 		PointLight pointLight = new PointLight();
 		pointLight.setColor(pointLightColor);
 		pointLight.setPosition((x + 0.5f) * this.parcours.getBlockSizeInM(),
-				(y + 0.5f) * this.parcours.getBlockSizeInM(), LIGHTZ);
+			(y + 0.5f) * this.parcours.getBlockSizeInM(), LIGHTZ);
 		pointLight.setInfluencingBounds(pointLightBounds);
 		pointLight.setAttenuation(1f, 3f, 0f);
 		pointLight.setEnable(true);
 		this.parcours.addLight(pointLight);
 
-		// Und einer gelben Kugel, um es zu visulaisieren
+		// Und einer gelben Kugel, um es zu visualisieren
 		Sphere lightSphere = new Sphere(0.07f);
 		lightSphere.setAppearance(appearance);
 		this.parcours.addLight(lightSphere, x + 0.5f, y + 0.5f, 0.5f);
+	}
+	
+	/**
+	 * Fuegt eine BPS-Landmarke ein
+	 * @param x X-Koordinate [Parcours-Block]
+	 * @param y Y-Koordinate [Parcours-Block]
+	 * @param appearance Die Appearance
+	 */
+	private void createBPSBeacon(int x, int y, Appearance appearance) {
+		PointLight pointBPSLight = new PointLight();
+//		pointBPSLight.setColor(new Color3f(0.5f, 0.5f, 0.5f));
+		pointBPSLight.setPosition((x + 0.5f) * this.parcours.getBlockSizeInM(),
+			(y + 0.5f) * this.parcours.getBlockSizeInM(), BPS.BPSZ);
+		
+//		pointBPSLight.setInfluencingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1.0));
+//		pointBPSLight.setAttenuation(1f, 3f, 0f);
+		pointBPSLight.setEnable(true);
+		this.parcours.addBPSLight(pointBPSLight);
+		
+		Sphere bpsSphere = new Sphere(0.02f);
+		bpsSphere.setAppearance(appearance);
+		this.parcours.addBPSLight(bpsSphere, x + 0.5f, y + 0.5f, BPS.BPSZ);
 	}
 
 	/**
@@ -519,8 +542,6 @@ public class ParcoursLoader {
 
 		return -1;
 	}
-
-
 
 	/**
 	 * Liest die parcourMap ein und baut daraus einen Parcour zusammen
@@ -572,6 +593,15 @@ public class ParcoursLoader {
 							createFloor(x, y, getAppearance('.'));
 						else
 							createFloor(x, y, getAppearance(' '));
+						break;
+					case 'l':
+						if (Beacon.checkParcoursPosition(this.parcours, x, y)) {
+							createBPSBeacon(x, y, getAppearance('l'));
+						} else {
+							lg.warn("Parcours enthaelt Landmarke an Position (" + x
+								+ "|" + y 
+								+ "), dort ist aber keine Landmarke zugelassen, ignoriere sie.");
+						}
 						break;
 					case '.':
 						// TODO Boden optimieren, kacheln zusammenfassen

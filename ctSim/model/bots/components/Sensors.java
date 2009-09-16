@@ -102,6 +102,58 @@ public class Sensors {
 	}
 
 	/**
+	 * Klasse der BPS-Sensoren, Bot Positioning System
+	 */
+	public static class BPSReceiver extends NumberTwin
+	implements SimpleSensor, CanRead, CanWrite {
+		/**
+		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
+		 */
+		@Override
+		protected String getBaseDescription() {
+			return "BPS-Sensor";
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
+		 */
+		@Override protected String getBaseName() { 
+			return "BPS"; 
+		}
+		
+		/**
+		 * BPS-Sensor (Bot Positioning System)
+		 * @param front	Sensor schaut nach vorn
+		 */
+		public BPSReceiver(boolean front) { 
+			super(front); 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
+		 */
+		public Code getHotCmdCode() { 
+			return Code.SENS_BPS; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override
+		public String getName() {
+			return getBaseName() + (isLeft ? "F" : "R");
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override
+		public String getDescription() {
+			return getBaseDescription() + (isLeft ? " front" : " rear");
+		}
+	}
+	
+	/**
 	 * Klasse der Rad-Encoder
 	 */
 	public static class Encoder extends NumberTwin

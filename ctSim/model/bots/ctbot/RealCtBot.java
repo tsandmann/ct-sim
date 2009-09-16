@@ -143,6 +143,7 @@ public class RealCtBot extends CtBot {
 			_(Sensors.Door.class         , READS),
 			_(Sensors.Trans.class        , READS),
 			_(Sensors.Error.class        , READS),
+			_(Sensors.BPSReceiver.class  , READS),
 			_(WelcomeReceiver.class      , READS),
 			//_(Actuators.Abl.class		 , WRITES_ASYNCLY),
 			_(MapComponent.class		 , READS, WRITES_ASYNCLY),

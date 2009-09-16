@@ -71,6 +71,12 @@
 	Wert: Beschreibung der Taste -->
 	<parameter name="rcStartCode" value=""/>
 
+	<!-- Schalter fuer Lichtsensoren -->
+	<parameter name="LightSensors" value="true"/>
+	
+	<!-- Schalter fuer BPS-Sensoren -->
+	<parameter name="BPSSensors" value="false"/>
+
 	<!-- Serieller Anschluss. Der Sim verbindet sich mit ihm und erwartet
 	dort einen USB-2-Bot-Adapter -->
 	<parameter name="serialport" os="Windows" value="COM3"/>

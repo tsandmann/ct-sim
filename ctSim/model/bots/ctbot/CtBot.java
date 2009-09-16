@@ -174,7 +174,7 @@ public abstract class CtBot extends BasicBot {
 		if (getConnection() == null)
 			throw new ProtocolException("Bot "+ this.getId() +" hat gar keine Connection");
 		
-		//Wir werfen das Kommando direkt an den angehängten Bot
+		// Wir werfen das Kommando direkt an den angehaengten Bot
 		try{ 
 			getConnection().write(command);
 		} catch (IOException e) {
@@ -203,8 +203,6 @@ public abstract class CtBot extends BasicBot {
 			new Sensors.Line(false),
 			new Sensors.Border(true),
 			new Sensors.Border(false),
-			new Sensors.Light(true),
-			new Sensors.Light(false),
 			new Sensors.Mouse(true),
 			new Sensors.Mouse(false),
 			new Sensors.RemoteControl(Config.getValue("RC5-type")),
@@ -215,6 +213,13 @@ public abstract class CtBot extends BasicBot {
 			new MapComponent(),
 			new RemoteCallCompnt()
 		);
+		
+		if (Config.getValue("LightSensors").equals("true")) {
+			components.add(new Sensors.Light(true), new Sensors.Light(false));
+		}
+		if (Config.getValue("BPSSensors").equals("true")) {
+			components.add(new Sensors.BPSReceiver(true), new Sensors.BPSReceiver(false));
+		}
 
 		// LEDs
 		int numLeds = ledColors.length;

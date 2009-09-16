@@ -571,7 +571,8 @@ public class MainWinMenuBar extends JMenuBar {
         /**
          * Judge-Klassenname
          */
-        public final String fqJudgeClassName;
+        @SuppressWarnings("unused")
+		public final String fqJudgeClassName;
 
 		/**
 		 * @param fqName Judge-Name

@@ -421,6 +421,9 @@ public class Command {
 
 		/** Helligkeitssensoren, siehe {@link Light}. */
 		SENS_LDR('H'),
+		
+		/** BPS-Sensoren */
+		SENS_BPS('b'),
 
 		/** Liniensensoren, siehe {@link Line}. */
 		SENS_LINE('L'),

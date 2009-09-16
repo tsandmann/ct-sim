@@ -29,6 +29,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.SimUtils;
+import ctSim.model.BPS;
 import ctSim.model.ThreeDBot;
 import ctSim.model.World;
 import ctSim.model.bots.Bot;
@@ -460,10 +461,13 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      */
     public void buisitDistanceSim(final Sensors.Distance sensor,
     boolean isLeft) throws IOException {
+    	final double MAX_RANGE = 0.85;
         final Point3d distFromBotCenter = isLeft
             ? new Point3d(- 0.036, 0.0554, 0)
             : new Point3d(+ 0.036, 0.0554, 0);
-        final Vector3d headingInBotCoord = looksForward();
+        //final Vector3d headingInBotCoord = looksForward();
+        final Point3d endPoint = new Point3d(distFromBotCenter);
+        endPoint.add(new Point3d(0.0, MAX_RANGE, 0.0));
         final Characteristic charstic = isLeft
             ? new Characteristic("characteristics/gp2d12Left.txt", 100)
             : new Characteristic("characteristics/gp2d12Right.txt", 80);
@@ -474,7 +478,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             public void run() {
                 double distInM = world.watchObstacle(
                     parent.worldCoordFromBotCoord(distFromBotCenter),
-                    parent.worldCoordFromBotCoord(headingInBotCoord),
+                    //parent.worldCoordFromBotCoord(headingInBotCoord),
+                    parent.worldCoordFromBotCoord(endPoint),
                     OPENING_ANGLE_IN_RAD,
                     parent.getShape());
                 double distInCm = 100 * distInM;
@@ -515,7 +520,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         final Vector3d headingInBotCoord = looksForward();
 
         simulators.add(new Runnable() {
-            private final double OPENING_ANGLE_IN_RAD = Math.toRadians(180);
+            private final double OPENING_ANGLE_IN_RAD = Math.toRadians(90);
 
             public void run() {
             	sensor.set(
@@ -526,6 +531,26 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             }
         });
     }
+    
+    /**
+	 * @param sensor BPS-Sensor
+	 * @param front	Schaut der Sensor nach vorn?
+	 */
+	public void buisitBPSSim(final Sensors.BPSReceiver sensor, final boolean front) {
+		simulators.add(new Runnable() {
+			private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3.0);
+			private final double LIGHT_DISTANCE = front ? 2.0 : -2.0;
+
+			public void run() {
+				Point3d pos = parent.worldCoordFromBotCoord(new Point3d());
+				pos.setZ(BPS.BPSZ);
+				Point3d end = parent.worldCoordFromBotCoord(new Point3d(0.0,
+						LIGHT_DISTANCE, 0.0));
+				end.setZ(BPS.BPSZ);
+				sensor.set(world.sensBPS(pos, end, OPENING_ANGLE_IN_RAD));
+			}
+		});
+	}
 
     /**
      * @param sensor Maussensor

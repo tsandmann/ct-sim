@@ -71,7 +71,7 @@ import ctSim.util.Decoratoror;
  * </p>
  * <h3>Spezifikation</h3>
  * <p>
- * Diese Klasse greift zur&uuml;ck auf die XPath-API aus der Java-Plattform ({@link javax.xml.xpath}).
+ * Diese Klasse greift zur&uuml;ck auf die XPath-API aus der Java-Plattform (javax.xml.xpath).
  * Es ist der Dokumentation nicht zu entnehmen, welche XPath-Version die
  * Plattform-API implementiert, aber ich glaube es ist 1.0 (das wird zumindest
  * bei {@link XPath} angedeutet). &rarr; <a
@@ -97,7 +97,7 @@ import ctSim.util.Decoratoror;
  * zur Java-Plattform.
  * </p>
  *
- * @see javax.xml.xpath
+ * siehe javax.xml.xpath
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class XmlDocument {
