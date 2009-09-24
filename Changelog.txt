@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2009-09-24 Timo Sandmann [mail@timosandmann.de]: Licht- und BPS-Sensordaten des echten Bots werden immer (falls der Bot welche sendet) angezeigt, unabhaengig von der Config-Einstellung
+
 2009-09-16 Timo Sandmann [mail@timosandmann.de]: Bot-Lokalisierung: Neuer Sensortyp BPS-Sensor; Config-Datei bietet Schalter fuer Licht- und BPS-Sensoren; Parcours koennen IR-Landmarken enthalten (siehe parcours/test_localization.xml); Bugfixes und Optimierungen fuer Distanzsensoren
 
 2009-07-06 Timo Sandmann [mail@timosandmann.de]: Release 16
