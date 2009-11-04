@@ -281,7 +281,7 @@ public class ParcoursLoader {
 	private static final float WALL_HEIGHT = 0.2f;
 
 	/** Verwaltet alle Aussehen */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	HashMap appearances = new HashMap();
 
 	/** Parcours-Map */
@@ -918,7 +918,7 @@ public class ParcoursLoader {
 	 *            Referenz auf einen schon bestehenden Eintrag, der geclonet
 	 *            werden soll
 	 */
-	@SuppressWarnings( { "unchecked", "boxing" })
+	@SuppressWarnings( { "unchecked", "boxing", "rawtypes" })
 	private void addAppearance(char item, HashMap colors, String textureFile,
 			String clone) {
 

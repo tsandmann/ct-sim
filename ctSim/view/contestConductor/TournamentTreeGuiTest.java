@@ -115,7 +115,7 @@ public class TournamentTreeGuiTest extends JFrame {
 		/**
 		 * @see javax.swing.tree.TreeModel#getChild(java.lang.Object, int)
 		 */
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public Object getChild(Object parent, int index) {
 			if (index < 0 || index > 1)
 				throw new IllegalArgumentException();
@@ -141,7 +141,7 @@ public class TournamentTreeGuiTest extends JFrame {
 		/**
 		 * @see javax.swing.tree.TreeModel#isLeaf(java.lang.Object)
 		 */
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public boolean isLeaf(Object node) {
 	        return ((SpreadingTree)node).payload != null;
         }

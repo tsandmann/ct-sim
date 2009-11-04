@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2009-11-04 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt
+
 2009-10-18 Timo Sandmann [mail@timosandmann.de]: Parcours parcours/contest-A-vorrunde_mod.xml aus contest-A-vorrunde.xml erstellt und um drei Landmarken ergaenzt
 
 2009-10-02 Frank Menzel [Menzelfr@gmx.de]: Schaparcours parcours/chess.xml fuer Verhalten behaviour_drive_chess 
