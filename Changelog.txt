@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2010-01-29 Timo Sandmann [mail@timosandmann.de]: Map-Anzeige unterstuetzt nun auch das Einzeichnen von Kreisen, Update-Intervall der Map-Anzeige per Config-Parameter "MapUpdateIntervall" einstellbar
+
 2009-11-04 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt
 
 2009-10-18 Timo Sandmann [mail@timosandmann.de]: Parcours parcours/contest-A-vorrunde_mod.xml aus contest-A-vorrunde.xml erstellt und um drei Landmarken ergaenzt

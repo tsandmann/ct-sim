@@ -32,6 +32,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import ctSim.controller.Config;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
@@ -39,9 +40,10 @@ import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWrite;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
 import ctSim.util.FmtLogger;
+import ctSim.util.MapCircles;
 import ctSim.util.MapLines;
 import ctSim.util.Misc;
-import ctSim.util.Runnable2;
+import ctSim.util.Runnable3;
 
 /**
  * Map-Repraesentation im Sim
@@ -62,12 +64,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private final int[] pixels = new int[WIDTH * HEIGHT];
 	/** eingezeichnete Linien */
 	private List<MapLines> lines = Misc.newList();
+	/** eingezeichnete Kreise */
+	private List<MapCircles> circles = Misc.newList();
+	/** Mutex fuer Liste */
+	public final Object circlesMutex = new Object();
 	/** Mitte des Ausschnitts, der angezeigt werden soll (= aktuelle Botposition), Hoehe und Breite werden hier nicht benutzt */
 	private final MapLines center = new MapLines(768, 768, 0, 0, 0);
 	/** SyncRequest austehend? */
 	private boolean syncRequestPending = false;
 	/** Image-Listener */
-	private final List<Runnable2<Image, MapLines[]>> imageLi = Misc.newList();
+	private final List<Runnable3<Image, MapLines[], List<MapCircles>>> imageLi = Misc.newList();
 	/** Image-Event austehend? */
 	private boolean imageEventPending = false;
 	/** async. Outputstream */
@@ -96,6 +102,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	
 	/** Zeitpunkt des letzten Bild-Updates */
 	private long lastUpdate = 0;
+	/** Intervall [ms], mit dem die Anzeige aktualisiert wird */
+	private final int updateIntervall;
 	
 	/**
 	 * Map-Komponente
@@ -106,6 +114,15 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		for (int i=0; i<pixels.length; i++) {
 			pixels[i] = color;
 		}
+		int tmp = 500;
+        try {
+        	tmp = Integer.parseInt(Config.getValue("MapUpdateIntervall"));
+        } catch(NumberFormatException exc) {
+            lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
+                    "Parameter 'MapUpdateIntervall' ist keine Ganzzahl");
+        } finally {
+        	updateIntervall = tmp;
+        }
 	}
 
 	/**
@@ -241,17 +258,32 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 	
 	/**
-	 * Traegt uebertragene Zeichnungsdaten in die interne Datenstruktur ein
+	 * Traegt uebertragene Zeichnungsdaten einer Linie in die interne Datenstruktur ein
 	 * @param color	Farbe der Linie
 	 * @param data	Rohdaten vom Kommando
 	 */
-	private final void updateDrawings(int color, byte[] data) {
+	private final void updateDrawingsLine(int color, byte[] data) {
 		int y1 = WIDTH - (Misc.toUnsignedInt8(data[0]) | Misc.toUnsignedInt8(data[1]) << 8);
 		int x1 = HEIGHT - (Misc.toUnsignedInt8(data[2]) | Misc.toUnsignedInt8(data[3]) << 8);
 		int y2 = WIDTH - (Misc.toUnsignedInt8(data[4]) | Misc.toUnsignedInt8(data[5]) << 8);
 		int x2 = HEIGHT - (Misc.toUnsignedInt8(data[6]) | Misc.toUnsignedInt8(data[7]) << 8);
 		lines.add(new MapLines(x1, y1, x2, y2, color));
 		lg.fine("Linie von (" + x1 + "|" + y1 + ") bis (" + x2 + "|" + y2 + ")");
+	}
+	
+	/**
+	 * Traegt uebertragene Zeichnungsdaten eines Kreises in die interne Datenstruktur ein
+	 * @param color	Farbe der Kreislinie
+	 * @param radius Radius des Kreises
+	 * @param data	Rohdaten vom Kommando
+	 */
+	private final void updateDrawingsCircle(int color, int radius, byte[] data) {
+		int y = WIDTH - (Misc.toUnsignedInt8(data[0]) | Misc.toUnsignedInt8(data[1]) << 8);
+		int x = HEIGHT - (Misc.toUnsignedInt8(data[2]) | Misc.toUnsignedInt8(data[3]) << 8);
+		synchronized (circlesMutex) {
+			circles.add(new MapCircles(x, y, radius, color));
+		}
+		lg.fine("Kreis mit Radius " + radius + " an (" + x + "|" + y + ")");
 	}
 	
 	/**
@@ -321,13 +353,22 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			/* GUI-Update freigeben */
 			imageEventPending = true;
 		} else if (sub.equals(Command.SubCode.MAP_LINE)) {
-			updateDrawings(block, c.getPayload());
+			updateDrawingsLine(block, c.getPayload());
 			imageEventPending = true;
-		} else if (sub.equals(Command.SubCode.SUB_MAP_CLEAR_LINES)) {
-			int from = lines.size() - c.getDataL();
-			if (from < 0) from = 0;
-			int to = lines.size();
-			lines = lines.subList(from, to);
+		} else if (sub.equals(Command.SubCode.MAP_CIRCLE)) {
+			updateDrawingsCircle(block, c.getDataR(), c.getPayload());
+			imageEventPending = true;
+		} else if (sub.equals(Command.SubCode.MAP_CLEAR_LINES)) {
+			int size = lines.size();
+			int n = c.getDataL() > size ? size : size - c.getDataL();
+			lines.subList(0, n).clear();
+			imageEventPending = true;
+		} else if (sub.equals(Command.SubCode.MAP_CLEAR_CIRCLES)) {
+			synchronized (circlesMutex) {
+				int size = circles.size();
+				int n = c.getDataL() > size ? size : size - c.getDataL();
+				circles.subList(0, n).clear();
+			}
 			imageEventPending = true;
 		} else {
 			lg.warn("Abbruch, ungueltiger SubCode");
@@ -380,7 +421,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Fuegt einen Listener hinzu, der ausgefuehrt wird, wenn sich die Karte veraendert hat 
 	 * @param li Listener
 	 */
-	public void addImageListener(Runnable2<Image, MapLines[]> li) {
+	public void addImageListener(Runnable3<Image, MapLines[], List<MapCircles>> li) {
 		if (li == null) {
 			throw new NullPointerException();
 		}
@@ -393,20 +434,21 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	@Override
 	public synchronized void updateExternalModel() {
 		if (imageEventPending) {
-			/* Bild max. alle 200 ms neu zeichnen */
+			/* Bild max. alle updateIntervall ms neu zeichnen */
 			long now = System.currentTimeMillis();
-			if (now > lastUpdate + 200) {
+			if (now > lastUpdate + updateIntervall) {
 				lastUpdate = now;
 	
 				imageEventPending = false;
 				Image img = Toolkit.getDefaultToolkit().createImage(
 					new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
 				
-				for (Runnable2<Image, MapLines[]> li : imageLi) {
-					MapLines[] tmp2 = new MapLines[lines.size() + 1];
-					lines.toArray(tmp2);
-					tmp2[tmp2.length - 1] = center;
-					li.run(img, tmp2);
+				for (Runnable3<Image, MapLines[], List<MapCircles>> li : imageLi) {
+//TODO:	Umkopieren einsparen?
+					MapLines[] tmp_lines = new MapLines[lines.size() + 1];
+					lines.toArray(tmp_lines);
+					tmp_lines[tmp_lines.length - 1] = center;
+					li.run(img, tmp_lines, circles);
 				}
 			}
 		}

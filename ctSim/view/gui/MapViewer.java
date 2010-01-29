@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -44,9 +45,10 @@ import javax.swing.filechooser.FileFilter;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.MapComponent;
 import ctSim.util.FmtLogger;
+import ctSim.util.MapCircles;
 import ctSim.util.MapLines;
 import ctSim.util.Misc;
-import ctSim.util.Runnable2;
+import ctSim.util.Runnable3;
 
 /**
  * Stellt das Fenster f&uuml;r die Map-Anzeige dar.
@@ -188,7 +190,7 @@ public class MapViewer extends JPanel {
 	 */
 	public MapViewer(MapComponent map, Bot bot) {
 		mapCompnt = map;
-		imageViewer = new ImageViewer(mapCompnt);
+		imageViewer = new ImageViewer(mapCompnt, map.circlesMutex);
 	
 		setLayout(new BorderLayout());
 		
@@ -221,7 +223,7 @@ public class MapViewer extends JPanel {
 	/**
 	 * Map-Anzeige
 	 */
-	public static class ImageViewer extends JPanel implements Runnable2<Image, MapLines[]> {
+	public static class ImageViewer extends JPanel implements Runnable3<Image, MapLines[], List<MapCircles>> {
 		/** UID */
 		private static final long serialVersionUID = -4764621960629937298L;
 		/** Bild */
@@ -236,11 +238,17 @@ public class MapViewer extends JPanel {
 		private final Color botColor = new Color(255, 0, 0);
 		/** Liste fuer einzuzeichnende Linien */
 		private MapLines[] lines;
+		/** Liste fuer einzuzeichnende Kreise */
+		private List<MapCircles> circles;
+		/** Mutex fuer Liste */
+		private final Object circlesMutex;
 		
 		/**
 		 * @param c Map-Komponente
+		 * @param mutex Mutex fuer circles-Liste
 		 */
-		public ImageViewer(MapComponent c) {
+		public ImageViewer(MapComponent c, Object mutex) {
+			this.circlesMutex = mutex;
 			c.addImageListener(this);
 			setToolTipText(c.getDescription());
 			setBorder(BorderFactory.createLoweredBevelBorder());
@@ -250,13 +258,15 @@ public class MapViewer extends JPanel {
 
 		/** 
 		 * Methode einer Swing-Komponente, aber thread-sicher 
-		 * @param img	Image
-		 * @param mapLines	Punkte fuer Bot-Position und Linien	
+		 * @param img Image
+		 * @param mapLines Punkte fuer Bot-Position und Linien	
+		 * @param mapCircles Daten fuer Kreise
 		 */
-		public synchronized void run(Image img, MapLines[] mapLines) {			
+		public synchronized void run(Image img, MapLines[] mapLines, List<MapCircles> mapCircles) {			
 			this.image = img;
 			MapLines center = mapLines[mapLines.length - 1];
 			this.lines = mapLines;
+			this.circles = mapCircles;
 			repaint();
 			
 			/* Bereich um den Bot in den sichtbaren Bereich scrollen */
@@ -273,6 +283,41 @@ public class MapViewer extends JPanel {
 			/* Image zeichnen */
 			g.drawImage(image, 0, 0, null);
 
+			/* Kreise einzeichnen */
+			if (circles != null) {
+				int n;
+				synchronized (circlesMutex) {
+					n = circles.size();
+				}
+				for (int i=0; i<n; ++i) {
+					MapCircles ci;
+					synchronized (circlesMutex) {
+						try {
+							ci = circles.get(i);
+						} catch (IndexOutOfBoundsException exc) {
+							break;
+						}
+					}
+					Color color;
+					switch (ci.color) {
+					case 0:
+						color = Color.GREEN;
+						break;
+					case 1:
+						color = Color.RED;
+						break;
+					default:
+						color = Color.BLACK;
+						break;
+					}
+					g.setColor(color);
+					int radius = ci.radius;
+					int x = ci.x - radius;
+					int y = ci.y - radius;
+					g.drawArc(x, y, 2 * radius, 2 * radius, 0, 360);
+				}
+			}
+			
 			/* Linien einzeichnen */
 			if (lines != null) {
 				for (int i=0; i<lines.length-1; i++) {
@@ -296,7 +341,7 @@ public class MapViewer extends JPanel {
 				g.setColor(botColor);
 				g.fillArc(lines[lines.length - 1].x1 - 7, lines[lines.length - 1].y1 - 7, 14, 14, lines[lines.length - 1].x2 + 120, 300);
 
-			}			
+			}
 		}
 
 		/**
@@ -321,7 +366,7 @@ public class MapViewer extends JPanel {
 		JPanel controls = new JPanel();
 
 		// Map als Bild anzeigen
-		ImageViewer v = new ImageViewer(compnt);
+		ImageViewer v = new ImageViewer(compnt, compnt.circlesMutex);
 		p.add(v, BorderLayout.CENTER);
 
 		// Ausliefern
