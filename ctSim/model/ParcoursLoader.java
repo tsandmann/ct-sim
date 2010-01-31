@@ -281,7 +281,6 @@ public class ParcoursLoader {
 	private static final float WALL_HEIGHT = 0.2f;
 
 	/** Verwaltet alle Aussehen */
-	@SuppressWarnings("rawtypes")
 	HashMap appearances = new HashMap();
 
 	/** Parcours-Map */

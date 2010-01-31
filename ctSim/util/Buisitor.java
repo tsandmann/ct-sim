@@ -39,7 +39,6 @@ public class Buisitor {
 	 * @param args Objekte
 	 * @return Anzahl
 	 */
-	@SuppressWarnings("rawtypes")
 	public int dispatchBuisit(Object... args) {
 		Class[] argTypes = new Class[args.length];
 		for (int i = 0; i < args.length; i++)
@@ -68,7 +67,6 @@ public class Buisitor {
 	 * @param types Typen
 	 * @return true / false
 	 */
-	@SuppressWarnings("rawtypes")
 	private static boolean hasSignature(Method m, Class... types) {
 		Class[] pt = m.getParameterTypes();
 		if (pt.length != types.length)

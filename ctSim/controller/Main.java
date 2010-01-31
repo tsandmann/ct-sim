@@ -163,7 +163,7 @@ public class Main {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		FmtLogger rv = FmtLogger.getLogger("");
+		FmtLogger rv = FmtLogger.getLogger("ctSim");
 		rv.fine("Logging-Subsystem initialisiert");
 
 		if (showSplash) {

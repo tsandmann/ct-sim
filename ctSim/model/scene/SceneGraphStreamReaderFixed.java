@@ -57,7 +57,6 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	/**
 	 * @see com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader#readBranchGraph(java.util.HashMap)
 	 */
-	@SuppressWarnings("rawtypes")
 	@Override
 	public BranchGroup readBranchGraph(HashMap map) throws IOException {
 		BranchGroup bg = super.readBranchGraph(map);
@@ -110,7 +109,6 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	 * @param name gesuchter Name
 	 * @return SceneGraphObject
 	 */
-	@SuppressWarnings("rawtypes")
 	private SceneGraphObject findInScenegraph(Group group,String name){
 		if (group.getUserData() != null)
 				if (((String)group.getUserData()).equals(name))

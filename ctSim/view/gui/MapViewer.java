@@ -41,6 +41,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
+import javax.vecmath.Point3i;
 
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.MapComponent;
@@ -48,7 +49,6 @@ import ctSim.util.FmtLogger;
 import ctSim.util.MapCircles;
 import ctSim.util.MapLines;
 import ctSim.util.Misc;
-import ctSim.util.Runnable3;
 
 /**
  * Stellt das Fenster f&uuml;r die Map-Anzeige dar.
@@ -58,7 +58,7 @@ public class MapViewer extends JPanel {
 	/** UID	*/
 	private static final long serialVersionUID = 3285763592662732927L;
 	/** Logger fuer das Map-Fenster */
-	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.LogViewer");
+	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.MapViewer");
 	/** Map-Komponente */
 	private final MapComponent mapCompnt;
 	/** Image-Viewer */
@@ -190,7 +190,7 @@ public class MapViewer extends JPanel {
 	 */
 	public MapViewer(MapComponent map, Bot bot) {
 		mapCompnt = map;
-		imageViewer = new ImageViewer(mapCompnt, map.circlesMutex);
+		imageViewer = new ImageViewer(mapCompnt);
 	
 		setLayout(new BorderLayout());
 		
@@ -223,11 +223,11 @@ public class MapViewer extends JPanel {
 	/**
 	 * Map-Anzeige
 	 */
-	public static class ImageViewer extends JPanel implements Runnable3<Image, MapLines[], List<MapCircles>> {
+	public static class ImageViewer extends JPanel implements Runnable {
 		/** UID */
 		private static final long serialVersionUID = -4764621960629937298L;
 		/** Bild */
-		private Image image;
+		private final Image image;
 		/** Breite */
 		private final int targetWidth;
 		/** Hoehe */
@@ -237,18 +237,26 @@ public class MapViewer extends JPanel {
 		/** Farbe der Bot-Position */
 		private final Color botColor = new Color(255, 0, 0);
 		/** Liste fuer einzuzeichnende Linien */
-		private MapLines[] lines;
+		private List<MapLines> lines;
+		/** Mutex fuer lines */
+		private final Object linesMutex;
 		/** Liste fuer einzuzeichnende Kreise */
 		private List<MapCircles> circles;
-		/** Mutex fuer Liste */
+		/** Mutex fuer circles */
 		private final Object circlesMutex;
+		/** Bot-Position */
+		private final Point3i botPos;
 		
 		/**
 		 * @param c Map-Komponente
-		 * @param mutex Mutex fuer circles-Liste
 		 */
-		public ImageViewer(MapComponent c, Object mutex) {
-			this.circlesMutex = mutex;
+		public ImageViewer(MapComponent c) {			
+			this.image = c.getImg();
+			this.lines = c.getMapLines();
+			this.linesMutex = c.getLinesMutex();
+			this.circles = c.getMapCircles();
+			this.circlesMutex = c.getCirclesMutex();
+			this.botPos = c.getBotPos();
 			c.addImageListener(this);
 			setToolTipText(c.getDescription());
 			setBorder(BorderFactory.createLoweredBevelBorder());
@@ -258,21 +266,13 @@ public class MapViewer extends JPanel {
 
 		/** 
 		 * Methode einer Swing-Komponente, aber thread-sicher 
-		 * @param img Image
-		 * @param mapLines Punkte fuer Bot-Position und Linien	
-		 * @param mapCircles Daten fuer Kreise
 		 */
-		public synchronized void run(Image img, MapLines[] mapLines, List<MapCircles> mapCircles) {			
-			this.image = img;
-			MapLines center = mapLines[mapLines.length - 1];
-			this.lines = mapLines;
-			this.circles = mapCircles;
-			repaint();
-			
+		public synchronized void run() {			
 			/* Bereich um den Bot in den sichtbaren Bereich scrollen */
-			this.scrollPosition.x = Misc.clamp(center.x1 - 125, 1535);
-			this.scrollPosition.y = Misc.clamp(center.y1 - 125, 1535);
+			this.scrollPosition.x = Misc.clamp(botPos.x - 125, targetWidth);
+			this.scrollPosition.y = Misc.clamp(botPos.y - 125, targetHeight);
 			scrollRectToVisible(this.scrollPosition);
+			repaint();
 		}
 		
 		/**
@@ -320,9 +320,21 @@ public class MapViewer extends JPanel {
 			
 			/* Linien einzeichnen */
 			if (lines != null) {
-				for (int i=0; i<lines.length-1; i++) {
+				int n;
+				synchronized (linesMutex) {
+					n = lines.size();
+				}
+				for (int i=0; i<n; ++i) {
+					MapLines li;
+					synchronized (linesMutex) {
+						try {
+							li = lines.get(i);
+						} catch (IndexOutOfBoundsException exc) {
+							break;
+						}
+					}
 					Color color;
-					switch (lines[i].color) {
+					switch (li.color) {
 					case 0:
 						color = Color.GREEN;
 						break;
@@ -334,13 +346,12 @@ public class MapViewer extends JPanel {
 						break;
 					}
 					g.setColor(color);
-					g.drawLine(lines[i].x1, lines[i].y1, lines[i].x2, lines[i].y2);
+					g.drawLine(li.x1, li.y1, li.x2, li.y2);
 				}
 				
 				/* Bot-Position einzeichnen */
 				g.setColor(botColor);
-				g.fillArc(lines[lines.length - 1].x1 - 7, lines[lines.length - 1].y1 - 7, 14, 14, lines[lines.length - 1].x2 + 120, 300);
-
+				g.fillArc(botPos.x - 7, botPos.y - 7, 14, 14, botPos.z + 120, 300);
 			}
 		}
 
@@ -366,7 +377,7 @@ public class MapViewer extends JPanel {
 		JPanel controls = new JPanel();
 
 		// Map als Bild anzeigen
-		ImageViewer v = new ImageViewer(compnt, compnt.circlesMutex);
+		ImageViewer v = new ImageViewer(compnt);
 		p.add(v, BorderLayout.CENTER);
 
 		// Ausliefern

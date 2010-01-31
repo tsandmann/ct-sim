@@ -93,7 +93,6 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Class)
 	 */
-	@SuppressWarnings("rawtypes")
 	@Override
     public ComponentAdapter registerComponentImplementation(
     	Class componentImplementation) {
@@ -104,7 +103,6 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class)
 	 */
-	@SuppressWarnings("rawtypes")
 	@Override
     public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation) {
@@ -116,7 +114,6 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, java.util.List)
 	 */
-	@SuppressWarnings("rawtypes")
 	@Override
     public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation, List parameters) {
@@ -128,7 +125,6 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, org.picocontainer.Parameter[])
 	 */
-	@SuppressWarnings("rawtypes")
 	@Override
     public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation,

@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.vecmath.Point3i;
 
 import ctSim.controller.Config;
 import ctSim.model.Command;
@@ -43,37 +44,40 @@ import ctSim.util.FmtLogger;
 import ctSim.util.MapCircles;
 import ctSim.util.MapLines;
 import ctSim.util.Misc;
-import ctSim.util.Runnable3;
 
 /**
  * Map-Repraesentation im Sim
  * <ul><li>Command-Code MAP</li>
  * <li>Nutzlast: Ein Block der Map-Rohdaten</li>
- * <li></li></ul>
+ * </ul>
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class MapComponent extends BotComponent<Void>
 implements CanRead, CanWrite, CanWriteAsynchronously {
-//TODO:	Alle Map-spezifischen Parameter als Konstanten (oder in die Config-XML?)
-	
-	/** Breite der Map in Pixeln */
-	private static final int WIDTH  = 1536;
+	/** Breite der Map in Pixeln */	
+	private final int WIDTH;
 	/** Hoehe der Map in Pixeln */
-	private static final int HEIGHT = 1536;
+	private final int HEIGHT;
+	/** Groesse einer Sektion */
+	private final int SECTION_SIZE;
+	/** Groesse eines Makroblocks */
+	private final int MAKROBLOCK_SIZE;
 	/** Rohe Mapdaten; ein Int pro Pixel. */
-	private final int[] pixels = new int[WIDTH * HEIGHT];
+	private final int[] pixels;
 	/** eingezeichnete Linien */
 	private List<MapLines> lines = Misc.newList();
+	/** Mutex fuer lines */
+	private final Object linesMutex = new Object();
 	/** eingezeichnete Kreise */
 	private List<MapCircles> circles = Misc.newList();
-	/** Mutex fuer Liste */
-	public final Object circlesMutex = new Object();
-	/** Mitte des Ausschnitts, der angezeigt werden soll (= aktuelle Botposition), Hoehe und Breite werden hier nicht benutzt */
-	private final MapLines center = new MapLines(768, 768, 0, 0, 0);
+	/** Mutex fuer circles */
+	private final Object circlesMutex = new Object();
+	/** aktuelle Botposition (z fuer heading) */
+	private final Point3i botPos;
 	/** SyncRequest austehend? */
 	private boolean syncRequestPending = false;
 	/** Image-Listener */
-	private final List<Runnable3<Image, MapLines[], List<MapCircles>>> imageLi = Misc.newList();
+	private final List<Runnable> imageLi = Misc.newList();
 	/** Image-Event austehend? */
 	private boolean imageEventPending = false;
 	/** async. Outputstream */
@@ -85,12 +89,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private int receiveState = 0;
 	/** Adresse des letzten empfangenen Blocks (muss fuer alle Teilbloecke gleich sein) */
 	private int lastBlock = 0;
-	/** X-Komponente der aktuellen Bot-Position */
-	private int bot_pos_x = 0;
-	/** Y-Komponente der aktuellen Bot-Position */
-	private int bot_pos_y = 0;
-	/** aktuelle Bot-Ausrichtung */
-	private int bot_heading = 0;
 	/** Kleinste belegte X-Koordinate */
 	private int min_x = 0xffffff;
 	/** Kleinste belegte Y-Koordinate */
@@ -104,13 +102,63 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private long lastUpdate = 0;
 	/** Intervall [ms], mit dem die Anzeige aktualisiert wird */
 	private final int updateIntervall;
+	/** Zuordnung pixel-Array <-> image */
+	private final MemoryImageSource memImage;
+	/** Image-Objekt fuer das Map-Bild */
+	private final Image image;
 	
 	/**
 	 * Map-Komponente
 	 */
 	public MapComponent() { 
 		super(null);
-		int color = colorFromRgb(128, 128, 128);
+		
+		String size_str = Config.getValue("mapSize");
+		float size = 0.0f;
+		try {
+			size = Float.parseFloat(size_str);
+		} catch (NumberFormatException exc) {
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
+				"Parameter 'mapSize' ist keine gueltige Map-Groesse!");
+		}
+		String resolution_str = Config.getValue("mapResolution");
+		int resolution = 0;
+		try {
+			resolution = Integer.parseInt(resolution_str);
+		} catch (NumberFormatException exc) {
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
+				"Parameter 'mapResolution' ist keine gueltige Map-Groesse!");
+		}
+		size *= resolution;
+		
+		String section_size_str = Config.getValue("mapSectionSize");
+		int section_size = 0;
+		try {
+			section_size = Integer.parseInt(section_size_str);
+		} catch (NumberFormatException exc) {
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
+				"Parameter 'mapSectionSize' ist keine gueltige Sektionsgroesse!");
+		}
+		
+		String makroblock_size_str = Config.getValue("mapMacroblockSize");
+		int makroblock_size = 0;
+		try {
+			makroblock_size = Integer.parseInt(makroblock_size_str);
+		} catch (NumberFormatException exc) {
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
+				"Parameter 'mapMacroblockSize' ist keine gueltige Sektionsgroesse!");
+		}
+		
+		WIDTH = (int) size;
+		HEIGHT = (int) size;
+		SECTION_SIZE = section_size;
+		MAKROBLOCK_SIZE = makroblock_size;
+		lg.fine("Map-Paramter: WIDTH=" + WIDTH + " HEIGHT=" + HEIGHT + " SECTION_SIZE=" + SECTION_SIZE + " MAKROBLOCK_SIZE=" + MAKROBLOCK_SIZE);
+		
+		pixels = new int[WIDTH * HEIGHT];
+		botPos = new Point3i(WIDTH / 2, HEIGHT / 2, 0);
+		
+		int color = colorFromRgb(128, 128, 128); // Map-Wert 0
 		for (int i=0; i<pixels.length; i++) {
 			pixels[i] = color;
 		}
@@ -123,6 +171,11 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
         } finally {
         	updateIntervall = tmp;
         }
+        lg.fine("MapUpdateIntervall=" + updateIntervall + " ms");
+        
+		memImage = new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH);
+		memImage.setAnimated(true);
+		image = Toolkit.getDefaultToolkit().createImage(memImage);
 	}
 
 	/**
@@ -211,20 +264,20 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @param to	Endindex der Daten
 	 */
 	private final void updateInternalModel(byte[] data, int block, int from, int to) {
-		/* Monsters here */
-		int x = ((block * 32) % 512 + (block / 512) * 512) % 1536;
-		int y = (((block / 16) * 16) % 512) + (block / 1536) * 512;
+		/* Monsters here... */
+		int x = ((block * (SECTION_SIZE * 2)) % MAKROBLOCK_SIZE + (block / MAKROBLOCK_SIZE) * MAKROBLOCK_SIZE) % WIDTH; // 2 sections pro Block in X-Richtung (nach Map-Orientierung)
+		int y = (((block / SECTION_SIZE) * SECTION_SIZE) % MAKROBLOCK_SIZE) + (block / HEIGHT) * MAKROBLOCK_SIZE; // 1 section pro Block in Y-Richtung (nach Map-Orientierung)
 		
 //TODO:	Karte je nach Startausrichtung des Bots entsprechend drehen, derzeit wird von Startrichtung == Norden ausgegangen		
 		/* neu empfangene Daten ins Map-Array kopieren */
 		int pic_x = 0, pic_y = 0;
 		int bufferIndex = 0;
 		for (int j=from; j<=to; j++) {	// Zeilen
-			pic_y = x + j;
+			pic_y = x + j; // X der Map ist Y beim Sim
 			pic_y = HEIGHT - pic_y;	// Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
 			int row_offset = pic_y * WIDTH;
-			for (int i=0; i<16; i++) {	// Spalten
-				pic_x = y + i;	// Spaltenindex im Block berechnen
+			for (int i=0; i<SECTION_SIZE; i++) {	// Spalten
+				pic_x = y + i;	// Spaltenindex im Block berechnen, Y der Map ist X beim Sim
 				pic_x = WIDTH - pic_x;	// Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
 				if (pic_x >= WIDTH || pic_y >= HEIGHT) {
 					/* ungueltige Daten :( */
@@ -243,8 +296,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				pixels[pic_x + row_offset] = colorFromRgb(gray, gray, gray);
 			}
 		}
-		pic_x &= ~15;	// Koordinaten innerhalb des Blocks ausblenden ==> Eckpunkt mit kleinsten Koordinaten
-		pic_y &= ~31;
+		pic_x &= ~(SECTION_SIZE - 1); // Koordinaten innerhalb des Blocks ausblenden ==> Eckpunkt mit kleinsten Koordinaten
+		pic_y &= ~(SECTION_SIZE * 2 - 1); // 2 sections pro Block in X-Richtung (Map-Orientierung) entspricht Y-Richtung (Sim-Orientierung)
 		if (pic_x < min_x) {
 			min_x = pic_x;
 		} else if (pic_x > max_x) {
@@ -267,8 +320,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		int x1 = HEIGHT - (Misc.toUnsignedInt8(data[2]) | Misc.toUnsignedInt8(data[3]) << 8);
 		int y2 = WIDTH - (Misc.toUnsignedInt8(data[4]) | Misc.toUnsignedInt8(data[5]) << 8);
 		int x2 = HEIGHT - (Misc.toUnsignedInt8(data[6]) | Misc.toUnsignedInt8(data[7]) << 8);
-		lines.add(new MapLines(x1, y1, x2, y2, color));
-		lg.fine("Linie von (" + x1 + "|" + y1 + ") bis (" + x2 + "|" + y2 + ")");
+		synchronized (linesMutex) {
+			lines.add(new MapLines(x1, y1, x2, y2, color));
+		}
+		lg.finer("Linie von (" + x1 + "|" + y1 + ") bis (" + x2 + "|" + y2 + ")");
 	}
 	
 	/**
@@ -283,7 +338,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		synchronized (circlesMutex) {
 			circles.add(new MapCircles(x, y, radius, color));
 		}
-		lg.fine("Kreis mit Radius " + radius + " an (" + x + "|" + y + ")");
+		lg.finer("Kreis mit Radius " + radius + " an (" + x + "|" + y + ")");
 	}
 	
 	/**
@@ -308,7 +363,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				receiveState = 0;
 				return;
 			}
-			bot_pos_y = HEIGHT - c.getDataR();	// Bot-Position, X-Komponente, wird im Bild in Y-Richtung gezaehlt
+			botPos.y = HEIGHT - c.getDataR();	// Bot-Position, X-Komponente, wird im Bild in Y-Richtung gezaehlt
 			updateInternalModel(c.getPayload(), block, 0, 7);	// macht die eigentliche Arbeit
 			receiveState = 1;
 			lastBlock = block;
@@ -320,7 +375,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				receiveState = 0;
 				return;
 			}
-			bot_pos_x = WIDTH - c.getDataR();	// Bot-Position, Y-Komponente, wird im Bild in X-Richtung gezaehlt
+			botPos.x = WIDTH - c.getDataR();	// Bot-Position, Y-Komponente, wird im Bild in X-Richtung gezaehlt
 			updateInternalModel(c.getPayload(), block, 8, 15);	// macht die eigentliche Arbeit
 			receiveState = 2;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_3)) {
@@ -331,7 +386,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				receiveState = 0;
 				return;
 			}
-			bot_heading = c.getDataR();
+			botPos.z = c.getDataR();
 			updateInternalModel(c.getPayload(), block, 16, 23);	// macht die eigentliche Arbeit
 			receiveState = 3;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_4)) {
@@ -346,10 +401,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			updateInternalModel(c.getPayload(), block, 24, 31);	// macht die eigentliche Arbeit
 			receiveState = 0;
 			
-			/* Bot-Position fuer Auto-Scrolling verwenden */
-			center.x1 = bot_pos_x;
-			center.y1 = bot_pos_y;
-			center.x2 = bot_heading;
 			/* GUI-Update freigeben */
 			imageEventPending = true;
 		} else if (sub.equals(Command.SubCode.MAP_LINE)) {
@@ -359,9 +410,11 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			updateDrawingsCircle(block, c.getDataR(), c.getPayload());
 			imageEventPending = true;
 		} else if (sub.equals(Command.SubCode.MAP_CLEAR_LINES)) {
-			int size = lines.size();
-			int n = c.getDataL() > size ? size : size - c.getDataL();
-			lines.subList(0, n).clear();
+			synchronized (linesMutex) {
+				int size = lines.size();
+				int n = c.getDataL() > size ? size : size - c.getDataL();
+				lines.subList(0, n).clear();
+			}
 			imageEventPending = true;
 		} else if (sub.equals(Command.SubCode.MAP_CLEAR_CIRCLES)) {
 			synchronized (circlesMutex) {
@@ -400,6 +453,36 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	public int getHeight() { return HEIGHT; }
 	
 	/**
+	 * @return Image-Referenz
+	 */
+	public Image getImg() { return image; }
+	
+	/**
+	 * @return MapLines-Referenz
+	 */
+	public List<MapLines> getMapLines() { return lines; }
+	
+	/**
+	 * @return MapCircles-Referenz
+	 */
+	public List<MapCircles> getMapCircles() { return circles; }
+	
+	/** 
+	 * @return this.linesMutes
+	 */
+	public Object getLinesMutex() { return linesMutex; }
+	
+	/**
+	 * @return this.circlesMutex
+	 */
+	public Object getCirclesMutex() { return circlesMutex; }
+	
+	/**
+	 * @return this.botPos
+	 */
+	public Point3i getBotPos() { return botPos; }
+	
+	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 	 */
 	public Code getHotCmdCode() { return Code.MAP; }
@@ -421,7 +504,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Fuegt einen Listener hinzu, der ausgefuehrt wird, wenn sich die Karte veraendert hat 
 	 * @param li Listener
 	 */
-	public void addImageListener(Runnable3<Image, MapLines[], List<MapCircles>> li) {
+	public void addImageListener(Runnable li) {
 		if (li == null) {
 			throw new NullPointerException();
 		}
@@ -440,15 +523,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				lastUpdate = now;
 	
 				imageEventPending = false;
-				Image img = Toolkit.getDefaultToolkit().createImage(
-					new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
+				memImage.newPixels();
 				
-				for (Runnable3<Image, MapLines[], List<MapCircles>> li : imageLi) {
-//TODO:	Umkopieren einsparen?
-					MapLines[] tmp_lines = new MapLines[lines.size() + 1];
-					lines.toArray(tmp_lines);
-					tmp_lines[tmp_lines.length - 1] = center;
-					li.run(img, tmp_lines, circles);
+				for (Runnable li : imageLi) {
+					li.run();
 				}
 			}
 		}
@@ -461,19 +539,19 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 */
 	public void saveImage(File file) throws IOException {		
 		/* Grosse der Map berechnen */
-		int width = max_x + 15 - min_x + 1;
-		int height = max_y + 31 - min_y + 1;
+		int width = max_x + (SECTION_SIZE - 1) - min_x + 1;
+		int height = max_y + (SECTION_SIZE * 2 - 1) - min_y + 1;
 		
 		/* belegten Teil in neues Bild kopieren */
 		BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics g = bimg.createGraphics();
-		g.setColor(new Color(128, 128, 128, 255));	// "Map-Wert 0"
+		g.setColor(new Color(128, 128, 128, 255)); // "Map-Wert 0"
 		g.fillRect(0, 0, width, height);
 		
 		/* Pixel kopieren */
 		int[] map = new int[width * height];
-		for (int y=min_y+1; y<=max_y+32; y++) {	// Zeilen
-			System.arraycopy(pixels, min_x + 1 + y * WIDTH, map, (y - min_y - 1) * width, width);	// alle Spalten einer Zeile
+		for (int y=min_y+1; y<=max_y+SECTION_SIZE*2; y++) { // Zeilen
+			System.arraycopy(pixels, min_x + 1 + y * WIDTH, map, (y - min_y - 1) * width, width); // alle Spalten einer Zeile
 		}
 		
 		/* Bild zeichnen und als png speichern */

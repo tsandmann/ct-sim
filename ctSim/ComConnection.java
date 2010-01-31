@@ -94,7 +94,7 @@ public class ComConnection extends Connection {
 			portId = CommPortIdentifier.getPortIdentifier(comPortName);
 		} catch (NoSuchPortException e) {
 			throw new CouldntOpenTheDamnThingException(
-				"COM-Port-Name '"+comPortName+"' stinkt", e);
+				"COM-Port-Name '"+comPortName+"' ungueltig", e);
 		}
 		try {
 			port = (SerialPort)portId.open("CtSim", 2000);
