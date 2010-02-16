@@ -917,7 +917,7 @@ public class ParcoursLoader {
 	 *            Referenz auf einen schon bestehenden Eintrag, der geclonet
 	 *            werden soll
 	 */
-	@SuppressWarnings( { "unchecked", "boxing", "rawtypes" })
+	@SuppressWarnings( { "unchecked", "boxing" })
 	private void addAppearance(char item, HashMap colors, String textureFile,
 			String clone) {
 

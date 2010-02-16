@@ -69,7 +69,7 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	 * @param scene Gruppe
 	 * @param map Map
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	private void reconstructMap(Group scene, HashMap map){
 		if (scene == null){
 			lg.warn("Keine Group empfangen");

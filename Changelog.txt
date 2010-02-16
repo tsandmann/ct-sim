@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2010-02-16 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt
+
 2010-01-31 Timo Sandmann [mail@timosandmann.de]: Performanz der Map-Anzeige verbessert, Bugfix fuer Logger 
 
 2010-01-29 Timo Sandmann [mail@timosandmann.de]: Map-Anzeige unterstuetzt nun auch das Einzeichnen von Kreisen, Update-Intervall der Map-Anzeige per Config-Parameter "MapUpdateIntervall" einstellbar
