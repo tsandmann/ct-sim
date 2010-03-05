@@ -22,6 +22,7 @@ package ctSim.model.bots.ctbot;
 import static ctSim.model.ThreeDBot.State.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.Transform3D;
@@ -29,6 +30,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import ctSim.SimUtils;
+import ctSim.controller.Config;
 import ctSim.model.BPS;
 import ctSim.model.ThreeDBot;
 import ctSim.model.World;
@@ -65,6 +67,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         * per second")
         */
         private static final float REVS_PER_SEC_MAX = 151f / 60f;
+        
+        /** Nachlauf des Rades, falls Richtungswechsel */
+        private double lag = 0;
 
         /** Governor des Simulators */
         private Actuators.Governor governor;
@@ -94,6 +99,20 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             double speedInRps = speedRatio * REVS_PER_SEC_MAX;
             double deltaTInSec = parent.getDeltaTInMs() / 1000.0d;
             return speedInRps * deltaTInSec;
+        }
+        
+        /**
+         * @return lag
+         */
+        public double getLag() {
+        	return lag;
+        }
+        
+        /**
+         * @param newLag
+         */
+        public void setLag(double newLag) {
+        	lag = newLag;
         }
     }
 
@@ -163,6 +182,15 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         /** Abstand Zentrum Maussensor in Vorausrichtung (Y) [m] */
         private static final double SENS_MOUSE_DIST_Y = -0.015d;
 
+        /** letzter Wert von s_l */
+        private double last_s_l = 0;
+        /** letzter Wert von s_r */
+        private double last_s_r = 0;
+        /** Zufallsgenerator fuer Nachlauf der Raeder */
+        private Random randGenerator = new Random();
+        /** Haben die Raeder Nachlauf beim Richtungswechsel? */
+        private final boolean wheelsWithLag = Config.getValue("WheelLag").equals("true");
+        
         /**
          * @see java.lang.Runnable#run()
          */
@@ -175,6 +203,35 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 			// Absolut zurueckgelegte Strecke pro Rad berechnen
 			double s_l = leftWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
 			double s_r = rightWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
+			
+			if (wheelsWithLag) {
+				if (s_l == 0 && last_s_l != 0) {
+					double rand = randGenerator.nextDouble();
+					if (last_s_l < 0) {
+						rand = -rand;
+					}
+					last_s_l = 0;
+					s_l = rand * (WHEEL_CIRCUMFERENCE / 60.0);
+//					System.out.println("s_l=" + s_l * 1000 + " mm");
+					leftWheel.setLag(rand);
+				} else {
+					last_s_l = s_l;
+					leftWheel.setLag(0.0);
+				}
+				if (s_r == 0 && last_s_r != 0) {
+					double rand = randGenerator.nextDouble();
+					if (last_s_r < 0) {
+						rand = -rand;
+					}
+					last_s_r = 0;
+					s_r = rand * (WHEEL_CIRCUMFERENCE / 60.0);
+//					System.out.println("s_r=" + s_r * 1000 + " mm");
+					rightWheel.setLag(rand);
+				} else {
+					last_s_r = s_r;
+					rightWheel.setLag(0.0);
+				}
+			}
 
 			// Haelfte des Drehwinkels, den der Bot in diesem Simschritt
 			// hinzubekommt
@@ -283,7 +340,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 			}
 
 			if (!parent.isObstStateNormal()) {
-//				mouseSensorX.sensor.set(0);
 				mouseSensorY.sensor.set(0);
 			}
 
@@ -434,7 +490,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             * verhindern, dass sich der Rundungsfehler mit der Zeit
             * anh&auml;uft.
             */
-            private double encoderRest = 0;
+            private double encoderRest = 0.0;
 
             public void run() {
                 // Anzahl der Umdrehungen der Raeder
@@ -444,8 +500,15 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
                 // Anzahl der Drehungen mal Anzahl der Markierungen,
                 // dazu der Rest der letzten Runde
                 double tmp = (revs * ENCODER_MARKS) + encoderRest;
+                if (encoderSensor.getHasLag()) {
+//					if (wheel.getLag() != 0.0) {
+//                		System.out.println("lag=" + wheel.getLag());
+//                		System.out.println("tmp=" + tmp);
+                	tmp += wheel.getLag();
+//					}
+                }
                 // Der Bot bekommt nur ganze Schritte zu sehen,
-                int encoderSteps = (int)Math.floor(tmp);
+                int encoderSteps = (int) Math.floor(tmp);
                 // aber wir merken uns Teilschritte intern
                 encoderRest = tmp - encoderSteps;
                 // und speichern sie.
@@ -465,7 +528,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         final Point3d distFromBotCenter = isLeft
             ? new Point3d(- 0.036, 0.0554, 0)
             : new Point3d(+ 0.036, 0.0554, 0);
-        //final Vector3d headingInBotCoord = looksForward();
         final Point3d endPoint = new Point3d(distFromBotCenter);
         endPoint.add(new Point3d(0.0, MAX_RANGE, 0.0));
         final Characteristic charstic = isLeft
@@ -478,7 +540,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             public void run() {
                 double distInM = world.watchObstacle(
                     parent.worldCoordFromBotCoord(distFromBotCenter),
-                    //parent.worldCoordFromBotCoord(headingInBotCoord),
                     parent.worldCoordFromBotCoord(endPoint),
                     OPENING_ANGLE_IN_RAD,
                     parent.getShape());
@@ -534,18 +595,23 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     
     /**
 	 * @param sensor BPS-Sensor
-	 * @param front	Schaut der Sensor nach vorn?
+	 * @param isLeft Wird nicht ausgewertet, es gibt nur einen Sensor
 	 */
-	public void buisitBPSSim(final Sensors.BPSReceiver sensor, final boolean front) {
+	public void buisitBPSSim(final Sensors.BPSReceiver sensor, final boolean isLeft) {
+		if (! isLeft) {
+			return; // es gibt nur einen Sensor, wir nehmen den Wert fuer links
+		}
 		simulators.add(new Runnable() {
 			private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3.0);
-			private final double LIGHT_DISTANCE = front ? 2.0 : -2.0;
+			private final double LIGHT_DISTANCE = 2.0;
+			private final Point3d startOfSens = new Point3d();
+			private final Point3d endOfSens = new Point3d(LIGHT_DISTANCE, 0.0, 0.0); // Sensor schaut nach -90 Grad
 
 			public void run() {
-				Point3d pos = parent.worldCoordFromBotCoord(new Point3d());
+				Point3d pos = parent.worldCoordFromBotCoord(startOfSens);
+				
 				pos.setZ(BPS.BPSZ);
-				Point3d end = parent.worldCoordFromBotCoord(new Point3d(0.0,
-						LIGHT_DISTANCE, 0.0));
+				Point3d end = parent.worldCoordFromBotCoord(endOfSens);
 				end.setZ(BPS.BPSZ);
 				sensor.set(world.sensBPS(pos, end, OPENING_ANGLE_IN_RAD));
 			}
@@ -556,8 +622,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @param sensor Maussensor
      * @param isX X? (sonst Y)
      */
-    public void buisitMouseSensorSim(final Sensors.Mouse sensor,
-    boolean isX) {
+    public void buisitMouseSensorSim(final Sensors.Mouse sensor, boolean isX) {
         (isX ? mouseSensorX : mouseSensorY).setSensor(sensor);
     }
 
@@ -565,7 +630,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @param sensor Clock
      */
     public void buisitClockSim(final Sensors.Clock sensor) {
-        this.clock  = sensor;
+        this.clock = sensor;
     }
 
     /**

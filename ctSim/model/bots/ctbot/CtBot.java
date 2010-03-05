@@ -214,11 +214,11 @@ public abstract class CtBot extends BasicBot {
 			new RemoteCallCompnt()
 		);
 		
-		if (this instanceof RealCtBot ||  Config.getValue("LightSensors").equals("true")) {
+		if (this instanceof RealCtBot || Config.getValue("LightSensors").equals("true")) {
 			components.add(new Sensors.Light(true), new Sensors.Light(false));
 		}
-		if (this instanceof RealCtBot || Config.getValue("BPSSensors").equals("true")) {
-			components.add(new Sensors.BPSReceiver(true), new Sensors.BPSReceiver(false));
+		if (this instanceof RealCtBot || Config.getValue("BPSSensor").equals("true")) {
+			components.add(new Sensors.BPSReceiver(true));
 		}
 
 		// LEDs

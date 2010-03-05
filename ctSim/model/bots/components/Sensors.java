@@ -22,6 +22,7 @@ package ctSim.model.bots.components;
 import java.io.IOException;
 import java.util.Map;
 
+import ctSim.controller.Config;
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
@@ -117,16 +118,17 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { 
+		@Override
+		protected String getBaseName() { 
 			return "BPS"; 
 		}
 		
 		/**
 		 * BPS-Sensor (Bot Positioning System)
-		 * @param front	Sensor schaut nach vorn
+		 * @param isLeft wird nicht ausgewertet
 		 */
-		public BPSReceiver(boolean front) { 
-			super(front); 
+		public BPSReceiver(boolean isLeft) { 
+			super(true); 
 		}
 		
 		/**
@@ -141,7 +143,7 @@ public class Sensors {
 		 */
 		@Override
 		public String getName() {
-			return getBaseName() + (isLeft ? "F" : "R");
+			return getBaseName();
 		}
 		
 		/**
@@ -149,7 +151,7 @@ public class Sensors {
 		 */
 		@Override
 		public String getDescription() {
-			return getBaseDescription() + (isLeft ? " front" : " rear");
+			return getBaseDescription();
 		}
 	}
 	
@@ -158,6 +160,9 @@ public class Sensors {
 	 */
 	public static class Encoder extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
+		/** Hat das Rad Nachlauf bei Richtungswechsel? */
+		protected final boolean hasLag = Config.getValue("WheelLag").equals("true");
+		
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
@@ -170,7 +175,9 @@ public class Sensors {
 		 * Rad-Encoder
 		 * @param isLeft links?
 		 */
-		public Encoder(boolean isLeft) { super(isLeft); }
+		public Encoder(boolean isLeft) {
+			super(isLeft); 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
@@ -181,6 +188,11 @@ public class Sensors {
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
 		public Code getHotCmdCode() { return Code.SENS_ENC; }
+		
+		/** 
+		 * @return hasLag 
+		 */
+		public boolean getHasLag() { return hasLag; }
 	}
 
 	/** Abstandssensor vom Typ GP2D12
