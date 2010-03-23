@@ -19,7 +19,6 @@
 
 package ctSim.model;
 
-import javax.vecmath.Point2f;
 import javax.vecmath.Point2i;
 import javax.vecmath.Point3d;
 
@@ -31,47 +30,35 @@ public class BPS {
 	/** Z-Koordinate der IR-LED einer Landmarke */
 	public static final float BPSZ = 0.1f;
 	
-	/** Raster-Breite fuer die Baken [mm] */
-	private static final float BEACON_GRID_SIZE = 360.0f;
+	/** Wert des Sensors, wenn keine Landmarke gesehen wird */
+	public static final int NO_DATA = 0xffff; 
 	
 	/**
-	 *
+	 * Eine Bake des BPS
 	 */
 	public static class Beacon {	
-		/** Position der Landmarke [BEACON_GRID_SIZE mm] */
-		private final Point2f position;
+		/** Position der Landmarke [parcoursBlockSizeInMM mm] */
+		private final Point2i position;
 		/** Block-Groesse des Parcours, in dem die Landmarke steht [mm] */
-		private final float parcoursBlockSizeInMM;
+		private final int parcoursBlockSizeInMM;
 		
 		/**
 		 * Erzeugt eine neue Landmarke
 		 * @param parc Parcours, in dem die Landmarke steht
-		 * @param beacon Position der Landmarke, so wie PickInfo sie ermittelt hat [m]
+		 * @param source Position der Landmarke, so wie PickInfo sie ermittelt hat [m]
 		 */
-		public Beacon(Parcours parc, Point3d beacon) {
-			float x = (float)beacon.y * (1000.0f / BEACON_GRID_SIZE);
-			float y = ((parc.getWidthInM() - (float)beacon.x) * 1000.0f) / BEACON_GRID_SIZE;
-			this.position = new Point2f(x, y);
+		public Beacon(Parcours parc, Point3d source) {
 			this.parcoursBlockSizeInMM = parc.getBlockSizeInMM();
+			final int x = (int) (source.y * (1000.0 / parcoursBlockSizeInMM));
+			final int y = (int) (((parc.getWidthInM() - source.x) * 1000.0) / parcoursBlockSizeInMM);
+			this.position = new Point2i(x, y);
 		}
 		
 		/**
 		 * @return Landmarken ID in 10 Bit-Codierung
 		 */
 		public int getID() {
-			int x_int = Math.round(this.position.x);
-			int y_int = Math.round(this.position.y);
-			return (y_int & 0x1f) | ((x_int & 0x1f) << 5);
-		}
-		
-		/**
-		 * Errechnet die Parcours-Block-Koordinaten der Landmarke 
-		 * @return Position in Parcours-Block-Koordinaten [parcoursBlockSizeInMM mm]
-		 */
-		private Point2i getPositionInBlocks() {
-			int x = Math.round((this.position.x * BEACON_GRID_SIZE - this.parcoursBlockSizeInMM / 2.0f) / this.parcoursBlockSizeInMM);
-			int y = Math.round((this.position.y * BEACON_GRID_SIZE - this.parcoursBlockSizeInMM / 2.0f) / this.parcoursBlockSizeInMM);
-			return new Point2i(x, y);
+			return (position.y & 0xff) | ((position.x & 0xff) << 8);
 		}
 		
 		/**
@@ -80,8 +67,10 @@ public class BPS {
 		 */
 		@Override
 		public String toString() {
-//			System.out.println("(" + this.position.x + "|" + this.position.y + ")");
-			return "(" + Math.round(this.position.x) + "|" + Math.round(this.position.y) + ")";
+			return "(" + (position.x * this.parcoursBlockSizeInMM
+				+ this.parcoursBlockSizeInMM / 2) + "|" + (position.y
+				* this.parcoursBlockSizeInMM + this.parcoursBlockSizeInMM / 2) 
+				+ ")";
 		}
 		
 		/**
@@ -90,7 +79,7 @@ public class BPS {
 		 * @see #toString()
 		 */
 		public String toStringInBlocks() {
-			return "(" + getPositionInBlocks().x + "|" + getPositionInBlocks().y + ")";
+			return "(" + position.x + "|" + position.y + ")";
 		}
 		
 		/**
@@ -101,16 +90,16 @@ public class BPS {
 		 * @return true, falls Landmarke an (x|y) moeglich, sonst false
 		 */
 		public static boolean checkParcoursPosition(Parcours parc, int x, int y) {
-			float tmp = (parc.getWidthInBlocks() - 1 - x) * parc.getBlockSizeInMM() + parc.getBlockSizeInMM() / 2.0f;
-			if (tmp % BEACON_GRID_SIZE != 0) {
-				System.out.println("x=" + x + " ungueltig, tmp=" + tmp);
-				return false;
-			}
-			tmp = y * parc.getBlockSizeInMM() + parc.getBlockSizeInMM() / 2.0f;
-			if (tmp % BEACON_GRID_SIZE != 0) {
-				System.out.println("y=" + y + " ungueltig, tmp=" + tmp);
-				return false;
-			}
+//			float tmp = (parc.getWidthInBlocks() - 1 - x) * parc.getBlockSizeInMM() + parc.getBlockSizeInMM() / 2.0f;
+//			if (tmp % BEACON_GRID_SIZE != 0) {
+//				System.out.println("x=" + x + " ungueltig, tmp=" + tmp);
+//				return false;
+//			}
+//			tmp = y * parc.getBlockSizeInMM() + parc.getBlockSizeInMM() / 2.0f;
+//			if (tmp % BEACON_GRID_SIZE != 0) {
+//				System.out.println("y=" + y + " ungueltig, tmp=" + tmp);
+//				return false;
+//			}
 			return true;
 		}
 	}

@@ -602,7 +602,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 			return; // es gibt nur einen Sensor, wir nehmen den Wert fuer links
 		}
 		simulators.add(new Runnable() {
-			private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3.0);
+			private final double OPENING_ANGLE_IN_RAD = Math.toRadians(0.5);
 			private final double LIGHT_DISTANCE = 2.0;
 			private final Point3d startOfSens = new Point3d();
 			private final Point3d endOfSens = new Point3d(LIGHT_DISTANCE, 0.0, 0.0); // Sensor schaut nach -90 Grad

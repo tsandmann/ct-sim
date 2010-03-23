@@ -836,7 +836,7 @@ public class World {
 
 		if (pickInfo == null) {
 			/* keine Landmarke sichtbar */
-			return 1023;
+			return BPS.NO_DATA;
 		}
 		
 		Point3d source = pickInfo.getClosestIntersectionPoint();
@@ -846,7 +846,7 @@ public class World {
 		Beacon beacon = new Beacon(this.parcours, source);
 		int result = beacon.getID();
 
-//		lg.info("Baken-Position [0.6 m]: " + beacon);
+//		lg.info("Baken-Position [mm]: " + beacon);
 //		lg.info("Baken-Position [blocks]: " + beacon.toStringInBlocks());
 
 		return result;
