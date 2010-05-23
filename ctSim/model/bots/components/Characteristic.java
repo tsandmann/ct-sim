@@ -113,9 +113,11 @@ public class Characteristic {
 		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
 		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
 		// den 0-Index:
+//TODO:	Doppelt runden haelt besser?!? Am Ergebnis von floor() gibt's aber gar nix mehr zu runden! 
 		this.lookup = new float[1 + Math.round(Math.round(Math
 				.floor(this.characteristic[this.characteristic.length - 2])))];
 		// Lookup-Table jetzt fuellen:
+//TODO:	round()-Aufrufe unsinnig, oder?
 		int firstMeas = Math.round(Math.round(Math.floor(this.characteristic[0])));
 		// Alles vor der ersten Messgroesse mit INF fuellen:
 		for (int i = 0; i < firstMeas; i++) {
@@ -124,10 +126,12 @@ public class Characteristic {
 		// Dann jeweils in Zweierschritten voran:
 		for (int i = 0; i < this.characteristic.length; i += 2) {
 			// Zwei aufeinanderfolgende Messgroessen heraussuchen:
+//TODO:	round()-Aufrufe unsinnig, oder?
 			int firMea = Math.round(Math.round(Math.floor(this.characteristic[i])));
 			// Wert am ersten Index eintragen:
 			this.lookup[firMea] = this.characteristic[i + 1];
 			try { // Klappt nicht, wenn schon das Ende erreicht ist.
+//TODO:	round()-Aufrufe unsinnig, oder?				
 				int secMea = Math.round(Math.round(Math
 						.floor(this.characteristic[i + 2])));
 				// Wie viele Schritte lassen die Messgroessen aus?
@@ -154,7 +158,7 @@ public class Characteristic {
 		for (int i = 0; i<this.lookup.length; i++){
 				this.intLookup[i] = Math.round(this.lookup[i]);
 			}
-		// printLookup();		
+		//printLookup();		
 	}
 	
 	/**
@@ -193,9 +197,11 @@ public class Characteristic {
 		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
 		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
 		// den 0-Index:
+//TODO:	round()-Aufrufe unsinnig, oder?		
 		this.lookup = new float[1 + Math.round(Math.round(Math
 				.floor(this.characteristic[this.characteristic.length - 2])))];
 		// Lookup-Table jetzt fuellen:
+//TODO:	round()-Aufrufe unsinnig, oder?		
 		int firstMeas = Math.round(Math.round(Math.floor(this.characteristic[0])));
 		// Alles vor der ersten Messgroesse mit INF fuellen:
 		for (int i = 0; i < firstMeas; i++) {
@@ -204,10 +210,12 @@ public class Characteristic {
 		// Dann jeweils in Zweierschritten voran:
 		for (int i = 0; i < this.characteristic.length; i += 2) {
 			// Zwei aufeinanderfolgende Messgroessen heraussuchen:
+//TODO:	round()-Aufrufe unsinnig, oder?			
 			int firMea = Math.round(Math.round(Math.floor(this.characteristic[i])));
 			// Wert am ersten Index eintragen:
 			this.lookup[firMea] = this.characteristic[i + 1];
 			try { // Klappt nicht, wenn schon das Ende erreicht ist.
+//TODO:	round()-Aufrufe unsinnig, oder?
 				int secMea = Math.round(Math.round(Math
 						.floor(this.characteristic[i + 2])));
 				// Wie viele Schritte lassen die Messgroessen aus?
@@ -253,6 +261,7 @@ public class Characteristic {
 		double data;
 		// Liegt der Wert innerhalb der Tabelle?
 		if (measurement >= 0 && measurement <= this.lookup.length - 1) {
+//TODO:	round()-Aufrufe unsinnig, oder?
 			int index = Math.round(Math.round(Math.floor(measurement)));
 			data = this.lookup[index];
 			// Falls der Wert nicht am Rand der Tabelle liegt,

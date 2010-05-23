@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -40,13 +41,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
+import javax.vecmath.Point3i;
 
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.MapComponent;
 import ctSim.util.FmtLogger;
+import ctSim.util.MapCircles;
 import ctSim.util.MapLines;
 import ctSim.util.Misc;
-import ctSim.util.Runnable2;
 
 /**
  * Stellt das Fenster f&uuml;r die Map-Anzeige dar.
@@ -56,7 +58,7 @@ public class MapViewer extends JPanel {
 	/** UID	*/
 	private static final long serialVersionUID = 3285763592662732927L;
 	/** Logger fuer das Map-Fenster */
-	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.LogViewer");
+	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.MapViewer");
 	/** Map-Komponente */
 	private final MapComponent mapCompnt;
 	/** Image-Viewer */
@@ -221,11 +223,11 @@ public class MapViewer extends JPanel {
 	/**
 	 * Map-Anzeige
 	 */
-	public static class ImageViewer extends JPanel implements Runnable2<Image, MapLines[]> {
+	public static class ImageViewer extends JPanel implements Runnable {
 		/** UID */
 		private static final long serialVersionUID = -4764621960629937298L;
 		/** Bild */
-		private Image image;
+		private final Image image;
 		/** Breite */
 		private final int targetWidth;
 		/** Hoehe */
@@ -235,12 +237,26 @@ public class MapViewer extends JPanel {
 		/** Farbe der Bot-Position */
 		private final Color botColor = new Color(255, 0, 0);
 		/** Liste fuer einzuzeichnende Linien */
-		private MapLines[] lines;
+		private List<MapLines> lines;
+		/** Mutex fuer lines */
+		private final Object linesMutex;
+		/** Liste fuer einzuzeichnende Kreise */
+		private List<MapCircles> circles;
+		/** Mutex fuer circles */
+		private final Object circlesMutex;
+		/** Bot-Position */
+		private final Point3i botPos;
 		
 		/**
 		 * @param c Map-Komponente
 		 */
-		public ImageViewer(MapComponent c) {
+		public ImageViewer(MapComponent c) {			
+			this.image = c.getImg();
+			this.lines = c.getMapLines();
+			this.linesMutex = c.getLinesMutex();
+			this.circles = c.getMapCircles();
+			this.circlesMutex = c.getCirclesMutex();
+			this.botPos = c.getBotPos();
 			c.addImageListener(this);
 			setToolTipText(c.getDescription());
 			setBorder(BorderFactory.createLoweredBevelBorder());
@@ -250,19 +266,13 @@ public class MapViewer extends JPanel {
 
 		/** 
 		 * Methode einer Swing-Komponente, aber thread-sicher 
-		 * @param img	Image
-		 * @param mapLines	Punkte fuer Bot-Position und Linien	
 		 */
-		public synchronized void run(Image img, MapLines[] mapLines) {			
-			this.image = img;
-			MapLines center = mapLines[mapLines.length - 1];
-			this.lines = mapLines;
-			repaint();
-			
+		public synchronized void run() {			
 			/* Bereich um den Bot in den sichtbaren Bereich scrollen */
-			this.scrollPosition.x = Misc.clamp(center.x1 - 125, 1535);
-			this.scrollPosition.y = Misc.clamp(center.y1 - 125, 1535);
+			this.scrollPosition.x = Misc.clamp(botPos.x - 125, targetWidth);
+			this.scrollPosition.y = Misc.clamp(botPos.y - 125, targetHeight);
 			scrollRectToVisible(this.scrollPosition);
+			repaint();
 		}
 		
 		/**
@@ -273,11 +283,23 @@ public class MapViewer extends JPanel {
 			/* Image zeichnen */
 			g.drawImage(image, 0, 0, null);
 
-			/* Linien einzeichnen */
-			if (lines != null) {
-				for (int i=0; i<lines.length-1; i++) {
+			/* Kreise einzeichnen */
+			if (circles != null) {
+				int n;
+				synchronized (circlesMutex) {
+					n = circles.size();
+				}
+				for (int i=0; i<n; ++i) {
+					MapCircles ci;
+					synchronized (circlesMutex) {
+						try {
+							ci = circles.get(i);
+						} catch (IndexOutOfBoundsException exc) {
+							break;
+						}
+					}
 					Color color;
-					switch (lines[i].color) {
+					switch (ci.color) {
 					case 0:
 						color = Color.GREEN;
 						break;
@@ -289,14 +311,48 @@ public class MapViewer extends JPanel {
 						break;
 					}
 					g.setColor(color);
-					g.drawLine(lines[i].x1, lines[i].y1, lines[i].x2, lines[i].y2);
+					int radius = ci.radius;
+					int x = ci.x - radius;
+					int y = ci.y - radius;
+					g.drawArc(x, y, 2 * radius, 2 * radius, 0, 360);
+				}
+			}
+			
+			/* Linien einzeichnen */
+			if (lines != null) {
+				int n;
+				synchronized (linesMutex) {
+					n = lines.size();
+				}
+				for (int i=0; i<n; ++i) {
+					MapLines li;
+					synchronized (linesMutex) {
+						try {
+							li = lines.get(i);
+						} catch (IndexOutOfBoundsException exc) {
+							break;
+						}
+					}
+					Color color;
+					switch (li.color) {
+					case 0:
+						color = Color.GREEN;
+						break;
+					case 1:
+						color = Color.RED;
+						break;
+					default:
+						color = Color.BLACK;
+						break;
+					}
+					g.setColor(color);
+					g.drawLine(li.x1, li.y1, li.x2, li.y2);
 				}
 				
 				/* Bot-Position einzeichnen */
 				g.setColor(botColor);
-				g.fillArc(lines[lines.length - 1].x1 - 7, lines[lines.length - 1].y1 - 7, 14, 14, lines[lines.length - 1].x2 + 120, 300);
-
-			}			
+				g.fillArc(botPos.x - 7, botPos.y - 7, 14, 14, botPos.z + 120, 300);
+			}
 		}
 
 		/**

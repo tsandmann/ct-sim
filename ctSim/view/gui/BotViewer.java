@@ -38,7 +38,6 @@ public class BotViewer extends JScrollPane {
 	private static final long serialVersionUID = - 7367493564649395707L;
 
 	/** Buisitors */
-	@SuppressWarnings("unchecked")
 	private Class[] buisitors;
 
 	/** zugehoeriger Bot */

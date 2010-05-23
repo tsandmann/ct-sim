@@ -77,7 +77,7 @@ public class FmtLogger extends Logger {
 	 * @param name Name des Loggers
 	 * @return Logger
 	 */
-	public static FmtLogger getLogger(String name) {
+	public static synchronized FmtLogger getLogger(String name) {
 		return new FmtLogger(name, loggerFactory.createLogger(name));
 	}
 

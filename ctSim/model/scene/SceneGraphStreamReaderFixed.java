@@ -57,7 +57,6 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	/**
 	 * @see com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader#readBranchGraph(java.util.HashMap)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public BranchGroup readBranchGraph(HashMap map) throws IOException {
 		BranchGroup bg = super.readBranchGraph(map);
@@ -70,7 +69,7 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	 * @param scene Gruppe
 	 * @param map Map
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked" })
 	private void reconstructMap(Group scene, HashMap map){
 		if (scene == null){
 			lg.warn("Keine Group empfangen");
@@ -110,7 +109,6 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	 * @param name gesuchter Name
 	 * @return SceneGraphObject
 	 */
-	@SuppressWarnings("unchecked")
 	private SceneGraphObject findInScenegraph(Group group,String name){
 		if (group.getUserData() != null)
 				if (((String)group.getUserData()).equals(name))

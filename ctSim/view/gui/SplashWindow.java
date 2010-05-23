@@ -201,7 +201,7 @@ public class SplashWindow extends Window {
 			// egal
 		}
 		if (instance != null) {
-			FmtLogger.getLogger("").removeHandler(logHandler);
+			FmtLogger.getLogger("ctSim").removeHandler(logHandler);
 			instance.getOwner().dispose();
 			instance = null;
 		}

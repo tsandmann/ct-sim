@@ -7,25 +7,25 @@
 	</description>
 		
 	<parcours>
-		<line>==============#</line>
-		<line>#   #     #   #</line>
-		<line>#   #     #   #</line>
-		<line>#   #     #   #</line>
-		<line>#             #</line>
-		<line>#X           X#</line>
-		<line>#             #</line>
-		<line>#   =======   #</line>
-		<line>#             #</line>
-		<line>#             #</line>
-		<line>#=====...=====#</line>
-		<line>#.............#</line>
-		<line>#.............#</line>
-		<line>#....=====....#</line>
-		<line>#......#......#</line>
-		<line>#......#......#</line>
-		<line>#.....0#......#</line>
-		<line>#===1..=..2===#</line>
-	    <line>LLL====L====LLL</line>
+		<line>============#</line>
+		<line>#  #  Z  #  #</line>
+		<line>#  #  |  #  #</line>
+		<line>#  #X | X#  #</line>
+		<line>#     |     #</line>
+		<line>#X    |    X#</line>
+		<line>#           #</line>
+		<line>#   =====   #</line>
+		<line>#    .*     #</line>
+		<line>#           #</line>
+		<line>#====...====#</line>
+		<line>#.l.........#</line>
+		<line>#...........#</line>
+		<line>#..*=====*..#</line>
+		<line>#....l#.l...#</line>
+		<line>#.....#.....#</line>
+		<line>#....0#.....#</line>
+		<line>#==1.===.2==#</line>
+	    <line>LL====L====LL</line>
 	</parcours>
 		
 		<optics>
@@ -88,6 +88,11 @@
 			<appearance type="*"> 
 				<description>Lichtkugel</description>
 				<color type="emmissive">#FFFF90</color>
+			</appearance>
+
+			<appearance type="l"> 
+				<description>Landmarke</description>
+				<color type="emmissive">#990000</color>
 			</appearance>
 
 			<appearance type="-"> 

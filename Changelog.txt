@@ -1,5 +1,27 @@
 Changelog fuer c't-Sim
 ======================
+2010-05-23 Timo Sandmann [mail@timosandmann.de]: Release 17
+
+2010-03-23 Timo Sandmann [mail@timosandmann.de]: Landmarken und -Sensor ueberarbeitet
+
+2010-03-05 Timo Sandmann [mail@timosandmann.de]: Optionaler Nachlauf der Raeder ueber Config-Schalter "WheelLag"
+
+2010-02-16 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt
+
+2010-01-31 Timo Sandmann [mail@timosandmann.de]: Performanz der Map-Anzeige verbessert, Bugfix fuer Logger 
+
+2010-01-29 Timo Sandmann [mail@timosandmann.de]: Map-Anzeige unterstuetzt nun auch das Einzeichnen von Kreisen, Update-Intervall der Map-Anzeige per Config-Parameter "MapUpdateIntervall" einstellbar
+
+2009-11-04 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt
+
+2009-10-18 Timo Sandmann [mail@timosandmann.de]: Parcours parcours/contest-A-vorrunde_mod.xml aus contest-A-vorrunde.xml erstellt und um drei Landmarken ergaenzt
+
+2009-10-02 Frank Menzel [Menzelfr@gmx.de]: Schaparcours parcours/chess.xml fuer Verhalten behaviour_drive_chess 
+
+2009-09-24 Timo Sandmann [mail@timosandmann.de]: Licht- und BPS-Sensordaten des echten Bots werden immer (falls der Bot welche sendet) angezeigt, unabhaengig von der Config-Einstellung
+
+2009-09-16 Timo Sandmann [mail@timosandmann.de]: Bot-Lokalisierung: Neuer Sensortyp BPS-Sensor; Config-Datei bietet Schalter fuer Licht- und BPS-Sensoren; Parcours koennen IR-Landmarken enthalten (siehe parcours/test_localization.xml); Bugfixes und Optimierungen fuer Distanzsensoren
+
 2009-07-06 Timo Sandmann [mail@timosandmann.de]: Release 16
 
 2009-05-20 Timo Sandmann [mail@timosandmann.de]: Java3D-Fehler (z.B. keine OpenGL-Unterstuetzung) werden abgefangen und ausgegeben

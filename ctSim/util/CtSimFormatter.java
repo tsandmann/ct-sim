@@ -28,7 +28,7 @@ import java.util.logging.LogRecord;
 /**
  * <p>
  * Formatter, der ausf&uuml;hrliche Log-Meldungen produziert. Baut auf das
- * {@link java.util.logging}-Framework auf.
+ * java.util.logging-Framework auf.
  * </p>
  * <p>
  * <strong>Beispielausgabe:</strong>

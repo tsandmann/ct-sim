@@ -421,6 +421,9 @@ public class Command {
 
 		/** Helligkeitssensoren, siehe {@link Light}. */
 		SENS_LDR('H'),
+		
+		/** BPS-Sensoren */
+		SENS_BPS('b'),
 
 		/** Liniensensoren, siehe {@link Line}. */
 		SENS_LINE('L'),
@@ -460,7 +463,8 @@ public class Command {
 		 */
 		MAP('Q', SubCode.MAP_DATA_1, SubCode.MAP_DATA_2, SubCode.MAP_DATA_3,
 				SubCode.MAP_DATA_4, SubCode.MAP_REQUEST, SubCode.MAP_LINE,
-				SubCode.SUB_MAP_CLEAR_LINES, SubCode.MAP_REQUEST);
+				SubCode.MAP_CIRCLE,	SubCode.MAP_CLEAR_LINES, 
+				SubCode.MAP_CLEAR_CIRCLES, SubCode.MAP_REQUEST);
 
 
 		/** Code auf der Leitung */
@@ -633,38 +637,32 @@ public class Command {
 		 */
 		ID_REQUEST('R'),
 		
-		/**
-		 * Fordert die komplette Map an
-		 */
+		/** Fordert die komplette Map an */
 		MAP_REQUEST('R'),
 		
-		/**
-		 * Uebertraegt die ersten 128 Byte der Map-Daten eines Blocks (vier Kommandos fuer einen kompletten Block noetig)
-		 */
+		/** Uebertraegt die ersten 128 Byte der Map-Daten eines Blocks (vier Kommandos fuer einen kompletten Block noetig) */
 		MAP_DATA_1('D'),
 		
-		/**
-		 * Map-Daten Teil 2 (Byte 128 bis 255)
-		 */
+		/** Map-Daten Teil 2 (Byte 128 bis 255) */
 		MAP_DATA_2('E'),
 		
-		/**
-		 * Map-Daten Teil 3 (Byte 256 bis 383)
-		 */
+		/** Map-Daten Teil 3 (Byte 256 bis 383) */
 		MAP_DATA_3('F'),
 		
-		/**
-		 * Map-Daten Teil 4 (Byte 384 bis 511)
-		 */
+		/** Map-Daten Teil 4 (Byte 384 bis 511) */
 		MAP_DATA_4('G'),
 		
-		/**
-		 * Linie zeichnen
-		 */
+		/** Linie zeichnen */
 		MAP_LINE('L'),
 		
+		/** Kreis zeichnen */
+		MAP_CIRCLE('C'),
+		
 		/** Linien loeschen */
-		SUB_MAP_CLEAR_LINES('X');
+		MAP_CLEAR_LINES('X'),
+		
+		/** Kreise loeschen */
+		MAP_CLEAR_CIRCLES('Y');
 		
 		
 		/** SubCode auf der Leitung */

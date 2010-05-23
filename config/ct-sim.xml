@@ -71,6 +71,18 @@
 	Wert: Beschreibung der Taste -->
 	<parameter name="rcStartCode" value=""/>
 
+	<!-- Schalter fuer Lichtsensoren -->
+	<parameter name="LightSensors" value="true"/>
+	
+	<!-- Schalter fuer BPS-Sensor -->
+	<parameter name="BPSSensor" value="false"/>
+	
+	<!-- Schalter fuer Nachlauf der Raeder -->
+	<parameter name="WheelLag" value="false"/>
+
+	<!-- Update-Intervall der Map-Anzeige [ms], default=500 -->
+	<parameter name="MapUpdateIntervall" value="500"/>
+
 	<!-- Serieller Anschluss. Der Sim verbindet sich mit ihm und erwartet
 	dort einen USB-2-Bot-Adapter -->
 	<parameter name="serialport" os="Windows" value="COM3"/>

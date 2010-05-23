@@ -39,6 +39,7 @@ import javax.media.j3d.Group;
 import javax.media.j3d.Node;
 import javax.media.j3d.PickBounds;
 import javax.media.j3d.PickConeRay;
+import javax.media.j3d.PickConeSegment;
 import javax.media.j3d.PickInfo;
 import javax.media.j3d.PickRay;
 import javax.media.j3d.Shape3D;
@@ -57,6 +58,7 @@ import org.xml.sax.SAXException;
 
 import ctSim.controller.BotBarrier;
 import ctSim.controller.Config;
+import ctSim.model.BPS.Beacon;
 import ctSim.model.Map.MapException;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
@@ -92,9 +94,11 @@ public class World {
 
 	/** Branchgroup fuer Licht */
 	private BranchGroup lightBG;
+	/** Branchgroup fuer BPS */
+	private BranchGroup bpsBG;
 	/** Brachgroup fuer Terrain */
 	private BranchGroup terrainBG;
-	/** Branchgroup fuer Hindernisse */
+	/** Branchgroup fuer Hindernisse und Bots */
 	private BranchGroup obstBG;
 	/** Branchgroup fuer Szene */
 	private BranchGroup scene;
@@ -385,6 +389,7 @@ public class World {
 
 	    obstTG.addChild(parc.getObstBG());
 	    this.lightBG.addChild(parc.getLightBG());
+	    this.bpsBG.addChild(parc.getBpsBG());
 	    this.terrainBG.addChild(parc.getTerrainBG());
 
 	    this.obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
@@ -395,8 +400,6 @@ public class World {
 	 * Initialisiert die Welt
 	 */
 	private void init() {
-//		VirtualUniverse.setJ3DThreadPriority(1);
-
 		// Die Wurzel des Ganzen:
 		this.scene = new BranchGroup();
 		this.scene.setName("World");
@@ -430,6 +433,12 @@ public class World {
 		this.lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.lightBG.setPickable(true);
 		this.worldTG.addChild(this.lightBG);
+		
+		// Die Branchgroup fuer BPS (IR-Licht)
+		this.bpsBG = new BranchGroup();
+		//this.bpsBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		this.bpsBG.setPickable(true);
+		this.worldTG.addChild(this.bpsBG);
 
 		// Die Branchgroup fuer den Boden
 		this.terrainBG = new BranchGroup();
@@ -579,7 +588,7 @@ public class World {
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return false;
 		//System.out.println(botName + " hatte einen Unfall!");
-		//Debug.out.println("Bot \""+botName + "\" hatte einen Unfall!"); //$NON-NLS-1$ //$NON-NLS-2$
+		//Debug.out.println("Bot \""+botName + "\" hatte einen Unfall!");
 		//obst.stop();
 		return true;
 	}
@@ -617,12 +626,12 @@ public class World {
 					PickInfo.CLOSEST_DISTANCE, pickShape);
 		}
 		if (pickInfo == null) {
-			Debug.out.println(message + " faellt ins Bodenlose."); //$NON-NLS-1$
+			Debug.out.println(message + " faellt ins Bodenlose.");
 			return false;
 		} else if (Math.round(pickInfo.getClosestDistance() * 1000) > Math
 				.round(groundClearance * 1000)) {
-			Debug.out.println(message + " faellt " //$NON-NLS-1$
-					+ pickInfo.getClosestDistance() * 1000 + " mm."); //$NON-NLS-1$
+			Debug.out.println(message + " faellt "
+					+ pickInfo.getClosestDistance() * 1000 + " mm.");
 			return false;
 		} else
 			return true;
@@ -696,11 +705,9 @@ public class World {
 		for (int j = 0; j < rayCount; j++) {
 			// PickRay modifizieren
 			pickRay.set(sensPos, sensHeading);
-			synchronized (this.terrainBG) {
-				// Picking durchfuehren
-				pickInfo = this.terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
-						PickInfo.NODE, pickRay);
-			}
+			// Picking durchfuehren
+			pickInfo = this.terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
+				PickInfo.NODE, pickRay);
 			// Boden auswerten
 			if (pickInfo == null) {
 				// kein Boden = 100% des Lichts wird verschluckt
@@ -774,7 +781,6 @@ public class World {
 	 * @see PickConeRay
 	 */
 	public int sensLight(Point3d pos, Vector3d heading, double openingAngle) {
-
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
 		Transform3D transform = new Transform3D();
@@ -785,227 +791,116 @@ public class World {
 		Vector3d relHeading = new Vector3d(heading);
 		transform.transform(relHeading);
 
-		pickConeRay.set(relPos, relHeading,	openingAngle / 2);
+		PickConeRay picky = new PickConeRay(relPos, relHeading,	openingAngle);
 		PickInfo pickInfo;
-		synchronized (this.terrainBG) {
-			synchronized (this.obstBG) {
-				this.obstBG.setPickable(false);
-				this.terrainBG.setPickable(false);
-				pickInfo = this.lightBG.pickClosest(PickInfo.PICK_GEOMETRY,
-						PickInfo.CLOSEST_DISTANCE, pickConeRay);
-				this.obstBG.setPickable(true);
-				this.terrainBG.setPickable(true);
-			}
-		}
-		if (pickInfo == null)
+		pickInfo = this.lightBG.pickClosest(PickInfo.PICK_GEOMETRY,
+			PickInfo.CLOSEST_DISTANCE, picky);
+
+		if (pickInfo == null) {
 			return 1023;
+		}
 		int darkness = (int) ((pickInfo.getClosestDistance() / LIGHT_SOURCE_REACH) * 1023);
-		if (darkness > 1023)
+		if (darkness > 1023) {
 			darkness = 1023;
+		}
 		return darkness;
 	}
 
 	/**
 	 * <p>
+	 * Liefert die Bakencodierung der Bake im Blickfeld mit der kuerzesten 
+	 * Entfernung zum Sensor, oder 1023, falls keine Bake gesehen wird.
+	 * </p>
+	 *
+	 * @param pos Die Position des Sensors
+	 * @param end Die Position der maximalen Sensorreichweite
+	 * @param openingAngle Der Oeffnungswinkel des Blickstrahls
+	 * @return Die Bakencodierung, der Bake im Blickfeld mit der kuerzesten 
+	 * Entfernung zum Sensor, oder 1023, falls keine Bake gesehen wird 
+	 * @see PickConeSegment
+	 */
+	public int sensBPS(Point3d pos, Point3d end, double openingAngle) {
+		// Falls die Welt verschoben wurde:
+		Point3d relPos = new Point3d(pos);
+		Point3d endPos = new Point3d(end);
+		Transform3D transform = new Transform3D();
+		this.worldTG.getTransform(transform);
+		transform.transform(relPos);
+		transform.transform(endPos);
+
+		PickConeSegment picky = new PickConeSegment(relPos, endPos,
+			openingAngle);
+		PickInfo pickInfo;
+		pickInfo = this.bpsBG.pickClosest(PickInfo.PICK_GEOMETRY,
+			PickInfo.CLOSEST_INTERSECTION_POINT | PickInfo.LOCAL_TO_VWORLD, picky);
+
+		if (pickInfo == null) {
+			/* keine Landmarke sichtbar */
+			return BPS.NO_DATA;
+		}
+		
+		Point3d source = pickInfo.getClosestIntersectionPoint();
+		Transform3D t = pickInfo.getLocalToVWorld();
+		t.transform(source);
+
+		Beacon beacon = new Beacon(this.parcours, source);
+		int result = beacon.getID();
+
+//		lg.info("Baken-Position [mm]: " + beacon);
+//		lg.info("Baken-Position [blocks]: " + beacon.toStringInBlocks());
+
+		return result;
+	}
+	
+	/**
+	 * <p>
 	 * Liefert die Distanz in Metern zum n&auml;chsten Objekt zur&uuml;ck, das
 	 * man sieht, wenn man von der &uuml;bergebenen Position aus in Richtung des
-	 * &uuml;bergebenen Vektors schaut.
-	 * </p>
-	 * <p>
-	 * <h3>Bug-Warnung</h3>
-	 * Der von dieser Methode studenweise angemietete {@link PickConeRay}
-	 * (java3d.media.j3d) enth&auml;lt einen emp&ouml;renden Bug. Unter ganz
-	 * bestimmten Umst&auml;nden meldet er Objekte, die nur in seinen tiefsten
-	 * sadistischen Fantasien existieren. Das hei&szlig;t, seine Methode
-	 * getClosestDistance() liefert zu kurze Werte &ndash; z.B. 42 cm zur
-	 * n&auml;chsten wei&szlig;en Maus, wo sie aber nachweislich mindestens
-	 * 6&times;9 cm entfernt ist.
-	 * </p>
-	 * <p>
-	 * Die Umst&auml;nde, unter denen im PickConeRay die
-	 * Distanzwertberechnungsvermasselung eintritt, sind hochspeziell (von
-	 * dieser Position aus in diesem Winkel mit diesen Hindernissen in dieser
-	 * Entfernung usw.). Daher wirkt der Bug typischerweise nur f&uuml;r
-	 * einzelne Simschritte: Ein Bot vollzieht in aller Arglosigkeit einen
-	 * Simschritt, ist im zweiten Schritt zuf&auml;llig diesen Umst&auml;nden
-	 * ausgesetzt und erschrickt sich zu Tode, aber im dritten Schritt hat sich
-	 * der Spuk so schnell verzogen, wie er gekommen ist. Das mag wie Pillepalle
-	 * wirken, aber ein Simschritt lang irrsinnige Sensorwerte wirkt auf manche
-	 * Bot-Steueralgorithmen wie Volksfest im Reinraum. Die verkorksten Werte
-	 * machen sich &ndash; so vermuten wir &ndash; als die unerkl&auml;rliche
-	 * Ausrei&szlig;er in den Kurven der Licht- und Distanzsensoren bemerkbar,
-	 * die ja schon <a
-	 * href="http://de.uncyclopedia.wikia.com/wiki/Ludwig_Wittgenstein">Wittgenstein</a>
-	 * jahrzehntelang vor R&auml;tsel stellten und von zwei verschiedenen
-	 * Messieurs an mindestens drei Stellen dokumentiert wurden:
-	 * <ul>
-	 * <li><a
-	 * href="http://www.heise.de/ct/foren/go.shtml?t=1&T=lichtsensor&sres=1&msg_id=11156011&forum_id=89813">ctBot-Forum
-	 * (1)</a></li>
-	 * <li><a
-	 * href="http://www.heise.de/ct/foren/go.shtml?t=1&T=lichtsensor&sres=1&msg_id=11109100&forum_id=89813">ctBot-Forum
-	 * (2)</a></li>
-	 * <li>E-Mail siehe unten &ndash; Auf Basis dieser Mail konnte der Bug in
-	 * einer n&auml;chtlichen Gewaltaktion reproduziert werden (Java3D 1.4.0_01,
-	 * WinXP). Nach geduldigen verdeckten Ermittlungen einem fehlgeschlagenen
-	 * Zugriff unter Einsatz des Sonderkommandos konnte der PickConeRay nach
-	 * einer halsbrecherischen G&auml;nsejagd quer durch den Quelltext als der
-	 * Arsch dingfest gemacht werden.
-	 * </p>
-	 * </li>
-	 * </ul>
-	 * </p>
-	 * <p>
-	 * <strong>Hinweis:</strong> Der {@link PickRay} scheint weniger
-	 * schwuchtelig unterwegs zu sein, also sollte man wohl mal &uuml;berlegen,
-	 * dem den Job zu &uuml;berlassen.
-	 * </p>
-	 * <p>
-	 * <strong>Anhang: E-Mail, die auf den Bug hingewiesen hat</strong>
-	 *
-	 * <pre style="font-size: smaller;">
-	 * Betreff: &uuml;berlauf / bug in sensor werten?
-	 * Von: Nikolai Baumeister &lt;...&gt;
-	 * Datum: Fri, 29 Sep 2006 15:32:27 +0200
-	 * An: ct-sim@heise.de
-	 *
-	 * Liebe Mitarbeiter
-	 *
-	 * Wie im irc beschrieben habe ich m&ouml;glicherweise einen
-	 * reproduzierbaren Fehler in den Rohwerten der Distanzsensoren im
-	 * Wettbewerbs-Sim mit Wettbewerbsroboter gefunden:
-	 *
-	 * Das Labyrinth ist dieses:
-	 * http://nikola.light.hl-users.com/angle-world-lamps.xml
-	 *
-	 * Der Fehler tritt bei mir genau dann auf wenn der bot in DIESEM Labyrinth
-	 * GENAU von der Startposition aus startet.
-	 *
-	 * Der Bot f&amp;aumlhrt mit maximaler geschwindigkeit nach Norden auf die
-	 * Wand zu und gibt dabei die Distanzwerte aus.
-	 *
-	 * Was der Bot genau macht ist unten in START_BOT() zu finden.
-	 *
-	 * Sensor Rohwerte habe ich zus&auml;tzlich ausgegeben
-	 * zwischen Zeile 313 und 314 in command.c
-	 * mit:
-	 * printf(&quot;left raw: %i, right raw: %i\n&quot;,
-	 *     received_command.data_l, received_command.data_l);
-	 *
-	 * Ansonsten waren sensor.c, command.c etc identisch mit der CVS version.
-	 *
-	 * Ausgabe (bereinigt):
-	 *
-	 * left raw: 115, right raw: 115
-	 * sensDistL: 779, sensDistR: 999, y: 752
-	 *
-	 * left raw: 116, right raw: 116
-	 * sensDistL: 767, sensDistR: 999, y: 752
-	 *
-	 * left raw: 117, right raw: 117
-	 * sensDistL: 755, sensDistR: 999, y: 763
-	 *
-	 * -----&gt;left raw: 225, right raw: 225
-	 * -----&gt;sensDistL: 281, sensDistR: 298, y: 775
-	 *
-	 * left raw: 118, right raw: 118
-	 * sensDistL: 743, sensDistR: 999, y: 775
-	 *
-	 * left raw: 119, right raw: 119
-	 * sensDistL: 732, sensDistR: 999, y: 787
-	 *
-	 * left raw: 120, right raw: 120
-	 * sensDistL: 721, sensDistR: 999, y: 787
-	 *
-	 * Die Rohwerte der Distanzsensoren springen an einer Stelle auf 255 hoch.
-	 *
-	 * Gru&szlig;
-	 * Niko
-	 *
-	 *
-	 * void START_BOT(Behaviour_t *data) {
-	 *
-	 *     #define ACTION_1    0
-	 *     #define ACTION_2    1
-	 *     #define DONE        2
-	 *
-	 *     static int state = ACTION_1;
-	 *
-	 *     switch (state){
-	 *
-	 *         case ACTION_1:
-	 *             speedWishLeft=BOT_SPEED_MAX;
-	 *             speedWishRight=BOT_SPEED_MAX;
-	 *             state = ACTION_2;
-	 *             break;
-	 *
-	 *         case ACTION_2:
-	 *             printf(&quot;sensDistL: %i, sensDistR: %i, y: %.0f\n&quot;,
-	 *                 sensDistL, sensDistR, x_mou);
-	 *             state = ACTION_1;
-	 *             break;
-	 *
-	 *         default:
-	 *             break;
-	 *     }
-	 * }
-	 * </pre>
-	 *
+	 * uebergebenen Endpunktes schaut.
 	 * </p>
 	 *
 	 * @param pos Die Position, von der aus der Seh-Strahl verfolgt wird
-	 * @param heading Die Blickrichtung, d.h. die Richtung des Seh-Strahls
+	 * @param end Die Position, wo der Seh-Strahl spaetestens enden soll (falls 
+	 * kein Objekt gesehen wird)
 	 * @param openingAngle Der Sehstrahl ist in Wahrheit ein Kegel;
 	 * {@code openingAngle} gibt seinen &Ouml;ffnungswinkel an (Bogenma&szlig;)
 	 * @param botBody Der K&ouml;rper des Roboter, der anfragt. Dies ist
-	 * erforderlich, da diese Methode mit einem PickConeRay implementiert ist,
+	 * erforderlich, da diese Methode mit einem PickConeSegment implementiert ist,
 	 * d.h. der K&ouml;rper des Bots muss auf &quot;not pickable&quot; gesetzt
 	 * werden vor Anwendung des Ray und wieder auf &quot;pickable&quot; nach
 	 * Anwendung. Der Grund ist, dass sonst in Grenzf&auml;llen der
-	 * Botk&ouml;rper vom PickConeRay gefunden wird.
+	 * Botk&ouml;rper vom PickConeSegment gefunden wird.
 	 * @return Die Distanz zum n&auml;chsten Objekt (&quot;pickable&quot;) in
-	 * Metern
-	 * @see PickConeRay
-	 * @see PickRay
+	 * Metern oder 100 m, falls kein Objekt in Sichtweite
+	 * @see PickConeSegment
 	 */
-	// TODO: Ueberarbeiten?
-	synchronized public double watchObstacle(Point3d pos, Vector3d heading,
-			double openingAngle, Node botBody) {
-
-		// TODO: Wieder rein??
+	public double watchObstacle(Point3d pos, Point3d end, double openingAngle, Node botBody) {
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
+		Point3d endPos = new Point3d(end);
 //		System.out.println(Math.floor(relPos.x*1000)+" | "+Math.floor(relPos.y*1000)+" | "+Math.floor(relPos.z*1000));
 		Transform3D transform = new Transform3D();
 		this.worldTG.getTransform(transform);
 		transform.transform(relPos);
+		transform.transform(endPos);
 //		System.out.println(Math.floor(relPos.x*1000)+" | "+Math.floor(relPos.y*1000)+" | "+Math.floor(relPos.z*1000));
 
-		// oder rotiert:
-		Vector3d relHeading = new Vector3d(heading);
-//		System.out.println(Math.floor(relHeading.angle(new Vector3d(0d, 1d, 0d))*100));
-		transform.transform(relHeading);
-//		System.out.println(Math.floor(relHeading.angle(new Vector3d(0d, 1d, 0d))*100));
-
-//		Point3d relPos = pos;
-//		Vector3d relHeading = heading;
-
-		pickConeRay.set(relPos, relHeading, openingAngle);
+		PickConeSegment picky = new PickConeSegment(relPos, endPos, openingAngle);
 		PickInfo pickInfo;
-		synchronized (this.obstBG) {
-			botBody.setPickable(false);
-			pickInfo = this.obstBG.pickClosest(
-					PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE,
-					pickConeRay);
-			try {
-				botBody.setPickable(true);
-			} catch (Exception e) {
-				// NOP
-			}
+		botBody.setPickable(false);
+		pickInfo = this.obstBG.pickClosest(
+			PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE, picky);
+		try {
+			botBody.setPickable(true);
+		} catch (Exception e) {
+			// NOP
 		}
-		if (pickInfo == null)
-			return 100.0; //$$ Ist das dokumentiert? Erwarten die Aufrufer das?
+		if (pickInfo == null) {
+//			lg.info("d=100.0");
+			return 100.0;
+		}
 		double d = pickInfo.getClosestDistance();
+//		lg.info("d=" + d);
 		return d;
 	}
 
@@ -1014,10 +909,7 @@ public class World {
 	 * letzte Mal zuerst dran war
 	 */
 	private int runningBotsPtr = 0;
-
-	/** PickConeRay der Welt */
-	private PickConeRay pickConeRay = new PickConeRay();
-
+	
 	/**
 	 * Diese Methode setzt die Simulation um einen Simulationsschritt weiter.
 	 * Siehe {@link ctSim.controller.DefaultController#run()}.
@@ -1025,7 +917,7 @@ public class World {
 	public void updateSimulation() {
 		// Simzeit um einen Schritt weiter
 		increaseSimulTime();
-
+		
 		ThreeDBot[] bots = botsRunning.toArray(new ThreeDBot[] {});
 		// Zeiger koennte zu weit stehen
 		if (runningBotsPtr >= bots.length)
@@ -1052,11 +944,11 @@ public class World {
 					targetFile));
 				out.write(sourceString.getBytes());
 				out.close();
-				lg.info("Welt wurde gespeichert als \""+
-						targetFile.getName()+"\".");
+				lg.info("Welt wurde gespeichert als \"" +
+						targetFile.getName() + "\".");
 		} catch(IOException e) {
-			lg.warn("Fehler: Datei konnte nicht gespeichert werden!");
-			e.printStackTrace();
+			lg.warn("Fehler: Datei konnte nicht gespeichert werden:");
+			lg.warn(e.getMessage());
 		}
 	}
 
@@ -1080,16 +972,16 @@ public class World {
 
 	/**
 	 * Beseitige alles, was noch auf die Welt und den Szenegraphen verweist
-	 *
 	 */
 	public void cleanup() {
 		removeAllBotsNow();
 		viewPlatforms.clear();
 		scene = null;
 		lightBG = null;
+		bpsBG = null;
 		obstBG = null;
 		terrainBG = null;
-		pickConeRay = null;
+//		pickConeRay = null;
 		worldTG = null;
 	}
 
