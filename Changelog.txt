@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2010-05-23 Timo Sandmann [mail@timosandmann.de]: Release 17
+
 2010-03-23 Timo Sandmann [mail@timosandmann.de]: Landmarken und -Sensor ueberarbeitet
 
 2010-03-05 Timo Sandmann [mail@timosandmann.de]: Optionaler Nachlauf der Raeder ueber Config-Schalter "WheelLag"
