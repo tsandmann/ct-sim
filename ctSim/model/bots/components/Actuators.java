@@ -370,6 +370,8 @@ public class Actuators {
 				getExternalModel().remove(0, getExternalModel().getLength());
 				getExternalModel().insertString(0, getAllText(internalModel),
 					null);
+			} catch (NullPointerException e) {
+				// NOP
 			} catch (BadLocationException e) {
 				// "Kann nicht passieren"
 				throw new AssertionError(e);
