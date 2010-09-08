@@ -71,6 +71,7 @@ public class BotViewer extends JScrollPane {
 		} else {
 			buisitors = new Class[] {
 					Tables.Position.class,
+					Tables.GlobalPosition.class,
 					Leds.class,
 					AndEverything.class,
 					Tables.Sensors.class,

@@ -648,4 +648,11 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	public void worldToMap(int bot, int free, int occupied) throws IOException, MapException {
 		this.world.toMap(bot, free, occupied);
 	}
+
+	/**
+	 * @see ctSim.controller.Controller#getWorld()
+	 */
+	public World getWorld() {
+		return this.world;
+	}
 }

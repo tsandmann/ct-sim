@@ -25,12 +25,12 @@ import java.awt.Font;
 import java.awt.Insets;
 
 import javax.swing.AbstractCellEditor;
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerModel;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -128,15 +128,17 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		SpinnerModel sModel, String decimalFormat) {
 			JSpinner spinner = new JSpinner(sModel);
 			if (decimalFormat != null) {
-				spinner.setEditor(new JSpinner.NumberEditor(spinner,
-					decimalFormat));
+				JSpinner.NumberEditor e = new JSpinner.NumberEditor(spinner, decimalFormat);
+				/* Werte nicht grau anzeigen, falls nicht editierbar */
+				e.getTextField().setDisabledTextColor(UIManager.getColor("TextField.foreground"));
+				spinner.setEditor(e);
 			}
 			// setEditor() setzt den Font auf Courier, keine Ahnung warum
 			spinner.setFont(Font.decode("SansSerif"));
 			spinner.setEnabled(editable);
 			spinner.setBorder(null);
 			JLabel la = new JLabel(label);
-			la.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
+			la.setBorder(null);
 			la.setToolTipText(toolTip);
 			spinner.setToolTipText(toolTip);
 			addRow(new Object[] {la, spinner});

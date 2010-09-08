@@ -49,9 +49,7 @@ public class BPS {
 		 */
 		public Beacon(Parcours parc, Point3d source) {
 			this.parcoursBlockSizeInMM = parc.getBlockSizeInMM();
-			final int x = (int) (source.y * (1000.0 / parcoursBlockSizeInMM));
-			final int y = (int) (((parc.getWidthInM() - source.x) * 1000.0) / parcoursBlockSizeInMM);
-			this.position = new Point2i(x, y);
+			this.position = parc.transformWorldposToGlobalpos(source);
 		}
 		
 		/**

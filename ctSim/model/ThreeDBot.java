@@ -38,6 +38,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Point2i;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -208,7 +209,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		 */
 		@Override
 		public String getName() {
-			return coord+" [m]";
+			return coord + " [m]";
 		}
 
 		/**
@@ -216,7 +217,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		 */
 		@Override
 		public String getDescription() {
-			return coord+"-Koordinate in Meter";
+			return coord + "-Koordinate [m]";
 		}
 
 		/**
@@ -230,6 +231,62 @@ public class ThreeDBot extends BasicBot implements Runnable {
 				case X:   newValue = p.x; break;
 				case Y:   newValue = p.y; break;
 				case Z:   newValue = p.z; break;
+			}
+			getExternalModel().setValue(newValue);
+		}
+	}
+	
+	/**
+	 * Globalen Bot-Position (wie fuer Lokalisierung verwendet)
+	 */
+	public class PositionGlobal extends BotComponent<SpinnerNumberModel> {
+		/** Koordinaten */
+		private final Coord coord;
+		
+		/**
+		 * Erzeugt eine neue Position
+		 * @param coord	Koordinaten
+		 */
+		public PositionGlobal(final Coord coord) {
+			super(new SpinnerNumberModel());
+			this.coord = coord;
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#isGuiEditable()
+		 */
+		@Override
+		public boolean isGuiEditable() {
+			return false;
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override
+		public String getName() {
+			return coord +" [mm]";
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override
+		public String getDescription() {
+			return "Globale" + coord + "-Koordinate [mm]";
+		}
+		
+		/**
+		 * Aktualisiert das externe Modell
+		 */
+		@Override
+		public void updateExternalModel() {
+			double newValue = 0;
+			Point2i p = bot.getController().getWorld().transformWorldposToGlobalpos(getPositionInWorldCoord());
+			switch (coord) {
+				case X: newValue = p.x; break;
+				case Y: newValue = p.y; break;
+				case Z: break;
 			}
 			getExternalModel().setValue(newValue);
 		}
@@ -308,6 +365,56 @@ public class ThreeDBot extends BasicBot implements Runnable {
 			ignoreStateChange = true;
 			getExternalModel().setValue(Math.toDegrees(getHeadingInRad()));
 			ignoreStateChange = false;
+		}
+	}
+	
+	/**
+	 * Globale Blickrichtung (wie fuer Lokalisierung verwendet)
+	 */
+	public class HeadingGlobal extends BotComponent<SpinnerNumberModel> {
+		/**
+		 * Erzeugt eine neue Blickrichtung fuer einen 3D-Bot
+		 */
+		public HeadingGlobal() {
+			super(new SpinnerNumberModel());
+			updateExternalModel(); // Initialen Wert setzen
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#isGuiEditable()
+		 */
+		@Override
+		public boolean isGuiEditable() {
+			return false;
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override
+		public String getName() {
+			// Unicode 00B0: Grad-Zeichen
+			return "Richtung [\u00B0]";
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override
+		public String getDescription() {
+			return "Richtung, in die der Bot blickt, gemessen in Grad";
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
+		 */
+		@Override
+		public void updateExternalModel() {
+			double heading = Math.toDegrees(getHeadingInRad());
+			if (heading < 0.0) {
+				heading += 360.0;
+			}
+			getExternalModel().setValue(heading);
 		}
 	}
 
@@ -413,6 +520,14 @@ public class ThreeDBot extends BasicBot implements Runnable {
 			new PositionCompnt(Z),
 			new HeadingCompnt()
 		);
+		
+		if (Config.getValue("BPSSensor").equals("true")) {
+			components.add(
+				new PositionGlobal(X),
+				new PositionGlobal(Y),
+				new HeadingGlobal()
+			);
+		}
 	}
 
 	

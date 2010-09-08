@@ -22,7 +22,9 @@ package ctSim.view.gui;
 import javax.swing.SpinnerModel;
 
 import ctSim.model.ThreeDBot.HeadingCompnt;
+import ctSim.model.ThreeDBot.HeadingGlobal;
 import ctSim.model.ThreeDBot.PositionCompnt;
+import ctSim.model.ThreeDBot.PositionGlobal;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.BotComponent.SimpleActuator;
 import ctSim.model.bots.components.BotComponent.SimpleSensor;
@@ -58,7 +60,35 @@ public abstract class Tables {
 		/**
 		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
 		 */
-		@Override protected String getPanelTitle() { return "Position"; }
+		@Override protected String getPanelTitle() { return "Sim-Position"; }
+	}
+	
+	/**
+	 * Positionen
+	 */
+	public static class GlobalPosition extends TableOfSpinners {
+		/** UID */
+		private static final long serialVersionUID = 4158211694642007178L;
+
+	    /**
+	     * @param c Positions-Komponente
+	     */
+	    public void buisit(PositionGlobal c) {
+			// vorm Semikolon: Pattern fuer positive Zahlen, nachm ; negative
+			model.addRow(c, "0;\u22120");
+		}
+
+		/**
+		 * @param c Heading-Kompomente
+		 */
+		public void buisit(HeadingGlobal c) {
+			model.addRow(c, "0.0;\u22120.0");
+		}
+
+		/**
+		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
+		 */
+		@Override protected String getPanelTitle() { return "Bot-Position"; }
 	}
 
 	/**

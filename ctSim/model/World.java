@@ -48,6 +48,7 @@ import javax.media.j3d.TransformGroup;
 import javax.media.j3d.ViewPlatform;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Color3f;
+import javax.vecmath.Point2i;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -102,7 +103,7 @@ public class World {
 	private BranchGroup obstBG;
 	/** Branchgroup fuer Szene */
 	private BranchGroup scene;
-	/** Branchgroup fuer Parcours */
+	/** Parcours der Welt */
 	private Parcours parcours;
 
 	/** Viewer */
@@ -1037,5 +1038,16 @@ public class World {
 			throw map.new MapException();
 		}
 		map.export();
+	}
+	
+	/**
+	 * Rechnet eine Welt-Koordinate in eine globale Position um
+	 * @param worldPos Welt-Position (wie von Java3D verwendet)
+	 * @return globale Position (wie zur Lokalisierung verwendet) / mm
+	 */
+	public Point2i transformWorldposToGlobalpos(Point3d worldPos) {
+		final int x = (int) (worldPos.y * 1000.0);
+		final int y = (int) ((getWidthInM() - worldPos.x) * 1000.0);
+		return new Point2i(x, y);
 	}
 }
