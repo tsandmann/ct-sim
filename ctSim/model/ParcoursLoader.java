@@ -58,7 +58,6 @@ import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
-import ctSim.model.BPS.Beacon;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
@@ -594,13 +593,13 @@ public class ParcoursLoader {
 							createFloor(x, y, getAppearance(' '));
 						break;
 					case 'l':
-						if (Beacon.checkParcoursPosition(this.parcours, x, y)) {
-							createBPSBeacon(x, y, getAppearance('l'));
-						} else {
-							lg.warn("Parcours enthaelt Landmarke an Position (" + x
-								+ "|" + y 
-								+ "), dort ist aber keine Landmarke zugelassen, ignoriere sie.");
-						}
+//						if (Beacon.checkParcoursPosition(this.parcours, x, y)) {
+						createBPSBeacon(x, y, getAppearance('l'));
+//						} else {
+//							lg.warn("Parcours enthaelt Landmarke an Position (" + x
+//								+ "|" + y 
+//								+ "), dort ist aber keine Landmarke zugelassen, ignoriere sie.");
+//						}
 						break;
 					case '.':
 						// TODO Boden optimieren, kacheln zusammenfassen

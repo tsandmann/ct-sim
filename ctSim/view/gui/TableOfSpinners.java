@@ -28,6 +28,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.JTable;
 import javax.swing.SpinnerModel;
 import javax.swing.UIManager;
@@ -132,6 +133,10 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 				/* Werte nicht grau anzeigen, falls nicht editierbar */
 				e.getTextField().setDisabledTextColor(UIManager.getColor("TextField.foreground"));
 				spinner.setEditor(e);
+			} else {
+				/* Werte nicht grau anzeigen, falls nicht editierbar */
+				JSpinner.DefaultEditor e = (DefaultEditor) spinner.getEditor();
+				e.getTextField().setDisabledTextColor(UIManager.getColor("TextField.foreground"));
 			}
 			// setEditor() setzt den Font auf Courier, keine Ahnung warum
 			spinner.setFont(Font.decode("SansSerif"));

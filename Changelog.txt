@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2010-09-08 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Aktuatoren-Anzeige, Code aufgeraeumt
+
 2010-09-08 Timo Sandmann [mail@timosandmann.de]: Anzeige fuer globale Bot-Position (falls Config.BPSSensor==true) ergaenzt
 
 2010-05-28 Timo Sandmann [mail@timosandmann.de]: Bugfix: reale Bots werden bei Abbruch der Verbindung entfernt
