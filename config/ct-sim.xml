@@ -9,9 +9,9 @@
 	<!--
 	Jeder Parameter kann bei Bedarf ein Attribut "os" haben. So kann man
 	verschiedene Werte fuer verschiedene Betriebssysteme angeben. Hat ein
-	Parameter (wie bisher ueblich) kein os-Attribut, gilt er für alle Systeme.
+	Parameter (wie bisher ueblich) kein os-Attribut, gilt er fuer alle Systeme.
 
-	Beispiele für systemabhaengige Parameter sind der serielle Port und manche
+	Beispiele fuer systemabhaengige Parameter sind der serielle Port und manche
 	Pfadnamen.
 
 	Sinn: Die bisherige Regelung, dass der Java-Code undurchsichtig in den

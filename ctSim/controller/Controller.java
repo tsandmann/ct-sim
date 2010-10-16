@@ -25,6 +25,7 @@ import java.net.ProtocolException;
 
 import ctSim.model.Command;
 import ctSim.model.Map.MapException;
+import ctSim.model.World;
 import ctSim.model.rules.Judge;
 import ctSim.util.BotID;
 import ctSim.view.View;
@@ -161,4 +162,10 @@ public interface Controller {
 	 * @throws MapException falls keine Daten in der Map
 	 */
 	public void worldToMap(int bot, int free, int occupied) throws IOException, MapException;
+	
+	/**
+	 * gibt die aktuelle Welt zurueck
+	 * @return geladenen Welt
+	 */
+	public World getWorld();
 }

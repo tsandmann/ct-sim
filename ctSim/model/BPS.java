@@ -49,9 +49,7 @@ public class BPS {
 		 */
 		public Beacon(Parcours parc, Point3d source) {
 			this.parcoursBlockSizeInMM = parc.getBlockSizeInMM();
-			final int x = (int) (source.y * (1000.0 / parcoursBlockSizeInMM));
-			final int y = (int) (((parc.getWidthInM() - source.x) * 1000.0) / parcoursBlockSizeInMM);
-			this.position = new Point2i(x, y);
+			this.position = parc.transformWorldposToGlobalpos(source);
 		}
 		
 		/**
@@ -82,14 +80,14 @@ public class BPS {
 			return "(" + position.x + "|" + position.y + ")";
 		}
 		
-		/**
-		 * Prueft, ob die angegebene Parcours-Position fuer eine BPS-Landmarke gueltig ist
-		 * @param parc Parcours, in dem die Landmarke steht
-		 * @param x X-Koordinate [Parcours-Block]
-		 * @param y Y-Koordinate [Parcours-Block]
-		 * @return true, falls Landmarke an (x|y) moeglich, sonst false
-		 */
-		public static boolean checkParcoursPosition(Parcours parc, int x, int y) {
+//		/**
+//		 * Prueft, ob die angegebene Parcours-Position fuer eine BPS-Landmarke gueltig ist
+//		 * @param parc Parcours, in dem die Landmarke steht
+//		 * @param x X-Koordinate [Parcours-Block]
+//		 * @param y Y-Koordinate [Parcours-Block]
+//		 * @return true, falls Landmarke an (x|y) moeglich, sonst false
+//		 */
+//		public static boolean checkParcoursPosition(Parcours parc, int x, int y) {
 //			float tmp = (parc.getWidthInBlocks() - 1 - x) * parc.getBlockSizeInMM() + parc.getBlockSizeInMM() / 2.0f;
 //			if (tmp % BEACON_GRID_SIZE != 0) {
 //				System.out.println("x=" + x + " ungueltig, tmp=" + tmp);
@@ -100,7 +98,7 @@ public class BPS {
 //				System.out.println("y=" + y + " ungueltig, tmp=" + tmp);
 //				return false;
 //			}
-			return true;
-		}
+//			return true;
+//		}
 	}
 }

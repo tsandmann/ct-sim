@@ -52,6 +52,16 @@ import ctSim.util.Misc;
  */
 public class MasterSimulator
 implements NumberTwinVisitor, BotBuisitor, Runnable {
+	/** Reichweite der Lichtsensoren / m */
+	private final double LIGHT_MAX_DISTANCE = 1.0;
+	/** Oeffnungswinkel der Lichtsensoren / radians */
+	private final double LIGHT_OPENING_ANGLE= Math.toRadians(90);
+	
+	/** Reichweite der Baken / m */
+	private static final double BPS_LIGHT_DISTANCE = 2.0;
+	/** Oeffnungswinkel des BPS-Sensors / radians */
+	private static final double BPS_OPENING_ANGLE = Math.toRadians(0.5);
+	
     /**
      * Rad-Simulator
      */
@@ -581,39 +591,33 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         final Vector3d headingInBotCoord = looksForward();
 
         simulators.add(new Runnable() {
-            private final double OPENING_ANGLE_IN_RAD = Math.toRadians(90);
-
             public void run() {
-            	sensor.set(
-            		world.sensLight(
-            			parent.worldCoordFromBotCoord(distFromBotCenter),
-                        parent.worldCoordFromBotCoord(headingInBotCoord),
-                        OPENING_ANGLE_IN_RAD));
+            	sensor.set(world.sensLight(
+            		parent.worldCoordFromBotCoord(distFromBotCenter),
+            		parent.worldCoordFromBotCoord(headingInBotCoord),
+            		LIGHT_MAX_DISTANCE, LIGHT_OPENING_ANGLE));
             }
         });
     }
     
     /**
 	 * @param sensor BPS-Sensor
-	 * @param isLeft Wird nicht ausgewertet, es gibt nur einen Sensor
+	 * @param isLeft immer true, denn es gibt nur einen Sensor
 	 */
 	public void buisitBPSSim(final Sensors.BPSReceiver sensor, final boolean isLeft) {
 		if (! isLeft) {
 			return; // es gibt nur einen Sensor, wir nehmen den Wert fuer links
 		}
 		simulators.add(new Runnable() {
-			private final double OPENING_ANGLE_IN_RAD = Math.toRadians(0.5);
-			private final double LIGHT_DISTANCE = 2.0;
 			private final Point3d startOfSens = new Point3d();
-			private final Point3d endOfSens = new Point3d(LIGHT_DISTANCE, 0.0, 0.0); // Sensor schaut nach -90 Grad
+			private final Point3d endOfSens = new Point3d(BPS_LIGHT_DISTANCE, 0.0, 0.0); // Sensor schaut nach -90 Grad
 
 			public void run() {
-				Point3d pos = parent.worldCoordFromBotCoord(startOfSens);
-				
+				Point3d pos = parent.worldCoordFromBotCoord(startOfSens);				
 				pos.setZ(BPS.BPSZ);
 				Point3d end = parent.worldCoordFromBotCoord(endOfSens);
 				end.setZ(BPS.BPSZ);
-				sensor.set(world.sensBPS(pos, end, OPENING_ANGLE_IN_RAD));
+				sensor.set(world.sensBPS(pos, end, BPS_OPENING_ANGLE));
 			}
 		});
 	}

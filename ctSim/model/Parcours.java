@@ -26,6 +26,7 @@ import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.vecmath.Point2i;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector2f;
@@ -828,5 +829,17 @@ public class Parcours {
 		} else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Rechnet eine Welt-Koordinate in eine globale Position um
+	 * @param worldPos Welt-Position (wie von Java3D verwendet)
+	 * @return globale Position (wie zur Lokalisierung verwendet) / Blocks
+	 */
+	public Point2i transformWorldposToGlobalpos(Point3d worldPos) {
+		int parcoursBlockSizeInMM = getBlockSizeInMM();
+		final int x = (int) (worldPos.y * (1000.0 / parcoursBlockSizeInMM));
+		final int y = (int) (((getWidthInM() - worldPos.x) * 1000.0) / parcoursBlockSizeInMM);
+		return new Point2i(x, y);
 	}
 }

@@ -48,6 +48,7 @@ import javax.media.j3d.TransformGroup;
 import javax.media.j3d.ViewPlatform;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Color3f;
+import javax.vecmath.Point2i;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -87,7 +88,7 @@ public class World {
 	private static final String PARCOURS_DTD = "/parcours.dtd";
 	
 	/** Breite des Spielfelds in m */
-	public static final float PLAYGROUND_THICKNESS = 0f;
+	public static final float PLAYGROUND_THICKNESS = 0.0f;
 
 	/** Transforgroup der Welt */
 	private TransformGroup worldTG;
@@ -102,7 +103,7 @@ public class World {
 	private BranchGroup obstBG;
 	/** Branchgroup fuer Szene */
 	private BranchGroup scene;
-	/** Branchgroup fuer Parcours */
+	/** Parcours der Welt */
 	private Parcours parcours;
 
 	/** Viewer */
@@ -255,22 +256,20 @@ public class World {
 		}
 		in.close();
 		return new World(new InputSource(sourceFile.toURI().toString()), 
-				/* Der EntityResolver hat den Sinn, dem Parser zu sagen,
-				 * er soll die parcours.dtd bitte im Verzeichnis "parcours"
-				 * suchen. */
-				new EntityResolver() {
-					public InputSource resolveEntity(
-							String publicId,
-							String systemId)
-					throws SAXException, IOException {
-						if (systemId.endsWith(PARCOURS_DTD))
-							return new InputSource(ClassLoader.getSystemResource(
-									// "./" darf hier nicht enthalten sein
-									Config.getValue("worlddir").substring(2) + PARCOURS_DTD).openStream());
-		                return null; // Standard-EntityResolver verwenden
-		            }
-				}
-			);
+			/* Der EntityResolver hat den Sinn, dem Parser zu sagen,
+			 * er soll die parcours.dtd bitte im Verzeichnis "parcours"
+			 * suchen. */
+			new EntityResolver() {
+				public InputSource resolveEntity(String publicId, String systemId)
+				throws SAXException, IOException {
+					if (systemId.endsWith(PARCOURS_DTD))
+						return new InputSource(ClassLoader.getSystemResource(
+							// "./" darf hier nicht enthalten sein
+							Config.getValue("worlddir").substring(2) + PARCOURS_DTD).openStream());
+	                return null; // Standard-EntityResolver verwenden
+	            }
+			}
+		);
 	}
 
 	/** L&auml;dt einen Parcours aus einem String und baut damit eine Welt.
@@ -285,22 +284,20 @@ public class World {
 	throws SAXException, IOException {
 		sourceString = new String(parcoursAsXml);
 		return new World(
-				new InputSource(new StringReader(parcoursAsXml)),
-				/* Der EntityResolver hat den Sinn, dem Parser zu sagen,
-				 * er soll die parcours.dtd bitte im Verzeichnis "parcours"
-				 * suchen. */
-				new EntityResolver() {
-					public InputSource resolveEntity(
-							String publicId,
-							String systemId)
-					throws SAXException, IOException {
-						if (systemId.endsWith(PARCOURS_DTD))
-							return new InputSource(ClassLoader.getSystemResource(
-									// "./" darf hier nicht enthalten sein
-									Config.getValue("worlddir").substring(2) + PARCOURS_DTD).openStream());
-		                return null; // Standard-EntityResolver verwenden
-		            }
-				});
+			new InputSource(new StringReader(parcoursAsXml)),
+			/* Der EntityResolver hat den Sinn, dem Parser zu sagen,
+			 * er soll die parcours.dtd bitte im Verzeichnis "parcours"
+			 * suchen. */
+			new EntityResolver() {
+				public InputSource resolveEntity(String publicId, String systemId)
+				throws SAXException, IOException {
+					if (systemId.endsWith(PARCOURS_DTD))
+						return new InputSource(ClassLoader.getSystemResource(
+						// "./" darf hier nicht enthalten sein
+						Config.getValue("worlddir").substring(2) + PARCOURS_DTD).openStream());
+                return null; // Standard-EntityResolver verwenden
+            }
+		});
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -374,7 +371,6 @@ public class World {
 	 * @param parc Der Parcours
 	 */
 	private void setParcours(Parcours parc) {
-
 		this.parcours = parc;
 		// Hindernisse werden an die richtige Position geschoben
 
@@ -436,7 +432,6 @@ public class World {
 		
 		// Die Branchgroup fuer BPS (IR-Licht)
 		this.bpsBG = new BranchGroup();
-		//this.bpsBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.bpsBG.setPickable(true);
 		this.worldTG.addChild(this.bpsBG);
 
@@ -517,8 +512,6 @@ public class World {
 	 * Funktionen fuer die Sensoren usw. (Abstandsfunktionen u.ae.)
 	 *
 	 */
-	/** Reichweite des Lichtes in m */
-	private static final float LIGHT_SOURCE_REACH = 1f;
 
 	/**
 	 * Gibt den Gewinner zurueck
@@ -554,23 +547,15 @@ public class World {
 	Vector3d newPosition) {
 
 		Group botBody = obst.getShape();
-//		Bounds bounds = obst.getBounds();
-		//String botName = obst.getName();
-
-//		System.out.println(bounds.toString());
 
 		// schiebe probehalber Bounds an die neue Position
 		Transform3D transform = new Transform3D();
 		transform.setTranslation(newPosition);
 		bounds.transform(transform);
 
-//		System.out.println(bounds.toString());
-
 		// und noch die Welttransformation darauf anwenden
 		this.worldTG.getTransform(transform);
 		bounds.transform(transform);
-
-//		System.out.println(bounds.toString());
 
 		PickBounds pickShape = new PickBounds(bounds);
 		PickInfo pickInfo;
@@ -579,7 +564,7 @@ public class World {
 			botBody.setPickable(false);
 
 			pickInfo = this.obstBG.pickAny(PickInfo.PICK_BOUNDS,
-					PickInfo.NODE, pickShape);
+				PickInfo.NODE, pickShape);
 
 			// Eigenen Koerper des Roboters wieder "pickable" machen
 			botBody.setPickable(true);
@@ -587,9 +572,7 @@ public class World {
 
 		if ((pickInfo == null) || (pickInfo.getNode() == null))
 			return false;
-		//System.out.println(botName + " hatte einen Unfall!");
-		//Debug.out.println("Bot \""+botName + "\" hatte einen Unfall!");
-		//obst.stop();
+
 		return true;
 	}
 
@@ -603,40 +586,8 @@ public class World {
 	 *            Die als normal anzusehende Bodenfreiheit
 	 * @return True wenn Bodenkontakt besteht.
 	 */
-	// TODO: Ueberarbeiten... (GroundClearance?)
 	public boolean checkTerrain(Point3d pos, double groundClearance) {
-
 		return !parcours.checkHole(pos);
-/*
-
-		// Falls die Welt verschoben wurde:
-		Point3d relPos = new Point3d(pos);
-		Transform3D transform = new Transform3D();
-		this.worldTG.getTransform(transform);
-		transform.transform(relPos);
-
-		// oder rotiert:
-		Vector3d relHeading = new Vector3d(0d, 0d, -1d);
-		transform.transform(relHeading);
-
-		PickShape pickShape = new PickRay(relPos, relHeading);
-		PickInfo pickInfo;
-		synchronized (this.terrainBG) {
-			pickInfo = this.terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
-					PickInfo.CLOSEST_DISTANCE, pickShape);
-		}
-		if (pickInfo == null) {
-			Debug.out.println(message + " faellt ins Bodenlose.");
-			return false;
-		} else if (Math.round(pickInfo.getClosestDistance() * 1000) > Math
-				.round(groundClearance * 1000)) {
-			Debug.out.println(message + " faellt "
-					+ pickInfo.getClosestDistance() * 1000 + " mm.");
-			return false;
-		} else
-			return true;
-
-*/
 	}
 
 	/**
@@ -659,7 +610,6 @@ public class World {
 	 *            Es werden rayCount viele Strahlen vom Sensor ausgewertet.
 	 * @return Die Menge an Licht, die absorbiert wird, von 1023(100%) bis 0(0%)
 	 */
-	// TODO: Ueberarbeiten?
 	public short sensGroundReflectionLine(Point3d pos, Vector3d heading,
 			double openingAngle, short rayCount) {
 		// Sensorposition
@@ -683,7 +633,7 @@ public class World {
 		if (rayCount > 2) {
 			// beginne links aussen
 			AxisAngle4d rotationAxisX = new AxisAngle4d(heading,
-					openingAngle / 2);
+				openingAngle / 2);
 			transformX.set(rotationAxisX);
 			transformX.transform(sensHeading);
 			// arbeite dich nach rechts vor
@@ -755,12 +705,12 @@ public class World {
 		double absorption;
 		Vector3d xHeading = new Vector3d(heading);
 		absorption = sensGroundReflectionLine(pos, heading, openingAngle,
-				(short) (rayCount / 2));
+			(short) (rayCount / 2));
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(Math.PI / 2);
 		rotation.transform(xHeading);
 		absorption += sensGroundReflectionLine(pos, xHeading, openingAngle,
-				(short) (rayCount / 2));
+			(short) (rayCount / 2));
 		return (short) (absorption / 2);
 	}
 
@@ -776,11 +726,12 @@ public class World {
 	 *
 	 * @param pos Die Position des Lichtsensors
 	 * @param heading Die Blickrichtung des Lichtsensors
-	 * @param openingAngle Der Oeffnungswinkel des Blickstrahls
-	 * @return Die Dunkelheit um den Sensor herum, von 1023(100%) bis 0(0%)
+	 * @param lightReach Reichweite des Lichtsensors / m
+	 * @param openingAngle Der Oeffnungswinkel des Blickstrahls / radians
+	 * @return Die Dunkelheit um den Sensor herum, von 1023 (100%) bis 0 (0%)
 	 * @see PickConeRay
 	 */
-	public int sensLight(Point3d pos, Vector3d heading, double openingAngle) {
+	public int sensLight(Point3d pos, Vector3d heading, double lightReach, double openingAngle) {
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
 		Transform3D transform = new Transform3D();
@@ -799,7 +750,7 @@ public class World {
 		if (pickInfo == null) {
 			return 1023;
 		}
-		int darkness = (int) ((pickInfo.getClosestDistance() / LIGHT_SOURCE_REACH) * 1023);
+		int darkness = (int) ((pickInfo.getClosestDistance() / lightReach) * 1023.0);
 		if (darkness > 1023) {
 			darkness = 1023;
 		}
@@ -828,8 +779,7 @@ public class World {
 		transform.transform(relPos);
 		transform.transform(endPos);
 
-		PickConeSegment picky = new PickConeSegment(relPos, endPos,
-			openingAngle);
+		PickConeSegment picky = new PickConeSegment(relPos, endPos, openingAngle);
 		PickInfo pickInfo;
 		pickInfo = this.bpsBG.pickClosest(PickInfo.PICK_GEOMETRY,
 			PickInfo.CLOSEST_INTERSECTION_POINT | PickInfo.LOCAL_TO_VWORLD, picky);
@@ -878,12 +828,10 @@ public class World {
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
 		Point3d endPos = new Point3d(end);
-//		System.out.println(Math.floor(relPos.x*1000)+" | "+Math.floor(relPos.y*1000)+" | "+Math.floor(relPos.z*1000));
 		Transform3D transform = new Transform3D();
 		this.worldTG.getTransform(transform);
 		transform.transform(relPos);
 		transform.transform(endPos);
-//		System.out.println(Math.floor(relPos.x*1000)+" | "+Math.floor(relPos.y*1000)+" | "+Math.floor(relPos.z*1000));
 
 		PickConeSegment picky = new PickConeSegment(relPos, endPos, openingAngle);
 		PickInfo pickInfo;
@@ -896,11 +844,9 @@ public class World {
 			// NOP
 		}
 		if (pickInfo == null) {
-//			lg.info("d=100.0");
 			return 100.0;
 		}
 		double d = pickInfo.getClosestDistance();
-//		lg.info("d=" + d);
 		return d;
 	}
 
@@ -940,12 +886,10 @@ public class World {
 	 */
 	public void writeParcoursToFile(File targetFile) {
 		try {
-			OutputStream out = new BufferedOutputStream(new FileOutputStream(
-					targetFile));
-				out.write(sourceString.getBytes());
-				out.close();
-				lg.info("Welt wurde gespeichert als \"" +
-						targetFile.getName() + "\".");
+			OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
+			out.write(sourceString.getBytes());
+			out.close();
+			lg.info("Welt wurde gespeichert als \"" + targetFile.getName() + "\".");
 		} catch(IOException e) {
 			lg.warn("Fehler: Datei konnte nicht gespeichert werden:");
 			lg.warn(e.getMessage());
@@ -981,7 +925,6 @@ public class World {
 		bpsBG = null;
 		obstBG = null;
 		terrainBG = null;
-//		pickConeRay = null;
 		worldTG = null;
 	}
 
@@ -1037,5 +980,16 @@ public class World {
 			throw map.new MapException();
 		}
 		map.export();
+	}
+	
+	/**
+	 * Rechnet eine Welt-Koordinate in eine globale Position um
+	 * @param worldPos Welt-Position (wie von Java3D verwendet)
+	 * @return globale Position (wie zur Lokalisierung verwendet) / mm
+	 */
+	public Point2i transformWorldposToGlobalpos(Point3d worldPos) {
+		final int x = (int) (worldPos.y * 1000.0);
+		final int y = (int) ((getWidthInM() - worldPos.x) * 1000.0);
+		return new Point2i(x, y);
 	}
 }

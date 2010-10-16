@@ -362,7 +362,7 @@ public abstract class BasicBot implements Bot {
 	 * @see ctSim.model.bots.Bot#dispose()
 	 */
 	public void dispose() {
-		// keine Ausgabe fuer 3D-Bots, den zu jedem 3D-Bot gibt es auch einen Sim-Bot
+		// keine Ausgabe fuer 3D-Bots, denn zu jedem 3D-Bot gibt es auch einen Sim-Bot
 		if (!(this instanceof ThreeDBot)) {
 			try {
 				lg.info(name + " verkr\u00FCmelt sich");
