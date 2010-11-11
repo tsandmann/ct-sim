@@ -26,7 +26,7 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Der Turnierbaum ist folgendermaßen zu verstehen:
+ * Der Turnierbaum ist folgendermassen zu verstehen:
  * <ul>
  * <li>Ein Knoten des Baums repr&auml;sentiert einen Spieler</li>
  * <li>Die beiden Kinder eines Knotens <em>U</em> repr&auml;sentieren die

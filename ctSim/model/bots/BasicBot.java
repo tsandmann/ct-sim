@@ -68,7 +68,7 @@ import ctSim.util.Misc;
  */
 public abstract class BasicBot implements Bot {
 	/**
-	 * Die Connection an der der Bot hängt
+	 * Die Connection an der der Bot haengt
 	 */
 	private Connection connection;
 	
@@ -78,7 +78,7 @@ public abstract class BasicBot implements Bot {
 	private Controller controller;
 
 	/**
-	 * Liefert die Id eines Bots fuer die Adressierung der Commands zurück
+	 * Liefert die Id eines Bots fuer die Adressierung der Commands zurueck
 	 * @return Id des Bots
 	 */
 	public BotID getId() {
@@ -260,7 +260,7 @@ public abstract class BasicBot implements Bot {
     		for (BotComponent<?> c : this)
     			c.offerRead(command);
     		if (! command.hasBeenProcessed())
-    			throw new ProtocolException("Unbekanntes Kommando: "+command);
+    			throw new ProtocolException("Unbekanntes Kommando: " + command);
     	}
 
     	/**
@@ -363,15 +363,17 @@ public abstract class BasicBot implements Bot {
 	 */
 	public void dispose() {
 		// keine Ausgabe fuer 3D-Bots, denn zu jedem 3D-Bot gibt es auch einen Sim-Bot
-		if (!(this instanceof ThreeDBot)) {
+		if (! (this instanceof ThreeDBot)) {
 			try {
 				lg.info(name + " verkr\u00FCmelt sich");
 			} catch (Exception e) {
 				// egal
 			}
 		}
-		for (Runnable r : disposeListeners)
+		
+		for (Runnable r : disposeListeners) {
 			r.run();
+		}
 	}
 
 	/**
@@ -469,7 +471,7 @@ public abstract class BasicBot implements Bot {
 	}
 	
 	/**
-	 * Liefert die Connection zurueck über die der Bot zu erreichen ist
+	 * Liefert die Connection zurueck ueber die der Bot zu erreichen ist
 	 * @return connection
 	 */
 	public Connection getConnection() {
@@ -477,7 +479,7 @@ public abstract class BasicBot implements Bot {
 	}
 
 	/**
-	 * Setzt die Connection über die der Bot zu erreichen ist
+	 * Setzt die Connection ueber die der Bot zu erreichen ist
 	 * @param connection
 	 */
 	public void setConnection(Connection connection) {

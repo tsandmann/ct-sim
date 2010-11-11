@@ -220,7 +220,7 @@ public class Config {
 			try {
 				for(QueryableNode n : doc.getNodeList("/ct-sim/parameter")) {
 					String parmOs = n.getString("@os").toLowerCase();
-					// Beispiele für os.name: "Windows XP", "Linux", "Mac OS X"
+					// Beispiele fuer os.name: "Windows XP", "Linux", "Mac OS X"
 					// Siehe http://tolstoy.com/samizdat/sysprops.html
 					String currentOs = System.getProperty("os.name")
 						.toLowerCase();

@@ -835,7 +835,11 @@ public class World {
 
 		PickConeSegment picky = new PickConeSegment(relPos, endPos, openingAngle);
 		PickInfo pickInfo;
-		botBody.setPickable(false);
+		try {
+			botBody.setPickable(false);
+		} catch (Exception e) {
+			// NOP
+		}
 		pickInfo = this.obstBG.pickClosest(
 			PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE, picky);
 		try {

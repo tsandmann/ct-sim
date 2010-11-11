@@ -39,8 +39,8 @@ import ctSim.util.AuxFrameButton;
 import ctSim.util.Misc;
 
 /**
- * Zeigt Log-Knopf, LCD, Fernbedienungsknopf, Remote-Call-Knopf, ABL-Knopf. Gehört zu dem
- * Bereich, wo Informationen über einen Bot angezeigt werden.
+ * Zeigt Log-Knopf, LCD, Fernbedienungsknopf, Remote-Call-Knopf, ABL-Knopf. Gehoert zu dem
+ * Bereich, wo Informationen ueber einen Bot angezeigt werden.
  */
 public class AndEverything extends GuiBotBuisitor {
 	/** UID */
@@ -85,7 +85,7 @@ public class AndEverything extends GuiBotBuisitor {
 	}
 
 	/** 
-	 * Baut den Knopf, der zum Log-Fenster führt 
+	 * Baut den Knopf, der zum Log-Fenster fuehrt 
 	 * @param log Log
 	 * @param bot Bot
 	 */
@@ -98,7 +98,7 @@ public class AndEverything extends GuiBotBuisitor {
 	}
 
 	/** 
-	 * Baut den Knopf, der zum Fernbedienungs-Fenster führt 
+	 * Baut den Knopf, der zum Fernbedienungs-Fenster fuehrt 
 	 * @param s RC5-Control
 	 * @param bot Bot
 	 */
@@ -111,7 +111,7 @@ public class AndEverything extends GuiBotBuisitor {
 	}
 
 	/** 
-	 * Baut den Knopf, der zum Remote-Call-Fenster führt 
+	 * Baut den Knopf, der zum Remote-Call-Fenster fuehrt 
 	 * @param c Remote-Call Komponente
 	 * @param bot Bot
 	 */
@@ -137,15 +137,15 @@ public class AndEverything extends GuiBotBuisitor {
 	}
 	
 	/** 
-	 * Baut den Knopf, der zum ABL-Fenster f&uumo;hrt 
+	 * Baut den Knopf, der zum Progamm-Fenster f&uumo;hrt 
 	 * @param abl ABL-Komponente
 	 * @param bot Bot
 	 */
-	public void buisitABLViewer(Actuators.Abl abl, Bot bot) {
+	public void buisitABLViewer(Actuators.Program abl, Bot bot) {
 		add(new AuxFrameButton(
 			abl.getName(),
 			abl.getDescription() + " von " + bot, // Fenster-Titel
-			new AblViewer(abl, bot)));
+			new ProgramViewer(abl, bot)));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 }

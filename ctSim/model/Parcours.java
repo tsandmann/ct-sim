@@ -64,7 +64,7 @@ public class Parcours {
 
 	/**
 	 * Anzahl der Startpositionen fuer Bots. Dir Position 0 ist die Default
-	 * Position, ab 1 für die Wettkampfbots.
+	 * Position, ab 1 fuer die Wettkampfbots.
 	 */
 	public static final int BOTS = 3; // ParcoursLoader kann max 2 Startplaetze
 								// erzeugen, darum hardcoded auf 3
@@ -639,7 +639,7 @@ public class Parcours {
 	}
 
 	/**
-	 * @return Liefert einen stark vereinfachten Parcours zurück. das Array
+	 * @return Liefert einen stark vereinfachten Parcours zurueck. das Array
 	 *         enthaelt nur 0 (freies Feld) und 1 (blockiertes Feld)
 	 */
 	int[][] getFlatParcours() {
@@ -679,7 +679,7 @@ public class Parcours {
 	}
 
 	/**
-	 * @return Liefert einen stark vereinfachten Parcours zurück. Das Array
+	 * @return Liefert einen stark vereinfachten Parcours zurueck. Das Array
 	 *         enthaelt nur 0 (freies Feld), 1 (blockiertes Feld) und 2 (Loch)
 	 */
 	public int[][] getFlatParcoursWithHoles() {

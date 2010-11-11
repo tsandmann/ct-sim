@@ -238,8 +238,7 @@ public class RemoteCallViewer extends JPanel {
 			 */
 			@Override
 			public void setBackground(Color bg) {
-				// No-op: Wir setzen das im Konstruktor, die Tabelle soll's ab
-				// dann nicht mehr aendern
+				super.setBackground(bg.darker());
 			}
 
 			/**
@@ -466,7 +465,7 @@ public class RemoteCallViewer extends JPanel {
 					return;
 				}
 			}
-			//lg.warn("Ein Remote Call wurde beendet, der laut Liste gar nicht läuft");
+			//lg.warn("Ein Remote Call wurde beendet, der laut Liste gar nicht laeuft");
 			// unproblematisch
 		}
 

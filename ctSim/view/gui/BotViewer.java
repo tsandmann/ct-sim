@@ -19,10 +19,17 @@
 package ctSim.view.gui;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 
 import ctSim.model.ThreeDBot;
 import ctSim.model.bots.Bot;
@@ -106,5 +113,17 @@ public class BotViewer extends JScrollPane {
 			}
 		}
 		setViewportView(panel);
+		
+		/* Key-Handler */
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+        
+        inputMap.put(key, "close");
+        getActionMap().put("close", new AbstractAction() {
+			private static final long serialVersionUID = -7639062234107576185L;
+			public void actionPerformed(ActionEvent e) {
+				BotViewer.this.bot.dispose();
+        	}
+        });
 	}
 }

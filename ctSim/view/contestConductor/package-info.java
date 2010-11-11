@@ -25,7 +25,7 @@
  * href="doc-files/datenbankschema.sql">Schema als SQL-Skript</a>).
  * </p>
  * <p>
- * <h3>Hintergrund: Wie läuft ein Wettbewerb?</h3>
+ * <h3>Hintergrund: Wie laeuft ein Wettbewerb?</h3>
  * Das Turnier wird in zwei Phasen abgewickelt: Zun&auml;chst wird in einer
  * Vorrunde jeder Bot einzeln durch einen Parcours geschickt und die
  * ben&ouml;tigte Zeit gestoppt, was eine Rangliste ergibt. In der Hauptphase
@@ -65,7 +65,7 @@
  * Der Turnierbaum beschreibt:
  * <ul>
  * <li>Welche Spiele es gibt</li>
- * <li>Welcher Bot in welchen Spielen spielt. (Ein Bot wird identifiziert über
+ * <li>Welcher Bot in welchen Spielen spielt. (Ein Bot wird identifiziert ueber
  * seine ID in der Tabelle ctsim_bot. Im Beispiel: Nummern von 1 bis 21, in
  * Kreisen dargestellt.)</li>
  * </ul>
@@ -76,13 +76,13 @@
  * die DB-Tabelle <strong>ctsim_game</strong> geschrieben (<a
  * href="doc-files/datenbankschema.pdf">siehe Datenbank-Doku</a>). Das Beispiel
  * stellt einen Turnierbaum zu diesem Zeitpunkt dar. Alle Spiele sind zu diesem
- * Zeitpunkt angelegt, aber für viele von ihnen ist noch nicht klar, welche Bots
+ * Zeitpunkt angelegt, aber fuer viele von ihnen ist noch nicht klar, welche Bots
  * die zwei Kontrahenten sein werden (im Beispiel ist das mit "?" markiert, in
- * der Tabelle mit bot1 = NULL und/oder bot2 = NULL). Wenn später im Verlauf der
+ * der Tabelle mit bot1 = NULL und/oder bot2 = NULL). Wenn spaeter im Verlauf der
  * Hauptrunde ein Spiel, z.B. Bot 1 gegen Bot 9, abgeschlossen ist, scheidet der
  * Verlierer aus (K.o.-System). Der Sieger wird ins entsprechende Spiel des
- * nächsthöheren Levels versetzt. Der Sieger kommt also auf den Platz des
- * Fragezeichens im höherliegenden Spiel. Das ist im Beispiel durch Pfeile
+ * naechsthoeheren Levels versetzt. Der Sieger kommt also auf den Platz des
+ * Fragezeichens im hoeherliegenden Spiel. Das ist im Beispiel durch Pfeile
  * markiert. (Die einzige Ausnahme vom K.o.-System ist das Halbfinale, wo die
  * Gewinner ins Finale und die Verlierer ins Spiel um den 3. Platz gesetzt
  * werden.)
@@ -90,15 +90,15 @@
  * <p>
  * <h4>Details</h4>
  * <ul>
- * <li>Ein Spiel wird identifiziert über die Datenbankfelder gameId und levelId --
- * z.B. 5 und 8 für fünftes Achtelfinalspiel</li>
+ * <li>Ein Spiel wird identifiziert ueber die Datenbankfelder gameId und levelId --
+ * z.B. 5 und 8 fuer fuenftes Achtelfinalspiel</li>
  * <li>levelIds sind Zweierpotenzen (1, 2, 4, 8 usw.). Es gibt zwei
  * Ausnahmewerte: -1 = Vorrunde, 0 = Spiel um den 3. Platz</li>
  * <li>gameIds sind fortlaufend und 1-based (1, 2, 3 ...)</li>
  * <li>Je nach Teilnehmerzahl kann es sein, dass nicht alle Spiele des
- * untersten Levels gefüllt sind -- im Beispiel mit 21 Spielern: Von den 16
+ * untersten Levels gefuellt sind -- im Beispiel mit 21 Spielern: Von den 16
  * Spielen im Sechzehntelfinale bleiben 11 frei und werden nie gespielt</li>
- * <li>Es stehen aber immer vollständige Levels in der Datenbank, also im
+ * <li>Es stehen aber immer vollstaendige Levels in der Datenbank, also im
  * Beispiel alle 16 Sechzehntelfinalsspiele. Die "leeren" Spiele haben bot1 =
  * NULL, bot2 = NULL, state = "not init" und werden nach der Planung nie mehr
  * angefasst</li>
@@ -139,11 +139,11 @@
  *
  * Der TournamentPlanner ist wichtig <strong>vor</strong> dem eigentlichen
  * Turnier: er plant die Vorrunde und erstellt den Turnierbaum (s.o.). Der
- * ContestConductor ist wichtig <strong>während</strong> dem Turnier: Er lädt
- * gemäß dem Turnierbaum die zwei Kontrahenten, läßt sie spielen, ermittelt den
- * Gewinner und trägt ihn im Turnierbaum ein.
+ * ContestConductor ist wichtig <strong>waehrend</strong> dem Turnier: Er laedt
+ * gemaess dem Turnierbaum die zwei Kontrahenten, laesst sie spielen, ermittelt den
+ * Gewinner und traegt ihn im Turnierbaum ein.
  * </p>
  *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krau&szlig &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 package ctSim.view.contestConductor;

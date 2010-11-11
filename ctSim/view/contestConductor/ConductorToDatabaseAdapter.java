@@ -177,7 +177,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * JavaScript-Applikation der Messieurs von der Online-Redaktion
      * benutzt, um den aktuellen Spielstand im Web anzuzeigen.
      *
-     * @param bots Ein Set, das ein oder zwei Bots enthält. Position,
+     * @param bots Ein Set, das ein oder zwei Bots enthaelt. Position,
      * Blickrichtung und Status der Bots wird in die Datenbank geloggt.
      * @param simTimeElapsed Simulatorzeit [ms] seit Beginn des Spiels
      * @throws IllegalArgumentException Falls der Parameter <code>bots</code>

@@ -19,18 +19,20 @@
 package ctSim.model.bots.ctbot;
 
 import java.awt.Color;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ProtocolException;
-
 import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.model.Command;
 import ctSim.model.bots.BasicBot;
 import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
 import ctSim.util.BotID;
+import ctSim.view.gui.ProgramViewer;
 
 /**
  * Abstrakte Oberklasse fuer alle c't-Bots
@@ -58,9 +60,12 @@ public abstract class CtBot extends BasicBot {
 	/** Bodenfreiheit des Bots [m] */
 	protected static final double BOT_GROUND_CLEARANCE = 0.015d;
 	
+    /** Referenz eines ProgramViewers, der bei bei Bedarf ein RemoteCall-Ergebnis anzeigen kann */
+	protected ProgramViewer ablResult;
+	
 	/**
 	 * Vorverarbeitung der Kommandos 
-	 * z.B. Weiterleiten von Kommandos für andere Bots
+	 * z.B. Weiterleiten von Kommandos fuer andere Bots
 	 * Adressvergabe, etc.
 	 * @param cmd das Kommando
 	 * @return True, Wenn das Kommando abgearbeitet wurde, sonst False
@@ -72,7 +77,7 @@ public abstract class CtBot extends BasicBot {
 		BotID id = cmd.getFrom();
 		if (cmd.has(Command.Code.WELCOME)) { // Von einem Welcome nehmen wir
 			// sicherheitshalber erstmal die ID an.
-			lg.info("Nehme für Bot " + toString()
+			lg.info("Nehme fuer Bot " + toString()
 					+ " erstmal die ID des Welcome-Paketes:"
 					+ id);
 			try {
@@ -163,22 +168,50 @@ public abstract class CtBot extends BasicBot {
 
 	
 	/**
-	 * Verarbeitet ein Kommando und leitet es an den angehängten Bot weiter
+	 * Verarbeitet ein Kommando und leitet es an den angehaengten Bot weiter
 	 * @param command das Kommando
 	 * @throws ProtocolException Wenn was nicht klappt
 	 */
 	public void receiveCommand(Command command) throws ProtocolException {
 		if (!command.getTo().equals(this.getId()) && !command.getTo().equals(Command.getBroadcastId()))
-			throw new ProtocolException("Bot "+ this.getId() +" hat ein Kommando "+command.toCompactString()+" empfangen, dass nicht für ihn ist");
+			throw new ProtocolException("Bot "+ this.getId() +" hat ein Kommando "+command.toCompactString()+" empfangen, dass nicht fuer ihn ist");
 		
-		if (getConnection() == null)
+		if (getConnection() == null) {
 			throw new ProtocolException("Bot "+ this.getId() +" hat gar keine Connection");
+		}
 		
 		// Wir werfen das Kommando direkt an den angehaengten Bot
-		try{ 
+		try { 
 			getConnection().write(command);
 		} catch (IOException e) {
 			lg.warn("Es gab Probleme beim Erreichen des Bots");
+		}
+	}
+	
+	/**
+	 * Startet das Verhalten "name" per RemoteCall
+	 * @param name	Das zu startende Verhalten
+	 * @param param	Int-Parameter fuer das Verhalten (16 Bit)
+	 * @param ref	Referenz auf den ABL-Viewer, falls das Ergebnis dort angezeigt werden soll
+	 */
+	public void startRemoteCall(String name, int param, ProgramViewer ref) {
+		for (BotComponent<?> c : components) {
+			if (c instanceof RemoteCallCompnt) {
+				try {
+					ablResult = ref;
+					RemoteCallCompnt rc = (RemoteCallCompnt)c;
+					ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+					bytes.write(name.getBytes());
+					bytes.write(0);
+					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
+					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
+					par.setValue(param);
+					beh.getParameters().add(par);
+					beh.call();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
@@ -209,7 +242,8 @@ public abstract class CtBot extends BasicBot {
 			new Sensors.Door(),
 			new Sensors.Trans(),
 			new Sensors.Error(),
-			//new Actuators.Abl(),
+			new Sensors.Shutdown(),
+			new Actuators.Program(),
 			new MapComponent(),
 			new RemoteCallCompnt()
 		);
@@ -230,7 +264,30 @@ public abstract class CtBot extends BasicBot {
 			components.add(
 				new Actuators.Led(ledName, i, ledColors[i]));
 		}
+		
+		addDisposeListener(new Runnable() {
+			public void run() {
+				sendShutdown();
+			}
+		});
+		
+		this.ablResult = null;
 	}
 
-
+	/**
+	 * Sendet einen Shutdown-Befehl zum Bot
+	 */
+	protected void sendShutdown() {
+		try {
+			for (BotComponent<?> c : components) {
+				if (c instanceof Sensors.Shutdown) {
+					((Sensors.Shutdown) c).sendShutdown();
+					lg.fine("Shutdown-Befehl gesendet");
+					break;
+				}
+			}
+		} catch (IOException e) {
+			// NOP
+		}
+	}
 }

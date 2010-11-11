@@ -169,8 +169,9 @@ public class LogViewer extends JPanel {
 		// Auto-Scrolling
 		log.getExternalModel().addDocumentListener(new DocumentListener() {
 			private void scrollToEnd() {
-				if (cb.isSelected())
+				if (cb.isSelected()) {
 					t.setCaretPosition(log.getExternalModel().getLength());
+				}
 			}
 
 			public void changedUpdate(DocumentEvent e) {

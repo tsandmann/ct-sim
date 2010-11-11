@@ -44,6 +44,7 @@ import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.Actuators.Governor;
 import ctSim.model.bots.components.NumberTwin.NumberTwinVisitor;
 import ctSim.model.bots.components.Sensors.Clock;
+import ctSim.model.bots.components.Sensors.Shutdown;
 import ctSim.util.Buisitor;
 import ctSim.util.Misc;
 
@@ -354,6 +355,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 			}
 
 			clock.setSimTimeInMs((int) world.getSimTimeInMs());
+			
+			if (shutdown.shutdownRequested()) {
+				parent.dispose();
+			}
 		}
 	}
 
@@ -425,6 +430,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         new MouseSensorSimulator();
     /** Uhr / Systemzeit */
     private Clock clock;
+    /** Shutdown-Control */
+    private Shutdown shutdown;
 
     /**
      * @param x
@@ -635,6 +642,13 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      */
     public void buisitClockSim(final Sensors.Clock sensor) {
         this.clock = sensor;
+    }
+    
+    /**
+     * @param sensor Shutdown-Control
+     */
+    public void buisitShutdownSim(final Sensors.Shutdown sensor) {
+    	this.shutdown = sensor;
     }
 
     /**

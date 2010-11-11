@@ -228,6 +228,9 @@ public class Command {
 
 	/** Direction Antwort. Nicht verwendet. */
 	public static final int DIR_ANSWER = 1;
+	
+	/** Maximale Anzahl an Bytes, die als Payload mitgeschickt werden koennen */
+	public static final int MAX_PAYLOAD = 255;
 
 	/** Id des Sims */
 	private static final BotID SIM_ID = new BotID(0xFE);
@@ -455,8 +458,7 @@ public class Command {
 		 */
 		REMOTE_CALL('r', SubCode.NORM, SubCode.REMOTE_CALL_LIST,
 			SubCode.REMOTE_CALL_ENTRY, SubCode.REMOTE_CALL_ORDER,
-			SubCode.REMOTE_CALL_DONE, SubCode.REMOTE_CALL_ABORT,
-			SubCode.REMOTE_CALL_ABL),
+			SubCode.REMOTE_CALL_DONE, SubCode.REMOTE_CALL_ABORT),
 			
 		/**
 		 * Map-&Uuml;bertragung 
@@ -464,9 +466,18 @@ public class Command {
 		MAP('Q', SubCode.MAP_DATA_1, SubCode.MAP_DATA_2, SubCode.MAP_DATA_3,
 				SubCode.MAP_DATA_4, SubCode.MAP_REQUEST, SubCode.MAP_LINE,
 				SubCode.MAP_CIRCLE,	SubCode.MAP_CLEAR_LINES, 
-				SubCode.MAP_CLEAR_CIRCLES, SubCode.MAP_REQUEST);
+				SubCode.MAP_CLEAR_CIRCLES, SubCode.MAP_REQUEST),
 
-
+		/**
+		 * Kommando zum Herunterfahren
+		 */
+		SHUTDOWN('q', SubCode.NORM),		
+				
+		/**
+		 * Programmdaten (Basic oder ABL)
+		 */
+		PROGRAM('p', SubCode.PROGRAM_PREPARE, SubCode.PROGRAM_DATA, SubCode.PROGRAM_START, SubCode.PROGRAM_STOP);
+		
 		/** Code auf der Leitung */
 		private final byte onTheWire;
 		/** gueltige SubCodes */
@@ -618,9 +629,24 @@ public class Command {
 		REMOTE_CALL_ABORT('A'),
 		
 		/**
-		 * Schickt ein ABL-Programm an den Bot
+		 * Bereitet den Programm-Versand vor
 		 */
-		REMOTE_CALL_ABL('I'),
+		PROGRAM_PREPARE('P'),
+		
+		/**
+		 * Schickt ein Skript-Programm an den Bot
+		 */
+		PROGRAM_DATA('D'),
+		
+		/**
+		 * Startet ein uebertragenes Programm auf dem Bot
+		 */
+		PROGRAM_START('S'),
+		
+		/**
+		 * Bricht ein laufendes Programm ab
+		 */
+		PROGRAM_STOP('Q'),
 
 		/**
 		 * Setzt die ID
@@ -879,7 +905,7 @@ public class Command {
 	 * Enkodiert das Kommando, so dass es &uuml;ber TCP/USB an einen c't-Bot
 	 * geschickt werden kann.
 	 *
-	 * @return byte[], in dem jeweils ein byte steht
+	 * @return byte[], in dem jeweils ein Byte steht
 	 */
 	public byte[] getCommandBytes() {
 		byte data[] = new byte[COMMAND_SIZE + payload.length];
@@ -987,7 +1013,11 @@ public class Command {
 	 */
 	public static String replaceCtrlChars(String s) {
 		// dezimal 0 bis 31 = oktal 0 bis 37
-		return s.replaceAll("[\000-\037]", ".");
+		final String tmp = s.replaceAll("[\000-\037]", ".");
+		if (! tmp.equals(s)) {
+			lg.fine("String enthielt ein nicht darstellbares Zeichen, das ersetzt wurde");
+		}
+		return tmp;
 	}
 
 	/**
@@ -1077,7 +1107,9 @@ public class Command {
 	 * @param payload Payload als byte-Array
 	 */
 	public void setPayload(byte[] payload) {
-		this.payload = payload;
+		if (payload.length <= MAX_PAYLOAD) {
+			this.payload = payload;
+		}
 	}
 
 	/**
