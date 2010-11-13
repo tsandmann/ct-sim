@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2010-11-13 Timo Sandmann [mail@timosandmann.de]: Programmfenster-Layout optimiert (sinnvolle Mindestgroesse)
+
 2010-11-11 Timo Sandmann [mail@timosandmann.de]: Fenster fuer (Skript-)Programme, Tastenkombinationen zum Schliessen von Fenstern (STRG/CMD+w) und Bots (STRG/CMD+e), Fenster merken sich ihre letzte Position, beim Beenden eines Bots wird ein Shutdown-Kommando gesendet, Log- und Map-Anzeige ueberarbeitet
 
 2010-10-16 Timo Sandmann [mail@timosandmann.de]: Release 18

@@ -304,7 +304,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	/**
 	 * Erzeugt das Programm-Fenster, in dem sich Programme laden, speichern, eingeben und versenden lassen.
 	 * @param program	Program-Actuator, der vom Fenster verwendet werden soll.
-	 * @param bot	Bot-Referenz
+	 * @param bot		Bot-Referenz
 	 */
 	public ProgramViewer(Program program, Bot bot) {
 		programCompnt = program;
@@ -313,8 +313,8 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		
 		/* Editor bauen */
 		programText = new JTextArea();
-		programText.setColumns(38);
-		programText.setRows(40);
+		programText.setColumns(40);
+		programText.setRows(35);
 		programText.setEditable(true);
 		programText.setLineWrap(false);
 		programText.setTabSize(2);
@@ -388,11 +388,22 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		
 		/* Gesamtgroesse setzen */
 		JScrollPane s = new JScrollPane(programText);
-		int w = getInsets().left + s.getInsets().left + s.getPreferredSize().width +
-			s.getInsets().right + getInsets().right + 20;
+		int edit_w = getInsets().left + s.getInsets().left + s.getPreferredSize().width +
+			s.getInsets().right + getInsets().right + 20; // scrollbar-width == 20
 		int h = getInsets().top + s.getInsets().top + s.getPreferredSize().height + 
 			s.getInsets().bottom + getInsets().bottom +	toolbars.getPreferredSize().height;
-		setPreferredSize(new Dimension(w, h));
+		
+		int toolbar_w = getInsets().left + toolbars.getInsets().left + toolbars.getPreferredSize().width +
+			toolbars.getInsets().right + getInsets().right;
+		
+		setPreferredSize(new Dimension(Math.max(edit_w, toolbar_w), h));
+		
+		int min_w = getInsets().left + toolbars.getInsets().left + toolbar_w +
+			toolbars.getInsets().right + getInsets().right;
+		int min_h = getInsets().top + s.getInsets().top + s.getMinimumSize().height + 
+			s.getInsets().bottom + getInsets().bottom +	toolbars.getPreferredSize().height;
+		
+		setMinimumSize(new Dimension(min_w, min_h + 60));
 
 		/* Ausliefern */
 		add(toolbars, BorderLayout.NORTH);

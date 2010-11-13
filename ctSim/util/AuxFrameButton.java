@@ -132,6 +132,7 @@ public class AuxFrameButton extends JToggleButton {
 				auxFrame.setSize(new Dimension(dim.width, 500));
 			}
 		}
+		auxFrame.setMinimumSize(frameContent.getMinimumSize());
 	}
 
 	// wenn der Knopf aus der Anzeige entfernt wird (z.B. weil der Container,
