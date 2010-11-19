@@ -472,7 +472,7 @@ public class Actuators {
 	    	    switch (c.getSubCode()) {
 		            case LCD_DATA:
 		            	setCursor(c.getDataL(), c.getDataR());
-	            		overwrite(c.getPayloadAsString());
+	            		overwrite(Command.replaceCtrlChars(c.getPayloadAsString()));
 	        	    	break;
 
 	    	        case LCD_CURSOR:
@@ -516,7 +516,7 @@ public class Actuators {
 		 */
 		protected synchronized String getAllText(Document d)
 		throws BadLocationException {
-			return d.getText(0, d.getLength());
+			return d.getText(0, Math.max(d.getLength(), numCols * numRows));
 		}
 
 		/**
