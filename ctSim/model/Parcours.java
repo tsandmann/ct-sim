@@ -128,7 +128,7 @@ public class Parcours {
 		this.bpsBG = new BranchGroup();
 		this.bpsBG.setPickable(true);
 
-		// Die Branchgroup fuer die Lichtquellen
+		// Die Branchgroup fuer den Boden
 		this.terrainBG = new BranchGroup();
 		this.terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		this.terrainBG.setPickable(true);

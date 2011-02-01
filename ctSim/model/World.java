@@ -87,7 +87,7 @@ public class World {
 	/** Name des XML-Schemas fuer Parcours */
 	private static final String PARCOURS_DTD = "/parcours.dtd";
 	
-	/** Breite des Spielfelds in m */
+	/** Dicke des Bodens in m */
 	public static final float PLAYGROUND_THICKNESS = 0.0f;
 
 	/** Transforgroup der Welt */
