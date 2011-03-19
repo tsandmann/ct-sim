@@ -1,6 +1,6 @@
 Changelog fuer c't-Sim
 ======================
-2011-03-19 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Programm-Senden-Funktion 
+2011-03-19 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Programm-Senden-Funktion, Linefeed-Behandlung im Log-Fenster ueberarbeitet
 
 2010-11-13 Timo Sandmann [mail@timosandmann.de]: Programmfenster-Layout optimiert (sinnvolle Mindestgroesse)
 

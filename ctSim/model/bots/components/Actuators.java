@@ -145,9 +145,14 @@ public class Actuators {
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 		 */
 		public void readFrom(Command c) {
-			synchronized (newStuff) {			
-				newStuff.append(Command.replaceCtrlChars(c.getPayloadAsString()));
-				newStuff.append("\n");
+			synchronized (newStuff) {
+				final String newLine = Command.replaceCtrlChars(c.getPayloadAsString());
+				newStuff.append(newLine);
+				if (newStuff.charAt(newStuff.length() - 1) != '\n' && 
+						(newLine.contains("DEBUG") || newLine.contains("INFO") || newLine.contains("WARNING")
+						|| newLine.contains("ERROR") || newLine.contains("FATAL"))) {
+					newStuff.append("\n");
+				}
 			}
 		}
 

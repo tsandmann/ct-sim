@@ -1008,12 +1008,14 @@ public class Command {
 	/**
 	 * Ersetzt jedes Steuerzeichen (Ascii 0 bis inkl. Ascii 31) durch einen
 	 * Punkt (.), so dass man den String gefahrlos ausgeben kann.
+	 * Ein Linefeed (0x0A) bleibt aber erhalten. 
 	 * @param s Input-String
 	 * @return Output-String
 	 */
 	public static String replaceCtrlChars(String s) {
 		// dezimal 0 bis 31 = oktal 0 bis 37
-		final String tmp = s.replaceAll("[\000-\037]", ".");
+		String tmp = s.replaceAll("[\000-\011]", ".");
+		tmp = s.replaceAll("[\013-\037]", ".");
 		if (! tmp.equals(s)) {
 			lg.fine("String enthielt ein nicht darstellbares Zeichen, das ersetzt wurde");
 		}
