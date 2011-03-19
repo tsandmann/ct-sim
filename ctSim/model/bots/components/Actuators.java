@@ -267,7 +267,8 @@ public class Actuators {
 			final int WAIT_TIME = 50;
 			
 			lg.fine("sendProgramData(" + filename + ", " + data + ", " + type + ")");
-			final int length = data.length() + 1;
+			data += '\0';
+			final int length = data.length();
 			lg.fine(" length=" + length);
 			prepareCmd(asyncOut, filename.getBytes(), type, length);
 			asyncOut.flush();
@@ -285,6 +286,7 @@ public class Actuators {
 			byte[] bytes = new byte[SEND_SIZE];
 			int i;
 			for (i = 0; i < length / SEND_SIZE; ++i) {
+				lg.fine(" i=" + i);
 				System.arraycopy(data.getBytes(), i * SEND_SIZE, bytes, 0, SEND_SIZE);
 				sendData(asyncOut, bytes, type, i);
 				asyncOut.flush();
@@ -299,11 +301,11 @@ public class Actuators {
 			}
 			/* Rest */
 			final int to_send = length % SEND_SIZE;
+			lg.fine("to_send=" + to_send);
 			if (to_send > 0) {
 				lg.fine(" sende zusaetzliche " + to_send + " Byte");
 				bytes = new byte[to_send];
 				System.arraycopy(data.getBytes(), length - to_send, bytes, 0, to_send - 1);
-				bytes[to_send - 1] = 0;
 				sendData(asyncOut, bytes, type, i);
 				asyncOut.flush();
 				if (bot instanceof RealCtBot) {
