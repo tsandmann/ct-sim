@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "parcours.dtd">
 <world>
-	<description>Dieses ist ein automatisch generierter Beispielparcours fuer den c't-Sim-Wettbewerb.</description>
+	<description>Testparcour fuer Skriptpogramme.</description>
 	<parcours>
 <line>*============ZZ============*</line>
 <line>#        #        #        #</line>

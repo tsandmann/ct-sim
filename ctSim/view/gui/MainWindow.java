@@ -255,7 +255,11 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * @param rate Die neue Zeitbasis fuer den Simulator in Aufrufen alle xxx ms
 	 */
 	protected void setTickRate(int rate) {
-		world.setSimStepIntervalInMs(rate);
+		try {
+			world.setSimStepIntervalInMs(rate);
+		} catch (NullPointerException e) {
+			// NOP
+		}
 	}
 
 	/**
