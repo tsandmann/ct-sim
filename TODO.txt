@@ -4,13 +4,9 @@ Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
 Known Bugs:   
 -----------
 
-* Bot kann sich aus Loch "befreien"
 
 Requested Features:
 -------------------
-
-* Benchmark, ob PickRay statt PickConeRayPerformance fuer die Distanzsensoren Performance bringt (pek)
-  -> erledigt?
 
 * FB-Kommandos koennen (so nicht) vom Judge geschickt werden
 
