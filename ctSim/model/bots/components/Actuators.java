@@ -269,7 +269,7 @@ public class Actuators {
 		 */
 		public void sendProgramData(String filename, String data, int type, Bot bot) throws IOException {
 			/** Wartezeit zwischen den Bloecken [ms] */
-			final int WAIT_TIME = 50;
+			final int WAIT_TIME = 75;
 			
 			lg.fine("sendProgramData(" + filename + ", " + data + ", " + type + ")");
 			data += '\0';
