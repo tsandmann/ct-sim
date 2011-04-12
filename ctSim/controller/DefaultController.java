@@ -92,8 +92,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         TcpConnection.startListening(this);
         try {
 	        if (Config.getValue("serialport") == null) {
-	        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstützung " +
-	        			"für serielle Schnittstellen deaktiviert");
+	        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstuetzung " +
+	        			"fuer serielle Schnittstellen deaktiviert");
 	        } else
 	        	ComConnection.startListening(this);
         } catch (Error e) {
@@ -306,7 +306,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 	/** H&auml;lt den Sequencer-Thread an */
     public void closeWorld() {
-    	if (sequencer == null) // Keine Welt geladen, d.h. kein Sequencer läuft
+    	if (sequencer == null) // Keine Welt geladen, d.h. kein Sequencer laeuft
     		return;
 
     	lg.fine("Terminieren des Sequencer angefordert");
@@ -385,9 +385,9 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     						"chmod lieferte %d zur\u00FCck", p.exitValue());
     			}
     		}
-    		// Bot ausführen
+    		// Bot ausfuehren
     		// String[] weil sonst trennt er das nach dem ersten Leerzeichen ab,
-    		// dann geht's nicht, wenn der Pfad mal ein Leerzeichen enthält
+    		// dann geht's nicht, wenn der Pfad mal ein Leerzeichen enthaelt
     		File dir = new File(filename).getAbsoluteFile().getParentFile();
             Runtime.getRuntime().exec(new String[] { filename }, null, dir);
         } catch (Exception e){
@@ -571,8 +571,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	/**
 	 * Liefert ein Kommando an einen Bot aus.
 	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben
-	 * Sender und Empfänger stehen in dem command drin 
-	 * @param command das zu übertragende Kommando
+	 * Sender und Empfaenger stehen in dem command drin 
+	 * @param command das zu uebertragende Kommando
 	 * @throws ProtocolException Falls kein passender empfaenger gefunden wurde
 	 */
 	public void deliverMessage(Command command) throws ProtocolException {
@@ -591,8 +591,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 			}
 		}	
 		if (!command.getTo().equals(Command.getBroadcastId())) {
-			// Es fühlt sich wohl kein Bot aus der Liste zuständig ==> Fehler 
-			throw new ProtocolException("Nachricht an Empfänger "+command.getTo()+" nicht zustellbar. " +
+			// Es fuehlt sich wohl kein Bot aus der Liste zustaendig ==> Fehler 
+			throw new ProtocolException("Nachricht an Empfaenger "+command.getTo()+" nicht zustellbar. " +
 					"Kein Bot mit passender Id angemeldet");
 		}
 	}
@@ -614,10 +614,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	}
 	
 	/** Offset fuer die Adressvergabe, damit wir nicht jedesmal mit den schon vergebene2n Adressen beginnen */
-	private int poolOffset =0;
+	private int poolOffset = 0;
 	
 	/**
-	 * Liefert eine Id aus dem Adresspoll zurück
+	 * Liefert eine Id aus dem Adresspoll zurueck
 	 * @return Die neue Id
 	 * @throws ProtocolException Wenn keine Adresse mehr frei
 	 */

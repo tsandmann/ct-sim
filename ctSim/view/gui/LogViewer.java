@@ -141,7 +141,8 @@ public class LogViewer extends JPanel {
 		setLayout(new BorderLayout());
 		logContent = log.getExternalModel();
 		final JTextArea t = new JTextArea(logContent);
-		t.setColumns(50);
+		t.setColumns(40);
+		t.setRows(40);
 		t.setEditable(false);
 		Misc.setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
 
@@ -169,8 +170,9 @@ public class LogViewer extends JPanel {
 		// Auto-Scrolling
 		log.getExternalModel().addDocumentListener(new DocumentListener() {
 			private void scrollToEnd() {
-				if (cb.isSelected())
+				if (cb.isSelected()) {
 					t.setCaretPosition(log.getExternalModel().getLength());
+				}
 			}
 
 			public void changedUpdate(DocumentEvent e) {
@@ -188,10 +190,11 @@ public class LogViewer extends JPanel {
 
 		// Gesamtgroesse setzen
 		JScrollPane s = new JScrollPane(t);
-		int w = getInsets().left + s.getInsets().left +
-			s.getPreferredSize().width +
+		int w = getInsets().left + s.getInsets().left + s.getPreferredSize().width +
 			s.getInsets().right + getInsets().right + 20;
-		setPreferredSize(new Dimension(w, w));
+		int h = getInsets().top + s.getInsets().top + s.getPreferredSize().height + 
+			s.getInsets().bottom + getInsets().bottom +	toolbar.getPreferredSize().height;
+		setPreferredSize(new Dimension(w, h));
 
 		// Ausliefern
 		add(toolbar, BorderLayout.NORTH);

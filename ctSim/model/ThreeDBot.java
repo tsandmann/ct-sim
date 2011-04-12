@@ -57,22 +57,22 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Klasse für alle Bots, die eine 3D-Darstellung haben (= simulierte Bots, für
- * reale ist das unnötig). Fungiert als Wrapper um eine {@link SimulatedBot}-Instanz,
+ * Klasse fuer alle Bots, die eine 3D-Darstellung haben (= simulierte Bots, fuer
+ * reale ist das unnoetig). Fungiert als Wrapper um eine {@link SimulatedBot}-Instanz,
  * d.h. diese Klasse hat eine Referenz auf einen {@code SimulatedBot} und ist
  * selbst ein Bot.
  * </p>
  * <p>
- * Die beiden Methoden, die für die Simulation zentral sind:
+ * Die beiden Methoden, die fuer die Simulation zentral sind:
  * <ul>
- * <li>{@link #run()}, die als eigener Thread läuft. Sie macht periodisch zwei
- * Dinge: Warten und dem SimulatedBot sagen "jetzt Simschritt machen" (für den
- * {@link CtBotSimTcp} heißt das er überträgt Sensordaten, wartet auf Antwort
- * vom C-Code, und aktualisiert dann die Aktuatoren wie vom C-Code gewünscht)</li>
- * <li>{@link #updateSimulation(long)}, die von außen aufgerufen wird. Die
+ * <li>{@link #run()}, die als eigener Thread laeuft. Sie macht periodisch zwei
+ * Dinge: Warten und dem SimulatedBot sagen "jetzt Simschritt machen" (fuer den
+ * {@link CtBotSimTcp} heisst das er uebertraegt Sensordaten, wartet auf Antwort
+ * vom C-Code, und aktualisiert dann die Aktuatoren wie vom C-Code gewuenscht)</li>
+ * <li>{@link #updateSimulation(long)}, die von aussen aufgerufen wird. Die
  * Methode betrachtet die Aktuator-Werte (z.B. Motorgeschwindigkeit) und nimmt
- * an der Simulation die relevanten Änderungen vor (im Beispiel: eine
- * Positions-/Drehungsänderung). Außerhalb dieser Klasse wird sichergestellt,
+ * an der Simulation die relevanten Aenderungen vor (im Beispiel: eine
+ * Positions-/Drehungsaenderung). Ausserhalb dieser Klasse wird sichergestellt,
  * dass {@code updateSimulation()} immer dann aufgerufen wird, wenn der Thread
  * dieser Klasse gerade wartet, nicht wenn er gerade einen Simschritt macht.
  * </li>
@@ -99,7 +99,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 			"ist nicht mehr kollidiert"),
 
 		/**
-		 * Der Bot hängt in einem Loch, d.h. eins der Räder ist in eine Grube
+		 * Der Bot haengt in einem Loch, d.h. eins der Raeder ist in eine Grube
 		 * gerutscht. In diesem State kann sich der Bot noch drehen, aber nicht
 		 * mehr bewegen.
 		 */
@@ -112,7 +112,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		 * work()-Methode wird nicht mehr aufgerufen. Es steht damit nur noch
 		 * rum, bis die Simulation irgendwann endet. Dieser Zustand kann
 		 * eintreten, wenn die TCP-Verbindung abrei&szlig;t (Bot-Code
-		 * abgestürzt) oder ein anderer I/O-Fehler auftritt.
+		 * abgestuerzt) oder ein anderer I/O-Fehler auftritt.
 		 */
 		HALTED(0x100, "halted",
 			"wird aus der Simulation ausgeschlossen");
@@ -814,7 +814,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	private void dieOrHalt() {
 		String eh = Config.getValue("simBotErrorHandling");
 		String warning = toString()+" hat ein E/A-Problem: " +
-				"Bot-Code ist wohl abgestürzt; ";
+				"Bot-Code ist wohl abgestuerzt; ";
 		if ("kill".equals(eh)) {
 			lg.warn(warning+"entferne Bot");
 			dispose();
@@ -866,7 +866,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @param simTimeInMs Aktuelle Simulation in Millisekunden
 	 */
 	public void updateSimulation(long simTimeInMs) {
-		if (is(HALTED)) // Fix für Bug 44
+		if (is(HALTED)) // Fix fuer Bug 44
 			return;
 		
 		/* Zeit aktualisieren */

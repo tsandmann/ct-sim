@@ -22,10 +22,8 @@ package ctSim.model.bots.ctbot;
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
 import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES_ASYNCLY;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ProtocolException;
-
 import ctSim.Connection;
 import ctSim.model.Command;
 import ctSim.model.bots.components.Actuators;
@@ -39,7 +37,6 @@ import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
 import ctSim.util.BotID;
 import ctSim.util.Runnable1;
 import ctSim.util.SaferThread;
-import ctSim.view.gui.AblViewer;
 
 /**
  * Reale Bots
@@ -74,6 +71,12 @@ public class RealCtBot extends CtBot {
 					return;
 				}
 				
+				if (cmd.has(Command.Code.SHUTDOWN)) {
+					die();
+					RealCtBot.this.dispose();
+					return;
+				}
+				
 				if (!preProcessCommands(cmd)){
 					components.processCommand(cmd);
 				}
@@ -102,12 +105,10 @@ public class RealCtBot extends CtBot {
 	
 	/** Name der Verbindung */
 	private final String connectionName;
-	/** Referenz eines AblViewer, der bei bei Bedarf ein RemoteCall-Ergebnis anzeigen kann */
-	private AblViewer ablResult;
 
 	/**
 	 * @param connection Connection zum Bot
-	 * @param newId Id für die Kommunikation 
+	 * @param newId Id fuer die Kommunikation 
 	 * @throws ProtocolException 
 	 */
 	public RealCtBot(Connection connection, BotID newId) throws ProtocolException {
@@ -119,7 +120,6 @@ public class RealCtBot extends CtBot {
 		setId(newId);
 		
 		connectionName = connection.getName();
-		this.ablResult = null;
 
 		components.add(
 			new MousePictureComponent(),
@@ -144,8 +144,9 @@ public class RealCtBot extends CtBot {
 			_(Sensors.Trans.class        , READS),
 			_(Sensors.Error.class        , READS),
 			_(Sensors.BPSReceiver.class  , READS),
+			_(Sensors.Shutdown.class     , READS, WRITES_ASYNCLY),
 			_(WelcomeReceiver.class      , READS),
-			//_(Actuators.Abl.class		 , WRITES_ASYNCLY),
+			_(Actuators.Program.class		 , WRITES_ASYNCLY),
 			_(MapComponent.class		 , READS, WRITES_ASYNCLY),
 			_(RemoteCallCompnt.class     , READS, WRITES_ASYNCLY)
 		);
@@ -153,7 +154,7 @@ public class RealCtBot extends CtBot {
 		for (BotComponent<?> c : components) {
 			c.offerAsyncWriteStream(connection.getCmdOutStream());
 			
-			/* RemoteCall-Componente suchen und DoneListener registrieren (AblViewer) */
+			/* RemoteCall-Componente suchen und DoneListener registrieren (ProgramViewer) */
 			if (c instanceof RemoteCallCompnt) {
 				RemoteCallCompnt rc = (RemoteCallCompnt)c;			
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
@@ -167,7 +168,6 @@ public class RealCtBot extends CtBot {
 		}
 
 		// Und einen CommandProcessor herstellen
-	
 		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
 			public void run() {
@@ -203,38 +203,30 @@ public class RealCtBot extends CtBot {
 		}		
 	}	
 	
-	/**
-	 * Sendet den RC5-Code, um ein ABL-Programm zu starten
-	 */
-	public void startABL() {
-		lg.info("Starte ABL-Programm auf dem Bot...");
-		sendRC5Code(">");	
-	}
-	
-	/**
-	 * Startet das Verhalten "name" per RemoteCall
-	 * @param name	Das zu startende Verhalten
-	 * @param param	Int-Parameter fuer das Verhalten (16 Bit)
-	 * @param ref	Referenz auf den ABL-Viewer, falls das Ergebnis dort angezeigt werden soll
-	 */
-	public void startRemoteCall(String name, int param, AblViewer ref) {
-		for (BotComponent<?> c : components) {
-			if (c instanceof RemoteCallCompnt) {
-				try {
-					ablResult = ref;
-					RemoteCallCompnt rc = (RemoteCallCompnt)c;
-					ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-					bytes.write(name.getBytes());
-					bytes.write(0);
-					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
-					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
-					par.setValue(param);
-					beh.getParameters().add(par);					
-					beh.call();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}	
+//	/**
+//	 * Startet das Verhalten "name" per RemoteCall
+//	 * @param name	Das zu startende Verhalten
+//	 * @param param	Int-Parameter fuer das Verhalten (16 Bit)
+//	 * @param ref	Referenz auf den Program-Viewer, falls das Ergebnis dort angezeigt werden soll
+//	 */
+//	public void startRemoteCall(String name, int param, ProgramViewer ref) {
+//		for (BotComponent<?> c : components) {
+//			if (c instanceof RemoteCallCompnt) {
+//				try {
+//					ablResult = ref;
+//					RemoteCallCompnt rc = (RemoteCallCompnt)c;
+//					ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//					bytes.write(name.getBytes());
+//					bytes.write(0);
+//					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
+//					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
+//					par.setValue(param);
+//					beh.getParameters().add(par);					
+//					beh.call();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}	
 }

@@ -214,12 +214,12 @@ public class ComConnection extends Connection {
 	 * COM-Verbindung
 	 */
 	private static ComConnection comConnSingleton = null;
-	/** Der empfänger der Bots */
+	/** Der Empfaenger der Bots */
 	private static BotReceiver botReceiver = null; 
 	
 	/**
 	 * Erzeugt einen Bot
-	 * Überschreibt die entsprechende Methode von Connection, weil hier ein paar Sondersachen dazukommen
+	 * Ueberschreibt die entsprechende Methode von Connection, weil hier ein paar Sondersachen dazukommen
 	 * @param c Kommando
 	 * @return Bot
 	 * @throws ProtocolException

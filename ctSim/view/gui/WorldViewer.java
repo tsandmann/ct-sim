@@ -205,7 +205,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		 * einfacheren Weg gefunden. Was man mit Google findet sind i.d.R.
 		 * Beispiele, die java.awt.Robot.createScreenCapture() verwenden -- was
 		 * aber einen "echten Screenshot" macht, d.h. wenn einer ein anderes
-		 * Fenster über den ctSim geschoben hat, wird eben das abgelichtet. Die
+		 * Fenster ueber den ctSim geschoben hat, wird eben das abgelichtet. Die
 		 * Alternative, auf dem Canvas3D oder auf diesem Objekt paint(...)
 		 * aufzurufen, funktioniert nicht (ergibt immer einfarbig schwarze
 		 * Screenshots -- vermutlich ist Canvas3D eben doch keine ganz so

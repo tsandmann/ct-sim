@@ -255,7 +255,11 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * @param rate Die neue Zeitbasis fuer den Simulator in Aufrufen alle xxx ms
 	 */
 	protected void setTickRate(int rate) {
-		world.setSimStepIntervalInMs(rate);
+		try {
+			world.setSimStepIntervalInMs(rate);
+		} catch (NullPointerException e) {
+			// NOP
+		}
 	}
 
 	/**
@@ -288,9 +292,18 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 				JComponent tabContent = new BotViewer(bot);
 				String tabTitleTooltip = bot.getDescription()+" (Klasse "+
 					bot.getClass().getSimpleName()+")";
+				String keyinfo = " (";
+				if (System.getProperty("os.name").toLowerCase().startsWith("linux")) {
+					keyinfo += "Strg";
+				} else if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+					keyinfo += "Strg";
+				} else if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
+					keyinfo += "Cmd";
+				}
+				keyinfo += " + e)";
 				String tabIconTooltip = (bot instanceof ThreeDBot
-					? "Bot l\u00F6schen"
-					: "Verbindung zu Bot beenden");
+					? "Bot l\u00F6schen" + keyinfo 
+					: "Verbindung zu Bot beenden" + keyinfo);
 				botTabs.addClosableTab(
 					tabTitle,
 					tabContent,

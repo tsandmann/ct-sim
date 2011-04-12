@@ -86,7 +86,7 @@ public class TestServer implements Runnable {
 	
 	/**
 	 * Wie lange der Worker pro Zyklus warten soll,
-	 * bevor er den Com-Thread wieder laufen lässt
+	 * bevor er den Com-Thread wieder laufen laesst
 	 * (simuliert Arbeit des Ctrl.)
 	 * 
 	 */
@@ -104,15 +104,15 @@ public class TestServer implements Runnable {
 	 * Server-Connection mit _einem_ Client. Diese entspricht einem
 	 * Java-Bot im Simulator.
 	 * 
-	 * Bekommt vom Server den Client_Port übergeben
+	 * Bekommt vom Server den Client_Port uebergeben
 	 * und kommuniziert dann mit diesem.
 	 * 
 	 * Je nach Einstellung von SERVER_TIME schickt er...
 	 * - wenn TRUE: ein Datum an den Client und wartet auf die Antwort
-	 * - wenn FALSE: das ankommende Datum einfach an den Client zurück
+	 * - wenn FALSE: das ankommende Datum einfach an den Client zurueck
 	 * 
 	 * Nach einem Empfangs-/Sende-Vorgang wird auf den Worker
-	 * (wenn eingestellt über USE_WORKER) gewartet...
+	 * (wenn eingestellt ueber USE_WORKER) gewartet...
 	 * 
 	 */
 	class ServerCom
@@ -454,16 +454,16 @@ public class TestServer implements Runnable {
 	 * jeden Zyklus auf den Worker (genauso sync., wie der Ctrl. mit den
 	 * Bots im Sim).
 	 * 
-	 * Über WORKER_WAIT kann eingestellt werden, ob
-	 * der Worker arbeit (des Ctrl.) simulieren soll (er schläft einfach die
+	 * Ueber WORKER_WAIT kann eingestellt werden, ob
+	 * der Worker arbeit (des Ctrl.) simulieren soll (er schlaeft einfach die
 	 * angegebene Zeit, bevor die 'ServerCom' wieder freigegeben wird und weiter
 	 * machen darf).
 	 * 
-	 * Über TICK_RATE wird eine mindest (Bot-)Laufzeit eingestellt.
-	 * Der Worker schläft diese, nachdem er die 'ServerCom' (entspr. einem Bot)
+	 * Ueber TICK_RATE wird eine mindest (Bot-)Laufzeit eingestellt.
+	 * Der Worker schlaeft diese, nachdem er die 'ServerCom' (entspr. einem Bot)
 	 * wieder freigegeben hat. Ein neuer Zyklus (in diesem Fall Sende-Vorgang)
 	 * kann also nicht vor Ablauf dieser Zeit _wieder_ beginnen (aber der
-	 * Bot kann während dieser Zeit rechnen; in diesem Fall die ServerCom
+	 * Bot kann waehrend dieser Zeit rechnen; in diesem Fall die ServerCom
 	 * kommunizieren)...
 	 * 
 	 * 
@@ -515,7 +515,7 @@ public class TestServer implements Runnable {
 			}
 		}
 		
-		// Initialisiert Latches für den "nächsten" Zyklus
+		// Initialisiert Latches fuer den "naechsten" Zyklus
 		public synchronized void reinit() {
 			
 			CountDownLatch start = this.start;
@@ -532,7 +532,7 @@ public class TestServer implements Runnable {
 				throws InterruptedException {
 			
 			CountDownLatch start = this.start;
-			// Überflüssig ?
+			// ueberfluessig ?
 			CountDownLatch done  = this.done;
 			
 			done.countDown();
@@ -551,7 +551,7 @@ public class TestServer implements Runnable {
 	 * global angegebenen Port.
 	 * 
 	 * Bei einer ankommenden Connection wird diese an eine
-	 * 'ServerCom' übergeben und weiter gelauscht...
+	 * 'ServerCom' uebergeben und weiter gelauscht...
 	 * 
 	 */
 	TestServer(int port) {
@@ -633,11 +633,11 @@ public class TestServer implements Runnable {
 }
 
 /** 
- * Der TestClient schickt einfach ein ankommendes Datum zurück
+ * Der TestClient schickt einfach ein ankommendes Datum zurueck
  * an den Server, der dann die Zeit stoppt und ausgibt (SERVER_TIME).
  * 
  * Oder schickt ein Datum an den Server und wartet selbst bis
- * dieses zurückkommt (SERVER_TIME == FALSE).
+ * dieses zurueckkommt (SERVER_TIME == FALSE).
  * 
  */
 class TestClient implements Runnable {

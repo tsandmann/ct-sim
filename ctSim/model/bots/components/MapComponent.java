@@ -272,18 +272,23 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/* neu empfangene Daten ins Map-Array kopieren */
 		int pic_x = 0, pic_y = 0;
 		int bufferIndex = 0;
-		for (int j=from; j<=to; j++) {	// Zeilen
+		for (int j = from; j <= to; ++j) { // Zeilen
 			pic_y = x + j; // X der Map ist Y beim Sim
-			pic_y = HEIGHT - pic_y;	// Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
+			if (pic_y >= HEIGHT || pic_y < 0) {
+				/* ungueltige Daten */
+				lg.warn("ungueltige Map-Position (pic_y=" + pic_y + ") breche Update ab");
+				return;
+			}
+			pic_y = (HEIGHT - 1) - pic_y;	// Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
 			int row_offset = pic_y * WIDTH;
-			for (int i=0; i<SECTION_SIZE; i++) {	// Spalten
-				pic_x = y + i;	// Spaltenindex im Block berechnen, Y der Map ist X beim Sim
-				pic_x = WIDTH - pic_x;	// Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
-				if (pic_x >= WIDTH || pic_y >= HEIGHT) {
-					/* ungueltige Daten :( */
-					lg.warn("(pic_x=" + pic_x + " | pic_y=" + pic_y + ") liegt ausserhalb der Karte! Breche Map-Update ab.");
+			for (int i = 0; i < SECTION_SIZE; ++i) { // Spalten
+				pic_x = y + i; // Spaltenindex im Block berechnen, Y der Map ist X beim Sim
+				if (pic_x >= WIDTH || pic_x < 0) {
+					/* ungueltige Daten */
+					lg.warn("ungueltige Map-Position (pic_x=" + pic_x + ") breche Update ab");
 					return;
 				}
+				pic_x = (WIDTH - 1) - pic_x; // Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
 				/* Grauwert von int8_t nach int umrechnen */
 				int gray = data[bufferIndex++];
 				if (gray > 128) {
@@ -350,7 +355,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			return;
 		}
 
-		int block = c.getDataL();	// 16 Bit Adresse des Map-Blocks
+		int block = c.getDataL(); // 16 Bit Adresse des Map-Blocks
 		
 		/* SubCode auswerten, ein Block wird in vier Teilen uebertragen. 
 		 * Alle Teile muessen dieselbe Blockadresse in DataL mitfuehren! */
@@ -363,8 +368,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				receiveState = 0;
 				return;
 			}
-			botPos.y = HEIGHT - c.getDataR();	// Bot-Position, X-Komponente, wird im Bild in Y-Richtung gezaehlt
-			updateInternalModel(c.getPayload(), block, 0, 7);	// macht die eigentliche Arbeit
+			botPos.y = HEIGHT - c.getDataR(); // Bot-Position, X-Komponente, wird im Bild in Y-Richtung gezaehlt
+			updateInternalModel(c.getPayload(), block, 0, 7); // macht die eigentliche Arbeit
 			receiveState = 1;
 			lastBlock = block;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_2)) {
@@ -375,8 +380,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				receiveState = 0;
 				return;
 			}
-			botPos.x = WIDTH - c.getDataR();	// Bot-Position, Y-Komponente, wird im Bild in X-Richtung gezaehlt
-			updateInternalModel(c.getPayload(), block, 8, 15);	// macht die eigentliche Arbeit
+			botPos.x = WIDTH - c.getDataR(); // Bot-Position, Y-Komponente, wird im Bild in X-Richtung gezaehlt
+			updateInternalModel(c.getPayload(), block, 8, 15); // macht die eigentliche Arbeit
 			receiveState = 2;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_3)) {
 			if (receiveState != 2 || lastBlock != block) {
@@ -387,7 +392,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				return;
 			}
 			botPos.z = c.getDataR();
-			updateInternalModel(c.getPayload(), block, 16, 23);	// macht die eigentliche Arbeit
+			updateInternalModel(c.getPayload(), block, 16, 23); // macht die eigentliche Arbeit
 			receiveState = 3;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_4)) {
 			if (receiveState != 3 || lastBlock != block) {
@@ -398,7 +403,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				return;
 			}
 			// DataR ist nicht belegt
-			updateInternalModel(c.getPayload(), block, 24, 31);	// macht die eigentliche Arbeit
+			updateInternalModel(c.getPayload(), block, 24, 31); // macht die eigentliche Arbeit
 			receiveState = 0;
 			
 			/* GUI-Update freigeben */
@@ -497,7 +502,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 */
 	@Override
 	public String getDescription() {
-		return "Die aktuelle Karte";
+		return "Karte";
 	}
 
 	/**
@@ -539,8 +544,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 */
 	public void saveImage(File file) throws IOException {		
 		/* Grosse der Map berechnen */
-		int width = max_x + (SECTION_SIZE - 1) - min_x + 1;
-		int height = max_y + (SECTION_SIZE * 2 - 1) - min_y + 1;
+		final int width = max_x + (SECTION_SIZE - 1) - min_x + 1;
+		final int height = max_y + (SECTION_SIZE * 2 - 1) - min_y + 1;
 		
 		/* belegten Teil in neues Bild kopieren */
 		BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -550,7 +555,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		
 		/* Pixel kopieren */
 		int[] map = new int[width * height];
-		for (int y=min_y+1; y<=max_y+SECTION_SIZE*2; y++) { // Zeilen
+		for (int y = min_y + 1; y < max_y + SECTION_SIZE * 2; ++y) { // Zeilen
 			System.arraycopy(pixels, min_x + 1 + y * WIDTH, map, (y - min_y - 1) * width, width); // alle Spalten einer Zeile
 		}
 		

@@ -53,7 +53,7 @@ import ctSim.view.gui.SplashWindow;
  */
 public class Main {
 	/** Versionsnummer */
-	public static final String VERSION = "2.7";
+	public static final String VERSION = "2.8";
 	/** Konfigurationsdatei */
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
     /** Flag, welches die Anzeige des Splashscreens bewirkt (DEFAULT: TRUE) */
@@ -79,7 +79,7 @@ public class Main {
 	 * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu
 	 * starten.
 	 *
-	 * @param args Als Kommandozeilenargumente sind momentan zulässig:
+	 * @param args Als Kommandozeilenargumente sind momentan zulaessig:
 	 * <ul>
 	 * <li>{@code -conf pfad/zur/konfigdatei.xml}: Andere Konfigurationsdatei
 	 * als die standardm&auml;&szlig;ige config/ct-sim.xml verwenden</li>

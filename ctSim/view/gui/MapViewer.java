@@ -196,7 +196,7 @@ public class MapViewer extends JPanel {
 		
 		/* Button bauen */
 		JButton save = new Button("speichern", "Karte als png-Bild speichern", null, onSave);
-		JButton reload = new Button("neu laden", "Karte komplett (neu) übertragen", null, onReload);
+		JButton reload = new Button("neu laden", "Karte komplett (neu) uebertragen", null, onReload);
 		
 		/* Toolbar bauen */
 		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.CENTER));

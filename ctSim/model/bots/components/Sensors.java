@@ -20,6 +20,7 @@
 package ctSim.model.bots.components;
 
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.util.Map;
 
 import ctSim.controller.Config;
@@ -439,9 +440,10 @@ public class Sensors {
 					asyncOut.getCommand(getHotCmdCode()).setDataL(rc5Code);
 					asyncOut.flush();
 				}
-			} else
+			} else {
 				// Puffern bis zum writeTo
 				syncPendingRcCode = rc5Code;
+			}
 		}
 		
 		/**
@@ -589,5 +591,92 @@ public class Sensors {
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
 		public Code getHotCmdCode() { return Code.SENS_ERROR; }
+	}
+	
+	/**
+	 * Shutdown-Control
+	 */
+	public static class Shutdown extends BotComponent<Void>
+	implements CanRead, CanWriteAsynchronously {
+		/** async. Outputstream */
+		private CommandOutputStream asyncOut = null;
+		/** steht ein Shutdown an? */
+		private boolean shutdownRequest = false;
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
+		 */
+		public void setAsyncWriteStream(CommandOutputStream s) {
+			asyncOut = s;
+		}
+
+		/**
+		 * Sendet einen Shutdown-Befehl
+		 * @throws IOException
+		 */
+		public synchronized void sendShutdown() throws IOException {
+			try {
+				synchronized (asyncOut) {
+					asyncOut.getCommand(getHotCmdCode());
+					asyncOut.flush();
+				}
+			} catch (NullPointerException e) {
+				// oh, hat wohl keinen Outputstream
+			}
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override 
+		public String getName() { 
+			return "Shutdown"; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override 
+		public String getDescription() { 
+			return "Shutdown-Control"; 
+		}
+
+		/**
+		 * Shutdown-Control 
+		 */
+		public Shutdown() {
+			super(null);
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanWrite#getHotCmdCode()
+		 * @return Command-Code 
+		 */
+		public Code getHotCmdCode() { 
+			return Code.SHUTDOWN; 
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
+		 */
+		@Override
+		public void updateExternalModel() {
+			// No-op, wir zeigen nix an
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
+		 */
+		public void readFrom(Command c) throws ProtocolException {
+			shutdownRequest = true;
+		}
+		
+		/**
+		 * Wurde eine Shutdown-Befehl vom Bot gesendet?
+		 * @return true oder false
+		 */
+		public boolean shutdownRequested() {
+			return shutdownRequest;
+		}
 	}
 }

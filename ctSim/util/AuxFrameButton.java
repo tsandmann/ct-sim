@@ -26,13 +26,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
-
+import ctSim.view.gui.ComponentJFrame;
 import ctSim.view.gui.RemoteCallViewer;
 
 /**
@@ -73,7 +72,10 @@ public class AuxFrameButton extends JToggleButton {
 		super(buttonLabel);
 
 		// Fenster erzeugen; konfigurieren spaeter
-		auxFrame = new JFrame(frameTitle);
+		auxFrame = new ComponentJFrame(frameTitle, frameContent, this);
+		
+		//auxFrame.setLocation(300, 300);
+		
 
 		// Uns selber konfigurieren
 		setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -81,7 +83,17 @@ public class AuxFrameButton extends JToggleButton {
 		// nicht-klickbaren Platz) 
 		setMaximumSize(new Dimension(Integer.MAX_VALUE, 
 			getMaximumSize().height));
-		setToolTipText("Fenster anzeigen mit "+buttonLabel);
+		
+		String keyinfo = "";
+		if (System.getProperty("os.name").toLowerCase().startsWith("linux")) {
+			keyinfo = "Strg";
+		} else if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+			keyinfo = "Strg";
+		} else if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
+			keyinfo = "Cmd";
+		}
+		keyinfo += " + w)";
+		setToolTipText("Fenster \"" + buttonLabel + "\" anzeigen (schlie\u00DFen mit " + keyinfo);
 		addActionListener(new ActionListener() {
 			// Fenster anzeigen/verbergen, wenn wir gedrueckt werden
 			@SuppressWarnings("synthetic-access")
@@ -96,7 +108,7 @@ public class AuxFrameButton extends JToggleButton {
 				}
 			}
 		});
-
+		
 		// Fenster konfigurieren, noch nicht anzeigen
 		auxFrame.addWindowListener(new WindowAdapter() {
 			// Wenn Fenster geschlossen wird soll der gedrueckte Button wieder
@@ -120,6 +132,7 @@ public class AuxFrameButton extends JToggleButton {
 				auxFrame.setSize(new Dimension(dim.width, 500));
 			}
 		}
+		auxFrame.setMinimumSize(frameContent.getMinimumSize());
 	}
 
 	// wenn der Knopf aus der Anzeige entfernt wird (z.B. weil der Container,

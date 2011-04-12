@@ -31,56 +31,64 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.BadLocationException;
-
+import ctSim.ConfigManager;
 import ctSim.controller.Config;
 import ctSim.model.bots.Bot;
-import ctSim.model.bots.components.Actuators.Abl;
+import ctSim.model.bots.components.Actuators.Program;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.FmtLogger;
 
-/* under construction! */
-
 /**
- * Stellt das Eingabefenster fuer ABL-Programme dar. Diese koennen geladen, gespeichert
- * (Textdatei) oder zum Bot gesendet und dort optional gestartet und auf Syntaxfehler
- * ueberprueft werden.
+ * Stellt das Eingabefenster fuer ABL- oder Basic-Programme dar. Diese koennen geladen, 
+ * gespeichert (Textdatei) oder zum Bot gesendet und dort optional gestartet und auf 
+ * Syntaxfehler ueberprueft werden.
  * @author Timo Sandmann (mail@timosandmann.de)
  */
-public class AblViewer extends JPanel {
+public class ProgramViewer extends JPanel implements ActionListener {
 	/** UID	*/
 	private static final long serialVersionUID = 2371285729455694008L;
-	
-	/** Logger fuer das ABL-Fenster */
+	/** Logger fuer das Fenster */
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.LogViewer");
-
-	/** ABL-Komponente */
-	private final Abl ablCompnt;
+	/** Programm-Komponente */
+	private final Program programCompnt;
 	/** Bot zu dem der Viewer gehoert */
 	private final Bot owner;
-	/** Textfeld (Editor) */
-	private JTextArea programText;
 	/** Toolbar Zeile 1 */
-	private JPanel toolbar1;
-	/** Toolar Zeile 2 */
-	private JPanel toolbar2;
+	private final JPanel toolbar0;
+	/** Toolbar Zeile 2 */
+	private final JPanel toolbar1;
+	/** Toolbar Zeile 3 */
+	private final JPanel toolbar2;
+	/** Button fuer ABL-Beispiel */
+	private final JButton exmplABL;
+	/** Textfeld fuer Dateiname */
+	private final JTextField fileName;
+	/** Textfeld (Editor) */
+	private final JTextArea programText;
 	/** Checkbox fuer Autostart */
 	private final JCheckBox autoStart;
 	/** Checkbos fuer Syntax-Check */
-	private final JCheckBox syntaxCheck;
-	/** Statusanzeige fuer Syntax-Check */
-	private RemoteCallViewer.PlannedBhvModel.Done checkLabel;
+	private final JCheckBox syntaxCheckABL;
+	/** Statusanzeige fuer ABL-Syntax-Check */
+	private RemoteCallViewer.PlannedBhvModel.Done checkLabelABL;
+	/** ausgewaehlter Typ. 0: Basic, 1: ABL */
+	private int type = 0;
+	/** Pfad fuer Laden- / Speichern-Dialog */
+	private String path = ConfigManager.path2Os(Config.getValue("botdir")) + "/../bot-logic/basic";
 
 	/**
 	 * Stellt unsere Buttons dar mit Icon und Tooltip
@@ -110,13 +118,12 @@ public class AblViewer extends JPanel {
 	}
 	
 	/**
-	 * @author ts
-	 *
+	 * Filter fuer Textdateien
 	 */
 	class TextFilter extends FileFilter {
 	    /**
 	     * Get the extension of a file.
-	     * @param f 
+	     * @param f File
 	     * @return Extension
 	     */  
 	    public String getExtension(File f) {
@@ -125,7 +132,7 @@ public class AblViewer extends JPanel {
 	        int i = s.lastIndexOf('.');
 
 	        if (i > 0 &&  i < s.length() - 1) {
-	            ext = s.substring(i+1).toLowerCase();
+	            ext = s.substring(i + 1).toLowerCase();
 	        }
 	        return ext;
 	    }
@@ -163,18 +170,20 @@ public class AblViewer extends JPanel {
 	/**
 	 * Programm-Laden-Handler
 	 */
-	private final Runnable onLoadAbl = new Runnable() {
-		@SuppressWarnings("synthetic-access")
+	private final Runnable onLoad = new Runnable() {
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
-			JFileChooser fc = new JFileChooser();
+			JFileChooser fc = new JFileChooser(path);
 			fc.addChoosableFileFilter(new TextFilter());
-			int userChoice = fc.showOpenDialog(AblViewer.this);
+			int userChoice = fc.showOpenDialog(ProgramViewer.this);
 			if (userChoice != JFileChooser.APPROVE_OPTION)
 				// Benutzer hat abgebrochen
 				return;
 			try {
 				File f = fc.getSelectedFile();
+				path = f.getParent();
+				String fname = fileName.getText().substring(0, fileName.getText().lastIndexOf('/') + 1);
+				fileName.setText(fname + f.getName());
 			    BufferedReader in = new BufferedReader(new FileReader(f));
 			    String line;
 			    String data = new String();
@@ -183,11 +192,9 @@ public class AblViewer extends JPanel {
 				}
 				in.close();
 				programText.setText(data);
-				lg.info("ABL-Programm aus Datei "+f.getAbsolutePath()+
-					" geladen ("+f.length()+" Byte)");
+				lg.info("Programm aus Datei " + f.getAbsolutePath() + " geladen (" + f.length() + " Byte)");
 			} catch (IOException e) {
-				lg.warn(e, "E/A-Problem beim Laden der Daten; " +
-						"ignoriere");
+				lg.warn(e, "E/A-Problem beim Laden der Daten; " + "ignoriere");
 			}
 		}
 	};	
@@ -195,75 +202,82 @@ public class AblViewer extends JPanel {
 	/**
 	 * Programm-Speichern-Handler
 	 */
-	private final Runnable onSaveAbl = new Runnable() {
-		@SuppressWarnings("synthetic-access")
+	private final Runnable onSave = new Runnable() {
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
-			JFileChooser fc = new JFileChooser();
+			JFileChooser fc = new JFileChooser(path);
 			fc.addChoosableFileFilter(new TextFilter());
-			int userChoice = fc.showSaveDialog(AblViewer.this);
+			fc.setSelectedFile(new File(path + "/" + fileName.getText().substring(fileName.getText().lastIndexOf('/') + 1)));
+			int userChoice = fc.showSaveDialog(ProgramViewer.this);
 			if (userChoice != JFileChooser.APPROVE_OPTION)
 				// Benutzer hat abgebrochen
 				return;
 			try {
 				File f = fc.getSelectedFile();
+				path = f.getParent();
 				OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(f));
 				out.write(programText.getText());
 				out.flush();
-				lg.info("ABL-Programm in Datei "+f.getAbsolutePath()+
-					" geschrieben ("+f.length()+" Byte)");
+				lg.info("Programm in Datei " + f.getAbsolutePath() + " geschrieben (" + f.length() + " Byte)");
 			} catch (IOException e) {
-				lg.warn(e, "E/A-Problem beim Schreiben der Daten; " +
-						"ignoriere");
+				lg.warn(e, "E/A-Problem beim Schreiben der Daten; " + "ignoriere");
 			}
 		}
 	};
 
 	/**
-	 * Liefert das aktuelle AblViewer-Objekt
+	 * Liefert das aktuelle ProgamViewer-Objekt
 	 * @return	this
 	 */
-	private AblViewer getViewer() {
+	private ProgramViewer getViewer() {
 		return this;
 	}
 	
 	/**
 	 * Programm-Senden-Handler
 	 */
-	private final Runnable onSendAbl = new Runnable() {
-		@SuppressWarnings("synthetic-access")
+	private final Runnable onSend = new Runnable() {
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
+			if (fileName.getText().length() == 0) {
+				lg.warn("Dateiname fehlt, Abbruch");
+				return;
+			}
+			if (fileName.getText().length() > 100) {
+				lg.warn("Dateiname zu lang, Abbruch");
+				return;
+			}
 			try {
-				ablCompnt.sendAblData(programText.getText());
-				lg.info(programText.getText().length() + " Bytes gesendet");
-				if (syntaxCheck.isSelected()) {
+				programCompnt.sendProgramData(fileName.getText(), programText.getText(), type, owner);
+				lg.info(programText.getText().length() + 1 + " Bytes gesendet als Datei " + fileName.getText());
+				if (syntaxCheckABL.isSelected()) {
 					/* Syntaxcheck ab Zeile 1 starten */
 					checkSyntax(1);
 					lastCheckedLine = 1;
 				} else {
 					if (autoStart.isSelected()) {
-						/* ABL-Programm sofort starten */
-						if (owner instanceof CtBotSimTcp) {
-							/* simulierter Bot */
-							CtBotSimTcp simBot = (CtBotSimTcp) owner;
-							simBot.startABL();
-						} else if (owner instanceof RealCtBot) {
-							/* echter Bot */
-							RealCtBot realBot = (RealCtBot) owner;
-							realBot.startABL();
-						}
+						/* Programm sofort starten */
+						programCompnt.startProgram(type);
 					}
 				}
 			} catch (IOException e) {
 				// wenn hier was schief ging, hat das keine tragischen Folgen, also nur Warnung
-				lg.warn("E/A Fehler beim Senden des ABL-Programms");
+				lg.warn("E/A Fehler beim Senden des Programms");
 			}
+		}
+	};
+	
+	/**
+	 * Programm-Abbrechen-Handler
+	 */
+	private final Runnable onStop = new Runnable() {
+		public void run() {
+			programCompnt.stopProgram(type);
 		}
 	};
 
 	/**
-	 * Schreibt ein kleines Beispiel-Programm ins ABL-Fenster.
+	 * Schreibt ein kleines ABL-Beispiel-Programm in den Editor.
 	 */
 	private void setExampleProgram() {
 		programText.setText("// Hey Bot, I'm an ABL-script!\nfor(4)\n\tbot_goto_dist(150,1)\n\tbot_turn(90)\nendf()\n");
@@ -274,14 +288,13 @@ public class AblViewer extends JPanel {
 	 * Erzeugt ein einfaches ABL-Beispiel.
 	 */
 	private final Runnable onExmplAbl = new Runnable() {
-		@SuppressWarnings("synthetic-access")
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
 			if (programText.getText().length() == 0) {
 				setExampleProgram();
 			} else {
-				if (JOptionPane.showConfirmDialog(null, "Es sind bereits Programmdaten im Fenster vorhanden. Sollen diese ueberschrieben werden?", 
-					"Hey!", JOptionPane.YES_NO_OPTION) == 0) {
+				if (JOptionPane.showConfirmDialog(null, "Es sind bereits Programmdaten im Fenster vorhanden. Sollen " + 
+						"diese ueberschrieben werden?", "Hey!", JOptionPane.YES_NO_OPTION) == 0) {
 					setExampleProgram();
 				}
 			}
@@ -289,83 +302,141 @@ public class AblViewer extends JPanel {
 	};
 	
 	/**
-	 * Erzeugt das ABL-Fenster, in dem sich ABL-Programme laden, speichern, eingeben und versenden lassen.
-	 * @param abl	ABL-Actuator, der vom Fenster verwendet werden soll.
-	 * @param bot	Bot-Referenz
+	 * Erzeugt das Programm-Fenster, in dem sich Programme laden, speichern, eingeben und versenden lassen.
+	 * @param program	Program-Actuator, der vom Fenster verwendet werden soll.
+	 * @param bot		Bot-Referenz
 	 */
-	public AblViewer(Abl abl, Bot bot) {
-		ablCompnt = abl;
+	public ProgramViewer(Program program, Bot bot) {
+		programCompnt = program;
 		owner = bot;
 		setLayout(new BorderLayout());
 		
 		/* Editor bauen */
 		programText = new JTextArea();
-		programText.setColumns(30);
-		programText.setRows(40);
+		programText.setColumns(40);
+		programText.setRows(35);
 		programText.setEditable(true);
 		programText.setLineWrap(false);
 		programText.setTabSize(2);
 
+		/* Radio Buttons bauen */
+		JRadioButton typeABL = new JRadioButton("ABL", false);
+		typeABL.setActionCommand("ABL");
+		typeABL.addActionListener(this);
+		JRadioButton typeBasic = new JRadioButton("Basic", true);
+		typeBasic.setActionCommand("Basic");
+		typeBasic.addActionListener(this);
+		
+		ButtonGroup group = new ButtonGroup();
+	    group.add(typeABL);
+	    group.add(typeBasic);
+		
 		/* Buttons bauen */
-		JButton load = new Button("Laden  ",
-			"ABL-Programm aus einer Textdatei laden",
-			Config.getIcon("Open16"), onLoadAbl);
-		JButton save = new Button("Speichern  ",
-			"ABL-Programm in eine Textdatei speichern",
-			Config.getIcon("Save16"), onSaveAbl);
-		JButton exmpl = new Button("Beispiel  ",
-				"Erzeugt ein kleines Beispiel-ABL-Programm",
-				Config.getIcon("New16"), onExmplAbl);		
-		JButton send = new Button("Senden  ",
-			"Programm zum Bot senden", 
-			Config.getIcon("Play16"), onSendAbl);
+		JButton load = new Button("Laden  ", "Programm aus einer Textdatei laden. Voreingestelltes Bot-Verzeichnis " +
+			"wie in Konfig-Datei angegeben.", Config.getIcon("Open16"), onLoad);
+		JButton save = new Button("Speichern  ", "Programm in eine Textdatei speichern. Voreingestelltes Bot-Verzeichnis " +
+			"wie in Konfig-Datei angegeben.", Config.getIcon("Save16"), onSave);
+		exmplABL = new Button("ABL-Beispiel  ",	"Erzeugt ein kleines Beispiel-ABL-Programm",
+			Config.getIcon("New16"), onExmplAbl);
+		JButton stop = new Button("Stopp  ", "laufendes Programm abbrechen",
+				Config.getIcon("Stop16"), onStop);
+		JButton send = new Button("Senden  ", "Programm zum Bot senden", 
+			Config.getIcon("Play16"), onSend);
 
 		/* Checkboxes bauen */
 		autoStart = new JCheckBox("Start");
-		autoStart.setToolTipText("ABL-Programm nach der \u00DCbertragung sofort starten");
+		autoStart.setToolTipText("Programm nach der \u00DCbertragung sofort starten");
 		autoStart.setSelected(true);
 		
-		syntaxCheck = new JCheckBox("Check");
-		syntaxCheck.setToolTipText("Syntax-Check des ABL-Programms nach der \u00DCbertragung");
+		syntaxCheckABL = new JCheckBox("Check");
+		syntaxCheckABL.setToolTipText("Syntax-Check des ABL-Programms nach der \u00DCbertragung");
 		//syntaxCheck.setSelected((bot instanceof CtBotSimTcp));
-		syntaxCheck.setSelected(false);
+		syntaxCheckABL.setSelected(false);
 		
 		RemoteCallViewer rcViwer = new RemoteCallViewer(null);
 		RemoteCallViewer.PlannedBhvModel rcModel = rcViwer.new PlannedBhvModel();
 		
-		checkLabel = rcModel.new Done("-", "Kein Syntaxcheck bisher", Color.GRAY);
+		checkLabelABL = rcModel.new Done("-", "Kein Syntaxcheck bisher", Color.GRAY);
+		
+		/* Dateinamen Feld bauen */
+		fileName = new JTextField();
+		fileName.setEditable(true);
+		fileName.setToolTipText("Dateiname (auf dem Bot-Dateisystem)");
+		fileName.setPreferredSize(new Dimension(160, fileName.getPreferredSize().height));
 		
 		/* Toolbars bauen */
 		JPanel toolbars = new JPanel(new BorderLayout());
+		toolbar0 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		toolbar1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		toolbar2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
+		toolbar0.add(typeBasic);
+		toolbar0.add(typeABL);
 		toolbar1.add(load);
 		toolbar1.add(save);
-		toolbar1.add(exmpl);
+		toolbar1.add(exmplABL);
+		toolbar1.add(stop);
+		toolbar2.add(fileName);
 		toolbar2.add(send);
 		toolbar2.add(autoStart);
-		toolbar2.add(syntaxCheck);
-		toolbar2.add(checkLabel);
+		toolbar2.add(syntaxCheckABL);
+		toolbar2.add(checkLabelABL);
 
-		toolbars.add(toolbar1, BorderLayout.NORTH);
-		toolbars.add(toolbar2, BorderLayout.SOUTH);
+		toolbars.add(toolbar0, BorderLayout.NORTH);
+		toolbars.add(toolbar1, BorderLayout.SOUTH);
+		toolbars.add(toolbar2);
 		
 		/* Gesamtgroesse setzen */
 		JScrollPane s = new JScrollPane(programText);
-		int w = getInsets().left + s.getInsets().left +
-			s.getPreferredSize().width +
-			s.getInsets().right + getInsets().right + 20;
-		int h = getInsets().top + s.getInsets().top +
-			s.getPreferredSize().height + 
-			s.getInsets().bottom + getInsets().bottom +
-			toolbars.getPreferredSize().height;
-		setPreferredSize(new Dimension(w, h));
+		int edit_w = getInsets().left + s.getInsets().left + s.getPreferredSize().width +
+			s.getInsets().right + getInsets().right + 20; // scrollbar-width == 20
+		int h = getInsets().top + s.getInsets().top + s.getPreferredSize().height + 
+			s.getInsets().bottom + getInsets().bottom +	toolbars.getPreferredSize().height;
+		
+		int toolbar_w = getInsets().left + toolbars.getInsets().left + toolbars.getPreferredSize().width +
+			toolbars.getInsets().right + getInsets().right;
+		
+		setPreferredSize(new Dimension(Math.max(edit_w, toolbar_w), h));
+		
+		int min_w = getInsets().left + toolbars.getInsets().left + toolbar_w +
+			toolbars.getInsets().right + getInsets().right;
+		int min_h = getInsets().top + s.getInsets().top + s.getMinimumSize().height + 
+			s.getInsets().bottom + getInsets().bottom +	toolbars.getPreferredSize().height;
+		
+		setMinimumSize(new Dimension(min_w, min_h + 60));
 
 		/* Ausliefern */
 		add(toolbars, BorderLayout.NORTH);
 		add(s, BorderLayout.CENTER);
+		
+		typeBasic.doClick(); // Typ auf Basic setzen
 	}
+	
+	/** 
+	 * Handler fuer Klick auf einen der Radio-Buttons 
+	 * @param e Event 
+	 */
+    public void actionPerformed(ActionEvent e) {
+    	if (e.getActionCommand().equals("Basic")) {
+    		type = 0;
+    		syntaxCheckABL.setEnabled(false);
+    		exmplABL.setEnabled(false);
+    		checkLabelABL.setText("-");
+    		checkLabelABL.setToolTipText("Nicht verf\u00FCgbar f\u00FCr Basic-Programme");
+    		checkLabelABL.setBackground(Color.GRAY);
+    		fileName.setText("/basic/bas1.txt");
+    		path = path.replace("/abl", "/basic");
+    	} else if (e.getActionCommand().equals("ABL")) {
+    		type = 1;
+    		syntaxCheckABL.setEnabled(true);
+    		exmplABL.setEnabled(true);
+    		checkLabelABL.setText("-");
+    		checkLabelABL.setToolTipText("Kein Syntaxcheck bisher");
+    		checkLabelABL.setBackground(Color.GRAY);
+    		fileName.setText("/abl/prog1.txt");
+    		path = path.replace("/basic", "/abl");
+    	}
+    }
 	
 	/** zuletzt gepruefte Programmzeile */
 	private int lastCheckedLine = 0;
@@ -377,40 +448,33 @@ public class AblViewer extends JPanel {
 	public void setSyntaxCheck(boolean result) {
 		if (result == false || lastCheckedLine == programText.getLineCount()) {
 			/* Fehler oder alle Zeilen ueberprueft */
-			toolbar2.remove(checkLabel);
+			toolbar2.remove(checkLabelABL);
 			RemoteCallViewer rcViwer = new RemoteCallViewer(null);
 			RemoteCallViewer.PlannedBhvModel rcModel = rcViwer.new PlannedBhvModel();
 			if (result) {
 				/* OK setzen */
-				checkLabel = rcModel.new Done(":-)", "Keine Syntaxfehler gefunden", Color.GREEN);
+				checkLabelABL = rcModel.new Done(":-)", "Keine Syntaxfehler gefunden", Color.GREEN);
 				lg.info("Syntaxcheck abgeschlossen - keine Fehler gefunden :-)");
 			} else {
 				/* Fehler setzen */
-				checkLabel = rcModel.new Done(":-(", "Syntaxfehler gefunden in Zeile " + lastCheckedLine, Color.RED);
+				checkLabelABL = rcModel.new Done(":-(", "Syntaxfehler gefunden in Zeile " + lastCheckedLine, Color.RED);
 				lg.info("Syntaxcheck ergab Fehler in Zeile " + lastCheckedLine + ". Weitere Ueberpruefung abgebrochen.");
 				/* Zeile mit Syntaxfehler markieren */
 				programText.setSelectedTextColor(Color.RED);
 				try {
-					programText.select(programText.getLineStartOffset(lastCheckedLine-1), programText.getLineEndOffset(lastCheckedLine-1));
+					programText.select(programText.getLineStartOffset(lastCheckedLine - 1), 
+						programText.getLineEndOffset(lastCheckedLine - 1));
 				} catch (BadLocationException e) {
 					// kann nicht passieren, wenn wir nur vorhandene Zeilen checken
 				}
 			}
 			/* Status anzeigen */
-			toolbar2.add(checkLabel);
+			toolbar2.add(checkLabelABL);
 			validate();
 			/* Programmstart, falls gewuenscht und keine Fehler gefunden */
 			if (result == true && autoStart.isSelected()) {
 				/* ABL-Programm sofort starten */
-				if (owner instanceof CtBotSimTcp) {
-					/* simulierter Bot */
-					CtBotSimTcp simBot = (CtBotSimTcp) owner;
-					simBot.startABL();
-				} else if (owner instanceof RealCtBot) {
-					/* echter Bot */
-					RealCtBot realBot = (RealCtBot) owner;
-					realBot.startABL();
-				}
+				programCompnt.startProgram(type);
 			}
 		} else {
 			/* naechste Zeile pruefen */
@@ -468,10 +532,10 @@ public class AblViewer extends JPanel {
 	 */
 	private int countSubString(String s, String subString) {
 		int count = 0;
-		for (int i=0; i>=0;) {
+		for (int i = 0; i >= 0;) {
 			int nextSubString = s.indexOf(subString, i + 1);
 			if (nextSubString >= 0) {
-				count++;
+				++count;
 //				lg.info("nextSubString=" + nextSubString);
 				String foundSubString = s.substring(i + 1, nextSubString);
 				
@@ -483,7 +547,7 @@ public class AblViewer extends JPanel {
 				
 				if (lastComment > lastNewLine) {
 					/* Kommentar */
-					count--;	// nicht mitzaehlen
+					--count; // nicht mitzaehlen
 //					lg.info("kommentar");
 				}
 			}

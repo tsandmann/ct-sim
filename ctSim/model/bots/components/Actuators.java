@@ -35,9 +35,12 @@ import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
 import ctSim.model.Command.SubCode;
+import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
 import ctSim.model.bots.components.BotComponent.SimpleActuator;
+import ctSim.model.bots.ctbot.RealCtBot;
+import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
 /**
@@ -135,31 +138,47 @@ public class Actuators {
 	implements CanRead {
 		/** Internes Model */
 		private final StringBuffer newStuff = new StringBuffer(); 
-
+		/** Zeitpunkt des letzten View-Updates */
+		private long lastUpdateTime = 0;
+		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 		 */
-		public synchronized void readFrom(Command c) {
-			newStuff.append(c.getPayloadAsString());
-			newStuff.append("\n");
+		public void readFrom(Command c) {
+			synchronized (newStuff) {
+				final String newLine = Command.replaceCtrlChars(c.getPayloadAsString());
+				newStuff.append(newLine);
+				if (newStuff.charAt(newStuff.length() - 1) != '\n' && 
+						(newLine.contains("DEBUG") || newLine.contains("INFO") || newLine.contains("WARNING")
+						|| newLine.contains("ERROR") || newLine.contains("FATAL"))) {
+					newStuff.append("\n");
+				}
+			}
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
 		@Override
-		public synchronized void updateExternalModel() {
+		public void updateExternalModel() {
+			final long now = System.currentTimeMillis();
+			if (now - lastUpdateTime < 500) {
+				return;
+			}
+			lastUpdateTime = now;
 			try {
-				getExternalModel().insertString(getExternalModel().getLength(),
-					newStuff.toString(), null);
-				newStuff.delete(0, newStuff.length());
+				synchronized (newStuff) {
+					getExternalModel().insertString(getExternalModel().getLength(),
+						newStuff.toString(), null);
+					newStuff.delete(0, newStuff.length());
+				}
 			} catch (BadLocationException e) {
 				// kann nur passieren wenn einer was am Code vermurkst;
 				// weiterwerfen zu Debugzwecken
 				throw new AssertionError(e);
 			}
 		}
-
+		
 		/**
 		 * Logfenster
 		 */
@@ -182,14 +201,20 @@ public class Actuators {
 	}
 	
 	/**
-	 * ABL-Fenster eines Bots. Kann ABL-Programme aus Textdateien laden, in Textdateien
+	 * Programm-Komponente eines Bots. Kann Basic- und ABL-Programme aus Textdateien laden, in Textdateien
 	 * schreiben und zum simulierten oder echten Bot senden.
 	 * @author Timo Sandmann (mail@timosandmann.de)
 	 */
-	public static class Abl extends BotComponent<PlainDocument>
+	public static class Program extends BotComponent<PlainDocument>
 	implements CanWriteAsynchronously {
+		/** Logger fuer die Programm-Komponente */
+		final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.components.Program");
+		
 		/** asynchroner Outputstream */
 		private CommandOutputStream asyncOut;
+		
+		/** Groesse eines uebertragenen Blocks [Byte] */
+		private final int SEND_SIZE = 64;
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
@@ -200,31 +225,31 @@ public class Actuators {
 		}
 
 		/**
-		 * ABL-Fenster eines Bots
+		 * Programm-Komponente eines Bots
 		 */
-		public Abl() { 
+		public Program() { 
 			super(new PlainDocument()); 
 		}
 		
 		/**
-		 * @return Command-Code fuer ABL == REMOTE_CALL (Unterscheidung per Subcommand)
+		 * @return Command-Code fuer Skript-Programme
 		 */
 		public Code getHotCmdCode() {
-			return Command.Code.REMOTE_CALL; 
+			return Command.Code.PROGRAM; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
 		@Override public String getName() {
-			return "ABL"; 
+			return "Programm"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
 		@Override public String getDescription() { 
-			return "ABL-Control"; 
+			return "Programmfenster f\u00FCr Skriptsprachen"; 
 		}
 
 		/**
@@ -235,29 +260,146 @@ public class Actuators {
 		}
 
 		/**
-		 * Sendet den Inhalt des Fensters als ABL-Programm zum Bot.
-		 * @param data	Das Programm
+		 * Sendet den Inhalt des Fensters als Programm zum Bot.
+		 * @param filename	Dateiname fuer das Programm
+		 * @param data		Das Programm
+		 * @param type		Typ, 0: Basic, 1: ABL
+		 * @param bot		Referenz auf die zugehoerige Bot-Instanz
 		 * @throws IOException
 		 */
-		public void sendAblData(String data) throws IOException {
-			prepareAblCmd(asyncOut, data.getBytes());
+		public void sendProgramData(String filename, String data, int type, Bot bot) throws IOException {
+			/** Wartezeit zwischen den Bloecken [ms] */
+			final int WAIT_TIME = 75;
+			
+			lg.fine("sendProgramData(" + filename + ", " + data + ", " + type + ")");
+			data += '\0';
+			final int length = data.length();
+			lg.fine(" length=" + length);
+			prepareCmd(asyncOut, filename.getBytes(), type, length);
 			asyncOut.flush();
+			if (bot instanceof RealCtBot) {
+				/* dem Bot Zeit geben, den Empfangspuffer zu verarbeiten und die Datei anzulegen */
+				try {
+					Thread.sleep(WAIT_TIME * 3);
+				} catch (InterruptedException e) {
+					// kein Plan
+				}
+			}
+			
+			lg.fine(" sende " + (length / SEND_SIZE) + " Bloecke von " + SEND_SIZE + " Byte");
+			/* SEND_SIZE Byte Bloecke */
+			byte[] bytes = new byte[SEND_SIZE];
+			int i;
+			for (i = 0; i < length / SEND_SIZE; ++i) {
+				lg.fine(" i=" + i);
+				System.arraycopy(data.getBytes(), i * SEND_SIZE, bytes, 0, SEND_SIZE);
+				sendData(asyncOut, bytes, type, i);
+				asyncOut.flush();
+				if (bot instanceof RealCtBot) {
+					/* dem Bot Zeit geben, den Empfangspuffer zu verarbeiten */
+					try {
+						Thread.sleep(WAIT_TIME);
+					} catch (InterruptedException e) {
+						// kein Plan
+					}
+				}
+			}
+			/* Rest */
+			final int to_send = length % SEND_SIZE;
+			lg.fine("to_send=" + to_send);
+			if (to_send > 0) {
+				lg.fine(" sende zusaetzliche " + to_send + " Byte");
+				bytes = new byte[to_send];
+				System.arraycopy(data.getBytes(), length - to_send, bytes, 0, to_send - 1);
+				sendData(asyncOut, bytes, type, i);
+				asyncOut.flush();
+				if (bot instanceof RealCtBot) {
+					/* dem Bot Zeit geben, den Empfangspuffer zu verarbeiten */
+					try {
+						Thread.sleep(WAIT_TIME);
+					} catch (InterruptedException e) {
+						// kein Plan
+					}
+				}
+			}
 		}
 		
 		/**
-		 * Bereitet den Transfer eines ABL-Programms zum Bot vor.
+		 * Bereitet den Transfer eines Programms zum Bot vor.
 		 * @param s			OutputStream fuer die Daten
-		 * @param payload	Das Programm als Byte-Array
+		 * @param filename	Dateiname fuer das Programm
+		 * @param type		Typ, 0: Basic, 1: ABL
+		 * @param length	Laenge des Programms in Byte
 		 */
-		private void prepareAblCmd(CommandOutputStream s, byte[] payload) {
+		private void prepareCmd(CommandOutputStream s, byte[] filename, int type, int length) {
 			Command c = s.getCommand(getHotCmdCode());
-			c.setSubCmdCode(Command.SubCode.REMOTE_CALL_ABL);
-			c.setDataL(payload.length & 0xFFFFFFFF);
-			c.setDataR(payload.length >> 16);
-			c.setPayload(payload);
+			c.setSubCmdCode(Command.SubCode.PROGRAM_PREPARE);
+			c.setDataL(type);			
+			c.setDataR(length);
+			c.setPayload(filename);
+		}
+		
+		/**
+		 * Sendet die Programmdaten zum Bot (in SEND_SIZE Byte groessen Teilen)
+		 * @param s		OutputStream fuer die Daten
+		 * @param data	Programmdaten
+		 * @param type	Typ, 0: Basic, 1: ABL
+		 * @param step	Nr. des Datenstuecks
+		 */
+		private void sendData(CommandOutputStream s, byte[] data, int type, int step) {
+			Command c = s.getCommand(getHotCmdCode());
+			c.setSubCmdCode(Command.SubCode.PROGRAM_DATA);
+			c.setDataL(type);
+			c.setDataR(step * SEND_SIZE);
+			c.setPayload(data);
+		}
+		
+		/**
+		 * Sendet das Kommando, um ein Programm auf dem Bot zu starten
+		 * @param type Typ des Programm; 0: Basic, 1: ABL
+		 */
+		public void startProgram(int type) {
+			switch (type) {
+			case 0:
+				lg.info("Starte Basic-Programm auf dem Bot...");
+				break;
+				
+			case 1:
+				lg.info("Starte ABL-Programm auf dem Bot...");
+				break;
+				
+			default:
+				lg.warn("ungueltiger Programm-Typ");
+				return;
+			}
+			Command c = asyncOut.getCommand(getHotCmdCode());
+			c.setSubCmdCode(Command.SubCode.PROGRAM_START);
+			c.setDataL(type);
+			try {
+				asyncOut.flush();
+			} catch (IOException e) {
+				lg.warn("Konnte Programm nicht starten:");
+				e.printStackTrace();
+			}
+		}
+		
+		/**
+		 * Bricht ein auf dem Bot laufendes Programm ab.
+		 * @param type Typ, 0: Basic, 1: ABL
+		 */
+		public void stopProgram(int type) {			
+			lg.fine("breche Programm auf dem Bot ab");
+			Command c = asyncOut.getCommand(getHotCmdCode());
+			c.setSubCmdCode(Command.SubCode.PROGRAM_STOP);
+			c.setDataL(type);
+			try {
+				asyncOut.flush();
+			} catch (IOException e) {
+				lg.warn("Konnte Programm nicht abbrechen:");
+				e.printStackTrace();
+			}
 		}
 	}
-	
 	
 	/**
 	 * <p>
@@ -335,13 +477,9 @@ public class Actuators {
 		public synchronized void readFrom(Command c) throws ProtocolException {
 			try {
 	    	    switch (c.getSubCode()) {
-		            case NORM:
-	            		setCursor(c.getDataL(), c.getDataR());
-	        	        overwrite(c.getPayloadAsString());
-	    	            break;
-
 		            case LCD_DATA:
-	            		overwrite(c.getPayloadAsString());
+		            	setCursor(c.getDataL(), c.getDataR());
+	            		overwrite(Command.replaceCtrlChars(c.getPayloadAsString()));
 	        	    	break;
 
 	    	        case LCD_CURSOR:
@@ -385,7 +523,7 @@ public class Actuators {
 		 */
 		protected synchronized String getAllText(Document d)
 		throws BadLocationException {
-			return d.getText(0, d.getLength());
+			return d.getText(0, Math.max(d.getLength(), numCols * numRows));
 		}
 
 		/**

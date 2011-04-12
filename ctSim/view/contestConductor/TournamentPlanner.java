@@ -30,7 +30,7 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 /**
  * <p>
  * High-Level-Klasse, die die Spiele eines Turniers plant. Arbeitet eng mit der
- * Klasse {@link ContestConductor} zusammen. Plant einen vollständigen
+ * Klasse {@link ContestConductor} zusammen. Plant einen vollstaendigen
  * Wettbewerb: Schreibt den Turnierbaum in die Datenbank (<a
  * href="package-summary.html#turnierbaum">Was ist der Turnierbaum?</a>)
  * </p>

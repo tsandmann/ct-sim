@@ -50,7 +50,7 @@ import ctSim.model.ThreeDBot;
 import ctSim.util.Runnable1;
 
 /**
- * <a href="doc-files/grundplatte_bemassung.pdf">Grundplatte mit Bemaßung</a>
+ * <a href="doc-files/grundplatte_bemassung.pdf">Grundplatte mit Bemassung</a>
  */
 public class CtBotShape extends Group {
 	/** Abstand zwischen Zentrum und Au&szlig;enkante des Bots [m] laut PDF */
@@ -243,14 +243,18 @@ public class CtBotShape extends Group {
     	leftCheek .setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
     	middle    .setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
 
-    	setMiddleColor(baseColor);
-    	setCheeksColor(baseColor);
+    	if (baseColor != null) {
+    		setMiddleColor(baseColor);
+    		setCheeksColor(baseColor);
+    	}
 
-    	appearanceEventSource.addAppearanceListener(new Runnable1<Color>() {
-			public void run(Color newAppearance) {
-				setCheeksColor(newAppearance);
-			}
-    	});
+    	if (appearanceEventSource != null) {
+	    	appearanceEventSource.addAppearanceListener(new Runnable1<Color>() {
+				public void run(Color newAppearance) {
+					setCheeksColor(newAppearance);
+				}
+	    	});
+    	}
     }
 
     /**

@@ -38,6 +38,7 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 import org.w3c.dom.Attr;
@@ -433,31 +434,43 @@ public class ParcoursLoader {
 
 
 	/**
-	 * Erzeugt eine Sauele mit Lichtquelle obendrauf
+	 * Erzeugt eine Saeule, auch mit Lichtquelle obendrauf moeglich
 	 * 
-	 * @param x
-	 *            X-Koordinate
-	 * @param y
-	 *            Y-Koordinate
-	 * @param wallAppearance
-	 *            Saeulen-Appearance
-	 * @param lightAppearance
-	 *            Licht-Appearance
+	 * @param x			X-Koordinate
+	 * @param y			Y-Koordinate
+	 * @param diameter	Durchmesser der Saeule
+	 * @param height	Hoehe der Saeule
+	 * @param wallAppearance	Saeulen-Appearance
+	 * @param lightAppearance	Licht-Appearance oder null
 	 */
-	private void createPillar(int x, int y, Appearance wallAppearance,
-			Appearance lightAppearance) {
-		Cylinder pillar = new Cylinder(0.05f, 0.5f, wallAppearance);
+	private void createPillar(int x, int y, float diameter, float height, Appearance wallAppearance, Appearance lightAppearance) {
+		Cylinder pillar = new Cylinder(diameter / 2.0f, height, wallAppearance);
 		pillar.setPickable(true);
 
-		Transform3D translate = new Transform3D();
-		translate.rotX(0.5 * Math.PI);
-		TransformGroup tg = new TransformGroup(translate);
+		TransformGroup tg = new TransformGroup();
 		tg.setCapability(javax.media.j3d.Node.ENABLE_PICK_REPORTING);
 		tg.addChild(pillar);
-
+		
+		Transform3D translate = new Transform3D();
+		/* Verschieben auf Fussboden */
+		translate.setTranslation(new Vector3f(0, 0, -0.2f));
+		
+		/* Drehen auf vertikal */
+		Transform3D rot = new Transform3D();
+		rot.rotX(0.5 * Math.PI);
+		translate.mul(rot);
+		
+		tg.setTransform(translate);
+		
+		/* unteres Ende auf Fussboden "hochschieben" */
+		translate.setTranslation(new Vector3f(0, 0, + height / 2.0f - 0.2f));
+		tg.setTransform(translate);
+		
 		this.parcours.addObstacle(tg, x + 0.5f, y + 0.5f);
-		createLight(new BoundingSphere(new Point3d(0d, 0d, 0d), 10d),
+		if (lightAppearance != null) {
+			createLight(new BoundingSphere(new Point3d(0d, 0d, 0d), 10d), 
 				new Color3f(1.0f, 1.0f, 0.9f), x, y, lightAppearance);
+		}
 	}
 
 	/**
@@ -487,7 +500,7 @@ public class ParcoursLoader {
 		// Und einer gelben Kugel, um es zu visualisieren
 		Sphere lightSphere = new Sphere(0.07f);
 		lightSphere.setAppearance(appearance);
-		this.parcours.addLight(lightSphere, x + 0.5f, y + 0.5f, 0.5f);
+		this.parcours.addLight(lightSphere, x + 0.5f, y + 0.5f, LIGHTZ);
 	}
 	
 	/**
@@ -576,21 +589,21 @@ public class ParcoursLoader {
 						// ermittle die Laenge der zusammenhaengenden Wand
 						while ((d < this.parcours.getHeightInBlocks())
 								&& (this.parcoursMap[x][d] == '#')) {
-							this.parcoursMap[x][d] = 'O'; // Feld ist schon
-															// bearbeitet
-							l++; // Laenge hochzaeheln
+							this.parcoursMap[x][d] = 'O'; // Feld ist schon bearbeitet
+							l++; // Laenge hochzaehlen
 							d++;
 						}
 						createWall(x, y, 1, l, getAppearance('#'));
 						break;
 					case '*':
-						createPillar(x, y, getAppearance('X'),
+						createPillar(x, y, 0.1f, LIGHTZ, getAppearance('X'),
 								getAppearance('*'));
 						// Sind wir im Startbereich
-						if (checkNeighbours(x, y, '.') != -1)
+						if (checkNeighbours(x, y, '.') != -1) {
 							createFloor(x, y, getAppearance('.'));
-						else
+						} else {
 							createFloor(x, y, getAppearance(' '));
+						}
 						break;
 					case 'l':
 //						if (Beacon.checkParcoursPosition(this.parcours, x, y)) {
@@ -602,16 +615,13 @@ public class ParcoursLoader {
 //						}
 						break;
 					case '.':
-						// TODO Boden optimieren, kacheln zusammenfassen
+						// TODO Boden optimieren, Kacheln zusammenfassen
 						createFloor(x, y, getAppearance(this.parcoursMap[x][y]));
 						break;
 					case ' ':
-						// TODO Boden optimieren, kacheln zusammenfassen
-						// createFloor(x,
-						// y,getAppearance(this.parcoursMap[x][y]));
 						break;
 					case 'L':
-						// TODO Boden optimieren, kacheln zusammenfassen
+						// TODO Boden optimieren, Kacheln zusammenfassen
 						createFloor(x, y, getAppearance(this.parcoursMap[x][y]));
 						parcours.addHole(x, y);
 						break;
@@ -898,8 +908,9 @@ public class ParcoursLoader {
 	@SuppressWarnings("boxing")
 	private Appearance getAppearance(int key) {
 		Appearance app = (Appearance) this.appearances.get((char) key);
-		if (app == null)
+		if (app == null) {
 			lg.warn("Appearance f\u00FCr '" + (char) key + "' nicht gefunden!");
+		}
 		return app;
 	}
 

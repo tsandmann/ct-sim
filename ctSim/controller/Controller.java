@@ -133,14 +133,14 @@ public interface Controller {
 	/**
 	 * Liefert ein Kommando an einen Bot aus.
 	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben
-	 * Sender und Empfänger stehen in dem command drin 
-	 * @param command das zu übertragende Kommando
-	 * @throws ProtocolException Falls kein passender empfaenger gefunden wurde
+	 * Sender und Empfaenger stehen in dem Command drin 
+	 * @param command das zu uebertragende Kommando
+	 * @throws ProtocolException Falls kein passender Empfaenger gefunden wurde
 	 */
 	public void deliverMessage(Command command) throws ProtocolException;
 	
 	/**
-	 * Liefert eine Id aus dem Adresspoll zurück
+	 * Liefert eine Id aus dem Adresspoll zurueck
 	 * @return Die neue Id
 	 * @throws ProtocolException Wenn keine Adresse mehr frei
 	 */
