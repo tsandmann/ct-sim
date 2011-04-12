@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2011-04-12 Timo Sandmann [mail@timosandmann.de]: Release 19
+
 2011-04-12 Timo Sandmann [mail@timosandmann.de]: Timing-Parameter fuer Programm-Senden optimiert
 
 2011-03-24 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Nullpointer-Exception
