@@ -61,8 +61,8 @@ import javax.swing.ImageIcon;
  * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class FileIconMap implements IconProvider {
-    /** UID */
-	private static final long serialVersionUID = 7916128473992195865L;
+//    /** UID */
+//	private static final long serialVersionUID = 7916128473992195865L;
 
     /** Logger */
     final FmtLogger lg = FmtLogger.getLogger("ctSim.util.FileIconMap");
