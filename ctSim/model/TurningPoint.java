@@ -336,7 +336,7 @@ public class TurningPoint {
 		Vector<TurningPoint> turningPoints = new Vector<TurningPoint>();
 		// turningPoints.add(new TurningPoint(start));
 		// turningPoints.add(new TurningPoint(finish));
-		int count = 0;
+//		int count = 0;
 		for (int i = 1; i < parcoursMapSimple[0].length; i++) {
 			for (int j = 1; j < parcoursMapSimple.length; j++) {
 				if (parcoursMapSimple[j - 1][i - 1] == 1
@@ -345,7 +345,7 @@ public class TurningPoint {
 						&& parcoursMapSimple[j][i] == 0) {
 					turningPoints.add(new TurningPoint(j + distFromCorner, i
 							+ distFromCorner));
-					count++;
+//					count++;
 				}
 				if (parcoursMapSimple[j - 1][i - 1] == 0
 						&& parcoursMapSimple[j - 1][i] == 1
@@ -353,7 +353,7 @@ public class TurningPoint {
 						&& parcoursMapSimple[j][i] == 0) {
 					turningPoints.add(new TurningPoint(j + distFromCorner, i
 							- distFromCorner));
-					count++;
+//					count++;
 				}
 				if (parcoursMapSimple[j - 1][i - 1] == 0
 						&& parcoursMapSimple[j - 1][i] == 0
@@ -361,7 +361,7 @@ public class TurningPoint {
 						&& parcoursMapSimple[j][i] == 0) {
 					turningPoints.add(new TurningPoint(j - distFromCorner, i
 							+ distFromCorner));
-					count++;
+//					count++;
 				}
 				if (parcoursMapSimple[j - 1][i - 1] == 0
 						&& parcoursMapSimple[j - 1][i] == 0
@@ -369,7 +369,7 @@ public class TurningPoint {
 						&& parcoursMapSimple[j][i] == 1) {
 					turningPoints.add(new TurningPoint(j - distFromCorner, i
 							- distFromCorner));
-					count++;
+//					count++;
 				}
 			}
 		}

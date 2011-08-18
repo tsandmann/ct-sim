@@ -1,5 +1,9 @@
 Changelog fuer c't-Sim
 ======================
+2011-08-18 Timo Sandmann [mail@timosandmann.de]: Release 20
+
+2011-07-04 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt
+
 2011-04-12 Timo Sandmann [mail@timosandmann.de]: Release 19
 
 2011-04-12 Timo Sandmann [mail@timosandmann.de]: Timing-Parameter fuer Programm-Senden optimiert

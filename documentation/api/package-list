@@ -1,0 +1,14 @@
+ctSim
+ctSim.applet
+ctSim.controller
+ctSim.model
+ctSim.model.bots
+ctSim.model.bots.components
+ctSim.model.bots.ctbot
+ctSim.model.rules
+ctSim.model.scene
+ctSim.util
+ctSim.util.xml
+ctSim.view
+ctSim.view.contestConductor
+ctSim.view.gui
