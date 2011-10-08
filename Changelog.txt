@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2011-10-08 Timo Sandmann [mail@timosandmann.de]: Exportierte Map des Standardlabyrinths hinzugefuegt
+
 2011-08-18 Timo Sandmann [mail@timosandmann.de]: Release 20
 
 2011-07-04 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt
