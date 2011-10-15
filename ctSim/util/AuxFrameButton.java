@@ -52,8 +52,10 @@ import ctSim.view.gui.RemoteCallViewer;
 public class AuxFrameButton extends JToggleButton {
 	/** UID */
 	private static final long serialVersionUID = - 7629302258050583L;
+//	/** Logger */ 
+//	private final FmtLogger lg = FmtLogger.getLogger("ctSim.utils.AuxFrameButton");
 	/** Frame */
-	private final JFrame auxFrame;
+	private final ComponentJFrame auxFrame;
 
 	/**
 	 * Erzeugt einen JToggleButton, der mit einem extra Fenster verheiratet ist.
@@ -143,6 +145,7 @@ public class AuxFrameButton extends JToggleButton {
 	 */
 	@Override
 	public void removeNotify() {
+//		lg.fine("AuxFrameButton::removeNotify()");
 		auxFrame.dispose();
 		super.removeNotify();
 	}

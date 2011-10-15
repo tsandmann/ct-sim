@@ -146,7 +146,7 @@ public class RealCtBot extends CtBot {
 			_(Sensors.BPSReceiver.class  , READS),
 			_(Sensors.Shutdown.class     , READS, WRITES_ASYNCLY),
 			_(WelcomeReceiver.class      , READS),
-			_(Actuators.Program.class		 , WRITES_ASYNCLY),
+			_(Actuators.Program.class	 , WRITES_ASYNCLY),
 			_(MapComponent.class		 , READS, WRITES_ASYNCLY),
 			_(RemoteCallCompnt.class     , READS, WRITES_ASYNCLY)
 		);

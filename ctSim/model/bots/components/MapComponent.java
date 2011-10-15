@@ -190,6 +190,12 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @throws IOException
 	 */
 	public synchronized void requestMap() throws IOException {
+		/* Fenster komplett loeschen */
+		int color = colorFromRgb(128, 128, 128); // Map-Wert 0
+		for (int i = 0; i < pixels.length; ++i) {
+			pixels[i] = color;
+		}
+		
 		if (writesAsynchronously()) {
 			synchronized (asyncOut) {
 				asyncOut.getCommand(getHotCmdCode()).setSubCmdCode(Command.SubCode.MAP_REQUEST);

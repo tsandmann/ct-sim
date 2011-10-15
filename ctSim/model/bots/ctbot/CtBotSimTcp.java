@@ -96,7 +96,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			_(Sensors.BPSReceiver.class  , WRITES),
 			_(Sensors.Shutdown.class     , READS, WRITES_ASYNCLY),
 			_(WelcomeReceiver.class      , READS),
-			_(Actuators.Program.class		 , WRITES_ASYNCLY),
+			_(Actuators.Program.class	 , WRITES_ASYNCLY),
 			_(MapComponent.class		 , READS, WRITES),	
 			_(RemoteCallCompnt.class     , READS, WRITES)
 		);

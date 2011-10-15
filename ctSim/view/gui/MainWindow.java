@@ -289,7 +289,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			@SuppressWarnings("synthetic-access")
 			public void run() {
 				String tabTitle = bot.toString();
-				JComponent tabContent = new BotViewer(bot);
+				final JComponent tabContent = new BotViewer(bot);
 				String tabTitleTooltip = bot.getDescription()+" (Klasse "+
 					bot.getClass().getSimpleName()+")";
 				String keyinfo = " (";
@@ -335,8 +335,9 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			public void run() {
 				for (int i = 0; i < botTabs.getTabCount(); i++) {
 					BotViewer bv = (BotViewer)botTabs.getComponentAt(i);
-					if (bot == bv.bot)
+					if (bot == bv.bot) {
 						botTabs.remove(i);
+					}
 				}
 				if (world != null) {
 					if (bot instanceof ThreeDBot) {
