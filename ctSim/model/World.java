@@ -171,8 +171,9 @@ public class World {
 		List<ThreeDBot> lb = Misc.newList();
 		lb.addAll(botsToStart);
 		lb.addAll(botsRunning);
-		for (ThreeDBot b : lb)
+		for (ThreeDBot b : lb) {
 			b.dispose();
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -246,8 +247,7 @@ public class World {
 	 * @throws SAXException 
 	 * @throws IOException 
 	 */
-	public static World buildWorldFromFile(File sourceFile)
-	throws SAXException, IOException {
+	public static World buildWorldFromFile(File sourceFile) throws SAXException, IOException {
 	    BufferedReader in = new BufferedReader(new FileReader(sourceFile));
 	    String line;
 	    sourceString = new String();
@@ -280,8 +280,7 @@ public class World {
 	 * @return Die neue Welt
 	 * @throws SAXException 
 	 * @throws IOException */
-	public static World buildWorldFromXmlString(String parcoursAsXml)
-	throws SAXException, IOException {
+	public static World buildWorldFromXmlString(String parcoursAsXml) throws SAXException, IOException {
 		sourceString = new String(parcoursAsXml);
 		return new World(
 			new InputSource(new StringReader(parcoursAsXml)),
@@ -326,11 +325,10 @@ public class World {
 	 * @throws IOException 
 	 * @see ParcoursLoader#loadParcours(InputSource, EntityResolver)
 	 */
-	private World(InputSource source, EntityResolver resolver)
-	throws SAXException, IOException {
-		ParcoursLoader pL = new ParcoursLoader();
-		pL.loadParcours(source, resolver);
-		Parcours p = pL.getParcours();
+	private World(InputSource source, EntityResolver resolver) throws SAXException, IOException {
+		ParcoursLoader pl = new ParcoursLoader();
+		pl.loadParcours(source, resolver);
+		Parcours p = pl.getParcours();
 
 		init();
 		setParcours(p);
@@ -371,7 +369,7 @@ public class World {
 	 * @param parc Der Parcours
 	 */
 	private void setParcours(Parcours parc) {
-		this.parcours = parc;
+		parcours = parc;
 		// Hindernisse werden an die richtige Position geschoben
 
 		// Zuerst werden sie gemeinsam so verschoben, dass ihre Unterkante genau
@@ -381,15 +379,15 @@ public class World {
 		TransformGroup obstTG = new TransformGroup(translate);
 		obstTG.setCapability(Node.ENABLE_PICK_REPORTING);
 		obstTG.setPickable(true);
-		this.obstBG.addChild(obstTG);
+		obstBG.addChild(obstTG);
 
 	    obstTG.addChild(parc.getObstBG());
-	    this.lightBG.addChild(parc.getLightBG());
-	    this.bpsBG.addChild(parc.getBpsBG());
-	    this.terrainBG.addChild(parc.getTerrainBG());
+	    lightBG.addChild(parc.getLightBG());
+	    bpsBG.addChild(parc.getBpsBG());
+	    terrainBG.addChild(parc.getTerrainBG());
 
-	    this.obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
-	    this.obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
+	    obstBG.setCapability(Node.ENABLE_PICK_REPORTING);
+	    obstBG.setCapability(Node.ALLOW_PICKABLE_READ);
 	}
 
 	/**
@@ -397,65 +395,85 @@ public class World {
 	 */
 	private void init() {
 		// Die Wurzel des Ganzen:
-		this.scene = new BranchGroup();
-		this.scene.setName("World");
-		this.scene.setUserData(new String("World"));
+		scene = new BranchGroup();
+		scene.setName("World");
+		scene.setUserData(new String("World"));
 
 		Transform3D worldTransform = new Transform3D();
 		worldTransform.setTranslation(new Vector3f(0.0f, 0.0f, -2.0f));
-		this.worldTG = new TransformGroup(worldTransform);
+		worldTG = new TransformGroup(worldTransform);
 
-		this.worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		this.worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-		this.worldTG.setCapability(Node.ENABLE_PICK_REPORTING);
-		this.worldTG.setCapability(Node.ALLOW_PICKABLE_READ);
-		this.worldTG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
-		this.worldTG.setPickable(true);
+		worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		worldTG.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		worldTG.setCapability(Node.ENABLE_PICK_REPORTING);
+		worldTG.setCapability(Node.ALLOW_PICKABLE_READ);
+		worldTG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
+		worldTG.setPickable(true);
 
-		this.scene.addChild(this.worldTG);
+		scene.addChild(worldTG);
 
 		// Lichtquellen einfuegen
 		// Streulicht (ambient light)
-		BoundingSphere ambientLightBounds =
-			new BoundingSphere(new Point3d(0d, 0d, 0d), 100d);
+		BoundingSphere ambientLightBounds = new BoundingSphere(new Point3d(0d, 0d, 0d), 100d);
 		Color3f ambientLightColor = new Color3f(0.33f, 0.33f, 0.33f);
 		AmbientLight ambientLightNode = new AmbientLight(ambientLightColor);
 		ambientLightNode.setInfluencingBounds(ambientLightBounds);
 		ambientLightNode.setEnable(true);
-		this.worldTG.addChild(ambientLightNode);
+		worldTG.addChild(ambientLightNode);
 
 		// Die Branchgroup fuer die Lichtquellen
-		this.lightBG = new BranchGroup();
-		this.lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		this.lightBG.setPickable(true);
-		this.worldTG.addChild(this.lightBG);
+		lightBG = new BranchGroup();
+		lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		lightBG.setPickable(true);
+		worldTG.addChild(lightBG);
 		
 		// Die Branchgroup fuer BPS (IR-Licht)
-		this.bpsBG = new BranchGroup();
-		this.bpsBG.setPickable(true);
-		this.worldTG.addChild(this.bpsBG);
+		bpsBG = new BranchGroup();
+		bpsBG.setPickable(true);
+		worldTG.addChild(this.bpsBG);
 
 		// Die Branchgroup fuer den Boden
-		this.terrainBG = new BranchGroup();
-		this.terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		this.terrainBG.setPickable(true);
-		this.worldTG.addChild(this.terrainBG);
+		terrainBG = new BranchGroup();
+		terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		terrainBG.setPickable(true);
+		worldTG.addChild(terrainBG);
 
 		// Damit spaeter Bots hinzugefuegt werden koennen:
-		this.obstBG = new BranchGroup();
-		this.obstBG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
-		this.obstBG.setCapability(BranchGroup.ALLOW_DETACH);
-		this.obstBG.setCapability(Group.ALLOW_CHILDREN_WRITE);
-		this.obstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		this.obstBG.setPickable(true);
-		this.worldTG.addChild(this.obstBG);
+		obstBG = new BranchGroup();
+		obstBG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
+		obstBG.setCapability(BranchGroup.ALLOW_DETACH);
+		obstBG.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		obstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		obstBG.setPickable(true);
+		worldTG.addChild(obstBG);
 	}
 
 	/**
 	 * @return Gibt die BranchGroup der Szene zurueck
 	 */
 	public BranchGroup getScene() {
-		return this.scene;
+		return scene;
+	}
+	
+	/**
+	 * @return Gibt den Parcours der Welt zurueck
+	 */
+	public Parcours getParcours() {
+		return parcours;
+	}
+	
+	/**
+	 * @return Gibt die BranchGroup der Hindernisse zurueck
+	 */
+	public BranchGroup getObstacles() {
+		return obstBG;
+	}
+	
+	/**
+	 * @return TG der Welt
+	 */
+	public TransformGroup getWorldTG() {
+		return worldTG;
 	}
 
 	/**
@@ -463,7 +481,7 @@ public class World {
 	 * @param view Die neue Ansicht
 	 */
 	public void addViewPlatform(ViewPlatform view) {
-		this.viewPlatforms.add(view);
+		viewPlatforms.add(view);
 	}
 
 	/**
@@ -473,8 +491,9 @@ public class World {
 	 * @return Neue ThreeDBot-Instanz
 	 */
 	public ThreeDBot addBot(SimulatedBot bot, BotBarrier barrier) {
-		if (bot == null)
+		if (bot == null) {
 			throw new NullPointerException();
+		}
 		
 		int newBot = getFutureNumOfBots() + 1;
 		Point3d pos = parcours.getStartPosition(newBot);
@@ -519,8 +538,9 @@ public class World {
 	 */
 	public ThreeDBot whoHasWon() {
 		for (ThreeDBot b : botsRunning) {
-			if (finishReached(b.getPositionInWorldCoord()))
+			if (finishReached(b.getPositionInWorldCoord())) {
 				return b;
+			}
 		}
 		return null;
 	}
@@ -535,45 +555,36 @@ public class World {
 	}
 
 	/**
-	 * Prueft, ob ein Objekt mit irgendeinem anderen Objekt kollidiert
-	 *
-	 * @param obst das Objekt
-	 * @param bounds die Grenzen des Objekts
-	 * @param newPosition die angestrebte neue Position
-	 * @return {@code true} wenn das Objekt kollidiert ist, {@code false} wenn
-	 * es sich frei bewegen kann
+	 * Prueft, ob ein Objekt mit einem Objekt aus der obstacle-BG der Welt kollidiert
+	 * @param body Koerper des Objekts
+	 * @param bounds Grenzen des Objekts
+	 * @return PickInfo ueber die Kollision (null, falls keine)
 	 */
-	public boolean isCollided(ThreeDBot obst, Bounds bounds,
-	Vector3d newPosition) {
-
-		Group botBody = obst.getShape();
-
-		// schiebe probehalber Bounds an die neue Position
+	public PickInfo getCollision(Group body, Bounds bounds) {
+		/* Welttransformation anwenden */
 		Transform3D transform = new Transform3D();
-		transform.setTranslation(newPosition);
+		worldTG.getTransform(transform);
 		bounds.transform(transform);
+		
+		PickBounds pickBounds = new PickBounds(bounds);
+		PickInfo pickInfo = null;
 
-		// und noch die Welttransformation darauf anwenden
-		this.worldTG.getTransform(transform);
-		bounds.transform(transform);
-
-		PickBounds pickShape = new PickBounds(bounds);
-		PickInfo pickInfo;
-		synchronized (this.obstBG) {
-			// Eigenen Koerper des Roboters verstecken
-			botBody.setPickable(false);
-
-			pickInfo = this.obstBG.pickAny(PickInfo.PICK_BOUNDS,
-				PickInfo.NODE, pickShape);
-
-			// Eigenen Koerper des Roboters wieder "pickable" machen
-			botBody.setPickable(true);
+		synchronized (obstBG) {
+			/* eigenen Koerper verstecken */
+			body.setPickable(false);
+			
+			/* Kollisionserkennung von Java3D */
+			pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE, pickBounds);
+			
+			/* eigenen Koerper wieder zuruecksetzen */
+			body.setPickable(true);
 		}
-
-		if ((pickInfo == null) || (pickInfo.getNode() == null))
-			return false;
-
-		return true;
+		
+//		if (pickInfo != null && pickInfo.getNode() != null) {
+//			lg.info("Objekt=" + pickInfo.getNode().getParent().getName() + " kollidiert");
+//		}
+		
+		return pickInfo;
 	}
 
 	/**
@@ -587,7 +598,7 @@ public class World {
 	 * @return True wenn Bodenkontakt besteht.
 	 */
 	public boolean checkTerrain(Point3d pos, double groundClearance) {
-		return !parcours.checkHole(pos);
+		return ! parcours.checkHole(pos);
 	}
 
 	/**
@@ -610,8 +621,7 @@ public class World {
 	 *            Es werden rayCount viele Strahlen vom Sensor ausgewertet.
 	 * @return Die Menge an Licht, die absorbiert wird, von 1023(100%) bis 0(0%)
 	 */
-	public short sensGroundReflectionLine(Point3d pos, Vector3d heading,
-			double openingAngle, short rayCount) {
+	public short sensGroundReflectionLine(Point3d pos, Vector3d heading, double openingAngle, short rayCount) {
 		// Sensorposition
 		Point3d sensPos = new Point3d(pos);
 		// Sensorblickrichtung nach unten
@@ -632,8 +642,7 @@ public class World {
 		// Bei nur einem Strahl schaue in die Mitte.
 		if (rayCount > 2) {
 			// beginne links aussen
-			AxisAngle4d rotationAxisX = new AxisAngle4d(heading,
-				openingAngle / 2);
+			AxisAngle4d rotationAxisX = new AxisAngle4d(heading, openingAngle / 2);
 			transformX.set(rotationAxisX);
 			transformX.transform(sensHeading);
 			// arbeite dich nach rechts vor
@@ -656,8 +665,7 @@ public class World {
 			// PickRay modifizieren
 			pickRay.set(sensPos, sensHeading);
 			// Picking durchfuehren
-			pickInfo = this.terrainBG.pickClosest(PickInfo.PICK_GEOMETRY,
-				PickInfo.NODE, pickRay);
+			pickInfo = terrainBG.pickClosest(PickInfo.PICK_GEOMETRY, PickInfo.NODE, pickRay);
 			// Boden auswerten
 			if (pickInfo == null) {
 				// kein Boden = 100% des Lichts wird verschluckt
@@ -700,17 +708,14 @@ public class World {
 	 *            Es werden rayCount viele Strahlen vom Sensor ausgewertet.
 	 * @return Die Menge an Licht, die absorbiert wird, von 1023(100%) bis 0(0%)
 	 */
-	public short sensGroundReflectionCross(Point3d pos, Vector3d heading,
-			double openingAngle, short rayCount) {
+	public short sensGroundReflectionCross(Point3d pos, Vector3d heading, double openingAngle, short rayCount) {
 		double absorption;
 		Vector3d xHeading = new Vector3d(heading);
-		absorption = sensGroundReflectionLine(pos, heading, openingAngle,
-			(short) (rayCount / 2));
+		absorption = sensGroundReflectionLine(pos, heading, openingAngle, (short) (rayCount / 2));
 		Transform3D rotation = new Transform3D();
 		rotation.rotZ(Math.PI / 2);
 		rotation.transform(xHeading);
-		absorption += sensGroundReflectionLine(pos, xHeading, openingAngle,
-			(short) (rayCount / 2));
+		absorption += sensGroundReflectionLine(pos, xHeading, openingAngle, (short) (rayCount / 2));
 		return (short) (absorption / 2);
 	}
 
@@ -735,7 +740,7 @@ public class World {
 		// Falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
 		Transform3D transform = new Transform3D();
-		this.worldTG.getTransform(transform);
+		worldTG.getTransform(transform);
 		transform.transform(relPos);
 
 		// oder rotiert:
@@ -744,8 +749,7 @@ public class World {
 
 		PickConeRay picky = new PickConeRay(relPos, relHeading,	openingAngle);
 		PickInfo pickInfo;
-		pickInfo = this.lightBG.pickClosest(PickInfo.PICK_GEOMETRY,
-			PickInfo.CLOSEST_DISTANCE, picky);
+		pickInfo = lightBG.pickClosest(PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE, picky);
 
 		if (pickInfo == null) {
 			return 1023;
@@ -775,14 +779,13 @@ public class World {
 		Point3d relPos = new Point3d(pos);
 		Point3d endPos = new Point3d(end);
 		Transform3D transform = new Transform3D();
-		this.worldTG.getTransform(transform);
+		worldTG.getTransform(transform);
 		transform.transform(relPos);
 		transform.transform(endPos);
 
 		PickConeSegment picky = new PickConeSegment(relPos, endPos, openingAngle);
 		PickInfo pickInfo;
-		pickInfo = this.bpsBG.pickClosest(PickInfo.PICK_GEOMETRY,
-			PickInfo.CLOSEST_INTERSECTION_POINT | PickInfo.LOCAL_TO_VWORLD, picky);
+		pickInfo = bpsBG.pickClosest(PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_INTERSECTION_POINT | PickInfo.LOCAL_TO_VWORLD, picky);
 
 		if (pickInfo == null) {
 			/* keine Landmarke sichtbar */
@@ -793,7 +796,7 @@ public class World {
 		Transform3D t = pickInfo.getLocalToVWorld();
 		t.transform(source);
 
-		Beacon beacon = new Beacon(this.parcours, source);
+		Beacon beacon = new Beacon(parcours, source);
 		int result = beacon.getID();
 
 //		lg.info("Baken-Position [mm]: " + beacon);
@@ -829,7 +832,7 @@ public class World {
 		Point3d relPos = new Point3d(pos);
 		Point3d endPos = new Point3d(end);
 		Transform3D transform = new Transform3D();
-		this.worldTG.getTransform(transform);
+		worldTG.getTransform(transform);
 		transform.transform(relPos);
 		transform.transform(endPos);
 
@@ -840,8 +843,7 @@ public class World {
 		} catch (Exception e) {
 			// NOP
 		}
-		pickInfo = this.obstBG.pickClosest(
-			PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE, picky);
+		pickInfo = obstBG.pickClosest(PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE, picky);
 		try {
 			botBody.setPickable(true);
 		} catch (Exception e) {
@@ -870,13 +872,16 @@ public class World {
 		
 		ThreeDBot[] bots = botsRunning.toArray(new ThreeDBot[] {});
 		// Zeiger koennte zu weit stehen
-		if (runningBotsPtr >= bots.length)
+		if (runningBotsPtr >= bots.length) {
 			runningBotsPtr = 0;
+		}
 
-		for (int i = runningBotsPtr; i < bots.length; i++)
+		for (int i = runningBotsPtr; i < bots.length; i++) {
 			bots[i].updateSimulation(getSimTimeInMs());
-		for (int i = 0; i < runningBotsPtr; i++)
+		}
+		for (int i = 0; i < runningBotsPtr; i++) {
 			bots[i].updateSimulation(getSimTimeInMs());
+		}
 		runningBotsPtr++;
 	}
 
@@ -968,7 +973,6 @@ public class World {
 	 * @throws MapException falls keine Daten in der Map
 	 */
 	public void toMap(int bot, int free, int occupied) throws IOException, MapException {
-		
 		float size = Float.parseFloat(Config.getValue("mapSize"));
 		int resolution = Integer.parseInt(Config.getValue("mapResolution"));
 		int section_points = Integer.parseInt(Config.getValue("mapSectionSize"));

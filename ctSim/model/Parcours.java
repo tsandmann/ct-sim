@@ -66,8 +66,7 @@ public class Parcours {
 	 * Anzahl der Startpositionen fuer Bots. Dir Position 0 ist die Default
 	 * Position, ab 1 fuer die Wettkampfbots.
 	 */
-	public static final int BOTS = 3; // ParcoursLoader kann max 2 Startplaetze
-								// erzeugen, darum hardcoded auf 3
+	public static final int BOTS = 3; // ParcoursLoader kann max 2 Startplaetze erzeugen, darum hardcoded auf 3
 
 	/** enthaelt alle Hindernisse */
 	private BranchGroup ObstBG;
@@ -108,34 +107,42 @@ public class Parcours {
 	 * gelesen). Format siehe {@link ParcoursLoader}.
 	 */
 	private int[][] parcoursMap;
+	
+	/** Parcoursloder */
+	final private ParcoursLoader parcoursLoader;
 
 	/**
 	 * Erzeugt einen neuen, leeren Parcours
+	 * @param parcoursLoader ParcoursLoader, der den Parcours erzeugt hat
 	 */
-	public Parcours() {
+	public Parcours(ParcoursLoader parcoursLoader) {
 		super();
+		this.parcoursLoader = parcoursLoader;
 		// Die Branchgroup fuer die Hindernisse
-		this.ObstBG = new BranchGroup();
-		this.ObstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		this.ObstBG.setPickable(true);
+		ObstBG = new BranchGroup();
+		ObstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		ObstBG.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		ObstBG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		ObstBG.setCapability(BranchGroup.ALLOW_DETACH);
+		ObstBG.setPickable(true);
 
 		// Die Branchgroup fuer die Lichtquellen
-		this.lightBG = new BranchGroup();
-		this.lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		this.lightBG.setPickable(true);
+		lightBG = new BranchGroup();
+		lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		lightBG.setPickable(true);
 		
 		// Die Branchgroup fuer die BPS-Landmarken
-		this.bpsBG = new BranchGroup();
-		this.bpsBG.setPickable(true);
+		bpsBG = new BranchGroup();
+		bpsBG.setPickable(true);
 
 		// Die Branchgroup fuer den Boden
-		this.terrainBG = new BranchGroup();
-		this.terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		this.terrainBG.setPickable(true);
+		terrainBG = new BranchGroup();
+		terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
+		terrainBG.setPickable(true);
 
-		// Standard startposition
-		this.startPositions[0][0] = 0;
-		this.startPositions[0][1] = 0;
+		// Standard Startposition
+		startPositions[0][0] = 0;
+		startPositions[0][1] = 0;
 	}
 
 	/**
@@ -172,7 +179,7 @@ public class Parcours {
 	 * @return Liefert die Parcoursbreite in Gittereinheiten zur&uuml;ck
 	 */
 	public int getWidthInBlocks() {
-		return this.dimX;
+		return dimX;
 	}
 
 	/**
@@ -182,7 +189,7 @@ public class Parcours {
 	 *            Breite in Gittereinheiten
 	 */
 	public void setDimX(int dimX1) {
-		this.dimX = dimX1;
+		dimX = dimX1;
 	}
 
 	/**
@@ -190,7 +197,7 @@ public class Parcours {
 	 * @return Liefert die Parcoursh&ouml;he in Gittereinheiten zur&uuml;ck
 	 */
 	public int getHeightInBlocks() {
-		return this.dimY;
+		return dimY;
 	}
 
 	/**
@@ -198,7 +205,7 @@ public class Parcours {
 	 *         zur&uuml;ck
 	 */
 	public float getWidthInM() {
-		return this.dimX * this.blockSizeInM;
+		return dimX * blockSizeInM;
 	}
 
 	/**
@@ -206,7 +213,7 @@ public class Parcours {
 	 *         zur&uuml;ck
 	 */
 	public float getHeightInM() {
-		return this.dimY * this.blockSizeInM;
+		return dimY * blockSizeInM;
 	}
 
 	/**
@@ -216,7 +223,7 @@ public class Parcours {
 	 *            Hoehe in Gittereinheiten
 	 */
 	public void setDimY(int dimY1) {
-		this.dimY = dimY1;
+		dimY = dimY1;
 	}
 
 	/**
@@ -230,7 +237,7 @@ public class Parcours {
 	 *            Y-Achse im Parcours-Gitter
 	 */
 	public void addObstacle(Node obstacle, float x, float y) {
-		addNode(obstacle, x, y, this.ObstBG);
+		addNode(obstacle, x, y, ObstBG);
 	}
 
 	/**
@@ -246,7 +253,25 @@ public class Parcours {
 	 *            Z-Achse Absolut
 	 */
 	public void addObstacle(Node obstacle, float x, float y, float z) {
-		addNode(obstacle, x, y, z, this.ObstBG);
+		addNode(obstacle, x * blockSizeInM, y * blockSizeInM, z, ObstBG);
+	}
+	
+	/**
+	 * Fuegt ein bewegliches Hinderniss ein
+	 * 
+	 * @param obstacle
+	 *            Das Hinderniss
+	 * @param x
+	 *            X-Koordinate
+	 * @param y
+	 *            Y-Koordinate
+	 */
+	public void addMoveableObstacle(Node obstacle, float x, float y) {
+		BranchGroup bg = new BranchGroup();
+		bg.setCapability(BranchGroup.ALLOW_DETACH);
+		bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		addNode(obstacle, x, y, 0.0f, bg);
+		ObstBG.addChild(bg);
 	}
 
 	/**
@@ -262,7 +287,7 @@ public class Parcours {
 	 *            Z-Achse Absolut
 	 */
 	public void addFloor(Node floor, float x, float y, float z) {
-		addNode(floor, x, y, z, this.terrainBG);
+		addNode(floor, x * blockSizeInM, y * blockSizeInM, z, terrainBG);
 	}
 
 	/**
@@ -271,28 +296,30 @@ public class Parcours {
 	 * @param node
 	 *            Die Node
 	 * @param x
-	 *            X-Achse im Parcours-Gitter
+	 *            X-Koordinate
 	 * @param y
-	 *            Y-Achse im Parcours-Gitter
+	 *            Y-Koordinate
 	 * @param z
 	 *            Z-Achse absolut; positiv ist vom Boden Richtung Bot +
 	 *            Betrachter, negativ vom Boden weg vom Betrachter
 	 * @param bg
-	 *            Gruppe in die das Objekt rein soll
+	 *            BranchGropu, in die das Objekt rein soll
 	 */
 	public void addNode(Node node, float x, float y, float z, BranchGroup bg) {
 		Transform3D translate = new Transform3D();
 
-		node.setPickable(true);
-
-		translate.set(new Vector3d(x * this.blockSizeInM,
-				y * this.blockSizeInM, z));
+		translate.set(new Vector3d(x, y, z));
 
 		TransformGroup tg = new TransformGroup(translate);
-		tg.setCapability(Node.ENABLE_PICK_REPORTING);
-		tg.setPickable(true);
+		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		tg.addChild(node);
-		bg.addChild(tg);
+		
+		TransformGroup tgObject = new TransformGroup();
+		tgObject.addChild(tg);
+		tgObject.setCapability(Node.ENABLE_PICK_REPORTING);
+		tgObject.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		tgObject.setPickable(true);
+		bg.addChild(tgObject);
 	}
 
 	/**
@@ -308,7 +335,7 @@ public class Parcours {
 	 *            Gruppe in die das Objekt rein soll
 	 */
 	public void addNode(Node node, float x, float y, BranchGroup bg) {
-		addNode(node, x, y, 0.0f, bg);
+		addNode(node, x * blockSizeInM, y * blockSizeInM, 0.0f, bg);
 	}
 
 	/**
@@ -324,7 +351,7 @@ public class Parcours {
 	 *            Z-Achse im Parcours-Gitter
 	 */
 	public void addLight(Node light, float x, float y, float z) {
-		addNode(light, x, y, z, this.lightBG);
+		addNode(light, x * blockSizeInM, y * blockSizeInM, z, lightBG);
 	}
 
 	/**
@@ -334,7 +361,7 @@ public class Parcours {
 	 *            Die Lichtquelle
 	 */
 	public void addLight(Node light) {
-		this.lightBG.addChild(light);
+		lightBG.addChild(light);
 	}
 	
 	/**
@@ -346,7 +373,7 @@ public class Parcours {
 	 * @param z   Z-Achse im Parcours-Gitter
 	 */
 	public void addBPSLight(Node bps, float x, float y, float z) {
-		addNode(bps, x, y, z, this.bpsBG);
+		addNode(bps, x * blockSizeInM, y * blockSizeInM, z, bpsBG);
 	}
 	
 	/**
@@ -354,35 +381,44 @@ public class Parcours {
 	 * @param bps Landmarke
 	 */
 	public void addBPSLight(Node bps) {
-		this.bpsBG.addChild(bps);
+		bpsBG.addChild(bps);
 	}
 
+	/**
+	 * Erzeugt ein bewegliches Objekt
+	 * @param x X-Koordinate
+	 * @param y Y-Koordinate
+	 */
+	public void createMovableObject(float x, float y) {
+		parcoursLoader.createMovableObject(x, y);
+	}
+	
 	/**
 	 * @return Liefert die Licht-Branchgroup zurueck
 	 */
 	public BranchGroup getLightBG() {
-		return this.lightBG;
+		return lightBG;
 	}
 
 	/**
 	 * @return Liefert die Branchgroup mit den Landmarken fuer BPS zurueck 
 	 */
 	public BranchGroup getBpsBG() {
-		return this.bpsBG;
+		return bpsBG;
 	}
 	
 	/**
 	 * @return Liefert die Hindernis-Branchgroup zurueck
 	 */
 	public BranchGroup getObstBG() {
-		return this.ObstBG;
+		return ObstBG;
 	}
 
 	/**
 	 * @return Liefert die Boden-Branchgroup zurueck
 	 */
 	public BranchGroup getTerrainBG() {
-		return this.terrainBG;
+		return terrainBG;
 	}
 
 	/**
@@ -397,8 +433,8 @@ public class Parcours {
 	 */
 	public void setStartPosition(int bot, int x, int y) {
 		if (bot <= BOTS - 1) {
-			this.startPositions[bot][0] = x;
-			this.startPositions[bot][1] = y;
+			startPositions[bot][0] = x;
+			startPositions[bot][1] = y;
 		}
 	}
 
@@ -415,20 +451,20 @@ public class Parcours {
 		if (bot <= BOTS - 1) {
 			switch (dir) {
 			case 0:
-				this.startHeadings[bot][0] = 1;
-				this.startHeadings[bot][1] = 0;
+				startHeadings[bot][0] = 1;
+				startHeadings[bot][1] = 0;
 				break;
 			case 90:
-				this.startHeadings[bot][0] = 0;
-				this.startHeadings[bot][1] = -1;
+				startHeadings[bot][0] = 0;
+				startHeadings[bot][1] = -1;
 				break;
 			case 180:
-				this.startHeadings[bot][0] = -1;
-				this.startHeadings[bot][1] = 0;
+				startHeadings[bot][0] = -1;
+				startHeadings[bot][1] = 0;
 				break;
 			case 270:
-				this.startHeadings[bot][0] = 0;
-				this.startHeadings[bot][1] = 1;
+				startHeadings[bot][0] = 0;
+				startHeadings[bot][1] = 1;
 				break;
 
 			default:
@@ -450,19 +486,16 @@ public class Parcours {
 		if (bot < BOTS) {
 			int i;
 			for (i = 1; i < BOTS; i++) {
-				if (startPositionsUsed[i] == null)
+				if (startPositionsUsed[i] == null) {
 					break;
+				}
 			}
 			if (i == BOTS) {
 				i = 0;
 			}
-			pos = new Point3d(this.startPositions[i][0] * this.blockSizeInM
-					+ this.blockSizeInM / 2, this.startPositions[i][1]
-					* this.blockSizeInM + this.blockSizeInM / 2, 0.0f);
+			pos = new Point3d(startPositions[i][0] * blockSizeInM + blockSizeInM / 2, startPositions[i][1] * blockSizeInM + blockSizeInM / 2, 0.0f);
 		} else {
-			pos = new Point3d(this.startPositions[0][0] * this.blockSizeInM
-					+ this.blockSizeInM / 2, this.startPositions[0][1]
-					* this.blockSizeInM + this.blockSizeInM / 2, 0.0f);
+			pos = new Point3d(startPositions[0][0] * blockSizeInM + blockSizeInM / 2, startPositions[0][1] * blockSizeInM + blockSizeInM / 2, 0.0f);
 		}
 		return pos;
 	}
@@ -476,8 +509,9 @@ public class Parcours {
 	 */
 	public int getStartPositionNumber(Bot bot) {
 		for (int i = 1; i < startPositionsUsed.length; i++) {
-			if (startPositionsUsed[i] == bot)
+			if (startPositionsUsed[i] == bot) {
 				return i;
+			}
 		}
 		return 0;
 	}
@@ -491,14 +525,11 @@ public class Parcours {
 	 */
 	public Point3d getUsedStartPosition(int bot) {
 		Point3d pos = null;
-		if (bot < BOTS)
-			pos = new Point3d(this.startPositions[bot][0] * this.blockSizeInM
-					+ this.blockSizeInM / 2, this.startPositions[bot][1]
-					* this.blockSizeInM + this.blockSizeInM / 2, 0.0f);
-		else
-			pos = new Point3d(this.startPositions[0][0] * this.blockSizeInM
-					+ this.blockSizeInM / 2, this.startPositions[0][1]
-					* this.blockSizeInM + this.blockSizeInM / 2, 0.0f);
+		if (bot < BOTS) {
+			pos = new Point3d(startPositions[bot][0] * blockSizeInM + blockSizeInM / 2, startPositions[bot][1] * blockSizeInM + blockSizeInM / 2, 0.0f);
+		} else {
+			pos = new Point3d(startPositions[0][0] * blockSizeInM + blockSizeInM / 2, startPositions[0][1] * blockSizeInM + blockSizeInM / 2, 0.0f);
+		}
 
 		return pos;
 	}
@@ -512,18 +543,17 @@ public class Parcours {
 	 */
 	public Vector3d getStartHeading(int bot) {
 		Vector3d pos = null;
-		if (bot < BOTS)
-			pos = new Vector3d(this.startHeadings[bot][0],
-					this.startHeadings[bot][1], 0.0f);
-		else
+		if (bot < BOTS) {
+			pos = new Vector3d(startHeadings[bot][0], startHeadings[bot][1], 0.0f);
+		} else {
 			// sonst leifer die Default-Richtung
-			pos = new Vector3d(this.startHeadings[0][0],
-					this.startHeadings[0][1], 0.0f);
+			pos = new Vector3d(startHeadings[0][0], startHeadings[0][1], 0.0f);
+		}
 
 		if (pos.length() == 0) {
 			pos.x = 1.0f;
 			lg.warn("getStartHeading wurde nach einer noch nicht gesetzten "
-					+ "Heading gefragt (Bot " + bot + "). Setze Default");
+				+ "Heading gefragt (Bot " + bot + "). Setze Default");
 		}
 
 		pos.normalize();
@@ -538,7 +568,7 @@ public class Parcours {
 	 * @param y
 	 */
 	public void addFinishPosition(int x, int y) {
-		this.finishPositions.add(new Vector2d(x, y));
+		finishPositions.add(new Vector2d(x, y));
 	}
 
 	/**
@@ -556,7 +586,7 @@ public class Parcours {
 	 *         Breite und H&ouml;he gleich.)
 	 */
 	public int getBlockSizeInMM() {
-		return (int)(blockSizeInM * 1000.0f);
+		return (int) (blockSizeInM * 1000.0f);
 	}
 
 	/**
@@ -566,16 +596,15 @@ public class Parcours {
 	 * @return true, falls ja
 	 */
 	public boolean finishReached(Vector3d pos) {
-		for (Vector2d p : this.finishPositions) {
+		for (Vector2d p : finishPositions) {
+			double minX = p.x * blockSizeInM;
+			double maxX = p.x * blockSizeInM + blockSizeInM;
+			double minY = p.y * blockSizeInM;
+			double maxY = p.y * blockSizeInM + blockSizeInM;
 
-			double minX = p.x * this.blockSizeInM;
-			double maxX = p.x * this.blockSizeInM + this.blockSizeInM;
-			double minY = p.y * this.blockSizeInM;
-			double maxY = p.y * this.blockSizeInM + this.blockSizeInM;
-
-			if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY)
-					&& (pos.y < maxY))
+			if ((pos.x > minX) && (pos.x < maxX) && (pos.y > minY) && (pos.y < maxY)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -597,9 +626,9 @@ public class Parcours {
 	 * @return true, wenn der Bot ueber dem loch steht
 	 */
 	public boolean checkHole(Point3d pos) {
-		if ((pos.x < 0) || (pos.y < 0) || (pos.x > dimX * blockSizeInM)
-				|| (pos.y > dimY * blockSizeInM))
+		if ((pos.x < 0) || (pos.y < 0) || (pos.x > dimX * blockSizeInM) || (pos.y > dimY * blockSizeInM)) {
 			return true;
+		}
 
 		Iterator it = holes.iterator();
 		while (it.hasNext()) {
@@ -609,9 +638,9 @@ public class Parcours {
 			Vector2f max = new Vector2f(min);
 			max.add(new Vector2f(blockSizeInM, blockSizeInM));
 
-			if ((pos.x > min.x) && (pos.x < max.x) && (pos.y > min.y)
-					&& (pos.y < max.y))
+			if ((pos.x > min.x) && (pos.x < max.x) && (pos.y > min.y) && (pos.y < max.y)) {
 				return true;
+			}
 		}
 
 		return false;
@@ -643,8 +672,7 @@ public class Parcours {
 	 *         enthaelt nur 0 (freies Feld) und 1 (blockiertes Feld)
 	 */
 	int[][] getFlatParcours() {
-		int[][] parcoursMapSimple = new int[this.getWidthInBlocks()][this
-				.getHeightInBlocks()];
+		int[][] parcoursMapSimple = new int[getWidthInBlocks()][getHeightInBlocks()];
 		for (int y = 0; y < parcoursMapSimple[0].length; y++) {
 			for (int x = 0; x < parcoursMapSimple.length; x++) {
 				switch (parcoursMap[x][y]) {
@@ -683,10 +711,9 @@ public class Parcours {
 	 *         enthaelt nur 0 (freies Feld), 1 (blockiertes Feld) und 2 (Loch)
 	 */
 	public int[][] getFlatParcoursWithHoles() {
-		int[][] parcoursMapSimple = new int[this.getWidthInBlocks()][this
-				.getHeightInBlocks()];
-		for (int y=0; y<parcoursMapSimple[0].length; y++) {
-			for (int x=0; x<parcoursMapSimple.length; x++) {
+		int[][] parcoursMapSimple = new int[getWidthInBlocks()][getHeightInBlocks()];
+		for (int y = 0; y < parcoursMapSimple[0].length; y++) {
+			for (int x = 0; x < parcoursMapSimple.length; x++) {
 				switch (parcoursMap[x][y]) {
 				case '.':
 				case ' ':
@@ -750,12 +777,13 @@ public class Parcours {
 	public double getShortestDistanceToFinish(Vector2d from) {
 		Vector<TurningPoint> shortestPath = getShortestPath(from);
 
-		if (shortestPath == null || shortestPath.size() < 2)
+		if (shortestPath == null || shortestPath.size() < 2) {
 			return -1;
+		}
 
 		double distance = TurningPoint.getLengthOfPath(shortestPath);
 
-		return distance * this.blockSizeInM;
+		return distance * blockSizeInM;
 	}
 
 	/**
@@ -778,12 +806,13 @@ public class Parcours {
 	 */
 	public Vector<TurningPoint> getShortestPath(Vector2d from) {
 		Vector2d f = new Vector2d(from);
-		f.scale(1 / this.blockSizeInM);
+		f.scale(1 / blockSizeInM);
 
 		TurningPoint start = new TurningPoint(f);
 
-		if (finishPositions.size() == 0)
+		if (finishPositions.size() == 0) {
 			return null;
+		}
 
 		Iterator<Vector2d> it = finishPositions.iterator();
 
@@ -795,8 +824,7 @@ public class Parcours {
 			fin.add(new Vector2d(0.5, 0.5));
 			TurningPoint finish = new TurningPoint(fin);
 
-			Vector<TurningPoint> tmpShortestPath = start.getShortestPathTo(
-					finish, getFlatParcours());
+			Vector<TurningPoint> tmpShortestPath = start.getShortestPathTo(finish, getFlatParcours());
 
 			double tmpDist = TurningPoint.getLengthOfPath(tmpShortestPath);
 			if (tmpDist < dist) {
@@ -815,7 +843,7 @@ public class Parcours {
 	 * @return Welt-Koordinate [mm]
 	 */
 	public int blockToWorld(int koord) {
-		return koord * (int)(this.blockSizeInM * 1000.0f);
+		return koord * (int) (blockSizeInM * 1000.0f);
 	}
 	
 	/**
@@ -824,8 +852,8 @@ public class Parcours {
 	 * @return {X, Y}
 	 */
 	public int[] getStartPositions(int bot) {
-		if (bot < this.startPositions.length) {
-			return this.startPositions[bot];
+		if (bot < startPositions.length) {
+			return startPositions[bot];
 		} else {
 			return null;
 		}

@@ -294,7 +294,7 @@ public class ParcoursLoader {
 	 */
 	public ParcoursLoader() {
 		super();
-		this.parcours = new Parcours();
+		parcours = new Parcours(this);
 	}
 
 	/**
@@ -312,11 +312,8 @@ public class ParcoursLoader {
 	 * @param appearance
 	 *            Die Appearance
 	 */
-	private void createWall(int x, int y, int lengthX, int lengthY,
-			Appearance appearance) {
-		Box box = new Box(parcours.getBlockSizeInM() / 2 * lengthX, parcours
-				.getBlockSizeInM()
-				/ 2 * lengthY, WALL_HEIGHT, appearance);
+	private void createWall(int x, int y, int lengthX, int lengthY, Appearance appearance) {
+		Box box = new Box(parcours.getBlockSizeInM() / 2 * lengthX, parcours.getBlockSizeInM() / 2 * lengthY, WALL_HEIGHT, appearance);
 		parcours.addObstacle(box, x + lengthX / 2.0f, y + lengthY / 2.0f);
 	}
 
@@ -336,13 +333,9 @@ public class ParcoursLoader {
 	 *            Aussehen des Bodens
 	 */
 	@SuppressWarnings("unused")
-	private void createFloor(int x, int y, int lengthX, int lengthY,
-			Appearance app) {
-		Box box = new Box(this.parcours.getBlockSizeInM() / 2 * lengthX,
-				this.parcours.getBlockSizeInM() / 2 * lengthY,
-				World.PLAYGROUND_THICKNESS, app);
-		this.parcours.addFloor(box, x + lengthX / 2.0f, y + lengthY / 2.0f,
-				-World.PLAYGROUND_THICKNESS + 0.001f);
+	private void createFloor(int x, int y, int lengthX, int lengthY, Appearance app) {
+		Box box = new Box(parcours.getBlockSizeInM() / 2 * lengthX, parcours.getBlockSizeInM() / 2 * lengthY, World.PLAYGROUND_THICKNESS, app);
+		parcours.addFloor(box, x + lengthX / 2.0f, y + lengthY / 2.0f, - World.PLAYGROUND_THICKNESS + 0.001f);
 	}
 
 	/**
@@ -357,10 +350,8 @@ public class ParcoursLoader {
 	 *            Aussehen des Bodens
 	 */
 	private void createFloor(int x, int y, Appearance app) {
-		Box box = new Box(this.parcours.getBlockSizeInM() * 0.5f, this.parcours
-				.getBlockSizeInM() * 0.5f, World.PLAYGROUND_THICKNESS, app);
-		this.parcours.addFloor(box, x + 0.5f, y + 0.5f,
-				-World.PLAYGROUND_THICKNESS + 0.001f);
+		Box box = new Box(parcours.getBlockSizeInM() * 0.5f, parcours.getBlockSizeInM() * 0.5f, World.PLAYGROUND_THICKNESS, app);
+		parcours.addFloor(box, x + 0.5f, y + 0.5f, - World.PLAYGROUND_THICKNESS + 0.001f);
 	}
 
 	/**
@@ -372,15 +363,10 @@ public class ParcoursLoader {
 	 *            Aussehen des Bodens
 	 */
 	private void createWholeFloor(Appearance app) {
-		Box box = new Box(this.parcours.getWidthInBlocks()
-				* this.parcours.getBlockSizeInM() * 0.5f, this.parcours
-				.getHeightInBlocks()
-				* this.parcours.getBlockSizeInM() * 0.5f,
-				World.PLAYGROUND_THICKNESS, app);
-		this.parcours.addFloor(box,
-				((float) this.parcours.getWidthInBlocks()) / 2,
-				((float) this.parcours.getHeightInBlocks()) / 2,
-				-World.PLAYGROUND_THICKNESS - 0.005f); // +0.001f);
+		Box box = new Box(parcours.getWidthInBlocks() * parcours.getBlockSizeInM() * 0.5f,
+			parcours.getHeightInBlocks() * parcours.getBlockSizeInM() * 0.5f, World.PLAYGROUND_THICKNESS, app);
+		parcours.addFloor(box, ((float) parcours.getWidthInBlocks()) / 2, ((float) parcours.getHeightInBlocks()) / 2,
+			- World.PLAYGROUND_THICKNESS - 0.005f);
 	}
 
 
@@ -405,8 +391,9 @@ public class ParcoursLoader {
 		// Zaehler
 		int n = 0;
 
-		for (n = 0; n < points.length; n++)
-			p[n] = points[n] * this.parcours.getBlockSizeInM();
+		for (n = 0; n < points.length; n++) {
+			p[n] = points[n] * parcours.getBlockSizeInM();
+		}
 
 		createFloor(x, y, getAppearance(' '));
 
@@ -429,48 +416,57 @@ public class ParcoursLoader {
 
 		ls.setAppearance(appearance);
 
-		this.parcours.addFloor(ls, x + 0.5f, y + 0.5f, 0.002f);
+		parcours.addFloor(ls, x + 0.5f, y + 0.5f, 0.002f);
 	}
 
 
 	/**
 	 * Erzeugt eine Saeule, auch mit Lichtquelle obendrauf moeglich
 	 * 
-	 * @param x			X-Koordinate
-	 * @param y			Y-Koordinate
+	 * @param x			X-Koordinate (bewegliches Objekt) oder X-Achse im Parcours (unbewegliches Objekt)
+	 * @param y			Y-Koordinate (bewegliches Objekt) oder Y-Achse im Parcours (unbewegliches Objekt)
 	 * @param diameter	Durchmesser der Saeule
 	 * @param height	Hoehe der Saeule
-	 * @param wallAppearance	Saeulen-Appearance
+	 * @param bodyAppearance	Saeulen-Appearance
 	 * @param lightAppearance	Licht-Appearance oder null
+	 * @param moveable			Soll das Objekt bewegbar sein?
 	 */
-	private void createPillar(int x, int y, float diameter, float height, Appearance wallAppearance, Appearance lightAppearance) {
-		Cylinder pillar = new Cylinder(diameter / 2.0f, height, wallAppearance);
-		pillar.setPickable(true);
-
+	private void createPillar(float x, float y, float diameter, float height, Appearance bodyAppearance, Appearance lightAppearance, boolean moveable) {
+		Cylinder pillar = new Cylinder(diameter / 2.0f, height, bodyAppearance);
+//		pillar.setName("Object");
+		pillar.setCapability(javax.media.j3d.Node.ALLOW_PICKABLE_WRITE);
+		
 		TransformGroup tg = new TransformGroup();
-		tg.setCapability(javax.media.j3d.Node.ENABLE_PICK_REPORTING);
 		tg.addChild(pillar);
 		
 		Transform3D translate = new Transform3D();
-		/* Verschieben auf Fussboden */
-		translate.setTranslation(new Vector3f(0, 0, -0.2f));
 		
 		/* Drehen auf vertikal */
 		Transform3D rot = new Transform3D();
 		rot.rotX(0.5 * Math.PI);
 		translate.mul(rot);
 		
-		tg.setTransform(translate);
-		
 		/* unteres Ende auf Fussboden "hochschieben" */
 		translate.setTranslation(new Vector3f(0, 0, + height / 2.0f - 0.2f));
 		tg.setTransform(translate);
 		
-		this.parcours.addObstacle(tg, x + 0.5f, y + 0.5f);
-		if (lightAppearance != null) {
-			createLight(new BoundingSphere(new Point3d(0d, 0d, 0d), 10d), 
-				new Color3f(1.0f, 1.0f, 0.9f), x, y, lightAppearance);
+		if (moveable) {
+			parcours.addMoveableObstacle(tg, x, y);
+		} else {
+			parcours.addObstacle(tg, x + 0.5f, y + 0.5f);
 		}
+		if (lightAppearance != null) {
+			createLight(new BoundingSphere(new Point3d(0d, 0d, 0d), 10d), new Color3f(1.0f, 1.0f, 0.9f), (int) x, (int) y, lightAppearance);
+		}
+	}
+	
+	/**
+	 * Erzeugt ein bewegliches Objekt
+	 * @param x X-Koordinate
+	 * @param y Y-Koordinate
+	 */
+	public void createMovableObject(float x, float y) {
+		createPillar(x, y, 0.03f, 0.08f, getAppearance('o'), null, true);
 	}
 
 	/**
@@ -485,22 +481,20 @@ public class ParcoursLoader {
 	 * @param appearance
 	 *            Die Appearance
 	 */
-	private void createLight(BoundingSphere pointLightBounds,
-			Color3f pointLightColor, int x, int y, Appearance appearance) {
+	private void createLight(BoundingSphere pointLightBounds, Color3f pointLightColor, int x, int y, Appearance appearance) {
 		// Lichter bestehen aus dem echten Licht
 		PointLight pointLight = new PointLight();
 		pointLight.setColor(pointLightColor);
-		pointLight.setPosition((x + 0.5f) * this.parcours.getBlockSizeInM(),
-			(y + 0.5f) * this.parcours.getBlockSizeInM(), LIGHTZ);
+		pointLight.setPosition((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM(), LIGHTZ);
 		pointLight.setInfluencingBounds(pointLightBounds);
 		pointLight.setAttenuation(1f, 3f, 0f);
 		pointLight.setEnable(true);
-		this.parcours.addLight(pointLight);
+		parcours.addLight(pointLight);
 
 		// Und einer gelben Kugel, um es zu visualisieren
 		Sphere lightSphere = new Sphere(0.07f);
 		lightSphere.setAppearance(appearance);
-		this.parcours.addLight(lightSphere, x + 0.5f, y + 0.5f, LIGHTZ);
+		parcours.addLight(lightSphere, x + 0.5f, y + 0.5f, LIGHTZ);
 	}
 	
 	/**
@@ -512,17 +506,16 @@ public class ParcoursLoader {
 	private void createBPSBeacon(int x, int y, Appearance appearance) {
 		PointLight pointBPSLight = new PointLight();
 //		pointBPSLight.setColor(new Color3f(0.5f, 0.5f, 0.5f));
-		pointBPSLight.setPosition((x + 0.5f) * this.parcours.getBlockSizeInM(),
-			(y + 0.5f) * this.parcours.getBlockSizeInM(), BPS.BPSZ);
+		pointBPSLight.setPosition((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM(), BPS.BPSZ);
 		
 //		pointBPSLight.setInfluencingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1.0));
 //		pointBPSLight.setAttenuation(1f, 3f, 0f);
 		pointBPSLight.setEnable(true);
-		this.parcours.addBPSLight(pointBPSLight);
+		parcours.addBPSLight(pointBPSLight);
 		
 		Sphere bpsSphere = new Sphere(0.02f);
 		bpsSphere.setAppearance(appearance);
-		this.parcours.addBPSLight(bpsSphere, x + 0.5f, y + 0.5f, BPS.BPSZ);
+		parcours.addBPSLight(bpsSphere, x + 0.5f, y + 0.5f, BPS.BPSZ);
 	}
 
 	/**
@@ -540,16 +533,18 @@ public class ParcoursLoader {
 	 *         dann die Richtung in Grad. 0 = (x=1, y=0) ab da im Uhrzeigersinn
 	 */
 	private int checkNeighbours(int x, int y, char c) {
-		if ((y > 0) && (this.parcoursMap[x][y - 1] == c))
+		if ((y > 0) && (parcoursMap[x][y - 1] == c)) {
 			return 90;
-		if ((y < this.parcours.getHeightInBlocks() - 1)
-				&& (this.parcoursMap[x][y + 1] == c))
+		}
+		if ((y < parcours.getHeightInBlocks() - 1) && (parcoursMap[x][y + 1] == c)) {
 			return 270;
-		if ((x > 0) && (this.parcoursMap[x - 1][y] == c))
+		}
+		if ((x > 0) && (parcoursMap[x - 1][y] == c)) {
 			return 180;
-		if ((x < this.parcours.getWidthInBlocks() - 1)
-				&& (this.parcoursMap[x + 1][y] == c))
+		}
+		if ((x < parcours.getWidthInBlocks() - 1) && (parcoursMap[x + 1][y] == c)) {
 			return 0;
+		}
 
 		return -1;
 	}
@@ -561,23 +556,19 @@ public class ParcoursLoader {
 		int l;
 		int d;
 
-		if (this.parcoursMap != null) {
-
-			for (int y = 0; y < this.parcours.getHeightInBlocks(); y++) {
-				for (int x = 0; x < this.parcours.getWidthInBlocks(); x++)
-					switch (this.parcoursMap[x][y]) {
+		if (parcoursMap != null) {
+			for (int y = 0; y < parcours.getHeightInBlocks(); y++) {
+				for (int x = 0; x < parcours.getWidthInBlocks(); x++) {
+					switch (parcoursMap[x][y]) {
 					case 'X':
-						createWall(x, y, 1, 1,
-								getAppearance(this.parcoursMap[x][y]));
+						createWall(x, y, 1, 1, getAppearance(parcoursMap[x][y]));
 						break;
 					case '=':
 						l = 0;
 						d = x;
 						// ermittle die Laenge der zusammenhaengenden Wand
-						while ((d < this.parcours.getWidthInBlocks())
-								&& (this.parcoursMap[d][y] == '=')) {
-							this.parcoursMap[d][y] = 'O'; // Feld ist schon
-															// bearbeitet
+						while ((d < parcours.getWidthInBlocks()) && (parcoursMap[d][y] == '=')) {
+							parcoursMap[d][y] = 'O'; // Feld ist schon bearbeitet
 							l++; // Laenge hochzaeheln
 							d++;
 						}
@@ -587,25 +578,26 @@ public class ParcoursLoader {
 						l = 0;
 						d = y;
 						// ermittle die Laenge der zusammenhaengenden Wand
-						while ((d < this.parcours.getHeightInBlocks())
-								&& (this.parcoursMap[x][d] == '#')) {
-							this.parcoursMap[x][d] = 'O'; // Feld ist schon bearbeitet
+						while ((d < parcours.getHeightInBlocks()) && (parcoursMap[x][d] == '#')) {
+							parcoursMap[x][d] = 'O'; // Feld ist schon bearbeitet
 							l++; // Laenge hochzaehlen
 							d++;
 						}
 						createWall(x, y, 1, l, getAppearance('#'));
 						break;
-					case '*':
-						createPillar(x, y, 0.1f, LIGHTZ, getAppearance('X'),
-								getAppearance('*'));
-						// Sind wir im Startbereich
+					case '*': // Licht
+						createPillar(x, y, 0.1f, LIGHTZ, getAppearance('X'), getAppearance('*'), false);
+						// sind wir im Startbereich ?
 						if (checkNeighbours(x, y, '.') != -1) {
 							createFloor(x, y, getAppearance('.'));
 						} else {
 							createFloor(x, y, getAppearance(' '));
 						}
 						break;
-					case 'l':
+					case 'o': // bewegliches Objekt
+						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM());
+						break;
+					case 'l': // Landmarke
 //						if (Beacon.checkParcoursPosition(this.parcours, x, y)) {
 						createBPSBeacon(x, y, getAppearance('l'));
 //						} else {
@@ -616,95 +608,83 @@ public class ParcoursLoader {
 						break;
 					case '.':
 						// TODO Boden optimieren, Kacheln zusammenfassen
-						createFloor(x, y, getAppearance(this.parcoursMap[x][y]));
+						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						break;
 					case ' ':
 						break;
 					case 'L':
 						// TODO Boden optimieren, Kacheln zusammenfassen
-						createFloor(x, y, getAppearance(this.parcoursMap[x][y]));
+						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						parcours.addHole(x, y);
 						break;
 
 					case '0':
-						this.parcours.setStartPosition(0, x, y);
-						createFloor(x, y, getAppearance(this.parcoursMap[x][y]));
+						parcours.setStartPosition(0, x, y);
+						parcours.setStartHeading(0, checkNeighbours(x, y, '.'));
+						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						break;
 					case '1':
-						this.parcours.setStartPosition(1, x, y);
-						this.parcours.setStartHeading(1, checkNeighbours(x, y,
-								'.'));
-						createFloor(x, y, getAppearance(this.parcoursMap[x][y]));
+						parcours.setStartPosition(1, x, y);
+						parcours.setStartHeading(1, checkNeighbours(x, y, '.'));
+						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						break;
 					case '2':
-						this.parcours.setStartPosition(2, x, y);
-						this.parcours.setStartHeading(2, checkNeighbours(x, y,
-								'.'));
-						createFloor(x, y, getAppearance(this.parcoursMap[x][y]));
+						parcours.setStartPosition(2, x, y);
+						parcours.setStartHeading(2, checkNeighbours(x, y, '.'));
+						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						break;
 					case 'Z':
 						// this.parcours.setFinishPosition(x,y);
-						this.parcours.addFinishPosition(x, y);
-						createFloor(x, y, getAppearance(this.parcoursMap[x][y]));
+						parcours.addFinishPosition(x, y);
+						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						break;
-
 					case '-':
-						createLine(x, y, LINE_HORIZ,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_HORIZ, getAppearance(parcoursMap[x][y]));
 						break;
 					case '|':
-						createLine(x, y, LINE_VERT,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_VERT, getAppearance(parcoursMap[x][y]));
 						break;
 					case '/':
-						createLine(x, y, LINE_CORNER_SE,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_CORNER_SE, getAppearance(parcoursMap[x][y]));
 						break;
 					case '\\':
-						createLine(x, y, LINE_CORNER_SW,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_CORNER_SW, getAppearance(parcoursMap[x][y]));
 						break;
 					case '+':
-						createLine(x, y, LINE_CORNER_NE,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_CORNER_NE, getAppearance(parcoursMap[x][y]));
 						break;
 					case '~':
-						createLine(x, y, LINE_CORNER_NW,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_CORNER_NW, getAppearance(parcoursMap[x][y]));
 						break;
 					case '[':
-						createLine(x, y, LINE_CROSSING_X,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_CROSSING_X, getAppearance(parcoursMap[x][y]));
 						break;
 					case 'T':
-						createLine(x, y, LINE_CROSSING_T,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_CROSSING_T, getAppearance(parcoursMap[x][y]));
 						break;
 					case ']':
-						createLine(x, y, LINE_CROSSING_T_MIRR,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_CROSSING_T_MIRR, getAppearance(parcoursMap[x][y]));
 						break;
 					case '}':
-						createLine(x, y, LINE_CROSSING_T_ROT_UNCLOCKWISE,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_CROSSING_T_ROT_UNCLOCKWISE, getAppearance(parcoursMap[x][y]));
 						break;
 					case '{':
-						createLine(x, y, LINE_CROSSING_T_ROT_CLOCKWISE,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_CROSSING_T_ROT_CLOCKWISE, getAppearance(parcoursMap[x][y]));
 						break;
 					case '!':
-						createLine(x, y, LINE_BREAK_VERT,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_BREAK_VERT, getAppearance(parcoursMap[x][y]));
 						break;
 					case '%':
-						createLine(x, y, LINE_BREAK_HOR,
-								getAppearance(this.parcoursMap[x][y]));
+						createLine(x, y, LINE_BREAK_HOR, getAppearance(parcoursMap[x][y]));
 						break;
 					}
+				}
 
 			}
-			// TODO: Hier wird testweise ein Boden aus einem Stueck eingefuegt!
+			
+			/* fuer den Rest Boden aus einem Stueck einfuegen */
 			createWholeFloor(getAppearance(' '));
+			
 			// TODO Hat mit dem Einzeichnen des Wegs bis zum Ziel zu tun; sollte
 			// ordentlich integriert werden: Menueeintrag in GUI, der das
 			// Einzeichnen ein-/ausschaltet. Aus Gruenden der Klarheit sollten
@@ -732,17 +712,13 @@ public class ParcoursLoader {
 		}
 	}
 
-
-
 	/**
 	 * @return Liefert das soeben aufgebaute Parcours-Objekt zurueck
 	 */
 	public Parcours getParcours() {
-		return this.parcours;
+		return parcours;
 	}
 
-	//TODO Wette: Diese Methode (106 Zeilen) laesst sich durch Verwenden von XPath auf ca. 20 Zeilen vereinfachen
-	//$$ EntityResolver-Kram ist zu kompliziert bei Aufruf dieser Methode; weg und ersetzen durch das, was in XmlDocument auch gemacht wird
 	/**
 	 * <p>
 	 * L&auml;dt einen Parcours aus einer InputSource.
@@ -776,13 +752,13 @@ public class ParcoursLoader {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public void loadParcours(InputSource source, EntityResolver resolver)
-			throws SAXException, IOException {
+	public void loadParcours(InputSource source, EntityResolver resolver) throws SAXException, IOException {
 		// Ein DOMParser liest ein XML-File ein
 		DOMParser parser = new DOMParser();
 		try {
-			if (resolver != null)
+			if (resolver != null) {
 				parser.setEntityResolver(resolver);
+			}
 			// einlesen
 			parser.parse(source);
 			// umwandeln in ein Document
@@ -792,8 +768,9 @@ public class ParcoursLoader {
 
 			// als erster suchen wir uns den Parcours-Block
 			Node n = doc.getDocumentElement().getFirstChild();
-			while ((n != null) && (!n.getNodeName().equals("parcours")))
+			while ((n != null) && (!n.getNodeName().equals("parcours"))) {
 				n = n.getNextSibling();
+			}
 			// jetzt haben wir ihn
 
 			int y = 0; // Anzahl der Zeilen im File
@@ -810,19 +787,18 @@ public class ParcoursLoader {
 				Node child = children.item(i);
 				if (child.getNodeName().equals("line")) {
 					y++;
-					if (x < child.getChildNodes().item(0).getNodeValue()
-							.length())
-						x = child.getChildNodes().item(0).getNodeValue()
-								.length();
+					if (x < child.getChildNodes().item(0).getNodeValue().length()) {
+						x = child.getChildNodes().item(0).getNodeValue().length();
+					}
 				}
 			}
 
 			// Parcors vorbereiten
-			this.parcours.setDimX(x);
-			this.parcours.setDimY(y);
+			parcours.setDimX(x);
+			parcours.setDimY(y);
 
 			// Und eine Map anlegen
-			this.parcoursMap = new int[x][y];
+			parcoursMap = new int[x][y];
 
 			parcours.setParcoursMap(parcoursMap);
 
@@ -832,10 +808,10 @@ public class ParcoursLoader {
 			for (int i = children.getLength() - 1; i >= 0; i--) {
 				Node child = children.item(i);
 				if (child.getNodeName().equals("line")) {
-					char c[] = child.getChildNodes().item(0).getNodeValue()
-							.toCharArray();
-					for (x = 0; x < c.length; x++)
-						this.parcoursMap[x][y] = c[x];
+					char c[] = child.getChildNodes().item(0).getNodeValue().toCharArray();
+					for (x = 0; x < c.length; x++) {
+						parcoursMap[x][y] = c[x];
+					}
 					y++;
 				}
 			}
@@ -844,8 +820,9 @@ public class ParcoursLoader {
 
 			// suchen wir uns den Otptics-Block
 			n = doc.getDocumentElement().getFirstChild();
-			while ((n != null) && (!n.getNodeName().equals("optics")))
+			while ((n != null) && (!n.getNodeName().equals("optics"))) {
 				n = n.getNextSibling();
+			}
 			// jetzt haben wir ihn
 
 			// Eine Liste aller Kinder des Parcours-Eintrags organsisieren
@@ -859,8 +836,7 @@ public class ParcoursLoader {
 				Node appearance = children.item(i);
 				if (appearance.getNodeName().equals("appearance")) {
 					// Zuerst den Type extrahieren
-					char item = appearance.getAttributes().getNamedItem("type")
-							.getNodeValue().toCharArray()[0];
+					char item = appearance.getAttributes().getNamedItem("type").getNodeValue().toCharArray()[0];
 
 					String texture = null;
 					String clone = null;
@@ -869,17 +845,16 @@ public class ParcoursLoader {
 
 					NodeList features = appearance.getChildNodes();
 					for (int j = 0; j < features.getLength(); j++) {
-						if (features.item(j).getNodeName().equals("texture"))
-							texture = features.item(j).getChildNodes().item(0)
-									.getNodeValue();
-						if (features.item(j).getNodeName().equals("color"))
-							colors.put(features.item(j).getAttributes()
-									.getNamedItem("type").getNodeValue(),
-									features.item(j).getChildNodes().item(0)
-											.getNodeValue());
-						if (features.item(j).getNodeName().equals("clone"))
-							clone = features.item(j).getChildNodes().item(0)
-									.getNodeValue();
+						if (features.item(j).getNodeName().equals("texture")) {
+							texture = features.item(j).getChildNodes().item(0).getNodeValue();
+						}
+						if (features.item(j).getNodeName().equals("color")) {
+							colors.put(features.item(j).getAttributes().getNamedItem("type").getNodeValue(), 
+								features.item(j).getChildNodes().item(0).getNodeValue());
+						}
+						if (features.item(j).getNodeName().equals("clone")) {
+							clone = features.item(j).getChildNodes().item(0).getNodeValue();
+						}
 					}
 
 					addAppearance(item, colors, texture, clone);
@@ -928,12 +903,9 @@ public class ParcoursLoader {
 	 *            werden soll
 	 */
 	@SuppressWarnings( { "unchecked", "boxing" })
-	private void addAppearance(char item, HashMap colors, String textureFile,
-			String clone) {
-
+	private void addAppearance(char item, HashMap colors, String textureFile, String clone) {
 		if (clone != null) {
-			this.appearances.put(item, this.appearances
-					.get(clone.toCharArray()[0]));
+			appearances.put(item, appearances.get(clone.toCharArray()[0]));
 			return;
 		}
 
@@ -947,51 +919,49 @@ public class ParcoursLoader {
 				String colorType = (String) it.next();
 				String colorName = (String) colors.get(colorType);
 
-				if (colorType.equals("ambient"))
+				if (colorType.equals("ambient")) {
 					mat.setAmbientColor(new Color3f(Color.decode(colorName)));
-				if (colorType.equals("diffuse"))
+				}
+				if (colorType.equals("diffuse")) {
 					mat.setDiffuseColor(new Color3f(Color.decode(colorName)));
-				if (colorType.equals("specular"))
+				}
+				if (colorType.equals("specular")) {
 					mat.setSpecularColor(new Color3f(Color.decode(colorName)));
-				if (colorType.equals("emmissive"))
+				}
+				if (colorType.equals("emmissive")) {
 					mat.setEmissiveColor(new Color3f(Color.decode(colorName)));
+				}
 			}
 			appearance.setMaterial(mat);
-
 		}
 
 		if (textureFile != null) {
-			TexCoordGeneration tcg = new TexCoordGeneration(
-					TexCoordGeneration.OBJECT_LINEAR,
-					TexCoordGeneration.TEXTURE_COORDINATE_3, new Vector4f(1.0f,
-							1.0f, 0.0f, 0.0f), new Vector4f(0.0f, 1.0f, 1.0f,
-							0.0f), new Vector4f(1.0f, 0.0f, 1.0f, 0.0f));
+			TexCoordGeneration tcg = new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR, TexCoordGeneration.TEXTURE_COORDINATE_3, new Vector4f(1.0f, 
+				1.0f, 0.0f, 0.0f), new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f, 1.0f, 0.0f));
 			appearance.setTexCoordGeneration(tcg);
 
 			try {
-				TextureLoader loader = new TextureLoader(ClassLoader
-						.getSystemResource(textureFile), null);
+				TextureLoader loader = new TextureLoader(ClassLoader.getSystemResource(textureFile), null);
 				Texture2D texture = (Texture2D) loader.getTexture();
 				texture.setBoundaryModeS(Texture.WRAP);
 				texture.setBoundaryModeT(Texture.WRAP);
 
-				// Mache die textur lesbar
+				// mache die Textur lesbar
 				texture.setCapability(Texture.ALLOW_IMAGE_READ);
 				ImageComponent[] imgs = texture.getImages();
-				for (int i = 0; i < imgs.length; i++)
+				for (int i = 0; i < imgs.length; i++) {
 					imgs[i].setCapability(ImageComponent.ALLOW_IMAGE_READ);
+				}
 
 				appearance.setTexture(texture);
 				appearance.setCapability(Appearance.ALLOW_TEXTURE_READ);
 
 			} catch (Exception e) {
-				lg.warn(e, "Probleme beim Laden der Texturdatei '%s'",
-						textureFile);
+				lg.warn(e, "Probleme beim Laden der Texturdatei '%s'", textureFile);
 			}
-
 		}
 
-		this.appearances.put(item, appearance);
+		appearances.put(item, appearance);
 	}
 
 	/**
@@ -1011,14 +981,14 @@ public class ParcoursLoader {
 			int len = attrs.getLength();
 			for (int i = 0; i < len; i++) {
 				Attr attr = (Attr) attrs.item(i);
-				out.print(" " + attr.getNodeName() + "=\""
-						+ attr.getNodeValue() + "\"");
+				out.print(" " + attr.getNodeName() + "=\"" + attr.getNodeValue() + "\"");
 			}
 			out.print('>');
 			NodeList children = node.getChildNodes();
 			len = children.getLength();
-			for (int i = 0; i < len; i++)
+			for (int i = 0; i < len; i++) {
 				print(children.item(i), out);
+			}
 			out.print("</" + node.getNodeName() + ">");
 			break;
 		case Node.ENTITY_REFERENCE_NODE:
@@ -1033,8 +1003,9 @@ public class ParcoursLoader {
 		case Node.PROCESSING_INSTRUCTION_NODE:
 			out.print("<?" + node.getNodeName());
 			String data = node.getNodeValue();
-			if (data != null && data.length() > 0)
+			if (data != null && data.length() > 0) {
 				out.print(" " + data);
+			}
 			out.println("?>");
 			break;
 		}

@@ -26,7 +26,6 @@ import java.net.ProtocolException;
 import javax.swing.ButtonModel;
 import javax.swing.JCheckBox;
 import javax.swing.JToggleButton;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
@@ -56,8 +55,7 @@ public class Actuators {
 	 * Drehgeschwindigkeit eines Rads; der c't-Bot hat daher einen linken und
 	 * einen rechten Governor).
 	 */
-	public static class Governor extends NumberTwin
-	implements SimpleActuator, CanRead {
+	public static class Governor extends NumberTwin implements SimpleActuator, CanRead {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
@@ -69,73 +67,81 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { return "Gov"; }
+		@Override protected String getBaseName() { 
+			return "Motor"; 
+		}
 		
 		/**
-		 * @param isLeft	links?
+		 * @param isLeft links?
 		 */
-		public Governor(boolean isLeft) { super(isLeft); }
-		
+		public Governor(boolean isLeft) {
+			super(isLeft); 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { return Code.ACT_MOT; }
+		public Code getHotCmdCode() { 
+			return Code.ACT_MOT; 
+		}
 	}
 
 	/**
 	 * Servor fuer Klappe
 	 */
-	public static class DoorServo extends BotComponent<SpinnerNumberModel>
-	implements SimpleActuator, CanRead {
-		/** Zahlenwert */
-		private Number internalModel = Double.valueOf(0);
-
+	public static class DoorServo extends NumberTwin implements SimpleActuator, CanRead {
+		/**
+		 * Servor fuer Klappe
+		 * @param isLeft Servo 1 ("links") oder 2 ("rechts")?
+		 */
+		public DoorServo(boolean isLeft) {
+			super(isLeft);
+		}
+		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
 		@Override
-		public String getDescription() {
+		public String getBaseDescription() {
 			return "Servomotor f\u00FCr Klappe";
-		}
-
-		/**
-		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
-		 */
-		@Override
-		public synchronized void updateExternalModel() {
-			getExternalModel().setValue(internalModel);
-		}
-
-		/**
-		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
-		 */
-		public synchronized void readFrom(Command c) {
-			internalModel = c.getDataL();
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { return "DoorServo"; }
-		
-		/**
-		 * Servor fuer Klappe
-		 */
-		public DoorServo() { super(new SpinnerNumberModel()); }
+		@Override public String getBaseName() { 
+			return "DoorServo"; 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { return Code.ACT_SERVO; }
+		public Code getHotCmdCode() { 
+			return Code.ACT_SERVO; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override
+		public String getName() {
+			return getBaseName();
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override
+		public String getDescription() {
+			return getBaseDescription();
+		}
 	}
 
 	/**
 	 * Log eines Bot; hier werden die vom Bot geschickten Log-Ausgaben
 	 * (Textzeilen) gesammelt. Diese Bot-Komponente existiert nicht in Hardware.
 	 */
-	public static class Log extends BotComponent<PlainDocument>
-	implements CanRead {
+	public static class Log extends BotComponent<PlainDocument> implements CanRead {
 		/** Internes Model */
 		private final StringBuffer newStuff = new StringBuffer(); 
 		/** Zeitpunkt des letzten View-Updates */
@@ -182,22 +188,30 @@ public class Actuators {
 		/**
 		 * Logfenster
 		 */
-		public Log() { super(new PlainDocument()); }
+		public Log() { 
+			super(new PlainDocument()); 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { return Command.Code.LOG; }
+		public Code getHotCmdCode() { 
+			return Command.Code.LOG; 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { return "Log"; }
+		@Override public String getName() { 
+			return "Log"; 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { return "Log-Anzeige"; }
+		@Override public String getDescription() { 
+			return "Log-Anzeige"; 
+		}
 	}
 	
 	/**
@@ -205,8 +219,7 @@ public class Actuators {
 	 * schreiben und zum simulierten oder echten Bot senden.
 	 * @author Timo Sandmann (mail@timosandmann.de)
 	 */
-	public static class Program extends BotComponent<PlainDocument>
-	implements CanWriteAsynchronously {
+	public static class Program extends BotComponent<PlainDocument> implements CanWriteAsynchronously {
 		/** Logger fuer die Programm-Komponente */
 		final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.components.Program");
 		
@@ -432,8 +445,7 @@ public class Actuators {
 	 * </ul>
 	 * </p>
 	 */
-	public static class LcDisplay extends BotComponent<PlainDocument>
-	implements CanRead {
+	public static class LcDisplay extends BotComponent<PlainDocument> implements CanRead {
 		/** Anzahl der Spalten */
 		private final int numCols;
 		/** Anzahl der Zeilen */
@@ -521,8 +533,7 @@ public class Actuators {
 		 * @return Text von d
 		 * @throws BadLocationException
 		 */
-		protected synchronized String getAllText(Document d)
-		throws BadLocationException {
+		protected synchronized String getAllText(Document d) throws BadLocationException {
 			return d.getText(0, Math.max(d.getLength(), numCols * numRows));
 		}
 
@@ -534,8 +545,7 @@ public class Actuators {
 		 * @throws BadLocationException nur falls jemand was am Code
 		 * &auml;ndert; sollte normalerweise nie vorkommen.
 		 */
-		protected synchronized void clearModel(Document d)
-		throws BadLocationException {
+		protected synchronized void clearModel(Document d) throws BadLocationException {
 			StringBuilder b = new StringBuilder();
 			for (int i = 0; i < numCols; i++)
 				b.append(' ');
@@ -556,8 +566,7 @@ public class Actuators {
 		 * @param text Der Text, der ab der neuen Cursorposition einzutragen ist
 		 * @throws BadLocationException "Kann nicht passieren"&#8482;
 		 */
-		protected synchronized void overwrite(String text)
-		throws BadLocationException {
+		protected synchronized void overwrite(String text) throws BadLocationException {
 			// +1 fuer \n am Zeilenende
 	    	int offset = cursorY * (numCols + 1) + cursorX;
 	    	int numCharsAvail = numCols - cursorX;
@@ -586,23 +595,31 @@ public class Actuators {
 		 * Wieviele Spalten breit ist das Display? (1 Zeichen pro Spalte) 
 		 * @return Spaltenanzahl 
 		 */
-		public synchronized int getNumCols() { return numCols; }
+		public synchronized int getNumCols() { 
+			return numCols; 
+		}
 
 		/** 
 		 * Wieviele Zeilen hoch ist das Display? 
 		 * @return Zeilenanzahl
 		 */
-		public synchronized int getNumRows() { return numRows; }
+		public synchronized int getNumRows() { 
+			return numRows; 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { return "LCD"; }
+		@Override public String getName() { 
+			return "LCD"; 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { return "LCD-Anzeige"; }
+		@Override public String getDescription() { 
+			return "LCD-Anzeige"; 
+		}
 	}
 
 	/**
@@ -644,8 +661,7 @@ public class Actuators {
 	 *
 	 * </p>
 	 */
-	public static class Led extends BotComponent<ButtonModel>
-	implements CanRead {
+	public static class Led extends BotComponent<ButtonModel> implements CanRead {
 		/** an oder aus? */
 		private boolean internalModel = false;
 		/** Name */
@@ -698,7 +714,9 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { return Command.Code.ACT_LED; }
+		public Code getHotCmdCode() { 
+			return Command.Code.ACT_LED; 
+		}
 
 		/**
 		 * Liefert die Farbe, in der die LED darzustellen ist, wenn sie an ist.
@@ -707,17 +725,22 @@ public class Actuators {
 		 * Helligkeit).
 		 * @return Farbe
 		 */
-		public Color getColorWhenOn() { return colorWhenOn; }
+		public Color getColorWhenOn() { 
+			return colorWhenOn; 
+		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { return name; }
+		@Override public String getName() { 
+			return name; 
+		}
 
-		/** 
-		 * Liefert einen leeren String (""). 
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { return ""; }
-
+		@Override public String getDescription() { 
+			return ""; 
+		}
 	}
 }
