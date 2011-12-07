@@ -72,19 +72,15 @@ public abstract class CtBot extends BasicBot {
 	 * @throws IOException falls Output-Stream.flush() fehlschlaegt
 	 * @throws ProtocolException falls kein Controller vorhanden zum Weiterleiten
 	 */
-	protected boolean preProcessCommands(Command cmd) throws IOException,
-			ProtocolException {
+	protected boolean preProcessCommands(Command cmd) throws IOException, ProtocolException {
 		BotID id = cmd.getFrom();
-		if (cmd.has(Command.Code.WELCOME)) { // Von einem Welcome nehmen wir
-			// sicherheitshalber erstmal die ID an.
-			lg.info("Nehme fuer Bot " + toString()
-					+ " erstmal die ID des Welcome-Paketes:"
-					+ id);
+		if (cmd.has(Command.Code.WELCOME)) {
+			// Von einem Welcome nehmen wir sicherheitshalber erstmal die ID an
+			lg.info("Nehme fuer Bot " + toString() + " erstmal die ID des Welcome-Paketes:"	+ id);
 			try {
 				setId(id);
 			} catch (ProtocolException e) {
-				lg.warn("ID " + id
-						+ " konnte nicht gesetzt werden");
+				lg.warn("ID " + id + " konnte nicht gesetzt werden");
 			}
 			return false;
 		}
@@ -93,21 +89,18 @@ public abstract class CtBot extends BasicBot {
 			// Will der Bot seine ID selbst setzen?
 			if (cmd.getSubCode() == Command.SubCode.ID_SET) {
 				BotID newId = new BotID(cmd.getDataL());
-				lg.info("Bot " + toString() + " setzt seine ID selbst auf:"
-						+ id);
+				lg.info("Bot " + toString() + " setzt seine ID selbst auf:"	+ id);
 				try {
 					setId(newId);
 				} catch (ProtocolException e) {
-					lg.warn("ID " + newId
-							+ " konnte nicht gesetzt werden");
+					lg.warn("ID " + newId + " konnte nicht gesetzt werden");
 				}
 				return true;
 			}
 
 			// Will der Bot eine ID aus dem Pool?
 			if (cmd.getSubCode() == Command.SubCode.ID_REQUEST) {
-				lg.info("Bot (" + toString()
-						+ ") fordert eine ID aus dem Pool an");
+				lg.info("Bot (" + toString() + ") fordert eine ID aus dem Pool an");
 
 				//TODO:	unschoene Loesung
 				while (getController() == null) {
@@ -119,8 +112,7 @@ public abstract class CtBot extends BasicBot {
 				}
 				BotID newId = getController().generateBotId();
 
-				Command answer = getConnection().getCmdOutStream().getCommand(
-						Command.Code.ID);
+				Command answer = getConnection().getCmdOutStream().getCommand(Command.Code.ID);
 				answer.setSubCmdCode(Command.SubCode.ID_OFFER);
 				answer.setDataL(newId.intValue()); // Die neue kommt in das Datenfeld
 				getConnection().getCmdOutStream().flush(); // Und raus damit
@@ -132,22 +124,18 @@ public abstract class CtBot extends BasicBot {
 
 		if (!cmd.getFrom().equals(getId())) {
 			if (cmd.getFrom().equals(Command.getBroadcastId())) {
-				lg.warn("Nachricht mit Broadcast-ID als Absender "
-						+ " erhalten, ignoriere Absender");
+				lg.warn("Nachricht mit Broadcast-ID als Absender erhalten, ignoriere Absender");
 				return false;
 			}
-			lg.warn("Nachricht von einem unerwarteten Absender ("
-					+ cmd.getFrom() + ") erhalten. Erwartet: "
-					+ getId());
+			lg.warn("Nachricht von einem unerwarteten Absender (" + cmd.getFrom() + ") erhalten. Erwartet: " + getId());
 			return true;
 		}
 
 		if (!cmd.getTo().equals(Command.getSimId())) {
 			lg.info("Nachricht ist fuer " + cmd.getTo());
-			// Diese Nachricht ist nicht fuer den Sim, sondern fuer einen
-			// anderen Bot
+			// Diese Nachricht ist nicht fuer den Sim, sondern fuer einen anderen Bot
 			// Also weiterleiten
-			Controller controller = this.getController();
+			Controller controller = getController();
 
 			if (controller != null) {
 				if (cmd.getFrom().equals(Command.getBroadcastId())) {
@@ -156,10 +144,8 @@ public abstract class CtBot extends BasicBot {
 				}
 				controller.deliverMessage(cmd);
 			} else {
-				throw new ProtocolException(
-						"Nachricht empfangen, die an einen anderen Bot (Id="
-								+ cmd.getTo()
-								+ ") gehen sollte. Habe aber keinen Controller!");
+				throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id=" + cmd.getTo()
+					+ ") gehen sollte. Habe aber keinen Controller!");
 			}
 			return true;
 		}
@@ -174,10 +160,10 @@ public abstract class CtBot extends BasicBot {
 	 */
 	public void receiveCommand(Command command) throws ProtocolException {
 		if (!command.getTo().equals(this.getId()) && !command.getTo().equals(Command.getBroadcastId()))
-			throw new ProtocolException("Bot "+ this.getId() +" hat ein Kommando "+command.toCompactString()+" empfangen, dass nicht fuer ihn ist");
+			throw new ProtocolException("Bot " + getId() + " hat ein Kommando "+command.toCompactString() + " empfangen, dass nicht fuer ihn ist");
 		
 		if (getConnection() == null) {
-			throw new ProtocolException("Bot "+ this.getId() +" hat gar keine Connection");
+			throw new ProtocolException("Bot " + getId() + " hat gar keine Connection");
 		}
 		
 		// Wir werfen das Kommando direkt an den angehaengten Bot
@@ -258,11 +244,8 @@ public abstract class CtBot extends BasicBot {
 		// LEDs
 		int numLeds = ledColors.length;
 		for (int i = 0; i < numLeds; i++) {
-			String ledName = "LED " + (i + 1)
-					 + (i == 1 ? " (vorn rechts)" :
-						i == 0 ? " (vorn links)" : "");
-			components.add(
-				new Actuators.Led(ledName, i, ledColors[i]));
+			String ledName = "LED " + (i + 1) + (i == 1 ? " (vorn rechts)" : i == 0 ? " (vorn links)" : "");
+			components.add(new Actuators.Led(ledName, i, ledColors[i]));
 		}
 		
 		addDisposeListener(new Runnable() {
@@ -271,7 +254,7 @@ public abstract class CtBot extends BasicBot {
 			}
 		});
 		
-		this.ablResult = null;
+		ablResult = null;
 	}
 
 	/**

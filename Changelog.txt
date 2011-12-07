@@ -1,6 +1,6 @@
 Changelog fuer c't-Sim
 ======================
-2011-12-06 Timo Sandmann [mail@timosandmann.de]: Simulation beweglicher Objekte ('o' im Parcours, siehe parcours/object-test.xml), die vom Bot transportiert werden koennen.
+2011-12-06 Timo Sandmann [mail@timosandmann.de]: Simulation bewegliche Objekte ('o' im Parcours), die vom Bot transportiert werden koennen.
 
 2011-10-15 Timo Sandmann [mail@timosandmann.de]: Map-Anzeige verbessert
 

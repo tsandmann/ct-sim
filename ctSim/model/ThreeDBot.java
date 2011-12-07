@@ -42,6 +42,9 @@ import javax.vecmath.Point2i;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import com.sun.j3d.utils.geometry.Box;
+import com.sun.j3d.utils.geometry.Sphere;
+
 import ctSim.controller.BotBarrier;
 import ctSim.controller.Config;
 import ctSim.model.bots.BasicBot;
@@ -51,6 +54,7 @@ import ctSim.model.bots.SimulatedBot.UnrecoverableScrewupException;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.ctbot.CtBotShape;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
+import ctSim.model.bots.ctbot.MasterSimulator;
 import ctSim.util.Runnable1;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
@@ -533,6 +537,13 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		if (Config.getValue("BPSSensor").equals("true")) {
 			components.add(new PositionGlobal(X), new PositionGlobal(Y), new HeadingGlobal());
 		}
+		
+		addDisposeListener(new Runnable() {
+			@Override
+			public void run() {
+				((MasterSimulator) simulator).cleanup();
+			}
+		});
 	}
 
 	
@@ -559,14 +570,6 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		return branchgrp;
 	}
 	
-
-	/**
-	 * @return Gibt die BranchGroup fuer Debug-Anzeigen zurueck
-	 */
-	public final BranchGroup getTestBG() {
-		return testBG;
-	}
-
 	/**
 	 * @return TG des Bots
 	 */
@@ -583,7 +586,50 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		tg.setTransform(relTrans);
 		tg.addChild(comp);
 
-		this.transformgrp.addChild(tg);
+		transformgrp.addChild(tg);
+	}
+	
+	/**
+	 * Loescht alle Elemente in TestBG (Branchgroup zu Debug-Zwecken)
+	 */
+	public void clearDebugBG() {
+		testBG.removeAllChildren();
+	}
+	
+	/**
+	 * Zeichnet eine Kugel zu Debug-Zwecken, indem sie zu TestBG hinzugefuegt wird
+	 * @param radius Radius der Kugel
+	 * @param transform Transformation, die auf die Box angewendet werden soll
+	 */
+	public void showDebugSphere(final double radius, Transform3D transform) {
+		final Sphere sphare = new Sphere((float) radius);
+		TransformGroup tg = new TransformGroup();
+		tg.setTransform(transform);
+		tg.addChild(sphare);
+		BranchGroup bg = new BranchGroup();
+		bg.setCapability(BranchGroup.ALLOW_DETACH);
+		bg.addChild(tg);
+		testBG.addChild(bg);
+	}
+
+	/**
+	 * Zeichnet eine Box zu Debug-Zwecken, indem sie zu TestBG hinzugefuegt wird
+	 * @param x Groesse in X-Richtung
+	 * @param y Groesse in Y-Richtung
+	 * @param z Groesse in Z-Richtung
+	 * @param transform Transformation, die auf die Box angewendet werden soll
+	 * @param angle Winkel, um den die Box gedreht werden soll
+	 */
+	public void showDebugBox(final double x, final double y, final double z, Transform3D transform, double angle) {
+		final Box box = new Box((float) x, (float) y, (float) z, null);
+		transform.setRotation(new AxisAngle4d(0, 0, 1, angle));
+		TransformGroup tg = new TransformGroup();
+		tg.setTransform(transform);
+		tg.addChild(box);
+		BranchGroup bg = new BranchGroup();
+		bg.setCapability(BranchGroup.ALLOW_DETACH);
+		bg.addChild(tg);
+		testBG.addChild(bg);
 	}
 
 	/**
@@ -781,7 +827,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @return obstState.isEmpty()
 	 */
-	public boolean isObstStateNormal() {
+	private boolean isObstStateNormal() {
 		return obstState.isEmpty();
 	}
 

@@ -125,8 +125,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	 */
 	@Override
 	public String getDescription() {
-		return "Simulierter, in C geschriebener c't-Bot, verbunden \u00FCber "+
-			getConnection().getName();
+		return "Simulierter, in C geschriebener c't-Bot, verbunden \u00FCber " + getConnection().getName();
 	}
 
 	/**
@@ -194,13 +193,16 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 				try {
 					Command cmd = new Command(getConnection());
 					
-					if (preProcessCommands(cmd))	// Ist das Kommando schon abgearbeitet?
+					if (preProcessCommands(cmd)) {
+						// Ist das Kommando schon abgearbeitet?
 						continue;
+					}
 					
 					components.processCommand(cmd);
 
-					if (cmd.has(Command.Code.DONE))
-							break;
+					if (cmd.has(Command.Code.DONE)) {
+						break;
+					}
 				} catch (ProtocolException e) {
 					lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere");
 				}
