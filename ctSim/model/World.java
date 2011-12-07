@@ -580,9 +580,9 @@ public class World {
 			body.setPickable(true);
 		}
 		
-		if (pickInfo != null && pickInfo.getNode() != null) {
+//		if (pickInfo != null && pickInfo.getNode() != null) {
 //			lg.info("Objekt=" + pickInfo.getNode().getParent().getName() + " kollidiert");
-		}
+//		}
 		
 		return pickInfo;
 	}
