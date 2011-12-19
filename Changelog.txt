@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2011-12-19 Timo Sandmann [mail@timosandmann.de]: Auswertung, welche Komponenten der Bot aktiviert hat, Deaktivierung der Buttons inaktiver Komponenten
+
 2011-12-06 Timo Sandmann [mail@timosandmann.de]: Simulation beweglicher Objekte ('o' im Parcours, siehe parcours/object-test.xml), die vom Bot transportiert werden koennen.
 
 2011-10-15 Timo Sandmann [mail@timosandmann.de]: Map-Anzeige verbessert

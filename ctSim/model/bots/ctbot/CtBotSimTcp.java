@@ -47,9 +47,10 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	/**
 	 * @param connection Verbindung
 	 * @param newId Id fuer die Kommunikation 
+	 * @param features Features des Bots gepackt in einen Integer
 	 * @throws ProtocolException 
 	 */
-	public CtBotSimTcp(final Connection connection, BotID newId) throws ProtocolException {
+	public CtBotSimTcp(final Connection connection, BotID newId, int features) throws ProtocolException {
 		super("Sim-Bot");
 		
 		if (connection == null) { 
@@ -106,7 +107,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 
 			/* RemoteCall-Componente suchen und DoneListener registrieren (AblViewer) */
 			if (c instanceof RemoteCallCompnt) {
-				RemoteCallCompnt rc = (RemoteCallCompnt)c;			
+				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
 					public void run(BehaviorExitStatus status) {
 						if (ablResult != null) {
@@ -114,6 +115,11 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 						}
 					}
 				});	
+			}
+			
+			if (c instanceof WelcomeReceiver) {
+				welcomeReceiver = (WelcomeReceiver) c;
+				welcomeReceiver.setFeatures(features);
 			}
 		}
 		

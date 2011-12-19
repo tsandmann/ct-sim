@@ -76,4 +76,29 @@ public interface Bot {
 	 * @throws ProtocolException 
 	 */
 	public void setController(Controller controller) throws ProtocolException;
+	
+	/**
+	 * @return Hat der Bot eine Logausgabe aktiviert?
+	 */
+	public boolean get_feature_log();
+	
+	/**
+	 * @return Hat der Bot eine Fernbedienung aktiviert?
+	 */
+	public boolean get_feature_rc5();
+
+	/**
+	 * @return Kann der Bot Programme empfangen?
+	 */
+	public boolean get_feature_program();
+
+	/**
+	 * @return Hat der Bot die Kartograhpie aktiviert?
+	 */
+	public boolean get_feature_map();
+
+	/**
+	 * @return Kann der Bot RemoteCalsl empfangen?
+	 */
+	public boolean get_feature_remotecall();
 }

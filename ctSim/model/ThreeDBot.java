@@ -1048,4 +1048,49 @@ public class ThreeDBot extends BasicBot implements Runnable {
 			((CtBotSimTcp)bot).sendRcStartCode();
 		}
 	}
+
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_log()
+	 */
+	@Override
+	public boolean get_feature_log() {
+		return false;
+	}
+
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_rc5()
+	 */
+	@Override
+	public boolean get_feature_rc5() {
+		return false;
+	}
+
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_program()
+	 */
+	@Override
+	public boolean get_feature_program() {
+		return false;
+	}
+
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_map()
+	 */
+	@Override
+	public boolean get_feature_map() {
+		return false;
+	}
+
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_remotecall()
+	 */
+	@Override
+	public boolean get_feature_remotecall() {
+		return false;
+	}
 }

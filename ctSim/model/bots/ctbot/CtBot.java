@@ -31,6 +31,7 @@ import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
 import ctSim.model.bots.components.Sensors;
+import ctSim.model.bots.components.WelcomeReceiver;
 import ctSim.util.BotID;
 import ctSim.view.gui.ProgramViewer;
 
@@ -62,6 +63,9 @@ public abstract class CtBot extends BasicBot {
 	
     /** Referenz eines ProgramViewers, der bei bei Bedarf ein RemoteCall-Ergebnis anzeigen kann */
 	protected ProgramViewer ablResult;
+	
+	/** Referenz zum Welcome-Receiver */
+	protected WelcomeReceiver welcomeReceiver = null;
 	
 	/**
 	 * Vorverarbeitung der Kommandos 
@@ -271,6 +275,61 @@ public abstract class CtBot extends BasicBot {
 			}
 		} catch (IOException e) {
 			// NOP
+		}
+	}
+	
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_log()
+	 */
+	public boolean get_feature_log() {
+		try {
+			return welcomeReceiver.get_feature_log();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_rc5()
+	 */
+	public boolean get_feature_rc5() {
+		try {
+			return welcomeReceiver.get_feature_rc5();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_program()
+	 */
+	public boolean get_feature_program() {
+		try {
+			return welcomeReceiver.get_feature_program();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_map()
+	 */
+	public boolean get_feature_map() {
+		try {
+			return welcomeReceiver.get_feature_map();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_remotecall()
+	 */
+	public boolean get_feature_remotecall() {
+		try {
+			return welcomeReceiver.get_feature_remotecall();
+		} catch (Exception e) {
+			return false;
 		}
 	}
 }
