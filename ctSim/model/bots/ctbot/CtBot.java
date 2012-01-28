@@ -301,16 +301,27 @@ public abstract class CtBot extends BasicBot {
 	}
 	
 	/**
-	 * @see ctSim.model.bots.Bot#get_feature_program()
+	 * @see ctSim.model.bots.Bot#get_feature_abl_program()
 	 */
-	public boolean get_feature_program() {
+	public boolean get_feature_abl_program() {
 		try {
-			return welcomeReceiver.get_feature_program();
+			return welcomeReceiver.get_feature_abl_program();
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_basic_program()
+	 */
+	public boolean get_feature_basic_program() {
+		try {
+			return welcomeReceiver.get_feature_basic_program();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_map()
 	 */

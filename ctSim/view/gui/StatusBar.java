@@ -36,6 +36,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
+import ctSim.controller.Config;
+
 /**
  * Zeigt Statusinformationen zum Simulator an
  * 
@@ -43,17 +45,16 @@ import javax.swing.text.NumberFormatter;
  *
  */
 public class StatusBar extends Box {
-	
 	/** UID */
 	private static final long serialVersionUID = 1L;
 	/** kleineste Tickrate */
-	private static final int MIN_TICK_RATE = 0;
+	public static final int MIN_TICK_RATE = 0;
 	/** Default-Tickrate*/
-	private static final int INIT_TICK_RATE = 0;
+	private final int INIT_TICK_RATE;
 	/** groesste Tickrate */
-	private static final int MAX_TICK_RATE = 400;
+	public static final int MAX_TICK_RATE = 400;
 	/** Intervall */
-	private static final int MAJOR_TICK = 10;
+	public static final int MAJOR_TICK = 10;
 	
 	/** Main-Fenster */
 	private MainWindow parent;
@@ -72,100 +73,87 @@ public class StatusBar extends Box {
 	 * @param par Referenz auf den Frame, in dem die StatusBar angezeigt wird
 	 */
 	StatusBar(MainWindow par) {
-		
 		super(BoxLayout.LINE_AXIS);
 		
-		this.parent = par;
+		parent = par;
 		
-//		this.timeFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
+		int tickrate = 0;
+		try {
+			tickrate = Integer.parseInt(Config.getValue("ctSimTickRate"));
+		} catch (NumberFormatException exc) {
+			// NOP
+		}
+		INIT_TICK_RATE = Math.min(tickrate, MAX_TICK_RATE);
 		
 		initTickRateSlider();
 		initTickRateField();
 		
-//		this.timeField = new JTextField("Time: 0", 5);
-//		this.timeField.setMaximumSize(new Dimension(50, 22));
+		timeLabel = new JLabel("Zeit: " + String.format("%tT.%<tL", new Date(- TIME_TO_SUB)));
 		
-		//this.timeLabel = new JLabel("Time: "+this.timeFormatter.format(new Date(-TIME_TO_SUB)));
-		this.timeLabel = new JLabel("Zeit: "+String.format("%tT.%<tL", new Date(-this.TIME_TO_SUB))); //$NON-NLS-1$ //$NON-NLS-2$
+		add(Box.createRigidArea(new Dimension(10, 0)));
+		add(timeLabel);
 		
-		this.add(Box.createRigidArea(new Dimension(10, 0)));
-		//this.add(this.timeField);
-		this.add(this.timeLabel);
+		add(Box.createHorizontalGlue());
 		
-		this.add(Box.createHorizontalGlue());
-		
-		JTextField tr = new JTextField("TR:"); //$NON-NLS-1$
+		JTextField tr = new JTextField("TR:");
 		tr.setHorizontalAlignment(SwingConstants.CENTER);
 		tr.setEditable(false);
-		//tr.setEnabled(false);
 		tr.setBorder(BorderFactory.createEtchedBorder());
 		tr.setMinimumSize(new Dimension(30, 22));
 		tr.setPreferredSize(new Dimension(30, 22));
 		tr.setMaximumSize(new Dimension(30, 23));
 		
-		this.add(tr);
-		this.add(this.tickRateField);
-		this.add(Box.createRigidArea(new Dimension(1,1)));
-		this.add(this.tickRateSlider);
+		add(tr);
+		add(tickRateField);
+		add(Box.createRigidArea(new Dimension(1, 1)));
+		add(tickRateSlider);
 	}
 	
 	/**
 	 * Erzeugt einen Schieberegler fuer den Simulatortakt
 	 */
 	void initTickRateSlider() {
+		tickRateSlider = new JSlider(StatusBar.MIN_TICK_RATE, StatusBar.MAX_TICK_RATE, INIT_TICK_RATE);
 		
-		this.tickRateSlider = new JSlider(
-				StatusBar.MIN_TICK_RATE,
-				StatusBar.MAX_TICK_RATE,
-				StatusBar.INIT_TICK_RATE);
-		
-		this.tickRateSlider.addChangeListener(new ChangeListener() {
-
+		tickRateSlider.addChangeListener(new ChangeListener() {
 			@SuppressWarnings({"synthetic-access","boxing"})
 			public void stateChanged(ChangeEvent e) {
-				
-				if(StatusBar.this.tickRateSlider.getValueIsAdjusting()) {
-					StatusBar.this.tickRateField.setText(String.valueOf(StatusBar.this.tickRateSlider.getValue()));
+				if (tickRateSlider.getValueIsAdjusting()) {
+					tickRateField.setText(String.valueOf(tickRateSlider.getValue()));
 				} else {
-					StatusBar.this.tickRateField.setValue(StatusBar.this.tickRateSlider.getValue());
-					StatusBar.this.parent.setTickRate(StatusBar.this.tickRateSlider.getValue());
+					tickRateField.setValue(tickRateSlider.getValue());
+					parent.setTickRate(tickRateSlider.getValue());
 				}
 			}
 		});
 		
-		this.tickRateSlider.setMajorTickSpacing(StatusBar.MAJOR_TICK);
-		//this.tickRateSlider.setMinorTickSpacing(5);
-		this.tickRateSlider.setPaintTicks(true);
-		//this.tickRateSlider.setPaintLabels(true);
-		this.tickRateSlider.setPreferredSize(new Dimension(150, 22));
-		this.tickRateSlider.setBorder(BorderFactory.createEtchedBorder());
+		tickRateSlider.setMajorTickSpacing(StatusBar.MAJOR_TICK);
+		tickRateSlider.setPaintTicks(true);
+		tickRateSlider.setPreferredSize(new Dimension(150, 22));
+		tickRateSlider.setBorder(BorderFactory.createEtchedBorder());
 	}
 	
 	/**
 	 * Erzeugt ein Anzeigefeld fuer den Simulatortakt
 	 */
 	@SuppressWarnings("boxing") void initTickRateField() {
-		
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 		formatter.setMinimum(StatusBar.MIN_TICK_RATE);
 		formatter.setMaximum(StatusBar.MAX_TICK_RATE);
 		
-		this.tickRateField = new JFormattedTextField(formatter);
-		this.tickRateField.setValue(StatusBar.INIT_TICK_RATE);
-		this.tickRateField.setColumns(3);
-		this.tickRateField.setHorizontalAlignment(SwingConstants.CENTER);
-		this.tickRateField.setMinimumSize(new Dimension(44, 22));
-		this.tickRateField.setMaximumSize(new Dimension(44, 22));
-		this.tickRateField.setPreferredSize(new Dimension(44, 22));
-		//System.out.println(this.tickRateField.getPreferredSize());
+		tickRateField = new JFormattedTextField(formatter);
+		tickRateField.setValue(INIT_TICK_RATE);
+		tickRateField.setColumns(3);
+		tickRateField.setHorizontalAlignment(SwingConstants.CENTER);
+		tickRateField.setMinimumSize(new Dimension(44, 22));
+		tickRateField.setMaximumSize(new Dimension(44, 22));
+		tickRateField.setPreferredSize(new Dimension(44, 22));
 		
-		this.tickRateField.addPropertyChangeListener(new PropertyChangeListener() {
-
+		tickRateField.addPropertyChangeListener(new PropertyChangeListener() {
 			@SuppressWarnings("synthetic-access")
 			public void propertyChange(PropertyChangeEvent evt) {
-				
-				if("value".equals(evt.getPropertyName())) { //$NON-NLS-1$
-					StatusBar.this.tickRateSlider.setValue((Integer)StatusBar.this.tickRateField.getValue());
+				if ("value".equals(evt.getPropertyName())) {
+					tickRateSlider.setValue((Integer) tickRateField.getValue());
 				}
 			}
 		});
@@ -175,11 +163,7 @@ public class StatusBar extends Box {
 	 * @param time Zeitspanne, um die Simulatorzeit erhoeht werden soll
 	 */
 	public void updateTime(long time) {
-		
-//		this.timeField.setText("Time: "+time);
-		
-		//this.timeLabel.setText("Time: "+this.timeFormatter.format(new Date(time-TIME_TO_SUB)));
-		this.timeLabel.setText("Zeit: "+String.format("%tT.%<tL", new Date(time-this.TIME_TO_SUB))); //$NON-NLS-1$ //$NON-NLS-2$
+		timeLabel.setText("Zeit: " + String.format("%tT.%<tL", new Date(time - TIME_TO_SUB)));
 	}
 	
 	/**
@@ -187,8 +171,7 @@ public class StatusBar extends Box {
 	 */
 	@SuppressWarnings("boxing")
 	protected void reinit() {
-		
-		this.tickRateField.setValue(StatusBar.INIT_TICK_RATE);
-		this.updateTime(0);
+		tickRateField.setValue(INIT_TICK_RATE);
+		updateTime(0);
 	}
 }

@@ -41,8 +41,11 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	/** Fernbedienung */
 	private boolean feature_rc5 = false;
 	
-	/** Programm-Empfang */
-	private boolean feature_program = false;
+	/** ABL Programm-Empfang */
+	private boolean feature_abl_program = false;
+	
+	/** Basic Programm-Empfang */
+	private boolean feature_basic_program = false;
 	
 	/** Kartographie */
 	private boolean feature_map = false;
@@ -114,14 +117,18 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 		}
 		
 		if ((features & 4) == 4) {
-			feature_program = true;
+			feature_abl_program = true;
 		}
-
+		
 		if ((features & 8) == 8) {
-			feature_map = true;
+			feature_basic_program = true;
 		}
 
 		if ((features & 16) == 16) {
+			feature_map = true;
+		}
+
+		if ((features & 32) == 32) {
 			feature_remotecall = true;
 		}	
 	}
@@ -141,10 +148,17 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	}
 	
 	/**
-	 * @return Kann der Bot Programme empfangen?
+	 * @return Kann der Bot ABL Programme empfangen?
 	 */
-	public boolean get_feature_program() {
-		return feature_program;
+	public boolean get_feature_abl_program() {
+		return feature_abl_program;
+	}
+	
+	/**
+	 * @return Kann der Bot Basic Programme empfangen?
+	 */
+	public boolean get_feature_basic_program() {
+		return feature_basic_program;
 	}
 
 	/**

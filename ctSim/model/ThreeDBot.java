@@ -1049,7 +1049,6 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		}
 	}
 
-
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_log()
 	 */
@@ -1057,7 +1056,6 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	public boolean get_feature_log() {
 		return false;
 	}
-
 
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_rc5()
@@ -1067,15 +1065,21 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		return false;
 	}
 
-
 	/**
-	 * @see ctSim.model.bots.Bot#get_feature_program()
+	 * @see ctSim.model.bots.Bot#get_feature_abl_program()
 	 */
 	@Override
-	public boolean get_feature_program() {
+	public boolean get_feature_abl_program() {
 		return false;
 	}
 
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_basic_program()
+	 */
+	@Override
+	public boolean get_feature_basic_program() {
+		return false;
+	}
 
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_map()
@@ -1084,7 +1088,6 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	public boolean get_feature_map() {
 		return false;
 	}
-
 
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_remotecall()

@@ -18,6 +18,9 @@
 	Pfaden ruminterpretiert, kann entfallen. Auf jedem unterstuetzen System
 	kann man nach dem Auschecken sofort starten (normalerweise).
 	-->
+	
+	<!-- Initialer Wert fuer TickRate (1 / Simulationsgeschwindigkeit) -->
+	<parameter name="ctSimTickRate" value="0"/>
 
 	<!-- ctSimTimeout ist die Zeit in [ms], die der Controller maximal auf einen Bot wartet -->
 	<parameter name="ctSimTimeout" value="500"/>

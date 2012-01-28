@@ -65,6 +65,7 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.SimulatedBot;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
+import ctSim.view.gui.StatusBar;
 
 /**
  * <p>Welt-Modell, kuemmert sich um die globale Simulation und das
@@ -191,7 +192,7 @@ public class World {
 	 * @return Zeitintervall
 	 */
 	public int getSimStepIntervalInMs() {
-		return this.simStepIntervalInMs;
+		return simStepIntervalInMs;
 	}
 
 	/** <p>Setzen des Zeitraffer-/Zeitlupen-Faktors:
@@ -208,7 +209,7 @@ public class World {
 	 * Simulatorschritts liegen soll.
 	 */
     public void setSimStepIntervalInMs(int timeInterval) {
-    	this.simStepIntervalInMs = timeInterval;
+    	simStepIntervalInMs = Math.min(timeInterval, StatusBar.MAX_TICK_RATE);
     }
 
 	/** Liefert die aktuelle Simulationszeit in Millisekunden.
@@ -446,6 +447,14 @@ public class World {
 		obstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		obstBG.setPickable(true);
 		worldTG.addChild(obstBG);
+		
+		int tickrate = 0;
+		try {
+			tickrate = Integer.parseInt(Config.getValue("ctSimTickRate"));
+		} catch (NumberFormatException exc) {
+			// NOP
+		}
+		setSimStepIntervalInMs(tickrate);
 	}
 
 	/**

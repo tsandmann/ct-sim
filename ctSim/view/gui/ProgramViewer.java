@@ -323,9 +323,11 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		JRadioButton typeABL = new JRadioButton("ABL", false);
 		typeABL.setActionCommand("ABL");
 		typeABL.addActionListener(this);
+		typeABL.setEnabled(bot.get_feature_abl_program());
 		JRadioButton typeBasic = new JRadioButton("Basic", true);
 		typeBasic.setActionCommand("Basic");
 		typeBasic.addActionListener(this);
+		typeBasic.setEnabled(bot.get_feature_basic_program());
 		
 		ButtonGroup group = new ButtonGroup();
 	    group.add(typeABL);
@@ -409,7 +411,11 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		add(toolbars, BorderLayout.NORTH);
 		add(s, BorderLayout.CENTER);
 		
-		typeBasic.doClick(); // Typ auf Basic setzen
+		if (bot.get_feature_basic_program()) {
+			typeBasic.doClick(); // Typ auf Basic setzen
+		} else {
+			typeABL.doClick(); // Typ auf ABL setzen
+		}
 	}
 	
 	/** 

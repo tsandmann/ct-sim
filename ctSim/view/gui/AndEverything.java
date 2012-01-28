@@ -141,15 +141,15 @@ public class AndEverything extends GuiBotBuisitor {
 	
 	/** 
 	 * Baut den Knopf, der zum Progamm-Fenster f&uumo;hrt 
-	 * @param abl ABL-Komponente
+	 * @param program Programm-Komponente
 	 * @param bot Bot
 	 */
-	public void buisitProgramViewer(Actuators.Program abl, Bot bot) {
+	public void buisitProgramViewer(Actuators.Program program, Bot bot) {
 		add(new AuxFrameButton(
-			abl.getName(),
-			abl.getDescription() + " von " + bot, // Fenster-Titel
-			new ProgramViewer(abl, bot),
-			bot.get_feature_program()));
+			program.getName(),
+			program.getDescription() + " von " + bot, // Fenster-Titel
+			new ProgramViewer(program, bot),
+			bot.get_feature_abl_program() || bot.get_feature_basic_program()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 }
