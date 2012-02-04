@@ -36,7 +36,22 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 	public CtBotSimTest() {
 		super("Test-Bot");
 	
-		components.add(new Sensors.Clock());	
+		components.add(new Sensors.Clock());
+		
+		for (BotComponent<?> c : components) {
+			if (c.getName().equals("IrL")) {
+				irL = (Sensors.Distance) c;
+			}
+			if (c.getName().equals("IrR")) {			
+				irR = (Sensors.Distance) c;
+			}
+			if (c.getName().equals("MotorL")) {
+				govL = (Actuators.Governor) c;
+			}
+			if (c.getName().equals("MotorR")) {
+				govR = (Actuators.Governor) c;
+			}
+		}
 	}
 
 	/**
@@ -51,36 +66,29 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 	private int lastState = 0;
 	/** Zufallsgenerator */
 	private Random rand = new Random();
+	/** Motor links */
+	private Actuators.Governor govL = null;
+	/** Motor rechts */
+	private Actuators.Governor govR = null;
+	/** Dist-Sensor links */
+	private Sensors.Distance irL = null;
+	/** Dist-Sensor rechts */
+	private Sensors.Distance irR = null;
 	
 	/**
 	 * @see ctSim.model.bots.SimulatedBot#doSimStep()
 	 */
-	public void doSimStep() throws InterruptedException {		
-		double irl = 0;
-		double irr = 0;
-
-		Actuators.Governor govL = null;
-		Actuators.Governor govR = null;
-		
-		for (BotComponent<?> c : components) {
-			if (c.getName().equals("IrL")) {
-				irl=((Sensors.Distance)c).get().doubleValue();
-			}
-			if (c.getName().equals("IrR")) {			
-				irr=((Sensors.Distance)c).get().doubleValue();
-			}
-			if (c.getName().equals("GovL")) {
-				govL=(Actuators.Governor)c;
-			}
-			if (c.getName().equals("GovR")) {
-				govR=(Actuators.Governor)c;
-			}
+	public void doSimStep() throws InterruptedException, UnrecoverableScrewupException {
+		if (govL == null || govR == null || irL == null || irR == null) {
+			throw new UnrecoverableScrewupException();
 		}
-
+		
 		/* Ansteuerung fuer die Motoren in Abhaengigkeit vom Input der IR-Abstandssensoren */
 
 		/* Solange die Wand weit weg ist, wird Stoff gegeben */
 		double ll = 255, rr = 255;
+		final double irl = irL.get().doubleValue();
+		final double irr = irR.get().doubleValue();
 		
 		/* Falls Wand in Sicht, per Zufall nach links oder rechts drehen */
 		if (irl > 160 || irr > 130) {
@@ -119,9 +127,6 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 		}
 		
 		/* Gewschwindigkeiten an die Motoren weitergeben */
-		if (govL == null || govR == null) {
-			return;
-		}
 		govL.set(ll);
 		govR.set(rr);
 	}
