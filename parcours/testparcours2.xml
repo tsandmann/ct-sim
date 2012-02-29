@@ -3,11 +3,11 @@
 
 <world>
 	<description>
-		Dieses ist ein Testparcours fuer ein Labyrinth fuer zwei Bots
+		Dieses ist ein Testparcours eines Labyrinths fuer zwei Bots
 	</description>
 		
 	<parcours>
-		<line>============#</line>
+		<line>*===========*</line>
 		<line>#  #  Z  #  #</line>
 		<line>#  #  |  #  #</line>
 		<line>#  #X | X#  #</line>
@@ -17,15 +17,15 @@
 		<line>#   =====   #</line>
 		<line>#     *     #</line>
 		<line>#           #</line>
-		<line>#====...====#</line>
-		<line>#...........#</line>
-		<line>#...........#</line>
-		<line>#..*=====*..#</line>
-		<line>#.....#.....#</line>
-		<line>#.....#.....#</line>
-		<line>#....0#.....#</line>
-		<line>#==1.===.2==#</line>
-	    <line>LL====L====LL</line>
+		<line>#====   ====#</line>
+		<line>#           #</line>
+		<line>#           #</line>
+		<line>#  *=====*  #</line>
+		<line>#     #     #</line>
+		<line>#    .#     #</line>
+		<line>#  . 0#  .  #</line>
+		<line>#==1 === 2==#</line>
+	    <line>*===========*</line>
 	</parcours>
 		
 		<optics>
@@ -42,7 +42,6 @@
 				<description>wagrechte Wand</description>
 				<clone>X</clone>
 			</appearance>
-	
 			
 			<appearance type="."> 
 				<description>Fussboden im Eingangsbereich</description>
@@ -76,7 +75,6 @@
 	
 			<appearance type="0"> 
 				<description>Fussboden des Default-Startfeldes</description>
-				<clone>.</clone>
 			</appearance>
 			
 			<appearance type="Z"> 
@@ -131,8 +129,4 @@
 				<color type="emmissive">#000000</color>
 			</appearance>
 		</optics>
-
-
-	
-
 </world>

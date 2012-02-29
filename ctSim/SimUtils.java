@@ -163,6 +163,6 @@ public class SimUtils {
 		long minutes = (millis % 3600000) / 60000;
 		long seconds = (millis % 60000) / 1000;
 		long rest = millis % 1000;
-		return new String (hours+":"+minutes+":"+seconds+":"+rest);  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+		return new String (hours + ":" + minutes + ":" + seconds + ":" + rest);
 	}	
 }

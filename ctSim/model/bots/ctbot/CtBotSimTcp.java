@@ -47,9 +47,10 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	/**
 	 * @param connection Verbindung
 	 * @param newId Id fuer die Kommunikation 
+	 * @param features Features des Bots gepackt in einen Integer
 	 * @throws ProtocolException 
 	 */
-	public CtBotSimTcp(final Connection connection, BotID newId) throws ProtocolException {
+	public CtBotSimTcp(final Connection connection, BotID newId, int features) throws ProtocolException {
 		super("Sim-Bot");
 		
 		if (connection == null) { 
@@ -96,7 +97,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			_(Sensors.BPSReceiver.class  , WRITES),
 			_(Sensors.Shutdown.class     , READS, WRITES_ASYNCLY),
 			_(WelcomeReceiver.class      , READS),
-			_(Actuators.Program.class		 , WRITES_ASYNCLY),
+			_(Actuators.Program.class	 , WRITES_ASYNCLY),
 			_(MapComponent.class		 , READS, WRITES),	
 			_(RemoteCallCompnt.class     , READS, WRITES)
 		);
@@ -106,7 +107,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 
 			/* RemoteCall-Componente suchen und DoneListener registrieren (AblViewer) */
 			if (c instanceof RemoteCallCompnt) {
-				RemoteCallCompnt rc = (RemoteCallCompnt)c;			
+				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
 					public void run(BehaviorExitStatus status) {
 						if (ablResult != null) {
@@ -114,6 +115,11 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 						}
 					}
 				});	
+			}
+			
+			if (c instanceof WelcomeReceiver) {
+				welcomeReceiver = (WelcomeReceiver) c;
+				welcomeReceiver.setFeatures(features);
 			}
 		}
 		
@@ -125,8 +131,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	 */
 	@Override
 	public String getDescription() {
-		return "Simulierter, in C geschriebener c't-Bot, verbunden \u00FCber "+
-			getConnection().getName();
+		return "Simulierter, in C geschriebener c't-Bot, verbunden \u00FCber " + getConnection().getName();
 	}
 
 	/**
@@ -194,13 +199,16 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 				try {
 					Command cmd = new Command(getConnection());
 					
-					if (preProcessCommands(cmd))	// Ist das Kommando schon abgearbeitet?
+					if (preProcessCommands(cmd)) {
+						// Ist das Kommando schon abgearbeitet?
 						continue;
+					}
 					
 					components.processCommand(cmd);
 
-					if (cmd.has(Command.Code.DONE))
-							break;
+					if (cmd.has(Command.Code.DONE)) {
+						break;
+					}
 				} catch (ProtocolException e) {
 					lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere");
 				}

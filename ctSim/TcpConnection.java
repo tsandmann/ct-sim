@@ -97,31 +97,27 @@ public class TcpConnection extends Connection {
         try {
             p = Integer.parseInt(Config.getValue("botport"));
         } catch(NumberFormatException nfe) {
-            lg.warning(nfe, "Problem beim Parsen der Konfiguration: " +
-                    "Parameter 'botport' ist keine Ganzzahl");
+            lg.warning(nfe, "Problem beim Parsen der Konfiguration: " + "Parameter 'botport' ist keine Ganzzahl");
         }
 
         lg.info("Warte auf Verbindung vom c't-Bot auf TCP-Port "+p);
 
 		try {
 			final ServerSocket srvSocket = new ServerSocket(p);
-			new SaferThread("ctSim-Listener-"+p+"/tcp") {
+			new SaferThread("ctSim-Listener-" + p + "/tcp") {
 				@Override
 				public void work() {
 					try {
 						Socket s = srvSocket.accept(); // blockiert
-						lg.fine("Verbindung auf Port "
-							+ srvSocket.getLocalPort() + "/tcp eingegangen");
+						lg.fine("Verbindung auf Port " + srvSocket.getLocalPort() + "/tcp eingegangen");
 						new TcpConnection(s).doHandshake(receiver);
 					} catch (IOException e) {
-						lg.warn(e, "Thread "+getName()+" hat ein E/A-Problem " +
-								"beim Lauschen");
+						lg.warn(e, "Thread "+getName() + " hat ein E/A-Problem " + "beim Lauschen");
 					}
 				}
 			}.start();
 		} catch (IOException e) {
-			lg.warning(e, "E/A-Problem beim Binden an TCP-Port "+p+"; " +
-				"l\u00E4uft der c't-Sim schon?");
+			lg.warning(e, "E/A-Problem beim Binden an TCP-Port "+p+"; " + "l\u00E4uft der c't-Sim schon?");
 			return;
 		}
 	}

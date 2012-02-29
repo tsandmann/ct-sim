@@ -42,8 +42,7 @@ public abstract class SimulatorFactory {
 	 * @param bot			Bot-Instanz, die simuliert werden soll
 	 * @return				Simulator fuer Bot bot
 	 */
-	public static Runnable createFor(World world, ThreeDBot botWrapper,
-	SimulatedBot bot) {
+	public static Runnable createFor(World world, ThreeDBot botWrapper,	SimulatedBot bot) {
 		/* ct-Bot per TCP-Verbindung (C-Binary) */
 		if (bot instanceof CtBotSimTcp) {
 			return new MasterSimulator(world, botWrapper);

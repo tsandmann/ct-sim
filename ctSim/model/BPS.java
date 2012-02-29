@@ -48,8 +48,8 @@ public class BPS {
 		 * @param source Position der Landmarke, so wie PickInfo sie ermittelt hat [m]
 		 */
 		public Beacon(Parcours parc, Point3d source) {
-			this.parcoursBlockSizeInMM = parc.getBlockSizeInMM();
-			this.position = parc.transformWorldposToGlobalpos(source);
+			parcoursBlockSizeInMM = parc.getBlockSizeInMM();
+			position = parc.transformWorldposToGlobalpos(source);
 		}
 		
 		/**
@@ -65,10 +65,8 @@ public class BPS {
 		 */
 		@Override
 		public String toString() {
-			return "(" + (position.x * this.parcoursBlockSizeInMM
-				+ this.parcoursBlockSizeInMM / 2) + "|" + (position.y
-				* this.parcoursBlockSizeInMM + this.parcoursBlockSizeInMM / 2) 
-				+ ")";
+			return "(" + (position.x * parcoursBlockSizeInMM + parcoursBlockSizeInMM / 2) + "|" + 
+				(position.y	* parcoursBlockSizeInMM + parcoursBlockSizeInMM / 2) + ")";
 		}
 		
 		/**

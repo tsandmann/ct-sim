@@ -25,7 +25,13 @@ import java.util.List;
 import java.util.Random;
 
 import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.Bounds;
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Group;
+import javax.media.j3d.Node;
+import javax.media.j3d.PickInfo;
 import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -37,6 +43,7 @@ import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.BotBuisitor;
 import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.Actuators.DoorServo;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.NumberTwin;
@@ -44,8 +51,10 @@ import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.Actuators.Governor;
 import ctSim.model.bots.components.NumberTwin.NumberTwinVisitor;
 import ctSim.model.bots.components.Sensors.Clock;
+import ctSim.model.bots.components.Sensors.Door;
 import ctSim.model.bots.components.Sensors.Shutdown;
 import ctSim.util.Buisitor;
+import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
 /**
@@ -94,19 +103,17 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         }
 
         /**
-        * Zahl der Umdrehungen, die das Rad im jetzigen Sim-Schritt macht
-        * (Beispiel: 10 Umdrehungen pro Sekunde, Sim-Schritt ist 0,2
-        * Sim-Sekunden lang -&gt; R&uuml;ckgabewert 2). Methode kann in
-        * einem Simschritt ohne Nebenwirkungen mehrfach aufgerufen werden
-        * (idempotente Methode).
-        *
-        * @return Umdrehungen pro Sekunde (exakter Wert, d.h. mit
-        * Nachkommaanteil)
-        */
+         * Zahl der Umdrehungen, die das Rad im jetzigen Sim-Schritt macht
+         * (Beispiel: 10 Umdrehungen pro Sekunde, Sim-Schritt ist 0,2
+         * Sim-Sekunden lang -&gt; R&uuml;ckgabewert 2). Methode kann in
+         * einem Simschritt ohne Nebenwirkungen mehrfach aufgerufen werden
+         * (idempotente Methode).
+         *
+         * @return Umdrehungen pro Sekunde (exakter Wert, d.h. mit Nachkommaanteil)
+         */
         protected double revsThisSimStep() {
             // LODO Die Kennlinien der echten Motoren sind nicht linear
-            double speedRatio = governor.get().floatValue()
-                / PWM_MAX;
+            double speedRatio = governor.get().floatValue() / PWM_MAX;
             double speedInRps = speedRatio * REVS_PER_SEC_MAX;
             double deltaTInSec = parent.getDeltaTInMs() / 1000.0d;
             return speedInRps * deltaTInSec;
@@ -124,6 +131,37 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          */
         public void setLag(double newLag) {
         	lag = newLag;
+        }
+    }
+    
+    /**
+     * Servo-Simulator
+     */
+    class ServoSimulator {
+        /** Servo des Simulators */
+        private Actuators.DoorServo servo;
+        
+        /** Zustand des Servos (< 12: Klappe zu; >= 12: Klappe offen; 0: Servo aus) */
+        private int position = 7;
+
+        /**
+         * Setzt den Servo
+         * @param servo
+         */
+        public void setServo(Actuators.DoorServo servo) {
+            this.servo = servo;
+        }
+
+        /**
+         * Wertet die Servo-Position aus
+         * @return Servo-Position
+         */
+        protected int getServoPosition() {
+        	if (servo.get().intValue() > 0) {
+        		position = servo.get().intValue();
+        	}
+            
+        	return position;
         }
     }
 
@@ -184,6 +222,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * Simulation der Botbewegung
      */
     class KrautUndRuebenSimulator implements Runnable {
+    	/** Logger */
+    	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.ctbot.KrautUndRuebenSimulator");
+    	
         /** Umfang eines Rades [m] */
         private static final double WHEEL_CIRCUMFERENCE = 0.1781283d;
 
@@ -191,7 +232,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         private static final double WHEEL_DIST = 0.0486d;
 
         /** Abstand Zentrum Maussensor in Vorausrichtung (Y) [m] */
-        private static final double SENS_MOUSE_DIST_Y = -0.015d;
+        private static final double SENS_MOUSE_DIST_Y = - 0.015d;
 
         /** letzter Wert von s_l */
         private double last_s_l = 0;
@@ -202,19 +243,28 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         /** Haben die Raeder Nachlauf beim Richtungswechsel? */
         private final boolean wheelsWithLag = Config.getValue("WheelLag").equals("true");
         
+        /** BranchGroup des Bot-Shapes */
+        private final Group botShape = parent.getBranchGroup();
+        
+        /** Sensor fuer Transportfach-Klappe */
+		private Door doorSensor;
+		/** letztes Objekt, das im Transportfach gesehen wurde */
+		private Node objectInPocket = null;
+		/** Objekt, das derzeit transportiert wird */
+		private Node associatedObject = null;
+		
         /**
          * @see java.lang.Runnable#run()
          */
         public void run() {
-			// Position und Heading berechnen:
+			/* Position und Heading berechnen 
+			 * fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe doc-files/odometrie.pdf */
 
-			// Fuer ausfuehrliche Erlaeuterung der Positionsberechnung
-			// siehe pdf
-
-			// Absolut zurueckgelegte Strecke pro Rad berechnen
+			/* Absolut zurueckgelegte Strecke pro Rad berechnen */
 			double s_l = leftWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
 			double s_r = rightWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
 			
+			/* Nachlauf der Raeder berechnen, falls gewuenscht */
 			if (wheelsWithLag) {
 				if (s_l == 0 && last_s_l != 0) {
 					double rand = randGenerator.nextDouble();
@@ -223,7 +273,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 					}
 					last_s_l = 0;
 					s_l = rand * (WHEEL_CIRCUMFERENCE / 60.0);
-//					System.out.println("s_l=" + s_l * 1000 + " mm");
+//					lg.fine("s_l=" + s_l * 1000 + " mm");
 					leftWheel.setLag(rand);
 				} else {
 					last_s_l = s_l;
@@ -236,7 +286,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 					}
 					last_s_r = 0;
 					s_r = rand * (WHEEL_CIRCUMFERENCE / 60.0);
-//					System.out.println("s_r=" + s_r * 1000 + " mm");
+//					lg.fine("s_r=" + s_r * 1000 + " mm");
 					rightWheel.setLag(rand);
 				} else {
 					last_s_r = s_r;
@@ -244,121 +294,308 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				}
 			}
 
-			// Haelfte des Drehwinkels, den der Bot in diesem Simschritt
-			// hinzubekommt
+			/* Haelfte des Drehwinkels, den der Bot in diesem Simschritt hinzubekommt */
 			double _gamma = (s_l - s_r) / (4.0 * WHEEL_DIST);
 
-			// neue Blickrichtung berechnen
-			// ergibt sich aus Rotation der Blickrichtung um 2*_gamma
+			/* neue Blickrichtung berechnen, ergibt sich aus Rotation der Blickrichtung um 2 * _gamma */
 			Vector3d _hd = parent.getHeadingVectorInWorldCoord();
 			double _s2g = Math.sin(2 * _gamma);
 			double _c2g = Math.cos(2 * _gamma);
-			Vector3d newHeading = new Vector3d((_hd.x * _c2g + _hd.y * _s2g),
-					(-_hd.x * _s2g + _hd.y * _c2g), 0f);
+			Vector3d newHeading = new Vector3d((_hd.x * _c2g + _hd.y * _s2g), (-_hd.x * _s2g + _hd.y * _c2g), 0);
 
 			newHeading.normalize();
 
-			// Neue Position bestimmen
+			/* Neue Position bestimmen */
 			Vector3d newPos = new Vector3d(parent.getPositionInWorldCoord());
 			double _sg = Math.sin(_gamma);
 			double _cg = Math.cos(_gamma);
 			double moveDistance;
 			if (_gamma == 0) {
-				// Bewegung geradeaus
-				moveDistance = s_l; // = s_r
+				/* Bewegung geradeaus */
+				moveDistance = s_l;
 			} else {
-				// andernfalls die Distanz laut Formel berechnen
+				/* andernfalls die Distanz laut Formel berechnen */
 				moveDistance = 0.5 * (s_l + s_r) * Math.sin(_gamma) / _gamma;
 			}
 
-			// Den Bewegungsvektor berechnen ...
-			Vector3d moveDirection = new Vector3d((_hd.x * _cg + _hd.y * _sg),
-					(-_hd.x * _sg + _hd.y * _cg), 0f);
+			/* Den Bewegungsvektor berechnen */
+			Vector3d moveDirection = new Vector3d((_hd.x * _cg + _hd.y * _sg), (-_hd.x * _sg + _hd.y * _cg), 0);
 			moveDirection.normalize();
 			moveDirection.scale(moveDistance);
-			// ... und die alte Position entsprechend veraendern.
+			/* die alte Position entsprechend veraendern */
 			newPos.add(moveDirection);
 
 			mouseSensorX.set(2 * _gamma * SENS_MOUSE_DIST_Y);
 			mouseSensorY.set(moveDistance);
+			
+			final Point3d newPosPoint = new Point3d(newPos);
+			final double newHeadAngle = SimUtils.getRotation(newHeading); // Winkel des Headings
+			boolean collisionInPocket = false;
 
-			boolean isCollided = world.isCollided(parent, new BoundingSphere(
-					new Point3d(0d, 0d, 0d), CtBotSimTcp.BOT_RADIUS), newPos);
-			// Wenn Kollision, Bot entsprechend faerben
-			parent.set(COLLIDED, isCollided);
+			/* Grundplatte auf Kollision pruefen */
+			{
+//				parent.clearDebugBG(); // loescht alte Debug-Anzeige
 
-			// Bodenkontakt ueberpruefen
+				/* Bounds fuer Grundplatte erstellen */
+				Bounds plate = new BoundingSphere(new Point3d(0, 0, 0), CtBotSimTcp.BOT_RADIUS);
 
-			// Vektor vom Ursprung zum linken Rad
-			Vector3d vecL = new Vector3d(-newHeading.y, newHeading.x, 0f);
-			vecL.scale((float) WHEEL_DIST);
-			// neue Position linkes Rad
-			Vector3d posRadL = new Vector3d(parent.getPositionInWorldCoord());
-			posRadL.add(vecL);
+				/* schiebe probehalber Bounds an die neue Position */
+				Transform3D t = new Transform3D();
+				t.setTranslation(newPos);
+				plate.transform(t);
 
-			// Vektor vom Ursprung zum rechten Rad
-			Vector3d vecR = new Vector3d(newHeading.y, -newHeading.x, 0f);
-			vecR.scale((float) WHEEL_DIST);
-			// neue Position rechtes Rad
-			Vector3d posRadR = new Vector3d(parent.getPositionInWorldCoord());
-			posRadR.add(vecR);
+//				parent.showDebugSphere(CtBotSimTcp.BOT_RADIUS, t);
 
-			// Winkel des heading errechnen
-			double angle = SimUtils.getRotation(newHeading);
-			// Transformations-Matrix fuer die Rotation erstellen
-			Transform3D rotation = new Transform3D();
-			rotation.rotZ(angle);
+				/* Kollision berechnen lassen */
+				PickInfo platePickInfo = world.getCollision(botShape, plate);
 
-			/** Abstand Zentrum Gleitpin in Achsrichtung (X) [m] */
-			double BOT_SKID_X = 0d;
+				boolean botCollision = platePickInfo == null || platePickInfo.getNode() == null ? false : true;				
 
-			/** Abstand Zentrum Gleitpin in Vorausrichtung (Y) [m] */
-			double BOT_SKID_Y = -0.054d;
+				if (botCollision && doorSensor.get().intValue() == 1) {
+					/* Transportfach-Aussparung checken, falls Grundplatte kollidiert und Klappe auf */
+					Transform3D transform = new Transform3D();
 
-			// Bodenkontakt des Gleitpins ueberpruefen
-			Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y,
-					-CtBotSimTcp.BOT_HEIGHT / 2);
-			// Position des Gleitpins gemaess der Ausrichtung des Bots anpassen
-			rotation.transform(skidVec);
-			skidVec.add(new Point3d(newPos));
+					/* Bounds fuer Transportfachs erstellen */
+					Bounds pocket = createBounds(newPosPoint, newHeadAngle, 0, 0.04, 0.05 / 2, transform);
 
-			boolean isFalling = !world.checkTerrain(new Point3d(skidVec),
-					CtBotSimTcp.BOT_GROUND_CLEARANCE);
+//					parent.showDebugBox(0.05 / 2, 0.055 / 2, 0.04 / 2, transform, newHeadAngle);
+//					parent.showDebugSphere(0.05 / 2, transform);
 
-			// Bodenkontakt des linken Reifens ueberpruefen
-			posRadL.z -= CtBotSimTcp.BOT_HEIGHT / 2;
+					/* Kollision berechnen lassen */
+					PickInfo pocketPickInfo = world.getCollision(botShape, pocket);
+					
+					if ((pocketPickInfo != null) && (pocketPickInfo.getNode() != null)) {
+						/* Kollision ist (auch) innerhalb des Transportfachs */
+						botCollision = false;					
 
-			isFalling |= !world.checkTerrain(new Point3d(posRadL),
-					CtBotSimTcp.BOT_GROUND_CLEARANCE);
+						/* Check, ob Kollision auch ausserhalb des Fachs */
 
-			// Bodenkontakt des rechten Reifens ueberpruefen
-			posRadR.z -= CtBotSimTcp.BOT_HEIGHT / 2;
+						/* Bounds fuer Innenseite erstellen */
+						Bounds pocketBack = createBounds(newPosPoint, newHeadAngle, 0, - 0.011, 0.05 / 2, transform);
 
-			isFalling |= !world.checkTerrain(new Point3d(posRadR),
-					CtBotSimTcp.BOT_GROUND_CLEARANCE);
+//						parent.showDebugBox(0.05 / 2, 0.015, 0.04 / 2, transform, newHeadAngle);
+//						parent.showDebugSphere(0.05 / 2, transform);
 
-			// Wenn einer der Beruehrungspunkte keinen Boden mehr unter
-			// sich hat wird der Bot gestoppt und entsprechend gefaerbt
-			parent.set(IN_HOLE, isFalling);
+						/* Kollision berechnen lassen */
+						PickInfo pocketBackPickInfo = world.getCollision(botShape, pocketBack);
 
-			if (!parent.is(IN_HOLE) && !parent.is(COLLIDED))
-				parent.setPosition(new Point3d(newPos));
+						if ((pocketBackPickInfo != null) && (pocketBackPickInfo.getNode() != null)) {
+							botCollision = true;
+							objectInPocket = null;
+//							lg.info("Kollision im Transportfach und (mindestens) auch dahinter");
+						} else {
 
-			if (!parent.is(IN_HOLE)) {
-				parent.setHeading(newHeading);
-			} else {
-				mouseSensorX.sensor.set(0);
+							/* Bounds fuer Seitenflaeche links erstellen */
+							Bounds pocketLeft = createBounds(newPosPoint, newHeadAngle, - 0.045, 0.034775, 0.03 / 2, transform);
+
+//							parent.showDebugBox(0.035 / 2, 0.03955, 0.04 / 2, transform, newHeadAngle);
+//							parent.showDebugSphere(0.03 / 2, transform);
+
+							/* Kollision berechnen lassen */
+							PickInfo pocketLeftPickInfo = world.getCollision(botShape, pocketLeft);
+
+							if ((pocketLeftPickInfo != null) && (pocketLeftPickInfo.getNode() != null)) {
+								botCollision = true;
+								collisionInPocket = true;
+								objectInPocket = null;
+//								lg.info("Kollision im Transportfach und (mindestens) auch links davon");
+							} else {					
+								/* Bounds fuer Seitenflaeche rechts erstellen */
+								Bounds pocketRight = createBounds(newPosPoint, newHeadAngle, 0.045, 0.034775, 0.03 / 2, transform);
+
+//								parent.showDebugBox(0.035 / 2, 0.03955, 0.04 / 2, transform, newHeadAngle);
+//								parent.showDebugSphere(0.03 / 2, transform);
+
+								/* Kollision berechnen lassen */
+								PickInfo pocketRightPickInfo = world.getCollision(botShape, pocketRight);
+
+								if ((pocketRightPickInfo != null) && (pocketRightPickInfo.getNode() != null)) {
+									botCollision = true;
+									collisionInPocket = true;
+									objectInPocket = null;
+//									lg.info("Kollision im Transportfach und rechts davon");
+								} else {
+//									lg.info("Kollision nur im Transportfach");
+									objectInPocket = pocketPickInfo.getNode().getParent();
+//									lg.info("objectInPocket=" + objectInPocket.getName());
+								}
+							}
+						}
+					} else {
+						objectInPocket = null;
+					}
+				} else {
+					objectInPocket = null;
+				}
+
+				/* wenn Kollision, Bot entsprechend faerben */
+				parent.set(COLLIDED, botCollision);
 			}
 
-			if (!parent.isObstStateNormal()) {
-				mouseSensorY.sensor.set(0);
+
+			/* Bodenkontakt ueberpruefen */
+			{
+				/* Vektor vom Ursprung zum linken Rad */
+				Vector3d vecL = new Vector3d(-newHeading.y, newHeading.x, 0);
+				vecL.scale((float) WHEEL_DIST);
+				/* neue Position linkes Rad */
+				Vector3d posRadL = new Vector3d(parent.getPositionInWorldCoord());
+				posRadL.add(vecL);
+
+				/* Vektor vom Ursprung zum rechten Rad */
+				Vector3d vecR = new Vector3d(newHeading.y, -newHeading.x, 0);
+				vecR.scale((float) WHEEL_DIST);
+				/* neue Position rechtes Rad */
+				Vector3d posRadR = new Vector3d(parent.getPositionInWorldCoord());
+				posRadR.add(vecR);
+
+				/* Transformations-Matrix fuer die Rotation erstellen */
+				Transform3D rotation = new Transform3D();
+				rotation.rotZ(newHeadAngle);
+
+				/** Abstand Zentrum Gleitpin in Achsrichtung (X) [m] */
+				final double BOT_SKID_X = 0d;
+
+				/** Abstand Zentrum Gleitpin in Vorausrichtung (Y) [m] */
+				final double BOT_SKID_Y = -0.054d;
+
+				/* Bodenkontakt des Gleitpins ueberpruefen */
+				Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -CtBotSimTcp.BOT_HEIGHT / 2);
+				/* Position des Gleitpins gemaess der Ausrichtung des Bots anpassen */
+				rotation.transform(skidVec);
+				skidVec.add(newPosPoint);
+
+				boolean isFalling = ! world.checkTerrain(new Point3d(skidVec), CtBotSimTcp.BOT_GROUND_CLEARANCE);
+
+				/* Bodenkontakt des linken Reifens ueberpruefen */
+				posRadL.z -= CtBotSimTcp.BOT_HEIGHT / 2;
+
+				isFalling |= ! world.checkTerrain(new Point3d(posRadL), CtBotSimTcp.BOT_GROUND_CLEARANCE);
+
+				/* Bodenkontakt des rechten Reifens ueberpruefen */
+				posRadR.z -= CtBotSimTcp.BOT_HEIGHT / 2;
+
+				isFalling |= ! world.checkTerrain(new Point3d(posRadR), CtBotSimTcp.BOT_GROUND_CLEARANCE);
+
+				/* Wenn einer der Beruehrungspunkte keinen Boden mehr unter
+				 * sich hat wird der Bot gestoppt und entsprechend gefaerbt */
+				parent.set(IN_HOLE, isFalling);
+
+				if (! parent.is(IN_HOLE) && ! parent.is(COLLIDED)) {
+					parent.setPosition(newPosPoint);
+				}
+	
+				if (! parent.is(IN_HOLE) && ! collisionInPocket) {
+					parent.setHeading(newHeading);
+				} else {
+					mouseSensorX.sensor.set(0);
+				}
+	
+				if (parent.is(IN_HOLE) || parent.is(COLLIDED)) {
+					mouseSensorY.sensor.set(0);
+				}
 			}
 
+			/* Uhr aktualisieren */
 			clock.setSimTimeInMs((int) world.getSimTimeInMs());
 			
+			/* Shutdown-Abfrage */
 			if (shutdown.shutdownRequested()) {
 				parent.dispose();
 			}
+		}
+
+		/**
+		 * @param newPos
+		 * @param newHeading
+		 * @param dX
+		 * @param dY
+		 * @param radius 
+		 * @param t Transformationsmatrix (wird veraendert)
+		 * @return erzeugte Bounds
+		 */
+		private Bounds createBounds(Point3d newPos, double newHeading, double dX, double dY, double radius, Transform3D t) {
+			final double dZ = - CtBotSimTcp.BOT_HEIGHT / 2;
+			
+			/* Vektor fuer die Verschiebung erstellen */
+			Vector3d v = new Vector3d(dX, dY, dZ);
+
+			/* Transformations-Matrix fuer die Rotation erstellen */
+			Transform3D r = new Transform3D();
+			r.rotZ(newHeading);
+			
+			/* Transformation um Verschiebung ergaenzen */
+			r.transform(v);
+			v.add(newPos);
+			t.setIdentity();
+			t.setTranslation(v);
+			
+			/* Bounds erstellen */
+			Bounds bounds = new BoundingSphere(new Point3d(0, 0, 0), radius);
+			
+			/* Bounds transformieren */
+			bounds.transform(t);
+			
+			return bounds;
+		}
+
+		/**
+		 * Setzt den Klappen-Sensor des Bots
+		 * @param doorSensor Sensor
+		 */
+		public void setDoorSensor(Door doorSensor) {
+			this.doorSensor = doorSensor;
+		}
+		
+		/**
+		 * @return this.objectInPocket
+		 */
+		public Node getObjectInPocket() {
+			return objectInPocket;
+		}
+		
+		/**
+		 * @return derzeit assoziiertes Objekt
+		 */
+		public Node getAssociatedObject() {
+			return associatedObject;
+		}
+		
+		/**
+		 * @param object zu setzendes Objekt
+		 */
+		public void setAssociatedObject(Node object) {
+			if (object != null) {
+				object.setPickable(false);
+				TransformGroup tgObject = (TransformGroup) object.getParent().getParent().getParent();
+				TransformGroup tgParcours = (TransformGroup) object.getParent().getParent();
+				BranchGroup bg = (BranchGroup) tgObject.getParent();
+				bg.detach();
+				
+				Transform3D tWorld = new Transform3D();
+				tWorld.setTranslation(new Vector3d(0, 0, 0.2));
+				tgParcours.setTransform(tWorld);
+				
+				Transform3D tPocket = new Transform3D();
+				Vector3d diff = new Vector3d(0, 0.036, - CtBotSimTcp.BOT_HEIGHT / 2);
+				tPocket.setTranslation(diff);
+				tgObject.setTransform(tPocket);
+				
+				parent.getTransformGroup().addChild(bg);
+			} else if (associatedObject != null) {
+				Transform3D t = new Transform3D();
+				associatedObject.getLocalToVworld(t);
+				Point3d center = new Point3d();
+				t.transform(center);
+				
+				TransformGroup tgObject = (TransformGroup) associatedObject.getParent().getParent().getParent();
+				BranchGroup bg = (BranchGroup) tgObject.getParent();
+				bg.detach();
+				
+				world.getParcours().createMovableObject((float) center.x, (float) center.y);
+			}
+
+			associatedObject = object;
 		}
 	}
 
@@ -421,13 +658,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     protected final WheelSimulator leftWheel = new WheelSimulator();
     /** Rad rechts */
     protected final WheelSimulator rightWheel = new WheelSimulator();
+    
+    /** Servo Klappe */
+    protected final ServoSimulator servoDoor = new ServoSimulator();
 
     /** Maussensor-X */
-    protected final MouseSensorSimulator mouseSensorX =
-        new MouseSensorSimulator();
+    protected final MouseSensorSimulator mouseSensorX = new MouseSensorSimulator();
     /** Maussensor-Y */
-    protected final MouseSensorSimulator mouseSensorY =
-        new MouseSensorSimulator();
+    protected final MouseSensorSimulator mouseSensorY = new MouseSensorSimulator();
     /** Uhr / Systemzeit */
     private Clock clock;
     /** Shutdown-Control */
@@ -480,19 +718,57 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     }
 
     /**
-     * @param g	governor
+     * @param g	Governor
      * @param isLeft links?
      */
     public void buisitWheel(Governor g, boolean isLeft) {
         (isLeft ? leftWheel : rightWheel).setGovernor(g);
+    }
+    
+    /**
+     * @param s	Servo
+     * @param isLeft links?
+     */
+    public void buisitServo(DoorServo s, boolean isLeft) {
+    	if (isLeft) {
+    		servoDoor.setServo(s);
+    	}
+    }
+    
+    /**
+     * @param doorSensor Klappensensor
+     * @param isLeft Servo 1 (links) fuer Klappe
+     */
+    public void buisitDoor(final Sensors.Door doorSensor, boolean isLeft) {
+        final ServoSimulator servo = isLeft ? servoDoor : null;
+        krautUndRuebenSim.setDoorSensor(doorSensor);
+    	
+        simulators.add(new Runnable() {
+            @SuppressWarnings("null")
+			public void run() {
+                final int doorState = servo.getServoPosition() < 12 ? 0 : 1; // 0: Klappe zu; 1: Klappe auf
+                final boolean change = doorState != doorSensor.get().intValue();
+                if (change) {
+                	doorSensor.set(doorState);
+                	parent.set(DOOR_OPEN, doorState != 0);
+                	
+                	if (doorState == 0) {
+                		/* Klappe wurde geschlossen */
+                		krautUndRuebenSim.setAssociatedObject(krautUndRuebenSim.getObjectInPocket());
+                	} else {
+                		/* Klappe wurde geoeffnet */
+                		krautUndRuebenSim.setAssociatedObject(null);
+                	}
+                }
+            }
+        });
     }
 
     /**
      * @param encoderSensor	Encoder
      * @param isLeft	links?
      */
-    public void buisitEncoderSim(final Sensors.Encoder encoderSensor,
-    boolean isLeft) {
+    public void buisitEncoderSim(final Sensors.Encoder encoderSensor, boolean isLeft) {
         final WheelSimulator wheel = isLeft
             ? leftWheel
             : rightWheel;
@@ -573,7 +849,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      */
     public void buisitLineSensorSim(Sensors.Line s, boolean isLeft) {
         simulators.add(new Cny70Simulator(
-            at(0.004, 0.009, -0.011 - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
+            at(0.004, 0.009, - 0.011 - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
             looksForward(), s));
     }
 
@@ -630,6 +906,36 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	}
 
     /**
+	 * @param sensor Transportfach-Sensor
+	 * @param isLeft immer true, denn es gibt nur einen Sensor
+	 */
+	public void buisitPocketSim(final Sensors.Trans sensor, final boolean isLeft) {
+		if (! isLeft) {
+			return; // es gibt nur einen Sensor, wir nehmen den Wert fuer links
+		}
+		final Point3d startOfSens = new Point3d(- 0.025, 0.025, 0);
+		final Point3d endOfSens = new Point3d(startOfSens);
+		endOfSens.add(new Point3d(0.05, 0, 0));
+		
+		simulators.add(new Runnable() {
+            private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
+
+            public void run() {
+            	if (krautUndRuebenSim.getAssociatedObject() != null) {
+            		sensor.set(1);
+            	} else {
+	                final double distInM = world.watchObstacle(
+	                    parent.worldCoordFromBotCoord(startOfSens),
+	                    parent.worldCoordFromBotCoord(endOfSens),
+	                    OPENING_ANGLE_IN_RAD,
+	                    parent.getShape());
+                	sensor.set(distInM < 100 ? 1 :0);
+            	}
+            }
+		});
+	}
+	
+    /**
      * @param sensor Maussensor
      * @param isX X? (sonst Y)
      */
@@ -641,14 +947,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @param sensor Clock
      */
     public void buisitClockSim(final Sensors.Clock sensor) {
-        this.clock = sensor;
+        clock = sensor;
     }
     
     /**
      * @param sensor Shutdown-Control
      */
     public void buisitShutdownSim(final Sensors.Shutdown sensor) {
-    	this.shutdown = sensor;
+    	shutdown = sensor;
     }
 
     /**
@@ -660,5 +966,12 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             simulator.run();
         }
         krautUndRuebenSim.run();
+    }
+    
+    /**
+     * Destruktor
+     */
+    public void cleanup() {
+    	krautUndRuebenSim.setAssociatedObject(null); // steckt ein eingeladenes Objekt wieder in die Welt
     }
 }

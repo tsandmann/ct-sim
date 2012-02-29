@@ -57,10 +57,10 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	protected static PositionMap positions = null;
 	
 	/** Inhalt des Frames */
-	final protected JComponent comp;
+	protected JComponent comp;
 
 	/** Button, der diesen Frame erzeugt hat / oeffnet und schliesst */
-	final protected AuxFrameButton button;
+	protected AuxFrameButton button;
 	
 	/**
 	 * entfernt alles nach dem ersten Leerzeichen aus einem Fenstertitel

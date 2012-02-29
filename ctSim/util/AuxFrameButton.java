@@ -52,8 +52,10 @@ import ctSim.view.gui.RemoteCallViewer;
 public class AuxFrameButton extends JToggleButton {
 	/** UID */
 	private static final long serialVersionUID = - 7629302258050583L;
+//	/** Logger */ 
+//	private final FmtLogger lg = FmtLogger.getLogger("ctSim.utils.AuxFrameButton");
 	/** Frame */
-	private final JFrame auxFrame;
+	private final ComponentJFrame auxFrame;
 
 	/**
 	 * Erzeugt einen JToggleButton, der mit einem extra Fenster verheiratet ist.
@@ -66,9 +68,9 @@ public class AuxFrameButton extends JToggleButton {
 	 * @param frameContent Inhalt des Fensters, der beliebig komplex sein kann.
 	 * Oft empfiehlt es sich, hier eine {@link JScrollPane} zu &uuml;bergeben,
 	 * die alles weitere enth&auml;lt
+	 * @param enabled soll der Button aktiviert sein?
 	 */
-	public AuxFrameButton(String buttonLabel, String frameTitle,
-	final JComponent frameContent) {
+	public AuxFrameButton(String buttonLabel, String frameTitle, final JComponent frameContent, boolean enabled) {
 		super(buttonLabel);
 
 		// Fenster erzeugen; konfigurieren spaeter
@@ -81,8 +83,9 @@ public class AuxFrameButton extends JToggleButton {
 		setAlignmentX(Component.CENTER_ALIGNMENT);
 		// Falls wir Platz haben, ausnutzen (keiner hat was von leerem 
 		// nicht-klickbaren Platz) 
-		setMaximumSize(new Dimension(Integer.MAX_VALUE, 
-			getMaximumSize().height));
+		setMaximumSize(new Dimension(Integer.MAX_VALUE, getMaximumSize().height));
+		
+		setEnabled(enabled);
 		
 		String keyinfo = "";
 		if (System.getProperty("os.name").toLowerCase().startsWith("linux")) {
@@ -93,7 +96,11 @@ public class AuxFrameButton extends JToggleButton {
 			keyinfo = "Cmd";
 		}
 		keyinfo += " + w)";
-		setToolTipText("Fenster \"" + buttonLabel + "\" anzeigen (schlie\u00DFen mit " + keyinfo);
+		if (enabled) {
+			setToolTipText("Fenster \"" + buttonLabel + "\" anzeigen (schlie\u00DFen mit " + keyinfo);
+		} else {
+			setToolTipText("Komponente \"" + buttonLabel + "\" im Bot-Code nicht aktiviert");
+		}
 		addActionListener(new ActionListener() {
 			// Fenster anzeigen/verbergen, wenn wir gedrueckt werden
 			@SuppressWarnings("synthetic-access")
@@ -143,6 +150,7 @@ public class AuxFrameButton extends JToggleButton {
 	 */
 	@Override
 	public void removeNotify() {
+//		lg.fine("AuxFrameButton::removeNotify()");
 		auxFrame.dispose();
 		super.removeNotify();
 	}

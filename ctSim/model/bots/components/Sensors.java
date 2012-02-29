@@ -515,47 +515,102 @@ public class Sensors {
 	/**
 	 * Transportfach-Klappensensor
 	 */
-	public static class Door extends NumberSingleton
+	public static class Door extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
+		/**
+		 * @param left
+		 */
+		public Door(boolean left) {
+			super(true);
+		}
+		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { return "Transportfach-Klappensensor"; }
+		@Override public String getBaseDescription() { 
+			return "Transportfach-Klappensensor (0: zu; 1: auf)"; 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { return "DoorSens"; }
+		@Override public String getBaseName() { 
+			return "Klappe"; 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { return Code.SENS_DOOR; }
-	}
-
-	/**
-	 * Transportfach-Ueberwachung
-	 */
-	public static class Trans extends NumberSingleton
-	implements SimpleSensor, CanRead, CanWrite {
+		public Code getHotCmdCode() { 
+			return Code.SENS_DOOR; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override
+		public String getName() {
+			return getBaseName();
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
 		@Override
 		public String getDescription() {
+			return getBaseDescription();
+		}
+	}
+
+	/**
+	 * Transportfach-Ueberwachung
+	 */
+	public static class Trans extends NumberTwin
+	implements SimpleSensor, CanRead, CanWrite {
+		/**
+		 * @param isLeft immer true
+		 */
+		public Trans(boolean isLeft) {
+			super(true);
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override
+		public String getBaseDescription() {
 			return "Lichtschranke im Transportfach";
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { return "Trans"; }
+		@Override public String getBaseName() { 
+			return "Trans"; 
+		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { return Code.SENS_TRANS; }
+		public Code getHotCmdCode() { 
+			return Code.SENS_TRANS; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override
+		public String getName() {
+			return getBaseName();
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override
+		public String getDescription() {
+			return getBaseDescription();
+		}
 	}
 
 	/**

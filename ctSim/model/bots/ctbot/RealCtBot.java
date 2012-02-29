@@ -53,7 +53,7 @@ public class RealCtBot extends CtBot {
 		 * @param connection Connection zum Bot
 		 */
 		public CmdProcessor(final Connection connection) {
-			super("ctSim-"+RealCtBot.this.toString());
+			super("ctSim-" + RealCtBot.this.toString());
 			this.connection = connection;
 		}
 
@@ -77,7 +77,7 @@ public class RealCtBot extends CtBot {
 					return;
 				}
 				
-				if (!preProcessCommands(cmd)){
+				if (! preProcessCommands(cmd)) {
 					components.processCommand(cmd);
 				}
 			} catch (ProtocolException e) {
@@ -109,10 +109,11 @@ public class RealCtBot extends CtBot {
 	/**
 	 * @param connection Connection zum Bot
 	 * @param newId Id fuer die Kommunikation 
+	 * @param features Features des Bots gepackt in einen Integer
 	 * @throws ProtocolException 
 	 */
-	public RealCtBot(Connection connection, BotID newId) throws ProtocolException {
-		super(connection.getShortName()+"-Bot");
+	public RealCtBot(Connection connection, BotID newId, int features) throws ProtocolException {
+		super(connection.getShortName() + "-Bot");
 		
 		// connection speichern
 		setConnection(connection);
@@ -146,7 +147,7 @@ public class RealCtBot extends CtBot {
 			_(Sensors.BPSReceiver.class  , READS),
 			_(Sensors.Shutdown.class     , READS, WRITES_ASYNCLY),
 			_(WelcomeReceiver.class      , READS),
-			_(Actuators.Program.class		 , WRITES_ASYNCLY),
+			_(Actuators.Program.class	 , WRITES_ASYNCLY),
 			_(MapComponent.class		 , READS, WRITES_ASYNCLY),
 			_(RemoteCallCompnt.class     , READS, WRITES_ASYNCLY)
 		);
@@ -156,14 +157,19 @@ public class RealCtBot extends CtBot {
 			
 			/* RemoteCall-Componente suchen und DoneListener registrieren (ProgramViewer) */
 			if (c instanceof RemoteCallCompnt) {
-				RemoteCallCompnt rc = (RemoteCallCompnt)c;			
+				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
 					public void run(BehaviorExitStatus status) {
 						if (ablResult != null) {
 							ablResult.setSyntaxCheck(status == BehaviorExitStatus.SUCCESS);
 						}
 					}
-				});	
+				});
+			}
+			
+			if (c instanceof WelcomeReceiver) {
+				welcomeReceiver = (WelcomeReceiver) c;
+				welcomeReceiver.setFeatures(features);
 			}
 		}
 

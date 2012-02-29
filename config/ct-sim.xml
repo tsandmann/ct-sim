@@ -18,6 +18,9 @@
 	Pfaden ruminterpretiert, kann entfallen. Auf jedem unterstuetzen System
 	kann man nach dem Auschecken sofort starten (normalerweise).
 	-->
+	
+	<!-- Initialer Wert fuer TickRate (1 / Simulationsgeschwindigkeit) -->
+	<parameter name="ctSimTickRate" value="0"/>
 
 	<!-- ctSimTimeout ist die Zeit in [ms], die der Controller maximal auf einen Bot wartet -->
 	<parameter name="ctSimTimeout" value="500"/>
@@ -139,6 +142,10 @@
 				<description>Standard Aussehen des simulierten Bots 1</description>
 				<color>#800000</color>
 			</appearance>
+			<appearance type="door_open">
+				<description>Standard Aussehen des simulierten Bots 1 mit offener Klappe</description>
+				<color>#600000</color>
+			</appearance>
 			<appearance type="collision">
 				<description>Aussehen des  simulierten Bots 1 bei Kollision</description>
 				<color>#8000FF</color>
@@ -156,19 +163,23 @@
 		<bot name="ctSim.model.bots.CtBotSimTcp_1">
 			<appearance type="normal">
 				<description>Standard Aussehen des  simulierten Bots 2</description>
-				<color>#808000</color>
+				<color>#0000A0</color>
+			</appearance>
+			<appearance type="door_open">
+				<description>Standard Aussehen des simulierten Bots 2 mit offener Klappe</description>
+				<color>#000080</color>
 			</appearance>
 			<appearance type="collision">
 				<description>Aussehen des  simulierten Bots 2 bei Kollision</description>
-				<color>#8080FF</color>
+				<color>#8000A0</color>
 			</appearance>
 			<appearance type="falling">
 				<description>Aussehen des  simulierten Bots 2 bei Absturz</description>
-				<color>#4080FF</color>
+				<color>#4000A0</color>
 			</appearance>
 			<appearance type="halted">
 				<description>Aussehen des  simulierten Bots 2 wenn er angehalten ist</description>
-				<color>#008000</color>
+				<color>#000040</color>
 			</appearance>
 		</bot>
 
@@ -177,6 +188,10 @@
 				<description>Standard Aussehen des Standard-Bots</description>
 				<color>#FF0000</color>
 			</appearance>
+			<appearance type="door_open">
+				<description>Standard Aussehen des Standard-Bots mit offener Klappe</description>
+				<color>#B00000</color>
+			</appearance>			
 			<appearance type="collision">
 				<description>Aussehen des Standard-Bots bei Kollision</description>
 				<color>#FF00FF</color>

@@ -199,16 +199,16 @@ public abstract class Connection {
 		switch (c.getSubCode()) {
     		case WELCOME_SIM:
     			lg.fine("TCP-Verbindung von simuliertem Bot eingegangen");
-    			bot = new CtBotSimTcp(this,c.getFrom());  			
+    			bot = new CtBotSimTcp(this, c.getFrom(), c.getDataL());
     			break;
     		case WELCOME_REAL:
     			lg.fine("TCP-Verbindung von realem Bot eingegangen");
-    			bot= new RealCtBot(this,c.getFrom());
+    			bot = new RealCtBot(this, c.getFrom(), c.getDataL());
     			break;
     		default:
     			throw new ProtocolException(c.toString());
     	}
-		
+
 		return bot;
-	}	
+	}
 }

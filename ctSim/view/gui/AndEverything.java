@@ -59,8 +59,7 @@ public class AndEverything extends GuiBotBuisitor {
 	 * @param d Display 
 	 */
 	public void buisitLcdViewer(Actuators.LcDisplay d) {
-		JTextArea t = new JTextArea(d.getExternalModel(), null,
-			d.getNumRows(), d.getNumCols());
+		JTextArea t = new JTextArea(d.getExternalModel(), null, d.getNumRows(), d.getNumCols());
 		t.setEnabled(false);
 
 		/*
@@ -93,7 +92,8 @@ public class AndEverything extends GuiBotBuisitor {
 		add(new AuxFrameButton(
 			log.getName(),
 			log.getDescription() + " des " + bot, // Fenster-Titel
-			new LogViewer(log)));
+			new LogViewer(log),
+			bot.get_feature_log()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
@@ -106,7 +106,8 @@ public class AndEverything extends GuiBotBuisitor {
 		add(new AuxFrameButton(
 			s.getDescription()+" ("+s.getName()+")",
 			s.getDescription()+" f\u00FCr "+bot,
-			new RemoteControlViewer(s)));
+			new RemoteControlViewer(s),
+			bot.get_feature_rc5()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
@@ -119,7 +120,8 @@ public class AndEverything extends GuiBotBuisitor {
 		add(new AuxFrameButton(
 			c.getName(),
 			c.getName()+" an "+bot,
-			new RemoteCallViewer(c)));
+			new RemoteCallViewer(c),
+			bot.get_feature_remotecall()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 	
@@ -132,20 +134,22 @@ public class AndEverything extends GuiBotBuisitor {
 		add(new AuxFrameButton(
 			map.getName(),
 			map.getDescription() + " von " + bot, // Fenster-Titel
-			new MapViewer(map, bot)));
+			new MapViewer(map, bot),
+			bot.get_feature_map()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 	
 	/** 
 	 * Baut den Knopf, der zum Progamm-Fenster f&uumo;hrt 
-	 * @param abl ABL-Komponente
+	 * @param program Programm-Komponente
 	 * @param bot Bot
 	 */
-	public void buisitABLViewer(Actuators.Program abl, Bot bot) {
+	public void buisitProgramViewer(Actuators.Program program, Bot bot) {
 		add(new AuxFrameButton(
-			abl.getName(),
-			abl.getDescription() + " von " + bot, // Fenster-Titel
-			new ProgramViewer(abl, bot)));
+			program.getName(),
+			program.getDescription() + " von " + bot, // Fenster-Titel
+			new ProgramViewer(program, bot),
+			bot.get_feature_abl_program() || bot.get_feature_basic_program()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 }

@@ -71,20 +71,20 @@ public class BotViewer extends JScrollPane {
 		if (botinstance instanceof CtBotSimTest) {
 			/* Test-Bots haben kein LCD, LOG, RemoteCall, ABL, Mausbild */
 			buisitors = new Class[] {
-					Tables.Position.class,
-					Tables.Sensors.class,
-					Tables.Actuators.class,
-				};
+				Tables.Position.class,
+				Tables.Sensors.class,
+				Tables.Actuators.class,
+			};
 		} else {
 			buisitors = new Class[] {
-					Tables.Position.class,
-					Tables.GlobalPosition.class,
-					Leds.class,
-					AndEverything.class,
-					Tables.Sensors.class,
-					Tables.Actuators.class,
-					MousePictureViewer.class,
-				};
+				Tables.Position.class,
+				Tables.GlobalPosition.class,
+				Leds.class,
+				AndEverything.class,
+				Tables.Sensors.class,
+				Tables.Actuators.class,
+				MousePictureViewer.class,
+			};
 		}
 		
 		/* Panelbreite soll mindestens so gross sein, dass alle Elemente darin komplett sichtbar sind */
@@ -95,10 +95,11 @@ public class BotViewer extends JScrollPane {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		for (Class<?> b : buisitors) {
 			try {
-				GuiBotBuisitor buisitor = (GuiBotBuisitor)b.newInstance();
+				GuiBotBuisitor buisitor = (GuiBotBuisitor) b.newInstance();
 				bot.accept(buisitor);
-				if (buisitor.shouldBeDisplayed())
+				if (buisitor.shouldBeDisplayed()) {
 					panel.add(buisitor);
+				}
 			} catch (IllegalAccessException e) {
 				/*
 				 * Kommt nur vor, wenn ein BotBuisitor keinen Konstruktor hat,

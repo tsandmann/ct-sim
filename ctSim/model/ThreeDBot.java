@@ -42,6 +42,9 @@ import javax.vecmath.Point2i;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import com.sun.j3d.utils.geometry.Box;
+import com.sun.j3d.utils.geometry.Sphere;
+
 import ctSim.controller.BotBarrier;
 import ctSim.controller.Config;
 import ctSim.model.bots.BasicBot;
@@ -51,6 +54,7 @@ import ctSim.model.bots.SimulatedBot.UnrecoverableScrewupException;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.ctbot.CtBotShape;
 import ctSim.model.bots.ctbot.CtBotSimTcp;
+import ctSim.model.bots.ctbot.MasterSimulator;
 import ctSim.util.Runnable1;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
@@ -106,6 +110,13 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		IN_HOLE(0x002, "falling",
 			"hat keinen Boden mehr unter den F\u00FC\u00DFen",
 			"hat wieder Boden unter den F\u00FC\u00DFen"),
+			
+		/**
+		 * Klappenzustand des Bots
+		 */
+		DOOR_OPEN(0x003, "door_open",
+			"Klappe ist nun geoeffnet",
+			"Klappe ist nun geschlossen"),
 
 		/**
 		 * Der Bot ist von der weiteren Simulation ausgeschlossen, d.h. seine
@@ -132,8 +143,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		 * @param appearanceKeyInXml
 		 * @param messageOnEnter
 		 */
-		State(int legacyValue, String appearanceKeyInXml,
-		String messageOnEnter) {
+		State(int legacyValue, String appearanceKeyInXml, String messageOnEnter) {
 			this(legacyValue, appearanceKeyInXml, messageOnEnter, null);
 		}
 
@@ -144,8 +154,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		 * @param messageOnEnter
 		 * @param messageOnExit
 		 */
-		State(int legacyValue, String appearanceKeyInXml,
-		String messageOnEnter, String messageOnExit) {
+		State(int legacyValue, String appearanceKeyInXml, String messageOnEnter, String messageOnExit) {
 			this.legacyValue = legacyValue;
 			this.appearanceKeyInXml = appearanceKeyInXml;
 			this.messageOnEnter = messageOnEnter;
@@ -183,8 +192,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 			updateExternalModel(); // Initialen Wert setzen
 			getExternalModel().addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
-					double newValue = getExternalModel().getNumber()
-						.doubleValue();
+					double newValue = getExternalModel().getNumber().doubleValue();
 					Point3d p = getPositionInWorldCoord();
 					switch (coord) {
 						case X:   p.x = newValue; break;
@@ -318,12 +326,11 @@ public class ThreeDBot extends BasicBot implements Runnable {
 					 * komplett auf double umgestellt ist, ist ignoreStateChange
 					 * ueberfluessig
 					 */
-					if (ignoreStateChange)
+					if (ignoreStateChange) {
 						return;
-					double newValueDeg = getExternalModel().getNumber()
-						.doubleValue();
-					getExternalModel().setValue(Misc.normalizeAngleDeg(
-						newValueDeg));
+					}
+					double newValueDeg = getExternalModel().getNumber().doubleValue();
+					getExternalModel().setValue(Misc.normalizeAngleDeg(newValueDeg));
 					setHeading(Math.toRadians(newValueDeg));
 				}
 			});
@@ -456,6 +463,8 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * </pre>
 	 */
 	private final BranchGroup branchgrp;
+	/** enthaelt Anzeigeelemente zu Debug-Zwecken */
+	private final BranchGroup testBG;
 	/** Transformgroup */
 	private final TransformGroup transformgrp;
 	/** Shape */
@@ -485,27 +494,36 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @param barrier 	Barrier fuer den neuen Bot
 	 * @param bot		Zugehoeriger Bot 
 	 */
-	public ThreeDBot(Point3d posInWorldCoord, Vector3d headInWorldCoord,
-	BotBarrier barrier,	SimulatedBot bot) {
+	public ThreeDBot(Point3d posInWorldCoord, Vector3d headInWorldCoord, BotBarrier barrier, SimulatedBot bot) {
 		super(bot.toString());
-		Color normalColor = Config.getBotColor(bot.getClass(),
-			bot.getInstanceNumber(), "normal");
-		this.shape = new CtBotShape(normalColor, this);
+		Color normalColor = Config.getBotColor(bot.getClass(), bot.getInstanceNumber(), "normal");
+		shape = new CtBotShape(normalColor, this);
 		this.barrier = barrier;
 		this.bot = bot;
 
-		// Translationsgruppe fuer das Obst
+		/* TransformGroup fuer den Bot */
 		transformgrp = new TransformGroup();
 		transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		transformgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		transformgrp.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 
-		// Jetzt wird noch alles nett verpackt
+		/* jetzt wird noch alles nett verpackt */
 		branchgrp = new BranchGroup();
 		branchgrp.setCapability(BranchGroup.ALLOW_DETACH);
 		branchgrp.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		branchgrp.setCapability(Group.ALLOW_CHILDREN_EXTEND);
+		branchgrp.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		branchgrp.addChild(transformgrp);
-
+		
+		/* BranchGroup fuer Debug-Anzeigen */
+		testBG = new BranchGroup();
+		testBG.setCapability(BranchGroup.ALLOW_DETACH);
+		testBG.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		testBG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
+		testBG.setPickable(false);
+		branchgrp.addChild(testBG);
+		
 		transformgrp.addChild(shape);
 
 		setPosition(posInWorldCoord);
@@ -514,20 +532,18 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 		// Die holen sich die Position in ihren Konstruktoren, daher muss die
 		// schon gesetzt sein
-		components.add(
-			new PositionCompnt(X),
-			new PositionCompnt(Y),
-			new PositionCompnt(Z),
-			new HeadingCompnt()
-		);
+		components.add(new PositionCompnt(X), new PositionCompnt(Y), new PositionCompnt(Z), new HeadingCompnt());
 		
 		if (Config.getValue("BPSSensor").equals("true")) {
-			components.add(
-				new PositionGlobal(X),
-				new PositionGlobal(Y),
-				new HeadingGlobal()
-			);
+			components.add(new PositionGlobal(X), new PositionGlobal(Y), new HeadingGlobal());
 		}
+		
+		addDisposeListener(new Runnable() {
+			@Override
+			public void run() {
+				((MasterSimulator) simulator).cleanup();
+			}
+		});
 	}
 
 	
@@ -553,18 +569,67 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	public final BranchGroup getBranchGroup() {
 		return branchgrp;
 	}
-
+	
+	/**
+	 * @return TG des Bots
+	 */
+	public final TransformGroup getTransformGroup() {
+		return transformgrp;
+	}
+	
 	/**
 	 * @param relTrans
 	 * @param comp
 	 */
 	public final void addBranchComponent(Transform3D relTrans, Node comp) {
-
 		TransformGroup tg = new TransformGroup();
 		tg.setTransform(relTrans);
 		tg.addChild(comp);
 
-		this.transformgrp.addChild(tg);
+		transformgrp.addChild(tg);
+	}
+	
+	/**
+	 * Loescht alle Elemente in TestBG (Branchgroup zu Debug-Zwecken)
+	 */
+	public void clearDebugBG() {
+		testBG.removeAllChildren();
+	}
+	
+	/**
+	 * Zeichnet eine Kugel zu Debug-Zwecken, indem sie zu TestBG hinzugefuegt wird
+	 * @param radius Radius der Kugel
+	 * @param transform Transformation, die auf die Box angewendet werden soll
+	 */
+	public void showDebugSphere(final double radius, Transform3D transform) {
+		final Sphere sphare = new Sphere((float) radius);
+		TransformGroup tg = new TransformGroup();
+		tg.setTransform(transform);
+		tg.addChild(sphare);
+		BranchGroup bg = new BranchGroup();
+		bg.setCapability(BranchGroup.ALLOW_DETACH);
+		bg.addChild(tg);
+		testBG.addChild(bg);
+	}
+
+	/**
+	 * Zeichnet eine Box zu Debug-Zwecken, indem sie zu TestBG hinzugefuegt wird
+	 * @param x Groesse in X-Richtung
+	 * @param y Groesse in Y-Richtung
+	 * @param z Groesse in Z-Richtung
+	 * @param transform Transformation, die auf die Box angewendet werden soll
+	 * @param angle Winkel, um den die Box gedreht werden soll
+	 */
+	public void showDebugBox(final double x, final double y, final double z, Transform3D transform, double angle) {
+		final Box box = new Box((float) x, (float) y, (float) z, null);
+		transform.setRotation(new AxisAngle4d(0, 0, 1, angle));
+		TransformGroup tg = new TransformGroup();
+		tg.setTransform(transform);
+		tg.addChild(box);
+		BranchGroup bg = new BranchGroup();
+		bg.setCapability(BranchGroup.ALLOW_DETACH);
+		bg.addChild(tg);
+		testBG.addChild(bg);
 	}
 
 	/**
@@ -576,7 +641,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 			@SuppressWarnings("synthetic-access")
 			public void run() {
 				if (thrd != null) {
-					lg.fine("Stoppe Thread "+thrd.getName());
+					lg.fine("Stoppe Thread " + thrd.getName());
 					Thread t = thrd;
 					thrd = null;
 					t.interrupt();
@@ -585,7 +650,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		});
 
 		thrd.start();
-		lg.fine("Thread "+thrd.getName()+" gestartet");
+		lg.fine("Thread " + thrd.getName() + " gestartet");
 	}
 
 	/**
@@ -623,8 +688,9 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 */
 	public final synchronized void setPosition(Point3d posInWorldCoord) {
 		// Optimierung (Transform-Kram ist teuer)
-		if (this.posInWorldCoord.equals(posInWorldCoord))
+		if (this.posInWorldCoord.equals(posInWorldCoord)) {
 			return;
+		}
 
 		this.posInWorldCoord = posInWorldCoord;
 
@@ -633,8 +699,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		t.setTranslation(new Vector3d(posInWorldCoord));
 		transformgrp.setTransform(t);
 
-		if (! is(COLLIDED)
-		&&  ! is(IN_HOLE)) {
+		if (! is(COLLIDED) && ! is(IN_HOLE)) {
 			lastSafePos.set(posInWorldCoord);
 		}
 	}
@@ -653,9 +718,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 */
 	public static Vector3d vectorFromAngle(double headingInRad) {
 		headingInRad = Misc.normalizeAngleRad(headingInRad);
-		return new Vector3d(- Math.sin(headingInRad),
-		                    + Math.cos(headingInRad),
-		                    0);
+		return new Vector3d(- Math.sin(headingInRad), + Math.cos(headingInRad), 0);
 	}
 
 	/**
@@ -664,8 +727,9 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 */	
 	public final synchronized void setHeading(Vector3d headingInWorldCoord) {
 		// Optimierung (Transform-Kram ist teuer)
-		if (this.headingInWorldCoord.equals(headingInWorldCoord))
+		if (this.headingInWorldCoord.equals(headingInWorldCoord)) {
 			return;
+		}
 
 		/*
 		 * Sinn der Methode: Transform3D aktualisieren, das von Bot- nach
@@ -711,8 +775,9 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 */
 	private static double radiansToYAxis(Vector3d v) {
 		double rv = v.angle(new Vector3d(0, 1, 0));
-		if (v.x > 0)
+		if (v.x > 0) {
 			rv = -rv;
+		}
 		return rv;
 	}
 
@@ -722,10 +787,11 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @param setOrClear
 	 */
 	public void set(State state, boolean setOrClear) {
-		if (setOrClear)
+		if (setOrClear) {
 			set(state);
-		else
+		} else {
 			clear(state);
+		}
 	}
 
 	/**
@@ -734,7 +800,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 */
 	public void set(State state) {
 		if (obstState.add(state)) {
-			lg.info(toString()+" "+state.messageOnEnter);
+			lg.info(toString() + " " + state.messageOnEnter);
 			updateAppearance();
 		}
 	}
@@ -745,7 +811,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 */
 	public void clear(State state) {
 		if (obstState.remove(state)) {
-			lg.info(toString()+" "+state.messageOnExit);
+			lg.info(toString() + " " + state.messageOnExit);
 			updateAppearance();
 		}
 	}
@@ -761,7 +827,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @return obstState.isEmpty()
 	 */
-	public boolean isObstStateNormal() {
+	private boolean isObstStateNormal() {
 		return obstState.isEmpty();
 	}
 
@@ -771,8 +837,9 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 */
 	public int getLegacyObstState() {
 		int rv = 0;
-		for (State s : obstState)
+		for (State s : obstState) {
 			rv += s.legacyValue;
+		}
 		return rv;
 	}
 
@@ -801,20 +868,20 @@ public class ThreeDBot extends BasicBot implements Runnable {
 					}
 				}
 
-				if (thrd != null)
+				if (thrd != null) {
 					barrier.awaitNextSimStep();
+				}
 			}
 		} catch(InterruptedException ie) {
 			// No-op: nochmal Meldung ausgeben, dann Ende
 		}
-		lg.fine("Thread "+Thread.currentThread().getName()+" wurde beendet");
+		lg.fine("Thread " + Thread.currentThread().getName() + " wurde beendet");
 	}
 
 	/** Implementiert Bug 39 (http://www.heise.de/trac/ctbot/ticket/39) */
 	private void dieOrHalt() {
 		String eh = Config.getValue("simBotErrorHandling");
-		String warning = toString()+" hat ein E/A-Problem: " +
-				"Bot-Code ist wohl abgestuerzt; ";
+		String warning = toString()+" hat ein E/A-Problem: " + "Bot-Code ist wohl abgestuerzt; ";
 		if ("kill".equals(eh)) {
 			lg.warn(warning+"entferne Bot");
 			dispose();
@@ -831,31 +898,28 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	@Override
 	public void updateView() throws InterruptedException {
 		super.updateView();	// Positionsanzeige updaten
-		bot.updateView();	// Anzeige der Bot-Komponenten updaten
+		bot.updateView(); // Anzeige der Bot-Komponenten updaten
 	}
 
 	/**
-	 * Hier wird aufgeraeumt, wenn die Lebenszeit des AliveObstacle zuende ist:
-	 * Verbindungen zur Welt und zum ControlPanel werden aufgeloest, das Panel
-	 * wird aus dem ControlFrame entfernt
-	 *
-	 * @see #run()
+	 * Aktualisiert die Bot-Ansicht
 	 */
 	private void updateAppearance() {
 		String key;
-		if (isObstStateNormal())
+		if (isObstStateNormal()) {
 			key = "normal";
-		else
+		} else {
 			// appearanceKey des ersten gesetzten Elements
 			// Im Fall, dass mehr als ein ObstState gesetzt ist (z.B. COLLIDED
 			// und zugleich HALTED), werden alle ignoriert ausser dem ersten
 			key = obstState.iterator().next().appearanceKeyInXml;
+		}
 
-		Color c = Config.getBotColor(bot.getClass(), bot.getInstanceNumber(),
-			key);
+		Color c = Config.getBotColor(bot.getClass(), bot.getInstanceNumber(), key);
 
-		for (Runnable1<Color> listener : appearanceListeners)
+		for (Runnable1<Color> listener : appearanceListeners) {
 			listener.run(c);
+		}
 	}
 
 	/**
@@ -866,8 +930,9 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @param simTimeInMs Aktuelle Simulation in Millisekunden
 	 */
 	public void updateSimulation(long simTimeInMs) {
-		if (is(HALTED)) // Fix fuer Bug 44
+		if (is(HALTED)) { // Fix fuer Bug 44
 			return;
+		}
 		
 		/* Zeit aktualisieren */
 		deltaT = simTimeInMs - lastSimulTime;
@@ -917,7 +982,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @return				Welt-Koordis
 	 */
 	public Vector3d worldCoordFromBotCoord(Vector3d inBotCoord) {
-		Vector3d rv = (Vector3d)inBotCoord.clone();
+		Vector3d rv = (Vector3d) inBotCoord.clone();
 		Transform3D t = new Transform3D();
 		transformgrp.getTransform(t);
 		t.transform(rv);
@@ -936,10 +1001,10 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * Setzt einen Handler fuer geandertes Aussehen
 	 * @param calledWhenObstStateChanged
 	 */
-	public void addAppearanceListener(
-	Runnable1<Color> calledWhenObstStateChanged) {
-		if (calledWhenObstStateChanged == null)
+	public void addAppearanceListener(Runnable1<Color> calledWhenObstStateChanged) {
+		if (calledWhenObstStateChanged == null) {
 			throw new NullPointerException();
+		}
 		appearanceListeners.add(calledWhenObstStateChanged);
 	}
 
@@ -972,7 +1037,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @return SimulatedBot-Instanz
 	 */
 	public SimulatedBot getSimBot() {
-		return this.bot;
+		return bot;
 	}
 
 	/**
@@ -982,5 +1047,53 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		if (bot instanceof CtBotSimTcp) {
 			((CtBotSimTcp)bot).sendRcStartCode();
 		}
+	}
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_log()
+	 */
+	@Override
+	public boolean get_feature_log() {
+		return false;
+	}
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_rc5()
+	 */
+	@Override
+	public boolean get_feature_rc5() {
+		return false;
+	}
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_abl_program()
+	 */
+	@Override
+	public boolean get_feature_abl_program() {
+		return false;
+	}
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_basic_program()
+	 */
+	@Override
+	public boolean get_feature_basic_program() {
+		return false;
+	}
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_map()
+	 */
+	@Override
+	public boolean get_feature_map() {
+		return false;
+	}
+
+	/**
+	 * @see ctSim.model.bots.Bot#get_feature_remotecall()
+	 */
+	@Override
+	public boolean get_feature_remotecall() {
+		return false;
 	}
 }
