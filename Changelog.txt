@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2012-02-29 Timo Sandmann [mail@timosandmann.de]: Release 21
+
 2012-02-04 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Testbots
 
 2012-01-28 Timo Sandmann [mail@timosandmann.de]: Neuer Config-Eintrag "ctSimTickRate" fuer initiale TickRate (TR), Auswertung aktiver Bot-Komponenten fuer ABL und Basic getrennt

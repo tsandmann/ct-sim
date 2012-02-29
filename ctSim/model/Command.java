@@ -119,7 +119,7 @@ import ctSim.util.Misc;
  * Command-Code {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * Der Bot antwortet mit einem Command, das ihn als realen Bot ausweist
  * (Command-Code WELCOME, Sub-Command-Code
- * {@link SubCode#WELCOME_REAL WELCOME_REAL}). Falls der Bot schon l&auml;uft,
+ * {@link Command.SubCode#WELCOME_REAL WELCOME_REAL}). Falls der Bot schon l&auml;uft,
  * wenn der Sim die Verbindung aufbaut, sendet der Sim trotzdem ein
  * {@code WELCOME}; bei USB-Verbindungen (COM-Verbindungen) schickt der Sim
  * kein {@code WELCOME}, da von vornherein klar ist, dass es ein Real-Bot sein
@@ -144,7 +144,7 @@ import ctSim.util.Misc;
  * Command mit dem {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * Der Bot antwortet mit einem Command, das ihn als simulierten Bot ausweist
  * (Command-Code WELCOME, Sub-Command-Code
- * {@link SubCode#WELCOME_SIM WELCOME_SIM}).</li>
+ * {@link Command.SubCode#WELCOME_SIM WELCOME_SIM}).</li>
  * <li>Der Sim sendet einen Block von Commands, die Sensorwerte beschreiben. Er
  * ist abgeschlossen mit einem Command, was den Command-Code
  * {@link Command.Code#DONE DONE} hat. Beispiel:
