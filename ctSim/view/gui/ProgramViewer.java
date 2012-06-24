@@ -209,9 +209,10 @@ public class ProgramViewer extends JPanel implements ActionListener {
 			fc.addChoosableFileFilter(new TextFilter());
 			fc.setSelectedFile(new File(path + "/" + fileName.getText().substring(fileName.getText().lastIndexOf('/') + 1)));
 			int userChoice = fc.showSaveDialog(ProgramViewer.this);
-			if (userChoice != JFileChooser.APPROVE_OPTION)
+			if (userChoice != JFileChooser.APPROVE_OPTION) {
 				// Benutzer hat abgebrochen
 				return;
+			}
 			try {
 				File f = fc.getSelectedFile();
 				path = f.getParent();
@@ -219,6 +220,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 				out.write(programText.getText());
 				out.flush();
 				lg.info("Programm in Datei " + f.getAbsolutePath() + " geschrieben (" + f.length() + " Byte)");
+				out.close();
 			} catch (IOException e) {
 				lg.warn(e, "E/A-Problem beim Schreiben der Daten; " + "ignoriere");
 			}

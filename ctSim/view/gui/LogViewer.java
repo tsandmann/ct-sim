@@ -96,21 +96,19 @@ public class LogViewer extends JPanel {
 		public void run() {
 			JFileChooser fc = new JFileChooser();
 			int userChoice = fc.showSaveDialog(LogViewer.this);
-			if (userChoice != JFileChooser.APPROVE_OPTION)
+			if (userChoice != JFileChooser.APPROVE_OPTION) {
 				// Benutzer hat abgebrochen
 				return;
+			}
 			try {
 				File f = fc.getSelectedFile();
-				OutputStreamWriter out = new OutputStreamWriter(
-					new BackslashNConverterStream(new FileOutputStream(f)),
-					"UTF-8");
+				OutputStreamWriter out = new OutputStreamWriter(new BackslashNConverterStream(new FileOutputStream(f)), "UTF-8");
 				out.write(logContent.getText(0, logContent.getLength()));
 				out.flush();
-				lg.info("Log-Ausgabe in Datei "+f.getAbsolutePath()+
-					" geschrieben ("+f.length()+" Byte)");
+				lg.info("Log-Ausgabe in Datei " + f.getAbsolutePath() + " geschrieben (" + f.length() + " Byte)");
+				out.close();
 			} catch (IOException e) {
-				lg.warn(e, "E/A-Problem beim Schreiben der Log-Daten; " +
-						"ignoriere");
+				lg.warn(e, "E/A-Problem beim Schreiben der Log-Daten; " + "ignoriere");
 			} catch (BadLocationException e) {
 				// Kann nicht passieren
 				throw new AssertionError(e);
