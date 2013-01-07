@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2013-01-06 Timo Sandmann [mail@timosandmann.de]: Generierte Dokumentation nach /documentation verschoben, um das Source-Verzeichnis (und seine Versionierung) nicht mit 1000 Dateien zu belasten
+
 2012-06-24 Timo Sandmann [mail@timosandmann.de]: Anpassung fuer Eclipse 4.2 (Warnings beseitigt)
 
 2012-02-29 Timo Sandmann [mail@timosandmann.de]: Release 21
