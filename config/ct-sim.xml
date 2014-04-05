@@ -18,7 +18,7 @@
 	Pfaden ruminterpretiert, kann entfallen. Auf jedem unterstuetzen System
 	kann man nach dem Auschecken sofort starten (normalerweise).
 	-->
-	
+
 	<!-- Initialer Wert fuer TickRate (1 / Simulationsgeschwindigkeit) -->
 	<parameter name="ctSimTickRate" value="0"/>
 
@@ -43,7 +43,7 @@
 	<!-- botbinary ist die Bot-Datei, die beim Sim-Start gestartet wird.
 	Hat nichts zu tun mit dem Parameter botdir -->
 	<parameter name="botbinary" os="Windows" value="../ct-Bot/Debug-W32/ct-Bot.exe"/>
-	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
+	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux/ct-Bot"/>
 	<parameter name="botbinary" os="Mac OS X" value="../ct-Bot/Debug-Mac/ct-Bot"/>
 
 	<!-- Verzeichnis, das der Dialog "Bot-Datei oeffnen" anfangs anzeigt -->
@@ -59,8 +59,8 @@
 	einige Performance-Daten auf die Konsole schreibt. Werte: true, false;
 	Standardwert: false. -->
 	<parameter name="TimeLogger" value="false"/>
-	
-	<!-- Stellt das Log-Level ein. 
+
+	<!-- Stellt das Log-Level ein.
 	Werte: SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST -->
 	<parameter name="LogLevel" value="INFO"/>
 
@@ -76,10 +76,10 @@
 
 	<!-- Schalter fuer Lichtsensoren -->
 	<parameter name="LightSensors" value="true"/>
-	
+
 	<!-- Schalter fuer BPS-Sensor -->
 	<parameter name="BPSSensor" value="false"/>
-	
+
 	<!-- Schalter fuer Nachlauf der Raeder -->
 	<parameter name="WheelLag" value="false"/>
 
@@ -99,8 +99,8 @@
 	<parameter name="ipForConnectByTcp" value="192.168.1.22"/>
 	<!-- Zugehoeriger Port. Default: 10002 -->
 	<parameter name="portForConnectByTcp" value="10002"/>
-	
-	<!-- Parameter der Map (fuer Export). 
+
+	<!-- Parameter der Map (fuer Export).
 	Muessen mit den Werten aus map.h (Bot-Projekt) uebereinstimmen! -->
 	<parameter name="mapSize" value="12.288f"/>
 	<parameter name="mapResolution" value="125"/>
@@ -191,7 +191,7 @@
 			<appearance type="door_open">
 				<description>Standard Aussehen des Standard-Bots mit offener Klappe</description>
 				<color>#B00000</color>
-			</appearance>			
+			</appearance>
 			<appearance type="collision">
 				<description>Aussehen des Standard-Bots bei Kollision</description>
 				<color>#FF00FF</color>
