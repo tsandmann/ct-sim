@@ -43,7 +43,7 @@
 	<!-- botbinary ist die Bot-Datei, die beim Sim-Start gestartet wird.
 	Hat nichts zu tun mit dem Parameter botdir -->
 	<parameter name="botbinary" os="Windows" value="../ct-Bot/Debug-W32/ct-Bot.exe"/>
-	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux/ct-Bot.elf"/>
+	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux/ct-Bot"/>
 	<parameter name="botbinary" os="Mac OS X" value="../ct-Bot/Debug-Mac/ct-Bot"/>
 
 	<!-- Verzeichnis, das der Dialog "Bot-Datei oeffnen" anfangs anzeigt -->

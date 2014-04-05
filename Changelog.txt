@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2014-04-05 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Config-Eintrag von Bot-Binary Linux: "ct-Bot.elf" nach "ct-Bot" geaendert
+
 2012-02-29 Timo Sandmann [mail@timosandmann.de]: Release 21
 
 2012-02-04 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Testbots
