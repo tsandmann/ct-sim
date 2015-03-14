@@ -57,8 +57,12 @@ public class SimBotTcpDump {
 			sb.peer = bs;
 			bs.join();
 			sb.join();
-			try { bot.close(); } catch (IOException e) {/**/}
-			try { sim.close(); } catch (IOException e) {/**/}
+			try { bot.close(); } catch (IOException e) {
+				srvSock.close();
+			}
+			try { sim.close(); } catch (IOException e) {
+				srvSock.close();	
+			}
 		}
 	}
 

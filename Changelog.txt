@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2015-03-14 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt beim Einsatz von Java 8
+
 2014-04-05 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Config-Eintrag von Bot-Binary Linux: "ct-Bot.elf" nach "ct-Bot" geaendert
 
 2013-01-06 Timo Sandmann [mail@timosandmann.de]: Generierte Dokumentation nach /documentation verschoben, um das Source-Verzeichnis (und seine Versionierung) nicht mit 1000 Dateien zu belasten

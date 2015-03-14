@@ -539,37 +539,37 @@ public class FmtLogger extends Logger {
 	    delegate.logp(level, sourceClass, sourceMethod, msg);
     }
 
-	/**
-	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Object)
-	 */
-	@Override
-    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object param1) {
-	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, param1);
-    }
-
-	/**
-	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Object[])
-	 */
-	@Override
-    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object[] params) {
-	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, params);
-    }
-
-	/**
-	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Throwable)
-	 */
-	@Override
-    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Throwable thrown) {
-	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, thrown);
-    }
-
-	/**
-	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg) {
-	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg);
-    }
+//	/**
+//	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Object)
+//	 */
+//	@Override
+//    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object param1) {
+//	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, param1);
+//    }
+//
+//	/**
+//	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Object[])
+//	 */
+//	@Override
+//    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object[] params) {
+//	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, params);
+//    }
+//
+//	/**
+//	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Throwable)
+//	 */
+//	@Override
+//    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Throwable thrown) {
+//	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, thrown);
+//    }
+//
+//	/**
+//	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+//	 */
+//	@Override
+//    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg) {
+//	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg);
+//    }
 
 	/**
 	 * @see java.util.logging.Logger#removeHandler(java.util.logging.Handler)
