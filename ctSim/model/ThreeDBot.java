@@ -937,6 +937,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/* Zeit aktualisieren */
 		deltaT = simTimeInMs - lastSimulTime;
 		if (lastSimulTime == 0) {
+			deltaT = 0;
 			sendRcStartCode();
 		}
 		lastSimulTime = simTimeInMs;
