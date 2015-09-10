@@ -278,7 +278,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/* neu empfangene Daten ins Map-Array kopieren */
 		int pic_x = 0, pic_y = 0;
 		int bufferIndex = 0;
-		for (int j = from; j <= to; ++j) { // Zeilen
+		for (int j = from; j <= to && bufferIndex < data.length; ++j) { // Zeilen
 			pic_y = x + j; // X der Map ist Y beim Sim
 			if (pic_y >= HEIGHT || pic_y < 0) {
 				/* ungueltige Daten */
