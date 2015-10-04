@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2015-10-04 Timo Sandmann [mail@timosandmann.de]: Java3D-Workaround fuer OS X El Capitan Kompatibilitaet
+
 2015-09-10 Timo Sandmann [mail@timosandmann.de]: Unterstuetzung fuer beliebig lange RemoteCall Namen
 
 2015-03-15 Frank Menzel [Menzelfr@gmx.de]:       Parcours fuer behaviour_drive_neuralnet
