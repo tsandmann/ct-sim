@@ -67,9 +67,9 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	    getBestConfiguration(new GraphicsConfigTemplate3D());
 
     /** OnScreen Flaeche */
-    protected final Canvas3D onScreenCanvas = new Canvas3D(gc, false);
+    protected Canvas3D onScreenCanvas = new Canvas3D(gc, false);
     /** OffScreen Flaeche */
-    protected final Canvas3D offScreenCanvas = new Canvas3D(gc, true);
+    protected Canvas3D offScreenCanvas = new Canvas3D(gc, true);
 
     /** wird mit jedem neuen Model ausgetauscht */
     protected SimpleUniverse universe;
@@ -94,10 +94,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     	deinit();
 
     	if (world == null) {
-    		//((CardLayout)getLayout()).show(this, NOTHING); //$$ falscher platz, vgl MODEL
-    		/* CardLayout.show() bewirkt Absturz unter Mac OS X, wenn kein Universum da ist => Dummy-Universum benutzen, falls keine Welt offen */
-    		universe = new SimpleUniverse(onScreenCanvas);
-            universe.getViewer().getView().addCanvas3D(offScreenCanvas);
+    		((CardLayout)getLayout()).show(this, NOTHING);
     	}
     	else {
     		init(world);
@@ -122,7 +119,13 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	 */
 	protected void deinit() {
     	if (universe != null)
-    		universe.cleanup();
+    		universe.cleanup();	
+    		/* remove all Java3D Canvas components */
+    		while (getComponentCount() > 1) {
+    			remove(1);
+    		}
+    		universe = null;
+    		onScreenCanvas = null;
     }
 
     /**
@@ -130,6 +133,9 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
      * @param w die Welt
      */
     protected void init(World w) {
+    	onScreenCanvas = new Canvas3D(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D()), false);
+    	offScreenCanvas = new Canvas3D(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D()), true);
+    	add(onScreenCanvas, MODEL);
     	universe = new SimpleUniverse(onScreenCanvas);
         universe.getViewer().getView().addCanvas3D(offScreenCanvas);
     	initPerspective(w);
