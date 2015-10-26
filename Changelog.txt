@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2015-10-26 Timo Sandmann [mail@timosandmann.de]: Release 22
+
 2015-10-26 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt
 
 2015-10-10 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Crash unter Mac OS X beim Oeffnen einer neuen Welt 
