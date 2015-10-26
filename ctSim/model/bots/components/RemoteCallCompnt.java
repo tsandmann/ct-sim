@@ -25,9 +25,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ProtocolException;
 import java.util.List;
-
 import javax.swing.SpinnerNumberModel;
-
 import ctSim.model.Command;
 import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
@@ -42,6 +40,7 @@ import ctSim.util.Runnable1;
  * Remote-Call Komponente
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
+@SuppressWarnings("unused")
 public class RemoteCallCompnt extends BotComponent<Void>
 implements CanRead, CanWrite, CanWriteAsynchronously {
 	/** Logger */
@@ -573,10 +572,44 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		int numParms = b.read();
 		// Da kommen irgendwelche komischen 3 Bytes, ignorieren
 		b.skip(3);
-		// 20 Byte + terminierendes Nullbyte
-		Behavior rv = new Behavior(readArray(b, 20+1));
+
+		int name_len = 0;
+		int param_start = 0;
+		int parameter_len = 0;
+		int n = 0;
+		byte data[] = new byte[b.available()];
+		try {
+			n = b.read(data);
+			int i;
+			for (i = 0; i < n; ++i) {
+				if (data[i] == 0) {
+					name_len = i + 1;
+					break;
+				}
+			}
+			for (; i < n; ++i) {
+				if (data[i] != 0) {
+					param_start = i;
+					break;
+				}
+			}
+			for (; i < n; ++i) {
+				if (data[i] == 0) {
+					parameter_len = i - param_start;
+					break;
+				}
+			}
+		} catch (IOException e) {
+			/* nop */
+		}
+		byte beh_name[] = new byte[name_len];
+		System.arraycopy(data, 0, beh_name, 0, name_len);
+		byte beh_params[] = new byte[parameter_len];
+		System.arraycopy(data, param_start, beh_params, 0, parameter_len);
+		
+		Behavior rv = new Behavior(beh_name);
 		// Parameterangaben lesen in jedem Fall, verarbeiten vielleicht
-		String[] parmNames = new String(readArray(b, 40+1)).split(",");
+		String[] parmNames = new String(beh_params).split(",");
 		if (numParms > 0) {
 			if (numParms != parmNames.length) {
 				lg.warn("Bot-Code scheint fehlerhaft; hat " +

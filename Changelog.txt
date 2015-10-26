@@ -1,6 +1,26 @@
 Changelog fuer c't-Sim
 ======================
+2015-10-26 Timo Sandmann [mail@timosandmann.de]: Release 22
+
+2015-10-26 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt
+
+2015-10-10 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Crash unter Mac OS X beim Oeffnen einer neuen Welt 
+
+2015-10-04 Timo Sandmann [mail@timosandmann.de]: Java3D-Workaround fuer OS X El Capitan Kompatibilitaet
+
+2015-09-10 Timo Sandmann [mail@timosandmann.de]: Unterstuetzung fuer beliebig lange RemoteCall Namen
+
+2015-03-15 Frank Menzel [Menzelfr@gmx.de]:       Parcours fuer behaviour_drive_neuralnet
+
+2015-03-14 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer den (unwahrscheinlichen) Fall, dass im ersten Sim-Schritt ein Motor-Befehl hereinkommt
+
+2015-03-14 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt beim Einsatz von Java 8
+
 2014-04-05 Timo Sandmann [mail@timosandmann.de]: Bugfix fuer Config-Eintrag von Bot-Binary Linux: "ct-Bot.elf" nach "ct-Bot" geaendert
+
+2013-01-06 Timo Sandmann [mail@timosandmann.de]: Generierte Dokumentation nach /documentation verschoben, um das Source-Verzeichnis (und seine Versionierung) nicht mit 1000 Dateien zu belasten
+
+2012-06-24 Timo Sandmann [mail@timosandmann.de]: Anpassung fuer Eclipse 4.2 (Warnings beseitigt)
 
 2012-02-29 Timo Sandmann [mail@timosandmann.de]: Release 21
 

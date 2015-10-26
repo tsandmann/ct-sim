@@ -121,7 +121,7 @@ public abstract class BasicBot implements Bot {
 		 * Fuegt Elemente hinzu
 		 * @param elements Die Elemente
 		 */
-		public void add(T... elements) {
+		public void add(@SuppressWarnings("unchecked") T... elements) {
             for (T e : elements)
                 add(e);
         }
@@ -306,7 +306,7 @@ public abstract class BasicBot implements Bot {
 	 * @param flags Connection-Flags
 	 * @return Component-Flag-Tabelle
 	 */
-	protected static CompntWithFlag _(
+	protected static CompntWithFlag createCompnt(
 	Class<? extends BotComponent<?>> compntClass, ConnectionFlags... flags) {
 		return new CompntWithFlag(compntClass, flags);
 	}

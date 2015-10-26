@@ -20,6 +20,7 @@
 package ctSim.view.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -152,6 +153,8 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 				bv.bot.dispose();
 			}
 		});
+		
+		botTabs.setMinimumSize(new Dimension(230, getHeight())); // Workaround fuer Java3D Canvas Bug unter Mac OS X 10.11 
 
 		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 			botTabs, buildWorldAndConsole());

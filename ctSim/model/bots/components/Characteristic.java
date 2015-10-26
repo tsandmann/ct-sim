@@ -68,10 +68,10 @@ public class Characteristic {
 		System.out.println("Praezise Werte");
 		for (float f = 0f; f < 100; f = f + 0.1f) {
 			System.out.printf("\n%12f", f);
-			for (int i = 0; i < charac.lookupPrecise(f)/5; i++)
+			for (int i = 0; i < charac.lookupPrecise(f) / 5; i++) {
 				System.out.print("*");
+			}
 		}
-
 	}
 	
 	/**
@@ -105,47 +105,45 @@ public class Characteristic {
 		
 		Number[] charac = csv2array(c); 
 		// Numbers in primitive floats verwandeln:
-		this.characteristic = new float[charac.length]; 
-		for (int i=0; i<charac.length; i++){
-			this.characteristic[i] = charac[i].floatValue();
+		characteristic = new float[charac.length]; 
+		for (int i = 0; i < charac.length; i++) {
+			characteristic[i] = charac[i].floatValue();
 		}
 		
 		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
 		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
 		// den 0-Index:
 //TODO:	Doppelt runden haelt besser?!? Am Ergebnis von floor() gibt's aber gar nix mehr zu runden! 
-		this.lookup = new float[1 + Math.round(Math.round(Math
-				.floor(this.characteristic[this.characteristic.length - 2])))];
+		lookup = new float[1 + Math.round(Math.round(Math.floor(characteristic[characteristic.length - 2])))];
 		// Lookup-Table jetzt fuellen:
 //TODO:	round()-Aufrufe unsinnig, oder?
-		int firstMeas = Math.round(Math.round(Math.floor(this.characteristic[0])));
+		int firstMeas = Math.round(Math.round(Math.floor(characteristic[0])));
 		// Alles vor der ersten Messgroesse mit INF fuellen:
 		for (int i = 0; i < firstMeas; i++) {
-			this.lookup[i] = this.INF;
+			lookup[i] = INF;
 		}
 		// Dann jeweils in Zweierschritten voran:
-		for (int i = 0; i < this.characteristic.length; i += 2) {
+		for (int i = 0; i < characteristic.length; i += 2) {
 			// Zwei aufeinanderfolgende Messgroessen heraussuchen:
 //TODO:	round()-Aufrufe unsinnig, oder?
-			int firMea = Math.round(Math.round(Math.floor(this.characteristic[i])));
+			int firMea = Math.round(Math.round(Math.floor(characteristic[i])));
 			// Wert am ersten Index eintragen:
-			this.lookup[firMea] = this.characteristic[i + 1];
+			lookup[firMea] = characteristic[i + 1];
 			try { // Klappt nicht, wenn schon das Ende erreicht ist.
 //TODO:	round()-Aufrufe unsinnig, oder?				
-				int secMea = Math.round(Math.round(Math
-						.floor(this.characteristic[i + 2])));
+				int secMea = Math.round(Math.round(Math.floor(characteristic[i + 2])));
 				// Wie viele Schritte lassen die Messgroessen aus?
 				int diff = secMea - firMea;
 				// Und wie veraendert sich der zugeordnete Wert zwischen den
 				// Messgroessen?
-				float valDiff = this.characteristic[i + 3] - this.characteristic[i + 1];
+				float valDiff = characteristic[i + 3] - characteristic[i + 1];
 				// Das ist pro Schritt gleich der Wertdifferenz durch
 				// Messgroessendifferenz:
 				float delta = valDiff / diff;
 				// Zwischenwerte addieren, fuer jeden weiteren
 				// einmal delta auf lookup[firMea] draufrechnen:
 				for (int j = 1; j < diff; j++) {
-					this.lookup[firMea + j] = this.lookup[firMea] + j * delta;
+					lookup[firMea + j] = lookup[firMea] + j * delta;
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				// Tja, das war wohl zu weit 8-)
@@ -154,10 +152,10 @@ public class Characteristic {
 
 		// Es wird ein zweiter Lookup-Table erstellt, fuer Sensorwerte, die 
 		// nur aus ganzen Zahlen bestehen:
-		this.intLookup = new int[this.lookup.length]; 
-		for (int i = 0; i<this.lookup.length; i++){
-				this.intLookup[i] = Math.round(this.lookup[i]);
-			}
+		intLookup = new int[lookup.length]; 
+		for (int i = 0; i < lookup.length; i++) {
+			intLookup[i] = Math.round(lookup[i]);
+		}
 		//printLookup();		
 	}
 	
@@ -189,47 +187,45 @@ public class Characteristic {
 		
 		Number[] charac = csv2array(c); 
 		// Numbers in primitive floats verwandeln:
-		this.characteristic = new float[charac.length]; 
-		for (int i=0; i<charac.length; i++){
-			this.characteristic[i] = charac[i].floatValue();
+		characteristic = new float[charac.length]; 
+		for (int i = 0; i < charac.length; i++) {
+			characteristic[i] = charac[i].floatValue();
 		}
 		
 		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
 		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
 		// den 0-Index:
 //TODO:	round()-Aufrufe unsinnig, oder?		
-		this.lookup = new float[1 + Math.round(Math.round(Math
-				.floor(this.characteristic[this.characteristic.length - 2])))];
+		this.lookup = new float[1 + Math.round(Math.round(Math.floor(characteristic[characteristic.length - 2])))];
 		// Lookup-Table jetzt fuellen:
 //TODO:	round()-Aufrufe unsinnig, oder?		
-		int firstMeas = Math.round(Math.round(Math.floor(this.characteristic[0])));
+		int firstMeas = Math.round(Math.round(Math.floor(characteristic[0])));
 		// Alles vor der ersten Messgroesse mit INF fuellen:
 		for (int i = 0; i < firstMeas; i++) {
-			this.lookup[i] = this.INF;
+			lookup[i] = INF;
 		}
 		// Dann jeweils in Zweierschritten voran:
-		for (int i = 0; i < this.characteristic.length; i += 2) {
+		for (int i = 0; i < characteristic.length; i += 2) {
 			// Zwei aufeinanderfolgende Messgroessen heraussuchen:
 //TODO:	round()-Aufrufe unsinnig, oder?			
-			int firMea = Math.round(Math.round(Math.floor(this.characteristic[i])));
+			int firMea = Math.round(Math.round(Math.floor(characteristic[i])));
 			// Wert am ersten Index eintragen:
-			this.lookup[firMea] = this.characteristic[i + 1];
+			lookup[firMea] = characteristic[i + 1];
 			try { // Klappt nicht, wenn schon das Ende erreicht ist.
 //TODO:	round()-Aufrufe unsinnig, oder?
-				int secMea = Math.round(Math.round(Math
-						.floor(this.characteristic[i + 2])));
+				int secMea = Math.round(Math.round(Math.floor(characteristic[i + 2])));
 				// Wie viele Schritte lassen die Messgroessen aus?
 				int diff = secMea - firMea;
 				// Und wie veraendert sich der zugeordnete Wert zwischen den
 				// Messgroessen?
-				float valDiff = this.characteristic[i + 3] - this.characteristic[i + 1];
+				float valDiff = characteristic[i + 3] - characteristic[i + 1];
 				// Das ist pro Schritt gleich der Wertdifferenz durch
 				// Messgroessendifferenz:
 				float delta = valDiff / diff;
 				// Zwischenwerte addieren, fuer jeden weiteren
 				// einmal delta auf lookup[firMea] draufrechnen:
 				for (int j = 1; j < diff; j++) {
-					this.lookup[firMea + j] = this.lookup[firMea] + j * delta;
+					lookup[firMea + j] = lookup[firMea] + j * delta;
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				// Tja, das war wohl zu weit 8-)
@@ -238,10 +234,10 @@ public class Characteristic {
 
 		// Es wird ein zweiter Lookup-Table erstellt, fuer Sensorwerte, die 
 		// nur aus ganzen Zahlen bestehen:
-		this.intLookup = new int[this.lookup.length]; 
-		for (int i = 0; i<this.lookup.length; i++){
-				this.intLookup[i] = Math.round(this.lookup[i]);
-			}
+		intLookup = new int[lookup.length]; 
+		for (int i = 0; i < lookup.length; i++) {
+			intLookup[i] = Math.round(lookup[i]);
+		}
 		// printLookup();
 	}
 
@@ -260,22 +256,21 @@ public class Characteristic {
 		double measurement = measure.doubleValue();
 		double data;
 		// Liegt der Wert innerhalb der Tabelle?
-		if (measurement >= 0 && measurement <= this.lookup.length - 1) {
+		if (measurement >= 0 && measurement <= lookup.length - 1) {
 //TODO:	round()-Aufrufe unsinnig, oder?
 			int index = Math.round(Math.round(Math.floor(measurement)));
-			data = this.lookup[index];
+			data = lookup[index];
 			// Falls der Wert nicht am Rand der Tabelle liegt,
 			// noch Zwischenwert extrapolieren --
-			if (data != this.INF && index < this.lookup.length - 1) {
-				data = data + (measurement - index)
-						* (this.lookup[index + 1] - this.lookup[index]);
+			if (data != INF && index < lookup.length - 1) {
+				data = data + (measurement - index) * (lookup[index + 1] - lookup[index]);
 				// Es sollen ganze Zahlen zurueckgegeben werden, wie 
 				// sich das fuer einen digitalen Sensor gehoert:
 				data = Math.round(data);
 			}
 		} else {
 			// Sonst INF zurueckgeben:
-			data = this.INF;
+			data = INF;
 		}
 		return data;
 	}
@@ -287,8 +282,8 @@ public class Characteristic {
 	@SuppressWarnings("unused")
 	private void printLookup() {
 		System.out.println("Lookup-Table");
-		for (int i = 0; i < this.lookup.length; i++) {
-			System.out.println("Zeile\t" + i + "\t" + this.lookup[i]+ "\t" + this.intLookup[i]);
+		for (int i = 0; i < lookup.length; i++) {
+			System.out.println("Zeile\t" + i + "\t" + lookup[i]+ "\t" + intLookup[i]);
 		}
 	}
 
@@ -299,7 +294,6 @@ public class Characteristic {
 	 * @return Das Array
 	 */
 	private static Number[] csv2array(String input) {
-
 		StringTokenizer st = new StringTokenizer(input, ";");
 		Vector<Number> num = new Vector<Number>();
 		Number curr;
@@ -313,7 +307,7 @@ public class Characteristic {
 		}
 		
 		Number[] result = new Number[num.size()];
-		for (int i = 0; i<num.size(); i++){
+		for (int i = 0; i < num.size(); i++) {
 			result[i] = num.elementAt(i);
 		}
 		return result;
@@ -328,9 +322,7 @@ public class Characteristic {
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	public static String readFile(File file) throws IOException,
-			FileNotFoundException {
-
+	public static String readFile(File file) throws IOException, FileNotFoundException {
 		StringBuffer input = new StringBuffer();
 		FileInputStream stream = new FileInputStream(file);
 		int c = 0;
@@ -338,6 +330,8 @@ public class Characteristic {
 			c = stream.read();
 			input.append((char) c);
 		}
+		stream.close();
+		
 		/*
 		 * Merkwuerdigerweise wird bei dieser Methode, einen FileInputStream in
 		 * einen String zu verwandeln, ans Ende ein '?' als Zeichen fuer EOF
