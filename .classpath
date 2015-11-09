@@ -14,13 +14,5 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="contrib/BrowserLauncher2-1_3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="contrib/j3dutils-1.5.2+dfsg.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="ct-Sim-dev/contrib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="contrib/RXTXcomm-2.2pre2.jar"/>
-	<classpathentry exported="true" kind="lib" path="contrib/vecmath-1.5.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="contrib/j3dcore-1.5.2+dfsg.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
