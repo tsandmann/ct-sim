@@ -12,7 +12,6 @@
 			<attribute name="javadoc_location" value="http://www.picocontainer.org/picocontainer/latest/picocontainer/apidocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="contrib/rxtx.jar" sourcepath="contrib/rxtx/src.zip"/>
 	<classpathentry exported="true" kind="lib" path="contrib/BrowserLauncher2-1_3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path=""/>
