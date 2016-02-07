@@ -43,6 +43,7 @@ import ctSim.model.World;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.BotBuisitor;
 import ctSim.model.bots.components.Actuators;
+import ctSim.model.bots.components.Actuators.CamServo;
 import ctSim.model.bots.components.Actuators.DoorServo;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
@@ -138,18 +139,37 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * Servo-Simulator
      */
     class ServoSimulator {
-        /** Servo des Simulators */
-        private Actuators.DoorServo servo;
+        /** Klappen-Servo des Simulators */
+        private Actuators.DoorServo door_servo;
+        /** Kamera-Servo des Simulators */
+        private Actuators.CamServo cam_servo;
         
         /** Zustand des Servos (< 12: Klappe zu; >= 12: Klappe offen; 0: Servo aus) */
-        private int position = 7;
+        private int position[] = {7, 14};
+        /** 1: Klappe, 2: Kamera */
+        private int servo_num = 0;
 
         /**
-         * Setzt den Servo
+         * @param num Nr. des Servos
+         */
+        public ServoSimulator(int num) {
+        	servo_num = num;
+        }
+        
+        /**
+         * Setzt den Klappen-Servo
          * @param servo
          */
         public void setServo(Actuators.DoorServo servo) {
-            this.servo = servo;
+            this.door_servo = servo;
+        }
+        
+        /**
+         * Setzt den Kamera-Servo
+         * @param servo
+         */
+        public void setServo(Actuators.CamServo servo) {
+            this.cam_servo = servo;
         }
 
         /**
@@ -157,11 +177,19 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          * @return Servo-Position
          */
         protected int getServoPosition() {
-        	if (servo.get().intValue() > 0) {
-        		position = servo.get().intValue();
+        	if (servo_num == 1) {
+	        	if (door_servo.get().intValue() > 0) {
+	        		position[0] = door_servo.get().intValue();
+	        	}
+        	} else if (servo_num == 2) {
+	        	if (cam_servo.get().intValue() > 0) {
+	        		position[1] = cam_servo.get().intValue();
+	        	}
+        	} else {
+        		return 0;
         	}
             
-        	return position;
+        	return position[servo_num - 1];
         }
     }
 
@@ -623,8 +651,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          * @param headingInBotCoord
          * @param sensor
          */
-        public Cny70Simulator(Point3d distFromBotCenter,
-        Vector3d headingInBotCoord, NumberTwin sensor) {
+        public Cny70Simulator(Point3d distFromBotCenter, Vector3d headingInBotCoord, NumberTwin sensor) {
             this.distFromBotCenter = distFromBotCenter;
             this.headingInBotCoord = headingInBotCoord;
             this.sensor = sensor;
@@ -634,12 +661,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          * @see java.lang.Runnable#run()
          */
         public void run() {
-            sensor.set(
-                world.sensGroundReflectionCross(
-                    parent.worldCoordFromBotCoord(distFromBotCenter),
-                    parent.worldCoordFromBotCoord(headingInBotCoord),
-                    OPENING_ANGLE_IN_RAD,
-                    PRECISION));
+            sensor.set(world.sensGroundReflectionCross(
+            	parent.worldCoordFromBotCoord(distFromBotCenter), parent.worldCoordFromBotCoord(headingInBotCoord), OPENING_ANGLE_IN_RAD, PRECISION)
+            );
         }
     }
 
@@ -660,7 +684,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     protected final WheelSimulator rightWheel = new WheelSimulator();
     
     /** Servo Klappe */
-    protected final ServoSimulator servoDoor = new ServoSimulator();
+    protected final ServoSimulator servoDoor = new ServoSimulator(1);
+    
+    /** Servo Kamera */
+    protected final ServoSimulator servoCam = new ServoSimulator(2);
 
     /** Maussensor-X */
     protected final MouseSensorSimulator mouseSensorX = new MouseSensorSimulator();
@@ -736,6 +763,16 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     }
     
     /**
+     * @param s	Servo
+     * @param isLeft links?
+     */
+    public void buisitServo(CamServo s, boolean isLeft) {
+    	if (! isLeft) {
+    		servoCam.setServo(s);
+    	}
+    }
+    
+    /**
      * @param doorSensor Klappensensor
      * @param isLeft Servo 1 (links) fuer Klappe
      */
@@ -759,6 +796,28 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
                 		/* Klappe wurde geoeffnet */
                 		krautUndRuebenSim.setAssociatedObject(null);
                 	}
+                }
+            }
+        });
+    }
+    
+    /**
+     * @param camPosSensor Kamerapositionssensor
+     * @param isLeft false: Servo 2 (rechts) fuer Kamera
+     */
+    public void buisitCamPos(final Sensors.CamPos camPosSensor, boolean isLeft) {
+        final ServoSimulator servo = isLeft ? servoCam : null;
+    	
+        simulators.add(new Runnable() {
+        	int last_pos = 0;
+            @SuppressWarnings("null")
+			public void run() {
+                final int cam_pos = servo.getServoPosition();
+                final boolean change = cam_pos != last_pos;
+                if (change) {
+                	camPosSensor.set(cam_pos);
+                	parent.printInfoMsg("Position Servo 2: " + cam_pos);
+                	last_pos = cam_pos;
                 }
             }
         });
@@ -815,27 +874,20 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @param isLeft links?
      * @throws IOException
      */
-    public void buisitDistanceSim(final Sensors.Distance sensor,
-    boolean isLeft) throws IOException {
+    public void buisitDistanceSim(final Sensors.Distance sensor, boolean isLeft) throws IOException {
     	final double MAX_RANGE = 0.85;
-        final Point3d distFromBotCenter = isLeft
-            ? new Point3d(- 0.036, 0.0554, 0)
-            : new Point3d(+ 0.036, 0.0554, 0);
+        final Point3d distFromBotCenter = isLeft ? new Point3d(- 0.036, 0.0554, 0) : new Point3d(+ 0.036, 0.0554, 0);
         final Point3d endPoint = new Point3d(distFromBotCenter);
         endPoint.add(new Point3d(0.0, MAX_RANGE, 0.0));
-        final Characteristic charstic = isLeft
-            ? new Characteristic("characteristics/gp2d12Left.txt", 100)
-            : new Characteristic("characteristics/gp2d12Right.txt", 80);
+        final Characteristic charstic = isLeft ? new Characteristic("characteristics/gp2d12Left.txt", 100) 
+        	: new Characteristic("characteristics/gp2d12Right.txt", 80);
 
         simulators.add(new Runnable() {
             private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
 
             public void run() {
-                double distInM = world.watchObstacle(
-                    parent.worldCoordFromBotCoord(distFromBotCenter),
-                    parent.worldCoordFromBotCoord(endPoint),
-                    OPENING_ANGLE_IN_RAD,
-                    parent.getShape());
+                double distInM = world.watchObstacle(parent.worldCoordFromBotCoord(distFromBotCenter), parent.worldCoordFromBotCoord(endPoint),
+                    OPENING_ANGLE_IN_RAD, parent.getShape());
                 double distInCm = 100 * distInM;
                 double sensorReading = charstic.lookupPrecise(distInCm);
                 sensor.set(sensorReading);

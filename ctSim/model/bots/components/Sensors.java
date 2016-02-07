@@ -513,6 +513,56 @@ public class Sensors {
 	}
 
 	/**
+	 * Kameraposition (kein echter Sensor, sondern Servo-Position)
+	 */
+	public static class CamPos extends NumberTwin
+	implements SimpleSensor, CanRead, CanWrite {
+		/**
+		 * @param left ignored
+		 */
+		public CamPos(boolean left) {
+			super(true);
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override public String getBaseDescription() { 
+			return "Kamera-Position (10: Anschlag links; 18: Anschlag rechts)"; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override public String getBaseName() { 
+			return "Kamerapos"; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
+		 */
+		public Code getHotCmdCode() { 
+			return Code.ACT_SERVO; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override
+		public String getName() {
+			return getBaseName();
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override
+		public String getDescription() {
+			return getBaseDescription();
+		}
+	}
+	
+	/**
 	 * Transportfach-Klappensensor
 	 */
 	public static class Door extends NumberTwin

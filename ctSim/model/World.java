@@ -704,7 +704,7 @@ public class World {
 	 * Es werden rayCount viele Strahlen gleichmaessig orthogonal zum Heading in
 	 * die Szene geschossen.
 	 *
-	 * Es werden rayCount viele Strahlen gleichmaessig in Form eines "+" in in
+	 * Es werden rayCount viele Strahlen gleichmaessig in Form eines "+" in
 	 * die Szene Geschossen.
 	 *
 	 * @param pos

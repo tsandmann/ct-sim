@@ -133,6 +133,7 @@ public class RealCtBot extends CtBot {
 			createCompnt(Actuators.LcDisplay.class  , READS),
 			createCompnt(Actuators.Log.class        , READS),
 			createCompnt(Actuators.DoorServo.class  , READS),
+			createCompnt(Actuators.CamServo.class   , READS),
 			createCompnt(Actuators.Led.class        , READS),
 			createCompnt(Sensors.Encoder.class      , READS),
 			createCompnt(Sensors.Distance.class     , READS),

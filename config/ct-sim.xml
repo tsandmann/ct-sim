@@ -96,7 +96,7 @@
 
 	<!-- IP, die standardmaessig im Textfeld steht, wenn man "Verbinden / Per
 	TCP" waehlt -->
-	<parameter name="ipForConnectByTcp" value="192.168.1.22"/>
+	<parameter name="ipForConnectByTcp" value="192.168.1.30"/>
 	<!-- Zugehoeriger Port. Default: 10002 -->
 	<parameter name="portForConnectByTcp" value="10002"/>
 
