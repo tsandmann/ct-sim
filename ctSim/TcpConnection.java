@@ -119,7 +119,7 @@ public class TcpConnection extends Connection {
 			}.start();
 		} catch (IOException e) {
 			lg.warning(e, "E/A-Problem beim Binden an TCP-Port "+p+"; " + "l\u00E4uft der c't-Sim schon?");
-			return;
+			System.exit(1);
 		}
 	}
 

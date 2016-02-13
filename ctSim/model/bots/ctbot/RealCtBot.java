@@ -19,8 +19,7 @@
 
 package ctSim.model.bots.ctbot;
 
-import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
-import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES_ASYNCLY;
+import static ctSim.model.bots.components.BotComponent.ConnectionFlags.*;
 
 import java.io.IOException;
 import java.net.ProtocolException;

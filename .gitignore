@@ -1,3 +1,5 @@
 .DS_Store
 /config/window.settings
+/build
 *.class
+ctsim-*.log
