@@ -20,7 +20,7 @@ Requested Features:
 
 * Grafiken fuer Fernbedienung (pek)
 
-* FB-Position? --> eventuelle eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
+* FB-Position? --> eventuell eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
 
 * Klassenstruktur wieder aufraeumen (fbe)
 
