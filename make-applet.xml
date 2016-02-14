@@ -49,7 +49,7 @@ zu erreichen.
 
 	<!-- Ding kompilieren samt allen Abhaengigkeiten -->
 	<javac srcdir="ctSim/applet" sourcepath="." destdir="${builddir}" 
-		classpath="contrib/rxtx.jar" />
+		classpath="contrib/j3d/j3dcore.jar\:contrib/j3d/j3dutils.jar\:contrib/j3d/vecmath.jar\:contrib/BrowserLauncher2-1_3.jar\:contrib/jSerialComm-1.3.10.jar\:contrib/picocontainer-1.2.jar" />
 
 	<!-- Manifest fuer die Jars schreiben -->
 	<manifest file="${builddir}/META-INF/MANIFEST.MF">
