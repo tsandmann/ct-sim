@@ -40,6 +40,11 @@
 	<!-- botport ist der TCP-Port, auf dem der sim auf Bots lauscht-->
 	<parameter name="botport" value="10001"/>
 
+	<!-- Aktiviert/deaktiviert den Autostart eines Bots, wie in botbinary (siehe unten) angegeben. Werte: true, false;
+	Standardwert: false. -->
+	<parameter name="BotAutoStart" value="false"/>
+
+
 	<!-- botbinary ist die Bot-Datei, die beim Sim-Start gestartet wird.
 	Hat nichts zu tun mit dem Parameter botdir -->
 	<parameter name="botbinary" os="Windows" value="../ct-Bot/Debug-W32/ct-Bot.exe"/>
@@ -78,7 +83,7 @@
 	<parameter name="LightSensors" value="true"/>
 
 	<!-- Schalter fuer BPS-Sensor -->
-	<parameter name="BPSSensor" value="false"/>
+	<parameter name="BPSSensor" value="true"/>
 
 	<!-- Schalter fuer Nachlauf der Raeder -->
 	<parameter name="WheelLag" value="false"/>
@@ -88,9 +93,9 @@
 
 	<!-- Serieller Anschluss. Der Sim verbindet sich mit ihm und erwartet
 	dort einen USB-2-Bot-Adapter -->
-	<parameter name="serialport" os="Windows" value="COM3"/>
+	<parameter name="serialport" os="Windows" value="COM4"/>
 	<parameter name="serialport" os="Linux" value="/dev/ttyUSB0"/>
-	<parameter name="serialport" os="Mac OS X" value="/dev/tty.usbserial-A1000NvX"/>
+	<parameter name="serialport" os="Mac OS X" value="/dev/cu.usbserial-ALSC2-1"/>
 	<!-- Geschwindigkeit des 'serialport' in Baud, default 115200 -->
 	<parameter name="serialportBaudrate" value="115200"/>
 

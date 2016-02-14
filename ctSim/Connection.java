@@ -153,7 +153,7 @@ public abstract class Connection {
 	 * @param receiver Bot-Receiver
 	 */
 	protected void doHandshake(BotReceiver receiver) {
-		for (int i=0; i<100; i++) {
+		for (int i = 0; i < 1000; i++) {
 			lg.fine("Sende Willkommen");
 			try {
 				write(new Command(Command.Code.WELCOME));
@@ -162,23 +162,19 @@ public abstract class Connection {
 				return;
 			}
 			/* Warten auf Antwort */
-			for (int j=0; j<20; j++) {
+			for (int j = 0; j < 100; j++) {
 				try {
 					Command cmd = new Command(this, true);
 					if (cmd.has(Command.Code.WELCOME)) {
 						receiver.onBotAppeared(createBot(cmd));
 						return; // Erfolg
 					} else {
-						lg.fine("Kommando, aber kein Willkommen von Verbindung "
-										+ "gelesen: Bot l\u00E4uft schon oder ist "
-										+ "veraltet, schicke Willkommen nochmals; "
-										+ "ignoriertes Kommando folgt" + cmd);
-						// Handshake nochmal versuchen
-						continue;
+						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot l\u00E4uft schon oder ist "
+										+ "veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
+						continue; // Handshake nochmal versuchen
 					}
 				} catch (ProtocolException e) {
-					lg.severe(e, "Ung\uu00FCltiges Kommando beim Handshake; "
-							+ "ignoriere");
+					lg.severe(e, "Ung\uu00FCltiges Kommando beim Handshake; ignoriere");
 					continue;
 				} catch (IOException e) {
 					lg.severe(e, "E/A-Problem beim Handshake; Abbruch");

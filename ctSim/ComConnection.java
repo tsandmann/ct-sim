@@ -19,17 +19,11 @@
 
 package ctSim;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
-import gnu.io.UnsupportedCommOperationException;
+import com.fazecast.jSerialComm.*;
 
 import java.io.IOException;
 import java.net.ProtocolException;
-import java.util.TooManyListenersException;
+import java.util.logging.Level;
 
 import ctSim.controller.BotReceiver;
 import ctSim.controller.Config;
@@ -47,28 +41,13 @@ import ctSim.util.SaferThread;
  * werden.
  * </p>
  * <p>
- * Die <a
- * href="http://java.sun.com/products/javacomm/reference/api">javacomm-Dokumentation</a>
- * beschreibt das API, das in dieser Klasse verwendet wird ({@code gnu.io.*}).
- * Tricks wie die Doku in Eclipse einbinden (Project / Build Path / rxtx.jar /
- * Javadoc location) gehen aber m.E. nicht.
- * </p>
- * <p style='font-size: smaller;'>
- * Hintergrund: Eclipse sucht nach gnu.io.irgendwas und findet aber nichts, da
- * die Doku unter javax.comm steht. Das r&uuml;hrt daher, dass die o.g.
- * Dokumentation zu Suns "<a href="http://java.sun.com/products/javacomm/">Java
- * Commmunications API</a>" geh&ouml;rt ({@code javax.comm.*}), c't-Sim aber
- * stattdessen den Gnu-Nachbau namens RXTX verwendet. RXTX ist bzgl. der
- * Klassennamen, Methodensignaturen usw. kompatibel mit javacomm, ist aber in
- * bester Open-Source-Tradition 100%ig undokumentiert.
- * </p>
- * <p>
- * Die RXTX-Bibliothek erzeugt einen Thread, der auf Eingaben lauscht und einen
- * unklaren Namen hat ("Thread-3" o.&auml;.).
+ * Die <a href="http://fazecast.github.io/jSerialComm/">jSerialComm-Dokumentation</a>
+ * beschreibt die API, die in dieser Klasse verwendet wird ({@com.fazecast.jSerialComm.*}).
  * </p>
  *
  * @author Maximilian Odendahl (maximilian.odendahl@rwth-aachen.de)
  * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Timo Sandmann
  */
 public class ComConnection extends Connection {
 	/** Input verfuegbar? */
@@ -76,68 +55,61 @@ public class ComConnection extends Connection {
 	/** Mutex */
 	protected final Object inputAvailMutex = new Object();
 	/** Port */
-	private final SerialPort port;
+	private SerialPort port;
 
 	/**
 	 * Baut eine COM-Verbindung auf (d.h. i.d.R. zum USB-2-Bot-Adapter).
 	 * Verwendet die in der Konfigdatei angegebenen Werte.
 	 *
 	 * @throws CouldntOpenTheDamnThingException
-	 * @throws IOException
 	 */
-	private ComConnection()
-	throws CouldntOpenTheDamnThingException, IOException {
+	private ComConnection() throws CouldntOpenTheDamnThingException {
 		String comPortName = Config.getValue("serialport");
-
-		CommPortIdentifier portId;
-		try {
-			portId = CommPortIdentifier.getPortIdentifier(comPortName);
-		} catch (NoSuchPortException e) {
-			throw new CouldntOpenTheDamnThingException(
-				"COM-Port-Name '"+comPortName+"' ungueltig", e);
-		}
-		try {
-			port = (SerialPort)portId.open("CtSim", 2000);
-		} catch (PortInUseException e) {
-			throw new CouldntOpenTheDamnThingException("COM-Port "+comPortName+
-				" wird schon verwendet; l\u00E4uft noch eine alte " +
-				"Sim-Instanz? Eventuell hilft es, den schwarzen Eumel des " +
-				"USB-2-Bot-Adapter vom USB-Kabel abzuziehen und wieder " +
-				"dranzustecken", e);
-		}
 		String baudrate = Config.getValue("serialportBaudrate");
+
+		port = SerialPort.getCommPort(comPortName);
+		port.closePort();
+		if (! port.openPort()) {
+			throw new CouldntOpenTheDamnThingException("Serial Port '" + comPortName + "' ungueltig");
+		}
+		
 		try {
 			int br = Integer.parseInt(baudrate);
-			port.setSerialPortParams(br, SerialPort.DATABITS_8,
-				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-			lg.info("Warte auf Verbindung vom c't-Bot an seriellem Port "+
-				comPortName+" ("+br+" baud)");
-			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-			port.enableReceiveTimeout(60000);
+			port.setComPortParameters(br, 8, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
+			port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 50, 1);
+			lg.info("Warte auf Verbindung vom c't-Bot an seriellem Port " + comPortName + " (" + br + " baud)");
 		} catch (NumberFormatException e) {
-			throw new CouldntOpenTheDamnThingException("Die Baud-Rate '"+
-				baudrate+"' ist keine g\u00FCltige Zahl", e);
-		} catch (UnsupportedCommOperationException e) {
-			port.close();
-			throw new CouldntOpenTheDamnThingException("Konnte seriellen " +
-					"Port \u00F6ffnen, aber nicht konfigurieren");
+			port.closePort();
+			throw new CouldntOpenTheDamnThingException("Die Baud-Rate '" + baudrate + "' ist keine g\u00FCltige Zahl", e);
 		}
 
 		setInputStream(port.getInputStream());
 		setOutputStream(port.getOutputStream());
 
 		registerEventListener();
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				port.closePort();
+				lg.fine("Serial Port is closed!");
+			}
+		});
 	}
 
 	/**
 	 * Registriert einen Listener
 	 */
 	private void registerEventListener() {
-		port.notifyOnDataAvailable(true);
-
-		class OurEventListener implements SerialPortEventListener {
+		class OurEventListener implements SerialPortDataListener {
+			@Override
+			public int getListeningEvents() { 
+				return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+			}
+			
+			@Override
 			public void serialEvent(SerialPortEvent evt) {
-				if (evt.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+				if (evt.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
 					// Es gibt was zu lesen
 					synchronized (inputAvailMutex) {
 						inputAvailable = true;
@@ -147,12 +119,7 @@ public class ComConnection extends Connection {
 			}
 		}
 
-		try {
-			port.addEventListener(new OurEventListener());
-		} catch (TooManyListenersException e) {
-			// "Kann nicht passieren"
-			throw new AssertionError(e);
-		}
+		port.addDataListener(new OurEventListener());
 	}
 
 	/**
@@ -162,8 +129,7 @@ public class ComConnection extends Connection {
 	public void blockUntilDataAvailable() throws InterruptedException {
 		synchronized (inputAvailMutex) {
 			while (! inputAvailable) {
-				// while ist Schutz vor spurious wakeups
-				// (siehe wait()-Doku)
+				// while ist Schutz vor spurious wakeups (siehe wait()-Doku)
 				inputAvailMutex.wait();
 			}
 		}
@@ -195,7 +161,7 @@ public class ComConnection extends Connection {
 	 */
 	@Override 
 	public String getName() {
-		return port.getName(); 
+		return port.getDescriptivePortName(); 
 	}
 
 	/**
@@ -230,7 +196,7 @@ public class ComConnection extends Connection {
 		switch (c.getSubCode()) {
     		case WELCOME_REAL:
     			lg.fine("COM-Verbindung von realem Bot eingegangen");
-    			bot= new RealCtBot(comConnSingleton,c.getFrom(), c.getDataL());
+    			bot = new RealCtBot(comConnSingleton, c.getFrom(), c.getDataL());
     			bot.addDisposeListener(new Runnable() {
     				public void run() {
     					spawnThread(botReceiver);
@@ -256,7 +222,11 @@ public class ComConnection extends Connection {
 			botReceiver = receiver;
 			spawnThread(receiver);
 		} catch (Exception e) {
-			lg.severe(e, "Konnte serielle Verbindung nicht aufbauen");
+			lg.warn("Konnte serielle Verbindung nicht aufbauen");
+			
+			if (Level.parse(Config.getValue("LogLevel")).intValue() <= Level.FINE.intValue()) {
+				e.printStackTrace(System.out);
+			}
 		}
 	}
 
@@ -289,8 +259,7 @@ public class ComConnection extends Connection {
 		 * @param message	Text der Exception
 		 * @param cause		
 		 */
-		public CouldntOpenTheDamnThingException(String message,
-		Throwable cause) {
+		public CouldntOpenTheDamnThingException(String message, Throwable cause) {
 			super(message, cause);
 		}
 
@@ -341,7 +310,7 @@ public class ComConnection extends Connection {
 			
 			////////////////
 			
-//			Bot b = new RealCtBot(comConnSingleton,(byte)0);
+//			Bot b = new RealCtBot(comConnSingleton, (byte) 0);
 //			b.addDisposeListener(new Runnable() {
 //				public void run() {
 //					spawnThread(botReceiver);
