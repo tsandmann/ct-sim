@@ -84,6 +84,9 @@
 
 	<!-- Schalter fuer BPS-Sensor -->
 	<parameter name="BPSSensor" value="true"/>
+	
+	<!-- Distanzsensortyp -->
+	<parameter name="GP2Y0A60" value="false"/>
 
 	<!-- Schalter fuer Nachlauf der Raeder -->
 	<parameter name="WheelLag" value="false"/>
