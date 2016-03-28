@@ -1,5 +1,15 @@
 Changelog fuer c't-Sim
 ======================
+2016-02-27: Unterstuetzung fuer alternativen Distanzsensor GP2Y0A60, Aktivierung erfolgt mit dem Konfig-Parameter "GP2Y0A60".
+
+2016-02-14: Java3D-Bibliotheken von jogamp (http://jogamp.org) integriert. Eine Systemweite Java3D Installation ist nicht mehr erforderlich, ct-Sim bringt alle erforderlichen Bibliotheken und Dateien selbst mit.
+
+2016-02-14: Konfig-Parameter "BotAutoStart" zur Konfiguration des Bot-Autostarts: Aktiviert/deaktiviert den Autostart eines Bots, wie mit dem Parameter "botbinary" angegeben.
+
+2016-02-14: Verwendung der jSerialComm-Bibliothek (http://fazecast.github.io/jSerialComm/) fuer usb-2-bot Adapter. Installation der rxtx-Bibliothek ist nicht mehr erforderlich.
+
+2016-02-07: Unterstuetzung fuer 2. Servo: Anzeige der Servo-Position im Sim-Fenster
+
 2015-10-26 Timo Sandmann [mail@timosandmann.de]: Release 22
 
 2015-10-26 Timo Sandmann [mail@timosandmann.de]: Warnings beseitigt
