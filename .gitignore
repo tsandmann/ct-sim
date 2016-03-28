@@ -4,3 +4,5 @@
 /applet-build
 *.class
 ctsim-*.log
+/README.md
+
