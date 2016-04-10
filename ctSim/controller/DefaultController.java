@@ -195,7 +195,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				}
 
 				// View(s) bescheidsagen
-				//TODO Wieso wird das nochmal gemacht, wenn die Simulation (per Judge-Urteil) schon beendet wurde?
 				view.onSimulationStep(sequencersWorld.getSimTimeInMs());
 
 				if(this.pause) {
@@ -207,7 +206,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				}
 
 				// Die ganze Simulation aktualisieren
-				//TODO Warum _nach_ dem view.update()? Heisst das nicht, die Anzeige hinkt der Simulation immer um einen Schritt hinterher?
 				sequencersWorld.updateSimulation();
 
 				// Fix fuer Bug 12

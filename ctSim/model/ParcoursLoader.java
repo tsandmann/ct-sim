@@ -685,7 +685,7 @@ public class ParcoursLoader {
 			/* fuer den Rest Boden aus einem Stueck einfuegen */
 			createWholeFloor(getAppearance(' '));
 			
-			// TODO Hat mit dem Einzeichnen des Wegs bis zum Ziel zu tun; sollte
+			// Hat mit dem Einzeichnen des Wegs bis zum Ziel zu tun; sollte
 			// ordentlich integriert werden: Menueeintrag in GUI, der das
 			// Einzeichnen ein-/ausschaltet. Aus Gruenden der Klarheit sollten
 			// die Linien vorher ihre eigene BranchGroup bekommen

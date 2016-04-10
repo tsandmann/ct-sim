@@ -106,7 +106,6 @@ public abstract class CtBot extends BasicBot {
 			if (cmd.getSubCode() == Command.SubCode.ID_REQUEST) {
 				lg.info("Bot (" + toString() + ") fordert eine ID aus dem Pool an");
 
-				//TODO:	unschoene Loesung
 				while (getController() == null) {
 					try {
 						Thread.sleep(10);

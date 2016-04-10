@@ -59,8 +59,8 @@ public class LabyrinthJudge extends Judge {
 	 */
 	@Override
 	public boolean isAddingBotsAllowed() {
-		if(this.controller.getParticipants() >= this.participants) {
-			Debug.out.println("Fehler: Es sind schon "+this.participants+" Bots auf der Karte.");
+		if (this.controller.getParticipants() >= this.participants) {
+			Debug.out.println("Fehler: Es sind schon " + this.participants + " Bots auf der Karte.");
 			return false;
 		}
 
@@ -72,14 +72,12 @@ public class LabyrinthJudge extends Judge {
 	 */
 	@Override
 	public boolean isStartingSimulationAllowed() {
-
-		// TODO: Bot-Anzahl pruefen
-		if(this.controller.getParticipants() < this.participants) {
+		if (this.controller.getParticipants() < this.participants) {
 			Debug.out.println("Fehler: Noch nicht genuegend Bots auf der Karte.");
 			return false;
 		}
 
-		if(this.controller.getParticipants() > this.participants) {
+		if (this.controller.getParticipants() > this.participants) {
 			Debug.out.println("Fehler: Es sind zu viele Bots auf der Karte.");
 			return false;
 		}
@@ -92,15 +90,15 @@ public class LabyrinthJudge extends Judge {
 	 */
 	@Override
 	public boolean isSimulationFinished(){
-		if (world == null)
+		if (world == null) {
 			return true;
+		}
 		
 		ThreeDBot winner = world.whoHasWon();
-		if (winner == null)
+		if (winner == null) {
 			return false;
-		else {
-			Debug.out.println("Zieleinlauf "+winner+" nach "
-				+ SimUtils.millis2time(this.getTime()));
+		} else {
+			Debug.out.println("Zieleinlauf " + winner + " nach " + SimUtils.millis2time(this.getTime()));
 			return true;
 		}
 	}
