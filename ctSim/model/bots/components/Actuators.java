@@ -96,6 +96,7 @@ public class Actuators {
 		 */
 		public DoorServo(boolean isLeft) {
 			super(isLeft);
+			assert(isLeft);
 		}
 		
 		/**
@@ -111,6 +112,58 @@ public class Actuators {
 		 */
 		@Override public String getBaseName() { 
 			return "DoorServo"; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
+		 */
+		public Code getHotCmdCode() { 
+			return Code.ACT_SERVO; 
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override
+		public String getName() {
+			return getBaseName();
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override
+		public String getDescription() {
+			return getBaseDescription();
+		}
+	}
+	
+	/**
+	 * Servor fuer Kamera
+	 */
+	public static class CamServo extends NumberTwin implements SimpleActuator, CanRead {
+		/**
+		 * Servor fuer Kamera
+		 * @param isLeft Servo 1 ("links") oder 2 ("rechts")?
+		 */
+		public CamServo(boolean isLeft) {
+			super(isLeft);
+			assert(! isLeft);
+		}
+		
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getDescription()
+		 */
+		@Override
+		public String getBaseDescription() {
+			return "Servomotor f\u00FCr Kamera";
+		}
+
+		/**
+		 * @see ctSim.model.bots.components.BotComponent#getName()
+		 */
+		@Override public String getBaseName() { 
+			return "CamServo"; 
 		}
 		
 		/**

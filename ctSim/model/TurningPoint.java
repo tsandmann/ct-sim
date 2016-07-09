@@ -31,8 +31,6 @@ import javax.vecmath.Vector2d;
  *
  */
 public class TurningPoint {
-	//TODO Mist: Dieser Algorithmus hat ganz eigene Vorstellungen davon, was "Bot ist in ein Loch gefallen" heisst (naemlich Bot-Zentrum ist naeher als distFromCorner an einer Ecke). Es waere besser, wenn das Model und diese Klasse einen Bot unter den gleichen Umstaenden als "im Loch" betrachten, nicht unter subtil unterschiedlichen Umstaenden
-	//TODO Variable distFromCorner ist wirklich problematisch und sollte anders geloest werden -- siehe ihre Doku
 	/**
 	 * <p>
 	 * Der Abstand, wie weit der Mittelpunkt des Bots von den
@@ -65,6 +63,14 @@ public class TurningPoint {
 	 * ist f&uuml;r den Wert 0 also praktisch nutzlos, da er auch Wege durch
 	 * W&auml;nde u.dgl. sucht. </li>
 	 * </ol>
+	 * 
+	 * 
+	 * Mist: Dieser Algorithmus hat ganz eigene Vorstellungen davon, was 
+	 * "Bot ist in ein Loch gefallen" heisst (naemlich Bot-Zentrum ist naeher als 
+	 * distFromCorner an einer Ecke). Es waere besser, wenn das Model und diese 
+	 * Klasse einen Bot unter den gleichen Umstaenden als "im Loch" betrachten, 
+	 * nicht unter subtil unterschiedlichen Umstaenden.
+	 * Variable distFromCorner ist wirklich problematisch und sollte anders geloest werden -- siehe ihre Doku
 	 */
 	public static final double distFromCorner = 0.05;
 

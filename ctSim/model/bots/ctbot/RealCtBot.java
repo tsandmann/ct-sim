@@ -19,8 +19,7 @@
 
 package ctSim.model.bots.ctbot;
 
-import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
-import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES_ASYNCLY;
+import static ctSim.model.bots.components.BotComponent.ConnectionFlags.*;
 
 import java.io.IOException;
 import java.net.ProtocolException;
@@ -133,6 +132,7 @@ public class RealCtBot extends CtBot {
 			createCompnt(Actuators.LcDisplay.class  , READS),
 			createCompnt(Actuators.Log.class        , READS),
 			createCompnt(Actuators.DoorServo.class  , READS),
+			createCompnt(Actuators.CamServo.class   , READS),
 			createCompnt(Actuators.Led.class        , READS),
 			createCompnt(Sensors.Encoder.class      , READS),
 			createCompnt(Sensors.Distance.class     , READS),

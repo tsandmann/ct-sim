@@ -92,8 +92,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         TcpConnection.startListening(this);
         try {
 	        if (Config.getValue("serialport") == null) {
-	        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstuetzung " +
-	        			"fuer serielle Schnittstellen deaktiviert");
+	        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstuetzung fuer serielle Schnittstellen deaktiviert");
 	        } else
 	        	ComConnection.startListening(this);
         } catch (Error e) {
@@ -125,11 +124,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
             lg.warning(e, "Problem beim Instanziieren des Standardparcours");
         }
 
-        String botBin = ConfigManager.path2Os(Config.getValue("botbinary"));
-        if (botBin == null)
-            lg.fine("Kein Standardbot konfiguriert");
-        else
-            invokeBot(new File(botBin));	// mit botBin als String funktioniert es nicht 
+        if (Config.getValue("BotAutoStart").equalsIgnoreCase("true")) {
+        	String botBin = ConfigManager.path2Os(Config.getValue("botbinary"));
+        	if (botBin != null) {
+        		invokeBot(new File(botBin)); // mit botBin als String funktioniert es nicht
+        	}
+        }
     }
 
 	/**
@@ -195,7 +195,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				}
 
 				// View(s) bescheidsagen
-				//TODO Wieso wird das nochmal gemacht, wenn die Simulation (per Judge-Urteil) schon beendet wurde?
 				view.onSimulationStep(sequencersWorld.getSimTimeInMs());
 
 				if(this.pause) {
@@ -207,7 +206,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				}
 
 				// Die ganze Simulation aktualisieren
-				//TODO Warum _nach_ dem view.update()? Heisst das nicht, die Anzeige hinkt der Simulation immer um einen Schritt hinterher?
 				sequencersWorld.updateSimulation();
 
 				// Fix fuer Bug 12

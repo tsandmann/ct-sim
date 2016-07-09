@@ -842,6 +842,14 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		}
 		return rv;
 	}
+	
+	/**
+	 * Schreibt eine Info-Nachricht in die Konsole
+	 * @param s Nachricht
+	 */
+	public void printInfoMsg(String s) {
+		lg.info(toString() + " " + s);
+	}
 
 	/**
 	 * &Uuml;berschreibt die run()-Methode aus der Klasse Thread und arbeitet in

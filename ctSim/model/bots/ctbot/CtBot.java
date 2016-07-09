@@ -106,7 +106,6 @@ public abstract class CtBot extends BasicBot {
 			if (cmd.getSubCode() == Command.SubCode.ID_REQUEST) {
 				lg.info("Bot (" + toString() + ") fordert eine ID aus dem Pool an");
 
-				//TODO:	unschoene Loesung
 				while (getController() == null) {
 					try {
 						Thread.sleep(10);
@@ -218,6 +217,7 @@ public abstract class CtBot extends BasicBot {
 			new Actuators.LcDisplay(20, 4),
 			new Actuators.Log(),
 			new Actuators.DoorServo(true),
+			new Actuators.CamServo(false),
 			new Sensors.Encoder(true),
 			new Sensors.Encoder(false),
 			new Sensors.Distance(true),
@@ -230,6 +230,7 @@ public abstract class CtBot extends BasicBot {
 			new Sensors.Mouse(false),
 			new Sensors.RemoteControl(Config.getValue("RC5-type")),
 			new Sensors.Door(true),
+			new Sensors.CamPos(true),
 			new Sensors.Trans(true),
 			new Sensors.Error(),
 			new Sensors.Shutdown(),

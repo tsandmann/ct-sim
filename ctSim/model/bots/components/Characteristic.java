@@ -112,12 +112,10 @@ public class Characteristic {
 		
 		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
 		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
-		// den 0-Index:
-//TODO:	Doppelt runden haelt besser?!? Am Ergebnis von floor() gibt's aber gar nix mehr zu runden! 
-		lookup = new float[1 + Math.round(Math.round(Math.floor(characteristic[characteristic.length - 2])))];
+		// den 0-Index: 
+		lookup = new float[(int) (1 + Math.floor(characteristic[characteristic.length - 2]))];
 		// Lookup-Table jetzt fuellen:
-//TODO:	round()-Aufrufe unsinnig, oder?
-		int firstMeas = Math.round(Math.round(Math.floor(characteristic[0])));
+		int firstMeas = (int) Math.floor(characteristic[0]);
 		// Alles vor der ersten Messgroesse mit INF fuellen:
 		for (int i = 0; i < firstMeas; i++) {
 			lookup[i] = INF;
@@ -125,13 +123,11 @@ public class Characteristic {
 		// Dann jeweils in Zweierschritten voran:
 		for (int i = 0; i < characteristic.length; i += 2) {
 			// Zwei aufeinanderfolgende Messgroessen heraussuchen:
-//TODO:	round()-Aufrufe unsinnig, oder?
-			int firMea = Math.round(Math.round(Math.floor(characteristic[i])));
+			int firMea = (int) Math.floor(characteristic[i]);
 			// Wert am ersten Index eintragen:
 			lookup[firMea] = characteristic[i + 1];
-			try { // Klappt nicht, wenn schon das Ende erreicht ist.
-//TODO:	round()-Aufrufe unsinnig, oder?				
-				int secMea = Math.round(Math.round(Math.floor(characteristic[i + 2])));
+			try { // Klappt nicht, wenn schon das Ende erreicht ist.			
+				int secMea = (int) Math.floor(characteristic[i + 2]);
 				// Wie viele Schritte lassen die Messgroessen aus?
 				int diff = secMea - firMea;
 				// Und wie veraendert sich der zugeordnete Wert zwischen den
@@ -194,26 +190,22 @@ public class Characteristic {
 		
 		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
 		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
-		// den 0-Index:
-//TODO:	round()-Aufrufe unsinnig, oder?		
-		this.lookup = new float[1 + Math.round(Math.round(Math.floor(characteristic[characteristic.length - 2])))];
+		// den 0-Index:	
+		this.lookup = new float[(int) (1 + Math.floor(characteristic[characteristic.length - 2]))];
 		// Lookup-Table jetzt fuellen:
-//TODO:	round()-Aufrufe unsinnig, oder?		
-		int firstMeas = Math.round(Math.round(Math.floor(characteristic[0])));
+		int firstMeas = (int) Math.floor(characteristic[0]);
 		// Alles vor der ersten Messgroesse mit INF fuellen:
 		for (int i = 0; i < firstMeas; i++) {
 			lookup[i] = INF;
 		}
 		// Dann jeweils in Zweierschritten voran:
 		for (int i = 0; i < characteristic.length; i += 2) {
-			// Zwei aufeinanderfolgende Messgroessen heraussuchen:
-//TODO:	round()-Aufrufe unsinnig, oder?			
-			int firMea = Math.round(Math.round(Math.floor(characteristic[i])));
+			// Zwei aufeinanderfolgende Messgroessen heraussuchen:	
+			int firMea = (int) Math.floor(characteristic[i]);
 			// Wert am ersten Index eintragen:
 			lookup[firMea] = characteristic[i + 1];
 			try { // Klappt nicht, wenn schon das Ende erreicht ist.
-//TODO:	round()-Aufrufe unsinnig, oder?
-				int secMea = Math.round(Math.round(Math.floor(characteristic[i + 2])));
+				int secMea = (int) Math.floor(characteristic[i + 2]);
 				// Wie viele Schritte lassen die Messgroessen aus?
 				int diff = secMea - firMea;
 				// Und wie veraendert sich der zugeordnete Wert zwischen den
@@ -257,8 +249,7 @@ public class Characteristic {
 		double data;
 		// Liegt der Wert innerhalb der Tabelle?
 		if (measurement >= 0 && measurement <= lookup.length - 1) {
-//TODO:	round()-Aufrufe unsinnig, oder?
-			int index = Math.round(Math.round(Math.floor(measurement)));
+			int index = (int) Math.floor(measurement);
 			data = lookup[index];
 			// Falls der Wert nicht am Rand der Tabelle liegt,
 			// noch Zwischenwert extrapolieren --

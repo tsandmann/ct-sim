@@ -569,7 +569,7 @@ public class ParcoursLoader {
 						// ermittle die Laenge der zusammenhaengenden Wand
 						while ((d < parcours.getWidthInBlocks()) && (parcoursMap[d][y] == '=')) {
 							parcoursMap[d][y] = 'O'; // Feld ist schon bearbeitet
-							l++; // Laenge hochzaeheln
+							l++; // Laenge hochzaehlen
 							d++;
 						}
 						createWall(x, y, l, 1, getAppearance('='));
@@ -599,21 +599,18 @@ public class ParcoursLoader {
 						break;
 					case 'l': // Landmarke
 //						if (Beacon.checkParcoursPosition(this.parcours, x, y)) {
-						createBPSBeacon(x, y, getAppearance('l'));
+							createBPSBeacon(x, y, getAppearance('l'));
 //						} else {
-//							lg.warn("Parcours enthaelt Landmarke an Position (" + x
-//								+ "|" + y 
-//								+ "), dort ist aber keine Landmarke zugelassen, ignoriere sie.");
+//							lg.warn("Parcours enthaelt Landmarke an Position (" + x + "|" + y + "), " + 
+//							"dort ist aber keine Landmarke zugelassen, ignoriere sie.");
 //						}
 						break;
 					case '.':
-						// TODO Boden optimieren, Kacheln zusammenfassen
 						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						break;
 					case ' ':
 						break;
 					case 'L':
-						// TODO Boden optimieren, Kacheln zusammenfassen
 						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						parcours.addHole(x, y);
 						break;
@@ -634,7 +631,7 @@ public class ParcoursLoader {
 						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						break;
 					case 'Z':
-						// this.parcours.setFinishPosition(x,y);
+						// this.parcours.setFinishPosition(x, y);
 						parcours.addFinishPosition(x, y);
 						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						break;
@@ -685,7 +682,7 @@ public class ParcoursLoader {
 			/* fuer den Rest Boden aus einem Stueck einfuegen */
 			createWholeFloor(getAppearance(' '));
 			
-			// TODO Hat mit dem Einzeichnen des Wegs bis zum Ziel zu tun; sollte
+			// Hat mit dem Einzeichnen des Wegs bis zum Ziel zu tun; sollte
 			// ordentlich integriert werden: Menueeintrag in GUI, der das
 			// Einzeichnen ein-/ausschaltet. Aus Gruenden der Klarheit sollten
 			// die Linien vorher ihre eigene BranchGroup bekommen

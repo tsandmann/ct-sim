@@ -268,13 +268,14 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @param block	Blockadresse der Daten
 	 * @param from	Startindex der Daten
 	 * @param to	Endindex der Daten
+	 * 
+	 * TODO: Karte je nach Startausrichtung des Bots entsprechend drehen, derzeit wird von Startrichtung == Norden ausgegangen
 	 */
 	private final void updateInternalModel(byte[] data, int block, int from, int to) {
 		/* Monsters here... */
 		int x = ((block * (SECTION_SIZE * 2)) % MAKROBLOCK_SIZE + (block / MAKROBLOCK_SIZE) * MAKROBLOCK_SIZE) % WIDTH; // 2 sections pro Block in X-Richtung (nach Map-Orientierung)
 		int y = (((block / SECTION_SIZE) * SECTION_SIZE) % MAKROBLOCK_SIZE) + (block / HEIGHT) * MAKROBLOCK_SIZE; // 1 section pro Block in Y-Richtung (nach Map-Orientierung)
-		
-//TODO:	Karte je nach Startausrichtung des Bots entsprechend drehen, derzeit wird von Startrichtung == Norden ausgegangen		
+
 		/* neu empfangene Daten ins Map-Array kopieren */
 		int pic_x = 0, pic_y = 0;
 		int bufferIndex = 0;

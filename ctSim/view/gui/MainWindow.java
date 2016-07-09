@@ -358,10 +358,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		// NOP
     }
 
-	//TODO:	Ueber diese Methode kriegt das MainWindow mit, wenn die Simulation
-	// anhaelt. Schoen waere: Knoepfe fuer Play/Pause/Stop ausgrauen, wenn nicht
-	// bedienbar. (Man kann nicht was stoppen, was schon gestoppt ist; starten,
-	// was schon gestartet ist; usw.)
 	/**
 	 * @see ctSim.view.View#onSimulationFinished()
 	 */

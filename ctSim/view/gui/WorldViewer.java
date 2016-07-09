@@ -219,9 +219,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		 */
     	Screen3D onScr = onScreenCanvas.getScreen3D();
     	Screen3D offScr = offScreenCanvas.getScreen3D();
-    	offScreenCanvas.setOffScreenBuffer(new ImageComponent2D(
-    		ImageComponent2D.FORMAT_RGB,
-    		onScr.getSize().width, onScr.getSize().height));
+    	offScreenCanvas.setOffScreenBuffer(new ImageComponent2D(ImageComponent2D.FORMAT_RGB, onScr.getSize().width, onScr.getSize().height));
     	offScr.setSize(onScr.getSize());
     	offScr.setPhysicalScreenHeight(onScr.getPhysicalScreenHeight());
     	offScr.setPhysicalScreenWidth(onScr.getPhysicalScreenWidth());

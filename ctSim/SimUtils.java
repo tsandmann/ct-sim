@@ -105,14 +105,7 @@ public class SimUtils {
 		return newHead;
 	}
 
-	/**
-	 * Errechnet den Winkel zwischen Nordrichtung des Universums (Richtung der 
-	 * positiven Y-Achse) und der angegeben Blickrichtung.
-	 * 
-	 * @param heading 
-	 * 			  Gib die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
-	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurueck
-	 */
+
 //	public static double getRotation(Vector3f heading) {
 //		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
 //		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
@@ -122,18 +115,25 @@ public class SimUtils {
 //		else
 //			return angle;
 //	}
-	// TODO: Allgemeiner!? Ref-Vector auslagern...
+
+	/**
+	 * Errechnet den Winkel zwischen Nordrichtung des Universums (Richtung der 
+	 * positiven Y-Achse) und der angegeben Blickrichtung.
+	 * 
+	 * @param heading 
+	 * 			  Gib die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
+	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurueck
+	 */
 	public static double getRotation(Vector3d heading) {
-		
 		double angle = heading.angle(new Vector3d(0d, 1d, 0d));
 		
-		if(heading.x >= 0)
+		if (heading.x >= 0) {
 			angle = -angle;
+		}
 		
 		return angle;
 	}
 	
-	// TODO: Allgemeiner!?
 	/**
 	 * Fuehrt eine Transformation durch 
 	 * @param pos Position 
