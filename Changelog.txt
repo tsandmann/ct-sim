@@ -1,5 +1,7 @@
 Changelog fuer c't-Sim
 ======================
+2016-07-09: Release 23 (v1.23)
+
 2016-02-27: Unterstuetzung fuer alternativen Distanzsensor Typ GP2Y0A60, Aktivierung erfolgt mit dem Konfig-Parameter "GP2Y0A60".
 
 2016-02-14: Java3D-Bibliotheken von jogamp (http://jogamp.org) integriert. Eine Systemweite Java3D Installation ist nicht mehr erforderlich, ct-Sim bringt alle erforderlichen Bibliotheken und Dateien selbst mit.
