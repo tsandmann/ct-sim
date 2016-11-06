@@ -432,7 +432,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
     		checkLabelABL.setText("-");
     		checkLabelABL.setToolTipText("Nicht verf\u00FCgbar f\u00FCr Basic-Programme");
     		checkLabelABL.setBackground(Color.GRAY);
-    		fileName.setText("/basic/bas1.txt");
+    		fileName.setText("bas1.txt");
     		path = path.replace("/abl", "/basic");
     	} else if (e.getActionCommand().equals("ABL")) {
     		type = 1;
@@ -441,7 +441,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
     		checkLabelABL.setText("-");
     		checkLabelABL.setToolTipText("Kein Syntaxcheck bisher");
     		checkLabelABL.setBackground(Color.GRAY);
-    		fileName.setText("/abl/prog1.txt");
+    		fileName.setText("prog1.txt");
     		path = path.replace("/basic", "/abl");
     	}
     }
