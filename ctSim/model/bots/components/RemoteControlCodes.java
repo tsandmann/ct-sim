@@ -52,6 +52,11 @@ public class RemoteControlCodes {
 			codeMapping = new HAUPPAUGE_WINTV();
 		}
 		
+		/* RC_HAVE_Technisat_TTS35AI */
+		if (type.equals("RC_HAVE_Technisat_TTS35AI")) {
+			codeMapping = new Technisat_TTS35AI();
+		}
+		
 		if (codeMapping != null) {
 			/* Tastenzuordnungen eintragen */
 			codeMapping.createCodes();
@@ -169,5 +174,50 @@ public class RemoteControlCodes {
 			addKey(">>", 0x1010);		// Forward
 			addKey("\u25A1", 0x1021);	// 25A1: Quadrat fuer "Stop"
 		}		
+	}
+	
+	/**
+	 * Definiert den Fernbedienungstyp Technisat TTS35AI und ihre Tastenzuordnungen.
+	 */
+	class Technisat_TTS35AI implements RC5Codes {
+		/**
+		 * @see ctSim.model.bots.components.RemoteControlCodes.RC5Codes#createCodes()
+		 */
+		public void createCodes() {
+			addKey("\u03A6", 0x128C);	// 03A6: "Power-Symbol" (wie Kombination von O und |)
+			addKey("1" , 0x1281);
+			addKey("2" , 0x1282);
+			addKey("3" , 0x1283);
+			addKey("4" , 0x1284);
+			addKey("5" , 0x1285);
+			addKey("6" , 0x1286);
+			addKey("7" , 0x1287);
+			addKey("8" , 0x1288);
+			addKey("9" , 0x1289);
+			addKey("10", 0x1280);
+			addKey("11", 0x128A);
+			addKey("12", 0x12A3);
+			
+			addKey("GR \u2013", 0x02AC);
+			addKey("RE +", 0x02AB);
+			addKey("YE \u2013", 0x02AD);
+			addKey("BL +", 0x02AE);
+			
+			addKey("I/II", 0x12A2);
+			addKey("TV/VCR", 0x028F);
+			addKey("||", 0x12A0);		// Pause
+			addKey("<<", 0x1291);		// Backward
+			addKey(">",  0x0297);		// Play
+			addKey(">>", 0x1290);		// Forward
+			addKey("\u25A1", 0x12A1);	// 25A1: Quadrat fuer "Stop"
+			addKey("\u25CF", 0x12AF);	// 25CF: Dicker Punkt fuer "Record"
+			
+			addKey("CH*P/P", 0x0293);
+			addKey("Vol+", 0x128F);
+			addKey("Mute", 0x128D);
+			addKey("Ch+",  0x12A9);
+			addKey("Vol\u2013", 0x12BC);
+			addKey("Ch\u2013",  0x12B8);		
+		}
 	}
 }
