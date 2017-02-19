@@ -22,6 +22,7 @@ package ctSim.view.gui;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
 import java.awt.image.BufferedImage;
@@ -62,9 +63,9 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     private static final String MODEL = "showing a model";
 
     /** Hilfsding fuer die J3D-Buerokratie */
-    protected GraphicsConfiguration gc = GraphicsEnvironment.
-	    getLocalGraphicsEnvironment().getDefaultScreenDevice().
-	    getBestConfiguration(new GraphicsConfigTemplate3D());
+    final protected GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D());
+    /** Das letzte verwendete GraphicsDevice, wird fuer das Erzeugen einer neuen Welt in einem Multi-Monitor Setup benoetigt */
+    protected GraphicsDevice last_gd = gc.getDevice();
 
     /** OnScreen Flaeche */
     protected Canvas3D onScreenCanvas = new Canvas3D(gc, false);
@@ -73,6 +74,30 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 
     /** wird mit jedem neuen Model ausgetauscht */
     protected SimpleUniverse universe;
+    
+	/**
+	 * Gets the best graphics conifguration to display on the current device.
+	 * 
+	 * @return GraphicsConfiguration
+	 */
+	protected GraphicsConfiguration getBestConfigurationOnSameDevice() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs = ge.getScreenDevices();
+		GraphicsConfiguration good = null;
+
+		GraphicsConfigTemplate3D gct = new GraphicsConfigTemplate3D();
+
+		for (GraphicsDevice newgd : gs) {
+			if (newgd == last_gd) {
+				good = gct.getBestConfiguration(newgd.getConfigurations());
+				if (good != null) {
+					break;
+				}
+			}
+		}
+
+		return good;
+	}
 
     /**
      * Erzeugt einen neuen WorldViewer, der erstmal leer ist
@@ -95,8 +120,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 
     	if (world == null) {
     		((CardLayout)getLayout()).show(this, NOTHING);
-    	}
-    	else {
+    	} else {
     		init(world);
     		/* einmal rendern erzwingen, damit sofort die Welt angezeit wird */
     		universe.getViewer().getCanvas3D().print(universe.getCanvas().getGraphics());
@@ -118,23 +142,28 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	 * </p>
 	 */
 	protected void deinit() {
-    	if (universe != null)
-    		universe.cleanup();	
-    		/* remove all Java3D Canvas components */
-    		while (getComponentCount() > 1) {
-    			remove(1);
-    		}
-    		universe = null;
-    		onScreenCanvas = null;
+		if (onScreenCanvas != null) {
+			last_gd = onScreenCanvas.getGraphicsConfiguration().getDevice();
+		}
+    	if (universe != null) {
+    		universe.cleanup();
+    	}
+		/* remove all Java3D Canvas components */
+		while (getComponentCount() > 1) {
+			remove(1);
+		}
+		universe = null;
+		onScreenCanvas = null;
+		offScreenCanvas = null;
     }
 
     /**
      * Initialisiert eine Welt
      * @param w die Welt
      */
-    protected void init(World w) {
-    	onScreenCanvas = new Canvas3D(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D()), false);
-    	offScreenCanvas = new Canvas3D(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D()), true);
+    protected void init(World w) {    	
+    	onScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice() /*GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D())*/, false);
+    	offScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice() /*GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D())*/, true);
     	add(onScreenCanvas, MODEL);
     	universe = new SimpleUniverse(onScreenCanvas);
         universe.getViewer().getView().addCanvas3D(offScreenCanvas);
