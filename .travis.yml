@@ -1,6 +1,9 @@
 language: java
 install: ant deps
-script: ant main
+script: ant -f make-jar.xml
+os:
+  - linux
+  - osx
 jdk:
   - oraclejdk8
   - oraclejdk7
