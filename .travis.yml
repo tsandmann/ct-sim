@@ -1,0 +1,12 @@
+language: java
+install: ant deps
+script: ant main
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk6
+sudo: false
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
