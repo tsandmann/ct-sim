@@ -13,4 +13,8 @@ addons:
     packages:
       - oracle-java8-installer
 
-script: ant -f make-jar.xml
+before_script:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install ant; fi
+
+script:
+  - ant -f make-jar.xml
