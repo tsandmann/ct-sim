@@ -48,13 +48,13 @@
 	<!-- botbinary ist die Bot-Datei, die beim Sim-Start gestartet wird.
 	Hat nichts zu tun mit dem Parameter botdir -->
 	<parameter name="botbinary" os="Windows" value="../ct-Bot/Debug-W32/ct-Bot.exe"/>
-	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux/ct-Bot"/>
-	<parameter name="botbinary" os="Mac OS X" value="../ct-Bot/Debug-Mac/ct-Bot"/>
+	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux_Mac/ct-Bot"/>
+	<parameter name="botbinary" os="Mac OS X" value="../ct-Bot/Debug-Linux_Mac/ct-Bot"/>
 
 	<!-- Verzeichnis, das der Dialog "Bot-Datei oeffnen" anfangs anzeigt -->
 	<parameter name="botdir" os="Windows" value="../ct-Bot/Debug-W32"/>
-	<parameter name="botdir" os="Linux" value="../ct-Bot/Debug-Linux"/>
-	<parameter name="botdir" os="Mac OS X" value="../ct-Bot/Debug-Mac"/>
+	<parameter name="botdir" os="Linux" value="../ct-Bot/Debug-Linux_Mac"/>
+	<parameter name="botdir" os="Mac OS X" value="../ct-Bot/Debug-Linux_Mac"/>
 
 	<!-- judge ist der Klassenname des Judges, den der Sim per default laedt-->
 	<!-- <parameter name="judge" value="ctSim.model.rules.LabyrinthJudge"/> -->

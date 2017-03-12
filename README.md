@@ -8,4 +8,5 @@ Feel free to fork from this repository, add your own extensions or improvements 
 
 | Branch              | Build status  |
 |:------------------- |:------------- |
+| master              | [![Build status](https://travis-ci.org/tsandmann/ct-sim.svg?branch=master "Build status of branch master")](https://travis-ci.org/tsandmann/ct-sim) |
 | develop             | [![Build status](https://travis-ci.org/tsandmann/ct-sim.svg?branch=develop "Build status of branch develop")](https://travis-ci.org/tsandmann/ct-sim) |

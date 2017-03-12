@@ -1,5 +1,19 @@
 Changelog fuer c't-Sim
 ======================
+2017-03-12: Release 24 (v1.24)
+
+2017-02-27: Automatisierte Build Tests eingefuehrt
+
+2017-02-26: Bot-Binary Pfad an aktualisierte ct-Bot Buildsettings angepasst
+
+2017-02-19: Bugfix fuer Oeffnen einer neuen Welt in Multi-Monitor Konfiguration
+
+2017-02-05: Rudimentaere Unterstuetzung fuer Technisat TTS35AI Fernbedienung
+
+2016-11-06: Basic / ABL Programm Dialog an neue ct-Bot Version angepasst
+
+2016-10-26: Classpath Settings korrigiert (Prioritaet der Eintraege)
+
 2016-07-09: Release 23 (v1.23)
 
 2016-02-27: Unterstuetzung fuer alternativen Distanzsensor Typ GP2Y0A60, Aktivierung erfolgt mit dem Konfig-Parameter "GP2Y0A60".
