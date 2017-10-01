@@ -811,20 +811,19 @@ public class Command {
 		con.read(b);
 		byte startCode = b[0];
 		if (startCode != STARTCODE) {
-			String msg = "Unerwartetes Zeichen als Startcode; " +
-					"Synchronisierung verloren; synchronisiere neu";
-			if (suppressSyncWarnings)
-				lg.fine(msg);
-			else
-				lg.warn(msg);
-
 			while (startCode != STARTCODE) {
+				String msg = "Unerwartetes Zeichen als Startcode; Synchronisierung verloren; synchronisiere neu. startCode=" + startCode + " anstatt " + STARTCODE;
+				if (suppressSyncWarnings) {
+					lg.fine(msg);
+				} else {
+					lg.warn(msg);
+				}
+
 				b = new byte[1];
 				con.read(b);
 				startCode = b[0];
 			}
-			lg.fine("Synchronisierung erfolgreich; beginne, Kommandos zu " +
-				"interpretieren");
+			lg.fine("Synchronisierung erfolgreich; beginne, Kommandos zu interpretieren");
 		}
 
 		// Rest des Kommandos
