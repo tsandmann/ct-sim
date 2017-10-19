@@ -52,6 +52,7 @@ import javax.vecmath.Point2i;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -247,8 +248,9 @@ public class World {
 	 * @return Die neue Welt
 	 * @throws SAXException 
 	 * @throws IOException 
+	 * @throws ParserConfigurationException 
 	 */
-	public static World buildWorldFromFile(File sourceFile) throws SAXException, IOException {
+	public static World buildWorldFromFile(File sourceFile) throws SAXException, IOException, ParserConfigurationException {
 	    BufferedReader in = new BufferedReader(new FileReader(sourceFile));
 	    String line;
 	    sourceString = new String();
@@ -280,8 +282,9 @@ public class World {
 	 * Methode im Unterverzeichnis "parcours" gesucht. 
 	 * @return Die neue Welt
 	 * @throws SAXException 
-	 * @throws IOException */
-	public static World buildWorldFromXmlString(String parcoursAsXml) throws SAXException, IOException {
+	 * @throws IOException 
+	 * @throws ParserConfigurationException */
+	public static World buildWorldFromXmlString(String parcoursAsXml) throws SAXException, IOException, ParserConfigurationException {
 		sourceString = new String(parcoursAsXml);
 		return new World(
 			new InputSource(new StringReader(parcoursAsXml)),
@@ -324,9 +327,10 @@ public class World {
 	 * {@link ParcoursLoader#loadParcours(InputSource, EntityResolver)}.
 	 * @throws SAXException 
 	 * @throws IOException 
+	 * @throws ParserConfigurationException 
 	 * @see ParcoursLoader#loadParcours(InputSource, EntityResolver)
 	 */
-	private World(InputSource source, EntityResolver resolver) throws SAXException, IOException {
+	private World(InputSource source, EntityResolver resolver) throws SAXException, IOException, ParserConfigurationException {
 		ParcoursLoader pl = new ParcoursLoader();
 		pl.loadParcours(source, resolver);
 		Parcours p = pl.getParcours();
