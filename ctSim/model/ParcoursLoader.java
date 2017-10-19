@@ -57,7 +57,7 @@ import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.image.TextureLoader;
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import javax.xml.parsers.*;
 
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
@@ -731,7 +731,7 @@ public class ParcoursLoader {
 	 * @param resolver
 	 *            Der zu verwendende Xerces-EntityResolver, oder
 	 *            <code>null</code>, wenn der Standard-Resolver verwendet werden
-	 *            soll. Der DOMParser, der dieser Methode zugrundeliegt,
+	 *            soll. Der DocumentBuilder, der dieser Methode zugrundeliegt,
 	 *            verwendet den Resolver w&auml;hrend dem Verarbeiten der im XML
 	 *            vorkommenden "system identifier" und "public identifier".
 	 *            Diese treten in unseren Parcoursdateien nur an einer Stelle
@@ -748,18 +748,20 @@ public class ParcoursLoader {
 	 * 
 	 * @throws SAXException
 	 * @throws IOException
+	 * @throws ParserConfigurationException 
 	 */
-	public void loadParcours(InputSource source, EntityResolver resolver) throws SAXException, IOException {
-		// Ein DOMParser liest ein XML-File ein
-		DOMParser parser = new DOMParser();
+	public void loadParcours(InputSource source, EntityResolver resolver) throws SAXException, IOException, ParserConfigurationException {
+		// Ein DocumentBuilder liest ein XML-File ein
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
+		
 		try {
+			builder = factory.newDocumentBuilder();
 			if (resolver != null) {
-				parser.setEntityResolver(resolver);
+				builder.setEntityResolver(resolver);
 			}
-			// einlesen
-			parser.parse(source);
-			// umwandeln in ein Document
-			Document doc = parser.getDocument();
+			// einlesen und umwandeln in ein Document
+			Document doc = builder.parse(source);
 
 			// Und anfangen mit dem abarbeiten
 
@@ -865,6 +867,9 @@ public class ParcoursLoader {
 			lg.warn(e, "Probleme beim Parsen des XML");
 			throw e;
 		} catch (IOException e) {
+			lg.warn(e, "Probleme beim Parsen des XML");
+			throw e;
+		} catch (ParserConfigurationException e) {
 			lg.warn(e, "Probleme beim Parsen des XML");
 			throw e;
 		}
