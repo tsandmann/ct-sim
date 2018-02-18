@@ -79,7 +79,6 @@ public class ContestConductor implements View {
 			/**
 			 * Alle Entfernungen zum Ziel berechnen
 			 */
-			@SuppressWarnings("synthetic-access")
 			GameOutcome() {
 				for (BotView b : BotView.getAll()) {
 					distToFinish.put(
@@ -142,7 +141,6 @@ public class ContestConductor implements View {
 		 * @throws SQLException
 		 * @throws TournamentPlanException
 		 */
-		@SuppressWarnings("synthetic-access")
 		private boolean isAnyoneOnFinishTile()
 		throws NullPointerException, SQLException, TournamentPlanException {
 			ThreeDBot winner = concon.world.whoHasWon();
@@ -165,7 +163,6 @@ public class ContestConductor implements View {
 		 * @throws SQLException
 		 * @throws TournamentPlanException
 		 */
-		@SuppressWarnings("synthetic-access")
 		private boolean isGameTimeoutElapsed()
 		throws SQLException, TournamentPlanException {
 			if (concon.world.getSimTimeInMs() <
@@ -195,7 +192,6 @@ public class ContestConductor implements View {
 		 * @throws SQLException
 		 * @throws TournamentPlanException
 		 */
-		@SuppressWarnings("synthetic-access")
 		protected void setWinner(GameOutcome outcome)
 		throws NullPointerException, SQLException, TournamentPlanException {
 			concon.lg.info("Gewinner ist Bot %s nach einem Spiel von %d ms",

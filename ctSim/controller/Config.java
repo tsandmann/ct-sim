@@ -115,7 +115,6 @@ public class Config {
 	private static BotAppearances appearances;
 
 	/** Icons */
-	@SuppressWarnings("unused")
 	private static IconProvider icons;
 
 	/**

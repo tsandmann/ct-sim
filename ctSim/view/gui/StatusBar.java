@@ -116,7 +116,6 @@ public class StatusBar extends Box {
 		tickRateSlider = new JSlider(StatusBar.MIN_TICK_RATE, StatusBar.MAX_TICK_RATE, INIT_TICK_RATE);
 		
 		tickRateSlider.addChangeListener(new ChangeListener() {
-			@SuppressWarnings({"synthetic-access","boxing"})
 			public void stateChanged(ChangeEvent e) {
 				if (tickRateSlider.getValueIsAdjusting()) {
 					tickRateField.setText(String.valueOf(tickRateSlider.getValue()));
@@ -136,7 +135,7 @@ public class StatusBar extends Box {
 	/**
 	 * Erzeugt ein Anzeigefeld fuer den Simulatortakt
 	 */
-	@SuppressWarnings("boxing") void initTickRateField() {
+	void initTickRateField() {
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 		formatter.setMinimum(StatusBar.MIN_TICK_RATE);
 		formatter.setMaximum(StatusBar.MAX_TICK_RATE);
@@ -150,7 +149,6 @@ public class StatusBar extends Box {
 		tickRateField.setPreferredSize(new Dimension(44, 22));
 		
 		tickRateField.addPropertyChangeListener(new PropertyChangeListener() {
-			@SuppressWarnings("synthetic-access")
 			public void propertyChange(PropertyChangeEvent evt) {
 				if ("value".equals(evt.getPropertyName())) {
 					tickRateSlider.setValue((Integer) tickRateField.getValue());
@@ -169,7 +167,7 @@ public class StatusBar extends Box {
 	/**
 	 * Setzt den Simulatortakt auf den initialen Wert zurueck
 	 */
-	@SuppressWarnings("boxing")
+
 	protected void reinit() {
 		tickRateField.setValue(INIT_TICK_RATE);
 		updateTime(0);

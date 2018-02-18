@@ -781,7 +781,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         krautUndRuebenSim.setDoorSensor(doorSensor);
     	
         simulators.add(new Runnable() {
-            @SuppressWarnings("null")
 			public void run() {
                 final int doorState = servo.getServoPosition() < 12 ? 0 : 1; // 0: Klappe zu; 1: Klappe auf
                 final boolean change = doorState != doorSensor.get().intValue();
@@ -810,7 +809,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     	
         simulators.add(new Runnable() {
         	int last_pos = 0;
-            @SuppressWarnings("null")
 			public void run() {
                 final int cam_pos = servo.getServoPosition();
                 final boolean change = cam_pos != last_pos;

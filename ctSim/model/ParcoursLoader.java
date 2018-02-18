@@ -57,7 +57,7 @@ import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.image.TextureLoader;
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import javax.xml.parsers.*;
 
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
@@ -332,7 +332,6 @@ public class ParcoursLoader {
 	 * @param app
 	 *            Aussehen des Bodens
 	 */
-	@SuppressWarnings("unused")
 	private void createFloor(int x, int y, int lengthX, int lengthY, Appearance app) {
 		Box box = new Box(parcours.getBlockSizeInM() / 2 * lengthX, parcours.getBlockSizeInM() / 2 * lengthY, World.PLAYGROUND_THICKNESS, app);
 		parcours.addFloor(box, x + lengthX / 2.0f, y + lengthY / 2.0f, - World.PLAYGROUND_THICKNESS + 0.001f);
@@ -731,7 +730,7 @@ public class ParcoursLoader {
 	 * @param resolver
 	 *            Der zu verwendende Xerces-EntityResolver, oder
 	 *            <code>null</code>, wenn der Standard-Resolver verwendet werden
-	 *            soll. Der DOMParser, der dieser Methode zugrundeliegt,
+	 *            soll. Der DocumentBuilder, der dieser Methode zugrundeliegt,
 	 *            verwendet den Resolver w&auml;hrend dem Verarbeiten der im XML
 	 *            vorkommenden "system identifier" und "public identifier".
 	 *            Diese treten in unseren Parcoursdateien nur an einer Stelle
@@ -748,18 +747,19 @@ public class ParcoursLoader {
 	 * 
 	 * @throws SAXException
 	 * @throws IOException
+	 * @throws ParserConfigurationException 
 	 */
-	public void loadParcours(InputSource source, EntityResolver resolver) throws SAXException, IOException {
-		// Ein DOMParser liest ein XML-File ein
-		DOMParser parser = new DOMParser();
+	public void loadParcours(InputSource source, EntityResolver resolver) throws SAXException, IOException, ParserConfigurationException {
+		// Ein DocumentBuilder liest ein XML-File ein
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
 		try {
+			builder = factory.newDocumentBuilder();
 			if (resolver != null) {
-				parser.setEntityResolver(resolver);
+				builder.setEntityResolver(resolver);
 			}
-			// einlesen
-			parser.parse(source);
-			// umwandeln in ein Document
-			Document doc = parser.getDocument();
+			// einlesen und umwandeln in ein Document
+			Document doc = builder.parse(source);
 
 			// Und anfangen mit dem abarbeiten
 
@@ -867,6 +867,9 @@ public class ParcoursLoader {
 		} catch (IOException e) {
 			lg.warn(e, "Probleme beim Parsen des XML");
 			throw e;
+		} catch (ParserConfigurationException e) {
+			lg.warn(e, "Probleme beim Parsen des XML");
+			throw e;
 		}
 	}
 
@@ -877,7 +880,6 @@ public class ParcoursLoader {
 	 *            Der Schluessel, mit dem sie abgelegt wurde
 	 * @return Die Appearance
 	 */
-	@SuppressWarnings("boxing")
 	private Appearance getAppearance(int key) {
 		Appearance app = (Appearance) this.appearances.get((char) key);
 		if (app == null) {
@@ -899,7 +901,6 @@ public class ParcoursLoader {
 	 *            Referenz auf einen schon bestehenden Eintrag, der geclonet
 	 *            werden soll
 	 */
-	@SuppressWarnings( { "unchecked", "boxing" })
 	private void addAppearance(char item, HashMap colors, String textureFile, String clone) {
 		if (clone != null) {
 			appearances.put(item, appearances.get(clone.toCharArray()[0]));

@@ -92,7 +92,6 @@ public class LogViewer extends JPanel {
 	 * Save-Hanlder
 	 */
 	private final Runnable onSaveLog = new Runnable() {
-		@SuppressWarnings("synthetic-access")
 		public void run() {
 			JFileChooser fc = new JFileChooser();
 			int userChoice = fc.showSaveDialog(LogViewer.this);
@@ -120,7 +119,6 @@ public class LogViewer extends JPanel {
 	 * Clear-Handler
 	 */
 	private final Runnable onClearLog = new Runnable() {
-		@SuppressWarnings("synthetic-access")
 		public void run() {
 			try {
 				logContent.remove(0, logContent.getLength());

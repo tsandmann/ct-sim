@@ -68,7 +68,6 @@ class DatabaseAdapter {
 		/**
 		 * @see java.util.HashMap#get(java.lang.Object)
 		 */
-		@SuppressWarnings("synthetic-access")
         @Override
 		public PreparedStatement get(Object key) {
 			// Wenn nicht drin, hinzufuegen, damit super.get garantiert was

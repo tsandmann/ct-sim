@@ -212,7 +212,6 @@ public class TestServer implements Runnable {
 //						long time = System.nanoTime();
 //						
 //						this.out.println("Test");
-//						@SuppressWarnings("unused")
 //						String str = this.in.readLine();
 //						
 //						if (str != null)
@@ -713,7 +712,6 @@ class TestClient implements Runnable {
 //					long time = System.nanoTime();
 //					
 //					this.out.println("Test");
-//					@SuppressWarnings("unused")
 //					String str = this.in.readLine();
 //					
 //					System.out.println(String.format("CLIENT: Antwort nach " +

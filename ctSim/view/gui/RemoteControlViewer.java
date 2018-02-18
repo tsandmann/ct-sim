@@ -83,7 +83,6 @@ public class RemoteControlViewer extends JPanel {
 		rv.setForeground(color);
 		rv.setBackground(Color.DARK_GRAY);
 		rv.addActionListener(new ActionListener() {
-			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				lg.fine("Fernbedienungsknopf '%s' gedr\u00FCckt", rv.getText());
 				try {

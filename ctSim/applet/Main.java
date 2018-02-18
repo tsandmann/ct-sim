@@ -120,7 +120,6 @@ public class Main extends JApplet implements BotReceiver {
 			@Override public void close() { /* No-op */ }
 			@Override public void flush() { /* No-op */ }
 
-			@SuppressWarnings("synthetic-access")
 			@Override
 			public void publish(LogRecord record) {
 				Level lvl = record.getLevel();
@@ -175,7 +174,6 @@ public class Main extends JApplet implements BotReceiver {
 	 */
 	public void onBotAppeared(final Bot b) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				String title = getParameter("windowTitle");
 				if (title == null || title.trim().length() == 0)
@@ -221,7 +219,6 @@ public class Main extends JApplet implements BotReceiver {
 	@Override
 	public void destroy() {
 		SwingUtilities.invokeLater(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				if (bot != null)
 					bot.dispose();

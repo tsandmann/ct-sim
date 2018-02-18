@@ -638,7 +638,6 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	public final void start() {
 		thrd = new Thread(this, "ctSim-"+toString());
 		addDisposeListener(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				if (thrd != null) {
 					lg.fine("Stoppe Thread " + thrd.getName());

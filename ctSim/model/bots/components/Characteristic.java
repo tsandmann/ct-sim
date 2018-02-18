@@ -270,7 +270,6 @@ public class Characteristic {
 	/**
 	 * Schreibt die Lookup-Tables zum Debuggen auf die Konsole
 	 */
-	@SuppressWarnings("unused")
 	private void printLookup() {
 		System.out.println("Lookup-Table");
 		for (int i = 0; i < lookup.length; i++) {

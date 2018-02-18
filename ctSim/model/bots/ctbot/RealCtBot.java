@@ -59,7 +59,7 @@ public class RealCtBot extends CtBot {
 		/**
 		 * @see ctSim.util.SaferThread#work()
 		 */
-		@SuppressWarnings("synthetic-access") // Bei den zwei Logging-Aufrufen ist uns das wurst
+		// Bei den zwei Logging-Aufrufen ist uns das egal
 		@Override
 		public void work() throws InterruptedException {
 			Command cmd = null;

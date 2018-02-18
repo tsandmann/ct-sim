@@ -171,7 +171,6 @@ public class ClosableTabsPane extends JTabbedPane {
 	 */
 	public ClosableTabsPane(final Icon closeIcon, final Icon closeIconHover) {
 		addMouseListener(new MouseAdapter() {
-			@SuppressWarnings("synthetic-access")
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int idx = indexOfBoundedIconAt(e.getX(), e.getY());
@@ -183,14 +182,12 @@ public class ClosableTabsPane extends JTabbedPane {
 
 			// Falls einer aus der TabbedPane nach oben rausfaehrt, so dass
 			// der MotionListener nicht greift
-			@SuppressWarnings("synthetic-access")
 			@Override
 			public void mouseExited(MouseEvent e) {
 				handleMouseMotionEvent(e);
 			}
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
-			@SuppressWarnings("synthetic-access")
         	@Override
         	public void mouseMoved(MouseEvent e) {
         		handleMouseMotionEvent(e);

@@ -128,7 +128,6 @@ public class Misc {
 	 * @param stuff
 	 * @return T
 	 */
-	@SuppressWarnings("unchecked")
     public static <T> T[] intersperse(T separator, T... stuff) {
 		T[] rv = (T[])Array.newInstance(separator.getClass(),
 			stuff.length * 2 - 1);

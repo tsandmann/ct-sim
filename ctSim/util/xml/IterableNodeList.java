@@ -60,7 +60,6 @@ public class IterableNodeList implements NodeList, Iterable<QueryableNode> {
 		return new Iterator<QueryableNode>() {
 			private int lastIdx = -1;
 
-			@SuppressWarnings("synthetic-access")
 			public boolean hasNext() {
 				return lastIdx + 1 < wrappee.getLength();
 			}
