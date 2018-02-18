@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -49,7 +49,7 @@ import ctSim.util.xml.XmlDocument;
  */
 public class Config {
 	/**
-	 * Fuer Dateien
+	 * für Dateien
 	 */
 	public static class SourceFile extends File {
 		/** UID */
@@ -68,12 +68,12 @@ public class Config {
 	static FmtLogger lg = FmtLogger.getLogger("ctSim.controller.Config");
 
 	/** <p>Default-Werte der Konfiguration. Ist ein Array, um sie im Quelltext
-	 * m&ouml;glichst bequem notieren zu k&ouml;nnen.</p>
+	 * möglichst bequem notieren zu können.</p>
 	 *
 	 * <p>Vorteile: Die Werte sind hier zentral statt quer durch den Quelltext
 	 * verteilt; Code, der {@link #getValue(String)} aufruft, kann einfacher
-	 * werden, da nicht dauernd der R&uuml;gabewert gegen <code>null</code>
-	 * gepr&uuml;ft werden muss &ndash; wenn in diesem Array ein Wert steht,
+	 * werden, da nicht dauernd der Rügabewert gegen <code>null</code>
+	 * geprüft werden muss – wenn in diesem Array ein Wert steht,
 	 * kann getValue(String) kein <code>null</code> mehr liefern.</p>*/
 	static final String[] parameterFallbacks = {
 		"botport", "10001",
@@ -92,7 +92,7 @@ public class Config {
 	/** Fallback-Farbe */
 	static final Color botColorFallback = Color.GRAY;
 
-	/** moegliche Parametertypen */
+	/** mögliche Parametertypen */
 	static final ParameterType[] parameterTypes = {
 		new ParameterType("ctSimTimeout", Integer.class),
 		new ParameterType("parcours", File.class),
@@ -102,13 +102,13 @@ public class Config {
 		new ParameterType("botdir", File.class),
 	};
 
-	/** <p>Enth&auml;lt die Einzelparameter der Konfiguration (spiegelt also
+	/** <p>Enthält die Einzelparameter der Konfiguration (spiegelt also
 	 * die <code>&lt;parameter></code>-Tags wider)</p>
 	 *
-	 * <p>Verwendung: Wird zun&auml;chst auf die Default-Werte gesetzt, die aus
+	 * <p>Verwendung: Wird zunächst auf die Default-Werte gesetzt, die aus
 	 * dem hartkodierten Array <code>configDefaults</code> kommen. Beim
-	 * sp&auml;teren Parsen der Konfigurationsdatei werden Defaults
-	 * dann m&ouml;glicherweise &uuml;berschrieben.</p> */
+	 * späteren Parsen der Konfigurationsdatei werden Defaults
+	 * dann möglicherweise überschrieben.</p> */
 	private static PlainParameters parameters;
 
 	/** Bot-Appearances */
@@ -118,9 +118,9 @@ public class Config {
 	private static IconProvider icons;
 
 	/**
-	 * L&auml;dt die <code>&lt;parameter></code>-Tags aus der
+	 * Lädt die <code>&lt;parameter></code>-Tags aus der
 	 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
-	 * {@link #getValue(String)} verf&uuml;gbar.
+	 * {@link #getValue(String)} verfügbar.
 	 * @param file Konfigurationsdatei dem von "config/config.dtd"
 	 * vorgeschriebenen XML-Format.
 	 * @throws ParserConfigurationException
@@ -141,7 +141,7 @@ public class Config {
 	}
 
 	/**
-	 * Laedt Icons
+	 * Lädt Icons
 	 * @param iconsBaseDirectory Verzeichnis
 	 * @throws NullPointerException
 	 * @throws FileNotFoundException
@@ -196,16 +196,16 @@ public class Config {
 	}
 
 	/**
-	 * HashMap fuer Plain-Parameter
+	 * HashMap für Plain-Parameter
 	 */
 	static class PlainParameters extends HashMap<String, String> {
 		/** UID */
 		private static final long serialVersionUID = - 6931464910390788433L;
 
 		/**
-		 * L&auml;dt die <code>&lt;parameter&gt;</code>-Tags aus der
+		 * Lädt die <code>&lt;parameter&gt;</code>-Tags aus der
 		 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
-		 * get(String) verf&uuml;gbar.
+		 * get(String) verfügbar.
 		 * @param doc Config-Dokument
 		 */
 		PlainParameters(QueryableDocument doc) {
@@ -219,7 +219,7 @@ public class Config {
 			try {
 				for(QueryableNode n : doc.getNodeList("/ct-sim/parameter")) {
 					String parmOs = n.getString("@os").toLowerCase();
-					// Beispiele fuer os.name: "Windows XP", "Linux", "Mac OS X"
+					// Beispiele für os.name: "Windows XP", "Linux", "Mac OS X"
 					// Siehe http://tolstoy.com/samizdat/sysprops.html
 					String currentOs = System.getProperty("os.name")
 						.toLowerCase();
@@ -239,7 +239,7 @@ public class Config {
 	}
 
 	/**
-	 * Hash-Map fuer Bot-Appearances
+	 * Hash-Map für Bot-Appearances
 	 */
 	static class BotAppearances
 	extends HashMap<BotAppearances.AppearanceKey, List<Color>> {
@@ -267,7 +267,7 @@ public class Config {
 			}
 
 			/**
-			 * Wichtig, weil wir's als Schluessel in der Map verwenden
+			 * Wichtig, weil wir's als Schlüssel in der Map verwenden
 			 * @see java.lang.Object#equals(java.lang.Object)
 			 */
 			@Override
@@ -287,7 +287,7 @@ public class Config {
 			}
 
 			/**
-			 * Wichtig, weil wir's als Schluessel in der Map verwenden
+			 * Wichtig, weil wir's als Schlüssel in der Map verwenden
 			 * Implementiert nach Josh Bloch: "Effective Java",
 			 * http://developer.java.sun.com/developer/Books/effectivejava/Chapter3.pdf
 			 * @see java.lang.Object#hashCode()
@@ -333,13 +333,13 @@ public class Config {
 					}
 				}
 			} catch (XPathExpressionException e) {
-				// Kann nur passieren, wenn einer was am Code aendert
+				// Kann nur passieren, wenn einer was am Code ändert
 				throw new AssertionError(e);
 			}
 		}
 
 		/**
-		 * Laedt Appearances
+		 * Lädt Appearances
 		 * @param botTag Tag
 		 * @param botType Typ
 		 * @throws XPathExpressionException
@@ -363,14 +363,14 @@ public class Config {
 		throws ClassNotFoundException {
 			// 1. Versuch
 			if ("default".equals(classNameFromXml))
-				return null; // Default-Wert wird mit null ausgedrueckt
+				return null; // Default-Wert wird mit null ausgedrückt
 
 			// 2. Versuch
 			try { return getClassTolerateNumber(classNameFromXml); }
 			catch (ClassNotFoundException e) { /* weitermachen */ }
 
 			// 3. + 4. Versuch: Angegebenes Package weg wenn vorhanden, unsere
-			// eigenen Schaetzungen versuchen
+			// eigenen Schätzungen versuchen
 			String c = Misc.lastOf(classNameFromXml.split("\\."));
 			try { return getClassTolerateNumber("ctSim.model.bots."+c); }
 			catch (ClassNotFoundException e) { /* weitermachen */ }
@@ -392,13 +392,13 @@ public class Config {
 			try { return Class.forName(classNameFromXml); }
 			catch (ClassNotFoundException e) { /* weitermachen */ }
 
-			// 2. Versuch: Ohne Anhaengsel
+			// 2. Versuch: Ohne Anhängsel
 			return Class.forName(classNameFromXml.split("_")[0]); //$$ XML anpassen
 		}
 
 		/**
-		 * Fuegt eine Appearance hinzu
-		 * @param key Schluessel
+* Fügt eine Appearance hinzu
+		 * @param key Schlüssel
 		 * @param value Farbe
 		 */
 		void add(AppearanceKey key, Color value) {
@@ -408,14 +408,14 @@ public class Config {
 		}
 
 		/**
-		 * Modulo, d.h. wenn als Farben Rot, Gr&uuml;n und Hellbordeauxdemousin
+		 * Modulo, d.h. wenn als Farben Rot, Grün und Hellbordeauxdemousin
 		 * da sind, kommt raus: (botType und appearanceType bleiben gleich)
 		 * <ul>
 		 * <li>Index 0: Rot</li>
-		 * <li>Index 1: Gr&uuml;n </li>
+		 * <li>Index 1: Grün </li>
 		 * <li>Index 2: Hellbordeauxdemousin</li>
 		 * <li>Index 3: Rot</li>
-		 * <li>Index 4: Gr&uuml;n</li>
+		 * <li>Index 4: Grün</li>
 		 * <li>usw. </li>
 		 * </ul>
 		 * @param botType Bot-Typ
@@ -426,7 +426,7 @@ public class Config {
 		Color get(Class<?> botType, String appearanceType, int index) {
 			List<Color> cList = get(new AppearanceKey(botType, appearanceType));
 			if (cList == null) {
-				lg.warn("Konfigdatei: Keine Appearance vom Typ '%s' f\u00FCr " +
+				lg.warn("Konfigdatei: Keine Appearance vom Typ '%s' für " +
 					"Bots vom Typ '%s' gefunden; verwende Default",
 					appearanceType, botType.getSimpleName());
 				cList = get(new AppearanceKey(null, appearanceType));

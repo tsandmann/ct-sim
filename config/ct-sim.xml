@@ -3,23 +3,23 @@
 
 <ct-sim>
 	<description>
-		Dieses ist die zentrale Konfigurationsdatei fuer den c't-Sim
+		Dieses ist die zentrale Konfigurationsdatei für den c't-Sim
 	</description>
 
 	<!--
 	Jeder Parameter kann bei Bedarf ein Attribut "os" haben. So kann man
-	verschiedene Werte fuer verschiedene Betriebssysteme angeben. Hat ein
-	Parameter (wie bisher ueblich) kein os-Attribut, gilt er fuer alle Systeme.
+	verschiedene Werte für verschiedene Betriebssysteme angeben. Hat ein
+	Parameter (wie bisher ueblich) kein os-Attribut, gilt er für alle Systeme.
 
-	Beispiele fuer systemabhaengige Parameter sind der serielle Port und manche
+	Beispiele für systemabhängige Parameter sind der serielle Port und manche
 	Pfadnamen.
 
 	Sinn: Die bisherige Regelung, dass der Java-Code undurchsichtig in den
-	Pfaden ruminterpretiert, kann entfallen. Auf jedem unterstuetzen System
+	Pfaden ruminterpretiert, kann entfallen. Auf jedem unterstützen System
 	kann man nach dem Auschecken sofort starten (normalerweise).
 	-->
 
-	<!-- Initialer Wert fuer TickRate (1 / Simulationsgeschwindigkeit) -->
+	<!-- Initialer Wert für TickRate (1 / Simulationsgeschwindigkeit) -->
 	<parameter name="ctSimTickRate" value="0"/>
 
 	<!-- ctSimTimeout ist die Zeit in [ms], die der Controller maximal auf einen Bot wartet -->
@@ -32,7 +32,7 @@
 	Siehe auch http://www.heise.de/trac/ctbot/ticket/39 -->
 	<parameter name="simBotErrorHandling" value="kill"/>
 
-	<!-- parcours ist die Welt, die per default geladen wird. Angabe unabhaengig von worlddir -->
+	<!-- parcours ist die Welt, die per default geladen wird. Angabe unabhängig von worlddir -->
 	<parameter name="parcours" value="parcours/testparcours2.xml"/>
 	<!-- worlddir ist das Verzeichnis, in dem alle Weltdateien liegen -->
 	<parameter name="worlddir" value="./parcours"/>
@@ -51,16 +51,16 @@
 	<parameter name="botbinary" os="Linux" value="../ct-Bot/Debug-Linux_Mac/ct-Bot"/>
 	<parameter name="botbinary" os="Mac OS X" value="../ct-Bot/Debug-Linux_Mac/ct-Bot"/>
 
-	<!-- Verzeichnis, das der Dialog "Bot-Datei oeffnen" anfangs anzeigt -->
+	<!-- Verzeichnis, das der Dialog "Bot-Datei öffnen" anfangs anzeigt -->
 	<parameter name="botdir" os="Windows" value="../ct-Bot/Debug-W32"/>
 	<parameter name="botdir" os="Linux" value="../ct-Bot/Debug-Linux_Mac"/>
 	<parameter name="botdir" os="Mac OS X" value="../ct-Bot/Debug-Linux_Mac"/>
 
-	<!-- judge ist der Klassenname des Judges, den der Sim per default laedt-->
+	<!-- judge ist der Klassenname des Judges, den der Sim per default lädt-->
 	<!-- <parameter name="judge" value="ctSim.model.rules.LabyrinthJudge"/> -->
 	<parameter name="judge" value="ctSim.model.rules.DefaultJudge"/>
 
-	<!-- Aktiviert/deaktiviert den TimeLogger, der waehrend einer Simulation
+	<!-- Aktiviert/deaktiviert den TimeLogger, der während einer Simulation
 	einige Performance-Daten auf die Konsole schreibt. Werte: true, false;
 	Standardwert: false. -->
 	<parameter name="TimeLogger" value="false"/>
@@ -74,21 +74,21 @@
 	<parameter name="RC5-type" value="RC_HAVE_HQ_RC_UNIVERS29_334"/>
 
 	<!-- Fernbedienungscode, der an simulierte Bots gesendet wird, wenn man
-	"Play" drueckt. "" = nichts senden, "5" = wie Knopf "5", weitere Codes
+	"Play" drückt. "" = nichts senden, "5" = wie Knopf "5", weitere Codes
 	in ctSim/model/bots/components/RemoteControlCodes.java.
 	Wert: Beschreibung der Taste -->
 	<parameter name="rcStartCode" value=""/>
 
-	<!-- Schalter fuer Lichtsensoren -->
+	<!-- Schalter für Lichtsensoren -->
 	<parameter name="LightSensors" value="true"/>
 
-	<!-- Schalter fuer BPS-Sensor -->
+	<!-- Schalter für BPS-Sensor -->
 	<parameter name="BPSSensor" value="true"/>
 	
 	<!-- Distanzsensortyp -->
 	<parameter name="GP2Y0A60" value="false"/>
 
-	<!-- Schalter fuer Nachlauf der Raeder -->
+	<!-- Schalter für Nachlauf der Räder -->
 	<parameter name="WheelLag" value="false"/>
 
 	<!-- Update-Intervall der Map-Anzeige [ms], default=500 -->
@@ -102,14 +102,14 @@
 	<!-- Geschwindigkeit des 'serialport' in Baud, default 115200 -->
 	<parameter name="serialportBaudrate" value="115200"/>
 
-	<!-- IP, die standardmaessig im Textfeld steht, wenn man "Verbinden / Per
-	TCP" waehlt -->
+	<!-- IP, die standardmäßig im Textfeld steht, wenn man "Verbinden / Per
+	TCP" wählt -->
 	<parameter name="ipForConnectByTcp" value="192.168.1.30"/>
-	<!-- Zugehoeriger Port. Default: 10002 -->
+	<!-- Zugehöriger Port. Default: 10002 -->
 	<parameter name="portForConnectByTcp" value="10002"/>
 
-	<!-- Parameter der Map (fuer Export).
-	Muessen mit den Werten aus map.h (Bot-Projekt) uebereinstimmen! -->
+	<!-- Parameter der Map (für Export).
+	müssen mit den Werten aus map.h (Bot-Projekt) übereinstimmen! -->
 	<parameter name="mapSize" value="12.288f"/>
 	<parameter name="mapResolution" value="125"/>
 	<parameter name="mapSectionSize" value="16"/>

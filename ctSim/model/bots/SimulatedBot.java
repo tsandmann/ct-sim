@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -20,7 +20,7 @@
 package ctSim.model.bots;
 
 /**
- * Interface fuer alle simulierten Bots
+ * Interface für alle simulierten Bots
  */
 public interface SimulatedBot extends Bot {
 	
@@ -34,7 +34,7 @@ public interface SimulatedBot extends Bot {
 	throws InterruptedException, UnrecoverableScrewupException;
 
 	/**
-	 * Exception-Klasse fuer simulierte Bots
+	 * Exception-Klasse für simulierte Bots
 	 */
 	public static class UnrecoverableScrewupException extends Exception {
 		/** UID */

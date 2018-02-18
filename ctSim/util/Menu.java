@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -68,7 +68,7 @@ public class Menu extends JMenu {
 	}
 
 	/**
-	 * Menue-Eintraege
+	 * Menü-Einträge
 	 */
 	public static class Entry extends MAction {
 		/** UID */
@@ -81,7 +81,7 @@ public class Menu extends JMenu {
 
 		/**
 		 * Konstruiert eine {@link MAction} aus Beschriftung, Icon und
-		 * auszuf&uuml;hrendem Code.
+		 * auszuführendem Code.
 		 * @param label Text
 		 * @param icon Icon
 		 * @param code Handler

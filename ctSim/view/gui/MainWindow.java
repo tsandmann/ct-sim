@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -51,10 +51,10 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Runnable1;
 
 /**
- * Die GUI-Hauptklasse fuer den c't-Sim
+ * Die GUI-Hauptklasse für den c't-Sim
  *
  * @author Felix Beckwermert
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class MainWindow extends JFrame implements ctSim.view.View {
     /** UID */
@@ -71,27 +71,27 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * <p>
-	 * Enth&auml;lt ein Tab pro Bot. Wenn einer am Tab das Schlie&szlig;en-Icon
-	 * (&quot;X&quot;) klickt, gilt das Prinzip &quot;zust&auml;ndig f&uuml;r
-	 * Bot entfernen ist der Bot, sonst niemand&quot;. Das f&uuml;hrt zu einem
+	 * Enthält ein Tab pro Bot. Wenn einer am Tab das Schließen-Icon
+	 * ("X") klickt, gilt das Prinzip "zuständig für
+	 * Bot entfernen ist der Bot, sonst niemand". Das führt zu einem
 	 * nicht ganz offensichtlichen Ablauf:
 	 * <ol>
 	 * <li>ClosableTabsPane ruft den CloseListener auf, den MainWindow bei der
 	 * ClosableTabsPane angemeldet hat</li>
-	 * <li>CloseListener sagt Bot &quot;verkr&uuml;mel dich&quot; ({@code dispose()}),
-	 * tut aber sonst nichts &ndash; entfernt keine Tabs oder so </li>
+	 * <li>CloseListener sagt Bot "verkrümel dich" ({@code dispose()}),
+	 * tut aber sonst nichts – entfernt keine Tabs oder so </li>
 	 * <li>Bot geht seine Deinitialisierungs-Routine durch</li>
 	 * <li>Bot ruft seine DisposeListener auf. Einer davon ist der, den
-	 * MainWindow beim Bot angemeldet hat: Dieser sagt schlie&szlig;lich dem Tab
-	 * &quot;zeig dich nicht mehr an"</li>
+	 * MainWindow beim Bot angemeldet hat: Dieser sagt schließlich dem Tab
+	 * "zeig dich nicht mehr an"</li>
 	 * </ol>
 	 * </p>
 	 * <p>
-	 * Grund: Der CloseListener <em>k&ouml;nnte</em> auch direkt das Tab
+	 * Grund: Der CloseListener <em>könnte</em> auch direkt das Tab
 	 * entfernen. Allerdings muss der DisposeListener in jedem Fall das Tab
-	 * entfernen, schon weil das Bot.dispose() ja von woanders ausgel&ouml;st
+	 * entfernen, schon weil das Bot.dispose() ja von woanders ausgelöst
 	 * werden kann. Daher kommt es zu Problemen, wenn nach einem
-	 * "Schlie&szlig;en"-Klick der CloseListener ein Tab entfernt und der
+	 * "Schließen"-Klick der CloseListener ein Tab entfernt und der
 	 * DisposeListener auch eins. Deswegen die klare Regelung, dass nur im
 	 * DisposeListener Tabs entfernt werden.
 	 * </p>
@@ -108,7 +108,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Main-Fenster
-	 * @param controller Controller fuer das Fenster
+	 * @param controller Controller für das Fenster
 	 */
 	public MainWindow(final Controller controller) {
 		super("c't-Sim " + Main.VERSION);
@@ -116,12 +116,12 @@ public class MainWindow extends JFrame implements ctSim.view.View {
     	/*
 		 * Riesenspass: Swing (also auch unsere GUI) ist "lightweight", Java3D
 		 * ist jedoch "heavyweight". Daher erscheint die Java3D-Anzeige immer
-		 * _vor_ allen GUI-Komponenten: Wenn z.B. ein Menue aufgeklappt wird,
-		 * das die 3D-Anzeige ueberlappt, _sollte_ natuerlich das Menue im
+		 * _vor_ allen GUI-Komponenten: Wenn z.B. ein Menü aufgeklappt wird,
+		 * das die 3D-Anzeige überlappt, _sollte_ natuerlich das Menü im
 		 * Vordergrund sein, es _ist_ aber die 3D-Anzeige im Vordergrund (d.h.
-		 * das Menue wird abgeschnitten, wo die 3D-Anzeige beginnt). -- Abhilfe
-		 * wenigstens fuer Menues und Tooltips: folgende zwei Aufrufe. --
-		 * Naeheres: http://java3d.j3d.org/faq/swing.html
+		 * das Menü wird abgeschnitten, wo die 3D-Anzeige beginnt). -- Abhilfe
+		 * wenigstens für Menüs und Tooltips: folgende zwei Aufrufe. --
+		 * Näheres: http://java3d.j3d.org/faq/swing.html
 		 * http://java3d.j3d.org/tutorials/quick_fix/swing.html
 		 * http://java.sun.com/products/jfc/tsc/articles/mixing/index.html
 		 */
@@ -143,9 +143,9 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		add(menuBar.getToolBar(), BorderLayout.NORTH);
 		add(buildStatusBar(), BorderLayout.SOUTH);
 
-		botTabs = new ClosableTabsPane(Config.getIcon("schliessen"),
-			Config.getIcon("schliessen-hover"));
-		// Listener wenn einer aufm Tab das Schliessen-Icon klickt
+		botTabs = new ClosableTabsPane(Config.getIcon("schließen"),
+			Config.getIcon("schließen-hover"));
+		// Listener wenn einer aufm Tab das Schließen-Icon klickt
 		botTabs.addCloseListener(new Runnable1<Integer>() {
 			public void run(Integer index) {
 				BotViewer bv = (BotViewer)botTabs.getComponentAt(index);
@@ -153,7 +153,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			}
 		});
 		
-		botTabs.setMinimumSize(new Dimension(230, getHeight())); // Workaround fuer Java3D Canvas Bug unter Mac OS X 10.11 
+		botTabs.setMinimumSize(new Dimension(230, getHeight())); // Workaround für Java3D Canvas Bug unter Mac OS X 10.11 
 
 		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 			botTabs, buildWorldAndConsole());
@@ -173,7 +173,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	private ConsoleComponent buildLogViewer() {
     	ConsoleComponent rv = new ConsoleComponent();
     	Debug.registerDebugWindow(rv); //$$ Legacy: Debug-Klasse
-    	// Wir melden uns als Handler fuer den Root-Logger an
+    	// Wir melden uns als Handler für den Root-Logger an
     	Handler h = rv.createLoggingHandler();
     	String logLevel = Config.getValue("LogLevel");
     	h.setLevel(Level.parse(logLevel));
@@ -215,7 +215,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	}
 
 	/**
-	 * Vom Controller aufzurufen, wenn sich die Welt &auml;ndert. Schlie&szlig;t
+	 * Vom Controller aufzurufen, wenn sich die Welt ändert. Schließt
 	 * die alte Welt und zeigt die neue an.
 	 * @param w Die Welt
 	 */
@@ -253,7 +253,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	}
 
 	/**
-	 * @param rate Die neue Zeitbasis fuer den Simulator in Aufrufen alle xxx ms
+	 * @param rate Die neue Zeitbasis für den Simulator in Aufrufen alle xxx ms
 	 */
 	protected void setTickRate(int rate) {
 		try {
@@ -267,7 +267,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * Updated das Layout
 	 */
 	protected void updateLayout() {
-		// kein resize, falls BotViewer vergroessert wurde
+		// kein resize, falls BotViewer vergrößert wurde
 		if (split.getSize().width <= split.getPreferredSize().width) {
 			split.resetToPreferredSizes();
 		}
@@ -275,14 +275,14 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Aktualisiert die GUI
-	 * @param time Die Zeit, die zur Simulatorzeit hinzugezaehlt wird
+	 * @param time Die Zeit, die zur Simulatorzeit hinzugezählt wird
 	 */
 	public void onSimulationStep(final long time) {
 		statusBar.updateTime(time);
 	}
 
 	/** 
-	 * F&uuml;gt einen neuen Bot hinzu 
+	 * Fügt einen neuen Bot hinzu 
 	 * @param bot der neue Bot
 	 * */
 	public void onBotAdded(final Bot bot) {
@@ -302,14 +302,14 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 				}
 				keyinfo += " + e)";
 				String tabIconTooltip = (bot instanceof ThreeDBot
-					? "Bot l\u00F6schen" + keyinfo 
+					? "Bot löschen" + keyinfo 
 					: "Verbindung zu Bot beenden" + keyinfo);
 				botTabs.addClosableTab(
 					tabTitle,
 					tabContent,
 					tabTitleTooltip,
 					tabIconTooltip);
-				// Listener fuer "Wenn Bot stirbt, Tab weg"
+				// Listener für "Wenn Bot stirbt, Tab weg"
 				bot.addDisposeListener(new Runnable() {
 					public void run() {
 						removeBotTab(bot);
@@ -320,7 +320,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 				updateLayout();
 
-				lg.info("Bot \""+bot+"\" wurde hinzugefuegt.");
+				lg.info("Bot \""+bot+"\" wurde hinzugefügt.");
 			}
 		});
 	}
@@ -374,10 +374,10 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	
 	/**
 	 * Veranlasst einen Reset aller Bots.
-	 * Die Bots werden ueber ihren BotViewer gefunden. TCP-Bots
+	 * Die Bots werden über ihren BotViewer gefunden. TCP-Bots
 	 * (simuliert und real) erhalten das Reset-Signal per RC5-Code.
-	 * Anschliessend werden alle Bots in der Welt zurueck auf ihre 
-	 * Startplaetze gesetzt. 
+	 * Anschließend werden alle Bots in der Welt zurück auf ihre 
+	 * Startplätze gesetzt. 
 	 */
 	public void onResetAllBots() {
 		/* Bots das Reset-Signal schicken */
@@ -399,7 +399,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			}
 
 		}
-		/* Alle Bots in der Welt auf die Startplaetze zurueck */
+		/* Alle Bots in der Welt auf die Startplätze zurück */
 		world.resetAllBots();
 	}
 }

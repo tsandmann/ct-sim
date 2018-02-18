@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -175,7 +175,7 @@ public class ParcoursLoader {
 		-0.5f,				0f + LINEWIDTH/2,	0f,	// Linie nach links
 		-0.5f,				0f - LINEWIDTH/2,	0f,	// kurze Linie runter
 		0f - LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// Linie nach rechts bis Mitte
-		0f - LINEWIDTH/2,	-0.5f,				0f,	// Kreuz schliessen zum Ausgangspunkt
+		0f - LINEWIDTH/2,	-0.5f,				0f,	// Kreuz schließen zum Ausgangspunkt
 	};
 	
 	/**
@@ -190,7 +190,7 @@ public class ParcoursLoader {
 		-0.5f,			0.0f + LINEWIDTH/2,		0f,	// lange Linie nach links
 		-0.5f,			0f - LINEWIDTH/2,		0f,	// kurze Linie runter
 		0f - LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// Linie nach rechts bis Mitte
-		0f - LINEWIDTH/2,	-0.5f,				0f,	// T schliessen zum Ausgangspunkt
+		0f - LINEWIDTH/2,	-0.5f,				0f,	// T schließen zum Ausgangspunkt
 	};
 	
 	/**
@@ -277,7 +277,7 @@ public class ParcoursLoader {
 		0f +LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,	// Linie wieder links bis kurz vor Mitte
 	};
 	
-	/** Wand-Hoehe */
+	/** Wand-Höhe */
 	private static final float WALL_HEIGHT = 0.2f;
 
 	/** Verwaltet alle Aussehen */
@@ -306,9 +306,9 @@ public class ParcoursLoader {
 	 * @param y
 	 *            Position in X-Richtung
 	 * @param lengthX
-	 *            Laenge der Wand in X-Richtung
+	 *            Länge der Wand in X-Richtung
 	 * @param lengthY
-	 *            Laenge der Wand in Y-Richtung
+	 *            Länge der Wand in Y-Richtung
 	 * @param appearance
 	 *            Die Appearance
 	 */
@@ -318,7 +318,7 @@ public class ParcoursLoader {
 	}
 
 	/**
-	 * Erzeugt ein Stueck Fussboden Alle Postionen sind keine Weltkoordinaten,
+	 * Erzeugt ein Stück Fussboden Alle Postionen sind keine Weltkoordinaten,
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
 	 * 
 	 * @param x
@@ -326,9 +326,9 @@ public class ParcoursLoader {
 	 * @param y
 	 *            Position in X-Richtung
 	 * @param lengthX
-	 *            Laenge der Flaeche in X-Richtung
+	 *            Länge der Fläche in X-Richtung
 	 * @param lengthY
-	 *            Laenge der Flaeche in Y-Richtung
+	 *            Länge der Fläche in Y-Richtung
 	 * @param app
 	 *            Aussehen des Bodens
 	 */
@@ -338,7 +338,7 @@ public class ParcoursLoader {
 	}
 
 	/**
-	 * Erzeugt ein Stueck Fussboden Alle Postionen sind keine Weltkoordinaten,
+	 * Erzeugt ein Stück Fussboden Alle Postionen sind keine Weltkoordinaten,
 	 * sondern ganzen Einheiten, wie sie aus dem ASCII-File kommen
 	 * 
 	 * @param x
@@ -354,7 +354,7 @@ public class ParcoursLoader {
 	}
 
 	/**
-	 * Erzeugt einen Fussboden aus einem Stueck Alle Postionen sind keine
+	 * Erzeugt einen Fussboden aus einem Stück Alle Postionen sind keine
 	 * Weltkoordinaten, sondern ganzen Einheiten, wie sie aus dem ASCII-File
 	 * kommen
 	 * 
@@ -387,7 +387,7 @@ public class ParcoursLoader {
 		// zwei Polygone (Deckel und Boden) mit N Ecken
 		float[] p = new float[points.length];
 		int stripCounts[] = { points.length / 3 };
-		// Zaehler
+		// Zähler
 		int n = 0;
 
 		for (n = 0; n < points.length; n++) {
@@ -409,7 +409,7 @@ public class ParcoursLoader {
 		st.stripify(gi);
 		gi.recomputeIndices();
 
-		// Hinzufuegen der Ober- und Unterseite des Linien-Shape3D
+		// Hinzufügen der Ober- und Unterseite des Linien-Shape3D
 		Shape3D ls = new Shape3D();
 		ls.addGeometry(gi.getGeometryArray());
 
@@ -420,13 +420,13 @@ public class ParcoursLoader {
 
 
 	/**
-	 * Erzeugt eine Saeule, auch mit Lichtquelle obendrauf moeglich
+	 * Erzeugt eine Säule, auch mit Lichtquelle obendrauf möglich
 	 * 
 	 * @param x			X-Koordinate (bewegliches Objekt) oder X-Achse im Parcours (unbewegliches Objekt)
 	 * @param y			Y-Koordinate (bewegliches Objekt) oder Y-Achse im Parcours (unbewegliches Objekt)
-	 * @param diameter	Durchmesser der Saeule
-	 * @param height	Hoehe der Saeule
-	 * @param bodyAppearance	Saeulen-Appearance
+	 * @param diameter	Durchmesser der Säule
+	 * @param height	Höhe der Säule
+	 * @param bodyAppearance	Säulen-Appearance
 	 * @param lightAppearance	Licht-Appearance oder null
 	 * @param moveable			Soll das Objekt bewegbar sein?
 	 */
@@ -469,7 +469,7 @@ public class ParcoursLoader {
 	}
 
 	/**
-	 * Fuegt ein Licht ein
+* Fügt ein Licht ein
 	 * 
 	 * @param pointLightBounds
 	 * @param pointLightColor
@@ -497,7 +497,7 @@ public class ParcoursLoader {
 	}
 	
 	/**
-	 * Fuegt eine BPS-Landmarke ein
+* Fügt eine BPS-Landmarke ein
 	 * @param x X-Koordinate [Parcours-Block]
 	 * @param y Y-Koordinate [Parcours-Block]
 	 * @param appearance Die Appearance
@@ -518,8 +518,8 @@ public class ParcoursLoader {
 	}
 
 	/**
-	 * Prueft die angrenzenden Felder (ohne diagonalen), ob mindestens eines
-	 * davon den uebergebenen Wert hat
+	 * Prüft die angrenzenden Felder (ohne diagonalen), ob mindestens eines
+	 * davon den übergebenen Wert hat
 	 * 
 	 * @param x
 	 *            X-Koordinate des mittelfeldes
@@ -565,10 +565,10 @@ public class ParcoursLoader {
 					case '=':
 						l = 0;
 						d = x;
-						// ermittle die Laenge der zusammenhaengenden Wand
+						// ermittle die Länge der zusammenhängenden Wand
 						while ((d < parcours.getWidthInBlocks()) && (parcoursMap[d][y] == '=')) {
 							parcoursMap[d][y] = 'O'; // Feld ist schon bearbeitet
-							l++; // Laenge hochzaehlen
+							l++; // Länge hochzählen
 							d++;
 						}
 						createWall(x, y, l, 1, getAppearance('='));
@@ -576,10 +576,10 @@ public class ParcoursLoader {
 					case '#':
 						l = 0;
 						d = y;
-						// ermittle die Laenge der zusammenhaengenden Wand
+						// ermittle die Länge der zusammenhängenden Wand
 						while ((d < parcours.getHeightInBlocks()) && (parcoursMap[x][d] == '#')) {
 							parcoursMap[x][d] = 'O'; // Feld ist schon bearbeitet
-							l++; // Laenge hochzaehlen
+							l++; // Länge hochzählen
 							d++;
 						}
 						createWall(x, y, 1, l, getAppearance('#'));
@@ -600,7 +600,7 @@ public class ParcoursLoader {
 //						if (Beacon.checkParcoursPosition(this.parcours, x, y)) {
 							createBPSBeacon(x, y, getAppearance('l'));
 //						} else {
-//							lg.warn("Parcours enthaelt Landmarke an Position (" + x + "|" + y + "), " + 
+//							lg.warn("Parcours enthält Landmarke an Position (" + x + "|" + y + "), " + 
 //							"dort ist aber keine Landmarke zugelassen, ignoriere sie.");
 //						}
 						break;
@@ -678,11 +678,11 @@ public class ParcoursLoader {
 
 			}
 			
-			/* fuer den Rest Boden aus einem Stueck einfuegen */
+			/* für den Rest Boden aus einem Stück einfügen */
 			createWholeFloor(getAppearance(' '));
 			
 			// Hat mit dem Einzeichnen des Wegs bis zum Ziel zu tun; sollte
-			// ordentlich integriert werden: Menueeintrag in GUI, der das
+			// ordentlich integriert werden: Menüeintrag in GUI, der das
 			// Einzeichnen ein-/ausschaltet. Aus Gruenden der Klarheit sollten
 			// die Linien vorher ihre eigene BranchGroup bekommen
 			/*
@@ -709,7 +709,7 @@ public class ParcoursLoader {
 	}
 
 	/**
-	 * @return Liefert das soeben aufgebaute Parcours-Objekt zurueck
+	 * @return Liefert das soeben aufgebaute Parcours-Objekt zurück
 	 */
 	public Parcours getParcours() {
 		return parcours;
@@ -717,12 +717,12 @@ public class ParcoursLoader {
 
 	/**
 	 * <p>
-	 * L&auml;dt einen Parcours aus einer InputSource.
+	 * Lädt einen Parcours aus einer InputSource.
 	 * 
 	 * @param source
 	 *            Xerces-InputSource-Objekt, aus dem der Parcours geholt werden
 	 *            kann. Der Sinn ist, dass beliebige Eingabequellen
-	 *            &uuml;bergeben werden k&ouml;nnen und daher nicht mehr nur aus
+	 *            übergeben werden können und daher nicht mehr nur aus
 	 *            Dateien, sondern auch aus Strings oder von sonstwo gelesen
 	 *            werden kann.
 	 *            </p>
@@ -731,17 +731,17 @@ public class ParcoursLoader {
 	 *            Der zu verwendende Xerces-EntityResolver, oder
 	 *            <code>null</code>, wenn der Standard-Resolver verwendet werden
 	 *            soll. Der DocumentBuilder, der dieser Methode zugrundeliegt,
-	 *            verwendet den Resolver w&auml;hrend dem Verarbeiten der im XML
+	 *            verwendet den Resolver während dem Verarbeiten der im XML
 	 *            vorkommenden "system identifier" und "public identifier".
 	 *            Diese treten in unseren Parcoursdateien nur an einer Stelle
-	 *            auf, n&auml;mlich in Zeile&nbsp;2:
+	 *            auf, nämlich in Zeile&nbsp;2:
 	 *            <code>&lt;!DOCTYPE collection SYSTEM "parcours.dtd"></code>.
 	 *            Der system identifier ist dabei <code>parcours.dtd</code>.
-	 *            F&uuml;r Parcours-Dateien ist kein Resolver n&ouml;tig (= es
-	 *            kann <code>null</code> &uuml;bergeben werden), weil sie im
+	 *            Für Parcours-Dateien ist kein Resolver nötig (= es
+	 *            kann <code>null</code> übergeben werden), weil sie im
 	 *            gleichen Verzeichnis liegen wie die Datei parcours.dtd.
-	 *            F&uuml;r Parcours, die aus XML-Strings gelesen werden, ist ein
-	 *            Resolver n&ouml;tig, da der Parser sonst nur im
+	 *            Für Parcours, die aus XML-Strings gelesen werden, ist ein
+	 *            Resolver nötig, da der Parser sonst nur im
 	 *            ctSim-Verzeichnis sucht (nicht im Verzeichnis ctSim/parcours),
 	 *            und daher die Datei ctSim/parcours/parcours.dtd nicht findet.
 	 * 
@@ -874,22 +874,22 @@ public class ParcoursLoader {
 	}
 
 	/**
-	 * Liefert eine Appearance aus der Liste zurueck
+	 * Liefert eine Appearance aus der Liste zurück
 	 * 
 	 * @param key
-	 *            Der Schluessel, mit dem sie abgelegt wurde
+	 *            Der Schlüssel, mit dem sie abgelegt wurde
 	 * @return Die Appearance
 	 */
 	private Appearance getAppearance(int key) {
 		Appearance app = (Appearance) this.appearances.get((char) key);
 		if (app == null) {
-			lg.warn("Appearance f\u00FCr '" + (char) key + "' nicht gefunden!");
+			lg.warn("Appearance für '" + (char) key + "' nicht gefunden!");
 		}
 		return app;
 	}
 
 	/**
-	 * Erzeugt eine Appearnace und fuegt die der Liste hinzu
+* Fügt die der Liste hinzu
 
 	 * @param item
 	 *            Der Key, iunter dem diese Apperance abgelegt wird

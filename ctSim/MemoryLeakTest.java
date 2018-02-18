@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -26,7 +26,7 @@ import ctSim.controller.Main;
 
 /**
  * Test zum Untersuchen von Speicherlecks, wenn hintereinander viele
- * World-Objekte geladen werden. Als Hauptprogramm auszufuehren.
+ * World-Objekte geladen werden. Als Hauptprogramm auszuführen.
  */
 public class MemoryLeakTest {
 	/**
@@ -50,7 +50,7 @@ public class MemoryLeakTest {
         public void onApplicationInited() {
 			super.onApplicationInited();
 			for (int i = 0; i < 50; i++) {
-				lg.info("\u00D6ffne Welt " + i);
+				lg.info("Öffne Welt " + i);
 				openWorldFromFile(new File("parcours/testparcours3.xml"));
 				addTestBot();
 				addTestBot();

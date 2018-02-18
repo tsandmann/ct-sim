@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -19,40 +19,40 @@
 
 /**
  * <p>
- * Erm&ouml;glicht die Durchf&uuml;hrung eines c't-Bot-Wettbewerbs wie den im
+ * Ermöglicht die Durchführung eines c't-Bot-Wettbewerbs wie den im
  * Oktober 2006. Das Package verwendet eine MySQL-Datenbank ( <a
  * href="doc-files/datenbankschema.pdf">Dokumentation des Schemas</a>, <a
  * href="doc-files/datenbankschema.sql">Schema als SQL-Skript</a>).
  * </p>
  * <p>
- * <h3>Hintergrund: Wie laeuft ein Wettbewerb?</h3>
- * Das Turnier wird in zwei Phasen abgewickelt: Zun&auml;chst wird in einer
+ * <h3>Hintergrund: Wie läuft ein Wettbewerb?</h3>
+ * Das Turnier wird in zwei Phasen abgewickelt: Zunächst wird in einer
  * Vorrunde jeder Bot einzeln durch einen Parcours geschickt und die
- * ben&ouml;tigte Zeit gestoppt, was eine Rangliste ergibt. In der Hauptphase
+ * benötigte Zeit gestoppt, was eine Rangliste ergibt. In der Hauptphase
  * kommt dann das K.o.-System zum Einsatz, d.h. dass sich jeweils der Gewinner
- * eines Duells f&uuml;r das n&auml;chste qualifiziert. Nur unter den vier
- * besten werden alle Pl&auml;tze ausgespielt.
+ * eines Duells für das nächste qualifiziert. Nur unter den vier
+ * besten werden alle Plätze ausgespielt.
  * </p>
  * <p>
- * Die Rangliste aus der Vorrunde erm&ouml;glicht Ausgewogenheit im Turnierplan
+ * Die Rangliste aus der Vorrunde ermöglicht Ausgewogenheit im Turnierplan
  * der Hauptphase: Die Spieler werden so platziert, dass sich der schnellste und
- * der zweitschnellste aus der Vorrunde erst im Finale begegnen k&ouml;nnen, der
+ * der zweitschnellste aus der Vorrunde erst im Finale begegnen können, der
  * schnellste und der drittschnellste erst im Halbfinale usw. So werden allzu
- * verzerrte Wettbewerbsergebnisse vermieden &ndash; g&auml;be es z.B. eine
- * einfache Auslosung statt einer Vorrunde, k&ouml;nnten zuf&auml;llig die
+ * verzerrte Wettbewerbsergebnisse vermieden – gäbe es z.B. eine
+ * einfache Auslosung statt einer Vorrunde, könnten zufällig die
  * beiden besten Implementierungen in der ersten Runde aufeinandertreffen. Das
- * w&uuml;rde hei&szlig;en, dass einer der beiden Schnellsten schon im ersten
- * Durchgang ausscheidet, was seine tats&auml;chliche St&auml;rke
- * verf&auml;lscht widerspiegelt. Die Vorrunde soll das vermeiden und helfen,
+ * würde heißen, dass einer der beiden Schnellsten schon im ersten
+ * Durchgang ausscheidet, was seine tatsächliche Stärke
+ * verfälscht widerspiegelt. Die Vorrunde soll das vermeiden und helfen,
  * die Spannung bis zuletzt aufrechtzuerhalten.
  * </p>
  * <p>
- * F&uuml;r die Hauptphase gilt: Treten nicht gen&uuml;gend Teams an, um alle
- * Zweik&auml;mpfe des ersten Durchgangs zu f&uuml;llen, erhalten m&ouml;glichst
- * viele Bots ein Freilos, das sie automatisch f&uuml;r die n&auml;chste Runde
+ * Für die Hauptphase gilt: Treten nicht genügend Teams an, um alle
+ * Zweikämpfe des ersten Durchgangs zu füllen, erhalten möglichst
+ * viele Bots ein Freilos, das sie automatisch für die nächste Runde
  * qualifiziert. Im Extremfall findet somit in der ersten Runde des Turniers nur
- * ein einziges Duell statt &ndash; daf&uuml;r sind alle anschlie&szlig;enden
- * Durchg&auml;nge voll besetzt.
+ * ein einziges Duell statt – dafür sind alle anschließenden
+ * Durchgänge voll besetzt.
  * </p>
  * <p>
  * <a name="turnierbaum">
@@ -65,7 +65,7 @@
  * Der Turnierbaum beschreibt:
  * <ul>
  * <li>Welche Spiele es gibt</li>
- * <li>Welcher Bot in welchen Spielen spielt. (Ein Bot wird identifiziert ueber
+ * <li>Welcher Bot in welchen Spielen spielt. (Ein Bot wird identifiziert über
  * seine ID in der Tabelle ctsim_bot. Im Beispiel: Nummern von 1 bis 21, in
  * Kreisen dargestellt.)</li>
  * </ul>
@@ -76,13 +76,13 @@
  * die DB-Tabelle <strong>ctsim_game</strong> geschrieben (<a
  * href="doc-files/datenbankschema.pdf">siehe Datenbank-Doku</a>). Das Beispiel
  * stellt einen Turnierbaum zu diesem Zeitpunkt dar. Alle Spiele sind zu diesem
- * Zeitpunkt angelegt, aber fuer viele von ihnen ist noch nicht klar, welche Bots
+ * Zeitpunkt angelegt, aber für viele von ihnen ist noch nicht klar, welche Bots
  * die zwei Kontrahenten sein werden (im Beispiel ist das mit "?" markiert, in
- * der Tabelle mit bot1 = NULL und/oder bot2 = NULL). Wenn spaeter im Verlauf der
+ * der Tabelle mit bot1 = NULL und/oder bot2 = NULL). Wenn später im Verlauf der
  * Hauptrunde ein Spiel, z.B. Bot 1 gegen Bot 9, abgeschlossen ist, scheidet der
  * Verlierer aus (K.o.-System). Der Sieger wird ins entsprechende Spiel des
- * naechsthoeheren Levels versetzt. Der Sieger kommt also auf den Platz des
- * Fragezeichens im hoeherliegenden Spiel. Das ist im Beispiel durch Pfeile
+ * nächsthöheren Levels versetzt. Der Sieger kommt also auf den Platz des
+ * Fragezeichens im höherliegenden Spiel. Das ist im Beispiel durch Pfeile
  * markiert. (Die einzige Ausnahme vom K.o.-System ist das Halbfinale, wo die
  * Gewinner ins Finale und die Verlierer ins Spiel um den 3. Platz gesetzt
  * werden.)
@@ -90,15 +90,15 @@
  * <p>
  * <h4>Details</h4>
  * <ul>
- * <li>Ein Spiel wird identifiziert ueber die Datenbankfelder gameId und levelId --
- * z.B. 5 und 8 fuer fuenftes Achtelfinalspiel</li>
+ * <li>Ein Spiel wird identifiziert über die Datenbankfelder gameId und levelId --
+ * z.B. 5 und 8 für fuenftes Achtelfinalspiel</li>
  * <li>levelIds sind Zweierpotenzen (1, 2, 4, 8 usw.). Es gibt zwei
  * Ausnahmewerte: -1 = Vorrunde, 0 = Spiel um den 3. Platz</li>
  * <li>gameIds sind fortlaufend und 1-based (1, 2, 3 ...)</li>
  * <li>Je nach Teilnehmerzahl kann es sein, dass nicht alle Spiele des
  * untersten Levels gefuellt sind -- im Beispiel mit 21 Spielern: Von den 16
  * Spielen im Sechzehntelfinale bleiben 11 frei und werden nie gespielt</li>
- * <li>Es stehen aber immer vollstaendige Levels in der Datenbank, also im
+ * <li>Es stehen aber immer vollständige Levels in der Datenbank, also im
  * Beispiel alle 16 Sechzehntelfinalsspiele. Die "leeren" Spiele haben bot1 =
  * NULL, bot2 = NULL, state = "not init" und werden nach der Planung nie mehr
  * angefasst</li>
@@ -109,7 +109,7 @@
  * Das ContestConductor-Subsystem sieht so aus:
  *
  * <pre>
- *   Au&szlig;enwelt
+ *   Außenwelt
  *   (DefaultController)
  *      |
  *      |
@@ -139,11 +139,11 @@
  *
  * Der TournamentPlanner ist wichtig <strong>vor</strong> dem eigentlichen
  * Turnier: er plant die Vorrunde und erstellt den Turnierbaum (s.o.). Der
- * ContestConductor ist wichtig <strong>waehrend</strong> dem Turnier: Er laedt
- * gemaess dem Turnierbaum die zwei Kontrahenten, laesst sie spielen, ermittelt den
- * Gewinner und traegt ihn im Turnierbaum ein.
+ * ContestConductor ist wichtig <strong>während</strong> dem Turnier: Er lädt
+ * gemäß dem Turnierbaum die zwei Kontrahenten, lässt sie spielen, ermittelt den
+ * Gewinner und trägt ihn im Turnierbaum ein.
  * </p>
  *
- * @author Hendrik Krau&szlig &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 package ctSim.view.contestConductor;

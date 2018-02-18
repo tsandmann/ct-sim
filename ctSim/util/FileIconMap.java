@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -29,7 +29,7 @@ import javax.swing.ImageIcon;
 /**
  * <p>
  * Hilfsklasse, die im Dateisystem ein Verzeichnis abklappert und alle dortigen
- * Dateien als Icons l&auml;dt (genauer: als Instanzen der Klasse
+ * Dateien als Icons lädt (genauer: als Instanzen der Klasse
  * {@link ImageIcon}).
  * </p>
  * <p>
@@ -40,20 +40,20 @@ import javax.swing.ImageIcon;
  * FileIconMap(new File("pfad/zu/den/icons"));</code></li>
  * <li><code>meinWurstButton.setIcon(icons.get("Wurst"))</code>, um dem
  * Button das Icon zuzuweisen, was unter dem Dateinamen
- * "pfad/zu/den/icons/Wurst.xyz" zu finden war. "xyz" steht dabei f&uuml;r eine
+ * "pfad/zu/den/icons/Wurst.xyz" zu finden war. "xyz" steht dabei für eine
  * beliebige Erweiterung; sie wird von dieser Klasse ignoriert.</li>
  * </ol>
  * </p>
  * <p>
- * <strong>Sinn:</strong> Es muss nicht mehr jedes Icon pers&ouml;nlich
- * angefordert werden, was zu Vereinfachungen f&uuml;hrt:
+ * <strong>Sinn:</strong> Es muss nicht mehr jedes Icon persönlich
+ * angefordert werden, was zu Vereinfachungen führt:
  * <ul>
- * <li>beliebige Mengen Icons k&ouml;nnen mit einer einzelnen Zeile geladen
+ * <li>beliebige Mengen Icons können mit einer einzelnen Zeile geladen
  * werden: <code>FileIconMap ganzeChose = new
  * FileIconMap(new File("IconUnterverzeichnis"));</code></li>
- * <li>Beim Erweitern der Applikation k&ouml;nnen Icons hinzugef&uuml;gt
+ * <li>Beim Erweitern der Applikation können Icons hinzugefügt
  * werden, indem nur die Icon-Datei ins entsprechende Verzeichnis gelegt wird.
- * Code-&Auml;nderungen zum Laden sind nicht n&ouml;tig.</li>
+ * Code-Änderungen zum Laden sind nicht nötig.</li>
  * </ul>
  * </p>
  *
@@ -68,20 +68,20 @@ public class FileIconMap implements IconProvider {
     final FmtLogger lg = FmtLogger.getLogger("ctSim.util.FileIconMap");
 
     /**
-	 * Aus dem Verzeichnis, das dem Konstruktor &uuml;bergeben wurde, werden
+	 * Aus dem Verzeichnis, das dem Konstruktor übergeben wurde, werden
 	 * alle Icons geladen und hier zwischengespeichert
 	 */
     private final HashMap<String, ImageIcon> map;
 
-    /** Um sp&auml;ter in Fehlermeldungen den Pfad angeben zu k&ouml;nnen */
+    /** Um später in Fehlermeldungen den Pfad angeben zu können */
     private final File parentDir;
 
     /**
      * <p>
      * Erzeugt eine Instanz, die das angegebene Verzeichnis abklappert und alle
-     * dortigen Dateien als Icons l&auml;dt. Der Abklappervorgang erfolgt nicht
+     * dortigen Dateien als Icons lädt. Der Abklappervorgang erfolgt nicht
      * rekursiv, d.h. Unterverzeichnisse werden von der vorliegenden
-     * Implementierung nicht ber&uuml;cksichtigt.
+     * Implementierung nicht berücksichtigt.
      * </p>
      * <p>
      * Das Verhalten der Klasse bei Namenskollisionen, d.h. falls zwei Dateien
@@ -90,7 +90,7 @@ public class FileIconMap implements IconProvider {
      * </p>
      *
      * @param parentDir Das Verzeichnis, das die zu ladenden Bilddateien
-     * enth&auml;lt.
+     * enthält.
      * @throws NullPointerException Falls parentDir <code>null</code> ist.
      * @throws FileNotFoundException Falls parentDir nicht existiert.
      * @throws IllegalArgumentException Falls parentDir kein Verzeichnis
@@ -117,8 +117,8 @@ public class FileIconMap implements IconProvider {
     }
 
     /**
-	 * &Auml;hnlich wie {@link IconProvider#get(String)}. Liefert {@code null},
-	 * falls das gew&uuml;nschte Icon im Dateisystem nicht existiert (genauer:
+	 * ähnlich wie {@link IconProvider#get(String)}. Liefert {@code null},
+	 * falls das gewünschte Icon im Dateisystem nicht existiert (genauer:
 	 * falls es nicht existiert hat zu dem Zeitpunkt, als der Konstruktor
 	 * aufgerufen wurde).
 	 */

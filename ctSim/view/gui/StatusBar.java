@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -51,7 +51,7 @@ public class StatusBar extends Box {
 	public static final int MIN_TICK_RATE = 0;
 	/** Default-Tickrate*/
 	private final int INIT_TICK_RATE;
-	/** groesste Tickrate */
+	/** größte Tickrate */
 	public static final int MAX_TICK_RATE = 400;
 	/** Intervall */
 	public static final int MAJOR_TICK = 10;
@@ -59,7 +59,7 @@ public class StatusBar extends Box {
 	/** Main-Fenster */
 	private MainWindow parent;
 	
-	/** Eine Stunde abziehen fuer Anzeige */
+	/** Eine Stunde abziehen für Anzeige */
 	private final long TIME_TO_SUB = 1000*60*60;
 	/** Zeit-Feld */
 	private JLabel timeLabel;
@@ -110,7 +110,7 @@ public class StatusBar extends Box {
 	}
 	
 	/**
-	 * Erzeugt einen Schieberegler fuer den Simulatortakt
+	 * Erzeugt einen Schieberegler für den Simulatortakt
 	 */
 	void initTickRateSlider() {
 		tickRateSlider = new JSlider(StatusBar.MIN_TICK_RATE, StatusBar.MAX_TICK_RATE, INIT_TICK_RATE);
@@ -133,7 +133,7 @@ public class StatusBar extends Box {
 	}
 	
 	/**
-	 * Erzeugt ein Anzeigefeld fuer den Simulatortakt
+	 * Erzeugt ein Anzeigefeld für den Simulatortakt
 	 */
 	void initTickRateField() {
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
@@ -158,14 +158,14 @@ public class StatusBar extends Box {
 	}
 	
 	/**
-	 * @param time Zeitspanne, um die Simulatorzeit erhoeht werden soll
+	 * @param time Zeitspanne, um die Simulatorzeit erhöht werden soll
 	 */
 	public void updateTime(long time) {
 		timeLabel.setText("Zeit: " + String.format("%tT.%<tL", new Date(time - TIME_TO_SUB)));
 	}
 	
 	/**
-	 * Setzt den Simulatortakt auf den initialen Wert zurueck
+	 * Setzt den Simulatortakt auf den initialen Wert zurück
 	 */
 
 	protected void reinit() {

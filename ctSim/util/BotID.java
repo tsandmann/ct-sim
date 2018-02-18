@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -20,11 +20,11 @@
 package ctSim.util;
 
 /**
- * Datentyp fuer Bot-IDs. Im Prinzip wie byte, gibt das Byte
+ * Datentyp für Bot-IDs. Im Prinzip wie byte, gibt das Byte
  * aber als unsigned aus.
  * mit set() kann man der ID einen neuen Wert geben,
  * mit equals() kann man die ID und eine andere auf
- * Gleichheit pruefen.
+ * Gleichheit prüfen.
  * Die get-Methoden sollten immer eine neue ID erstellen, 
  * (wg. call by referenz)
  * @author Timo Sandmann (mail@timosandmann.de)

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -53,13 +53,13 @@ import ctSim.util.Runnable1;
  * <a href="doc-files/grundplatte_bemassung.pdf">Grundplatte mit Bemassung</a>
  */
 public class CtBotShape extends Group {
-	/** Abstand zwischen Zentrum und Au&szlig;enkante des Bots [m] laut PDF */
+	/** Abstand zwischen Zentrum und Außenkante des Bots [m] laut PDF */
 	private static final double BOT_RADIUS = 0.060;
 
-	/** H&ouml;he des Bots [m] laut Bauchgef&uuml;hl */
+	/** Höhe des Bots [m] laut Bauchgefühl */
 	private static final double BOT_HEIGHT = 0.120;
 
-	/** &Ouml;ffnungswinkel des Mundes [Grad] aus den Ma&szlig;en im PDF. */
+	/** Öffnungswinkel des Mundes [Grad] aus den Maßen im PDF. */
 	private static final double MOUTH_OPENING_ANGLE_IN_DEG = toDegrees(
 		asin(25 / 54.55));
 
@@ -69,12 +69,12 @@ public class CtBotShape extends Group {
 	/**
 	 * <p>
 	 * Maximalwinkel [Grad] zwischen zwei Ecken in den Vielecken, die die
-	 * Kreislinien am Bot ann&auml;hern. Die Kreisb&ouml;gen am Bot sind wie
-	 * &uuml;blich keine echten Kreise, sondern haben Ecken: Sie werden
-	 * n&auml;herungsweise durch regelm&auml;&szlig;ige Vielecke dargestellt.
+	 * Kreislinien am Bot annähern. Die Kreisbögen am Bot sind wie
+	 * üblich keine echten Kreise, sondern haben Ecken: Sie werden
+	 * näherungsweise durch regelmäßige Vielecke dargestellt.
 	 * Der Winkel ist der zwischen den Ecken des Vielecks, wobei auch mal eine
 	 * Ecke einen kleineren Winkel haben kann (z.B. dort, wo Mittelteil und
-	 * Backen aneinandersto&szlig;en).
+	 * Backen aneinanderstoßen).
 	 * </p>
 	 * <p>
 	 * Mehr = bessere (rundere) Darstellung, weniger = schnelleres Rechnen.
@@ -202,7 +202,7 @@ public class CtBotShape extends Group {
      *        `-- Appearance 3
      * </pre>
 	 *
-	 * Appearance 1 und 2 werden gemeinsam gesetzt, Appearance 3 unabh&auml;ngig
+	 * Appearance 1 und 2 werden gemeinsam gesetzt, Appearance 3 unabhängig
 	 * davon.
 	 * </p>
 	 */
@@ -217,11 +217,11 @@ public class CtBotShape extends Group {
      * @param appearanceEventSource ThreeDBot
      */
     public CtBotShape(Color baseColor, ThreeDBot appearanceEventSource) {
-    	// Kann kollidieren -- Gilt auch fuer alle Kinder im Szenegraph
+    	// Kann kollidieren -- Gilt auch für alle Kinder im Szenegraph
     	setPickable(true);
 
-    	// "Kann kollidieren" waehrend der Anzeige noch aenderbar (World
-    	// ruft auf uns spaeter setPickable() auf)
+    	// "Kann kollidieren" während der Anzeige noch änderbar (World
+    	// ruft auf uns später setPickable() auf)
     	setCapability(Node.ALLOW_PICKABLE_WRITE);
 
     	// Form bauen
@@ -238,7 +238,7 @@ public class CtBotShape extends Group {
     	middle = buildMiddle();
     	addChild(middle);
 
-    	// Appearances waehrend der Anzeige aenderbar
+    	// Appearances während der Anzeige änderbar
     	rightCheek.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
     	leftCheek .setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
     	middle    .setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
@@ -270,10 +270,10 @@ public class CtBotShape extends Group {
 
         PointList ceil  = buildCheekArc(+ BOT_HEIGHT / 2);
         /*
-		 * reverse() um Backface-Culling auszutricksen; "richtiger" waere, in
+		 * reverse() um Backface-Culling auszutricksen; "richtiger" wäre, in
 		 * den PolygonAttributes der Appearance setCullFace(FRONT) zu setzen,
 		 * aber das wuerde die Appearance der gesamten Shape beeinflussen, und
-		 * die soll hier nicht veraendert werden
+		 * die soll hier nicht verändert werden
 		 */
         ceil.reverse();
         rv.addGeometry(ceil.toFanGeometry()); // ausliefern
@@ -285,7 +285,7 @@ public class CtBotShape extends Group {
         PointList lateralSurface = arcBottom.interleave(arcTop);
 
         // Mantel innen (zum Botzentrum gewandt; d.h. Innenwand Mund); wir
-        // schliessen einfach den Zylindermantel-Abschnitt
+        // schließen einfach den Zylindermantel-Abschnitt
         lateralSurface.add(arcBottom.get(0));
         lateralSurface.add(arcTop.get(0));
 
@@ -387,7 +387,7 @@ public class CtBotShape extends Group {
             rv.add(buildPointOnCircumference(z, a));
         }
         // sicherstellen, dass genau der Zielwinkel erreicht wird (nicht
-        // vorher aufgehoert)
+        // vorher aufgehört)
         rv.add(buildPointOnCircumference(z, toAngleInDeg));
         return rv;
     }

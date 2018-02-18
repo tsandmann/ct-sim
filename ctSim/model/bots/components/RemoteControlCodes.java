@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -26,7 +26,7 @@ import ctSim.util.Misc;
 
 /**
  * Erzeugt die Zuordnung von Tasten auf Fernbedienungscodes je nach Typ der Fernbedienung 
- * (einstellbar wie beim Bot-Code ueber die Datei rc5-codes.h). 
+ * (einstellbar wie beim Bot-Code über die Datei rc5-codes.h). 
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class RemoteControlCodes {
@@ -68,7 +68,7 @@ public class RemoteControlCodes {
 	}
 
 	/**
-	 * Gibt die Tastenbelegung der erzeugten Fernbedienung zurueck
+	 * Gibt die Tastenbelegung der erzeugten Fernbedienung zurück
 	 * @return	HashMap mit Tastenzuordnungen
 	 */
 	public Map<String, Integer> getKeyMap() {
@@ -76,7 +76,7 @@ public class RemoteControlCodes {
 	}
 	
 	/**
-	 * Fuegt eine Taste hinzu und legt ihren RC5-Code in der HashMap ab.
+	 * Fügt eine Taste hinzu und legt ihren RC5-Code in der HashMap ab.
 	 * @param label	Name der Taste
 	 * @param code	RC5-Code der Taste
 	 */
@@ -85,7 +85,7 @@ public class RemoteControlCodes {
 	}
 	
 	/**
-	 * Interface fuer alle RC5-Fernbedienungen
+	 * Interface für alle RC5-Fernbedienungen
 	 * @author Timo Sandmann (mail@timosandmann.de)
 	 */
 	interface RC5Codes {
@@ -98,8 +98,8 @@ public class RemoteControlCodes {
 	/**
 	 * Definiert den Fernbedienungstyp der Standardfernbedienung HQ_RC_UNIVERS29_334 
 	 * und ihre Tastenzuordnungen.
-	 * Moechte man weitere Fernbedienungen ergaenzen, erzeugt man weitere Klassen, die 
-	 * RC5Codes implementieren und genauso aufgebaut sind wie diese. Ausserdem traegt 
+	 * Möchte man weitere Fernbedienungen ergänzen, erzeugt man weitere Klassen, die 
+	 * RC5Codes implementieren und genauso aufgebaut sind wie diese. Ausserdem trägt 
 	 * man sie ebenfalls in RemoteControlCodes() ein.
 	 * @author Timo Sandmann (mail@timosandmann.de)
 	 */
@@ -133,8 +133,8 @@ public class RemoteControlCodes {
 			addKey("<<", 0x11B2);		// Backward
 			addKey(">",  0x11B5);		// Play
 			addKey(">>", 0x11B4);		// Forward
-			addKey("\u25A1", 0x11B6);	// 25A1: Quadrat fuer "Stop"
-			addKey("\u25CF", 0x11AB);	// 25CF: Dicker Punkt fuer "Record"
+			addKey("\u25A1", 0x11B6);	// 25A1: Quadrat für "Stop"
+			addKey("\u25CF", 0x11AB);	// 25CF: Dicker Punkt für "Record"
 			
 			addKey("CH*P/P", 0x11BF);
 			addKey("Vol+", 0x1190);
@@ -172,7 +172,7 @@ public class RemoteControlCodes {
 			addKey("<<", 0x1011);		// Backward
 			addKey(">",  0xffff);		// Play
 			addKey(">>", 0x1010);		// Forward
-			addKey("\u25A1", 0x1021);	// 25A1: Quadrat fuer "Stop"
+			addKey("\u25A1", 0x1021);	// 25A1: Quadrat für "Stop"
 		}		
 	}
 	
@@ -209,8 +209,8 @@ public class RemoteControlCodes {
 			addKey("<<", 0x1291);		// Backward
 			addKey(">",  0x0297);		// Play
 			addKey(">>", 0x1290);		// Forward
-			addKey("\u25A1", 0x12A1);	// 25A1: Quadrat fuer "Stop"
-			addKey("\u25CF", 0x12AF);	// 25CF: Dicker Punkt fuer "Record"
+			addKey("\u25A1", 0x12A1);	// 25A1: Quadrat für "Stop"
+			addKey("\u25CF", 0x12AF);	// 25CF: Dicker Punkt für "Record"
 			
 			addKey("CH*P/P", 0x0293);
 			addKey("Vol+", 0x128F);

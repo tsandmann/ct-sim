@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -24,19 +24,19 @@ import java.util.Enumeration;
 import java.util.Iterator;
 
 /**
- * Utility-Klasse im Stil von {@link Arrays}, die Hilfen f&uuml;r die Arbeit
- * mit {@link Enumeration}-Objekten enth&auml;lt.
+ * Utility-Klasse im Stil von {@link Arrays}, die Hilfen für die Arbeit
+ * mit {@link Enumeration}-Objekten enthält.
  *
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class Enumerations {
 	/**
 	 * <p>
-	 * Erm&ouml;glicht, for-each-Schleifen mit Enumeration-Objekten zu
-	 * f&uuml;ttern: Liefert ein {@link Iterable}, das die Elemente der
-	 * &uuml;bergebenen Enumeration enth&auml;lt. N&uuml;tzlich wenn eine
-	 * veraltete Methode eine Enumeration zur&uuml;ckliefert, man aber gern eine
-	 * for-each-Konstruktion verwenden w&uuml;rde: <br/> <code>
+	 * Ermöglicht, for-each-Schleifen mit Enumeration-Objekten zu
+	 * füttern: Liefert ein {@link Iterable}, das die Elemente der
+	 * übergebenen Enumeration enthält. Nützlich wenn eine
+	 * veraltete Methode eine Enumeration zurückliefert, man aber gern eine
+	 * for-each-Konstruktion verwenden würde: <br/> <code>
 	 * Enumeration&lt;String> e = antikesObjekt.getEnumeration();<br />
 	 * for (String s : Enumerations.asIterable(e)) {<br />
 	 * &nbsp;&nbsp;&nbsp;&nbsp;...<br />
@@ -46,22 +46,22 @@ public class Enumerations {
 	 * <p>
 	 * <strong>Achtung:</strong> Die Implementierung geht davon aus, dass nach
 	 * dem Methodenaufruf &lt;strong&gt;nur noch&lt;/strong&gt; das Iterable
-	 * verwendet wird, nicht mehr die &uuml;bergebene Enumeration. Falls nach
+	 * verwendet wird, nicht mehr die übergebene Enumeration. Falls nach
 	 * dem Aufruf dieser Methode sowohl das Iterable als auch die Enumeration
 	 * benutzt werden, insbesondere die Methode {@code next()} bzw.
 	 * {@code nextElement()} verwendet wird, kommt es zu Chaos, Aufregung,
-	 * Depression, Heulen und Z&auml;hneklappern.
+	 * Depression, Heulen und Zähneklappern.
 	 * </p>
 	 * <p>
-	 * Die optionale Methode {@link Iterator#remove()} schl&auml;gt in der
+	 * Die optionale Methode {@link Iterator#remove()} schlägt in der
 	 * vorliegenden Implementierung mit einer
 	 * {@link UnsupportedOperationException} fehl.
 	 * </p>
 	 *
-	 * @param source Enumeration, die dem zur&uuml;ckgelieferten Iterable
+	 * @param source Enumeration, die dem zurückgelieferten Iterable
 	 * zugrunde liegt.
-	 * @param <T> Elementtyp der &uuml;bergebenen Enumeration und damit
-	 * auch des zur&uuml;ckgelieferten Iterable.
+	 * @param <T> Elementtyp der übergebenen Enumeration und damit
+	 * auch des zurückgelieferten Iterable.
 	 * @return T
 	 */
 	public static <T> Iterable<T> asIterable(final Enumeration<T> source) {

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -23,9 +23,9 @@ import ctSim.controller.DefaultController;
 import ctSim.model.World;
 import ctSim.view.gui.Debug;
 
-//$$ Problem: Wenn Judge Bot-hinzufuegen verbietet, wird Bot nicht korrekt de-initialisiert
+//$$ Problem: Wenn Judge Bot-hinzufügen verbietet, wird Bot nicht korrekt de-initialisiert
 /**
- * Abstrakte Superklasse f&uuml;r alle Judges, die pr&uuml;fen,
+ * Abstrakte Superklasse für alle Judges, die prüfen,
  * ob die Spielregeln eingehalten werden.
  *
  * @author bbe (bbe@heise.de)
@@ -34,7 +34,7 @@ public abstract class Judge {
 	/**
 	 * Diese konfus benannte Variable gibt an, ob
 	 * {@link #isSimulationFinished()} in irgendeinem der bisherigen
-	 * Simulatorschritte <code>true</code> zur&uuml;ckgegeben hat. Mit der
+	 * Simulatorschritte <code>true</code> zurückgegeben hat. Mit der
 	 * vorliegenden Implementierung von DefaultJudge bleibt die Variable immer
 	 * auf <code>true</code> stehen. Mit der vorliegenden Implementierung von
 	 * LabyrinthJudge wird die Variable genau dann <code>false</code>, wenn
@@ -42,10 +42,10 @@ public abstract class Judge {
 	 */
 	private boolean start = true;
 
-	/** Verweis auf den zuegehoerigen controller */
+	/** Verweis auf den zugehörigen controller */
 	protected DefaultController controller;
 
-	//$$ startTime Wofuer?
+	//$$ startTime wofür?
 	/** Welt-Zeit zu Beginn des Wettkampfes [ms] */
 	private long startTime = 0;
 
@@ -62,7 +62,7 @@ public abstract class Judge {
 	}
 
 	/** 
-	 * Gibt an, ob es erlaubt ist, Bots zum Spiel hinzuzufuegen.
+	 * Gibt an, ob es erlaubt ist, Bots zum Spiel hinzuzufügen.
 	 * @return true/false
 	 */
 	public boolean isAddingBotsAllowed() {
@@ -70,7 +70,7 @@ public abstract class Judge {
 	}
 
 	/**
-	 * @return true, wenn die Bedingungen fuer einen Start erfuellt sind
+	 * @return true, wenn die Bedingungen für einen Start erfuellt sind
 	 */
 	public boolean isStartingSimulationAllowed() {
 		if(this.controller.getParticipants() < 1) {
@@ -92,7 +92,7 @@ public abstract class Judge {
 	 * @param t Zeit
 	 *
 	 * @return <code>true</code>, falls die Simulation beendet werden soll
-	 * &ndash; typischerweise, weil ein Bot das Ziel erreicht hat.
+	 * – typischerweise, weil ein Bot das Ziel erreicht hat.
 	 * <code>False</code>, falls die Simulation fortgesetzt werden soll. */
 	public final boolean isSimulationFinished(long t) {
 		this.time = t;

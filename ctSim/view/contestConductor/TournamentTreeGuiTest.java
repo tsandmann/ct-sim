@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -41,7 +41,7 @@ import javax.swing.tree.TreePath;
  */
 public class TournamentTreeGuiTest extends JFrame {
 	/**
-	 * fuer Tests
+	 * für Tests
 	 */
 	public class TournamentTreeModel implements TreeModel {
 		/** Listenerliste */
@@ -53,14 +53,14 @@ public class TournamentTreeGuiTest extends JFrame {
 		SpreadingTree<Integer> carrier;
 
 		/**
-		 * fuer Tests
+		 * für Tests
 		 */
 		public TournamentTreeModel() {
 			init();
 		}
 
 		/**
-		 * fuer Tests
+		 * für Tests
 		 */
 		public void init() {
 			currentLevel = 1;
@@ -68,7 +68,7 @@ public class TournamentTreeGuiTest extends JFrame {
 		}
 
         /**
-         * fuer Tests
+         * für Tests
          */
         public void addLevel() {
         	ArrayList<Integer> li = new ArrayList<Integer>();
@@ -82,7 +82,7 @@ public class TournamentTreeGuiTest extends JFrame {
         }
 
         /**
-         * fuer Tests
+         * für Tests
          */
         public void removeNode() {
         	int u = currentLevel - 4;
@@ -145,7 +145,7 @@ public class TournamentTreeGuiTest extends JFrame {
         }
 
 		/**
-		 * fuer Tests
+		 * für Tests
 		 * @param path 
 		 * @param newValue 
 		 */

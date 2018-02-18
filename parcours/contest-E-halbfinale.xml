@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "parcours.dtd">
 <world>
-	<description>Halbfinale -- Parcours fuer den c't-Sim-Wettbewerb Oktober 2006. Details siehe Paket ctSim.view.contestConductor</description>
+	<description>Halbfinale -- Parcours für den c't-Sim-Wettbewerb Oktober 2006. Details siehe Paket ctSim.view.contestConductor</description>
 	<parcours>
 <line>*==========ZZ==========*</line>
 <line>#      #        #      #</line>

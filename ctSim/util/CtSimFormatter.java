@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -27,7 +27,7 @@ import java.util.logging.LogRecord;
 
 /**
  * <p>
- * Formatter, der ausf&uuml;hrliche Log-Meldungen produziert. Baut auf das
+ * Formatter, der ausführliche Log-Meldungen produziert. Baut auf das
  * java.util.logging-Framework auf.
  * </p>
  * <p>
@@ -50,7 +50,7 @@ import java.util.logging.LogRecord;
  *     at ctSim.model.AliveObstacle.run(AliveObstacle.java:393)
  *     at java.lang.Thread.run(Thread.java:595)</pre></p>
  *
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class CtSimFormatter extends Formatter {
 	/** Format */
@@ -68,7 +68,7 @@ public class CtSimFormatter extends Formatter {
 			r.getThrown().printStackTrace(new PrintWriter(s));
 			throwable = s.toString();
 		}
-		// "* 2" ist quick and dirty. Kommt daher, dass Thread.activeCount() nur Schaetzungen ueber die Groesse zurueckgibt ... Details siehe Doku der Methode
+		// "* 2" ist quick and dirty. Kommt daher, dass Thread.activeCount() nur Schätzungen über die Größe zurückgibt ... Details siehe Doku der Methode
 		Thread[] threads = new Thread[Thread.activeCount() * 2];
 		Thread.enumerate(threads);
 		String threadName = "";

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -26,7 +26,7 @@ import org.junit.Test;
 import ctSim.model.bots.components.Actuators.LcDisplay;
 
 /** 
- * Unit-Test fuer LcDisplay 
+ * Unit-Test für LcDisplay 
  */
 public class LcDisplayTest extends LcDisplay {
 	/** Testdaten */
@@ -74,7 +74,7 @@ public class LcDisplayTest extends LcDisplay {
 	throws Exception {
 		clearModel(getExternalModel());
 		setCursor(3, 3);
-		overwrite("Katastrophenfalleinsatzbehoerde");
+		overwrite("Katastrophenfalleinsatzbehörde");
 		// hier nicht updateExternalModel()
 		assertEquals(twentyFourLines, getExText());
 	}
@@ -88,7 +88,7 @@ public class LcDisplayTest extends LcDisplay {
 	 */
 	@Test
 	public void setTextAtAll() throws Exception {
-		// Einfuegen bei 0,0 -- geht's ueberhaupt
+		// Einfügen bei 0,0 -- geht's überhaupt
 		setCursor(0, 0);
 		overwrite(insertion);
 		updateExternalModel();
@@ -103,7 +103,7 @@ public class LcDisplayTest extends LcDisplay {
 	 */
 	@Test
 	public void setTextColCorrect() throws Exception {
-		// Einfuegen bei 10,0 -- kommt das in der richtigen Spalte an
+		// Einfügen bei 10,0 -- kommt das in der richtigen Spalte an
 		setCursor(10, 0);
 		overwrite(insertion);
 		updateExternalModel();
@@ -119,7 +119,7 @@ public class LcDisplayTest extends LcDisplay {
 	 */
 	@Test
 	public void setTextRowCorrect() throws Exception {
-		// Einfuegen bei 0,8 -- kommt das in der richtigen Zeile an
+		// Einfügen bei 0,8 -- kommt das in der richtigen Zeile an
 		clearModel(getExternalModel());
 		setCursor(0, 8);
 		overwrite(insertion);
@@ -136,7 +136,7 @@ public class LcDisplayTest extends LcDisplay {
 	 */
 	@Test
 	public void setTextTruncate() throws Exception {
-		// Einfuegen bei 38,23 -- wird das richtig abgeschnitten
+		// Einfügen bei 38,23 -- wird das richtig abgeschnitten
 		clearModel(getExternalModel());
 		setCursor(38, 23);
 		overwrite(insertion);

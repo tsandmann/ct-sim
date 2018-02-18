@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -27,5 +27,5 @@ import ctSim.util.xml.XmlDocument.XPathQueryable;
  * QueryableNode
  */
 public interface QueryableNode extends Node, XPathQueryable {
-	// Leeres Interface fuer FacadeFactory
+	// Leeres Interface für FacadeFactory
 }

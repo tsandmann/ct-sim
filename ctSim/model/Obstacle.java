@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -25,7 +25,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 /**
- * Interface fuer Hindernisse aller Art in der Bot-Welt
+ * Interface für Hindernisse aller Art in der Bot-Welt
  * 
  * @author Benjamin Benz (bbe@ctmagazin.de)
  */
@@ -33,27 +33,27 @@ import javax.vecmath.Vector3d;
 public abstract interface Obstacle {
 
 	/**
-	 * @return Liefert die Grenzen des Hindernisses zurueck
+	 * @return Liefert die Grenzen des Hindernisses zurück
 	 */
 	public abstract Bounds getBounds();
 	
 	/**
-	 * @return Gibt die Position zurueck
+	 * @return Gibt die Position zurück
 	 */
 	public abstract Point3d getPositionInWorldCoord() ;
 	
 	/**
-	 * @return Gibt die Blickrichtung zurueck
+	 * @return Gibt die Blickrichtung zurück
 	 */
 	public abstract Vector3d getHeadingInWorldCoord();
 	
 	/**
-	 * Erzeugt die 3D-Repraesentation eines Objektes
+	 * Erzeugt die 3D-Repräsentation eines Objektes
 	 */
 	//public abstract void createBranchGroup();
 	
 	/**
-	 * @return die 3D-Repraesentation eines Objektes
+	 * @return die 3D-Repräsentation eines Objektes
 	 */
 	public abstract BranchGroup getBranchGroup();
 }
