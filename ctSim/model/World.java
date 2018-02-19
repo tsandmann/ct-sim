@@ -250,6 +250,7 @@ public class World {
 	 * @throws IOException 
 	 * @throws ParserConfigurationException 
 	 */
+  
 	public static World buildWorldFromFile(File sourceFile) throws SAXException, IOException, ParserConfigurationException {
 	    BufferedReader in = new BufferedReader(new FileReader(sourceFile));
 	    String line;
@@ -282,8 +283,10 @@ public class World {
 	 * Methode im Unterverzeichnis "parcours" gesucht. 
 	 * @return Die neue Welt
 	 * @throws SAXException 
-	 * @throws IOException 
-	 * @throws ParserConfigurationException */
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
+
 	public static World buildWorldFromXmlString(String parcoursAsXml) throws SAXException, IOException, ParserConfigurationException {
 		sourceString = new String(parcoursAsXml);
 		return new World(
@@ -325,8 +328,8 @@ public class World {
 	 * @param resolver Der Xerces-EntityResolver, der beim Parsen des XML
 	 * verwendet werden soll. Details siehe
 	 * {@link ParcoursLoader#loadParcours(InputSource, EntityResolver)}.
-	 * @throws SAXException 
-	 * @throws IOException 
+	 * @throws SAXException
+	 * @throws IOException
 	 * @throws ParserConfigurationException 
 	 * @see ParcoursLoader#loadParcours(InputSource, EntityResolver)
 	 */
@@ -526,7 +529,6 @@ public class World {
 		//botWrapper.updateSimulation(getSimTimeInMs());
 
 		botWrapper.addDisposeListener(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				botsToStart.remove(botWrapper);
 				botsRunning.remove(botWrapper);

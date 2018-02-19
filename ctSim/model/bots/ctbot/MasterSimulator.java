@@ -124,14 +124,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          * @return lag
          */
         public double getLag() {
-        	return lag;
+        		return lag;
         }
         
         /**
          * @param newLag
          */
         public void setLag(double newLag) {
-        	lag = newLag;
+        		lag = newLag;
         }
     }
     
@@ -153,7 +153,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          * @param num Nr. des Servos
          */
         public ServoSimulator(int num) {
-        	servo_num = num;
+        		servo_num = num;
         }
         
         /**
@@ -177,19 +177,19 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          * @return Servo-Position
          */
         protected int getServoPosition() {
-        	if (servo_num == 1) {
-	        	if (door_servo.get().intValue() > 0) {
-	        		position[0] = door_servo.get().intValue();
+	        	if (servo_num == 1) {
+		        	if (door_servo.get().intValue() > 0) {
+		        		position[0] = door_servo.get().intValue();
+		        	}
+	        	} else if (servo_num == 2) {
+		        	if (cam_servo.get().intValue() > 0) {
+		        		position[1] = cam_servo.get().intValue();
+		        	}
+	        	} else {
+	        		return 0;
 	        	}
-        	} else if (servo_num == 2) {
-	        	if (cam_servo.get().intValue() > 0) {
-	        		position[1] = cam_servo.get().intValue();
-	        	}
-        	} else {
-        		return 0;
-        	}
-            
-        	return position[servo_num - 1];
+	            
+	        	return position[servo_num - 1];
         }
     }
 
@@ -662,7 +662,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          */
         public void run() {
             sensor.set(world.sensGroundReflectionCross(
-            	parent.worldCoordFromBotCoord(distFromBotCenter), parent.worldCoordFromBotCoord(headingInBotCoord), OPENING_ANGLE_IN_RAD, PRECISION)
+            		parent.worldCoordFromBotCoord(distFromBotCenter), parent.worldCoordFromBotCoord(headingInBotCoord), OPENING_ANGLE_IN_RAD, PRECISION)
             );
         }
     }
@@ -757,9 +757,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @param isLeft links?
      */
     public void buisitServo(DoorServo s, boolean isLeft) {
-    	if (isLeft) {
-    		servoDoor.setServo(s);
-    	}
+	    	if (isLeft) {
+	    		servoDoor.setServo(s);
+	    	}
     }
     
     /**
@@ -767,9 +767,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @param isLeft links?
      */
     public void buisitServo(CamServo s, boolean isLeft) {
-    	if (! isLeft) {
-    		servoCam.setServo(s);
-    	}
+	    	if (! isLeft) {
+	    		servoCam.setServo(s);
+	    	}
     }
     
     /**
@@ -780,25 +780,26 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         final ServoSimulator servo = isLeft ? servoDoor : null;
         krautUndRuebenSim.setDoorSensor(doorSensor);
     	
-        simulators.add(new Runnable() {
-            @SuppressWarnings("null")
-			public void run() {
-                final int doorState = servo.getServoPosition() < 12 ? 0 : 1; // 0: Klappe zu; 1: Klappe auf
-                final boolean change = doorState != doorSensor.get().intValue();
-                if (change) {
-                	doorSensor.set(doorState);
-                	parent.set(DOOR_OPEN, doorState != 0);
-                	
-                	if (doorState == 0) {
-                		/* Klappe wurde geschlossen */
-                		krautUndRuebenSim.setAssociatedObject(krautUndRuebenSim.getObjectInPocket());
-                	} else {
-                		/* Klappe wurde geoeffnet */
-                		krautUndRuebenSim.setAssociatedObject(null);
-                	}
-                }
-            }
-        });
+        if (servo != null) {
+	        simulators.add(new Runnable() {
+				public void run() {
+	                final int doorState = servo.getServoPosition() < 12 ? 0 : 1; // 0: Klappe zu; 1: Klappe auf
+					final boolean change = doorState != doorSensor.get().intValue();
+	                if (change) {
+		                	doorSensor.set(doorState);
+		                	parent.set(DOOR_OPEN, doorState != 0);
+		                	
+		                	if (doorState == 0) {
+		                		/* Klappe wurde geschlossen */
+		                		krautUndRuebenSim.setAssociatedObject(krautUndRuebenSim.getObjectInPocket());
+		                	} else {
+		                		/* Klappe wurde geoeffnet */
+		                		krautUndRuebenSim.setAssociatedObject(null);
+		                	}
+	                }
+	            }
+	        });
+        }
     }
     
     /**
@@ -808,19 +809,20 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     public void buisitCamPos(final Sensors.CamPos camPosSensor, boolean isLeft) {
         final ServoSimulator servo = isLeft ? servoCam : null;
     	
-        simulators.add(new Runnable() {
-        	int last_pos = 0;
-            @SuppressWarnings("null")
-			public void run() {
-                final int cam_pos = servo.getServoPosition();
-                final boolean change = cam_pos != last_pos;
-                if (change) {
-                	camPosSensor.set(cam_pos);
-                	parent.printInfoMsg("Position Servo 2: " + cam_pos);
-                	last_pos = cam_pos;
-                }
-            }
-        });
+        if (servo != null) {
+	        simulators.add(new Runnable() {
+	        	int last_pos = 0;
+				public void run() {
+	                final int cam_pos = servo.getServoPosition();
+	                final boolean change = cam_pos != last_pos;
+	                if (change) {
+	                	camPosSensor.set(cam_pos);
+	                	parent.printInfoMsg("Position Servo 2: " + cam_pos);
+	                	last_pos = cam_pos;
+	                }
+	            }
+	        });
+        }
     }
 
     /**
@@ -1026,6 +1028,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * Destruktor
      */
     public void cleanup() {
-    	krautUndRuebenSim.setAssociatedObject(null); // steckt ein eingeladenes Objekt wieder in die Welt
+    		krautUndRuebenSim.setAssociatedObject(null); // steckt ein eingeladenes Objekt wieder in die Welt
     }
 }

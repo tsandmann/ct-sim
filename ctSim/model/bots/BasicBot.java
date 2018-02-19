@@ -37,33 +37,33 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Superklasse f&uuml;r alle Bots, unabh&auml;ngig davon, ob sie &ndash;
+ * Superklasse für alle Bots, unabhängig davon, ob sie &ndash;
  * <ul>
  * <li><strong>real</strong> sind, d.h. ein Bot aus Hardware wurde an den Sim
- * angeschlossen und der Sim spielt daher haupts&auml;chlich die Rolle eines
- * erweiterten Displays f&uuml;r Sensorwerte, die von echten Sensoren stammen
- * (mit anderen Worten, der Sim l&auml;uft im Slave-Modus)</li>
+ * angeschlossen und der Sim spielt daher hauptsächlich die Rolle eines
+ * erweiterten Displays für Sensorwerte, die von echten Sensoren stammen
+ * (mit anderen Worten, der Sim läuft im Slave-Modus)</li>
  * <li><strong>simuliert</strong> sind, d.h. es gibt keinen Bot aus Hardware,
- * es l&auml;uft nur der Steuercode auf einem PC. Sensordaten kommen in diesem
- * Fall nicht von echter Hardware, sondern &uuml;ber TCP vom Sim, der sie
+ * es läuft nur der Steuercode auf einem PC. Sensordaten kommen in diesem
+ * Fall nicht von echter Hardware, sondern über TCP vom Sim, der sie
  * ausgerechnet hat (Sim im Master-Modus)</li>
  * <li><strong>c't-Bots</strong> sind oder nicht &ndash; theoretisch
- * k&ouml;nnte jemand ja mal den Simulator um selbstgestrickte Bots erweitern,
+ * könnte jemand ja mal den Simulator um selbstgestrickte Bots erweitern,
  * die keine c't-Bot sind.</li>
  * </ul>
  * </p>
  * <p>
  * Die Klasse ist abstrakt und muss daher erst abgeleitet werden, um
- * instanziiert werden zu koennen.
+ * instanziiert werden zu können.
  * </p>
  * <p>
- * Der Haupt-Thread k&uuml;mmert sich um die eigentliche Simulation und die
- * Koordination mit dem Zeittakt der Welt. Die Kommunikation z.B. &uuml;ber eine
+ * Der Haupt-Thread kümmert sich um die eigentliche Simulation und die
+ * Koordination mit dem Zeittakt der Welt. Die Kommunikation z.B. über eine
  * TCP/IP-Verbindung muss von den abgeleiteten Klassen selbst behandelt werden.
  * </p>
  *
  * @author Benjamin Benz (bbe@heise.de)
- * @author Peter K&ouml;nig (pek@heise.de)
+ * @author Peter König (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
 public abstract class BasicBot implements Bot {
@@ -78,7 +78,7 @@ public abstract class BasicBot implements Bot {
 	private Controller controller;
 
 	/**
-	 * Liefert die Id eines Bots fuer die Adressierung der Commands zurueck
+	 * Liefert die Id eines Bots fuer die Adressierung der Commands zurück
 	 * @return Id des Bots
 	 */
 	public BotID getId() {
@@ -90,7 +90,7 @@ public abstract class BasicBot implements Bot {
 	}
 
 	/**
-	 * Setzt die Id des Bots fuer die Adressierung der Commands 
+	 * Setzt die Id des Bots für die Adressierung der Commands 
 	 * @param newId ID des Bots
 	 * @throws ProtocolException Wenn die Id bereits vergeben ist
 	 */
@@ -121,7 +121,7 @@ public abstract class BasicBot implements Bot {
 		 * Fuegt Elemente hinzu
 		 * @param elements Die Elemente
 		 */
-		public void add(@SuppressWarnings("unchecked") T... elements) {
+		public void add(T... elements) {
             for (T e : elements)
                 add(e);
         }
@@ -158,10 +158,10 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * <p>
-	 * Liste von BotComponents; wie ArrayList, aber kann zus&auml;tzlich 1.
+	 * Liste von BotComponents; wie ArrayList, aber kann zusätzlich 1.
 	 * Component-Flag-Tabellen (siehe
 	 * {@link #applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) applyFlagTable()})
-	 * und 2. Massen-Hinzuf&uuml;gen:
+	 * und 2. Massen-Hinzufügen:
 	 *
 	 * <pre>
 	 * componentList.add(
@@ -213,14 +213,14 @@ public abstract class BasicBot implements Bot {
          * }
          * </pre>
 		 *
-		 * Component-Flag-Tabellen sind also eine Verkn&uuml;pfung dieser
+		 * Component-Flag-Tabellen sind also eine Verknüpfung dieser
 		 * Methode, einer Hilfsmethode mit Namen Unterstrich (_) und einer
 		 * kleinen Klasse (CompntWithFlag). Vorteil: eine Superklasse, z.B.
 		 * CtBot, kann die Komponenten instanziieren. Subklassen, z.B.
 		 * SimulierterCtBot und UeberTcpVerbundenerRealerCtBot, haben ja alle
 		 * dieselben Komponenten, aber betreiben sie in verschiedenen Modi (z.B.
 		 * realer Bot: (fast) alle nur lesen). Die Superklasse macht also
-		 * {@code components.add(...)}, die Subklassen k&ouml;nnen dann den
+		 * {@code components.add(...)}, die Subklassen können dann den
 		 * {@code applyFlagsTable(...)}-Aufruf machen.
 		 * </p>
 		 * <p>
@@ -241,8 +241,8 @@ public abstract class BasicBot implements Bot {
     	/**
 		 * <p>
 		 * Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und
-		 * Aktuatoren). Die Komponente(n), die sich zust&auml;ndig f&uuml;hlt
-		 * (f&uuml;hlen), k&ouml;nnen etwas damit tun (typischerweise ihren
+		 * Aktuatoren). Die Komponente(n), die sich zuständig fühlt
+		 * (fühlen), können etwas damit tun (typischerweise ihren
 		 * eigenen Wert setzen auf den im Kommando gespeicherten).
 		 * </p>
 		 * <p>
@@ -342,7 +342,6 @@ public abstract class BasicBot implements Bot {
 		}
 //		// Wenn wir sterben, Instanz-Zahl reduzieren
 //		addDisposeListener(new Runnable() {
-//			@SuppressWarnings("synthetic-access")
 //			public void run() {
 //				numInstances.decrease(BasicBot.this.getClass());
 //			}
@@ -378,7 +377,7 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * <p>
-	 * Laufende Nummer des AliveObstacles, und zwar abh&auml;ngig von der
+	 * Laufende Nummer des AliveObstacles, und zwar abhängig von der
 	 * Subklasse: Laufen z.B. 2 GurkenBots und 3 TomatenBots (alle von
 	 * AliveObstacle abgeleitet), dann sind die Instance-Numbers:
 	 * <ul>
@@ -407,10 +406,10 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * <p>
-	 * Benutzerfreundlicher Name des Bots (wie dem Konstruktor &uuml;bergeben),
-	 * an die falls erforderlich eine laufende Nummer angeh&auml;ngt ist. Laufen
-	 * z.B. 2 AliveObstacle-Instanzen mit Namen &quot;Gurken-Bot&quot; und 3 mit
-	 * &quot;Tomaten-Bot&quot;, sind die R&uuml;ckgabewerte dieser Methode:
+	 * Benutzerfreundlicher Name des Bots (wie dem Konstruktor übergeben),
+	 * an die falls erforderlich eine laufende Nummer angehängt ist. Laufen
+	 * z.B. 2 AliveObstacle-Instanzen mit Namen "Gurken-Bot" und 3 mit
+	 * "Tomaten-Bot", sind die Rückgabewerte dieser Methode:
 	 * <ul>
 	 * <li>Gurken-Bot</li>
 	 * <li>Gurken-Bot (2)</li>

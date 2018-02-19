@@ -754,7 +754,7 @@ public class ParcoursLoader {
 		// Ein DocumentBuilder liest ein XML-File ein
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder;
-		
+    
 		try {
 			builder = factory.newDocumentBuilder();
 			if (resolver != null) {
@@ -882,7 +882,6 @@ public class ParcoursLoader {
 	 *            Der Schluessel, mit dem sie abgelegt wurde
 	 * @return Die Appearance
 	 */
-	@SuppressWarnings("boxing")
 	private Appearance getAppearance(int key) {
 		Appearance app = (Appearance) this.appearances.get((char) key);
 		if (app == null) {
@@ -904,7 +903,6 @@ public class ParcoursLoader {
 	 *            Referenz auf einen schon bestehenden Eintrag, der geclonet
 	 *            werden soll
 	 */
-	@SuppressWarnings( { "unchecked", "boxing" })
 	private void addAppearance(char item, HashMap colors, String textureFile, String clone) {
 		if (clone != null) {
 			appearances.put(item, appearances.get(clone.toCharArray()[0]));

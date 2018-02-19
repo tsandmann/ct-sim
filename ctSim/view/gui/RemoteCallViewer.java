@@ -341,7 +341,6 @@ public class RemoteCallViewer extends JPanel {
 			/**
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
-			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
 				if (isRunning) {
 					try {

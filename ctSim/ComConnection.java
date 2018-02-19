@@ -300,7 +300,6 @@ public class ComConnection extends Connection {
 		 * work-Methode des Threads
 		 * @throws InterruptedException
 		 */
-		@SuppressWarnings("synthetic-access")
 		@Override
 		public void work() throws InterruptedException {
 			comConnSingleton.blockUntilDataAvailable();

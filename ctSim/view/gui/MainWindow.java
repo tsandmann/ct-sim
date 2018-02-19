@@ -51,10 +51,10 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Runnable1;
 
 /**
- * Die GUI-Hauptklasse fuer den c't-Sim
+ * Die GUI-Hauptklasse für den c't-Sim
  *
  * @author Felix Beckwermert
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class MainWindow extends JFrame implements ctSim.view.View {
     /** UID */
@@ -147,7 +147,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			Config.getIcon("schliessen-hover"));
 		// Listener wenn einer aufm Tab das Schliessen-Icon klickt
 		botTabs.addCloseListener(new Runnable1<Integer>() {
-			@SuppressWarnings("synthetic-access")
 			public void run(Integer index) {
 				BotViewer bv = (BotViewer)botTabs.getComponentAt(index);
 				bv.bot.dispose();
@@ -222,7 +221,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 */
 	public void onWorldOpened(final World w) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				closeWorld();
 				world = w;
@@ -289,7 +287,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * */
 	public void onBotAdded(final Bot bot) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				String tabTitle = bot.toString();
 				final JComponent tabContent = new BotViewer(bot);
@@ -334,7 +331,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 */
 	private void removeBotTab(final Bot bot) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				for (int i = 0; i < botTabs.getTabCount(); i++) {
 					BotViewer bv = (BotViewer)botTabs.getComponentAt(i);
@@ -370,7 +366,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 */
 	public void onJudgeSet(final Judge judge) {	
 //		SwingUtilities.invokeLater(new Runnable() {
-//			@SuppressWarnings("synthetic-access")
 //			public void run() {
 //				menuBar.onJudgeSet(judge);
 //			}

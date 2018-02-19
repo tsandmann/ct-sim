@@ -45,7 +45,7 @@ public class SimUtils {
 	 */
 	@SuppressWarnings("deprecation")
 	public static String vec3dToString(Vector3d vec) {
-		return new Integer(Math.round(Math.round(vec3dToDouble(vec))))
+		return Integer.valueOf(Math.round(Math.round(vec3dToDouble(vec))))
 				.toString();
 	}
 
