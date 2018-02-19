@@ -64,6 +64,7 @@ public class DecoratororTest {
 	 * @throws NoSuchMethodException
 	 */
 	@Test
+	@SuppressWarnings("unused")
 	public void doesImplementWithWrongName() throws NoSuchMethodException {
 		// wrong name
 		assertFalse(doesImplement(
@@ -77,6 +78,7 @@ public class DecoratororTest {
 	 * @throws NoSuchMethodException
 	 */
 	@Test
+	@SuppressWarnings("unused")
 	public void doesImplementReturnTypeStuff() throws NoSuchMethodException {
 		// wrong: unrelated return type
 		assertFalse(doesImplement(
@@ -111,6 +113,7 @@ public class DecoratororTest {
 	 * 
 	 */
 	@Test
+	@SuppressWarnings("unused")
 	public void doesImplementParameterStuff() {
 		// wrong: too many params
 		assertFalse(doesImplement(

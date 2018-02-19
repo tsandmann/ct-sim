@@ -59,7 +59,7 @@ import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
  * <ul>
  * <li>Menüleiste</li>
  * <li>die einzelnen Menüs</li>
- * <li>die Knoepfe der Toolbar</li>
+ * <li>die Knöpfe der Toolbar</li>
  * <li>Event-Handling-Code, der ausgeführt wird, wenn der Benutzer einen
  * Menüpunkt / einen Toolbar-Knopf klickt</li>
  * <li>die Dialogfenster hinter den Menüpunkten (Welt öffnen,
@@ -270,7 +270,7 @@ public class MainWinMenuBar extends JMenuBar {
 //	 * NOP
 //	 */
 //	private Runnable1<Boolean> noOp = new Runnable1<Boolean>() {
-//		public void run(Boolean argument) {
+//		public void run(@SuppressWarnings("unused") Boolean argument) {
 //			// No-Op
 //		}
 //	};
@@ -569,6 +569,7 @@ public class MainWinMenuBar extends JMenuBar {
         /**
          * Judge-Klassenname
          */
+    	@SuppressWarnings("unused")
 		public final String fqJudgeClassName;
 
 		/**

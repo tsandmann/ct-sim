@@ -95,6 +95,7 @@ public class BotViewer extends JScrollPane {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		for (Class<?> b : buisitors) {
 			try {
+				@SuppressWarnings("deprecation")
 				GuiBotBuisitor buisitor = (GuiBotBuisitor) b.newInstance();
 				bot.accept(buisitor);
 				if (buisitor.shouldBeDisplayed()) {

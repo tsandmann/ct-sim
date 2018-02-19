@@ -149,7 +149,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 		/**
 		 * <p>
-		 * führt das Behavior mit den gegenwärtigen Parameterwerten
+		 * Führt das Behavior mit den gegenwärtigen Parameterwerten
 		 * aus. Der Behavior serialisiert sich und seine Parameter in ein
 		 * Byte-Array. In diesem stehen:
 		 * <ol>
@@ -248,7 +248,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			try {
 				this.name = fullName.split(" ")[1];
 			} catch (ArrayIndexOutOfBoundsException e) {
-				throw new ProtocolException("Ungueltiger Parametertyp '"+
+				throw new ProtocolException("Ungültiger Parametertyp '"+
 					fullName+"' (muss Leerzeichen enthalten)");
 			}
 		}
@@ -647,7 +647,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		try {
 			is.read(rv);
 		} catch (IOException e) {
-			throw new ProtocolException("Remote Call Entry: Ungueltige " +
+			throw new ProtocolException("Remote Call Entry: Ungültige " +
 					"Payload");
 		}
 		return rv;

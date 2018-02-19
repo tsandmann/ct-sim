@@ -213,7 +213,7 @@ public abstract class BasicBot implements Bot {
          * }
          * </pre>
 		 *
-		 * Component-Flag-Tabellen sind also eine Verknuepfung dieser
+		 * Component-Flag-Tabellen sind also eine Verknüpfung dieser
 		 * Methode, einer Hilfsmethode mit Namen Unterstrich (_) und einer
 		 * kleinen Klasse (CompntWithFlag). Vorteil: eine Superklasse, z.B.
 		 * CtBot, kann die Komponenten instanziieren. Subklassen, z.B.
@@ -241,8 +241,8 @@ public abstract class BasicBot implements Bot {
     	/**
 		 * <p>
 		 * Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und
-		 * Aktuatoren). Die Komponente(n), die sich zuständig fuehlt
-		 * (fuehlen), können etwas damit tun (typischerweise ihren
+		 * Aktuatoren). Die Komponente(n), die sich zuständig fühlt
+		 * (fühlen), können etwas damit tun (typischerweise ihren
 		 * eigenen Wert setzen auf den im Kommando gespeicherten).
 		 * </p>
 		 * <p>

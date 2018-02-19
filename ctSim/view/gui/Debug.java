@@ -36,6 +36,7 @@ public class Debug {
 	/** Output */
 	public static final Debug out = new Debug();
 	/** Log-File */
+	@SuppressWarnings("unused")
 	private final String LOG_FILE = "debug.txt";
 	/** Zeitformat */
 	private final String TIME_PREFIX = "[HH:mm:ss] ";
@@ -130,6 +131,7 @@ public class Debug {
 	/**
 	 * @see java.lang.Object#finalize()
 	 */
+	@SuppressWarnings({ "deprecation", "javadoc" })
 	@Override
 	protected void finalize() throws Throwable {
 		

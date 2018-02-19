@@ -270,6 +270,7 @@ public class Characteristic {
 	/**
 	 * Schreibt die Lookup-Tables zum Debuggen auf die Konsole
 	 */
+	@SuppressWarnings("unused")
 	private void printLookup() {
 		System.out.println("Lookup-Table");
 		for (int i = 0; i < lookup.length; i++) {
@@ -283,6 +284,7 @@ public class Characteristic {
 	 *            Der zu zerlegende String, Einzelteile durch ; getrennt
 	 * @return Das Array
 	 */
+	@SuppressWarnings("deprecation")
 	private static Number[] csv2array(String input) {
 		StringTokenizer st = new StringTokenizer(input, ";");
 		Vector<Number> num = new Vector<Number>();

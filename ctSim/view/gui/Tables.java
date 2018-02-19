@@ -101,7 +101,6 @@ public abstract class Tables {
 		/**
 		 * @param a Aktuator
 		 */
-
 		public void buisit(SimpleActuator a) {
 			model.addRow((BotComponent<? extends SpinnerModel>)a);
 		}
@@ -122,7 +121,6 @@ public abstract class Tables {
 		/**
 		 * @param s Sensor
 		 */
-
 		public void buisit(SimpleSensor s) {
 			model.addRow((BotComponent<? extends SpinnerModel>)s);
 		}

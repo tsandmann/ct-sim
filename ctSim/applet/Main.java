@@ -52,6 +52,7 @@ import ctSim.view.gui.BotViewer;
 /**
  * Main-Klasse für das c't-Bot-Applet 
  */
+@SuppressWarnings("deprecation")
 public class Main extends JApplet implements BotReceiver {
 	/** UID */
 	private static final long serialVersionUID = - 2381362461560258968L;
