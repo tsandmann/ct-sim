@@ -284,7 +284,6 @@ public class Characteristic {
 	 *            Der zu zerlegende String, Einzelteile durch ; getrennt
 	 * @return Das Array
 	 */
-	@SuppressWarnings("deprecation")
 	private static Number[] csv2array(String input) {
 		StringTokenizer st = new StringTokenizer(input, ";");
 		Vector<Number> num = new Vector<Number>();

@@ -43,7 +43,6 @@ public class SimUtils {
 	 *            der Eingabevektor
 	 * @return die Gradzahl als String
 	 */
-	@SuppressWarnings("deprecation")
 	public static String vec3dToString(Vector3d vec) {
 		return Integer.valueOf(Math.round(Math.round(vec3dToDouble(vec))))
 				.toString();

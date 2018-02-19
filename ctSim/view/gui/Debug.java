@@ -131,7 +131,6 @@ public class Debug {
 	/**
 	 * @see java.lang.Object#finalize()
 	 */
-	@SuppressWarnings({ "deprecation", "javadoc" })
 	@Override
 	protected void finalize() throws Throwable {
 		
