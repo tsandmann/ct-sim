@@ -754,6 +754,7 @@ public class ParcoursLoader {
 		// Ein DocumentBuilder liest ein XML-File ein
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder;
+    
 		try {
 			builder = factory.newDocumentBuilder();
 			if (resolver != null) {
