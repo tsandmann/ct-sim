@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -33,7 +33,7 @@ import java.awt.image.WritableRaster;
 
 /**
  * <p>
- * Erm&ouml;glicht runde (radiale) Farbverl&auml;ufe. Implementierung mit
+ * Ermöglicht runde (radiale) Farbverläufe. Implementierung mit
  * Inspiration von <a
  * href="http://www.oreilly.com/catalog/java2d/chapter/ch04.html">http://www.oreilly.com/catalog/java2d/chapter/ch04.html</a>
  * </p>
@@ -49,13 +49,13 @@ import java.awt.image.WritableRaster;
  *     protected void paintComponent(Graphics graphics) {
  *         Graphics2D g = (Graphics2D)graphics;
  *         g.setPaint(paint);
- *         g.fillRect(...); // Wird gef&uuml;llt mit Farbverlauf
+ *         g.fillRect(...); // Wird gefüllt mit Farbverlauf
  *     }
  *     ...
  * }
  * </pre>
  *
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class RoundGradientPaint implements Paint {
 	/**
@@ -99,7 +99,7 @@ public class RoundGradientPaint implements Paint {
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
 					double distance = center.distance(baseX + x, baseY + y);
-					// Verhaeltnis Abstand / Radius
+					// Verhältnis Abstand / Radius
 					double ratio = Misc.clamp(distance / radius, 1);
 					raster.setPixel(x, y, getPixelColor(ratio));
 				}

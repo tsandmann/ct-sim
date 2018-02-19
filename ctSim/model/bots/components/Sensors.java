@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -260,7 +260,7 @@ public class Sensors {
 	 */
 	public static class Clock extends BotComponent<Void>
 	implements CanRead, CanWrite {
-		/** letzte uebertragene Zeit */
+		/** letzte übertragene Zeit */
 		private int lastTransmittedSimTime = -1;
 
 		/**
@@ -269,7 +269,7 @@ public class Sensors {
 		 */
 		public synchronized void setSimTimeInMs(int simTime) {
 			lastTransmittedSimTime = simTime;
-			// Wir haben nur 16 Bit zur Verfuegung und 10.000 ist ne nette Zahl ;-)
+			// Wir haben nur 16 Bit zur Verfügung und 10.000 ist ne nette Zahl ;-)
 			lastTransmittedSimTime %= 10000;
 		}
 
@@ -279,10 +279,10 @@ public class Sensors {
 		public synchronized void readFrom(Command c) {
 			if (c.getDataL() != lastTransmittedSimTime) {
 				if (lastTransmittedSimTime == -1)
-					// Fuer's allererste DONE-Kommando doch nicht warnen
+					// Für's allererste DONE-Kommando doch nicht warnen
 					return;		
 				lg.warn("Bot-Steuercode hat unerwartete lastTransmitted-Zeit "+
-						"gesendet (erwartet: %d, tats\u00E4chlich: %d); dies "+
+						"gesendet (erwartet: %d, tatsächlich: %d); dies "+
 						"deutet darauf hin, dass der Steuercode Simschritte "+
 						"verschlafen hat",
 						lastTransmittedSimTime, c.getDataL());
@@ -339,7 +339,7 @@ public class Sensors {
 		 * {@code true}: Diese Instanz verwaltet die X-Komponente,
 		 * {@code false}: Y-Komponente. Im Konstruktor wird dieser Wert an den
 		 * Superkonstruktor gegeben, wo er entscheidet, ob unser Wert im dataL-
-		 * oder dataR-Feld eines Commands &uuml;bermittelt wird (sowohl
+		 * oder dataR-Feld eines Commands übermittelt wird (sowohl
 		 * Schreiben als auch Lesen). Die Zuordnung ist also X = dataL, Y =
 		 * dataR.
 		 */
@@ -396,10 +396,10 @@ public class Sensors {
 	 * </p>
 	 * <p>
 	 * <strong>c't-Bot-Protokoll:</strong> Der Fernbedienungssensor sendet eine
-	 * Ganzzahl, die f&uuml;r einen Knopf steht (Zuordnung siehe
+	 * Ganzzahl, die für einen Knopf steht (Zuordnung siehe
 	 * {@link RemoteControlViewer}). Die Zahl steht im Feld {@code dataL}, die
-	 * &uuml;brigen Felder werden nicht ver&auml;ndert. Falls der Benutzer einen
-	 * Knopf gedrueckt hat, sendet die Instanz den entsprechenden Code. Falls
+	 * übrigen Felder werden nicht verändert. Falls der Benutzer einen
+	 * Knopf gedrückt hat, sendet die Instanz den entsprechenden Code. Falls
 	 * nicht, sendet sie ein Command, das {@code dataL} == 0 hat.
 	 * </p>
 	 */
@@ -410,7 +410,7 @@ public class Sensors {
 		/** ausstehender RC5-Code */
 		private int syncPendingRcCode = 0;
 		
-		/** Lookup-Tabelle fuer RC5-Codes */
+		/** Lookup-Tabelle für RC5-Codes */
 		private Map<String, Integer> RC5Keys = null;
 
 		/**
@@ -430,7 +430,7 @@ public class Sensors {
 
 		/**
 		 * Sendet einen RC5-Code
-		 * @param rc5Code	RC5-Code gemaess Tabelle
+		 * @param rc5Code	RC5-Code gemäß Tabelle
 		 * @throws IOException
 		 */
 		private synchronized void send(int rc5Code) throws IOException {
@@ -613,7 +613,7 @@ public class Sensors {
 	}
 
 	/**
-	 * Transportfach-Ueberwachung
+	 * Transportfach-Überwachung
 	 */
 	public static class Trans extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
@@ -674,7 +674,7 @@ public class Sensors {
 		 */
 		@Override
 		public String getDescription() {
-			return "Sensor f\u00FCr Motor- oder Batteriefehler; 0 = Fehler; " +
+			return "Sensor für Motor- oder Batteriefehler; 0 = Fehler; " +
 					"1 = okay";
 		}
 

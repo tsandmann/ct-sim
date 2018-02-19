@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -20,7 +20,7 @@
 package ctSim.util;
 
 /**
- * Datentyp fuer Kreise, die der MapViewer darstellen kann
+ * Datentyp für Kreise, die der MapViewer darstellen kann
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class MapCircles {

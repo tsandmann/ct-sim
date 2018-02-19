@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -36,7 +36,7 @@ import ctSim.util.BotID;
 import ctSim.view.gui.ProgramViewer;
 
 /**
- * Abstrakte Oberklasse fuer alle c't-Bots
+ * Abstrakte Oberklasse für alle c't-Bots
  */
 public abstract class CtBot extends BasicBot {
 	
@@ -55,7 +55,7 @@ public abstract class CtBot extends BasicBot {
 	/** Abstand vom Zentrum zur Aussenkante des Bots [m] */
 	protected static final double BOT_RADIUS = 0.060d;
 
-	/** Hoehe des Bots [m] */
+	/** Höhe des Bots [m] */
 	protected static final double BOT_HEIGHT = 0.120d;
 
 	/** Bodenfreiheit des Bots [m] */
@@ -69,18 +69,18 @@ public abstract class CtBot extends BasicBot {
 	
 	/**
 	 * Vorverarbeitung der Kommandos 
-	 * z.B. Weiterleiten von Kommandos fuer andere Bots
+	 * z.B. Weiterleiten von Kommandos für andere Bots
 	 * Adressvergabe, etc.
 	 * @param cmd das Kommando
 	 * @return True, Wenn das Kommando abgearbeitet wurde, sonst False
-	 * @throws IOException falls Output-Stream.flush() fehlschlaegt
+	 * @throws IOException falls Output-Stream.flush() fehlschlägt
 	 * @throws ProtocolException falls kein Controller vorhanden zum Weiterleiten
 	 */
 	protected boolean preProcessCommands(Command cmd) throws IOException, ProtocolException {
 		BotID id = cmd.getFrom();
 		if (cmd.has(Command.Code.WELCOME)) {
 			// Von einem Welcome nehmen wir sicherheitshalber erstmal die ID an
-			lg.info("Nehme fuer Bot " + toString() + " erstmal die ID des Welcome-Paketes:"	+ id);
+			lg.info("Nehme für Bot " + toString() + " erstmal die ID des Welcome-Paketes:"	+ id);
 			try {
 				setId(id);
 			} catch (ProtocolException e) {
@@ -135,8 +135,8 @@ public abstract class CtBot extends BasicBot {
 		}
 
 		if (!cmd.getTo().equals(Command.getSimId())) {
-			lg.info("Nachricht ist fuer " + cmd.getTo());
-			// Diese Nachricht ist nicht fuer den Sim, sondern fuer einen anderen Bot
+			lg.info("Nachricht ist für " + cmd.getTo());
+			// Diese Nachricht ist nicht für den Sim, sondern für einen anderen Bot
 			// Also weiterleiten
 			Controller controller = getController();
 
@@ -157,19 +157,19 @@ public abstract class CtBot extends BasicBot {
 
 	
 	/**
-	 * Verarbeitet ein Kommando und leitet es an den angehaengten Bot weiter
+	 * Verarbeitet ein Kommando und leitet es an den angehängten Bot weiter
 	 * @param command das Kommando
 	 * @throws ProtocolException Wenn was nicht klappt
 	 */
 	public void receiveCommand(Command command) throws ProtocolException {
 		if (!command.getTo().equals(this.getId()) && !command.getTo().equals(Command.getBroadcastId()))
-			throw new ProtocolException("Bot " + getId() + " hat ein Kommando "+command.toCompactString() + " empfangen, dass nicht fuer ihn ist");
+			throw new ProtocolException("Bot " + getId() + " hat ein Kommando "+command.toCompactString() + " empfangen, dass nicht für ihn ist");
 		
 		if (getConnection() == null) {
 			throw new ProtocolException("Bot " + getId() + " hat gar keine Connection");
 		}
 		
-		// Wir werfen das Kommando direkt an den angehaengten Bot
+		// Wir werfen das Kommando direkt an den angehängten Bot
 		try { 
 			getConnection().write(command);
 		} catch (IOException e) {
@@ -180,7 +180,7 @@ public abstract class CtBot extends BasicBot {
 	/**
 	 * Startet das Verhalten "name" per RemoteCall
 	 * @param name	Das zu startende Verhalten
-	 * @param param	Int-Parameter fuer das Verhalten (16 Bit)
+	 * @param param	Int-Parameter für das Verhalten (16 Bit)
 	 * @param ref	Referenz auf den ABL-Viewer, falls das Ergebnis dort angezeigt werden soll
 	 */
 	public void startRemoteCall(String name, int param, ProgramViewer ref) {

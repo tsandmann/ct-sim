@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -38,7 +38,7 @@ import ctSim.util.Misc;
 /**
  * <ul><li>Command-Code SENS_MOUSE_PICTURE</li>
 * <li>Nutzlast: einen Teil der Pixel des Mausbilds, z.B. Pixel Nr. 42 bis 108</li>
-* <li>In diesem Fall w&auml;re dataL == 42 und die Nutzlastl&auml;nge == 64</li>
+* <li>In diesem Fall wäre dataL == 42 und die Nutzlastlänge == 64</li>
 * <li></li></ul>
  */
 public class MousePictureComponent extends BotComponent<Void>
@@ -46,14 +46,14 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * Breite des Maussensorbilds in Pixeln (d.h. unskalierte Pixel, wie sie von
 	 * der Bot-Hardware kommen &amp;ndash; zum Anzeigen wird das Bild ja
-	 * gr&ouml;&szlig;erskaliert)
+	 * größerskaliert)
 	 */
 	private static final int WIDTH  = 18;
 
 	/**
-	 * H&ouml;he des Maussensorbilds in Pixeln (d.h. unskalierte Pixel, wie sie
+	 * Höhe des Maussensorbilds in Pixeln (d.h. unskalierte Pixel, wie sie
 	 * von der Bot-Hardware kommen &amp;ndash; zum Anzeigen wird das Bild ja
-	 * gr&ouml;&szlig;erskaliert)
+	 * größerskaliert)
 	 */
 	private static final int HEIGHT = 18;
 
@@ -120,16 +120,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Konvertiert ein RGB-Wertetripel in nen Integer, wie er im Array
 	 * {@link #pixels} sein muss. Format ist etwas undurchsichtig:
 	 * <ul>
-	 * <li>Es handelt sich um eine 4-Komponenten-Farbe (Alpha, Rot, Gr&uuml;n,
+	 * <li>Es handelt sich um eine 4-Komponenten-Farbe (Alpha, Rot, Grün,
 	 * Blau in dieser Reihenfolge)</li>
 	 * <li>8 Bit pro Komponente ([0; 255]) = 32 Bit pro Pixel</li>
 	 * <li><strong>Die 32 Bit sind in <em>einen</em> Integer gestopft.</strong>
 	 * (Integer in Java: 32 Bit lang.)
 	 * <ul>
-	 * <li>Alpha-Wert = die 8 h&ouml;chstwertigen Bits (MSBs), also Bits
-	 * 24&ndash;32</li>
+	 * <li>Alpha-Wert = die 8 höchstwertigen Bits (MSBs), also Bits
+	 * 24–32</li>
 	 * <li>usw.</li>
-	 * <li>Blau-Wert = die 8 niedrigstwertigen Bits (LSBs), also Bits 0&ndash;8
+	 * <li>Blau-Wert = die 8 niedrigstwertigen Bits (LSBs), also Bits 0–8
 	 * </li>
 	 * </ul>
 	 * </li>
@@ -140,8 +140,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Alpha setzt diese Methode immer auf 255 (voll deckend).
 	 * </p>
 	 * <p>
-	 * Sind die &uuml;bergebenen Parameter au&szlig;erhalb des Wertebereichs [0;
-	 * 255], wird geclampt (255 wenn zu gro&szlig;, 0 wenn zu klein).
+	 * Sind die übergebenen Parameter außerhalb des Wertebereichs [0;
+	 * 255], wird geclampt (255 wenn zu groß, 0 wenn zu klein).
 	 * </p>
 	 * @param r rot
 	 * @param g gruen
@@ -152,7 +152,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		r = Misc.clamp(r, 255);
 		g = Misc.clamp(g, 255);
 		b = Misc.clamp(b, 255);
-		// Alpha volle Pulle, die andern wie als Parameter uebergeben
+		// Alpha volle Pulle, die andern wie als Parameter übergeben
 		return 255 << 24 | r << 16 | g << 8 | b;
 	}
 
@@ -167,7 +167,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @param c Command
 	 */
 	public synchronized void readFrom(Command c) {
-		//LODO Ist alles ziemlich zerbrechlich. Was zum Beispiel, wenn der Bot aufgrund eines Bug eine dataL ausserhalb des Arrays sendet? -> Mehr Input Validation, wofuer haben wir ProtocolExceptions
+		//LODO Ist alles ziemlich zerbrechlich. Was zum Beispiel, wenn der Bot aufgrund eines Bug eine dataL ausserhalb des Arrays sendet? -> Mehr Input Validation, wofür haben wir ProtocolExceptions
 		if (! c.has(getHotCmdCode()))
 			return;
 
@@ -184,22 +184,22 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			int row = (offset + i) / WIDTH;
 			col = HEIGHT - 1 - col; // spiegeln -- oben und unten vertauschen
 			// Um 90 Grad drehen = Spaltennr. und Zeilennr. vertauschen (siehe ) //$$$ Siehe protokoll-doku
-			// Ohne Drehen waere pixels[col + (row * WIDTH)]
+			// Ohne Drehen wäre pixels[col + (row * WIDTH)]
 			pixels[(col * HEIGHT) + row] = colorFromRgb(gray, gray, gray);
 		}
 
 		imageEventPending = true;
 		if (offset + i == pixels.length) {
-			// Array voll: Flag setzen fuer "Listenern bescheidgeben"
+			// Array voll: Flag setzen für "Listenern bescheidgeben"
 			completionEventPending = true;
 		}
 	}
 
 	/**
-	 * No-op: Wir implementieren die, weil wir laut Interface m&uuml;ssen, aber
+	 * No-op: Wir implementieren die, weil wir laut Interface müssen, aber
 	 * wir brauchen die nicht weil wir ja
 	 * {@link #askForWrite(CommandOutputStream) askForWrite()}
-	 * &uuml;berschrieben haben.
+	 * überschrieben haben.
 	 * @param c Command
 	 */
 	public void writeTo(Command c) { 
@@ -212,7 +212,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	public int getWidth() { return WIDTH; }
 	
 	/**
-	 * @return Hoehe
+	 * @return Höhe
 	 */
 	public int getHeight() { return HEIGHT; }
 	

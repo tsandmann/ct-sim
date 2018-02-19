@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -35,7 +35,7 @@ public class TimeLogger implements View {
 		"Simzeit %d ms; Armbanduhrenzeit %tT.%<tL";
 	/** komplette Ausgabe */
 	private static final String normalMsg = minimalMsg +
-			"; Verh\u00E4ltnis 1 : %.3f seit letzter " +
+			"; Verhältnis 1 : %.3f seit letzter " +
 			"TimeLogger-Ausgabe; 1 : %.3f seit Simulationsbeginn";
 
 	/** Logger */
@@ -65,8 +65,8 @@ public class TimeLogger implements View {
 	 * @see ctSim.view.View#onApplicationInited()
 	 */
 	public void onApplicationInited() {
-		lg.info("TimeLogger l\u00E4uft; Simzeit und Realzeit werden " +
-				"w\u00E4hrend der Simulation periodisch ausgegeben");
+		lg.info("TimeLogger läuft; Simzeit und Realzeit werden " +
+				"während der Simulation periodisch ausgegeben");
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class TimeLogger implements View {
     		return;
 
 		long now = System.currentTimeMillis();
-		// Falls minimalMsg verwendet wird, wird das ueberfluessige Argument
+		// Falls minimalMsg verwendet wird, wird das überflüssige Argument
 		// ignoriert
 		lg.info((simTimeAtLastLog == - intervalInSimMs)
 			? minimalMsg : normalMsg,

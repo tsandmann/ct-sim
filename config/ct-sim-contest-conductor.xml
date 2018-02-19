@@ -11,14 +11,14 @@
 
 		Mit der Kommandozeilenoption -conf config/ct-sim-contest-conductor.xml
 		kann der Controller veranlasst werden, diese Datei statt der
-		standardmaessigen zu verwenden. Zum einfachen Ausfuehren beider
+		standardmäßigen zu verwenden. Zum einfachen Ausführen beider
 		Varianten lassen sich in Eclipse zwei Run Configurations einrichten
 		(eine mit der o.g. Option, eine ohne).
 	</description>
 
 	<!-- ctSimTimeout ist die Zeit in [ms], die der Controller maximal auf einen Bot wartet -->
 	<parameter name="ctSimTimeout" value="100"/>
-	<!-- AliveObstacleTimeout ist die Zeit in [ms], die die work()-Methode eines AliveObstacles brauchen darf, um zum ende zu kommen. Wird sie ueberschritten, deakticviert sich das Obstacle selbst. Steht der Timeout auf 0, hat es beliebig viel Zeit -->
+	<!-- AliveObstacleTimeout ist die Zeit in [ms], die die work()-Methode eines AliveObstacles brauchen darf, um zum Ende zu kommen. Wird sie überschritten, deakticviert sich das Obstacle selbst. Steht der Timeout auf 0, hat es beliebig viel Zeit -->
 	<parameter name="AliveObstacleTimeout" value="0"/>
 
 	<!-- worlddir ist das Verzeichnis, in dem alle Weltdateien liegen -->
@@ -29,7 +29,7 @@
 	<!-- botdir ist das Verzeichnis, in dem nach Bots gesucht wird. Der Name wird automatisch von Linux nach Windows konvertiert und umgekehrt -->
 	<parameter name="botdir" value="..\ct-Bot\Debug-W32"/>
 
-	<!-- Uebergeht einen eventuellen "judge"-Parameter -->
+	<!-- Übergeht einen eventuellen "judge"-Parameter -->
 	<parameter name="useContestConductor" value="true"/>
 
 	<parameter name="contestBotTargetDir" value="tmp"/>
@@ -37,17 +37,17 @@
 	<parameter name="contestBotFileNameSuffix" os="Windows" value=".exe"/>
 	<parameter name="contestBotFileNameSuffix" os="Linux" value=".elf"/>
 
-	<!-- ctSimIP ist der Rechner, auf dem der Sim laeuft -->
+	<!-- ctSimIP ist der Rechner, auf dem der Sim läuft -->
 	<parameter name="ctSimIP" value="192.168.123.252"/>
 
 
-	<!-- host1 ist der Rechner, der den Bot1 ausfuehrt Achtung dort muss ein ssh-Daemon laufen-->
+	<!-- host1 ist der Rechner, der den Bot1 ausführt. Achtung dort muss ein ssh-Daemon laufen-->
 	<parameter name="host1" value="192.168.123.253"/>
-	<!-- host1_username ist der Bnutzername für den Rechner, der den Bot1 ausfuehrt. Authorisiert wird der User per Provate/Public-RSA Keys. diese muessen bereits uebertragen sein -->
+	<!-- host1_username ist der Bnutzername für den Rechner, der den Bot1 ausführt. Authorisiert wird der User per Provate/Public-RSA Keys. diese müssen bereits übertragen sein -->
 	<parameter name="host1_username" value="ctbot"/>
-	<!-- host2 ist der Rechner, der den Bot2 ausfuehrt. Achtung dort muss ein ssh-Daemon laufen -->
+	<!-- host2 ist der Rechner, der den Bot2 ausführt. Achtung dort muss ein ssh-Daemon laufen -->
 	<parameter name="host2" value="192.168.123.254"/>
-	<!-- host2_username ist der Bnutzername für den Rechner, der den Bot2 ausfuehrt Authorisiert wird der User per Provate/Public-RSA Keys. diese muessen bereits uebertragen sein-->
+	<!-- host2_username ist der Bnutzername für den Rechner, der den Bot2 ausführt authorisiert wird der User per Provate/Public-RSA Keys. Diese müssen bereits übertragen sein-->
 	<parameter name="host2_username" value="ctbot"/>
 
 

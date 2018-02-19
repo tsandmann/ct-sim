@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -26,9 +26,9 @@ import ctSim.model.Command;
 
 /**
  * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim
- * gehoert. Hab keine Ahnung, wofuer das sein soll. Ich nehm die Datei aus dem
- * Build Path, damit man bei Namensaenderungen in Sim-Klassen das nicht immer
- * hier mitfuehren muss. --hkr@heise.de
+ * gehört. Hab keine Ahnung, wofür das sein soll. Ich nehm die Datei aus dem
+ * Build Path, damit man bei Namensänderungen in Sim-Klassen das nicht immer
+ * hier mitführen muss. --hkr@heise.de
  */
 public class EchoTest {
 

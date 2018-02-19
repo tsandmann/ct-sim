@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -37,8 +37,8 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
 /**
- * Repraesentiert einen Parcours fuer die Bots Wird zum Laden eines solchen
- * benoetigt. Des Weiteren stehen hier auch Informationen ueber Start- und
+ * Repräsentiert einen Parcours für die Bots Wird zum Laden eines solchen
+ * benötigt. Des Weiteren stehen hier auch Informationen über Start- und
  * Zielpunkte der Bots
  * 
  * @author bbe (bbe@heise.de)
@@ -50,31 +50,31 @@ public class Parcours {
 
 	/**
 	 * <p>
-	 * Breite einer Gittereinheit (eines Blocks) in Meter. Da die Bl&ouml;cke
-	 * immer quadratisch sind, ist die Breite auch die H&ouml;he.
+	 * Breite einer Gittereinheit (eines Blocks) in Meter. Da die Blöcke
+	 * immer quadratisch sind, ist die Breite auch die Höhe.
 	 * </p>
 	 * <p>
 	 * Idee: ct-Bot ist 12cm breit, wir setzen das Gitter auf 24cm, damit der
-	 * Bot auf dem engstm&ouml;glichen Durchgang (1 Block breit) m&ouml;glichst
+	 * Bot auf dem engstmöglichen Durchgang (1 Block breit) möglichst
 	 * viel Spielraum hat nach links und rechts (oben und unten), aber dass
-	 * gerade keine zwei Bots mehr aneinander vorbeik&ouml;nnen.
+	 * gerade keine zwei Bots mehr aneinander vorbeikönnen.
 	 * </p>
 	 */
 	private final float blockSizeInM = 0.24f;
 
 	/**
-	 * Anzahl der Startpositionen fuer Bots. Dir Position 0 ist die Default
-	 * Position, ab 1 fuer die Wettkampfbots.
+	 * Anzahl der Startpositionen für Bots. Dir Position 0 ist die Default
+	 * Position, ab 1 für die Wettkampfbots.
 	 */
-	public static final int BOTS = 3; // ParcoursLoader kann max 2 Startplaetze erzeugen, darum hardcoded auf 3
+	public static final int BOTS = 3; // ParcoursLoader kann max 2 Startplätze erzeugen, darum hardcoded auf 3
 
-	/** enthaelt alle Hindernisse */
+	/** Enthält alle Hindernisse */
 	private BranchGroup ObstBG;
-	/** Enthaelt alle Lichter */
+	/** Enthält alle Lichter */
 	private BranchGroup lightBG;
-	/** Enthaelt alle Landmarken */
+	/** Enthält alle Landmarken */
 	private BranchGroup bpsBG;
-	/** Enthaelt den Boden */
+	/** Enthält den Boden */
 	private BranchGroup terrainBG;
 
 	/** Ausdehnung des Parcours in X-Richtung [Gitter] */
@@ -118,7 +118,7 @@ public class Parcours {
 	public Parcours(ParcoursLoader parcoursLoader) {
 		super();
 		this.parcoursLoader = parcoursLoader;
-		// Die Branchgroup fuer die Hindernisse
+		// Die Branchgroup für die Hindernisse
 		ObstBG = new BranchGroup();
 		ObstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		ObstBG.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
@@ -126,16 +126,16 @@ public class Parcours {
 		ObstBG.setCapability(BranchGroup.ALLOW_DETACH);
 		ObstBG.setPickable(true);
 
-		// Die Branchgroup fuer die Lichtquellen
+		// Die Branchgroup für die Lichtquellen
 		lightBG = new BranchGroup();
 		lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		lightBG.setPickable(true);
 		
-		// Die Branchgroup fuer die BPS-Landmarken
+		// Die Branchgroup für die BPS-Landmarken
 		bpsBG = new BranchGroup();
 		bpsBG.setPickable(true);
 
-		// Die Branchgroup fuer den Boden
+		// Die Branchgroup für den Boden
 		terrainBG = new BranchGroup();
 		terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		terrainBG.setPickable(true);
@@ -176,14 +176,14 @@ public class Parcours {
 	}
 
 	/**
-	 * @return Liefert die Parcoursbreite in Gittereinheiten zur&uuml;ck
+	 * @return Liefert die Parcoursbreite in Gittereinheiten zurück
 	 */
 	public int getWidthInBlocks() {
 		return dimX;
 	}
 
 	/**
-	 * Setzt die Parcursbreite in Gittereinheiten
+	 * Setzt die Parcoursbreite in Gittereinheiten
 	 * 
 	 * @param dimX1
 	 *            Breite in Gittereinheiten
@@ -194,40 +194,40 @@ public class Parcours {
 
 	/**
 	 * 
-	 * @return Liefert die Parcoursh&ouml;he in Gittereinheiten zur&uuml;ck
+	 * @return Liefert die Parcourshöhe in Gittereinheiten zurück
 	 */
 	public int getHeightInBlocks() {
 		return dimY;
 	}
 
 	/**
-	 * @return Liefert die Breite (X-Gr&ouml;&szlig;e) des Parcours in Meter
-	 *         zur&uuml;ck
+	 * @return Liefert die Breite (X-Größe) des Parcours in Meter
+	 *         zurück
 	 */
 	public float getWidthInM() {
 		return dimX * blockSizeInM;
 	}
 
 	/**
-	 * @return Liefert die H&ouml;he (Y-Gr&ouml;&szlig;e) des Parcours in Meter
-	 *         zur&uuml;ck
+	 * @return Liefert die Höhe (Y-Größe) des Parcours in Meter
+	 *         zurück
 	 */
 	public float getHeightInM() {
 		return dimY * blockSizeInM;
 	}
 
 	/**
-	 * Setzt die Parcurshoehe in Gittereinheiten
+	 * Setzt die Parcourshöhe in Gittereinheiten
 	 * 
 	 * @param dimY1
-	 *            Hoehe in Gittereinheiten
+	 *            Höhe in Gittereinheiten
 	 */
 	public void setDimY(int dimY1) {
 		dimY = dimY1;
 	}
 
 	/**
-	 * Fuegt ein Hinderniss ein
+* Fügt ein Hinderniss ein
 	 * 
 	 * @param obstacle
 	 *            Das Hinderniss
@@ -241,7 +241,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fuegt ein Hinderniss ein
+* Fügt ein Hinderniss ein
 	 * 
 	 * @param obstacle
 	 *            Das Hinderniss
@@ -257,7 +257,7 @@ public class Parcours {
 	}
 	
 	/**
-	 * Fuegt ein bewegliches Hinderniss ein
+* Fügt ein bewegliches Hinderniss ein
 	 * 
 	 * @param obstacle
 	 *            Das Hinderniss
@@ -275,7 +275,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fuegt ein Stueck Boden ein
+* Fügt ein Stück Boden ein
 	 * 
 	 * @param floor
 	 *            der Boden
@@ -291,7 +291,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fuegt eine Node ein
+* Fügt eine Node ein
 	 * 
 	 * @param node
 	 *            Die Node
@@ -323,7 +323,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fuegt eine Node ein
+* Fügt eine Node ein
 	 * 
 	 * @param node
 	 *            Die Node
@@ -339,7 +339,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fuegt eine Darstellung der Lichtquelle ein
+* Fügt eine Darstellung der Lichtquelle ein
 	 * 
 	 * @param light
 	 *            Die Lichtquelle
@@ -355,7 +355,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fuegt eine Lichtquelle ein
+* Fügt eine Lichtquelle ein
 	 * 
 	 * @param light
 	 *            Die Lichtquelle
@@ -365,7 +365,7 @@ public class Parcours {
 	}
 	
 	/**
-	 * Fuegt eine Darstellung der Landmarke ein
+* Fügt eine Darstellung der Landmarke ein
 	 * 
 	 * @param bps Die Landmarke
 	 * @param x   X-Achse im Parcours-Gitter
@@ -377,7 +377,7 @@ public class Parcours {
 	}
 	
 	/**
-	 * Fuegt eine Landmarke fuer BPS ein
+* Fügt eine Landmarke für BPS ein
 	 * @param bps Landmarke
 	 */
 	public void addBPSLight(Node bps) {
@@ -394,28 +394,28 @@ public class Parcours {
 	}
 	
 	/**
-	 * @return Liefert die Licht-Branchgroup zurueck
+	 * @return Liefert die Licht-Branchgroup zurück
 	 */
 	public BranchGroup getLightBG() {
 		return lightBG;
 	}
 
 	/**
-	 * @return Liefert die Branchgroup mit den Landmarken fuer BPS zurueck 
+	 * @return Liefert die Branchgroup mit den Landmarken für BPS zurück 
 	 */
 	public BranchGroup getBpsBG() {
 		return bpsBG;
 	}
 	
 	/**
-	 * @return Liefert die Hindernis-Branchgroup zurueck
+	 * @return Liefert die Hindernis-Branchgroup zurück
 	 */
 	public BranchGroup getObstBG() {
 		return ObstBG;
 	}
 
 	/**
-	 * @return Liefert die Boden-Branchgroup zurueck
+	 * @return Liefert die Boden-Branchgroup zurück
 	 */
 	public BranchGroup getTerrainBG() {
 		return terrainBG;
@@ -425,7 +425,7 @@ public class Parcours {
 	 * Legt die Startposition eines Bots fest
 	 * 
 	 * @param bot
-	 *            Nummer des Bots (faengt bei 0 an zu zaehlen)
+	 *            Nummer des Bots (fängt bei 0 an zu zählen)
 	 * @param x
 	 *            X-Koordinate
 	 * @param y
@@ -442,7 +442,7 @@ public class Parcours {
 	 * Legt die Startrichtung eines Bots fest
 	 * 
 	 * @param bot
-	 *            Nummer des Bots (faengt bei 0 an zu zaehlen)
+	 *            Nummer des Bots (fängt bei 0 an zu zählen)
 	 * @param dir
 	 *            Richtung in Grad. 0 entspricht (x=1, y=0) dann im
 	 *            Uhrzeigersinn
@@ -474,7 +474,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert die Startposition fuer einen neuen Bots Wenn keine festgelegt
+	 * Liefert die Startposition für einen neuen Bots Wenn keine festgelegt
 	 * wurde, dann die Default-Position (0)
 	 * 
 	 * @param bot
@@ -562,7 +562,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fuegt eine neue Zielposition hinzu
+* Fügt eine neue Zielposition hinzu
 	 * 
 	 * @param x
 	 * @param y
@@ -572,25 +572,25 @@ public class Parcours {
 	}
 
 	/**
-	 * @return Liefert die Breite/H&ouml;he einer Gittereinheit (eines Blocks)
-	 *         in Meter zur&uuml;ck. (Da die Bl&ouml;cke quadratisch sind, sind
-	 *         Breite und H&ouml;he gleich.)
+	 * @return Liefert die Breite/Höhe einer Gittereinheit (eines Blocks)
+	 *         in Meter zurück. (Da die Blöcke quadratisch sind, sind
+	 *         Breite und Höhe gleich.)
 	 */
 	public float getBlockSizeInM() {
 		return blockSizeInM;
 	}
 
 	/**
-	 * @return Liefert die Breite/H&ouml;he einer Gittereinheit (eines Blocks)
-	 *         in Millimeter zur&uuml;ck. (Da die Bl&ouml;cke quadratisch sind, sind
-	 *         Breite und H&ouml;he gleich.)
+	 * @return Liefert die Breite/Höhe einer Gittereinheit (eines Blocks)
+	 *         in Millimeter zurück. (Da die Blöcke quadratisch sind, sind
+	 *         Breite und Höhe gleich.)
 	 */
 	public int getBlockSizeInMM() {
 		return (int) (blockSizeInM * 1000.0f);
 	}
 
 	/**
-	 * Prueft, ob ein Punkt innerhalb des Zielfeldes liegt
+	 * Prüft, ob ein Punkt innerhalb des Zielfeldes liegt
 	 * 
 	 * @param pos
 	 * @return true, falls ja
@@ -610,7 +610,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fuegt ein Loch hinzu
+	 * Fügt ein Loch hinzu
 	 * 
 	 * @param x
 	 * @param y
@@ -620,10 +620,10 @@ public class Parcours {
 	}
 
 	/**
-	 * Prueft, ob ein Punkt ueber einem Loch liegt
+	 * Prüft, ob ein Punkt über einem Loch liegt
 	 * 
 	 * @param pos
-	 * @return true, wenn der Bot ueber dem loch steht
+	 * @return true, wenn der Bot über dem loch steht
 	 */
 	public boolean checkHole(Point3d pos) {
 		if ((pos.x < 0) || (pos.y < 0) || (pos.x > dimX * blockSizeInM) || (pos.y > dimY * blockSizeInM)) {
@@ -668,8 +668,8 @@ public class Parcours {
 	}
 
 	/**
-	 * @return Liefert einen stark vereinfachten Parcours zurueck. das Array
-	 *         enthaelt nur 0 (freies Feld) und 1 (blockiertes Feld)
+	 * @return Liefert einen stark vereinfachten Parcours zurück. das Array
+	 *         enthält nur 0 (freies Feld) und 1 (blockiertes Feld)
 	 */
 	int[][] getFlatParcours() {
 		int[][] parcoursMapSimple = new int[getWidthInBlocks()][getHeightInBlocks()];
@@ -707,8 +707,8 @@ public class Parcours {
 	}
 
 	/**
-	 * @return Liefert einen stark vereinfachten Parcours zurueck. Das Array
-	 *         enthaelt nur 0 (freies Feld), 1 (blockiertes Feld) und 2 (Loch)
+	 * @return Liefert einen stark vereinfachten Parcours zurück. Das Array
+	 *         enthält nur 0 (freies Feld), 1 (blockiertes Feld) und 2 (Loch)
 	 */
 	public int[][] getFlatParcoursWithHoles() {
 		int[][] parcoursMapSimple = new int[getWidthInBlocks()][getHeightInBlocks()];
@@ -761,7 +761,7 @@ public class Parcours {
 	 */
 	public double getShortestDistanceToFinish(Vector3d from) {
 		// LODO: z wird ignoriert -- wird nicht mehr klappen, wenn der Bot
-		// (hypothetisch) mal Rampen hochfaehrt und sich auf verschiedenen
+		// (hypothetisch) mal Rampen hochfährt und sich auf verschiedenen
 		// Ebenen bewegt
 		return getShortestDistanceToFinish(new Vector2d(from.x, from.y));
 	}

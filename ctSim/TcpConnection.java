@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -30,7 +30,7 @@ import ctSim.controller.Config;
 import ctSim.util.SaferThread;
 
 /**
- * Repraesentiert eine TCP-Verbindung
+ * Repräsentiert eine TCP-Verbindung
  *
  * @author Benjamin Benz (bbe@heise.de)
  * @author Christoph Grimmer (c.grimmer@futurio.de)
@@ -51,7 +51,7 @@ public class TcpConnection extends Connection {
 	}
 
 	/**
-	 * Wandelt den uebergebenen String und die Portnummer in eine TCP/IP-Adresse
+	 * Wandelt den übergebenen String und die Portnummer in eine TCP/IP-Adresse
 	 * und stellt dann die Verbindung her
 	 *
 	 * @param hostname Adresse als String
@@ -116,7 +116,7 @@ public class TcpConnection extends Connection {
 				}
 			}.start();
 		} catch (IOException e) {
-			lg.warning(e, "E/A-Problem beim Binden an TCP-Port "+p+"; " + "l\u00E4uft der c't-Sim schon?");
+			lg.warning(e, "E/A-Problem beim Binden an TCP-Port "+p+"; " + "läuft der c't-Sim schon?");
 			System.exit(1);
 		}
 	}
@@ -129,7 +129,7 @@ public class TcpConnection extends Connection {
 	 */
 	public static void connectTo(final String hostname, final int port,
 	final BotReceiver receiver) {
-		final String address = hostname+":"+port; // Nur fuer Meldungen
+		final String address = hostname+":"+port; // Nur für Meldungen
     	lg.info("Verbinde mit "+address+" ...");
 		new SaferThread("ctSim-Connect-"+address) {
 			@Override

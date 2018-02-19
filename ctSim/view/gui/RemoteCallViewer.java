@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -103,7 +103,7 @@ public class RemoteCallViewer extends JPanel {
 						p.getMaximum().toString().length(),
 						p.getMinimum().toString().length());
 				} catch (NullPointerException e) {
-					// p.getMax() oder p.getMin() koennen null sein,
+					// p.getMax() oder p.getMin() können null sein,
 					// in dem Fall ignorieren und Default nehmen
 				}
 				((DefaultEditor)js.getEditor()).getTextField().setColumns(
@@ -112,7 +112,7 @@ public class RemoteCallViewer extends JPanel {
 			}
 
 			// Mindestbreite ausrechnen, damit ScrollPane bescheidweiss
-			// Zwischenraeume
+			// Zwischenräume
 			int prefWidth = (getComponentCount() - 1) *
 				((FlowLayout)getLayout()).getHgap();
 			// Breiten der Komponenten
@@ -166,7 +166,7 @@ public class RemoteCallViewer extends JPanel {
 		}
 
 		/**
-		 * Fuegt ein Verhalten hinzu
+		 * Fügt ein Verhalten hinzu
 		 * @param b Verhalten
 		 */
 		protected void addBehavior(Behavior b) {
@@ -230,7 +230,7 @@ public class RemoteCallViewer extends JPanel {
 			@Override
 			public void setForeground(Color fg) {
 				// No-op: Wir setzen das im Konstruktor, die Tabelle soll's ab
-				// dann nicht mehr aendern
+				// dann nicht mehr ändern
 			}
 
 			/**
@@ -263,7 +263,7 @@ public class RemoteCallViewer extends JPanel {
 			 */
 			public Waiting() {
 				super("Wartet", "Remote-Call wartet, bis alle Calls " +
-						"\u00FCber ihm abgeschlossen sind", Color.GRAY);
+						"über ihm abgeschlossen sind", Color.GRAY);
 			}
 		}
 
@@ -278,8 +278,8 @@ public class RemoteCallViewer extends JPanel {
 			 * Aktivstatus
 			 */
 			public Running() {
-				super("L\u00E4uft", "Remote-Call wird vom Bot " +
-						"gegenw\u00E4rtig ausgef\u00FChrt", Color.BLUE);
+				super("Läuft", "Remote-Call wird vom Bot " +
+						"gegenwärtig ausgeführt", Color.BLUE);
 			}
 		}
 
@@ -303,7 +303,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Zeigt auf 1. Zelle der Zeile des Behaviors, das gerade
-		 * ausgef&uuml;hrt wird
+		 * ausgeführt wird
 		 */
 		private StatusLabel nowRunning = null;
 
@@ -331,7 +331,7 @@ public class RemoteCallViewer extends JPanel {
 			 * Loeschen-Button
 			 */
 			public DeleteButton() {
-				setIcon(Config.getIcon("schliessen-hover"));
+				setIcon(Config.getIcon("schließen-hover"));
 				addActionListener(this);
 
 				setMaximumSize(new Dimension(24, 24));
@@ -365,7 +365,7 @@ public class RemoteCallViewer extends JPanel {
 					}
 				}
 				throw new IllegalStateException("Interner Fehler " +
-						"(Selbstfindungsproblem): L\u00F6schen-Knopf " +
+						"(Selbstfindungsproblem): Löschen-Knopf " +
 						"funktioniert nicht");
 			}
 
@@ -376,8 +376,8 @@ public class RemoteCallViewer extends JPanel {
 			public void setRunning(boolean isRunning) {
 				this.isRunning = isRunning;
 				setToolTipText(isRunning
-					? "Ausf\u00FChrung des Remote-Call abbrechen"
-					: "Remote-Call l\u00F6schen");
+					? "Ausführung des Remote-Call abbrechen"
+					: "Remote-Call löschen");
 			}
 		}
 
@@ -396,14 +396,14 @@ public class RemoteCallViewer extends JPanel {
 		}
 
 		/**
-		 * Ruft das naechste Verhalten in der Liste auf
+		 * Ruft das nächste Verhalten in der Liste auf
 		 */
 		protected void callNextBehavior() {
 			for (int row = 0; row < getRowCount(); row++) {
 				if (getValueAt(row, 0) instanceof Done)
 					continue;
 
-				lg.fine("Starte n\u00E4chsten Remote-Call");
+				lg.fine("Starte nächsten Remote-Call");
 				if (! (getValueAt(row, 0) instanceof Waiting))
 					throw new IllegalStateException("Interner Fehler");
 
@@ -453,7 +453,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Setzt das letzte Verhalten auf einen Exit-Status
-		 * @param status gewuenschter Status
+		 * @param status gewünschter Status
 		 */
 		protected void setLastCallDone(BehaviorExitStatus status) {
 			for (int row = 0; row < getRowCount(); row++) {
@@ -464,7 +464,7 @@ public class RemoteCallViewer extends JPanel {
 					return;
 				}
 			}
-			//lg.warn("Ein Remote Call wurde beendet, der laut Liste gar nicht laeuft");
+			//lg.warn("Ein Remote Call wurde beendet, der laut Liste gar nicht läuft");
 			// unproblematisch
 		}
 
@@ -490,7 +490,7 @@ public class RemoteCallViewer extends JPanel {
 					color = Color.ORANGE;
 					break;
 				case BACKGRND:
-					tooltip = "Remote-Call laeuft im Hintergrund";
+					tooltip = "Remote-Call läuft im Hintergrund";
 					color = Color.GRAY;
 					break;
 				default:
@@ -516,7 +516,7 @@ public class RemoteCallViewer extends JPanel {
 		/**
 		 * Setzt den Loeschen-Knopf
 		 * @param row Zeile
-		 * @param isRunning laeuft grad?
+		 * @param isRunning läuft grad?
 		 */
 		private void setDeleteButton(int row, boolean isRunning) {
 			((DeleteButton)getValueAt(row, 3)).setRunning(isRunning);
@@ -560,7 +560,7 @@ public class RemoteCallViewer extends JPanel {
 			this.listReceived = true;
 		} catch (IOException e) {
 			lg.warn(e, "E/A-Problem aufgetreten, als die Anforderung der " +
-				"Remote-Call-Liste gesendet wurde; wer wei\u00DF, ob " +
+				"Remote-Call-Liste gesendet wurde; wer weiß, ob " +
 				"das jetzt funktioniert mit den Remote-Calls");
 		}
 	}
@@ -600,7 +600,7 @@ public class RemoteCallViewer extends JPanel {
 		final PlannedBhvModel plannedM = new PlannedBhvModel();
 
 		JPanel availHeading = new JPanel();
-		availHeading.add(new JLabel("Verf\u00FCgbare Remote-Calls"));
+		availHeading.add(new JLabel("Verfügbare Remote-Calls"));
 
 		JButton refresh = new JButton("Holen");
 		refresh.addActionListener(new ActionListener() {
@@ -621,8 +621,8 @@ public class RemoteCallViewer extends JPanel {
 		final ComponentTable plannedBhvs = buildCompntTable(plannedM);
 
 		/*
-		 * Workaround fuer Bug in JTable: Wenn das Model sich aendert (der
-		 * JButton im Model loescht Zeilen aus dem Model), dann kriegt wir u.U.
+		 * Workaround für Bug in JTable: Wenn das Model sich ändert (der
+		 * JButton im Model löscht Zeilen aus dem Model), dann kriegt wir u.U.
 		 * eine Exception im Zusammenhang mit editingStopped-Ereignissen, weil
 		 * die Ereignisse Zellen aktualisieren, die schon nicht mehr da sind.
 		 * Details:
@@ -651,10 +651,10 @@ public class RemoteCallViewer extends JPanel {
 				plannedM.addBehavior(bv.getBehavior().clone());
 			}
 		});
-		// Font vergroessern
+		// Font vergrößern
 		Font f = b.getFont();
 		// Wichtig: deriveFont(float) aufrufen, nicht deriveFont(int), die
-		// bedeuten ganz unterschiedliche Sachen. Also f an die Zahl anhaengen
+		// bedeuten ganz unterschiedliche Sachen. Also f an die Zahl anhängen
 		b.setFont(f.deriveFont(f.getSize() * 3f));
 		add(b, new GridBaggins().row(1).col(1).epadx(10).fillV());
 

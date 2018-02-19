@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -25,7 +25,7 @@ import java.util.Map;
 import ctSim.util.Misc;
 
 /**
- * Klasse, um die Positionsdaten von Fenstern serialisieren zu koennen
+ * Klasse, um die Positionsdaten von Fenstern serialisieren zu können
  */
 public class PositionMap implements Serializable {
 	/** UID */

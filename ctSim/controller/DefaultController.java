@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -59,12 +59,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	/** Logger */
 	protected FmtLogger lg = FmtLogger.getLogger("ctSim.controller");
 
-	/** Flag fuer Pause */
+	/** Flag für Pause */
 	private volatile boolean pause;
 
-	/** Latch fuer Start */
+	/** Latch für Start */
 	private CountDownLatch startSignal;
-	/** Latch fuer Done */
+	/** Latch für Done */
 	private CountDownLatch doneSignal;
 
 	/** Jugde */
@@ -79,10 +79,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	/** Bots */
 	private final List<Bot> bots = Misc.newList();
 
-    /** Flag fuer Bot-Reset */
+    /** Flag für Bot-Reset */
 	private boolean reset = false;
     /**
-     * Setzt das View und initialisiert alles noetige dafuer
+     * Setzt das View und initialisiert alles Nötige dafür
      * @param view	unser View
      */
     public void setView(View view) {
@@ -92,7 +92,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         TcpConnection.startListening(this);
         try {
 	        if (Config.getValue("serialport") == null) {
-	        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstuetzung fuer serielle Schnittstellen deaktiviert");
+	        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstützung für serielle Schnittstellen deaktiviert");
 	        } else
 	        	ComConnection.startListening(this);
         } catch (Error e) {
@@ -133,14 +133,14 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
 	/**
-	 * Sequencer: F&uuml;hrt die Simulation aus. W&auml;hrend der Simulation
+	 * Sequencer: Führt die Simulation aus. Während der Simulation
 	 * erledigt er pro Simschritt zwei Hauptaufgaben:
 	 * <ul>
 	 * <li>"updateSimulation": Sagt der Welt bescheid, die den ThreeDBots
 	 * bescheidsagt, die den Simulatoren bescheidsagen. Die Simulation rechnen
-	 * einen Simschritt, z.B. wird abh&auml;ngig von der Motorgeschwindigkeit
+	 * einen Simschritt, z.B. wird abhängig von der Motorgeschwindigkeit
 	 * die Position des Bot weitergesetzt</li>
-	 * <li>Die Bots &uuml;bertragen die Sensordaten zum C-Code, warten auf
+	 * <li>Die Bots übertragen die Sensordaten zum C-Code, warten auf
 	 * Antwort, und verarbeiten die Antwort. </li>
 	 * </ul>
 	 */
@@ -168,7 +168,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	        try {
 				long realTimeBeginInMs = System.currentTimeMillis();
 
-				// Warte, bis alle Bots fertig sind und auf die naechste
+				// Warte, bis alle Bots fertig sind und auf die nächste
 	        	// Aktualisierung warten
 				// breche ab, wenn die Bots zu lange brauchen !
 				if(! doneSignal.await(timeout, TimeUnit.MILLISECONDS)) {
@@ -178,13 +178,13 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 				CountDownLatch oldStartSignal = this.startSignal;
 
-				/* Reset gewuenscht? */
+				/* Reset gewünscht? */
 				if (this.reset) {
 					this.reset = false;
 					view.onResetAllBots();
 				}
 				
-				// Judge pruefen:
+				// Judge prüfen:
 				if (judge.isSimulationFinished(sequencersWorld.getSimTimeInMs())) {
 					lg.fine("Sequencer: Simulationsende");
 					// Spiel ist beendet
@@ -208,7 +208,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				// Die ganze Simulation aktualisieren
 				sequencersWorld.updateSimulation();
 
-				// Fix fuer Bug 12
+				// Fix für Bug 12
 				if (sequencersWorld.getFutureNumOfBots() == 0) {
 					lg.info("Keine Bots mehr in der Simulation, pausiere");
 					pause();
@@ -216,7 +216,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 				// Add/Start new Bot
 				// + neue Runde einleuten
-				// Ueberschreibt startSignal, aber wir haben mit oldStartSignal
+				// überschreibt startSignal, aber wir haben mit oldStartSignal
 				// eine Referenz aufgehoben
 				doneSignal  = new CountDownLatch(sequencersWorld
 					.getFutureNumOfBots());
@@ -235,7 +235,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 					Thread.sleep(timeToSleep);
 	        } catch (InterruptedException e) {
 	            // Wird von wait() geworfen, wenn jemand closeWorld() macht
-				// waehrend wait() noch laeuft (closeWorld() ruft interrupt()
+				// während wait() noch läuft (closeWorld() ruft interrupt()
 				// auf). Man bittet uns, unsere while-Bedingung auszuwerten,
 				// weil die false geworden ist. Also normal weitergehen
 	        }
@@ -256,7 +256,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	}
 
 	/**
-	 * L&auml;sst den Sequencer (= die Simulation) pausieren. Keine Wirkung,
+	 * Lässt den Sequencer (= die Simulation) pausieren. Keine Wirkung,
 	 * falls keine Welt geladen ist.
 	 */
 	public void pause() {
@@ -294,7 +294,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		this.world = world;
 		judge.setWorld(world);
 		view.onWorldOpened(world);
-		lg.info("Neue Welt ge\u00F6ffnet");
+		lg.info("Neue Welt geöffnet");
 
 		lg.fine("Initialisiere Sequencer");
 		pause = true; // Immer pausiert starten
@@ -302,9 +302,9 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		sequencer.start();
     }
 
-	/** H&auml;lt den Sequencer-Thread an */
+	/** Hält den Sequencer-Thread an */
     public void closeWorld() {
-    	if (sequencer == null) // Keine Welt geladen, d.h. kein Sequencer laeuft
+    	if (sequencer == null) // Keine Welt geladen, d.h. kein Sequencer läuft
     		return;
 
     	lg.fine("Terminieren des Sequencer angefordert");
@@ -333,7 +333,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
     /**
-     * F&uuml;gt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu
+     * Fügt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu
      */
     public void addTestBot() {
     	if (sequencer == null) {
@@ -380,12 +380,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     			p.waitFor(); // Warten bis der gelaufen ist
     			if (p.exitValue() != 0) {
     				lg.warning("Fehler beim Setzen der execute-Permission: " +
-    						"chmod lieferte %d zur\u00FCck", p.exitValue());
+    						"chmod lieferte %d zurück", p.exitValue());
     			}
     		}
-    		// Bot ausfuehren
+    		// Bot ausführen
     		// String[] weil sonst trennt er das nach dem ersten Leerzeichen ab,
-    		// dann geht's nicht, wenn der Pfad mal ein Leerzeichen enthaelt
+    		// dann geht's nicht, wenn der Pfad mal ein Leerzeichen enthält
     		File dir = new File(filename).getAbsoluteFile().getParentFile();
             Runtime.getRuntime().exec(new String[] { filename }, null, dir);
         } catch (Exception e){
@@ -411,7 +411,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
     
     /**
-	 * Handler, falls neuer Bot hinzugefuegt wurde
+	 * Handler, falls neuer Bot hinzugefügt wurde
 	 * @param bot	Der neue Bot
 	 */
 	public synchronized void onBotAppeared(final Bot bot) {
@@ -419,7 +419,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 			if (sequencer == null) {
 				lg.info("Weise " + bot.toString()
 						+ " ab: Es gibt keine Welt, zu "
-						+ "der man ihn hinzuf\u00FCgen k\u00F6nnte");
+						+ "der man ihn hinzufügen könnte");
 				bot.dispose(); // Bot abweisen
 				return;
 			}
@@ -444,14 +444,14 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() { // invokeLater, weil sonst der
 					// dispose-Listener der GUI noch nicht eingetragen ist!
-					bot.dispose(); // Bot ist unerwuenscht => weg
+					bot.dispose(); // Bot ist unerwünscht => weg
 				}
 			});
 			return; // keine Exception, wir weisen den Bot einfach ab und
-			// alles andere laeuft normal weiter
+			// alles andere läuft normal weiter
 		}
 
-		// Fuer den Kommunikationsproxy brauchen wir eine Liste aller Bots
+		// für den Kommunikationsproxy brauchen wir eine Liste aller Bots
 		bots.add(bot);
 
 		// Und einen Dispose-Handler installieren, damit wir Bots auch wieder
@@ -464,7 +464,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	}
 
     /**
-     * Gibt die Anzahl der zurzeit geladenen Bots zurueck
+     * Gibt die Anzahl der zurzeit geladenen Bots zurück
      * @return	Anzahl der Bots
      */
     public int getParticipants() {
@@ -500,7 +500,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
     /**
      * Setzt den Schiedsrichter
-     * @param judge	gewuenschte Judge-Instanz
+     * @param judge	gewünschte Judge-Instanz
      */
     public void setJudge(Judge judge) {
     	if (judge == null)
@@ -510,7 +510,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
     
     /**
-     * Laedt eine Welt aus einer Datei
+     * Lädt eine Welt aus einer Datei
      * @param sourceFile	File-Objekt der Welt
      */
     public void openWorldFromFile(File sourceFile) {
@@ -523,7 +523,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
     /**
-     * Laedt eine Welt aus einem String
+     * Lädt eine Welt aus einem String
      * @param parcoursAsXml	String mit den XML-Dater der Welt
      */
     public void openWorldFromXmlString(String parcoursAsXml) {
@@ -535,7 +535,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
     /**
-     * Erzeugt eine zufaellige Welt
+     * Erzeugt eine zufällige Welt
      */
     public void openRandomWorld() {
         try {
@@ -543,7 +543,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
             lg.info("Parcours generiert");
             openWorldFromXmlString(p);
         } catch (Exception e) {
-            lg.warning("Probleme beim \u00D6ffnen des generierten " +
+            lg.warning("Probleme beim Öffnen des generierten " +
                     "Parcours.");
         }
     }
@@ -557,9 +557,9 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     
         
     /**
-     * Setzt alle Bots im naechsten Sim-Schritt zurueck.
+     * Setzt alle Bots im nächsten Sim-Schritt zurück.
      * Dadurch, dass hier nur das Reset-Flag gesetzt wird, eruebriegt sich das 
-     * Synchronisieren der (Bot-)Threads; der Reset erfolgt einfach beim naechsten
+     * Synchronisieren der (Bot-)Threads; der Reset erfolgt einfach beim nächsten
      * Zeitschritt.
      */
     public void resetAllBots() {
@@ -569,15 +569,15 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	/**
 	 * Liefert ein Kommando an einen Bot aus.
 	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben
-	 * Sender und Empfaenger stehen in dem command drin 
-	 * @param command das zu uebertragende Kommando
-	 * @throws ProtocolException Falls kein passender empfaenger gefunden wurde
+	 * Sender und Empfänger stehen in dem command drin 
+	 * @param command das zu übertragende Kommando
+	 * @throws ProtocolException Falls kein passender Empfänger gefunden wurde
 	 */
 	public void deliverMessage(Command command) throws ProtocolException {
 		for (Bot b : bots) {
 			// Wir betrachten hier nur CtBot
 			if (b instanceof CtBot) {
-				/* direkte Nachrichten an Empfaenger */
+				/* direkte Nachrichten an Empfänger */
 				if (((CtBot)b).getId().equals(command.getTo())) {
 					((CtBot)b).receiveCommand(command);
 					return;
@@ -589,8 +589,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 			}
 		}	
 		if (!command.getTo().equals(Command.getBroadcastId())) {
-			// Es fuehlt sich wohl kein Bot aus der Liste zustaendig ==> Fehler 
-			throw new ProtocolException("Nachricht an Empfaenger "+command.getTo()+" nicht zustellbar. " +
+			// Es fuehlt sich wohl kein Bot aus der Liste zuständig ==> Fehler 
+			throw new ProtocolException("Nachricht an Empfänger "+command.getTo()+" nicht zustellbar. " +
 					"Kein Bot mit passender Id angemeldet");
 		}
 	}
@@ -611,11 +611,11 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		return true;
 	}
 	
-	/** Offset fuer die Adressvergabe, damit wir nicht jedesmal mit den schon vergebene2n Adressen beginnen */
+	/** Offset für die Adressvergabe, damit wir nicht jedesmal mit den schon vergebene2n Adressen beginnen */
 	private int poolOffset = 0;
 	
 	/**
-	 * Liefert eine Id aus dem Adresspoll zurueck
+	 * Liefert eine Id aus dem Adresspoll zurück
 	 * @return Die neue Id
 	 * @throws ProtocolException Wenn keine Adresse mehr frei
 	 */

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -30,7 +30,7 @@ import ctSim.util.Misc;
  * nach Abschluss der Vorrunde, welcher Bot gegen welchen spielen soll.
  * </p>
  * <p>
- * N&auml;heres siehe <a
+ * Näheres siehe <a
  * href="TournamentPlanner.html#turnier-zwei-phasen">Beschreibung von Vor- und
  * Hauptrunde</a>.
  * </p>
@@ -47,9 +47,9 @@ import ctSim.util.Misc;
  * for (int i = 0; i &lt; tree.getLowestLevelId(); i *= 2) {
  *     for (Player p : tree.getTournamentPlan(i)) {
  *         if (p == null)
- *             // F&uuml;r diesen Platz steht noch kein Kontrahent fest
+ *             // Für diesen Platz steht noch kein Kontrahent fest
  *         else
- *             // F&uuml;r diesen Platz ist p der Kontrahent
+ *             // Für diesen Platz ist p der Kontrahent
  *     }
  * }</code></li>
  * </ol>
@@ -107,22 +107,22 @@ public class TournamentTree extends ArrayList<Integer> {
 	 * <p>
 	 * <strong>Wieviele Spiele?</strong> Gegeben ist die Zahl der Spieler. Bei
 	 * z. B. 42 Spielern kriegen wir die mit einem Sechzehntelfinale nicht mehr
-	 * unter &ndash; Sechzehntelfinale bedeutet 16 Spiele, und das bedeutet 32
-	 * Spieler. Also muss ein Zweiunddrei&szlig;igstelfinale her, auch wenn das
+	 * unter – Sechzehntelfinale bedeutet 16 Spiele, und das bedeutet 32
+	 * Spieler. Also muss ein Zweiunddreißigstelfinale her, auch wenn das
 	 * nur teilweise besetzt sein wird (Sechzehntelfinale und alle folgenden
-	 * werden dann voll besetzt sein). &ndash; Allgemein: Zahl der Spiele =
+	 * werden dann voll besetzt sein). – Allgemein: Zahl der Spiele =
 	 * 2^(aufgerundeter lb(Zahl der Spieler))
 	 * </p>
 	 * <p>
-	 * <strong>Wieviele Freilose?</strong> Im Zweiunddrei&szlig;igstelfinale
-	 * m&uuml;ssen genau soviele Spieler rausfliegen, dass (im Beispiel) das
+	 * <strong>Wieviele Freilose?</strong> Im Zweiunddreißigstelfinale
+	 * müssen genau soviele Spieler rausfliegen, dass (im Beispiel) das
 	 * Sechzehntelfinale seine 32 Spieler hat &rarr; Da pro Spiel ein Spieler
-	 * rausfliegt, m&uuml;ssen 42 &minus; 32 = 10 Spiele im
-	 * Zweiunddrei&szlig;igstelfinale gespielt werden, die anderen bleiben leer.
-	 * 10 Spiele = 20 Spieler, d.h. die &uuml;brigen 22 Spieler kriegen ein
+	 * rausfliegt, müssen 42 &minus; 32 = 10 Spiele im
+	 * Zweiunddreißigstelfinale gespielt werden, die anderen bleiben leer.
+	 * 10 Spiele = 20 Spieler, d.h. die übrigen 22 Spieler kriegen ein
 	 * Freilos.
 	 * </p>
-	 * Freiloslevel immer ein Level h&ouml;her als lowestLevelId. 0 = 0
+	 * Freiloslevel immer ein Level höher als lowestLevelId. 0 = 0
 	 *
 	 * @param desiredLevelId
 	 * @return	der Plan
@@ -138,7 +138,7 @@ public class TournamentTree extends ArrayList<Integer> {
     	// x-tel-Finale -> x Spiele -> 2 * x Spieler
     	final int numPlayersByeLevel = 2 * getByeLevelId();
 
-    	// Baum bauen fuer Freilos- und hoehere Level, noch nicht niedrigstes
+    	// Baum bauen für Freilos- und höhere Level, noch nicht niedrigstes
     	ArrayList<Player> playersByeLevel = new ArrayList<Player>();
     	for (int i = 0; i < numPlayersByeLevel; i++)
     		playersByeLevel.add(new Player(i, get(i)));
@@ -159,7 +159,7 @@ public class TournamentTree extends ArrayList<Integer> {
 	    		}
     			return botIdsFromPlayers(playersRaw);
     		} else {
-    			// Wir sollen lowestLevel zurueckliefern
+    			// Wir sollen lowestLevel zurückliefern
     			ArrayList<Player> playersRaw = tree.getTournamentPlan(
     				getByeLevelId());
 				ArrayList<Integer> rv = new ArrayList<Integer>();
@@ -179,7 +179,7 @@ public class TournamentTree extends ArrayList<Integer> {
     }
 
     /**
-     * Gibt die Bot-IDs zu den Playern zurueck
+     * Gibt die Bot-IDs zu den Playern zurück
      * @param li Player-Liste
      * @return Liste der Bot-IDs
      */

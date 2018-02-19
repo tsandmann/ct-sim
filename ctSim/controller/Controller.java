@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -39,9 +39,9 @@ import ctSim.view.View;
  * </p>
  * <p>
  * Das Interface definiert also in erster Linie, welche Dienste ein Controller
- * den Views der Applikation zur Verf&uuml;gung stellt. Daneben hat das
+ * den Views der Applikation zur Verfügung stellt. Daneben hat das
  * Interface die offensichtliche Bedeutung, dass der Controller der Applikation
- * gegen&uuml;ber den Views (ausschlie&szlig;lich) unter diesem Interface
+ * gegenüber den Views (ausschließlich) unter diesem Interface
  * erscheint.
  * </p>
  *
@@ -67,7 +67,7 @@ public interface Controller {
 	public void invokeBot(File file);
 
 	/**
-	 * Fuegt einen Testbot hinzu
+* Fügt einen Testbot hinzu
 	 */
 	public void addTestBot();
 
@@ -79,19 +79,19 @@ public interface Controller {
 	public void connectToTcp(String hostname, String port);
 
 	/**
-	 * Laedt eine Welt aus einer Datei
+	 * Lädt eine Welt aus einer Datei
 	 * @param sourceFile Weltdatei
 	 */
 	public void openWorldFromFile(File sourceFile);
 
 	/**
-	 * Laedt eine Welt aus einem XML-formatierten String
+	 * Lädt eine Welt aus einem XML-formatierten String
 	 * @param parcoursAsXml Welt als XML-String
 	 */
 	public void openWorldFromXmlString(String parcoursAsXml);
 
 	/**
-	 * Laedt eine zufaellig generierte Welt
+	 * Lädt eine zufällig generierte Welt
 	 */
 	public void openRandomWorld();
 
@@ -108,7 +108,7 @@ public interface Controller {
 	public void setJudge(Judge j);
 
 	/**
-	 * Haelt die Simulation fuer unbestimmte Zeit an
+	 * Hält die Simulation für unbestimmte Zeit an
 	 */
 	public void pause();
 
@@ -118,29 +118,29 @@ public interface Controller {
 	public void unpause();
 
 	/**
-	 * Von au&szlig;en, d.h. von einer Bootstrap-Komponente, aufzurufen, sobald
+	 * Von außen, d.h. von einer Bootstrap-Komponente, aufzurufen, sobald
 	 * die Hauptkomponenten der Applikation (Controller und View) initialisiert
 	 * und untereinander korrekt verdrahtet sind. Ab diesem Methodenaufruf liegt
-	 * die Verantwortung f&uuml;r den Programmablauf beim Controller.
+	 * die Verantwortung für den Programmablauf beim Controller.
 	 */
 	void onApplicationInited();
 	
 	/**
-     * Setzt alle Bots zurueck
+     * Setzt alle Bots zurück
      */
     public void resetAllBots();
 	
 	/**
 	 * Liefert ein Kommando an einen Bot aus.
 	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben
-	 * Sender und Empfaenger stehen in dem Command drin 
-	 * @param command das zu uebertragende Kommando
-	 * @throws ProtocolException Falls kein passender Empfaenger gefunden wurde
+	 * Sender und Empfänger stehen in dem Command drin 
+	 * @param command das zu übertragende Kommando
+	 * @throws ProtocolException Falls kein passender Empfänger gefunden wurde
 	 */
 	public void deliverMessage(Command command) throws ProtocolException;
 	
 	/**
-	 * Liefert eine Id aus dem Adresspoll zurueck
+	 * Liefert eine Id aus dem Adresspoll zurück
 	 * @return Die neue Id
 	 * @throws ProtocolException Wenn keine Adresse mehr frei
 	 */
@@ -164,7 +164,7 @@ public interface Controller {
 	public void worldToMap(int bot, int free, int occupied) throws IOException, MapException;
 	
 	/**
-	 * gibt die aktuelle Welt zurueck
+	 * gibt die aktuelle Welt zurück
 	 * @return geladenen Welt
 	 */
 	public World getWorld();

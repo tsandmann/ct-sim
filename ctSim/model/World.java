@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -69,7 +69,7 @@ import ctSim.util.Misc;
 import ctSim.view.gui.StatusBar;
 
 /**
- * <p>Welt-Modell, kuemmert sich um die globale Simulation und das
+ * <p>Welt-Modell, kümmert sich um die globale Simulation und das
  * Zeitmanagement.</p>
  *
  * <p>Zum Erzeugen einer Welt die statischen Methoden
@@ -80,13 +80,13 @@ import ctSim.view.gui.StatusBar;
  * @author Lasse Schwarten (lasse@schwarten.org)
  * @author Christoph Grimmer (c.grimmer@futurio.de)
  * @author Werner Pirkl (morpheus.the.real@gmx.de)
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class World {
 	/** Logger */
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.World");
 
-	/** Name des XML-Schemas fuer Parcours */
+	/** Name des XML-Schemas für Parcours */
 	private static final String PARCOURS_DTD = "/parcours.dtd";
 	
 	/** Dicke des Bodens in m */
@@ -95,15 +95,15 @@ public class World {
 	/** Transforgroup der Welt */
 	private TransformGroup worldTG;
 
-	/** Branchgroup fuer Licht */
+	/** Branchgroup für Licht */
 	private BranchGroup lightBG;
-	/** Branchgroup fuer BPS */
+	/** Branchgroup für BPS */
 	private BranchGroup bpsBG;
-	/** Brachgroup fuer Terrain */
+	/** Brachgroup für Terrain */
 	private BranchGroup terrainBG;
-	/** Branchgroup fuer Hindernisse und Bots */
+	/** Branchgroup für Hindernisse und Bots */
 	private BranchGroup obstBG;
-	/** Branchgroup fuer Szene */
+	/** Branchgroup für Szene */
 	private BranchGroup scene;
 	/** Parcours der Welt */
 	private Parcours parcours;
@@ -120,7 +120,7 @@ public class World {
 	/** @see #setSimStepIntervalInMs(int) */
 	private int simStepIntervalInMs = 0;
 
-	/** <p>Pro Simulationsschritt r&uuml;ckt die Simulationszeit-Uhr um diesen
+	/** <p>Pro Simulationsschritt rückt die Simulationszeit-Uhr um diesen
 	 * Wert vor. Einheit Millisekunden.</p>
 	 *
 	 * $$ Dokumentieren: Bot kriegt Zeit in diesen Schritten mitgeteilt; setzt indirekt max. Aufloesung
@@ -128,8 +128,8 @@ public class World {
 	private static final int SIM_TIME_PER_STEP =
 		Integer.parseInt(Config.getValue("simTimePerStep"));
 
-	/** <p>Gegenw&auml;rtige Simulationszeit. Sie ist gleich <em>Zahl der
-	 * bisher ausgef&uuml;hrten Simulationsschritte &times;
+	/** <p>Gegenwärtige Simulationszeit. Sie ist gleich <em>Zahl der
+	 * bisher ausgeführten Simulationsschritte &times;
 	 * <code>SIM_TIME_PER_STEP</code></em>. Einheit Millisekunden.</p>
 	 *
 	 * @see #getSimTimeInMs()
@@ -184,11 +184,11 @@ public class World {
 	 * <p>
 	 * Liefert den Zeitraffer-/Zeitlupen-Faktor: Wieviel Realzeit
 	 * (Armbanduhrenzeit) vergeht zwischen dem Beginn eines Simulatorschritts
-	 * und dem Beginn des n&auml;chsten Simulatorschritts? &ndash; Einheit
+	 * und dem Beginn des nächsten Simulatorschritts? – Einheit
 	 * Millisekunden.
 	 * </p>
 	 * <p>
-	 * N&auml;heres siehe {@link #setSimStepIntervalInMs(int)}.
+	 * Näheres siehe {@link #setSimStepIntervalInMs(int)}.
 	 * </p>
 	 * @return Zeitintervall
 	 */
@@ -200,9 +200,9 @@ public class World {
 	 * Stellt ein, wieviel Realzeit (Armbanduhrenzeit) zwischen zwei
 	 * Schritten der Simulation vergeht. Einheit Millisekunden.</p>
 	 *
-	 * <p>Vorg&auml;nge in der Simulation werden von diesem Wert nicht
-	 * beeinflusst, da unabh&auml;ngig von ihm jeder Simulationsschritt
-	 * ausgef&uuml;hrt wird. Der Wert beeinflusst nur, wie lange
+	 * <p>Vorgänge in der Simulation werden von diesem Wert nicht
+	 * beeinflusst, da unabhängig von ihm jeder Simulationsschritt
+	 * ausgeführt wird. Der Wert beeinflusst nur, wie lange
 	 * zwischen den Schritten (in Realzeit) gewartet wird.</p>
 	 *
 	 * @param timeInterval Zeitspanne [ms], wieviel Zeit zwischen dem
@@ -216,12 +216,12 @@ public class World {
 	/** Liefert die aktuelle Simulationszeit in Millisekunden.
 	 *
 	 * @return Die momentane Simulationszeit [ms]. Sie ist gleich der Zahl
-	 * der bisher ausgef&uuml;hrten Simulationsschritte mal einem
-	 * konstanten Faktor. Daher ist sie unabh&auml;ngig von der Realzeit
+	 * der bisher ausgeführten Simulationsschritte mal einem
+	 * konstanten Faktor. Daher ist sie unabhängig von der Realzeit
 	 * (Armbanduhrenzeit): eine Sim-Sekunde ist im allgemeinen
 	 * nicht gleich lang wie eine Armbanduhr-Sekunde, und zudem wird
 	 * die Simzeit-Uhr beispielsweise angehalten, wenn in der GUI der
-	 * Pause-Knopf gedr&uuml;ckt wird. Simzeit und Realzeit unterscheiden
+	 * Pause-Knopf gedrückt wird. Simzeit und Realzeit unterscheiden
 	 * sich also sowohl um Summanden als auch um einen Faktor.
 	 */
     public long getSimTimeInMs() {
@@ -242,9 +242,9 @@ public class World {
 	// Statische Methoden, um eine Welt zu erzeugen
 
 	/**
-	 * L&auml;dt einen Parcours aus einer Datei und baut damit eine Welt.
-	 * @param sourceFile Die zu &ouml;ffnende Datei. Sie
-	 * hat in dem f&uuml;r Parcours vorgesehenen Schema zu sein.
+	 * Lädt einen Parcours aus einer Datei und baut damit eine Welt.
+	 * @param sourceFile Die zu öffnende Datei. Sie
+	 * hat in dem für Parcours vorgesehenen Schema zu sein.
 	 * @return Die neue Welt
 	 * @throws SAXException 
 	 * @throws IOException 
@@ -276,9 +276,9 @@ public class World {
 		);
 	}
 
-	/** L&auml;dt einen Parcours aus einem String und baut damit eine Welt.
+	/** Lädt einen Parcours aus einem String und baut damit eine Welt.
 	 * @param parcoursAsXml Der String, der die XML-Darstellung des Parcours
-	 * enth&auml;lt. Das XML muss in dem f&uuml;r Parcours vorgesehenen Schema
+	 * enthält. Das XML muss in dem für Parcours vorgesehenen Schema
 	 * sein. Die in Zeile&nbsp;2 des XML angegebene DTD-Datei wird von dieser
 	 * Methode im Unterverzeichnis "parcours" gesucht. 
 	 * @return Die neue Welt
@@ -313,10 +313,10 @@ public class World {
 	 * Liest einen Parcours aus einer XML-Quelle und baut damit eine Welt.
 	 * </p>
 	 * <p>
-	 * Der Konstruktor ist privat, da ihn niemand von au&szlig;en verwendet hat.
+	 * Der Konstruktor ist privat, da ihn niemand von außen verwendet hat.
 	 * Es stehen die statischen Methoden <code>buildWorldFromFile</code> und
 	 * <code>buildWorldFromXmlString</code> aus dieser Klasse zu
-	 * Verf&uuml;gung, um Welten zu erzeugen.
+	 * Verfügung, um Welten zu erzeugen.
 	 * </p>
 	 *
 	 * @param source Die Xerces-Eingabequelle, aus der der die XML-Darstellung
@@ -351,8 +351,8 @@ public class World {
 	}
 
 	/**
-	 * Hoehe in Bloecken
-	 * @return Hoehe
+	 * Höhe in Bloecken
+	 * @return Höhe
 	 */
 	public int getHeightInGridBlocks() {
 		return parcours.getHeightInBlocks();
@@ -420,7 +420,7 @@ public class World {
 
 		scene.addChild(worldTG);
 
-		// Lichtquellen einfuegen
+		// Lichtquellen einfügen
 		// Streulicht (ambient light)
 		BoundingSphere ambientLightBounds = new BoundingSphere(new Point3d(0d, 0d, 0d), 100d);
 		Color3f ambientLightColor = new Color3f(0.33f, 0.33f, 0.33f);
@@ -429,24 +429,24 @@ public class World {
 		ambientLightNode.setEnable(true);
 		worldTG.addChild(ambientLightNode);
 
-		// Die Branchgroup fuer die Lichtquellen
+		// Die Branchgroup für die Lichtquellen
 		lightBG = new BranchGroup();
 		lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		lightBG.setPickable(true);
 		worldTG.addChild(lightBG);
 		
-		// Die Branchgroup fuer BPS (IR-Licht)
+		// Die Branchgroup für BPS (IR-Licht)
 		bpsBG = new BranchGroup();
 		bpsBG.setPickable(true);
 		worldTG.addChild(this.bpsBG);
 
-		// Die Branchgroup fuer den Boden
+		// Die Branchgroup für den Boden
 		terrainBG = new BranchGroup();
 		terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		terrainBG.setPickable(true);
 		worldTG.addChild(terrainBG);
 
-		// Damit spaeter Bots hinzugefuegt werden koennen:
+		// Damit später Bots hinzugefügt werden können:
 		obstBG = new BranchGroup();
 		obstBG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 		obstBG.setCapability(BranchGroup.ALLOW_DETACH);
@@ -465,21 +465,21 @@ public class World {
 	}
 
 	/**
-	 * @return Gibt die BranchGroup der Szene zurueck
+	 * @return Gibt die BranchGroup der Szene zurück
 	 */
 	public BranchGroup getScene() {
 		return scene;
 	}
 	
 	/**
-	 * @return Gibt den Parcours der Welt zurueck
+	 * @return Gibt den Parcours der Welt zurück
 	 */
 	public Parcours getParcours() {
 		return parcours;
 	}
 	
 	/**
-	 * @return Gibt die BranchGroup der Hindernisse zurueck
+	 * @return Gibt die BranchGroup der Hindernisse zurück
 	 */
 	public BranchGroup getObstacles() {
 		return obstBG;
@@ -493,7 +493,7 @@ public class World {
 	}
 
 	/**
-	 * Fuegt eine ViewPlatform hinzu
+* Fügt eine ViewPlatform hinzu
 	 * @param view Die neue Ansicht
 	 */
 	public void addViewPlatform(ViewPlatform view) {
@@ -501,9 +501,9 @@ public class World {
 	}
 
 	/**
-	 * Fuegt einen neuen Bot hinzu
+* Fügt einen neuen Bot hinzu
 	 * @param bot 		Der neue Bot
-	 * @param barrier 	Barrier fuer den Bot
+	 * @param barrier 	Barrier für den Bot
 	 * @return Neue ThreeDBot-Instanz
 	 */
 	public ThreeDBot addBot(SimulatedBot bot, BotBarrier barrier) {
@@ -514,7 +514,7 @@ public class World {
 		int newBot = getFutureNumOfBots() + 1;
 		Point3d pos = parcours.getStartPosition(newBot);
 		parcours.setStartFieldUsed(bot);
-		// Die Bots schweben 7,5 cm ueber Null, damit keine Kollision mit der Grundflaeche erkannt wird
+		// Die Bots schweben 7,5 cm über Null, damit keine Kollision mit der Grundfläche erkannt wird
 		pos.z = 0.075;
 		Vector3d head = parcours.getStartHeading(newBot);
 
@@ -543,12 +543,12 @@ public class World {
 	 * **********************************************************************
 	 * WORLD_FUNCTIONS
 	 *
-	 * Funktionen fuer die Sensoren usw. (Abstandsfunktionen u.ae.)
+	 * Funktionen für die Sensoren usw. (Abstandsfunktionen u.ä.)
 	 *
 	 */
 
 	/**
-	 * Gibt den Gewinner zurueck
+	 * Gibt den Gewinner zurück
 	 * @return ThreeDBot, der gewonnen hat
 	 */
 	public ThreeDBot whoHasWon() {
@@ -570,10 +570,10 @@ public class World {
 	}
 
 	/**
-	 * Prueft, ob ein Objekt mit einem Objekt aus der obstacle-BG der Welt kollidiert
+	 * Prüft, ob ein Objekt mit einem Objekt aus der obstacle-BG der Welt kollidiert
 	 * @param body Koerper des Objekts
 	 * @param bounds Grenzen des Objekts
-	 * @return PickInfo ueber die Kollision (null, falls keine)
+	 * @return PickInfo über die Kollision (null, falls keine)
 	 */
 	public PickInfo getCollision(Group body, Bounds bounds) {
 		/* Welttransformation anwenden */
@@ -591,7 +591,7 @@ public class World {
 			/* Kollisionserkennung von Java3D */
 			pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE, pickBounds);
 			
-			/* eigenen Koerper wieder zuruecksetzen */
+			/* eigenen Koerper wieder zurücksetzen */
 			body.setPickable(true);
 		}
 		
@@ -603,7 +603,7 @@ public class World {
 	}
 
 	/**
-	 * Prueft, ob unter dem angegebenen Punkt innerhalb der Bodenfreiheit des
+	 * Prüft, ob unter dem angegebenen Punkt innerhalb der Bodenfreiheit des
 	 * Bots noch Boden zu finden ist
 	 *
 	 * @param pos
@@ -619,11 +619,11 @@ public class World {
 	/**
 	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den
 	 * Linien- bzw. Abgrundsensor nicht mehr erreicht. Je mehr Licht reflektiert
-	 * wird, desto niedriger ist der zurueckgegebene Wert. Der Wertebereich
+	 * wird, desto niedriger ist der zurückgegebene Wert. Der Wertebereich
 	 * erstreckt sich von 0 (weiss oder maximale Reflexion) bis 1023 (minimale
 	 * Reflexion, schwarz oder Loch).
 	 *
-	 * Es werden rayCount viele Strahlen gleichmaessig orthogonal zum Heading
+	 * Es werden rayCount viele Strahlen gleichmäßig orthogonal zum Heading
 	 * in die Szene geschossen.
 	 *
 	 * @param pos
@@ -649,7 +649,7 @@ public class World {
 		// oder rotiert:
 		transform.transform(sensHeading);
 
-		// Transformationsgruppen, fuer den Sensorsweep
+		// Transformationsgruppen, für den Sensorsweep
 		Transform3D transformX = new Transform3D();
 
 		// Wenn mehr als ein Strahl ausgesendet werden soll, dann taste
@@ -661,11 +661,11 @@ public class World {
 			transformX.set(rotationAxisX);
 			transformX.transform(sensHeading);
 			// arbeite dich nach rechts vor
-			// sende Strahlen in gleichmaessigen Abstaenden aus
+			// sende Strahlen in gleichmäßigen Abständen aus
 			rotationAxisX.set(heading, -(openingAngle / (rayCount - 1)));
 			transformX.set(rotationAxisX);
 		} else {
-			// aendere die Blickrichtung NICHT
+			// ändere die Blickrichtung NICHT
 			transformX.setIdentity();
 		}
 		// Variablen und Objekte ausserhalb der Schleife vorbereiten.
@@ -679,7 +679,7 @@ public class World {
 		for (int j = 0; j < rayCount; j++) {
 			// PickRay modifizieren
 			pickRay.set(sensPos, sensHeading);
-			// Picking durchfuehren
+			// Picking durchführen
 			pickInfo = terrainBG.pickClosest(PickInfo.PICK_GEOMETRY, PickInfo.NODE, pickRay);
 			// Boden auswerten
 			if (pickInfo == null) {
@@ -688,7 +688,7 @@ public class World {
 			} else if (pickInfo.getNode() instanceof Shape3D) {
 				shape = (Shape3D) pickInfo.getNode();
 				shape.getAppearance().getMaterial().getDiffuseColor(color);
-				// Je nach Farbe wird ein Teil des Lichts zurueckgeworfen.
+				// Je nach Farbe wird ein Teil des Lichts zurückgeworfen.
 				// Hierzu wird der Durchschnitt der Rot-, Gruen- und
 				// Blau-Anteile
 				// der Farbe bestimmt.
@@ -703,14 +703,14 @@ public class World {
 	/**
 	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den
 	 * Linien- bzw. Abgrundsensor nicht mehr erreicht. Je mehr Licht reflektiert
-	 * wird, desto niedriger ist der zurueckgegebene Wert. Der Wertebereich
+	 * wird, desto niedriger ist der zurückgegebene Wert. Der Wertebereich
 	 * erstreckt sich von 0 (weiss oder maximale Reflexion) bis 1023 (minimale
 	 * Reflexion, schwarz oder Loch).
 	 *
-	 * Es werden rayCount viele Strahlen gleichmaessig orthogonal zum Heading in
+	 * Es werden rayCount viele Strahlen gleichmäßig orthogonal zum Heading in
 	 * die Szene geschossen.
 	 *
-	 * Es werden rayCount viele Strahlen gleichmaessig in Form eines "+" in
+	 * Es werden rayCount viele Strahlen gleichmäßig in Form eines "+" in
 	 * die Szene Geschossen.
 	 *
 	 * @param pos
@@ -736,11 +736,11 @@ public class World {
 
 	/**
 	 * <p>
-	 * Liefert die Helligkeit, die auf einen Lichtsensor f&auml;llt.
+	 * Liefert die Helligkeit, die auf einen Lichtsensor fällt.
 	 * </p>
 	 * <p>
 	 * Da diese Methode unter Verwendung des PickConeRay implementiert ist, ist
-	 * sie seinen Bugs unterworfen. Ausf&uuml;hrliche Dokumentation siehe
+	 * sie seinen Bugs unterworfen. Ausführliche Dokumentation siehe
 	 * watchObstacle(Point3d, Vector3d, double, Shape3D).
 	 * </p>
 	 *
@@ -822,23 +822,23 @@ public class World {
 	
 	/**
 	 * <p>
-	 * Liefert die Distanz in Metern zum n&auml;chsten Objekt zur&uuml;ck, das
-	 * man sieht, wenn man von der &uuml;bergebenen Position aus in Richtung des
-	 * uebergebenen Endpunktes schaut.
+	 * Liefert die Distanz in Metern zum nächsten Objekt zurück, das
+	 * man sieht, wenn man von der übergebenen Position aus in Richtung des
+	 * übergebenen Endpunktes schaut.
 	 * </p>
 	 *
 	 * @param pos Die Position, von der aus der Seh-Strahl verfolgt wird
-	 * @param end Die Position, wo der Seh-Strahl spaetestens enden soll (falls 
+	 * @param end Die Position, wo der Seh-Strahl spätestens enden soll (falls 
 	 * kein Objekt gesehen wird)
 	 * @param openingAngle Der Sehstrahl ist in Wahrheit ein Kegel;
-	 * {@code openingAngle} gibt seinen &Ouml;ffnungswinkel an (Bogenma&szlig;)
-	 * @param botBody Der K&ouml;rper des Roboter, der anfragt. Dies ist
+	 * {@code openingAngle} gibt seinen Öffnungswinkel an (Bogenmaß)
+	 * @param botBody Der Körper des Roboter, der anfragt. Dies ist
 	 * erforderlich, da diese Methode mit einem PickConeSegment implementiert ist,
-	 * d.h. der K&ouml;rper des Bots muss auf &quot;not pickable&quot; gesetzt
-	 * werden vor Anwendung des Ray und wieder auf &quot;pickable&quot; nach
-	 * Anwendung. Der Grund ist, dass sonst in Grenzf&auml;llen der
-	 * Botk&ouml;rper vom PickConeSegment gefunden wird.
-	 * @return Die Distanz zum n&auml;chsten Objekt (&quot;pickable&quot;) in
+	 * d.h. der Körper des Bots muss auf "not pickable" gesetzt
+	 * werden vor Anwendung des Ray und wieder auf "pickable" nach
+	 * Anwendung. Der Grund ist, dass sonst in Grenzfällen der
+	 * Botkörper vom PickConeSegment gefunden wird.
+	 * @return Die Distanz zum nächsten Objekt ("pickable") in
 	 * Metern oder 100 m, falls kein Objekt in Sichtweite
 	 * @see PickConeSegment
 	 */
@@ -886,7 +886,7 @@ public class World {
 		increaseSimulTime();
 		
 		ThreeDBot[] bots = botsRunning.toArray(new ThreeDBot[] {});
-		// Zeiger koennte zu weit stehen
+		// Zeiger könnte zu weit stehen
 		if (runningBotsPtr >= bots.length) {
 			runningBotsPtr = 0;
 		}
@@ -953,7 +953,7 @@ public class World {
 	}
 
 	/**
-	 * Loescht einen Bot
+	 * Löscht einen Bot
 	 * @param bot der zu loeschende Bot
 	 */
 	public void deleteBot(Bot bot) {
@@ -961,8 +961,8 @@ public class World {
 	}
 	
 	/**
-	 * Setzt alle Bots auf ihre Startpplaetze zurueck.
-	 * Hier werden nur simulierte Bots (ThreeDBot-Instanzen) beruecksichtigt, weil
+	 * Setzt alle Bots auf ihre Startpplätze zurück.
+	 * Hier werden nur simulierte Bots (ThreeDBot-Instanzen) berücksichtigt, weil
 	 * sonstige Bots in World nicht bekannt sind! 
 	 */
 	public void resetAllBots() {

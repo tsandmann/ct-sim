@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -30,7 +30,7 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 /**
  * <p>
  * High-Level-Klasse, die die Spiele eines Turniers plant. Arbeitet eng mit der
- * Klasse {@link ContestConductor} zusammen. Plant einen vollstaendigen
+ * Klasse {@link ContestConductor} zusammen. Plant einen vollständigen
  * Wettbewerb: Schreibt den Turnierbaum in die Datenbank (<a
  * href="package-summary.html#turnierbaum">Was ist der Turnierbaum?</a>)
  * </p>
@@ -39,13 +39,13 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
  * <ol>
  * <li><code>TournamentPlanner planner = new TournamentPlanner();</code></li>
  * <li><code>planner.{@link #planPrelimRound()};</code></li>
- * <li>Durchf&uuml;hren der Vorrundenspiele (durch die Klasse ContestConductor)</li>
+ * <li>Durchführen der Vorrundenspiele (durch die Klasse ContestConductor)</li>
  * <li><code>planner.{@link #planMainRound()};</code></li>
- * <li>Durchf&uuml;hren der Hauptrundenspiele (durch die Klasse
+ * <li>Durchführen der Hauptrundenspiele (durch die Klasse
  * ContestConductor)</li>
  * </ol>
  *
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class TournamentPlanner {
 	/** Logger */
@@ -54,10 +54,10 @@ public class TournamentPlanner {
 	/** Datenbank */
 	private PlannerToDatabaseAdapter db;
 
-	/** Konstruiert einen TournamentPlanner, der mit der &uuml;bergebenen
-	 * Datenbank verbunden ist. N&uuml;tzlich f&uuml;r Unit-Tests, die dem
-	 * Planner &uuml;ber diesen Konstruktor eine Testdatenbank unterschieben
-	 * k&ouml;nnen.
+	/** Konstruiert einen TournamentPlanner, der mit der übergebenen
+	 * Datenbank verbunden ist. Nützlich für Unit-Tests, die dem
+	 * Planner über diesen Konstruktor eine Testdatenbank unterschieben
+	 * können.
 	 * @param database 
 	 */
 	public TournamentPlanner(PlannerToDatabaseAdapter database) {
@@ -65,10 +65,10 @@ public class TournamentPlanner {
 	}
 
 	/**
-	 * Hilfsmethode: Denkt sich Spielzeiten aus f&uuml;r alle Spiele in einem
+	 * Hilfsmethode: Denkt sich Spielzeiten aus für alle Spiele in einem
 	 * Level und schreibt sie in die DB.
 	 *
-	 * @param levelId Prim&auml;rschl&uuml;ssel des Levels, f&uuml;r das die
+	 * @param levelId Primärschlüssel des Levels, für das die
 	 * Zeiten gesetzt werden sollen.
 	 * @throws SQLException 
 	 */
@@ -87,14 +87,14 @@ public class TournamentPlanner {
 		}
 	}
 
-	/** L&ouml;scht alle bisher geplanten Spiele und plant die Vorrunde.
-	 * F&uuml;r jeden Bot, f&uuml;r den eine Binary in der Datenbank steht,
-	 * wird ein Vorrundenspiel angelegt. Jeder Bot durchl&auml;uft ein
+	/** Löscht alle bisher geplanten Spiele und plant die Vorrunde.
+	 * Für jeden Bot, für den eine Binary in der Datenbank steht,
+	 * wird ein Vorrundenspiel angelegt. Jeder Bot durchläuft ein
 	 * Vorrundenspiel einzeln.
 	 * @throws SQLException 
 	 *
 	 * @throws IllegalStateException Falls in der DB-Tabelle ctsim_level
-	 * keine Angaben &uuml;ber die Vorrunde zu finden sind, oder falls
+	 * keine Angaben über die Vorrunde zu finden sind, oder falls
 	 * weniger als zwei Bots mit Binary in der Datenbank zu finden sind.
 	 */
 	public void planPrelimRound() throws SQLException {
@@ -175,9 +175,9 @@ public class TournamentPlanner {
 			if (! db.doesLevelExist(i)) {
 				throw new IllegalStateException(String.format(
 						"Level %d " +
-						"in der Datenbank nicht gefunden. Fuer die gegebene " +
+						"in der Datenbank nicht gefunden. Für die gegebene " +
 						"Anzahl Spiele werden alle Levels bis inkl. %d " +
-						"benoetigt. Planung der Hauptrunde fehlgeschlagen.",
+						"benötigt. Planung der Hauptrunde fehlgeschlagen.",
 						i, tree.getLowestLevelId()));
 			}
 		}
@@ -188,7 +188,7 @@ public class TournamentPlanner {
 			scheduleGames(i);
 		}
 
-		// Extrawurst fuer Spiel um den 3. Platz (sog. Semifinale)
+		// Extrawurst für Spiel um den 3. Platz (sog. Semifinale)
 		db.createMainGame(0, 1);
 		scheduleGames(0);
 		lg.fine("Hauptrunde geplant");
@@ -196,14 +196,14 @@ public class TournamentPlanner {
 
 	/**
 	 * Schreibt ein Level aus einem TournamentTree in die Datenbank. Manche oder
-	 * alle der Spieler, die in dem Level sitzen, k&ouml;nnen <code>null</code>
+	 * alle der Spieler, die in dem Level sitzen, können <code>null</code>
 	 * sein (d.h. anfangs steht nicht fest, wer im Achtelfinale spielt, erst
 	 * nach Spielen des Sechzehntelfinales wird das nach und nach klar). Wenn
-	 * Spieler <code>null</code> sind, werden die zugeh&ouml;rigen Spiele
+	 * Spieler <code>null</code> sind, werden die zugehörigen Spiele
 	 * trotzdem angelegt.
 	 *
 	 * @param players Eine Liste von Bot-IDs, die die Spieler
-	 * repr&auml;sentieren. <code>null</code> bedeutet, das f�r dieses Spiel
+	 * repräsentieren. <code>null</code> bedeutet, das f�r dieses Spiel
 	 * (noch) kein Spieler vorgesehen ist.
 	 * @param levelId Nummer des zu schreibenden Levels.
 	 * @throws SQLException 

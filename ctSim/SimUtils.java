@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -26,8 +26,8 @@ import javax.vecmath.Vector3d;
 import java.lang.Math;
 
 /**
- * Diese Klasse enthaelt reine Hilfsfunktionen wie Umrechnungsmethoden zwischen
- * verschiedenen Mass-Einheiten usw.
+ * Diese Klasse enthält reine Hilfsfunktionen wie Umrechnungsmethoden zwischen
+ * verschiedenen Maß-Einheiten usw.
  * 
  * @author pek (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
@@ -36,14 +36,13 @@ public class SimUtils {
 
 	/**
 	 * Errechnet aus einem javax.vecmath.Vector3d eine ganzzahlig gerundete
-	 * Gradangabe und gibt sie als String zurueck. Diese Methode wird zur Anzeige
+	 * Gradangabe und gibt sie als String zurück. Diese Methode wird zur Anzeige
 	 * der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
 	 * @param vec
 	 *            der Eingabevektor
 	 * @return die Gradzahl als String
 	 */
-	@SuppressWarnings("deprecation")
 	public static String vec3dToString(Vector3d vec) {
 		return Integer.valueOf(Math.round(Math.round(vec3dToDouble(vec))))
 				.toString();
@@ -62,7 +61,7 @@ public class SimUtils {
 		double rad = vec.angle(north);
 		double deg = Math.toDegrees(rad);
 		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
-		// muessen hier zwei Faelle unterschieden werden:
+		// müssen hier zwei Fälle unterschieden werden:
 		if (vec.x >= 0)
 			return deg;
 		return -deg;
@@ -71,7 +70,7 @@ public class SimUtils {
 	/**
 	 * Erzeugt aus einer Grad-Angabe einen normalisierten
 	 * javax.vecmath.Vector3d. Diese Methode wird zum Setzen der
-	 * Bot-Blickrichtung ueber das ControlPanel benutzt.
+	 * Bot-Blickrichtung über das ControlPanel benutzt.
 	 * 
 	 * @param deg
 	 *            der Winkel in Grad
@@ -90,7 +89,7 @@ public class SimUtils {
 	/**
 	 * Erzeugt aus einer Grad-Angabe einen normalisierten
 	 * javax.vecmath.Vector3d. Diese Methode wird zum Setzen der
-	 * Bot-Blickrichtung ueber das ControlPanel benutzt.
+	 * Bot-Blickrichtung über das ControlPanel benutzt.
 	 * 
 	 * @param deg
 	 *            der Winkel in Grad
@@ -110,7 +109,7 @@ public class SimUtils {
 //	public static double getRotation(Vector3f heading) {
 //		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
 //		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
-//		// muessen hier zwei Faelle unterschieden werden:
+//		// müssen hier zwei Fälle unterschieden werden:
 //		if (heading.x >= 0)
 //			return -angle;
 //		else
@@ -123,7 +122,7 @@ public class SimUtils {
 	 * 
 	 * @param heading 
 	 * 			  Gib die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
-	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurueck
+	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurück
 	 */
 	public static double getRotation(Vector3d heading) {
 		double angle = heading.angle(new Vector3d(0d, 1d, 0d));
@@ -136,7 +135,7 @@ public class SimUtils {
 	}
 	
 	/**
-	 * Fuehrt eine Transformation durch 
+	 * Führt eine Transformation durch 
 	 * @param pos Position 
 	 * @param head Blickrichtung
 	 * @return Die Transformation

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -26,14 +26,14 @@ import java.io.OutputStream;
  * <p>
  * Stream, der Sachen ausgibt und dabei Newlines (\n, 0xA) in der
  * plattformueblichen Weise schreibt. Soll heissen: Wenn die Applikation auf
- * Windows laeuft, wird das \n in \r\n (0xD 0xA) konvertiert. Wichtig beim
+ * Windows läuft, wird das \n in \r\n (0xD 0xA) konvertiert. Wichtig beim
  * Schreiben von Text-Dateien.
  * </p>
  * <p>
  * Der Stream wrappt einen anderen Stream (gibt nichts selber aus).
  * </p>
  *
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class BackslashNConverterStream extends OutputStream {
 	/** Output-Stream */
@@ -43,7 +43,7 @@ public class BackslashNConverterStream extends OutputStream {
 		System.getProperty("line.separator").getBytes();
 
 	/**
-	 * Erzeugt eine Instanz, die Eingaben konvertiert und an den uebergebenen
+	 * Erzeugt eine Instanz, die Eingaben konvertiert und an den übergebenen
 	 * Stream weiterreicht.
 	 * @param underlyingStream 
 	 */

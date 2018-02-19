@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -32,44 +32,44 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
 
 /**
  * <p>
- * Superklasse f&uuml;r alle Bot-Komponenten. Diese lassen sich in zwei Gruppen
- * einteilen: Sensoren (&uuml;ber sie bekommt der Bot-Steuercode Eingaben:
+ * Superklasse für alle Bot-Komponenten. Diese lassen sich in zwei Gruppen
+ * einteilen: Sensoren (über sie bekommt der Bot-Steuercode Eingaben:
  * Lichtsensor, Abstandssensoren, ...) und Aktuatoren (dorthin kann der
  * Steuercode Anweisungen geben: Motoren, LEDs, ...).
  * </p>
  * <p>
- * Manche Bot-Components k&ouml;nnen lesen von der TCP-(oder USB-)Verbindung mit
+ * Manche Bot-Components können lesen von der TCP-(oder USB-)Verbindung mit
  * dem Bot (Beispiel: {@link Led}, Gegenbeispiel:
  * {@link Mouse}, der immer innerhalb des Sim berechnet und nicht von
- * der Verbindung gelesen wird). Manche Components k&ouml;nnen sich auch aufs
+ * der Verbindung gelesen wird). Manche Components können sich auch aufs
  * TCP (USB) schreiben (Beispiel: {@link RemoteControl}, Gegenbeispiel:
  * {@link Log}, das nie aus dem Sim herausgesendet wird). Die
- * F&auml;higkeiten &quot;kann lesen&quot; und &quot;kann schreiben&quot; sind
- * unabh&auml;ngig, jede Kombination ist m&ouml;glich.</p>
+ * Fähigkeiten "kann lesen" und "kann schreiben" sind
+ * unabhängig, jede Kombination ist möglich.</p>
  * <p>
- * Die <em>grunds&auml;tzliche</em> F&auml;higkeit &quot;Lesen
- * k&ouml;nnen&quot; oder &quot;Schreiben k&ouml;nnen&quot; wird durch die
- * Interfaces {@link CanRead} und {@link CanWrite} ausgedr&uuml;ckt. (Nur eine
- * Component, die CanWrite implementiert, kann &uuml;berhaupt schreiben.) Ob die
- * F&auml;higkeit <em>in einem Einzelfall</em> verwendet wird, h&auml;ngt
- * zus&auml;tzlich ab von den beiden {@link ConnectionFlags} READS und WRITES:
- * F&uuml;r einen Real-Bot setzt der Sim zum Beispiel (fast) alle Components auf
- * &quot;nur lesen&quot;, auch wenn sie potentiell schreiben k&ouml;nnten. Beim
- * Setzen der Flags wird gepr&uuml;ft, ob die Component das Flag &uuml;berhaupt
- * unterst&uuml;tzt; andernfalls tritt eine UnsupportedOperationException auf.
+ * Die <em>grundsätzliche</em> Fähigkeit "Lesen
+ * können" oder "Schreiben können" wird durch die
+ * Interfaces {@link CanRead} und {@link CanWrite} ausgedrückt. (Nur eine
+ * Component, die CanWrite implementiert, kann überhaupt schreiben.) Ob die
+ * Fähigkeit <em>in einem Einzelfall</em> verwendet wird, hängt
+ * zusätzlich ab von den beiden {@link ConnectionFlags} READS und WRITES:
+ * Für einen Real-Bot setzt der Sim zum Beispiel (fast) alle Components auf
+ * "nur lesen", auch wenn sie potentiell schreiben könnten. Beim
+ * Setzen der Flags wird geprüft, ob die Component das Flag überhaupt
+ * unterstützt; andernfalls tritt eine UnsupportedOperationException auf.
  * </p> $$ Aktuatoren vs. Sensoren
  *
  * @author Felix Beckwermert
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  * @param <M> Typ der Komponente
  */
 public abstract class BotComponent<M> {
 	/**
-	 * Interface fuer lesende Komponenten
+	 * Interface für lesende Komponenten
 	 */
 	protected interface CanRead {
 		/**
-		 * Nicht aufrufen &ndash; stattdessen
+		 * Nicht aufrufen – stattdessen
 		 * {@link BotComponent#offerRead(Command)} verwenden.
 		 * @param c Kommando
 		 * @throws ProtocolException 
@@ -77,7 +77,7 @@ public abstract class BotComponent<M> {
 		void readFrom(Command c) throws ProtocolException;
 
 		/**
-		 * Nicht aufrufen &ndash; sollte nur von
+		 * Nicht aufrufen – sollte nur von
 		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet
 		 * werden.
@@ -87,19 +87,19 @@ public abstract class BotComponent<M> {
 	}
 
 	/**
-	 * Schreibbare (genauer: von der UI aus &auml;nderbare) Dinger sollten sich
+	 * Schreibbare (genauer: von der UI aus änderbare) Dinger sollten sich
 	 * auf ihrem externen Model als Listener anmelden
 	 */
 	protected interface CanWrite {
 		/**
-		 * Nicht aufrufen &ndash; stattdessen
+		 * Nicht aufrufen – stattdessen
 		 * {@link BotComponent#askForWrite(CommandOutputStream)} verwenden.
 		 * @param c Kommando
 		 */
 		void writeTo(Command c);
 
 		/**
-		 * Nicht aufrufen &ndash; sollte nur von
+		 * Nicht aufrufen – sollte nur von
 		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet
 		 * werden.
@@ -109,7 +109,7 @@ public abstract class BotComponent<M> {
 	}
 
 	/**
-	 * Interface fuer Komponenten, die asynchron schreiben
+	 * Interface für Komponenten, die asynchron schreiben
 	 */
 	protected interface CanWriteAsynchronously {
 		/**
@@ -149,7 +149,7 @@ public abstract class BotComponent<M> {
 	/** externes Modell */
 	private final M externalModel;
 
-	/** Anf&auml;nglich alles false */
+	/** Anfänglich alles false */
 	private EnumSet<ConnectionFlags> flags =
 		EnumSet.noneOf(ConnectionFlags.class);
 
@@ -164,12 +164,12 @@ public abstract class BotComponent<M> {
 	public M getExternalModel() { return externalModel; }
 
 	/**
-	 * @param s nicht unterstuetzte Operation
+	 * @param s nicht unterstützte Operation
 	 * @return Exception
 	 */
 	private UnsupportedOperationException createUnsuppOp(String s) {
 		return new UnsupportedOperationException("Bot-Komponente "+this+
-			" unterst\u00FCtzt kein "+s);
+			" unterstützt kein "+s);
 	}
 
 	/**
@@ -181,7 +181,7 @@ public abstract class BotComponent<M> {
 			? EnumSet.noneOf(ConnectionFlags.class)
 			: EnumSet.copyOf(Arrays.asList(flags));
 
-		// Pruefen, ob dieses Objekt in der Lage ist zu dem, was die von uns
+		// Prüfen, ob dieses Objekt in der Lage ist zu dem, was die von uns
 		// wollen
 		if (f.contains(ConnectionFlags.READS)) {
 			if (! (this instanceof CanRead))
@@ -269,7 +269,7 @@ public abstract class BotComponent<M> {
 		((CanWriteAsynchronously)this).setAsyncWriteStream(s);
 	}
 
-	/** @return Gibt den Namen der Komponente zur&uuml;ck */
+	/** @return Gibt den Namen der Komponente zurück */
 	public abstract String getName();
 
 	/** @return Beschreibung der Komponente */

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -40,13 +40,13 @@ import ctSim.util.BotID;
 import ctSim.util.Runnable1;
 
 /**
- * Klasse aller simulierten c't-Bots, die ueber TCP mit dem Simulator
+ * Klasse aller simulierten c't-Bots, die über TCP mit dem Simulator
  * kommunizieren
  */
 public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	/**
 	 * @param connection Verbindung
-	 * @param newId Id fuer die Kommunikation 
+	 * @param newId Id für die Kommunikation 
 	 * @param features Features des Bots gepackt in einen Integer
 	 * @throws ProtocolException 
 	 */
@@ -133,7 +133,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	 */
 	@Override
 	public String getDescription() {
-		return "Simulierter, in C geschriebener c't-Bot, verbunden \u00FCber " + getConnection().getName();
+		return "Simulierter, in C geschriebener c't-Bot, verbunden über " + getConnection().getName();
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			for (BotComponent<?> c : components) {
 				if (c instanceof Sensors.RemoteControl) {
 					((Sensors.RemoteControl)c).send(code);
-					lg.fine("RC5Code fuer Taste \"" + code + "\" gesendet");
+					lg.fine("RC5Code für Taste \"" + code + "\" gesendet");
 					break;
 				}
 			}
@@ -212,7 +212,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 						break;
 					}
 				} catch (ProtocolException e) {
-					lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere");
+					lg.warn(e, "Ungültiges Kommando; ignoriere");
 				}
 			}
 		} catch (IOException e) {

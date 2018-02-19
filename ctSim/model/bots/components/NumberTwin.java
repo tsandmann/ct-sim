@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -26,8 +26,8 @@ import javax.swing.event.ChangeListener;
 import ctSim.model.Command;
 
 /**
- * Zahlendarstellung fuer links oder rechts
- * ist Haelfte eines Paars (z.B. IrL + IrR)
+ * Zahlendarstellung für links oder rechts
+ * ist Hälfte eines Paars (z.B. IrL + IrR)
  */
 public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	/**
@@ -47,7 +47,7 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	protected final boolean isLeft;
 
 	/**
-	 * Zahlendarstellung fuer links oder rechts
+	 * Zahlendarstellung für links oder rechts
 	 * @param isLeft links?
 	 */
 	public NumberTwin(boolean isLeft) {

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -22,7 +22,7 @@ package ctSim.model.rules;
 import ctSim.controller.DefaultController;
 import ctSim.view.gui.Debug;
 
-/**  Das ist der "Ich-mache-nix"-Judge fuer den "Normal-Betrieb" mit
+/**  Das ist der "Ich-mache-nix"-Judge für den "Normal-Betrieb" mit
  * einem einzelnen Bot
  */
 public class DefaultJudge extends Judge {

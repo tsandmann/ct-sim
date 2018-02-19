@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -23,7 +23,7 @@ import javax.vecmath.Point2i;
 import javax.vecmath.Point3d;
 
 /**
- * Repraesentiert das Bot Positioning System (BPS) im Simulator
+ * Repräsentiert das Bot Positioning System (BPS) im Simulator
  * @author Timo Sandmann
  */
 public class BPS {
@@ -39,7 +39,7 @@ public class BPS {
 	public static class Beacon {	
 		/** Position der Landmarke [parcoursBlockSizeInMM mm] */
 		private final Point2i position;
-		/** Block-Groesse des Parcours, in dem die Landmarke steht [mm] */
+		/** Block-Größe des Parcours, in dem die Landmarke steht [mm] */
 		private final int parcoursBlockSizeInMM;
 		
 		/**
@@ -79,11 +79,11 @@ public class BPS {
 		}
 		
 //		/**
-//		 * Prueft, ob die angegebene Parcours-Position fuer eine BPS-Landmarke gueltig ist
+//		 * Prüft, ob die angegebene Parcours-Position für eine BPS-Landmarke gueltig ist
 //		 * @param parc Parcours, in dem die Landmarke steht
 //		 * @param x X-Koordinate [Parcours-Block]
 //		 * @param y Y-Koordinate [Parcours-Block]
-//		 * @return true, falls Landmarke an (x|y) moeglich, sonst false
+//		 * @return true, falls Landmarke an (x|y) möglich, sonst false
 //		 */
 //		public static boolean checkParcoursPosition(Parcours parc, int x, int y) {
 //			float tmp = (parc.getWidthInBlocks() - 1 - x) * parc.getBlockSizeInMM() + parc.getBlockSizeInMM() / 2.0f;
