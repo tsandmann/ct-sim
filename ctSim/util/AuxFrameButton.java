@@ -102,7 +102,7 @@ public class AuxFrameButton extends JToggleButton {
 			setToolTipText("Komponente \"" + buttonLabel + "\" im Bot-Code nicht aktiviert");
 		}
 		addActionListener(new ActionListener() {
-			// Fenster anzeigen/verbergen, wenn wir gedrueckt werden
+			// Fenster anzeigen/verbergen, wenn wir gedrückt werden
 			public void actionPerformed(ActionEvent e) {
 				auxFrame.setVisible(AuxFrameButton.this.isSelected());
 				if (frameContent instanceof RemoteCallViewer) {

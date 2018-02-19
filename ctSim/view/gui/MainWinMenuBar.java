@@ -55,19 +55,19 @@ import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 
 /**
  * <p>
- * Menueleiste und Toolbar des c't-Sim. Zustaendig fuer:
+ * Menüleiste und Toolbar des c't-Sim. Zuständig für:
  * <ul>
- * <li>Menueleiste</li>
- * <li>die einzelnen Menues</li>
- * <li>die Knoepfe der Toolbar</li>
- * <li>Event-Handling-Code, der ausgefuehrt wird, wenn der Benutzer einen
- * Menuepunkt / einen Toolbar-Knopf klickt</li>
- * <li>die Dialogfenster hinter den Menuepunkten (Welt oeffnen,
+ * <li>Menüleiste</li>
+ * <li>die einzelnen Menüs</li>
+ * <li>die Knopfe der Toolbar</li>
+ * <li>Event-Handling-Code, der ausgeführt wird, wenn der Benutzer einen
+ * Menüpunkt / einen Toolbar-Knopf klickt</li>
+ * <li>die Dialogfenster hinter den Menüpunkten (Welt öffnen,
  * speichern usw.)</li>
  * </ul>
  * </p>
  *
- * @author Hendrik Krausslig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class MainWinMenuBar extends JMenuBar {
 	/** UID */
@@ -77,23 +77,23 @@ public class MainWinMenuBar extends JMenuBar {
     final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.MainWinMenuBar");
 
 	/**
-	 * Je nach dem, was der Benutzer im Menue; klickt, muessen wir oft im
+	 * Je nach dem, was der Benutzer im Menü; klickt, müssen wir oft im
 	 * Controller eine Aktion anschubsen. Default-Sichtbarkeit, um
 	 * Eclipses synthetic-access-Warnungen zu vermeiden.
 	 */
 	final Controller controller;
 
 	/**
-	 * Aufgebohrter JFileChooser: Zustaendig fuer die "Parcours
-	 * oeffnen"- und "Parcours speichern"-Dialoge
+	 * Aufgebohrter JFileChooser: Zuständig fuer die "Parcours
+	 * öffnen"- und "Parcours speichern"-Dialoge
 	 */
 	private final WorldFileChooser worldChooser = new WorldFileChooser();
 
 	/**
 	 * Mit der Toolbar der Applikation haben wir indirekt zu tun: Es werden
-	 * zuerst alle Menues gebaut, dann die Toolbar, die den Inhalt von
-	 * einigen der Menues wiederholt. Weil in dieser Klasse die Menues
-	 * wohnen, wird die Toolbar miterzeugt und spaeter vom MainWindow per
+	 * zuerst alle Menüs gebaut, dann die Toolbar, die den Inhalt von
+	 * einigen der Menüs wiederholt. Weil in dieser Klasse die Menüs
+	 * wohnen, wird die Toolbar miterzeugt und später vom MainWindow per
 	 * getToolBar() abgeholt.
 	 */
 	private final JToolBar toolBar;
@@ -115,7 +115,7 @@ public class MainWinMenuBar extends JMenuBar {
 	
 	/**
 	 * @param controller
-	 * @param mainWindow Als 'parent' der modalen Dialoge und fuer das
+	 * @param mainWindow Als 'parent' der modalen Dialoge und für das
 	 * gelegentliche Event, was auch im mainWindow verarbeitet werden muss.
 	 */
 	public MainWinMenuBar(Controller controller, MainWindow mainWindow) {
@@ -270,7 +270,7 @@ public class MainWinMenuBar extends JMenuBar {
 //	 * NOP
 //	 */
 //	private Runnable1<Boolean> noOp = new Runnable1<Boolean>() {
-//		public void run(Boolean argument) {
+//		public void run(@SuppressWarnings("unused") Boolean argument) {
 //			// No-Op
 //		}
 //	};
@@ -569,6 +569,7 @@ public class MainWinMenuBar extends JMenuBar {
         /**
          * Judge-Klassenname
          */
+    	@SuppressWarnings("unused")
 		public final String fqJudgeClassName;
 
 		/**

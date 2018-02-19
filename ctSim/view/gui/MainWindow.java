@@ -51,10 +51,10 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Runnable1;
 
 /**
- * Die GUI-Hauptklasse fuer den c't-Sim
+ * Die GUI-Hauptklasse für den c't-Sim
  *
  * @author Felix Beckwermert
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class MainWindow extends JFrame implements ctSim.view.View {
     /** UID */

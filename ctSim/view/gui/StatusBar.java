@@ -167,7 +167,6 @@ public class StatusBar extends Box {
 	/**
 	 * Setzt den Simulatortakt auf den initialen Wert zurueck
 	 */
-
 	protected void reinit() {
 		tickRateField.setValue(INIT_TICK_RATE);
 		updateTime(0);

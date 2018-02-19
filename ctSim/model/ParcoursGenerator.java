@@ -706,6 +706,7 @@ public class ParcoursGenerator {
 	 *            Der Parcours
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private static void printParc(String step, char[][] parc) {
 		System.out.println("\n" + step + "\n"); //$NON-NLS-1$//$NON-NLS-2$
 		System.out.println(parc2String(parc));

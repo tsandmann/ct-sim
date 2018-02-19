@@ -332,6 +332,7 @@ public class ParcoursLoader {
 	 * @param app
 	 *            Aussehen des Bodens
 	 */
+	@SuppressWarnings("unused")
 	private void createFloor(int x, int y, int lengthX, int lengthY, Appearance app) {
 		Box box = new Box(parcours.getBlockSizeInM() / 2 * lengthX, parcours.getBlockSizeInM() / 2 * lengthY, World.PLAYGROUND_THICKNESS, app);
 		parcours.addFloor(box, x + lengthX / 2.0f, y + lengthY / 2.0f, - World.PLAYGROUND_THICKNESS + 0.001f);

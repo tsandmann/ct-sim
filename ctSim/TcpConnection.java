@@ -101,7 +101,6 @@ public class TcpConnection extends Connection {
         }
 
         lg.info("Warte auf Verbindung vom c't-Bot auf TCP-Port "+p);
-
 		try {
 			final ServerSocket srvSocket = new ServerSocket(p);
 			new SaferThread("ctSim-Listener-" + p + "/tcp") {

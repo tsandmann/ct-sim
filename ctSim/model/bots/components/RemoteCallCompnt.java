@@ -38,7 +38,7 @@ import ctSim.util.Runnable1;
 
 /**
  * Remote-Call Komponente
- * @author Hendrik Krausslig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class RemoteCallCompnt extends BotComponent<Void>
 implements CanRead, CanWrite, CanWriteAsynchronously {
@@ -92,8 +92,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				if (received == b.onTheWire)
 					return b;
 			}
-			lg.warn("Ungueltiger Exit-Status '"+received+"' empfangen; " +
-					"behandle wie Exit-Status fuer Fehler");
+			lg.warn("Ungültiger Exit-Status '"+received+"' empfangen; " +
+					"behandle wie Exit-Status für Fehler");
 			return FAILURE;
 		}
 
@@ -107,7 +107,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	/**
-	 * Repraesentiert ein Behavior, wie es vom Bot geliefert wurde. Ein
+	 * Repräsentiert ein Behavior, wie es vom Bot geliefert wurde. Ein
 	 * Behavior ist eine Funktion (Routine), die vom Sim aus aufgerufen werden
 	 * kann. Es hat:
 	 * <ul>
@@ -115,18 +115,18 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * <li>eine Liste von {@link Parameter}n (jeder Parameter hat einen Namen
 	 * und als Typ int oder float)</li>
 	 * <li>eine Methode, um ihn aufzurufen, d.h. an den Bot die Anforderung
-	 * abzusetzen "fuehre dieses Behavior aus".</li>
+	 * abzusetzen "führe dieses Behavior aus".</li>
 	 * </ul>
 	 */
 	public class Behavior implements Cloneable {
 		/**
 		 * Name des Behavior. Wird dem Benutzer angezeigt und dient dem
-		 * Bot-Steuercode gegenueber als eindeutiger Bezeichner des
+		 * Bot-Steuercode gegenüber als eindeutiger Bezeichner des
 		 * Behavior. Wenn der Bot die Liste schickt, welche Behaviors er
-		 * unterstuetzt, steht der Name in einem Feld mit fester Laenge:
+		 * unterstützt, steht der Name in einem Feld mit fester Länge:
 		 * Nach dem Namen an sich kommt eine Anzahl Null-Bytes, um auf die im
 		 * Protokoll vorgeschriebenen soundsoviel Bytes zu kommen. Trotzdem
-		 * enthaelt diese Variable nur den Namen an sich, die Null-Bytes
+		 * enthält diese Variable nur den Namen an sich, die Null-Bytes
 		 * werden abgeschnitten.
 		 */
 		private final String name;
@@ -137,7 +137,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 		/**
 		 * Erstellt eine {@code Behavior}-Instanz mit dem angegebenen Namen.
-		 * Hinten am Namen haengende Null-Bytes werden ignoriert.
+		 * Hinten am Namen hängende Null-Bytes werden ignoriert.
 		 * @param name Name der Botenfunktion des Verhaltens
 		 */
 		public Behavior(final byte[] name) {
@@ -149,27 +149,27 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 		/**
 		 * <p>
-		 * Fuehrt das Behavior mit den gegenwaertigen Parameterwerten
+		 * Führt das Behavior mit den gegenwärtigen Parameterwerten
 		 * aus. Der Behavior serialisiert sich und seine Parameter in ein
 		 * Byte-Array. In diesem stehen:
 		 * <ol>
-		 * <li>Name des Behavior (variable Laenge)</li>
+		 * <li>Name des Behavior (variable Länge)</li>
 		 * <li>ein Null-Byte</li>
-		 * <li>vier Byte fuer den serialisierten Parameter 1 ({@linkplain Parameter#writeTo(ByteArrayOutputStream) Wie serialisiert der sich?})</li>
-		 * <li>vier Byte fuer den serialisierten Parameter 2</li>
+		 * <li>vier Byte für den serialisierten Parameter 1 ({@linkplain Parameter#writeTo(ByteArrayOutputStream) Wie serialisiert der sich?})</li>
+		 * <li>vier Byte für den serialisierten Parameter 2</li>
 		 * <li>&hellip;</li>
-		 * <li>vier Byte fuer den serialisierten letzten Parameter.</li>
+		 * <li>vier Byte für den serialisierten letzten Parameter.</li>
 		 * </ol>
 		 * </p>
 		 * <p>
-		 * Das Behavior uebergibt das Byte-Array an seine
+		 * Das Behavior übergibt das Byte-Array an seine
 		 * {@link RemoteCallCompnt}, die es an den Bot sendet. Das Senden
-		 * erfolgt nicht sofort, sondern zu einem spaeteren Zeitpunkt, falls
-		 * die {@code RemoteCallCompnt} im synchronen Modus laeuft.
+		 * erfolgt nicht sofort, sondern zu einem späteren Zeitpunkt, falls
+		 * die {@code RemoteCallCompnt} im synchronen Modus läuft.
 		 * </p>
 		 *
 		 * @throws IOException Falls die {@code RemoteCallCompnt} im asynchronen
-		 * Modus laeuft und beim Senden ein E/A-Problem auftritt.
+		 * Modus läuft und beim Senden ein E/A-Problem auftritt.
 		 */
 		public void call() throws IOException {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -248,7 +248,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			try {
 				this.name = fullName.split(" ")[1];
 			} catch (ArrayIndexOutOfBoundsException e) {
-				throw new ProtocolException("Ungueltiger Parametertyp '"+
+				throw new ProtocolException("Ungültiger Parametertyp '"+
 					fullName+"' (muss Leerzeichen enthalten)");
 			}
 		}
@@ -327,7 +327,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				}
 				if (bitCount > 16) {
 					throw new ProtocolException("Ints mit mehr als 16 Bit " +
-							"nicht unterstuetzt");
+							"nicht unterstützt");
 				}
 				// Hauptarbeit
 				if (isUnsigned) {
@@ -536,10 +536,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	/**
-	 * No-op: Wir implementieren die, weil wir laut Interface muessen, aber
+	 * No-op: Wir implementieren die, weil wir laut Interface müssen, aber
 	 * wir brauchen die nicht weil wir ja
 	 * {@link #askForWrite(CommandOutputStream) askForWrite()}
-	 * ueberschrieben haben.
+	 * überschrieben haben.
 	 * @param c Command
 	 */
 	public void writeTo(Command c) {
@@ -611,7 +611,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		if (numParms > 0) {
 			if (numParms != parmNames.length) {
 				lg.warn("Bot-Code scheint fehlerhaft; hat " +
-						"angekuendigt, der Remote-Call hat "+numParms+
+						"angekündigt, der Remote-Call hat "+numParms+
 						" Parameter; tats\u00E4chlich hat er "+parmNames.length+
 						" Parameter; Gehe von "+parmNames.length+
 						" Parametern aus; Kommando folgt"+command);
@@ -647,7 +647,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		try {
 			is.read(rv);
 		} catch (IOException e) {
-			throw new ProtocolException("Remote Call Entry: Ungueltige " +
+			throw new ProtocolException("Remote Call Entry: Ungültige " +
 					"Payload");
 		}
 		return rv;

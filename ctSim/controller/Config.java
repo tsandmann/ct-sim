@@ -115,8 +115,9 @@ public class Config {
 	private static BotAppearances appearances;
 
 	/** Icons */
+	@SuppressWarnings("unused")
 	private static IconProvider icons;
-
+	
 	/**
 	 * L&auml;dt die <code>&lt;parameter></code>-Tags aus der
 	 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
