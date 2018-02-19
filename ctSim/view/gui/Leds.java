@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -79,7 +79,7 @@ public class Leds extends GuiBotBuisitor {
 			setSelected(false); // um initialen Tooltip setzen zu lassen
 			setEnabled(editable);
 
-			// Farbverlaeufe setzen
+			// Farbverläufe setzen
 			double center = Math.round(RADIUS / 4.0);
 			double radius = Math.round(RADIUS / 2f);
 			paintWhenOn  = new RoundGradientPaint(center, center,
@@ -108,11 +108,11 @@ public class Leds extends GuiBotBuisitor {
 			Graphics2D g = (Graphics2D)graphics;
 			Misc.enableAntiAliasing(g);
 
-			// Flaeche der Komponente loeschen
+			// Fläche der Komponente loeschen
 			g.setColor(getBackground());
 			g.fillRect(0, 0, getSize().width, getSize().height);
 
-			// LED-Flaeche malen
+			// LED-Fläche malen
 			g.setPaint(isSelected() ? paintWhenOn : paintWhenOff);
 			g.fillOval(0, 0, RADIUS, RADIUS);
 
@@ -122,7 +122,7 @@ public class Leds extends GuiBotBuisitor {
 		}
 
 		/**
-		 * @return Groesse
+		 * @return Größe
 		 */
 		@Override
 		public Dimension getPreferredSize() {
@@ -130,7 +130,7 @@ public class Leds extends GuiBotBuisitor {
 		}
 
 		/**
-		 * @return Groesse
+		 * @return Größe
 		 */
     	@Override
     	public Dimension getMinimumSize() {

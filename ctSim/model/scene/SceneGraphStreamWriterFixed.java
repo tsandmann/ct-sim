@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -31,8 +31,8 @@ import com.sun.j3d.utils.scenegraph.io.NamedObjectException;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 
 /**
- * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benoetigt, da SceneGraphStreamWriter von j3d defekt ist
- * Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu transerieren. Das koennte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht
+ * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamWriter von j3d defekt ist
+ * Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu transerieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht
  * 
  * @author bbe (bbe@heise.de)
  *

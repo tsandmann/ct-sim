@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -42,7 +42,7 @@ import javax.swing.table.TableCellRenderer;
 import ctSim.model.bots.components.BotComponent;
 
 /**
- * Tabellen fuer Komponenten
+ * Tabellen für Komponenten
  */
 public abstract class TableOfSpinners extends GuiBotBuisitor {
 	/**
@@ -100,7 +100,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
     	private static final long serialVersionUID = 3066982780978636288L;
 
     	/**
-    	 * Neue Tabelle fuer Bot-Komponenten
+    	 * Neue Tabelle für Bot-Komponenten
     	 */
     	public BotComponentTableModel() {
     		super(0, 2);
@@ -118,7 +118,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
     	}
 
 		/**
-		 * Fuegt eine neue Zeile hinzu
+		 * Fügt eine neue Zeile hinzu
 		 * @param label			Text
 		 * @param toolTip		Tooltip
 		 * @param editable		editierbar?
@@ -188,7 +188,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
     }
 
     /**
-     * Tabellen fuer Komponenten
+     * Tabellen für Komponenten
      */
     public TableOfSpinners() {
         final JTable t = new JTable(model);
@@ -205,11 +205,11 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 
         /*
 		 * Schweisstreibend: Hab t.setBorder() mit "lowered bevel border"
-		 * versucht, aber das fuehrte zu doofen Ergebnissen; JTable kann
+		 * versucht, aber das führte zu doofen Ergebnissen; JTable kann
 		 * offenbar keine Borders. -> Loesung: JTable in ScrollPane einwickeln.
 		 * Dann wird die ScrollPane aber sehr gross, warum weiss ich nicht. ->
 		 * Loesung: getMin/Pref/MaxSize() sollen zur Table weiterleiten. Dann
-		 * ist aber in der ScrollPane nicht genug Platz fuer ihren
+		 * ist aber in der ScrollPane nicht genug Platz für ihren
 		 * Lowered-Bevel-Border _und_ die Table, das heisst (Tusch) ein
 		 * Scrollbalken erscheint. -> Loesung: Insets dazurechnen.
 		 */

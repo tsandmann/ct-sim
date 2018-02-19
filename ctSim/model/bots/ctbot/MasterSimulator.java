@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -59,7 +59,7 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
 /**
- * Master-Simulator (CNY70, Maus, Raeder, Mater, Rest)
+ * Master-Simulator (CNY70, Maus, Räder, Mater, Rest)
  */
 public class MasterSimulator
 implements NumberTwinVisitor, BotBuisitor, Runnable {
@@ -106,7 +106,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         /**
          * Zahl der Umdrehungen, die das Rad im jetzigen Sim-Schritt macht
          * (Beispiel: 10 Umdrehungen pro Sekunde, Sim-Schritt ist 0,2
-         * Sim-Sekunden lang -&gt; R&uuml;ckgabewert 2). Methode kann in
+         * Sim-Sekunden lang -&gt; Rückgabewert 2). Methode kann in
          * einem Simschritt ohne Nebenwirkungen mehrfach aufgerufen werden
          * (idempotente Methode).
          *
@@ -197,14 +197,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * Maussensor-Simulator
      */
     class MouseSensorSimulator {
-        /** Aufl&ouml;sung des Maussensors [dpi] */
+        /** Auflösung des Maussensors [dpi] */
         private static final int SENS_MOUSE_DPI = 400;
 
         /**
-        * Enh&auml;lt den Rest, der beim vorigen Aufruf von
+        * Enhält den Rest, der beim vorigen Aufruf von
         * {@link #set(double)} entstanden ist. Sensor kann nur ints
-        * uebermitteln; damit die Nachkommaanteile der Berechnung nicht
-        * verlorengehen und sich die Abweichung mit der Zeit anh&auml;uft,
+        * übermitteln; damit die Nachkommaanteile der Berechnung nicht
+        * verlorengehen und sich die Abweichung mit der Zeit anhäuft,
         * merken wir sie uns hier
         */
         private double valueFraction = 0;
@@ -221,16 +221,16 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         }
 
         /**
-        * Errechnet die Anzahl an Dots, die der Maussensor f&uuml;r eine
-        * Bewegung der angegebenen L&auml;nge zurueckmeldet.
+        * Errechnet die Anzahl an Dots, die der Maussensor für eine
+        * Bewegung der angegebenen Länge zurückmeldet.
         *
-        * @param distanceInM Die L&auml;nge der Strecke in Metern
+        * @param distanceInM Die Länge der Strecke in Metern
         * @return Anzahl der Dots
         */
         private double meter2Dots(double distanceInM) {
             // distance ist in Metern angegeben,
             // * 100 macht daraus cm; 2,54 cm sind ein Inch,
-            // anschliessend Multiplikation mit der Aufloesung des Maussensors
+            // anschließend Multiplikation mit der Aufloesung des Maussensors
             return distanceInM * 100 / 2.54 * SENS_MOUSE_DPI;
         }
 
@@ -266,15 +266,15 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         private double last_s_l = 0;
         /** letzter Wert von s_r */
         private double last_s_r = 0;
-        /** Zufallsgenerator fuer Nachlauf der Raeder */
+        /** Zufallsgenerator für Nachlauf der Räder */
         private Random randGenerator = new Random();
-        /** Haben die Raeder Nachlauf beim Richtungswechsel? */
+        /** Haben die Räder Nachlauf beim Richtungswechsel? */
         private final boolean wheelsWithLag = Config.getValue("WheelLag").equals("true");
         
         /** BranchGroup des Bot-Shapes */
         private final Group botShape = parent.getBranchGroup();
         
-        /** Sensor fuer Transportfach-Klappe */
+        /** Sensor für Transportfach-Klappe */
 		private Door doorSensor;
 		/** letztes Objekt, das im Transportfach gesehen wurde */
 		private Node objectInPocket = null;
@@ -286,13 +286,13 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          */
         public void run() {
 			/* Position und Heading berechnen 
-			 * fuer ausfuehrliche Erlaeuterung der Positionsberechnung siehe doc-files/odometrie.pdf */
+			 * für ausführliche Erläuterung der Positionsberechnung siehe doc-files/odometrie.pdf */
 
-			/* Absolut zurueckgelegte Strecke pro Rad berechnen */
+			/* Absolut zurückgelegte Strecke pro Rad berechnen */
 			double s_l = leftWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
 			double s_r = rightWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
 			
-			/* Nachlauf der Raeder berechnen, falls gewuenscht */
+			/* Nachlauf der Räder berechnen, falls gewünscht */
 			if (wheelsWithLag) {
 				if (s_l == 0 && last_s_l != 0) {
 					double rand = randGenerator.nextDouble();
@@ -322,7 +322,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				}
 			}
 
-			/* Haelfte des Drehwinkels, den der Bot in diesem Simschritt hinzubekommt */
+			/* Hälfte des Drehwinkels, den der Bot in diesem Simschritt hinzubekommt */
 			double _gamma = (s_l - s_r) / (4.0 * WHEEL_DIST);
 
 			/* neue Blickrichtung berechnen, ergibt sich aus Rotation der Blickrichtung um 2 * _gamma */
@@ -350,7 +350,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 			Vector3d moveDirection = new Vector3d((_hd.x * _cg + _hd.y * _sg), (-_hd.x * _sg + _hd.y * _cg), 0);
 			moveDirection.normalize();
 			moveDirection.scale(moveDistance);
-			/* die alte Position entsprechend veraendern */
+			/* die alte Position entsprechend verändern */
 			newPos.add(moveDirection);
 
 			mouseSensorX.set(2 * _gamma * SENS_MOUSE_DIST_Y);
@@ -360,11 +360,11 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 			final double newHeadAngle = SimUtils.getRotation(newHeading); // Winkel des Headings
 			boolean collisionInPocket = false;
 
-			/* Grundplatte auf Kollision pruefen */
+			/* Grundplatte auf Kollision prüfen */
 			{
-//				parent.clearDebugBG(); // loescht alte Debug-Anzeige
+//				parent.clearDebugBG(); // löscht alte Debug-Anzeige
 
-				/* Bounds fuer Grundplatte erstellen */
+				/* Bounds für Grundplatte erstellen */
 				Bounds plate = new BoundingSphere(new Point3d(0, 0, 0), CtBotSimTcp.BOT_RADIUS);
 
 				/* schiebe probehalber Bounds an die neue Position */
@@ -383,7 +383,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 					/* Transportfach-Aussparung checken, falls Grundplatte kollidiert und Klappe auf */
 					Transform3D transform = new Transform3D();
 
-					/* Bounds fuer Transportfachs erstellen */
+					/* Bounds für Transportfachs erstellen */
 					Bounds pocket = createBounds(newPosPoint, newHeadAngle, 0, 0.04, 0.05 / 2, transform);
 
 //					parent.showDebugBox(0.05 / 2, 0.055 / 2, 0.04 / 2, transform, newHeadAngle);
@@ -398,7 +398,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
 						/* Check, ob Kollision auch ausserhalb des Fachs */
 
-						/* Bounds fuer Innenseite erstellen */
+						/* Bounds für Innenseite erstellen */
 						Bounds pocketBack = createBounds(newPosPoint, newHeadAngle, 0, - 0.011, 0.05 / 2, transform);
 
 //						parent.showDebugBox(0.05 / 2, 0.015, 0.04 / 2, transform, newHeadAngle);
@@ -413,7 +413,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 //							lg.info("Kollision im Transportfach und (mindestens) auch dahinter");
 						} else {
 
-							/* Bounds fuer Seitenflaeche links erstellen */
+							/* Bounds für Seitenfläche links erstellen */
 							Bounds pocketLeft = createBounds(newPosPoint, newHeadAngle, - 0.045, 0.034775, 0.03 / 2, transform);
 
 //							parent.showDebugBox(0.035 / 2, 0.03955, 0.04 / 2, transform, newHeadAngle);
@@ -428,7 +428,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 								objectInPocket = null;
 //								lg.info("Kollision im Transportfach und (mindestens) auch links davon");
 							} else {					
-								/* Bounds fuer Seitenflaeche rechts erstellen */
+								/* Bounds für Seitenfläche rechts erstellen */
 								Bounds pocketRight = createBounds(newPosPoint, newHeadAngle, 0.045, 0.034775, 0.03 / 2, transform);
 
 //								parent.showDebugBox(0.035 / 2, 0.03955, 0.04 / 2, transform, newHeadAngle);
@@ -456,12 +456,12 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 					objectInPocket = null;
 				}
 
-				/* wenn Kollision, Bot entsprechend faerben */
+				/* wenn Kollision, Bot entsprechend färben */
 				parent.set(COLLIDED, botCollision);
 			}
 
 
-			/* Bodenkontakt ueberpruefen */
+			/* Bodenkontakt überprüfen */
 			{
 				/* Vektor vom Ursprung zum linken Rad */
 				Vector3d vecL = new Vector3d(-newHeading.y, newHeading.x, 0);
@@ -477,7 +477,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				Vector3d posRadR = new Vector3d(parent.getPositionInWorldCoord());
 				posRadR.add(vecR);
 
-				/* Transformations-Matrix fuer die Rotation erstellen */
+				/* Transformations-Matrix für die Rotation erstellen */
 				Transform3D rotation = new Transform3D();
 				rotation.rotZ(newHeadAngle);
 
@@ -487,26 +487,26 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				/** Abstand Zentrum Gleitpin in Vorausrichtung (Y) [m] */
 				final double BOT_SKID_Y = -0.054d;
 
-				/* Bodenkontakt des Gleitpins ueberpruefen */
+				/* Bodenkontakt des Gleitpins überprüfen */
 				Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -CtBotSimTcp.BOT_HEIGHT / 2);
-				/* Position des Gleitpins gemaess der Ausrichtung des Bots anpassen */
+				/* Position des Gleitpins gemäß der Ausrichtung des Bots anpassen */
 				rotation.transform(skidVec);
 				skidVec.add(newPosPoint);
 
 				boolean isFalling = ! world.checkTerrain(new Point3d(skidVec), CtBotSimTcp.BOT_GROUND_CLEARANCE);
 
-				/* Bodenkontakt des linken Reifens ueberpruefen */
+				/* Bodenkontakt des linken Reifens überprüfen */
 				posRadL.z -= CtBotSimTcp.BOT_HEIGHT / 2;
 
 				isFalling |= ! world.checkTerrain(new Point3d(posRadL), CtBotSimTcp.BOT_GROUND_CLEARANCE);
 
-				/* Bodenkontakt des rechten Reifens ueberpruefen */
+				/* Bodenkontakt des rechten Reifens überprüfen */
 				posRadR.z -= CtBotSimTcp.BOT_HEIGHT / 2;
 
 				isFalling |= ! world.checkTerrain(new Point3d(posRadR), CtBotSimTcp.BOT_GROUND_CLEARANCE);
 
 				/* Wenn einer der Beruehrungspunkte keinen Boden mehr unter
-				 * sich hat wird der Bot gestoppt und entsprechend gefaerbt */
+				 * sich hat wird der Bot gestoppt und entsprechend gefärbt */
 				parent.set(IN_HOLE, isFalling);
 
 				if (! parent.is(IN_HOLE) && ! parent.is(COLLIDED)) {
@@ -539,20 +539,20 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		 * @param dX
 		 * @param dY
 		 * @param radius 
-		 * @param t Transformationsmatrix (wird veraendert)
+		 * @param t Transformationsmatrix (wird verändert)
 		 * @return erzeugte Bounds
 		 */
 		private Bounds createBounds(Point3d newPos, double newHeading, double dX, double dY, double radius, Transform3D t) {
 			final double dZ = - CtBotSimTcp.BOT_HEIGHT / 2;
 			
-			/* Vektor fuer die Verschiebung erstellen */
+			/* Vektor für die Verschiebung erstellen */
 			Vector3d v = new Vector3d(dX, dY, dZ);
 
-			/* Transformations-Matrix fuer die Rotation erstellen */
+			/* Transformations-Matrix für die Rotation erstellen */
 			Transform3D r = new Transform3D();
 			r.rotZ(newHeading);
 			
-			/* Transformation um Verschiebung ergaenzen */
+			/* Transformation um Verschiebung ergänzen */
 			r.transform(v);
 			v.add(newPos);
 			t.setIdentity();
@@ -628,7 +628,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	}
 
     /**
-    * Repr&auml;sentiert einen optischen Sensor vom Typ CNY70. Beim c't-Bot
+    * Repräsentiert einen optischen Sensor vom Typ CNY70. Beim c't-Bot
     * kommt der CNY70 u.a. als Liniensensor (2&times;) und als
     * Abgrundsensor (2&times;) zum Einsatz.
     */
@@ -669,11 +669,11 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
     /** Simulatoren */
     private final List<Runnable> simulators = Misc.newList();
-     /** Simulator fuer Position */
+     /** Simulator für Position */
     private final KrautUndRuebenSimulator krautUndRuebenSim;
     /** Welt */
     protected final World world;
-    /** 3D-Repraesentation des Bots */
+    /** 3D-Repräsentation des Bots */
     protected final ThreeDBot parent;
     /** Bot-Buisitor*/
     private final Buisitor buisitor = new Buisitor(this);
@@ -774,7 +774,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     
     /**
      * @param doorSensor Klappensensor
-     * @param isLeft Servo 1 (links) fuer Klappe
+     * @param isLeft Servo 1 (links) für Klappe
      */
     public void buisitDoor(final Sensors.Door doorSensor, boolean isLeft) {
         final ServoSimulator servo = isLeft ? servoDoor : null;
@@ -802,7 +802,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     
     /**
      * @param camPosSensor Kamerapositionssensor
-     * @param isLeft false: Servo 2 (rechts) fuer Kamera
+     * @param isLeft false: Servo 2 (rechts) für Kamera
      */
     public void buisitCamPos(final Sensors.CamPos camPosSensor, boolean isLeft) {
         final ServoSimulator servo = isLeft ? servoCam : null;
@@ -836,14 +836,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
             /**
             * Bruchteil des Encoder-Schritts, der beim letztem Sim-Schritt
-            * &uuml;brig geblieben ist (-1; 1). Wird hier gespeichert, um zu
+            * übrig geblieben ist (-1; 1). Wird hier gespeichert, um zu
             * verhindern, dass sich der Rundungsfehler mit der Zeit
-            * anh&auml;uft.
+            * anhäuft.
             */
             private double encoderRest = 0.0;
 
             public void run() {
-                // Anzahl der Umdrehungen der Raeder
+                // Anzahl der Umdrehungen der Räder
                 double revs = wheel.revsThisSimStep();
 
                 // Encoder-Schritte als Fliesskommazahl errechnen:
@@ -941,7 +941,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	 */
 	public void buisitBPSSim(final Sensors.BPSReceiver sensor, final boolean isLeft) {
 		if (! isLeft) {
-			return; // es gibt nur einen Sensor, wir nehmen den Wert fuer links
+			return; // es gibt nur einen Sensor, wir nehmen den Wert für links
 		}
 		simulators.add(new Runnable() {
 			private final Point3d startOfSens = new Point3d();
@@ -963,7 +963,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	 */
 	public void buisitPocketSim(final Sensors.Trans sensor, final boolean isLeft) {
 		if (! isLeft) {
-			return; // es gibt nur einen Sensor, wir nehmen den Wert fuer links
+			return; // es gibt nur einen Sensor, wir nehmen den Wert für links
 		}
 		final Point3d startOfSens = new Point3d(- 0.025, 0.025, 0);
 		final Point3d endOfSens = new Point3d(startOfSens);

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -27,10 +27,10 @@ import ctSim.controller.Config;
 import ctSim.view.contestConductor.ConductorTestUtil.TestDatabase;
 
 /**
- * Repr&auml;sentiert die Datenbank, die alles &uuml;ber den Wettbewerb
- * (&quot;contest&quot;) wei&szlig;. Idee: Die Klassen, die die Datenbank
- * verwenden, holen sie von hier. Daher k&ouml;nnen Unit-Tests einfach diese
- * Klasse ableiten und getConnection() &uuml;berschreiben, um dem
+ * Repräsentiert die Datenbank, die alles über den Wettbewerb
+ * ("contest") weiß. Idee: Die Klassen, die die Datenbank
+ * verwenden, holen sie von hier. Daher können Unit-Tests einfach diese
+ * Klasse ableiten und getConnection() überschreiben, um dem
  * Contest-Conductor eine Test-Datenbank unterzuschieben. Beispiel siehe
  * {@link TestDatabase}.
  */

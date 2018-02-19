@@ -6,15 +6,15 @@ kann man die Datei ganz löschen.
 
 Umlaute und wie man sie in Java escapt
 
-Ä u00C4
-ä u00E4
-Ö u00D6
-ö u00F6
-Ü u00DC
-ü u00FC
-ß u00DF
+Ä Ä
+ä ä
+Ö Ö
+ö ö
+Ü Ü
+ü ü
+ß ß
 
 
 Beispiel:
-System.out.println("Dieser Java-String enth\u00E4lt einen Umlaut");
+System.out.println("Dieser Java-String enthält einen Umlaut");
 

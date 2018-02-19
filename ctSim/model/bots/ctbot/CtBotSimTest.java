@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -83,7 +83,7 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 			throw new UnrecoverableScrewupException();
 		}
 		
-		/* Ansteuerung fuer die Motoren in Abhaengigkeit vom Input der IR-Abstandssensoren */
+		/* Ansteuerung für die Motoren in Abhängigkeit vom Input der IR-Abstandssensoren */
 
 		/* Solange die Wand weit weg ist, wird Stoff gegeben */
 		double ll = 255, rr = 255;

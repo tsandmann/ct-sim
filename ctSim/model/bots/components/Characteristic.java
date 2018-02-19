@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -23,8 +23,8 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Realisiert eine Sensorkennlinie ueber eine Reihe von Stuetzstellen. Die
- * Messgroessen, die einen bestimmten Sensor-Output ausloesen, muessen in ganzen
+ * Realisiert eine Sensorkennlinie über eine Reihe von Stützstellen. Die
+ * Messgrößen, die einen bestimmten Sensor-Output ausloesen, müssen in ganzen
  * Zahlen angegeben werden, deshalb sollten sie in einer Einheit angegeben
  * werden, die hinreichend fein ist (Distanzsensoren in cm, Abgrundsensoren
  * vielleicht in mm). Die Sensor-Output-Daten duerfen in Gleitkommazahlen angegeben
@@ -36,26 +36,26 @@ import java.util.*;
 
 public class Characteristic {
 
-	/** Das Array mit ausgewaehlten Messgroessen (M) und Sensordaten (S), Format:
+	/** Das Array mit ausgewählten Messgrößen (M) und Sensordaten (S), Format:
 	 * M1, S1, M2, S2 ....
 	 * wobei Mx ganzzahlige, positive Werte sind und M(x+1) > Mx sein muss
-	 * (Luecken sind aber erlaubt)
+	 * (Lücken sind aber erlaubt)
 	 * Sx sind die Sensordaten als Gleitkommazahlen (floats)
 	 */
 	private float[] characteristic;
 
-	/** Eine Lookup-Table, ist eine ergaenzte Form von characteristic;
-	 * hier uebernimmt der Array-Index die Funktion der Mx-Werte.
-	 * Diese sind hier lueckenlos, Zwischenwerte werden extrapoliert.
+	/** Eine Lookup-Table, ist eine ergänzte Form von characteristic;
+	 * hier übernimmt der Array-Index die Funktion der Mx-Werte.
+	 * Diese sind hier lückenlos, Zwischenwerte werden extrapoliert.
 	 */
 	private float[] lookup;
 	
 	/** Kopie der Lookup-Tables, der auf ganze Zahlen gerundete Sensorwerte 
-	 * zurueckgibt
+	 * zurückgibt
 	 */
 	private int[] intLookup;
 
-	/** Sensordatum fuer alle Messgroessen ausserhalb der Kennlinie */
+	/** Sensordatum für alle Messgrößen ausserhalb der Kennlinie */
 	private float INF;	
 	
 	/**
@@ -65,7 +65,7 @@ public class Characteristic {
 	 */
 	public static void main(String[] args) {
 		Characteristic charac = new Characteristic(new File("characteristics\\gp2d12Right.txt"), 999f);
-		System.out.println("Praezise Werte");
+		System.out.println("Präzise Werte");
 		for (float f = 0f; f < 100; f = f + 0.1f) {
 			System.out.printf("\n%12f", f);
 			for (int i = 0; i < charac.lookupPrecise(f) / 5; i++) {
@@ -76,7 +76,7 @@ public class Characteristic {
 	
 	/**
 	 * @param filename Pfad zur charac-Datei
-	 * @param inf Sensordatum fuer Messgroessen ausserhalb der Kennlinie
+	 * @param inf Sensordatum für Messgrößen ausserhalb der Kennlinie
 	 * @throws IOException
 	 */
 	public Characteristic(String filename, float inf) throws IOException {
@@ -85,7 +85,7 @@ public class Characteristic {
 
 	/**
 	 * @param openStream Stream der chrac-Datei
-	 * @param inf Sensordatum fuer Messgroessen ausserhalb der Kennlinie
+	 * @param inf Sensordatum für Messgrößen ausserhalb der Kennlinie
 	 */
 	public Characteristic(InputStream openStream, float inf) {
 		this.INF = inf;
@@ -110,33 +110,33 @@ public class Characteristic {
 			characteristic[i] = charac[i].floatValue();
 		}
 		
-		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
-		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
+		// Lookup-Table hat so viele Stellen wie die letzte Messgröße (in der
+		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich für
 		// den 0-Index: 
 		lookup = new float[(int) (1 + Math.floor(characteristic[characteristic.length - 2]))];
 		// Lookup-Table jetzt fuellen:
 		int firstMeas = (int) Math.floor(characteristic[0]);
-		// Alles vor der ersten Messgroesse mit INF fuellen:
+		// Alles vor der ersten Messgröße mit INF fuellen:
 		for (int i = 0; i < firstMeas; i++) {
 			lookup[i] = INF;
 		}
 		// Dann jeweils in Zweierschritten voran:
 		for (int i = 0; i < characteristic.length; i += 2) {
-			// Zwei aufeinanderfolgende Messgroessen heraussuchen:
+			// Zwei aufeinanderfolgende Messgrößen heraussuchen:
 			int firMea = (int) Math.floor(characteristic[i]);
 			// Wert am ersten Index eintragen:
 			lookup[firMea] = characteristic[i + 1];
 			try { // Klappt nicht, wenn schon das Ende erreicht ist.			
 				int secMea = (int) Math.floor(characteristic[i + 2]);
-				// Wie viele Schritte lassen die Messgroessen aus?
+				// Wie viele Schritte lassen die Messgrößen aus?
 				int diff = secMea - firMea;
-				// Und wie veraendert sich der zugeordnete Wert zwischen den
-				// Messgroessen?
+				// Und wie verändert sich der zugeordnete Wert zwischen den
+				// Messgrößen?
 				float valDiff = characteristic[i + 3] - characteristic[i + 1];
 				// Das ist pro Schritt gleich der Wertdifferenz durch
-				// Messgroessendifferenz:
+				// Messgrößendifferenz:
 				float delta = valDiff / diff;
-				// Zwischenwerte addieren, fuer jeden weiteren
+				// Zwischenwerte addieren, für jeden weiteren
 				// einmal delta auf lookup[firMea] draufrechnen:
 				for (int j = 1; j < diff; j++) {
 					lookup[firMea + j] = lookup[firMea] + j * delta;
@@ -146,7 +146,7 @@ public class Characteristic {
 			}
 		}
 
-		// Es wird ein zweiter Lookup-Table erstellt, fuer Sensorwerte, die 
+		// Es wird ein zweiter Lookup-Table erstellt, für Sensorwerte, die 
 		// nur aus ganzen Zahlen bestehen:
 		intLookup = new int[lookup.length]; 
 		for (int i = 0; i < lookup.length; i++) {
@@ -156,17 +156,17 @@ public class Characteristic {
 	}
 	
 	/**
-	 * Der Konstruktor errechnet aus der lueckenhaften Stuetzwerttabelle den
-	 * kompletten Lookup-Table mit Zwischenwerten fuer alle ganzzahligen
-	 * Messgroessen im Bereich der Kennlinie
+	 * Der Konstruktor errechnet aus der lückenhaften Stützwerttabelle den
+	 * kompletten Lookup-Table mit Zwischenwerten für alle ganzzahligen
+	 * Messgrößen im Bereich der Kennlinie
 	 * 
 	 * @param file
-	 *            Eine Textdatei mit der Stuetzwerttabelle 
+	 *            Eine Textdatei mit der Stützwerttabelle 
 	 *            Format:
-	 *            Messgroesse (int>=0) \t resultierendes Sensordatum (float) \n)
-	 *            Messgroessen aufsteigend, aber nicht zwingend lueckenlos
+	 *            Messgröße (int>=0) \t resultierendes Sensordatum (float) \n)
+	 *            Messgrößen aufsteigend, aber nicht zwingend lückenlos
 	 * @param inf
-	 *            Sensordatum fuer Messgroessen ausserhalb der Kennlinie	  
+	 *            Sensordatum für Messgrößen ausserhalb der Kennlinie	  
 	 */
 	public Characteristic(File file, float inf) {
 		// Wert ausserhalb des Messbereichs:
@@ -188,33 +188,33 @@ public class Characteristic {
 			characteristic[i] = charac[i].floatValue();
 		}
 		
-		// Lookup-Table hat so viele Stellen wie die letzte Messgroesse (in der
-		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich fuer
+		// Lookup-Table hat so viele Stellen wie die letzte Messgröße (in der
+		// vorletzten Stelle der Kennlinie) angibt -- plus eine natuerlich für
 		// den 0-Index:	
 		this.lookup = new float[(int) (1 + Math.floor(characteristic[characteristic.length - 2]))];
 		// Lookup-Table jetzt fuellen:
 		int firstMeas = (int) Math.floor(characteristic[0]);
-		// Alles vor der ersten Messgroesse mit INF fuellen:
+		// Alles vor der ersten Messgröße mit INF fuellen:
 		for (int i = 0; i < firstMeas; i++) {
 			lookup[i] = INF;
 		}
 		// Dann jeweils in Zweierschritten voran:
 		for (int i = 0; i < characteristic.length; i += 2) {
-			// Zwei aufeinanderfolgende Messgroessen heraussuchen:	
+			// Zwei aufeinanderfolgende Messgrößen heraussuchen:	
 			int firMea = (int) Math.floor(characteristic[i]);
 			// Wert am ersten Index eintragen:
 			lookup[firMea] = characteristic[i + 1];
 			try { // Klappt nicht, wenn schon das Ende erreicht ist.
 				int secMea = (int) Math.floor(characteristic[i + 2]);
-				// Wie viele Schritte lassen die Messgroessen aus?
+				// Wie viele Schritte lassen die Messgrößen aus?
 				int diff = secMea - firMea;
-				// Und wie veraendert sich der zugeordnete Wert zwischen den
-				// Messgroessen?
+				// Und wie verändert sich der zugeordnete Wert zwischen den
+				// Messgrößen?
 				float valDiff = characteristic[i + 3] - characteristic[i + 1];
 				// Das ist pro Schritt gleich der Wertdifferenz durch
-				// Messgroessendifferenz:
+				// Messgrößendifferenz:
 				float delta = valDiff / diff;
-				// Zwischenwerte addieren, fuer jeden weiteren
+				// Zwischenwerte addieren, für jeden weiteren
 				// einmal delta auf lookup[firMea] draufrechnen:
 				for (int j = 1; j < diff; j++) {
 					lookup[firMea + j] = lookup[firMea] + j * delta;
@@ -224,7 +224,7 @@ public class Characteristic {
 			}
 		}
 
-		// Es wird ein zweiter Lookup-Table erstellt, fuer Sensorwerte, die 
+		// Es wird ein zweiter Lookup-Table erstellt, für Sensorwerte, die 
 		// nur aus ganzen Zahlen bestehen:
 		intLookup = new int[lookup.length]; 
 		for (int i = 0; i < lookup.length; i++) {
@@ -234,13 +234,13 @@ public class Characteristic {
 	}
 
 	/**
-	 * Gibt zur uebergebenen Messgroesse den passenden Sensorwert zurueck.
-	 * Praezise Funktion, die bei Messgroessen zwischen ganzen Zahlen weitere
+	 * Gibt zur übergebenen Messgröße den passenden Sensorwert zurück.
+	 * Präzise Funktion, die bei Messgrößen zwischen ganzen Zahlen weitere
 	 * Zwischenwerte berechnet. Nur sinnvoll bei Sensoren, die nicht nur ganzzahlige
 	 * Messwerte liefern
 	 * 
 	 * @param measure
-	 *            Die Messgroesse, aufgrund derer der Sensor seinen Wert erzeugt
+	 *            Die Messgröße, aufgrund derer der Sensor seinen Wert erzeugt
 	 *            (z.B. die Distanz bei Distanzsensoren)
 	 * @return Das Sensordatum laut Kennlinie, ist eine ganze Zahl
 	 */
@@ -255,12 +255,12 @@ public class Characteristic {
 			// noch Zwischenwert extrapolieren --
 			if (data != INF && index < lookup.length - 1) {
 				data = data + (measurement - index) * (lookup[index + 1] - lookup[index]);
-				// Es sollen ganze Zahlen zurueckgegeben werden, wie 
-				// sich das fuer einen digitalen Sensor gehoert:
+				// Es sollen ganze Zahlen zurückgegeben werden, wie 
+				// sich das für einen digitalen Sensor gehört:
 				data = Math.round(data);
 			}
 		} else {
-			// Sonst INF zurueckgeben:
+			// Sonst INF zurückgeben:
 			data = INF;
 		}
 		return data;
@@ -306,7 +306,7 @@ public class Characteristic {
 	}
 
 	/**
-	 * Liest den Inhalt einer Datei und gibt ihn als String zurueck.
+	 * Liest den Inhalt einer Datei und gibt ihn als String zurück.
 	 * 
 	 * @param file
 	 *            Die Datei
@@ -326,9 +326,9 @@ public class Characteristic {
 		
 		/*
 		 * Merkwuerdigerweise wird bei dieser Methode, einen FileInputStream in
-		 * einen String zu verwandeln, ans Ende ein '?' als Zeichen fuer EOF
-		 * angehaengt, das wir auf etwas unschoene Art und Weise abschneiden
-		 * muessen:
+		 * einen String zu verwandeln, ans Ende ein '?' als Zeichen für EOF
+		 * angehängt, das wir auf etwas unschoene Art und Weise abschneiden
+		 * müssen:
 		 */
 		input = input.deleteCharAt((input.length()) - 1);
 		return (input.toString());

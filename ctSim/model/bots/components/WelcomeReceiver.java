@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -29,7 +29,7 @@ import ctSim.model.bots.components.BotComponent.SimpleActuator;
 import ctSim.util.BotID;
 
 /**
- * Handshake fuer Bot-Sim Connection
+ * Handshake für Bot-Sim Connection
  */
 public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuator, CanRead {
 	/** Subcode */
@@ -54,8 +54,8 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	private boolean feature_remotecall = false;
 	
 	/**
-	 * Handshake fuer Connection
-	 * @param expectedForWelcome Subcode fuer neue Connection
+	 * Handshake für Connection
+	 * @param expectedForWelcome Subcode für neue Connection
 	 */
 	public WelcomeReceiver(SubCode expectedForWelcome) {
 		super(null);
@@ -104,7 +104,7 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	}
 	
 	/**
-	 * Setzt die Features des Bots. Codierung gemaess ct-Bot/command.c
+	 * Setzt die Features des Bots. Codierung gemäß ct-Bot/command.c
 	 * @param features Alle Features in einen integer gepackt
 	 */
 	public void setFeatures(int features) {

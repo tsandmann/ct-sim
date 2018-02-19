@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -27,13 +27,13 @@ import ctSim.model.Command;
 /**
  * <p>
  * Entwicklertool: Macht die Command-Objekte sichtbar, die durch die
- * TCP-Verbindung zwischen c't-Sim und Steuercode laufen. F&uuml;r Debugging der
- * IO. Tool l&auml;uft solange, bis man es ausdr&uuml;cklich beendet.
+ * TCP-Verbindung zwischen c't-Sim und Steuercode laufen. Für Debugging der
+ * IO. Tool läuft solange, bis man es ausdrücklich beendet.
  * </p>
  * <p>
  * Verwendung: "botport" in config/ct-sim.xml umstellen auf "10002"; Sim und
  * dieses Tool starten; Bot-Code starten. Das Hinschreiben der ganzen Commands
- * verz&ouml;gert alles &ndash; falls der Sim Meldungen wirft "Bot viel zu
+ * verzögert alles – falls der Sim Meldungen wirft "Bot viel zu
  * langsam", dann den entsprechenden Timeout-Wert in der Konfigdatei hochsetzen.
  * </p>
  */

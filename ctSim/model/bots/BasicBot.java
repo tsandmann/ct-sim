@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -37,7 +37,7 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Superklasse für alle Bots, unabhängig davon, ob sie &ndash;
+ * Superklasse für alle Bots, unabhängig davon, ob sie –
  * <ul>
  * <li><strong>real</strong> sind, d.h. ein Bot aus Hardware wurde an den Sim
  * angeschlossen und der Sim spielt daher hauptsächlich die Rolle eines
@@ -47,7 +47,7 @@ import ctSim.util.Misc;
  * es läuft nur der Steuercode auf einem PC. Sensordaten kommen in diesem
  * Fall nicht von echter Hardware, sondern über TCP vom Sim, der sie
  * ausgerechnet hat (Sim im Master-Modus)</li>
- * <li><strong>c't-Bots</strong> sind oder nicht &ndash; theoretisch
+ * <li><strong>c't-Bots</strong> sind oder nicht – theoretisch
  * könnte jemand ja mal den Simulator um selbstgestrickte Bots erweitern,
  * die keine c't-Bot sind.</li>
  * </ul>
@@ -68,7 +68,7 @@ import ctSim.util.Misc;
  */
 public abstract class BasicBot implements Bot {
 	/**
-	 * Die Connection an der der Bot haengt
+	 * Die Connection an der der Bot hängt
 	 */
 	private Connection connection;
 	
@@ -78,7 +78,7 @@ public abstract class BasicBot implements Bot {
 	private Controller controller;
 
 	/**
-	 * Liefert die Id eines Bots fuer die Adressierung der Commands zurück
+	 * Liefert die Id eines Bots für die Adressierung der Commands zurück
 	 * @return Id des Bots
 	 */
 	public BotID getId() {
@@ -118,7 +118,7 @@ public abstract class BasicBot implements Bot {
 		private static final long serialVersionUID = - 8179783452023605404L;
 		
 		/**
-		 * Fuegt Elemente hinzu
+		 * Fügt Elemente hinzu
 		 * @param elements Die Elemente
 		 */
 		public void add(T... elements) {
@@ -128,7 +128,7 @@ public abstract class BasicBot implements Bot {
 	}
 	
 	/**
-	 * Zaehlklasse
+	 * Zählklasse
 	 */
 	public static class CountingMap
 	extends HashMap<Class<? extends BasicBot>, Integer> {
@@ -173,7 +173,7 @@ public abstract class BasicBot implements Bot {
 	 *
 	 * </p>
 	 *
-	 * @author Hendrik Krau&szlig; &lt;<a
+	 * @author Hendrik Krauß &lt;<a
 	 * href="mailto:hkr@heise.de">hkr@heise.de</a>>
 	 */
 	public static class BotComponentList extends BulkList<BotComponent<?>> {
@@ -264,7 +264,7 @@ public abstract class BasicBot implements Bot {
     	}
 
     	/**
-    	 * View-Update durchfuehren
+    	 * View-Update durchführen
     	 */
     	public void updateView() {
     		for (BotComponent<?> c : BotComponentList.this)
@@ -299,7 +299,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * <p>
 	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann
-	 * &ndash; siehe
+	 * – siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
 	 * @param compntClass Bot-Komponente
@@ -332,7 +332,7 @@ public abstract class BasicBot implements Bot {
 	public BasicBot(String name) {
 		super();
 		this.controller = null;
-		// Instanz-Zahl erhoehen
+		// Instanz-Zahl erhöhen
 		numInstances.increase(getClass());
 		int num = numInstances.get(getClass()) + 1;
 		if (num > 1 && !name.contains("(")) {
@@ -361,10 +361,10 @@ public abstract class BasicBot implements Bot {
 	 * @see ctSim.model.bots.Bot#dispose()
 	 */
 	public void dispose() {
-		// keine Ausgabe fuer 3D-Bots, denn zu jedem 3D-Bot gibt es auch einen Sim-Bot
+		// keine Ausgabe für 3D-Bots, denn zu jedem 3D-Bot gibt es auch einen Sim-Bot
 		if (! (this instanceof ThreeDBot)) {
 			try {
-				lg.info(name + " verkr\u00FCmelt sich");
+				lg.info(name + " verkrümelt sich");
 			} catch (Exception e) {
 				// egal
 			}
@@ -447,7 +447,7 @@ public abstract class BasicBot implements Bot {
 	}
 
 	/**
-	 * Liefert den Controller zurueck, der diesen Bot verwaltet
+	 * Liefert den Controller zurück, der diesen Bot verwaltet
 	 * @return Controller der Controller
 	 */
 	public Controller getController() {
@@ -455,14 +455,14 @@ public abstract class BasicBot implements Bot {
 	}
 
 	/**
-	 * Setzt den zustaendigen Controller
+	 * Setzt den zuständigen Controller
 	 * @param controller
 	 * @throws ProtocolException Wenn die Id dieses Bots im Controller schon belegt ist
 	 */
 	public void setController(Controller controller) throws ProtocolException {
 		this.controller = controller;
 		if (this instanceof CtBotSimTest)
-			return;	// Test-Bots unterstuetzen keine IDs!
+			return;	// Test-Bots unterstützen keine IDs!
 		if (controller != null){
 			if (!controller.isIdFree(getId()))
 				throw new ProtocolException("Die Id dieses Bots existiert schon im Controller!");
@@ -470,7 +470,7 @@ public abstract class BasicBot implements Bot {
 	}
 	
 	/**
-	 * Liefert die Connection zurueck ueber die der Bot zu erreichen ist
+	 * Liefert die Connection zurück über die der Bot zu erreichen ist
 	 * @return connection
 	 */
 	public Connection getConnection() {
@@ -478,7 +478,7 @@ public abstract class BasicBot implements Bot {
 	}
 
 	/**
-	 * Setzt die Connection ueber die der Bot zu erreichen ist
+	 * Setzt die Connection über die der Bot zu erreichen ist
 	 * @param connection
 	 */
 	public void setConnection(Connection connection) {

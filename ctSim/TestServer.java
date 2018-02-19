@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -35,9 +35,9 @@ import ctSim.util.FmtLogger;
 
 /**
  * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim
- * gehoert. Hab keine Ahnung, wofuer das sein soll. Ich nehm die Datei aus dem
- * Build Path, damit man bei Namensaenderungen in Sim-Klassen das nicht immer
- * hier mitfuehren muss. --hkr@heise.de
+ * gehört. Hab keine Ahnung, wofür das sein soll. Ich nehm die Datei aus dem
+ * Build Path, damit man bei Namensänderungen in Sim-Klassen das nicht immer
+ * hier mitführen muss. --hkr@heise.de
  */
 public class TestServer implements Runnable {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.TestServer");
@@ -86,7 +86,7 @@ public class TestServer implements Runnable {
 	
 	/**
 	 * Wie lange der Worker pro Zyklus warten soll,
-	 * bevor er den Com-Thread wieder laufen laesst
+	 * bevor er den Com-Thread wieder laufen lässt
 	 * (simuliert Arbeit des Ctrl.)
 	 * 
 	 */
@@ -104,15 +104,15 @@ public class TestServer implements Runnable {
 	 * Server-Connection mit _einem_ Client. Diese entspricht einem
 	 * Java-Bot im Simulator.
 	 * 
-	 * Bekommt vom Server den Client_Port uebergeben
+	 * Bekommt vom Server den Client_Port übergeben
 	 * und kommuniziert dann mit diesem.
 	 * 
 	 * Je nach Einstellung von SERVER_TIME schickt er...
 	 * - wenn TRUE: ein Datum an den Client und wartet auf die Antwort
-	 * - wenn FALSE: das ankommende Datum einfach an den Client zurueck
+	 * - wenn FALSE: das ankommende Datum einfach an den Client zurück
 	 * 
 	 * Nach einem Empfangs-/Sende-Vorgang wird auf den Worker
-	 * (wenn eingestellt ueber USE_WORKER) gewartet...
+	 * (wenn eingestellt über USE_WORKER) gewartet...
 	 * 
 	 */
 	class ServerCom
@@ -354,7 +354,7 @@ public class TestServer implements Runnable {
 				command.setSeq(this.seq++);
 				this.send(command.getCommandBytes());
 				
-				// TODO: nur fuer real-bot
+				// TODO: nur für real-bot
 				command.setCommand(Command.CMD_SENS_TRANS);
 				command.setDataL(0);
 				command.setDataR(0);
@@ -375,7 +375,7 @@ public class TestServer implements Runnable {
 //					}
 //				}
 				
-				// TODO: nur fuer real-bot
+				// TODO: nur für real-bot
 				command.setCommand(Command.CMD_SENS_ERROR);
 				command.setDataL(0);
 				command.setDataR(0);
@@ -384,7 +384,7 @@ public class TestServer implements Runnable {
 
 				
 //				lastTransmittedSimulTime= (int)world.getSimulTime();
-//				lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur verfuegung und 10.000 ist ne nette Zahl ;-)
+//				lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur Verfügung und 10.000 ist ne nette Zahl ;-)
 				command.setCommand(Command.CMD_DONE);
 //				command.setDataL(lastTransmittedSimulTime);
 				command.setDataL(10);
@@ -454,16 +454,16 @@ public class TestServer implements Runnable {
 	 * jeden Zyklus auf den Worker (genauso sync., wie der Ctrl. mit den
 	 * Bots im Sim).
 	 * 
-	 * Ueber WORKER_WAIT kann eingestellt werden, ob
-	 * der Worker arbeit (des Ctrl.) simulieren soll (er schlaeft einfach die
+	 * Über WORKER_WAIT kann eingestellt werden, ob
+	 * der Worker arbeit (des Ctrl.) simulieren soll (er schläft einfach die
 	 * angegebene Zeit, bevor die 'ServerCom' wieder freigegeben wird und weiter
 	 * machen darf).
 	 * 
-	 * Ueber TICK_RATE wird eine mindest (Bot-)Laufzeit eingestellt.
-	 * Der Worker schlaeft diese, nachdem er die 'ServerCom' (entspr. einem Bot)
+	 * Über TICK_RATE wird eine mindest (Bot-)Laufzeit eingestellt.
+	 * Der Worker schläft diese, nachdem er die 'ServerCom' (entspr. einem Bot)
 	 * wieder freigegeben hat. Ein neuer Zyklus (in diesem Fall Sende-Vorgang)
 	 * kann also nicht vor Ablauf dieser Zeit _wieder_ beginnen (aber der
-	 * Bot kann waehrend dieser Zeit rechnen; in diesem Fall die ServerCom
+	 * Bot kann während dieser Zeit rechnen; in diesem Fall die ServerCom
 	 * kommunizieren)...
 	 * 
 	 * 
@@ -515,7 +515,7 @@ public class TestServer implements Runnable {
 			}
 		}
 		
-		// Initialisiert Latches fuer den "naechsten" Zyklus
+		// Initialisiert Latches für den "nächsten" Zyklus
 		public synchronized void reinit() {
 			
 			CountDownLatch start = this.start;
@@ -532,7 +532,7 @@ public class TestServer implements Runnable {
 				throws InterruptedException {
 			
 			CountDownLatch start = this.start;
-			// ueberfluessig ?
+			// überflüssig ?
 			CountDownLatch done  = this.done;
 			
 			done.countDown();
@@ -551,7 +551,7 @@ public class TestServer implements Runnable {
 	 * global angegebenen Port.
 	 * 
 	 * Bei einer ankommenden Connection wird diese an eine
-	 * 'ServerCom' uebergeben und weiter gelauscht...
+	 * 'ServerCom' übergeben und weiter gelauscht...
 	 * 
 	 */
 	TestServer(int port) {
@@ -633,11 +633,11 @@ public class TestServer implements Runnable {
 }
 
 /** 
- * Der TestClient schickt einfach ein ankommendes Datum zurueck
+ * Der TestClient schickt einfach ein ankommendes Datum zurück
  * an den Server, der dann die Zeit stoppt und ausgibt (SERVER_TIME).
  * 
  * Oder schickt ein Datum an den Server und wartet selbst bis
- * dieses zurueckkommt (SERVER_TIME == FALSE).
+ * dieses zurückkommt (SERVER_TIME == FALSE).
  * 
  */
 class TestClient implements Runnable {

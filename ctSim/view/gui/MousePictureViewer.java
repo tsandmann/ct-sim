@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -57,7 +57,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		private Image image;
 		/** Breite */
 		private final int targetWidth;
-		/** Hoehe */
+		/** Höhe */
 		private final int targetHeight;
 
 		/**
@@ -155,8 +155,8 @@ public class MousePictureViewer extends GuiBotBuisitor {
 
 		// 3/3: Checkbox
 		final JCheckBox cb = new JCheckBox("laufend");
-		cb.setToolTipText("Fordert das n\u00E4chste an, sobald ein Mausbild " +
-			"\u00FCbertragen ist");
+		cb.setToolTipText("Fordert das nächste an, sobald ein Mausbild " +
+			"übertragen ist");
 		cb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Wenn Checkbox an, Button deaktivieren

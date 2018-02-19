@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -22,7 +22,7 @@ package ctSim.model;
 import java.util.Random;
 
 /**
- * Parcours-Generator fuer den c't-Sim-Wettbewerb
+ * Parcours-Generator für den c't-Sim-Wettbewerb
  * 
  * @author pek (pek@heise.de)
  * 
@@ -31,52 +31,52 @@ import java.util.Random;
 public class ParcoursGenerator {
 
 	/**
-	 * Zeichen fuer normalen Boden
+	 * Zeichen für normalen Boden
 	 */
 	private static final char FLOOR = ' ';
 
 	/**
-	 * Zeichen fuer hellen Boden
+	 * Zeichen für hellen Boden
 	 */
 	private static final char WHITE = '.';
 
 	/**
-	 * Zeichen fuer einzelnes Wandstueck
+	 * Zeichen für einzelnes Wandstück
 	 */
 	private static final char WALL = 'X';
 
 	/**
-	 * Zeichen fuer horizontales Wandstueck
+	 * Zeichen für horizontales Wandstück
 	 */
 	private static final char WALLH = '=';
 
 	/**
-	 * Zeichen fuer vertikales Wandstueck
+	 * Zeichen für vertikales Wandstück
 	 */
 	private static final char WALLV = '#';
 
 	/**
-	 * Zeichen fuer Loch
+	 * Zeichen für Loch
 	 */
 	private static final char HOLE = 'L';
 
 	/**
-	 * Zeichen fuer Lampe
+	 * Zeichen für Lampe
 	 */
 	private static final char LAMP = '*';
 
 	/**
-	 * Zeichen fuer Zielfeld
+	 * Zeichen für Zielfeld
 	 */
 	private static final char GOAL = 'Z';
 
 	/**
-	 * Zeichen fuer linkes Startfeld
+	 * Zeichen für linkes Startfeld
 	 */
 	private static final char START1 = '1';
 
 	/**
-	 * Zeichen fuer rechtes Startfeld
+	 * Zeichen für rechtes Startfeld
 	 */
 	private static final char START2 = '2';
 
@@ -86,7 +86,7 @@ public class ParcoursGenerator {
 	private static final String xmlHead = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" //$NON-NLS-1$
 			+ "<!DOCTYPE world SYSTEM \"parcours.dtd\">\n" //$NON-NLS-1$
 			+ "<world>\n" //$NON-NLS-1$
-			+ "	<description>Dieses ist ein automatisch generierter Beispielparcours fuer den c't-Sim-Wettbewerb.</description>\n" //$NON-NLS-1$
+			+ "	<description>Dieses ist ein automatisch generierter Beispielparcours für den c't-Sim-Wettbewerb.</description>\n" //$NON-NLS-1$
 			+ "	<parcours>\n"; //$NON-NLS-1$
 
 	/**
@@ -169,20 +169,20 @@ public class ParcoursGenerator {
 	private static char[][] map;
 
 	/**
-	 * Die Karte wird allerdings zurerst nur zur Haelfte generiert, ebenfalls
+	 * Die Karte wird allerdings zurerst nur zur Hälfte generiert, ebenfalls
 	 * als char-Array, erste Dimension die Zeilennummer, die zweite die
 	 * Spaltennummer:
 	 */
 	private static char[][] halfmap;
 
 	/**
-	 * Die Groesse des Labyrinths in Feldern; die Breite ist die Breite der
+	 * Die Größe des Labyrinths in Feldern; die Breite ist die Breite der
 	 * halben Karte!
 	 */
 	private static int width;
 
 	/**
-	 * Die Hoehe:
+	 * Die Höhe:
 	 */
 	private static int height;
 
@@ -192,32 +192,32 @@ public class ParcoursGenerator {
 	private static Random rand;
 
 	/**
-	 * Parameter fuer die Erzeugung: Verschnoerkelungsfaktor; Anzahl der
+	 * Parameter für die Erzeugung: Verschnoerkelungsfaktor; Anzahl der
 	 * angestrebten Segmente pro Hindernis
 	 */
 	private static int twirling;
 
 	/**
 	 * Hindernisdichte an der Wand; klein = rauh Es wird Wandlange/wallRoughness
-	 * oft versucht, der Wand ein Hindernis hinzuzufuegen
+	 * oft versucht, der Wand ein Hindernis hinzuzufügen
 	 */
 	private static int wallRoughness;
 
 	/**
 	 * Hindernisdichte im Inneren des Labyrinths klein = viele Es wird
 	 * Wandlange/wallRoughness oft versucht, der Wand ein Hindernis
-	 * hinzuzufuegen
+	 * hinzuzufügen
 	 */
 	private static int innerRoughness;
 
 	/**
-	 * Lochanteil; jedes n-te Wandstueck wird durch Loch ersetzt
+	 * Lochanteil; jedes n-te Wandstück wird durch Loch ersetzt
 	 */
 	private static int perforation;
 
 	/**
 	 * Diese main-Methode dient nur dem Debugging. Sie generiert 20 Parcours mit
-	 * zufaelligen Parametern und gibt sie auf der Konsole aus.
+	 * zufälligen Parametern und gibt sie auf der Konsole aus.
 	 * 
 	 * @param args
 	 *            Keine Argumente
@@ -230,19 +230,19 @@ public class ParcoursGenerator {
 
 	/**
 	 * Diese Methode generiert das eigentliche Labyrinth. Parameter werden
-	 * innerhalb fester Grenzen zufaellig gesetzt: Breite zwischen 12 und 30
-	 * Feldern; Hoehe zwischen 12 und 30 Feldern; wallRoughness zwischen 2 und
+	 * innerhalb fester Grenzen zufällig gesetzt: Breite zwischen 12 und 30
+	 * Feldern; Höhe zwischen 12 und 30 Feldern; wallRoughness zwischen 2 und
 	 * 6; innerRoughness zwischen 7 und 12; twirling zwischen 2 und 5;
 	 * perforation zwischen 6 und 20
 	 * 
 	 * @return Der Parcours als XML-String
 	 */
 	public static String generateParc() {
-		// Generiere zufaellige Werte fuer die Parameter:
+		// Generiere zufällige Werte für die Parameter:
 		int w, h, wr, ir, t, p;
 		rand = new Random();
 		w = rand.nextInt(10) + 6; // Breite zwischen 12 und 30 Felder
-		h = rand.nextInt(19) + 12; // Hoehe zwischen 12 und 30 Felder
+		h = rand.nextInt(19) + 12; // Höhe zwischen 12 und 30 Felder
 		wr = rand.nextInt(5) + 2; // zwischen 2 und 6;
 		ir = rand.nextInt(6) + 7; // zwischen 7 und 12;
 		t = rand.nextInt(4) + 2; // zwischen 2 und 5;
@@ -257,22 +257,22 @@ public class ParcoursGenerator {
 	 * @param wi
 	 *            Halbe Breite des Parcours in Feldern
 	 * @param he
-	 *            Hoehe des Parcours in Feldern
+	 *            Höhe des Parcours in Feldern
 	 * @param wr
 	 *            Hindernisdichte an der Wand; klein = rauh
 	 * @param ir
-	 *            Verhaeltnis der Hindernismenge an der Wand zu solchen in der
+	 *            Verhältnis der Hindernismenge an der Wand zu solchen in der
 	 *            Mitte
 	 * @param tw
 	 *            Verschnoerkelungsfaktor; Anzahl der angestrebten Segmente pro
 	 *            Hindernis
 	 * @param pe
-	 *            Lochanteil; jedes n-te Wandstueck wird durch Loch ersetzt
+	 *            Lochanteil; jedes n-te Wandstück wird durch Loch ersetzt
 	 * @return Der Parcours als XML-String
 	 */
 	public static String generateParc(int wi, int he, int wr, int ir, int tw,
 			int pe) {
-		// Alle Werte sind groesser als 0:
+		// Alle Werte sind Größer als 0:
 		width = Math.max(wi, 1);
 		height = Math.max(he, 1);
 		wallRoughness = Math.max(wr, 1);
@@ -281,10 +281,10 @@ public class ParcoursGenerator {
 		perforation = Math.max(pe, 1);
 
 		/*
-		 * Zunaechst wird nur die halbe Karte gebaut.
+		 * Zunächst wird nur die halbe Karte gebaut.
 		 * 
 		 * Erste Dimension ist die Zeilennummer und zweite die Spaltennummer,
-		 * daher erst Hoehe und dann Breite:
+		 * daher erst Höhe und dann Breite:
 		 */
 
 		halfmap = new char[height][width];
@@ -298,13 +298,13 @@ public class ParcoursGenerator {
 
 		// Dann die Einfassung bauen:
 		buildEnclosure();
-		// Dann Hindernisse an den Waenden anfuegen:
+		// Dann Hindernisse an den Wänden anfügen:
 		roughenWalls();
 		// Dann freie Hindernisse bauen:
 		generateFreeObstacles();
-		// Einzelne Hindernisse durch Loecher ersetzen:
+		// Einzelne Hindernisse durch Löcher ersetzen:
 		perforate();
-		// Fehlende Haelfte rekonstruieren:
+		// Fehlende Hälfte rekonstruieren:
 		mirror();
 		// Startfelder einbauen:
 		generateStart();
@@ -338,13 +338,13 @@ public class ParcoursGenerator {
 	}
 
 	/**
-	 * Fuegt Hindernisse an die Waende an, so dass der Weg an der Wand entlang
-	 * auf jeden Fall laenger ist als der kuerzeste Weg. Die Methode sorgt auch
-	 * fuer Hindernisse, die ueber die Mittellinie hinausgehen.
+* Fügt Hindernisse an die Wände an, so dass der Weg an der Wand entlang
+	 * auf jeden Fall länger ist als der kuerzeste Weg. Die Methode sorgt auch
+	 * für Hindernisse, die über die Mittellinie hinausgehen.
 	 */
 	private static void roughenWalls() {
 		/*
-		 * Die Anzahl der Hindernisse an der Wand berechnet sich durch Laenge /
+		 * Die Anzahl der Hindernisse an der Wand berechnet sich durch Länge /
 		 * xxxRoughness -- im Osten innerRoughness, sonst wallRoughness
 		 */
 
@@ -362,7 +362,7 @@ public class ParcoursGenerator {
 		}
 
 		/*
-		 * Zuletzt Ostwand moeblieren (= Hindernisse einfuegen, die ueber die
+		 * Zuletzt Ostwand moeblieren (= Hindernisse einfügen, die über die
 		 * Mittelline gehen):
 		 */
 		obstNum = height / innerRoughness;
@@ -372,7 +372,7 @@ public class ParcoursGenerator {
 	}
 
 	/**
-	 * Fuegt ein neues Hindernis an einen zufaelligen Ort direkt an der
+	 * Fügt ein neues Hindernis an einen zufälligen Ort direkt an der
 	 * betreffenden Wand hinzu, sofern dort Platz genug vorhanden ist.
 	 * 
 	 * @param wall
@@ -386,7 +386,7 @@ public class ParcoursGenerator {
 		case 'N':
 			// erste Zeile,
 			row = 0;
-			// Spalte ist Zufall, haelt aber Sicherheitsabstand
+			// Spalte ist Zufall, hält aber Sicherheitsabstand
 			// von der Ecke und vom Zielfeld:
 			col = rand.nextInt(width - 5) + 3;
 			generateTwirl(row, col, 2, twirling);
@@ -394,24 +394,24 @@ public class ParcoursGenerator {
 		case 'S':
 			// zweite Zeile,
 			row = height - 1;
-			// Spalte ist Zufall, haelt aber Sicherheitsabstand
+			// Spalte ist Zufall, hält aber Sicherheitsabstand
 			// von der Ecke:
 			col = rand.nextInt(width - 4) + 3;
 			generateTwirl(row, col, 0, twirling);
 			break;
 		case 'W':
-			// Reihe ist Zufall, haelt aber Sicherheitsabstand von der Ecke:
+			// Reihe ist Zufall, hält aber Sicherheitsabstand von der Ecke:
 			row = rand.nextInt(height - 6) + 3;
 			// erste Spalte
 			col = 0;
 			generateTwirl(row, col, 1, twirling);
 			break;
 		case 'E':
-			// Reihe ist Zufall, haelt aber Sicherheitsabstand von der Ecke:
+			// Reihe ist Zufall, hält aber Sicherheitsabstand von der Ecke:
 			row = rand.nextInt(height - 6) + 3;
 			// letzte Spalte
 			col = width - 1;
-			// Freien Raum nur nach Westen pruefen:
+			// Freien Raum nur nach Westen prüfen:
 			if (testNextFields(row, col, 3, 3)) {
 				halfmap[row][col] = WALLH;
 				generateTwirl(row, col, 3, twirling);
@@ -424,7 +424,7 @@ public class ParcoursGenerator {
 	}
 
 	/**
-	 * "Verschnoerkelt" ein Hindernis in zufaellige Richtung. Die Methode ruft
+	 * "Verschnoerkelt" ein Hindernis in zufällige Richtung. Die Methode ruft
 	 * sich rekursiv selbst auf.
 	 * 
 	 * @param row
@@ -438,7 +438,7 @@ public class ParcoursGenerator {
 	 */
 
 	private static void generateTwirl(int row, int col, int twirlsLeft) {
-		// Zufaellige Richtung: 0 = nach Norden 1 = nach Osten
+		// Zufällige Richtung: 0 = nach Norden 1 = nach Osten
 		// 2 = nach Sueden 3= nach Westen
 		int dir = rand.nextInt(4);
 		// Dann Methode mit diesen Parametern aufrufen:
@@ -446,7 +446,7 @@ public class ParcoursGenerator {
 	}
 
 	/**
-	 * "Verschnoerkelt" ein Hindernis in zufaellige Richtung. Die Methode ruft
+	 * "Verschnoerkelt" ein Hindernis in zufällige Richtung. Die Methode ruft
 	 * sich rekursiv selbst auf.
 	 * 
 	 * 
@@ -467,17 +467,17 @@ public class ParcoursGenerator {
 			return;
 		/*
 		 * Der Schnoerkel wird segmentweise gebaut. Segmente haben eine
-		 * zufaellig bestimmte Wunschlaenge, die mindestens 3 betraegt und auch
-		 * von den Parcours-Dimensionen abhaengt:
+		 * zufällig bestimmte Wunschlänge, die mindestens 3 beträgt und auch
+		 * von den Parcours-Dimensionen abhängt:
 		 */
 		int desL = rand
 				.nextInt(Math.min(halfmap[0].length, halfmap.length) / 4) + 3;
 		int[] newC = new int[2];
 
-		// Falls das naechste Feld in der gewuenschten Richtung Boden ist...
+		// Falls das nächste Feld in der gewünschten Richtung Boden ist...
 		if (testNextFields(row, col, dir, 1)) {
-			// ... Schnoerkel so lange verlaengern, bis nicht mehr
-			// genuegend Raum da ist oder bis die gewuenschte Laenge
+			// ... Schnoerkel so lange verlängern, bis nicht mehr
+			// genuegend Raum da ist oder bis die gewünschte Länge
 			// erreicht ist:
 			while (testNextFields(row, col, dir, 3) && desL > 0) {
 				newC = getNextCoordinate(row, col, dir);
@@ -491,7 +491,7 @@ public class ParcoursGenerator {
 				desL--;
 			}
 			// Ansonsten ist dieser Schnoerkelabschnitt zu Ende
-			// und der naechste beginnt:
+			// und der Nächste beginnt:
 
 			generateTwirl(row, col, twirlsLeft);
 		} else {
@@ -511,7 +511,7 @@ public class ParcoursGenerator {
 	/**
 	 * Testet, ob von einem Feld aus nach Norden, Sueden und Westen gesehen in
 	 * einer bestimmten Tiefe nur Bodenfelder vorkommen. Es wird auch in die
-	 * Breite geprueft: bei Tiefe 1 ist der gepruefte Streifen 1 Feld breit, bei
+	 * Breite geprüft: bei Tiefe 1 ist der geprüfte Streifen 1 Feld breit, bei
 	 * 2 3 Felder und bei 3 oder mehr 5 Felder.
 	 * 
 	 * @param row
@@ -531,7 +531,7 @@ public class ParcoursGenerator {
 	/**
 	 * Testet, ob von einem Feld aus in eine bestimmte Richtung gesehen in einer
 	 * bestimmten Tiefe nur Bodenfelder vorkommen. Es wird auch in die Breite
-	 * geprueft: bei Tiefe 1 ist der gepruefte Streifen 1 Feld breit, bei 2 3
+	 * geprüft: bei Tiefe 1 ist der geprüfte Streifen 1 Feld breit, bei 2 3
 	 * Felder und bei 3 oder mehr 5 Felder.
 	 * 
 	 * @param row
@@ -545,7 +545,7 @@ public class ParcoursGenerator {
 	 * @return true, wenn alle getesteten Felder Bodenfelder sind.
 	 */
 	private static boolean testNextFields(int row, int col, int dir, int depth) {
-		// Offset sind die ebenfalls zu pruefenden Reihen parallel
+		// Offset sind die ebenfalls zu prüfenden Reihen parallel
 		// zu den eigentlichen Feldern
 		int offset = Math.max(0, Math.min(depth - 1, 2));
 
@@ -585,7 +585,7 @@ public class ParcoursGenerator {
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 
-			// Pruefung freier Felder hat Grenzen des Parcours ueberschritten,
+			// Prüfung freier Felder hat Grenzen des Parcours überschritten,
 			// damit ist definitiv nicht genuegend Platz!
 			result = false;
 		}
@@ -593,8 +593,8 @@ public class ParcoursGenerator {
 	}
 
 	/**
-	 * Gibt die Koordinaten eines Felds zurueck, dass in angegebener Richtung
-	 * vom uebergebenen Feld liegt.
+	 * Gibt die Koordinaten eines Felds zurück, dass in angegebener Richtung
+	 * vom übergebenen Feld liegt.
 	 * 
 	 * @param row
 	 *            Die Zeile des Ausgangsfelds
@@ -631,12 +631,12 @@ public class ParcoursGenerator {
 	}
 
 	/**
-	 * Fuegt dem Parcours Hindernisse ohne Wandkontakt hinzu. Hindernisse bauen
+	 * Fügt dem Parcours Hindernisse ohne Wandkontakt hinzu. Hindernisse bauen
 	 * garantiert keine Wege zu und halten Abstand von allen vorhandenen
 	 * Hindernissen -- allerdings auch von der Mittelachse des Parcours.
 	 */
 	private static void generateFreeObstacles() {
-		// Anzahl haengt von Dimension des Parcours und innerRoughness ab:
+		// Anzahl hängt von Dimension des Parcours und innerRoughness ab:
 		int obstNum = 2 * Math.max(width, height) / innerRoughness;
 		int row, col;
 		for (int i = 0; i < obstNum; i++) {
@@ -651,7 +651,7 @@ public class ParcoursGenerator {
 	}
 
 	/**
-	 * Fuegt die Startfelder hinzu.
+	 * Fügt die Startfelder hinzu.
 	 */
 	private static void generateStart() {
 		int offset = rand.nextInt(width - 3) + 2;
@@ -688,7 +688,7 @@ public class ParcoursGenerator {
 	private static void perforate() {
 		for (int r = 1; r < height - 1; r++) {
 			for (int c = 1; c < width - 1; c++) {
-				// Es gibt so viele Sorten von Waenden... 8-)
+				// Es gibt so viele Sorten von Wänden... 8-)
 				if ((rand.nextInt(perforation) == 0)
 						&& ((halfmap[r][c] == WALL) || (halfmap[r][c] == WALLH) || (halfmap[r][c] == WALLV))) {
 					halfmap[r][c] = HOLE;
@@ -701,7 +701,7 @@ public class ParcoursGenerator {
 	 * Gibt einen Parcours auf der Konsole aus.
 	 * 
 	 * @param step
-	 *            Bezeichnung des Generierungsschrittes fuer die Fehlersuche
+	 *            Bezeichnung des Generierungsschrittes für die Fehlersuche
 	 * @param parc
 	 *            Der Parcours
 	 * 
@@ -713,7 +713,7 @@ public class ParcoursGenerator {
 	}
 
 	/**
-	 * Formatiert einen Parcours fuer die Ausgabe auf der Konsole.
+	 * Formatiert einen Parcours für die Ausgabe auf der Konsole.
 	 * 
 	 * @param parc
 	 *            Der Parcours

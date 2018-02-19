@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -39,15 +39,15 @@ import ctSim.util.AuxFrameButton;
 import ctSim.util.Misc;
 
 /**
- * Zeigt Log-Knopf, LCD, Fernbedienungsknopf, Remote-Call-Knopf, ABL-Knopf. Gehoert zu dem
- * Bereich, wo Informationen ueber einen Bot angezeigt werden.
+ * Zeigt Log-Knopf, LCD, Fernbedienungsknopf, Remote-Call-Knopf, ABL-Knopf. Gehört zu dem
+ * Bereich, wo Informationen über einen Bot angezeigt werden.
  */
 public class AndEverything extends GuiBotBuisitor {
 	/** UID */
 	private static final long serialVersionUID = - 8170321975584432026L;
 
 	/**
-	 * Anzeige fuer "Rest"
+	 * Anzeige für "Rest"
 	 */
 	public AndEverything() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -63,11 +63,11 @@ public class AndEverything extends GuiBotBuisitor {
 		t.setEnabled(false);
 
 		/*
-		 * Fix fuer Bug 8 im Trac ("Kein Scrollen moeglich wenn Sim aktiv").
+		 * Fix für Bug 8 im Trac ("Kein Scrollen möglich wenn Sim aktiv").
 		 * Details hab ich nicht rausgekriegt, aber wenn man das Caret (=
 		 * Cursor) abschaltet geht's. Siehe Bug:
 		 * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4201999 und
-		 * zugehoerigen Fix:
+		 * zugehörigen Fix:
 		 * http://java.sun.com/j2se/1.5.0/docs/guide/swing/1.5/#swingText
 		 */
 		Misc.setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
@@ -84,7 +84,7 @@ public class AndEverything extends GuiBotBuisitor {
 	}
 
 	/** 
-	 * Baut den Knopf, der zum Log-Fenster fuehrt 
+	 * Baut den Knopf, der zum Log-Fenster führt 
 	 * @param log Log
 	 * @param bot Bot
 	 */
@@ -98,21 +98,21 @@ public class AndEverything extends GuiBotBuisitor {
 	}
 
 	/** 
-	 * Baut den Knopf, der zum Fernbedienungs-Fenster fuehrt 
+	 * Baut den Knopf, der zum Fernbedienungs-Fenster führt 
 	 * @param s RC5-Control
 	 * @param bot Bot
 	 */
 	public void buisitRemoteControl(Sensors.RemoteControl s, Bot bot) {
 		add(new AuxFrameButton(
 			s.getDescription()+" ("+s.getName()+")",
-			s.getDescription()+" f\u00FCr "+bot,
+			s.getDescription()+" für "+bot,
 			new RemoteControlViewer(s),
 			bot.get_feature_rc5()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
 	/** 
-	 * Baut den Knopf, der zum Remote-Call-Fenster fuehrt 
+	 * Baut den Knopf, der zum Remote-Call-Fenster führt 
 	 * @param c Remote-Call Komponente
 	 * @param bot Bot
 	 */

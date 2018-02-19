@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -37,10 +37,10 @@ import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.FmtLogger;
 
 /**
- * Repr&auml;sentiert eine Verbindung
+ * Repräsentiert eine Verbindung
  *
  * @author bbe (bbe@heise.de)
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public abstract class Connection {	
 	/** Logger */
@@ -70,12 +70,12 @@ public abstract class Connection {
 	/**
 	 * Hat keinen BufferedOutputStream, denn auf dem muss man (offenbar) immer
 	 * flush() aufrufen. Wir wissen jedoch nicht, wann die Leute, die uns
-	 * verwenden, flushen wollen &amp;ndash; daher m&uuml;ssen die das machen
+	 * verwenden, flushen wollen &amp;ndash; daher müssen die das machen
 	 * mit dem BufferedOutputStream.
 	 */
 	private DataOutputStream output = null;
 
-	/** OutputStream fuer Kommandos */
+	/** OutputStream für Kommandos */
 	private CommandOutputStream cmdOutStream = null;
 
 	/**
@@ -91,7 +91,7 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Uebertraegt ein Kommando
+	 * Überträgt ein Kommando
 	 * @param c	das Kommando
 	 * @throws IOException
 	 */
@@ -119,7 +119,7 @@ public abstract class Connection {
 	}
 
 	/** 
-	 * Muss waehrend Konstruktion aufgerufen werden
+	 * Muss während Konstruktion aufgerufen werden
 	 * @param is InputStream
 	 */
 	protected void setInputStream(InputStream is) {
@@ -127,7 +127,7 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Muss waehrend Konstruktion aufgerufen werden
+	 * Muss während Konstruktion aufgerufen werden
 	 * @param os OutputStream
 	 */
 	protected void setOutputStream(OutputStream os) {
@@ -136,13 +136,13 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Gibt den Kurznamen der Connection zurueck
+	 * Gibt den Kurznamen der Connection zurück
 	 * @return	Name
 	 */
 	public abstract String getShortName();
 
 	/**
-	 * Gibt den Namen der Connection zurueck
+	 * Gibt den Namen der Connection zurück
 	 * @return	Name
 	 */
 	public abstract String getName();
@@ -169,7 +169,7 @@ public abstract class Connection {
 						receiver.onBotAppeared(createBot(cmd));
 						return; // Erfolg
 					} else {
-						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot l\u00E4uft schon oder ist "
+						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot läuft schon oder ist "
 										+ "veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
 						continue; // Handshake nochmal versuchen
 					}

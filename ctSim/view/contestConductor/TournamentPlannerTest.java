@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -52,7 +52,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
     }
 
 	// Vorsicht, wenn hier Exceptions auftreten, verschluckt
-	// JUnit die und meldet nur unverstaendlich "No runnable methods". Im
+	// JUnit die und meldet nur unverständlich "No runnable methods". Im
 	// Zweifel main()-Methode schreiben, die das hier aufruft, und als
 	// Applikation (nicht Unit-Test) laufenlassen
 	/**
@@ -139,7 +139,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 					rs.getInt("level"), rs.getInt("game")));
 		}
 
-		// richtige zeitliche Abstaende?
+		// richtige zeitliche Abstände?
 		assertScheduledRightInterval(-1, gameIntervalInS);
 	}
 
@@ -214,14 +214,14 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	}
 
 	/** 
-	 * Pr&uuml;ft 1. ob die playerIds ungleich 0 sind und 2. ob alle playerIds
-	 * unterschiedlich sind. (Es w&auml;re falsch, wenn der Planner einen Bot
-	 * f&uuml;r zwei Spiele vorsehen w&uuml;rde.) 
+	 * Prüft 1. ob die playerIds ungleich 0 sind und 2. ob alle playerIds
+	 * unterschiedlich sind. (Es wäre falsch, wenn der Planner einen Bot
+	 * für zwei Spiele vorsehen würde.) 
 	 * @param playerIdField playerID
 	 * @throws SQLException 
 	 */
 	private void checkPlayerId(String playerIdField) throws SQLException {
-		// zur Erinnerung: count() und count(distinct) zaehlen NULL nicht mit
+		// zur Erinnerung: count() und count(distinct) zählen NULL nicht mit
 		ResultSet rs = db.execSql("select count(" + playerIdField + ") " +
 			"from `ctsim_game` where level != -1");
 		rs.next();
@@ -244,7 +244,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	@Test
 	public void mainRound() throws SQLException, TournamentPlanException {
 		int gameIntervalInS = 1234;
-		// paar Spiele + die noetigen Levels anlegen
+		// paar Spiele + die nötigen Levels anlegen
 		db.execSql("delete from ctsim_game");
 		for (int i = 0; i < 42; i++)
 			makePrelimGame(i, GameState.GAME_OVER, i, Math.abs(30 - i));
@@ -285,7 +285,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		checkPlayerId("bot1");
 		checkPlayerId("bot2");
 
-		// ueberall scheduled-Zeiten gesetzt?
+		// überall scheduled-Zeiten gesetzt?
 		assertFalse("Ein oder mehrere Spiele haben scheduled == NULL",
 			db.execSql(
 				"select * from ctsim_game where level != -1 " +

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -119,7 +119,7 @@ public class ComponentTable extends JTable {
 	 * Konfiguration
 	 * @param compnt Komponente
 	 * @param table Tabelle
-	 * @param isSelected ausgewaehlt?
+	 * @param isSelected ausgewählt?
 	 * @return Component
 	 */
 	protected Component configure(JComponent compnt, JTable table,
@@ -137,11 +137,11 @@ public class ComponentTable extends JTable {
 	}
 
 	/**
-	 * In der Tabelle: Falls das hinzugefuegte Ding breiter ist als die
-	 * Spalte, dann diese Spalte verbreitern; Falls das hinzugefuegte
-	 * Ding hoeher ist als die Zeile, dann alle (!) Zeilen hoeher machen
-	 * (unterschiedlich hohe Zeilen werden von JTable nicht unterstuetzt
-	 * soweit ich weiss und saehen sowieso doof aus)
+	 * In der Tabelle: Falls das hinzugefügte Ding breiter ist als die
+	 * Spalte, dann diese Spalte verbreitern; Falls das hinzugefügte
+	 * Ding höher ist als die Zeile, dann alle (!) Zeilen höher machen
+	 * (unterschiedlich hohe Zeilen werden von JTable nicht unterstützt
+	 * soweit ich weiss und sähen sowieso doof aus)
 	 */
 	public void accomodateContent() {
 		int maxHeight = 0;
@@ -158,11 +158,11 @@ public class ComponentTable extends JTable {
 				maxWidth + getIntercellSpacing().width);
 			maxWidth = 0;
 		}
-		// Zeilenbreite setzen (1x fuer ganze Tabelle)
+		// Zeilenbreite setzen (1x für ganze Tabelle)
 		setRowHeight(maxHeight + getIntercellSpacing().height);
 	}
 
-	// Workaround fuer Bug "horizontale Scrollbars" ///////////////////////////
+	// Workaround für Bug "horizontale Scrollbars" ///////////////////////////
 
 	// Bug: Eine JTable in einer JScrollPane loest nie die horizontale Scrollbar
 	// aus -- siehe http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936

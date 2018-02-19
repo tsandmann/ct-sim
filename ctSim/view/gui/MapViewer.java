@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -51,13 +51,13 @@ import ctSim.util.MapLines;
 import ctSim.util.Misc;
 
 /**
- * Stellt das Fenster f&uuml;r die Map-Anzeige dar.
+ * Stellt das Fenster für die Map-Anzeige dar.
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class MapViewer extends JPanel {
 	/** UID	*/
 	private static final long serialVersionUID = 3285763592662732927L;
-	/** Logger fuer das Map-Fenster */
+	/** Logger für das Map-Fenster */
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.MapViewer");
 	/** Map-Komponente */
 	private final MapComponent mapCompnt;
@@ -94,7 +94,7 @@ public class MapViewer extends JPanel {
 	}
 	
 	/**
-	 * Filter fuer den Dialog zur Dateiauswahl
+	 * Filter für den Dialog zur Dateiauswahl
 	 */
 	class PNGFilter extends FileFilter {
 	    /**
@@ -196,14 +196,14 @@ public class MapViewer extends JPanel {
 		
 		/* Button bauen */
 		JButton save = new Button("speichern", "Karte als png-Bild speichern", null, onSave);
-		JButton reload = new Button("neu laden", "Karte komplett (neu) uebertragen", null, onReload);
+		JButton reload = new Button("neu laden", "Karte komplett (neu) übertragen", null, onReload);
 		
 		/* Toolbar bauen */
 		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		toolbar.add(reload);
 		toolbar.add(save);
 		
-		/* Gesamtgroesse setzen */
+		/* Gesamtgröße setzen */
 		scrollPane = new JScrollPane(imageViewer);
 		scrollPane.setPreferredSize(new Dimension(500, 600));
 		int w = getInsets().left + scrollPane.getInsets().left +
@@ -230,19 +230,19 @@ public class MapViewer extends JPanel {
 		private final Image image;
 		/** Breite */
 		private final int targetWidth;
-		/** Hoehe */
+		/** Höhe */
 		private final int targetHeight;
 		/** Bereich, der immer sichtbar sein soll */
 		private final Rectangle scrollPosition = new Rectangle(250, 250);
 		/** Farbe der Bot-Position */
 		private final Color botColor = new Color(255, 0, 0);
-		/** Liste fuer einzuzeichnende Linien */
+		/** Liste für einzuzeichnende Linien */
 		private List<MapLines> lines;
-		/** Mutex fuer lines */
+		/** Mutex für lines */
 		private final Object linesMutex;
-		/** Liste fuer einzuzeichnende Kreise */
+		/** Liste für einzuzeichnende Kreise */
 		private List<MapCircles> circles;
-		/** Mutex fuer circles */
+		/** Mutex für circles */
 		private final Object circlesMutex;
 		/** Bot-Position */
 		private final Point3i botPos;

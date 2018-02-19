@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -79,10 +79,10 @@ public class Main {
 	 * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu
 	 * starten.
 	 *
-	 * @param args Als Kommandozeilenargumente sind momentan zulaessig:
+	 * @param args Als Kommandozeilenargumente sind momentan zulässig:
 	 * <ul>
 	 * <li>{@code -conf pfad/zur/konfigdatei.xml}: Andere Konfigurationsdatei
-	 * als die standardm&auml;&szlig;ige config/ct-sim.xml verwenden</li>
+	 * als die standardmäßige config/ct-sim.xml verwenden</li>
 	 * </ul>
 	 */
     public static void main(String... args) {
@@ -94,7 +94,7 @@ public class Main {
 		    java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
 		    SplashWindow.splash(url, "Version " + VERSION);
 		    SplashWindow.setMessage("Initialisierung...");
-		    /* Inits ausfuehren */
+		    /* Inits ausführen */
 		    try {
 				SwingUtilities.invokeAndWait(new Runnable() {
 			    	public void run() {
@@ -107,7 +107,7 @@ public class Main {
 		    } catch (Exception e) {
 				System.err.println("Initialisierungen in Main fehlgeschlagen");
 				e.printStackTrace();
-				/* Programm erst nach Klick auf Splash schliessen */
+				/* Programm erst nach Klick auf Splash schließen */
 				MouseAdapter disposeOnClick = new MouseAdapter() {
 				    @Override
 					public void mouseClicked(MouseEvent evt) {
@@ -141,7 +141,7 @@ public class Main {
 		    } else if (args[i].toLowerCase().equals("-nosplash")) {
 				showSplash = false;
 			} else {
-				System.out.println("Ung\u00FCltiges Argument '" + args[i] + "'");
+				System.out.println("Ungültiges Argument '" + args[i] + "'");
 				System.out.println("USAGE: ct-Sim [-conf configfile][-nosplash]");
 				System.out.println("\t-conf configfile.xml\tPfad zu alternativer Konfigurationsdatei");
 				System.out.println("\t-nosplash\t\tStartet ct-Sim ohne Splash-Screen");
@@ -173,7 +173,7 @@ public class Main {
     }
 
 	/**
-	 * Laedt die Konfiguration
+	 * Lädt die Konfiguration
 	 */
 	private static void loadConfig() {
 		try {
