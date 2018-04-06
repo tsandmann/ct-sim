@@ -67,7 +67,8 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { 
+		@Override
+		protected String getBaseName() { 
 			return "Motor"; 
 		}
 		
@@ -110,7 +111,8 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getBaseName() { 
+		@Override
+		public String getBaseName() { 
 			return "DoorServo"; 
 		}
 		
@@ -162,7 +164,8 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getBaseName() { 
+		@Override
+		public String getBaseName() { 
 			return "CamServo"; 
 		}
 		
@@ -255,14 +258,16 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { 
+		@Override
+		public String getName() { 
 			return "Log"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		@Override
+		public String getDescription() { 
 			return "Log-Anzeige"; 
 		}
 	}
@@ -307,14 +312,16 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() {
+		@Override
+		public String getName() {
 			return "Programm"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		@Override
+		public String getDescription() { 
 			return "Programmfenster für Skriptsprachen"; 
 		}
 
@@ -663,14 +670,16 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { 
+		@Override
+		public String getName() { 
 			return "LCD"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		@Override
+		public String getDescription() { 
 			return "LCD-Anzeige"; 
 		}
 	}
@@ -785,14 +794,16 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { 
+		@Override
+		public String getName() { 
 			return name; 
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		@Override
+		public String getDescription() { 
 			return ""; 
 		}
 	}

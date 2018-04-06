@@ -502,7 +502,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */
-	@Override public String getName() { return "Map"; }
+	@Override
+	public String getName() { return "Map"; }
 
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()

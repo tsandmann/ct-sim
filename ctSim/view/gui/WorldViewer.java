@@ -262,8 +262,8 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	 * enthält, ihren Divider zu ändern. Würden wir unsere
 	 * MinimumSize nicht auf was sehr kleines setzen, ginge das nicht.
 	 */
-    @Override
-    public Dimension getMinimumSize() {
-        return new Dimension(1,1);
+	@Override
+	public Dimension getMinimumSize() {
+		return new Dimension(1,1);
     }
 }

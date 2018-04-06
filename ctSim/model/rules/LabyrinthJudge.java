@@ -49,7 +49,7 @@ public class LabyrinthJudge extends Judge {
 	 * @see ctSim.model.rules.Judge#setWorld(ctSim.model.World)
 	 */
 	@Override
-    public void setWorld(World world) {
+	public void setWorld(World world) {
 		this.world = world;
 		super.setWorld(world);
 	}
