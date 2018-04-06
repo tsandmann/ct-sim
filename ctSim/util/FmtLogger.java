@@ -46,6 +46,7 @@ public class FmtLogger extends Logger {
 	 * Logger-Factory
 	 */
 	private static Factory loggerFactory = new Factory() {
+		
 		@Override
 		public Logger createLogger(String name) {
 			return Logger.getLogger(name);
@@ -310,239 +311,268 @@ public class FmtLogger extends Logger {
 	/**
 	 * @see java.util.logging.Logger#addHandler(java.util.logging.Handler)
 	 */
-	@Override
-    public synchronized void addHandler(Handler handler) throws SecurityException {
+	
+    @Override
+	public synchronized void addHandler(Handler handler) throws SecurityException {
 	    delegate.addHandler(handler);
     }
 
 	/**
 	 * @see java.util.logging.Logger#config(java.lang.String)
 	 */
-	@Override
-    public void config(String msg) {
+	
+    @Override
+	public void config(String msg) {
 	    delegate.config(msg);
     }
 
 	/**
 	 * @see java.util.logging.Logger#entering(java.lang.String, java.lang.String, java.lang.Object)
 	 */
-	@Override
-    public void entering(String sourceClass, String sourceMethod, Object param1) {
+	
+    @Override
+	public void entering(String sourceClass, String sourceMethod, Object param1) {
 	    delegate.entering(sourceClass, sourceMethod, param1);
     }
 
 	/**
 	 * @see java.util.logging.Logger#entering(java.lang.String, java.lang.String, java.lang.Object[])
 	 */
-	@Override
-    public void entering(String sourceClass, String sourceMethod, Object[] params) {
+	
+    @Override
+	public void entering(String sourceClass, String sourceMethod, Object[] params) {
 	    delegate.entering(sourceClass, sourceMethod, params);
     }
 
 	/**
 	 * @see java.util.logging.Logger#entering(java.lang.String, java.lang.String)
 	 */
-	@Override
-    public void entering(String sourceClass, String sourceMethod) {
+	
+    @Override
+	public void entering(String sourceClass, String sourceMethod) {
 	    delegate.entering(sourceClass, sourceMethod);
     }
 
 	/**
 	 * @see java.util.logging.Logger#exiting(java.lang.String, java.lang.String, java.lang.Object)
 	 */
-	@Override
-    public void exiting(String sourceClass, String sourceMethod, Object result) {
+	
+    @Override
+	public void exiting(String sourceClass, String sourceMethod, Object result) {
 	    delegate.exiting(sourceClass, sourceMethod, result);
     }
 
 	/**
 	 * @see java.util.logging.Logger#exiting(java.lang.String, java.lang.String)
 	 */
-	@Override
-    public void exiting(String sourceClass, String sourceMethod) {
+	
+    @Override
+	public void exiting(String sourceClass, String sourceMethod) {
 	    delegate.exiting(sourceClass, sourceMethod);
     }
 
 	/**
 	 * @see java.util.logging.Logger#fine(java.lang.String)
 	 */
-	@Override
-    public void fine(String msg) {
+	
+    @Override
+	public void fine(String msg) {
 	    delegate.fine(msg);
     }
 
 	/**
 	 * @see java.util.logging.Logger#finer(java.lang.String)
 	 */
-	@Override
-    public void finer(String msg) {
+	
+    @Override
+	public void finer(String msg) {
 	    delegate.finer(msg);
     }
 
 	/**
 	 * @see java.util.logging.Logger#finest(java.lang.String)
 	 */
-	@Override
-    public void finest(String msg) {
+	
+    @Override
+	public void finest(String msg) {
 	    delegate.finest(msg);
     }
 
 	/**
 	 * @see java.util.logging.Logger#getFilter()
 	 */
-	@Override
-    public Filter getFilter() {
+	
+    @Override
+	public Filter getFilter() {
 	    return delegate.getFilter();
     }
 
 	/**
 	 * @see java.util.logging.Logger#getHandlers()
 	 */
-	@Override
-    public synchronized Handler[] getHandlers() {
+	
+    @Override
+	public synchronized Handler[] getHandlers() {
 	    return delegate.getHandlers();
     }
 
 	/**
 	 * @see java.util.logging.Logger#getLevel()
 	 */
-	@Override
-    public Level getLevel() {
+	
+    @Override
+	public Level getLevel() {
 	    return delegate.getLevel();
     }
 
 	/**
 	 * @see java.util.logging.Logger#getName()
 	 */
-	@Override
-    public String getName() {
+	
+    @Override
+	public String getName() {
 	    return delegate.getName();
     }
 
 	/**
 	 * @see java.util.logging.Logger#getParent()
 	 */
-	@Override
-    public Logger getParent() {
+	
+    @Override
+	public Logger getParent() {
 	    return delegate.getParent();
     }
 
 	/**
 	 * @see java.util.logging.Logger#getResourceBundle()
 	 */
-	@Override
-    public ResourceBundle getResourceBundle() {
+	
+    @Override
+	public ResourceBundle getResourceBundle() {
 	    return delegate.getResourceBundle();
     }
 
 	/**
 	 * @see java.util.logging.Logger#getResourceBundleName()
 	 */
-	@Override
-    public String getResourceBundleName() {
+	
+    @Override
+	public String getResourceBundleName() {
 	    return delegate.getResourceBundleName();
     }
 
 	/**
 	 * @see java.util.logging.Logger#getUseParentHandlers()
 	 */
-	@Override
-    public synchronized boolean getUseParentHandlers() {
+	
+    @Override
+	public synchronized boolean getUseParentHandlers() {
 	    return delegate.getUseParentHandlers();
     }
 
 	/**
 	 * @see java.util.logging.Logger#info(java.lang.String)
 	 */
-	@Override
-    public void info(String msg) {
+	
+    @Override
+	public void info(String msg) {
 	    delegate.info(msg);
     }
 
 	/**
 	 * @see java.util.logging.Logger#isLoggable(java.util.logging.Level)
 	 */
-	@Override
-    public boolean isLoggable(Level level) {
+	
+    @Override
+	public boolean isLoggable(Level level) {
 	    return delegate.isLoggable(level);
     }
 
 	/**
 	 * @see java.util.logging.Logger#log(java.util.logging.Level, java.lang.String, java.lang.Object)
 	 */
-	@Override
-    public void log(Level level, String msg, Object param1) {
+	
+    @Override
+	public void log(Level level, String msg, Object param1) {
 	    delegate.log(level, msg, param1);
     }
 
 	/**
 	 * @see java.util.logging.Logger#log(java.util.logging.Level, java.lang.String, java.lang.Object[])
 	 */
-	@Override
-    public void log(Level level, String msg, Object[] params) {
+	
+    @Override
+	public void log(Level level, String msg, Object[] params) {
 	    delegate.log(level, msg, params);
     }
 
 	/**
 	 * @see java.util.logging.Logger#log(java.util.logging.Level, java.lang.String, java.lang.Throwable)
 	 */
-	@Override
-    public void log(Level level, String msg, Throwable thrown) {
+	
+    @Override
+	public void log(Level level, String msg, Throwable thrown) {
 	    delegate.log(level, msg, thrown);
     }
 
 	/**
 	 * @see java.util.logging.Logger#log(java.util.logging.Level, java.lang.String)
 	 */
-	@Override
-    public void log(Level level, String msg) {
+	
+    @Override
+	public void log(Level level, String msg) {
 	    delegate.log(level, msg);
     }
 
 	/**
 	 * @see java.util.logging.Logger#log(java.util.logging.LogRecord)
 	 */
-	@Override
-    public void log(LogRecord record) {
+	
+    @Override
+	public void log(LogRecord record) {
 	    delegate.log(record);
     }
 
 	/**
 	 * @see java.util.logging.Logger#logp(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.Object)
 	 */
-	@Override
-    public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object param1) {
+	
+    @Override
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object param1) {
 	    delegate.logp(level, sourceClass, sourceMethod, msg, param1);
     }
 
 	/**
 	 * @see java.util.logging.Logger#logp(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.Object[])
 	 */
-	@Override
-    public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object[] params) {
+	
+    @Override
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object[] params) {
 	    delegate.logp(level, sourceClass, sourceMethod, msg, params);
     }
 
 	/**
 	 * @see java.util.logging.Logger#logp(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.Throwable)
 	 */
-	@Override
-    public void logp(Level level, String sourceClass, String sourceMethod, String msg, Throwable thrown) {
+	
+    @Override
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg, Throwable thrown) {
 	    delegate.logp(level, sourceClass, sourceMethod, msg, thrown);
     }
 
 	/**
 	 * @see java.util.logging.Logger#logp(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String)
 	 */
-	@Override
-    public void logp(Level level, String sourceClass, String sourceMethod, String msg) {
+	
+    @Override
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg) {
 	    delegate.logp(level, sourceClass, sourceMethod, msg);
     }
 
 //	/**
 //	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Object)
 //	 */
-//	@Override
+//	
 //    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object param1) {
 //	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, param1);
 //    }
@@ -550,7 +580,7 @@ public class FmtLogger extends Logger {
 //	/**
 //	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Object[])
 //	 */
-//	@Override
+//	
 //    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object[] params) {
 //	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, params);
 //    }
@@ -558,7 +588,7 @@ public class FmtLogger extends Logger {
 //	/**
 //	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Throwable)
 //	 */
-//	@Override
+//	
 //    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Throwable thrown) {
 //	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, thrown);
 //    }
@@ -566,7 +596,7 @@ public class FmtLogger extends Logger {
 //	/**
 //	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 //	 */
-//	@Override
+//	
 //    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg) {
 //	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg);
 //    }
@@ -574,64 +604,72 @@ public class FmtLogger extends Logger {
 	/**
 	 * @see java.util.logging.Logger#removeHandler(java.util.logging.Handler)
 	 */
-	@Override
-    public synchronized void removeHandler(Handler handler) throws SecurityException {
+	
+    @Override
+	public synchronized void removeHandler(Handler handler) throws SecurityException {
 	    delegate.removeHandler(handler);
     }
 
 	/**
 	 * @see java.util.logging.Logger#setFilter(java.util.logging.Filter)
 	 */
-	@Override
-    public void setFilter(Filter newFilter) throws SecurityException {
+	
+    @Override
+	public void setFilter(Filter newFilter) throws SecurityException {
 	    delegate.setFilter(newFilter);
     }
 
 	/**
 	 * @see java.util.logging.Logger#setLevel(java.util.logging.Level)
 	 */
-	@Override
-    public void setLevel(Level newLevel) throws SecurityException {
+	
+    @Override
+	public void setLevel(Level newLevel) throws SecurityException {
 	    delegate.setLevel(newLevel);
     }
 
 	/**
 	 * @see java.util.logging.Logger#setParent(java.util.logging.Logger)
 	 */
-	@Override
-    public void setParent(Logger parent) {
+	
+    @Override
+	public void setParent(Logger parent) {
 	    delegate.setParent(parent);
     }
 
 	/**
 	 * @see java.util.logging.Logger#setUseParentHandlers(boolean)
 	 */
-	@Override
-    public synchronized void setUseParentHandlers(boolean useParentHandlers) {
+	
+    @Override
+	public synchronized void setUseParentHandlers(boolean useParentHandlers) {
 	    delegate.setUseParentHandlers(useParentHandlers);
     }
 
 	/**
 	 * @see java.util.logging.Logger#severe(java.lang.String)
 	 */
-	@Override
-    public void severe(String msg) {
+	
+    @Override
+	public void severe(String msg) {
 	    delegate.severe(msg);
     }
 
 	/**
 	 * @see java.util.logging.Logger#throwing(java.lang.String, java.lang.String, java.lang.Throwable)
 	 */
-	@Override
-    public void throwing(String sourceClass, String sourceMethod, Throwable thrown) {
+	
+    @Override
+	public void throwing(String sourceClass, String sourceMethod, Throwable thrown) {
 	    delegate.throwing(sourceClass, sourceMethod, thrown);
     }
 
 	/**
 	 * @see java.util.logging.Logger#warning(java.lang.String)
 	 */
-	@Override
-    public void warning(String msg) {
+	
+    @Override
+	public void warning(String msg) {
 	    delegate.warning(msg);
     }
 }

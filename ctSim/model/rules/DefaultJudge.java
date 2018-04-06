@@ -41,6 +41,7 @@ public class DefaultJudge extends Judge {
 	/**
 	 * @see ctSim.model.rules.Judge#isAddingBotsAllowed()
 	 */
+	
 	@Override
 	public boolean isAddingBotsAllowed() {
 		return true;
@@ -49,6 +50,7 @@ public class DefaultJudge extends Judge {
 	/**
 	 * @see ctSim.model.rules.Judge#isStartingSimulationAllowed()
 	 */
+	
 	@Override
 	public boolean isStartingSimulationAllowed() {
 		if (controller.getParticipants() < 1) {
@@ -61,6 +63,7 @@ public class DefaultJudge extends Judge {
 	/**
 	 * @see ctSim.model.rules.Judge#isSimulationFinished()
 	 */
+	
 	@Override
 	protected boolean isSimulationFinished() {
 		return false;

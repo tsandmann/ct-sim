@@ -39,8 +39,9 @@ public abstract class ConductorTestUtil {
         /**
          * @see ctSim.view.contestConductor.ContestDatabase#getConnection()
          */
+        
         @Override
-        public Connection getConnection() {
+		public Connection getConnection() {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 return DriverManager.getConnection(

@@ -100,6 +100,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/**
 		 * @see java.lang.Enum#toString()
 		 */
+		
 		@Override
 		public String toString() {
 			return displayableName;
@@ -188,6 +189,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/**
 		 * @see java.lang.Object#clone()
 		 */
+		
 		@Override
 		public Behavior clone() {
 			Behavior rv;
@@ -274,6 +276,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/**
 		 * @see java.lang.Object#clone()
 		 */
+		
 		@Override
 		public Parameter clone() {
 			Parameter rv;
@@ -347,6 +350,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/**
 		 * @see ctSim.model.bots.components.RemoteCallCompnt.Parameter#getIntRepresentation()
 		 */
+		
 		@Override
 		protected int getIntRepresentation() {
 			return getNumber().intValue();
@@ -371,6 +375,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/**
 		 * @see ctSim.model.bots.components.RemoteCallCompnt.Parameter#getIntRepresentation()
 		 */
+		
 		@Override
 		protected int getIntRepresentation() {
 			return Float.floatToIntBits(getNumber().floatValue());
@@ -406,6 +411,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
+	
 	@Override
 	public String getDescription() {
 		return "Ding, was dem Bot Remote-Calls (Funktionsaufrufe) schicken " +
@@ -415,6 +421,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */
+	
 	@Override
 	public String getName() {
 		return "Remote-Calls";
@@ -423,6 +430,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 	 */
+	
 	@Override
 	public void updateExternalModel() {
 		while (! newBehaviors.isEmpty()) {
@@ -449,6 +457,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#askForWrite(ctSim.model.CommandOutputStream)
 	 */
+	
 	@Override
 	public void askForWrite(CommandOutputStream s) {
 		if (! writesSynchronously())

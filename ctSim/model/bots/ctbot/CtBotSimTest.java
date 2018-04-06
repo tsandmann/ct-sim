@@ -57,6 +57,7 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 	/**
 	 * @see ctSim.model.bots.BasicBot#getDescription()
 	 */
+	
 	@Override
 	public String getDescription() {
 		return "Simulierter, in Java geschriebener c't-Bot";

@@ -130,6 +130,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
+			
 			@Override
 			public void windowClosing(WindowEvent e) {
 				controller.closeWorld();

@@ -75,6 +75,7 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */
+	
 	@Override
 	public String getName() {
 		return getBaseName() + (isLeft ? "L" : "R");
@@ -83,6 +84,7 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
+	
 	@Override
 	public String getDescription() {
 		return getBaseDescription()
@@ -112,6 +114,7 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 	 */
+	
 	@Override
 	public synchronized void updateExternalModel() {
 		getExternalModel().setValue(internalModel);

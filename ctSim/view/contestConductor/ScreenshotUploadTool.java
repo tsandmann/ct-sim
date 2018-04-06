@@ -78,8 +78,9 @@ public class ScreenshotUploadTool {
 
         Main.dependencies.reRegisterInstance(ContestDatabase.class,
             new ContestDatabase() {
+            
             @Override
-            public Connection getConnection() {
+			public Connection getConnection() {
             	try {
 	                Class.forName("com.mysql.jdbc.Driver");
 	                return DriverManager.getConnection(

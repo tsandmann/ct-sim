@@ -271,6 +271,7 @@ public class Config {
 			 * Wichtig, weil wir's als Schlüssel in der Map verwenden
 			 * @see java.lang.Object#equals(java.lang.Object)
 			 */
+			
 			@Override
 			public boolean equals(Object o) {
 				if (! (o instanceof AppearanceKey))
@@ -293,6 +294,7 @@ public class Config {
 			 * http://developer.java.sun.com/developer/Books/effectivejava/Chapter3.pdf
 			 * @see java.lang.Object#hashCode()
 			 */
+			
 			@Override
 			public int hashCode() {
 				int rv = 17; // beliebiger Wert

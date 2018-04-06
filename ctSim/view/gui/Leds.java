@@ -103,6 +103,7 @@ public class Leds extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 		 */
+		
 		@Override
 		protected void paintComponent(Graphics graphics) {
 			Graphics2D g = (Graphics2D)graphics;
@@ -124,6 +125,7 @@ public class Leds extends GuiBotBuisitor {
 		/**
 		 * @return Größe
 		 */
+		
 		@Override
 		public Dimension getPreferredSize() {
 			return getMinimumSize();
@@ -132,8 +134,9 @@ public class Leds extends GuiBotBuisitor {
 		/**
 		 * @return Größe
 		 */
+    	
     	@Override
-    	public Dimension getMinimumSize() {
+		public Dimension getMinimumSize() {
     		return new Dimension(RADIUS, RADIUS);
     	}
     }

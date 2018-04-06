@@ -51,6 +51,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
+		
 		@Override
 		protected String getBaseDescription() {
 			return "Liniensensor [0; 1023]";
@@ -59,7 +60,9 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { return "Line"; }
+		
+		@Override
+		protected String getBaseName() { return "Line"; }
 		
 		/**
 		 * Liniensensoren
@@ -81,6 +84,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
+		
 		@Override
 		protected String getBaseDescription() {
 			return "Lichtsensor";
@@ -89,7 +93,9 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { return "Light"; }
+		
+		@Override
+		protected String getBaseName() { return "Light"; }
 		
 		/**
 		 * Lichtsensoren
@@ -111,6 +117,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
+		
 		@Override
 		protected String getBaseDescription() {
 			return "BPS-Sensor";
@@ -119,6 +126,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
+		
 		@Override
 		protected String getBaseName() { 
 			return "BPS"; 
@@ -142,6 +150,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			return getBaseName();
@@ -150,6 +159,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return getBaseDescription();
@@ -167,6 +177,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
+		
 		@Override
 		protected String getBaseDescription() {
 			return "Rad-Encoder-Sensor";
@@ -183,7 +194,9 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { return "Enc"; }
+		
+		@Override
+		protected String getBaseName() { return "Enc"; }
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
@@ -203,6 +216,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
+		
 		@Override
 		protected String getBaseDescription() {
 			return "Abstandssensor";
@@ -211,7 +225,9 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { return "Ir"; }
+		
+		@Override
+		protected String getBaseName() { return "Ir"; }
 		
 		/**
 		 * Distanzsensoren GPD12
@@ -233,6 +249,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
+		
 		@Override
 		protected String getBaseDescription() {
 			return "Abgrundsensor [0; 1023]";
@@ -241,7 +258,9 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { return "Border"; }
+		
+		@Override
+		protected String getBaseName() { return "Border"; }
 		
 		/**
 		 * Abgrundsensoren
@@ -300,6 +319,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		
 		@Override
 		public void updateExternalModel() {
 			// No-op, weil wir werden ja eh nicht angezeigt und operieren
@@ -309,6 +329,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return "Simulationszeit-Uhr (Millisekunden)";
@@ -322,7 +343,9 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { return "Uhr"; }
+		
+		@Override
+		public String getName() { return "Uhr"; }
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
@@ -357,6 +380,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			// Unicode 0394: grosses Delta
@@ -366,6 +390,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return "Maus-Sensor: " +
@@ -377,12 +402,16 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
-		@Override protected String getBaseDescription() { return ""; }
+		
+		@Override
+		protected String getBaseDescription() { return ""; }
 		
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { return ""; }
+		
+		@Override
+		protected String getBaseName() { return ""; }
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
@@ -462,14 +491,18 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { 
+		
+		@Override
+		public String getName() { 
 			return "RC5"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		
+		@Override
+		public String getDescription() { 
 			return "Fernbedienung"; 
 		}
 
@@ -506,6 +539,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		
 		@Override
 		public void updateExternalModel() {
 			// No-op, wir zeigen nix an
@@ -527,14 +561,18 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getBaseDescription() { 
+		
+		@Override
+		public String getBaseDescription() { 
 			return "Kamera-Position (10: Anschlag links; 18: Anschlag rechts)"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getBaseName() { 
+		
+		@Override
+		public String getBaseName() { 
 			return "Kamerapos"; 
 		}
 		
@@ -548,6 +586,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			return getBaseName();
@@ -556,6 +595,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return getBaseDescription();
@@ -577,14 +617,18 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getBaseDescription() { 
+		
+		@Override
+		public String getBaseDescription() { 
 			return "Transportfach-Klappensensor (0: zu; 1: auf)"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getBaseName() { 
+		
+		@Override
+		public String getBaseName() { 
 			return "Klappe"; 
 		}
 		
@@ -598,6 +642,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			return getBaseName();
@@ -606,6 +651,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return getBaseDescription();
@@ -627,6 +673,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getBaseDescription() {
 			return "Lichtschranke im Transportfach";
@@ -635,7 +682,9 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getBaseName() { 
+		
+		@Override
+		public String getBaseName() { 
 			return "Trans"; 
 		}
 		
@@ -649,6 +698,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			return getBaseName();
@@ -657,6 +707,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return getBaseDescription();
@@ -672,6 +723,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return "Sensor für Motor- oder Batteriefehler; 0 = Fehler; " +
@@ -690,7 +742,9 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { return "Error"; }
+		
+		@Override
+		public String getName() { return "Error"; }
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
@@ -733,7 +787,8 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override 
+		
+		@Override
 		public String getName() { 
 			return "Shutdown"; 
 		}
@@ -741,7 +796,8 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override 
+		
+		@Override
 		public String getDescription() { 
 			return "Shutdown-Control"; 
 		}
@@ -764,6 +820,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		
 		@Override
 		public void updateExternalModel() {
 			// No-op, wir zeigen nix an

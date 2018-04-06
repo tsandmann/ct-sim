@@ -54,6 +54,7 @@ public class BackslashNConverterStream extends OutputStream {
 	/**
 	 * @see java.io.OutputStream#write(int)
 	 */
+	
 	@Override
 	public void write(int b) throws IOException {
 		if (b == '\n')

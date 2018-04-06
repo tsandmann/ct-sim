@@ -131,6 +131,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	/**
 	 * @see ctSim.model.bots.BasicBot#getDescription()
 	 */
+	
 	@Override
 	public String getDescription() {
 		return "Simulierter, in C geschriebener c't-Bot, verbunden über " + getConnection().getName();

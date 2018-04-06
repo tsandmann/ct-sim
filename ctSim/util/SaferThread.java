@@ -53,6 +53,7 @@ public abstract class SaferThread extends Thread {
 	/**
 	 * @see java.lang.Thread#run()
 	 */
+	
 	@Override
 	public void run() {
 		while (! deathPending) {
@@ -75,6 +76,7 @@ public abstract class SaferThread extends Thread {
 	/**
 	 * @see java.lang.Thread#start()
 	 */
+	
 	@Override
 	public synchronized void start() {
 		lg.fine("Thread "+getName()+" startet");

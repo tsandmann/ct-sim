@@ -126,6 +126,7 @@ public class RemoteCallViewer extends JPanel {
 		/**
 		 * @see javax.swing.JComponent#setForeground(java.awt.Color)
 		 */
+		
 		@Override
 		public void setForeground(Color fg) {
 			for (int i = 0; i < getComponentCount(); i++)
@@ -136,6 +137,7 @@ public class RemoteCallViewer extends JPanel {
 		/**
 		 * @see javax.swing.JComponent#setEnabled(boolean)
 		 */
+		
 		@Override
 		public void setEnabled(boolean enabled) {
 			for (int i = 0; i < getComponentCount(); i++)
@@ -227,6 +229,7 @@ public class RemoteCallViewer extends JPanel {
 			/**
 			 * @see javax.swing.JComponent#setForeground(java.awt.Color)
 			 */
+			
 			@Override
 			public void setForeground(Color fg) {
 				// No-op: Wir setzen das im Konstruktor, die Tabelle soll's ab
@@ -236,6 +239,7 @@ public class RemoteCallViewer extends JPanel {
 			/**
 			 * @see javax.swing.JComponent#setBackground(java.awt.Color)
 			 */
+			
 			@Override
 			public void setBackground(Color bg) {
 				super.setBackground(bg.darker());
@@ -244,6 +248,7 @@ public class RemoteCallViewer extends JPanel {
 			/**
 			 * @see javax.swing.JComponent#setEnabled(boolean)
 			 */
+			
 			@Override
 			public void setEnabled(boolean b) {
 				// No-op: Wir sind auf enabled und das soll so bleiben, weil
@@ -384,6 +389,7 @@ public class RemoteCallViewer extends JPanel {
 		/**
 		 * @see ctSim.view.gui.RemoteCallViewer.BehaviorModel#addBehavior(ctSim.model.bots.components.RemoteCallCompnt.Behavior)
 		 */
+		
 		@Override
 		protected void addBehavior(Behavior b) {
 			addRow(new Object[] {
@@ -576,6 +582,7 @@ public class RemoteCallViewer extends JPanel {
 		final BehaviorModel availM = new BehaviorModel(2) {
 			private static final long serialVersionUID = 3932551442111274878L;
 
+			
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column == 1;

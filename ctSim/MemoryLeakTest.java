@@ -46,8 +46,9 @@ public class MemoryLeakTest {
 		/**
 		 * @see ctSim.controller.DefaultController#onApplicationInited()
 		 */
-		@Override
-        public void onApplicationInited() {
+		
+        @Override
+		public void onApplicationInited() {
 			super.onApplicationInited();
 			for (int i = 0; i < 50; i++) {
 				lg.info("Öffne Welt " + i);

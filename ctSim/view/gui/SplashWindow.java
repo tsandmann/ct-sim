@@ -110,6 +110,7 @@ public class SplashWindow extends Window {
 
 		/* Schließen des Splash-Screens per Mausklick */
 		MouseAdapter disposeOnClick = new MouseAdapter() {
+			
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				synchronized (SplashWindow.this) {
@@ -128,6 +129,7 @@ public class SplashWindow extends Window {
 	 * Aktualisiert den Splash-Screen
 	 * @param g Graphics
 	 */
+	
 	@Override
 	public void update(Graphics g) {
 		paint(g);
@@ -137,6 +139,7 @@ public class SplashWindow extends Window {
 	 * Zeichnet den Splash-Screen
 	 * @param g  Graphics-Objekt
 	 */
+	
 	@Override
 	public void paint(Graphics g) {
 		g.drawImage(image, 0, 0, this);
@@ -239,6 +242,7 @@ public class SplashWindow extends Window {
 		/**
 		 * @see java.util.logging.Handler#close()
 		 */
+		
 		@Override
 		public void close() throws SecurityException {
 			// NOP
@@ -247,6 +251,7 @@ public class SplashWindow extends Window {
 		/**
 		 * @see java.util.logging.Handler#flush()
 		 */
+		
 		@Override
 		public void flush() {
 			// NOP
@@ -256,6 +261,7 @@ public class SplashWindow extends Window {
 		 * Schreibt die Log-Message ins Splash-Fenster
 		 * @see java.util.logging.Handler#publish(java.util.logging.LogRecord)
 		 */
+		
 		@Override
 		public void publish(LogRecord record) {
 			if (record == null) return;

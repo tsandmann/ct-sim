@@ -63,6 +63,7 @@ public class BPS {
 		 * Gibt die Position der Landmarke als String aus [BEACON_GRID_SIZE mm]
 		 * @see java.lang.Object#toString()
 		 */
+		
 		@Override
 		public String toString() {
 			return "(" + (position.x * parcoursBlockSizeInMM + parcoursBlockSizeInMM / 2) + "|" + 

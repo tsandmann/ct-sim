@@ -115,8 +115,8 @@ public class MapViewer extends JPanel {
 		
 	    /**
 	     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
-	     */
-	    @Override
+	     */    
+		@Override
 		public boolean accept(File f) {
 	        if (f.isDirectory()) {
 	            return true;
@@ -137,7 +137,8 @@ public class MapViewer extends JPanel {
 	    /**
 	     * @see javax.swing.filechooser.FileFilter#getDescription()
 	     */
-	    @Override
+	    
+		@Override
 		public String getDescription() {
 	        return "PNG-Bilder";
 	    }
@@ -278,6 +279,7 @@ public class MapViewer extends JPanel {
 		/**
 		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 		 */
+		
 		@Override
 		public void paint(Graphics g) {
 			/* Image zeichnen */
@@ -358,6 +360,7 @@ public class MapViewer extends JPanel {
 		/**
 		 * @see javax.swing.JComponent#getPreferredSize()
 		 */
+		
 		@Override
 		public Dimension getPreferredSize() {
 			Insets is = getBorder().getBorderInsets(this);

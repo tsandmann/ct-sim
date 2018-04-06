@@ -60,6 +60,7 @@ public class RealCtBot extends CtBot {
 		 * @see ctSim.util.SaferThread#work()
 		 */
 		// Bei den zwei Logging-Aufrufen ist uns das egal
+		
 		@Override
 		public void work() throws InterruptedException {
 			Command cmd = null;
@@ -91,6 +92,7 @@ public class RealCtBot extends CtBot {
 		/**
 		 * @see ctSim.util.SaferThread#dispose()
 		 */
+		
 		@Override
 		public void dispose() {
 			try {
@@ -186,6 +188,7 @@ public class RealCtBot extends CtBot {
 	/**
 	 * @see ctSim.model.bots.BasicBot#getDescription()
 	 */
+	
 	@Override
 	public String getDescription() {
 		return "Realer c't-Bot, verbunden über "+connectionName;

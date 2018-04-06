@@ -63,6 +63,7 @@ public abstract class NumberSingleton extends BotComponent<SpinnerNumberModel> {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 	 */
+	
 	@Override
 	public void updateExternalModel() {
 		getExternalModel().setValue(internalModel);

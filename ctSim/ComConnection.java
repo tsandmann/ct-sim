@@ -89,6 +89,7 @@ public class ComConnection extends Connection {
 		registerEventListener();
 		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			
 			@Override
 			public void run() {
 				port.closePort();
@@ -102,12 +103,10 @@ public class ComConnection extends Connection {
 	 */
 	private void registerEventListener() {
 		class OurEventListener implements SerialPortDataListener {
-			@Override
 			public int getListeningEvents() { 
 				return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
 			}
 			
-			@Override
 			public void serialEvent(SerialPortEvent evt) {
 				if (evt.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
 					// Es gibt was zu lesen
@@ -139,6 +138,7 @@ public class ComConnection extends Connection {
 	 * Liest Daten aus einem Inputstream
 	 * @throws IOException
 	 */
+	
 	@Override
 	public void read(byte[] b) throws IOException {
 		inputAvailable = false;
@@ -150,6 +150,7 @@ public class ComConnection extends Connection {
 	 * werden. Wir verhindern durch den Override auch, dass die Vaterklasse was
 	 * schließt.
 	 */
+	
 	@Override
 	public synchronized void close() {
 		// No-op
@@ -159,7 +160,8 @@ public class ComConnection extends Connection {
 	 * Gibt den Namen des Ports unserer Connection zurück
 	 * @return	Name 
 	 */
-	@Override 
+	
+	@Override
 	public String getName() {
 		return port.getDescriptivePortName(); 
 	}
@@ -168,7 +170,8 @@ public class ComConnection extends Connection {
 	 * Gibt den Kurznamen unserer Connection zurück
 	 * @return	"USB"
 	 */
-	@Override 
+	
+	@Override
 	public String getShortName() { 
 		return "USB"; 
 	}
@@ -190,6 +193,7 @@ public class ComConnection extends Connection {
 	 * @return Bot
 	 * @throws ProtocolException
 	 */
+	
 	@Override
 	protected Bot createBot(Command c) throws ProtocolException {
 		CtBot bot;
@@ -300,6 +304,7 @@ public class ComConnection extends Connection {
 		 * work-Methode des Threads
 		 * @throws InterruptedException
 		 */
+		
 		@Override
 		public void work() throws InterruptedException {
 			comConnSingleton.blockUntilDataAvailable();

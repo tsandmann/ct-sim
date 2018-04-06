@@ -57,6 +57,7 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	/**
 	 * @see com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader#readBranchGraph(java.util.HashMap)
 	 */
+	
 	@Override
 	public BranchGroup readBranchGraph(HashMap map) throws IOException {
 		BranchGroup bg = super.readBranchGraph(map);

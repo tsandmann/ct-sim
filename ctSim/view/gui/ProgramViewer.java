@@ -140,7 +140,8 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	    /**
 	     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
 	     */
-	    @Override
+	    
+		@Override
 		public boolean accept(File f) {
 	        if (f.isDirectory()) {
 	            return true;
@@ -161,7 +162,8 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	    /**
 	     * @see javax.swing.filechooser.FileFilter#getDescription()
 	     */
-	    @Override
+	    
+		@Override
 		public String getDescription() {
 	        return "Textdateien";
 	    }
