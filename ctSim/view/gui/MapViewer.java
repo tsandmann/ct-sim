@@ -115,23 +115,24 @@ public class MapViewer extends JPanel {
 		
 	    /**
 	     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
-	     */    
-		@Override
-		public boolean accept(File f) {
-	        if (f.isDirectory()) {
-	            return true;
-	        }
+	     */
+	    
+	    @Override
+	    public boolean accept(File f) {
+	    	if (f.isDirectory()) {
+	    		return true;
+	    	}
 
-	        String extension = getExtension(f);
-	        if (extension != null) {
-	            if (extension.equals("png")) {
-	            	return true;
-	            } else {
-	                return false;
-	            }
-	        }
+	    	String extension = getExtension(f);
+	    	if (extension != null) {
+	    		if (extension.equals("png")) {
+	    			return true;
+	    		} else {
+	    			return false;
+	    		}
+	    	}
 
-	        return false;
+	    	return false;
 	    }
 
 	    /**

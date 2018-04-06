@@ -126,7 +126,6 @@ public class Main extends JApplet implements BotReceiver {
 			@Override
 			public void flush() { /* No-op */ }
 
-			
 			@Override
 			public void publish(LogRecord record) {
 				Level lvl = record.getLevel();

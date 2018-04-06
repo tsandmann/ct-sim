@@ -103,10 +103,13 @@ public class ComConnection extends Connection {
 	 */
 	private void registerEventListener() {
 		class OurEventListener implements SerialPortDataListener {
+			
+			@Override // explizit
 			public int getListeningEvents() { 
 				return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
 			}
 			
+			@Override // explizit
 			public void serialEvent(SerialPortEvent evt) {
 				if (evt.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
 					// Es gibt was zu lesen

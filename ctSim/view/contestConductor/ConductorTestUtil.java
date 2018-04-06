@@ -35,23 +35,23 @@ public abstract class ConductorTestUtil {
     /**
      * TestDatabase
      */
-    public static class TestDatabase extends ContestDatabase {
-        /**
-         * @see ctSim.view.contestConductor.ContestDatabase#getConnection()
-         */
-        
-        @Override
+	public static class TestDatabase extends ContestDatabase {
+		/**
+		 * @see ctSim.view.contestConductor.ContestDatabase#getConnection()
+		 */
+		
+		@Override
 		public Connection getConnection() {
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                return DriverManager.getConnection(
-                    "jdbc:mysql://10.10.22.179:3306/ctbot-contest-unittests",
-                    "root", "geheimdienst");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				return DriverManager.getConnection(
+						"jdbc:mysql://10.10.22.179:3306/ctbot-contest-unittests",
+						"root", "geheimdienst");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
 
     /**
      * Neuer Bot

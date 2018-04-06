@@ -47,7 +47,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	 * @see ctSim.view.contestConductor.ConductorTestUtil#getDbFromChildClass()
 	 */
 	
-    @Override
+	@Override
 	protected DatabaseAdapter getDbFromChildClass() {
 	    return db;
     }

@@ -69,6 +69,7 @@ public class IterableNodeList implements NodeList, Iterable<QueryableNode> {
 				return IterableNodeList.this.item(lastIdx);
 			}
 			
+			@Override // explizit
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}

@@ -190,8 +190,8 @@ public class ClosableTabsPane extends JTabbedPane {
 			}
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
-        	
-        	@Override
+			
+			@Override
 			public void mouseMoved(MouseEvent e) {
         		handleMouseMotionEvent(e);
         	}

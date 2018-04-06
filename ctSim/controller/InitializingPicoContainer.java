@@ -93,7 +93,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Class)
 	 */
 	
-    @Override
+	@Override
 	public ComponentAdapter registerComponentImplementation(
     	Class componentImplementation) {
 	    ensureInitialized(componentImplementation);
@@ -104,7 +104,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class)
 	 */
 	
-    @Override
+	@Override
 	public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation) {
 		ensureInitialized(componentImplementation);
@@ -116,7 +116,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, java.util.List)
 	 */
 	
-    @Override
+	@Override
 	public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation, List parameters) {
 		ensureInitialized(componentImplementation);
@@ -128,7 +128,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, org.picocontainer.Parameter[])
 	 */
 	
-    @Override
+	@Override
 	public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation,
     	Parameter[] parameters) {

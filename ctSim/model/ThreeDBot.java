@@ -556,6 +556,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		
 		addDisposeListener(new Runnable() {
 			
+			@Override // explizit
 			public void run() {
 				((MasterSimulator) simulator).cleanup();
 			}
@@ -1083,6 +1084,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @see ctSim.model.bots.Bot#get_feature_log()
 	 */
 	
+	@Override // explizit
 	public boolean get_feature_log() {
 		return false;
 	}
@@ -1091,6 +1093,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @see ctSim.model.bots.Bot#get_feature_rc5()
 	 */
 	
+	@Override // explizit
 	public boolean get_feature_rc5() {
 		return false;
 	}
@@ -1099,6 +1102,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @see ctSim.model.bots.Bot#get_feature_abl_program()
 	 */
 	
+	@Override // explizit
 	public boolean get_feature_abl_program() {
 		return false;
 	}
@@ -1107,6 +1111,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @see ctSim.model.bots.Bot#get_feature_basic_program()
 	 */
 	
+	@Override // explizit
 	public boolean get_feature_basic_program() {
 		return false;
 	}
@@ -1115,6 +1120,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @see ctSim.model.bots.Bot#get_feature_map()
 	 */
 	
+	@Override // explizit
 	public boolean get_feature_map() {
 		return false;
 	}
@@ -1123,6 +1129,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @see ctSim.model.bots.Bot#get_feature_remotecall()
 	 */
 	
+	@Override // explizit
 	public boolean get_feature_remotecall() {
 		return false;
 	}

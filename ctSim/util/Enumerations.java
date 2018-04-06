@@ -76,6 +76,7 @@ public class Enumerations {
 	                    return source.nextElement();
                     }
 					
+					@Override // explizit
 					public void remove() {
 						throw new UnsupportedOperationException();
                     }

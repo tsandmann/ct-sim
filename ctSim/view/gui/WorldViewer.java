@@ -263,7 +263,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	 * MinimumSize nicht auf was sehr kleines setzen, ginge das nicht.
 	 */
     
-    @Override
+	@Override
 	public Dimension getMinimumSize() {
         return new Dimension(1,1);
     }

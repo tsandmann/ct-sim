@@ -135,7 +135,7 @@ public class Leds extends GuiBotBuisitor {
 		 * @return Größe
 		 */
     	
-    	@Override
+		@Override
 		public Dimension getMinimumSize() {
     		return new Dimension(RADIUS, RADIUS);
     	}
