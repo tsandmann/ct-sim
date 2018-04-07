@@ -119,6 +119,7 @@ public class AuxFrameButton extends JToggleButton {
 		auxFrame.addWindowListener(new WindowAdapter() {
 			// Wenn Fenster geschlossen wird soll der gedrückte Button wieder
 			// rausspringen
+			
 			@Override
 			public void windowClosing(WindowEvent e) {
 				AuxFrameButton.this.setSelected(false);
@@ -147,6 +148,7 @@ public class AuxFrameButton extends JToggleButton {
 	/**
 	 * @see javax.swing.JComponent#removeNotify()
 	 */
+	
 	@Override
 	public void removeNotify() {
 //		lg.fine("AuxFrameButton::removeNotify()");

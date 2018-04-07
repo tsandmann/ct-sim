@@ -171,6 +171,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 */
 	public ClosableTabsPane(final Icon closeIcon, final Icon closeIconHover) {
 		addMouseListener(new MouseAdapter() {
+			
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int idx = indexOfBoundedIconAt(e.getX(), e.getY());
@@ -182,14 +183,16 @@ public class ClosableTabsPane extends JTabbedPane {
 
 			// Falls einer aus der TabbedPane nach oben rausfährt, so dass
 			// der MotionListener nicht greift
+			
 			@Override
 			public void mouseExited(MouseEvent e) {
 				handleMouseMotionEvent(e);
 			}
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
-        	@Override
-        	public void mouseMoved(MouseEvent e) {
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
         		handleMouseMotionEvent(e);
         	}
         });
@@ -240,6 +243,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	/**
 	 * @see javax.swing.JTabbedPane#getToolTipText(java.awt.event.MouseEvent)
 	 */
+	
 	@Override
 	public String getToolTipText(MouseEvent e) {
 		int idx = indexOfBoundedIconAt(e.getX(), e.getY());

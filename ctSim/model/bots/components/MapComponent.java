@@ -209,6 +209,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#askForWrite(ctSim.model.CommandOutputStream)
 	 */
+	
 	@Override
 	public synchronized void askForWrite(CommandOutputStream s) {
 		if (! writesSynchronously()) {
@@ -502,11 +503,14 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */
-	@Override public String getName() { return "Map"; }
+	
+	@Override
+	public String getName() { return "Map"; }
 
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
+	
 	@Override
 	public String getDescription() {
 		return "Karte";
@@ -526,6 +530,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 	 */
+	
 	@Override
 	public synchronized void updateExternalModel() {
 		if (imageEventPending) {

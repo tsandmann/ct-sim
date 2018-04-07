@@ -73,6 +73,7 @@ public class BotID extends java.lang.Number {
 	/**
 	 * @see java.lang.Number#doubleValue()
 	 */
+	
 	@Override
 	public double doubleValue() {
 		return intValue();
@@ -81,6 +82,7 @@ public class BotID extends java.lang.Number {
 	/**
 	 * @see java.lang.Number#floatValue()
 	 */
+	
 	@Override
 	public float floatValue() {
 		return intValue();
@@ -89,6 +91,7 @@ public class BotID extends java.lang.Number {
 	/**
 	 * @see java.lang.Number#intValue()
 	 */
+	
 	@Override
 	public int intValue() {
 		return this.data;
@@ -97,6 +100,7 @@ public class BotID extends java.lang.Number {
 	/**
 	 * @see java.lang.Number#longValue()
 	 */
+	
 	@Override
 	public long longValue() {
 		return intValue();
@@ -105,6 +109,7 @@ public class BotID extends java.lang.Number {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	
 	@Override
 	public String toString() {
 		return String.valueOf(intValue());

@@ -60,6 +60,7 @@ public class CtSimFormatter extends Formatter {
 	/**
 	 * @see java.util.logging.Formatter#format(java.util.logging.LogRecord)
 	 */
+	
 	@Override
 	public String format(LogRecord r) {
 		String throwable = "";

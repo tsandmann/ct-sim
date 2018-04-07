@@ -207,6 +207,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#isGuiEditable()
 		 */
+		
 		@Override
 		public boolean isGuiEditable() {
 			return true;
@@ -215,6 +216,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			return coord + " [m]";
@@ -223,6 +225,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return coord + "-Koordinate [m]";
@@ -231,6 +234,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * Aktualisiert das externe Modell
 		 */
+		
 		@Override
 		public void updateExternalModel() {
 			double newValue = 0;
@@ -263,6 +267,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#isGuiEditable()
 		 */
+		
 		@Override
 		public boolean isGuiEditable() {
 			return false;
@@ -271,6 +276,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			return coord +" [mm]";
@@ -279,6 +285,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return "Globale" + coord + "-Koordinate [mm]";
@@ -287,6 +294,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * Aktualisiert das externe Modell
 		 */
+		
 		@Override
 		public void updateExternalModel() {
 			double newValue = 0;
@@ -339,6 +347,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#isGuiEditable()
 		 */
+		
 		@Override
 		public boolean isGuiEditable() {
 			return true;
@@ -347,6 +356,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			// Unicode 00B0: Grad-Zeichen
@@ -356,6 +366,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			// Unicode 00B0: Grad-Zeichen
@@ -367,6 +378,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		
 		@Override
 		public void updateExternalModel() {
 			ignoreStateChange = true;
@@ -390,6 +402,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#isGuiEditable()
 		 */
+		
 		@Override
 		public boolean isGuiEditable() {
 			return false;
@@ -398,6 +411,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			// Unicode 00B0: Grad-Zeichen
@@ -407,6 +421,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return "Richtung, in die der Bot blickt, gemessen in Grad";
@@ -415,6 +430,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		
 		@Override
 		public void updateExternalModel() {
 			double heading = Math.toDegrees(getHeadingInRad());
@@ -539,7 +555,8 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		}
 		
 		addDisposeListener(new Runnable() {
-			@Override
+			
+			@Override // explizit
 			public void run() {
 				((MasterSimulator) simulator).cleanup();
 			}
@@ -655,6 +672,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 *  Stoppt den Bot (bzw. dessen Thread).
 	 */
+	
 	@Override
 	public void dispose() {
 		super.dispose(); // Unsere DisposeListener
@@ -902,6 +920,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.BasicBot#updateView()
 	 */
+	
 	@Override
 	public void updateView() throws InterruptedException {
 		super.updateView();	// Positionsanzeige updaten
@@ -1000,6 +1019,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.BasicBot#toString()
 	 */
+	
 	@Override
 	public String toString() {
 		return bot.toString();
@@ -1019,6 +1039,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.BasicBot#getDescription()
 	 */
+	
 	@Override
 	public String getDescription() {
 		return bot.getDescription();
@@ -1027,6 +1048,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.BasicBot#getInstanceNumber()
 	 */
+	
 	@Override
 	public int getInstanceNumber() {
 		return bot.getInstanceNumber();
@@ -1035,6 +1057,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.BasicBot#accept(ctSim.model.bots.BotBuisitor)
 	 */
+	
 	@Override
 	public void accept(BotBuisitor buisitor) {
 		super.accept(buisitor);
@@ -1060,7 +1083,8 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_log()
 	 */
-	@Override
+	
+	@Override // explizit
 	public boolean get_feature_log() {
 		return false;
 	}
@@ -1068,7 +1092,8 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_rc5()
 	 */
-	@Override
+	
+	@Override // explizit
 	public boolean get_feature_rc5() {
 		return false;
 	}
@@ -1076,7 +1101,8 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_abl_program()
 	 */
-	@Override
+	
+	@Override // explizit
 	public boolean get_feature_abl_program() {
 		return false;
 	}
@@ -1084,7 +1110,8 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_basic_program()
 	 */
-	@Override
+	
+	@Override // explizit
 	public boolean get_feature_basic_program() {
 		return false;
 	}
@@ -1092,7 +1119,8 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_map()
 	 */
-	@Override
+	
+	@Override // explizit
 	public boolean get_feature_map() {
 		return false;
 	}
@@ -1100,7 +1128,8 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_remotecall()
 	 */
-	@Override
+	
+	@Override // explizit
 	public boolean get_feature_remotecall() {
 		return false;
 	}

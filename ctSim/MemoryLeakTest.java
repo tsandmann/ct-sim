@@ -46,6 +46,7 @@ public class MemoryLeakTest {
 		/**
 		 * @see ctSim.controller.DefaultController#onApplicationInited()
 		 */
+		
 		@Override
         public void onApplicationInited() {
 			super.onApplicationInited();

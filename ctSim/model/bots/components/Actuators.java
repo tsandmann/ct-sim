@@ -59,6 +59,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
+		
 		@Override
 		protected String getBaseDescription() {
 			return "Motorbegrenzer";
@@ -67,7 +68,9 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { 
+		
+		@Override
+		protected String getBaseName() { 
 			return "Motor"; 
 		}
 		
@@ -102,6 +105,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getBaseDescription() {
 			return "Servomotor für Klappe";
@@ -110,7 +114,9 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getBaseName() { 
+		
+		@Override
+		public String getBaseName() { 
 			return "DoorServo"; 
 		}
 		
@@ -124,6 +130,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			return getBaseName();
@@ -132,6 +139,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return getBaseDescription();
@@ -154,6 +162,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getBaseDescription() {
 			return "Servomotor für Kamera";
@@ -162,7 +171,9 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getBaseName() { 
+		
+		@Override
+		public String getBaseName() { 
 			return "CamServo"; 
 		}
 		
@@ -176,6 +187,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
+		
 		@Override
 		public String getName() {
 			return getBaseName();
@@ -184,6 +196,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
+		
 		@Override
 		public String getDescription() {
 			return getBaseDescription();
@@ -218,6 +231,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		
 		@Override
 		public void updateExternalModel() {
 			final long now = System.currentTimeMillis();
@@ -255,14 +269,18 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { 
+		
+		@Override
+		public String getName() { 
 			return "Log"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		
+		@Override
+		public String getDescription() { 
 			return "Log-Anzeige"; 
 		}
 	}
@@ -285,6 +303,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		
 		@Override
 		public synchronized void updateExternalModel() {
 			// NOP
@@ -307,14 +326,18 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() {
+		
+		@Override
+		public String getName() {
 			return "Programm"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		
+		@Override
+		public String getDescription() { 
 			return "Programmfenster für Skriptsprachen"; 
 		}
 
@@ -567,6 +590,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		
 		@Override
 		public synchronized void updateExternalModel() {
 			try {
@@ -663,14 +687,18 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { 
+		
+		@Override
+		public String getName() { 
 			return "LCD"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		
+		@Override
+		public String getDescription() { 
 			return "LCD-Anzeige"; 
 		}
 	}
@@ -759,6 +787,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 		 */
+		
 		@Override
 		public synchronized void updateExternalModel() {
 			getExternalModel().setSelected(internalModel);
@@ -785,14 +814,18 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { 
+		
+		@Override
+		public String getName() { 
 			return name; 
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		
+		@Override
+		public String getDescription() { 
 			return ""; 
 		}
 	}

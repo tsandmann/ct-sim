@@ -172,6 +172,7 @@ public class ComponentTable extends JTable {
 	/**
 	 * @see javax.swing.JTable#getScrollableTracksViewportWidth()
 	 */
+	
 	@Override
 	public boolean getScrollableTracksViewportWidth() {
 		if (autoResizeMode != AUTO_RESIZE_OFF) {
@@ -186,6 +187,7 @@ public class ComponentTable extends JTable {
 	/**
 	 * @see javax.swing.JComponent#getPreferredSize()
 	 */
+	
 	@Override
 	public Dimension getPreferredSize() {
 		if (getParent() instanceof JViewport) {

@@ -79,6 +79,7 @@ public class Main extends JApplet implements BotReceiver {
 	/**
 	 * Initialiserung des Applets
 	 */
+	
 	@Override
 	public void init() {
 		initLogging();
@@ -102,6 +103,7 @@ public class Main extends JApplet implements BotReceiver {
 	 */
 	private void initLogging() {
 		FmtLogger.setFactory(new FmtLogger.Factory() {
+			
 			@Override
 			public Logger createLogger(String name) {
 				return mainLogger;
@@ -117,8 +119,12 @@ public class Main extends JApplet implements BotReceiver {
 
 		mainLogger.setLevel(level);
 		Handler h = new Handler() {
-			@Override public void close() { /* No-op */ }
-			@Override public void flush() { /* No-op */ }
+			
+			@Override
+			public void close() { /* No-op */ }
+			
+			@Override
+			public void flush() { /* No-op */ }
 
 			@Override
 			public void publish(LogRecord record) {
@@ -155,6 +161,7 @@ public class Main extends JApplet implements BotReceiver {
 	/**
 	 * Startet die TCP-Connection
 	 */
+	
 	@Override
 	public void start() {
 		int port;
@@ -181,6 +188,7 @@ public class Main extends JApplet implements BotReceiver {
 				final JFrame f = new JFrame(title);
 				BotViewer bv = new BotViewer(b);
 				f.addWindowListener(new WindowAdapter() {
+					
 					@Override
 					public void windowClosing(WindowEvent e) {
 						bot.dispose();
@@ -216,6 +224,7 @@ public class Main extends JApplet implements BotReceiver {
 	/**
 	 * Beendet das c't-Bot-Applet
 	 */
+	
 	@Override
 	public void destroy() {
 		SwingUtilities.invokeLater(new Runnable() {

@@ -92,8 +92,9 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Class)
 	 */
+	
 	@Override
-    public ComponentAdapter registerComponentImplementation(
+	public ComponentAdapter registerComponentImplementation(
     	Class componentImplementation) {
 	    ensureInitialized(componentImplementation);
 	    return super.registerComponentImplementation(componentImplementation);
@@ -102,8 +103,9 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class)
 	 */
+	
 	@Override
-    public ComponentAdapter registerComponentImplementation(
+	public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation) {
 		ensureInitialized(componentImplementation);
 	    return super.registerComponentImplementation(componentKey,
@@ -113,8 +115,9 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, java.util.List)
 	 */
+	
 	@Override
-    public ComponentAdapter registerComponentImplementation(
+	public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation, List parameters) {
 		ensureInitialized(componentImplementation);
 	    return super.registerComponentImplementation(componentKey,
@@ -124,8 +127,9 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, org.picocontainer.Parameter[])
 	 */
+	
 	@Override
-    public ComponentAdapter registerComponentImplementation(
+	public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation,
     	Parameter[] parameters) {
 		ensureInitialized(componentImplementation);

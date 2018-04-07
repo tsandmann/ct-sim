@@ -106,6 +106,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#askForWrite(ctSim.model.CommandOutputStream)
 	 */
+	
 	@Override
 	public synchronized void askForWrite(CommandOutputStream s) {
 		if (syncRequestPending && writesSynchronously()) {
@@ -224,11 +225,14 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */
-	@Override public String getName() { return "Mausbild"; }
+	
+	@Override
+	public String getName() { return "Mausbild"; }
 
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
+	
 	@Override
 	public String getDescription() {
 		return "Was der Maus-Sensor sieht";
@@ -269,6 +273,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 	 */
+	
 	@Override
 	public synchronized void updateExternalModel() {
 		if (imageEventPending) {

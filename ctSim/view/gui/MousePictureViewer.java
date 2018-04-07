@@ -87,6 +87,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 		 */
+		
 		@Override
 		public void paint(Graphics g) {
 			// Loeschen
@@ -99,6 +100,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.JComponent#getPreferredSize()
 		 */
+		
 		@Override
 		public Dimension getPreferredSize() {
 			Insets is = getBorder().getBorderInsets(this);
@@ -109,6 +111,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.JComponent#getMinimumSize()
 		 */
+		
 		@Override
 		public Dimension getMinimumSize() {
 			return getPreferredSize();
@@ -128,6 +131,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		ImageViewer v = new ImageViewer(6, compnt);
 		p.add(v, BorderLayout.CENTER);
 		v.addMouseListener(new MouseAdapter() {
+			
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {

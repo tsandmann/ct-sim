@@ -104,6 +104,7 @@ public class Menu extends JMenu {
 		/**
 		 * @see ctSim.util.Menu.MAction#getMenuItem()
 		 */
+		
 		@Override
 		public JMenuItem getMenuItem() {
 			return ourMenuItem;
@@ -142,6 +143,7 @@ public class Menu extends JMenu {
 		/**
 		 * @see ctSim.util.Menu.MAction#getMenuItem()
 		 */
+		
 		@Override
 		public JMenuItem getMenuItem() {
 			return ourMenuItem;

@@ -82,8 +82,9 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 		 */
 		public LoggingHandler() {
 			setFormatter(new Formatter() {
+				
 				@Override
-                public String format(LogRecord r) {
+				public String format(LogRecord r) {
 					String lvl = r.getLevel().getLocalizedName();
 	                return String.format("[%1$tk:%1$tM:%tS] %s%s: %s\n", 
 	                		r.getMillis(), 
@@ -96,6 +97,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 		/**
 		 * @param record LogRecord
 		 */
+		
 		@Override
 		public synchronized void publish(LogRecord record) {
 			if (record.getLevel().intValue() >= getLevel().intValue())
@@ -106,6 +108,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 		 * Schließen
 		 * @throws SecurityException
 		 */
+		
 		@Override
 		public void close() throws SecurityException {
 			// No-op
@@ -114,6 +117,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 		/**
 		 * Flush
 		 */
+		
 		@Override
 		public void flush() {
 			// No-op

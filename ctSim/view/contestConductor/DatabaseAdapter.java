@@ -68,7 +68,8 @@ class DatabaseAdapter {
 		/**
 		 * @see java.util.HashMap#get(java.lang.Object)
 		 */
-    @Override
+    
+		@Override
 		public PreparedStatement get(Object key) {
 			// Wenn nicht drin, hinzufügen, damit super.get garantiert was
 			// zurückliefert
@@ -150,6 +151,7 @@ class DatabaseAdapter {
 		 * <a href="#enum_constant_summary">Enum Constant Summary</a>
 		 * aufgeführten Wert.
 		 */
+		
 		@Override
 		public String toString() {
 			return representationInDb;

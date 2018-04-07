@@ -60,7 +60,9 @@ public abstract class Tables {
 		/**
 		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
 		 */
-		@Override protected String getPanelTitle() { return "Sim-Position"; }
+
+		@Override
+		protected String getPanelTitle() { return "Sim-Position"; }
 	}
 	
 	/**
@@ -88,7 +90,9 @@ public abstract class Tables {
 		/**
 		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
 		 */
-		@Override protected String getPanelTitle() { return "Bot-Position"; }
+
+		@Override
+		protected String getPanelTitle() { return "Bot-Position"; }
 	}
 
 	/**
@@ -108,7 +112,9 @@ public abstract class Tables {
 		/**
 		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
 		 */
-		@Override protected String getPanelTitle() { return "Aktuatoren"; }
+
+		@Override
+		protected String getPanelTitle() { return "Aktuatoren"; }
 	}
 
 	/**
@@ -128,6 +134,8 @@ public abstract class Tables {
 		/**
 		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
 		 */
-		@Override protected String getPanelTitle() { return "Sensoren"; }
+
+		@Override
+		protected String getPanelTitle() { return "Sensoren"; }
 	}
 }

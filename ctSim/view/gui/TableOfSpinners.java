@@ -109,12 +109,13 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.table.DefaultTableModel#isCellEditable(int, int)
 		 */
-		@Override
+    	
+    	@Override
     	public boolean isCellEditable(int row, int column) {
-			if (column == 0)
-				return false;
-			else
-				return ((JSpinner)getValueAt(row, column)).isEnabled();
+    		if (column == 0)
+    			return false;
+    		else
+    			return ((JSpinner)getValueAt(row, column)).isEnabled();
     	}
 
 		/**
@@ -182,10 +183,11 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
     /**
      * @see ctSim.view.gui.GuiBotBuisitor#shouldBeDisplayed()
      */
-    @Override
-    public boolean shouldBeDisplayed() {
-    	return model.getRowCount() > 0;
-    }
+	
+	@Override
+	public boolean shouldBeDisplayed() {
+		return model.getRowCount() > 0;
+	}
 
     /**
      * Tabellen für Komponenten
@@ -217,20 +219,20 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 			private static final long serialVersionUID = 6362442061290466520L;
 
 			@Override
-        	public Dimension getMinimumSize() {
+			public Dimension getMinimumSize() {
         		return t.getMinimumSize();
         	}
 
-        	@Override
-        	public Dimension getPreferredSize() {
+			@Override
+			public Dimension getPreferredSize() {
         		Insets i = getInsets();
         		return new Dimension(
         			t.getPreferredSize().width  + i.left + i.right,
         			t.getPreferredSize().height + i.top  + i.bottom);
         	}
 
-        	@Override
-        	public Dimension getMaximumSize() {
+			@Override
+			public Dimension getMaximumSize() {
         		return t.getMaximumSize();
         	}
         });

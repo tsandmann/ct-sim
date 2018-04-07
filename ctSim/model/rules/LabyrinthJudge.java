@@ -48,8 +48,9 @@ public class LabyrinthJudge extends Judge {
 	/**
 	 * @see ctSim.model.rules.Judge#setWorld(ctSim.model.World)
 	 */
-	@Override
-    public void setWorld(World world) {
+	
+    @Override
+	public void setWorld(World world) {
 		this.world = world;
 		super.setWorld(world);
 	}
@@ -57,6 +58,7 @@ public class LabyrinthJudge extends Judge {
 	/**
 	 * @see ctSim.model.rules.Judge#isAddingBotsAllowed()
 	 */
+	
 	@Override
 	public boolean isAddingBotsAllowed() {
 		if (this.controller.getParticipants() >= this.participants) {
@@ -70,6 +72,7 @@ public class LabyrinthJudge extends Judge {
 	/**
 	 * @see ctSim.model.rules.Judge#isStartingSimulationAllowed()
 	 */
+	
 	@Override
 	public boolean isStartingSimulationAllowed() {
 		if (this.controller.getParticipants() < this.participants) {
@@ -88,6 +91,7 @@ public class LabyrinthJudge extends Judge {
 	/**
 	 * @return true, wenn alle Regelen eingehalten werden
 	 */
+	
 	@Override
 	public boolean isSimulationFinished(){
 		if (world == null) {

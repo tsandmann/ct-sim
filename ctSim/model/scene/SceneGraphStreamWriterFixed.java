@@ -49,6 +49,7 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 	/**
 	 * @see com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter#writeBranchGraph(javax.media.j3d.BranchGroup, java.util.HashMap)
 	 */
+	
 	@Override
 	public void writeBranchGraph(BranchGroup bg, HashMap map) throws IOException, DanglingReferenceException, NamedObjectException {
 		prepareMap(map);

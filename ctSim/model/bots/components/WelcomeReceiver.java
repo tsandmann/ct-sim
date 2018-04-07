@@ -65,6 +65,7 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
 	 */
+	
 	@Override
 	public String getDescription() {
 		return "Willkommenskommando-Auswerte-Ding";
@@ -90,6 +91,7 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 	 */
+	
 	@Override
 	public void updateExternalModel() {
 		// NOP
@@ -98,6 +100,7 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */
+	
 	@Override
 	public String getName() {
 		return "Bot-ID";

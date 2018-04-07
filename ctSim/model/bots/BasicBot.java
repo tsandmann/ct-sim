@@ -419,6 +419,7 @@ public abstract class BasicBot implements Bot {
 	 * </ul>
 	 * </p>
 	 */
+	
 	@Override
 	public String toString() {
 		return name;

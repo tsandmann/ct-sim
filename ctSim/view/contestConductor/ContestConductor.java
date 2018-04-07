@@ -104,6 +104,7 @@ public class ContestConductor implements View {
 		/**
 		 * @see ctSim.model.rules.Judge#isStartingSimulationAllowed()
 		 */
+		
 		@Override
 		public boolean isStartingSimulationAllowed() {
 			return true;
@@ -112,6 +113,7 @@ public class ContestConductor implements View {
 		/**
 		 * @see ctSim.model.rules.Judge#isSimulationFinished()
 		 */
+		
 		@Override
 		public boolean isSimulationFinished() {
 			try {

@@ -320,6 +320,7 @@ public class Command {
 			/**
 			 * @see ctSim.model.Command.BotSubCodes#toString()
 			 */
+			
 			@Override
 			public String toString() {
 				return formatChar(onTheWire);
@@ -359,6 +360,7 @@ public class Command {
 		/**
 		 * @see ctSim.model.Command.BotCodes#toString()
 		 */
+		
 		@Override
 		public String toString() {
 			return formatChar(codeOnTheWire);
@@ -952,6 +954,7 @@ public class Command {
 	 * Liefert eine vollständige Stringrepräsentation des Command
 	 * (mehrere Zeilen lang).
 	 */
+	
 	@Override
 	public String toString() {
 		String payloadStr;

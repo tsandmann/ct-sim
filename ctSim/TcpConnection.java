@@ -66,6 +66,7 @@ public class TcpConnection extends Connection {
 	 * Beendet die laufende Verbindung
 	 * @throws IOException
 	 */
+	
 	@Override
 	public synchronized void close() throws IOException {
 		socket.close();
@@ -75,6 +76,7 @@ public class TcpConnection extends Connection {
 	/**
 	 * @see ctSim.Connection#getName()
 	 */
+	
 	@Override
 	public String getName() {
 		return
@@ -85,7 +87,9 @@ public class TcpConnection extends Connection {
 	/**
 	 * @see ctSim.Connection#getShortName()
 	 */
-	@Override public String getShortName() { return "TCP"; }
+	
+	@Override
+	public String getShortName() { return "TCP"; }
 
 	/**
 	 * Beginnt zu lauschen
@@ -104,6 +108,7 @@ public class TcpConnection extends Connection {
 		try {
 			final ServerSocket srvSocket = new ServerSocket(p);
 			new SaferThread("ctSim-Listener-" + p + "/tcp") {
+				
 				@Override
 				public void work() {
 					try {
@@ -132,6 +137,7 @@ public class TcpConnection extends Connection {
 		final String address = hostname+":"+port; // Nur für Meldungen
     	lg.info("Verbinde mit "+address+" ...");
 		new SaferThread("ctSim-Connect-"+address) {
+			
 			@Override
 			public void work() {
 				try {

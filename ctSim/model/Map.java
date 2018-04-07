@@ -352,11 +352,13 @@ public class Map {
 	public void export() throws IOException {
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new FileFilter() {
+			
 			@Override
 			public boolean accept(File f) {
 				return (f.isDirectory() || f.getName().endsWith(".map"));
 			}
 
+			
 			@Override
 			public String getDescription() {
 				return "Map-Dateien (*.map)";
