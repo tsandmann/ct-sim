@@ -145,12 +145,19 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		if (onScreenCanvas != null) {
 			last_gd = onScreenCanvas.getGraphicsConfiguration().getDevice();
 		}
-    	if (universe != null) {
-    		universe.cleanup();
-    	}
-		/* remove all Java3D Canvas components */
-		while (getComponentCount() > 1) {
-			remove(1);
+		
+		if (System.getProperty("os.name").indexOf("OS X") == 0) {
+			/* 
+			 * Workaround gegen Crash unter macOS und Java >= 9 (context.destroy() in JoglPipeline.java crasht).
+			 * Nachteil: Auch nach dem Schließen der Welt wird diese noch angezeigt, bis eine Neue geladen wurde.
+			 */
+	    	if (universe != null) {
+	    		universe.cleanup();
+	    	}
+			/* remove all Java3D Canvas components */
+			while (getComponentCount() > 1) {
+				remove(1);
+			}
 		}
 		universe = null;
 		onScreenCanvas = null;
