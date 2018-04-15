@@ -78,7 +78,7 @@ public class ContestConductorTest {
 		 * @see ctSim.view.contestConductor.ContestConductor.ContestJudge#isSimulationFinished()
 		 */
 		@Override
-        public boolean isSimulationFinished() {
+		public boolean isSimulationFinished() {
 			concon.lg.fine("ContestJudge-Attrappe: Bot 1 gewinnt, " +
 					"beende Spiel");
             try {

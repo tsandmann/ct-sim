@@ -109,7 +109,7 @@ public class Main {
 				e.printStackTrace();
 				/* Programm erst nach Klick auf Splash schließen */
 				MouseAdapter disposeOnClick = new MouseAdapter() {
-				    @Override
+					@Override
 					public void mouseClicked(MouseEvent evt) {
 				    	System.exit(1);
 				    }

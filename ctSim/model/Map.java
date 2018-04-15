@@ -356,7 +356,6 @@ public class Map {
 			public boolean accept(File f) {
 				return (f.isDirectory() || f.getName().endsWith(".map"));
 			}
-
 			@Override
 			public String getDescription() {
 				return "Map-Dateien (*.map)";

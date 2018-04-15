@@ -298,7 +298,6 @@ public class MainWinMenuBar extends JMenuBar {
 					return (f.isDirectory() || f.getName().endsWith(".exe")
 							|| f.getName().endsWith(".elf") || f.getName().lastIndexOf('.') == -1);
 				}
-
 				@Override
 				public String getDescription() {
 					return "Bot-Controller (*.exe, *.elf)";
@@ -540,7 +539,6 @@ public class MainWinMenuBar extends JMenuBar {
 				public boolean accept(File f) {
 					return (f.isDirectory() || f.getName().endsWith(".xml"));
 				}
-
 				@Override
 				public String getDescription() {
 					return "Parcours-Dateien (*.xml)";

@@ -83,7 +83,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 		public LoggingHandler() {
 			setFormatter(new Formatter() {
 				@Override
-                public String format(LogRecord r) {
+				public String format(LogRecord r) {
 					String lvl = r.getLevel().getLocalizedName();
 	                return String.format("[%1$tk:%1$tM:%tS] %s%s: %s\n", 
 	                		r.getMillis(), 

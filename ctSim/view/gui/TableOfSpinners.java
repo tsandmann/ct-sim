@@ -106,15 +106,15 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
     		super(0, 2);
     	}
 
-		/**
-		 * @see javax.swing.table.DefaultTableModel#isCellEditable(int, int)
-		 */
-		@Override
+    	/**
+    	 * @see javax.swing.table.DefaultTableModel#isCellEditable(int, int)
+    	 */
+    	@Override
     	public boolean isCellEditable(int row, int column) {
-			if (column == 0)
-				return false;
-			else
-				return ((JSpinner)getValueAt(row, column)).isEnabled();
+    		if (column == 0)
+    			return false;
+    		else
+    			return ((JSpinner)getValueAt(row, column)).isEnabled();
     	}
 
 		/**
@@ -179,13 +179,13 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
     /** Modell */
     protected BotComponentTableModel model = new BotComponentTableModel();
 
-    /**
-     * @see ctSim.view.gui.GuiBotBuisitor#shouldBeDisplayed()
-     */
-    @Override
-    public boolean shouldBeDisplayed() {
-    	return model.getRowCount() > 0;
-    }
+	/**
+	 * @see ctSim.view.gui.GuiBotBuisitor#shouldBeDisplayed()
+	 */
+	@Override
+	public boolean shouldBeDisplayed() {
+		return model.getRowCount() > 0;
+	}
 
     /**
      * Tabellen für Komponenten
@@ -214,27 +214,24 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		 * Scrollbalken erscheint. -> Loesung: Insets dazurechnen.
 		 */
         add(new JScrollPane(t) {
-			private static final long serialVersionUID = 6362442061290466520L;
-
-			@Override
+        	private static final long serialVersionUID = 6362442061290466520L;
+        	@Override
         	public Dimension getMinimumSize() {
         		return t.getMinimumSize();
         	}
-
         	@Override
         	public Dimension getPreferredSize() {
         		Insets i = getInsets();
         		return new Dimension(
-        			t.getPreferredSize().width  + i.left + i.right,
-        			t.getPreferredSize().height + i.top  + i.bottom);
+        				t.getPreferredSize().width  + i.left + i.right,
+        				t.getPreferredSize().height + i.top  + i.bottom);
         	}
-
         	@Override
         	public Dimension getMaximumSize() {
         		return t.getMaximumSize();
         	}
         });
-    }
+	}
 
     /**
      * @return Panel-Titel

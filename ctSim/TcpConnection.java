@@ -85,7 +85,8 @@ public class TcpConnection extends Connection {
 	/**
 	 * @see ctSim.Connection#getShortName()
 	 */
-	@Override public String getShortName() { return "TCP"; }
+	@Override
+	public String getShortName() { return "TCP"; }
 
 	/**
 	 * Beginnt zu lauschen

@@ -106,7 +106,6 @@ public class ComConnection extends Connection {
 			public int getListeningEvents() { 
 				return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
 			}
-			
 			@Override
 			public void serialEvent(SerialPortEvent evt) {
 				if (evt.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
@@ -159,7 +158,7 @@ public class ComConnection extends Connection {
 	 * Gibt den Namen des Ports unserer Connection zurück
 	 * @return	Name 
 	 */
-	@Override 
+	@Override
 	public String getName() {
 		return port.getDescriptivePortName(); 
 	}
@@ -168,7 +167,7 @@ public class ComConnection extends Connection {
 	 * Gibt den Kurznamen unserer Connection zurück
 	 * @return	"USB"
 	 */
-	@Override 
+	@Override
 	public String getShortName() { 
 		return "USB"; 
 	}
