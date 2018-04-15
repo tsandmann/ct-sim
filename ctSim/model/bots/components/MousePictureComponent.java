@@ -224,7 +224,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */
-	@Override public String getName() { return "Mausbild"; }
+	@Override
+	public String getName() { return "Mausbild"; }
 
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()

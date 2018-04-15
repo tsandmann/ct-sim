@@ -78,16 +78,16 @@ public class ScreenshotUploadTool {
 
         Main.dependencies.reRegisterInstance(ContestDatabase.class,
             new ContestDatabase() {
-            @Override
-            public Connection getConnection() {
-            	try {
-	                Class.forName("com.mysql.jdbc.Driver");
-	                return DriverManager.getConnection(
-	                    url, user, pw);
-            	} catch (Exception e) {
-            		throw new RuntimeException(e);
-            	}
-            }
+        	@Override
+        	public Connection getConnection() {
+        		try {
+        			Class.forName("com.mysql.jdbc.Driver");
+        			return DriverManager.getConnection(
+        				url, user, pw);
+        		} catch (Exception e) {
+        			throw new RuntimeException(e);
+        		}
+        	}
         });
 
         DatabaseAdapter da = (DatabaseAdapter)Main.dependencies.

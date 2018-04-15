@@ -146,7 +146,7 @@ public class SpreadingTree<T> {
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-    public String toString() {
+	public String toString() {
 	    return payload == null ? "?" : ""+payload;
     }
 }
