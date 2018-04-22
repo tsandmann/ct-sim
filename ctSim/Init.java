@@ -23,9 +23,7 @@ import javax.swing.UIManager;
 
 import ctSim.util.FmtLogger;
 
-/**
- * Initialisierungen für ct-Sim
- */
+/** Initialisierungen für ct-Sim */
 public class Init {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.controller.Init");

@@ -157,7 +157,7 @@ public class ComConnection extends Connection {
 	/**
 	 * Gibt den Namen des Ports unserer Connection zurück
 	 * 
-	 * @return	Name 
+	 * @return Name 
 	 */
 	@Override
 	public String getName() {
@@ -167,7 +167,7 @@ public class ComConnection extends Connection {
 	/**
 	 * Gibt den Kurznamen unserer Connection zurück
 	 * 
-	 * @return	"USB"
+	 * @return "USB"
 	 */
 	@Override
 	public String getShortName() { 
@@ -189,7 +189,7 @@ public class ComConnection extends Connection {
 	 * Überschreibt die entsprechende Methode von Connection,
 	 * weil hier ein paar Sondersachen dazukommen
 	 * 
-	 * @param c Kommando
+	 * @param c	Kommando
 	 * @return Bot
 	 * @throws ProtocolException
 	 */
@@ -237,7 +237,7 @@ public class ComConnection extends Connection {
 	/**
 	 * Neuer Thread
 	 * 
-	 * @param receiver Bot-Receiver
+	 * @param receiver	Bot-Receiver
 	 */
 	private static void spawnThread(BotReceiver receiver) {
 		new ComListenerThread(receiver).start();

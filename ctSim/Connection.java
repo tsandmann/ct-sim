@@ -104,7 +104,7 @@ public abstract class Connection {
 	/**
 	 * Liefert den Cmd-Stream
 	 * 
-	 * @return	der CommandOutputStream
+	 * @return der CommandOutputStream
 	 */
 	public synchronized CommandOutputStream getCmdOutStream() {
 		assert cmdOutStream != null;
@@ -124,7 +124,7 @@ public abstract class Connection {
 	/** 
 	 * Muss während der Konstruktion aufgerufen werden...
 	 * 
-	 * @param is InputStream
+	 * @param is	InputStream
 	 */
 	protected void setInputStream(InputStream is) {
 		input = new DataInputStream(new BufferedInputStream(is));
@@ -133,7 +133,7 @@ public abstract class Connection {
 	/**
 	 * Muss während der Konstruktion aufgerufen werden...
 	 * 
-	 * @param os OutputStream
+	 * @param os	OutputStream
 	 */
 	protected void setOutputStream(OutputStream os) {
 		output = new DataOutputStream(os);
@@ -143,14 +143,14 @@ public abstract class Connection {
 	/**
 	 * Gibt den Kurznamen der Connection zurück
 	 * 
-	 * @return	Name
+	 * @return Name
 	 */
 	public abstract String getShortName();
 
 	/**
 	 * Gibt den Namen der Connection zurück
 	 * 
-	 * @return	Name
+	 * @return Name
 	 */
 	public abstract String getName();
 	
@@ -158,7 +158,7 @@ public abstract class Connection {
 	 * Blockiert, bis Handshake erfolgreich oder IOException
 	 * Abbruch nach 100 Versuchen
 	 * 
-	 * @param receiver Bot-Receiver
+	 * @param receiver	Bot-Receiver
 	 */
 	protected void doHandshake(BotReceiver receiver) {
 		for (int i = 0; i < 1000; i++) {
@@ -195,7 +195,7 @@ public abstract class Connection {
 	/**
 	 * Erzeugt einen Bot
 	 * 
-	 * @param c Kommando
+	 * @param c	Kommando
 	 * @return Bot
 	 * @throws ProtocolException
 	 */

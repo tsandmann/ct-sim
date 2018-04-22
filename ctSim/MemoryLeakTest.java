@@ -18,6 +18,7 @@
  */
 
 package ctSim;
+
 import java.io.File;
 
 import ctSim.controller.Controller;
@@ -40,9 +41,7 @@ public class MemoryLeakTest {
 		Main.main();
 	}
 
-	/**
-	 * Testklasse
-	 */
+	/** Testklasse */
 	public static class TestController extends DefaultController {
 		/**
 		 * @see ctSim.controller.DefaultController#onApplicationInited()
