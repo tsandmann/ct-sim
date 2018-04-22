@@ -18,6 +18,7 @@
  */
 
 package ctSim;
+
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.net.ServerSocket;
@@ -40,6 +41,7 @@ import ctSim.model.Command;
 public class SimBotTcpDump {
 	/**
 	 * main
+	 * 
 	 * @param args
 	 * @throws Exception
 	 */
@@ -66,9 +68,7 @@ public class SimBotTcpDump {
 		}
 	}
 
-	/**
-	 * Forwarder-Thread
-	 */
+	/** Forwarder-Thread */
 	static class Forwarder extends Thread {
 		/** Quelle */
 		TcpConnection from;
@@ -81,6 +81,7 @@ public class SimBotTcpDump {
 
 		/**
 		 * Forwarder
+		 * 
 		 * @param name
 		 * @param from
 		 * @param to
