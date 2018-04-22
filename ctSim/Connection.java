@@ -79,7 +79,7 @@ public abstract class Connection {
 	private CommandOutputStream cmdOutStream = null;
 
 	/**
-	 * Beendet die laufende Verbindung.
+	 * Beendet die laufende Verbindung
 	 *
 	 * @throws IOException
 	 */
@@ -91,7 +91,7 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Überträgt ein Kommando.
+	 * Überträgt ein Kommando
 	 * 
 	 * @param c	das Kommando
 	 * @throws IOException
@@ -102,7 +102,7 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Liefert den Cmd-Stream.
+	 * Liefert den Cmd-Stream
 	 * 
 	 * @return	der CommandOutputStream
 	 */
@@ -112,7 +112,7 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Liest Daten aus dem InputStream.
+	 * Liest Daten aus dem InputStream
 	 * 
 	 * @param b	Daten
 	 * @throws IOException
@@ -122,7 +122,7 @@ public abstract class Connection {
 	}
 
 	/** 
-	 * Muss während Konstruktion aufgerufen werden.
+	 * Muss während der Konstruktion aufgerufen werden...
 	 * 
 	 * @param is InputStream
 	 */
@@ -131,7 +131,7 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Muss während Konstruktion aufgerufen werden.
+	 * Muss während der Konstruktion aufgerufen werden...
 	 * 
 	 * @param os OutputStream
 	 */
@@ -141,14 +141,14 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Gibt den Kurznamen der Connection zurück.
+	 * Gibt den Kurznamen der Connection zurück
 	 * 
 	 * @return	Name
 	 */
 	public abstract String getShortName();
 
 	/**
-	 * Gibt den Namen der Connection zurück.
+	 * Gibt den Namen der Connection zurück
 	 * 
 	 * @return	Name
 	 */
@@ -156,7 +156,7 @@ public abstract class Connection {
 	
 	/**
 	 * Blockiert, bis Handshake erfolgreich oder IOException
-	 * Abbruch nach 100 Versuchen.
+	 * Abbruch nach 100 Versuchen
 	 * 
 	 * @param receiver Bot-Receiver
 	 */
@@ -193,7 +193,7 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Erzeugt einen Bot.
+	 * Erzeugt einen Bot
 	 * 
 	 * @param c Kommando
 	 * @return Bot

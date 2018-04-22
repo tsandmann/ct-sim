@@ -111,7 +111,7 @@ public class Parcours {
 	final private ParcoursLoader parcoursLoader;
 
 	/**
-	 * Erzeugt einen neuen, leeren Parcours.
+	 * Erzeugt einen neuen, leeren Parcours
 	 * 
 	 * @param parcoursLoader ParcoursLoader, der den Parcours erzeugt hat
 	 */
@@ -146,7 +146,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Setzt ein Startfeld auf belegt.
+	 * Setzt ein Startfeld auf belegt
 	 * 
 	 * @param bot
 	 *            Zeiger auf Bot, der das Startfeld belegt
@@ -161,7 +161,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Gibt ein Startfeld wieder frei.
+	 * Gibt ein Startfeld wieder frei
 	 * 
 	 * @param bot
 	 *            Zeiger auf Bot, der auf dem Startfeld steht oder gestartet ist
@@ -183,7 +183,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Setzt die Parcoursbreite in Gittereinheiten.
+	 * Setzt die Parcoursbreite in Gittereinheiten
 	 * 
 	 * @param dimX1
 	 *            Breite in Gittereinheiten
@@ -216,7 +216,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Setzt die Parcourshöhe in Gittereinheiten.
+	 * Setzt die Parcourshöhe in Gittereinheiten
 	 * 
 	 * @param dimY1
 	 *            Höhe in Gittereinheiten
@@ -226,7 +226,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fügt ein Hindernis ein.
+	 * Fügt ein Hindernis ein
 	 * 
 	 * @param obstacle
 	 *            Das Hindernis
@@ -240,7 +240,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fügt ein Hindernis ein.
+	 * Fügt ein Hindernis ein
 	 * 
 	 * @param obstacle
 	 *            Das Hindernis
@@ -256,7 +256,7 @@ public class Parcours {
 	}
 	
 	/**
-	 * Fügt ein bewegliches Hindernis ein.
+	 * Fügt ein bewegliches Hindernis ein
 	 * 
 	 * @param obstacle
 	 *            Das Hindernis
@@ -274,7 +274,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fügt ein Stück Boden ein.
+	 * Fügt ein Stück Boden ein
 	 * 
 	 * @param floor
 	 *            der Boden
@@ -290,7 +290,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fügt eine Node ein.
+	 * Fügt eine Node ein
 	 * 
 	 * @param node
 	 *            Die Node
@@ -322,7 +322,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fügt eine Node ein.
+	 * Fügt eine Node ein
 	 * 
 	 * @param node
 	 *            Die Node
@@ -338,7 +338,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fügt eine Darstellung der Lichtquelle ein.
+	 * Fügt eine Darstellung der Lichtquelle ein
 	 * 
 	 * @param light
 	 *            Die Lichtquelle
@@ -354,7 +354,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fügt eine Lichtquelle ein.
+	 * Fügt eine Lichtquelle ein
 	 * 
 	 * @param light
 	 *            Die Lichtquelle
@@ -364,7 +364,7 @@ public class Parcours {
 	}
 	
 	/**
-	 * Fügt eine Darstellung der Landmarke ein.
+	 * Fügt eine Darstellung der Landmarke ein
 	 * 
 	 * @param bps Die Landmarke
 	 * @param x   X-Achse im Parcours-Gitter
@@ -376,7 +376,7 @@ public class Parcours {
 	}
 	
 	/**
-	 * Fügt eine Landmarke für BPS ein.
+	 * Fügt eine Landmarke für BPS ein
 	 * 
 	 * @param bps Landmarke
 	 */
@@ -385,7 +385,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Erzeugt ein bewegliches Objekt.
+	 * Erzeugt ein bewegliches Objekt
 	 * 
 	 * @param x X-Koordinate
 	 * @param y Y-Koordinate
@@ -423,7 +423,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Legt die Startposition eines Bots fest.
+	 * Legt die Startposition eines Bots fest
 	 * 
 	 * @param bot
 	 *            Nummer des Bots (fängt bei 0 an zu zählen)
@@ -440,7 +440,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Legt die Startrichtung eines Bots fest.
+	 * Legt die Startrichtung eines Bots fest
 	 * 
 	 * @param bot
 	 *            Nummer des Bots (fängt bei 0 an zu zählen)
@@ -502,7 +502,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert die Nummer des Startfeldes zu einem Bot.
+	 * Liefert die Nummer des Startfeldes zu einem Bot
 	 * 
 	 * @param bot
 	 *            Referenz auf Bot
@@ -518,7 +518,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert die Startposition eines vorhandenen Bots.
+	 * Liefert die Startposition eines vorhandenen Bots
 	 * 
 	 * @param bot
 	 *            Bot-Nummer
@@ -547,7 +547,7 @@ public class Parcours {
 		if (bot < BOTS) {
 			pos = new Vector3d(startHeadings[bot][0], startHeadings[bot][1], 0.0f);
 		} else {
-			// sonst leifer die Default-Richtung
+			// sonst liefere die Default-Richtung
 			pos = new Vector3d(startHeadings[0][0], startHeadings[0][1], 0.0f);
 		}
 
@@ -591,7 +591,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Prüft, ob ein Punkt innerhalb des Zielfeldes liegt.
+	 * Prüft, ob ein Punkt innerhalb des Zielfeldes liegt
 	 * 
 	 * @param pos
 	 * @return true, falls ja
@@ -611,7 +611,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Fügt ein Loch hinzu.
+	 * Fügt ein Loch hinzu
 	 * 
 	 * @param x
 	 * @param y
@@ -621,7 +621,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Prüft, ob ein Punkt über einem Loch liegt.
+	 * Prüft, ob ein Punkt über einem Loch liegt
 	 * 
 	 * @param pos
 	 * @return true, wenn der Bot über dem loch steht
@@ -648,7 +648,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Setzt eine Parcours-Map.
+	 * Setzt eine Parcours-Map
 	 * 
 	 * @param parcoursMap
 	 *            die neue Map
@@ -768,8 +768,8 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert die kuerzeste Distanz von einem gegebenen Punkt (in
-	 * Gitterkoordinaten) zum Ziel.
+	 * Liefert die kürzeste Distanz von einem gegebenen Punkt (in
+	 * Gitterkoordinaten) zum Ziel
 	 * 
 	 * @param from
 	 *            Startpunkt in Weltkoordinaten
@@ -788,7 +788,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert den kürzesten Pfad von einem bestimmten Punkt aus zum Ziel.
+	 * Liefert den kürzesten Pfad von einem bestimmten Punkt aus zum Ziel
 	 * 
 	 * @param from
 	 *            Startpunkt in weltkoordinaten
@@ -799,7 +799,7 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert den kürzesten Pfad von einem bestimmten Punkt aus zum Ziel.
+	 * Liefert den kürzesten Pfad von einem bestimmten Punkt aus zum Ziel
 	 * 
 	 * @param from
 	 *            Startpunkt in weltkoordinaten
@@ -839,7 +839,7 @@ public class Parcours {
 	}
 	
 	/** 
-	 * Rechnet eine Block-Koordinate in eine Welt-Koordinate um.
+	 * Rechnet eine Block-Koordinate in eine Welt-Koordinate um
 	 * 
 	 * @param koord Block-Koordinate
 	 * @return Welt-Koordinate [mm]
@@ -863,7 +863,7 @@ public class Parcours {
 	}
 	
 	/**
-	 * Rechnet eine Welt-Koordinate in eine globale Position um.
+	 * Rechnet eine Welt-Koordinate in eine globale Position um
 	 * 
 	 * @param worldPos Welt-Position (wie von Java3D verwendet)
 	 * @return globale Position (wie zur Lokalisierung verwendet) / Blocks

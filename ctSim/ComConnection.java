@@ -39,7 +39,8 @@ import ctSim.util.SaferThread;
  * Bots). Der Treiber, den wir mit unserem USB-2-Bot-Adapter verwenden, emuliert
  * einen seriellen Anschluss. Dieser kann dann von dieser Klasse angesprochen
  * werden.
- * 
+ * </p>
+ * <p>
  * Die <a href="http://fazecast.github.io/jSerialComm/">jSerialComm-Dokumentation</a>
  * beschreibt die API, die in dieser Klasse verwendet wird ({@com.fazecast.jSerialComm.*}).
  * </p>
@@ -59,7 +60,7 @@ public class ComConnection extends Connection {
 	/**
 	 * Baut eine COM-Verbindung auf (d.h. i.d.R. zum USB-2-Bot-Adapter).
 	 * Verwendet die in der Konfigdatei angegebenen Werte.
-	 *
+	 * 
 	 * @throws CouldntOpenTheDamnThingException
 	 */
 	private ComConnection() throws CouldntOpenTheDamnThingException {
@@ -119,7 +120,7 @@ public class ComConnection extends Connection {
 	}
 
 	/**
-	 * Wartet, bis neue Daten eingetroffen sind.
+	 * Wartet, bis neue Daten eingetroffen sind
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -133,7 +134,7 @@ public class ComConnection extends Connection {
 	}
 
 	/**
-	 * Liest Daten aus einem Inputstream.
+	 * Liest Daten aus einem Inputstream
 	 * 
 	 * @throws IOException
 	 */
@@ -154,7 +155,7 @@ public class ComConnection extends Connection {
 	}
 
 	/**
-	 * Gibt den Namen des Ports unserer Connection zurück.
+	 * Gibt den Namen des Ports unserer Connection zurück
 	 * 
 	 * @return	Name 
 	 */
@@ -164,7 +165,7 @@ public class ComConnection extends Connection {
 	}
 
 	/**
-	 * Gibt den Kurznamen unserer Connection zurück.
+	 * Gibt den Kurznamen unserer Connection zurück
 	 * 
 	 * @return	"USB"
 	 */
@@ -213,7 +214,7 @@ public class ComConnection extends Connection {
 	}	
 	
 	/**
-	 * Startet das Lauschen für neue Bots.
+	 * Startet das Lauschen für neue Bots
 	 * 
 	 * @param receiver	BotReceiver für neuen Bot
 	 */
@@ -252,14 +253,14 @@ public class ComConnection extends Connection {
 		private static final long serialVersionUID = 4896454703538812700L;
 
 		/**
-		 * Erzeugt eine neue Exception.
+		 * Erzeugt eine neue Exception
 		 */
 		public CouldntOpenTheDamnThingException() {
 			super();
 		}
 
 		/**
-		 * Erzeugt eine neue Exception.
+		 * Erzeugt eine neue Exception
 		 * 
 		 * @param message	Text der Exception
 		 * @param cause		
@@ -269,7 +270,7 @@ public class ComConnection extends Connection {
 		}
 
 		/**
-		 * Erzeugt eine neue Exception.
+		 * Erzeugt eine neue Exception
 		 * 
 		 * @param message	Text der Exception
 		 */
@@ -278,7 +279,7 @@ public class ComConnection extends Connection {
 		}
 
 		/**
-		 * Erzeugt eine neue Exception.
+		 * Erzeugt eine neue Exception
 		 * 
 		 * @param cause
 		 */
@@ -293,7 +294,7 @@ public class ComConnection extends Connection {
 		private final BotReceiver botReceiver;
 		
 		/**
-		 * Erzeugt einen Thread, der auf COM-Connections lauscht
+		 * Erzeugt einen Thread, der auf COM-Connections lauscht.
 		 * 
 		 * @param receiver	BotReceiver für den neuen Bot
 		 */
