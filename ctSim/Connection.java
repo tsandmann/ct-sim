@@ -40,7 +40,7 @@ import ctSim.util.FmtLogger;
  * Repräsentiert eine Verbindung
  *
  * @author bbe (bbe@heise.de)
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public abstract class Connection {	
 	/** Logger */
@@ -70,7 +70,7 @@ public abstract class Connection {
 	/**
 	 * Hat keinen BufferedOutputStream, denn auf dem muss man (offenbar) immer
 	 * flush() aufrufen. Wir wissen jedoch nicht, wann die Leute, die uns
-	 * verwenden, flushen wollen &amp;ndash; daher müssen die das machen
+	 * verwenden, flushen wollen - daher müssen die das machen
 	 * mit dem BufferedOutputStream.
 	 */
 	private DataOutputStream output = null;
@@ -79,7 +79,7 @@ public abstract class Connection {
 	private CommandOutputStream cmdOutStream = null;
 
 	/**
-	 * Beendet die laufende Verbindung
+	 * Beendet die laufende Verbindung.
 	 *
 	 * @throws IOException
 	 */
@@ -91,7 +91,8 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Überträgt ein Kommando
+	 * Überträgt ein Kommando.
+	 * 
 	 * @param c	das Kommando
 	 * @throws IOException
 	 */
@@ -101,7 +102,8 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Liefert den Cmd-Stream
+	 * Liefert den Cmd-Stream.
+	 * 
 	 * @return	der CommandOutputStream
 	 */
 	public synchronized CommandOutputStream getCmdOutStream() {
@@ -110,7 +112,8 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Liest Daten aus dem InputStream
+	 * Liest Daten aus dem InputStream.
+	 * 
 	 * @param b	Daten
 	 * @throws IOException
 	 */
@@ -119,7 +122,8 @@ public abstract class Connection {
 	}
 
 	/** 
-	 * Muss während Konstruktion aufgerufen werden
+	 * Muss während Konstruktion aufgerufen werden.
+	 * 
 	 * @param is InputStream
 	 */
 	protected void setInputStream(InputStream is) {
@@ -127,7 +131,8 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Muss während Konstruktion aufgerufen werden
+	 * Muss während Konstruktion aufgerufen werden.
+	 * 
 	 * @param os OutputStream
 	 */
 	protected void setOutputStream(OutputStream os) {
@@ -136,20 +141,23 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Gibt den Kurznamen der Connection zurück
+	 * Gibt den Kurznamen der Connection zurück.
+	 * 
 	 * @return	Name
 	 */
 	public abstract String getShortName();
 
 	/**
-	 * Gibt den Namen der Connection zurück
+	 * Gibt den Namen der Connection zurück.
+	 * 
 	 * @return	Name
 	 */
 	public abstract String getName();
 	
 	/**
 	 * Blockiert, bis Handshake erfolgreich oder IOException
-	 * Abbruch nach 100 Versuchen 
+	 * Abbruch nach 100 Versuchen.
+	 * 
 	 * @param receiver Bot-Receiver
 	 */
 	protected void doHandshake(BotReceiver receiver) {
@@ -185,7 +193,8 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Erzeugt einen Bot
+	 * Erzeugt einen Bot.
+	 * 
 	 * @param c Kommando
 	 * @return Bot
 	 * @throws ProtocolException

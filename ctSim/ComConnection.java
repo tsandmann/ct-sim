@@ -39,18 +39,17 @@ import ctSim.util.SaferThread;
  * Bots). Der Treiber, den wir mit unserem USB-2-Bot-Adapter verwenden, emuliert
  * einen seriellen Anschluss. Dieser kann dann von dieser Klasse angesprochen
  * werden.
- * </p>
- * <p>
+ * 
  * Die <a href="http://fazecast.github.io/jSerialComm/">jSerialComm-Dokumentation</a>
  * beschreibt die API, die in dieser Klasse verwendet wird ({@com.fazecast.jSerialComm.*}).
  * </p>
  *
  * @author Maximilian Odendahl (maximilian.odendahl@rwth-aachen.de)
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  * @author Timo Sandmann
  */
 public class ComConnection extends Connection {
-	/** Input verfuegbar? */
+	/** Input verfügbar? */
 	protected boolean inputAvailable = false;
 	/** Mutex */
 	protected final Object inputAvailMutex = new Object();
@@ -97,9 +96,7 @@ public class ComConnection extends Connection {
 		});
 	}
 
-	/**
-	 * Registriert einen Listener
-	 */
+	/** Registriert einen Listener */
 	private void registerEventListener() {
 		class OurEventListener implements SerialPortDataListener {
 			@Override
@@ -109,7 +106,7 @@ public class ComConnection extends Connection {
 			@Override
 			public void serialEvent(SerialPortEvent evt) {
 				if (evt.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
-					// Es gibt was zu lesen
+					// Es gibt etwas zu lesen
 					synchronized (inputAvailMutex) {
 						inputAvailable = true;
 						inputAvailMutex.notify();
@@ -122,7 +119,8 @@ public class ComConnection extends Connection {
 	}
 
 	/**
-	 * Wartet, bis neue Daten eingetroffen sind
+	 * Wartet, bis neue Daten eingetroffen sind.
+	 * 
 	 * @throws InterruptedException
 	 */
 	public void blockUntilDataAvailable() throws InterruptedException {
@@ -135,7 +133,8 @@ public class ComConnection extends Connection {
 	}
 
 	/**
-	 * Liest Daten aus einem Inputstream
+	 * Liest Daten aus einem Inputstream.
+	 * 
 	 * @throws IOException
 	 */
 	@Override
@@ -146,7 +145,7 @@ public class ComConnection extends Connection {
 
 	/**
 	 * Tut nichts: ComConnection ist ein Singleton und soll nie geschlossen
-	 * werden. Wir verhindern durch den Override auch, dass die Vaterklasse was
+	 * werden. Wir verhindern durch den Override auch, dass die Vaterklasse etwas
 	 * schließt.
 	 */
 	@Override
@@ -155,7 +154,8 @@ public class ComConnection extends Connection {
 	}
 
 	/**
-	 * Gibt den Namen des Ports unserer Connection zurück
+	 * Gibt den Namen des Ports unserer Connection zurück.
+	 * 
 	 * @return	Name 
 	 */
 	@Override
@@ -164,7 +164,8 @@ public class ComConnection extends Connection {
 	}
 
 	/**
-	 * Gibt den Kurznamen unserer Connection zurück
+	 * Gibt den Kurznamen unserer Connection zurück.
+	 * 
 	 * @return	"USB"
 	 */
 	@Override
@@ -183,8 +184,10 @@ public class ComConnection extends Connection {
 	private static BotReceiver botReceiver = null; 
 	
 	/**
-	 * Erzeugt einen Bot
-	 * Überschreibt die entsprechende Methode von Connection, weil hier ein paar Sondersachen dazukommen
+	 * Erzeugt einen Bot.
+	 * Überschreibt die entsprechende Methode von Connection,
+	 * weil hier ein paar Sondersachen dazukommen
+	 * 
 	 * @param c Kommando
 	 * @return Bot
 	 * @throws ProtocolException
@@ -210,7 +213,8 @@ public class ComConnection extends Connection {
 	}	
 	
 	/**
-	 * Startet das Lauschen für neue Bots
+	 * Startet das Lauschen für neue Bots.
+	 * 
 	 * @param receiver	BotReceiver für neuen Bot
 	 */
 	public static void startListening(final BotReceiver receiver) {
@@ -231,6 +235,7 @@ public class ComConnection extends Connection {
 
 	/**
 	 * Neuer Thread
+	 * 
 	 * @param receiver Bot-Receiver
 	 */
 	private static void spawnThread(BotReceiver receiver) {
@@ -247,14 +252,15 @@ public class ComConnection extends Connection {
 		private static final long serialVersionUID = 4896454703538812700L;
 
 		/**
-		 * Erzeugt eine neue Exception
+		 * Erzeugt eine neue Exception.
 		 */
 		public CouldntOpenTheDamnThingException() {
 			super();
 		}
 
 		/**
-		 * Erzeugt eine neue Exception
+		 * Erzeugt eine neue Exception.
+		 * 
 		 * @param message	Text der Exception
 		 * @param cause		
 		 */
@@ -263,7 +269,8 @@ public class ComConnection extends Connection {
 		}
 
 		/**
-		 * Erzeugt eine neue Exception
+		 * Erzeugt eine neue Exception.
+		 * 
 		 * @param message	Text der Exception
 		 */
 		public CouldntOpenTheDamnThingException(String message) {
@@ -271,7 +278,8 @@ public class ComConnection extends Connection {
 		}
 
 		/**
-		 * Erzeugt eine neue Exception
+		 * Erzeugt eine neue Exception.
+		 * 
 		 * @param cause
 		 */
 		public CouldntOpenTheDamnThingException(Throwable cause) {
@@ -279,15 +287,14 @@ public class ComConnection extends Connection {
 		}
 	}
 	
-	/**
-	 * Thread, der die COM-Connection überwacht
-	 */
+	/** Thread, der die COM-Connection überwacht. */
 	static class ComListenerThread extends SaferThread {
 		/** Bot-Receiver */
 		private final BotReceiver botReceiver;
 		
 		/**
 		 * Erzeugt einen Thread, der auf COM-Connections lauscht
+		 * 
 		 * @param receiver	BotReceiver für den neuen Bot
 		 */
 		public ComListenerThread(BotReceiver receiver) {
@@ -297,6 +304,7 @@ public class ComConnection extends Connection {
 		
 		/**
 		 * work-Methode des Threads
+		 * 
 		 * @throws InterruptedException
 		 */
 		@Override
@@ -315,6 +323,7 @@ public class ComConnection extends Connection {
 //				}
 //			});
 //			botReceiver.onBotAppeared(b);
+
 			die();
 		}
 	}
