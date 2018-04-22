@@ -288,13 +288,13 @@ public class ComConnection extends Connection {
 		}
 	}
 	
-	/** Thread, der die COM-Connection überwacht. */
+	/** Thread, der die COM-Connection überwacht */
 	static class ComListenerThread extends SaferThread {
 		/** Bot-Receiver */
 		private final BotReceiver botReceiver;
 		
 		/**
-		 * Erzeugt einen Thread, der auf COM-Connections lauscht.
+		 * Erzeugt einen Thread, der auf COM-Connections lauscht
 		 * 
 		 * @param receiver	BotReceiver für den neuen Bot
 		 */

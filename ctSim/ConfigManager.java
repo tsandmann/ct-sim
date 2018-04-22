@@ -27,7 +27,7 @@ public class ConfigManager {
 	static FmtLogger lg = FmtLogger.getLogger("ctSim.ConfigManager");
 
 	/**
-	 * Wandelt einen Pfad mit Bot-Binary von Windows zu Linux.
+	 * Wandelt einen Pfad mit Bot-Binary von Windows zu Linux
 	 * 
 	 * @param in der Originalstring
 	 * @return der "Linux-String"
