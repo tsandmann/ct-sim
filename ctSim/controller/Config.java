@@ -45,19 +45,18 @@ import ctSim.util.xml.XmlDocument;
 
 /**
  * Managed die Konfiguration des ct-Sim
- * Theoretisch kann man mehr als einmal initialisieren (Konfig laden), aber das ist ungetestet
+ * Theoretisch kann man mehr als einmal initialisieren (Konfig laden), aber das ist ungetestet.
  */
 public class Config {
-	/**
-	 * für Dateien
-	 */
+	/** für Dateien */
 	public static class SourceFile extends File {
 		/** UID */
 		private static final long serialVersionUID = 3022935037996253818L;
 
 		/**
 		 * Neues Dateihandle
-		 * @param pathAndName Pfad
+		 * 
+		 * @param pathAndName	Pfad
 		 */
 		public SourceFile(String pathAndName) {
 			super(pathAndName);
@@ -78,7 +77,7 @@ public class Config {
 	static final String[] parameterFallbacks = {
 		"botport", "10001",
 		"judge", "ctSim.model.rules.DefaultJudge",
-		"worlddir", ".", //$$ besser dokumentieren in ct-sim.xml und Co.
+		"worlddir", ".", // TODO: besser dokumentieren in ct-sim.xml und Co.
 		"botdir", ".",
 		"useContestConductor", "false",
 		"contestBotTargetDir", "tmp",
@@ -103,7 +102,7 @@ public class Config {
 	};
 
 	/** <p>Enthält die Einzelparameter der Konfiguration (spiegelt also
-	 * die <code>&lt;parameter></code>-Tags wider)</p>
+	 * die <code><parameter></code>-Tags wider)</p>
 	 *
 	 * <p>Verwendung: Wird zunächst auf die Default-Werte gesetzt, die aus
 	 * dem hartkodierten Array <code>configDefaults</code> kommen. Beim
@@ -122,8 +121,8 @@ public class Config {
 	 * Lädt die <code>&lt;parameter></code>-Tags aus der
 	 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
 	 * {@link #getValue(String)} verfügbar.
-	 * @param file Konfigurationsdatei dem von "config/config.dtd"
-	 * vorgeschriebenen XML-Format.
+	 * 
+	 * @param file	Konfigurationsdatei dem von "config/config.dtd" vorgeschriebenen XML-Format.
 	 * @throws ParserConfigurationException
 	 * @throws IOException
 	 * @throws SAXException
@@ -143,7 +142,8 @@ public class Config {
 
 	/**
 	 * Lädt Icons
-	 * @param iconsBaseDirectory Verzeichnis
+	 * 
+	 * @param iconsBaseDirectory	Verzeichnis
 	 * @throws NullPointerException
 	 * @throws FileNotFoundException
 	 * @throws IllegalArgumentException
@@ -173,9 +173,9 @@ public class Config {
 	}
 
 	/**
-	 * @param botType	Bot-Typ
-	 * @param index		Bot-Nummer
-	 * @param appearanceType Appearance
+	 * @param botType			Bot-Typ
+	 * @param index				Bot-Nummer
+	 * @param appearanceType	Appearance
 	 * @return Farbe
 	 */
 	public static Color getBotColor(Class<?> botType, int index,
@@ -191,20 +191,18 @@ public class Config {
 		URL u = ClassLoader.getSystemResource("images/" + key+".gif");
 		// NullPointerException vermeiden
 		if (u == null)
-			return new ImageIcon(); // leeres Icon
+			return new ImageIcon();	// leeres Icon
 		else
 			return new ImageIcon(u);		
 	}
 
-	/**
-	 * HashMap für Plain-Parameter
-	 */
+	/** HashMap für Plain-Parameter */
 	static class PlainParameters extends HashMap<String, String> {
 		/** UID */
 		private static final long serialVersionUID = - 6931464910390788433L;
 
 		/**
-		 * Lädt die <code>&lt;parameter&gt;</code>-Tags aus der
+		 * Lädt die <code><parameter></code>-Tags aus der
 		 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
 		 * get(String) verfügbar.
 		 * @param doc Config-Dokument
@@ -239,17 +237,13 @@ public class Config {
 		}
 	}
 
-	/**
-	 * Hash-Map für Bot-Appearances
-	 */
+	/** Hash-Map für Bot-Appearances */
 	static class BotAppearances
 	extends HashMap<BotAppearances.AppearanceKey, List<Color>> {
 		/** UID */
 		private static final long serialVersionUID = 8690190797733423514L;
 
-		/**
-		 * Appearance-Key
-		 */
+		/** Appearance-Key */
 		class AppearanceKey {
 			/** Bot-Typ */
 			final Class<?> botType;
@@ -258,6 +252,7 @@ public class Config {
 
 			/**
 			 * Neue Appearance
+			 * 
 			 * @param botType			Bot-Typ
 			 * @param appearanceType	Appearance
 			 */
@@ -268,7 +263,8 @@ public class Config {
 			}
 
 			/**
-			 * Wichtig, weil wir's als Schlüssel in der Map verwenden
+			 * Wichtig, weil wir es als Schlüssel in der Map verwenden
+			 * 
 			 * @see java.lang.Object#equals(java.lang.Object)
 			 */
 			@Override
@@ -288,22 +284,24 @@ public class Config {
 			}
 
 			/**
-			 * Wichtig, weil wir's als Schlüssel in der Map verwenden
+			 * Wichtig, weil wir es als Schlüssel in der Map verwenden
 			 * Implementiert nach Josh Bloch: "Effective Java",
-			 * http://developer.java.sun.com/developer/Books/effectivejava/Chapter3.pdf
+			 * (http://developer.java.sun.com/developer/Books/effectivejava/Chapter3.pdf)
+			 * 
 			 * @see java.lang.Object#hashCode()
 			 */
 			@Override
 			public int hashCode() {
-				int rv = 17; // beliebiger Wert
-				rv = 37 * rv + hash(botType); // 37: ungerade Primzahl
+				int rv = 17;	// beliebiger Wert
+				rv = 37 * rv + hash(botType);	// 37: ungerade Primzahl
 				rv = 37 * rv + hash(appearanceType);
 				return rv;
 			}
 
 			/**
 			 * Hashwert des Objekts berechnen
-			 * @param o Objekt
+			 * 
+			 * @param o	Objekt
 			 * @return Hashwert
 			 */
 			private int hash(Object o) {
@@ -312,7 +310,7 @@ public class Config {
 		}
 
 		/**
-		 * @param d Document
+		 * @param d	Document
 		 */
 		BotAppearances(QueryableDocument d) {
 			try {
@@ -334,15 +332,16 @@ public class Config {
 					}
 				}
 			} catch (XPathExpressionException e) {
-				// Kann nur passieren, wenn einer was am Code ändert
+				// Kann nur passieren, wenn einer etwas am Code ändert
 				throw new AssertionError(e);
 			}
 		}
 
 		/**
 		 * Lädt Appearances
-		 * @param botTag Tag
-		 * @param botType Typ
+		 * 
+		 * @param botTag	Tag
+		 * @param botType	Typ
 		 * @throws XPathExpressionException
 		 */
 		private void loadAppearances(QueryableNode botTag, Class<?> botType)
@@ -356,7 +355,7 @@ public class Config {
 		}
 
 		/**
-		 * @param classNameFromXml Klasse als XML
+		 * @param classNameFromXml	Klasse als XML
 		 * @return Klasse
 		 * @throws ClassNotFoundException
 		 */
@@ -364,7 +363,7 @@ public class Config {
 		throws ClassNotFoundException {
 			// 1. Versuch
 			if ("default".equals(classNameFromXml))
-				return null; // Default-Wert wird mit null ausgedrückt
+				return null;	// Default-Wert wird mit null ausgedrückt
 
 			// 2. Versuch
 			try { return getClassTolerateNumber(classNameFromXml); }
@@ -381,9 +380,10 @@ public class Config {
 		}
 
 		// Das alte Format erlaubte z.B. "CtBotSimTcp_3";
-		// probieren wir's ohne Unterstrich und Nummer
+		// probieren wir es ohne Unterstrich und Nummer
+		
 		/**
-		 * @param classNameFromXml Klasse als XML
+		 * @param classNameFromXml	Klasse als XML
 		 * @return Klasse
 		 * @throws ClassNotFoundException
 		 */
@@ -394,13 +394,14 @@ public class Config {
 			catch (ClassNotFoundException e) { /* weitermachen */ }
 
 			// 2. Versuch: Ohne Anhängsel
-			return Class.forName(classNameFromXml.split("_")[0]); //$$ XML anpassen
+			return Class.forName(classNameFromXml.split("_")[0]);	// $$ XML anpassen
 		}
 
 		/**
-* Fügt eine Appearance hinzu
-		 * @param key Schlüssel
-		 * @param value Farbe
+		 * Fügt eine Appearance hinzu
+		 * 
+		 * @param key	Schlüssel
+		 * @param value	Farbe
 		 */
 		void add(AppearanceKey key, Color value) {
 			if (! containsKey(key))
@@ -419,9 +420,9 @@ public class Config {
 		 * <li>Index 4: Grün</li>
 		 * <li>usw. </li>
 		 * </ul>
-		 * @param botType Bot-Typ
-		 * @param appearanceType Appearance-Typ
-		 * @param index Nr
+		 * @param botType			Bot-Typ
+		 * @param appearanceType	Appearance-Typ
+		 * @param index				Nummer
 		 * @return Farbe
 		 */
 		Color get(Class<?> botType, String appearanceType, int index) {
@@ -448,9 +449,7 @@ public class Config {
 		}
 	}
 
-	/**
-	 *Parameter-Typen
-	 */
+	/** Parameter-Typen */
 	static class ParameterType {
 		/** Name */
 		final String name;
@@ -459,6 +458,7 @@ public class Config {
 
 		/**
 		 * Parameter-Typ
+		 * 
 		 * @param name	Name
 		 * @param type	Typ
 		 */
