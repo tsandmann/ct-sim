@@ -48,106 +48,88 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Hauptteil des Protokolls zwischen c't-Sim und Bot-Steuercode (sog.
- * <em>c't-Bot-Protokoll</em>). Eingesetzt wird diese Klasse vorwiegend in
- * zwei Fällen:
+ * Hauptteil des Protokolls zwischen c't-Sim und Bot-Steuercode (sog. <em>c't-Bot-Protokoll</em>).
+ * Eingesetzt wird diese Klasse vorwiegend in zwei Fällen:
  * <ol>
- * <li>Ein realer (in Hardware existierender) Bot, der per USB oder TCP
- * verbunden ist, sendet laufend Messwerte der Sensoren und andere
- * Statusinformationen. 12 Byte auf dem Draht stellen die Messwerte eines
- * Sensorpaars dar, z.B. linker und rechter Distanzsensor; die Aufgabe dieser
- * Klasse ist das Lesen und Repräsentieren dieser 12 Byte innerhalb des
- * Sim.</li>
- * <li>Ein simulierter Bot (Bot-Steuercode, auf einem PC läuft) bekommt
- * über seine TCP-Verbindung vom Sim Sensorwerte gefüttert. Der Sim
- * speichert die Werte in einem Command-Objekt, das er anschließend ins
- * TCP schreibt.</li>
+ * <li>Ein realer (in Hardware existierender) Bot, der per USB oder TCP verbunden ist, sendet laufend
+ * Messwerte der Sensoren und andere Statusinformationen. 12 Byte auf dem Draht stellen die Messwerte
+ * eines Sensorpaars dar, z.B. linker und rechter Distanzsensor; die Aufgabe dieser Klasse ist das
+ * Lesen und Repräsentieren dieser 12 Byte innerhalb des Sim.</li>
+ * <li>Ein simulierter Bot (Bot-Steuercode, auf einem PC läuft) bekommt über seine TCP-Verbindung
+ * vom Sim Sensorwerte gefüttert. Der Sim speichert die Werte in einem Command-Objekt, das er
+ * anschließend ins TCP schreibt.</li>
  * </ol>
  * </p>
  * <p>
  * Diese Klasse behandelt das Dekodieren eines Commands aus einem Haufen Bytes
- * (siehe {@linkplain #Command(Connection) Konstruktor}) und das Enkodieren
- * eines Commands (siehe {@link #getCommandBytes()}). Verwendet und
- * interpretiert werden die Commands in den Bot-Komponenten. Die betreffenden
- * Komponenten stehen in der {@linkplain Code Liste der Command-Codes}.
+ * (siehe {@linkplain #Command(Connection) Konstruktor}) und das Enkodieren eines Commands
+ * (siehe {@link #getCommandBytes()}). Verwendet und interpretiert werden die Commands in den
+ * Bot-Komponenten. Die betreffenden Komponenten stehen in der
+ * {@linkplain Code Liste der Command-Codes}.
  * </p>
  * <p>
- * <strong>Beispiel</strong> eines Command:
+ * <strong>Beispiel</strong> eines Commands:
  *
  * <pre>
- * Byte#         Wert            Bedeutung
+ * Byte#		Wert			Bedeutung
  * im TCP
- *   0           '&gt;' (Ascii 62)  Startcode, markiert Beginn des Command, ist
- *                               immer '&gt;'
- *   1           'H' (Ascii 72)  Command-Code, hier der für die
- *                               Helligkeitssensoren
- *   2 Bit 0     0               Richtungsangabe, 0 = Anfrage, 1 = Antwort. Ist
- *                               historisch und steht immer auf 0.
- *   2 Bits 1-7  'N' (Ascii 78)  Sub-Command-Code: Nur von einigen Command-Codes
- *                               verwendet, ist normalerweise N ("normal")
- *   3           0               Länge der Nutzlast in Byte, hier: keine
- *                               Nutzlast
- *   4           42              Datenfeld "dataL" LSB: niederwertiges Byte des
- *                               Messwerts des linken Helligkeitssensors
- *   5           1               dataL MSB: höherwertiges Byte des Messwerts
- *   6           37              dataR LSB: niederwertiges Byte rechter
- *                               Helligkeitssensor
- *   7           0               dataR MSB: zugehöriges höherwertiges Byte
- *   8           61              Sequenznummer LSB, bei aufeinanderfolgenden
- *                               Commands erhöht sich die Sequenznummer immer
- *                               um eins
- *   9          0               Absender-Id des Paketes
- *  10          0               Empänger-Id des Paketes
- *  11           '&lt;' (Ascii 60)  CRC-Code, markiert Command-Ende, ist immer '&lt;'
- *                               (Name "CRC" irreführend)
- *  12 und folgende              Nutzlast falls vorhanden. Wird z.B. verwendet,
- *                               wenn der Bot den Inhalt des LCD überträgt oder
- *                               die Bilddaten, was der Maussensor sieht
+ * 	0			'>' (Ascii 62)	Startcode, markiert Beginn des Command, ist immer '>'
+ * 	1			'H' (Ascii 72)	Command-Code, hier der für die Helligkeitssensoren
+ * 	2 Bit 0	0					Richtungsangabe, 0 = Anfrage, 1 = Antwort.
+ * 								Ist historisch und steht immer auf 0.
+ * 	2 Bits 1-7	'N' (Ascii 78)  Sub-Command-Code: Nur von einigen Command-Codes verwendet,
+ * 								ist normalerweise N ("normal").
+ * 	3			0				Länge der Nutzlast in Byte, hier: keine Nutzlast
+ * 	4			42				Datenfeld "dataL" LSB: niederwertiges Byte des
+ * 								Messwerts des linken Helligkeitssensors
+ * 	5			1				dataL MSB: höherwertiges Byte des Messwerts
+ * 	6			37				dataR LSB: niederwertiges Byte rechter Helligkeitssensor
+ * 	7			0				dataR MSB: zugehöriges höherwertiges Byte
+ * 	8			61				Sequenznummer LSB, bei aufeinanderfolgenden Commands
+ * 								erhöht sich die Sequenznummer immer um eins
+ * 	9			0               Absender-Id des Paketes
+ * 	10          0               Empänger-Id des Paketes
+ *  11			'<' (Ascii 60)	CRC-Code, markiert Command-Ende, ist immer '<' (Name "CRC" irreführend)
+ * 	12 und folgende				Nutzlast falls vorhanden. Wird z.B. verwendet, wenn der Bot den Inhalt
+ * 								des LCD überträgt oder die Bilddaten, von dem was der Maussensor sieht
  * </pre>
  *
  * </p>
  * <p>
- * Für einen <strong>realen Bot</strong> besteht das Protokoll aus
- * folgenden Regeln:
+ * Für einen <strong>realen Bot</strong> besteht das Protokoll aus folgenden Regeln:
  * <ul>
  * <li>Der Bot-Steuercode sendet laufend Commands mit Sensor-Messwerten und
  * anderen Statusinformationen, die der Sim auswertet und dem Benutzer anzeigt.
- * Welche einzelnen Commands behandelt werden, und wie sie im Detail
- * interpretiert werden, ist Sache der Bot-Komponenten wie in der
- * {@linkplain Code Command-Code-Liste} beschrieben. </li>
- * <li>Beim Start des Sim überträgt er ein Command mit dem
- * Command-Code {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
+ * Welche einzelnen Commands behandelt werden, und wie sie im Detail interpretiert
+ * werden, ist Sache der Bot-Komponenten wie in der {@linkplain Code Command-Code-Liste}
+ * beschrieben. </li>
+ * <li>Beim Start des Sim überträgt er ein Command mit dem Command-Code
+ * {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * Der Bot antwortet mit einem Command, das ihn als realen Bot ausweist
- * (Command-Code WELCOME, Sub-Command-Code
- * {@link Command.SubCode#WELCOME_REAL WELCOME_REAL}). Falls der Bot schon läuft,
- * wenn der Sim die Verbindung aufbaut, sendet der Sim trotzdem ein
- * {@code WELCOME}; bei USB-Verbindungen (COM-Verbindungen) schickt der Sim
- * kein {@code WELCOME}, da von vornherein klar ist, dass es ein Real-Bot sein
- * muss. Aus Sicht des Bot kann ein Handshake also jederzeit kommen oder
- * überhaupt nie.</li>
- * <li>Jederzeit während der Verbindung kann der Sim ein Command senden,
- * das das Bild anfordert, das der Maussensor auf der Botunterseite sieht
- * (Command-Code {@link Command.Code#SENS_MOUSE_PICTURE SENS_MOUSE_PICTURE}). Der Bot
- * beantwortet das mit einer Serie von Commands mit dem Aufbau, der in
- * {@link MousePictureComponent} beschrieben ist</li>
- * <li>Jederzeit während der Verbindung kann der Sim ein Command senden,
- * das einen Befehl der RC5-Fernbedienung repräsentiert (Command-Code
- * {@link Command.Code#SENS_RC5 SENS_RC5})</li>
+ * (Command-Code WELCOME, Sub-Command-Code {@link Command.SubCode#WELCOME_REAL WELCOME_REAL}) 
+ * Falls der Bot schon läuft, wenn der Sim die Verbindung aufbaut, sendet der Sim trotzdem ein
+ * {@code WELCOME}; bei USB-Verbindungen (COM-Verbindungen) schickt der Sim kein {@code WELCOME},
+ * da von vornherein klar ist, dass es ein Real-Bot sein muss.
+ * Aus Sicht des Bot kann ein Handshake also jederzeit kommen oder überhaupt nie.</li>
+ * <li>Jederzeit während der Verbindung kann der Sim ein Command senden, das das Bild anfordert,
+ * das der Maussensor auf der Botunterseite sieht (Command-Code
+ * {@link Command.Code#SENS_MOUSE_PICTURE SENS_MOUSE_PICTURE}).
+ * Der Bot beantwortet das mit einer Serie von Commands mit dem Aufbau, der in
+ * {@link MousePictureComponent} beschrieben ist.</li>
+ * <li>Jederzeit während der Verbindung kann der Sim ein Command senden, das einen Befehl der
+ * RC5-Fernbedienung repräsentiert (Command-Code {@link Command.Code#SENS_RC5 SENS_RC5})</li>
  * </ul>
  * </p>
  * <p>
  * Für einen <strong>simulierten Bot</strong> ist das Protokoll:
  * <ul>
- * <li>Der Sim lauscht auf dem TCP-Port, der in der Konfigdatei angegeben ist
- * (Parameter "botport").</li>
- * <li>Bot-Steuercode verbindet sich mit dem TCP-Port. Der Sim sendet ein
- * Command mit dem {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
- * Der Bot antwortet mit einem Command, das ihn als simulierten Bot ausweist
- * (Command-Code WELCOME, Sub-Command-Code
- * {@link Command.SubCode#WELCOME_SIM WELCOME_SIM}).</li>
- * <li>Der Sim sendet einen Block von Commands, die Sensorwerte beschreiben. Er
- * ist abgeschlossen mit einem Command, was den Command-Code
- * {@link Command.Code#DONE DONE} hat. Beispiel:
+ * <li>Der Sim lauscht auf dem TCP-Port, der in der Konfigdatei angegeben ist (Parameter "botport").</li>
+ * <li>Bot-Steuercode verbindet sich mit dem TCP-Port. Der Sim sendet ein Command mit dem
+ * {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
+ * Der Bot antwortet mit einem Command, das ihn als simulierten Bot ausweist (Command-Code WELCOME,
+ * Sub-Command-Code {@link Command.SubCode#WELCOME_SIM WELCOME_SIM}).</li>
+ * <li>Der Sim sendet einen Block von Commands, die Sensorwerte beschreiben. Er ist abgeschlossen mit
+ * einem Command, was den Command-Code {@link Command.Code#DONE DONE} hat. Beispiel:
  *
  * <pre>
  * Richtung  Command-Code         dataL dataR
@@ -164,16 +146,14 @@ import ctSim.util.Misc;
  * Sim->Bot: SENS_ENC             L   0 R   0 Payload=''
  * Sim->Bot: DONE                 L  30 R   0 Payload=''</pre>
  *
- * Wenn ein Bot andere Sensoren hätte als der normale c't-Bot, sähe
- * die Liste anders aus. Manche Sensoren senden nur, wenn sie etwas zu senden
- * haben (Beispiel für dieses Verhalten: SENS_MOUSE_PICTURE, also die
- * {@link MousePictureComponent}). Das DONE-Command enthält die aktuelle
- * Simulatorzeit in Millisekunden, falls der Bot zeitabhängige Sachen
- * rechnen will. </li>
- * <li>Der Bot berechnet auf Basis der simulierten Sensorwerte seine
- * nächsten Aktionen. Dann sendet er einen Block von Commands mit
- * Aktuatorwerten. Er ist abgeschlossen mit einem Command, was den Command-Code
- * {@link Command.Code#DONE DONE} hat. Beispiel:
+ * Wenn ein Bot andere Sensoren hätte als der normale c't-Bot, sähe die Liste anders aus.
+ * Manche Sensoren senden nur, wenn sie etwas zu senden haben (Beispiel für dieses Verhalten:
+ * SENS_MOUSE_PICTURE, also die {@link MousePictureComponent}).
+ * Das DONE-Command enthält die aktuelle Simulatorzeit in Millisekunden, falls der Bot
+ * zeitabhängige Sachen rechnen will. </li>
+ * <li>Der Bot berechnet auf Basis der simulierten Sensorwerte seine nächsten Aktionen.
+ * Dann sendet er einen Block von Commands mit Aktuatorwerten. Er ist abgeschlossen mit einem Command,
+ * was den Command-Code {@link Command.Code#DONE DONE} hat. Beispiel:
  *
  * <pre>
  * Richtung  CmdCode/SubCmdCode   dataL dataR
@@ -190,25 +170,22 @@ import ctSim.util.Misc;
  * Bot->Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='I=1005 M=00000 00000'
  * Bot->Sim: DONE                 L  30 R   0 Payload=''</pre>
  *
- * Das DONE-Command enthält zur Bestätigung die Simulatorzeit, die vom
- * c't-Sim zuletzt empfangen wurde. </li>
+ * Das DONE-Command enthält zur Bestätigung die Simulatorzeit, die vom c't-Sim zuletzt empfangen wurde.</li>
  * </li>
- * Falls der Sim vom Benutzer pausiert wird, kann beliebig viel Armbanduhrenzeit
- * zwischen einem Block und dem nächsten liegen. Die Simulatorzeit
- * (DONE-Command) wird davon jedoch nicht beeinflusst. Bot-Steuercode sollte
- * sich also auf die Simulatorzeit verlassen, nicht auf Armbanduhrenzeit.
+ * Falls der Sim vom Benutzer pausiert wird, kann beliebig viel Armbanduhrenzeit zwischen einem Block
+ * und dem nächsten liegen. Die Simulatorzeit (DONE-Command) wird davon jedoch nicht beeinflusst.
+ * Bot-Steuercode sollte sich also auf die Simulatorzeit verlassen, nicht auf Armbanduhrenzeit.
  * <li>
  * </ul>
  * </p>
  * <p>
- * Die Endianness auf dem Draht bei uns ist <a
- * href="http://de.wikipedia.org/wiki/Little_endian">Little-Endian</a>. Java
- * verwendet intern Big-Endian. Die Konvertierung erfolgt zu Fuß in dieser
- * Klasse.
+ * Die Endianness auf dem Draht bei uns ist
+ * <a href="http://de.wikipedia.org/wiki/Little_endian">Little-Endian</a>.
+ * Java verwendet intern Big-Endian. Die Konvertierung erfolgt zu Fuß in dieser Klasse.
  * </p>
  *
  * @author Benjamin Benz (bbe@heise.de)
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class Command {
 	/** Logger */
@@ -226,7 +203,7 @@ public class Command {
 	/** Direction Anfrage. Commands haben immer das hier gesetzt. */
 	public static final int DIR_REQUEST = 0;
 
-	/** Direction Antwort. Nicht verwendet. */
+	/** Direction Antwort (wird nicht verwendet) */
 	public static final int DIR_ANSWER = 1;
 	
 	/** Maximale Anzahl an Bytes, die als Payload mitgeschickt werden können */
@@ -238,16 +215,14 @@ public class Command {
 	/** Broadcast Adresse */
 	private static final BotID BROADCAST_ID = new BotID(0xFF);
 	
-	/**
-	 * Interface für Codes
-	 */
+	/** Interface für Codes */
 	public static interface BotCodes {
 		/**
 		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
 		 * SubCodes sind mit dem Code-Enum verkoppelt, da vom Code abhängt,
-		 * ob z.B. ein "R" auf dem Draht für den SubCode
-		 * WELCOME_REAL oder für RIGHT steht.
-		 * @param b Int
+		 * ob z.B. ein "R" auf dem Draht für den SubCode WELCOME_REAL oder für RIGHT steht.
+		 * 
+		 * @param b	Int
 		 * @return SubCude
 		 * @throws ProtocolException 
 		 */
@@ -261,24 +236,24 @@ public class Command {
 		
 		/**
 		 * Kommando-Code als String
+		 * 
 		 * @return Code des Kommandos
 		 */
 		public String toString();
 	}
 	
-	/**
-	 * Interface für Subcodes 
-	 */
+	/** Interface für Subcodes */
 	public static interface BotSubCodes {
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
-		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
-		 * wird ein 7 Bit langer unsigned Int zurückgegeben.
+		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher wird ein
+		 * 7 Bit langer unsigned Int zurückgegeben.
 		 */
 		public byte toUint7();
 		
 		/**
 		 * Subkommando-Code als String
+		 * 
 		 * @return Code des Subkommandos
 		 */
 		public String toString();
@@ -330,8 +305,7 @@ public class Command {
 		private byte codeOnTheWire;
 		
 		/**
-		 * @param code	Code des Kommandos als byte
-		 * (wird nicht weiter geprüft)
+		 * @param code	Code des Kommandos als byte (wird nicht weiter geprüft)
 		 */
 		public Bot2BotCode(byte code) {
 			codeOnTheWire = code;
@@ -339,7 +313,8 @@ public class Command {
 		
 		/**
 		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
-		 * @param b Subcode als int
+		 * 
+		 * @param b	Subcode als int
 		 * @return Bot2BotSubCode-Instanz
 		 * @throws ProtocolException 
 		 */
@@ -349,8 +324,8 @@ public class Command {
 		
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
-		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
-		 * wird ein 7 Bit langer unsigned Int zurückgegeben.
+		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher wird ein
+		 * 7 Bit langer unsigned Int zurückgegeben.
 		 */
 		public byte toUint7() { 
 			return codeOnTheWire; 
@@ -369,8 +344,8 @@ public class Command {
 	// Enum Command-Code
 	
 	/**
-	 * Ein Command-Code kann einen der Werte in diesem Enum haben. Der
-	 * Command-Code gibt den Typ des Commands an.
+	 * Ein Command-Code kann einen der Werte in diesem Enum haben.
+	 * Der Command-Code gibt den Typ des Commands an.
 	 */
 	public static enum Code implements BotCodes {
 		/** Zum Hallo-Sagen (Handshake); siehe {@link Command}. */
@@ -460,34 +435,29 @@ public class Command {
 			SubCode.REMOTE_CALL_ENTRY, SubCode.REMOTE_CALL_ORDER,
 			SubCode.REMOTE_CALL_DONE, SubCode.REMOTE_CALL_ABORT),
 			
-		/**
-		 * Map-Übertragung 
-		 */
+		/** Map-Übertragung */
 		MAP('Q', SubCode.MAP_DATA_1, SubCode.MAP_DATA_2, SubCode.MAP_DATA_3,
 				SubCode.MAP_DATA_4, SubCode.MAP_REQUEST, SubCode.MAP_LINE,
 				SubCode.MAP_CIRCLE,	SubCode.MAP_CLEAR_LINES, 
 				SubCode.MAP_CLEAR_CIRCLES, SubCode.MAP_REQUEST),
 
-		/**
-		 * Kommando zum Herunterfahren
-		 */
+		/** Kommando zum Herunterfahren */
 		SHUTDOWN('q', SubCode.NORM),		
 				
-		/**
-		 * Programmdaten (Basic oder ABL)
-		 */
+		/** Programmdaten (Basic oder ABL) */
 		PROGRAM('p', SubCode.PROGRAM_PREPARE, SubCode.PROGRAM_DATA, SubCode.PROGRAM_START, SubCode.PROGRAM_STOP);
 		
 		/** Code auf der Leitung */
 		private final byte onTheWire;
-		/** gueltige SubCodes */
+		/** gültige SubCodes */
 		private final SubCode[] validSubCodes;
 
 		/**
 		 * Konschtruktor; nicht aufrufbar; stattdessen {@link #fromByte(int)}
 		 * verwenden. Setzt die zugelassenen SubCodes für diese
 		 * Code-Instanz auf NORM und nichts sonst.
-		 * @param c Code
+		 * 
+		 * @param c	Code
 		 */
 		private Code(char c) {
 			this(c, SubCode.NORM);
@@ -498,7 +468,8 @@ public class Command {
 		 * Die Code-Instanz kennt ihre möglichen SubCodes, da etwa ein
 		 * SubCode "L" nach Code ACT_LCD was anderes heißt als
 		 * nach Code REMOTE_CALL. Das muss unterschieden werden können.
-		 * @param c Subcode
+		 * 
+		 * @param c	Subcode
 		 * @param validSubCodes Subcode-Instanz
 		 */
 		private Code(char c, SubCode... validSubCodes) {
@@ -510,14 +481,15 @@ public class Command {
 
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
-		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
-		 * wird ein 7 Bit langer unsigned Int zurückgegeben.
+		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher wird ein
+		 * 7 Bit langer unsigned Int zurückgegeben.
 		 */
 		public byte toUint7() { return onTheWire; }
 
 		/**
 		 * Erzeugt eine SubCode-Instanz. Akzeptiert ints aus Toleranz.
-		 * @param b Byte
+		 * 
+		 * @param b	Byte
 		 * @return SubCode
 		 *
 		 * @throws ProtocolException falls der Ascii-Wert von {@code b} keiner
@@ -535,9 +507,9 @@ public class Command {
 		/**
 		 * SubCodes werden erzeugt mit dieser Methode (und nur mit dieser).
 		 * SubCodes sind mit dem Code-Enum verkoppelt, da vom Code abhängt,
-		 * ob z.B. ein "R" auf dem Draht für den SubCode
-		 * WELCOME_REAL oder für RIGHT steht.
-		 * @param b Int
+		 * ob z.B. ein "R" auf dem Draht für den SubCode WELCOME_REAL oder für RIGHT steht.
+		 * 
+		 * @param b	Int
 		 * @return SubCude
 		 * @throws ProtocolException 
 		 */
@@ -552,12 +524,11 @@ public class Command {
 		}
 
 		/**
-		 * @param sc Subcode
+		 * @param sc	Subcode
 		 * @throws ProtocolException
 		 */
 		public void assertSubCodeValid(SubCode sc) throws ProtocolException {
-			// Wenn SubCode ungueltig, explodiert der folgende Aufruf mit einer
-			// ProtoExcp
+			// Wenn SubCode ungültig, explodiert der folgende Aufruf mit einer ProtoExcp
 			getSubCode(sc.toUint7());
 		}
 	}
@@ -583,16 +554,14 @@ public class Command {
 		LCD_CURSOR('C'),
 
 		/**
-		 * Subkommando für Handshake mit "Real-Bot", siehe
-		 * {@linkplain Command}.
+		 * Subkommando für Handshake mit "Real-Bot", siehe {@linkplain Command}.
 		 *
 		 * @see RealCtBot
 		 */
 		WELCOME_REAL('R'),
 
 		/**
-		 * Subkommando für Handshake mit "Sim-Bot", siehe
-		 * {@linkplain Command}.
+		 * Subkommando für Handshake mit "Sim-Bot", siehe {@linkplain Command}.
 		 *
 		 * @see SimulatedBot
 		 * @see CtBotSimTcp
@@ -617,8 +586,7 @@ public class Command {
 
 		/**
 		 * Signalisiert dem Sim, dass ein Remote-Call abgeschlossen wurde.
-		 * Ergebnis des Remote-Call steht in dataL (1 = geklappt, 0 = in die
-		 * Hose gegangen)
+		 * Ergebnis des Remote-Call steht in dataL (1 = geklappt, 0 = fehlgeschlagen)
 		 */
 		REMOTE_CALL_DONE('D'),
 
@@ -666,7 +634,9 @@ public class Command {
 		/** Fordert die komplette Map an */
 		MAP_REQUEST('R'),
 		
-		/** Überträgt die ersten 128 Byte der Map-Daten eines Blocks (vier Kommandos für einen kompletten Block nötig) */
+		/** Überträgt die ersten 128 Byte der Map-Daten eines Blocks
+		 * (vier Kommandos für einen kompletten Block nötig)
+		 * */
 		MAP_DATA_1('D'),
 		
 		/** Map-Daten Teil 2 (Byte 128 bis 255) */
@@ -697,7 +667,8 @@ public class Command {
 		/**
 		 * Konschtruktor; nicht aufrufbar; stattdessen {@link Command.Code#getSubCode(int)}
 		 * verwenden.
-		 * @param c Subcode
+		 * 
+		 * @param c	Subcode
 		 */
 		private SubCode(char c) {
 			if (c > 127)
@@ -707,8 +678,8 @@ public class Command {
 
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
-		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher
-		 * wird ein 7 Bit langer unsigned Int zurückgegeben.
+		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher wird ein
+		 * 7 Bit langer unsigned Int zurückgegeben.
 		 */
 		public byte toUint7() { 
 			return onTheWire; 
@@ -749,15 +720,15 @@ public class Command {
 	private final byte crc;
 
 	/**
-	 * Client-Code kann damit markieren, ob das Kommando verarbeitet ist oder
-	 * nicht. Gibt einen Getter und Setter dafür, sonst hat diese Klasse
-	 * damit nichts am Hut.
+	 * Client-Code kann damit markieren, ob das Kommando verarbeitet ist oder nicht.
+	 * Gibt einen Getter und Setter dafür, sonst hat diese Klasse damit nichts am Hut.
 	 */
 	private boolean hasBeenProcessed = false;
 
 	/** 
-	 * Erzeugt ein Kommando 
-	 * @param code des Kommandos 
+	 * Erzeugt ein Kommando
+	 * 
+	 * @param code	Code des Kommandos 
 	 */
 	public Command(Code code) {
 		this.commandCode = code;
@@ -770,9 +741,10 @@ public class Command {
 	/**
 	 * Wie {@link #Command(Connection, boolean)} mit
 	 * {@code suppressSyncWarnings == false} (dem Normalwert).
-	 * @param con Connection für das Kommando
-	 * @throws IOException 
-	 * @throws ProtocolException 
+	 * 
+	 * @param con	Connection für das Kommando
+	 * @throws IOException
+	 * @throws ProtocolException
 	 */
 	public Command(Connection con) throws IOException, ProtocolException {
 		this(con, false);
@@ -789,18 +761,18 @@ public class Command {
 	 * Normalbetrieb kommt sie nicht vor, da auf einen CRC-Code ohne weiteren
 	 * Zwischenkram der Startcode des nächsten Kommandos folgen muss.
 	 * </p>
-	 * @param con Connection für das Kommando
+	 * @param con	Connection für das Kommando
 	 *
-	 * @param suppressSyncWarnings Unterdrückt die "Synchronisierung
-	 * verloren"-Warnung (s.o.), d.h. gibt sie auf Log-Level {@code FINE}
-	 * aus statt auf {@code WARNING}. Das ist sinnvoll für den Handshake
-	 * mit einem realen Bot: Wenn der Bot schon Kommandos sendet, wenn der Sim
-	 * sich mit ihm verbindet, dann ist es leicht möglich, dass der Sim
-	 * mitten in einem Kommando dazukommt. In diesem Fall verwirrt die Meldung
-	 * mehr, als sie hilft.
-	 * @throws IOException Bei E/A-Fehler während dem Lesen
-	 * @throws ProtocolException Falls ein ungültiger CRC empfangen wird
-	 * oder die Direction nicht {@link #DIR_REQUEST} ist.
+	 * @param suppressSyncWarnings
+	 * Unterdrückt die "Synchronisierung verloren"-Warnung (s.o.), d.h. gibt sie auf Log-Level
+	 * {@code FINE} aus statt auf {@code WARNING}. Das ist sinnvoll für den Handshake mit einem
+	 * realen Bot: Wenn der Bot schon Kommandos sendet, wenn der Sim sich mit ihm verbindet,
+	 * dann ist es leicht möglich, dass der Sim mitten in einem Kommando dazukommt. In diesem Fall
+	 * verwirrt die Meldung mehr, als sie hilft.
+	 * 
+	 * @throws IOException	Bei E/A-Fehler während dem Lesen
+	 * @throws ProtocolException
+	 * Falls ein ungültiger CRC empfangen wird oder die Direction nicht {@link #DIR_REQUEST} ist.
 	 */
 	public Command(Connection con, boolean suppressSyncWarnings)
 	throws IOException, ProtocolException {
@@ -827,7 +799,7 @@ public class Command {
 		}
 
 		// Rest des Kommandos
-		b = new byte[COMMAND_SIZE - 1]; // -1: Startcode haben wir schon
+		b = new byte[COMMAND_SIZE - 1];	// -1: Startcode haben wir schon
 		con.read(b);
 
 		byte i =0;
@@ -852,11 +824,11 @@ public class Command {
 		i+=2;
 		
 		seq=b[i++];	// neue Version mit Adressen und kurzer seq
-		// alte version seq   = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) );	i++;
+//		seq = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) ); i++; // alte Version
 				
 		
 		from.set(b[i++]);	// neue Version mit Adressen
-		to.set(b[i++]); // neue Version mit Adressen		
+		to.set(b[i++]);	// neue Version mit Adressen		
 		
 		if (to.equals(Command.getSimId())) {
 			commandCode = Code.fromByte(code);
@@ -883,6 +855,7 @@ public class Command {
 	/**
 	 * {@code true}, falls dieses Kommando den Command-Code
 	 * {@code someCommandCode} hat. Andernfalls {@code false}.
+	 * 
 	 * @param someCommandCode 
 	 * @return true/false
 	 */
@@ -893,6 +866,7 @@ public class Command {
 	/**
 	 * {@code true}, falls dieses Kommando den Sub-Command-Code
 	 * {@code subCommandCode} hat. Andernfalls {@code false}.
+	 * 
 	 * @param subCode 
 	 * @return true/false
 	 */
@@ -922,7 +896,7 @@ public class Command {
 		data[i++] = (byte)(dataR & 255);
 		data[i++] = (byte)(dataR >> 8);
 		data[i++] = (byte)(seq & 255);
-	//	data[i++] = (byte)(seq >> 8); // alte Version mit 16-Bit seq
+//		data[i++] = (byte)(seq >> 8);	// alte Version mit 16-Bit seq
 		
 		// neue Version mit Sender-Ids
 		data[i++] = from.byteValue();
@@ -938,7 +912,8 @@ public class Command {
 	/**
 	 * Hilfsmethode: Liefert Char und Ascii-Code zu einem {@code char} oder nur
 	 * den Ascii-Code, falls es non-printable ist.
-	 * @param aChar Der char
+	 * 
+	 * @param aChar	Der char
 	 * @return Char- und ASCII-Code
 	 */
 	static String formatChar(int aChar) {
@@ -977,7 +952,8 @@ public class Command {
 	}
 
 	/** 
-	 * Liefert eine kompakte Stringrepräsentation des Command (1 Zeile) 
+	 * Liefert eine kompakte Stringrepräsentation des Command (1 Zeile)
+	 * 
 	 * @return String 
 	 */
 	public String toCompactString() {
@@ -990,7 +966,8 @@ public class Command {
 	}
 
 	/** 
-	 * Gibt die angehängten Nutzdaten zurück 
+	 * Gibt die angehängten Nutzdaten zurück
+	 * 
 	 * @return Payload als byte-Array 
 	 */
 	public byte[] getPayload() { return payload; }
@@ -998,6 +975,7 @@ public class Command {
 	/**
 	 * Gibt die Nutzdaten als String zurück, unter Verwendung des
 	 * Standard-Charset – siehe {@link String#String(byte[])}.
+	 * 
 	 * @return Payload als String
 	 */
 	public String getPayloadAsString() {
@@ -1008,7 +986,8 @@ public class Command {
 	 * Ersetzt jedes Steuerzeichen (Ascii 0 bis inkl. Ascii 31) durch einen
 	 * Punkt (.), so dass man den String gefahrlos ausgeben kann.
 	 * Ein Linefeed (0x0A) bleibt aber erhalten. 
-	 * @param s Input-String
+	 * 
+	 * @param s	Input-String
 	 * @return Output-String
 	 */
 	public static String replaceCtrlChars(String s) {
@@ -1022,10 +1001,11 @@ public class Command {
 	}
 
 	/**
-	 * Wenn man den Payload in einer Zeile anzeigen will: Ersetzt Newlines, so
-	 * dass der Benutzer keinen Zeilenwechsel sieht, sondern die zwei Zeichen
+	 * Wenn man den Payload in einer Zeile anzeigen will: Ersetzt Newlines,
+	 * sodass der Benutzer keinen Zeilenwechsel sieht, sondern die zwei Zeichen
 	 * "\n".
-	 * @param s Input-String
+	 * 
+	 * @param s	Input-String
 	 * @return Output-String
 	 */
 	public static String escapeNewlines(String s) {
@@ -1033,22 +1013,22 @@ public class Command {
 	}
 
 	/** 
-	 * @return Gibt das Datenfeld links ({@code dataL}) zurück 
+	 * @return Gibt das Datenfeld links ({@code dataL}) zurück
 	 */
 	public int getDataL() { return dataL; }
 
 	/** 
-	 * @return Gibt das Datenfeld rechts ({@code dataR}) zurück 
+	 * @return Gibt das Datenfeld rechts ({@code dataR}) zurück
 	 */
 	public int getDataR() { return dataR; }
 
 	/** 
-	 * @return Gibt die Richtung zurück 
+	 * @return Gibt die Richtung zurück
 	 */
 	public int getDirection() { return direction; }
 
 	/** 
-	 * @return Liefert die Kommando-Sequenznummer 
+	 * @return Liefert die Kommando-Sequenznummer
 	 */
 	public byte getSeq() { return seq; }
 
@@ -1058,7 +1038,7 @@ public class Command {
 	public boolean hasBeenProcessed() { return hasBeenProcessed; }
 
 	/** 
-	 * @return Gibt das Subkommando des Kommandos zurück 
+	 * @return Gibt das Subkommando des Kommandos zurück
 	 */
 	public SubCode getSubCode() {
 		if (subCommandCode instanceof SubCode) {
@@ -1070,19 +1050,22 @@ public class Command {
 	}
 
 	/** 
-	 * Setzt das Feld dataL 
+	 * Setzt das Feld dataL
+	 * 
 	 * @param dataL 
 	 */
 	public void setDataL(int dataL) { this.dataL = dataL; }
 
 	/** 
-	 * Setzt das Feld dataR 
+	 * Setzt das Feld dataR
+	 * 
 	 * @param dataR 
 	 */
 	public void setDataR(int dataR) { this.dataR = dataR; } 
 	
 	/** 
 	 * Setzt die Kommandosequenznummer
+	 * 
 	 * @param seq 
 	 */
 	public void setSeq(byte seq) { this.seq = seq; }
@@ -1090,7 +1073,8 @@ public class Command {
 	/**
 	 * Setzt den Sub-Command-Code. Nur sinnvoll für Commands, die der Sim
 	 * senden wird.
-	 * @param sc SubCode
+	 * 
+	 * @param sc	SubCode
 	 */
 	public void setSubCmdCode(SubCode sc) {
 		try {
@@ -1105,6 +1089,7 @@ public class Command {
 	/**
 	 * Setzt die Nutzlast, die an das Command angehängt ist. Nur sinnvoll
 	 * für Commands, die der Sim senden wird.
+	 * 
 	 * @param payload Payload als byte-Array
 	 */
 	public void setPayload(byte[] payload) {
@@ -1117,6 +1102,7 @@ public class Command {
 	 * Flag, ob dieses Kommando fertig verarbeitet ist. Nützlich, wenn ein
 	 * Kommando in der Gegend herumgereicht wird und am Schluss festgestellt
 	 * werden soll, ob jemand das jetzt interpretiert hat oder nicht.
+	 * 
 	 * @param hasBeenProcessed 
 	 */
 	public void setHasBeenProcessed(boolean hasBeenProcessed) {
@@ -1125,6 +1111,7 @@ public class Command {
 
 	/**
 	 * Liest den Absender des Paketes aus
+	 * 
 	 * @return Absender-Id
 	 */
 	public BotID getFrom() {
@@ -1133,7 +1120,8 @@ public class Command {
 
 	/**
 	 * Setzt den Absender
-	 * @param from Absender-ID
+	 * 
+	 * @param from	Absender-ID
 	 */
 	public void setFrom(BotID from) {
 		this.from = from;
@@ -1141,6 +1129,7 @@ public class Command {
 
 	/**
 	 * Liest die Empfänger-ID des Paketes aus
+	 * 
 	 * @return Empfänger-ID
 	 */
 	public BotID getTo() {
@@ -1149,7 +1138,8 @@ public class Command {
 
 	/** 
 	 * Setzt die Empfänger-ID
-	 * @param to Empfänger-ID
+	 * 
+	 * @param to	Empfänger-ID
 	 */
 	public void setTo(BotID to) {
 		this.to = to;

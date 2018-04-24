@@ -27,9 +27,7 @@ import java.util.Map;
 import ctSim.util.BotID;
 import ctSim.util.Misc;
 
-/**
- * Output-Stream für Kommandos
- */
+/** Output-Stream für Kommandos */
 public class CommandOutputStream {
 	/** Puffer */
 	private final Map<Command.Code, Command> buffer = Misc.newMap();
@@ -38,7 +36,7 @@ public class CommandOutputStream {
 	/** Sequenznummer */
 	private byte seq = 0;
 
-	/** An wen gehen all die schoenen Pakete? */
+	/** An wen gehen die Pakete? */
 	private BotID to = new BotID();
 	
 	/**
@@ -51,7 +49,7 @@ public class CommandOutputStream {
 	}
 
 	/**
-	 * @param c Command-Code
+	 * @param c	Command-Code
 	 * @return Command
 	 */
 	public synchronized Command getCommand(Command.Code c) {
@@ -62,7 +60,8 @@ public class CommandOutputStream {
 
 	/**
 	 * Schreibt ein Kommando, toleriert null schweigend
-	 * @param c Kommando
+	 * 
+	 * @param c	Kommando
 	 * @throws IOException 
 	 */
 	private synchronized void write(Command c) throws IOException {
@@ -75,14 +74,15 @@ public class CommandOutputStream {
 
 	/**
 	 * Reihenfolge wichtig, sonst kommt der Bot-Steuercode durcheinander 
-	 * 1. Alles ausser SENS_ERROR und DONE
+	 * 1. Alles außer SENS_ERROR und DONE
 	 * 2. SENS_ERROR
 	 * 3. DONE
+	 * 
 	 * @throws IOException
 	 */
 	public synchronized void flush() throws IOException {
-		Command error = buffer.remove(Command.Code.SENS_ERROR); // ist evtl null
-		Command done = buffer.remove(Command.Code.DONE); // ist evtl null
+		Command error = buffer.remove(Command.Code.SENS_ERROR);	// ist evtl null
+		Command done = buffer.remove(Command.Code.DONE);	// ist evtl null
 
 		for (Command c : buffer.values())
 			write(c);
@@ -94,7 +94,8 @@ public class CommandOutputStream {
 	}
 
 	/** 
-	 * Setzt den Empfänger all der schoenen Kommandos
+	 * Setzt den Empfänger aller Kommandos
+	 * 
 	 * @param to
 	 */
 	public void setTo(BotID to) {
@@ -102,7 +103,8 @@ public class CommandOutputStream {
 	}
 
 	/** 
-	 * Liefert den Empfänger all der schoenen Kommandos
+	 * Liefert den Empfänger aller Kommandos
+	 * 
 	 * @return Empfänger-Id
 	 */
 	public BotID getTo() {
