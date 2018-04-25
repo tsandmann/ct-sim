@@ -16,8 +16,8 @@
  * MA 02111-1307, USA.
  *
  */
-package ctSim.model.bots.components;
 
+package ctSim.model.bots.components;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -43,17 +43,15 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
 /**
- * Klasse, die nur als Container für innere Klassen dient und selber keine
- * Methoden oder Felder hat. (Für die winzigen inneren Klassen lohnt sich
- * keine eigene Datei.)
+ * Klasse, die nur als Container für innere Klassen dient und selber keine Methoden oder Felder hat.
+ * (Für die winzigen inneren Klassen lohnt sich keine eigene Datei.)
  *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class Actuators {
 	/**
-	 * Governor, der die Fahrgeschwindigkeit des Bot regelt (genauer: die
-	 * Drehgeschwindigkeit eines Rads; der c't-Bot hat daher einen linken und
-	 * einen rechten Governor).
+	 * Governor, der die Fahrgeschwindigkeit des Bot regelt (genauer: die Drehgeschwindigkeit eines
+	 * Rads; der c't-Bot hat daher einen linken und einen rechten Governor).
 	 */
 	public static class Governor extends NumberTwin implements SimpleActuator, CanRead {
 		/**
@@ -73,7 +71,7 @@ public class Actuators {
 		}
 		
 		/**
-		 * @param isLeft links?
+		 * @param isLeft	links?
 		 */
 		public Governor(boolean isLeft) {
 			super(isLeft); 
@@ -87,13 +85,13 @@ public class Actuators {
 		}
 	}
 
-	/**
-	 * Servor für Klappe
-	 */
+	/** Servo für Klappe */
 	public static class DoorServo extends NumberTwin implements SimpleActuator, CanRead {
+		
 		/**
-		 * Servor für Klappe
-		 * @param isLeft Servo 1 ("links") oder 2 ("rechts")?
+		 * Servo für Klappe
+		 * 
+		 * @param isLeft	Servo 1 ("links") oder 2 ("rechts")?
 		 */
 		public DoorServo(boolean isLeft) {
 			super(isLeft);
@@ -140,13 +138,14 @@ public class Actuators {
 		}
 	}
 	
-	/**
-	 * Servor für Kamera
+	/** Servo für Kamera
 	 */
 	public static class CamServo extends NumberTwin implements SimpleActuator, CanRead {
+		
 		/**
-		 * Servor für Kamera
-		 * @param isLeft Servo 1 ("links") oder 2 ("rechts")?
+		 * Servo für Kamera
+		 * 
+		 * @param isLeft	Servo 1 ("links") oder 2 ("rechts")?
 		 */
 		public CamServo(boolean isLeft) {
 			super(isLeft);
@@ -194,8 +193,8 @@ public class Actuators {
 	}
 
 	/**
-	 * Log eines Bot; hier werden die vom Bot geschickten Log-Ausgaben
-	 * (Textzeilen) gesammelt. Diese Bot-Komponente existiert nicht in Hardware.
+	 * Log eines Bot; hier werden die vom Bot geschickten Log-Ausgaben (Textzeilen) gesammelt.
+	 * Diese Bot-Komponente existiert nicht in Hardware.
 	 */
 	public static class Log extends BotComponent<PlainDocument> implements CanRead {
 		/** Internes Model */
@@ -236,14 +235,12 @@ public class Actuators {
 				}
 			} catch (BadLocationException e) {
 				// kann nur passieren wenn einer was am Code vermurkst;
-				// weiterwerfen zu Debugzwecken
+				// weiter werfen zu Debugzwecken
 				throw new AssertionError(e);
 			}
 		}
 		
-		/**
-		 * Logfenster
-		 */
+		/** Logfenster */
 		public Log() { 
 			super(new PlainDocument()); 
 		}
@@ -273,8 +270,9 @@ public class Actuators {
 	}
 	
 	/**
-	 * Programm-Komponente eines Bots. Kann Basic- und ABL-Programme aus Textdateien laden, in Textdateien
-	 * schreiben und zum simulierten oder echten Bot senden.
+	 * Programm-Komponente eines Bots. Kann Basic- und ABL-Programme aus Textdateien laden,
+	 * in Textdateien schreiben und zum simulierten oder echten Bot senden.
+	 * 
 	 * @author Timo Sandmann (mail@timosandmann.de)
 	 */
 	public static class Program extends BotComponent<PlainDocument> implements CanWriteAsynchronously {
@@ -295,9 +293,7 @@ public class Actuators {
 			// NOP
 		}
 
-		/**
-		 * Programm-Komponente eines Bots
-		 */
+		/** Programm-Komponente eines Bots */
 		public Program() { 
 			super(new PlainDocument()); 
 		}
@@ -334,6 +330,7 @@ public class Actuators {
 
 		/**
 		 * Sendet den Inhalt des Fensters als Programm zum Bot.
+		 * 
 		 * @param filename	Dateiname für das Programm
 		 * @param data		Das Programm
 		 * @param type		Typ, 0: Basic, 1: ABL
@@ -360,7 +357,7 @@ public class Actuators {
 			}
 			
 			lg.fine(" sende " + (length / SEND_SIZE) + " Bloecke von " + SEND_SIZE + " Byte");
-			/* SEND_SIZE Byte Bloecke */
+			/* SEND_SIZE Byte Blöcke */
 			byte[] bytes = new byte[SEND_SIZE];
 			int i;
 			for (i = 0; i < length / SEND_SIZE; ++i) {
@@ -399,6 +396,7 @@ public class Actuators {
 		
 		/**
 		 * Bereitet den Transfer eines Programms zum Bot vor.
+		 * 
 		 * @param s			OutputStream für die Daten
 		 * @param filename	Dateiname für das Programm
 		 * @param type		Typ, 0: Basic, 1: ABL
@@ -414,6 +412,7 @@ public class Actuators {
 		
 		/**
 		 * Sendet die Programmdaten zum Bot (in SEND_SIZE Byte großen Teilen)
+		 * 
 		 * @param s		OutputStream für die Daten
 		 * @param data	Programmdaten
 		 * @param type	Typ, 0: Basic, 1: ABL
@@ -429,7 +428,8 @@ public class Actuators {
 		
 		/**
 		 * Sendet das Kommando, um ein Programm auf dem Bot zu starten
-		 * @param type Typ des Programm; 0: Basic, 1: ABL
+		 * 
+		 * @param type	Typ des Programm; 0: Basic, 1: ABL
 		 */
 		public void startProgram(int type) {
 			switch (type) {
@@ -457,8 +457,9 @@ public class Actuators {
 		}
 		
 		/**
-		 * Bricht ein auf dem Bot laufendes Programm ab.
-		 * @param type Typ, 0: Basic, 1: ABL
+		 * Bricht ein auf dem Bot laufendes Programm ab
+		 * 
+		 * @param type	Typ, 0: Basic, 1: ABL
 		 */
 		public void stopProgram(int type) {			
 			lg.fine("breche Programm auf dem Bot ab");
@@ -480,28 +481,21 @@ public class Actuators {
 	 * </p>
 	 * <p>
 	 * <h3>{@link Command c't-Bot-Protokoll}</h3>
-	 * Das LCD lauscht auf Kommandos mit dem
-	 * {@linkplain Code#ACT_LCD Command-Code ACT_LCD}. Diese Kommandos
-	 * müssen als Sub-Command-Code einen der folgenden Werte haben:
+	 * Das LCD lauscht auf Kommandos mit dem {@linkplain Code#ACT_LCD Command-Code ACT_LCD}.
+	 * Diese Kommandos müssen als Sub-Command-Code einen der folgenden Werte haben:
 	 * <ul>
-	 * <li>{@linkplain SubCode#LCD_CLEAR} – löscht das LCD, so dass
-	 * überall nur Leerzeichen stehen. </li>
-	 * <li>{@linkplain SubCode#LCD_CURSOR} – Bewegt den Cursor in die
-	 * Spalte, die in {@code dataL} angegeben ist, und die Zeile, die in
-	 * {@code dataR} angegeben ist. Beide Angaben zero-based, d.h. 0,0
-	 * bezeichnet das linkeste Zeichen der obersten Zeile. Negative Werte werden
-	 * wie 0 behandelt. Werte rechts außerhalb des Display werden wie die
-	 * rechteste Spalte behandelt; Werte unten außerhalb des Display wie
-	 * die unterste Zeile. </li>
-	 * <li>{@linkplain SubCode#LCD_DATA} – Holt die Nutzlast des
-	 * Kommandos und schreibt sie ins Display an die aktuelle Cursor-Position.
-	 * Falls dort schon etwas steht, wird der alte Text überschrieben
-	 * (nicht weitergeschoben). Falls der Text rechts aus dem Display
-	 * hinauslaufen würde, wird er abgeschnitten (bricht nicht in die
-	 * nächste Zeile um). </li>
-	 * <li>{@linkplain SubCode#NORM} – Kombination von LCD_CURSOR und
-	 * LCD_DATA: Bewegt den Cursor wie ein LCD_CURSOR-Kommando und zeigt dann
-	 * Text an wie ein LCD_DATA-Kommando. </li>
+	 * <li>{@linkplain SubCode#LCD_CLEAR} – löscht das LCD, so dass überall nur Leerzeichen stehen.</li>
+	 * <li>{@linkplain SubCode#LCD_CURSOR} – Bewegt den Cursor in die Spalte, die in {@code dataL}
+	 * angegeben ist, und die Zeile, die in {@code dataR} angegeben ist. Beide Angaben zero-based,
+	 * d.h. 0,0 bezeichnet das linkeste Zeichen der obersten Zeile. Negative Werte werden wie 0
+	 * behandelt. Werte rechts außerhalb des Display werden wie die rechteste Spalte behandelt;
+	 * Werte unten außerhalb des Display wie die unterste Zeile.</li>
+	 * <li>{@linkplain SubCode#LCD_DATA} – Holt die Nutzlast des Kommandos und schreibt sie ins
+	 * Display an die aktuelle Cursor-Position. Falls dort schon etwas steht, wird der alte Text
+	 * überschrieben (nicht weitergeschoben). Falls der Text rechts aus dem Display hinauslaufen
+	 * würde, wird er abgeschnitten (bricht nicht in die nächste Zeile um).</li>
+	 * <li>{@linkplain SubCode#NORM} – Kombination von LCD_CURSOR und LCD_DATA: Bewegt den Cursor
+	 * wie ein LCD_CURSOR-Kommando und zeigt dann Text an wie ein LCD_DATA-Kommando.</li>
 	 * </ul>
 	 * </p>
 	 */
@@ -518,10 +512,10 @@ public class Actuators {
 		private final PlainDocument internalModel = new PlainDocument();
 
 		/**
-		 * Erstellt eine LCD-BotComponent mit der angegebenen Zahl Spalten (=
-		 * Zeichen) und Zeilen.
-		 * @param numCols Spalten
-		 * @param numRows Zeilen
+		 * Erstellt eine LCD-BotComponent mit der angegebenen Zahl Spalten (= Zeichen) und Zeilen
+		 * 
+		 * @param numCols	Spalten
+		 * @param numRows	Zeilen
 		 */
 		public LcDisplay(int numCols, int numRows) {
 			super(new PlainDocument());
@@ -589,7 +583,7 @@ public class Actuators {
 		}
 
 		/**
-		 * @param d Document
+		 * @param d	Document
 		 * @return Text von d
 		 * @throws BadLocationException
 		 */
@@ -598,12 +592,11 @@ public class Actuators {
 		}
 
 		/**
-		 * Setzt das Display zurück, so dass es auf ganzer Breite und
-		 * Höhe nur Leerzeichen anzeigt.
-		 * @param d Document des Displays
-		 *
-		 * @throws BadLocationException nur falls jemand was am Code
-		 * ändert; sollte normalerweise nie vorkommen.
+		 * Setzt das Display zurück, sodass es auf ganzer Breite und Höhe nur Leerzeichen anzeigt.
+		 * 
+		 * @param d	Document des Displays
+		 * @throws BadLocationException	nur falls jemand was am Code ändert;
+		 * 			sollte normalerweise nie vorkommen.
 		 */
 		protected synchronized void clearModel(Document d) throws BadLocationException {
 			StringBuilder b = new StringBuilder();
@@ -620,11 +613,11 @@ public class Actuators {
 		}
 
 		/**
-		 * Text einfügen an der aktuellen Cursorposition. Dort stehender
-		 * Text wird überschrieben (nicht verschoben).
+		 * Text einfügen an der aktuellen Cursorposition
+		 * Dort stehender Text wird überschrieben (nicht verschoben).
 		 *
-		 * @param text Der Text, der ab der neuen Cursorposition einzutragen ist
-		 * @throws BadLocationException "Kann nicht passieren"&#8482;
+		 * @param text	Der Text, der ab der neuen Cursorposition einzutragen ist
+		 * @throws BadLocationException	"Kann nicht passieren"
 		 */
 		protected synchronized void overwrite(String text) throws BadLocationException {
 			// +1 für \n am Zeilenende
@@ -639,12 +632,11 @@ public class Actuators {
 	    }
 
 	    /**
-		 * Bewegt den Cursor.
+		 * Bewegt den Cursor
 		 *
-		 * @param col Neue Cursorposition (Spalte). Falls sie außerhalb
-		 * der Ausdehnung dieses Displays liegt, wird sie auf den
-		 * nächstliegenden zulässigen Wert gesetzt.
-		 * @param row Dito (Zeile).
+		 * @param col	Neue Cursorposition (Spalte). Falls sie außerhalb der Ausdehnung dieses
+		 * 				Displays liegt, wird sie auf den nächstliegenden zulässigen Wert gesetzt.
+		 * @param row	Dito (Zeile)
 		 */
 		protected synchronized void setCursor(int col, int row) {
 	        cursorX = Misc.clamp(col, numCols - 1);
@@ -652,7 +644,8 @@ public class Actuators {
 	    }
 
 		/** 
-		 * Wieviele Spalten breit ist das Display? (1 Zeichen pro Spalte) 
+		 * Wieviele Spalten breit ist das Display? (1 Zeichen pro Spalte)
+		 * 
 		 * @return Spaltenanzahl 
 		 */
 		public synchronized int getNumCols() { 
@@ -660,7 +653,8 @@ public class Actuators {
 		}
 
 		/** 
-		 * Wieviele Zeilen hoch ist das Display? 
+		 * Wieviele Zeilen hoch ist das Display?
+		 * 
 		 * @return Zeilenanzahl
 		 */
 		public synchronized int getNumRows() { 
@@ -685,23 +679,18 @@ public class Actuators {
 	}
 
 	/**
-	 * <p>
-	 * Repräsentation einer LED (Leuchtdiode) auf dem Bot. Nicht verwirren
-	 * lassen wegen dem Model: Eine LED ist etwas, was an oder aus sein kann,
-	 * d.h. sie ist sinnvollerweise eine Art {@link JCheckBox} (auch wenn unsere
-	 * LEDs sich nicht als Kasten mit/ohne Häkchen malen, sondern als runde
-	 * helle/dunkle Punkte). Diese Klasse hat daher das Model, das Checkboxen
-	 * auch verwenden:JToggleButton.ToggleButtonModel. (Das wiederum
-	 * kommt daher, dass Checkboxen in Java von Buttons abgeleitet sind.)
-	 * </p>
+	 * <p>Repräsentation einer LED (Leuchtdiode) auf dem Bot. Nicht verwirren lassen wegen dem Model:
+	 * Eine LED ist etwas, was an oder aus sein kann, d.h. sie ist sinnvollerweise eine Art
+	 * {@link JCheckBox} (auch wenn unsere LEDs sich nicht als Kasten mit/ohne Häkchen malen, sondern
+	 * als runde helle/dunkle Punkte). Diese Klasse hat daher das Model, das Checkboxen auch verwenden:
+	 * JToggleButton.ToggleButtonModel. (Das wiederum kommt daher, dass Checkboxen in Java von Buttons
+	 * abgeleitet sind.)</p>
 	 * <p>
 	 * <h3>{@link Command c't-Bot-Plotokoll}</h3>
-	 * Jede LED lauscht auf {@link Command}s mit Command-Code
-	 * {@link Code#ACT_LED ACT_LED}. Bei diesen Commands gibt das Feld
-	 * {@code dataL} den Zustand aller LEDs an: ein Bit pro LED, 1 = an, 0 =
-	 * aus. Jede Instanz dieser Klasse lauscht auf ein Bit und ignoriert die
-	 * anderen; welches Bit wird beim Konstruieren angegeben.
-	 * </p>
+	 * Jede LED lauscht auf {@link Command}s mit Command-Code {@link Code#ACT_LED ACT_LED}. Bei diesen
+	 * Commands gibt das Feld {@code dataL} den Zustand aller LEDs an: ein Bit pro LED, 1 = an, 0 = aus.
+	 * Jede Instanz dieser Klasse lauscht auf ein Bit und ignoriert die anderen; welches Bit wird beim
+	 * Konstruieren angegeben.</p>
 	 * <p>
 	 * Datenformat des Felds dataL: Beispiel dataL = 0x42 = 0b01000010
 	 *
@@ -715,8 +704,8 @@ public class Actuators {
 	 *       | | | | | | .--- blau vorne links
 	 *       | | | | | | | .- blau vorne rechts
 	 *       | | | | | | | |
-	 * Wert  0 1 0 0 0 0 1 0  &lt;- Wie vom Draht gelesen
-	 * Bit#  7 6 5 4 3 2 1 0  &lt;- bitIndexFromLsb (Das hier an Konstruktor geben)
+	 * Wert  0 1 0 0 0 0 1 0  <- Wie vom Draht gelesen
+	 * Bit#  7 6 5 4 3 2 1 0  <- bitIndexFromLsb (Das hier an Konstruktor geben)
 	 *       |             |
 	 *      MSB           LSB
 	 * </pre>
@@ -734,15 +723,13 @@ public class Actuators {
 		private final Color colorWhenOn;
 
 		/**
-		 * Erstellt eine LED.
+		 * Erstellt eine LED
 		 *
-		 * @param name Name der LED, wie er dem Benutzer präsentiert wird
-		 * @param bitIndexFromLsb Welches Bit der LED-Statusangaben soll die LED
-		 * beachten? 0 = LSB, Näheres siehe {@link Led oben}, Abschnitt
-		 * "c't-Bot-Protokoll"
-		 * @param colorWhenOn Farbe der LED, wenn sie leuchtet. Eine dunklere
-		 * Valiante für dann, wenn sie nicht leuchtet, wird automatisch
-		 * berechnet
+		 * @param name				Name der LED, wie er dem Benutzer präsentiert wird
+		 * @param bitIndexFromLsb	Welches Bit der LED-Statusangaben soll die LED beachten? 0 = LSB,
+		 * 							Näheres siehe {@link Led oben}, Abschnitt "c't-Bot-Protokoll"
+		 * @param colorWhenOn		Farbe der LED, wenn sie leuchtet. Eine dunklere Variante für dann,
+		 * 							wenn sie nicht leuchtet, wird automatisch berechnet
 		 */
 		public Led(String name, int bitIndexFromLsb, Color colorWhenOn) {
 			super(new JToggleButton.ToggleButtonModel());
@@ -782,9 +769,9 @@ public class Actuators {
 
 		/**
 		 * Liefert die Farbe, in der die LED darzustellen ist, wenn sie an ist.
-		 * Die Farbe für dann, wenn sie aus ist, sollte hieraus berechnet
-		 * werden (typischerweise durch Reduzieren der Sättigung und/oder
-		 * Helligkeit).
+		 * Die Farbe für dann, wenn sie aus ist, sollte hieraus berechnet werden (typischerweise durch
+		 * Reduzieren der Sättigung und/oder Helligkeit).
+		 * 
 		 * @return Farbe
 		 */
 		public Color getColorWhenOn() { 

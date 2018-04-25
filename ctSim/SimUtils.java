@@ -29,7 +29,7 @@ import java.lang.Math;
  * Diese Klasse enthält reine Hilfsfunktionen wie Umrechnungsmethoden zwischen
  * verschiedenen Maß-Einheiten usw.
  * 
- * @author pek (pek@heise.de)
+ * @author Peter König (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
 public class SimUtils {

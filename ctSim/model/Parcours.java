@@ -42,7 +42,6 @@ import ctSim.util.Misc;
  * Zielpunkte der Bots.
  * 
  * @author Benjamin Benz (bbe@heise.de)
- * 
  */
 public class Parcours {
 	/** Logger */
@@ -531,8 +530,8 @@ public class Parcours {
 
 	/**
 	 * @return Liefert die Breite/Höhe einer Gittereinheit (eines Blocks)
-	 *         in Meter zurück. (Da die Blöcke quadratisch sind, sind
-	 *         Breite und Höhe gleich.)
+	 * 			in Meter zurück. (Da die Blöcke quadratisch sind, sind
+	 * 			Breite und Höhe gleich.)
 	 */
 	public float getBlockSizeInM() {
 		return blockSizeInM;
@@ -540,8 +539,8 @@ public class Parcours {
 
 	/**
 	 * @return Liefert die Breite/Höhe einer Gittereinheit (eines Blocks)
-	 *         in Millimeter zurück. (Da die Blöcke quadratisch sind, sind
-	 *         Breite und Höhe gleich.)
+	 * 			in Millimeter zurück. (Da die Blöcke quadratisch sind, sind
+	 * 			Breite und Höhe gleich.)
 	 */
 	public int getBlockSizeInMM() {
 		return (int) (blockSizeInM * 1000.0f);
@@ -626,7 +625,7 @@ public class Parcours {
 
 	/**
 	 * @return Liefert einen stark vereinfachten Parcours zurück. Das Array
-	 *         enthält nur 0 (freies Feld) und 1 (blockiertes Feld).
+	 * 			enthält nur 0 (freies Feld) und 1 (blockiertes Feld).
 	 */
 	int[][] getFlatParcours() {
 		int[][] parcoursMapSimple = new int[getWidthInBlocks()][getHeightInBlocks()];
@@ -665,7 +664,7 @@ public class Parcours {
 
 	/**
 	 * @return Liefert einen stark vereinfachten Parcours zurück. Das Array
-	 *         enthält nur 0 (freies Feld), 1 (blockiertes Feld) und 2 (Loch).
+	 * 			enthält nur 0 (freies Feld), 1 (blockiertes Feld) und 2 (Loch).
 	 */
 	public int[][] getFlatParcoursWithHoles() {
 		int[][] parcoursMapSimple = new int[getWidthInBlocks()][getHeightInBlocks()];

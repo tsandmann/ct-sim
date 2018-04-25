@@ -25,7 +25,6 @@ import java.util.Random;
  * Parcours-Generator für den c't-Sim-Wettbewerb
  * 
  * @author Peter König (pek@heise.de)
- * 
  */
 
 public class ParcoursGenerator {

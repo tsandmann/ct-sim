@@ -947,8 +947,8 @@ public class World {
 	 * @param bot		Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird
 	 * @param free		Wert, mit dem freie Felder eingetragen werden (z.B. 100)
 	 * @param occupied	Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
-	 * @throws IOException falls Fehler beim Schreiben der Datei
-	 * @throws MapException falls keine Daten in der Map
+	 * @throws IOException	falls Fehler beim Schreiben der Datei
+	 * @throws MapException	falls keine Daten in der Map
 	 */
 	public void toMap(int bot, int free, int occupied) throws IOException, MapException {
 		float size = Float.parseFloat(Config.getValue("mapSize"));
