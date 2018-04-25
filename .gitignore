@@ -2,8 +2,8 @@
 /README.md
 /config/window.settings
 
+/log/*.log
 /documentation/api/
 /build-applet
 /build-jar
 *.class
-ctsim-*.log
