@@ -24,6 +24,7 @@ import javax.vecmath.Point3d;
 
 /**
  * Repräsentiert das Bot Positioning System (BPS) im Simulator
+ * 
  * @author Timo Sandmann
  */
 public class BPS {

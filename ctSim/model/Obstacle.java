@@ -47,9 +47,7 @@ public abstract interface Obstacle {
 	 */
 	public abstract Vector3d getHeadingInWorldCoord();
 	
-	/**
-	 * Erzeugt die 3D-Repräsentation eines Objektes
-	 */
+	/** Erzeugt die 3D-Repräsentation eines Objektes */
 	//public abstract void createBranchGroup();
 	
 	/**

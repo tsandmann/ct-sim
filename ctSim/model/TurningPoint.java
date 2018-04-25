@@ -23,54 +23,46 @@ import java.util.Vector;
 import javax.vecmath.Vector2d;
 
 /**
- * Diese Klasse beschreibt die Position eines Knicks im Pfad des Roboters, wenn
- * er an einem Hindernis abbiegt. Ausserdem enthält sie Methoden um die
- * Kuerzeste Verbindung in einem ungerichteten Graphen zu finden
+ * Diese Klasse beschreibt die Position eines Knicks im Pfad des Roboters,
+ * wenn er an einem Hindernis abbiegt. Ausserdem enthält sie Methoden um die
+ * kürzeste Verbindung in einem ungerichteten Graphen zu finden
  *
  * @author phophermi (mpraehofer@web.de)
- *
  */
 public class TurningPoint {
 	/**
 	 * <p>
 	 * Der Abstand, wie weit der Mittelpunkt des Bots von den
-	 * Wänden/Löchern/andern Hindernissen hält, in
-	 * Grid-Einheiten.
+	 * Wänden/Löchern/andern Hindernissen hält, in Grid-Einheiten.
 	 * </p>
 	 * <p>
-	 * 0.25 ist <strong>bei momentaner Block-Größe</strong> ein
-	 * Bot-Radius. ("Block-Größe": siehe blockSizeInM in
-	 * der Klasse Parcours.) 0.25 bedeutet also, dieser der
-	 * Wegfindungs-Algorithmus erlaubt dem Bot, bis zur Kollision an Wände
+	 * 0.25 ist <strong>bei momentaner Block-Größe</strong> ein Bot-Radius.
+	 * ("Block-Größe": siehe blockSizeInM in der Klasse Parcours.) 0.25 bedeutet also,
+	 * dass dieser Wegfindungs-Algorithmus dem Bot erlaubt , bis zur Kollision an Wände
 	 * heranzukommen.
 	 * </p>
 	 * <ol>
 	 * <h3>Probleme:</h3>
-	 * <li>Wenn dieser Wert zu groß ist (z.B. 0.25), und man den Weg bis
-	 * zum Ziel bestimmt von der Position eines Bots aus, kann folgendes
-	 * passieren: Bots, die mit ihrer Vorderseite ein bisschen über einem
-	 * Loch stehen, sind nach Meinung dieses Algorithmus in ungültiger
-	 * Position. Das heißt, dass
-	 * {@link #getShortestPathTo(TurningPoint, int[][])} zurückliefert, es
-	 * gäbe keinen gültigen Weg von der Botposition zum Ziel, obwohl
-	 * laut {@link ThreeDBot} der Bot noch lang nicht in ein Loch gefallen
-	 * ist. </li>
+	 * <li>Wenn dieser Wert zu groß ist (z.B. 0.25), und man den Weg bis zum Ziel bestimmt
+	 * von der Position eines Bots aus, kann folgendes passieren:
+	 * Bots, die mit ihrer Vorderseite ein bisschen über einem Loch stehen, sind nach Meinung
+	 * dieses Algorithmus in ungültiger Position. Das heißt, dass
+	 * {@link #getShortestPathTo(TurningPoint, int[][])} zurückliefert, es gäbe keinen gültigen
+	 * Weg von der Botposition zum Ziel, obwohl laut {@link ThreeDBot} der Bot noch lange nicht
+	 * in ein Loch gefallen ist. </li>
 	 * <li> Es ist nicht empfehlenswert, diesen Wert auf 0 zu setzen.
-	 * Angenommen, solche Stellen kommen auf der Karte (XML) vor:<br /> #<br />
-	 * #===<br /> #<br/> Ein Weg zum Ziel wird dann auch gefunden in der
-	 * zweiten Zeile zwischen den Blöcken "#" und "=",
-	 * wo der Bot natürlich nicht durchkommt. Dieser Wegfindungsalgorithmus
-	 * ist für den Wert 0 also praktisch nutzlos, da er auch Wege durch
-	 * Wände u.dgl. sucht. </li>
+	 * Angenommen, solche Stellen kommen auf der Karte (XML) vor: <br /> #<br />
+	 * #===<br /> #<br/>
+	 * Ein Weg zum Ziel wird dann auch gefunden in der zweiten Zeile zwischen den Blöcken "#" und "=",
+	 * wo der Bot natürlich nicht durchkommt. Dieser Wegfindungsalgorithmus ist für den Wert 0
+	 * also praktisch nutzlos, da er auch Wege durch Wände u.dgl. sucht.</li>
 	 * </ol>
 	 * 
-	 * 
-	 * Mist: Dieser Algorithmus hat ganz eigene Vorstellungen davon, was 
-	 * "Bot ist in ein Loch gefallen" heisst (nämlich Bot-Zentrum ist näher als 
-	 * distFromCorner an einer Ecke). Es wäre besser, wenn das Model und diese 
-	 * Klasse einen Bot unter den gleichen Umständen als "im Loch" betrachten, 
-	 * nicht unter subtil unterschiedlichen Umständen.
-	 * Variable distFromCorner ist wirklich problematisch und sollte anders geloest werden -- siehe ihre Doku
+	 * Mist: Dieser Algorithmus hat ganz eigene Vorstellungen davon, was "Bot ist in ein Loch gefallen"
+	 * heißt (nämlich Bot-Zentrum ist näher als distFromCorner an einer Ecke). Es wäre besser,
+	 * wenn das Model und diese Klasse einen Bot unter den gleichen Umständen als "im Loch" betrachten, 
+	 * und nicht unter subtil unterschiedlichen Umständen. Variable distFromCorner ist wirklich
+	 * problematisch und sollte anders gelöst werden -- siehe zugehörige Doku
 	 */
 	public static final double distFromCorner = 0.05;
 
@@ -83,7 +75,7 @@ public class TurningPoint {
 	/**
 	 * z-Koordinate der Linie: 0 entspricht Bodenhöhe, dann wird die Linie
 	 * allerdings von Start- und Zielfeld überdeckt. Nicht getestet wurde ob
-	 * der bot stolpert, wenn height>0
+	 * der bot stolpert, wenn height > 0
 	 */
 	public static final float height = 0.0f;
 
@@ -94,8 +86,8 @@ public class TurningPoint {
 	Vector2d pos;
 
 	/**
-	 * @param x X-Koordinate
-	 * @param y Y-Koordinate
+	 * @param x	X-Koordinate
+	 * @param y	Y-Koordinate
 	 */
 	TurningPoint(double x, double y) {
 		pos = new Vector2d();
@@ -104,7 +96,7 @@ public class TurningPoint {
 	}
 
 	/**
-	 * @param p x/Y als Vektor
+	 * @param p	x/Y als Vektor
 	 */
 	TurningPoint(Vector2d p) {
 		pos = new Vector2d(p);
@@ -114,8 +106,8 @@ public class TurningPoint {
 	 * Testet ob this mit p2 in der parcoursMapSimple auf direktem Wege vom Bot
 	 * erreicht werden können
 	 *
-	 * @param p2 Zu testender Punkt
-	 * @param parcoursMapSimple ParcoursMap
+	 * @param p2				Zu testender Punkt
+	 * @param parcoursMapSimple	ParcoursMap
 	 * @return true wenn direkt erreichbar
 	 */
 	boolean isDirectlyConnectedTo(TurningPoint p2, int[][] parcoursMapSimple) {
@@ -185,7 +177,7 @@ public class TurningPoint {
 	 *
 	 * @param path
 	 * @param M
-	 * @return länge von path bezüglich M
+	 * @return Länge von path bezüglich M
 	 */
 	static double getLengthOfPath(Vector<Integer> path, double[][] M) {
 		double l = 0;
@@ -203,9 +195,9 @@ public class TurningPoint {
 	}
 
 	/**
-	 * gibt die Länge des durch path gegebenen Streckenzugs zurück
+	 * Gibt die Länge des durch path gegebenen Streckenzugs zurück
 	 *
-	 * @param path der Streckenzug
+	 * @param path	der Streckenzug
 	 * @return länge von path bezüglich M
 	 */
 	static double getLengthOfPath(Vector<TurningPoint> path) {
@@ -224,16 +216,15 @@ public class TurningPoint {
 	}
 
 	/**
-	 * die kuerzeste Verbindung von this zu p2 wird rekursiv bestimmt
+	 * die kürzeste Verbindung von this zu p2 wird rekursiv bestimmt
 	 *
-	 * @param s	?
-	 * @param f	?
+	 * @param s			?
+	 * @param f			?
 	 * @param initPath	der bisher untersuchte Weg
 	 * @param cutoff	ist der untersuchte Weg länger wird abgebrochen
-	 * @param M Inzidenzmatrix
-	 * @param N	?
-	 * @return die kuerzeste Verbindung von this zu p2 unter Vermeidung von
-	 *         initialPath
+	 * @param M			Inzidenzmatrix
+	 * @param N			?
+	 * @return die kürzeste Verbindung von this zu p2 unter Vermeidung von initialPath
 	 */
 	Vector<Integer> getShortestPath(int s, int f, Vector<Integer> initPath,
 			double cutoff, double[][] M, int[][] N) {
@@ -282,7 +273,7 @@ public class TurningPoint {
 	}
 
 	/**
-	 * gibt einen Polygonzug der mit Breite und einer Spitze versehen Linie von
+	 * Gibt einen Polygonzug der mit Breite und einer Spitze versehen Linie von
 	 * this zu p2 zurück, zur Weiterverwendung in createLine()
 	 *
 	 * @param p2
@@ -333,10 +324,10 @@ public class TurningPoint {
 	}
 
 	/**
-	 * Findet alle möglichen Eckpunkte der kuerzesten Verbindung
+	 * Findet alle möglichen Eckpunkte der kürzesten Verbindung
 	 *
 	 * @param parcoursMapSimple
-	 * @return eine Liste möglicher Eckpunkte für die kuerzesten Verbindung
+	 * @return eine Liste möglicher Eckpunkte für die kürzeste Verbindung
 	 */
 	Vector<TurningPoint> findTurningPoints(int[][] parcoursMapSimple) {
 		Vector<TurningPoint> turningPoints = new Vector<TurningPoint>();
@@ -383,12 +374,12 @@ public class TurningPoint {
 	}
 
 	/**
-	 * Kreiert die Incidenzmatrix der Punkteliste bezüglich parcoursMapSimple
+	 * Erzeugt die Incidenzmatrix der Punkteliste bezüglich parcoursMapSimple
 	 *
 	 * @param turningPoints
 	 * @param parcoursMapSimple
-	 * @return double[i][j] ist der Abstand von Punkt i zu j, falls direkt
-	 *         verbunden, ansonsten 10e30(unendlich)
+	 * @return double[i][j] ist der Abstand von Punkt i zu j, falls direkt verbunden,
+	 * 			ansonsten 10e30 (defacto unendlich)
 	 */
 	double[][] createIncidenceMatrix(Vector<TurningPoint> turningPoints,
 			int[][] parcoursMapSimple) {
@@ -450,12 +441,13 @@ public class TurningPoint {
 	 * <code>this</code> nach <code>finish</code> beschreiben, den der Bot
 	 * im Labyrinth <code>parcoursMapSimple</code> durchfahren kann.
 	 *
-	 * @param finish Der Punkt, zu dem der kürzeste Weg bestimmt werden
-	 * soll; typischerweise das Zielfeld des Labyrinths.
-	 * @param parcoursMapSimple Vereinfachte Karte des Parcours: 0 = befahrbar,
-	 * 1 = Hindernis
-	 * @return Eckpunkte der kürzesten Verbindung von <code>this</code> zu
-	 * finish. Die Liste kann leer sein.
+	 * @param finish
+	 * 				Der Punkt, zu dem der kürzeste Weg bestimmt werden soll;
+	 * 				typischerweise das Zielfeld des Labyrinths.
+	 * @param parcoursMapSimple
+	 * 				Vereinfachte Karte des Parcours: 0 = befahrbar, 1 = Hindernis
+	 * @return Eckpunkte der kürzesten Verbindung von <code>this</code> zu finish.
+	 * 			Die Liste kann leer sein.
 	 */
 	Vector<TurningPoint> getShortestPathTo(TurningPoint finish,
 			int[][] parcoursMapSimple) {
@@ -468,7 +460,7 @@ public class TurningPoint {
 				parcoursMapSimple);
 		// Erstellen der Tabelle der jeweils direkt erreichbaren Nachbarn
 		int[][] neighbors = this.getDirectNeighbors(incidenceMatrix);
-		// finde die kuerzeste Verbindung
+		// finde die kürzeste Verbindung
 		Vector<Integer> shortestPath = turningPoints.get(0).getShortestPath(0,
 				1, new Vector<Integer>(), 1e30, incidenceMatrix, neighbors);
 		Vector<TurningPoint> shortest = new Vector<TurningPoint>();
