@@ -1,8 +1,9 @@
 .DS_Store
+/README.md
 /config/window.settings
-/build
-/applet-build
+
+/documentation/api/
+/build-applet
+/build-jar
 *.class
 ctsim-*.log
-/README.md
-
