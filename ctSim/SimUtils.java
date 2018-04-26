@@ -39,8 +39,7 @@ public class SimUtils {
 	 * Gradangabe und gibt sie als String zurück. Diese Methode wird zur Anzeige
 	 * der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
-	 * @param vec
-	 *            der Eingabevektor
+	 * @param vec	der Eingabevektor
 	 * @return die Gradzahl als String
 	 */
 	public static String vec3dToString(Vector3d vec) {
@@ -52,8 +51,7 @@ public class SimUtils {
 	 * Errechnet aus einem javax.vecmath.Vector3d eine Gradangabe. Diese Methode
 	 * wird zur Anzeige der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
-	 * @param vec
-	 *            der Eingabevektor
+	 * @param vec	der Eingabevektor
 	 * @return die (gerundete) Gradzahl als int-Wert
 	 */
 	public static double vec3dToDouble(Vector3d vec) {
@@ -72,8 +70,7 @@ public class SimUtils {
 	 * javax.vecmath.Vector3d. Diese Methode wird zum Setzen der
 	 * Bot-Blickrichtung über das ControlPanel benutzt.
 	 * 
-	 * @param deg
-	 *            der Winkel in Grad
+	 * @param deg	der Winkel in Grad
 	 * @return der neue Blickvektor
 	 */
 	public static Vector3d intToVec3d(int deg) {
@@ -91,8 +88,7 @@ public class SimUtils {
 	 * javax.vecmath.Vector3d. Diese Methode wird zum Setzen der
 	 * Bot-Blickrichtung über das ControlPanel benutzt.
 	 * 
-	 * @param deg
-	 *            der Winkel in Grad
+	 * @param deg	der Winkel in Grad
 	 * @return der neue Blickvektor
 	 */
 	public static Vector3d doubleToVec3d(double deg) {
@@ -120,8 +116,7 @@ public class SimUtils {
 	 * Errechnet den Winkel zwischen Nordrichtung des Universums (Richtung der 
 	 * positiven Y-Achse) und der angegeben Blickrichtung.
 	 * 
-	 * @param heading 
-	 * 			  Gib die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
+	 * @param heading	Gibt die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
 	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurück
 	 */
 	public static double getRotation(Vector3d heading) {
@@ -136,8 +131,9 @@ public class SimUtils {
 	
 	/**
 	 * Führt eine Transformation durch 
-	 * @param pos Position 
-	 * @param head Blickrichtung
+	 * 
+	 * @param pos	Position 
+	 * @param head	Blickrichtung
 	 * @return Die Transformation
 	 */
 	public static Transform3D getTransform(Point3d pos, Vector3d head) {
@@ -155,7 +151,8 @@ public class SimUtils {
 	
 	/**
 	 * Wandelt Millisekunden in die Anzeige h:m:s:ms um
-	 * @param millis Die Zeit in Millisekunden
+	 * 
+	 * @param millis	Die Zeit in Millisekunden
 	 * @return Die Zeit als Text
 	 */
 	public static String millis2time(long millis){

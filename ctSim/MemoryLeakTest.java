@@ -18,6 +18,7 @@
  */
 
 package ctSim;
+
 import java.io.File;
 
 import ctSim.controller.Controller;
@@ -26,11 +27,12 @@ import ctSim.controller.Main;
 
 /**
  * Test zum Untersuchen von Speicherlecks, wenn hintereinander viele
- * World-Objekte geladen werden. Als Hauptprogramm auszuführen.
+ * World-Objekte geladen werden. Ist als Hauptprogramm auszuführen...
  */
 public class MemoryLeakTest {
 	/**
 	 * main
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -39,9 +41,7 @@ public class MemoryLeakTest {
 		Main.main();
 	}
 
-	/**
-	 * Testklasse
-	 */
+	/** Testklasse */
 	public static class TestController extends DefaultController {
 		/**
 		 * @see ctSim.controller.DefaultController#onApplicationInited()
@@ -58,7 +58,7 @@ public class MemoryLeakTest {
 				try {
 					Thread.sleep(2000);
                 } catch (InterruptedException e) {
-                	// ist wurst
+                	// ist egal
                 }
 			}
         }

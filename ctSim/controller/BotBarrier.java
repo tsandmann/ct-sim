@@ -25,6 +25,7 @@ package ctSim.controller;
 public interface BotBarrier {
 	/**
 	 * Wartet auf die nächste Runde
+	 * 
 	 * @throws InterruptedException
 	 */
 	public void awaitNextSimStep() throws InterruptedException;

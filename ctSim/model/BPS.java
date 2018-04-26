@@ -24,6 +24,7 @@ import javax.vecmath.Point3d;
 
 /**
  * Repräsentiert das Bot Positioning System (BPS) im Simulator
+ * 
  * @author Timo Sandmann
  */
 public class BPS {
@@ -44,6 +45,7 @@ public class BPS {
 		
 		/**
 		 * Erzeugt eine neue Landmarke
+		 * 
 		 * @param parc Parcours, in dem die Landmarke steht
 		 * @param source Position der Landmarke, so wie PickInfo sie ermittelt hat [m]
 		 */
@@ -61,6 +63,7 @@ public class BPS {
 		
 		/**
 		 * Gibt die Position der Landmarke als String aus [BEACON_GRID_SIZE mm]
+		 * 
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
@@ -71,6 +74,7 @@ public class BPS {
 		
 		/**
 		 * Gibt die Position der Landmarke als String aus [Parcours-Block-Koordinaten]
+		 * 
 		 * @return (X|Y) [Parcours-Block-Koordinaten]
 		 * @see #toString()
 		 */
@@ -80,9 +84,10 @@ public class BPS {
 		
 //		/**
 //		 * Prüft, ob die angegebene Parcours-Position für eine BPS-Landmarke gueltig ist
-//		 * @param parc Parcours, in dem die Landmarke steht
-//		 * @param x X-Koordinate [Parcours-Block]
-//		 * @param y Y-Koordinate [Parcours-Block]
+//		
+//		 * @param parc	Parcours, in dem die Landmarke steht
+//		 * @param x		X-Koordinate [Parcours-Block]
+//		 * @param y		Y-Koordinate [Parcours-Block]
 //		 * @return true, falls Landmarke an (x|y) möglich, sonst false
 //		 */
 //		public static boolean checkParcoursPosition(Parcours parc, int x, int y) {

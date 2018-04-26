@@ -39,9 +39,9 @@ import ctSim.util.Misc;
 /**
  * Repräsentiert einen Parcours für die Bots Wird zum Laden eines solchen
  * benötigt. Des Weiteren stehen hier auch Informationen über Start- und
- * Zielpunkte der Bots
+ * Zielpunkte der Bots.
  * 
- * @author bbe (bbe@heise.de)
+ * @author Benjamin Benz (bbe@heise.de)
  * 
  */
 public class Parcours {
@@ -52,12 +52,11 @@ public class Parcours {
 	 * <p>
 	 * Breite einer Gittereinheit (eines Blocks) in Meter. Da die Blöcke
 	 * immer quadratisch sind, ist die Breite auch die Höhe.
-	 * </p>
-	 * <p>
+	 * 
 	 * Idee: ct-Bot ist 12cm breit, wir setzen das Gitter auf 24cm, damit der
 	 * Bot auf dem engstmöglichen Durchgang (1 Block breit) möglichst
 	 * viel Spielraum hat nach links und rechts (oben und unten), aber dass
-	 * gerade keine zwei Bots mehr aneinander vorbeikönnen.
+	 * gerade keine zwei Bots mehr aneinander vorbei können.
 	 * </p>
 	 */
 	private final float blockSizeInM = 0.24f;
@@ -66,7 +65,7 @@ public class Parcours {
 	 * Anzahl der Startpositionen für Bots. Dir Position 0 ist die Default
 	 * Position, ab 1 für die Wettkampfbots.
 	 */
-	public static final int BOTS = 3; // ParcoursLoader kann max 2 Startplätze erzeugen, darum hardcoded auf 3
+	public static final int BOTS = 3;	// ParcoursLoader kann max 2 Startplätze erzeugen, darum hardcoded auf 3
 
 	/** Enthält alle Hindernisse */
 	private BranchGroup ObstBG;
@@ -99,7 +98,7 @@ public class Parcours {
 	/** Zielpositionen */
 	private List<Vector2d> finishPositions = Misc.newList();
 
-	/** Liste mit allen Abgruenden */
+	/** Liste mit allen Abgründen */
 	private Vector<Vector2d> holes = new Vector<Vector2d>();
 
 	/**
@@ -113,6 +112,7 @@ public class Parcours {
 
 	/**
 	 * Erzeugt einen neuen, leeren Parcours
+	 * 
 	 * @param parcoursLoader ParcoursLoader, der den Parcours erzeugt hat
 	 */
 	public Parcours(ParcoursLoader parcoursLoader) {
@@ -148,8 +148,7 @@ public class Parcours {
 	/**
 	 * Setzt ein Startfeld auf belegt
 	 * 
-	 * @param bot
-	 *            Zeiger auf Bot, der das Startfeld belegt
+	 * @param bot	Zeiger auf Bot, der das Startfeld belegt
 	 */
 	public void setStartFieldUsed(Bot bot) {
 		for (int i = 1; i < BOTS; i++) {
@@ -163,8 +162,7 @@ public class Parcours {
 	/**
 	 * Gibt ein Startfeld wieder frei
 	 * 
-	 * @param bot
-	 *            Zeiger auf Bot, der auf dem Startfeld steht oder gestartet ist
+	 * @param bot	Zeiger auf Bot, der auf dem Startfeld steht oder gestartet ist
 	 */
 	public void setStartFieldUnused(Bot bot) {
 		for (int i = 1; i < BOTS; i++) {
@@ -185,15 +183,13 @@ public class Parcours {
 	/**
 	 * Setzt die Parcoursbreite in Gittereinheiten
 	 * 
-	 * @param dimX1
-	 *            Breite in Gittereinheiten
+	 * @param dimX1	Breite in Gittereinheiten
 	 */
 	public void setDimX(int dimX1) {
 		dimX = dimX1;
 	}
 
 	/**
-	 * 
 	 * @return Liefert die Parcourshöhe in Gittereinheiten zurück
 	 */
 	public int getHeightInBlocks() {
@@ -201,16 +197,14 @@ public class Parcours {
 	}
 
 	/**
-	 * @return Liefert die Breite (X-Größe) des Parcours in Meter
-	 *         zurück
+	 * @return Liefert die Breite (X-Größe) des Parcours in Meter zurück
 	 */
 	public float getWidthInM() {
 		return dimX * blockSizeInM;
 	}
 
 	/**
-	 * @return Liefert die Höhe (Y-Größe) des Parcours in Meter
-	 *         zurück
+	 * @return Liefert die Höhe (Y-Größe) des Parcours in Meter zurück
 	 */
 	public float getHeightInM() {
 		return dimY * blockSizeInM;
@@ -219,52 +213,41 @@ public class Parcours {
 	/**
 	 * Setzt die Parcourshöhe in Gittereinheiten
 	 * 
-	 * @param dimY1
-	 *            Höhe in Gittereinheiten
+	 * @param dimY1	Höhe in Gittereinheiten
 	 */
 	public void setDimY(int dimY1) {
 		dimY = dimY1;
 	}
 
 	/**
-* Fügt ein Hinderniss ein
+	 * Fügt ein Hindernis ein
 	 * 
-	 * @param obstacle
-	 *            Das Hinderniss
-	 * @param x
-	 *            X-Achse im Parcours-Gitter
-	 * @param y
-	 *            Y-Achse im Parcours-Gitter
+	 * @param obstacle	Das Hindernis
+	 * @param x			X-Achse im Parcours-Gitter
+	 * @param y			Y-Achse im Parcours-Gitter
 	 */
 	public void addObstacle(Node obstacle, float x, float y) {
 		addNode(obstacle, x, y, ObstBG);
 	}
 
 	/**
-* Fügt ein Hinderniss ein
+	 * Fügt ein Hindernis ein
 	 * 
-	 * @param obstacle
-	 *            Das Hinderniss
-	 * @param x
-	 *            X-Achse im Parcours-Gitter
-	 * @param y
-	 *            Y-Achse im Parcours-Gitter
-	 * @param z
-	 *            Z-Achse Absolut
+	 * @param obstacle	Das Hindernis
+	 * @param x			X-Achse im Parcours-Gitter
+	 * @param y			Y-Achse im Parcours-Gitter
+	 * @param z			Z-Achse absolut
 	 */
 	public void addObstacle(Node obstacle, float x, float y, float z) {
 		addNode(obstacle, x * blockSizeInM, y * blockSizeInM, z, ObstBG);
 	}
 	
 	/**
-* Fügt ein bewegliches Hinderniss ein
+	 * Fügt ein bewegliches Hindernis ein
 	 * 
-	 * @param obstacle
-	 *            Das Hinderniss
-	 * @param x
-	 *            X-Koordinate
-	 * @param y
-	 *            Y-Koordinate
+	 * @param obstacle	Das Hindernis
+	 * @param x			X-Koordinate
+	 * @param y			Y-Koordinate
 	 */
 	public void addMoveableObstacle(Node obstacle, float x, float y) {
 		BranchGroup bg = new BranchGroup();
@@ -275,35 +258,26 @@ public class Parcours {
 	}
 
 	/**
-* Fügt ein Stück Boden ein
+	 * Fügt ein Stück Boden ein
 	 * 
-	 * @param floor
-	 *            der Boden
-	 * @param x
-	 *            X-Achse im Parcours-Gitter
-	 * @param y
-	 *            Y-Achse im Parcours-Gitter
-	 * @param z
-	 *            Z-Achse Absolut
+	 * @param floor	der Boden
+	 * @param x		X-Achse im Parcours-Gitter
+	 * @param y		Y-Achse im Parcours-Gitter
+	 * @param z		Z-Achse absolut
 	 */
 	public void addFloor(Node floor, float x, float y, float z) {
 		addNode(floor, x * blockSizeInM, y * blockSizeInM, z, terrainBG);
 	}
 
 	/**
-* Fügt eine Node ein
+	 * Fügt eine Node ein
 	 * 
-	 * @param node
-	 *            Die Node
-	 * @param x
-	 *            X-Koordinate
-	 * @param y
-	 *            Y-Koordinate
-	 * @param z
-	 *            Z-Achse absolut; positiv ist vom Boden Richtung Bot +
-	 *            Betrachter, negativ vom Boden weg vom Betrachter
-	 * @param bg
-	 *            BranchGropu, in die das Objekt rein soll
+	 * @param node	Die Node
+	 * @param x		X-Koordinate
+	 * @param y		Y-Koordinate
+	 * @param z		Z-Achse absolut; positiv ist vom Boden Richtung Bot +
+	 * 				Betrachter, negativ vom Boden weg vom Betrachter
+	 * @param bg	BranchGroup, in die das Objekt rein soll
 	 */
 	public void addNode(Node node, float x, float y, float z, BranchGroup bg) {
 		Transform3D translate = new Transform3D();
@@ -323,62 +297,54 @@ public class Parcours {
 	}
 
 	/**
-* Fügt eine Node ein
+	 * Fügt eine Node ein
 	 * 
-	 * @param node
-	 *            Die Node
-	 * @param x
-	 *            X-Achse im Parcours-Gitter
-	 * @param y
-	 *            Y-Achse im Parcours-Gitter
-	 * @param bg
-	 *            Gruppe in die das Objekt rein soll
+	 * @param node	Die Node
+	 * @param x		X-Achse im Parcours-Gitter
+	 * @param y		Y-Achse im Parcours-Gitter
+	 * @param bg	Gruppe in die das Objekt rein soll
 	 */
 	public void addNode(Node node, float x, float y, BranchGroup bg) {
 		addNode(node, x * blockSizeInM, y * blockSizeInM, 0.0f, bg);
 	}
 
 	/**
-* Fügt eine Darstellung der Lichtquelle ein
+	 * Fügt eine Darstellung der Lichtquelle ein
 	 * 
-	 * @param light
-	 *            Die Lichtquelle
-	 * @param x
-	 *            X-Achse im Parcours-Gitter
-	 * @param y
-	 *            Y-Achse im Parcours-Gitter
-	 * @param z
-	 *            Z-Achse im Parcours-Gitter
+	 * @param light	Die Lichtquelle
+	 * @param x		X-Achse im Parcours-Gitter
+	 * @param y		Y-Achse im Parcours-Gitter
+	 * @param z		Z-Achse im Parcours-Gitter
 	 */
 	public void addLight(Node light, float x, float y, float z) {
 		addNode(light, x * blockSizeInM, y * blockSizeInM, z, lightBG);
 	}
 
 	/**
-* Fügt eine Lichtquelle ein
+	 * Fügt eine Lichtquelle ein
 	 * 
-	 * @param light
-	 *            Die Lichtquelle
+	 * @param light	Die Lichtquelle
 	 */
 	public void addLight(Node light) {
 		lightBG.addChild(light);
 	}
 	
 	/**
-* Fügt eine Darstellung der Landmarke ein
+	 * Fügt eine Darstellung der Landmarke ein
 	 * 
-	 * @param bps Die Landmarke
-	 * @param x   X-Achse im Parcours-Gitter
-	 * @param y   Y-Achse im Parcours-Gitter
-	 * @param z   Z-Achse im Parcours-Gitter
+	 * @param bps	Die Landmarke
+	 * @param x		X-Achse im Parcours-Gitter
+	 * @param y		Y-Achse im Parcours-Gitter
+	 * @param z		Z-Achse im Parcours-Gitter
 	 */
 	public void addBPSLight(Node bps, float x, float y, float z) {
 		addNode(bps, x * blockSizeInM, y * blockSizeInM, z, bpsBG);
 	}
 	
 	/**
-* Fügt eine Landmarke für BPS ein
-	 * @param bps Landmarke
+	 * Fügt eine Landmarke für BPS ein
+	 * 
+	 * @param bps	Landmarke
 	 */
 	public void addBPSLight(Node bps) {
 		bpsBG.addChild(bps);
@@ -386,8 +352,9 @@ public class Parcours {
 
 	/**
 	 * Erzeugt ein bewegliches Objekt
-	 * @param x X-Koordinate
-	 * @param y Y-Koordinate
+	 * 
+	 * @param x	X-Koordinate
+	 * @param y	Y-Koordinate
 	 */
 	public void createMovableObject(float x, float y) {
 		parcoursLoader.createMovableObject(x, y);
@@ -424,12 +391,9 @@ public class Parcours {
 	/**
 	 * Legt die Startposition eines Bots fest
 	 * 
-	 * @param bot
-	 *            Nummer des Bots (fängt bei 0 an zu zählen)
-	 * @param x
-	 *            X-Koordinate
-	 * @param y
-	 *            Y-Koordinate
+	 * @param bot	Nummer des Bots (fängt bei 0 an zu zählen)
+	 * @param x		X-Koordinate
+	 * @param y		Y-Koordinate
 	 */
 	public void setStartPosition(int bot, int x, int y) {
 		if (bot <= BOTS - 1) {
@@ -441,11 +405,8 @@ public class Parcours {
 	/**
 	 * Legt die Startrichtung eines Bots fest
 	 * 
-	 * @param bot
-	 *            Nummer des Bots (fängt bei 0 an zu zählen)
-	 * @param dir
-	 *            Richtung in Grad. 0 entspricht (x=1, y=0) dann im
-	 *            Uhrzeigersinn
+	 * @param bot	Nummer des Bots (fängt bei 0 an zu zählen)
+	 * @param dir	Richtung in Grad. 0 entspricht (x=1, y=0) dann im Uhrzeigersinn
 	 */
 	public void setStartHeading(int bot, int dir) {
 		if (bot <= BOTS - 1) {
@@ -474,11 +435,10 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert die Startposition für einen neuen Bots Wenn keine festgelegt
-	 * wurde, dann die Default-Position (0)
+	 * Liefert die Startposition für einen neuen Bots
+	 * Wenn keine festgelegt wurde, dann die Default-Position (0).
 	 * 
-	 * @param bot
-	 *            Bot-Nummer
+	 * @param bot	Bot-Nummer
 	 * @return Die Startposition
 	 */
 	public Point3d getStartPosition(int bot) {
@@ -503,8 +463,7 @@ public class Parcours {
 	/**
 	 * Liefert die Nummer des Startfeldes zu einem Bot
 	 * 
-	 * @param bot
-	 *            Referenz auf Bot
+	 * @param bot	Referenz auf Bot
 	 * @return Nummer des Startfeldes, oder 0, falls Bot unbekannt
 	 */
 	public int getStartPositionNumber(Bot bot) {
@@ -519,8 +478,7 @@ public class Parcours {
 	/**
 	 * Liefert die Startposition eines vorhandenen Bots
 	 * 
-	 * @param bot
-	 *            Bot-Nummer
+	 * @param bot	Bot-Nummer
 	 * @return Die Startposition
 	 */
 	public Point3d getUsedStartPosition(int bot) {
@@ -535,8 +493,8 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert die Startrichtung eines Bots Wenn keine festgelegt wurde, dann
-	 * die Default-Position (0)
+	 * Liefert die Startrichtung eines Bots
+	 * Wenn keine festgelegt wurde, dann die Default-Position (0).
 	 * 
 	 * @param bot
 	 * @return Die Startrichtung
@@ -546,7 +504,7 @@ public class Parcours {
 		if (bot < BOTS) {
 			pos = new Vector3d(startHeadings[bot][0], startHeadings[bot][1], 0.0f);
 		} else {
-			// sonst leifer die Default-Richtung
+			// sonst liefere die Default-Richtung
 			pos = new Vector3d(startHeadings[0][0], startHeadings[0][1], 0.0f);
 		}
 
@@ -562,7 +520,7 @@ public class Parcours {
 	}
 
 	/**
-* Fügt eine neue Zielposition hinzu
+	 * Fügt eine neue Zielposition hinzu
 	 * 
 	 * @param x
 	 * @param y
@@ -623,7 +581,7 @@ public class Parcours {
 	 * Prüft, ob ein Punkt über einem Loch liegt
 	 * 
 	 * @param pos
-	 * @return true, wenn der Bot über dem loch steht
+	 * @return true, wenn der Bot über dem Loch steht
 	 */
 	public boolean checkHole(Point3d pos) {
 		if ((pos.x < 0) || (pos.y < 0) || (pos.x > dimX * blockSizeInM) || (pos.y > dimY * blockSizeInM)) {
@@ -649,8 +607,7 @@ public class Parcours {
 	/**
 	 * Setzt eine Parcours-Map
 	 * 
-	 * @param parcoursMap
-	 *            die neue Map
+	 * @param parcoursMap	die neue Map
 	 */
 	void setParcoursMap(int[][] parcoursMap) {
 		this.parcoursMap = parcoursMap;
@@ -668,8 +625,8 @@ public class Parcours {
 	}
 
 	/**
-	 * @return Liefert einen stark vereinfachten Parcours zurück. das Array
-	 *         enthält nur 0 (freies Feld) und 1 (blockiertes Feld)
+	 * @return Liefert einen stark vereinfachten Parcours zurück. Das Array
+	 *         enthält nur 0 (freies Feld) und 1 (blockiertes Feld).
 	 */
 	int[][] getFlatParcours() {
 		int[][] parcoursMapSimple = new int[getWidthInBlocks()][getHeightInBlocks()];
@@ -708,7 +665,7 @@ public class Parcours {
 
 	/**
 	 * @return Liefert einen stark vereinfachten Parcours zurück. Das Array
-	 *         enthält nur 0 (freies Feld), 1 (blockiertes Feld) und 2 (Loch)
+	 *         enthält nur 0 (freies Feld), 1 (blockiertes Feld) und 2 (Loch).
 	 */
 	public int[][] getFlatParcoursWithHoles() {
 		int[][] parcoursMapSimple = new int[getWidthInBlocks()][getHeightInBlocks()];
@@ -752,26 +709,24 @@ public class Parcours {
 	}	
 	
 	/**
-	 * Liefert die kuerzeste Distanz von einem gegebenen Punkt (in
-	 * Gitterkoordinaten) zum Ziel
+	 * Liefert die kürzeste Distanz von einem gegebenen Punkt (in
+	 * Gitterkoordinaten) zum Ziel.
 	 * 
-	 * @param from
-	 *            Startpunkt in Weltkoordinaten
+	 * @param from	Startpunkt in Weltkoordinaten
 	 * @return Distanz (ohne Drehungen) in Metern
 	 */
 	public double getShortestDistanceToFinish(Vector3d from) {
-		// LODO: z wird ignoriert -- wird nicht mehr klappen, wenn der Bot
+		// TODO: z wird ignoriert -- wird nicht mehr klappen, wenn der Bot
 		// (hypothetisch) mal Rampen hochfährt und sich auf verschiedenen
-		// Ebenen bewegt
+		// Ebenen bewegt.
 		return getShortestDistanceToFinish(new Vector2d(from.x, from.y));
 	}
 
 	/**
-	 * Liefert die kuerzeste Distanz von einem gegebenen Punkt (in
+	 * Liefert die kürzeste Distanz von einem gegebenen Punkt (in
 	 * Gitterkoordinaten) zum Ziel
 	 * 
-	 * @param from
-	 *            Startpunkt in Weltkoordinaten
+	 * @param from	Startpunkt in Weltkoordinaten
 	 * @return Distanz in Metern
 	 */
 	public double getShortestDistanceToFinish(Vector2d from) {
@@ -787,10 +742,9 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert den kuerzesten Pfad von einem bestimmten Punkt aus zum Ziel
+	 * Liefert den kürzesten Pfad von einem bestimmten Punkt aus zum Ziel
 	 * 
-	 * @param from
-	 *            Startpunkt in weltkoordinaten
+	 * @param from	Startpunkt in weltkoordinaten
 	 * @return Liste der Turningpoints (Gitterkoordinaten!!!)
 	 */
 	public Vector<TurningPoint> getShortestPath(Vector3d from) {
@@ -798,10 +752,9 @@ public class Parcours {
 	}
 
 	/**
-	 * Liefert den kuerzesten Pfad von einem bestimmten Punkt aus zum Ziel
+	 * Liefert den kürzesten Pfad von einem bestimmten Punkt aus zum Ziel
 	 * 
-	 * @param from
-	 *            Startpunkt in weltkoordinaten
+	 * @param from	Startpunkt in weltkoordinaten
 	 * @return Liste der Turningpoints (Gitterkoordinaten!!!)
 	 */
 	public Vector<TurningPoint> getShortestPath(Vector2d from) {
@@ -833,13 +786,14 @@ public class Parcours {
 			}
 		}
 
-		// finde die kuerzeste Verbindung
+		// finde die kürzeste Verbindung
 		return shortestPath;
 	}
 	
 	/** 
 	 * Rechnet eine Block-Koordinate in eine Welt-Koordinate um
-	 * @param koord Block-Koordinate
+	 * 
+	 * @param koord	Block-Koordinate
 	 * @return Welt-Koordinate [mm]
 	 */
 	public int blockToWorld(int koord) {
@@ -848,7 +802,8 @@ public class Parcours {
 	
 	/**
 	 * Liefert die Startposition zu einer Bot-Nr.
-	 * @param bot Nummer des Bots [0, 2]
+	 * 
+	 * @param bot	Nummer des Bots [0, 2]
 	 * @return {X, Y}
 	 */
 	public int[] getStartPositions(int bot) {
@@ -861,7 +816,8 @@ public class Parcours {
 	
 	/**
 	 * Rechnet eine Welt-Koordinate in eine globale Position um
-	 * @param worldPos Welt-Position (wie von Java3D verwendet)
+	 * 
+	 * @param worldPos	Welt-Position (wie von Java3D verwendet)
 	 * @return globale Position (wie zur Lokalisierung verwendet) / Blocks
 	 */
 	public Point2i transformWorldposToGlobalpos(Point3d worldPos) {

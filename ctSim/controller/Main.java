@@ -47,8 +47,7 @@ import ctSim.view.gui.SplashWindow;
  * ist der Aufruf der {@link #main(String[])}-Methode dieser Klasse.
  * </p>
  * <p>
- * Inhaltlich befasst sich die Klasse mit grundlegenden
- * Initialisierungs-Geschichten.
+ * Inhaltlich befasst sich die Klasse mit grundlegenden Initialisierungs-Geschichten.
  * </p>
  */
 public class Main {
@@ -79,7 +78,7 @@ public class Main {
 	 * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu
 	 * starten.
 	 *
-	 * @param args Als Kommandozeilenargumente sind momentan zulässig:
+	 * @param args	Als Kommandozeilenargumente sind momentan zulässig:
 	 * <ul>
 	 * <li>{@code -conf pfad/zur/konfigdatei.xml}: Andere Konfigurationsdatei
 	 * als die standardmäßige config/ct-sim.xml verwenden</li>
@@ -131,7 +130,7 @@ public class Main {
 	/**
 	 * Siehe {@link #main(String...)}.
 	 * 
-	 * @param args Command-Line-Argumente
+	 * @param args	Command-Line-Argumente
 	 */
 	private static void handleCommandLineArgs(String[] args) {
 		for (int i = 0; i < args.length; i++) {
@@ -152,7 +151,8 @@ public class Main {
 
 	/**
 	 * Initialisiert den Logger
-	 * @return	Logger-Instanz
+	 * 
+	 * @return Logger-Instanz
 	 */
 	public static FmtLogger initLogging() {
 		try {
@@ -172,9 +172,7 @@ public class Main {
 		return rv;
     }
 
-	/**
-	 * Lädt die Konfiguration
-	 */
+	/** Lädt die Konfiguration */
 	private static void loadConfig() {
 		try {
 			Config.loadConfigFile(DEFAULT_CONFIGFILE);
@@ -193,9 +191,7 @@ public class Main {
 		}
 	}
 
-	/**
-	 * Initialisierung von View und Controller
-	 */
+	/** Initialisierung von View und Controller */
 	private static void setupViewAndController() {
 		Controller c = dependencies.get(Controller.class);
 

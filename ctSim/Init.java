@@ -23,9 +23,7 @@ import javax.swing.UIManager;
 
 import ctSim.util.FmtLogger;
 
-/**
- * Initialisierungen für ct-Sim 
- */
+/** Initialisierungen für ct-Sim */
 public class Init {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.controller.Init");
@@ -50,9 +48,7 @@ public class Init {
 		}
 	}
 	
-	/**
-	 * Metal-Design einstellen
-	 */
+	/** Metal-Design einstellen */
 	private static void useMetalLookAndFeel() {
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");

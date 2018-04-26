@@ -32,6 +32,7 @@ import ctSim.model.bots.Bot;
 
 /**
  * Modell der Karte, die der Bot von der Umgebung erstellt (MAP_AVAILABLE)
+ * 
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class Map {
@@ -49,16 +50,14 @@ public class Map {
 	private Macroblock[][] macroblocks;
 	
 	/**
-	 * Ein Makroblock stellt einen macroblock_length * macroblock_length Byte grossen Teil der Map dar
+	 * Ein Makroblock stellt einen macroblock_length * macroblock_length Byte großen Teil der Map dar
 	 * und enthält die Sections der Map.
 	 */
 	private class Macroblock {
 		/** Sections dieses Makroblocks */
 		private Section[][] sections;
 		
-		/** 
-		 * Erzeugt einen neuen Makroblock 
-		 */
+		/** Erzeugt einen neuen Makroblock */
 		public Macroblock() {
 			int length_in_sections = macroblock_length / section_points;
 			this.sections = new Section[length_in_sections][length_in_sections];
@@ -71,10 +70,11 @@ public class Map {
 		
 		/**
 		 * Liefert die Section in der das Feld (x|y) liegt
-		 * @param x X-Koordinate relativ zum Makroblock
-		 * @param y Y-Koordinate relativ zum Makroblock
+		 * 
+		 * @param x	X-Koordinate relativ zum Makroblock
+		 * @param y	Y-Koordinate relativ zum Makroblock
 		 * @return Section des gewünschten Feldes
-		 * @throws MapException falls auf eine Section ausserhalb des Makroblocks zugegriffen wird
+		 * @throws MapException falls auf eine Section außerhalb des Makroblocks zugegriffen wird
 		 */
 		public Section getSection(int x, int y) throws MapException {
 			int index_x = x / section_points;
@@ -88,8 +88,9 @@ public class Map {
 		}
 		
 		/**
-		 * Schreibt die Daten (aller Sections) dieses Makroblocks in einen Byte-Stream 
-		 * @param stream Stream, dem die Makroblock-Daten angehängt werden
+		 * Schreibt die Daten (aller Sections) dieses Makroblocks in einen Byte-Stream
+		 * 
+		 * @param stream	Stream, dem die Makroblock-Daten angehängt werden
 		 * @throws IOException falls beim Schreiben in den Stream ein Fehler auftritt
 		 */
 		public void toByteStream(OutputStream stream) throws IOException {
@@ -102,7 +103,7 @@ public class Map {
 	}
 	
 	/**
-	 * Eine Section stellt einen section_points * section_points Byte grossen Teil der Map dar,
+	 * Eine Section stellt einen section_points * section_points Byte großen Teil der Map dar,
 	 * enthält die Felder der Map und liegt in einem Makroblock. 
 	 */
 	private class Section {
@@ -118,10 +119,11 @@ public class Map {
 		
 		/**
 		 * Gibt einen Feld-Wert zurück
-		 * @param x X-Index des Feldes innerhalb der Section
-		 * @param y Y-Index des Feldes innerhalb der Section
+		 * 
+		 * @param x	X-Index des Feldes innerhalb der Section
+		 * @param y	Y-Index des Feldes innerhalb der Section
 		 * @return Feld (x|y) dieser Section
-		 * @throws MapException falls auf ein Feld ausserhalb der Section zugegriffen wird
+		 * @throws MapException falls auf ein Feld außerhalb der Section zugegriffen wird
 		 */
 		public byte getField(int x, int y) throws MapException {
 			if (x >= section_points || y >= section_points) {
@@ -132,10 +134,11 @@ public class Map {
 		
 		/**
 		 * Schreibt einen Feld-Wert in die Section
-		 * @param x X-Index des Feldes innerhalb der Section
-		 * @param y Y-Index des Feldes innerhalb der Section
+		 * 
+		 * @param x	X-Index des Feldes innerhalb der Section
+		 * @param y	Y-Index des Feldes innerhalb der Section
 		 * @param value zu schreibender Wert
-		 * @throws MapException falls auf ein Feld ausserhalb der Section zugegriffen wird
+		 * @throws MapException falls auf ein Feld außerhalb der Section zugegriffen wird
 		 */
 		public void setField(int x, int y, byte value) throws MapException {
 			if (x >= section_points || y >= section_points) {
@@ -145,8 +148,9 @@ public class Map {
 		}
 		
 		/**
-		 * Schreibt die Daten dieser Section in einen Byte-Stream 
-		 * @param stream Stream, dem die Section-Daten angehängt werden
+		 * Schreibt die Daten dieser Section in einen Byte-Stream
+		 * 
+		 * @param stream	Stream, dem die Section-Daten angehängt werden
 		 * @throws IOException falls beim Schreiben in den Stream ein Fehler auftritt
 		 */
 		public void toByteStream(OutputStream stream) throws IOException {
@@ -160,10 +164,11 @@ public class Map {
 	
 	/**
 	 * Erstellt eine leere Map mit den folgenden Parametern:
-	 * @param size Größe der Karte [m]
-	 * @param resolution Aufloesung der Karte [Punkte / m]
-	 * @param section_points Kantenlänge einer Section [Punkte]
-	 * @param macroblock_length Kantenlänge eines Macroblocks [Punkte]
+	 * 
+	 * @param size	Größe der Karte [m]
+	 * @param resolution	Auflösung der Karte [Punkte / m]
+	 * @param section_points	Kantenlänge einer Section [Punkte]
+	 * @param macroblock_length	Kantenlänge eines Macroblocks [Punkte]
 	 */
 	public Map(float size, int resolution, int section_points, int macroblock_length) {
 		this.size = size;
@@ -173,17 +178,18 @@ public class Map {
 		
 		final int length_in_macroblocks = (int)(this.size * this.resolution / this.macroblock_length);
 		this.macroblocks = new Macroblock[length_in_macroblocks][length_in_macroblocks];
-		// Makrobloecke werden on demand angelegt in access_field()
+		// Makroblöcke werden on demand angelegt in access_field()
 	}
 	
 	/**
 	 * Greift auf ein Map-Feld lesend oder schreibend zu
-	 * @param x Map-Koordinate X
-	 * @param y Map-Koordinate Y
-	 * @param value zu schreibender Wert (falls set == true)
-	 * @param set lesender (false) oder schreibender (true) Zugriff
+	 * 
+	 * @param x	Map-Koordinate X
+	 * @param y	Map-Koordinate Y
+	 * @param value	zu schreibender Wert (falls set == true)
+	 * @param set	lesender (false) oder schreibender (true) Zugriff
 	 * @return Wert des Feldes (fall set == false)
-	 * @throws MapException falls auf ein Feld ausserhalb der Karte zugegriffen wird
+	 * @throws MapException falls auf ein Feld außerhalb der Karte zugegriffen wird
 	 */
 	private byte access_field(int x, int y, byte value, boolean set) throws MapException {
 		int mb_index_x = x / macroblock_length;
@@ -214,7 +220,8 @@ public class Map {
 	
 	/** 
 	 * Wandelt eine Welt-Koordinate in eine Map-Koordinate um
-	 * @param koord Welt-Koordinate
+	 * 
+	 * @param koord	Welt-Koordinate
 	 * @return Map-Koordinate
 	 */
 	private int world_to_map(int koord) {
@@ -224,11 +231,12 @@ public class Map {
 	
 	/**
 	 * Trägt die Daten eines Parcours in die Karte ein. Als Urpsrung wird das Startfeld 
-	 * verwendet, das zum Bot der angegebenen Nr. gehört. 
-	 * @param parcours zu verwendender Parcours 
-	 * @param bot Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird
-	 * @param free Wert, mit dem freie Felder eingetragen werden (z.B. 100)
-	 * @param occupied Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
+	 * verwendet, das zum Bot der angegebenen Nr. gehört.
+	 * 
+	 * @param parcours	zu verwendender Parcours 
+	 * @param bot	Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird
+	 * @param free	Wert, mit dem freie Felder eingetragen werden (z.B. 100)
+	 * @param occupied	Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
 	 * @throws MapException im Fehlerfall
 	 */
 	public void createFromParcours(Parcours parcours, int bot, int free,
@@ -236,7 +244,7 @@ public class Map {
 
 		if (parcours.getHeightInM() > this.size
 				|| parcours.getHeightInM() > this.size) {
-			/* Parcours ist zu gross */
+			/* Parcours ist zu groß */
 			throw new MapException("Parcours " + parcours
 					+ " ist zu gross, max " + this.size + " m x " + this.size
 					+ " m möglich");
@@ -297,10 +305,11 @@ public class Map {
 	/**
 	 * Trägt die Daten eines Parcours in die Karte ein. Als Urpsrung wird das Startfeld 
 	 * des angegebenen Bots verwendet.
-	 * @param parcours zu verwendender Parcours 
-	 * @param bot Bot, dessen Startfeld als Koordinatenursprung der Map benutzt wird
-	 * @param free Wert, mit dem freie Felder eingetragen werden (z.B. 100)
-	 * @param occupied Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
+	 * 
+	 * @param parcours	zu verwendender Parcours
+	 * @param bot	Bot, dessen Startfeld als Koordinatenursprung der Map benutzt wird
+	 * @param free	Wert, mit dem freie Felder eingetragen werden (z.B. 100)
+	 * @param occupied	Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
 	 * @throws MapException im Fehlerfall
 	 */
 	public void createFromParcours(Parcours parcours, Bot bot, int free,
@@ -311,8 +320,9 @@ public class Map {
 	}
 	
 	/**
-	 * Schreibt die komplette Map in einen Byte-Stream 
-	 * @param stream Stream, dem die Map-Daten angehängt werden
+	 * Schreibt die komplette Map in einen Byte-Stream
+	 * 
+	 * @param stream	Stream, dem die Map-Daten angehängt werden
 	 * @throws IOException falls beim Schreiben in den Stream ein Fehler auftritt
 	 */
 	private void toByteStream(OutputStream stream) throws IOException {
@@ -331,7 +341,8 @@ public class Map {
 	
 	/**
 	 * Exportiert die Map in eine Datei (Bot-Format)
-	 * @param file Datei
+	 * 
+	 * @param file	Datei
 	 * @throws IOException falls beim Schreiben in die Datei etwas schief ging
 	 */
 	public void exportToFile(File file) throws IOException {
@@ -347,6 +358,7 @@ public class Map {
 	
 	/**
 	 * Exportiert die Map in eine auszuwählende Datei (Bot-Format)
+	 * 
 	 * @throws IOException falls beim Schreiben in die Datei etwas schief ging
 	 */
 	public void export() throws IOException {
@@ -375,23 +387,20 @@ public class Map {
 		exportToFile(file);
 	}
 	
-	/**
-	 * Map-Exceptions
-	 */
+	/** Map-Exceptions */
 	public class MapException extends Throwable {
 		/** ID */
 		private static final long serialVersionUID = 141554206659442950L;
 
-		/**
-		 * Map-Exception ohne Fehlermeldung
-		 */
+		/** Map-Exception ohne Fehlermeldung */
 		public MapException() {
 			super();
 		}
 
 		/**
 		 * Map-Exception mit Fehlermeldung
-		 * @param msg Fehlermeldung
+		 * 
+		 * @param msg	Fehlermeldung
 		 */
 		public MapException(String msg) {
 			super(msg);

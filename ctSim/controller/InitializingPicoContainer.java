@@ -26,22 +26,19 @@ import org.picocontainer.Parameter;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
-/**
- * Initialisierter Pico-Container 
- */
+/** Initialisierter Pico-Container */
 public class InitializingPicoContainer extends DefaultPicoContainer {
     /** UID */
 	private static final long serialVersionUID = - 6940983694133437239L;
 
-    /**
-     * Initialisierter Pico-Container 
-     */
+    /** Initialisierter Pico-Container */
     public InitializingPicoContainer() {
     	super();
     }
 
     /**
      * Initialisierter Pico-Container 
+     * 
      * @param parent 
      */
 	public InitializingPicoContainer(PicoContainer parent) {
@@ -50,6 +47,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 
 	/**
 	 * Getter
+	 * 
 	 * @param <T>
 	 * @param componentKey
 	 * @return T
@@ -60,6 +58,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 
 	/**
 	 * Klasse initialisiert?
+	 * 
 	 * @param classToInitialize Klasse
 	 */
 	private void ensureInitialized(Class<?> classToInitialize) {

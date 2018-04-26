@@ -41,6 +41,7 @@ public class TcpConnection extends Connection {
 
 	/**
 	 * TCP-Verbindung
+	 * 
 	 * @param sock	Socket
 	 * @throws IOException
 	 */
@@ -54,8 +55,8 @@ public class TcpConnection extends Connection {
 	 * Wandelt den übergebenen String und die Portnummer in eine TCP/IP-Adresse
 	 * und stellt dann die Verbindung her
 	 *
-	 * @param hostname Adresse als String
-	 * @param port Portnummer
+	 * @param hostname	Adresse als String
+	 * @param port		Portnummer
 	 * @throws IOException
 	 */
 	public TcpConnection(String hostname, int port) throws IOException {
@@ -64,6 +65,7 @@ public class TcpConnection extends Connection {
 
 	/**
 	 * Beendet die laufende Verbindung
+	 * 
 	 * @throws IOException
 	 */
 	@Override
@@ -90,6 +92,7 @@ public class TcpConnection extends Connection {
 
 	/**
 	 * Beginnt zu lauschen
+	 * 
 	 * @param receiver	Bot-Receiver
 	 */
 	public static void startListening(final BotReceiver receiver) {
@@ -124,6 +127,7 @@ public class TcpConnection extends Connection {
 
 	/**
 	 * Verbindet zu Host:Port
+	 * 
 	 * @param hostname	Host-Name des Bots
 	 * @param port		Port
 	 * @param receiver	Bot-Receiver
@@ -147,7 +151,7 @@ public class TcpConnection extends Connection {
 				} catch (IOException e) {
 					lg.severe(e, "E/A-Problem beim Verbinden mit "+address);
 				}
-				// Arbeit ist getan, ob's funktioniert hat oder nicht
+				// Arbeit ist getan, ob es funktioniert hat oder nicht...
 				die();
 			}
 		}.start();

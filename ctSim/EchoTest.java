@@ -41,7 +41,7 @@ public class EchoTest {
 	
 	public void send(Connection connection) throws IOException{
 		Command command = new Command();
-		lastTransmittedSimulTime+=1;//(int)world.getSimulTime();
+		lastTransmittedSimulTime+=1; //(int)world.getSimulTime();
 		command.setCommand(Command.CMD_DONE);
 		command.setDataL(lastTransmittedSimulTime);
 		command.setDataR(0);
@@ -79,13 +79,14 @@ public class EchoTest {
 	
 	/**
 	 * main
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try{
 			EchoTest et = new EchoTest();
 			
-		//	long sendTime;
+//			long sendTime;
 			
 			ServerSocket server = new ServerSocket(10001);
 			TcpConnection tcp = new TcpConnection();
@@ -95,7 +96,7 @@ public class EchoTest {
 	
 			while(1==1){
 				et.send(tcp);
-			//	sendTime=System.nanoTime()/1000;
+//				sendTime=System.nanoTime()/1000;
 				et.receiveCommands(tcp);
 			}
 			
