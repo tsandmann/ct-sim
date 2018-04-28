@@ -47,9 +47,11 @@ import ctSim.util.Misc;
 
 /**
  * Map-Repräsentation im Sim
- * <ul><li>Command-Code MAP</li>
+ * <ul>
+ * <li>Command-Code MAP</li>
  * <li>Nutzlast: Ein Block der Map-Rohdaten</li>
  * </ul>
+ * 
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class MapComponent extends BotComponent<Void>
@@ -87,7 +89,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/** Empfangsstatus (0: noch keine Daten, 1: 1 Teil empfangen, 2: 2. Teil empfangen, 3: 3. Teil empfangen */
 	private int receiveState = 0;
-	/** Adresse des letzten empfangenen Blocks (muss für alle Teilbloecke gleich sein) */
+	/** Adresse des letzten empfangenen Blocks (muss für alle Teilblöcke gleich sein) */
 	private int lastBlock = 0;
 	/** Kleinste belegte X-Koordinate */
 	private int min_x = 0xffffff;
@@ -107,9 +109,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/** Image-Objekt für das Map-Bild */
 	private final Image image;
 	
-	/**
-	 * Map-Komponente
-	 */
+	/** Map-Komponente */
 	public MapComponent() { 
 		super(null);
 		
@@ -158,7 +158,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		pixels = new int[WIDTH * HEIGHT];
 		botPos = new Point3i(WIDTH / 2, HEIGHT / 2, 0);
 		
-		int color = colorFromRgb(128, 128, 128); // Map-Wert 0
+		int color = colorFromRgb(128, 128, 128);	// Map-Wert 0
 		for (int i=0; i<pixels.length; i++) {
 			pixels[i] = color;
 		}
@@ -187,11 +187,12 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Map anfordern
+	 * 
 	 * @throws IOException
 	 */
 	public synchronized void requestMap() throws IOException {
-		/* Fenster komplett loeschen */
-		int color = colorFromRgb(128, 128, 128); // Map-Wert 0
+		/* Fenster komplett löschen */
+		int color = colorFromRgb(128, 128, 128);	// Map-Wert 0
 		for (int i = 0; i < pixels.length; ++i) {
 			pixels[i] = color;
 		}
@@ -222,48 +223,42 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * <p>
-	 * Konvertiert ein RGB-Wertetripel in nen Integer, wie er im Array
-	 * {@link #pixels} sein muss. Format ist etwas undurchsichtig:
+	 * Konvertiert ein RGB-Wertetripel in nen Integer, wie er im Array {@link #pixels} sein muss.
+	 * Format ist etwas undurchsichtig:
 	 * <ul>
-	 * <li>Es handelt sich um eine 4-Komponenten-Farbe (Alpha, Rot, Grün,
-	 * Blau in dieser Reihenfolge)</li>
+	 * <li>Es handelt sich um eine 4-Komponenten-Farbe (Alpha, Rot, Grün, Blau in dieser Reihenfolge)</li>
 	 * <li>8 Bit pro Komponente ([0; 255]) = 32 Bit pro Pixel</li>
-	 * <li><strong>Die 32 Bit sind in <em>einen</em> Integer gestopft.</strong>
-	 * (Integer in Java: 32 Bit lang.)
-	 * <ul>
-	 * <li>Alpha-Wert = die 8 höchstwertigen Bits (MSBs), also Bits
-	 * 24–32</li>
-	 * <li>usw.</li>
-	 * <li>Blau-Wert = die 8 niedrigstwertigen Bits (LSBs), also Bits 0–8
-	 * </li>
+	 * <li><strong>Die 32 Bit sind in <em>einen</em> Integer gestopft.</strong> (Integer in Java: 32 Bit lang.)</li>
+	 * <li>Alpha-Wert = die 8 höchstwertigen Bits (MSBs), also Bits 24–32 usw.</li>
+	 * <li>Blau-Wert = die 8 niedrigstwertigen Bits (LSBs), also Bits 0–8</li>
 	 * </ul>
-	 * </li>
 	 * <li>Details siehe {@link ColorModel#getRGBdefault()}</li>
-	 * </ul>
 	 * </p>
 	 * <p>
 	 * Alpha setzt diese Methode immer auf 255 (voll deckend).
 	 * </p>
 	 * <p>
-	 * Sind die übergebenen Parameter außerhalb des Wertebereichs [0;
-	 * 255], wird geclampt (255 wenn zu groß, 0 wenn zu klein).
+	 * Sind die übergebenen Parameter außerhalb des Wertebereichs [0;255], wird geclampt
+	 * (255 wenn zu groß, 0 wenn zu klein).
 	 * </p>
-	 * @param r rot
-	 * @param g gruen
-	 * @param b blau
+	 * 
+	 * @param r	rot
+	 * @param g	grün
+	 * @param b	blau
 	 * @return Farbe
 	 */
 	private final int colorFromRgb(int r, int g, int b) {
 		r = Misc.clamp(r, 255);
 		g = Misc.clamp(g, 255);
 		b = Misc.clamp(b, 255);
-		// Alpha volle Pulle, die anderen wie als Parameter übergeben
+		// Alpha voll deckend, die anderen wie als Parameter übergeben
 		return 255 << 24 | r << 16 | g << 8 | b;
 	}
 	
 	/**
 	 * Überträgt die empfangenen Daten in das Pixel-Array. 
 	 * Die Koordinaten werden dabei gemäß der Map-Parameter aus der Blockadresse berechnet.
+	 * 
 	 * @param data	Map-Rohdaten
 	 * @param block	Blockadresse der Daten
 	 * @param from	Startindex der Daten
@@ -279,23 +274,23 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/* neu empfangene Daten ins Map-Array kopieren */
 		int pic_x = 0, pic_y = 0;
 		int bufferIndex = 0;
-		for (int j = from; j <= to && bufferIndex < data.length; ++j) { // Zeilen
-			pic_y = x + j; // X der Map ist Y beim Sim
+		for (int j = from; j <= to && bufferIndex < data.length; ++j) {	// Zeilen
+			pic_y = x + j;	// X der Map ist Y beim Sim
 			if (pic_y >= HEIGHT || pic_y < 0) {
-				/* ungueltige Daten */
+				/* ungültige Daten */
 				lg.warn("ungueltige Map-Position (pic_y=" + pic_y + ") breche Update ab");
 				return;
 			}
 			pic_y = (HEIGHT - 1) - pic_y;	// Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
 			int row_offset = pic_y * WIDTH;
-			for (int i = 0; i < SECTION_SIZE; ++i) { // Spalten
-				pic_x = y + i; // Spaltenindex im Block berechnen, Y der Map ist X beim Sim
+			for (int i = 0; i < SECTION_SIZE; ++i) {	// Spalten
+				pic_x = y + i;	// Spaltenindex im Block berechnen, Y der Map ist X beim Sim
 				if (pic_x >= WIDTH || pic_x < 0) {
-					/* ungueltige Daten */
+					/* ungültige Daten */
 					lg.warn("ungueltige Map-Position (pic_x=" + pic_x + ") breche Update ab");
 					return;
 				}
-				pic_x = (WIDTH - 1) - pic_x; // Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
+				pic_x = (WIDTH - 1) - pic_x;	// Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
 				/* Grauwert von int8_t nach int umrechnen */
 				int gray = data[bufferIndex++];
 				if (gray > 128) {
@@ -308,8 +303,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				pixels[pic_x + row_offset] = colorFromRgb(gray, gray, gray);
 			}
 		}
-		pic_x &= ~(SECTION_SIZE - 1); // Koordinaten innerhalb des Blocks ausblenden ==> Eckpunkt mit kleinsten Koordinaten
-		pic_y &= ~(SECTION_SIZE * 2 - 1); // 2 sections pro Block in X-Richtung (Map-Orientierung) entspricht Y-Richtung (Sim-Orientierung)
+		// Koordinaten innerhalb des Blocks ausblenden ==> Eckpunkt mit kleinsten Koordinaten:
+		pic_x &= ~(SECTION_SIZE - 1);
+		// 2 Sections pro Block in X-Richtung (Map-Orientierung) entspricht Y-Richtung (Sim-Orientierung):
+		pic_y &= ~(SECTION_SIZE * 2 - 1);
 		if (pic_x < min_x) {
 			min_x = pic_x;
 		} else if (pic_x > max_x) {
@@ -324,6 +321,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	
 	/**
 	 * Trägt übertragene Zeichnungsdaten einer Linie in die interne Datenstruktur ein
+	 * 
 	 * @param color	Farbe der Linie
 	 * @param data	Rohdaten vom Kommando
 	 */
@@ -340,9 +338,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	
 	/**
 	 * Trägt übertragene Zeichnungsdaten eines Kreises in die interne Datenstruktur ein
-	 * @param color	Farbe der Kreislinie
-	 * @param radius Radius des Kreises
-	 * @param data	Rohdaten vom Kommando
+	 * 
+	 * @param color		Farbe der Kreislinie
+	 * @param radius	Radius des Kreises
+	 * @param data		Rohdaten vom Kommando
 	 */
 	private final void updateDrawingsCircle(int color, int radius, byte[] data) {
 		int y = WIDTH - (Misc.toUnsignedInt8(data[0]) | Misc.toUnsignedInt8(data[1]) << 8);
@@ -355,17 +354,18 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	
 	/**
 	 * Wertet ein Map-Kommando aus
-	 * @param c Command
+	 * 
+	 * @param c	Command
 	 */
 	public synchronized void readFrom(Command c) {
 		if (! c.has(getHotCmdCode())) {
 			return;
 		}
 
-		int block = c.getDataL(); // 16 Bit Adresse des Map-Blocks
+		int block = c.getDataL();	// 16 Bit Adresse des Map-Blocks
 		
 		/* SubCode auswerten, ein Block wird in vier Teilen übertragen. 
-		 * Alle Teile müssen dieselbe Blockadresse in DataL mitführen! */
+		 * Alle Teile müssen die selbe Blockadresse in DataL mitführen! */
 		Command.SubCode sub = c.getSubCode();
 		if (sub.equals(Command.SubCode.MAP_DATA_1)) {
 			if (receiveState != 0) {
@@ -375,8 +375,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				receiveState = 0;
 				return;
 			}
-			botPos.y = HEIGHT - c.getDataR(); // Bot-Position, X-Komponente, wird im Bild in Y-Richtung gezählt
-			updateInternalModel(c.getPayload(), block, 0, 7); // macht die eigentliche Arbeit
+			botPos.y = HEIGHT - c.getDataR();	// Bot-Position, X-Komponente, wird im Bild in Y-Richtung gezählt
+			updateInternalModel(c.getPayload(), block, 0, 7);	// macht die eigentliche Arbeit
 			receiveState = 1;
 			lastBlock = block;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_2)) {
@@ -387,8 +387,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				receiveState = 0;
 				return;
 			}
-			botPos.x = WIDTH - c.getDataR(); // Bot-Position, Y-Komponente, wird im Bild in X-Richtung gezählt
-			updateInternalModel(c.getPayload(), block, 8, 15); // macht die eigentliche Arbeit
+			botPos.x = WIDTH - c.getDataR();	// Bot-Position, Y-Komponente, wird im Bild in X-Richtung gezählt
+			updateInternalModel(c.getPayload(), block, 8, 15);	// macht die eigentliche Arbeit
 			receiveState = 2;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_3)) {
 			if (receiveState != 2 || lastBlock != block) {
@@ -399,7 +399,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				return;
 			}
 			botPos.z = c.getDataR();
-			updateInternalModel(c.getPayload(), block, 16, 23); // macht die eigentliche Arbeit
+			updateInternalModel(c.getPayload(), block, 16, 23);	// macht die eigentliche Arbeit
 			receiveState = 3;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_4)) {
 			if (receiveState != 3 || lastBlock != block) {
@@ -410,7 +410,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				return;
 			}
 			// DataR ist nicht belegt
-			updateInternalModel(c.getPayload(), block, 24, 31); // macht die eigentliche Arbeit
+			updateInternalModel(c.getPayload(), block, 24, 31);	// macht die eigentliche Arbeit
 			receiveState = 0;
 			
 			/* GUI-Update freigeben */
@@ -442,11 +442,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	/**
-	 * No-op: Wir implementieren die, weil wir laut Interface müssen, aber
-	 * wir brauchen die nicht weil wir ja
-	 * {@link #askForWrite(CommandOutputStream) askForWrite()}
-	 * überschrieben haben.
-	 * @param c Command
+	 * No-op: Wir implementieren dies, weil wir laut Interface müssen, aber wir brauchen es nicht,
+	 * weil wir ja {@link #askForWrite(CommandOutputStream) askForWrite()} überschrieben haben.
+	 * 
+	 * @param c	Command
 	 */
 	public void writeTo(Command c) { 
 		/* No-op */ 
@@ -454,12 +453,14 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Kartenbreite (X-Richtung)
+	 * 
 	 * @return Breite
 	 */
 	public int getWidth() { return WIDTH; }
 	
 	/**
 	 * Kartenhöhe (Y-Richtung)
+	 * 
 	 * @return Höhe
 	 */
 	public int getHeight() { return HEIGHT; }
@@ -514,8 +515,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	/**
-	 * Fügt einen Listener hinzu, der ausgeführt wird, wenn sich die Karte verändert hat 
-	 * @param li Listener
+	 * Fügt einen Listener hinzu, der ausgeführt wird, wenn sich die Karte verändert hat
+	 *  
+	 * @param li	Listener
 	 */
 	public void addImageListener(Runnable li) {
 		if (li == null) {
@@ -547,24 +549,25 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	
 	/**
 	 * Speichert die Karte als png-Bild
-	 * @param file Dateiname
+	 * 
+	 * @param file	Dateiname
 	 * @throws IOException 
 	 */
 	public void saveImage(File file) throws IOException {		
-		/* Grosse der Map berechnen */
+		/* Größe der Map berechnen */
 		final int width = max_x + (SECTION_SIZE - 1) - min_x + 1;
 		final int height = max_y + (SECTION_SIZE * 2 - 1) - min_y + 1;
 		
 		/* belegten Teil in neues Bild kopieren */
 		BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics g = bimg.createGraphics();
-		g.setColor(new Color(128, 128, 128, 255)); // "Map-Wert 0"
+		g.setColor(new Color(128, 128, 128, 255));	// "Map-Wert 0"
 		g.fillRect(0, 0, width, height);
 		
 		/* Pixel kopieren */
 		int[] map = new int[width * height];
-		for (int y = min_y + 1; y < max_y + SECTION_SIZE * 2; ++y) { // Zeilen
-			System.arraycopy(pixels, min_x + 1 + y * WIDTH, map, (y - min_y - 1) * width, width); // alle Spalten einer Zeile
+		for (int y = min_y + 1; y < max_y + SECTION_SIZE * 2; ++y) {	// Zeilen
+			System.arraycopy(pixels, min_x + 1 + y * WIDTH, map, (y - min_y - 1) * width, width);	// alle Spalten einer Zeile
 		}
 		
 		/* Bild zeichnen und als png speichern */

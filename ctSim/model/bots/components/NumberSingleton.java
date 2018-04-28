@@ -25,18 +25,12 @@ import javax.swing.event.ChangeListener;
 
 import ctSim.model.Command;
 
-/**
- * Zahlendarstellung
- */
+/** Zahlendarstellung */
 public abstract class NumberSingleton extends BotComponent<SpinnerNumberModel> {
-	/**
-	 * Zahlenwert
-	 */
+	/** Zahlenwert */
 	protected Number internalModel = Double.valueOf(0);
 
-	/**
-	 * Zahl
-	 */
+	/** Zahl */
 	public NumberSingleton() {
 		super(new SpinnerNumberModel());
 		getExternalModel().addChangeListener(new ChangeListener() {
@@ -47,14 +41,14 @@ public abstract class NumberSingleton extends BotComponent<SpinnerNumberModel> {
 	}
 
 	/**
-	 * @param c Command
+	 * @param c	Command
 	 */
 	public synchronized void writeTo(Command c) {
 		c.setDataL(internalModel.intValue());
 	}
 
 	/**
-	 * @param c Command
+	 * @param c	Command
 	 */
 	public void readFrom(Command c) {
 		internalModel = c.getDataL();
