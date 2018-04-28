@@ -74,7 +74,7 @@ public class Map {
 		 * @param x	X-Koordinate relativ zum Makroblock
 		 * @param y	Y-Koordinate relativ zum Makroblock
 		 * @return Section des gewünschten Feldes
-		 * @throws MapException falls auf eine Section außerhalb des Makroblocks zugegriffen wird
+		 * @throws MapException	falls auf eine Section außerhalb des Makroblocks zugegriffen wird
 		 */
 		public Section getSection(int x, int y) throws MapException {
 			int index_x = x / section_points;
@@ -91,7 +91,7 @@ public class Map {
 		 * Schreibt die Daten (aller Sections) dieses Makroblocks in einen Byte-Stream
 		 * 
 		 * @param stream	Stream, dem die Makroblock-Daten angehängt werden
-		 * @throws IOException falls beim Schreiben in den Stream ein Fehler auftritt
+		 * @throws IOException	falls beim Schreiben in den Stream ein Fehler auftritt
 		 */
 		public void toByteStream(OutputStream stream) throws IOException {
 			for (Section[] row : this.sections) {
@@ -123,7 +123,7 @@ public class Map {
 		 * @param x	X-Index des Feldes innerhalb der Section
 		 * @param y	Y-Index des Feldes innerhalb der Section
 		 * @return Feld (x|y) dieser Section
-		 * @throws MapException falls auf ein Feld außerhalb der Section zugegriffen wird
+		 * @throws MapException	falls auf ein Feld außerhalb der Section zugegriffen wird
 		 */
 		public byte getField(int x, int y) throws MapException {
 			if (x >= section_points || y >= section_points) {
@@ -138,7 +138,7 @@ public class Map {
 		 * @param x	X-Index des Feldes innerhalb der Section
 		 * @param y	Y-Index des Feldes innerhalb der Section
 		 * @param value zu schreibender Wert
-		 * @throws MapException falls auf ein Feld außerhalb der Section zugegriffen wird
+		 * @throws MapException	falls auf ein Feld außerhalb der Section zugegriffen wird
 		 */
 		public void setField(int x, int y, byte value) throws MapException {
 			if (x >= section_points || y >= section_points) {
@@ -151,7 +151,7 @@ public class Map {
 		 * Schreibt die Daten dieser Section in einen Byte-Stream
 		 * 
 		 * @param stream	Stream, dem die Section-Daten angehängt werden
-		 * @throws IOException falls beim Schreiben in den Stream ein Fehler auftritt
+		 * @throws IOException	falls beim Schreiben in den Stream ein Fehler auftritt
 		 */
 		public void toByteStream(OutputStream stream) throws IOException {
 			for (int y=0; y<section_points; y++) {
@@ -189,7 +189,7 @@ public class Map {
 	 * @param value	zu schreibender Wert (falls set == true)
 	 * @param set	lesender (false) oder schreibender (true) Zugriff
 	 * @return Wert des Feldes (fall set == false)
-	 * @throws MapException falls auf ein Feld außerhalb der Karte zugegriffen wird
+	 * @throws MapException	falls auf ein Feld außerhalb der Karte zugegriffen wird
 	 */
 	private byte access_field(int x, int y, byte value, boolean set) throws MapException {
 		int mb_index_x = x / macroblock_length;
@@ -237,7 +237,7 @@ public class Map {
 	 * @param bot	Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird
 	 * @param free	Wert, mit dem freie Felder eingetragen werden (z.B. 100)
 	 * @param occupied	Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
-	 * @throws MapException im Fehlerfall
+	 * @throws MapException	im Fehlerfall
 	 */
 	public void createFromParcours(Parcours parcours, int bot, int free,
 			int occupied) throws MapException {
@@ -310,7 +310,7 @@ public class Map {
 	 * @param bot	Bot, dessen Startfeld als Koordinatenursprung der Map benutzt wird
 	 * @param free	Wert, mit dem freie Felder eingetragen werden (z.B. 100)
 	 * @param occupied	Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
-	 * @throws MapException im Fehlerfall
+	 * @throws MapException	im Fehlerfall
 	 */
 	public void createFromParcours(Parcours parcours, Bot bot, int free,
 			int occupied) throws MapException {
@@ -323,7 +323,7 @@ public class Map {
 	 * Schreibt die komplette Map in einen Byte-Stream
 	 * 
 	 * @param stream	Stream, dem die Map-Daten angehängt werden
-	 * @throws IOException falls beim Schreiben in den Stream ein Fehler auftritt
+	 * @throws IOException	falls beim Schreiben in den Stream ein Fehler auftritt
 	 */
 	private void toByteStream(OutputStream stream) throws IOException {
 		/** Nicht allokierte Makrobloecke werden als dieser null-dumm geschrieben */
@@ -343,7 +343,7 @@ public class Map {
 	 * Exportiert die Map in eine Datei (Bot-Format)
 	 * 
 	 * @param file	Datei
-	 * @throws IOException falls beim Schreiben in die Datei etwas schief ging
+	 * @throws IOException	falls beim Schreiben in die Datei etwas schief ging
 	 */
 	public void exportToFile(File file) throws IOException {
 		OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
@@ -359,7 +359,7 @@ public class Map {
 	/**
 	 * Exportiert die Map in eine auszuwählende Datei (Bot-Format)
 	 * 
-	 * @throws IOException falls beim Schreiben in die Datei etwas schief ging
+	 * @throws IOException	falls beim Schreiben in die Datei etwas schief ging
 	 */
 	public void export() throws IOException {
 		JFileChooser fc = new JFileChooser();

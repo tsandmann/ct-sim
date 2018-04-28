@@ -16,7 +16,7 @@ zu erreichen.
 <project default="make-applet">
 
 <!-- Variablen -->
-<property name="builddir" location="applet-build" />
+<property name="builddir" location="build-applet" />
 <property name="iconsdir" location="./images" />
 <property name="jar-base-filename" value="ctsim-applet" />
 <property name="makecobdir" location="./contrib/makecob" />
@@ -48,12 +48,23 @@ zu erreichen.
 	-->
 
 	<!-- Ding kompilieren samt allen Abhängigkeiten -->
-	<javac srcdir="ctSim/applet" sourcepath="." destdir="${builddir}" 
-		classpath="contrib/j3d/j3dcore.jar\:contrib/j3d/j3dutils.jar\:contrib/j3d/vecmath.jar\:contrib/BrowserLauncher2-1_3.jar\:contrib/jSerialComm-1.3.10.jar\:contrib/picocontainer-1.2.jar" />
+	<javac
+		srcdir="ctSim/applet"
+		sourcepath="."
+		destdir="${builddir}"
+		classpath="
+		contrib/jSerialComm/jSerialComm-2.0.2.jar\:
+		contrib/java3d/j3dcore.jar\:
+		contrib/java3d/j3dutils.jar\:
+		contrib/java3d/vecmath.jar\:
+		contrib/picocontainer-1.2.jar\:
+		contrib/BrowserLauncher2-1_3.jar"
+		includeantruntime="false"
+	/>
 
 	<!-- Manifest für die Jars schreiben -->
 	<manifest file="${builddir}/META-INF/MANIFEST.MF">
-	  <attribute name="Built-By" value="${user.name}"/>
+	  <attribute name="Built-By" value="${user.name}" />
 	</manifest>
 
 	<!--
@@ -65,33 +76,24 @@ zu erreichen.
 	Wir rufen mehrfach die unten definierte "Funktion" namens make-jar auf
 	-->
 	<antcall target="make-jar">
-		<param name="num" value="1"/>
-		<param name="subdirs" value="
-			ctSim/*.class,
-			ctSim/applet/**/*.class,
-			ctSim/controller/**/*.class"/>
+		<param name="num" value="1" />
+		<param name="subdirs" value="ctSim/*.class, ctSim/applet/**/*.class, ctSim/controller/**/*.class" />
 	</antcall>
 	<antcall target="make-jar">
-		<param name="num" value="2"/>
-		<param name="subdirs" value="
-			ctSim/model/*.class,
-			ctSim/model/bots/*.class"/>
+		<param name="num" value="2" />
+		<param name="subdirs" value="ctSim/model/*.class, ctSim/model/bots/*.class" />
 	</antcall>
 	<antcall target="make-jar">
-		<param name="num" value="3"/>
-		<param name="subdirs" value="
-			ctSim/view/**/*.class"/>
+		<param name="num" value="3" />
+		<param name="subdirs" value="ctSim/view/**/*.class" />
 	</antcall>
 	<antcall target="make-jar">
-		<param name="num" value="4"/>
-		<param name="subdirs" value="
-			ctSim/model/bots/ctbot/*.class,
-			ctSim/util/**/*.class"/>
+		<param name="num" value="4" />
+		<param name="subdirs" value="ctSim/model/bots/ctbot/*.class, ctSim/util/**/*.class" />
 	</antcall>
     <antcall target="make-jar">
-			<param name="num" value="5"/>
-			<param name="subdirs" value="
-				ctSim/model/bots/components/*.class"/>
+			<param name="num" value="5" />
+			<param name="subdirs" value="ctSim/model/bots/components/*.class" />
 	</antcall>
 	<jar destfile="${builddir}/icons.jar"
 		basedir="${iconsdir}"
@@ -113,7 +115,8 @@ zu erreichen.
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 <target name="make-jar">
-	<jar destfile="${builddir}/${jar-base-filename}-${num}.jar"
+	<jar
+		destfile="${builddir}/${jar-base-filename}-${num}.jar"
 		basedir="${builddir}"
 		includes="${builddir}/ctSim/META-INF,${subdirs}"
 		excludes="${exclude}"
@@ -134,8 +137,8 @@ zu erreichen.
 <!-- Erstellt eine cob-Datei aus jar-Archiv Nr. "num" -->
 <target name="make-cob-step">
 	<antcall target="make-cob">
-		<param name="file" value="${jar-base-filename}-${i}.jar"/>
-		<param name="num" value="${i}"/>				
+		<param name="file" value="${jar-base-filename}-${i}.jar" />
+		<param name="num" value="${i}" />				
 	</antcall>	
 </target>
 
@@ -154,19 +157,19 @@ zu erreichen.
 	
 	<!-- es gibt keine for-Schleife, also ausrollen -->
 	<antcall target="make-cob-step">
-		<param name="i" value="1"/>
+		<param name="i" value="1" />
 	</antcall>
 	<antcall target="make-cob-step">
-		<param name="i" value="2"/>
+		<param name="i" value="2" />
 	</antcall>
 	<antcall target="make-cob-step">
-		<param name="i" value="3"/>
+		<param name="i" value="3" />
 	</antcall>
 	<antcall target="make-cob-step">
-		<param name="i" value="4"/>
+		<param name="i" value="4" />
 	</antcall>
 	<antcall target="make-cob-step">
-		<param name="i" value="5"/>
+		<param name="i" value="5" />
 	</antcall>
 	
 	<delete file="${builddir}/makecob" />

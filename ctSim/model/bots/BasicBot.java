@@ -39,46 +39,36 @@ import ctSim.util.Misc;
  * <p>
  * Superklasse für alle Bots, unabhängig davon, ob sie –
  * <ul>
- * <li><strong>real</strong> sind, d.h. ein Bot aus Hardware wurde an den Sim
- * angeschlossen und der Sim spielt daher hauptsächlich die Rolle eines
- * erweiterten Displays für Sensorwerte, die von echten Sensoren stammen
- * (mit anderen Worten, der Sim läuft im Slave-Modus)</li>
- * <li><strong>simuliert</strong> sind, d.h. es gibt keinen Bot aus Hardware,
- * es läuft nur der Steuercode auf einem PC. Sensordaten kommen in diesem
- * Fall nicht von echter Hardware, sondern über TCP vom Sim, der sie
- * ausgerechnet hat (Sim im Master-Modus)</li>
- * <li><strong>c't-Bots</strong> sind oder nicht – theoretisch
- * könnte jemand ja mal den Simulator um selbstgestrickte Bots erweitern,
- * die keine c't-Bot sind.</li>
+ * <li><strong>real</strong> sind, d.h. ein Bot aus Hardware wurde an den Sim angeschlossen
+ * und der Sim spielt daher hauptsächlich die Rolle eines erweiterten Displays für Sensorwerte,
+ * die von echten Sensoren stammen (mit anderen Worten, der Sim läuft im Slave-Modus).</li>
+ * <li><strong>simuliert</strong> sind, d.h. es gibt keinen Bot aus Hardware, es läuft nur der
+ * Steuercode auf einem PC. Sensordaten kommen in diesem Fall nicht von echter Hardware,
+ * sondern über TCP vom Sim, der sie ausgerechnet hat (Sim im Master-Modus).</li>
+ * <li><strong>c't-Bots</strong> sind oder nicht -- theoretisch könnte jemand ja mal den
+ * Simulator um selbstgestrickte Bots erweitern, die keine c't-Bot sind.</li>
  * </ul>
  * </p>
- * <p>
- * Die Klasse ist abstrakt und muss daher erst abgeleitet werden, um
- * instanziiert werden zu können.
- * </p>
- * <p>
- * Der Haupt-Thread kümmert sich um die eigentliche Simulation und die
- * Koordination mit dem Zeittakt der Welt. Die Kommunikation z.B. über eine
- * TCP/IP-Verbindung muss von den abgeleiteten Klassen selbst behandelt werden.
- * </p>
+ * <p>Die Klasse ist abstrakt und muss daher erst abgeleitet werden, um instanziiert werden
+ * zu können.</p>
+ * <p>Der Haupt-Thread kümmert sich um die eigentliche Simulation und die Koordination mit
+ * dem Zeittakt der Welt. Die Kommunikation z.B. über eine TCP/IP-Verbindung muss von den
+ * abgeleiteten Klassen selbst behandelt werden.</p>
  *
  * @author Benjamin Benz (bbe@heise.de)
  * @author Peter König (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
 public abstract class BasicBot implements Bot {
-	/**
-	 * Die Connection an der der Bot hängt
-	 */
+	/** Die Connection an der der Bot hängt */
 	private Connection connection;
 	
-	/**
-	 * Hier ist der Controller gespeichert, der den Bot verwaltet
-	 */
+	/** Hier ist der Controller gespeichert, der den Bot verwaltet */
 	private Controller controller;
 
 	/**
 	 * Liefert die Id eines Bots für die Adressierung der Commands zurück
+	 * 
 	 * @return Id des Bots
 	 */
 	public BotID getId() {
@@ -90,13 +80,14 @@ public abstract class BasicBot implements Bot {
 	}
 
 	/**
-	 * Setzt die Id des Bots für die Adressierung der Commands 
-	 * @param newId ID des Bots
-	 * @throws ProtocolException Wenn die Id bereits vergeben ist
+	 * Setzt die Id des Bots für die Adressierung der Commands
+	 * 
+	 * @param newId	ID des Bots
+	 * @throws ProtocolException	Wenn die Id bereits vergeben ist
 	 */
 	public void setId(BotID newId) throws ProtocolException {
 		if (newId.equals(this.getId()))
-			return; // ID ist schon gesetzt
+			return;	// ID ist schon gesetzt
 		if (controller != null) {
 			if (!controller.isIdFree(newId)) {
 				lg.warn("Die neue Id dieses Bots (" + newId
@@ -111,7 +102,8 @@ public abstract class BasicBot implements Bot {
 	
 	/**
 	 * Liste
-	 * @param <T> Typ
+	 * 
+	 * @param <T>	Typ
 	 */
 	public static class BulkList<T> extends ArrayList<T> {
 		/** UID */
@@ -119,7 +111,8 @@ public abstract class BasicBot implements Bot {
 		
 		/**
 		 * Fügt Elemente hinzu
-		 * @param elements Die Elemente
+		 * 
+		 * @param elements	Die Elemente
 		 */
 		public void add(T... elements) {
             for (T e : elements)
@@ -127,16 +120,14 @@ public abstract class BasicBot implements Bot {
         }
 	}
 	
-	/**
-	 * Zählklasse
-	 */
+	/** Zählklasse */
 	public static class CountingMap
 	extends HashMap<Class<? extends BasicBot>, Integer> {
 		/** UID */
 		private static final long serialVersionUID = 6419402218947363629L;
 
 		/**
-		 * @param c Bot
+		 * @param c	Bot
 		 */
 		public synchronized void increase(Class<? extends BasicBot> c) {
 			if (containsKey(c))
@@ -146,7 +137,7 @@ public abstract class BasicBot implements Bot {
 		}
 
 		/**
-		 * @param c Bot
+		 * @param c	Bot
 		 */
 		public synchronized void decrease(Class<? extends BasicBot> c) {
 			if (containsKey(c))
@@ -158,10 +149,9 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * <p>
-	 * Liste von BotComponents; wie ArrayList, aber kann zusätzlich 1.
-	 * Component-Flag-Tabellen (siehe
-	 * {@link #applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) applyFlagTable()})
-	 * und 2. Massen-Hinzufügen:
+	 * Liste von BotComponents; wie ArrayList, aber kann zusätzlich 1. Component-Flag-Tabellen
+	 * (siehe {@link #applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) applyFlagTable()})
+	 * und 2. Massen hinzufügen:
 	 *
 	 * <pre>
 	 * componentList.add(
@@ -169,12 +159,11 @@ public abstract class BasicBot implements Bot {
 	 *     new BotComponent&lt;...&gt;(...),
 	 *     new BotComponent&lt;...&gt;(...),
 	 *     ...
-	 * );</pre>
-	 *
+	 * );
+	 * </pre>
 	 * </p>
 	 *
-	 * @author Hendrik Krauß &lt;<a
-	 * href="mailto:hkr@heise.de">hkr@heise.de</a>>
+	 * @author Hendrik Krauß (hkr@heise.de)
 	 */
 	public static class BotComponentList extends BulkList<BotComponent<?>> {
         /** UID */
@@ -198,36 +187,33 @@ public abstract class BasicBot implements Bot {
          *         components.add(
          *             new Plappermaul(...),
          *             new Goldbein("links"),
-         *             new Goldbein("rechts"), // Beide Instanzen werden betroffen
+         *             new Goldbein("rechts"),	// Beide Instanzen werden betroffen
          *             new Nervensaegmodul(...),
          *         );
          *
          *         // Hier die Component-Flag-Tabelle
          *         // Setzen, welche BotComponents lesen/schreiben
          *         components.applyFlagTable(
-         *             _(Plappermaul.class, WRITES),   // schreibt ins TCP
-         *             _(Nervensaegmodul.class, READS, WRITES), // liest + schreibt
-         *             _(Goldbein.class)   // weder noch
+         *             _(Plappermaul.class, WRITES),	// schreibt ins TCP
+         *             _(Nervensaegmodul.class, READS, WRITES),	// liest + schreibt
+         *             _(Goldbein.class)	// weder noch
          *         );
          *     }
          * }
          * </pre>
 		 *
-		 * Component-Flag-Tabellen sind also eine Verknüpfung dieser
-		 * Methode, einer Hilfsmethode mit Namen Unterstrich (_) und einer
-		 * kleinen Klasse (CompntWithFlag). Vorteil: eine Superklasse, z.B.
-		 * CtBot, kann die Komponenten instanziieren. Subklassen, z.B.
-		 * SimulierterCtBot und UeberTcpVerbundenerRealerCtBot, haben ja alle
-		 * dieselben Komponenten, aber betreiben sie in verschiedenen Modi (z.B.
-		 * realer Bot: (fast) alle nur lesen). Die Superklasse macht also
-		 * {@code components.add(...)}, die Subklassen können dann den
+		 * Component-Flag-Tabellen sind also eine Verknüpfung dieser Methode, einer Hilfsmethode
+		 * mit Namen Unterstrich (_) und einer kleinen Klasse (CompntWithFlag). Vorteil: eine
+		 * Superklasse, z.B. CtBot, kann die Komponenten instanziieren. Subklassen, z.B.
+		 * SimulierterCtBot und UeberTcpVerbundenerRealerCtBot, haben ja alle dieselben Komponenten,
+		 * aber betreiben sie in verschiedenen Modi (z.B. realer Bot: (fast) alle nur lesen).
+		 * Die Superklasse macht also {@code components.add(...)}, die Subklassen können dann den
 		 * {@code applyFlagsTable(...)}-Aufruf machen.
 		 * </p>
-		 * <p>
-		 * Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von
-		 * ihnen allen betroffen.
-		 * </p>
-         * @param compntFlagTable Flags
+		 * <p>Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von ihnen allen
+		 * betroffen.</p>
+		 * 
+         * @param compntFlagTable	Flags
 		 */
         public void applyFlagTable(CompntWithFlag... compntFlagTable) {
         	for (BotComponent<?> compnt : this) {
@@ -239,17 +225,15 @@ public abstract class BasicBot implements Bot {
     	}
 
     	/**
-		 * <p>
-		 * Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und
-		 * Aktuatoren). Die Komponente(n), die sich zuständig fühlt
-		 * (fühlen), können etwas damit tun (typischerweise ihren
-		 * eigenen Wert setzen auf den im Kommando gespeicherten).
-		 * </p>
+		 * <p>Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und
+		 * Aktuatoren). Die Komponente(n), die sich zuständig fühlt (fühlen), können etwas damit tun
+		 * (typischerweise ihren eigenen Wert setzen auf den im Kommando gespeicherten).</p>
 		 * <p>
 		 * Implementiert das <a
 		 * href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-Responsibility-Pattern</a>.
 		 * </p>
-    	 * @param command Kommando
+		 * 
+    	 * @param command	Kommando
     	 * @throws ProtocolException 
 		 */
     	public void processCommand(Command command) throws ProtocolException {
@@ -263,9 +247,7 @@ public abstract class BasicBot implements Bot {
     			throw new ProtocolException("Unbekanntes Kommando: " + command);
     	}
 
-    	/**
-    	 * View-Update durchführen
-    	 */
+    	/** View-Update durchführen */
     	public void updateView() {
     		for (BotComponent<?> c : BotComponentList.this)
     			c.updateExternalModel();
@@ -286,8 +268,8 @@ public abstract class BasicBot implements Bot {
 		final ConnectionFlags[] flags;
 
 		/**
-		 * @param compntClass Bot-Komponente
-		 * @param flags Connection-Flags
+		 * @param compntClass	Bot-Komponente
+		 * @param flags			Connection-Flags
 		 */
 		CompntWithFlag(Class<? extends BotComponent<?>> compntClass,
 		ConnectionFlags[] flags) {
@@ -302,8 +284,9 @@ public abstract class BasicBot implements Bot {
 	 * – siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
-	 * @param compntClass Bot-Komponente
-	 * @param flags Connection-Flags
+	 * 
+	 * @param compntClass	Bot-Komponente
+	 * @param flags			Connection-Flags
 	 * @return Component-Flag-Tabelle
 	 */
 	protected static CompntWithFlag createCompnt(
@@ -327,7 +310,7 @@ public abstract class BasicBot implements Bot {
 	private final List<Runnable> disposeListeners = Misc.newList();
 
 	/**
-	 * @param name Bot-Name
+	 * @param name	Bot-Name
 	 */
 	public BasicBot(String name) {
 		super();
@@ -377,9 +360,9 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * <p>
-	 * Laufende Nummer des AliveObstacles, und zwar abhängig von der
-	 * Subklasse: Laufen z.B. 2 GurkenBots und 3 TomatenBots (alle von
-	 * AliveObstacle abgeleitet), dann sind die Instance-Numbers:
+	 * Laufende Nummer des AliveObstacles, und zwar abhängig von der Subklasse:
+	 * Laufen z.B. 2 GurkenBots und 3 TomatenBots (alle von AliveObstacle abgeleitet),
+	 * dann sind die Instance-Numbers:
 	 * <ul>
 	 * <li>GurkenBot 0</li>
 	 * <li>GurkenBot 1</li>
@@ -389,27 +372,25 @@ public abstract class BasicBot implements Bot {
 	 * </ul>
 	 * Instance-Numbers fangen immer bei 0 an.
 	 * </p>
+	 * 
 	 * @return Nummer
-	 *
 	 * @see #toString()
 	 */
 	public int getInstanceNumber() {
 		/*
-		 * Drandenken: Wenn einer ne Subklasse instanziiert, die von
-		 * AliveObstacle abgeleitet ist, wird eine AliveObstacle-Instanz
-		 * automatisch miterzeugt -- Wenn wir hier getClass() aufrufen, liefert
-		 * das aber die exakte Klasse (also in unserm Fall niemals
-		 * AliveObstacle, sondern z.B. BestimmterDingsBot)
+		 * Bedenke: Wenn einer ne Subklasse instanziiert, die von AliveObstacle abgeleitet ist,
+		 * wird eine AliveObstacle-Instanz automatisch miterzeugt -- Wenn wir hier getClass() aufrufen,
+		 * liefert das aber die exakte Klasse (also in unserm Fall niemals AliveObstacle, sondern
+		 * z.B. BestimmterDingsBot)
 		 */
 		return numInstances.get(getClass());
 	}
 
 	/**
 	 * <p>
-	 * Benutzerfreundlicher Name des Bots (wie dem Konstruktor übergeben),
-	 * an die falls erforderlich eine laufende Nummer angehängt ist. Laufen
-	 * z.B. 2 AliveObstacle-Instanzen mit Namen "Gurken-Bot" und 3 mit
-	 * "Tomaten-Bot", sind die Rückgabewerte dieser Methode:
+	 * Benutzerfreundlicher Name des Bots (wie dem Konstruktor übergeben), an die falls erforderlich
+	 * eine laufende Nummer angehängt ist. Laufen z.B. 2 AliveObstacle-Instanzen mit Namen "Gurken-Bot"
+	 * und 3 mit "Tomaten-Bot", sind die Rückgabewerte dieser Methode:
 	 * <ul>
 	 * <li>Gurken-Bot</li>
 	 * <li>Gurken-Bot (2)</li>
@@ -448,7 +429,8 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * Liefert den Controller zurück, der diesen Bot verwaltet
-	 * @return Controller der Controller
+	 * 
+	 * @return Controller	der Controller
 	 */
 	public Controller getController() {
 		return controller;
@@ -456,8 +438,9 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * Setzt den zuständigen Controller
+	 * 
 	 * @param controller
-	 * @throws ProtocolException Wenn die Id dieses Bots im Controller schon belegt ist
+	 * @throws ProtocolException	Wenn die Id dieses Bots im Controller schon belegt ist
 	 */
 	public void setController(Controller controller) throws ProtocolException {
 		this.controller = controller;
@@ -471,6 +454,7 @@ public abstract class BasicBot implements Bot {
 	
 	/**
 	 * Liefert die Connection zurück über die der Bot zu erreichen ist
+	 * 
 	 * @return connection
 	 */
 	public Connection getConnection() {
@@ -479,6 +463,7 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * Setzt die Connection über die der Bot zu erreichen ist
+	 * 
 	 * @param connection
 	 */
 	public void setConnection(Connection connection) {

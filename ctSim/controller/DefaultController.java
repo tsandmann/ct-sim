@@ -618,7 +618,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * Liefert eine Id aus dem Adresspoll zurück
 	 * 
 	 * @return Die neue Id
-	 * @throws ProtocolException	Wenn keine Adresse mehr frei
+	 * @throws ProtocolException	wenn keine Adresse mehr frei
 	 */
 	public BotID generateBotId() throws ProtocolException{
 		byte poolSize= (byte)64;

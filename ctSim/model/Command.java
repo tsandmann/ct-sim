@@ -492,8 +492,7 @@ public class Command {
 		 * @param b	Byte
 		 * @return SubCode
 		 *
-		 * @throws ProtocolException falls der Ascii-Wert von {@code b} keiner
-		 * der Werte dieses Enums ist
+		 * @throws ProtocolException	falls der Ascii-Wert von {@code b} keiner der Werte dieses Enums ist
 		 */
 		public static Code fromByte(int b) throws ProtocolException {
 			for (Code c : Code.values()) {
@@ -678,8 +677,8 @@ public class Command {
 
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB)
-		 * dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher wird ein
-		 * 7 Bit langer unsigned Int zurückgegeben.
+		 * 			dargestellt werden soll. Das erste Bit des Byte ist immer 0; daher wird ein
+		 * 			7 Bit langer unsigned Int zurückgegeben.
 		 */
 		public byte toUint7() { 
 			return onTheWire; 
