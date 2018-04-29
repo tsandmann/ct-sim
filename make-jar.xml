@@ -128,7 +128,6 @@ mehr benötigt wird.
 	-->
 	<path id="ctSim.classpath">
 		<path location="." />
-		<path location="contrib/BrowserLauncher2-1_3.jar" />
 		<path location="contrib/junit-4.1.jar" />
 		<path location="contrib/mysql-connector-java-3.1.13-bin.jar" />
 		<path location="contrib/picocontainer-1.2.jar" />		
@@ -212,7 +211,6 @@ mehr benötigt wird.
 		<!--
 		Libs kopieren
 		-->
-		<copy file="${contrib.dir}/BrowserLauncher2-1_3.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/junit-4.1.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/mysql-connector-java-3.1.13-bin.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/picocontainer-1.2.jar" todir="${build.lib.dir}" />
@@ -262,7 +260,7 @@ mehr benötigt wird.
 			-->
 			<manifest>
 				<attribute name="Main-Class" value="${main.class.name}" />
-				<attribute name="Class-Path" value="BrowserLauncher2-1_3.jar : junit-4.1.jar : mysql-connector-java-3.1.13-bin.jar : picocontainer-1.2.jar : jSerialComm-1.3.10.jar : gluegen-rt-natives-linux-amd64.jar : gluegen-rt-natives-linux-i586.jar : gluegen-rt-natives-macosx-universal.jar : gluegen-rt-natives-windows-amd64.jar : gluegen-rt-natives-windows-i586.jar : gluegen-rt.jar : gluegen.jar : j3dcore.jar : j3dutils.jar : jogl-all-natives-linux-amd64.jar : jogl-all-natives-linux-i586.jar : jogl-all-natives-macosx-universal.jar : jogl-all-natives-windows-amd64.jar : jogl-all-natives-windows-i586.jar : jogl-all.jar : vecmath.jar" />
+				<attribute name="Class-Path" value="junit-4.1.jar : mysql-connector-java-3.1.13-bin.jar : picocontainer-1.2.jar : jSerialComm-1.3.10.jar : gluegen-rt-natives-linux-amd64.jar : gluegen-rt-natives-linux-i586.jar : gluegen-rt-natives-macosx-universal.jar : gluegen-rt-natives-windows-amd64.jar : gluegen-rt-natives-windows-i586.jar : gluegen-rt.jar : gluegen.jar : j3dcore.jar : j3dutils.jar : jogl-all-natives-linux-amd64.jar : jogl-all-natives-linux-i586.jar : jogl-all-natives-macosx-universal.jar : jogl-all-natives-windows-amd64.jar : jogl-all-natives-windows-i586.jar : jogl-all.jar : vecmath.jar" />
 			</manifest>
 		
 		</jar>
