@@ -116,7 +116,7 @@
  *      |
  *      |
  *      v                     hat einen
- *   ContestConductor -------------------------&gt; TournamentPlanner
+ *   ContestConductor -------------------------> TournamentPlanner
  *          |                                            |
  *          |                                            |
  *          | hat einen                                  | hat einen
@@ -144,6 +144,6 @@
  * Gewinner und trägt ihn im Turnierbaum ein.
  * </p>
  *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 package ctSim.view.contestConductor;

@@ -285,7 +285,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * {@link JTabbedPane} üblichen Indizes). Verwendungsbeispiel:
 	 * 
 	 * <pre>
-	 * tabsPane.addCloseListener(new Closure&lt;Integer&gt;() {
+	 * tabsPane.addCloseListener(new Closure<Integer>() {
 	 *     public void run(Integer index) { 
 	 *         Component c = tabsPane.getComponentAt(index);
 	 *         ...

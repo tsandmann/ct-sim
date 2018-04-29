@@ -118,7 +118,7 @@ public class Config {
 	private static IconProvider icons;
 	
 	/**
-	 * Lädt die <code>&lt;parameter></code>-Tags aus der
+	 * Lädt die <code><parameter></code>-Tags aus der
 	 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
 	 * {@link #getValue(String)} verfügbar.
 	 * 

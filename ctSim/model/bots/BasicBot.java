@@ -155,9 +155,9 @@ public abstract class BasicBot implements Bot {
 	 *
 	 * <pre>
 	 * componentList.add(
-	 *     new BotComponent&lt;...&gt;(...),
-	 *     new BotComponent&lt;...&gt;(...),
-	 *     new BotComponent&lt;...&gt;(...),
+	 *     new BotComponent<...>(...),
+	 *     new BotComponent<...>(...),
+	 *     new BotComponent<...>(...),
 	 *     ...
 	 * );
 	 * </pre>
