@@ -42,7 +42,7 @@ import ctSim.model.rules.Judge;
  * @see Controller
  * @see ViewYAdapter
  * 
- * @author Hendrik Krauss (hkr@heise.de)
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public interface View {
 	/**

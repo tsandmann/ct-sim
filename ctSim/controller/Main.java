@@ -43,8 +43,8 @@ import ctSim.view.gui.SplashWindow;
 
 /**
  * <p>
- * Haupt-Einsprungpunkt in den ctSim. Der normale Weg, das Programm zu starten,
- * ist der Aufruf der {@link #main(String[])}-Methode dieser Klasse.
+ * Haupt-Einsprungpunkt in den ctSim. Der normale Weg, das Programm zu starten, ist der Aufruf der
+ * {@link #main(String[])}-Methode dieser Klasse.
  * </p>
  * <p>
  * Inhaltlich befasst sich die Klasse mit grundlegenden Initialisierungs-Geschichten.
@@ -75,8 +75,7 @@ public class Main {
 	}
 
 	/**
-	 * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu
-	 * starten.
+	 * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu starten.
 	 *
 	 * @param args	Als Kommandozeilenargumente sind momentan zulässig:
 	 * <ul>

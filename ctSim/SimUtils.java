@@ -26,8 +26,8 @@ import javax.vecmath.Vector3d;
 import java.lang.Math;
 
 /**
- * Diese Klasse enthält reine Hilfsfunktionen wie Umrechnungsmethoden zwischen
- * verschiedenen Maß-Einheiten usw.
+ * Diese Klasse enthält reine Hilfsfunktionen wie Umrechnungsmethoden zwischen verschiedenen
+ * Maß-Einheiten usw.
  * 
  * @author Peter König (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
@@ -35,9 +35,8 @@ import java.lang.Math;
 public class SimUtils {
 
 	/**
-	 * Errechnet aus einem javax.vecmath.Vector3d eine ganzzahlig gerundete
-	 * Gradangabe und gibt sie als String zurück. Diese Methode wird zur Anzeige
-	 * der Bot-Blickrichtung im ControlPanel benutzt.
+	 * Errechnet aus einem javax.vecmath.Vector3d eine ganzzahlig gerundete Gradangabe und gibt sie
+	 * als String zurück. Diese Methode wird zur Anzeige der Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
 	 * @param vec	der Eingabevektor
 	 * @return die Gradzahl als String
@@ -48,8 +47,8 @@ public class SimUtils {
 	}
 
 	/**
-	 * Errechnet aus einem javax.vecmath.Vector3d eine Gradangabe. Diese Methode
-	 * wird zur Anzeige der Bot-Blickrichtung im ControlPanel benutzt.
+	 * Errechnet aus einem javax.vecmath.Vector3d eine Gradangabe. Diese Methode wird zur Anzeige der
+	 * Bot-Blickrichtung im ControlPanel benutzt.
 	 * 
 	 * @param vec	der Eingabevektor
 	 * @return die (gerundete) Gradzahl als int-Wert
@@ -66,9 +65,8 @@ public class SimUtils {
 	}
 
 	/**
-	 * Erzeugt aus einer Grad-Angabe einen normalisierten
-	 * javax.vecmath.Vector3d. Diese Methode wird zum Setzen der
-	 * Bot-Blickrichtung über das ControlPanel benutzt.
+	 * Erzeugt aus einer Grad-Angabe einen normalisierten javax.vecmath.Vector3d. Diese Methode wird
+	 * zum Setzen der Bot-Blickrichtung über das ControlPanel benutzt.
 	 * 
 	 * @param deg	der Winkel in Grad
 	 * @return der neue Blickvektor
@@ -84,9 +82,8 @@ public class SimUtils {
 	}
 	
 	/**
-	 * Erzeugt aus einer Grad-Angabe einen normalisierten
-	 * javax.vecmath.Vector3d. Diese Methode wird zum Setzen der
-	 * Bot-Blickrichtung über das ControlPanel benutzt.
+	 * Erzeugt aus einer Grad-Angabe einen normalisierten javax.vecmath.Vector3d. Diese Methode wird
+	 * zum Setzen der Bot-Blickrichtung über das ControlPanel benutzt.
 	 * 
 	 * @param deg	der Winkel in Grad
 	 * @return der neue Blickvektor
@@ -113,8 +110,8 @@ public class SimUtils {
 //	}
 
 	/**
-	 * Errechnet den Winkel zwischen Nordrichtung des Universums (Richtung der 
-	 * positiven Y-Achse) und der angegeben Blickrichtung.
+	 * Errechnet den Winkel zwischen Nordrichtung des Universums (Richtung der  positiven Y-Achse)
+	 * und der angegeben Blickrichtung.
 	 * 
 	 * @param heading	Gibt die Blickrichtung an, zu welcher der Winkel berechnet werden soll. 				 
 	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurück

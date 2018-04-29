@@ -55,10 +55,9 @@ public class Main extends JApplet implements BotReceiver {
 	private static final long serialVersionUID = - 2381362461560258968L;
 
 	/**
-	 * Nur für Entwicklung: Normalerweise verbindet sich das Applet mit dem
-	 * Host, von dem es heruntergeladen wurde. Falls es keinen Host gibt, weil
-	 * man es lokal im Browser aufgerufen hat (file:///home/dings/...), dann
-	 * wird ersatzweise diese Adresse genommen, um testen zu können.
+	 * Nur für Entwicklung: Normalerweise verbindet sich das Applet mit dem Host, von dem es
+	 * heruntergeladen wurde. Falls es keinen Host gibt, weil man es lokal im Browser aufgerufen hat
+	 * (file:///home/dings/...), dann wird ersatzweise diese Adresse genommen, um testen zu können.
 	 */
 	private static final String fallbackAddress = "192.168.1.22";
 
