@@ -267,7 +267,7 @@ public class MainWinMenuBar extends JMenuBar {
 	};
 
 //	/**
-//	 * NOP
+//	 * No-op
 //	 */
 //	private Runnable1<Boolean> noOp = new Runnable1<Boolean>() {
 //		public void run(@SuppressWarnings("unused") Boolean argument) {

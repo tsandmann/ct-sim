@@ -91,7 +91,7 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	 */
 	@Override
 	public void updateExternalModel() {
-		// NOP
+		// No-op
 	}
 
 	/**

@@ -654,13 +654,13 @@ public class ContestConductor implements View {
 	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
 	 */
 	public void onJudgeSet(Judge j) {
-		// NOP
+		// No-op
 	}
 	
 	/**
 	 * @see ctSim.view.View#onResetAllBots()
 	 */
 	public void onResetAllBots() {
-		// NOP
+		// No-op
 	}
 }

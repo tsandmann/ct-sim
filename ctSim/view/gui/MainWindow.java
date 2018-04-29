@@ -259,7 +259,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		try {
 			world.setSimStepIntervalInMs(rate);
 		} catch (NullPointerException e) {
-			// NOP
+			// No-op
 		}
 	}
 
@@ -351,14 +351,14 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * @see ctSim.view.View#onApplicationInited()
 	 */
 	public void onApplicationInited() {
-		// NOP
+		// No-op
     }
 
 	/**
 	 * @see ctSim.view.View#onSimulationFinished()
 	 */
 	public void onSimulationFinished() {
-		// NOP
+		// No-op
 	}
 
 	/**

@@ -109,7 +109,7 @@ public abstract class CtBot extends BasicBot {
 					try {
 						Thread.sleep(10);
 					} catch (InterruptedException e) {
-						// NOP
+						// No-op
 					}
 				}
 				BotID newId = getController().generateBotId();
@@ -274,7 +274,7 @@ public abstract class CtBot extends BasicBot {
 				}
 			}
 		} catch (IOException e) {
-			// NOP
+			// No-op
 		}
 	}
 	

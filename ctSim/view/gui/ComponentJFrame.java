@@ -93,22 +93,22 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 			try {
 				objIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream("config/window.settings")));
 			} catch (FileNotFoundException e1) {
-				// NOP
+				// No-op
 			} catch (IOException e1) {
-				// NOP
+				// No-op
 			} 
 			if (objIn != null) {
 				try {
 					positions = (PositionMap) objIn.readObject();
 				} catch (IOException e1) {
-					// NOP
+					// No-op
 				} catch (ClassNotFoundException e1) {
-					// NOP
+					// No-op
 				} 
 				try {
 					objIn.close();
 				} catch (IOException e1) {
-					// NOP
+					// No-op
 				}
 			} else {
 				/* Laden nicht möglich, leere Map erzeugen */
@@ -136,7 +136,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 				try {
 					button.doClick(); // Klick auf den Button schliesst das Fenster und schaltet den Button um
 				} catch (NullPointerException ex) {
-					// NOP
+					// No-op
 				}
 			}
         });
@@ -179,41 +179,41 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	 * @param e 
 	 */
 	public void windowActivated(WindowEvent e) {
-		// NOP
+		// No-op
 	}
 	
 	/**
 	 * @param e 
 	 */
 	public void windowClosing(WindowEvent e) {
-		// NOP
+		// No-op
 	}
 
 	/**
 	 * @param e 
 	 */
 	public void windowDeactivated(WindowEvent e) {
-		// NOP
+		// No-op
 	}
 
 	/**
 	 * @param e 
 	 */
 	public void windowDeiconified(WindowEvent e) {
-		// NOP
+		// No-op
 	}
 
 	/**
 	 * @param e 
 	 */
 	public void windowIconified(WindowEvent e) {
-		// NOP
+		// No-op
 	}
 
 	/**
 	 * @param e 
 	 */
 	public void windowOpened(WindowEvent e) {
-		// NOP
+		// No-op
 	}
 }
