@@ -484,17 +484,17 @@ public class Actuators {
 	 * Das LCD lauscht auf Kommandos mit dem {@linkplain Code#ACT_LCD Command-Code ACT_LCD}.
 	 * Diese Kommandos müssen als Sub-Command-Code einen der folgenden Werte haben:
 	 * <ul>
-	 * <li>{@linkplain SubCode#LCD_CLEAR} – löscht das LCD, so dass überall nur Leerzeichen stehen.</li>
-	 * <li>{@linkplain SubCode#LCD_CURSOR} – Bewegt den Cursor in die Spalte, die in {@code dataL}
+	 * <li>{@linkplain SubCode#LCD_CLEAR} - löscht das LCD, so dass überall nur Leerzeichen stehen.</li>
+	 * <li>{@linkplain SubCode#LCD_CURSOR} - Bewegt den Cursor in die Spalte, die in {@code dataL}
 	 * angegeben ist, und die Zeile, die in {@code dataR} angegeben ist. Beide Angaben zero-based,
 	 * d.h. 0,0 bezeichnet das linkeste Zeichen der obersten Zeile. Negative Werte werden wie 0
 	 * behandelt. Werte rechts außerhalb des Display werden wie die rechteste Spalte behandelt;
 	 * Werte unten außerhalb des Display wie die unterste Zeile.</li>
-	 * <li>{@linkplain SubCode#LCD_DATA} – Holt die Nutzlast des Kommandos und schreibt sie ins
+	 * <li>{@linkplain SubCode#LCD_DATA} - Holt die Nutzlast des Kommandos und schreibt sie ins
 	 * Display an die aktuelle Cursor-Position. Falls dort schon etwas steht, wird der alte Text
 	 * überschrieben (nicht weitergeschoben). Falls der Text rechts aus dem Display hinauslaufen
 	 * würde, wird er abgeschnitten (bricht nicht in die nächste Zeile um).</li>
-	 * <li>{@linkplain SubCode#NORM} – Kombination von LCD_CURSOR und LCD_DATA: Bewegt den Cursor
+	 * <li>{@linkplain SubCode#NORM} - Kombination von LCD_CURSOR und LCD_DATA: Bewegt den Cursor
 	 * wie ein LCD_CURSOR-Kommando und zeigt dann Text an wie ein LCD_DATA-Kommando.</li>
 	 * </ul>
 	 * </p>

@@ -72,7 +72,7 @@ public class Config {
 	 * <p>Vorteile: Die Werte sind hier zentral statt quer durch den Quelltext
 	 * verteilt; Code, der {@link #getValue(String)} aufruft, kann einfacher
 	 * werden, da nicht dauernd der Rügabewert gegen <code>null</code>
-	 * geprüft werden muss – wenn in diesem Array ein Wert steht,
+	 * geprüft werden muss - wenn in diesem Array ein Wert steht,
 	 * kann getValue(String) kein <code>null</code> mehr liefern.</p>*/
 	static final String[] parameterFallbacks = {
 		"botport", "10001",

@@ -37,7 +37,7 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Superklasse für alle Bots, unabhängig davon, ob sie –
+ * Superklasse für alle Bots, unabhängig davon, ob sie -
  * <ul>
  * <li><strong>real</strong> sind, d.h. ein Bot aus Hardware wurde an den Sim angeschlossen
  * und der Sim spielt daher hauptsächlich die Rolle eines erweiterten Displays für Sensorwerte,
@@ -281,7 +281,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * <p>
 	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann
-	 * – siehe
+	 * - siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
 	 * 

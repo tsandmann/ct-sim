@@ -79,7 +79,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * <li>ClosableTabsPane ruft den CloseListener auf, den MainWindow bei der
 	 * ClosableTabsPane angemeldet hat</li>
 	 * <li>CloseListener sagt Bot "verkrümel dich" ({@code dispose()}),
-	 * tut aber sonst nichts – entfernt keine Tabs oder so </li>
+	 * tut aber sonst nichts - entfernt keine Tabs oder so </li>
 	 * <li>Bot geht seine Deinitialisierungs-Routine durch</li>
 	 * <li>Bot ruft seine DisposeListener auf. Einer davon ist der, den
 	 * MainWindow beim Bot angemeldet hat: Dieser sagt schließlich dem Tab

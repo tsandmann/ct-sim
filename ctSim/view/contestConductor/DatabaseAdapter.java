@@ -240,7 +240,7 @@ class DatabaseAdapter {
 	 * <p>
 	 * <strong>Beispielaufruf:</strong>
 	 * <code>ResultSet r = execSql("select * from gurken where id = ? and length = ?", gurkenId, 42);</code>
-	 * – Die Methode verwendet SQL-Strings mit IN-Parametern (dieselbe
+	 * - Die Methode verwendet SQL-Strings mit IN-Parametern (dieselbe
 	 * Syntax wie in {@link PreparedStatement} dokumentiert). Im wesentlichen
 	 * gilt: Die Fragezeichen im String werden reihenfolgenrichtig durch die
 	 * Parameter ersetzt: Erstes Fragezeichen = erster Parameter, zweites =
@@ -272,7 +272,7 @@ class DatabaseAdapter {
 	 * aufgrund von Speicherlecks im ctSim erforderlich. Es hat sich
 	 * herausgestellt, dass bisher die laufend erzeugten Statements offenbar
 	 * erst zur Garbage Collection freigegeben werden, wenn das
-	 * Connection-Objekt, von dem sie erzeugt wurden, geschlossen wurde –
+	 * Connection-Objekt, von dem sie erzeugt wurden, geschlossen wurde -
 	 * d.h. am Programmende. Korrekt angewendet löst diese Methode das
 	 * Speicherproblem. $$ doc update close()
 	 * </p>

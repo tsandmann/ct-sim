@@ -973,7 +973,7 @@ public class Command {
 
 	/**
 	 * Gibt die Nutzdaten als String zurück, unter Verwendung des
-	 * Standard-Charset – siehe {@link String#String(byte[])}.
+	 * Standard-Charset - siehe {@link String#String(byte[])}.
 	 * 
 	 * @return Payload als String
 	 */

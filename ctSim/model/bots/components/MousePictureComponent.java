@@ -120,8 +120,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * <li>Es handelt sich um eine 4-Komponenten-Farbe (Alpha, Rot, Grün, Blau in dieser Reihenfolge)</li>
 	 * <li>8 Bit pro Komponente ([0; 255]) = 32 Bit pro Pixel</li>
 	 * <li><strong>Die 32 Bit sind in <em>einen</em> Integer gestopft.</strong> (Integer in Java: 32 Bit lang.)</li>
-	 * <li>Alpha-Wert = die 8 höchstwertigen Bits (MSBs), also Bits 24–32 usw.</li>
-	 * <li>Blau-Wert = die 8 niedrigstwertigen Bits (LSBs), also Bits 0–8</li>
+	 * <li>Alpha-Wert = die 8 höchstwertigen Bits (MSBs), also Bits 24-32 usw.</li>
+	 * <li>Blau-Wert = die 8 niedrigstwertigen Bits (LSBs), also Bits 0-8</li>
 	 * </ul>
 	 * <li>Details siehe {@link ColorModel#getRGBdefault()}</li>
 	 * </p>
