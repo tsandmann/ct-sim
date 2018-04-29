@@ -27,30 +27,32 @@ import java.util.logging.LogRecord;
 
 /**
  * <p>
- * Formatter, der ausführliche Log-Meldungen produziert. Baut auf das
- * java.util.logging-Framework auf.
+ * Formatter, der ausführliche Log-Meldungen produziert. Baut auf das java.util.logging-Framework auf.
  * </p>
  * <p>
  * <strong>Beispielausgabe:</strong>
  *
  * <pre>[18 Oct 06 13:32:51.441] INFO: Elefanten sind i.d.R. grau [ctSim.controller.info() Thread (10)]</pre>
  *
- * Format ist also "[Zeit-der-Logausgabe] Loglevel: Meldung
- * [Quellpaket.Quellmethode() Thread Threadname-falls-vorhanden (Thread-ID)]".
- * Falls der Logmeldung eine Exception mitgegeben wird, sieht die Ausgabe so
- * aus:
+ * Format ist also
+ * "[Zeit-der-Logausgabe] Loglevel: Meldung [Quellpaket.Quellmethode() Thread Threadname-falls-vorhanden
+ * (Thread-ID)]".
+ * Falls der Logmeldung eine Exception mitgegeben wird, sieht die Ausgabe so aus:
  *
- * <pre>[10 Oct 06 13:53:36.623] SEVERE: TCP-Verbindungen haben sich ganz schlimm verwurstelt [ctSim.model.bots.ctbot.CtBotSimTcp.severe() Thread AWT-Shutdown (18)]
- *java.io.IOException
- *     at java.io.DataInputStream.readFully(DataInputStream.java:178)
- *     at ctSim.Connection.read(Connection.java:180)
- *     at ctSim.model.Command.readCommand(Command.java:322)
- *     at ctSim.model.bots.ctbot.CtBotSimTcp.receiveCommands(CtBotSimTcp.java:973)
- *     at ctSim.model.bots.ctbot.CtBotSimTcp.work(CtBotSimTcp.java:779)
- *     at ctSim.model.AliveObstacle.run(AliveObstacle.java:393)
- *     at java.lang.Thread.run(Thread.java:595)</pre></p>
+ * <pre>[10 Oct 06 13:53:36.623] SEVERE: TCP-Verbindungen haben sich ganz schlimm verwurstelt
+ * [ctSim.model.bots.ctbot.CtBotSimTcp.severe() Thread AWT-Shutdown (18)]
+ * java.io.IOException
+ * 		at java.io.DataInputStream.readFully(DataInputStream.java:178)
+ * 		at ctSim.Connection.read(Connection.java:180)
+ * 		at ctSim.model.Command.readCommand(Command.java:322)
+ * 		at ctSim.model.bots.ctbot.CtBotSimTcp.receiveCommands(CtBotSimTcp.java:973)
+ * 		at ctSim.model.bots.ctbot.CtBotSimTcp.work(CtBotSimTcp.java:779)
+ * 		at ctSim.model.AliveObstacle.run(AliveObstacle.java:393)
+ * 		at java.lang.Thread.run(Thread.java:595)
+ * </pre>
+ * </p>
  *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class CtSimFormatter extends Formatter {
 	/** Format */
@@ -68,7 +70,8 @@ public class CtSimFormatter extends Formatter {
 			r.getThrown().printStackTrace(new PrintWriter(s));
 			throwable = s.toString();
 		}
-		// "* 2" ist quick and dirty. Kommt daher, dass Thread.activeCount() nur Schätzungen über die Größe zurückgibt ... Details siehe Doku der Methode
+		// "*2" ist quick and dirty. Kommt daher, dass Thread.activeCount() nur Schätzungen über die
+		// Größe zurückgibt; für Details siehe Doku der Methode
 		Thread[] threads = new Thread[Thread.activeCount() * 2];
 		Thread.enumerate(threads);
 		String threadName = "";

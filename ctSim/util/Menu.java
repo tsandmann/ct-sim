@@ -27,9 +27,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-/**
- * Menu-Klasse
- */
+/** Menu-Klasse */
 public class Menu extends JMenu {
 	/** UID */
 	private static final long serialVersionUID = - 1890962781596714017L;
@@ -44,13 +42,9 @@ public class Menu extends JMenu {
     		add(a.getMenuItem());
     }
 
-	/**
-	 * Menu-Action
-	 */
+	/** Menu-Action */
 	public static abstract class MAction extends AbstractAction {
-		/**
-		 * UID
-		 */
+		/** UID */
 		private static final long serialVersionUID = -8593361086944554328L;
 
 		/**
@@ -67,9 +61,7 @@ public class Menu extends JMenu {
 		public abstract JMenuItem getMenuItem();
 	}
 
-	/**
-	 * Menü-Einträge
-	 */
+	/** Menü-Einträge */
 	public static class Entry extends MAction {
 		/** UID */
 		private static final long serialVersionUID = 8468636621500013742L;
@@ -80,11 +72,11 @@ public class Menu extends JMenu {
 		private final JMenuItem ourMenuItem;
 
 		/**
-		 * Konstruiert eine {@link MAction} aus Beschriftung, Icon und
-		 * auszuführendem Code.
-		 * @param label Text
-		 * @param icon Icon
-		 * @param code Handler
+		 * Konstruiert eine {@link MAction} aus Beschriftung, Icon und auszuführendem Code.
+		 * 
+		 * @param label	Text
+		 * @param icon	Icon
+		 * @param code	Handler
 		 */
 		public Entry(String label, Icon icon, Runnable code) {
 			super(label, icon);
@@ -93,9 +85,10 @@ public class Menu extends JMenu {
 		}
 
 		/** 
-		 * Wie Entry(String, Icon, Runnable), nur mit ohne Icon 
-		 * @param name Text 
-		 * @param code Handler
+		 * Wie Entry(String, Icon, Runnable), nur mit ohne Icon
+		 * 
+		 * @param name	Text 
+		 * @param code	Handler
 		 */
 		public Entry(String name, Runnable code) {
 			this(name, null, code);
@@ -118,9 +111,7 @@ public class Menu extends JMenu {
 		}
 	}
 
-	/**
-	 * Checkboxes
-	 */
+	/** Checkboxes */
 	public static class Checkbox extends MAction {
 		/** UID */
 		private static final long serialVersionUID = 3470458051483318867L;

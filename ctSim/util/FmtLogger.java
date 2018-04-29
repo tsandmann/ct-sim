@@ -26,25 +26,20 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-/**
- * Logger-Klasse
- */
+/** Logger-Klasse */
 public class FmtLogger extends Logger {
-	/**
-	 * Logger-Factory
-	 */
+	/** Logger-Factory */
 	public abstract static class Factory {
 		/**
 		 * Neuer Logger
+		 * 
 		 * @param name	Name
 		 * @return		Logger
 		 */
 		public abstract Logger createLogger(String name);
 	}
 
-	/**
-	 * Logger-Factory
-	 */
+	/** Logger-Factory */
 	private static Factory loggerFactory = new Factory() {
 		@Override
 		public Logger createLogger(String name) {
@@ -54,7 +49,8 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Setzt Factory
-	 * @param f Factory
+	 * 
+	 * @param f	Factory
 	 */
 	public static void setFactory(Factory f) {
 		loggerFactory = f;
@@ -65,8 +61,9 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Logger
-	 * @param name Name
-	 * @param delegate Delegate
+	 * 
+	 * @param name		Name
+	 * @param delegate	Delegate
 	 */
 	protected FmtLogger(String name, Logger delegate) {
 	    super(name, null);
@@ -74,7 +71,7 @@ public class FmtLogger extends Logger {
     }
 
 	/**
-	 * @param name Name des Loggers
+	 * @param name	Name des Loggers
 	 * @return Logger
 	 */
 	public static synchronized FmtLogger getLogger(String name) {
@@ -83,7 +80,8 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Warnung
-	 * @param msg Text
+	 * 
+	 * @param msg	Text
 	 */
 	public void warn(String msg) {
 		delegate.warning(msg);
@@ -94,6 +92,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Severe
+	 * 
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -103,6 +102,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Warnung
+	 * 
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -112,6 +112,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Warnung
+	 * 
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -121,6 +122,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Info
+	 * 
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -130,6 +132,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Config
+	 * 
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -139,6 +142,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Fine
+	 * 
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -148,6 +152,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Finer
+	 * 
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -157,6 +162,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Finest
+	 * 
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -305,7 +311,7 @@ public class FmtLogger extends Logger {
 
 
 	//////////////////////////////////////////////////////////////////////////
-	// Alptraum: Delegate-Zeugs
+	// Albtraum: Delegate-Elemente
 
 	/**
 	 * @see java.util.logging.Logger#addHandler(java.util.logging.Handler)

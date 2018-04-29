@@ -24,9 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
 
-/**
- * Decoratoror
- */
+/** Decoratoror */
 public class Decoratoror {
 	/**
 	 * @param concreteMethod
@@ -37,7 +35,7 @@ public class Decoratoror {
 	Method abstractMethod) {
 		if (! concreteMethod.getName().equals(abstractMethod.getName()))
 			return false;
-		// return type has to be the same or a specialization
+		// return type has to be the same or a specialisation
 		if (! abstractMethod.getReturnType().isAssignableFrom(
 			concreteMethod.getReturnType()))
 			return false;
@@ -68,8 +66,8 @@ public class Decoratoror {
 	}
 
 	/**
-	 * @param decorators Objekte
-	 * @param m Methode
+	 * @param decorators	Objekte
+	 * @param m				Methode
 	 * @return Objekt
 	 * @throws NoSuchMethodException
 	 */
@@ -93,8 +91,7 @@ public class Decoratoror {
 	public static <T> T createDecorated(
 	Class<T> resultInterface, Object... decorators)
 	throws NoSuchMethodException {
-		// Sanity check -- newProxyInstance will also report that, but to
-		// be clear and explicit ...
+		// Sanity check -- newProxyInstance will also report that, but to be clear and explicit ...
 		if (! resultInterface.isInterface()) {
 			throw new IllegalArgumentException("First argument must " +
 			"represent an interface");
@@ -110,9 +107,8 @@ public class Decoratoror {
 			methodImpls.put(ifcMeth, findImplementor(decorators, ifcMeth));
 
 		/*
-		 * Gotcha: Object's methods don't show up in
-		 * resultInterface.getMethods(), but we need entries in methodImpls for
-		 * them
+		 * Gotcha: Object's methods don't show up in resultInterface.getMethods(), but we need entries
+		 * in methodImpls for them
 		 */
 		for (Method objMeth : Object.class.getMethods())
 			// NoSuchMethodException is impossible here

@@ -25,39 +25,27 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/**
- * Testklasse
- */
+/** Testklasse */
 public class DecoratororTest {
-	/**
-	 * Test-Interface
-	 */
-	interface A                    { /* some type */ }
-	/**
-	 * Test-Interface
-	 */
-	interface SubA    extends A    { /* some type */ }
-	/**
-	 * Test-Interface
-	 */
+	/** Test-Interface */
+	interface A { /* some type */ }
+	/** Test-Interface */
+	interface SubA extends A { /* some type */ }
+	/** Test-Interface */
 	interface SubSubA extends SubA { /* some type */ }
-	/**
-	 * Test-Interface
-	 */
+	/** Test-Interface */
 	interface B { /* some type */ }
 	
-	/**
-	 * Test-Interface
-	 */
+	/** Test-Interface */
 	interface C {
 		/**
 		 * @param someSubA
 		 */
-		void doSomething(SubA someSubA); // for parameter testing
+		void doSomething(SubA someSubA);	// for parameter testing
 		/**
 		 * @return SubA
 		 */
-		SubA getA(); // for name and return type testing
+		SubA getA();	// for name and return type testing
 	}
 
 	/**
@@ -101,7 +89,7 @@ public class DecoratororTest {
 			}.getClass().getDeclaredMethods()[0],
 			C.class.getMethod("getA", new Class[] {})));
 
-		// ok: return type specialized
+		// ok: return type specialised
 		assertTrue(doesImplement(
 			new Object() {
 				public SubSubA getA() { return null; }
@@ -109,20 +97,18 @@ public class DecoratororTest {
 			C.class.getMethod("getA", new Class[] {})));
 	}
 
-	/**
-	 * 
-	 */
+	/** TBD */
 	@Test
 	@SuppressWarnings("unused")
 	public void doesImplementParameterStuff() {
-		// wrong: too many params
+		// wrong: too many parameters
 		assertFalse(doesImplement(
 			new Object() {
 				public void doSomething(SubA x, SubA y) { /* ... */ }
 			}.getClass().getDeclaredMethods()[0],
 			C.class.getDeclaredMethods()[0]));
 
-		// wrong: too few params
+		// wrong: too few parameters
 		assertFalse(doesImplement(
 			new Object() {
 				public void doSomething() { /* ... */ }

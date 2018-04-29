@@ -21,6 +21,7 @@ package ctSim.util;
 
 /**
  * Datentyp für Kreise, die der MapViewer darstellen kann
+ * 
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class MapCircles {
@@ -35,10 +36,11 @@ public class MapCircles {
 	
 	/**
 	 * Kreis, wie er vom MapViewer dargestellt werden kann
-	 * @param x X-Koordinate Mittelpunkt
-	 * @param y Y-Koordinate Mittelpunkt
-	 * @param radius Radius
-	 * @param color Farbe
+	 * 
+	 * @param x			X-Koordinate Mittelpunkt
+	 * @param y			Y-Koordinate Mittelpunkt
+	 * @param radius	Radius
+	 * @param color		Farbe
 	 */
 	public MapCircles(int x, int y, int radius, int color) {
 		this.x = x;
