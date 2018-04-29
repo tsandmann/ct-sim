@@ -54,7 +54,7 @@ import javax.swing.ImageIcon;
  *
  * @see ImageIcon
  * 
- * @author Hendrik Krauss (hkr@heise.de)
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class FileIconMap implements IconProvider {
     /** UID */
@@ -83,10 +83,10 @@ public class FileIconMap implements IconProvider {
      * verschiedenen Erweiterungen gefunden werden (kaese.png, kaese.gif), ist undefiniert.
      * </p>
      *
-     * @param parentDir	Das Verzeichnis, das die zu ladenden Bilddateien enthält.
-     * @throws NullPointerException		Falls parentDir <code>null</code> ist.
-     * @throws FileNotFoundException	Falls parentDir nicht existiert.
-     * @throws IllegalArgumentException	Falls parentDir kein Verzeichnis darstellt.
+     * @param parentDir	das Verzeichnis, das die zu ladenden Bilddateien enthält
+     * @throws NullPointerException		falls parentDir <code>null</code> ist
+     * @throws FileNotFoundException	falls parentDir nicht existiert
+     * @throws IllegalArgumentException	falls parentDir kein Verzeichnis darstellt
      */
     public FileIconMap(File parentDir)
     throws NullPointerException, FileNotFoundException,

@@ -131,15 +131,13 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
 	/**
-	 * Sequencer: Führt die Simulation aus. Während der Simulation
-	 * erledigt er pro Simschritt zwei Hauptaufgaben:
+	 * Sequencer: Führt die Simulation aus. Während der Simulation erledigt er pro Simschritt zwei
+	 * Hauptaufgaben:
 	 * <ul>
-	 * <li>"updateSimulation": Sagt der Welt bescheid, die den ThreeDBots
-	 * bescheid sagt, die den Simulatoren bescheidsagen. Die Simulation rechnen
-	 * einen Sim-Schritt, z.B. wird abhängig von der Motorgeschwindigkeit
-	 * die Position des Bot weitergesetzt</li>
-	 * <li>Die Bots übertragen die Sensordaten zum C-Code, warten auf
-	 * Antwort, und verarbeiten die Antwort.</li>
+	 * <li>"updateSimulation": Sagt der Welt bescheid, die den ThreeDBots bescheid sagt, die den
+	 * Simulatoren Bescheid sagen. Die Simulation rechnen einen Sim-Schritt, z.B. wird abhängig von der
+	 * Motorgeschwindigkeit die Position des Bot weitergesetzt</li>
+	 * <li>Die Bots übertragen die Sensordaten zum C-Code, warten auf Antwort, und verarbeiten die Antwort.</li>
 	 * </ul>
 	 */
 	public void run() {
@@ -211,9 +209,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 					pause();
 				}
 
-				// Add/Start new Bot + neue Runde einläuten
-				// überschreibt startSignal, aber wir haben mit oldStartSignal
-				// eine Referenz aufgehoben
+				// Add/Start new Bot + neue Runde einläuten überschreibt startSignal, aber wir haben
+				// mit oldStartSignal eine Referenz aufgehoben
 				doneSignal  = new CountDownLatch(sequencersWorld
 					.getFutureNumOfBots());
 				startSignal = new CountDownLatch(1);
@@ -230,10 +227,9 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				if (timeToSleep > 0)
 					Thread.sleep(timeToSleep);
 	        } catch (InterruptedException e) {
-	            // Wird von wait() geworfen, wenn jemand closeWorld() macht
-				// während wait() noch läuft (closeWorld() ruft interrupt() auf).
-	        	// Man bittet uns, unsere while-Bedingung auszuwerten,
-				// weil die false geworden ist. Also normal weitergehen.
+	            // Wird von wait() geworfen, wenn jemand closeWorld() macht während wait() noch läuft
+	        	// (closeWorld() ruft interrupt() auf). Man bittet uns, unsere while-Bedingung auszuwerten,
+				// weil die false geworden ist. Also normal weiter gehen.
 	        }
 	    }
 		sequencersWorld.cleanup();
@@ -251,10 +247,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		startSig.await();
 	}
 
-	/**
-	 * Lässt den Sequencer (= die Simulation) pausieren. Keine Wirkung,
-	 * falls keine Welt geladen ist.
-	 */
+	/** Lässt den Sequencer (= die Simulation) pausieren. Keine Wirkung, falls keine Welt geladen ist. */
 	public void pause() {
 		lg.fine("Pause angefordert");
 		this.pause = true;
@@ -274,11 +267,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	}
 
 	/**
-	 * Setzt die Welt. Prinzip: Sequencer und Welt werden gemeinsam erstellt und
-	 * gemeinsam gekillt. setWorld() startet einen Sequencer-Thread, der
-	 * pausiert bleibt bis jemand unpause() aufruft.
+	 * Setzt die Welt. Prinzip: Sequencer und Welt werden gemeinsam erstellt und gemeinsam gekillt.
+	 * setWorld() startet einen Sequencer-Thread, der pausiert bleibt bis jemand unpause() aufruft.
 	 * 
-	 * @param world	Die Welt
+	 * @param world	die Welt
 	 */
 	private void setWorld(World world) {
 		if (world == null)
@@ -391,7 +383,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     /**
      * Handler, falls ein Bot stirbt
      * 
-     * @param bot	Der sterbende Bot
+     * @param bot	der sterbende Bot
      */
     public synchronized void onBotDisappeared(Bot bot) {
     	if (bot != null) {
@@ -409,7 +401,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     /**
 	 * Handler, falls neuer Bot hinzugefügt wurde
 	 * 
-	 * @param bot	Der neue Bot
+	 * @param bot	der neue Bot
 	 */
 	public synchronized void onBotAppeared(final Bot bot) {
 		if (bot instanceof SimulatedBot) {
@@ -556,9 +548,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         
     /**
      * Setzt alle Bots im nächsten Sim-Schritt zurück.
-     * Dadurch, dass hier nur das Reset-Flag gesetzt wird, erübrigt sich das 
-     * Synchronisieren der (Bot-)Threads; der Reset erfolgt einfach beim nächsten
-     * Zeitschritt.
+     * Dadurch, dass hier nur das Reset-Flag gesetzt wird, erübrigt sich das Synchronisieren der
+     * (Bot-)Threads; der Reset erfolgt einfach beim nächsten Zeitschritt.
      */
     public void resetAllBots() {
     	this.reset = true;
@@ -570,7 +561,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * Sender und Empfänger stehen in dem command drin.
 	 *  
 	 * @param command	das zu übertragende Kommando
-	 * @throws ProtocolException	Falls kein passender Empfänger gefunden wurde
+	 * @throws ProtocolException	falls kein passender Empfänger gefunden wurde
 	 */
 	public void deliverMessage(Command command) throws ProtocolException {
 		for (Bot b : bots) {

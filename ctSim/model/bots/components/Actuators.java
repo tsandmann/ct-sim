@@ -138,8 +138,7 @@ public class Actuators {
 		}
 	}
 	
-	/** Servo für Kamera
-	 */
+	/** Servo für Kamera */
 	public static class CamServo extends NumberTwin implements SimpleActuator, CanRead {
 		
 		/**
@@ -234,8 +233,7 @@ public class Actuators {
 					newStuff.delete(0, newStuff.length());
 				}
 			} catch (BadLocationException e) {
-				// kann nur passieren wenn einer was am Code vermurkst;
-				// weiter werfen zu Debugzwecken
+				// kann nur passieren wenn einer was am Code vermurkst; weiter werfen zu Debugzwecken
 				throw new AssertionError(e);
 			}
 		}
@@ -329,7 +327,7 @@ public class Actuators {
 		}
 
 		/**
-		 * Sendet den Inhalt des Fensters als Programm zum Bot.
+		 * Sendet den Inhalt des Fensters als Programm zum Bot
 		 * 
 		 * @param filename	Dateiname für das Programm
 		 * @param data		Das Programm
@@ -352,7 +350,7 @@ public class Actuators {
 				try {
 					Thread.sleep(WAIT_TIME * 3);
 				} catch (InterruptedException e) {
-					// kein Plan
+					// No-op, kein Plan
 				}
 			}
 			
@@ -370,7 +368,7 @@ public class Actuators {
 					try {
 						Thread.sleep(WAIT_TIME);
 					} catch (InterruptedException e) {
-						// kein Plan
+						// No-op, kein Plan
 					}
 				}
 			}
@@ -388,14 +386,14 @@ public class Actuators {
 					try {
 						Thread.sleep(WAIT_TIME);
 					} catch (InterruptedException e) {
-						// kein Plan
+						// No-op, kein Plan
 					}
 				}
 			}
 		}
 		
 		/**
-		 * Bereitet den Transfer eines Programms zum Bot vor.
+		 * Bereitet den Transfer eines Programms zum Bot vor
 		 * 
 		 * @param s			OutputStream für die Daten
 		 * @param filename	Dateiname für das Programm
@@ -595,7 +593,7 @@ public class Actuators {
 		 * Setzt das Display zurück, sodass es auf ganzer Breite und Höhe nur Leerzeichen anzeigt.
 		 * 
 		 * @param d	Document des Displays
-		 * @throws BadLocationException	nur falls jemand was am Code ändert;
+		 * @throws BadLocationException	nur falls jemand etwas am Code ändert;
 		 * 			sollte normalerweise nie vorkommen.
 		 */
 		protected synchronized void clearModel(Document d) throws BadLocationException {

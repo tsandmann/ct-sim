@@ -121,7 +121,7 @@ public class Misc {
 		return false;
 	}
 
-	// throws NullPtr wenn separator == null
+	// @throws NullPtr	wenn separator == null
 	/**
 	 * @param <T>
 	 * @param separator
@@ -197,8 +197,8 @@ public class Misc {
 	 * @param array 
 	 * @param <T> 
 	 * @return letztes Element
-	 * @throws ArrayIndexOutOfBoundsException falls das übergebene Array leer ist (Länge 0 hat)
-	 * @throws NullPointerException falls das übergebene Array {@code null} ist.
+	 * @throws ArrayIndexOutOfBoundsException	falls das übergebene Array leer ist (Länge 0 hat)
+	 * @throws NullPointerException				falls das übergebene Array {@code null} ist
 	 */
 	public static <T> T lastOf(T[] array) {
 		return array[array.length - 1];

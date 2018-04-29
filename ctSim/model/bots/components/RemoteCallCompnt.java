@@ -157,7 +157,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		 * {@code RemoteCallCompnt} im synchronen Modus läuft.
 		 * </p>
 		 *
-		 * @throws IOException	Falls die {@code RemoteCallCompnt} im asynchronen Modus läuft
+		 * @throws IOException	falls die {@code RemoteCallCompnt} im asynchronen Modus läuft
 		 * 						und beim Senden ein E/A-Problem auftritt.
 		 */
 		public void call() throws IOException {
