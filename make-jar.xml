@@ -231,7 +231,6 @@ mehr benötigt wird.
 		<copy file="${contrib.dir}/JogAmp/jogl-all-natives-windows-i586.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/JogAmp/jogl-all.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/picocontainer-1.2.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/BrowserLauncher2-1_3.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/mysql-connector-java-3.1.13-bin.jar" todir="${build.lib.dir}" />
 		
 		<!--
@@ -291,7 +290,6 @@ mehr benötigt wird.
 						jogl-all-natives-windows-amd64.jar :
 						jogl-all-natives-windows-i586.jar :
 						picocontainer-1.2.jar :
-						BrowserLauncher2-1_3.jar :
 						mysql-connector-java-3.1.13-bin.jar
 						" />
 			</manifest>
