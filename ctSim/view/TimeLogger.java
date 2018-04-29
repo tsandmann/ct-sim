@@ -24,13 +24,11 @@ import ctSim.model.bots.Bot;
 import ctSim.model.rules.Judge;
 import ctSim.util.FmtLogger;
 
-/**
- *  Zeit-Logger
- */
+/** Zeit-Logger */
 public class TimeLogger implements View {
 	/** Intervall */
 	private static final int intervalInSimMs = 10000;
-	/** verkuerzte Ausgabe */
+	/** verkürzte Ausgabe */
 	private static final String minimalMsg =
 		"Simzeit %d ms; Armbanduhrenzeit %tT.%<tL";
 	/** komplette Ausgabe */
@@ -39,8 +37,8 @@ public class TimeLogger implements View {
 			"TimeLogger-Ausgabe; 1 : %.3f seit Simulationsbeginn";
 
 	/** Logger */
+	// sicherstellen, dass beim ersten Schritt geloggt wird:
 	FmtLogger lg = FmtLogger.getLogger("ctSim.view.TimeLogger");
-	// sicherstellen, dass beim ersten Schritt geloggt wird
 	/** letzte Sim-Zeit */
 	private long simTimeAtLastLog;
 	/** letzte Real-Zeit */
@@ -48,13 +46,11 @@ public class TimeLogger implements View {
 	/** Real-Zeit beim Start*/
 	private long realTimeAtSimulationStart;
 
-	{ // instance initializer
+	{	// instance initializer
 		initVariables();
 	}
 
-	/**
-	 * Initialisierung
-	 */
+	/** Initialisierung */
 	private void initVariables() {
 		realTimeAtSimulationStart = Long.MIN_VALUE;
 		simTimeAtLastLog = - intervalInSimMs;
@@ -80,8 +76,7 @@ public class TimeLogger implements View {
     		return;
 
 		long now = System.currentTimeMillis();
-		// Falls minimalMsg verwendet wird, wird das überflüssige Argument
-		// ignoriert
+		// Falls minimalMsg verwendet wird, wird das überflüssige Argument ignoriert
 		lg.info((simTimeAtLastLog == - intervalInSimMs)
 			? minimalMsg : normalMsg,
 			simTimeInMs, System.currentTimeMillis(),

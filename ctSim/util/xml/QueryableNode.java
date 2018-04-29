@@ -23,9 +23,7 @@ import org.w3c.dom.Node;
 
 import ctSim.util.xml.XmlDocument.XPathQueryable;
 
-/**
- * QueryableNode
- */
+/** QueryableNode */
 public interface QueryableNode extends Node, XPathQueryable {
 	// Leeres Interface für FacadeFactory
 }
