@@ -372,7 +372,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/** Done-Listener */
 	private final List<Runnable1<BehaviorExitStatus>> doneListeners =
 		Misc.newList();
-	/** Internes Model; cacht Behavior-Instanzen nachdem sie empfangen wurden und bis sie an die
+	/**
+	 * Internes Model; cacht Behavior-Instanzen nachdem sie empfangen wurden und bis sie an die
 	 * behaviorListener gegeben werden
 	 */
 	private final List<Behavior> newBehaviors = Misc.newList();

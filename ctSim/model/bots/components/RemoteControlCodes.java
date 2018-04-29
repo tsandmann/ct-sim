@@ -25,8 +25,9 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
 /**
- * Erzeugt die Zuordnung von Tasten auf Fernbedienungscodes je nach Typ der Fernbedienung 
- * (einstellbar wie beim Bot-Code über die Datei rc5-codes.h). 
+ * Erzeugt die Zuordnung von Tasten auf Fernbedienungscodes je nach Typ der Fernbedienung (einstellbar
+ * wie beim Bot-Code über die Datei rc5-codes.h).
+ * 
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class RemoteControlCodes {
@@ -37,8 +38,8 @@ public class RemoteControlCodes {
 	private final Map<String, Integer> keys = Misc.newMap();
 	
 	/**
-	 * @param type Typ der Fernbedienung (wie in rc5-codes.h beim Bot-Code)
-	 * @throws Exception Falls Typ unbekannt
+	 * @param type	Typ der Fernbedienung (wie in rc5-codes.h beim Bot-Code)
+	 * @throws Exception	falls der Typ unbekannt
 	 */
 	public RemoteControlCodes(final String type) throws Exception {
 		RC5Codes codeMapping = null;
@@ -69,14 +70,16 @@ public class RemoteControlCodes {
 
 	/**
 	 * Gibt die Tastenbelegung der erzeugten Fernbedienung zurück
-	 * @return	HashMap mit Tastenzuordnungen
+	 * 
+	 * @return HashMap mit Tastenzuordnungen
 	 */
 	public Map<String, Integer> getKeyMap() {
 		return keys;
 	}
 	
 	/**
-	 * Fügt eine Taste hinzu und legt ihren RC5-Code in der HashMap ab.
+	 * Fügt eine Taste hinzu und legt ihren RC5-Code in der HashMap ab
+	 * 
 	 * @param label	Name der Taste
 	 * @param code	RC5-Code der Taste
 	 */
@@ -86,21 +89,21 @@ public class RemoteControlCodes {
 	
 	/**
 	 * Interface für alle RC5-Fernbedienungen
+	 * 
 	 * @author Timo Sandmann (mail@timosandmann.de)
 	 */
 	interface RC5Codes {
-		/**
-		 * Erzeugt die Fernbedienungstasten
-		 */
+		/** Erzeugt die Fernbedienungstasten */
 		void createCodes();
 	}
 	
 	/**
-	 * Definiert den Fernbedienungstyp der Standardfernbedienung HQ_RC_UNIVERS29_334 
-	 * und ihre Tastenzuordnungen.
-	 * Möchte man weitere Fernbedienungen ergänzen, erzeugt man weitere Klassen, die 
-	 * RC5Codes implementieren und genauso aufgebaut sind wie diese. Ausserdem trägt 
-	 * man sie ebenfalls in RemoteControlCodes() ein.
+	 * Definiert den Fernbedienungstyp der Standardfernbedienung HQ_RC_UNIVERS29_334 und ihre
+	 * Tastenzuordnungen.
+	 * Möchte man weitere Fernbedienungen ergänzen, erzeugt man weitere Klassen, die RC5Codes
+	 * implementieren und genauso aufgebaut sind wie diese. Außerdem trägt man sie ebenfalls in
+	 * RemoteControlCodes() ein.
+	 * 
 	 * @author Timo Sandmann (mail@timosandmann.de)
 	 */
 	class HQ_RC_UNIVERS29_334 implements RC5Codes {
@@ -146,7 +149,8 @@ public class RemoteControlCodes {
 	}
 	
 	/**
-	 * Definiert den Fernbedienungstyp "HAUPPAUGE_WINTV" und ihre Tastenzuordnungen.
+	 * Definiert den Fernbedienungstyp "HAUPPAUGE_WINTV" und ihre Tastenzuordnungen
+	 * 
 	 * @author Timo Sandmann (mail@timosandmann.de)
 	 */
 	class HAUPPAUGE_WINTV implements RC5Codes {
@@ -176,9 +180,7 @@ public class RemoteControlCodes {
 		}		
 	}
 	
-	/**
-	 * Definiert den Fernbedienungstyp Technisat TTS35AI und ihre Tastenzuordnungen.
-	 */
+	/** Definiert den Fernbedienungstyp Technisat TTS35AI und ihre Tastenzuordnungen */
 	class Technisat_TTS35AI implements RC5Codes {
 		/**
 		 * @see ctSim.model.bots.components.RemoteControlCodes.RC5Codes#createCodes()

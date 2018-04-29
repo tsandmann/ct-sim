@@ -25,14 +25,9 @@ import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Sensors;
 
-/**
- * Klasse aller simulierten c't-Bots ("Testbots"), die nur innerhalb des Simulators existieren
- *
- */
+/** Klasse aller simulierten c't-Bots ("Testbots"), die nur innerhalb des Simulators existieren */
 public class CtBotSimTest extends CtBot implements SimulatedBot {
-	/**
-	 * neuer Test-Bot
-	 */
+	/** neuer Test-Bot */
 	public CtBotSimTest() {
 		super("Test-Bot");
 	
@@ -85,7 +80,7 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 		
 		/* Ansteuerung für die Motoren in Abhängigkeit vom Input der IR-Abstandssensoren */
 
-		/* Solange die Wand weit weg ist, wird Stoff gegeben */
+		/* Solange die Wand weit weg ist, gilt: volle Fahrt voraus */
 		double ll = 255, rr = 255;
 		final double irl = irL.get().doubleValue();
 		final double irr = irR.get().doubleValue();
@@ -96,12 +91,12 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 			/* Wenn wir bereits drehen, dann in die gleiche Richtung weiterdrehen */
 			case 0: {
 				if (rand.nextInt(42) < 25) {
-					/* linksrum */
+					/* links herum */
 					ll = -255;
 					rr = 200;
 					lastState = 1;
 				} else {
-					/* rechtsrum */
+					/* rechts herum */
 					ll = 200;
 					rr = -255;
 					lastState = 2;
@@ -109,13 +104,13 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 				break;
 			}
 			case 1: {
-				/* linksrum */
+				/* links herum */
 				ll = -255;
 				rr = 200;
 				break;
 			}
 			case 2: {
-				/* rechtsrum */
+				/* rechts herum */
 				ll = 200;
 				rr = -255;
 				break;
