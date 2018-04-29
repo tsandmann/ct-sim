@@ -24,16 +24,15 @@ import java.io.OutputStream;
 
 /**
  * <p>
- * Stream, der Sachen ausgibt und dabei Newlines (\n, 0xA) in der
- * plattformueblichen Weise schreibt. Soll heissen: Wenn die Applikation auf
- * Windows läuft, wird das \n in \r\n (0xD 0xA) konvertiert. Wichtig beim
- * Schreiben von Text-Dateien.
+ * Stream, der Sachen ausgibt und dabei Newlines (\n, 0xA) in der plattformüblichen Weise schreibt.
+ * Soll heißen: Wenn die Applikation auf Windows läuft, wird das \n in \r\n (0xD 0xA) konvertiert.
+ * Wichtig beim Schreiben von Text-Dateien.
  * </p>
  * <p>
  * Der Stream wrappt einen anderen Stream (gibt nichts selber aus).
  * </p>
  *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class BackslashNConverterStream extends OutputStream {
 	/** Output-Stream */
@@ -43,8 +42,8 @@ public class BackslashNConverterStream extends OutputStream {
 		System.getProperty("line.separator").getBytes();
 
 	/**
-	 * Erzeugt eine Instanz, die Eingaben konvertiert und an den übergebenen
-	 * Stream weiterreicht.
+	 * Erzeugt eine Instanz, die Eingaben konvertiert und an den übergebenen Stream weiterreicht.
+	 * 
 	 * @param underlyingStream 
 	 */
 	public BackslashNConverterStream(OutputStream underlyingStream) {

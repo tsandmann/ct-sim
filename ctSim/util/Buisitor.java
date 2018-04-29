@@ -21,9 +21,7 @@ package ctSim.util;
 
 import java.lang.reflect.Method;
 
-/**
- * Buisitor-Klasse
- */
+/** Buisitor-Klasse */
 public class Buisitor {
 	/** Ziel */
 	private final Object target;
@@ -36,7 +34,7 @@ public class Buisitor {
 	}
 
 	/**
-	 * @param args Objekte
+	 * @param args	Objekte
 	 * @return Anzahl
 	 */
 	public int dispatchBuisit(Object... args) {
@@ -62,9 +60,10 @@ public class Buisitor {
 	}
 
 	/**
-	 * Checkt eine Signatur
-	 * @param m Methode
-	 * @param types Typen
+	 * Überprüft eine Signatur
+	 * 
+	 * @param m		Methode
+	 * @param types	Typen
 	 * @return true / false
 	 */
 	private static boolean hasSignature(Method m, Class... types) {
@@ -79,21 +78,22 @@ public class Buisitor {
 	}
 
 	/**
-	 * Checkt einen Tyen
+	 * Überprüft einen Type
+	 * 
 	 * @param supertype
 	 * @param subtype
 	 * @return true / false 
 	 */
 	private static boolean isSupertype(Class<?> supertype, Class<?> subtype) {
-		// isAssignableFrom() geht mit Referenztypen richtig um; berücksichtigt
-		// Autoboxing/-unboxing aber nicht
+		// isAssignableFrom() geht mit Referenztypen richtig um; berücksichtigt Autoboxing/-unboxing
+		// aber nicht
 		if (supertype.isAssignableFrom(subtype))
 			return true;
 		else {
-			// Primitive müssen wir zu Fuss prüfen
+			// Primitive müssen wir separat prüfen
 			if (isBoolean(supertype))
 				return isBoolean(subtype);
-			//$$ Restliche 8 Primitivtypen prüfen
+			// $$ Restliche 8 Primitivtypen prüfen
 			return false;
 		}
 	}

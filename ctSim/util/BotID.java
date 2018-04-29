@@ -20,13 +20,10 @@
 package ctSim.util;
 
 /**
- * Datentyp für Bot-IDs. Im Prinzip wie byte, gibt das Byte
- * aber als unsigned aus.
- * mit set() kann man der ID einen neuen Wert geben,
- * mit equals() kann man die ID und eine andere auf
- * Gleichheit prüfen.
- * Die get-Methoden sollten immer eine neue ID erstellen, 
- * (wg. call by referenz)
+ * Datentyp für Bot-IDs. Im Prinzip wie byte, gibt das Byte aber als unsigned aus.
+ * Mit set() kann man der ID einen neuen Wert geben; mit equals() kann man die ID und eine andere auf
+ * Gleichheit prüfen. Die get-Methoden sollten immer eine neue ID erstellen, (wg. call by reference).
+ * 
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class BotID extends java.lang.Number {
@@ -38,7 +35,8 @@ public class BotID extends java.lang.Number {
 
 	/**
 	 * Erzeugt eine neue ID (unsígned byte)
-	 * @param id Wert der ID
+	 * 
+	 * @param id	Wert der ID
 	 */
 	public BotID(byte id) {
 		this.data = id;
@@ -49,7 +47,8 @@ public class BotID extends java.lang.Number {
 	
 	/**
 	 * Erzeugt eine neue ID (unsígned byte)
-	 * @param id Wert der ID
+	 * 
+	 * @param id	Wert der ID
 	 */
 	public BotID(int id) {
 		this((byte)id);
@@ -57,15 +56,14 @@ public class BotID extends java.lang.Number {
 
 	/**
 	 * Erzeugt eine neue ID (unsígned byte)
-	 * @param id Wert der ID
+	 * 
+	 * @param id	Wert der ID
 	 */
 	public BotID(BotID id) {
 		this(id.byteValue());
 	}	
 	
-	/**
-	 * Erzeugt eine neue ID (unsígned byte)
-	 */
+	/** Erzeugt eine neue ID (unsígned byte) */
 	public BotID() {
 		this(0);
 	}
@@ -112,7 +110,8 @@ public class BotID extends java.lang.Number {
 
 	/**
 	 * Setzt die ID auf einen neuen Wert
-	 * @param id neuer Wert
+	 * 
+	 * @param id	neuer Wert
 	 */
 	public void set(byte id) {
 		int tmp = id;
@@ -124,15 +123,17 @@ public class BotID extends java.lang.Number {
 	
 	/**
 	 * Setzt die ID auf einen neuen Wert
-	 * @param id neuer Wert
+	 * 
+	 * @param id	neuer Wert
 	 */
 	public void set(int id) {
 		set((byte)id); 
 	}
 	
 	/**
-	 * Vergleicht eine andere BotID mit Dieser
-	 * @param id andere BotID
+	 * Vergleicht eine andere BotID mit dieser ID
+	 * 
+	 * @param id	andere BotID
 	 * @return true, falls beide IDs denselben Wert haben
 	 */
 	public boolean equals(BotID id) {
