@@ -21,9 +21,10 @@ package ctSim.util;
 
 /**
  * Runnable-Interface
- * @param <T1> Typ 1
- * @param <T2> Typ 2
- * @param <T3> Typ 3
+ * 
+ * @param <T1>	Typ 1
+ * @param <T2>	Typ 2
+ * @param <T3>	Typ 3
  */
 public interface Runnable3<T1, T2, T3> extends java.util.EventListener {
 	/**
