@@ -25,20 +25,17 @@ import ctSim.view.gui.Debug;
 
 //$$ Problem: Wenn Judge Bot-hinzufügen verbietet, wird Bot nicht korrekt de-initialisiert
 /**
- * Abstrakte Superklasse für alle Judges, die prüfen,
- * ob die Spielregeln eingehalten werden.
+ * Abstrakte Superklasse für alle Judges, die prüfen, ob die Spielregeln eingehalten werden.
  *
  * @author bbe (bbe@heise.de)
  */
 public abstract class Judge {
 	/**
-	 * Diese konfus benannte Variable gibt an, ob
-	 * {@link #isSimulationFinished()} in irgendeinem der bisherigen
-	 * Simulatorschritte <code>true</code> zurückgegeben hat. Mit der
-	 * vorliegenden Implementierung von DefaultJudge bleibt die Variable immer
-	 * auf <code>true</code> stehen. Mit der vorliegenden Implementierung von
-	 * LabyrinthJudge wird die Variable genau dann <code>false</code>, wenn
-	 * ein Bot das Ziel erreicht hat.
+	 * Diese konfus benannte Variable gibt an, ob {@link #isSimulationFinished()} in irgendeinem der
+	 * bisherigen Simulatorschritte <code>true</code> zurückgegeben hat. Mit der vorliegenden
+	 * Implementierung von DefaultJudge bleibt die Variable immer auf <code>true</code> stehen.
+	 * Mit der vorliegenden Implementierung von LabyrinthJudge wird die Variable genau dann
+	 * <code>false</code>, wenn ein Bot das Ziel erreicht hat.
 	 */
 	private boolean start = true;
 
@@ -54,7 +51,8 @@ public abstract class Judge {
 
 	/**
 	 * Erzeuge neuen Judge
-	 * @param ctrl Der DefaultController
+	 * 
+	 * @param ctrl	der DefaultController
 	 */
 	public Judge(DefaultController ctrl) {
 		super();
@@ -63,6 +61,7 @@ public abstract class Judge {
 
 	/** 
 	 * Gibt an, ob es erlaubt ist, Bots zum Spiel hinzuzufügen.
+	 * 
 	 * @return true/false
 	 */
 	public boolean isAddingBotsAllowed() {
@@ -70,7 +69,7 @@ public abstract class Judge {
 	}
 
 	/**
-	 * @return true, wenn die Bedingungen für einen Start erfuellt sind
+	 * @return true, wenn die Bedingungen für einen Start erfüllt sind
 	 */
 	public boolean isStartingSimulationAllowed() {
 		if(this.controller.getParticipants() < 1) {
@@ -82,18 +81,20 @@ public abstract class Judge {
 
 	/**
 	 * Setzt eine Welt
-	 * @param w Welt
+	 * 
+	 * @param w	Welt
 	 */
 	public void setWorld(World w) {
     	time = startTime = w.getSimTimeInMs();
     }
 
-	/** Stellt fest, ob die momentane Simulation beendet werden soll.
-	 * @param t Zeit
-	 *
-	 * @return <code>true</code>, falls die Simulation beendet werden soll
-	 * – typischerweise, weil ein Bot das Ziel erreicht hat.
-	 * <code>False</code>, falls die Simulation fortgesetzt werden soll. */
+	/** Stellt fest, ob die momentane Simulation beendet werden soll
+	 * 
+	 * @param t	Zeit
+	 * @return <code>true</code>, falls die Simulation beendet werden soll; typischerweise, weil ein
+	 * 			Bot das Ziel erreicht hat. <code>false</code>, falls die Simulation fortgesetzt werden
+	 * 			soll.
+	 */
 	public final boolean isSimulationFinished(long t) {
 		this.time = t;
 		boolean rv = isSimulationFinished();
@@ -103,14 +104,13 @@ public abstract class Judge {
 	}
 
 	/** 
-	 * Hier kommen die eigentlichen Schiedsrichteraufgaben rein. 
+	 * Hier kommen die eigentlichen Schiedsrichteraufgaben rein.
+	 *  
 	 * @return true / false
 	 */
 	protected abstract boolean isSimulationFinished();
 
-	/**
-	 * Neu-Initialisierung
-	 */
+	/** Neu-Initialisierung */
 	public void reinit() {
 		this.start = true;
 		this.time = 0;

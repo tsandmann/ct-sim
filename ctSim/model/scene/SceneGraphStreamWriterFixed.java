@@ -16,6 +16,7 @@
  * MA 02111-1307, USA.
  * 
  */
+
 package ctSim.model.scene;
 
 import java.io.IOException;
@@ -31,12 +32,13 @@ import com.sun.j3d.utils.scenegraph.io.NamedObjectException;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 
 /**
- * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamWriter von j3d defekt ist
- * Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu transerieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht
+ * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamWriter
+ * von Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die Namen der Objekte zu
+ * transferieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
  * 
  * @author bbe (bbe@heise.de)
- *
- */public class SceneGraphStreamWriterFixed extends SceneGraphStreamWriter {
+ */
+public class SceneGraphStreamWriterFixed extends SceneGraphStreamWriter {
 
 	/**
 	 * @param arg0
@@ -57,7 +59,8 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 
 	/**
 	 * Bereitet eine Map vor
-	 * @param map Map
+	 * 
+	 * @param map	Map
 	 */
 	private void prepareMap(HashMap map){
 		Iterator it = map.keySet().iterator();
