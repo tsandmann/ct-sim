@@ -158,7 +158,7 @@ public abstract class CtBot extends BasicBot {
 	 * Verarbeitet ein Kommando und leitet es an den angehängten Bot weiter
 	 * 
 	 * @param command	das Kommando
-	 * @throws ProtocolException	wenn was nicht klappt
+	 * @throws ProtocolException	wenn etwas nicht klappt
 	 */
 	public void receiveCommand(Command command) throws ProtocolException {
 		if (!command.getTo().equals(this.getId()) && !command.getTo().equals(Command.getBroadcastId()))
@@ -247,7 +247,7 @@ public abstract class CtBot extends BasicBot {
 			components.add(new Sensors.BPSReceiver(true));
 		}
 
-		/** LEDs */
+		/* LEDs */
 		int numLeds = ledColors.length;
 		for (int i = 0; i < numLeds; i++) {
 			String ledName = "LED " + (i + 1) + (i == 1 ? " (vorn rechts)" : i == 0 ? " (vorn links)" : "");

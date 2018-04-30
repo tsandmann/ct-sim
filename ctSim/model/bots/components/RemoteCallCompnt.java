@@ -554,7 +554,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	throws ProtocolException {
 		ByteArrayInputStream b = new ByteArrayInputStream(command.getPayload());
 		int numParms = b.read();
-		// Da kommen irgendwelche komischen 3 Bytes --> ignorieren
+		// Als nächstes kommt 3x die jeweilige Größe der Paramter (in Byte), wird ignoriert
 		b.skip(3);
 
 		int name_len = 0;
@@ -584,7 +584,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				}
 			}
 		} catch (IOException e) {
-			/* nop */
+			/* No-op */
 		}
 		byte beh_name[] = new byte[name_len];
 		System.arraycopy(data, 0, beh_name, 0, name_len);

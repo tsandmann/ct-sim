@@ -1016,7 +1016,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     
     /** Destruktor */
     public void cleanup() {
-    	// steckt ein eingeladenes Objekt wieder in die Welt:
+    	// steckt ein evtl. im Transportfach befindliches Objekt wieder in die Welt:
     	krautUndRuebenSim.setAssociatedObject(null);
     }
 }

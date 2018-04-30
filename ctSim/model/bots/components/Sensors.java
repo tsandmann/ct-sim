@@ -613,7 +613,7 @@ public class Sensors {
 	public static class Trans extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
-		 * @param isLeft	(immer true)
+		 * @param isLeft	(ignored)
 		 */
 		public Trans(boolean isLeft) {
 			super(true);
