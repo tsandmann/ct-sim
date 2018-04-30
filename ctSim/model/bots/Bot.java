@@ -88,12 +88,12 @@ public interface Bot {
 	public boolean get_feature_rc5();
 
 	/**
-	 * @return Kann der Bot ABL Programme empfangen?
+	 * @return Kann der Bot ABL-Programme empfangen?
 	 */
 	public boolean get_feature_abl_program();
 
 	/**
-	 * @return Kann der Bot Basic Programme empfangen?
+	 * @return Kann der Bot Basic-Programme empfangen?
 	 */
 	public boolean get_feature_basic_program();
 

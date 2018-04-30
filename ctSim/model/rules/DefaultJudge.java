@@ -22,16 +22,15 @@ package ctSim.model.rules;
 import ctSim.controller.DefaultController;
 import ctSim.view.gui.Debug;
 
-/**  Das ist der "Ich-mache-nix"-Judge für den "Normal-Betrieb" mit
- * einem einzelnen Bot
- */
+/**  Das ist der "Ich-mache-nix"-Judge für den "Normal-Betrieb" mit einem einzelnen Bot */
 public class DefaultJudge extends Judge {
 	/** Controller */
 	private DefaultController controller;
 
 	/**
 	 * Der Konstruktor
-	 * @param ctrl Der DefaultController
+	 * 
+	 * @param ctrl	der DefaultController
 	 */
 	public DefaultJudge(DefaultController ctrl) {
 		super(ctrl);

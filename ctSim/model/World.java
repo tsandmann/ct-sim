@@ -443,7 +443,7 @@ public class World {
 		try {
 			tickrate = Integer.parseInt(Config.getValue("ctSimTickRate"));
 		} catch (NumberFormatException exc) {
-			// NOP
+			// No-op
 		}
 		setSimStepIntervalInMs(tickrate);
 	}
@@ -819,13 +819,13 @@ public class World {
 		try {
 			botBody.setPickable(false);
 		} catch (Exception e) {
-			// NOP
+			// No-op
 		}
 		pickInfo = obstBG.pickClosest(PickInfo.PICK_GEOMETRY, PickInfo.CLOSEST_DISTANCE, picky);
 		try {
 			botBody.setPickable(true);
 		} catch (Exception e) {
-			// NOP
+			// No-op
 		}
 		if (pickInfo == null) {
 			return 100.0;
