@@ -38,7 +38,8 @@ import ctSim.util.Runnable1;
 
 /**
  * Remote-Call Komponente
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * 
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class RemoteCallCompnt extends BotComponent<Void>
 implements CanRead, CanWrite, CanWriteAsynchronously {
@@ -46,25 +47,15 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	static final FmtLogger lg = FmtLogger.getLogger(
 		"ctSim.model.bots.components.RemoteCallCompnt");
 
-	/**
-	 * Exit-Status eines Verhaltens
-	 */
+	/** Exit-Status eines Verhaltens */
 	public enum BehaviorExitStatus {
-		/**
-		 * Fehler
-		 */
+		/** Fehler */
 		FAILURE(0, "Fehler"),
-		/**
-		 * Fertig, alles OK
-		 */
+		/** Fertig, alles OK */
 		SUCCESS(1, "Fertig"),
-		/**
-		 * Abgebrochen
-		 */
+		/** Abgebrochen */
 		CANCELLED(3, "Abgebrochen"),
-		/**
-		 * Verhalten läuft im Hintergrund weiter
-		 */
+		/** Verhalten läuft im Hintergrund weiter */
 		BACKGRND(4, "Im Hintergrund");
 
 		/** Status auf der Leitung */
@@ -74,8 +65,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 		/**
 		 * Exit-Status eines Verhaltens
-		 * @param onTheWire Code auf der Leitung
-		 * @param displayableName Name
+		 * 
+		 * @param onTheWire			Code auf der Leitung
+		 * @param displayableName	Name
 		 */
 		private BehaviorExitStatus(int onTheWire, String displayableName) {
 			this.onTheWire = onTheWire;
@@ -84,7 +76,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 		/**
 		 * Decodiert einen Verhaltensstatus
-		 * @param received Status als int
+		 * 
+		 * @param received	Status als int
 		 * @return Status
 		 */
 		public static BehaviorExitStatus decode(int received) {
@@ -107,27 +100,24 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	/**
-	 * Repräsentiert ein Behavior, wie es vom Bot geliefert wurde. Ein
-	 * Behavior ist eine Funktion (Routine), die vom Sim aus aufgerufen werden
-	 * kann. Es hat:
+	 * Repräsentiert ein Behavior, wie es vom Bot geliefert wurde. Ein Behavior ist eine Funktion
+	 * (Routine), die vom Sim aus aufgerufen werden kann. Es hat:
 	 * <ul>
 	 * <li>einen Namen</li>
-	 * <li>eine Liste von {@link Parameter}n (jeder Parameter hat einen Namen
-	 * und als Typ int oder float)</li>
-	 * <li>eine Methode, um ihn aufzurufen, d.h. an den Bot die Anforderung
-	 * abzusetzen "führe dieses Behavior aus".</li>
+	 * <li>eine Liste von {@link Parameter}n (jeder Parameter hat einen Namen und als Typ int oder
+	 * float)</li>
+	 * <li>eine Methode, um ihn aufzurufen, d.h. an den Bot die Anforderung abzusetzen "führe dieses
+	 * Behavior aus".</li>
 	 * </ul>
 	 */
 	public class Behavior implements Cloneable {
 		/**
-		 * Name des Behavior. Wird dem Benutzer angezeigt und dient dem
-		 * Bot-Steuercode gegenüber als eindeutiger Bezeichner des
-		 * Behavior. Wenn der Bot die Liste schickt, welche Behaviors er
+		 * Name des Behavior. Wird dem Benutzer angezeigt und dient dem Bot-Steuercode gegenüber als
+		 * eindeutiger Bezeichner des Behaviors. Wenn der Bot die Liste schickt, welche Behaviors er
 		 * unterstützt, steht der Name in einem Feld mit fester Länge:
-		 * Nach dem Namen an sich kommt eine Anzahl Null-Bytes, um auf die im
-		 * Protokoll vorgeschriebenen soundsoviel Bytes zu kommen. Trotzdem
-		 * enthält diese Variable nur den Namen an sich, die Null-Bytes
-		 * werden abgeschnitten.
+		 * Nach dem Namen an sich kommt eine Anzahl Null-Bytes, um auf die im Protokoll vorgeschriebenen
+		 * soundsoviel Bytes zu kommen. Trotzdem enthält diese Variable nur den Namen an sich,
+		 * die Null-Bytes werden abgeschnitten.
 		 */
 		private final String name;
 
@@ -138,7 +128,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/**
 		 * Erstellt eine {@code Behavior}-Instanz mit dem angegebenen Namen.
 		 * Hinten am Namen hängende Null-Bytes werden ignoriert.
-		 * @param name Name der Botenfunktion des Verhaltens
+		 * 
+		 * @param name	Name der Botenfunktion des Verhaltens
 		 */
 		public Behavior(final byte[] name) {
 			// Letztes Byte muss terminierendes Nullbyte sein
@@ -149,34 +140,32 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 		/**
 		 * <p>
-		 * Führt das Behavior mit den gegenwärtigen Parameterwerten
-		 * aus. Der Behavior serialisiert sich und seine Parameter in ein
-		 * Byte-Array. In diesem stehen:
+		 * Führt das Behavior mit den gegenwärtigen Parameterwerten aus. Der Behavior serialisiert sich
+		 * und seine Parameter in ein Byte-Array. In diesem stehen:
 		 * <ol>
 		 * <li>Name des Behavior (variable Länge)</li>
 		 * <li>ein Null-Byte</li>
-		 * <li>vier Byte für den serialisierten Parameter 1 ({@linkplain Parameter#writeTo(ByteArrayOutputStream) Wie serialisiert der sich?})</li>
+		 * <li>vier Byte für den serialisierten Parameter 1 ({@linkplain Parameter#writeTo(ByteArrayOutputStream) Wie serialisiert er sich?})</li>
 		 * <li>vier Byte für den serialisierten Parameter 2</li>
-		 * <li>&hellip;</li>
+		 * <li>...</li>
 		 * <li>vier Byte für den serialisierten letzten Parameter.</li>
 		 * </ol>
 		 * </p>
 		 * <p>
-		 * Das Behavior übergibt das Byte-Array an seine
-		 * {@link RemoteCallCompnt}, die es an den Bot sendet. Das Senden
-		 * erfolgt nicht sofort, sondern zu einem späteren Zeitpunkt, falls
-		 * die {@code RemoteCallCompnt} im synchronen Modus läuft.
+		 * Das Behavior übergibt das Byte-Array an seine {@link RemoteCallCompnt}, die es an den Bot
+		 * sendet. Das Senden erfolgt nicht sofort, sondern zu einem späteren Zeitpunkt, falls die
+		 * {@code RemoteCallCompnt} im synchronen Modus läuft.
 		 * </p>
 		 *
-		 * @throws IOException Falls die {@code RemoteCallCompnt} im asynchronen
-		 * Modus läuft und beim Senden ein E/A-Problem auftritt.
+		 * @throws IOException	Falls die {@code RemoteCallCompnt} im asynchronen Modus läuft
+		 * 						und beim Senden ein E/A-Problem auftritt.
 		 */
 		public void call() throws IOException {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 			String msg = "Sende Remote-Call, um Behavior "+getName()+
 				" aufzurufen";
 			bytes.write(name.getBytes());
-			bytes.write(0); // terminierendes Nullbyte
+			bytes.write(0);	// terminierendes Nullbyte
 			for (Parameter p : parameters) {
 				msg += ", "+p.fullName+" = "+p.getNumber();
 				p.writeTo(bytes);
@@ -194,11 +183,11 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			try {
 				rv = (Behavior)super.clone();
 			} catch (CloneNotSupportedException e) {
-				// Kann nicht passieren, wir rufen Object.clone() auf
+				// Kann nicht passieren; wir rufen Object.clone() auf
 				throw new AssertionError(e);
 			}
-			// Nach super.clone() zeigt rv's parameters-Ref auf das Objekt, auf
-			// das auch unsere parameters-Ref zeigt
+			// Nach super.clone() zeigt rv's parameters-Ref auf das Objekt,
+			// auf das auch unsere parameters-Ref zeigt
 			rv.parameters = Misc.newList();
 			for (Parameter p : parameters)
 				rv.parameters.add(p.clone());
@@ -220,27 +209,22 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 	}
 
-	/**
-	 * Parameter für Remote-Calls
-	 */
+	/** Parameter für Remote-Calls */
 	public abstract static class Parameter extends SpinnerNumberModel
 	implements Cloneable {
 		/** UID */
 		private static final long serialVersionUID = - 6872518108087767878L;
 
-		/**
-		 * Kurzname (ohne Typ)
-		 */
+		/** Kurzname (ohne Typ) */
 		public final String name;
 		
-		/**
-		 * Name (mit Typ)
-		 */
+		/** Name (mit Typ) */
 		public final String fullName;
 
 		/**
 		 * Parameter
-		 * @param fullName Parameter-Name mit Typ 
+		 * 
+		 * @param fullName	Parameter-Name mit Typ 
 		 * @throws ProtocolException
 		 */
 		Parameter(final String fullName) throws ProtocolException {
@@ -254,8 +238,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 
 		/**
-		 * Gemäß Remote-Call-Protokoll 32 Bit (4 Byte) schreiben -- LE
-		 * @param bytes Daten
+		 * Gemäß Remote-Call-Protokoll 32 Bit (4 Byte) schreiben - Little Endian
+		 * 
+		 * @param bytes	Daten
 		 */
 		public void writeTo(ByteArrayOutputStream bytes) {
 			int value = getIntRepresentation();
@@ -281,13 +266,13 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				rv = getClass().getConstructor(String.class).newInstance(
 					fullName);
 			} catch (InstantiationException e) {
-				// Passiert nur, wenn einer den Konstruktor ändert
+				// Passiert nur, wenn jemand den Konstruktor ändert
 				throw new AssertionError(e);
 			} catch (IllegalAccessException e) {
-				// Dito
+				// siehe oben
 				throw new AssertionError(e);
 			} catch (NoSuchMethodException e) {
-				// Dito
+				// siehe oben
 				throw new AssertionError(e);
 			} catch (InvocationTargetException e) {
 				throw new RuntimeException(e);
@@ -299,9 +284,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 	}
 
-	/**
-	 * Int-Parameter (für RemoteCalls)
-	 */
+	/** Int-Parameter (für RemoteCalls) */
 	public static class IntParam extends Parameter {
 		/** UID */
 		private static final long serialVersionUID = 1030435953303383535L;
@@ -317,7 +300,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			boolean isUnsigned = name.charAt(0) == 'u';
 			// int oder uint am Anfang abschneiden
 			String s = name.split("u?int")[0];
-			s = s.split(" ")[0]; // alles nachm " " abschneiden
+			s = s.split(" ")[0];	// alles nachm " " abschneiden
 			try {
 				int bitCount = Integer.parseInt(s);
 				// Gesundheitscheck
@@ -335,12 +318,12 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 					setMaximum(+2^bitCount - 1);
 				} else {
 					// für signed int
-					bitCount--; // 16 Bit sind -(2^15) bis +(2^15)-1
+					bitCount--;	// 16 Bit sind -(2^15) bis +(2^15)-1
 					setMinimum(-2^bitCount);
 					setMaximum(+2^bitCount - 1);
 				}
 			} catch (NumberFormatException e) {
-				// ignorieren, dann halt ohne Minimum + Maximum
+				// ignorieren, dann eben ohne Minimum + Maximum
 			}
 		}
 
@@ -353,15 +336,13 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 	}
 
-	/**
-	 * Float-Parameter (für RemoteCalls)
-	 */
+	/** Float-Parameter (für RemoteCalls) */
 	public static class FloatParam extends Parameter {
 		/** UID */
 		private static final long serialVersionUID = 9039021104381285572L;
 
 		/**
-		 * @param name Parameterbeschreibung, z.B. "float dingsbums"
+		 * @param name	Parameterbeschreibung, z.B. "float dingsbums"
 		 * @throws ProtocolException
 		 */
 		public FloatParam(String name) throws ProtocolException {
@@ -391,14 +372,13 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/** Done-Listener */
 	private final List<Runnable1<BehaviorExitStatus>> doneListeners =
 		Misc.newList();
-	/** Internes Model; cacht Behavior-Instanzen nachdem sie empfangen wurden
-	 * und bis sie an die behaviorListener gegeben werden
+	/**
+	 * Internes Model; cacht Behavior-Instanzen nachdem sie empfangen wurden und bis sie an die
+	 * behaviorListener gegeben werden
 	 */
 	private final List<Behavior> newBehaviors = Misc.newList();
 
-	/**
-	 * RemoteCallCompnt
-	 */
+	/** RemoteCallCompnt */
 	public RemoteCallCompnt() {
 		super(null);
 	}
@@ -437,7 +417,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 */
 	public Code getHotCmdCode() { return Command.Code.REMOTE_CALL; }
 
-	// E/A -- Schreiben ///////////////////////////////////////////////////////
+	// E/A - Schreiben ///////////////////////////////////////////////////////
 
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
@@ -468,6 +448,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Bricht das aktuelle Verhalten per RemoteCall ab
+	 * 
 	 * @throws IOException
 	 */
 	public void abortCurrentBehavior() throws IOException {
@@ -481,6 +462,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Fordert eine Liste aller RemoteCalls vom Bot an
+	 * 
 	 * @throws IOException
 	 */
 	public void listRemoteCalls() throws IOException {
@@ -495,7 +477,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Führt ein Verhalten aus
-	 * @param payload Daten
+	 * 
+	 * @param payload	Daten
 	 * @throws IOException
 	 */
 	private void executeBehavior(byte[] payload) throws IOException {
@@ -508,7 +491,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Bereitet das List-Kommando vor
-	 * @param s Stream
+	 * 
+	 * @param s	Stream
 	 */
 	private void prepareListCmd(CommandOutputStream s) {
 		s.getCommand(getHotCmdCode()).setSubCmdCode(
@@ -517,7 +501,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Bereitet das Abbruch-Kommando vor
-	 * @param s Stream
+	 * 
+	 * @param s	Stream
 	 */
 	private void prepareAbortCmd(CommandOutputStream s) {
 		s.getCommand(getHotCmdCode()).setSubCmdCode(
@@ -526,8 +511,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Bereitet das Aufruf-Kommando vor
-	 * @param s Stream
-	 * @param payload Daten
+	 * 
+	 * @param s			Stream
+	 * @param payload	Daten
 	 */
 	private void prepareOrderCmd(CommandOutputStream s, byte[] payload) {
 		Command c = s.getCommand(getHotCmdCode());
@@ -536,17 +522,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	/**
-	 * No-op: Wir implementieren die, weil wir laut Interface müssen, aber
-	 * wir brauchen die nicht weil wir ja
-	 * {@link #askForWrite(CommandOutputStream) askForWrite()}
-	 * überschrieben haben.
-	 * @param c Command
+	 * No-op: Wir implementieren dies, weil wir laut Interface müssen, aber wir brauchen es nicht,
+	 * weil wir ja {@link #askForWrite(CommandOutputStream) askForWrite()} überschrieben haben.
+	 * 
+	 * @param c	Command
 	 */
 	public void writeTo(Command c) {
 		/* No-op */ 
 	}
 
-	// E/A -- Lesen ///////////////////////////////////////////////////////////
+	// E/A - Lesen ///////////////////////////////////////////////////////////
 
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
@@ -560,7 +545,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Dekodiert ein Verhalten
-	 * @param command Kommando
+	 * 
+	 * @param command	Kommando
 	 * @return Verhalten
 	 * @throws ProtocolException
 	 */
@@ -568,7 +554,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	throws ProtocolException {
 		ByteArrayInputStream b = new ByteArrayInputStream(command.getPayload());
 		int numParms = b.read();
-		// Da kommen irgendwelche komischen 3 Bytes, ignorieren
+		// Da kommen irgendwelche komischen 3 Bytes --> ignorieren
 		b.skip(3);
 
 		int name_len = 0;
@@ -636,8 +622,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * List ein Array aus einem Stream ein
-	 * @param is Input-Stream
-	 * @param lengthOfString Länge
+	 * 
+	 * @param is				Input-Stream
+	 * @param lengthOfString	Länge
 	 * @return Array
 	 * @throws ProtocolException
 	 */
@@ -655,6 +642,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Done-Event-Handler
+	 * 
 	 * @param rCallExitStatus
 	 */
 	public void fireDoneEvent(int rCallExitStatus) {
@@ -668,6 +656,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Done-Event-Listener
+	 * 
 	 * @param willBeCalledWhenRCallDone
 	 */
 	public void addDoneListener(
@@ -679,6 +668,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Listen-Event-Listener
+	 * 
 	 * @param willBeCalledWhenBotSentBehavior
 	 */
 	public void addBehaviorListener(

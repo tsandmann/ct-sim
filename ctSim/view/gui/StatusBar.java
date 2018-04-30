@@ -81,7 +81,7 @@ public class StatusBar extends Box {
 		try {
 			tickrate = Integer.parseInt(Config.getValue("ctSimTickRate"));
 		} catch (NumberFormatException exc) {
-			// NOP
+			// No-op
 		}
 		INIT_TICK_RATE = Math.min(tickrate, MAX_TICK_RATE);
 		

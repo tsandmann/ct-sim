@@ -241,7 +241,7 @@ public class SplashWindow extends Window {
 		 */
 		@Override
 		public void close() throws SecurityException {
-			// NOP
+			// No-op
 		}
 
 		/**
@@ -249,7 +249,7 @@ public class SplashWindow extends Window {
 		 */
 		@Override
 		public void flush() {
-			// NOP
+			// No-op
 		}
 
 		/**

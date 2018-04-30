@@ -35,17 +35,13 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 import ctSim.view.gui.RemoteControlViewer;
 
-/**
- * Sensoren
- */
+/** Sensoren */
 public class Sensors {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger(
 		"ctSim.model.bots.components.Sensors");
 
-	/**
-	 * Klasse der Liniensensoren
-	 */
+	/** Klasse der Liniensensoren */
 	public static class Line extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
@@ -64,7 +60,8 @@ public class Sensors {
 		
 		/**
 		 * Liniensensoren
-		 * @param isLeft links?
+		 * 
+		 * @param isLeft	links?
 		 */
 		public Line(boolean isLeft) { super(isLeft); }
 		
@@ -74,9 +71,7 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_LINE; }
 	}
 
-	/**
-	 * Klasse der Lichtsensoren
-	 */
+	/** Klasse der Lichtsensoren */
 	public static class Light extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
@@ -95,7 +90,8 @@ public class Sensors {
 		
 		/**
 		 * Lichtsensoren
-		 * @param isLeft links?
+		 * 
+		 * @param isLeft	links?
 		 */
 		public Light(boolean isLeft) { super(isLeft); }
 		
@@ -105,9 +101,7 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_LDR; }
 	}
 
-	/**
-	 * Klasse der BPS-Sensoren, Bot Positioning System
-	 */
+	/** Klasse der BPS-Sensoren, Bot Positioning System */
 	public static class BPSReceiver extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
@@ -128,7 +122,8 @@ public class Sensors {
 		
 		/**
 		 * BPS-Sensor (Bot Positioning System)
-		 * @param isLeft wird nicht ausgewertet
+		 * 
+		 * @param isLeft	wird nicht ausgewertet
 		 */
 		public BPSReceiver(boolean isLeft) { 
 			super(true); 
@@ -158,12 +153,10 @@ public class Sensors {
 		}
 	}
 	
-	/**
-	 * Klasse der Rad-Encoder
-	 */
+	/** Klasse der Rad-Encoder */
 	public static class Encoder extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
-		/** Hat das Rad Nachlauf bei Richtungswechsel? */
+		/** Hat das Rad einen Nachlauf bei Richtungswechsel? */
 		protected final boolean hasLag = Config.getValue("WheelLag").equals("true");
 		
 		/**
@@ -176,7 +169,8 @@ public class Sensors {
 
 		/**
 		 * Rad-Encoder
-		 * @param isLeft links?
+		 * 
+		 * @param isLeft	links?
 		 */
 		public Encoder(boolean isLeft) {
 			super(isLeft); 
@@ -199,8 +193,7 @@ public class Sensors {
 		public boolean getHasLag() { return hasLag; }
 	}
 
-	/** Abstandssensor vom Typ GP2D12
-	 */
+	/** Abstandssensor vom Typ GP2D12 */
 	public static class Distance extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
@@ -219,7 +212,8 @@ public class Sensors {
 		
 		/**
 		 * Distanzsensoren GPD12
-		 * @param isLeft links?
+		 * 
+		 * @param isLeft	links?
 		 */
 		public Distance(boolean isLeft) { super(isLeft); }
 		
@@ -229,9 +223,7 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_IR; }
 	}
 
-	/**
-	 * Klasse der Abgrundsensoren
-	 */
+	/** Klasse der Abgrundsensoren */
 	public static class Border extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
@@ -250,7 +242,8 @@ public class Sensors {
 		
 		/**
 		 * Abgrundsensoren
-		 * @param isLeft links?
+		 * 
+		 * @param isLeft	links?
 		 */
 		public Border(boolean isLeft) { super(isLeft); }
 		
@@ -260,9 +253,7 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_BORDER; }
 	}
 
-	/**
-	 * Systemzeit des Bots
-	 */
+	/** Systemzeit des Bots */
 	public static class Clock extends BotComponent<Void>
 	implements CanRead, CanWrite {
 		/** letzte übertragene Zeit */
@@ -270,11 +261,12 @@ public class Sensors {
 
 		/**
 		 * Systemzeit setzen
-		 * @param simTime Zeit in ms
+		 * 
+		 * @param simTime	Zeit in ms
 		 */
 		public synchronized void setSimTimeInMs(int simTime) {
 			lastTransmittedSimTime = simTime;
-			// Wir haben nur 16 Bit zur Verfügung und 10.000 ist ne nette Zahl ;-)
+			// Wir haben nur 16 Bit zur Verfügung und 10.000 ist eine nette Zahl ;-)
 			lastTransmittedSimTime %= 10000;
 		}
 
@@ -284,7 +276,7 @@ public class Sensors {
 		public synchronized void readFrom(Command c) {
 			if (c.getDataL() != lastTransmittedSimTime) {
 				if (lastTransmittedSimTime == -1)
-					// Für's allererste DONE-Kommando doch nicht warnen
+					// Für das allererste DONE-Kommando doch nicht warnen
 					return;		
 				lg.warn("Bot-Steuercode hat unerwartete lastTransmitted-Zeit "+
 						"gesendet (erwartet: %d, tatsächlich: %d); dies "+
@@ -307,8 +299,8 @@ public class Sensors {
 		 */
 		@Override
 		public void updateExternalModel() {
-			// No-op, weil wir werden ja eh nicht angezeigt und operieren
-			// direkt auf dem ExternalModel
+			// No-op, weil wir ja sowieso nicht angezeigt werden und direkt auf dem ExternalModel
+			// operieren
 		}
 
 		/**
@@ -319,9 +311,7 @@ public class Sensors {
 			return "Simulationszeit-Uhr (Millisekunden)";
 		}
 
-		/**
-		 * Systemzeit
-		 */
+		/** Systemzeit */
 		public Clock() { super(null); }
 		
 		/**
@@ -336,24 +326,21 @@ public class Sensors {
 		public Code getHotCmdCode() { return Command.Code.DONE; }
 	}
 
-	/**
-	 * Maussensor
-	 */
+	/** Maussensor */
 	public static class Mouse extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
 		 * {@code true}: Diese Instanz verwaltet die X-Komponente,
-		 * {@code false}: Y-Komponente. Im Konstruktor wird dieser Wert an den
-		 * Superkonstruktor gegeben, wo er entscheidet, ob unser Wert im dataL-
-		 * oder dataR-Feld eines Commands übermittelt wird (sowohl
-		 * Schreiben als auch Lesen). Die Zuordnung ist also X = dataL, Y =
-		 * dataR.
+		 * {@code false}: Y-Komponente. Im Konstruktor wird dieser Wert an den Superkonstruktor gegeben,
+		 * wo er entscheidet, ob unser Wert im dataL- oder dataR-Feld eines Commands übermittelt wird
+		 * (sowohl Schreiben als auch Lesen). Die Zuordnung ist also X = dataL, Y = dataR.
 		 */
 		private boolean isX;
 
 		/**
 		 * Maussensor
-		 * @param isX X? (sonst Y)
+		 * 
+		 * @param isX	X? (sonst Y)
 		 */
 		public Mouse(boolean isX) {
 			super(isX);
@@ -365,7 +352,7 @@ public class Sensors {
 		 */
 		@Override
 		public String getName() {
-			// Unicode 0394: grosses Delta
+			// Unicode 0394: großes Delta
 			return "Mouse \u0394" + (isX ? "X" : "Y");
 		}
 
@@ -403,17 +390,16 @@ public class Sensors {
 	 * Software-Emulation der Fernbedienung.
 	 * </p>
 	 * <p>
-	 * <strong>c't-Bot-Protokoll:</strong> Der Fernbedienungssensor sendet eine
-	 * Ganzzahl, die für einen Knopf steht (Zuordnung siehe
-	 * {@link RemoteControlViewer}). Die Zahl steht im Feld {@code dataL}, die
-	 * übrigen Felder werden nicht verändert. Falls der Benutzer einen
-	 * Knopf gedrückt hat, sendet die Instanz den entsprechenden Code. Falls
-	 * nicht, sendet sie ein Command, das {@code dataL} == 0 hat.
+	 * <strong>c't-Bot-Protokoll:</strong> Der Fernbedienungssensor sendet eine Ganzzahl, die für einen
+	 * Knopf steht (Zuordnung siehe {@link RemoteControlViewer}). Die Zahl steht im Feld {@code dataL},
+	 * die übrigen Felder werden nicht verändert. Falls der Benutzer einen Knopf gedrückt hat, sendet
+	 * die Instanz den entsprechenden Code. Falls nicht, sendet sie ein Command, das {@code dataL} == 0
+	 * hat.
 	 * </p>
 	 */
 	public static class RemoteControl extends BotComponent<Void>
 	implements CanWrite, CanWriteAsynchronously {
-		/** async. Outputstream */
+		/** asynchroner Outputstream */
 		private CommandOutputStream asyncOut;
 		/** ausstehender RC5-Code */
 		private int syncPendingRcCode = 0;
@@ -438,6 +424,7 @@ public class Sensors {
 
 		/**
 		 * Sendet einen RC5-Code
+		 * 
 		 * @param rc5Code	RC5-Code gemäß Tabelle
 		 * @throws IOException
 		 */
@@ -456,7 +443,8 @@ public class Sensors {
 		
 		/**
 		 * Sendet einen Tastencode
-		 * @param key Taste, dessen Code gesendet werden soll
+		 * 
+		 * @param key	Taste, dessen Code gesendet werden soll
 		 * @throws IOException 
 		 */
 		public void send(String key) throws IOException {
@@ -484,8 +472,9 @@ public class Sensors {
 		}
 
 		/**
-		 * Fernbedienung 
-		 * @param type Typ der Fernbedienung (z.B. "RC_HAVE_HQ_RC_UNIVERS29_334")
+		 * Fernbedienung
+		 * 
+		 * @param type	Typ der Fernbedienung (z.B. "RC_HAVE_HQ_RC_UNIVERS29_334")
 		 */
 		public RemoteControl(String type) {
 			super(null);
@@ -499,9 +488,7 @@ public class Sensors {
 			}
 		}
 		
-		/**
-		 * Fernbedienung 
-		 */
+		/** Fernbedienung */
 		public RemoteControl() { 
 			this("");
 		}
@@ -522,13 +509,11 @@ public class Sensors {
 		}
 	}
 
-	/**
-	 * Kameraposition (kein echter Sensor, sondern Servo-Position)
-	 */
+	/** Kameraposition (kein echter Sensor, sondern Servo-Position) */
 	public static class CamPos extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
-		 * @param left ignored
+		 * @param left	(ignored)
 		 */
 		public CamPos(boolean left) {
 			super(true);
@@ -574,9 +559,7 @@ public class Sensors {
 		}
 	}
 	
-	/**
-	 * Transportfach-Klappensensor
-	 */
+	/** Transportfach-Klappensensor */
 	public static class Door extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
@@ -626,13 +609,11 @@ public class Sensors {
 		}
 	}
 
-	/**
-	 * Transportfach-Überwachung
-	 */
+	/** Transportfach-Überwachung */
 	public static class Trans extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/**
-		 * @param isLeft immer true
+		 * @param isLeft	(immer true)
 		 */
 		public Trans(boolean isLeft) {
 			super(true);
@@ -678,9 +659,7 @@ public class Sensors {
 		}
 	}
 
-	/**
-	 * Error-Sensor
-	 */
+	/** Error-Sensor */
 	public static class Error extends NumberSingleton
 	implements SimpleSensor, CanRead, CanWrite {
 		
@@ -693,9 +672,7 @@ public class Sensors {
 					"1 = okay";
 		}
 
-		/**
-		 * Error-Sensor
-		 */
+		/** Error-Sensor */
 		public Error() {
 			// Hat 1 als Standardwert, nicht 0
 			internalModel = Double.valueOf(1);
@@ -714,12 +691,10 @@ public class Sensors {
 		public Code getHotCmdCode() { return Code.SENS_ERROR; }
 	}
 	
-	/**
-	 * Shutdown-Control
-	 */
+	/** Shutdown-Control */
 	public static class Shutdown extends BotComponent<Void>
 	implements CanRead, CanWriteAsynchronously {
-		/** async. Outputstream */
+		/** asynchroner Outputstream */
 		private CommandOutputStream asyncOut = null;
 		/** steht ein Shutdown an? */
 		private boolean shutdownRequest = false;
@@ -733,6 +708,7 @@ public class Sensors {
 
 		/**
 		 * Sendet einen Shutdown-Befehl
+		 * 
 		 * @throws IOException
 		 */
 		public synchronized void sendShutdown() throws IOException {
@@ -762,15 +738,14 @@ public class Sensors {
 			return "Shutdown-Control"; 
 		}
 
-		/**
-		 * Shutdown-Control 
-		 */
+		/** Shutdown-Control */
 		public Shutdown() {
 			super(null);
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWrite#getHotCmdCode()
+		 * 
 		 * @return Command-Code 
 		 */
 		public Code getHotCmdCode() { 
@@ -794,6 +769,7 @@ public class Sensors {
 		
 		/**
 		 * Wurde eine Shutdown-Befehl vom Bot gesendet?
+		 * 
 		 * @return true oder false
 		 */
 		public boolean shutdownRequested() {

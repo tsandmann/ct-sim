@@ -16,6 +16,7 @@
  * MA 02111-1307, USA.
  *
  */
+
 package ctSim.model.bots.ctbot;
 
 import java.awt.Color;
@@ -35,9 +36,7 @@ import ctSim.model.bots.components.WelcomeReceiver;
 import ctSim.util.BotID;
 import ctSim.view.gui.ProgramViewer;
 
-/**
- * Abstrakte Oberklasse für alle c't-Bots
- */
+/** Abstrakte Oberklasse für alle c't-Bots */
 public abstract class CtBot extends BasicBot {
 	
 	/** LED-Farben */
@@ -69,12 +68,12 @@ public abstract class CtBot extends BasicBot {
 	
 	/**
 	 * Vorverarbeitung der Kommandos 
-	 * z.B. Weiterleiten von Kommandos für andere Bots
-	 * Adressvergabe, etc.
-	 * @param cmd das Kommando
-	 * @return True, Wenn das Kommando abgearbeitet wurde, sonst False
-	 * @throws IOException falls Output-Stream.flush() fehlschlägt
-	 * @throws ProtocolException falls kein Controller vorhanden zum Weiterleiten
+	 * z.B. Weiterleiten von Kommandos für andere Bots Adressvergabe, etc.
+	 * 
+	 * @param cmd	das Kommando
+	 * @return True, wenn das Kommando abgearbeitet wurde, sonst False
+	 * @throws IOException			falls Output-Stream.flush() fehlschlägt
+	 * @throws ProtocolException	falls kein Controller vorhanden zum Weiterleiten
 	 */
 	protected boolean preProcessCommands(Command cmd) throws IOException, ProtocolException {
 		BotID id = cmd.getFrom();
@@ -110,15 +109,15 @@ public abstract class CtBot extends BasicBot {
 					try {
 						Thread.sleep(10);
 					} catch (InterruptedException e) {
-						// NOP
+						// No-op
 					}
 				}
 				BotID newId = getController().generateBotId();
 
 				Command answer = getConnection().getCmdOutStream().getCommand(Command.Code.ID);
 				answer.setSubCmdCode(Command.SubCode.ID_OFFER);
-				answer.setDataL(newId.intValue()); // Die neue kommt in das Datenfeld
-				getConnection().getCmdOutStream().flush(); // Und raus damit
+				answer.setDataL(newId.intValue());	// Die neue ID kommt in das Datenfeld
+				getConnection().getCmdOutStream().flush();	// ... und raus damit
 
 				lg.info("Schlage Bot die Adresse " + newId + " vor");
 				return true;
@@ -136,13 +135,12 @@ public abstract class CtBot extends BasicBot {
 
 		if (!cmd.getTo().equals(Command.getSimId())) {
 			lg.info("Nachricht ist für " + cmd.getTo());
-			// Diese Nachricht ist nicht für den Sim, sondern für einen anderen Bot
-			// Also weiterleiten
+			// Diese Nachricht ist nicht für den Sim, sondern für einen anderen Bot, also weiterleiten
 			Controller controller = getController();
 
 			if (controller != null) {
 				if (cmd.getFrom().equals(Command.getBroadcastId())) {
-					// ungueltiger Absender => Paket verwerfen
+					// ungültiger Absender => Paket verwerfen
 					return true;
 				}
 				controller.deliverMessage(cmd);
@@ -158,8 +156,9 @@ public abstract class CtBot extends BasicBot {
 	
 	/**
 	 * Verarbeitet ein Kommando und leitet es an den angehängten Bot weiter
-	 * @param command das Kommando
-	 * @throws ProtocolException Wenn was nicht klappt
+	 * 
+	 * @param command	das Kommando
+	 * @throws ProtocolException	wenn was nicht klappt
 	 */
 	public void receiveCommand(Command command) throws ProtocolException {
 		if (!command.getTo().equals(this.getId()) && !command.getTo().equals(Command.getBroadcastId()))
@@ -179,7 +178,8 @@ public abstract class CtBot extends BasicBot {
 	
 	/**
 	 * Startet das Verhalten "name" per RemoteCall
-	 * @param name	Das zu startende Verhalten
+	 * 
+	 * @param name	das zu startende Verhalten
 	 * @param param	Int-Parameter für das Verhalten (16 Bit)
 	 * @param ref	Referenz auf den ABL-Viewer, falls das Ergebnis dort angezeigt werden soll
 	 */
@@ -206,6 +206,7 @@ public abstract class CtBot extends BasicBot {
 	
 	/**
 	 * Neuer Bot "name"
+	 * 
 	 * @param name
 	 */
 	public CtBot(String name) {
@@ -246,7 +247,7 @@ public abstract class CtBot extends BasicBot {
 			components.add(new Sensors.BPSReceiver(true));
 		}
 
-		// LEDs
+		/** LEDs */
 		int numLeds = ledColors.length;
 		for (int i = 0; i < numLeds; i++) {
 			String ledName = "LED " + (i + 1) + (i == 1 ? " (vorn rechts)" : i == 0 ? " (vorn links)" : "");
@@ -262,9 +263,7 @@ public abstract class CtBot extends BasicBot {
 		ablResult = null;
 	}
 
-	/**
-	 * Sendet einen Shutdown-Befehl zum Bot
-	 */
+	/** Sendet einen Shutdown-Befehl zum Bot */
 	protected void sendShutdown() {
 		try {
 			for (BotComponent<?> c : components) {
@@ -275,7 +274,7 @@ public abstract class CtBot extends BasicBot {
 				}
 			}
 		} catch (IOException e) {
-			// NOP
+			// No-op
 		}
 	}
 	

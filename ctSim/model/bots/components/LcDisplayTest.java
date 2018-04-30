@@ -25,16 +25,12 @@ import org.junit.Test;
 
 import ctSim.model.bots.components.Actuators.LcDisplay;
 
-/** 
- * Unit-Test für LcDisplay 
- */
+/** Unit-Test für LcDisplay */
 public class LcDisplayTest extends LcDisplay {
 	/** Testdaten */
 	private final String twentyFourLines;
 
-	/**
-	 * Display-Test
-	 */
+	/** Display-Test */
 	public LcDisplayTest() {
 		super(42, 24);
 		String fortyTwoSpaces = "";
@@ -46,9 +42,7 @@ public class LcDisplayTest extends LcDisplay {
 		twentyFourLines = s.substring(0, s.length() - 1);
 	}
 
-	/**
-	 * Testcode
-	 */
+	/** Testcode */
 	@Test
 	public void ctor() {
 		assertEquals(42, getNumCols());
@@ -57,6 +51,7 @@ public class LcDisplayTest extends LcDisplay {
 
 	/**
 	 * Testcode
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -67,6 +62,7 @@ public class LcDisplayTest extends LcDisplay {
 	
 	/**
 	 * Testcode
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -84,11 +80,12 @@ public class LcDisplayTest extends LcDisplay {
 	
 	/**
 	 * Testcode
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void setTextAtAll() throws Exception {
-		// Einfügen bei 0,0 -- geht's überhaupt
+		// Einfügen bei 0,0 - geht das überhaupt?
 		setCursor(0, 0);
 		overwrite(insertion);
 		updateExternalModel();
@@ -99,11 +96,12 @@ public class LcDisplayTest extends LcDisplay {
 	
 	/**
 	 * Testcode
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void setTextColCorrect() throws Exception {
-		// Einfügen bei 10,0 -- kommt das in der richtigen Spalte an
+		// Einfügen bei 10,0 - kommt das in der richtigen Spalte an?
 		setCursor(10, 0);
 		overwrite(insertion);
 		updateExternalModel();
@@ -115,11 +113,12 @@ public class LcDisplayTest extends LcDisplay {
 	
 	/**
 	 * Testcode
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void setTextRowCorrect() throws Exception {
-		// Einfügen bei 0,8 -- kommt das in der richtigen Zeile an
+		// Einfügen bei 0,8 - kommt das in der richtigen Zeile an?
 		clearModel(getExternalModel());
 		setCursor(0, 8);
 		overwrite(insertion);
@@ -132,11 +131,12 @@ public class LcDisplayTest extends LcDisplay {
 	
 	/**
 	 * Testcode
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void setTextTruncate() throws Exception {
-		// Einfügen bei 38,23 -- wird das richtig abgeschnitten
+		// Einfügen bei 38,23 - wird das richtig abgeschnitten?
 		clearModel(getExternalModel());
 		setCursor(38, 23);
 		overwrite(insertion);
@@ -148,6 +148,7 @@ public class LcDisplayTest extends LcDisplay {
 	
 	/**
 	 * @return Text
+	 * 
 	 * @throws Exception
 	 */
 	private String getExText() throws Exception {

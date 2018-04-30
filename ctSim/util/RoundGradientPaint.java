@@ -80,7 +80,7 @@ public class RoundGradientPaint implements Paint {
 		 * @see java.awt.PaintContext#dispose()
 		 */
 		public void dispose() {
-			// no-op
+			// No-op
 		}
 
 		/**

@@ -28,9 +28,7 @@ import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.SimpleActuator;
 import ctSim.util.BotID;
 
-/**
- * Handshake für Bot-Sim Connection
- */
+/** Handshake für Bot-Sim Connection */
 public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuator, CanRead {
 	/** Subcode */
 	private final SubCode expectedForWelcome;
@@ -55,7 +53,8 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	
 	/**
 	 * Handshake für Connection
-	 * @param expectedForWelcome Subcode für neue Connection
+	 * 
+	 * @param expectedForWelcome	Subcode für neue Connection
 	 */
 	public WelcomeReceiver(SubCode expectedForWelcome) {
 		super(null);
@@ -92,7 +91,7 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	 */
 	@Override
 	public void updateExternalModel() {
-		// NOP
+		// No-op
 	}
 
 	/**
@@ -105,7 +104,8 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	
 	/**
 	 * Setzt die Features des Bots. Codierung gemäß ct-Bot/command.c
-	 * @param features Alle Features in einen integer gepackt
+	 * 
+	 * @param features	Alle Features in einen integer gepackt
 	 */
 	public void setFeatures(int features) {
 		if ((features & 1) == 1) {
@@ -148,28 +148,28 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	}
 	
 	/**
-	 * @return Kann der Bot ABL Programme empfangen?
+	 * @return Kann der Bot ABL-Programme empfangen?
 	 */
 	public boolean get_feature_abl_program() {
 		return feature_abl_program;
 	}
 	
 	/**
-	 * @return Kann der Bot Basic Programme empfangen?
+	 * @return Kann der Bot Basic-Programme empfangen?
 	 */
 	public boolean get_feature_basic_program() {
 		return feature_basic_program;
 	}
 
 	/**
-	 * @return Hat der Bot die Kartograhpie aktiviert?
+	 * @return Hat der Bot die Kartographie aktiviert?
 	 */
 	public boolean get_feature_map() {
 		return feature_map;
 	}
 
 	/**
-	 * @return Kann der Bot RemoteCalsl empfangen?
+	 * @return Kann der Bot RemoteCalls empfangen?
 	 */
 	public boolean get_feature_remotecall() {
 		return feature_remotecall;

@@ -35,11 +35,11 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 import ctSim.util.FmtLogger;
 
 /**
- * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamReader von j3d defekt ist
- * Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu transerieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht
+ * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamReader
+ * von Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu
+ * transferieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
  * 
  * @author bbe (bbe@heise.de)
- *
  */
 public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	/** Logger */
@@ -66,8 +66,9 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 
 	/**
 	 * Rekonstruiert eine Map
-	 * @param scene Gruppe
-	 * @param map Map
+	 * 
+	 * @param scene	Gruppe
+	 * @param map	Map
 	 */
 	private void reconstructMap(Group scene, HashMap map){
 		if (scene == null){
@@ -104,8 +105,9 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	
 	/**
 	 * Sucht etwas im Szenegraphen
-	 * @param group Gruppe
-	 * @param name gesuchter Name
+	 * 
+	 * @param group	Gruppe
+	 * @param name	gesuchter Name
 	 * @return SceneGraphObject
 	 */
 	private SceneGraphObject findInScenegraph(Group group,String name){
@@ -116,12 +118,12 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 		Enumeration en = group.getAllChildren();
 		while (en.hasMoreElements()){
 			SceneGraphObject so = (SceneGraphObject) en.nextElement();
-			// Ist das eine Gruppe? Wenn ja, durchsuchen
+			// Ist das eine Gruppe? Wenn ja, durchsuchen...
 			if (so instanceof Group){
-				// rekursion
+				// Rekursion
 				SceneGraphObject res = findInScenegraph((Group)so, name); 
-				if ( res != null) // etwas gefunen? 
-					return res;		// abbruch der rekursion
+				if ( res != null)	// etwas gefunden? 
+					return res;	// Abbruch der Rekursion
 			}
 		}
 		return null;

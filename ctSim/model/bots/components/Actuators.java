@@ -290,7 +290,7 @@ public class Actuators {
 		 */
 		@Override
 		public synchronized void updateExternalModel() {
-			// NOP
+			// No-op
 		}
 
 		/** Programm-Komponente eines Bots */
@@ -575,7 +575,7 @@ public class Actuators {
 				getExternalModel().insertString(0, getAllText(internalModel),
 					null);
 			} catch (NullPointerException e) {
-				// NOP
+				// No-op
 			} catch (BadLocationException e) {
 				// "Kann nicht passieren"
 				throw new AssertionError(e);

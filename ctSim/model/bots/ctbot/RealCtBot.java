@@ -37,13 +37,9 @@ import ctSim.util.BotID;
 import ctSim.util.Runnable1;
 import ctSim.util.SaferThread;
 
-/**
- * Reale Bots
- */
+/** Reale Bots */
 public class RealCtBot extends CtBot {
-	/**
-	 * Kommando-Auswerter
-	 */
+	/** Kommando-Auswerter */
 	protected class CmdProcessor extends SaferThread {
 		/** Verbindung zum Sim */
 		private final Connection connection;
@@ -96,8 +92,7 @@ public class RealCtBot extends CtBot {
 			try {
 				connection.close();
 			} catch (IOException e) {
-				// Strategie auf Best-effort-Basis
-				// (soll heissen ist uns wurscht)
+				// Strategie auf Best-effort-Basis (soll heißen: ist uns egal)
 			}
 		}
 	}
@@ -106,15 +101,15 @@ public class RealCtBot extends CtBot {
 	private final String connectionName;
 
 	/**
-	 * @param connection Connection zum Bot
-	 * @param newId Id für die Kommunikation 
-	 * @param features Features des Bots gepackt in einen Integer
+	 * @param connection	Connection zum Bot
+	 * @param newId			Id für die Kommunikation 
+	 * @param features		Features des Bots gepackt in einen Integer
 	 * @throws ProtocolException 
 	 */
 	public RealCtBot(Connection connection, BotID newId, int features) throws ProtocolException {
 		super(connection.getShortName() + "-Bot");
 		
-		// connection speichern
+		// Connection speichern
 		setConnection(connection);
 		
 		setId(newId);
@@ -155,7 +150,7 @@ public class RealCtBot extends CtBot {
 		for (BotComponent<?> c : components) {
 			c.offerAsyncWriteStream(connection.getCmdOutStream());
 			
-			/* RemoteCall-Componente suchen und DoneListener registrieren (ProgramViewer) */
+			/* RemoteCall-Komponente suchen und DoneListener registrieren (ProgramViewer) */
 			if (c instanceof RemoteCallCompnt) {
 				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
@@ -193,6 +188,7 @@ public class RealCtBot extends CtBot {
 
 	/**
 	 * Sendet einen Fernbedienungscode an den Bot
+	 * 
 	 * @param code	zu sendender RC5-Code als String
 	 */
 	public void sendRC5Code(String code) {

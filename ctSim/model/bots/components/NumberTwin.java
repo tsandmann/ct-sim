@@ -25,14 +25,9 @@ import javax.swing.event.ChangeListener;
 
 import ctSim.model.Command;
 
-/**
- * Zahlendarstellung für links oder rechts
- * ist Hälfte eines Paars (z.B. IrL + IrR)
- */
+/** Zahlendarstellung für links oder rechts ist Hälfte eines Paars (z.B. IrL + IrR) */
 public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
-	/**
-	 * NumberTwinVisitor
-	 */
+	/** NumberTwinVisitor */
 	public interface NumberTwinVisitor {
 		/**
 		 * @param numberTwin	Zahl
@@ -48,7 +43,8 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 
 	/**
 	 * Zahlendarstellung für links oder rechts
-	 * @param isLeft links?
+	 * 
+	 * @param isLeft	links?
 	 */
 	public NumberTwin(boolean isLeft) {
 		super(new SpinnerNumberModel());
@@ -91,14 +87,14 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	}
 
 	/**
-	 * @param c Command
+	 * @param c	Command
 	 */
 	public synchronized void readFrom(Command c) {
 		internalModel = isLeft ? c.getDataL() : c.getDataR();
 	}
 
 	/**
-	 * @param c Command
+	 * @param c	Command
 	 */
 	public synchronized void writeTo(Command c) {
 		// Verengende Konvertierung Number -> int
@@ -118,15 +114,17 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	}
 
 	/** 
-	 * Nur auf dem EDT laufenlassen 
-	 * @param n Number 
+	 * Nur auf dem EDT laufen lassen
+	 * 
+	 * @param n	Number 
 	 */
 	public synchronized void set(Number n) {
 		getExternalModel().setValue(n);
 	}
 
 	/** 
-	 * Nur auf dem EDT laufenlassen 
+	 * Nur auf dem EDT laufen lassen
+	 * 
 	 * @return Number 
 	 */
 	public synchronized Number get() {
@@ -134,7 +132,7 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	}
 
 	/**
-	 * @param visitor NumberTwinVisitor
+	 * @param visitor	NumberTwinVisitor
 	 */
 	public void acceptNumTwinVisitor(NumberTwinVisitor visitor) {
 		visitor.visit(this, isLeft);
