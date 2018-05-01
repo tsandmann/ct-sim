@@ -29,7 +29,7 @@ import javax.swing.JTextArea;
 /**
  * Eine Textkonsole in der c't-Sim-GUI
  * 
- * @author Felix Beckwermert
+ * @author Felix Beckwermert (felix@beckwermert.de)
  */
 public class ConsoleComponent extends JScrollPane implements DebugWindow {
 	/** UID */
@@ -37,9 +37,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 	/** Textfeld */
 	private JTextArea textArea;
 	
-	/**
-	 * Neue Textconsole
-	 */
+	/** Neue Textconsole */
 	public ConsoleComponent() {
 		super(new JTextArea(3, 40), 
 				VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -51,7 +49,8 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 	
 	/**
 	 * Gibt einen Text aus
-	 * @param msg Text
+	 * 
+	 * @param msg	Text
 	 */
 	public synchronized void print(String msg) {
 		textArea.append(msg);
@@ -60,26 +59,23 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 
 	/**
 	 * Gibt einen Text und ein Zeilenende aus
-	 * @param msg Text
+	 * 
+	 * @param msg	Text
 	 */
 	public synchronized void println(String msg) {
 		print(msg + "\n");
 	}
 	
 	/**
-	 *@return Neuer Logging-Hanlder
+	 *@return Neuer Logging-Handler
 	 */
 	public Handler createLoggingHandler() {
 		return new LoggingHandler();
 	}
 	
-	/**
-	 * Log-Handler für Konsolenausgabe
-	 */
+	/** Log-Handler für Konsolenausgabe */
 	private class LoggingHandler extends Handler {
-		/**
-		 * Logging-Handler
-		 */
+		/** Logging-Handler */
 		public LoggingHandler() {
 			setFormatter(new Formatter() {
 				@Override
@@ -90,11 +86,12 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 	                		lvl.toUpperCase().charAt(0), 
 	                		lvl.toLowerCase().substring(1), 
 	                		r.getMessage());
-                }});
+                }
+			});
 		}
 
 		/**
-		 * @param record LogRecord
+		 * @param record	LogRecord
 		 */
 		@Override
 		public synchronized void publish(LogRecord record) {
@@ -104,6 +101,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 
 		/**
 		 * Schließen
+		 * 
 		 * @throws SecurityException
 		 */
 		@Override
@@ -111,9 +109,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 			// No-op
 		}
 
-		/**
-		 * Flush
-		 */
+		/** Flush */
 		@Override
 		public void flush() {
 			// No-op

@@ -50,8 +50,8 @@ import javax.swing.JTabbedPane;
  * <code>ctp.{@link #addClosableTab(String, Component, String) addClosableTab}("Tab-Titel", tabContent, "Tab-Tooltip");</code><br/>
  * </p>
  * <p>
- * Grundprinzip aus einem <a href="http://forum.java.sun.com/thread.jspa?threadID=337070">Forumsposting
- * von einem Mr_Silly</a> übernommen; Code neu geschrieben und erweitert.
+ * Code neu geschrieben und erweitert; hierbei wurde das Grundprinzip übernommen aus:
+ * <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6632934">Bug JDK-6632934: JTabbedPane with closable tabs</a>
  * </p>
  * <p>
  * Der Sim verwendet derzeit nur eine Instanz dieser Klasse, in der <em>alle</em> Tabs ein Schließen-Icon

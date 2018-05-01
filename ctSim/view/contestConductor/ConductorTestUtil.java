@@ -32,9 +32,7 @@ public abstract class ConductorTestUtil {
      */
     protected abstract DatabaseAdapter getDbFromChildClass();
 
-    /**
-     * TestDatabase
-     */
+    /** TestDatabase */
 	public static class TestDatabase extends ContestDatabase {
 		/**
 		 * @see ctSim.view.contestConductor.ContestDatabase#getConnection()
@@ -54,8 +52,9 @@ public abstract class ConductorTestUtil {
 
     /**
      * Neuer Bot
-     * @param id ID
-     * @param name Name
+     * 
+     * @param id	ID
+     * @param name	Name
      * @throws SQLException
      */
     protected void makeBot(int id, String name) throws SQLException {
@@ -67,7 +66,8 @@ public abstract class ConductorTestUtil {
 
     /**
      * Neues Level
-     * @param levelId ID
+     * 
+     * @param levelId	ID
      * @throws SQLException
      */
     protected void makeLevel(int levelId) throws SQLException {
@@ -76,8 +76,9 @@ public abstract class ConductorTestUtil {
 
     /**
      * Neues Level
-     * @param levelId ID
-     * @param gametime_real Zeit
+     * 
+     * @param levelId		ID
+     * @param gametime_real	Zeit
      * @throws SQLException
      */
     protected void makeLevel(int levelId, int gametime_real)
@@ -89,6 +90,7 @@ public abstract class ConductorTestUtil {
 
     /**
      * Test-Methode
+     * 
      * @param i
      * @param state
      * @param finishtime
@@ -104,6 +106,7 @@ public abstract class ConductorTestUtil {
 
     /**
      * Test-Methode
+     * 
      * @param i
      * @param state
      * @param winner

@@ -28,13 +28,11 @@ import ctSim.controller.Main;
 import ctSim.util.Misc;
 
 /**
- * Dings, das ein Verzeichnis voller Screenshots in eine Datenbank
- * hochlädt. Sollte weitgehend selbstdokumentierend sein (hua hua).
+ * Element, das ein Verzeichnis voller Screenshots in eine Datenbank hochlädt. Sollte weitgehend
+ * selbstdokumentierend sein...
  */
 public class ScreenshotUploadTool {
-    /**
-     * usage-Meldung
-     */
+    /** usage-Meldung */
     public static void usage() {
         System.out.println(
         	"Syntax:   java ScreenshotUploadTool dburl dbuser dbpassword");
@@ -46,7 +44,8 @@ public class ScreenshotUploadTool {
 
     /**
      * Bereitet eine URL vor
-     * @param rawUrl URL
+     * 
+     * @param rawUrl	URL
      * @return String
      */
     private static String preprocessUrl(String rawUrl) {
@@ -59,6 +58,7 @@ public class ScreenshotUploadTool {
 
     /**
      * main
+     * 
      * @param args
      * @throws Exception
      */

@@ -41,18 +41,12 @@ import javax.swing.table.TableCellRenderer;
 
 import ctSim.model.bots.components.BotComponent;
 
-/**
- * Tabellen für Komponenten
- */
+/** Tabellen für Komponenten */
 public abstract class TableOfSpinners extends GuiBotBuisitor {
-	/**
-	 * UID
-	 */
+	/** UID */
 	private static final long serialVersionUID = -4717996663435641535L;
 
-	/**
-	 * Komponenteneditor
-	 */
+	/** Komponenten-Editor */
 	public static class CompntEditor extends AbstractCellEditor
 	implements TableCellEditor {
 		/** UID */
@@ -78,9 +72,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		}
 	}
 
-	/**
-	 * Komponenten-Renderer
-	 */
+	/** Komponenten-Renderer */
 	public static class CompntRenderer implements TableCellRenderer {
 		/**
 		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
@@ -92,16 +84,12 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		}
 	}
 
-    /**
-     * Bot-Komponenten-Tabelle
-     */
+    /** Bot-Komponenten-Tabelle */
     public static class BotComponentTableModel extends DefaultTableModel {
     	/** UID */
     	private static final long serialVersionUID = 3066982780978636288L;
 
-    	/**
-    	 * Neue Tabelle für Bot-Komponenten
-    	 */
+    	/** Neue Tabelle für Bot-Komponenten */
     	public BotComponentTableModel() {
     		super(0, 2);
     	}
@@ -119,6 +107,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 
 		/**
 		 * Fügt eine neue Zeile hinzu
+		 * 
 		 * @param label			Text
 		 * @param toolTip		Tooltip
 		 * @param editable		editierbar?
@@ -138,7 +127,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 				JSpinner.DefaultEditor e = (DefaultEditor) spinner.getEditor();
 				e.getTextField().setDisabledTextColor(UIManager.getColor("TextField.foreground"));
 			}
-			// setEditor() setzt den Font auf Courier, keine Ahnung warum
+			// setEditor() setzt den Font auf Courier; warum ist unklar...
 			spinner.setFont(Font.decode("SansSerif"));
 			spinner.setEnabled(editable);
 			spinner.setBorder(null);
@@ -148,7 +137,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 			spinner.setToolTipText(toolTip);
 			addRow(new Object[] {la, spinner});
 
-			// Events aus dem SpinnerModel sollen Neumalen der Tabelle ausloesen
+			// Events aus dem SpinnerModel sollen Neu-Malen der Tabelle auslösen
 			final int thisRow = getRowCount() - 1;
 			sModel.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
@@ -158,7 +147,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		}
 
 		/**
-		 * @param c Bot-Komponente
+		 * @param c	Bot-Komponente
 		 */
 		public void addRow(BotComponent<? extends SpinnerModel> c) {
 			addRow(c.getName(), c.getDescription(), c.isGuiEditable(),
@@ -166,8 +155,8 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		}
 
 		/**
-		 * @param c Bot-Komponente
-		 * @param decimalFormat Format
+		 * @param c				Bot-Komponente
+		 * @param decimalFormat	Format
 		 */
 		public void addRow(BotComponent<? extends SpinnerModel> c,
 		String decimalFormat) {
@@ -187,9 +176,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		return model.getRowCount() > 0;
 	}
 
-    /**
-     * Tabellen für Komponenten
-     */
+    /** Tabellen für Komponenten */
     public TableOfSpinners() {
         final JTable t = new JTable(model);
         t.setRowHeight(new JSpinner().getMinimumSize().height +
@@ -203,15 +190,16 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 
         setBorder(new TitledBorder(getPanelTitle()));
 
-        /*
-		 * Schweisstreibend: Hab t.setBorder() mit "lowered bevel border"
-		 * versucht, aber das führte zu doofen Ergebnissen; JTable kann
-		 * offenbar keine Borders. -> Loesung: JTable in ScrollPane einwickeln.
-		 * Dann wird die ScrollPane aber sehr gross, warum weiss ich nicht. ->
-		 * Loesung: getMin/Pref/MaxSize() sollen zur Table weiterleiten. Dann
-		 * ist aber in der ScrollPane nicht genug Platz für ihren
-		 * Lowered-Bevel-Border _und_ die Table, das heisst (Tusch) ein
-		 * Scrollbalken erscheint. -> Loesung: Insets dazurechnen.
+        /**
+		 * Schweißtreibend:
+		 * Ich habe t.setBorder() mit "lowered bevel border" versucht, aber das führte zu unschönen
+		 * Ergebnissen; JTable kann offenbar keine Borders.
+		 * -> Lösung: JTable in ScrollPane einwickeln. Dann wird die ScrollPane allerdings sehr groß,
+		 * warum weiß ich nicht...
+		 * -> Lösung: getMin/Pref/MaxSize() sollen zur Table weiterleiten. Dann ist aber in der ScrollPane
+		 * nicht genug Platz für ihren Lowered-Bevel-Border _und_ die Table, das heißt (Tusch) ein
+		 * Scrollbalken erscheint.
+		 * -> Lösung: Insets dazurechnen.
 		 */
         add(new JScrollPane(t) {
         	private static final long serialVersionUID = 6362442061290466520L;

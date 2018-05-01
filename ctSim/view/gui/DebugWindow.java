@@ -16,23 +16,24 @@
  * MA 02111-1307, USA.
  * 
  */
+
 package ctSim.view.gui;
 
 /**
  * Interface für Debug-Fenster
  * 
- * @author Felix Beckwermert
+ * @author Felix Beckwermert (felix@beckwermert.de)
  *
  */
 public interface DebugWindow {
 	
 	/**
-	 * @param str Text, der in das Debug-Fenster geschrieben werden soll
+	 * @param str	Text, der in das Debug-Fenster geschrieben werden soll
 	 */
 	public void print(String str);
 	
 	/**
-	 * @param str Textzeile, die in das Debug-Fenster geschrieben werden soll
+	 * @param str	Textzeile, die in das Debug-Fenster geschrieben werden soll
 	 */
 	public void println(String str);
 }

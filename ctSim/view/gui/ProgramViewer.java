@@ -53,9 +53,9 @@ import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.FmtLogger;
 
 /**
- * Stellt das Eingabefenster für ABL- oder Basic-Programme dar. Diese können geladen, 
- * gespeichert (Textdatei) oder zum Bot gesendet und dort optional gestartet und auf 
- * Syntaxfehler überprüft werden.
+ * Stellt das Eingabefenster für ABL- oder Basic-Programme dar. Diese können geladen, gespeichert
+ * (Textdatei) oder zum Bot gesendet und dort optional gestartet und auf Syntaxfehler überprüft werden.
+ * 
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class ProgramViewer extends JPanel implements ActionListener {
@@ -90,15 +90,14 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	/** Pfad für Laden- / Speichern-Dialog */
 	private String path = ConfigManager.path2Os(Config.getValue("botdir")) + "/../bot-logic/basic";
 
-	/**
-	 * Stellt unsere Buttons dar mit Icon und Tooltip
-	 */
+	/** Stellt unsere Buttons dar, inklusive Icon und Tooltip */
 	class Button extends JButton {
 		/** UID */
 		private static final long serialVersionUID = 6172865032677505851L;
 
 		/**
 		 * Button-Klasse
+		 * 
 		 * @param label			Name
 		 * @param toolTipText	Tooltip
 		 * @param icon			Icon
@@ -117,13 +116,12 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		}
 	}
 	
-	/**
-	 * Filter für Textdateien
-	 */
+	/** Filter für Textdateien */
 	class TextFilter extends FileFilter {
 	    /**
-	     * Get the extension of a file.
-	     * @param f File
+	     * Die Dateinanmen-Erweiterung einer Datei auslesen
+	     * 
+	     * @param f	File
 	     * @return Extension
 	     */  
 	    public String getExtension(File f) {
@@ -167,9 +165,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	    }
 	}
 
-	/**
-	 * Programm-Laden-Handler
-	 */
+	/** Programm-Laden-Handler */
 	private final Runnable onLoad = new Runnable() {
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
@@ -199,9 +195,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		}
 	};	
 	
-	/**
-	 * Programm-Speichern-Handler
-	 */
+	/** Programm-Speichern-Handler */
 	private final Runnable onSave = new Runnable() {
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
@@ -229,15 +223,14 @@ public class ProgramViewer extends JPanel implements ActionListener {
 
 	/**
 	 * Liefert das aktuelle ProgamViewer-Objekt
-	 * @return	this
+	 * 
+	 * @return this
 	 */
 	private ProgramViewer getViewer() {
 		return this;
 	}
 	
-	/**
-	 * Programm-Senden-Handler
-	 */
+	/** Programm-Senden-Handler */
 	private final Runnable onSend = new Runnable() {
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
@@ -263,32 +256,25 @@ public class ProgramViewer extends JPanel implements ActionListener {
 					}
 				}
 			} catch (IOException e) {
-				// wenn hier was schief ging, hat das keine tragischen Folgen, also nur Warnung
+				// wenn hier was schief ging, hat das keine tragischen Folgen, also nur eine Warnung ausgeben
 				lg.warn("E/A Fehler beim Senden des Programms");
 			}
 		}
 	};
 	
-	/**
-	 * Programm-Abbrechen-Handler
-	 */
+	/** Programm-Abbrechen-Handler */
 	private final Runnable onStop = new Runnable() {
 		public void run() {
 			programCompnt.stopProgram(type);
 		}
 	};
 
-	/**
-	 * Schreibt ein kleines ABL-Beispiel-Programm in den Editor.
-	 */
+	/** Schreibt ein kleines ABL-Beispiel-Programm in den Editor. */
 	private void setExampleProgram() {
 		programText.setText("// Hey Bot, I'm an ABL-script!\nfor(4)\n\tbot_goto_dist(150,1)\n\tbot_turn(90)\nendf()\n");
 	}
 	
-	/**
-	 * Beispiel-Programm-Handler. 
-	 * Erzeugt ein einfaches ABL-Beispiel.
-	 */
+	/** Beispiel-Programm-Handler der ein einfaches ABL-Beispiel erzeugt */
 	private final Runnable onExmplAbl = new Runnable() {
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
@@ -304,7 +290,8 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	};
 	
 	/**
-	 * Erzeugt das Programm-Fenster, in dem sich Programme laden, speichern, eingeben und versenden lassen.
+	 * Erzeugt das Programm-Fenster, in dem sich Programme laden, speichern, eingeben und versenden lassen
+	 * 
 	 * @param program	Program-Actuator, der vom Fenster verwendet werden soll.
 	 * @param bot		Bot-Referenz
 	 */
@@ -414,15 +401,16 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		add(s, BorderLayout.CENTER);
 		
 		if (bot.get_feature_basic_program()) {
-			typeBasic.doClick(); // Typ auf Basic setzen
+			typeBasic.doClick();	// Typ auf Basic setzen
 		} else {
-			typeABL.doClick(); // Typ auf ABL setzen
+			typeABL.doClick();	// Typ auf ABL setzen
 		}
 	}
 	
-	/** 
-	 * Handler für Klick auf einen der Radio-Buttons 
-	 * @param e Event 
+	/**
+	 * Handler für Klick auf einen der Radio-Buttons
+	 * 
+	 * @param e	Event 
 	 */
     public void actionPerformed(ActionEvent e) {
     	if (e.getActionCommand().equals("Basic")) {
@@ -451,6 +439,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	
 	/**
 	 * Zeigt das Ergebnis eines ABL-Syntax-Checks in der Toolbar an
+	 * 
 	 * @param result	Das Ergebnnis, true für SUCCESS
 	 */
 	public void setSyntaxCheck(boolean result) {
@@ -492,7 +481,8 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	}
 	
 	/**
-	 * Startet einen Syntaxcheck bis Zeile line per RemoteCall.
+	 * Startet einen Syntaxcheck bis Zeile line per RemoteCall
+	 * 
 	 * @param line	Zeile, bis zu der das Programm geprüft werden soll
 	 */
 	private void checkSyntax(int line) {
@@ -534,8 +524,9 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	
 	/**
 	 * Zählt die Vorkommen eines SubStrings in einem String
-	 * @param s Quell-String, der untersucht wird
-	 * @param subString SubString, dessen Vorkommen gezählt wird
+	 * 
+	 * @param s			Quell-String, der untersucht wird
+	 * @param subString	SubString, dessen Vorkommen gezählt wird
 	 * @return Anzahl der Vorkommen
 	 */
 	private int countSubString(String s, String subString) {
