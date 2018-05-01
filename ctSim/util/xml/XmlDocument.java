@@ -111,12 +111,12 @@ public class XmlDocument {
 	 * 				versuchen, die Datei wurst/parcours.dtd zu öffnen und als DTD zu verwenden.
 	 * @return das Dokument
 	 * @throws SAXException
-	 * 				Falls die übergebene Datei nicht geparst werden kann, etwa weil das enthaltene XML
+	 * 				falls die übergebene Datei nicht geparst werden kann, etwa weil das enthaltene XML
 	 * 				nicht wohlgeformt ist oder nicht gegen die DTD validiert. Eine SAXException wird
 	 * 				unter genau den Umständen geworfen, wenn {@link DocumentBuilder#parse(InputStream, String)},
 	 * 				eine solche wirft.
 	 * @throws IOException
-	 * 				Falls beim Lesen der übergebenen Datei eine IOException auftritt, etwa weil die Datei
+	 * 				falls beim Lesen der übergebenen Datei eine IOException auftritt, etwa weil die Datei
 	 * 				nicht lesbar ist.
 	 * @throws ParserConfigurationException
 	 * 				In dem abwegigen Fall, dass die Java-Plattform keinen validierenden Parser auftreiben kann.
