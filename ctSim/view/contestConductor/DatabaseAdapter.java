@@ -41,13 +41,11 @@ import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
  * Datenbank für den Wettbewerb Oktober 2006 einerseits und ContestConductor / TournamentPlanner
  * andererseits.
  * </p>
- *
  * <p>
  * Diese Klasse besteht, um den ContestConductor und den TournamentPlanner um SQL zu entlasten.
  * (Ein Aufruf <code>db.setWinner(42);</code> ist übersichtlicher als ein halbes dutzend Zeilen
  * Datenbank-Getue).
  * </p>
- *
  * <p>
  * Alle Methoden dieser Klasse und alle Methoden der abgeleiteten Klassen werfen Instanzen von
  * java.sql.SQLException, falls die darunterliegenden Methoden, die auf die Datenbank zugreifen,
@@ -239,9 +237,9 @@ class DatabaseAdapter {
 	 * klein zu halten.
 	 * <ul>
 	 * <li>Doof:
-	 * <code>execSql("select * from rueben where id = " + ruebenId + " and mass > " + minMass);</code></li>
+	 * <code>execSql("select * from rueben where id = " + ruebenId + " and mass &gt; " + minMass);</code></li>
 	 * <li>Clever:
-	 * <code>execSql("select * from rueben where id = ? and mass > ?", ruebenId, minMass);</code></li>
+	 * <code>execSql("select * from rueben where id = ? and mass &gt; ?", ruebenId, minMass);</code></li>
 	 * </ul>
 	 * Bei wiederholten Aufrufen (etwa mit wechselnden <code>ruebenId</code>-Werten) ist der Speicherbedarf
 	 * im ersteren Fall linear ansteigend, da die Strings und daher die PreparedStatement-Objekte immer

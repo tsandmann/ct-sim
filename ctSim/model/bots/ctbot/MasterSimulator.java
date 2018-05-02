@@ -63,12 +63,12 @@ public class MasterSimulator
 implements NumberTwinVisitor, BotBuisitor, Runnable {
 	/** Reichweite der Lichtsensoren / m */
 	private final double LIGHT_MAX_DISTANCE = 1.0;
-	/** Öffnungswinkel der Lichtsensoren / radians */
+	/** Öffnungswinkel der Lichtsensoren / Radiant */
 	private final double LIGHT_OPENING_ANGLE= Math.toRadians(90);
 	
 	/** Reichweite der Baken / m */
 	private static final double BPS_LIGHT_DISTANCE = 2.0;
-	/** Öffnungswinkel des BPS-Sensors / radians */
+	/** Öffnungswinkel des BPS-Sensors / Radiant */
 	private static final double BPS_OPENING_ANGLE = Math.toRadians(0.5);
 	
     /** Rad-Simulator */
@@ -99,7 +99,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
         /**
          * Zahl der Umdrehungen, die das Rad im jetzigen Sim-Schritt macht (Beispiel: 10 Umdrehungen
-         * pro Sekunde, Sim-Schritt ist 0,2 Sim-Sekunden lang -> Rückgabewert 2). Methode kann in
+         * pro Sekunde, Sim-Schritt ist 0,2 Sim-Sekunden lang -&gt; Rückgabewert 2). Methode kann in
          * einem Simschritt ohne Nebenwirkungen mehrfach aufgerufen werden (idempotente Methode).
          *
          * @return Umdrehungen pro Sekunde (exakter Wert, d.h. mit Nachkomma-Anteil)

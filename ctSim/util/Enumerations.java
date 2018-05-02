@@ -34,11 +34,11 @@ public class Enumerations {
 	 * <p>
 	 * Ermöglicht, for-each-Schleifen mit Enumeration-Objekten zu füttern: Liefert ein {@link Iterable},
 	 * das die Elemente der übergebenen Enumeration enthält. Nützlich wenn eine veraltete Methode eine
-	 * Enumeration zurückliefert, man aber gern eine for-each-Konstruktion verwenden würde:<br/>
+	 * Enumeration zurückliefert, man aber gern eine for-each-Konstruktion verwenden würde:<br>
 	 * <code>
-	 * Enumeration<String> e = antikesObjekt.getEnumeration();<br />
-	 * for (String s : Enumerations.asIterable(e)) {<br />
-	 * 		...<br />
+	 * Enumeration<String> e = antikesObjekt.getEnumeration();<br>
+	 * for (String s : Enumerations.asIterable(e)) {<br>
+	 * 		...<br>
 	 * }
 	 * </code>
 	 * </p>

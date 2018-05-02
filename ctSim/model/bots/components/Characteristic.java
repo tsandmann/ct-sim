@@ -129,7 +129,7 @@ public class Characteristic {
 				float valDiff = characteristic[i + 3] - characteristic[i + 1];
 				// Das ist pro Schritt gleich der Wertdifferenz durch die Messgrößendifferenz:
 				float delta = valDiff / diff;
-				// Zwischenwerte addieren, für jeden weiteren einmal delta auf lookup[firMea] draufrechnen:
+				// Zwischenwerte addieren, für jeden weiteren einmal delta auf lookup[firMea] dazurechnen:
 				for (int j = 1; j < diff; j++) {
 					lookup[firMea + j] = lookup[firMea] + j * delta;
 				}
@@ -152,7 +152,7 @@ public class Characteristic {
 	 * 
 	 * @param file
 	 * 				Eine Textdatei mit der Stützwerttabelle; Format:
-	 * 				Messgröße (int>=0) \t resultierendes Sensordatum (float) \n
+	 * 				Messgröße (int&gt;=0) \t resultierendes Sensordatum (float) \n
 	 * 				Messgrößen aufsteigend, aber nicht zwingend lückenlos
 	 * @param inf	Sensordatum für Messgrößen außerhalb der Kennlinie	  
 	 */
