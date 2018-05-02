@@ -34,9 +34,7 @@ import ctSim.controller.Main;
 import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
-/**
- * Testklasse
- */
+/** Testklasse */
 public class TournamentPlannerTest extends ConductorTestUtil {
 	/** Datenbank */
 	private PlannerToDatabaseAdapter db;
@@ -51,13 +49,13 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	    return db;
     }
 
-	// Vorsicht, wenn hier Exceptions auftreten, verschluckt
-	// JUnit die und meldet nur unverständlich "No runnable methods". Im
-	// Zweifel main()-Methode schreiben, die das hier aufruft, und als
-	// Applikation (nicht Unit-Test) laufenlassen
 	/**
-	 * Tests
+	 * Vorsicht: Wenn hier Exceptions auftreten, verschluckt JUnit diese und meldet nur unverständlich
+	 * "No runnable methods". Im Zweifel main()-Methode schreiben, die das hier aufruft, und als
+	 * Applikation (nicht Unit-Test) laufen lassen
 	 */
+	
+	/** Tests */
 	public TournamentPlannerTest() {
 		Main.dependencies.reRegisterImplementation(ContestDatabase.class,
 			TestDatabase.class);
@@ -67,6 +65,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
+	 * 
 	 * @throws SQLException
 	 */
 	@Test(expected=IllegalStateException.class)
@@ -81,6 +80,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
+	 * 
 	 * @throws SQLException
 	 */
 	@Test(expected=IllegalStateException.class)
@@ -93,6 +93,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
+	 * 
 	 * @throws SQLException
 	 */
 	@Test(expected=IllegalStateException.class)
@@ -106,6 +107,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
+	 * 
 	 * @throws SQLException
 	 */
 	@Test
@@ -145,6 +147,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
+	 * 
 	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 */
@@ -161,6 +164,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
+	 * 
 	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 */
@@ -180,6 +184,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
+	 * 
 	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 */
@@ -199,6 +204,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
+	 * 
 	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 */
@@ -214,10 +220,10 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	}
 
 	/** 
-	 * Prüft 1. ob die playerIds ungleich 0 sind und 2. ob alle playerIds
-	 * unterschiedlich sind. (Es wäre falsch, wenn der Planner einen Bot
-	 * für zwei Spiele vorsehen würde.) 
-	 * @param playerIdField playerID
+	 * Prüft 1. ob die playerIds ungleich 0 sind und 2. ob alle playerIds unterschiedlich sind. (Es wäre
+	 * falsch, wenn der Planner einen Bot für zwei Spiele vorsehen würde.)
+	 * 
+	 * @param playerIdField	playerID
 	 * @throws SQLException 
 	 */
 	private void checkPlayerId(String playerIdField) throws SQLException {
@@ -238,6 +244,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
+	 * 
 	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 */
@@ -255,7 +262,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 		testee.planMainRound();
 
-		{ // keine doppelten Spiele?
+		{	// keine doppelten Spiele?
 			ResultSet rs = db.execSql("select * from ( " +
 					"select level, game, count(*) as c " +
 					"from ctsim_game group by level, game ) as x " +
@@ -268,7 +275,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 			}
 		}
 
-		// alle erwarteten Level da?
+		// sind alle erwarteten Level da?
 		for (int i = 1; i <= 32; i *= 2) {
 			ResultSet rs = db.execSql("select * from ctsim_game " +
 					"where level = ?", i);
@@ -276,7 +283,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 					rs.next());
 		}
 
-		// mind. ein Spiel ready to run?
+		// ist mindestens ein Spiel ready to run?
 		assertTrue("Kein Spiel ist 'ready to run'",
 				db.execSql("select * from ctsim_game where " +
 						"state = ?", GameState.READY_TO_RUN).next());
@@ -285,19 +292,20 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		checkPlayerId("bot1");
 		checkPlayerId("bot2");
 
-		// überall scheduled-Zeiten gesetzt?
+		// sind überall scheduled-Zeiten gesetzt?
 		assertFalse("Ein oder mehrere Spiele haben scheduled == NULL",
 			db.execSql(
 				"select * from ctsim_game where level != -1 " +
 				"and scheduled is NULL").next());
 
-		// scheduled-Zeiten sind im richtigen Intervall?
+		// sind scheduled-Zeiten im richtigen Intervall?
 		for (int i = 1; i <= 32; i *= 2)
 			assertScheduledRightInterval(i, gameIntervalInS);
 	}
 
 	/**
 	 * Testmethode
+	 * 
 	 * @param levelId
 	 * @param gameIntervalExpected
 	 * @throws SQLException
