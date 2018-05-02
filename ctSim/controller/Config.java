@@ -66,13 +66,17 @@ public class Config {
 	/** Logger */
 	static FmtLogger lg = FmtLogger.getLogger("ctSim.controller.Config");
 
-	/** <p>Default-Werte der Konfiguration. Ist ein Array, um sie im Quelltext möglichst bequem notieren
-	 * zu können.</p>
-	 *
-	 * <p>Vorteile: Die Werte sind hier zentral statt quer durch den Quelltext verteilt; Code, der
+	/**
+	 * <p>
+	 * Default-Werte der Konfiguration. Ist ein Array, um sie im Quelltext möglichst bequem notieren
+	 * zu können.
+	 * </p>
+	 * <p>
+	 * Vorteile: Die Werte sind hier zentral statt quer durch den Quelltext verteilt; Code, der
 	 * {@link #getValue(String)} aufruft, kann einfacher werden, da nicht dauernd der Rügabewert gegen
 	 * <code>null</code> geprüft werden muss - wenn in diesem Array ein Wert steht, kann getValue(String)
-	 * kein <code>null</code> mehr liefern.</p>
+	 * kein <code>null</code> mehr liefern.
+	 * </p>
 	 */
 	static final String[] parameterFallbacks = {
 		"botport", "10001",
@@ -101,12 +105,17 @@ public class Config {
 		new ParameterType("botdir", File.class),
 	};
 
-	/** <p>Enthält die Einzelparameter der Konfiguration (spiegelt also die <code><parameter></code>-Tags
-	 * wider)</p>
-	 *
-	 * <p>Verwendung: Wird zunächst auf die Default-Werte gesetzt, die aus dem hartkodierten Array
+	/**
+	 * <p>
+	 * Enthält die Einzelparameter der Konfiguration (spiegelt also die <code><parameter></code>-Tags
+	 * wider)
+	 * </p>
+	 * <p>
+	 * Verwendung: Wird zunächst auf die Default-Werte gesetzt, die aus dem hartkodierten Array
 	 * <code>configDefaults</code> kommen. Beim späteren Parsen der Konfigurationsdatei werden Defaults
-	 * dann möglicherweise überschrieben.</p> */
+	 * dann möglicherweise überschrieben.
+	 * </p>
+	 * */
 	private static PlainParameters parameters;
 
 	/** Bot-Appearances */
@@ -329,7 +338,7 @@ public class Config {
 					}
 				}
 			} catch (XPathExpressionException e) {
-				// Kann nur passieren, wenn einer etwas am Code ändert
+				// Kann nur passieren, wenn jemand etwas am Code ändert
 				throw new AssertionError(e);
 			}
 		}

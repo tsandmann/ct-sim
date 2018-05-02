@@ -49,7 +49,7 @@ import ctSim.util.Decoratoror;
  * <p>
  * Eine Metapher für <a href="http://en.wikipedia.org/wiki/Xpath">XPath</a> sind reguläre Ausdrücke:
  * So, wie reguläre Ausdrücke Teilstrings in einem langen String fangen, fängt XPath Teile aus einem
- * XML-Dokument. XPath lässt sich rubbeldiekatz lernen durch die
+ * XML-Dokument. XPath lässt sich schnell lernen durch die
  * <a href="http://www.w3.org/TR/xpath.html#path-abbrev">Anwendungsbeispiele in der Spezifikation</a>
  * ("context node" heißt in aller Regel Root-Knoten des XML-Dokuments.)
  * </p>
