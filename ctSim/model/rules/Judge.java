@@ -27,7 +27,7 @@ import ctSim.view.gui.Debug;
 /**
  * Abstrakte Superklasse für alle Judges, die prüfen, ob die Spielregeln eingehalten werden.
  *
- * @author bbe (bbe@heise.de)
+ * @author Benjamin Benz (bbe@heise.de)
  */
 public abstract class Judge {
 	/**
@@ -42,7 +42,6 @@ public abstract class Judge {
 	/** Verweis auf den zugehörigen controller */
 	protected DefaultController controller;
 
-	//$$ startTime wofür?
 	/** Welt-Zeit zu Beginn des Wettkampfes [ms] */
 	private long startTime = 0;
 

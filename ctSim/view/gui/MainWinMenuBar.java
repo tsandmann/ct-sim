@@ -55,19 +55,18 @@ import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 
 /**
  * <p>
- * Menüleiste und Toolbar des c't-Sim. Zuständig für:
+ * Menüleiste und Toolbar des c't-Sim, zuständig für:
  * <ul>
  * <li>Menüleiste</li>
  * <li>die einzelnen Menüs</li>
  * <li>die Knöpfe der Toolbar</li>
- * <li>Event-Handling-Code, der ausgeführt wird, wenn der Benutzer einen
- * Menüpunkt / einen Toolbar-Knopf klickt</li>
- * <li>die Dialogfenster hinter den Menüpunkten (Welt öffnen,
- * speichern usw.)</li>
+ * <li>Event-Handling-Code, der ausgeführt wird, wenn der Benutzer einen Menüpunkt / einen Toolbar-Knopf
+ * klickt</li>
+ * <li>die Dialogfenster hinter den Menüpunkten (Welt öffnen, speichern usw.)</li>
  * </ul>
  * </p>
  *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class MainWinMenuBar extends JMenuBar {
 	/** UID */
@@ -77,31 +76,24 @@ public class MainWinMenuBar extends JMenuBar {
     final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.MainWinMenuBar");
 
 	/**
-	 * Je nach dem, was der Benutzer im Menü; klickt, müssen wir oft im
-	 * Controller eine Aktion anschubsen. Default-Sichtbarkeit, um
-	 * Eclipses synthetic-access-Warnungen zu vermeiden.
+	 * Je nach dem, was der Benutzer im Menü; klickt, müssen wir oft im Controller eine Aktion anschieben;
+	 * Default-Sichtbarkeit um Eclipses synthetic-access-Warnungen zu vermeiden.
 	 */
 	final Controller controller;
 
-	/**
-	 * Aufgebohrter JFileChooser: Zuständig für die "Parcours
-	 * öffnen"- und "Parcours speichern"-Dialoge
-	 */
+	/** Aufgebohrter JFileChooser: Zuständig für die "Parcours öffnen"- und "Parcours speichern"-Dialoge */
 	private final WorldFileChooser worldChooser = new WorldFileChooser();
 
 	/**
-	 * Mit der Toolbar der Applikation haben wir indirekt zu tun: Es werden
-	 * zuerst alle Menüs gebaut, dann die Toolbar, die den Inhalt von
-	 * einigen der Menüs wiederholt. Weil in dieser Klasse die Menüs
-	 * wohnen, wird die Toolbar miterzeugt und später vom MainWindow per
-	 * getToolBar() abgeholt.
+	 * Mit der Toolbar der Applikation haben wir indirekt zu tun: Es werden zuerst alle Menüs gebaut,
+	 * dann die Toolbar, die den Inhalt von einigen der Menüs wiederholt. Weil in dieser Klasse die Menüs
+	 * enthalten sind, wird die Toolbar mit erzeugt und später vom MainWindow per getToolBar() abgeholt.
 	 */
 	private final JToolBar toolBar;
 
 	/**
-	 * Siehe {@link #MainWinMenuBar(Controller, MainWindow)}.
-	 * Default-Sichtbarkeit, um Eclipses synthetic-access-Warnungen zu
-	 * vermeiden.
+	 * Siehe {@link #MainWinMenuBar(Controller, MainWindow)};
+	 * Default-Sichtbarkeit um Eclipses synthetic-access-Warnungen zu vermeiden.
 	 */
 	final MainWindow mainWindow;
 
@@ -115,15 +107,14 @@ public class MainWinMenuBar extends JMenuBar {
 	
 	/**
 	 * @param controller
-	 * @param mainWindow Als 'parent' der modalen Dialoge und für das
-	 * gelegentliche Event, was auch im mainWindow verarbeitet werden muss.
+	 * @param mainWindow	als 'parent' der modalen Dialoge und für das gelegentliche Event, was auch
+	 * 				im mainWindow verarbeitet werden muss.
 	 */
 	public MainWinMenuBar(Controller controller, MainWindow mainWindow) {
 		this.controller = controller;
 		this.mainWindow = mainWindow;
 
-		// Prinzip: Menü machen; auf dessen Basis dann Toolbar, die
-		// einige der Menüs widerspiegelt
+		// Prinzip: Menü machen; auf dessen Basis dann Toolbar, die einige der Menüs widerspiegelt
 		JMenu worldMenu = new Menu("Welt",
 			new Entry("Öffnen ...", Config.getIcon("Open16"), onOpenWorld),
 			new Entry("Generieren", Config.getIcon("New16"), onOpenRandomWorld),
@@ -132,11 +123,10 @@ public class MainWinMenuBar extends JMenuBar {
 			new Entry("Schließen", Config.getIcon("Delete16"), onCloseWorld));
 		add(worldMenu);
 		JMenu connectMenu = new Menu("Verbinde mit Bot",
-	    	new Entry("Per TCP ...", Config.getIcon("tcpbot16"), onAddTcpBot)/*,
-	    	// Die Checkbox hat nen Haken und ist unveränderbar disabled
-	    	// (ausgegraut). Sinn: Benutzer wissen lassen, dass ctSim das
-	    	// automatisch macht
-	    	new Checkbox("Per USB (COM) automatisch", noOp).disable().check()*/);
+	    	new Entry("Per TCP ...", Config.getIcon("tcpbot16"), onAddTcpBot) /*,
+	    	new Checkbox("Per USB (COM) automatisch", noOp).disable().check()*/ );
+		// Die Checkbox hat nen Haken und ist unveränderbar disabled (ausgegraut).
+		// Sinn dahinter ist den Benutzer wissen zu lassen, dass ctSim das automatisch macht
 		add(connectMenu);
 		JMenu botMenu = new Menu("Simuliere Bot",
 	    	new Entry("Testbot", onAddTestBot),
@@ -166,16 +156,16 @@ public class MainWinMenuBar extends JMenuBar {
 	}
 
 	///////////////////////////////////////////////////////////////////////////
-	// Event-Handling-Code der Menüpunkte / Toolbar-Knoepfe
+	
+	// Event-Handling-Code der Menüpunkte / Toolbar-Knöpfe
 
-	// Wählt der Benutzer einen Menüpunkt oder klickt einen Toolbar-Knopf,
-	// dann läuft einer der folgenden Runnables. Die Zuordnung welcher
-	// Menüpunkt -> welches Runnable findet im Konstruktor statt. (Sind
-	// Runnables, haben mit Threading aber nichts zu tun an der Stelle.)
-		
 	/**
-	 * Handler für Welt öffnen
+	 * Wählt der Benutzer einen Menüpunkt oder klickt einen Toolbar-Knopf, dann läuft einer der folgenden
+	 * Runnables. Die Zuordnung welcher Menüpunkt -> welches Runnable findet im Konstruktor statt.
+	 * (Es sind Runnables, diese haben mit Threading aber nichts zu tun an der Stelle.)
 	 */
+		
+	/** Handler für Welt öffnen */
 	private Runnable onOpenWorld = new Runnable() {
 		public void run() {
 			File f = worldChooser.showOpenWorldDialog();
@@ -184,18 +174,14 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
-	/**
-	 * Handler für neue Zufallswelt
-	 */
+	/** Handler für neue Zufallswelt */
 	private Runnable onOpenRandomWorld = new Runnable() {
 		public void run() {
 			controller.openRandomWorld();
 		}
 	};
 
-	/**
-	 * Handler für Welt speichern
-	 */
+	/** Handler für Welt speichern */
 	private Runnable onSaveWorld = new Runnable() {
 		public void run() {
 			File file = worldChooser.showSaveWorldDialog();
@@ -205,7 +191,7 @@ public class MainWinMenuBar extends JMenuBar {
 					// Meldung
 					"Die Datei '"+file.getName()+"' existiert " +
 					"bereits. Soll sie überschrieben werden?",
-					"\00DCberschreiben?", // Dialogtitel
+					"\00DCberschreiben?",	// Dialogtitel
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 				if (result != JOptionPane.YES_OPTION)
@@ -215,9 +201,7 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
-	/**
-	 * Handler für Welt schließen
-	 */
+	/** Handler für Welt schließen */
 	private Runnable onCloseWorld = new Runnable() {
 		public void run() {
 			controller.closeWorld();
@@ -225,9 +209,7 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
-	/**
-	 * Handler für neuen Bot
-	 */
+	/** Handler für neuen Bot */
 	private Runnable onAddTcpBot = new Runnable() {
 		private final JTextField host = new JTextField(
 			Config.getValue("ipForConnectByTcp"), 12);
@@ -254,44 +236,38 @@ public class MainWinMenuBar extends JMenuBar {
 					JOptionPane.QUESTION_MESSAGE,
 					JOptionPane.OK_CANCEL_OPTION);
 				tcpEntryDialog = optionPane.createDialog(
-					mainWindow, // parent
-					"Wohin verbinden?"); // Dialog-Titel
+					mainWindow,				// parent
+					"Wohin verbinden?");	// Dialog-Titel
 			}
 
 			tcpEntryDialog.setVisible(true);
 			if (((Integer)optionPane.getValue()) == JOptionPane.YES_OPTION) {
-				// parseInt() muss funktionieren dank MaskFormatter
+//				parseInt() muss funktionieren dank MaskFormatter
 				controller.connectToTcp(host.getText(), port.getText());
 			}
 		}
 	};
 
-//	/**
-//	 * No-op
-//	 */
+//	/** No-op */
 //	private Runnable1<Boolean> noOp = new Runnable1<Boolean>() {
 //		public void run(@SuppressWarnings("unused") Boolean argument) {
 //			// No-Op
 //		}
 //	};
 
-	/**
-	 * Handler für neuen Testbot
-	 */
+	/** Handler für neuen Testbot */
 	private Runnable onAddTestBot = new Runnable() {
 		public void run() {
 			controller.addTestBot();
 		}
 	};
 
-	/**
-	 * Handler zum ausführen eines Binaries
-	 */
+	/** Handler zum ausführen eines Binaries */
 	private Runnable onInvokeExecutable = new Runnable() {
 		private final JFileChooser botChooser = new JFileChooser(
 			ConfigManager.path2Os(Config.getValue("botdir")));
 
-		{ // "Konstruktor" des Runnable sozusagen
+		{	// der "Konstruktor" des Runnables sozusagen
 			botChooser.setFileFilter(new FileFilter() {
 				@Override
 				public boolean accept(File f) {
@@ -314,27 +290,21 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
-	/**
-	 * Handler für Simulation starten
-	 */
+	/** Handler für Simulation starten */
 	private Runnable onStartSimulation = new Runnable() {
 		public void run() {
 			controller.unpause();
 		}
 	};
 
-	/**
-	 * Handler für Simulation anhalten
-	 */
+	/** Handler für Simulation anhalten */
 	private Runnable onPauseSimulation = new Runnable() {
 		public void run() {
 			controller.pause();
 		}
 	};
 	
-	/**
-	 * Handler für About-Eintrag
-	 */
+	/** Handler für About-Eintrag */
 	private Runnable onAbout = new Runnable() {
 		public void run() {
 			/* Splash-Screen anzeigen */
@@ -345,9 +315,7 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 	
-	/**
-	 * Handler für Webseite-Link
-	 */
+	/** Handler für Webseite-Link */
 	private Runnable onSiteLink = new Runnable() {
 		public void run() {
 			try {
@@ -361,9 +329,7 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 	
-	/**
-	 * Handler für Trac-Link
-	 */
+	/** Handler für Trac-Link */
 	private Runnable onTracLink = new Runnable() {
 		public void run() {
 			try {
@@ -377,9 +343,7 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 	
-	/**
-	 * Handler für Forum-Link
-	 */
+	/** Handler für Forum-Link */
 	private Runnable onForumLink = new Runnable() {
 		public void run() {
 			try {
@@ -393,18 +357,14 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 	
-	/**
-	 * Handler für Bots resetten
-	 */
+	/** Handler für Bots resetten */
 	private Runnable onResetBots = new Runnable() {
 		public void run() {
 			controller.resetAllBots();
 		}
 	};
 
-	/**
-	 * Handler für Welt als Bot-Map exportieren
-	 */
+	/** Handler für Welt als Bot-Map exportieren */
 	private Runnable onWorldToMap = new Runnable() {
 		private final JTextField bot = new JTextField("1", 8);
 		private final JTextField free = new JTextField("100", 5);
@@ -432,8 +392,8 @@ public class MainWinMenuBar extends JMenuBar {
 					JOptionPane.QUESTION_MESSAGE,
 					JOptionPane.OK_CANCEL_OPTION);
 				mapDialog = optionPane.createDialog(
-					mainWindow, // parent
-					"Parcours als Map exportieren"); // Dialog-Titel
+					mainWindow,							// parent
+					"Parcours als Map exportieren");	// Dialog-Titel
 			}
 
 			mapDialog.setVisible(true);
@@ -454,10 +414,12 @@ public class MainWinMenuBar extends JMenuBar {
 
 	
 	///////////////////////////////////////////////////////////////////////////
+	
 	// Hilfsmethoden
 
 	/**
 	 * Baut das Jugde-Menü
+	 * 
 	 * @return Menü
 	 */
 	private JMenuItem[] buildJudgeMenuItems() {
@@ -471,7 +433,8 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/**
 	 * Baut die Toolbar
-	 * @param menus Menüs
+	 * 
+	 * @param menus	Menüs
 	 * @return Toolbar
 	 */
 	private JToolBar buildToolBar(JMenu... menus) {
@@ -504,6 +467,7 @@ public class MainWinMenuBar extends JMenuBar {
 //   }
 
 	///////////////////////////////////////////////////////////////////////////
+	
 	// Hilfsklasse
 
 	/** Siehe {@link #worldChooser} */
@@ -529,9 +493,7 @@ public class MainWinMenuBar extends JMenuBar {
 			return null;
 		}
 
-		/**
-		 * Wählt eine Welt-Datei aus
-		 */
+		/** Wählt eine Welt-Datei aus */
 		public WorldFileChooser() {
 			super(Config.getValue("worlddir"));
 			setFileFilter(new FileFilter() {
@@ -557,24 +519,20 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	}
 
-    /**
-     * Judge-Menü
-     */
+    /** Judge-Menü */
     private class JudgeMenuItem extends JMenuItem {
         /** UID */
     	private static final long serialVersionUID = - 8177774672896579874L;
 
-        /**
-         * Judge-Klassenname
-         */
+        /** Judge-Klassenname */
     	@SuppressWarnings("unused")
 		public final String fqJudgeClassName;
 
 		/**
-		 * @param fqName Judge-Name
+		 * @param fqName	Judge-Name
 		 */
 		public JudgeMenuItem(final String fqName) {
-			// fürs Anzeigen Packagename weg, nur Klassenname
+			// für das Anzeigen den Packagename wegnehmen, nur den Klassenname angeben
 	        super(new AbstractAction(fqName.replaceAll("^.*\\.(.*)$", "$1"))
 	        	 {
 					private static final long serialVersionUID =

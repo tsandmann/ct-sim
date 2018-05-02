@@ -200,10 +200,10 @@ public class Config {
 		private static final long serialVersionUID = - 6931464910390788433L;
 
 		/**
-		 * Lädt die <code><parameter></code>-Tags aus der
-		 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
-		 * get(String) verfügbar.
-		 * @param doc Config-Dokument
+		 * Lädt die <code><parameter></code>-Tags aus der Konfigurationsdatei des Sims. Die Werte der
+		 * Tags sind dann mittels get(String) verfügbar.
+		 * 
+		 * @param doc	Config-Dokument
 		 */
 		PlainParameters(QueryableDocument doc) {
 			if (parameterFallbacks.length % 2 != 0)
@@ -282,8 +282,8 @@ public class Config {
 			}
 
 			/**
-			 * Wichtig, weil wir es als Schlüssel in der Map verwenden Implementiert nach Josh Bloch:
-			 * "Effective Java", (http://developer.java.sun.com/developer/Books/effectivejava/Chapter3.pdf)
+			 * Wichtig, weil wir es als Schlüssel in der Map verwenden;
+			 * Implementiert nach Josh Bloch: "Effective Java (Third Edition)", Addison-Wesley, 2018, Kap 3
 			 * 
 			 * @see java.lang.Object#hashCode()
 			 */

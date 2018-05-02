@@ -105,7 +105,7 @@ public class TournamentTree extends ArrayList<Integer> {
 	 * Sechzehntelfinale nicht mehr unter - Sechzehntelfinale bedeutet 16 Spiele, und das bedeutet
 	 * 32 Spieler. Also muss ein Zweiunddreißigstelfinale her, auch wenn das nur teilweise besetzt sein
 	 * wird (Sechzehntelfinale und alle folgenden werden dann voll besetzt sein).
-	 * Allgemein: Zahl der Spiele = 2^(aufgerundeter lb(Zahl der Spieler))
+	 * Allgemein: Anzahl Spiele = 2^(aufgerundeter lb(Anzahl Spieler))/2 (lb = Binärer Logarithmus, also log_2(x))
 	 * </p>
 	 * <p>
 	 * <strong>Wie viele Freilose?</strong>

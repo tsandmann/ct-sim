@@ -103,7 +103,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         }
     }
 
-    /** Initialiserung */
+    /** Initialisierung */
     private void init() {
         try {
             String parcFile = Config.getValue("parcours");
@@ -221,7 +221,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				oldStartSignal.countDown();
 
 				// Schlafe nur, wenn nicht schon zuviel Zeit "verbraucht" wurde
-				// Felix: !!!Finger weg von den folgenden Zeilen !!!
 				long timeToSleep = sequencersWorld.getSimStepIntervalInMs() -
 						(System.currentTimeMillis() - realTimeBeginInMs);
 				if (timeToSleep > 0)
