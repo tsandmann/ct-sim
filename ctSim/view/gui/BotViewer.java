@@ -37,7 +37,7 @@ import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.bots.ctbot.RealCtBot;
 
 /**
- * @author Felix Beckwermert
+ * @author Felix Beckwermert (felix@beckwermert.de)
  * @author Hendrik Krauß (hkr@heise.de)
  */
 public class BotViewer extends JScrollPane {

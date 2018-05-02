@@ -64,8 +64,8 @@ public class AndEverything extends GuiBotBuisitor {
 		/**
 		 * Fix für Bug 8 im Trac ("Kein Scrollen möglich wenn Sim aktiv"). Details hab ich nicht ermitteln
 		 * können, aber wenn man das Caret (=Cursor) abschaltet geht es.
-		 * Siehe Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4201999 und zugehörigen Fix:
-		 * http://java.sun.com/j2se/1.5.0/docs/guide/swing/1.5/#swingText
+		 * Siehe <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4201999">Bug</a> und den
+		 * zugehörigen <a href="http://java.sun.com/j2se/1.5.0/docs/guide/swing/1.5/#swingText">Fix</a>
 		 */
 		Misc.setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
 
