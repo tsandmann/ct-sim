@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -69,14 +69,15 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		}
 
 		// Wir sind ja ein ImageListener, daher brauchen wir eine run(Image)-Methode
-		/** 
+		/**
 		 * Methode einer Swing-Komponente, aber thread-sicher
-		 * 
+		 *
 		 * @param img	Bild
 		 */
+		@Override
 		public synchronized void run(Image img) {
 			this.image = img.getScaledInstance(targetWidth, targetHeight,
-				Image.SCALE_SMOOTH);
+					Image.SCALE_SMOOTH);
 			repaint();
 		}
 
@@ -99,7 +100,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		public Dimension getPreferredSize() {
 			Insets is = getBorder().getBorderInsets(this);
 			return new Dimension(targetWidth  + is.left + is.right,
-			                     targetHeight + is.top  + is.bottom);
+					targetHeight + is.top  + is.bottom);
 		}
 
 		/**
@@ -137,8 +138,9 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		/* 2/3: Knopf */
 		final JButton bt = new JButton("Holen");
 		bt.setToolTipText("Fordert beim Bot ein Bild dessen an, was der " +
-			"Maussensor sieht");
+				"Maussensor sieht");
 		bt.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					compnt.requestPicture();
@@ -152,8 +154,9 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		/* 3/3: Checkbox */
 		final JCheckBox cb = new JCheckBox("laufend");
 		cb.setToolTipText("Fordert das nächste an, sobald ein Mausbild " +
-			"übertragen ist");
+				"übertragen ist");
 		cb.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Wenn Checkbox an, Button deaktivieren
 				bt.setEnabled(! cb.isSelected());
@@ -166,6 +169,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		});
 		controls.add(cb);
 		compnt.addCompletionListener(new Runnable() {
+			@Override
 			public void run() {
 				if (cb.isSelected()) {
 					try {

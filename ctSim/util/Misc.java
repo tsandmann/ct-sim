@@ -1,25 +1,26 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
 
 import static java.lang.Math.PI;
+
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;
@@ -35,7 +36,7 @@ import javax.swing.text.DefaultCaret;
 /** Tools */
 public class Misc {
 	/**
-	 * @param x 
+	 * @param x
 	 * @return log2(x)
 	 */
 	public static double log2(double x) {
@@ -44,7 +45,7 @@ public class Misc {
 
 	/**
 	 * Bringt einen Winkel in das Intervall ]-180°; 180°].
-	 * 
+	 *
 	 * @param angleInDeg	Winkel in Grad
 	 * @return Winkel
 	 */
@@ -58,7 +59,7 @@ public class Misc {
 
 	/**
 	 * Bringt einen Winkel in das Intervall ]-π; π].
-	 * 
+	 *
 	 * @param angleInRad	Winkel im Bogenmaß
 	 * @return Winkel
 	 */
@@ -75,9 +76,9 @@ public class Misc {
 	 * 0 &lt; <code>value</code> &lt; <code>maxAllowed</code>
 	 * gilt. Falls nicht, liefert den Wert aus dem Intervall [0; <code>maxAllowed</code>],
 	 * der <code>value</code> am Nächsten liegt.
-	 * 
-	 * @param value 
-	 * @param maxAllowed 
+	 *
+	 * @param value
+	 * @param maxAllowed
 	 * @return Wert
 	 */
 	public static int clamp(int value, int maxAllowed) {
@@ -87,12 +88,12 @@ public class Misc {
 		return rv;
 	}
 
-	/** 
+	/**
 	 * Wie {@link #clamp(int, int)}
-	 * 
-	 * @param value 
-	 * @param maxAllowed 
-	 * @return Wert 
+	 *
+	 * @param value
+	 * @param maxAllowed
+	 * @return Wert
 	 */
 	public static double clamp(double value, double maxAllowed) {
 		double rv = value;
@@ -128,9 +129,9 @@ public class Misc {
 	 * @param stuff
 	 * @return T
 	 */
-    public static <T> T[] intersperse(T separator, T... stuff) {
+	public static <T> T[] intersperse(T separator, T... stuff) {
 		T[] rv = (T[])Array.newInstance(separator.getClass(),
-			stuff.length * 2 - 1);
+				stuff.length * 2 - 1);
 		for (int i = 0; i < stuff.length; i++) {
 			rv[i * 2] = stuff[i];
 			if (i + 1 < stuff.length)
@@ -156,11 +157,11 @@ public class Misc {
 	 * @throws IOException
 	 */
 	public static void copyStreamToStream(InputStream source,
-		OutputStream dest) throws IOException {
+			OutputStream dest) throws IOException {
 		byte[] buf = new byte[4096];
 		int len;
 		while ((len = source.read(buf)) > 0)
-            dest.write(buf, 0, len);
+			dest.write(buf, 0, len);
 		dest.close();
 	}
 
@@ -169,7 +170,7 @@ public class Misc {
 
 	static {
 		antiAliasOn.put(RenderingHints.KEY_ANTIALIASING,
-			RenderingHints.VALUE_ANTIALIAS_ON);
+				RenderingHints.VALUE_ANTIALIAS_ON);
 	}
 
 	/**
@@ -182,8 +183,8 @@ public class Misc {
 	/**
 	 * Konvertiert ein Byte (Wertebereich [-128; +127]) in ein <em>unsigned byte</em>
 	 * (Wertebereich [0; 255]).
-	 * 
-	 * @param value 
+	 *
+	 * @param value
 	 * @return uByte
 	 */
 	public static int toUnsignedInt8(byte value) {
@@ -193,9 +194,9 @@ public class Misc {
 
 	/**
 	 * Liefert das letzte Element des übergebenen Arrays
-	 * 
-	 * @param array 
-	 * @param <T> 
+	 *
+	 * @param array
+	 * @param <T>
 	 * @return letztes Element
 	 * @throws ArrayIndexOutOfBoundsException	falls das übergebene Array leer ist (Länge 0 hat)
 	 * @throws NullPointerException				falls das übergebene Array {@code null} ist
@@ -215,23 +216,23 @@ public class Misc {
 	 * Nach der hervorragenden Entdeckung von Josh Bloch; siehe
 	 * <a href="http://developers.sun.com/learning/javaoneonline/2006//coreplatform/TS-1512.html">Vortrag
 	 * bei der JavaOne</a>
-	 * 
-	 * @param <T> 
+	 *
+	 * @param <T>
 	 * @return ArrayList
 	 */
 	public static <T> ArrayList<T> newList() {
-		return new ArrayList<T>();
+		return new ArrayList<>();
 	}
 
-	/** 
+	/**
 	 * Wie {@link #newList()}, aber für eine {@link HashMap}
-	 * 
-	 * @param <K> 
-	 * @param <V> 
-	 * @return HashMap 
+	 *
+	 * @param <K>
+	 * @param <V>
+	 * @return HashMap
 	 */
 	public static <K, V> HashMap<K, V> newMap() {
-		return new HashMap<K, V>();
+		return new HashMap<>();
 	}
 
 	/**

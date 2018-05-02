@@ -26,7 +26,7 @@ import ctSim.model.bots.ctbot.MasterSimulator;
 
 /**
  * Erzeugt einen Simulator für einen Bot, der zu einer Welt gehört
- * und eine 3D-Darstellung besitzt 
+ * und eine 3D-Darstellung besitzt
  */
 public abstract class SimulatorFactory {
 	/** SimulatorFactory */
@@ -36,7 +36,7 @@ public abstract class SimulatorFactory {
 
 	/**
 	 * Erstellt einen neuen Simulator
-	 * 
+	 *
 	 * @param world			Welt, zu der der Bot gehört
 	 * @param botWrapper	3D-Darstellung des Bots
 	 * @param bot			Bot-Instanz, die simuliert werden soll
@@ -47,13 +47,14 @@ public abstract class SimulatorFactory {
 		if (bot instanceof CtBotSimTcp) {
 			return new MasterSimulator(world, botWrapper);
 		}
-		
+
 		/* Testbot (Java-Klasse) */
 		if (bot instanceof CtBotSimTest) {
 			return new MasterSimulator(world, botWrapper);
 		}
 
 		return new Runnable() {
+			@Override
 			public void run() {
 				// No-op
 			}

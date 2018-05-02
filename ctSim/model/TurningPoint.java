@@ -20,6 +20,7 @@
 package ctSim.model;
 
 import java.util.Vector;
+
 import javax.vecmath.Vector2d;
 
 /**
@@ -56,10 +57,10 @@ public class TurningPoint {
 	 * wo der Bot natürlich nicht durchkommt. Dieser Wegfindungsalgorithmus ist für den Wert 0
 	 * also praktisch nutzlos, da er auch Wege durch Wände u.dgl. sucht.</li>
 	 * </ol>
-	 * 
+	 *
 	 * Mist: Dieser Algorithmus hat ganz eigene Vorstellungen davon, was "Bot ist in ein Loch gefallen"
 	 * heißt (nämlich Bot-Zentrum ist näher als distFromCorner an einer Ecke). Es wäre besser,
-	 * wenn das Model und diese Klasse einen Bot unter den gleichen Umständen als "im Loch" betrachten, 
+	 * wenn das Model und diese Klasse einen Bot unter den gleichen Umständen als "im Loch" betrachten,
 	 * und nicht unter subtil unterschiedlichen Umständen. Variable distFromCorner ist wirklich
 	 * problematisch und sollte anders gelöst werden - siehe zugehörige Doku
 	 */
@@ -233,7 +234,7 @@ public class TurningPoint {
 		}
 		if (M[s][f] < infinity) {
 			if (M[s][f] < cutoff) {
-				Vector<Integer> path = new Vector<Integer>();
+				Vector<Integer> path = new Vector<>();
 				path.add(s);
 				path.add(f);
 				return path;
@@ -242,7 +243,7 @@ public class TurningPoint {
 		} else {
 			Vector<Integer> minPath = null;
 			double minDist = cutoff;
-			Vector<Integer> newInitPath = new Vector<Integer>(initPath);
+			Vector<Integer> newInitPath = new Vector<>(initPath);
 			newInitPath.add(s);
 			for (int i = 0; i < N[s].length; i++) {
 				if (!initPath.contains(N[s][i]) && M[s][N[s][i]] < cutoff) {
@@ -255,7 +256,7 @@ public class TurningPoint {
 					if (!shortcutFlag) {
 						Vector<Integer> helpPath = this.getShortestPath(
 								N[s][i], f, newInitPath, minDist
-										- M[s][N[s][i]], M, N);
+								- M[s][N[s][i]], M, N);
 						double helpDist = getLengthOfPath(helpPath, M)
 								+ M[s][N[s][i]];
 						if (helpDist < minDist) {
@@ -329,10 +330,10 @@ public class TurningPoint {
 	 * @return eine Liste möglicher Eckpunkte für die kürzeste Verbindung
 	 */
 	Vector<TurningPoint> findTurningPoints(int[][] parcoursMapSimple) {
-		Vector<TurningPoint> turningPoints = new Vector<TurningPoint>();
+		Vector<TurningPoint> turningPoints = new Vector<>();
 		// turningPoints.add(new TurningPoint(start));
 		// turningPoints.add(new TurningPoint(finish));
-//		int count = 0;
+		//		int count = 0;
 		for (int i = 1; i < parcoursMapSimple[0].length; i++) {
 			for (int j = 1; j < parcoursMapSimple.length; j++) {
 				if (parcoursMapSimple[j - 1][i - 1] == 1
@@ -341,7 +342,7 @@ public class TurningPoint {
 						&& parcoursMapSimple[j][i] == 0) {
 					turningPoints.add(new TurningPoint(j + distFromCorner, i
 							+ distFromCorner));
-//					count++;
+					//					count++;
 				}
 				if (parcoursMapSimple[j - 1][i - 1] == 0
 						&& parcoursMapSimple[j - 1][i] == 1
@@ -349,7 +350,7 @@ public class TurningPoint {
 						&& parcoursMapSimple[j][i] == 0) {
 					turningPoints.add(new TurningPoint(j + distFromCorner, i
 							- distFromCorner));
-//					count++;
+					//					count++;
 				}
 				if (parcoursMapSimple[j - 1][i - 1] == 0
 						&& parcoursMapSimple[j - 1][i] == 0
@@ -357,7 +358,7 @@ public class TurningPoint {
 						&& parcoursMapSimple[j][i] == 0) {
 					turningPoints.add(new TurningPoint(j - distFromCorner, i
 							+ distFromCorner));
-//					count++;
+					//					count++;
 				}
 				if (parcoursMapSimple[j - 1][i - 1] == 0
 						&& parcoursMapSimple[j - 1][i] == 0
@@ -365,7 +366,7 @@ public class TurningPoint {
 						&& parcoursMapSimple[j][i] == 1) {
 					turningPoints.add(new TurningPoint(j - distFromCorner, i
 							- distFromCorner));
-//					count++;
+					//					count++;
 				}
 			}
 		}
@@ -462,7 +463,7 @@ public class TurningPoint {
 		// finde die kürzeste Verbindung
 		Vector<Integer> shortestPath = turningPoints.get(0).getShortestPath(0,
 				1, new Vector<Integer>(), 1e30, incidenceMatrix, neighbors);
-		Vector<TurningPoint> shortest = new Vector<TurningPoint>();
+		Vector<TurningPoint> shortest = new Vector<>();
 		if (shortestPath != null) {
 			for (int i : shortestPath) {
 				shortest.add(turningPoints.get(i));

@@ -25,8 +25,8 @@ import java.util.Map;
 
 import ctSim.controller.Config;
 import ctSim.model.Command;
-import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWrite;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
@@ -39,7 +39,7 @@ import ctSim.view.gui.RemoteControlViewer;
 public class Sensors {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger(
-		"ctSim.model.bots.components.Sensors");
+			"ctSim.model.bots.components.Sensors");
 
 	/** Klasse der Liniensensoren */
 	public static class Line extends NumberTwin
@@ -57,17 +57,18 @@ public class Sensors {
 		 */
 		@Override
 		protected String getBaseName() { return "Line"; }
-		
+
 		/**
 		 * Liniensensoren
-		 * 
+		 *
 		 * @param isLeft	links?
 		 */
 		public Line(boolean isLeft) { super(isLeft); }
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { return Code.SENS_LINE; }
 	}
 
@@ -87,17 +88,18 @@ public class Sensors {
 		 */
 		@Override
 		protected String getBaseName() { return "Light"; }
-		
+
 		/**
 		 * Lichtsensoren
-		 * 
+		 *
 		 * @param isLeft	links?
 		 */
 		public Light(boolean isLeft) { super(isLeft); }
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { return Code.SENS_LDR; }
 	}
 
@@ -116,26 +118,27 @@ public class Sensors {
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
 		@Override
-		protected String getBaseName() { 
-			return "BPS"; 
+		protected String getBaseName() {
+			return "BPS";
 		}
-		
+
 		/**
 		 * BPS-Sensor (Bot Positioning System)
-		 * 
+		 *
 		 * @param isLeft	wird nicht ausgewertet
 		 */
-		public BPSReceiver(boolean isLeft) { 
-			super(true); 
+		public BPSReceiver(boolean isLeft) {
+			super(true);
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { 
-			return Code.SENS_BPS; 
+		@Override
+		public Code getHotCmdCode() {
+			return Code.SENS_BPS;
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
@@ -143,7 +146,7 @@ public class Sensors {
 		public String getName() {
 			return getBaseName();
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
@@ -152,13 +155,13 @@ public class Sensors {
 			return getBaseDescription();
 		}
 	}
-	
+
 	/** Klasse der Rad-Encoder */
 	public static class Encoder extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
 		/** Hat das Rad einen Nachlauf bei Richtungswechsel? */
 		protected final boolean hasLag = Config.getValue("WheelLag").equals("true");
-		
+
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseDescription()
 		 */
@@ -169,13 +172,13 @@ public class Sensors {
 
 		/**
 		 * Rad-Encoder
-		 * 
+		 *
 		 * @param isLeft	links?
 		 */
 		public Encoder(boolean isLeft) {
-			super(isLeft); 
+			super(isLeft);
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
@@ -185,10 +188,11 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { return Code.SENS_ENC; }
-		
-		/** 
-		 * @return hasLag 
+
+		/**
+		 * @return hasLag
 		 */
 		public boolean getHasLag() { return hasLag; }
 	}
@@ -209,17 +213,18 @@ public class Sensors {
 		 */
 		@Override
 		protected String getBaseName() { return "Ir"; }
-		
+
 		/**
 		 * Distanzsensoren GPD12
-		 * 
+		 *
 		 * @param isLeft	links?
 		 */
 		public Distance(boolean isLeft) { super(isLeft); }
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { return Code.SENS_IR; }
 	}
 
@@ -239,17 +244,18 @@ public class Sensors {
 		 */
 		@Override
 		protected String getBaseName() { return "Border"; }
-		
+
 		/**
 		 * Abgrundsensoren
-		 * 
+		 *
 		 * @param isLeft	links?
 		 */
 		public Border(boolean isLeft) { super(isLeft); }
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { return Code.SENS_BORDER; }
 	}
 
@@ -261,7 +267,7 @@ public class Sensors {
 
 		/**
 		 * Systemzeit setzen
-		 * 
+		 *
 		 * @param simTime	Zeit in ms
 		 */
 		public synchronized void setSimTimeInMs(int simTime) {
@@ -273,23 +279,25 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 		 */
+		@Override
 		public synchronized void readFrom(Command c) {
 			if (c.getDataL() != lastTransmittedSimTime) {
 				if (lastTransmittedSimTime == -1)
 					// Für das allererste DONE-Kommando doch nicht warnen
-					return;		
+					return;
 				lg.warn("Bot-Steuercode hat unerwartete lastTransmitted-Zeit "+
 						"gesendet (erwartet: %d, tatsächlich: %d); dies "+
 						"deutet darauf hin, dass der Steuercode Simschritte "+
 						"verschlafen hat",
 						lastTransmittedSimTime, c.getDataL());
-				
+
 			}
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWrite#writeTo(ctSim.model.Command)
 		 */
+		@Override
 		public synchronized void writeTo(Command c) {
 			c.setDataL(lastTransmittedSimTime);
 		}
@@ -312,16 +320,17 @@ public class Sensors {
 
 		/** Systemzeit */
 		public Clock() { super(null); }
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
 		@Override
 		public String getName() { return "Uhr"; }
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { return Command.Code.DONE; }
 	}
 
@@ -338,7 +347,7 @@ public class Sensors {
 
 		/**
 		 * Maussensor
-		 * 
+		 *
 		 * @param isX	X? (sonst Y)
 		 */
 		public Mouse(boolean isX) {
@@ -361,9 +370,9 @@ public class Sensors {
 		@Override
 		public String getDescription() {
 			return "Maus-Sensor: " +
-				(isX
-				? "Drehgeschwindigkeit (X-Komponente)"
-				: "Geradeaus-Geschwindigkeit (Y-Komponente)");
+					(isX
+							? "Drehgeschwindigkeit (X-Komponente)"
+									: "Geradeaus-Geschwindigkeit (Y-Komponente)");
 		}
 
 		/**
@@ -371,16 +380,17 @@ public class Sensors {
 		 */
 		@Override
 		protected String getBaseDescription() { return ""; }
-		
+
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
 		@Override
 		protected String getBaseName() { return ""; }
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { return Code.SENS_MOUSE; }
 	}
 
@@ -402,13 +412,14 @@ public class Sensors {
 		private CommandOutputStream asyncOut;
 		/** ausstehender RC5-Code */
 		private int syncPendingRcCode = 0;
-		
+
 		/** Lookup-Tabelle für RC5-Codes */
 		private Map<String, Integer> RC5Keys = null;
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
 		 */
+		@Override
 		public void setAsyncWriteStream(CommandOutputStream s) {
 			asyncOut = s;
 		}
@@ -416,6 +427,7 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWrite#writeTo(ctSim.model.Command)
 		 */
+		@Override
 		public synchronized void writeTo(Command c) {
 			c.setDataL(syncPendingRcCode);
 			syncPendingRcCode = 0;
@@ -423,7 +435,7 @@ public class Sensors {
 
 		/**
 		 * Sendet einen RC5-Code
-		 * 
+		 *
 		 * @param rc5Code	RC5-Code gemäß Tabelle
 		 * @throws IOException
 		 */
@@ -439,12 +451,12 @@ public class Sensors {
 				syncPendingRcCode = rc5Code;
 			}
 		}
-		
+
 		/**
 		 * Sendet einen Tastencode
-		 * 
+		 *
 		 * @param key	Taste, dessen Code gesendet werden soll
-		 * @throws IOException 
+		 * @throws IOException
 		 */
 		public void send(String key) throws IOException {
 			Integer rc5 = RC5Keys.get(key);
@@ -458,21 +470,21 @@ public class Sensors {
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
 		@Override
-		public String getName() { 
-			return "RC5"; 
+		public String getName() {
+			return "RC5";
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
 		@Override
-		public String getDescription() { 
-			return "Fernbedienung"; 
+		public String getDescription() {
+			return "Fernbedienung";
 		}
 
 		/**
 		 * Fernbedienung
-		 * 
+		 *
 		 * @param type	Typ der Fernbedienung (z.B. "RC_HAVE_HQ_RC_UNIVERS29_334")
 		 */
 		public RemoteControl(String type) {
@@ -486,17 +498,18 @@ public class Sensors {
 				RC5Keys = Misc.newMap();	// unbekannter Typ -> leere Zuordnung verwenden
 			}
 		}
-		
+
 		/** Fernbedienung */
-		public RemoteControl() { 
+		public RemoteControl() {
 			this("");
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWrite#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { 
-			return Code.SENS_RC5; 
+		@Override
+		public Code getHotCmdCode() {
+			return Code.SENS_RC5;
 		}
 
 		/**
@@ -517,30 +530,31 @@ public class Sensors {
 		public CamPos(boolean left) {
 			super(true);
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
 		@Override
-		public String getBaseDescription() { 
-			return "Kamera-Position (10: Anschlag links; 18: Anschlag rechts)"; 
+		public String getBaseDescription() {
+			return "Kamera-Position (10: Anschlag links; 18: Anschlag rechts)";
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
 		@Override
-		public String getBaseName() { 
-			return "Kamerapos"; 
+		public String getBaseName() {
+			return "Kamerapos";
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { 
-			return Code.ACT_SERVO; 
+		@Override
+		public Code getHotCmdCode() {
+			return Code.ACT_SERVO;
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
@@ -548,7 +562,7 @@ public class Sensors {
 		public String getName() {
 			return getBaseName();
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
@@ -557,7 +571,7 @@ public class Sensors {
 			return getBaseDescription();
 		}
 	}
-	
+
 	/** Transportfach-Klappensensor */
 	public static class Door extends NumberTwin
 	implements SimpleSensor, CanRead, CanWrite {
@@ -567,30 +581,31 @@ public class Sensors {
 		public Door(boolean left) {
 			super(true);
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
 		@Override
-		public String getBaseDescription() { 
-			return "Transportfach-Klappensensor (0: zu; 1: auf)"; 
+		public String getBaseDescription() {
+			return "Transportfach-Klappensensor (0: zu; 1: auf)";
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
 		@Override
-		public String getBaseName() { 
-			return "Klappe"; 
+		public String getBaseName() {
+			return "Klappe";
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { 
-			return Code.SENS_DOOR; 
+		@Override
+		public Code getHotCmdCode() {
+			return Code.SENS_DOOR;
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
@@ -598,7 +613,7 @@ public class Sensors {
 		public String getName() {
 			return getBaseName();
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
@@ -617,7 +632,7 @@ public class Sensors {
 		public Trans(boolean isLeft) {
 			super(true);
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
@@ -630,17 +645,18 @@ public class Sensors {
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
 		@Override
-		public String getBaseName() { 
-			return "Trans"; 
+		public String getBaseName() {
+			return "Trans";
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		public Code getHotCmdCode() { 
-			return Code.SENS_TRANS; 
+		@Override
+		public Code getHotCmdCode() {
+			return Code.SENS_TRANS;
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
@@ -648,7 +664,7 @@ public class Sensors {
 		public String getName() {
 			return getBaseName();
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
@@ -661,7 +677,7 @@ public class Sensors {
 	/** Error-Sensor */
 	public static class Error extends NumberSingleton
 	implements SimpleSensor, CanRead, CanWrite {
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
@@ -683,13 +699,14 @@ public class Sensors {
 		 */
 		@Override
 		public String getName() { return "Error"; }
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { return Code.SENS_ERROR; }
 	}
-	
+
 	/** Shutdown-Control */
 	public static class Shutdown extends BotComponent<Void>
 	implements CanRead, CanWriteAsynchronously {
@@ -697,17 +714,18 @@ public class Sensors {
 		private CommandOutputStream asyncOut = null;
 		/** steht ein Shutdown an? */
 		private boolean shutdownRequest = false;
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
 		 */
+		@Override
 		public void setAsyncWriteStream(CommandOutputStream s) {
 			asyncOut = s;
 		}
 
 		/**
 		 * Sendet einen Shutdown-Befehl
-		 * 
+		 *
 		 * @throws IOException
 		 */
 		public synchronized void sendShutdown() throws IOException {
@@ -725,16 +743,16 @@ public class Sensors {
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
 		@Override
-		public String getName() { 
-			return "Shutdown"; 
+		public String getName() {
+			return "Shutdown";
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
 		@Override
-		public String getDescription() { 
-			return "Shutdown-Control"; 
+		public String getDescription() {
+			return "Shutdown-Control";
 		}
 
 		/** Shutdown-Control */
@@ -744,11 +762,12 @@ public class Sensors {
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWrite#getHotCmdCode()
-		 * 
-		 * @return Command-Code 
+		 *
+		 * @return Command-Code
 		 */
-		public Code getHotCmdCode() { 
-			return Code.SHUTDOWN; 
+		@Override
+		public Code getHotCmdCode() {
+			return Code.SHUTDOWN;
 		}
 
 		/**
@@ -762,13 +781,14 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 		 */
+		@Override
 		public void readFrom(Command c) throws ProtocolException {
 			shutdownRequest = true;
 		}
-		
+
 		/**
 		 * Wurde eine Shutdown-Befehl vom Bot gesendet?
-		 * 
+		 *
 		 * @return true oder false
 		 */
 		public boolean shutdownRequested() {

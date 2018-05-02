@@ -55,7 +55,7 @@ public class Config {
 
 		/**
 		 * Neues Dateihandle
-		 * 
+		 *
 		 * @param pathAndName	Pfad
 		 */
 		public SourceFile(String pathAndName) {
@@ -79,17 +79,17 @@ public class Config {
 	 * </p>
 	 */
 	static final String[] parameterFallbacks = {
-		"botport", "10001",
-		"judge", "ctSim.model.rules.DefaultJudge",
-		"worlddir", ".",	// TODO: besser dokumentieren in ct-sim.xml und Co.
-		"botdir", ".",
-		"useContestConductor", "false",
-		"contestBotTargetDir", "tmp",
-		"contestBotFileNamePrefix", "tmp-contest-bot",
-		"contestBotFileNameSuffix", ".exe",
-		"simTimePerStep", "10",
-		"ctSimTimeout", "10000",
-		"simBotErrorHandling", "kill",
+			"botport", "10001",
+			"judge", "ctSim.model.rules.DefaultJudge",
+			"worlddir", ".",	// TODO: besser dokumentieren in ct-sim.xml und Co.
+			"botdir", ".",
+			"useContestConductor", "false",
+			"contestBotTargetDir", "tmp",
+			"contestBotFileNamePrefix", "tmp-contest-bot",
+			"contestBotFileNameSuffix", ".exe",
+			"simTimePerStep", "10",
+			"ctSimTimeout", "10000",
+			"simBotErrorHandling", "kill",
 	};
 
 	/** Fallback-Farbe */
@@ -97,12 +97,12 @@ public class Config {
 
 	/** mögliche Parametertypen */
 	static final ParameterType[] parameterTypes = {
-		new ParameterType("ctSimTimeout", Integer.class),
-		new ParameterType("parcours", File.class),
-		new ParameterType("worlddir", File.class),
-		new ParameterType("botport", Integer.class),
-		new ParameterType("botbinary", File.class),
-		new ParameterType("botdir", File.class),
+			new ParameterType("ctSimTimeout", Integer.class),
+			new ParameterType("parcours", File.class),
+			new ParameterType("worlddir", File.class),
+			new ParameterType("botport", Integer.class),
+			new ParameterType("botbinary", File.class),
+			new ParameterType("botdir", File.class),
 	};
 
 	/**
@@ -124,18 +124,18 @@ public class Config {
 	/** Icons */
 	@SuppressWarnings("unused")
 	private static IconProvider icons;
-	
+
 	/**
 	 * Lädt die <code><parameter></code>-Tags aus der Konfigurationsdatei des Sims. Die Werte der Tags
 	 * sind dann mittels {@link #getValue(String)} verfügbar.
-	 * 
+	 *
 	 * @param file	Konfigurationsdatei dem von "config/config.dtd" vorgeschriebenen XML-Format.
 	 * @throws ParserConfigurationException
 	 * @throws IOException
 	 * @throws SAXException
 	 */
 	public static void loadConfigFile(String file)
-	throws SAXException, IOException, ParserConfigurationException {
+			throws SAXException, IOException, ParserConfigurationException {
 		lg.info("Lade Konfigurationsdatei '"+file+"'");
 		java.net.URL url = ClassLoader.getSystemResource(file);
 		if (url != null) {
@@ -149,15 +149,15 @@ public class Config {
 
 	/**
 	 * Lädt Icons
-	 * 
+	 *
 	 * @param iconsBaseDirectory	Verzeichnis
 	 * @throws NullPointerException
 	 * @throws FileNotFoundException
 	 * @throws IllegalArgumentException
 	 */
 	public static void loadIcons(File iconsBaseDirectory)
-	throws NullPointerException, FileNotFoundException,
-	IllegalArgumentException {
+			throws NullPointerException, FileNotFoundException,
+			IllegalArgumentException {
 		setIconProvider(new FileIconMap(iconsBaseDirectory));
 	}
 
@@ -186,7 +186,7 @@ public class Config {
 	 * @return Farbe
 	 */
 	public static Color getBotColor(Class<?> botType, int index,
-	String appearanceType) {
+			String appearanceType) {
 		return appearances.get(botType, appearanceType, index);
 	}
 
@@ -200,7 +200,7 @@ public class Config {
 		if (u == null)
 			return new ImageIcon();	// leeres Icon
 		else
-			return new ImageIcon(u);		
+			return new ImageIcon(u);
 	}
 
 	/** HashMap für Plain-Parameter */
@@ -211,7 +211,7 @@ public class Config {
 		/**
 		 * Lädt die <code><parameter></code>-Tags aus der Konfigurationsdatei des Sims. Die Werte der
 		 * Tags sind dann mittels get(String) verfügbar.
-		 * 
+		 *
 		 * @param doc	Config-Dokument
 		 */
 		PlainParameters(QueryableDocument doc) {
@@ -228,7 +228,7 @@ public class Config {
 					// Beispiele für os.name: "Windows XP", "Linux", "Mac OS X"
 					// Siehe http://tolstoy.com/samizdat/sysprops.html
 					String currentOs = System.getProperty("os.name")
-						.toLowerCase();
+							.toLowerCase();
 
 					/* Attribut os nicht vorhanden (= alle Betriebsysteme), oder vorhanden und System
 					 * passt startsWith() damit "Windows" in der ct-sim.xml das von System.getProperty()
@@ -259,19 +259,19 @@ public class Config {
 
 			/**
 			 * Neue Appearance
-			 * 
+			 *
 			 * @param botType			Bot-Typ
 			 * @param appearanceType	Appearance
 			 */
 			public AppearanceKey(final Class<?> botType,
-				final String appearanceType) {
+					final String appearanceType) {
 				this.botType = botType;
 				this.appearanceType = appearanceType;
 			}
 
 			/**
 			 * Wichtig, weil wir es als Schlüssel in der Map verwenden
-			 * 
+			 *
 			 * @see java.lang.Object#equals(java.lang.Object)
 			 */
 			@Override
@@ -293,7 +293,7 @@ public class Config {
 			/**
 			 * Wichtig, weil wir es als Schlüssel in der Map verwenden;
 			 * Implementiert nach Josh Bloch: "Effective Java (Third Edition)", Addison-Wesley, 2018, Kap 3
-			 * 
+			 *
 			 * @see java.lang.Object#hashCode()
 			 */
 			@Override
@@ -306,7 +306,7 @@ public class Config {
 
 			/**
 			 * Hashwert des Objekts berechnen
-			 * 
+			 *
 			 * @param o	Objekt
 			 * @return Hashwert
 			 */
@@ -331,9 +331,9 @@ public class Config {
 						loadAppearances(botTag, getClass(className));
 					} catch (ClassNotFoundException e) {
 						lg.warn("Konfigurationsdatei hat Klasse '%s' " +
-							"angefordert, die nicht gefunden werden " +
-							"konnte; ignoriere diesen <bot>-Tag in der " +
-							"Datei", className);
+								"angefordert, die nicht gefunden werden " +
+								"konnte; ignoriere diesen <bot>-Tag in der " +
+								"Datei", className);
 						continue;
 					}
 				}
@@ -345,18 +345,18 @@ public class Config {
 
 		/**
 		 * Lädt Appearances
-		 * 
+		 *
 		 * @param botTag	Tag
 		 * @param botType	Typ
 		 * @throws XPathExpressionException
 		 */
 		private void loadAppearances(QueryableNode botTag, Class<?> botType)
-		throws XPathExpressionException {
+				throws XPathExpressionException {
 			for (QueryableNode appNode : botTag.getNodeList("appearance")) {
 				add(new AppearanceKey(
-					botType,
-					appNode.getString("@type")),
-					Color.decode(appNode.getString("color")));
+						botType,
+						appNode.getString("@type")),
+						Color.decode(appNode.getString("color")));
 			}
 		}
 
@@ -366,7 +366,7 @@ public class Config {
 		 * @throws ClassNotFoundException
 		 */
 		private static Class<?> getClass(String classNameFromXml)
-		throws ClassNotFoundException {
+				throws ClassNotFoundException {
 			// 1. Versuch
 			if ("default".equals(classNameFromXml))
 				return null;	// Default-Wert wird mit null ausgedrückt
@@ -387,14 +387,14 @@ public class Config {
 
 		// Das alte Format erlaubte z.B. "CtBotSimTcp_3";
 		// probieren wir es ohne Unterstrich und Nummer
-		
+
 		/**
 		 * @param classNameFromXml	Klasse als XML
 		 * @return Klasse
 		 * @throws ClassNotFoundException
 		 */
 		private static Class<?> getClassTolerateNumber(String classNameFromXml)
-		throws ClassNotFoundException {
+				throws ClassNotFoundException {
 			// 1. Versuch: Klassenname exakt wie angegeben
 			try { return Class.forName(classNameFromXml); }
 			catch (ClassNotFoundException e) { /* weitermachen */ }
@@ -405,7 +405,7 @@ public class Config {
 
 		/**
 		 * Fügt eine Appearance hinzu
-		 * 
+		 *
 		 * @param key	Schlüssel
 		 * @param value	Farbe
 		 */
@@ -435,21 +435,21 @@ public class Config {
 			List<Color> cList = get(new AppearanceKey(botType, appearanceType));
 			if (cList == null) {
 				lg.warn("Konfigdatei: Keine Appearance vom Typ '%s' für " +
-					"Bots vom Typ '%s' gefunden; verwende Default",
-					appearanceType, botType.getSimpleName());
+						"Bots vom Typ '%s' gefunden; verwende Default",
+						appearanceType, botType.getSimpleName());
 				cList = get(new AppearanceKey(null, appearanceType));
 			}
 
 			if (cList == null) {
 				lg.warn("Konfigdatei: Keine Default-Appearance gefunden; " +
-					"verwende Fallback");
+						"verwende Fallback");
 				return botColorFallback;
 			}
 
 			if (index >= cList.size()) {
 				lg.warn("Konfigdatei: %d Bots vom Typ '%s' vorhanden, aber " +
-					"nur %d Appearances; muss Appearances mehrfach verwenden",
-					index + 1, botType.getSimpleName(), cList.size());
+						"nur %d Appearances; muss Appearances mehrfach verwenden",
+						index + 1, botType.getSimpleName(), cList.size());
 			}
 			return cList.get(index % cList.size());
 		}
@@ -464,7 +464,7 @@ public class Config {
 
 		/**
 		 * Parameter-Typ
-		 * 
+		 *
 		 * @param name	Name
 		 * @param type	Typ
 		 */

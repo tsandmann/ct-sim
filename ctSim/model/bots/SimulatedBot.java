@@ -21,16 +21,16 @@ package ctSim.model.bots;
 
 /** Interface für alle simulierten Bots */
 public interface SimulatedBot extends Bot {
-	
+
 	/**
-	 * Diese Routine kommt pro Simulationsschritt einmal dran. 
+	 * Diese Routine kommt pro Simulationsschritt einmal dran.
 	 * Hier muss daher alles rein, was ein Bot tun soll
-	 * 
+	 *
 	 * @throws InterruptedException
 	 * @throws UnrecoverableScrewupException
 	 */
-	public void doSimStep() 
-	throws InterruptedException, UnrecoverableScrewupException;
+	public void doSimStep()
+			throws InterruptedException, UnrecoverableScrewupException;
 
 	/** Exception-Klasse für simulierte Bots */
 	public static class UnrecoverableScrewupException extends Exception {
@@ -44,7 +44,7 @@ public interface SimulatedBot extends Bot {
 
 		/**
 		 * UnrecoverableScrewupException
-		 * 
+		 *
 		 * @param message	Text
 		 */
 		public UnrecoverableScrewupException(String message) {
@@ -53,7 +53,7 @@ public interface SimulatedBot extends Bot {
 
 		/**
 		 * UnrecoverableScrewupException
-		 * 
+		 *
 		 * @param cause	Grund
 		 */
 		public UnrecoverableScrewupException(Throwable cause) {
@@ -62,7 +62,7 @@ public interface SimulatedBot extends Bot {
 
 		/**
 		 * UnrecoverableScrewupException
-		 * 
+		 *
 		 * @param message	Text
 		 * @param cause		Grund
 		 */

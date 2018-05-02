@@ -27,13 +27,13 @@ import java.io.IOException;
 import java.util.List;
 
 import ctSim.model.Command;
-import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWrite;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
-import ctSim.util.Runnable1;
 import ctSim.util.Misc;
+import ctSim.util.Runnable1;
 
 /**
  * <ul>
@@ -81,13 +81,14 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
 	 */
+	@Override
 	public void setAsyncWriteStream(CommandOutputStream s) {
 		asyncOut = s;
 	}
 
 	/**
 	 * Bild anfordern
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public synchronized void requestPicture() throws IOException {
@@ -132,7 +133,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Sind die übergebenen Parameter außerhalb des Wertebereichs [0;255], wird geclampt
 	 * (255 wenn zu groß, 0 wenn zu klein).
 	 * </p>
-	 * 
+	 *
 	 * @param r	rot
 	 * @param g	grün
 	 * @param b	blau
@@ -154,9 +155,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 *   2  20 ... ...
 	 *   1  19 ... 307
 	 * </pre>
-	 * 
+	 *
 	 * @param c	Command
 	 */
+	@Override
 	public synchronized void readFrom(Command c) {
 		// TODO Ist alles ziemlich zerbrechlich. Was ist zum Beispiel, wenn der Bot aufgrund eines Bug eine dataL außerhalb des Arrays sendet? -> Mehr Input Validation, wofür haben wir ProtocolExceptions
 		if (! c.has(getHotCmdCode()))
@@ -189,7 +191,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * No-op: Wir implementieren dies, weil wir laut Interface müssen, aber wir brauchen es nicht,
 	 * weil wir ja {@link #askForWrite(CommandOutputStream) askForWrite()} überschrieben haben.
-	 * 
+	 *
 	 * @param c	Command
 	 */
 	public void writeTo(Command c) { 
@@ -200,17 +202,18 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @return Breite
 	 */
 	public int getWidth() { return WIDTH; }
-	
+
 	/**
 	 * @return Höhe
 	 */
 	public int getHeight() { return HEIGHT; }
-	
+
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 	 */
+	@Override
 	public Code getHotCmdCode() { return Code.SENS_MOUSE_PICTURE; }
-	
+
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */
@@ -265,7 +268,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		if (imageEventPending) {
 			imageEventPending = false;
 			Image img = Toolkit.getDefaultToolkit().createImage(
-				new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
+					new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
 			for (Runnable1<Image> li : imageLi)
 				li.run(img);
 		}

@@ -19,20 +19,31 @@
 
 package ctSim.view.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+
 import ctSim.util.FmtLogger;
 
 /**
  * Splash-Screen für den c't-Sim
- * 
+ *
  * Grundidee übernommen von:
- * <a href="http://www.randelshofer.ch/oop/javasplash/javasplash.html">Java Splash - Werner Randelshofer</a> 
- * 
+ * <a href="http://www.randelshofer.ch/oop/javasplash/javasplash.html">Java Splash - Werner Randelshofer</a>
+ *
  * @author Timo Sandmann
  */
 public class SplashWindow extends Window {
@@ -44,13 +55,13 @@ public class SplashWindow extends Window {
 
 	/** Das Splash-Image des Fensters */
 	private Image image;
-	
+
 	/** Textnachricht, die unter dem Bild angezeigt wird */
 	private static String message = "";
-	
+
 	/** Name und Versionsnummer */
 	private String version;
-	
+
 	/** Log-Handler, um Log-Nachrichten ausgeben zu können */
 	private static Handler logHandler;
 
@@ -67,7 +78,7 @@ public class SplashWindow extends Window {
 
 	/**
 	 * Erzeugt ein neues Splash-Fenster
-	 * 
+	 *
 	 * @param parent	Parent
 	 * @param image		Splash-Image
 	 * @param version	Versionsnummer
@@ -119,13 +130,13 @@ public class SplashWindow extends Window {
 			}
 		};
 		addMouseListener(disposeOnClick);
-		
+
 		logHandler = new SplashLogHandler();
 	}
 
 	/**
 	 * Aktualisiert den Splash-Screen
-	 * 
+	 *
 	 * @param g	Graphics
 	 */
 	@Override
@@ -135,7 +146,7 @@ public class SplashWindow extends Window {
 
 	/**
 	 * Zeichnet den Splash-Screen
-	 * 
+	 *
 	 * @param g	Graphics-Objekt
 	 */
 	@Override
@@ -143,7 +154,7 @@ public class SplashWindow extends Window {
 		g.drawImage(image, 0, 0, this);
 		g.drawString(version, image.getWidth(null) / 2 - 40, 95);
 		g.drawString(message, 5, image.getHeight(null)-7);
-		
+
 		if (!paintCalled) {
 			paintCalled = true;
 			synchronized (this) {
@@ -154,7 +165,7 @@ public class SplashWindow extends Window {
 
 	/**
 	 * Zeigt ein Image als Splash-Screen an
-	 * 
+	 *
 	 * @param image		Splash-Image, das angezeigt wird
 	 * @param version	Name und Versionsnummer
 	 */
@@ -164,7 +175,7 @@ public class SplashWindow extends Window {
 		instance.setVisible(true);
 
 		/**
-		 * Note: To make sure the user gets a chance to see the splash window we wait until its paint 
+		 * Note: To make sure the user gets a chance to see the splash window we wait until its paint
 		 * method has been called at least once by the AWT event dispatcher thread. If more than one
 		 * processor is available, we don't wait, and maximize CPU throughput instead.
 		 */
@@ -183,7 +194,7 @@ public class SplashWindow extends Window {
 
 	/**
 	 * Zeigt ein Image als Splash-Screen an
-	 * 
+	 *
 	 * @param image		Splash-Image, das angezeigt wird
 	 * @param version	Name und Versionsnummer
 	 */
@@ -206,36 +217,36 @@ public class SplashWindow extends Window {
 			instance = null;
 		}
 	}
-	
+
 	/**
 	 * Zeigt eine Nachricht auf dem Splash-Screen an, löscht dabei die alte Nachricht
-	 * 
+	 *
 	 * @param msg	Nachricht, die angezeigt werden soll
 	 */
 	public static void setMessage(String msg) {
-		message = msg;	
+		message = msg;
 		instance.paint(instance.getGraphics());
 	}
-	
+
 	/**
 	 * Gibt den Log-Handler zurück
-	 * 
+	 *
 	 * @return unser Log-Handler
 	 */
 	public static Handler getLogHandler() {
 		return logHandler;
 	}
-	
+
 	/**
 	 * @return Windows-Instanz
 	 */
 	public static Window getWindow() {
 		return instance;
 	}
-	
+
 	/**
 	 * Log-Handler für den Splash-Screen, damit dort auch die Konsolenausgaben erscheinen
-	 * 
+	 *
 	 * @author Timo Sandmann
 	 */
 	class SplashLogHandler extends Handler {
@@ -257,7 +268,7 @@ public class SplashWindow extends Window {
 
 		/**
 		 * Schreibt die Log-Message in das Splash-Fenster
-		 * 
+		 *
 		 * @see java.util.logging.Handler#publish(java.util.logging.LogRecord)
 		 */
 		@Override

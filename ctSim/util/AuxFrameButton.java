@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
@@ -26,11 +26,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
+
 import ctSim.view.gui.ComponentJFrame;
 import ctSim.view.gui.RemoteCallViewer;
 
@@ -44,14 +46,14 @@ import ctSim.view.gui.RemoteCallViewer;
  * als "gedrückt" dargestellt und ein unabhängiges Fenster ({@link JFrame}) wird angezeigt. Drückt
  * man den Knopf erneut, springt er wieder heraus und das Fenster verschwindet.
  * </p>
- * 
+ *
  * @author Hendrik Krauß (hkr@heise.de)
  */
 public class AuxFrameButton extends JToggleButton {
 	/** UID */
 	private static final long serialVersionUID = - 7629302258050583L;
-	/** Logger */ 
-//	private final FmtLogger lg = FmtLogger.getLogger("ctSim.utils.AuxFrameButton");
+	/** Logger */
+	//	private final FmtLogger lg = FmtLogger.getLogger("ctSim.utils.AuxFrameButton");
 	/** Frame */
 	private final ComponentJFrame auxFrame;
 
@@ -59,7 +61,7 @@ public class AuxFrameButton extends JToggleButton {
 	 * Erzeugt einen JToggleButton, der mit einem extra Fenster verheiratet ist. Tooltip des Knopfs:
 	 * Falls das {@code buttonLabel} z.B. "Bratwurst" ist, wird der Tooltip lauten "Fenster anzeigen
 	 * mit Bratwurst".
-	 * 
+	 *
 	 * @param buttonLabel	Text, der auf dem Knopf anzuzeigen ist
 	 * @param frameTitle	Text, der in die Titelzeile des extra Fensters zu schreiben ist
 	 * @param frameContent	Inhalt des Fensters, der beliebig komplex sein kann. Oft empfiehlt es sich,
@@ -71,17 +73,17 @@ public class AuxFrameButton extends JToggleButton {
 
 		// Fenster erzeugen aber erst später konfigurieren
 		auxFrame = new ComponentJFrame(frameTitle, frameContent, this);
-		
+
 		//auxFrame.setLocation(300, 300);
-		
+
 
 		// Uns selber konfigurieren
 		setAlignmentX(Component.CENTER_ALIGNMENT);
-		// Falls wir Platz haben, ausnutzen (keiner hat was von leerem nicht-klickbaren Platz) 
+		// Falls wir Platz haben, ausnutzen (keiner hat was von leerem nicht-klickbaren Platz)
 		setMaximumSize(new Dimension(Integer.MAX_VALUE, getMaximumSize().height));
-		
+
 		setEnabled(enabled);
-		
+
 		String keyinfo = "";
 		if (System.getProperty("os.name").toLowerCase().startsWith("linux")) {
 			keyinfo = "Strg";
@@ -98,6 +100,7 @@ public class AuxFrameButton extends JToggleButton {
 		}
 		addActionListener(new ActionListener() {
 			// Fenster anzeigen/verbergen, wenn wir gedrückt werden
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				auxFrame.setVisible(AuxFrameButton.this.isSelected());
 				if (frameContent instanceof RemoteCallViewer) {
@@ -109,7 +112,7 @@ public class AuxFrameButton extends JToggleButton {
 				}
 			}
 		});
-		
+
 		// Fenster konfigurieren aber noch nicht anzeigen
 		auxFrame.addWindowListener(new WindowAdapter() {
 			// Wenn Fenster geschlossen wird soll der gedrückte Button wieder rausspringen
@@ -142,7 +145,7 @@ public class AuxFrameButton extends JToggleButton {
 	 */
 	@Override
 	public void removeNotify() {
-//		lg.fine("AuxFrameButton::removeNotify()");
+		//		lg.fine("AuxFrameButton::removeNotify()");
 		auxFrame.dispose();
 		super.removeNotify();
 	}

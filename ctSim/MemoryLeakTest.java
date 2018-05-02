@@ -32,12 +32,12 @@ import ctSim.controller.Main;
 public class MemoryLeakTest {
 	/**
 	 * main
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		Main.dependencies.reRegisterImplementation(
-			Controller.class, TestController.class);
+				Controller.class, TestController.class);
 		Main.main();
 	}
 
@@ -47,7 +47,7 @@ public class MemoryLeakTest {
 		 * @see ctSim.controller.DefaultController#onApplicationInited()
 		 */
 		@Override
-        public void onApplicationInited() {
+		public void onApplicationInited() {
 			super.onApplicationInited();
 			for (int i = 0; i < 50; i++) {
 				lg.info("Öffne Welt " + i);
@@ -61,6 +61,6 @@ public class MemoryLeakTest {
                 	// ist egal
                 }
 			}
-        }
+		}
 	}
 }

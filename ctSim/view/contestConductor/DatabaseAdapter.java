@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.contestConductor;
@@ -61,9 +61,9 @@ import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 class DatabaseAdapter {
 	/** HashMap für Statements */
 	class StatementCache extends HashMap<String, PreparedStatement> {
-        /** UID */
+		/** UID */
 		private static final long serialVersionUID =
-        	- 293074803104060506L;
+				- 293074803104060506L;
 
 		/**
 		 * @see java.util.HashMap#get(java.lang.Object)
@@ -78,13 +78,13 @@ class DatabaseAdapter {
 				 */
 				String s = (String)key;
 				try {
-	                put(s, dbConn.prepareStatement(s));
-                } catch (SQLException e) {
-                	// In non-checked Excp einwickeln, um mit der geerbten Signatur kompatibel zu bleiben
-                	throw new RuntimeException(e);
-                }
+					put(s, dbConn.prepareStatement(s));
+				} catch (SQLException e) {
+					// In non-checked Excp einwickeln, um mit der geerbten Signatur kompatibel zu bleiben
+					throw new RuntimeException(e);
+				}
 			}
-		    return super.get(key);
+			return super.get(key);
 		}
 	}
 
@@ -117,7 +117,7 @@ class DatabaseAdapter {
 
 		/**
 		 * Zustand des Spiels
-		 * 
+		 *
 		 * @param representationInDb	Zustand
 		 */
 		GameState(String representationInDb) {
@@ -153,14 +153,14 @@ class DatabaseAdapter {
 
 	/** Statement-Cache */
 	protected StatementCache statementCache = new StatementCache();
-	
+
 	/** Datenbank */
 	private ContestDatabase connFactory;
 
 
 	/**
 	 * DB-Verbindung
-	 * 
+	 *
 	 * @param connFactory	DB
 	 */
 	protected DatabaseAdapter(ContestDatabase connFactory) {
@@ -175,7 +175,7 @@ class DatabaseAdapter {
 
 	/**
 	 * Connection setzen
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	protected void acquireConn() throws SQLException {
@@ -192,7 +192,7 @@ class DatabaseAdapter {
 	 * @throws SQLException
 	 */
 	protected PreparedStatement buildPreparedStatement(String sqlWithInParams,
-		Object... inValues) throws SQLException {
+			Object... inValues) throws SQLException {
 		PreparedStatement rv = statementCache.get(sqlWithInParams);
 		// Sicherheitsmaßnahme, damit niemand auf teilweise alten Daten operiert
 		rv.clearParameters();
@@ -203,12 +203,12 @@ class DatabaseAdapter {
 			else if (inValues[i] instanceof RenderedImage) {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				try {
-	                ImageIO.write((RenderedImage)inValues[i], "png", out);
-                } catch (IOException e) {
-                	throw new IllegalArgumentException(e);	//$$ doc IllegalArg
-                }
+					ImageIO.write((RenderedImage)inValues[i], "png", out);
+				} catch (IOException e) {
+					throw new IllegalArgumentException(e);	//$$ doc IllegalArg
+				}
 				rv.setBinaryStream(i + 1,
-					new ByteArrayInputStream(out.toByteArray()), out.size());
+						new ByteArrayInputStream(out.toByteArray()), out.size());
 			}
 			else
 				rv.setObject(i + 1, inValues[i]);
@@ -264,12 +264,12 @@ class DatabaseAdapter {
 	 * wie es ein Aufruf von executeQuery mit demselben SQL-Befehl zurückgegeben hätte. Falls der
 	 * genannte Parameter mit "insert", "update" oder "delete" beginnt, wird <code>null</code>
 	 * zurückgegeben.
-	 * @throws SQLException 
+	 * @throws SQLException
 	 * @throws IllegalArgumentException	falls der Parameter <code>sqlWithParams</code> weder mit SELECT
 	 * 				noch mit INSERT, UPDATE oder DELETE beginnt. (Groß-/Kleinschreibung irrelevant.)
 	 */
 	protected ResultSet execSql(String sqlWithInParams, Object... inValues)
-	throws SQLException, IllegalArgumentException {
+			throws SQLException, IllegalArgumentException {
 		/* Idee: SQL-Kommando ausführen; wenn's nicht klappt, Verbindung neu herstellen und nochmal
 		 * ausführen. Fix gegen abreißende DB-Verbindungen (wenn die Verbindung abreißt, bekommt man von
 		 * MySQL mit dem nächsten SQL-Befehl eine com.mysql.jdbc.CommunicationsException, die von
@@ -292,7 +292,7 @@ class DatabaseAdapter {
 
 	/**
 	 * Führt ein SQL-Kommando aus
-	 * 
+	 *
 	 * @param sqlWithInParams	Kommando
 	 * @param inValues			Werte
 	 * @return Result
@@ -300,12 +300,12 @@ class DatabaseAdapter {
 	 * @throws IllegalArgumentException
 	 */
 	private ResultSet tryExecSql(String sqlWithInParams, Object... inValues)
-	throws SQLException, IllegalArgumentException {
+			throws SQLException, IllegalArgumentException {
 		if (sqlWithInParams.toLowerCase().startsWith("select")) {
 			return buildPreparedStatement(sqlWithInParams, inValues).
-				executeQuery();
+					executeQuery();
 		} else if (Misc.startsWith(sqlWithInParams.toLowerCase(),
-			"insert", "update", "delete")) {
+				"insert", "update", "delete")) {
 			buildPreparedStatement(sqlWithInParams, inValues).executeUpdate();
 			return null;
 		} else {
@@ -318,50 +318,50 @@ class DatabaseAdapter {
 	 * Trägt einen Bot für ein Spiel ein
 	 * Aufzurufen entweder vor dem Wettbewerb in der Planungsphase oder im Wettbewerb, wenn sich durch
 	 * die Spielergebnisse herausstellt, welche Bots um ein Level weiterkommen.
-     *
-     * @param botId		Bot, repräsentiert von seinem Primärschlüssel, der eingettragen werden soll.
-     * 					Falls <code>null</code>, tut die Methode nichts.
-     * @param levelId	das Level, in das der Bot platziert werden soll
-     * @param gameId	die Nummer des Spiels im jeweiligen Level
-	 * @throws SQLException 
-     * @throws TournamentPlanException	wenn für das übergebene Spiel bereits zwei Spieler eingetragen sind
-     */
-    public void placeBot(Integer botId, int levelId, int gameId)
-    throws SQLException, TournamentPlanException {
-    	if (botId == null)
-    		return;
+	 *
+	 * @param botId		Bot, repräsentiert von seinem Primärschlüssel, der eingettragen werden soll.
+	 * 					Falls <code>null</code>, tut die Methode nichts.
+	 * @param levelId	das Level, in das der Bot platziert werden soll
+	 * @param gameId	die Nummer des Spiels im jeweiligen Level
+	 * @throws SQLException
+	 * @throws TournamentPlanException	wenn für das übergebene Spiel bereits zwei Spieler eingetragen sind
+	 */
+	public void placeBot(Integer botId, int levelId, int gameId)
+			throws SQLException, TournamentPlanException {
+		if (botId == null)
+			return;
 
-    	lg.fine("Trage Bot ID = '"+botId+"' für Level "+levelId+
-    		" Spiel "+gameId+" ein");
+		lg.fine("Trage Bot ID = '"+botId+"' für Level "+levelId+
+				" Spiel "+gameId+" ein");
 
-    	// Suche das Spiel heraus
-    	ResultSet rs = execSql(
-    		"SELECT * from ctsim_game WHERE level = ? AND game = ?",
-    		levelId, gameId);
+		// Suche das Spiel heraus
+		ResultSet rs = execSql(
+				"SELECT * from ctsim_game WHERE level = ? AND game = ?",
+				levelId, gameId);
 
-    	// Bots holen; Erwartung: einer oder beide sind NULL
-    	rs.next();
-    	Integer bot1Id = rs.getInt("bot1");
-    	if (rs.wasNull())
-    		bot1Id = null;
-    	Integer bot2Id = rs.getInt("bot2");
-    	if (rs.wasNull())
-    		bot2Id = null;
+		// Bots holen; Erwartung: einer oder beide sind NULL
+		rs.next();
+		Integer bot1Id = rs.getInt("bot1");
+		if (rs.wasNull())
+			bot1Id = null;
+		Integer bot2Id = rs.getInt("bot2");
+		if (rs.wasNull())
+			bot2Id = null;
 
-    	// Bots aktualisieren
-    	if (bot1Id == null) {
-    		execSql("UPDATE ctsim_game " +
-    				"SET bot1 = ?, state = ? " +
-    				"WHERE level = ? AND game = ?",
-    				botId, GameState.WAITING_FOR_BOT2, levelId, gameId);
-    	} else if (bot2Id == null) {
-    		execSql("UPDATE ctsim_game " +
-    				"SET bot2 = ?, state = ? " +
-    				"WHERE level = ? AND game = ?",
-    				botId, GameState.READY_TO_RUN, levelId, gameId);
-    	} else {
-    		throw new TournamentPlanException(
-    			"Kein Platz in Spiel "+gameId+" Level: "+levelId);
-    	}
-    }
+		// Bots aktualisieren
+		if (bot1Id == null) {
+			execSql("UPDATE ctsim_game " +
+					"SET bot1 = ?, state = ? " +
+					"WHERE level = ? AND game = ?",
+					botId, GameState.WAITING_FOR_BOT2, levelId, gameId);
+		} else if (bot2Id == null) {
+			execSql("UPDATE ctsim_game " +
+					"SET bot2 = ?, state = ? " +
+					"WHERE level = ? AND game = ?",
+					botId, GameState.READY_TO_RUN, levelId, gameId);
+		} else {
+			throw new TournamentPlanException(
+					"Kein Platz in Spiel "+gameId+" Level: "+levelId);
+		}
+	}
 }

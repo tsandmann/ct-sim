@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -42,7 +42,7 @@ public class RemoteControlViewer extends JPanel {
 
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger(
-		"ctSim.view.gui.RemoteControlViewer");
+			"ctSim.view.gui.RemoteControlViewer");
 
 	/** blau */
 	private static final Color LIGHT_BLUE = new Color(150, 150, 255);
@@ -58,7 +58,7 @@ public class RemoteControlViewer extends JPanel {
 
 	/**
 	 * Setzt die Standardfarbe
-	 * 
+	 *
 	 * @param c	Farbe
 	 * @return null
 	 */
@@ -69,7 +69,7 @@ public class RemoteControlViewer extends JPanel {
 
 	/**
 	 * Button bauen
-	 * 
+	 *
 	 * @param label	Label
 	 * @param color	Farbe
 	 * @return Button
@@ -85,6 +85,7 @@ public class RemoteControlViewer extends JPanel {
 		rv.setForeground(color);
 		rv.setBackground(Color.DARK_GRAY);
 		rv.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				lg.fine("Fernbedienungsknopf '%s' gedrückt", rv.getText());
 				try {
@@ -99,7 +100,7 @@ public class RemoteControlViewer extends JPanel {
 
 	/**
 	 * Button bauen
-	 * 
+	 *
 	 * @param label	Label
 	 * @return Button
 	 */
@@ -109,7 +110,7 @@ public class RemoteControlViewer extends JPanel {
 
 	/**
 	 * Baut das Panel
-	 * 
+	 *
 	 * @param width		Breite
 	 * @param height	Höhe
 	 * @param buttons	Buttons
@@ -126,34 +127,34 @@ public class RemoteControlViewer extends JPanel {
 
 	/** Layout der Fernbedienung */
 	private JComponent[] layout = new JComponent[] {
-		defaultColor(LIGHT_BLUE),
-		grid(3, 5,
-			null,		null,		b("\u03A6", GR),	// 03A6: "Power-Symbol" (wie Kombination von O und |)
-			b( "1"),	b( "2"),	b( "3"),
-			b( "4"),	b( "5"),	b( "6"),
-			b( "7"),	b( "8"),	b( "9"),
-			b("10"),	b("11"),	b("12")
-		),
-		defaultColor(null),
-		grid(4, 1,
-			b("GR -", GR),	b("RE +", new Color(200, 50, 50)),
-			b("YE -", YE),	b("BL +", LIGHT_BLUE)
-		),
-		defaultColor(Color.LIGHT_GRAY),
-		grid(5, 5,
-			b("I/II"),	null,		null,		null,		b("TV/VCR"),
-			null,		null,		b("||"),	null,		null,
-			null,		b("<<"),	b(">"),		b(">>"),	null,
-			null,		null,		b("\u25A1"),null,		null,		// 25A1: Quadrat für "Stop"
-			b("\u25CF"),null,		null,		null,		b("CH*P/P")	// 25CF: Dicker Punkt für "Record"
-		),
-		defaultColor(LIGHT_BLUE),
-		grid(3, 2,
-			b("Vol+"),	b("Mute"),	b("Ch+"),
-			b("Vol-"),	null,		b("Ch-")
-		)
-	};	
-	
+			defaultColor(LIGHT_BLUE),
+			grid(3, 5,
+					null,		null,		b("\u03A6", GR),	// 03A6: "Power-Symbol" (wie Kombination von O und |)
+					b( "1"),	b( "2"),	b( "3"),
+					b( "4"),	b( "5"),	b( "6"),
+					b( "7"),	b( "8"),	b( "9"),
+					b("10"),	b("11"),	b("12")
+					),
+			defaultColor(null),
+			grid(4, 1,
+					b("GR -", GR),	b("RE +", new Color(200, 50, 50)),
+					b("YE -", YE),	b("BL +", LIGHT_BLUE)
+					),
+			defaultColor(Color.LIGHT_GRAY),
+			grid(5, 5,
+					b("I/II"),	null,		null,		null,		b("TV/VCR"),
+					null,		null,		b("||"),	null,		null,
+					null,		b("<<"),	b(">"),		b(">>"),	null,
+					null,		null,		b("\u25A1"),null,		null,		// 25A1: Quadrat für "Stop"
+					b("\u25CF"),null,		null,		null,		b("CH*P/P")	// 25CF: Dicker Punkt für "Record"
+					),
+			defaultColor(LIGHT_BLUE),
+			grid(3, 2,
+					b("Vol+"),	b("Mute"),	b("Ch+"),
+					b("Vol-"),	null,		b("Ch-")
+					)
+	};
+
 	/**
 	 * @param rcSensor	RC5-Komponente
 	 */

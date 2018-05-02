@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -53,33 +53,33 @@ import ctSim.view.ScreenshotProvider;
 
 /** Klasse zur Darstellung einer Welt */
 public class WorldViewer extends JPanel implements ScreenshotProvider {
-    /** UID */
+	/** UID */
 	private static final long serialVersionUID = - 2085097216130758546L;
 	/** nichts-Meldung */
-    private static final String NOTHING = "showing nothing";
-    /** model-Meldung */
-    private static final String MODEL = "showing a model";
+	private static final String NOTHING = "showing nothing";
+	/** model-Meldung */
+	private static final String MODEL = "showing a model";
 
-    /** Hilfselement für die J3D-Bürokratie */
-    final protected GraphicsConfiguration gc =
-    		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D());
-    /**
-     * Das letzte verwendete GraphicsDevice, wird für das Erzeugen einer neuen Welt in einem Multi-Monitor
-     * Setup benötigt
-     * */
-    protected GraphicsDevice last_gd = gc.getDevice();
+	/** Hilfselement für die J3D-Bürokratie */
+	final protected GraphicsConfiguration gc =
+			GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D());
+	/**
+	 * Das letzte verwendete GraphicsDevice, wird für das Erzeugen einer neuen Welt in einem Multi-Monitor
+	 * Setup benötigt
+	 * */
+	protected GraphicsDevice last_gd = gc.getDevice();
 
-    /** OnScreen Fläche */
-    protected Canvas3D onScreenCanvas = new Canvas3D(gc, false);
-    /** OffScreen Fläche */
-    protected Canvas3D offScreenCanvas = new Canvas3D(gc, true);
+	/** OnScreen Fläche */
+	protected Canvas3D onScreenCanvas = new Canvas3D(gc, false);
+	/** OffScreen Fläche */
+	protected Canvas3D offScreenCanvas = new Canvas3D(gc, true);
 
-    /** wird mit jedem neuen Model ausgetauscht */
-    protected SimpleUniverse universe;
-    
+	/** wird mit jedem neuen Model ausgetauscht */
+	protected SimpleUniverse universe;
+
 	/**
 	 * Gets the best graphics conifguration to display on the current device
-	 * 
+	 *
 	 * @return GraphicsConfiguration
 	 */
 	protected GraphicsConfiguration getBestConfigurationOnSameDevice() {
@@ -101,34 +101,34 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		return good;
 	}
 
-    /** Erzeugt einen neuen WorldViewer, der erstmal leer ist */
-    public WorldViewer() {
-    	setLayout(new CardLayout());
-    	JPanel p = new JPanel(new GridBagLayout());	// nur zum Zentrieren
-    	p.add(new JLabel("Keine Welt geladen"));
-    	add(p, NOTHING);
-    	add(onScreenCanvas, MODEL);
-    	Main.dependencies.registerInstance(ScreenshotProvider.class, this);
-    }
+	/** Erzeugt einen neuen WorldViewer, der erstmal leer ist */
+	public WorldViewer() {
+		setLayout(new CardLayout());
+		JPanel p = new JPanel(new GridBagLayout());	// nur zum Zentrieren
+		p.add(new JLabel("Keine Welt geladen"));
+		add(p, NOTHING);
+		add(onScreenCanvas, MODEL);
+		Main.dependencies.registerInstance(ScreenshotProvider.class, this);
+	}
 
-    /**
-     * Zeigt eine Welt an, oder einen dummy, falls world == null
-     * 
-     * @param world	die Welt
-     */
-    public void show(World world) {
-    	deinit();
+	/**
+	 * Zeigt eine Welt an, oder einen dummy, falls world == null
+	 *
+	 * @param world	die Welt
+	 */
+	public void show(World world) {
+		deinit();
 
-    	if (world == null) {
-    		((CardLayout)getLayout()).show(this, NOTHING);
-    	} else {
-    		init(world);
-    		/* einmal rendern erzwingen, damit sofort die Welt angezeigt wird */
-    		universe.getViewer().getCanvas3D().print(universe.getCanvas().getGraphics());
-    	}
-    }
+		if (world == null) {
+			((CardLayout)getLayout()).show(this, NOTHING);
+		} else {
+			init(world);
+			/* einmal rendern erzwingen, damit sofort die Welt angezeigt wird */
+			universe.getViewer().getCanvas3D().print(universe.getCanvas().getGraphics());
+		}
+	}
 
-    /**
+	/**
 	 * <p>
 	 * Altes Universum deinitialisieren (falls vorhanden), inkl. seiner Java3D-Threads. Es ist enorm
 	 * wichtig, diese Methode aufzurufen!
@@ -144,16 +144,16 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		if (onScreenCanvas != null) {
 			last_gd = onScreenCanvas.getGraphicsConfiguration().getDevice();
 		}
-		
+
 		if (System.getProperty("os.name").indexOf("OS X") == 0) {
-			/* 
+			/*
 			 * Workaround gegen Crash unter macOS und Java >= 9 (context.destroy() in
 			 * JoglPipeline.java crasht). Nachteil: Auch nach dem Schließen der Welt wird diese noch
 			 * angezeigt, bis eine Neue geladen wurde.
 			 */
-	    	if (universe != null) {
-	    		universe.cleanup();
-	    	}
+			if (universe != null) {
+				universe.cleanup();
+			}
 			/* remove all Java3D Canvas components */
 			while (getComponentCount() > 1) {
 				remove(1);
@@ -162,85 +162,85 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		universe = null;
 		onScreenCanvas = null;
 		offScreenCanvas = null;
-    }
+	}
 
-    /**
-     * Initialisiert eine Welt
-     * 
-     * @param w	die Welt
-     */
-    protected void init(World w) {    	
-    	onScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice()
-    			/*GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D())*/,
-    			false);
-    	offScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice()
-    			/*GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D())*/,
-    			true);
-    	add(onScreenCanvas, MODEL);
-    	universe = new SimpleUniverse(onScreenCanvas);
-        universe.getViewer().getView().addCanvas3D(offScreenCanvas);
-    	initPerspective(w);
-    	universe.addBranchGraph(w.getScene());
+	/**
+	 * Initialisiert eine Welt
+	 *
+	 * @param w	die Welt
+	 */
+	protected void init(World w) {
+		onScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice()
+				/*GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D())*/,
+				false);
+		offScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice()
+				/*GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D())*/,
+				true);
+		add(onScreenCanvas, MODEL);
+		universe = new SimpleUniverse(onScreenCanvas);
+		universe.getViewer().getView().addCanvas3D(offScreenCanvas);
+		initPerspective(w);
+		universe.addBranchGraph(w.getScene());
 
-    	/**
-    	 * Aktivieren von:
-    	 * Ziehen/linke Maustaste = Ansicht rotieren
-    	 * Ziehen/rechte Maustaste = Ansicht verschieben
-    	 * Ziehen/mittlere Maustaste = Ansicht zoomen
-    	 * Mausrad = Ansicht zoomen
-    	 */
-    	universe.addBranchGraph(new BranchGroup() {
-    		{
-    			/*
+		/**
+		 * Aktivieren von:
+		 * Ziehen/linke Maustaste = Ansicht rotieren
+		 * Ziehen/rechte Maustaste = Ansicht verschieben
+		 * Ziehen/mittlere Maustaste = Ansicht zoomen
+		 * Mausrad = Ansicht zoomen
+		 */
+		universe.addBranchGraph(new BranchGroup() {
+			{
+				/*
 				 * Syntaxhinweis zu den doppelten Schweifklammern: Es handelt sich um
 				 * "instance initializer", die den Code kompakter machen sollen - siehe JLS §8.6 und
 				 * <a href="http://www.c2.com/cgi/wiki?DoubleBraceInitialization">DoubleBraceInitialization</a>
 				 */
-    			addMouseBehavior(new MouseRotate(MouseBehavior.INVERT_INPUT)
-    				{{ setFactor(0.001); }});
-    			addMouseBehavior(new MouseTranslate(MouseBehavior.INVERT_INPUT)
-    				{{ setFactor(0.01); }});
-    			addMouseBehavior(new MouseZoom()
-    				{{ setFactor(0.035); }});
-    			addMouseBehavior(new MouseWheelZoom()
-    				{{ setFactor(0.3); }});
-    		}
+				addMouseBehavior(new MouseRotate(MouseBehavior.INVERT_INPUT)
+				{{ setFactor(0.001); }});
+				addMouseBehavior(new MouseTranslate(MouseBehavior.INVERT_INPUT)
+				{{ setFactor(0.01); }});
+				addMouseBehavior(new MouseZoom()
+				{{ setFactor(0.035); }});
+				addMouseBehavior(new MouseWheelZoom()
+				{{ setFactor(0.3); }});
+			}
 
-    		private void addMouseBehavior(MouseBehavior b) {
-    			b.setTransformGroup(
-    				universe.getViewingPlatform().getViewPlatformTransform());
-    			b.setSchedulingBounds(new BoundingSphere(new Point3d(), 1000));
-    			// TODO Könnte besser sein: Was, wenn irgendne Welt mal > 1000 ist?
-    			addChild(b);
-    		}
-    	});
+			private void addMouseBehavior(MouseBehavior b) {
+				b.setTransformGroup(
+						universe.getViewingPlatform().getViewPlatformTransform());
+				b.setSchedulingBounds(new BoundingSphere(new Point3d(), 1000));
+				// TODO Könnte besser sein: Was, wenn irgendne Welt mal > 1000 ist?
+				addChild(b);
+			}
+		});
 		w.addViewPlatform(universe.getViewingPlatform().getViewPlatform());
 
 		((CardLayout)getLayout()).show(this, MODEL);
-    }
+	}
 
-    /**
-     * Position: X/Y: zentriert, Z: so, dass der Parcours vollständig im Blick ist
-     * 
-     * @param w	Welt
-     */
-    private void initPerspective(World w) {
-    	double centerX = w.getWidthInM() / 2;
-    	double centerY = w.getHeightInM() / 2;
-    	double longerSide = Math.max(
-    		w.getWidthInM(), w.getHeightInM());
-    	// Winkel im Bogenmaß
-    	double field = universe.getViewer().getView().getFieldOfView();
+	/**
+	 * Position: X/Y: zentriert, Z: so, dass der Parcours vollständig im Blick ist
+	 *
+	 * @param w	Welt
+	 */
+	private void initPerspective(World w) {
+		double centerX = w.getWidthInM() / 2;
+		double centerY = w.getHeightInM() / 2;
+		double longerSide = Math.max(
+				w.getWidthInM(), w.getHeightInM());
+		// Winkel im Bogenmaß
+		double field = universe.getViewer().getView().getFieldOfView();
 
-    	Transform3D targetTfm = new Transform3D();
-    	TransformGroup tg =
-    		universe.getViewingPlatform().getViewPlatformTransform();
+		Transform3D targetTfm = new Transform3D();
+		TransformGroup tg =
+				universe.getViewingPlatform().getViewPlatformTransform();
 
-    	tg.getTransform(targetTfm);
-    	targetTfm.setTranslation(new Vector3d(centerX, centerY,
-    		(longerSide/2) / Math.tan(field/2)));
-    	tg.setTransform(targetTfm);
-    }
+		tg.getTransform(targetTfm);
+		targetTfm.setTranslation(new Vector3d(centerX, centerY,
+				(longerSide/2) / Math.tan(field/2)));
+		tg.setTransform(targetTfm);
+	}
 
     /**
      * Baut einen Screenshot
@@ -258,23 +258,23 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		 * oder auf diesem Objekt paint(...) aufzurufen, funktioniert nicht (dies ergibt immer einfarbig
 		 * schwarze Screenshots - vermutlich ist Canvas3D eben doch keine ganz so normale Swing-Komponente).
 		 */
-    	Screen3D onScr = onScreenCanvas.getScreen3D();
-    	Screen3D offScr = offScreenCanvas.getScreen3D();
-    	offScreenCanvas.setOffScreenBuffer(new ImageComponent2D(ImageComponent2D.FORMAT_RGB, onScr.getSize().width, onScr.getSize().height));
-    	offScr.setSize(onScr.getSize());
-    	offScr.setPhysicalScreenHeight(onScr.getPhysicalScreenHeight());
-    	offScr.setPhysicalScreenWidth(onScr.getPhysicalScreenWidth());
-    	offScreenCanvas.renderOffScreenBuffer();
-    	offScreenCanvas.waitForOffScreenRendering();
-    	return offScreenCanvas.getOffScreenBuffer().getImage();
-    }
+		Screen3D onScr = onScreenCanvas.getScreen3D();
+		Screen3D offScr = offScreenCanvas.getScreen3D();
+		offScreenCanvas.setOffScreenBuffer(new ImageComponent2D(ImageComponent2D.FORMAT_RGB, onScr.getSize().width, onScr.getSize().height));
+		offScr.setSize(onScr.getSize());
+		offScr.setPhysicalScreenHeight(onScr.getPhysicalScreenHeight());
+		offScr.setPhysicalScreenWidth(onScr.getPhysicalScreenWidth());
+		offScreenCanvas.renderOffScreenBuffer();
+		offScreenCanvas.waitForOffScreenRendering();
+		return offScreenCanvas.getOffScreenBuffer().getImage();
+	}
 
-    /**
+	/**
 	 * MinimumSize ist (1,1): Ermöglicht der SplitPane, die uns enthält, ihren Divider zu ändern.
 	 * Würden wir unsere MinimumSize nicht auf etwas sehr kleines setzen, ginge das nicht.
 	 */
 	@Override
 	public Dimension getMinimumSize() {
 		return new Dimension(1,1);
-    }
+	}
 }

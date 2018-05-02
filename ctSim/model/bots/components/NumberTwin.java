@@ -37,18 +37,19 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	}
 
 	/** Zahlenwert */
-	protected Number internalModel = Double.valueOf(0); 
+	protected Number internalModel = Double.valueOf(0);
 	/** "linke" oder "rechte" Zahl */
 	protected final boolean isLeft;
 
 	/**
 	 * Zahlendarstellung für links oder rechts
-	 * 
+	 *
 	 * @param isLeft	links?
 	 */
 	public NumberTwin(boolean isLeft) {
 		super(new SpinnerNumberModel());
 		getExternalModel().addChangeListener(new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent e) {
 				synchronized(NumberTwin.this) {
 					internalModel = getExternalModel().getNumber();
@@ -62,7 +63,7 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	 * @return Kurzname
 	 */
 	protected abstract String getBaseName();
-	
+
 	/**
 	 * @return Beschreibung
 	 */
@@ -82,8 +83,8 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	@Override
 	public String getDescription() {
 		return getBaseDescription()
-		       + " "
-		       + (isLeft ? "links" : "rechts");
+				+ " "
+				+ (isLeft ? "links" : "rechts");
 	}
 
 	/**
@@ -113,19 +114,19 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 		getExternalModel().setValue(internalModel);
 	}
 
-	/** 
+	/**
 	 * Nur auf dem EDT laufen lassen
-	 * 
-	 * @param n	Number 
+	 *
+	 * @param n	Number
 	 */
 	public synchronized void set(Number n) {
 		getExternalModel().setValue(n);
 	}
 
-	/** 
+	/**
 	 * Nur auf dem EDT laufen lassen
-	 * 
-	 * @return Number 
+	 *
+	 * @return Number
 	 */
 	public synchronized Number get() {
 		return getExternalModel().getNumber();

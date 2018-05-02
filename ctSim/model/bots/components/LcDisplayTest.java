@@ -51,7 +51,7 @@ public class LcDisplayTest extends LcDisplay {
 
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -59,15 +59,15 @@ public class LcDisplayTest extends LcDisplay {
 		clearModel(getExternalModel());
 		assertEquals(twentyFourLines, getAllText(getExternalModel()));
 	}
-	
+
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void internalModelIsDifferentFromExternalOne() 
-	throws Exception {
+	public void internalModelIsDifferentFromExternalOne()
+			throws Exception {
 		clearModel(getExternalModel());
 		setCursor(3, 3);
 		overwrite("Katastrophenfalleinsatzbehörde");
@@ -77,10 +77,10 @@ public class LcDisplayTest extends LcDisplay {
 
 	/** Testdaten */
 	private String insertion = "beeblebrox";
-	
+
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -90,13 +90,13 @@ public class LcDisplayTest extends LcDisplay {
 		overwrite(insertion);
 		updateExternalModel();
 		String expected = twentyFourLines.replaceFirst(
-			"^ {" + insertion.length() + "}", insertion);
+				"^ {" + insertion.length() + "}", insertion);
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -107,13 +107,13 @@ public class LcDisplayTest extends LcDisplay {
 		updateExternalModel();
 		String expected = twentyFourLines;
 		expected = expected.substring(0, 10) + insertion +
-			expected.substring(10 + insertion.length(), expected.length());
+				expected.substring(10 + insertion.length(), expected.length());
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -124,14 +124,14 @@ public class LcDisplayTest extends LcDisplay {
 		overwrite(insertion);
 		updateExternalModel();
 		String expected = twentyFourLines.substring(0, 43*8) + insertion +
-		twentyFourLines.substring(43*8 + insertion.length(),
-			twentyFourLines.length());
+				twentyFourLines.substring(43*8 + insertion.length(),
+						twentyFourLines.length());
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -142,13 +142,13 @@ public class LcDisplayTest extends LcDisplay {
 		overwrite(insertion);
 		updateExternalModel();
 		String expected = twentyFourLines.substring(0, 43*23 + 38) +
-			insertion.substring(0, 4);
+				insertion.substring(0, 4);
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * @return Text
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	private String getExText() throws Exception {

@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
@@ -23,19 +23,19 @@ package ctSim.util;
  * Datentyp für Bot-IDs. Im Prinzip wie byte, gibt das Byte aber als unsigned aus.
  * Mit set() kann man der ID einen neuen Wert geben; mit equals() kann man die ID und eine andere auf
  * Gleichheit prüfen. Die get-Methoden sollten immer eine neue ID erstellen, (wg. call by reference).
- * 
+ *
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class BotID extends java.lang.Number {
 	/** UID */
 	private static final long serialVersionUID = 2020798275037223330L;
-	
+
 	/** Datenwert */
 	private int data = 0;
 
 	/**
 	 * Erzeugt eine neue ID (unsígned byte)
-	 * 
+	 *
 	 * @param id	Wert der ID
 	 */
 	public BotID(byte id) {
@@ -44,25 +44,25 @@ public class BotID extends java.lang.Number {
 			this.data += 256;
 		}
 	}
-	
+
 	/**
 	 * Erzeugt eine neue ID (unsígned byte)
-	 * 
+	 *
 	 * @param id	Wert der ID
 	 */
 	public BotID(int id) {
 		this((byte)id);
-	}	
+	}
 
 	/**
 	 * Erzeugt eine neue ID (unsígned byte)
-	 * 
+	 *
 	 * @param id	Wert der ID
 	 */
 	public BotID(BotID id) {
 		this(id.byteValue());
-	}	
-	
+	}
+
 	/** Erzeugt eine neue ID (unsígned byte) */
 	public BotID() {
 		this(0);
@@ -99,7 +99,7 @@ public class BotID extends java.lang.Number {
 	public long longValue() {
 		return intValue();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
@@ -110,7 +110,7 @@ public class BotID extends java.lang.Number {
 
 	/**
 	 * Setzt die ID auf einen neuen Wert
-	 * 
+	 *
 	 * @param id	neuer Wert
 	 */
 	public void set(byte id) {
@@ -120,23 +120,23 @@ public class BotID extends java.lang.Number {
 		}
 		this.data = tmp;
 	}
-	
+
 	/**
 	 * Setzt die ID auf einen neuen Wert
-	 * 
+	 *
 	 * @param id	neuer Wert
 	 */
 	public void set(int id) {
-		set((byte)id); 
+		set((byte)id);
 	}
-	
+
 	/**
 	 * Vergleicht eine andere BotID mit dieser ID
-	 * 
+	 *
 	 * @param id	andere BotID
 	 * @return true, falls beide IDs denselben Wert haben
 	 */
 	public boolean equals(BotID id) {
-		return (this.intValue() == id.intValue()); 
+		return (this.intValue() == id.intValue());
 	}
 }

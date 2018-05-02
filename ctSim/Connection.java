@@ -42,7 +42,7 @@ import ctSim.util.FmtLogger;
  * @author Benjamin Benz (bbe@heise.de)
  * @author Hendrik Krauß (hkr@heise.de)
  */
-public abstract class Connection {	
+public abstract class Connection {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
 
@@ -92,7 +92,7 @@ public abstract class Connection {
 
 	/**
 	 * Überträgt ein Kommando
-	 * 
+	 *
 	 * @param c	das Kommando
 	 * @throws IOException
 	 */
@@ -103,7 +103,7 @@ public abstract class Connection {
 
 	/**
 	 * Liefert den Cmd-Stream
-	 * 
+	 *
 	 * @return der CommandOutputStream
 	 */
 	public synchronized CommandOutputStream getCmdOutStream() {
@@ -113,7 +113,7 @@ public abstract class Connection {
 
 	/**
 	 * Liest Daten aus dem InputStream
-	 * 
+	 *
 	 * @param b	Daten
 	 * @throws IOException
 	 */
@@ -121,9 +121,9 @@ public abstract class Connection {
 		input.readFully(b);
 	}
 
-	/** 
+	/**
 	 * Muss während der Konstruktion aufgerufen werden...
-	 * 
+	 *
 	 * @param is	InputStream
 	 */
 	protected void setInputStream(InputStream is) {
@@ -132,7 +132,7 @@ public abstract class Connection {
 
 	/**
 	 * Muss während der Konstruktion aufgerufen werden...
-	 * 
+	 *
 	 * @param os	OutputStream
 	 */
 	protected void setOutputStream(OutputStream os) {
@@ -142,22 +142,22 @@ public abstract class Connection {
 
 	/**
 	 * Gibt den Kurznamen der Connection zurück
-	 * 
+	 *
 	 * @return Name
 	 */
 	public abstract String getShortName();
 
 	/**
 	 * Gibt den Namen der Connection zurück
-	 * 
+	 *
 	 * @return Name
 	 */
 	public abstract String getName();
-	
+
 	/**
 	 * Blockiert, bis Handshake erfolgreich oder IOException
 	 * Abbruch nach 100 Versuchen
-	 * 
+	 *
 	 * @param receiver	Bot-Receiver
 	 */
 	protected void doHandshake(BotReceiver receiver) {
@@ -178,7 +178,7 @@ public abstract class Connection {
 						return; // Erfolg
 					} else {
 						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot läuft schon oder ist "
-										+ "veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
+								+ "veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
 						continue; // Handshake nochmal versuchen
 					}
 				} catch (ProtocolException e) {
@@ -194,7 +194,7 @@ public abstract class Connection {
 
 	/**
 	 * Erzeugt einen Bot
-	 * 
+	 *
 	 * @param c	Kommando
 	 * @return Bot
 	 * @throws ProtocolException
@@ -202,17 +202,17 @@ public abstract class Connection {
 	protected Bot createBot(Command c) throws ProtocolException {
 		CtBot bot;
 		switch (c.getSubCode()) {
-    		case WELCOME_SIM:
-    			lg.fine("TCP-Verbindung von simuliertem Bot eingegangen");
-    			bot = new CtBotSimTcp(this, c.getFrom(), c.getDataL());
-    			break;
-    		case WELCOME_REAL:
-    			lg.fine("TCP-Verbindung von realem Bot eingegangen");
-    			bot = new RealCtBot(this, c.getFrom(), c.getDataL());
-    			break;
-    		default:
-    			throw new ProtocolException(c.toString());
-    	}
+		case WELCOME_SIM:
+			lg.fine("TCP-Verbindung von simuliertem Bot eingegangen");
+			bot = new CtBotSimTcp(this, c.getFrom(), c.getDataL());
+			break;
+		case WELCOME_REAL:
+			lg.fine("TCP-Verbindung von realem Bot eingegangen");
+			bot = new RealCtBot(this, c.getFrom(), c.getDataL());
+			break;
+		default:
+			throw new ProtocolException(c.toString());
+		}
 
 		return bot;
 	}

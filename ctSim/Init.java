@@ -27,7 +27,7 @@ import ctSim.util.FmtLogger;
 public class Init {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.controller.Init");
-	
+
 	/** Setzt das Design auf Java-System oder Metal für Linux */
 	public static void setLookAndFeel() {
 		// Ubuntu 6.10 + Gnome: Stelle fest, dass c't-Sim absolut bekackt aussieht mit dem Look+Feel
@@ -37,14 +37,14 @@ public class Init {
 		else {
 			try {
 				UIManager.setLookAndFeel(
-					UIManager.getSystemLookAndFeelClassName());
+						UIManager.getSystemLookAndFeelClassName());
 				lg.fine("Verwende Look and Feel des Systems");
 			} catch (Exception e) {
 				useMetalLookAndFeel();
 			}
 		}
 	}
-	
+
 	/** Metal-Design einstellen */
 	private static void useMetalLookAndFeel() {
 		try {

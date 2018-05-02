@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.contestConductor;
@@ -42,7 +42,7 @@ import ctSim.util.Misc;
  * </p>
  *
  * @author Hendrik Krauß (hkr@heise.de)
- * 
+ *
  * @param <T>	Typ
  */
 public class SpreadingTree<T> {
@@ -55,9 +55,9 @@ public class SpreadingTree<T> {
 	/** zuletzt links? */
 	protected boolean lastAdditionLeft = false;
 
-	/** 
+	/**
 	 * Neuer Baum
-	 * 
+	 *
 	 * @param payload	Payload
 	 */
 	protected SpreadingTree(T payload) {
@@ -66,20 +66,20 @@ public class SpreadingTree<T> {
 
 	/**
 	 * Neuer Baum
-	 * 
+	 *
 	 * @param left	links
 	 * @param right	rechts
 	 */
 	protected SpreadingTree(SpreadingTree<T> left, SpreadingTree<T> right) {
 		this.left = left;
 		this.right = right;
-    }
+	}
 
 	/**
 	 * Node hinzufügen
-	 * 
+	 *
 	 * null: undefined
-	 * 
+	 *
 	 * @param node	neuer Node
 	 * @return Baum
 	 */
@@ -94,7 +94,7 @@ public class SpreadingTree<T> {
 			}
 			return this;
 		} else
-			return new SpreadingTree<T>(this, node);
+			return new SpreadingTree<>(this, node);
 	}
 
 	/**
@@ -103,18 +103,18 @@ public class SpreadingTree<T> {
 	 * @return Tree
 	 */
 	public static <T> SpreadingTree<T> buildTree(List<T> c) {
-    	// Muss Zweierpotenz sein
+		// Muss Zweierpotenz sein
 		if (Misc.log2(c.size()) != Math.round(Misc.log2(c.size())))
 			throw new IllegalArgumentException();
-		SpreadingTree<T> rv = new SpreadingTree<T>(c.get(0));
+		SpreadingTree<T> rv = new SpreadingTree<>(c.get(0));
 		for (int i = 1; i < c.size(); i++)
-			rv = rv.add(new SpreadingTree<T>(c.get(i)));
+			rv = rv.add(new SpreadingTree<>(c.get(i)));
 		return rv;
 	}
 
 	/**
 	 * Von außen aufzurufen
-	 * 
+	 *
 	 * @param desiredLevelId
 	 * @return ArrayList
 	 */
@@ -150,6 +150,6 @@ public class SpreadingTree<T> {
 	 */
 	@Override
 	public String toString() {
-	    return payload == null ? "?" : ""+payload;
-    }
+		return payload == null ? "?" : ""+payload;
+	}
 }

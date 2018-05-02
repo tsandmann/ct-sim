@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
@@ -66,19 +66,19 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * Icon-Wrapper, der sich merkt, wo das Icon zuletzt gezeichnet wurde (Koordinaten in Pixeln von der
 	 * oberen linken Ecke der JComponent, in der das Icon gemalt wurde)
 	 */
-    public static class BoundedIcon implements Icon {
-    	/** Icon */
-    	private Icon wrappee;
-    	/** X-Koordinate */
-    	private int lastX;
-    	/** Y-Koordinate */
+	public static class BoundedIcon implements Icon {
+		/** Icon */
+		private Icon wrappee;
+		/** X-Koordinate */
+		private int lastX;
+		/** Y-Koordinate */
 		private int lastY;
 
 		/**
 		 * @param wrappee	Inhalt
 		 */
 		public BoundedIcon(Icon wrappee) {
-    		this.wrappee = wrappee;
+			this.wrappee = wrappee;
 		}
 
 		/**
@@ -91,6 +91,7 @@ public class ClosableTabsPane extends JTabbedPane {
 		/**
 		 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 		 */
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			lastX = x;
 			lastY = y;
@@ -103,7 +104,7 @@ public class ClosableTabsPane extends JTabbedPane {
 		public Icon getWrappee() { return wrappee; }
 		/**
 		 * Wrappee-Icon setzen
-		 * 
+		 *
 		 * @param wrappee
 		 */
 		public void setWrappee(Icon wrappee) { this.wrappee = wrappee; }
@@ -111,15 +112,17 @@ public class ClosableTabsPane extends JTabbedPane {
 		/**
 		 * @see javax.swing.Icon#getIconHeight()
 		 */
+		@Override
 		public int getIconHeight() { return wrappee.getIconHeight(); }
-		
+
 		/**
 		 * @see javax.swing.Icon#getIconWidth()
 		 */
+		@Override
 		public int getIconWidth() { return wrappee.getIconWidth(); }
-    }
+	}
 
-    /*
+	/*
 	 * Implementierungsprinzip: Die Schließen-Icons sind spezielle Icons, die wissen, an welchen
 	 * Koordinaten sie zuletzt gemalt wurden. Die ClosableTabsPane hat zwei Listener:
 	 * 1. einen MouseListener, der das Icon fragt, ob die Koordinaten des Klick-Event innerhalb des
@@ -128,7 +131,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * das Icon austauscht, um den Hover-Effekt (mouseover / mouseout) zu erzielen.
 	 * Die Tooltips der Icons werden ähnlich gemacht.
 	 */
-    /** UID */
+	/** UID */
 	private static final long serialVersionUID = 1030593683059736787L;
 
 	/** Nicht gewrapptes Schließen-Icon für dann, wenn Mauscursor nicht darüber */
@@ -155,7 +158,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * wird nicht tatsächlich geschlossen, Event feuert nur
-	 * 
+	 *
 	 * @param closeIcon
 	 * @param closeIconHover
 	 */
@@ -179,9 +182,9 @@ public class ClosableTabsPane extends JTabbedPane {
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
-        		handleMouseMotionEvent(e);
-        	}
-        });
+				handleMouseMotionEvent(e);
+			}
+		});
 
 		this.rawCloseIcon = closeIcon;
 		this.rawCloseIconHover = closeIconHover;
@@ -189,7 +192,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Behandelt das MouseMotion-Event
-	 * 
+	 *
 	 * @param e	Event
 	 */
 	private void handleMouseMotionEvent(MouseEvent e) {
@@ -200,7 +203,7 @@ public class ClosableTabsPane extends JTabbedPane {
 			Icon ic = getIconAt(i);
 			if (ic instanceof BoundedIcon) {
 				((BoundedIcon)ic).setWrappee(mouseOverIdx == i ?
-					rawCloseIconHover : rawCloseIcon);
+						rawCloseIconHover : rawCloseIcon);
 			}
 		}
 		repaint();
@@ -210,7 +213,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * X/Y relativ zu dieser TabbedPane, d.h. man kann die Koordinaten, wie sie ein MouseEvent liefert,
 	 * direkt weiterverarbeiten. Gibt einen Tab-Index zurück wie die {@code index...()}-Methoden in
 	 * JTabbedPane.
-	 * 
+	 *
 	 * @param x	X-Koordinate
 	 * @param y	Y-Koordinate
 	 * @return Tab-Index
@@ -225,7 +228,7 @@ public class ClosableTabsPane extends JTabbedPane {
 		if (! (ic instanceof BoundedIcon))
 			return -1;
 		return ((BoundedIcon)ic).getLastBounds().contains(x, y) ?
-			idx : -1;
+				idx : -1;
 	}
 
 	/**
@@ -241,7 +244,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Fügt neuen Tab hinzu
-	 * 
+	 *
 	 * @param title		Titel
 	 * @param component	Komponente
 	 */
@@ -251,27 +254,27 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Fügt neuen Tab hinzu
-	 * 
+	 *
 	 * @param title		Titel
 	 * @param component	Komponente
 	 * @param toolTip	Tooltip
 	 */
 	public void addClosableTab(String title, Component component,
-		String toolTip) {
+			String toolTip) {
 
 		addClosableTab(title, component, toolTip, "Tab schließen");
 	}
 
 	/**
 	 * Fügt neuen Tab hinzu
-	 * 
+	 *
 	 * @param title				Titel
 	 * @param component			Komponente
 	 * @param toolTip			Tooltip
 	 * @param closeIconToolTip	Icon-Tooltip
 	 */
 	public void addClosableTab(String title, Component component,
-		String toolTip, String closeIconToolTip) {
+			String toolTip, String closeIconToolTip) {
 
 		// Hier (und nur hier) BoundedIcon erstellen
 		addTab(title, new BoundedIcon(rawCloseIcon), component, toolTip);
@@ -283,17 +286,17 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * Registriert einen Listener, der benachrichtigt wird, wenn der Benutzer ein Tab aus dieser TabsPane
 	 * schließt. Der Parameter, der dem Listener übergeben wird, ist der Index des Tab (einer der in
 	 * {@link JTabbedPane} üblichen Indizes). Verwendungsbeispiel:
-	 * 
+	 *
 	 * <pre>
 	 * tabsPane.addCloseListener(new Closure<Integer>() {
-	 *     public void run(Integer index) { 
+	 *     public void run(Integer index) {
 	 *         Component c = tabsPane.getComponentAt(index);
 	 *         ...
 	 *     }
 	 * });
 	 * </pre>
 	 * </p>
-	 * 
+	 *
 	 * @param li
 	 * @throws NullPointerException	Falls li == {@code null} ist.
 	 */
@@ -307,7 +310,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * Entfernt einen Listener, den man zuvor registriert hat. Siehe {@link #addCloseListener(Runnable1)}.
 	 * Der Aufruf wird stillschweigend ignoriert, falls der Listener schon entfernt ist oder nie
 	 * registriert wurde.
-	 * 
+	 *
 	 * @param li	Listener
 	 */
 	public void removeCloseListener(Runnable1<Integer> li) {

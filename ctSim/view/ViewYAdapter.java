@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view;
@@ -62,7 +62,7 @@ import java.lang.reflect.Proxy;
  * </p>
  *
  * @see View
- * 
+ *
  * @author Hendrik Krauß (hkr@heise.de)
  */
 public class ViewYAdapter {
@@ -78,25 +78,26 @@ public class ViewYAdapter {
 	 * <p>
 	 * Verwendungsbeispiel siehe {@link ViewYAdapter}.
 	 * </p>
-	 * 
+	 *
 	 * @param views	angeschlossene Views
 	 * @return Das neue View
 	 */
 	public static View newInstance(final Iterable<View> views) {
 		return (View) Proxy.newProxyInstance(View.class.getClassLoader(),
 				new Class[] { View.class }, new InvocationHandler() {
-					public Object invoke(Object proxy, Method method,
-							Object[] args) throws Throwable {
-						for (View v : views)
-							method.invoke(v, args);
-						return null;
-					}
-				});
+			@Override
+			public Object invoke(Object proxy, Method method,
+					Object[] args) throws Throwable {
+				for (View v : views)
+					method.invoke(v, args);
+				return null;
+			}
+		});
 	}
 
-	/** 
+	/**
 	 * Wie {@link #newInstance(Iterable)}, kann aber Varargs
-	 * 
+	 *
 	 * @param views	angeschlossene Views
 	 * @return Das neue View
 	 */

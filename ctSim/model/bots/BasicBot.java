@@ -61,13 +61,13 @@ import ctSim.util.Misc;
 public abstract class BasicBot implements Bot {
 	/** Die Connection an der der Bot hängt */
 	private Connection connection;
-	
+
 	/** Hier ist der Controller gespeichert, der den Bot verwaltet */
 	private Controller controller;
 
 	/**
 	 * Liefert die Id eines Bots für die Adressierung der Commands zurück
-	 * 
+	 *
 	 * @return Id des Bots
 	 */
 	public BotID getId() {
@@ -80,7 +80,7 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * Setzt die Id des Bots für die Adressierung der Commands
-	 * 
+	 *
 	 * @param newId	ID des Bots
 	 * @throws ProtocolException	wenn die Id bereits vergeben ist
 	 */
@@ -98,27 +98,27 @@ public abstract class BasicBot implements Bot {
 		lg.info("Setze die Id von Bot " + toString() + " auf " + newId);
 		getConnection().getCmdOutStream().setTo(newId);
 	}
-	
+
 	/**
 	 * Liste
-	 * 
+	 *
 	 * @param <T>	Typ
 	 */
 	public static class BulkList<T> extends ArrayList<T> {
 		/** UID */
 		private static final long serialVersionUID = - 8179783452023605404L;
-		
+
 		/**
 		 * Fügt Elemente hinzu
-		 * 
+		 *
 		 * @param elements	die Elemente
 		 */
 		public void add(T... elements) {
-            for (T e : elements)
-                add(e);
-        }
+			for (T e : elements)
+				add(e);
+		}
 	}
-	
+
 	/** Zählklasse */
 	public static class CountingMap
 	extends HashMap<Class<? extends BasicBot>, Integer> {
@@ -165,41 +165,41 @@ public abstract class BasicBot implements Bot {
 	 * @author Hendrik Krauß (hkr@heise.de)
 	 */
 	public static class BotComponentList extends BulkList<BotComponent<?>> {
-        /** UID */
+		/** UID */
 		private static final long serialVersionUID = - 1331425647710880289L;
 
-        /**
+		/**
 		 * <p>
 		 * Eine Component-Flag-Tabelle gibt an, welche {@link BotComponent}s
 		 * vom TCP (oder USB) lesen sollen, welche schreiben. Funktioniert so:
 		 *
 		 * <pre>
-         * import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
+		 * import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
 		 * import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES;
 		 * ...
 		 *
-         * public class C3PO extends Bot {
-         *     private BotComponentList components = ...;
-         *
-         *     public C3PO() {
-         *         // Alle BotComponents erzeugen
-         *         components.add(
-         *             new Plappermaul(...),
-         *             new Goldbein("links"),
-         *             new Goldbein("rechts"),	// Beide Instanzen werden betroffen
-         *             new Nervensaegmodul(...),
-         *         );
-         *
-         *         // Hier die Component-Flag-Tabelle
-         *         // Setzen, welche BotComponents lesen/schreiben
-         *         components.applyFlagTable(
-         *             _(Plappermaul.class, WRITES),	// schreibt ins TCP
-         *             _(Nervensaegmodul.class, READS, WRITES),	// liest + schreibt
-         *             _(Goldbein.class)	// weder noch
-         *         );
-         *     }
-         * }
-         * </pre>
+		 * public class C3PO extends Bot {
+		 *     private BotComponentList components = ...;
+		 *
+		 *     public C3PO() {
+		 *         // Alle BotComponents erzeugen
+		 *         components.add(
+		 *             new Plappermaul(...),
+		 *             new Goldbein("links"),
+		 *             new Goldbein("rechts"),	// Beide Instanzen werden betroffen
+		 *             new Nervensaegmodul(...),
+		 *         );
+		 *
+		 *         // Hier die Component-Flag-Tabelle
+		 *         // Setzen, welche BotComponents lesen/schreiben
+		 *         components.applyFlagTable(
+		 *             _(Plappermaul.class, WRITES),	// schreibt ins TCP
+		 *             _(Nervensaegmodul.class, READS, WRITES),	// liest + schreibt
+		 *             _(Goldbein.class)	// weder noch
+		 *         );
+		 *     }
+		 * }
+		 * </pre>
 		 *
 		 * Component-Flag-Tabellen sind also eine Verknüpfung dieser Methode, einer Hilfsmethode mit
 		 * Namen Unterstrich (_) und einer kleinen Klasse (CompntWithFlag). Vorteil: eine Superklasse,
@@ -210,19 +210,19 @@ public abstract class BasicBot implements Bot {
 		 * machen.
 		 * </p>
 		 * <p>Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von ihnen allen betroffen.</p>
-		 * 
-         * @param compntFlagTable	Flags
+		 *
+		 * @param compntFlagTable	Flags
 		 */
-        public void applyFlagTable(CompntWithFlag... compntFlagTable) {
-        	for (BotComponent<?> compnt : this) {
-        		for (CompntWithFlag cwf : compntFlagTable) {
-        			if (cwf.compntClass.isAssignableFrom(compnt.getClass()))
-        				compnt.setFlags(cwf.flags);
-    			}
-    		}
-    	}
+		public void applyFlagTable(CompntWithFlag... compntFlagTable) {
+			for (BotComponent<?> compnt : this) {
+				for (CompntWithFlag cwf : compntFlagTable) {
+					if (cwf.compntClass.isAssignableFrom(compnt.getClass()))
+						compnt.setFlags(cwf.flags);
+				}
+			}
+		}
 
-    	/**
+		/**
 		 * <p>Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und Aktuatoren). Die
 		 * Komponente(n), die sich zuständig fühlt (fühlen), können etwas damit tun (typischerweise
 		 * ihren eigenen Wert setzen auf den im Kommando gespeicherten).</p>
@@ -230,27 +230,27 @@ public abstract class BasicBot implements Bot {
 		 * Implementiert das
 		 * <a href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-Responsibility-Pattern</a>.
 		 * </p>
-		 * 
-    	 * @param command	Kommando
-    	 * @throws ProtocolException 
+		 *
+		 * @param command	Kommando
+		 * @throws ProtocolException
 		 */
-    	public void processCommand(Command command) throws ProtocolException {
-    		if (command.getDirection() != Command.DIR_REQUEST) {
-    			throw new ProtocolException("Kommando ist Unfug: Hat als " +
-    					"Richtung nicht 'Anfrage'; ignoriere");
-    		}
-    		for (BotComponent<?> c : this)
-    			c.offerRead(command);
-    		if (! command.hasBeenProcessed())
-    			throw new ProtocolException("Unbekanntes Kommando: " + command);
-    	}
+		public void processCommand(Command command) throws ProtocolException {
+			if (command.getDirection() != Command.DIR_REQUEST) {
+				throw new ProtocolException("Kommando ist Unfug: Hat als " +
+						"Richtung nicht 'Anfrage'; ignoriere");
+			}
+			for (BotComponent<?> c : this)
+				c.offerRead(command);
+			if (! command.hasBeenProcessed())
+				throw new ProtocolException("Unbekanntes Kommando: " + command);
+		}
 
-    	/** View-Update durchführen */
-    	public void updateView() {
-    		for (BotComponent<?> c : BotComponentList.this)
-    			c.updateExternalModel();
-        }
-    }
+		/** View-Update durchführen */
+		public void updateView() {
+			for (BotComponent<?> c : BotComponentList.this)
+				c.updateExternalModel();
+		}
+	}
 
 	/**
 	 * <p>
@@ -270,7 +270,7 @@ public abstract class BasicBot implements Bot {
 		 * @param flags			Connection-Flags
 		 */
 		CompntWithFlag(Class<? extends BotComponent<?>> compntClass,
-		ConnectionFlags[] flags) {
+				ConnectionFlags[] flags) {
 			this.compntClass = compntClass;
 			this.flags = flags;
 		}
@@ -282,13 +282,13 @@ public abstract class BasicBot implements Bot {
 	 * - siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
-	 * 
+	 *
 	 * @param compntClass	Bot-Komponente
 	 * @param flags			Connection-Flags
 	 * @return Component-Flag-Tabelle
 	 */
 	protected static CompntWithFlag createCompnt(
-	Class<? extends BotComponent<?>> compntClass, ConnectionFlags... flags) {
+			Class<? extends BotComponent<?>> compntClass, ConnectionFlags... flags) {
 		return new CompntWithFlag(compntClass, flags);
 	}
 
@@ -321,17 +321,18 @@ public abstract class BasicBot implements Bot {
 		} else {
 			this.name = name;
 		}
-//		// Wenn wir sterben, Instanz-Zahl reduzieren
-//		addDisposeListener(new Runnable() {
-//			public void run() {
-//				numInstances.decrease(BasicBot.this.getClass());
-//			}
-//		});
-    }
+		//		// Wenn wir sterben, Instanz-Zahl reduzieren
+		//		addDisposeListener(new Runnable() {
+		//			public void run() {
+		//				numInstances.decrease(BasicBot.this.getClass());
+		//			}
+		//		});
+	}
 
 	/**
 	 * @see ctSim.model.bots.Bot#addDisposeListener(java.lang.Runnable)
 	 */
+	@Override
 	public void addDisposeListener(Runnable runsWhenAObstDisposes) {
 		if (runsWhenAObstDisposes == null)
 			throw new NullPointerException();
@@ -341,6 +342,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * @see ctSim.model.bots.Bot#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// keine Ausgabe für 3D-Bots, denn zu jedem 3D-Bot gibt es auch einen Sim-Bot
 		if (! (this instanceof ThreeDBot)) {
@@ -350,7 +352,7 @@ public abstract class BasicBot implements Bot {
 				// egal
 			}
 		}
-		
+
 		for (Runnable r : disposeListeners) {
 			r.run();
 		}
@@ -370,10 +372,11 @@ public abstract class BasicBot implements Bot {
 	 * </ul>
 	 * Instance-Numbers fangen immer bei 0 an.
 	 * </p>
-	 * 
+	 *
 	 * @return Nummer
 	 * @see #toString()
 	 */
+	@Override
 	public int getInstanceNumber() {
 		/*
 		 * Bedenke: Wenn einer ne Subklasse instanziiert, die von AliveObstacle abgeleitet ist,
@@ -406,6 +409,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * @see ctSim.model.bots.Bot#getDescription()
 	 */
+	@Override
 	public String getDescription() {
 		return "Unbekannter Bottyp";
 	}
@@ -413,6 +417,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * @see ctSim.model.bots.Bot#accept(ctSim.model.bots.BotBuisitor)
 	 */
+	@Override
 	public void accept(BotBuisitor buisitor) {
 		for (BotComponent<?> c : components)
 			buisitor.visit(c, this);
@@ -421,25 +426,28 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * @see ctSim.model.bots.Bot#updateView()
 	 */
+	@Override
 	public void updateView() throws InterruptedException {
 		components.updateView();
 	}
 
 	/**
 	 * Liefert den Controller zurück, der diesen Bot verwaltet
-	 * 
+	 *
 	 * @return Controller	der Controller
 	 */
+	@Override
 	public Controller getController() {
 		return controller;
 	}
 
 	/**
 	 * Setzt den zuständigen Controller
-	 * 
+	 *
 	 * @param controller
 	 * @throws ProtocolException	wenn die Id dieses Bots im Controller schon belegt ist
 	 */
+	@Override
 	public void setController(Controller controller) throws ProtocolException {
 		this.controller = controller;
 		if (this instanceof CtBotSimTest)
@@ -449,10 +457,10 @@ public abstract class BasicBot implements Bot {
 				throw new ProtocolException("Die Id dieses Bots existiert schon im Controller!");
 		}
 	}
-	
+
 	/**
 	 * Liefert die Connection zurück über die der Bot zu erreichen ist
-	 * 
+	 *
 	 * @return connection
 	 */
 	public Connection getConnection() {
@@ -461,7 +469,7 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * Setzt die Connection über die der Bot zu erreichen ist
-	 * 
+	 *
 	 * @param connection
 	 */
 	public void setConnection(Connection connection) {

@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.contestConductor;
@@ -46,26 +46,26 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	 */
 	@Override
 	protected DatabaseAdapter getDbFromChildClass() {
-	    return db;
-    }
+		return db;
+	}
 
 	/**
 	 * Vorsicht: Wenn hier Exceptions auftreten, verschluckt JUnit diese und meldet nur unverständlich
 	 * "No runnable methods". Im Zweifel main()-Methode schreiben, die das hier aufruft, und als
 	 * Applikation (nicht Unit-Test) laufen lassen
 	 */
-	
+
 	/** Tests */
 	public TournamentPlannerTest() {
 		Main.dependencies.reRegisterImplementation(ContestDatabase.class,
-			TestDatabase.class);
+				TestDatabase.class);
 		db = Main.dependencies.get(PlannerToDatabaseAdapter.class);
 		testee = Main.dependencies.get(TournamentPlanner.class);
-    }
+	}
 
 	/**
 	 * Tests
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test(expected=IllegalStateException.class)
@@ -80,7 +80,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test(expected=IllegalStateException.class)
@@ -93,7 +93,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test(expected=IllegalStateException.class)
@@ -107,7 +107,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -132,9 +132,9 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 		// keine doppelten Spiele?
 		rs = db.execSql("select * from ( " +
-			"select level, game, count(*) as c " +
-			"from ctsim_game group by level, game ) as x " +
-			"where c > 1");
+				"select level, game, count(*) as c " +
+				"from ctsim_game group by level, game ) as x " +
+				"where c > 1");
 		if (rs.next()) {
 			fail(String.format("Mehrere Spiele haben Level %d Game %d. " +
 					"(Level-Game-Kombinationen sollten immer eindeutig sein)",
@@ -147,13 +147,13 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 */
 	@Test(expected=IllegalStateException.class)
 	public void mainRoundWithNoPrelim()
-	throws SQLException, TournamentPlanException {
+			throws SQLException, TournamentPlanException {
 		db.execSql("delete from ctsim_level");
 		makeLevel(-1);
 		makeLevel(1);
@@ -164,13 +164,13 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 */
 	@Test(expected=TournamentPlanException.class)
 	public void mainRoundWithIncompletePrelim()
-	throws SQLException, TournamentPlanException {
+			throws SQLException, TournamentPlanException {
 		db.execSql("delete from ctsim_level");
 		makeLevel(-1);
 		makeLevel(1);
@@ -184,13 +184,13 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 */
 	@Test(expected=TournamentPlanException.class)
 	public void mainRoundWithMissingWinners()
-	throws SQLException, TournamentPlanException {
+			throws SQLException, TournamentPlanException {
 		db.execSql("delete from ctsim_level");
 		makeLevel(-1);
 		makeLevel(1);
@@ -204,13 +204,13 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 */
 	@Test(expected=IllegalStateException.class)
 	public void mainRoundWithMissingLevels()
-	throws SQLException, TournamentPlanException {
+			throws SQLException, TournamentPlanException {
 		db.execSql("delete from ctsim_game");
 		makePrelimGame(1, GameState.GAME_OVER, 42, 42);
 		makePrelimGame(2, GameState.GAME_OVER, 42, 42);
@@ -219,23 +219,23 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		testee.planMainRound();
 	}
 
-	/** 
+	/**
 	 * Prüft 1. ob die playerIds ungleich 0 sind und 2. ob alle playerIds unterschiedlich sind. (Es wäre
 	 * falsch, wenn der Planner einen Bot für zwei Spiele vorsehen würde.)
-	 * 
+	 *
 	 * @param playerIdField	playerID
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	private void checkPlayerId(String playerIdField) throws SQLException {
 		// zur Erinnerung: count() und count(distinct) zählen NULL nicht mit
 		ResultSet rs = db.execSql("select count(" + playerIdField + ") " +
-			"from `ctsim_game` where level != -1");
+				"from `ctsim_game` where level != -1");
 		rs.next();
 		int playerIdCount = rs.getInt(1);
 		assertNotSame(0, playerIdCount);
 
 		rs = db.execSql("select count(distinct "+playerIdField+") from " +
-			"`ctsim_game` where level != -1");
+				"`ctsim_game` where level != -1");
 		rs.next();
 		int playerIdDistinctCount = rs.getInt(1);
 
@@ -244,7 +244,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Tests
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 */
@@ -294,9 +294,9 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 		// sind überall scheduled-Zeiten gesetzt?
 		assertFalse("Ein oder mehrere Spiele haben scheduled == NULL",
-			db.execSql(
-				"select * from ctsim_game where level != -1 " +
-				"and scheduled is NULL").next());
+				db.execSql(
+						"select * from ctsim_game where level != -1 " +
+						"and scheduled is NULL").next());
 
 		// sind scheduled-Zeiten im richtigen Intervall?
 		for (int i = 1; i <= 32; i *= 2)
@@ -305,34 +305,34 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Testmethode
-	 * 
+	 *
 	 * @param levelId
 	 * @param gameIntervalExpected
 	 * @throws SQLException
 	 */
 	private void assertScheduledRightInterval(int levelId,
-		long gameIntervalExpected)
-	throws SQLException {
+			long gameIntervalExpected)
+					throws SQLException {
 		// 2x dasselbe; previous hinkt 1 hinterher
 		ResultSet rs = db.execSql("select * from ctsim_game " +
-			"where level = ? order by scheduled", levelId);
+				"where level = ? order by scheduled", levelId);
 		rs.next();
 		int prevLevel = rs.getInt("level");
 		int prevGame = rs.getInt("game");
 		long prevTime = rs.getTimestamp("scheduled").getTime();
 		while (rs.next()) {
 			long gameIntervalActual = (rs.getTimestamp("scheduled").getTime()
-				- prevTime) / 1000;
+					- prevTime) / 1000;
 			assertEquals(
-				"Level " + prevLevel +
-				" Game " + prevGame +
-				": falscher zeitlicher Abstand zu " +
-				"Level " + rs.getInt("level") +
-				" Game " + rs.getInt("game"),
-				gameIntervalExpected, gameIntervalActual);
+					"Level " + prevLevel +
+					" Game " + prevGame +
+					": falscher zeitlicher Abstand zu " +
+					"Level " + rs.getInt("level") +
+					" Game " + rs.getInt("game"),
+					gameIntervalExpected, gameIntervalActual);
 			prevLevel = rs.getInt("level");
 			prevGame = rs.getInt("game");
 			prevTime = rs.getTimestamp("scheduled").getTime();
 		}
-    }
+	}
 }

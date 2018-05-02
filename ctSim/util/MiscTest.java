@@ -1,29 +1,34 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
 
+import static ctSim.util.Misc.intersperse;
+import static ctSim.util.Misc.join;
+import static ctSim.util.Misc.startsWith;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 
 import org.junit.Test;
-import static ctSim.util.Misc.*;
-import static org.junit.Assert.*;
 
 /** Test-Klasse */
 public class MiscTest {
@@ -79,7 +84,7 @@ public class MiscTest {
 		str = intersperse("u", "a", "b", "c", "d", "e", "f");
 		assertEquals(11, str.length);
 		assertTrue(Arrays.equals(str, new String[] {"a", "u", "b", "u", "c",
-			"u", "d", "u", "e", "u", "f"}));
+				"u", "d", "u", "e", "u", "f"}));
 
 		str = intersperse("f", null, null);
 		assertEquals(3, str.length);

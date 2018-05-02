@@ -57,17 +57,17 @@ import ctSim.util.Runnable1;
  * @author Hendrik Krauß (hkr@heise.de)
  */
 public class MainWindow extends JFrame implements ctSim.view.View {
-    /** UID */
+	/** UID */
 	private static final long serialVersionUID = 3689470428407624063L;
-    /** Logger */
-    final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui");
+	/** Logger */
+	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui");
 
 	//////////////////////////////////////////////////////////////////////
 	// GUI-Components:
-	
-    /** Statusbar */
-    private StatusBar statusBar;
-    /** Split-Pane */
+
+	/** Statusbar */
+	private StatusBar statusBar;
+	/** Split-Pane */
 	private JSplitPane split;
 
 	/**
@@ -96,7 +96,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	private final ClosableTabsPane botTabs;
 
 	//////////////////////////////////////////////////////////////////////
-	
+
 	/** Welt */
 	private World world;
 	/** Welt-Viewer */
@@ -106,26 +106,26 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Main-Fenster
-	 * 
+	 *
 	 * @param controller	Controller für das Fenster
 	 */
 	public MainWindow(final Controller controller) {
 		super("c't-Sim " + Main.VERSION);
 
-    	/*
+		/*
 		 * Riesenspaß: Swing (also auch unsere GUI) ist "lightweight", Java3D ist jedoch "heavyweight".
 		 * Daher erscheint die Java3D-Anzeige immer _vor_ allen GUI-Komponenten: Wenn z.B. ein Menü
 		 * aufgeklappt wird, welches die 3D-Anzeige überlappt, _sollte_ natürlich das Menü im Vordergrund
 		 * sein, stattdessen _ist_ aber die 3D-Anzeige im Vordergrund (d.h. das Menü wird dort
 		 * abgeschnitten, wo die 3D-Anzeige beginnt). - Abhilfe gibt es zumindest für Menüs und Tooltips:
-		 * 
+		 *
 		 * Näheres unter:
 		 * <a href="http://java3d.j3d.org/faq/swing.html">Swing FAQ</a>
 		 * <a href="http://java3d.j3d.org/tutorials/quick_fix/swing.html">Swing Quick Fix</a>
 		 * <a href="http://java.sun.com/products/jfc/tsc/articles/mixing/index.html">Mixing</a>
 		 */
-    	JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-    	ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -138,14 +138,15 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		});
 
 		menuBar = new MainWinMenuBar(controller, this);
-        setJMenuBar(menuBar);
+		setJMenuBar(menuBar);
 		add(menuBar.getToolBar(), BorderLayout.NORTH);
 		add(buildStatusBar(), BorderLayout.SOUTH);
 
 		botTabs = new ClosableTabsPane(Config.getIcon("schließen"),
-			Config.getIcon("schließen-hover"));
+				Config.getIcon("schließen-hover"));
 		// Listener wenn jemand auf dem Tab das Schließen-Icon klickt
 		botTabs.addCloseListener(new Runnable1<Integer>() {
+			@Override
 			public void run(Integer index) {
 				BotViewer bv = (BotViewer)botTabs.getComponentAt(index);
 				bv.bot.dispose();
@@ -155,7 +156,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		botTabs.setMinimumSize(new Dimension(230, getHeight()));
 
 		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-			botTabs, buildWorldAndConsole());
+				botTabs, buildWorldAndConsole());
 		split.setOneTouchExpandable(true);
 
 		add(split, BorderLayout.CENTER);
@@ -167,28 +168,28 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Baut den LogViewer
-	 * 
+	 *
 	 * @return LogViewer
 	 */
 	private ConsoleComponent buildLogViewer() {
-    	ConsoleComponent rv = new ConsoleComponent();
-    	Debug.registerDebugWindow(rv);	//$$ Legacy: Debug-Klasse
-    	// Wir melden uns als Handler für den Root-Logger an
-    	Handler h = rv.createLoggingHandler();
-    	String logLevel = Config.getValue("LogLevel");
-    	h.setLevel(Level.parse(logLevel));
-    	FmtLogger.getLogger("").addHandler(h);
-    	return rv;
-    }
+		ConsoleComponent rv = new ConsoleComponent();
+		Debug.registerDebugWindow(rv);	//$$ Legacy: Debug-Klasse
+		// Wir melden uns als Handler für den Root-Logger an
+		Handler h = rv.createLoggingHandler();
+		String logLevel = Config.getValue("LogLevel");
+		h.setLevel(Level.parse(logLevel));
+		FmtLogger.getLogger("").addHandler(h);
+		return rv;
+	}
 
 	/**
 	 * Baut Welt und LogViwer
-	 * 
+	 *
 	 * @return Split-Pane
 	 */
 	private JSplitPane buildWorldAndConsole() {
 		JSplitPane rv = new JSplitPane(
-			JSplitPane.VERTICAL_SPLIT, worldViewer, buildLogViewer());
+				JSplitPane.VERTICAL_SPLIT, worldViewer, buildLogViewer());
 		rv.setResizeWeight(1);
 		rv.setOneTouchExpandable(true);
 		return rv;
@@ -196,7 +197,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Baut die Statuszeile
-	 * 
+	 *
 	 * @return Statuszeile
 	 */
 	private StatusBar buildStatusBar() {
@@ -207,25 +208,27 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	/** Screenshot-Handler */
 	public void onScreenshot() {
 		try {
-	        ImageIO.write(worldViewer.getScreenshot(), "png",
-	        	File.createTempFile("screenshot", ".png"));
-        } catch (IOException e) {
-	        e.printStackTrace();
-        }
+			ImageIO.write(worldViewer.getScreenshot(), "png",
+					File.createTempFile("screenshot", ".png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Vom Controller aufzurufen, wenn sich die Welt ändert; schließt die alte Welt und zeigt die Neue an.
-	 * 
+	 *
 	 * @param w	die Welt
 	 */
+	@Override
 	public void onWorldOpened(final World w) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				closeWorld();
 				world = w;
 				worldViewer.show(world);
-//				validate();
+				//				validate();
 			}
 		});
 	}
@@ -244,7 +247,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Schreibt den Parcours in eine Datei
-	 * 
+	 *
 	 * @param file	Ausgabedatei
 	 */
 	protected void writeParcoursToFile(File file) {
@@ -272,25 +275,28 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Aktualisiert die GUI
-	 * 
+	 *
 	 * @param time	die Zeit, die zur Simulatorzeit hinzugezählt wird
 	 */
+	@Override
 	public void onSimulationStep(final long time) {
 		statusBar.updateTime(time);
 	}
 
-	/** 
+	/**
 	 * Fügt einen neuen Bot hinzu
-	 * 
+	 *
 	 * @param bot	der neue Bot
 	 * */
+	@Override
 	public void onBotAdded(final Bot bot) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				String tabTitle = bot.toString();
 				final JComponent tabContent = new BotViewer(bot);
 				String tabTitleTooltip = bot.getDescription()+" (Klasse "+
-					bot.getClass().getSimpleName()+")";
+						bot.getClass().getSimpleName()+")";
 				String keyinfo = " (";
 				if (System.getProperty("os.name").toLowerCase().startsWith("linux")) {
 					keyinfo += "Strg";
@@ -301,15 +307,16 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 				}
 				keyinfo += " + e)";
 				String tabIconTooltip = (bot instanceof ThreeDBot
-					? "Bot löschen" + keyinfo 
-					: "Verbindung zu Bot beenden" + keyinfo);
+						? "Bot löschen" + keyinfo
+								: "Verbindung zu Bot beenden" + keyinfo);
 				botTabs.addClosableTab(
-					tabTitle,
-					tabContent,
-					tabTitleTooltip,
-					tabIconTooltip);
+						tabTitle,
+						tabContent,
+						tabTitleTooltip,
+						tabIconTooltip);
 				// Listener für "Wenn Bot stirbt, Tab entfernen"
 				bot.addDisposeListener(new Runnable() {
+					@Override
 					public void run() {
 						removeBotTab(bot);
 						updateLayout();
@@ -326,11 +333,12 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Entfernt einen Bot
-	 * 
+	 *
 	 * @param bot	Bot
 	 */
 	private void removeBotTab(final Bot bot) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				for (int i = 0; i < botTabs.getTabCount(); i++) {
 					BotViewer bv = (BotViewer)botTabs.getComponentAt(i);
@@ -350,13 +358,15 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	/**
 	 * @see ctSim.view.View#onApplicationInited()
 	 */
+	@Override
 	public void onApplicationInited() {
 		// No-op
-    }
+	}
 
 	/**
 	 * @see ctSim.view.View#onSimulationFinished()
 	 */
+	@Override
 	public void onSimulationFinished() {
 		// No-op
 	}
@@ -364,21 +374,23 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	/**
 	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
 	 */
-	public void onJudgeSet(final Judge judge) {	
-//		SwingUtilities.invokeLater(new Runnable() {
-//			public void run() {
-//				menuBar.onJudgeSet(judge);
-//			}
-//		});
-    }
-	
+	@Override
+	public void onJudgeSet(final Judge judge) {
+		//		SwingUtilities.invokeLater(new Runnable() {
+		//			public void run() {
+		//				menuBar.onJudgeSet(judge);
+		//			}
+		//		});
+	}
+
 	/**
 	 * Veranlasst einen Reset aller Bots
-	 * 
+	 *
 	 * Die Bots werden über ihren BotViewer gefunden. TCP-Bots (simuliert und real) erhalten das
 	 * Reset-Signal per RC5-Code. Anschließend werden alle Bots in der Welt zurück auf ihre Startplätze
-	 * gesetzt. 
+	 * gesetzt.
 	 */
+	@Override
 	public void onResetAllBots() {
 		/* Bots das Reset-Signal schicken */
 		for (int i=0; i<botTabs.getTabCount(); i++) {
@@ -390,9 +402,9 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 				/* Sim-Bots das Reset-Signal senden */
 				Bot b = ((ThreeDBot) bot).getSimBot();
 				if (b instanceof CtBotSimTcp) {
-				((CtBotSimTcp) b).sendRC5Code("CH*P/P");
+					((CtBotSimTcp) b).sendRC5Code("CH*P/P");
 				}
-				
+
 			} else if (bot instanceof RealCtBot) {
 				/* Realen Bots das Reset-Signal senden */
 				((RealCtBot) bot).sendRC5Code("CH*P/P");

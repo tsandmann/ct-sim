@@ -50,7 +50,7 @@ public abstract class Judge {
 
 	/**
 	 * Erzeuge neuen Judge
-	 * 
+	 *
 	 * @param ctrl	der DefaultController
 	 */
 	public Judge(DefaultController ctrl) {
@@ -58,9 +58,9 @@ public abstract class Judge {
 		this.controller = ctrl;
 	}
 
-	/** 
+	/**
 	 * Gibt an, ob es erlaubt ist, Bots zum Spiel hinzuzufügen.
-	 * 
+	 *
 	 * @return true/false
 	 */
 	public boolean isAddingBotsAllowed() {
@@ -80,15 +80,15 @@ public abstract class Judge {
 
 	/**
 	 * Setzt eine Welt
-	 * 
+	 *
 	 * @param w	Welt
 	 */
 	public void setWorld(World w) {
-    	time = startTime = w.getSimTimeInMs();
-    }
+		time = startTime = w.getSimTimeInMs();
+	}
 
 	/** Stellt fest, ob die momentane Simulation beendet werden soll
-	 * 
+	 *
 	 * @param t	Zeit
 	 * @return <code>true</code>, falls die Simulation beendet werden soll; typischerweise, weil ein
 	 * 			Bot das Ziel erreicht hat. <code>false</code>, falls die Simulation fortgesetzt werden
@@ -102,9 +102,9 @@ public abstract class Judge {
 		return rv;
 	}
 
-	/** 
+	/**
 	 * Hier kommen die eigentlichen Schiedsrichteraufgaben rein.
-	 *  
+	 *
 	 * @return true / false
 	 */
 	protected abstract boolean isSimulationFinished();
@@ -116,8 +116,8 @@ public abstract class Judge {
 		this.startTime = 0;
 	}
 
-	/** 
-	 * @return Liefert die Simulatorzeit [ms] seit Beginn des aktuellen Spiels. 
+	/**
+	 * @return Liefert die Simulatorzeit [ms] seit Beginn des aktuellen Spiels.
 	 */
 	public long getTime() {
 		return this.time - this.startTime;

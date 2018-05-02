@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util.xml;
@@ -89,7 +89,7 @@ import ctSim.util.Decoratoror;
  * </p>
  *
  * siehe javax.xml.xpath
- * 
+ *
  * @author Hendrik Krauß (hkr@heise.de)
  */
 public class XmlDocument {
@@ -122,7 +122,7 @@ public class XmlDocument {
 	 * 				In dem abwegigen Fall, dass die Java-Plattform keinen validierenden Parser auftreiben kann.
 	 */
 	public static QueryableDocument parse(File fileToParse, String baseDir)
-	throws SAXException, IOException, ParserConfigurationException {
+			throws SAXException, IOException, ParserConfigurationException {
 		return parse(new FileInputStream(fileToParse), baseDir);
 	}
 
@@ -135,12 +135,12 @@ public class XmlDocument {
 	 * 				Die XML-Datei, die geparst und validiert werden soll,
 	 * 				z.B. <code>new File("sachen/gemuese/gurken.xml")</code>.
 	 * @return Das Dokument
-	 * @throws SAXException 
-	 * @throws IOException 
-	 * @throws ParserConfigurationException 
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
 	 */
 	public static QueryableDocument parse(File fileToParse)
-	throws SAXException, IOException, ParserConfigurationException {
+			throws SAXException, IOException, ParserConfigurationException {
 		return parse(fileToParse, fileToParse.getParent() + "/");
 	}
 
@@ -151,29 +151,29 @@ public class XmlDocument {
 	 * 				Name und ggf. Pfad der XML-Datei, die geparst und validiert werden soll,
 	 * 				z.B. "sachen/gemuese/gurken.xml".
 	 * @return Das Dokument
-	 * @throws SAXException 
-	 * @throws IOException 
-	 * @throws ParserConfigurationException 
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
 	 */
 	public static QueryableDocument parse(String fileToParse)
-		throws SAXException, IOException, ParserConfigurationException {
+			throws SAXException, IOException, ParserConfigurationException {
 		return parse(new File(fileToParse));
 	}
 
 	/**
 	 * Wie {@link #parse(java.io.File, java.lang.String)}, liest aber die Datei aus dem übergebenen
 	 * InputStream.
-	 * 
-	 * @param documentStream 
-	 * @param baseDir 
+	 *
+	 * @param documentStream
+	 * @param baseDir
 	 * @return Das Dokument
-	 * @throws SAXException 
-	 * @throws IOException 
-	 * @throws ParserConfigurationException 
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
 	 */
 	public static QueryableDocument parse(
-		InputStream documentStream, String baseDir)
-		throws SAXException, IOException, ParserConfigurationException {
+			InputStream documentStream, String baseDir)
+					throws SAXException, IOException, ParserConfigurationException {
 		// Irrsinnige Bürokratie ...
 		DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
 		f.setValidating(true);	// Soll gegen DTD validieren
@@ -184,25 +184,28 @@ public class XmlDocument {
 		 * auf stderr aus, man solle doch einen ErrorHandler setzen.
 		 */
 		parser.setErrorHandler(new ErrorHandler() {
+			@Override
 			public void error(SAXParseException exception)
-			throws SAXException {
+					throws SAXException {
 				throw exception;
 			}
 
+			@Override
 			public void fatalError(SAXParseException exception)
-			throws SAXException {
+					throws SAXException {
 				throw exception;
 			}
 
+			@Override
 			public void warning(SAXParseException exception)
-			throws SAXException {
+					throws SAXException {
 				throw exception;
 			}});
 		Document document = parser.parse(documentStream, baseDir);
 		try {
 			// document kann nicht null sein
 			return Decoratoror.createDecorated(QueryableDocument.class,
-				new QueryableMixin(document), document);
+					new QueryableMixin(document), document);
 		} catch (NoSuchMethodException e) {
 			// "Kann nicht passieren"
 			throw new AssertionError(e);
@@ -218,7 +221,7 @@ public class XmlDocument {
 			if (baseNode == null)
 				return null;
 			return Decoratoror.createDecorated(QueryableNode.class,
-				new QueryableMixin(baseNode), baseNode);
+					new QueryableMixin(baseNode), baseNode);
 		} catch (NoSuchMethodException e) {
 			// "Kann nicht passieren"
 			throw new AssertionError(e);
@@ -243,55 +246,60 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNodeList(java.lang.String)
 		 */
+		@Override
 		public IterableNodeList getNodeList(String xPathExpression)
-		throws XPathExpressionException {
+				throws XPathExpressionException {
 			return new IterableNodeList((NodeList)evaluator.evaluate(
-				xPathExpression, cocktail, XPathConstants.NODESET));
+					xPathExpression, cocktail, XPathConstants.NODESET));
 		}
 
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNode(java.lang.String)
 		 */
+		@Override
 		public QueryableNode getNode(String xPathExpression)
-		throws XPathExpressionException {
+				throws XPathExpressionException {
 			return createQueryableNode((Node)evaluator.evaluate(
-				xPathExpression, cocktail, XPathConstants.NODE));
+					xPathExpression, cocktail, XPathConstants.NODE));
 		}
 
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getString(java.lang.String)
 		 */
+		@Override
 		public String getString(String xPathExpression)
-		throws XPathExpressionException {
+				throws XPathExpressionException {
 			return (String)evaluator.evaluate(xPathExpression, cocktail,
-				XPathConstants.STRING);
+					XPathConstants.STRING);
 		}
 
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNumber(java.lang.String)
 		 */
+		@Override
 		public Double getNumber(String xPathExpression)
-		throws XPathExpressionException {
+				throws XPathExpressionException {
 			/*
 			 * Cast nach Double (nicht Number) - eine XPath-Number mappt in Java auf einen Double,
 			 * siehe <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/xml/xpath/XPathConstants.html#NUMBER"></a>
 			 */
 			return (Double)evaluator.evaluate(xPathExpression, cocktail,
-				XPathConstants.NUMBER);
+					XPathConstants.NUMBER);
 		}
 
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getBoolean(java.lang.String)
 		 */
+		@Override
 		public Boolean getBoolean(String xPathExpression)
-		throws XPathExpressionException {
+				throws XPathExpressionException {
 			return (Boolean)evaluator.evaluate(xPathExpression, cocktail,
-				XPathConstants.BOOLEAN);
+					XPathConstants.BOOLEAN);
 		}
 
 		/**
 		 * Knoten vorhanden?
-		 * 
+		 *
 		 * @param <T>
 		 * @param xPathExpression
 		 * @param value
@@ -299,7 +307,7 @@ public class XmlDocument {
 		 * @throws XPathExpressionException
 		 */
 		private <T> T nullIfNotExists(String xPathExpression, T value)
-		throws XPathExpressionException {
+				throws XPathExpressionException {
 			// War der Knoten nicht da oder war er leer?
 			return getNode(xPathExpression) == null ? null : value;
 		}
@@ -307,8 +315,9 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getStringOrNull(java.lang.String)
 		 */
+		@Override
 		public String getStringOrNull(String xPathExpression)
-		throws XPathExpressionException {
+				throws XPathExpressionException {
 			String rv = getString(xPathExpression);
 			if ("".equals(rv))
 				return nullIfNotExists(xPathExpression, rv);
@@ -319,8 +328,9 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNumberOrNull(java.lang.String)
 		 */
+		@Override
 		public Number getNumberOrNull(String xPathExpression)
-		throws XPathExpressionException {
+				throws XPathExpressionException {
 			Double rv = getNumber(xPathExpression);
 			if (rv.isNaN())
 				return nullIfNotExists(xPathExpression, rv);
@@ -331,8 +341,9 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getBooleanOrNull(java.lang.String)
 		 */
+		@Override
 		public Boolean getBooleanOrNull(String xPathExpression)
-		throws XPathExpressionException {
+				throws XPathExpressionException {
 			Boolean rv = getBoolean(xPathExpression);
 			if (rv == false)
 				return nullIfNotExists(xPathExpression, rv);
@@ -353,17 +364,17 @@ public class XmlDocument {
 		 * <strong>Beachten:</strong> Knoten müssen nicht Elemente sein; Attribute, CData-Abschnitte
 		 * usw. sind auch Knoten. Siehe {@link Node}.
 		 * </p>
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Die selektierten Knoten als {@link NodeList}, wie sie die Java-Plattform implementiert,
 		 * 			die aber auch {@link Iterable} ist.
 		 * 			<code>for (Node n : document.getNodeList(...))</code> ist also möglich. Gibt es im
 		 * 			Dokument keine Knoten, die von dem XPath-Ausdruck selektiert werden, wird eine NodeList
 		 * 			zurückgegeben, die keine Knoten enthält.
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 */
 		public IterableNodeList getNodeList(String xPathExpression)
-		throws XPathExpressionException;
+				throws XPathExpressionException;
 
 		/**
 		 * <p>
@@ -375,13 +386,13 @@ public class XmlDocument {
 		 * <strong>Beachten:</strong> Knoten müssen nicht Elemente sein; Attribute, CData-Abschnitte usw.
 		 * sind auch Knoten. Siehe {@link Node}.
 		 * </p>
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Knoten
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 */
 		public QueryableNode getNode(String xPathExpression)
-		throws XPathExpressionException;
+				throws XPathExpressionException;
 
 		/**
 		 * <p>
@@ -403,81 +414,81 @@ public class XmlDocument {
 		 * Details zum Thema "string-value":
 		 * siehe <a href="http://www.w3.org/TR/xpath.html#data-model">XPath-Spezifikation Abschnitt 5</a>.
 		 * </p>
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return String
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 *
 		 * @see #getStringOrNull(String)
 		 */
 		public String getString(String xPathExpression)
-		throws XPathExpressionException;
+				throws XPathExpressionException;
 
 		/**
 		 * Selektiert Knoten, konvertiert sie in einen String (siehe {@link #getString(String)}) und
 		 * konvertiert den String in einen Double. Falls der übergebene XPath-Ausdruck keine Knoten
 		 * selektiert, wird {@code NaN} zurückgeliefert (d.h. {@code getNumber(...).isNaN() == true}).
 		 * <a href="http://www.w3.org/TR/xpath#function-number">Details zur Konvertierung in eine Zahl</a>
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Zahl
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 *
 		 * @see #getNumberOrNull(String)
 		 */
 		public Double getNumber(String xPathExpression)
-		throws XPathExpressionException;
+				throws XPathExpressionException;
 
 		/**
 		 * Selektiert Knoten, konvertiert sie in einen String (siehe {@link #getString(String)}) und
 		 * konvertiert den String in einen Boolean. Falls der übergebene XPath-Ausdruck keine Knoten
 		 * selektiert, wird {@code false} zurückgeliefert.
 		 * <a href="http://www.w3.org/TR/xpath#function-boolean">Details zur Konvertierung in einen Boolean</a>
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Boolean
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 *
 		 * @see #getBooleanOrNull(String)
 		 */
 		public Boolean getBoolean(String xPathExpression)
-		throws XPathExpressionException;
+				throws XPathExpressionException;
 
 		/**
 		 * Wie {@link #getString(String) getString()}, aber falls der übergebene XPath-Ausdruck keine
 		 * Knoten selektiert, wird {@code null} zurückgeliefert. So kann man auseinanderhalten, ob der
 		 * Knoten nicht existiert ({@code null}) oder ob er existiert, aber keinen Text enthält ("").
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return String / null
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 */
 		public String getStringOrNull(String xPathExpression)
-		throws XPathExpressionException;
+				throws XPathExpressionException;
 
 		/**
 		 * Wie {@link #getNumber(String) getNumber()}, aber falls der übergebene XPath-Ausdruck keine
 		 * Knoten selektiert, wird {@code null} zurückgeliefert. So kann man auseinanderhalten, ob der
 		 * Knoten nicht existiert ({@code null}) oder ob er existiert, aber etwas anderes als eine Zahl
 		 * enthält.
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Zahl / null
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 */
 		public Number getNumberOrNull(String xPathExpression)
-		throws XPathExpressionException;
+				throws XPathExpressionException;
 
 		/**
 		 * Wie {@link #getBoolean(String) getBoolean()}, aber falls der übergebene XPath-Ausdruck keine
 		 * Knoten selektiert, wird {@code null} zurückgeliefert. So kann man auseinander halten, ob der
 		 * Knoten nicht existiert ({@code null}) oder ob er wirklich da ist und {@code false} enthält.
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Boolean / null
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 */
 		public Boolean getBooleanOrNull(String xPathExpression)
-		throws XPathExpressionException;
+				throws XPathExpressionException;
 	}
 }

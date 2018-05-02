@@ -40,7 +40,7 @@ import ctSim.util.Misc;
  * Repräsentiert einen Parcours für die Bots Wird zum Laden eines solchen
  * benötigt. Des Weiteren stehen hier auch Informationen über Start- und
  * Zielpunkte der Bots.
- * 
+ *
  * @author Benjamin Benz (bbe@heise.de)
  */
 public class Parcours {
@@ -51,7 +51,7 @@ public class Parcours {
 	 * <p>
 	 * Breite einer Gittereinheit (eines Blocks) in Meter. Da die Blöcke
 	 * immer quadratisch sind, ist die Breite auch die Höhe.
-	 * 
+	 *
 	 * Idee: ct-Bot ist 12cm breit, wir setzen das Gitter auf 24cm, damit der
 	 * Bot auf dem engstmöglichen Durchgang (1 Block breit) möglichst
 	 * viel Spielraum hat nach links und rechts (oben und unten), aber dass
@@ -98,20 +98,20 @@ public class Parcours {
 	private List<Vector2d> finishPositions = Misc.newList();
 
 	/** Liste mit allen Abgründen */
-	private Vector<Vector2d> holes = new Vector<Vector2d>();
+	private Vector<Vector2d> holes = new Vector<>();
 
 	/**
 	 * Referenz auf eine Rohversion der Karte des Parcours (wie aus dem XML
 	 * gelesen). Format siehe {@link ParcoursLoader}.
 	 */
 	private int[][] parcoursMap;
-	
+
 	/** Parcoursloder */
 	final private ParcoursLoader parcoursLoader;
 
 	/**
 	 * Erzeugt einen neuen, leeren Parcours
-	 * 
+	 *
 	 * @param parcoursLoader ParcoursLoader, der den Parcours erzeugt hat
 	 */
 	public Parcours(ParcoursLoader parcoursLoader) {
@@ -129,7 +129,7 @@ public class Parcours {
 		lightBG = new BranchGroup();
 		lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		lightBG.setPickable(true);
-		
+
 		// Die Branchgroup für die BPS-Landmarken
 		bpsBG = new BranchGroup();
 		bpsBG.setPickable(true);
@@ -146,7 +146,7 @@ public class Parcours {
 
 	/**
 	 * Setzt ein Startfeld auf belegt
-	 * 
+	 *
 	 * @param bot	Zeiger auf Bot, der das Startfeld belegt
 	 */
 	public void setStartFieldUsed(Bot bot) {
@@ -160,7 +160,7 @@ public class Parcours {
 
 	/**
 	 * Gibt ein Startfeld wieder frei
-	 * 
+	 *
 	 * @param bot	Zeiger auf Bot, der auf dem Startfeld steht oder gestartet ist
 	 */
 	public void setStartFieldUnused(Bot bot) {
@@ -181,7 +181,7 @@ public class Parcours {
 
 	/**
 	 * Setzt die Parcoursbreite in Gittereinheiten
-	 * 
+	 *
 	 * @param dimX1	Breite in Gittereinheiten
 	 */
 	public void setDimX(int dimX1) {
@@ -211,7 +211,7 @@ public class Parcours {
 
 	/**
 	 * Setzt die Parcourshöhe in Gittereinheiten
-	 * 
+	 *
 	 * @param dimY1	Höhe in Gittereinheiten
 	 */
 	public void setDimY(int dimY1) {
@@ -220,7 +220,7 @@ public class Parcours {
 
 	/**
 	 * Fügt ein Hindernis ein
-	 * 
+	 *
 	 * @param obstacle	Das Hindernis
 	 * @param x			X-Achse im Parcours-Gitter
 	 * @param y			Y-Achse im Parcours-Gitter
@@ -231,7 +231,7 @@ public class Parcours {
 
 	/**
 	 * Fügt ein Hindernis ein
-	 * 
+	 *
 	 * @param obstacle	Das Hindernis
 	 * @param x			X-Achse im Parcours-Gitter
 	 * @param y			Y-Achse im Parcours-Gitter
@@ -240,10 +240,10 @@ public class Parcours {
 	public void addObstacle(Node obstacle, float x, float y, float z) {
 		addNode(obstacle, x * blockSizeInM, y * blockSizeInM, z, ObstBG);
 	}
-	
+
 	/**
 	 * Fügt ein bewegliches Hindernis ein
-	 * 
+	 *
 	 * @param obstacle	Das Hindernis
 	 * @param x			X-Koordinate
 	 * @param y			Y-Koordinate
@@ -258,7 +258,7 @@ public class Parcours {
 
 	/**
 	 * Fügt ein Stück Boden ein
-	 * 
+	 *
 	 * @param floor	der Boden
 	 * @param x		X-Achse im Parcours-Gitter
 	 * @param y		Y-Achse im Parcours-Gitter
@@ -270,7 +270,7 @@ public class Parcours {
 
 	/**
 	 * Fügt eine Node ein
-	 * 
+	 *
 	 * @param node	Die Node
 	 * @param x		X-Koordinate
 	 * @param y		Y-Koordinate
@@ -286,7 +286,7 @@ public class Parcours {
 		TransformGroup tg = new TransformGroup(translate);
 		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		tg.addChild(node);
-		
+
 		TransformGroup tgObject = new TransformGroup();
 		tgObject.addChild(tg);
 		tgObject.setCapability(Node.ENABLE_PICK_REPORTING);
@@ -297,7 +297,7 @@ public class Parcours {
 
 	/**
 	 * Fügt eine Node ein
-	 * 
+	 *
 	 * @param node	Die Node
 	 * @param x		X-Achse im Parcours-Gitter
 	 * @param y		Y-Achse im Parcours-Gitter
@@ -309,7 +309,7 @@ public class Parcours {
 
 	/**
 	 * Fügt eine Darstellung der Lichtquelle ein
-	 * 
+	 *
 	 * @param light	Die Lichtquelle
 	 * @param x		X-Achse im Parcours-Gitter
 	 * @param y		Y-Achse im Parcours-Gitter
@@ -321,16 +321,16 @@ public class Parcours {
 
 	/**
 	 * Fügt eine Lichtquelle ein
-	 * 
+	 *
 	 * @param light	Die Lichtquelle
 	 */
 	public void addLight(Node light) {
 		lightBG.addChild(light);
 	}
-	
+
 	/**
 	 * Fügt eine Darstellung der Landmarke ein
-	 * 
+	 *
 	 * @param bps	Die Landmarke
 	 * @param x		X-Achse im Parcours-Gitter
 	 * @param y		Y-Achse im Parcours-Gitter
@@ -339,10 +339,10 @@ public class Parcours {
 	public void addBPSLight(Node bps, float x, float y, float z) {
 		addNode(bps, x * blockSizeInM, y * blockSizeInM, z, bpsBG);
 	}
-	
+
 	/**
 	 * Fügt eine Landmarke für BPS ein
-	 * 
+	 *
 	 * @param bps	Landmarke
 	 */
 	public void addBPSLight(Node bps) {
@@ -351,14 +351,14 @@ public class Parcours {
 
 	/**
 	 * Erzeugt ein bewegliches Objekt
-	 * 
+	 *
 	 * @param x	X-Koordinate
 	 * @param y	Y-Koordinate
 	 */
 	public void createMovableObject(float x, float y) {
 		parcoursLoader.createMovableObject(x, y);
 	}
-	
+
 	/**
 	 * @return Liefert die Licht-Branchgroup zurück
 	 */
@@ -367,12 +367,12 @@ public class Parcours {
 	}
 
 	/**
-	 * @return Liefert die Branchgroup mit den Landmarken für BPS zurück 
+	 * @return Liefert die Branchgroup mit den Landmarken für BPS zurück
 	 */
 	public BranchGroup getBpsBG() {
 		return bpsBG;
 	}
-	
+
 	/**
 	 * @return Liefert die Hindernis-Branchgroup zurück
 	 */
@@ -389,7 +389,7 @@ public class Parcours {
 
 	/**
 	 * Legt die Startposition eines Bots fest
-	 * 
+	 *
 	 * @param bot	Nummer des Bots (fängt bei 0 an zu zählen)
 	 * @param x		X-Koordinate
 	 * @param y		Y-Koordinate
@@ -403,7 +403,7 @@ public class Parcours {
 
 	/**
 	 * Legt die Startrichtung eines Bots fest
-	 * 
+	 *
 	 * @param bot	Nummer des Bots (fängt bei 0 an zu zählen)
 	 * @param dir	Richtung in Grad. 0 entspricht (x=1, y=0) dann im Uhrzeigersinn
 	 */
@@ -436,7 +436,7 @@ public class Parcours {
 	/**
 	 * Liefert die Startposition für einen neuen Bots
 	 * Wenn keine festgelegt wurde, dann die Default-Position (0).
-	 * 
+	 *
 	 * @param bot	Bot-Nummer
 	 * @return Die Startposition
 	 */
@@ -461,7 +461,7 @@ public class Parcours {
 
 	/**
 	 * Liefert die Nummer des Startfeldes zu einem Bot
-	 * 
+	 *
 	 * @param bot	Referenz auf Bot
 	 * @return Nummer des Startfeldes, oder 0, falls Bot unbekannt
 	 */
@@ -476,7 +476,7 @@ public class Parcours {
 
 	/**
 	 * Liefert die Startposition eines vorhandenen Bots
-	 * 
+	 *
 	 * @param bot	Bot-Nummer
 	 * @return Die Startposition
 	 */
@@ -494,7 +494,7 @@ public class Parcours {
 	/**
 	 * Liefert die Startrichtung eines Bots
 	 * Wenn keine festgelegt wurde, dann die Default-Position (0).
-	 * 
+	 *
 	 * @param bot
 	 * @return Die Startrichtung
 	 */
@@ -510,7 +510,7 @@ public class Parcours {
 		if (pos.length() == 0) {
 			pos.x = 1.0f;
 			lg.warn("getStartHeading wurde nach einer noch nicht gesetzten "
-				+ "Heading gefragt (Bot " + bot + "). Setze Default");
+					+ "Heading gefragt (Bot " + bot + "). Setze Default");
 		}
 
 		pos.normalize();
@@ -520,7 +520,7 @@ public class Parcours {
 
 	/**
 	 * Fügt eine neue Zielposition hinzu
-	 * 
+	 *
 	 * @param x
 	 * @param y
 	 */
@@ -548,7 +548,7 @@ public class Parcours {
 
 	/**
 	 * Prüft, ob ein Punkt innerhalb des Zielfeldes liegt
-	 * 
+	 *
 	 * @param pos
 	 * @return true, falls ja
 	 */
@@ -568,7 +568,7 @@ public class Parcours {
 
 	/**
 	 * Fügt ein Loch hinzu
-	 * 
+	 *
 	 * @param x
 	 * @param y
 	 */
@@ -578,7 +578,7 @@ public class Parcours {
 
 	/**
 	 * Prüft, ob ein Punkt über einem Loch liegt
-	 * 
+	 *
 	 * @param pos
 	 * @return true, wenn der Bot über dem Loch steht
 	 */
@@ -605,7 +605,7 @@ public class Parcours {
 
 	/**
 	 * Setzt eine Parcours-Map
-	 * 
+	 *
 	 * @param parcoursMap	die neue Map
 	 */
 	void setParcoursMap(int[][] parcoursMap) {
@@ -616,7 +616,7 @@ public class Parcours {
 	 * Liefert eine Referenz auf die Rohversion der Karte dieses Parcours (wie
 	 * aus dem XML gelesen). Das Format ist so, wie der {@link ParcoursLoader}
 	 * die parcoursMap erstellt hat.
-	 * 
+	 *
 	 * @return die ParcoursMap
 	 */
 	public int[][] getParcoursMap() {
@@ -705,12 +705,12 @@ public class Parcours {
 			}
 		}
 		return parcoursMapSimple;
-	}	
-	
+	}
+
 	/**
 	 * Liefert die kürzeste Distanz von einem gegebenen Punkt (in
 	 * Gitterkoordinaten) zum Ziel.
-	 * 
+	 *
 	 * @param from	Startpunkt in Weltkoordinaten
 	 * @return Distanz (ohne Drehungen) in Metern
 	 */
@@ -724,7 +724,7 @@ public class Parcours {
 	/**
 	 * Liefert die kürzeste Distanz von einem gegebenen Punkt (in
 	 * Gitterkoordinaten) zum Ziel
-	 * 
+	 *
 	 * @param from	Startpunkt in Weltkoordinaten
 	 * @return Distanz in Metern
 	 */
@@ -742,7 +742,7 @@ public class Parcours {
 
 	/**
 	 * Liefert den kürzesten Pfad von einem bestimmten Punkt aus zum Ziel
-	 * 
+	 *
 	 * @param from	Startpunkt in weltkoordinaten
 	 * @return Liste der Turningpoints (Gitterkoordinaten!!!)
 	 */
@@ -752,7 +752,7 @@ public class Parcours {
 
 	/**
 	 * Liefert den kürzesten Pfad von einem bestimmten Punkt aus zum Ziel
-	 * 
+	 *
 	 * @param from	Startpunkt in weltkoordinaten
 	 * @return Liste der Turningpoints (Gitterkoordinaten!!!)
 	 */
@@ -788,20 +788,20 @@ public class Parcours {
 		// finde die kürzeste Verbindung
 		return shortestPath;
 	}
-	
-	/** 
+
+	/**
 	 * Rechnet eine Block-Koordinate in eine Welt-Koordinate um
-	 * 
+	 *
 	 * @param koord	Block-Koordinate
 	 * @return Welt-Koordinate [mm]
 	 */
 	public int blockToWorld(int koord) {
 		return koord * (int) (blockSizeInM * 1000.0f);
 	}
-	
+
 	/**
 	 * Liefert die Startposition zu einer Bot-Nr.
-	 * 
+	 *
 	 * @param bot	Nummer des Bots [0, 2]
 	 * @return {X, Y}
 	 */
@@ -812,10 +812,10 @@ public class Parcours {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Rechnet eine Welt-Koordinate in eine globale Position um
-	 * 
+	 *
 	 * @param worldPos	Welt-Position (wie von Java3D verwendet)
 	 * @return globale Position (wie zur Lokalisierung verwendet) / Blocks
 	 */

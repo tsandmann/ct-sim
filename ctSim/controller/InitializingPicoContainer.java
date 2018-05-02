@@ -28,46 +28,46 @@ import org.picocontainer.defaults.DefaultPicoContainer;
 
 /** Initialisierter Pico-Container */
 public class InitializingPicoContainer extends DefaultPicoContainer {
-    /** UID */
+	/** UID */
 	private static final long serialVersionUID = - 6940983694133437239L;
 
-    /** Initialisierter Pico-Container */
-    public InitializingPicoContainer() {
-    	super();
-    }
+	/** Initialisierter Pico-Container */
+	public InitializingPicoContainer() {
+		super();
+	}
 
-    /**
-     * Initialisierter Pico-Container 
-     * 
-     * @param parent 
-     */
+	/**
+	 * Initialisierter Pico-Container
+	 *
+	 * @param parent
+	 */
 	public InitializingPicoContainer(PicoContainer parent) {
 		super(parent);
-    }
+	}
 
 	/**
 	 * Getter
-	 * 
+	 *
 	 * @param <T>
 	 * @param componentKey
 	 * @return T
 	 */
-    public <T> T get(Class<T> componentKey) {
-	    return (T)super.getComponentInstance(componentKey);
+	public <T> T get(Class<T> componentKey) {
+		return (T)super.getComponentInstance(componentKey);
 	}
 
 	/**
 	 * Klasse initialisiert?
-	 * 
+	 *
 	 * @param classToInitialize Klasse
 	 */
 	private void ensureInitialized(Class<?> classToInitialize) {
 		try {
-	        Class.forName(classToInitialize.getName());
-        } catch (ClassNotFoundException e) {
-        	//$$ Obskurer Fehler
-        	throw new RuntimeException(e);
-        }
+			Class.forName(classToInitialize.getName());
+		} catch (ClassNotFoundException e) {
+			//$$ Obskurer Fehler
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 			throw new IllegalArgumentException();
 		for (int i = 0; i < classMap.length; i += 2)
 			registerComponentImplementation(classMap[i], classMap[i + 1]);
-    }
+	}
 
 	/**
 	 * @param classes
@@ -93,53 +93,53 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 */
 	@Override
 	public ComponentAdapter registerComponentImplementation(
-    	Class componentImplementation) {
-	    ensureInitialized(componentImplementation);
-	    return super.registerComponentImplementation(componentImplementation);
-    }
+			Class componentImplementation) {
+		ensureInitialized(componentImplementation);
+		return super.registerComponentImplementation(componentImplementation);
+	}
 
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class)
 	 */
 	@Override
 	public ComponentAdapter registerComponentImplementation(
-    	Object componentKey, Class componentImplementation) {
+			Object componentKey, Class componentImplementation) {
 		ensureInitialized(componentImplementation);
-	    return super.registerComponentImplementation(componentKey,
-	        componentImplementation);
-    }
+		return super.registerComponentImplementation(componentKey,
+				componentImplementation);
+	}
 
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, java.util.List)
 	 */
 	@Override
 	public ComponentAdapter registerComponentImplementation(
-    	Object componentKey, Class componentImplementation, List parameters) {
+			Object componentKey, Class componentImplementation, List parameters) {
 		ensureInitialized(componentImplementation);
-	    return super.registerComponentImplementation(componentKey,
-	        componentImplementation, parameters);
-    }
+		return super.registerComponentImplementation(componentKey,
+				componentImplementation, parameters);
+	}
 
 	/**
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, org.picocontainer.Parameter[])
 	 */
 	@Override
 	public ComponentAdapter registerComponentImplementation(
-    	Object componentKey, Class componentImplementation,
-    	Parameter[] parameters) {
+			Object componentKey, Class componentImplementation,
+			Parameter[] parameters) {
 		ensureInitialized(componentImplementation);
-	    return super.registerComponentImplementation(componentKey,
-	        componentImplementation, parameters);
-    }
+		return super.registerComponentImplementation(componentKey,
+				componentImplementation, parameters);
+	}
 
 	/**
 	 * @param componentImplementation
 	 * @return ComponentAdapter
 	 */
 	public ComponentAdapter registerImplementation(
-		Class<?> componentImplementation) {
-    	return registerComponentImplementation(componentImplementation);
-    }
+			Class<?> componentImplementation) {
+		return registerComponentImplementation(componentImplementation);
+	}
 
 	/**
 	 * @param componentKey
@@ -147,9 +147,9 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @return ComponentAdapter
 	 */
 	public ComponentAdapter registerImplementation(
-		Object componentKey, Class<?> componentImplementation) {
+			Object componentKey, Class<?> componentImplementation) {
 		return registerComponentImplementation(
-			componentKey, componentImplementation);
+				componentKey, componentImplementation);
 	}
 
 	/**
@@ -157,8 +157,8 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @return ComponentAdapter
 	 */
 	public ComponentAdapter registerInstance(Object componentInstance) {
-        return registerComponentInstance(componentInstance);
-    }
+		return registerComponentInstance(componentInstance);
+	}
 
 	/**
 	 * @param componentKey
@@ -166,18 +166,18 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @return ComponentAdapter
 	 */
 	public ComponentAdapter registerInstance(
-    	Object componentKey, Object componentInstance) {
-    	return registerComponentInstance(componentKey, componentInstance);
-    }
+			Object componentKey, Object componentInstance) {
+		return registerComponentInstance(componentKey, componentInstance);
+	}
 
 	/**
 	 * @param componentImplementation
 	 * @return ComponentAdapter
 	 */
 	public ComponentAdapter reRegisterImplementation(
-		Class<?> componentImplementation) {
+			Class<?> componentImplementation) {
 		return reRegisterImplementation(
-			componentImplementation, componentImplementation);
+				componentImplementation, componentImplementation);
 	}
 
 	/**
@@ -186,10 +186,10 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @return ComponentAdapter
 	 */
 	public ComponentAdapter reRegisterImplementation(
-		Object componentKey, Class<?> componentImplementation) {
+			Object componentKey, Class<?> componentImplementation) {
 		unregisterComponent(componentKey);
 		return registerComponentImplementation(componentKey,
-			componentImplementation);
+				componentImplementation);
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 */
 	public ComponentAdapter reRegisterInstance(Object componentInstance) {
 		return reRegisterInstance(
-			componentInstance.getClass(), componentInstance);
+				componentInstance.getClass(), componentInstance);
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @return ComponentAdapter
 	 */
 	public ComponentAdapter reRegisterInstance(
-		Object componentKey, Object componentInstance) {
+			Object componentKey, Object componentInstance) {
 		unregisterComponent(componentKey);
 		return registerInstance(componentKey, componentInstance);
 	}

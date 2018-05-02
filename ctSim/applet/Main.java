@@ -73,7 +73,7 @@ public class Main extends JApplet implements BotReceiver {
 	/** Controller-Referenz */
 	private Controller controller = null;
 
-	
+
 	/** Initialiserung des Applets */
 	@Override
 	public void init() {
@@ -88,7 +88,7 @@ public class Main extends JApplet implements BotReceiver {
 		JPanel p = new JPanel();
 		p.add(status);
 		getContentPane().add(p);
-		
+
 		// Controller wird für Bot-ID-Vergabe benötigt!
 		controller = new DefaultController();
 	}
@@ -119,9 +119,9 @@ public class Main extends JApplet implements BotReceiver {
 			public void publish(LogRecord record) {
 				Level lvl = record.getLevel();
 				status.setIcon(UIManager.getLookAndFeel().getDefaults().getIcon(
-					lvl == Level.WARNING || lvl == Level.SEVERE
-					? "OptionPane.warningIcon"
-					: "OptionPane.informationIcon"));
+						lvl == Level.WARNING || lvl == Level.SEVERE
+						? "OptionPane.warningIcon"
+								: "OptionPane.informationIcon"));
 				status.setText(record.getMessage());
 				status.setToolTipText(record.getMessage());
 			}
@@ -132,6 +132,7 @@ public class Main extends JApplet implements BotReceiver {
 	/** Icons initialisieren */
 	private void initIcons() {
 		Config.setIconProvider(new IconProvider() {
+			@Override
 			public Icon get(String key) {
 				// Icon aus jar-Datei laden; Annahme: jar enthält Icon in seinem Root-Verzeichnis
 				URL u = getClass().getClassLoader().getResource(key+".gif");	// $$ images-unterverz
@@ -155,15 +156,17 @@ public class Main extends JApplet implements BotReceiver {
 		}
 		String host = getCodeBase().getHost();
 		TcpConnection.connectTo(host.equals("") ? fallbackAddress : host,
-			port, this);
+				port, this);
 	}
 
 	/**
 	 * Fügt einen neuen (bereits erstellten) Bot in das Fenster ein
 	 * @param b	Referenz auf den neuen Bot
 	 */
+	@Override
 	public void onBotAppeared(final Bot b) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				String title = getParameter("windowTitle");
 				if (title == null || title.trim().length() == 0)
@@ -180,15 +183,15 @@ public class Main extends JApplet implements BotReceiver {
 				});
 				f.add(bv);
 				f.setSize(
-					bv.getInsets().left +
-					bv.getPreferredSize().width +
-					bv.getInsets().right +
-					bv.getVerticalScrollBar().getPreferredSize().width,
+						bv.getInsets().left +
+						bv.getPreferredSize().width +
+						bv.getInsets().right +
+						bv.getVerticalScrollBar().getPreferredSize().width,
 
-					bv.getInsets().top +
-					bv.getPreferredSize().height +
-					bv.getInsets().bottom +
-					bv.getHorizontalScrollBar().getPreferredSize().height);
+						bv.getInsets().top +
+						bv.getPreferredSize().height +
+						bv.getInsets().bottom +
+						bv.getHorizontalScrollBar().getPreferredSize().height);
 				f.setLocationRelativeTo(null);
 				f.setVisible(true);
 			}
@@ -207,6 +210,7 @@ public class Main extends JApplet implements BotReceiver {
 	@Override
 	public void destroy() {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				if (bot != null)
 					bot.dispose();

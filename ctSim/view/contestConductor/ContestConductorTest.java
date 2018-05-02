@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.contestConductor;
@@ -50,12 +50,12 @@ import ctSim.view.contestConductor.ContestConductor.ContestJudge;
 public class ContestConductorTest {
 	/**
 	 * Siehe {@link ContestConductorTest}
-	 * 
+	 *
 	 * @param args
 	 * */
 	public static void main(String[] args) {
 		Main.dependencies.reRegisterImplementation(
-			ContestJudge.class, MockContestJudge.class);
+				ContestJudge.class, MockContestJudge.class);
 		Main.main("-conf", "config/ct-sim-contest-conductor-local.xml");
 	}
 
@@ -66,9 +66,9 @@ public class ContestConductorTest {
 		 * @param concon
 		 */
 		public MockContestJudge(Controller controller,
-			ContestConductor concon) {
+				ContestConductor concon) {
 			super(controller, concon);
-	    }
+		}
 
 		/**
 		 * @see ctSim.view.contestConductor.ContestConductor.ContestJudge#isSimulationFinished()
@@ -77,14 +77,14 @@ public class ContestConductorTest {
 		public boolean isSimulationFinished() {
 			concon.lg.fine("ContestJudge-Attrappe: Bot 1 gewinnt, " +
 					"beende Spiel");
-            try {
-            	GameOutcome o = new GameOutcome();
-            	o.winner = ContestConductor.BotView.getAll().get(0);
-                setWinner(o);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            return true;
-        }
+			try {
+				GameOutcome o = new GameOutcome();
+				o.winner = ContestConductor.BotView.getAll().get(0);
+				setWinner(o);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			return true;
+		}
 	}
 }

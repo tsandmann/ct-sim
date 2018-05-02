@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
@@ -61,7 +61,7 @@ public class Buisitor {
 
 	/**
 	 * Überprüft eine Signatur
-	 * 
+	 *
 	 * @param m		Methode
 	 * @param types	Typen
 	 * @return true / false
@@ -79,10 +79,10 @@ public class Buisitor {
 
 	/**
 	 * Überprüft einen Type
-	 * 
+	 *
 	 * @param supertype
 	 * @param subtype
-	 * @return true / false 
+	 * @return true / false
 	 */
 	private static boolean isSupertype(Class<?> supertype, Class<?> subtype) {
 		// isAssignableFrom() geht mit Referenztypen richtig um; berücksichtigt Autoboxing/-unboxing

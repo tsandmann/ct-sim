@@ -24,8 +24,8 @@ import java.util.Arrays;
 import java.util.EnumSet;
 
 import ctSim.model.Command;
-import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.components.Actuators.Led;
 import ctSim.model.bots.components.Actuators.Log;
 import ctSim.model.bots.components.Sensors.Mouse;
@@ -65,9 +65,9 @@ public abstract class BotComponent<M> {
 	protected interface CanRead {
 		/**
 		 * Nicht aufrufen - stattdessen {@link BotComponent#offerRead(Command)} verwenden
-		 * 
+		 *
 		 * @param c	Kommando
-		 * @throws ProtocolException 
+		 * @throws ProtocolException
 		 */
 		void readFrom(Command c) throws ProtocolException;
 
@@ -75,7 +75,7 @@ public abstract class BotComponent<M> {
 		 * Nicht aufrufen - sollte nur von
 		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
-		 * 
+		 *
 		 * @return Command-Code
 		 */
 		Code getHotCmdCode();
@@ -89,7 +89,7 @@ public abstract class BotComponent<M> {
 		/**
 		 * Nicht aufrufen - stattdessen {@link BotComponent#askForWrite(CommandOutputStream)}
 		 * verwenden.
-		 * 
+		 *
 		 * @param c	Kommando
 		 */
 		void writeTo(Command c);
@@ -98,7 +98,7 @@ public abstract class BotComponent<M> {
 		 * Nicht aufrufen - sollte nur von
 		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
-		 * 
+		 *
 		 * @return Command-Code
 		 */
 		Code getHotCmdCode();
@@ -108,7 +108,7 @@ public abstract class BotComponent<M> {
 	protected interface CanWriteAsynchronously {
 		/**
 		 * Setzt Asynchronen-Schreib-Stream
-		 * 
+		 *
 		 * @param s	OutputStream
 		 */
 		void setAsyncWriteStream(CommandOutputStream s);
@@ -125,11 +125,11 @@ public abstract class BotComponent<M> {
 	}
 
 	/** Connection-Eigenschaften */
-	public static enum ConnectionFlags { 
+	public static enum ConnectionFlags {
 		/** liest */
-		READS, 
+		READS,
 		/** schreibt */
-		WRITES, 
+		WRITES,
 		/** schreibt asynchron */
 		WRITES_ASYNCLY }
 
@@ -140,7 +140,7 @@ public abstract class BotComponent<M> {
 
 	/** Anfänglich alles false */
 	private EnumSet<ConnectionFlags> flags =
-		EnumSet.noneOf(ConnectionFlags.class);
+			EnumSet.noneOf(ConnectionFlags.class);
 
 	/**
 	 * @param externalModel	externes Modell vom Typ M
@@ -158,34 +158,34 @@ public abstract class BotComponent<M> {
 	 */
 	private UnsupportedOperationException createUnsuppOp(String s) {
 		return new UnsupportedOperationException("Bot-Komponente "+this+
-			" unterstützt kein "+s);
+				" unterstützt kein "+s);
 	}
 
 	/**
 	 * Setzt die Connection-Flags
-	 * 
+	 *
 	 * @param flags	Flags
 	 */
 	public void setFlags(ConnectionFlags... flags) {
 		EnumSet<ConnectionFlags> f = (flags == null || flags.length == 0)
-			? EnumSet.noneOf(ConnectionFlags.class)
-			: EnumSet.copyOf(Arrays.asList(flags));
+				? EnumSet.noneOf(ConnectionFlags.class)
+						: EnumSet.copyOf(Arrays.asList(flags));
 
-		// Prüfen, ob dieses Objekt in der Lage ist zu dem, was die von uns wollen
-		if (f.contains(ConnectionFlags.READS)) {
-			if (! (this instanceof CanRead))
-				throw createUnsuppOp("Lesen");
-		}
-		if (f.contains(ConnectionFlags.WRITES)) {
-			if (! (this instanceof CanWrite))
-				throw createUnsuppOp("Schreiben");
-		}
-		if (f.contains(ConnectionFlags.WRITES_ASYNCLY)) {
-			if (! (this instanceof CanWriteAsynchronously))
-				throw createUnsuppOp("asynchrones Schreiben");
-		}
+				// Prüfen, ob dieses Objekt in der Lage ist zu dem, was die von uns wollen
+				if (f.contains(ConnectionFlags.READS)) {
+					if (! (this instanceof CanRead))
+						throw createUnsuppOp("Lesen");
+				}
+				if (f.contains(ConnectionFlags.WRITES)) {
+					if (! (this instanceof CanWrite))
+						throw createUnsuppOp("Schreiben");
+				}
+				if (f.contains(ConnectionFlags.WRITES_ASYNCLY)) {
+					if (! (this instanceof CanWriteAsynchronously))
+						throw createUnsuppOp("asynchrones Schreiben");
+				}
 
-		this.flags = f;
+				this.flags = f;
 	}
 
 	/**
@@ -218,7 +218,7 @@ public abstract class BotComponent<M> {
 
 	/**
 	 * Liest Daten vom Kommando
-	 * 
+	 *
 	 * @param c	Kommando
 	 * @throws ProtocolException
 	 */
@@ -238,7 +238,7 @@ public abstract class BotComponent<M> {
 
 	/**
 	 * Schreibanforderung
-	 * 
+	 *
 	 * @param s	CommandOutputStream
 	 */
 	public void askForWrite(final CommandOutputStream s) {
@@ -251,7 +251,7 @@ public abstract class BotComponent<M> {
 
 	/**
 	 * async Write-Stream setzen
-	 * 
+	 *
 	 * @param s	CommandOutputStream
 	 */
 	public void offerAsyncWriteStream(CommandOutputStream s) {
@@ -261,7 +261,7 @@ public abstract class BotComponent<M> {
 		((CanWriteAsynchronously)this).setAsyncWriteStream(s);
 	}
 
-	/** 
+	/**
 	 * @return Gibt den Namen der Komponente zurück
 	 */
 	public abstract String getName();

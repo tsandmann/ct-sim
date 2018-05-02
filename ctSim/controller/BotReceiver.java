@@ -27,7 +27,7 @@ import ctSim.model.bots.Bot;
 public interface BotReceiver {
 	/**
 	 * Handler für neuer Bot ist da
-	 * 
+	 *
 	 * @param b	Bot
 	 */
 	public void onBotAppeared(Bot b);

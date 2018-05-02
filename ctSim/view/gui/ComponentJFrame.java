@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -33,39 +33,41 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
 import javax.swing.AbstractAction;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
+
 import ctSim.util.AuxFrameButton;
 import ctSim.util.FmtLogger;
 
 /**
  * Ein JFrame, das die letzte Position speichert und einen KeyHandler zum Schließen des Fensters
  * implementiert
- * 
+ *
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class ComponentJFrame extends JFrame implements WindowListener {
 	/** UID */
 	private static final long serialVersionUID = 1407018820276635315L;
-	
+
 	/** Logger für das Fenster */
 	private final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.ComponentJFrame");
-	
+
 	/** Positionen aller Frames */
 	protected static PositionMap positions = null;
-	
+
 	/** Inhalt des Frames */
 	protected JComponent comp;
 
 	/** Button, der diesen Frame erzeugt hat / öffnet und schließt */
 	protected AuxFrameButton button;
-	
+
 	/**
 	 * Entfernt alles nach dem ersten Leerzeichen aus einem Fenstertitel
-	 * 
+	 *
 	 * @param title	Fenstertitel
 	 * @return Titel bis zum ersten Leerzeichen
 	 */
@@ -77,7 +79,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 			return title;
 		}
 	}
-	
+
 	/**
 	 * @param title		Fenstertitel
 	 * @param comp		Inhalt des Fensters
@@ -88,7 +90,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 		this.comp = comp;
 		this.button = button;
 		addWindowListener(this);
-		
+
 		if (positions == null) {
 			/* Daten der Fenster-Positionen laden */
 			ObjectInputStream objIn = null;
@@ -117,7 +119,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 				positions = new PositionMap();
 			}
 		}
-		
+
 		/* Position dieses Fensters laden */
 		Point p = positions.getMap().get(stripTitle(title));
 		if (p != null) {
@@ -130,10 +132,11 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 		/* Key-Handler */
 		InputMap inputMap = comp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		// Ctrl / Cmd + w
-        KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
-        inputMap.put(key, "close");
-        comp.getActionMap().put("close", new AbstractAction() {
+		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		inputMap.put(key, "close");
+		comp.getActionMap().put("close", new AbstractAction() {
 			private static final long serialVersionUID = -7639062435105576105L;
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					button.doClick();	// Klick auf den Button schließt das Fenster und schaltet den Button um
@@ -141,18 +144,19 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 					// egal
 				}
 			}
-        });
+		});
 	}
 
 	/**
 	 * Handler, der aufgerufen wird, wenn das Fenster geschlossen wird
-	 * 
+	 *
 	 * @param e	Event
 	 */
+	@Override
 	public void windowClosed(WindowEvent e) {
 		lg.fine(this.getTitle() + ": windowClosed()");
 		positions.getMap().put(stripTitle(getTitle()), getLocation());
-		
+
 		ObjectOutputStream objOut = null;
 		try {
 			objOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("config/window.settings")));
@@ -160,7 +164,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 			lg.warn("Fenster-Positionen konnten nicht gespeichert werden: " + ex.getMessage());
 		} catch (IOException ex) {
 			lg.warn("Fenster-Positionen konnten nicht gespeichert werden: " + ex.getMessage());
-		} 
+		}
 		if (objOut == null) {
 			return;
 		}
@@ -176,19 +180,21 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 		}
 	}
 
-	
+
 	/* Zeug, das ein WindowListener verlangt, das wir aber hier nicht brauchen */
-	
+
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowActivated(WindowEvent e) {
 		// No-op
 	}
-	
+
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowClosing(WindowEvent e) {
 		// No-op
 	}
@@ -196,6 +202,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowDeactivated(WindowEvent e) {
 		// No-op
 	}
@@ -203,6 +210,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowDeiconified(WindowEvent e) {
 		// No-op
 	}
@@ -210,6 +218,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowIconified(WindowEvent e) {
 		// No-op
 	}
@@ -217,6 +226,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowOpened(WindowEvent e) {
 		// No-op
 	}
