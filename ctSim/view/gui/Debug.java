@@ -95,7 +95,7 @@ public class Debug {
 			}
 		}
 		
-		if(!str.endsWith("\n"))	// $NON-NLS-1$
+		if(!str.endsWith("\n"))
 			this.isNewLine = false;
 	}
 	

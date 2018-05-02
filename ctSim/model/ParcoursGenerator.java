@@ -60,82 +60,82 @@ public class ParcoursGenerator {
 	private static final char START2 = '2';
 
 	/** XML-String -- Anfang der Parcours-Datei */
-	private static final String xmlHead = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"	// $NON-NLS-1$
-			+ "<!DOCTYPE world SYSTEM \"parcours.dtd\">\n"	// $NON-NLS-1$
-			+ "<world>\n"	// $NON-NLS-1$
+	private static final String xmlHead = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+			+ "<!DOCTYPE world SYSTEM \"parcours.dtd\">\n"
+			+ "<world>\n"
 			+ "	<description>Dieses ist ein automatisch generierter Beispielparcours für den c't-Sim-Wettbewerb.</description>\n" //$NON-NLS-1$
-			+ "	<parcours>\n";	// $NON-NLS-1$
+			+ "	<parcours>\n";
 
 	/** XML-String -- Ende der Parcours-Datei */
-	private static final String xmlTail = "	</parcours>\n"	// $NON-NLS-1$
-			+ "	<optics>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"X\">\n"	// $NON-NLS-1$
-			+ "			<description>quadratische Wand</description>\n"	// $NON-NLS-1$
-			+ "			<texture>textures/rock_wall.jpg</texture>\n"	// $NON-NLS-1$
-			+ "			<color>#999999</color>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"#\">\n"	// $NON-NLS-1$
-			+ "			<description>senkrechte Wand</description>\n"	// $NON-NLS-1$
-			+ "			<clone>X</clone>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"=\">\n"	// $NON-NLS-1$
-			+ "			<description>wagrechte Wand</description>\n"	// $NON-NLS-1$
-			+ "			<clone>X</clone>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\".\">\n"	// $NON-NLS-1$
-			+ "			<description>Fussboden im Eingangsbereich</description>\n"	// $NON-NLS-1$
-			+ "			<color type=\"ambient\">#FFFFFF</color>\n"	// $NON-NLS-1$
-			+ "			<color type=\"diffuse\">#FFFFFF</color>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\" \">\n"	// $NON-NLS-1$
-			+ "			<description>Fussboden im Labyrinth</description>\n"	// $NON-NLS-1$
-			+ "			<color type=\"ambient\">#606060</color>\n"	// $NON-NLS-1$
-			+ "			<color type=\"diffuse\">#606060</color>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"L\">\n"	// $NON-NLS-1$
-			+ "			<description>Fussboden mit Loch</description>\n"	// $NON-NLS-1$
-			+ "			<color type=\"ambient\">#000000</color>\n"	// $NON-NLS-1$
-			+ "			<color type=\"diffuse\">#000000</color>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"1\">\n"	// $NON-NLS-1$
-			+ "			<description>Fussboden des Startfeldes 1</description>\n"	// $NON-NLS-1$
-			+ "			<color type=\"ambient\">#993030</color>\n"	// $NON-NLS-1$
-			+ "			<color type=\"diffuse\">#993030</color>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"2\">\n"	// $NON-NLS-1$
-			+ "			<description>Fussboden des Startfeldes 2</description>\n"	// $NON-NLS-1$
-			+ "			<color type=\"ambient\">#000099</color>\n"	// $NON-NLS-1$
-			+ "			<color type=\"diffuse\">#000099</color>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"0\">\n"	// $NON-NLS-1$
-			+ "			<description>Fussboden des Default-Startfeldes</description>\n"	// $NON-NLS-1$
-			+ "			<clone>.</clone>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"Z\">\n"	// $NON-NLS-1$
-			+ "			<description>Fussboden des Zielfeldes 0</description>\n"	// $NON-NLS-1$
-			+ "			<color type=\"ambient\">#66FF00</color>\n"	// $NON-NLS-1$
-			+ "			<color type=\"diffuse\">#66FF00</color>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"*\"><description>Lichtkugel</description>\n"	// $NON-NLS-1$
-			+ "			<color type=\"emmissive\">#FFFF90</color>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"-\"><description>Linie</description>\n"	// $NON-NLS-1$
-			+ "			<color type=\"ambient\">#000000</color>\n"	// $NON-NLS-1$
-			+ "			<color type=\"diffuse\">#000000</color>\n"	// $NON-NLS-1$
-			+ "			<color type=\"specular\">#000000</color>\n"	// $NON-NLS-1$
-			+ "			<color type=\"emmissive\">#000000</color>\n"	// $NON-NLS-1$
-			+ "		</appearance>\n"	// $NON-NLS-1$
-			+ "		<appearance type=\"|\"><description>Linie</description>\n"	// $NON-NLS-1$
-			+ "			<clone>-</clone>\n" + "		</appearance>\n"	// $NON-NLS-1$	// $NON-NLS-2$
-			+ "		<appearance type=\"/\">\n"	// $NON-NLS-1$
-			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"	// $NON-NLS-1$	// $NON-NLS-2$
-			+ "		</appearance>\n" + "		<appearance type=\"\\\">\n"	// $NON-NLS-1$	// $NON-NLS-2$
-			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"	// $NON-NLS-1$	// $NON-NLS-2$
-			+ "		</appearance>\n" + "		<appearance type=\"+\">\n"	// $NON-NLS-1$	// $NON-NLS-2$
-			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"	// $NON-NLS-1$	// $NON-NLS-2$
-			+ "		</appearance>\n" + "		<appearance type=\"~\">\n"	// $NON-NLS-1$	// $NON-NLS-2$
-			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"	// $NON-NLS-1$	// $NON-NLS-2$
-			+ "		</appearance>\n" + "	</optics>\n" + "</world>\n";	// $NON-NLS-1$	// $NON-NLS-2$	// $NON-NLS-3$
+	private static final String xmlTail = "	</parcours>\n"
+			+ "	<optics>\n"
+			+ "		<appearance type=\"X\">\n"
+			+ "			<description>quadratische Wand</description>\n"
+			+ "			<texture>textures/rock_wall.jpg</texture>\n"
+			+ "			<color>#999999</color>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\"#\">\n"
+			+ "			<description>senkrechte Wand</description>\n"
+			+ "			<clone>X</clone>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\"=\">\n"
+			+ "			<description>wagrechte Wand</description>\n"
+			+ "			<clone>X</clone>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\".\">\n"
+			+ "			<description>Fussboden im Eingangsbereich</description>\n"
+			+ "			<color type=\"ambient\">#FFFFFF</color>\n"
+			+ "			<color type=\"diffuse\">#FFFFFF</color>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\" \">\n"
+			+ "			<description>Fussboden im Labyrinth</description>\n"
+			+ "			<color type=\"ambient\">#606060</color>\n"
+			+ "			<color type=\"diffuse\">#606060</color>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\"L\">\n"
+			+ "			<description>Fussboden mit Loch</description>\n"
+			+ "			<color type=\"ambient\">#000000</color>\n"
+			+ "			<color type=\"diffuse\">#000000</color>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\"1\">\n"
+			+ "			<description>Fussboden des Startfeldes 1</description>\n"
+			+ "			<color type=\"ambient\">#993030</color>\n"
+			+ "			<color type=\"diffuse\">#993030</color>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\"2\">\n"
+			+ "			<description>Fussboden des Startfeldes 2</description>\n"
+			+ "			<color type=\"ambient\">#000099</color>\n"
+			+ "			<color type=\"diffuse\">#000099</color>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\"0\">\n"
+			+ "			<description>Fussboden des Default-Startfeldes</description>\n"
+			+ "			<clone>.</clone>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\"Z\">\n"
+			+ "			<description>Fussboden des Zielfeldes 0</description>\n"
+			+ "			<color type=\"ambient\">#66FF00</color>\n"
+			+ "			<color type=\"diffuse\">#66FF00</color>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\"*\"><description>Lichtkugel</description>\n"
+			+ "			<color type=\"emmissive\">#FFFF90</color>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\"-\"><description>Linie</description>\n"
+			+ "			<color type=\"ambient\">#000000</color>\n"
+			+ "			<color type=\"diffuse\">#000000</color>\n"
+			+ "			<color type=\"specular\">#000000</color>\n"
+			+ "			<color type=\"emmissive\">#000000</color>\n"
+			+ "		</appearance>\n"
+			+ "		<appearance type=\"|\"><description>Linie</description>\n"
+			+ "			<clone>-</clone>\n" + "		</appearance>\n"
+			+ "		<appearance type=\"/\">\n"
+			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"
+			+ "		</appearance>\n" + "		<appearance type=\"\\\">\n"
+			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"
+			+ "		</appearance>\n" + "		<appearance type=\"+\">\n"
+			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"
+			+ "		</appearance>\n" + "		<appearance type=\"~\">\n"
+			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"
+			+ "		</appearance>\n" + "	</optics>\n" + "</world>\n";	// $NON-NLS-3$
 
 	/**
 	 * Die Karte ist ein char-Array, erste Dimension die Zeilennummer,
@@ -629,7 +629,7 @@ public class ParcoursGenerator {
 	 */
 	@SuppressWarnings("unused")
 	private static void printParc(String step, char[][] parc) {
-		System.out.println("\n" + step + "\n");	// $NON-NLS-1$	// $NON-NLS-2$
+		System.out.println("\n" + step + "\n");
 		System.out.println(parc2String(parc));
 	}
 
@@ -645,7 +645,7 @@ public class ParcoursGenerator {
 			for (int c = 0; c < parc[r].length; c++) {
 				result.append(parc[r][c]);
 			}
-			result.append("\n");	// $NON-NLS-1$
+			result.append("\n");
 		}
 		return result.toString();
 	}
@@ -660,11 +660,11 @@ public class ParcoursGenerator {
 		StringBuffer result = new StringBuffer();
 		result.append(xmlHead);
 		for (int r = 0; r < parc.length; r++) {
-			result.append("<line>");	// $NON-NLS-1$
+			result.append("<line>");
 			for (int c = 0; c < parc[r].length; c++) {
 				result.append(parc[r][c]);
 			}
-			result.append("</line>\n");	// $NON-NLS-1$
+			result.append("</line>\n");
 		}
 		result.append(xmlTail);
 		return result.toString();
