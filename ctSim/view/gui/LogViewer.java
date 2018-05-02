@@ -49,9 +49,7 @@ import ctSim.util.BackslashNConverterStream;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
-/**
- * LOG-Fenster 
- */
+/** LOG-Fenster */
 public class LogViewer extends JPanel {
 	/** UID */
 	private static final long serialVersionUID = 2371285729455694008L;
@@ -61,15 +59,14 @@ public class LogViewer extends JPanel {
 	/** Log-Text */
 	private final Document logContent;
 
-	/**
-	 * Buttons
-	 */
+	/** Buttons */
 	class Button extends JButton {
 		/** UID */
 		private static final long serialVersionUID = 6172889032677505851L;
 
 		/**
 		 * Button-Klasse
+		 * 
 		 * @param label			Name
 		 * @param toolTipText	Tooltip
 		 * @param icon			Icon
@@ -88,9 +85,7 @@ public class LogViewer extends JPanel {
 		}
 	}
 
-	/**
-	 * Save-Hanlder
-	 */
+	/** Save-Handler */
 	private final Runnable onSaveLog = new Runnable() {
 		public void run() {
 			JFileChooser fc = new JFileChooser();
@@ -109,21 +104,19 @@ public class LogViewer extends JPanel {
 			} catch (IOException e) {
 				lg.warn(e, "E/A-Problem beim Schreiben der Log-Daten; " + "ignoriere");
 			} catch (BadLocationException e) {
-				// Kann nicht passieren
+				// ''Kann nicht passieren''
 				throw new AssertionError(e);
 			}
 		}
 	};
 
-	/**
-	 * Clear-Handler
-	 */
+	/** Clear-Handler */
 	private final Runnable onClearLog = new Runnable() {
 		public void run() {
 			try {
 				logContent.remove(0, logContent.getLength());
 			} catch (BadLocationException e) {
-				// Kann nicht passieren
+				// ''Kann nicht passieren''
 				throw new AssertionError(e);
 			}
 		}
@@ -131,7 +124,8 @@ public class LogViewer extends JPanel {
 
 	/**
 	 * Log-Viewer
-	 * @param log Log-Kompomente
+	 * 
+	 * @param log	Log-Kompomente
 	 */
 	public LogViewer(final Log log) {
 		setLayout(new BorderLayout());
@@ -151,7 +145,7 @@ public class LogViewer extends JPanel {
 
 		equalizeHeight(save, clear);
 
-		// Rechtsbuendig (trailing)
+		// Rechtsbündig (trailing)
 		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 
 		toolbar.add(save);
@@ -172,7 +166,7 @@ public class LogViewer extends JPanel {
 			}
 
 			public void changedUpdate(DocumentEvent e) {
-				// No-op, keine Ahnung was das ist
+				// No-op
 			}
 
 			public void insertUpdate(DocumentEvent e) {
@@ -199,6 +193,7 @@ public class LogViewer extends JPanel {
 
 	/**
 	 * Gleicht die Höhe von zwei Komponenten an
+	 * 
 	 * @param c1
 	 * @param c2
 	 */
@@ -212,6 +207,7 @@ public class LogViewer extends JPanel {
 
 	/**
 	 * Setzt eine Komponente auf eine gewünschte Höhe
+	 * 
 	 * @param c
 	 * @param preferredHeight
 	 */

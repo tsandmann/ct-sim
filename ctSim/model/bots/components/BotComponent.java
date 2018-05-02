@@ -57,7 +57,7 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
  *
  * @param <M>	Typ der Komponente
  * 
- * @author Felix Beckwermert
+ * @author Felix Beckwermert (felix@beckwermert.de)
  * @author Hendrik Krauß (hkr@heise.de)
  */
 public abstract class BotComponent<M> {

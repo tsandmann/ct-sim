@@ -42,8 +42,9 @@ import ctSim.util.AuxFrameButton;
 import ctSim.util.FmtLogger;
 
 /**
- * ein JFrame, das die letzte Position speichert und einen KeyHandler zum 
- * Schließen des Fensters implementiert
+ * Ein JFrame, das die letzte Position speichert und einen KeyHandler zum Schließen des Fensters
+ * implementiert
+ * 
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class ComponentJFrame extends JFrame implements WindowListener {
@@ -59,12 +60,13 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/** Inhalt des Frames */
 	protected JComponent comp;
 
-	/** Button, der diesen Frame erzeugt hat / oeffnet und schliesst */
+	/** Button, der diesen Frame erzeugt hat / öffnet und schließt */
 	protected AuxFrameButton button;
 	
 	/**
-	 * entfernt alles nach dem ersten Leerzeichen aus einem Fenstertitel
-	 * @param title Fenstertitel
+	 * Entfernt alles nach dem ersten Leerzeichen aus einem Fenstertitel
+	 * 
+	 * @param title	Fenstertitel
 	 * @return Titel bis zum ersten Leerzeichen
 	 */
 	private static String stripTitle(String title) {
@@ -77,9 +79,9 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	}
 	
 	/**
-	 * @param title Fenstertitel
-	 * @param comp Inhalt des Fensters
-	 * @param button Button, der zu diesem Fenster führt
+	 * @param title		Fenstertitel
+	 * @param comp		Inhalt des Fensters
+	 * @param button	Button, der zu diesem Fenster führt
 	 */
 	public ComponentJFrame(String title, final JComponent comp, final AuxFrameButton button) {
 		super(title);
@@ -134,7 +136,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 			private static final long serialVersionUID = -7639062435105576105L;
 			public void actionPerformed(ActionEvent e) {
 				try {
-					button.doClick(); // Klick auf den Button schliesst das Fenster und schaltet den Button um
+					button.doClick();	// Klick auf den Button schließt das Fenster und schaltet den Button um
 				} catch (NullPointerException ex) {
 					// No-op
 				}
@@ -144,7 +146,8 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 
 	/**
 	 * Handler, der aufgerufen wird, wenn das Fenster geschlossen wird
-	 * @param e Event
+	 * 
+	 * @param e	Event
 	 */
 	public void windowClosed(WindowEvent e) {
 		lg.fine(this.getTitle() + ": windowClosed()");
@@ -174,44 +177,45 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	}
 
 	
-	/* Zeug, das ein WindowListener verlangt, wir aber hier nicht brauchen */
+	/* Zeug, das ein WindowListener verlangt, das wir aber hier nicht brauchen */
+	
 	/**
-	 * @param e 
+	 * @param e
 	 */
 	public void windowActivated(WindowEvent e) {
 		// No-op
 	}
 	
 	/**
-	 * @param e 
+	 * @param e
 	 */
 	public void windowClosing(WindowEvent e) {
 		// No-op
 	}
 
 	/**
-	 * @param e 
+	 * @param e
 	 */
 	public void windowDeactivated(WindowEvent e) {
 		// No-op
 	}
 
 	/**
-	 * @param e 
+	 * @param e
 	 */
 	public void windowDeiconified(WindowEvent e) {
 		// No-op
 	}
 
 	/**
-	 * @param e 
+	 * @param e
 	 */
 	public void windowIconified(WindowEvent e) {
 		// No-op
 	}
 
 	/**
-	 * @param e 
+	 * @param e
 	 */
 	public void windowOpened(WindowEvent e) {
 		// No-op

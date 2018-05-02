@@ -35,16 +35,12 @@ import ctSim.model.bots.components.Actuators;
 import ctSim.util.Misc;
 import ctSim.util.RoundGradientPaint;
 
-/**
- * LED-GUI 
- */
+/** LED-GUI */
 public class Leds extends GuiBotBuisitor {
 	/** UID */
 	private static final long serialVersionUID = - 8033803343789440470L;
 
-	/**
-	 * LED-Viewer
-	 */
+	/** LED-Viewer */
 	static class LedViewer extends JCheckBox {
 		/** UID */
     	private static final long serialVersionUID = 5975141457176705163L;
@@ -60,10 +56,11 @@ public class Leds extends GuiBotBuisitor {
 
 		/**
 		 * LED-Viewer
-		 * @param model Button
-		 * @param editable editierbar?
-		 * @param tooltip Tooltip
-		 * @param colorWhenOn An-Farbe
+		 * 
+		 * @param model			Button
+		 * @param editable		editierbar?
+		 * @param tooltip		Tooltip
+		 * @param colorWhenOn	An-Farbe
 		 */
 		LedViewer(final ButtonModel model, boolean editable, 
 			final String tooltip, Color colorWhenOn) {
@@ -72,11 +69,11 @@ public class Leds extends GuiBotBuisitor {
 			model.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
 					LedViewer.this.setToolTipText(
-						tooltip + " \u2013 " // Streckenstrich ("Minuszeichen")
+						tooltip + " \u2013 "	// Streckenstrich ("Minuszeichen")
 						+ (model.isSelected() ? "leuchtet" : "leuchtet nicht"));
 				}
 			});
-			setSelected(false); // um initialen Tooltip setzen zu lassen
+			setSelected(false);	// um initialen Tooltip setzen zu lassen
 			setEnabled(editable);
 
 			// Farbverläufe setzen
@@ -90,7 +87,8 @@ public class Leds extends GuiBotBuisitor {
 
 		/**
 		 * Berechnet aus einer Farbe eine Dunklere
-		 * @param c Farbe
+		 * 
+		 * @param c	Farbe
 		 * @return neue Farbe
 		 */
 		private static Color reduceSaturation(Color c) {
@@ -108,7 +106,7 @@ public class Leds extends GuiBotBuisitor {
 			Graphics2D g = (Graphics2D)graphics;
 			Misc.enableAntiAliasing(g);
 
-			// Fläche der Komponente loeschen
+			// Fläche der Komponente löschen
 			g.setColor(getBackground());
 			g.fillRect(0, 0, getSize().width, getSize().height);
 

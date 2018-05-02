@@ -39,35 +39,32 @@ import ctSim.util.AuxFrameButton;
 import ctSim.util.Misc;
 
 /**
- * Zeigt Log-Knopf, LCD, Fernbedienungsknopf, Remote-Call-Knopf, ABL-Knopf. Gehört zu dem
- * Bereich, wo Informationen über einen Bot angezeigt werden.
+ * Zeigt Log-Knopf, LCD, Fernbedienungsknopf, Remote-Call-Knopf, ABL-Knopf. Gehört zu dem Bereich, wo
+ * Informationen über einen Bot angezeigt werden.
  */
 public class AndEverything extends GuiBotBuisitor {
 	/** UID */
 	private static final long serialVersionUID = - 8170321975584432026L;
 
-	/**
-	 * Anzeige für "Rest"
-	 */
+	/** Anzeige für "Rest" */
 	public AndEverything() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(BorderFactory.createTitledBorder("Display & Remote-Control"));
 	}
 
 	/** 
-	 * Erstellt die Textarea, die das LCD des Bot zeigt 
-	 * @param d Display 
+	 * Erstellt die Text-Area, die das LCD des Bot zeigt 
+	 * 
+	 * @param d	Display 
 	 */
 	public void buisitLcdViewer(Actuators.LcDisplay d) {
 		JTextArea t = new JTextArea(d.getExternalModel(), null, d.getNumRows(), d.getNumCols());
 		t.setEnabled(false);
 
-		/*
-		 * Fix für Bug 8 im Trac ("Kein Scrollen möglich wenn Sim aktiv").
-		 * Details hab ich nicht rausgekriegt, aber wenn man das Caret (=
-		 * Cursor) abschaltet geht's. Siehe Bug:
-		 * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4201999 und
-		 * zugehörigen Fix:
+		/**
+		 * Fix für Bug 8 im Trac ("Kein Scrollen möglich wenn Sim aktiv"). Details hab ich nicht ermitteln
+		 * können, aber wenn man das Caret (=Cursor) abschaltet geht es.
+		 * Siehe Bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4201999 und zugehörigen Fix:
 		 * http://java.sun.com/j2se/1.5.0/docs/guide/swing/1.5/#swingText
 		 */
 		Misc.setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
@@ -84,23 +81,25 @@ public class AndEverything extends GuiBotBuisitor {
 	}
 
 	/** 
-	 * Baut den Knopf, der zum Log-Fenster führt 
-	 * @param log Log
-	 * @param bot Bot
+	 * Baut den Knopf, der zum Log-Fenster führt
+	 * 
+	 * @param log	Log
+	 * @param bot	Bot
 	 */
 	public void buisitLogViewer(Actuators.Log log, Bot bot) {
 		add(new AuxFrameButton(
 			log.getName(),
-			log.getDescription() + " des " + bot, // Fenster-Titel
+			log.getDescription() + " des " + bot,	// Fenster-Titel
 			new LogViewer(log),
 			bot.get_feature_log()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
 	/** 
-	 * Baut den Knopf, der zum Fernbedienungs-Fenster führt 
-	 * @param s RC5-Control
-	 * @param bot Bot
+	 * Baut den Knopf, der zum Fernbedienungs-Fenster führt
+	 * 
+	 * @param s		RC5-Control
+	 * @param bot	Bot
 	 */
 	public void buisitRemoteControl(Sensors.RemoteControl s, Bot bot) {
 		add(new AuxFrameButton(
@@ -112,9 +111,10 @@ public class AndEverything extends GuiBotBuisitor {
 	}
 
 	/** 
-	 * Baut den Knopf, der zum Remote-Call-Fenster führt 
-	 * @param c Remote-Call Komponente
-	 * @param bot Bot
+	 * Baut den Knopf, der zum Remote-Call-Fenster führt
+	 * 
+	 * @param c		Remote-Call Komponente
+	 * @param bot	Bot
 	 */
 	public void buisitRemoteCallViewer(RemoteCallCompnt c, Bot bot) {
 		add(new AuxFrameButton(
@@ -126,28 +126,30 @@ public class AndEverything extends GuiBotBuisitor {
 	}
 	
 	/** 
-	 * Baut den Knopf, der das Map-Fenster anzeigt 
-	 * @param map Map-Komponente
-	 * @param bot Bot
+	 * Baut den Knopf, der das Map-Fenster anzeigt
+	 * 
+	 * @param map	Map-Komponente
+	 * @param bot	Bot
 	 */
 	public void buisitMapViewer(MapComponent map, Bot bot) {
 		add(new AuxFrameButton(
 			map.getName(),
-			map.getDescription() + " von " + bot, // Fenster-Titel
+			map.getDescription() + " von " + bot,	// Fenster-Titel
 			new MapViewer(map, bot),
 			bot.get_feature_map()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 	
 	/** 
-	 * Baut den Knopf, der zum Progamm-Fenster f&uumo;hrt 
-	 * @param program Programm-Komponente
-	 * @param bot Bot
+	 * Baut den Knopf, der zum Progamm-Fenster führt
+	 * 
+	 * @param program	Programm-Komponente
+	 * @param bot		Bot
 	 */
 	public void buisitProgramViewer(Actuators.Program program, Bot bot) {
 		add(new AuxFrameButton(
 			program.getName(),
-			program.getDescription() + " von " + bot, // Fenster-Titel
+			program.getDescription() + " von " + bot,	// Fenster-Titel
 			new ProgramViewer(program, bot),
 			bot.get_feature_abl_program() || bot.get_feature_basic_program()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
