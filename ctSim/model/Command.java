@@ -245,8 +245,8 @@ public class Command {
 	public static interface BotSubCodes {
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB) dargestellt
-		 * werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int
-		 * zurückgegeben.
+		 * 			werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer
+		 * 			unsigned Int zurückgegeben.
 		 */
 		public byte toUint7();
 
@@ -323,8 +323,8 @@ public class Command {
 
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB) dargestellt
-		 * werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int
-		 * zurückgegeben.
+		 * 			werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer
+		 * 			unsigned Int zurückgegeben.
 		 */
 		@Override
 		public byte toUint7() {
@@ -341,6 +341,7 @@ public class Command {
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+	
 	// Enum Command-Code
 
 	/**
@@ -414,9 +415,9 @@ public class Command {
 
 		/**
 		 * Für Remote-Calls, d.h. wenn der Sim ein Bot-Behavior aufruft.
-		 * Keiner weiß, wofür NORM steht, aber der Bot schickt das öfters mal. Um die Warnungen des
-		 * Sim ("Ungültiges Kommando, SubCode NORM passt nicht zu Code REMOTE_CALL") zu unterdrücken,
-		 * füge ich das hier hinzu.
+		 * Bisher weiß niemand, wofür NORM steht, aber der Bot schickt das öfters mal. Um die
+		 * Warnungen des Sim ("Ungültiges Kommando, SubCode NORM passt nicht zu Code REMOTE_CALL") zu
+		 * unterdrücken, füge ich das hier hinzu.
 		 */
 		REMOTE_CALL('r', SubCode.NORM, SubCode.REMOTE_CALL_LIST,
 				SubCode.REMOTE_CALL_ENTRY, SubCode.REMOTE_CALL_ORDER,
@@ -466,8 +467,8 @@ public class Command {
 
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB) dargestellt
-		 * werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int
-		 * zurückgegeben.
+		 * 			werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer
+		 * 			unsigned Int zurückgegeben.
 		 */
 		@Override
 		public byte toUint7() { return onTheWire; }
@@ -520,6 +521,7 @@ public class Command {
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+	
 	// Enum Sub-Command-Code
 
 	/** Ein Sub-Command-Code kann einen der Werte in diesem Enum haben. */
@@ -655,8 +657,8 @@ public class Command {
 
 		/**
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB) dargestellt
-		 * werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int
-		 * zurückgegeben.
+		 * 			werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer
+		 * 			unsigned Int zurückgegeben.
 		 */
 		@Override
 		public byte toUint7() {
@@ -665,6 +667,7 @@ public class Command {
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+	
 	// Instanzvariablen
 
 	/** Command-Code */
@@ -717,8 +720,8 @@ public class Command {
 	}
 
 	/**
-	 * Wie {@link #Command(Connection, boolean)} mit
-	 * {@code suppressSyncWarnings == false} (dem Normalwert).
+	 * Wie {@link #Command(Connection, boolean)} mit {@code suppressSyncWarnings == false}
+	 * (dem Normalwert).
 	 *
 	 * @param con	Connection für das Kommando
 	 * @throws IOException
@@ -730,14 +733,13 @@ public class Command {
 
 	/**
 	 * <p>
-	 * Liest und dekodiert ein Kommando von einer Connection. Sie wird dabei
-	 * weitergesetzt um die Zahl Bytes, die das Kommando lang war.
+	 * Liest und dekodiert ein Kommando von einer Connection. Sie wird dabei weitergesetzt um die Zahl
+	 * Bytes, die das Kommando lang war.
 	 * </p>
 	 * <p>
-	 * Falls das erste gelesene Byte nicht der Startcode ist, wird eine Warnung
-	 * ausgegeben ("Synchronisierung verloren") und das Zeichen ignoriert. Im
-	 * Normalbetrieb kommt sie nicht vor, da auf einen CRC-Code ohne weiteren
-	 * Zwischenkram der Startcode des nächsten Kommandos folgen muss.
+	 * Falls das erste gelesene Byte nicht der Startcode ist, wird eine Warnung ausgegeben
+	 * ("Synchronisierung verloren") und das Zeichen ignoriert. Im Normalbetrieb kommt sie nicht vor,
+	 * da auf einen CRC-Code ohne weiteren Zwischenkram der Startcode des nächsten Kommandos folgen muss.
 	 * </p>
 	 *
 	 * @param con	Connection für das Kommando
@@ -750,7 +752,7 @@ public class Command {
 	 *
 	 * @throws IOException	bei E/A-Fehler während dem Lesen
 	 * @throws ProtocolException	falls ein ungültiger CRC empfangen wird oder die Direction nicht
-	 * 				{@link #DIR_REQUEST} ist.
+	 * 			{@link #DIR_REQUEST} ist.
 	 */
 	public Command(Connection con, boolean suppressSyncWarnings)
 			throws IOException, ProtocolException {
@@ -802,7 +804,7 @@ public class Command {
 		i+=2;
 
 		seq=b[i++];	// neue Version mit Adressen und kurzer seq
-		//		seq = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) ); i++;	// alte Version
+		// seq = (short) ( ( b[ i+1 ] & 0xff ) << 8 | ( b[ i ] & 0xff ) ); i++;	// alte Version
 
 
 		from.set(b[i++]);	// neue Version mit Adressen
@@ -831,8 +833,8 @@ public class Command {
 	}
 
 	/**
-	 * {@code true}, falls dieses Kommando den Command-Code {@code someCommandCode} hat.
-	 * Andernfalls {@code false}.
+	 * {@code true}, falls dieses Kommando den Command-Code {@code someCommandCode} hat,
+	 * andernfalls {@code false}.
 	 *
 	 * @param someCommandCode
 	 * @return true/false
@@ -842,8 +844,8 @@ public class Command {
 	}
 
 	/**
-	 * {@code true}, falls dieses Kommando den Sub-Command-Code {@code subCommandCode} hat.
-	 * Andernfalls {@code false}.
+	 * {@code true}, falls dieses Kommando den Sub-Command-Code {@code subCommandCode} hat,
+	 * andernfalls {@code false}.
 	 *
 	 * @param subCode
 	 * @return true/false
@@ -873,7 +875,7 @@ public class Command {
 		data[i++] = (byte)(dataR & 255);
 		data[i++] = (byte)(dataR >> 8);
 		data[i++] = (byte)(seq & 255);
-		//		data[i++] = (byte)(seq >> 8);	// alte Version mit 16-Bit seq
+		// data[i++] = (byte)(seq >> 8);	// alte Version mit 16-Bit seq
 
 		// neue Version mit Sender-Ids
 		data[i++] = from.byteValue();

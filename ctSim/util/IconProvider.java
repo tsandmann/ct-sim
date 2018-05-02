@@ -26,7 +26,7 @@ import javax.swing.Icon;
  * Ding, das Icons bereitstellt.
  * </p>
  * <p>
- *
+ * 
  * <pre>
  * .--------.  verwendet einen   .--------------.
  * | Config | -----------------&gt; | IconProvider |

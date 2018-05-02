@@ -69,9 +69,10 @@ import ctSim.util.Misc;
 import ctSim.view.gui.StatusBar;
 
 /**
- * <p>Welt-Modell, kümmert sich um die globale Simulation und das Zeitmanagement.</p>
- *
- * <p>Zum Erzeugen einer Welt die statischen Methoden <code>buildWorldFrom...()</code> verwenden.</p>
+ * <p>
+ * Welt-Modell, kümmert sich um die globale Simulation und das Zeitmanagement.
+ * Zum Erzeugen einer Welt die statischen Methoden <code>buildWorldFrom...()</code> verwenden.
+ * </p>
  *
  * @author Benjamin Benz (bbe@heise.de)
  * @author Peter König (pek@heise.de)
@@ -113,6 +114,7 @@ public class World {
 	private static String sourceString;
 
 	///////////////////////////////////////////////////////////////////////////
+	
 	// "Geerbte" Zeit-Sachen
 
 	/**
@@ -120,16 +122,22 @@ public class World {
 	 * */
 	private int simStepIntervalInMs = 0;
 
-	/** <p>Pro Simulationsschritt rückt die Simulationszeit-Uhr um diesen Wert vor.
-	 *  Einheit Millisekunden.</p>
+	/**
+	 * <p>
+	 * Pro Simulationsschritt rückt die Simulationszeit-Uhr um diesen Wert vor; Einheit Millisekunden.
+	 * </p>
 	 *
 	 * TODO: Dokumentieren: Bot kriegt Zeit in diesen Schritten mitgeteilt; setzt indirekt max. Auflösung
 	 */
 	private static final int SIM_TIME_PER_STEP =
 			Integer.parseInt(Config.getValue("simTimePerStep"));
 
-	/** <p>Gegenwärtige Simulationszeit. Sie ist gleich <em>Zahl der bisher ausgeführten
-	 * Simulationsschritte x <code>SIM_TIME_PER_STEP</code></em>. Einheit Millisekunden.</p>
+	/**
+	 * <p>
+	 * Gegenwärtige Simulationszeit<br>
+	 * Sie ist gleich <em>Zahl der bisher ausgeführten Simulationsschritte x <code>SIM_TIME_PER_STEP</code></em>;
+	 * Einheit Millisekunden.
+	 * </p>
 	 *
 	 * @see #getSimTimeInMs()
 	 */
@@ -177,10 +185,11 @@ public class World {
 	///////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * <p> Liefert den Zeitraffer-/Zeitlupen-Faktor: Wieviel Realzeit (Armbanduhrenzeit) vergeht
-	 * zwischen dem Beginn eines Simulatorschritts und dem Beginn des nächsten Simulatorschritts?
-	 * Die Einheit ist Millisekunden.</p>
-	 * <p>Näheres siehe {@link #setSimStepIntervalInMs(int)}.</p>
+	 * <p>
+	 * Liefert den Zeitraffer-/Zeitlupen-Faktor: Wieviel Realzeit (Armbanduhrenzeit) vergeht zwischen
+	 * dem Beginn eines Simulatorschritts und dem Beginn des nächsten Simulatorschritts?
+	 * Die Einheit ist Millisekunden. Näheres siehe unter {@link #setSimStepIntervalInMs(int)}.
+	 * </p>
 	 *
 	 * @return Zeitintervall
 	 */
@@ -188,17 +197,20 @@ public class World {
 		return simStepIntervalInMs;
 	}
 
-	/** <p>Setzen des Zeitraffer-/Zeitlupen-Faktors:
+	/**
+	 * <p>
+	 * Setzen des Zeitraffer-/Zeitlupen-Faktors:
 	 * Stellt ein, wieviel Realzeit (Armbanduhrenzeit) zwischen zwei Schritten der Simulation vergeht.
-	 * Die Einheit ist Millisekunden.</p>
-	 *
-	 * <p>Vorgänge in der Simulation werden von diesem Wert nicht beeinflusst, da jeder Simulationsschritt
+	 * Die Einheit ist Millisekunden.
+	 * </p>
+	 * <p>
+	 * Vorgänge in der Simulation werden von diesem Wert nicht beeinflusst, da jeder Simulationsschritt
 	 * unabhängig von ihm ausgeführt wird. Der Wert beeinflusst nur, wie lange zwischen den Schritten
-	 * (in Realzeit) gewartet wird.</p>
+	 * (in Realzeit) gewartet wird.
+	 * </p>
 	 *
-	 * @param timeInterval
-	 * 				Zeitspanne [ms], wieviel Zeit zwischen dem Beginn eines Simulatorschritts
-	 * 				und dem Beginn des folgenden Simulatorschritts liegen soll.
+	 * @param timeInterval	Zeitspanne [ms], wieviel Zeit zwischen dem Beginn eines Simulatorschritts
+	 * 						und dem Beginn des folgenden Simulatorschritts liegen soll.
 	 */
 	public void setSimStepIntervalInMs(int timeInterval) {
 		simStepIntervalInMs = Math.min(timeInterval, StatusBar.MAX_TICK_RATE);
@@ -206,13 +218,12 @@ public class World {
 
 	/** Liefert die aktuelle Simulationszeit in Millisekunden.
 	 *
-	 * @return Die momentane Simulationszeit [ms]
-	 * 			Sie ist gleich der Zahl der bisher ausgeführten Simulationsschritte mal einem
-	 * 			konstanten Faktor. Daher ist sie unabhängig von der Realzeit (Armbanduhrenzeit):
-	 * 			eine Sim-Sekunde ist im Allgemeinen	nicht gleich lang wie eine Armbanduhr-Sekunde,
-	 * 			und zudem wird die Simzeit-Uhr beispielsweise angehalten, wenn in der GUI der
-	 * 			Pause-Knopf gedrückt wird. Simzeit und Realzeit unterscheiden sich also sowohl
-	 * 			um Summanden als auch um einen Faktor.
+	 * @return Die momentane Simulationszeit [ms]	Sie ist gleich der Zahl der bisher ausgeführten
+	 * 			Simulationsschritte mal einem konstanten Faktor. Daher ist sie unabhängig von der
+	 * 			Realzeit (Armbanduhrenzeit): eine Sim-Sekunde ist im Allgemeinen nicht gleich lang
+	 * 			wie eine Armbanduhr-Sekunde, und zudem wird die Simzeit-Uhr beispielsweise angehalten,
+	 * 			wenn in der GUI der Pause-Knopf gedrückt wird. Simzeit und Realzeit unterscheiden sich
+	 * 			also sowohl um Summanden als auch um einen Faktor.
 	 */
 	public long getSimTimeInMs() {
 		return simTimeInMs;
@@ -229,12 +240,13 @@ public class World {
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+	
 	// Statische Methoden, um eine Welt zu erzeugen
 
 	/**
 	 * Lädt einen Parcours aus einer Datei und baut damit eine Welt
 	 *
-	 * @param sourceFile	Die zu öffnende Datei. Sie hat in dem für Parcours vorgesehenen Schema zu sein.
+	 * @param sourceFile	die zu öffnende Datei. Sie hat in dem für Parcours vorgesehenen Schema zu sein.
 	 * @return Die neue Welt
 	 * @throws SAXException
 	 * @throws IOException
@@ -250,8 +262,10 @@ public class World {
 		}
 		in.close();
 		return new World(new InputSource(sourceFile.toURI().toString()),
-				/* Der EntityResolver hat den Sinn, dem Parser zu sagen,
-				 * er soll die parcours.dtd im Verzeichnis "parcours" suchen. */
+				/** 
+				 * Der EntityResolver hat den Sinn, dem Parser zu sagen,
+				 * er soll die parcours.dtd im Verzeichnis "parcours" suchen.
+				 * */
 				new EntityResolver() {
 			@Override
 			public InputSource resolveEntity(String publicId, String systemId)
@@ -266,12 +280,12 @@ public class World {
 				);
 	}
 
-	/** Lädt einen Parcours aus einem String und baut damit eine Welt.
+	/**
+	 * Lädt einen Parcours aus einem String und baut damit eine Welt.
 	 *
-	 * @param parcoursAsXml
-	 * 				Der String, der die XML-Darstellung des Parcours enthält. Das XML muss in dem
-	 * 				für Parcours vorgesehenen Schema sein. Die in Zeile 2 des XML angegebene
-	 * 				DTD-Datei wird von dieser Methode im Unterverzeichnis "parcours" gesucht.
+	 * @param parcoursAsXml	Der String, der die XML-Darstellung des Parcours enthält. Das XML muss in
+	 * 			dem für Parcours vorgesehenen Schema sein. Die in Zeile 2 des XML angegebene
+	 * 			DTD-Datei wird von dieser Methode im Unterverzeichnis "parcours" gesucht.
 	 * @return Die neue Welt
 	 * @throws SAXException
 	 * @throws IOException
@@ -282,8 +296,10 @@ public class World {
 		sourceString = new String(parcoursAsXml);
 		return new World(
 				new InputSource(new StringReader(parcoursAsXml)),
-				/* Der EntityResolver hat den Sinn, dem Parser zu sagen,
-				 * er soll die parcours.dtd im Verzeichnis "parcours" suchen. */
+				/**
+				 * Der EntityResolver hat den Sinn, dem Parser zu sagen,
+				 * er soll die parcours.dtd im Verzeichnis "parcours" suchen
+				 */
 				new EntityResolver() {
 					@Override
 					public InputSource resolveEntity(String publicId, String systemId)
@@ -300,21 +316,22 @@ public class World {
 	///////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * <p>Liest einen Parcours aus einer XML-Quelle und baut damit eine Welt.</p>
+	 * <p>
+	 * Liest einen Parcours aus einer XML-Quelle und baut damit eine Welt.
+	 * </p>
 	 *
-	 * <p>Der Konstruktor ist privat, da ihn niemand von außen verwendet hat.
+	 * <p>
+	 * Der Konstruktor ist privat, da ihn niemand von außen verwendet hat.
 	 * Es stehen die statischen Methoden <code>buildWorldFromFile</code> und
-	 * <code>buildWorldFromXmlString</code> aus dieser Klasse zu Verfügung, um Welten zu erzeugen.</p>
+	 * <code>buildWorldFromXmlString</code> aus dieser Klasse zu Verfügung, um Welten zu erzeugen.
+	 * </p>
 	 *
-	 * @param source
-	 * 				Die Xerces-Eingabequelle, aus der der die XML-Darstellung des Parcours kommt.
-	 * 				Das Parsen der Quelle liefert einen Parcours, auf dessen Grundlage eine Instanz
-	 * 				der Welt konstruiert wird. <code>source</code> kann auf die Parcours-Datei zeigen
-	 * 				oder (via einen java.io.StringReader) auf das in einem String stehende XML. Potentiell
-	 * 				auch auf anderes.
-	 * @param resolver
-	 * 				Der Xerces-EntityResolver, der beim Parsen des XML verwendet werden soll.
-	 * 				Details siehe {@link ParcoursLoader#loadParcours(InputSource, EntityResolver)}.
+	 * @param source	Die Xerces-Eingabequelle, aus der der die XML-Darstellung des Parcours kommt.
+	 * 			Das Parsen der Quelle liefert einen Parcours, auf dessen Grundlage eine Instanz der Welt
+	 * 			konstruiert wird. <code>source</code> kann auf die Parcours-Datei zeigen oder (über einen
+	 * 			java.io.StringReader) auf das in einem String stehende XML, potentiell auch auf anderes.
+	 * @param resolver	Der Xerces-EntityResolver, der beim Parsen des XML verwendet werden soll.
+	 * 			Details siehe {@link ParcoursLoader#loadParcours(InputSource, EntityResolver)}.
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws ParserConfigurationException
@@ -369,9 +386,8 @@ public class World {
 	 */
 	private void setParcours(Parcours parc) {
 		parcours = parc;
-		// Hindernisse werden an die richtige Position geschoben:
-		// Zuerst werden sie gemeinsam so verschoben, dass ihre Unterkante genau
-		// bündig mit der Unterkante des Bodens ist:
+		// Hindernisse werden an die richtige Position geschoben: Zuerst werden sie gemeinsam so
+		// verschoben, dass ihre Unterkante genau bündig mit der Unterkante des Bodens ist:
 		Transform3D translate = new Transform3D();
 		translate.set(new Vector3d(0d, 0d, 0.2d - PLAYGROUND_THICKNESS));
 		TransformGroup obstTG = new TransformGroup(translate);
@@ -530,10 +546,10 @@ public class World {
 		return botWrapper;
 	}
 
-	/* **********************************************************************
-	 * **********************************************************************
-	 * WORLD_FUNCTIONS
-	 * Funktionen für die Sensoren usw. (Abstandsfunktionen u.ä.)
+	/**
+	 * ******************************************************************************
+	 *  WORLD_FUNCTIONS - Funktionen für die Sensoren usw. (Abstandsfunktionen u.ä.)
+	 * ******************************************************************************
 	 */
 
 	/**
@@ -552,8 +568,7 @@ public class World {
 
 	/**
 	 * @param posInWorldCoord	Position
-	 * @return {@code true}, falls pos auf einem der Zielfelder des Parcours liegt.
-	 * 			{@code false} andernfalls.
+	 * @return {@code true}, falls pos auf einem der Zielfelder des Parcours liegt, ansonsten {@code false}.
 	 */
 	private boolean finishReached(Point3d posInWorldCoord) {
 		return this.parcours.finishReached(new Vector3d(posInWorldCoord));
@@ -586,16 +601,15 @@ public class World {
 			body.setPickable(true);
 		}
 
-		//		if (pickInfo != null && pickInfo.getNode() != null) {
-		//			lg.info("Objekt=" + pickInfo.getNode().getParent().getName() + " kollidiert");
-		//		}
+		// if (pickInfo != null && pickInfo.getNode() != null) {
+		// 		lg.info("Objekt=" + pickInfo.getNode().getParent().getName() + " kollidiert");
+		// }
 
 		return pickInfo;
 	}
 
 	/**
-	 * Prüft, ob unter dem angegebenen Punkt innerhalb der Bodenfreiheit des
-	 * Bots noch Boden zu finden ist
+	 * Prüft, ob unter dem angegebenen Punkt innerhalb der Bodenfreiheit des Bots noch Boden zu finden ist
 	 *
 	 * @param pos				die Position, von der aus nach unten gemessen wird
 	 * @param groundClearance	die als normal anzusehende Bodenfreiheit
@@ -606,10 +620,10 @@ public class World {
 	}
 
 	/**
-	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den Linien-
-	 * bzw. Abgrundsensor nicht mehr erreicht. Je mehr Licht reflektiert wird,
-	 * desto niedriger ist der zurückgegebene Wert. Der Wertebereich erstreckt sich von 0
-	 * (weiss oder maximale Reflexion) bis 1023 (minimale Reflexion, schwarz oder Loch).
+	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den Linien- bzw. Abgrundsensor
+	 * nicht mehr erreicht. Je mehr Licht reflektiert wird, desto niedriger ist der zurückgegebene Wert.
+	 * Der Wertebereich erstreckt sich von 0 (weiß oder maximale Reflexion) bis 1023 (minimale Reflexion,
+	 * schwarz oder Loch).
 	 *
 	 * Es werden rayCount viele Strahlen gleichmäßig orthogonal zum Heading in die Szene geschossen.
 	 *
@@ -635,8 +649,8 @@ public class World {
 		// Transformationsgruppen, für den Sensorsweep
 		Transform3D transformX = new Transform3D();
 
-		// Wenn mehr als ein Strahl ausgesendet werden soll, dann taste den Sensorbereich
-		// parallel zur Achse des Bots ab. Bei nur einem Strahl schaue in die Mitte.
+		// Wenn mehr als ein Strahl ausgesendet werden soll, dann taste den Sensorbereich parallel zur
+		// Achse des Bots ab. Bei nur einem Strahl schaue in die Mitte.
 		if (rayCount > 2) {
 			// beginne links außen
 			AxisAngle4d rotationAxisX = new AxisAngle4d(heading, openingAngle / 2);
@@ -671,8 +685,7 @@ public class World {
 				shape = (Shape3D) pickInfo.getNode();
 				shape.getAppearance().getMaterial().getDiffuseColor(color);
 				// Je nach Farbe wird ein Teil des Lichts zurückgeworfen.
-				// Hierzu wird der Durchschnitt der Rot-, Grün- und Blau-Anteile
-				// der Farbe bestimmt.
+				// Hierzu wird der Durchschnitt der Rot-, Grün- und Blau-Anteile der Farbe bestimmt.
 				absorption += 1 - (color.x + color.y + color.z) / 3;
 			}
 			// Heading anpassen
@@ -682,13 +695,12 @@ public class World {
 	}
 
 	/**
-	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den Linien-
-	 * bzw. Abgrundsensor nicht mehr erreicht. Je mehr Licht reflektiert wird,
-	 * desto niedriger ist der zurückgegebene Wert. Der Wertebereich erstreckt sich von 0
-	 * (weiss oder maximale Reflexion) bis 1023 (minimale Reflexion, schwarz oder Loch).
+	 * Liefert eine Angabe, wie viel Licht vom Boden absorbiert wird und den Linien- bzw. Abgrundsensor
+	 * nicht mehr erreicht. Je mehr Licht reflektiert wird, desto niedriger ist der zurückgegebene Wert.
+	 * Der Wertebereich erstreckt sich von 0 (weiß oder maximale Reflexion) bis 1023 (minimale Reflexion,
+	 * schwarz oder Loch).
 	 *
 	 * Es werden rayCount viele Strahlen gleichmäßig orthogonal zum Heading in die Szene geschossen.
-	 *
 	 * Es werden rayCount viele Strahlen gleichmäßig in Form eines "+" in die Szene geschossen.
 	 *
 	 * @param pos			die Position, an der der Sensor angebracht ist
@@ -709,11 +721,13 @@ public class World {
 	}
 
 	/**
-	 * <p>Liefert die Helligkeit, die auf einen Lichtsensor fällt.</p>
-	 *
-	 * <p> Da diese Methode unter Verwendung des PickConeRay implementiert ist,
-	 * ist sie seinen Bugs unterworfen. Ausführliche Dokumentation siehe
-	 * watchObstacle(Point3d, Vector3d, double, Shape3D).</p>
+	 * <p>
+	 * Liefert die Helligkeit, die auf einen Lichtsensor fällt.
+	 * </p>
+	 * <p>
+	 * Da diese Methode unter Verwendung des PickConeRay implementiert ist, ist sie seinen Bugs
+	 * unterworfen. Ausführliche Dokumentation siehe watchObstacle(Point3d, Vector3d, double, Shape3D).
+	 * </p>
 	 *
 	 * @param pos			die Position des Lichtsensors
 	 * @param heading		die Blickrichtung des Lichtsensors
@@ -749,14 +763,16 @@ public class World {
 	}
 
 	/**
-	 * <p>Liefert die Bakencodierung der Bake im Blickfeld mit der kürzesten Entfernung zum Sensor,
-	 * oder 1023, falls keine Bake gesehen wird.</p>
+	 * <p>
+	 * Liefert die Bakencodierung der Bake im Blickfeld mit der kürzesten Entfernung zum Sensor,
+	 * oder 1023, falls keine Bake gesehen wird.
+	 * </p>
 	 *
 	 * @param pos			die Position des Sensors
 	 * @param end			die Position der maximalen Sensorreichweite
 	 * @param openingAngle	der Öffnungswinkel des Blickstrahls
 	 * @return Die Bakencodierung, der Bake im Blickfeld mit der kürzesten Entfernung zum Sensor,
-	 * 				oder 1023, falls keine Bake gesehen wird
+	 * 			oder 1023, falls keine Bake gesehen wird
 	 *
 	 * @see PickConeSegment
 	 */
@@ -785,33 +801,32 @@ public class World {
 		Beacon beacon = new Beacon(parcours, source);
 		int result = beacon.getID();
 
-		//		lg.info("Baken-Position [mm]: " + beacon);
-		//		lg.info("Baken-Position [blocks]: " + beacon.toStringInBlocks());
+		// lg.info("Baken-Position [mm]: " + beacon);
+		// lg.info("Baken-Position [blocks]: " + beacon.toStringInBlocks());
 
 		return result;
 	}
 
 	/**
-	 * <p>Liefert die Distanz in Metern zum nächsten Objekt zurück, das man sieht,
-	 * wenn man von der übergebenen Position aus in Richtung des übergebenen
-	 * Endpunktes schaut.</p>
+	 * <p>
+	 * Liefert die Distanz in Metern zum nächsten Objekt zurück, das man sieht, wenn man von der
+	 * übergebenen Position aus in Richtung des übergebenen Endpunktes schaut.
+	 * </p>
 	 *
 	 * @param pos	die Position, von der aus der Seh-Strahl verfolgt wird
 	 * @param end	die Position, wo der Seh-Strahl spätestens enden soll (falls kein Objekt gesehen wird)
-	 * @param openingAngle
-	 * 				Der Sehstrahl ist in Wahrheit ein Kegel; {@code openingAngle} gibt seinen Öffnungswinkel
-	 * 				an (Bogenmaß).
-	 * @param botBody
-	 * 				Der Körper des Roboter, der anfragt. Dies ist erforderlich, da diese Methode mit einem
-	 * 				PickConeSegment implementiert ist, d.h. der Körper des Bots muss vor der Anwendung des
-	 * 				Ray auf "not pickable" gesetzt werden und nach der Anwendung wieder auf "pickable".
-	 * 				Der Grund ist, dass sonst in Grenzfällen der Botkörper vom PickConeSegment gefunden wird.
+	 * @param openingAngle	Der Sehstrahl ist in Wahrheit ein Kegel; {@code openingAngle} gibt seinen
+	 * 			Öffnungswinkel an (Bogenmaß).
+	 * @param botBody	Der Körper des Roboter, der anfragt. Dies ist erforderlich, da diese Methode mit
+	 * 			einem PickConeSegment implementiert ist, d.h. der Körper des Bots muss vor der Anwendung
+	 * 			des Ray auf "not pickable" gesetzt werden und nach der Anwendung wieder auf "pickable".
+	 * 			Der Grund ist, dass sonst in Grenzfällen der Botkörper vom PickConeSegment gefunden wird.
 	 * @return Die Distanz zum nächsten Objekt ("pickable") in Metern oder 100 m, falls kein Objekt in Sichtweite
 	 *
 	 * @see PickConeSegment
 	 */
 	public double watchObstacle(Point3d pos, Point3d end, double openingAngle, Node botBody) {
-		// Falls die Welt verschoben wurde:
+		// falls die Welt verschoben wurde:
 		Point3d relPos = new Point3d(pos);
 		Point3d endPos = new Point3d(end);
 		Transform3D transform = new Transform3D();
@@ -843,7 +858,7 @@ public class World {
 	private int runningBotsPtr = 0;
 
 	/**
-	 * Diese Methode setzt die Simulation um einen Simulationsschritt weiter.
+	 * Diese Methode setzt die Simulation um einen Simulationsschritt weiter;
 	 * siehe {@link ctSim.controller.DefaultController#run()}.
 	 */
 	public void updateSimulation() {
@@ -925,9 +940,9 @@ public class World {
 	}
 
 	/**
-	 * Setzt alle Bots auf ihre Startpplätze zurück.
-	 * Hier werden nur simulierte Bots (ThreeDBot-Instanzen) berücksichtigt,
-	 * weil sonstige Bots in World nicht bekannt sind!
+	 * Setzt alle Bots auf ihre Startplätze zurück
+	 * Hier werden nur simulierte Bots (ThreeDBot-Instanzen) berücksichtigt, weil sonstige Bots in World
+	 * nicht bekannt sind!
 	 */
 	public void resetAllBots() {
 		for (ThreeDBot b : botsRunning) {

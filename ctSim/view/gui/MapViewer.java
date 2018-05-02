@@ -377,7 +377,7 @@ public class MapViewer extends JPanel {
 		ImageViewer v = new ImageViewer(compnt);
 		p.add(v, BorderLayout.CENTER);
 
-		/* Ausliefern */
+		/* ausliefern */
 		p.add(controls, BorderLayout.CENTER);
 
 		add(p);

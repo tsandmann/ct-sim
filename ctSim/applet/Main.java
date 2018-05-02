@@ -74,7 +74,7 @@ public class Main extends JApplet implements BotReceiver {
 	private Controller controller = null;
 
 
-	/** Initialiserung des Applets */
+	/** Initialisierung des Applets */
 	@Override
 	public void init() {
 		initLogging();
@@ -161,6 +161,7 @@ public class Main extends JApplet implements BotReceiver {
 
 	/**
 	 * Fügt einen neuen (bereits erstellten) Bot in das Fenster ein
+	 * 
 	 * @param b	Referenz auf den neuen Bot
 	 */
 	@Override

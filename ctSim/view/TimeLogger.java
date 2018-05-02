@@ -78,7 +78,7 @@ public class TimeLogger implements View {
 			return;
 
 		long now = System.currentTimeMillis();
-		// Falls minimalMsg verwendet wird, wird das überflüssige Argument ignoriert
+		// falls minimalMsg verwendet wird, wird das überflüssige Argument ignoriert
 		lg.info((simTimeAtLastLog == - intervalInSimMs)
 				? minimalMsg : normalMsg,
 						simTimeInMs, System.currentTimeMillis(),

@@ -216,6 +216,7 @@ public class Misc {
 	 * Nach der hervorragenden Entdeckung von Josh Bloch; siehe
 	 * <a href="http://developers.sun.com/learning/javaoneonline/2006//coreplatform/TS-1512.html">Vortrag
 	 * bei der JavaOne</a>
+	 * </p>
 	 *
 	 * @param <T>
 	 * @return ArrayList

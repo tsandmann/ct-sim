@@ -209,7 +209,7 @@ public class SplashWindow extends Window {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// egal
+			// No-op, egal
 		}
 		if (instance != null) {
 			FmtLogger.getLogger("ctSim").removeHandler(logHandler);

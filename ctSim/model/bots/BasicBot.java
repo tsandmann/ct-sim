@@ -209,7 +209,9 @@ public abstract class BasicBot implements Bot {
 		 * {@code components.add(...)}, die Subklassen können dann den {@code applyFlagsTable(...)}-Aufruf
 		 * machen.
 		 * </p>
-		 * <p>Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von ihnen allen betroffen.</p>
+		 * <p>
+		 * Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von ihnen allen betroffen.
+		 * </p>
 		 *
 		 * @param compntFlagTable	Flags
 		 */
@@ -223,9 +225,11 @@ public abstract class BasicBot implements Bot {
 		}
 
 		/**
-		 * <p>Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und Aktuatoren). Die
+		 * <p>
+		 * Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und Aktuatoren). Die
 		 * Komponente(n), die sich zuständig fühlt (fühlen), können etwas damit tun (typischerweise
-		 * ihren eigenen Wert setzen auf den im Kommando gespeicherten).</p>
+		 * ihren eigenen Wert setzen auf den im Kommando gespeicherten).
+		 * </p>
 		 * <p>
 		 * Implementiert das
 		 * <a href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-Responsibility-Pattern</a>.
@@ -254,8 +258,8 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * <p>
-	 * Ordnet einer BotComponent {@link ConnectionFlags} zu.
-	 * Component-Flag-Tabellen sind Arrays von diesem Typ. Siehe
+	 * Ordnet einer BotComponent {@link ConnectionFlags} zu<br>
+	 * Component-Flag-Tabellen sind Arrays von diesem Typ; siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
 	 */
@@ -278,8 +282,7 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * <p>
-	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann
-	 * - siehe
+	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann; siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
 	 *
@@ -321,12 +324,12 @@ public abstract class BasicBot implements Bot {
 		} else {
 			this.name = name;
 		}
-		//		// Wenn wir sterben, Instanz-Zahl reduzieren
-		//		addDisposeListener(new Runnable() {
-		//			public void run() {
-		//				numInstances.decrease(BasicBot.this.getClass());
-		//			}
-		//		});
+		// // Wenn wir sterben, Instanz-Zahl reduzieren
+		// addDisposeListener(new Runnable() {
+		// 		public void run() {
+		// 		numInstances.decrease(BasicBot.this.getClass());
+		// 		}
+		// });
 	}
 
 	/**
@@ -349,7 +352,7 @@ public abstract class BasicBot implements Bot {
 			try {
 				lg.info(name + " verkrümelt sich");
 			} catch (Exception e) {
-				// egal
+				// No-op, egal
 			}
 		}
 
@@ -374,15 +377,15 @@ public abstract class BasicBot implements Bot {
 	 * </p>
 	 *
 	 * @return Nummer
+	 * 
 	 * @see #toString()
 	 */
 	@Override
 	public int getInstanceNumber() {
-		/*
-		 * Bedenke: Wenn einer ne Subklasse instanziiert, die von AliveObstacle abgeleitet ist,
-		 * wird eine AliveObstacle-Instanz automatisch miterzeugt -- Wenn wir hier getClass() aufrufen,
-		 * liefert das aber die exakte Klasse (also in unserm Fall niemals AliveObstacle, sondern
-		 * z.B. BestimmterDingsBot)
+		/**
+		 * Bedenke: Wenn einer ne Subklasse instanziiert, die von AliveObstacle abgeleitet ist, wird eine
+		 * AliveObstacle-Instanz automatisch miterzeugt -- Wenn wir hier getClass() aufrufen, liefert das
+		 * aber die exakte Klasse (also in unserm Fall niemals AliveObstacle, sondern z.B. BestimmterDingsBot)
 		 */
 		return numInstances.get(getClass());
 	}

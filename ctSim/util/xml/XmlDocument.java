@@ -85,10 +85,8 @@ import ctSim.util.Decoratoror;
  * <p>
  * Diese Klasse vereinfacht die o.g. Routineaufgabe zu:
  * <code>new XmlDocument("gemuese.xml").getNodeList("//tomate")</code>.
- * Sie bietet außerdem Typsicherheit beim Umgang mit XPath, im Gegensatz zur Java-Plattform.
+ * Sie bietet außerdem Typsicherheit beim Umgang mit XPath, im Gegensatz zur Java-Plattform; siehe javax.xml.xpath
  * </p>
- *
- * siehe javax.xml.xpath
  *
  * @author Hendrik Krauß (hkr@heise.de)
  */
@@ -96,30 +94,26 @@ public class XmlDocument {
 	/**
 	 * Parst die übergegebene XML-Datei und validiert sie gegen die DTD, die in der Datei angegeben ist.
 	 *
-	 * @param fileToParse
-	 * 				Die XML-Datei, die geparst und validiert werden soll,
-	 * 				z.B. <code>new File("spielzeug/tiere/kuschelnilpferd.xml")</code>.
-	 * @param baseDir
-	 * 				Das Verzeichnis, das fürs Auflösen von relativen URIs als Ausgangspunkt
-	 * 				genommen wird. Das ist hauptsächlich relevant für das Finden von DTDs, besonders
-	 * 				falls die DTD in einem anderen	Verzeichnis liegt als die XML-Datei. - Beispiel:
-	 * 				In unseren Parcoursdateien wird die DTD folgendermaßen angegeben:
-	 * 				<code><!DOCTYPE collection SYSTEM "parcours.dtd"></code>.
-	 * 				Die relative URI ist dabei ist <code>parcours.dtd</code> (im XML-Jargon
-	 * 				"system identifier" genannt). Wenn diese Klasse also eine XML-Datei mit eben
-	 * 				genannten Zeile parst und z.B. als baseDir "wurst" übergeben wurde, wird der Parser
-	 * 				versuchen, die Datei wurst/parcours.dtd zu öffnen und als DTD zu verwenden.
+	 * @param fileToParse	Die XML-Datei, die geparst und validiert werden soll,
+	 * 			z.B. <code>new File("spielzeug/tiere/kuschelnilpferd.xml")</code>.
+	 * @param baseDir		Das Verzeichnis, das fürs Auflösen von relativen URIs als Ausgangspunkt
+	 * 			genommen wird. Das ist hauptsächlich relevant für das Finden von DTDs, besonders falls
+	 * 			die DTD in einem anderen Verzeichnis liegt als die XML-Datei. - Beispiel: In unseren
+	 * 			Parcoursdateien wird die DTD folgendermaßen angegeben:
+	 * 			<code><!DOCTYPE collection SYSTEM "parcours.dtd"></code>.
+	 * 			Die relative URI ist dabei ist <code>parcours.dtd</code> (im XML-Jargon "system identifier"
+	 * 			genannt). Wenn diese Klasse also eine XML-Datei mit eben genannten Zeile parst und z.B.
+	 * 			als baseDir "wurst" übergeben wurde, wird der Parser versuchen, die Datei wurst/parcours.dtd
+	 * 			zu öffnen und als DTD zu verwenden.
 	 * @return das Dokument
-	 * @throws SAXException
-	 * 				falls die übergebene Datei nicht geparst werden kann, etwa weil das enthaltene XML
-	 * 				nicht wohlgeformt ist oder nicht gegen die DTD validiert. Eine SAXException wird
-	 * 				unter genau den Umständen geworfen, wenn {@link DocumentBuilder#parse(InputStream, String)},
-	 * 				eine solche wirft.
-	 * @throws IOException
-	 * 				falls beim Lesen der übergebenen Datei eine IOException auftritt, etwa weil die Datei
-	 * 				nicht lesbar ist.
-	 * @throws ParserConfigurationException
-	 * 				In dem abwegigen Fall, dass die Java-Plattform keinen validierenden Parser auftreiben kann.
+	 * @throws SAXException	falls die übergebene Datei nicht geparst werden kann, etwa weil das enthaltene
+	 * 			XML nicht wohlgeformt ist oder nicht gegen die DTD validiert. Eine SAXException wird unter
+	 * 			genau den Umständen geworfen, wenn {@link DocumentBuilder#parse(InputStream, String)}, eine
+	 * 			solche wirft.
+	 * @throws IOException	falls beim Lesen der übergebenen Datei eine IOException auftritt, etwa weil die
+	 * 			Datei nicht lesbar ist.
+	 * @throws ParserConfigurationException	in dem abwegigen Fall, dass die Java-Plattform keinen validierenden
+	 * 			Parser auftreiben kann.
 	 */
 	public static QueryableDocument parse(File fileToParse, String baseDir)
 			throws SAXException, IOException, ParserConfigurationException {
@@ -131,9 +125,8 @@ public class XmlDocument {
 	 * Verzeichnis, das das übergebene File enthält. Relevant also für den Fall, dass die XML- und
 	 * DTD-Datei im selben Verzeichnis liegen.
 	 *
-	 * @param fileToParse
-	 * 				Die XML-Datei, die geparst und validiert werden soll,
-	 * 				z.B. <code>new File("sachen/gemuese/gurken.xml")</code>.
+	 * @param fileToParse	Die XML-Datei, die geparst und validiert werden soll,
+	 * 			z.B. <code>new File("sachen/gemuese/gurken.xml")</code>.
 	 * @return Das Dokument
 	 * @throws SAXException
 	 * @throws IOException
@@ -147,9 +140,8 @@ public class XmlDocument {
 	/**
 	 * Wie {@link #parse(java.io.File)}:
 	 *
-	 * @param fileToParse
-	 * 				Name und ggf. Pfad der XML-Datei, die geparst und validiert werden soll,
-	 * 				z.B. "sachen/gemuese/gurken.xml".
+	 * @param fileToParse	Name und ggf. Pfad der XML-Datei, die geparst und validiert werden soll,
+	 * 			z.B. "sachen/gemuese/gurken.xml".
 	 * @return Das Dokument
 	 * @throws SAXException
 	 * @throws IOException
@@ -179,7 +171,7 @@ public class XmlDocument {
 		f.setValidating(true);	// Soll gegen DTD validieren
 		DocumentBuilder parser = f.newDocumentBuilder();
 		/**
-		 * Wichtig für Validierung: Wenn kein ErrorHandler gesetzt und eine XML-Datei geparst wird,
+		 * Wichtig für die Validierung: Wenn kein ErrorHandler gesetzt und eine XML-Datei geparst wird,
 		 * die zwar wohlgeformt, aber nicht gültig (valid) ist, dann gibt der Parser eine dumme Warnung
 		 * auf stderr aus, man solle doch einen ErrorHandler setzen.
 		 */
@@ -230,7 +222,7 @@ public class XmlDocument {
 
 	/** Mixin */
 	public static class QueryableMixin implements XPathQueryable {
-		/** Dieser Mixin wird in diesen Knoten hinein gemixt; Drandenken: Dokumente sind auch Knoten */
+		/** Dieser Mixin wird in diesen Knoten hinein gemixt; Bedenken: Dokumente sind auch Knoten */
 		private Node cocktail;
 
 		/** Hiwi zum Auswerten von XPath-Ausdrücken */
@@ -279,7 +271,7 @@ public class XmlDocument {
 		@Override
 		public Double getNumber(String xPathExpression)
 				throws XPathExpressionException {
-			/*
+			/**
 			 * Cast nach Double (nicht Number) - eine XPath-Number mappt in Java auf einen Double,
 			 * siehe <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/xml/xpath/XPathConstants.html#NUMBER"></a>
 			 */
@@ -367,10 +359,9 @@ public class XmlDocument {
 		 *
 		 * @param xPathExpression
 		 * @return Die selektierten Knoten als {@link NodeList}, wie sie die Java-Plattform implementiert,
-		 * 			die aber auch {@link Iterable} ist.
-		 * 			<code>for (Node n : document.getNodeList(...))</code> ist also möglich. Gibt es im
-		 * 			Dokument keine Knoten, die von dem XPath-Ausdruck selektiert werden, wird eine NodeList
-		 * 			zurückgegeben, die keine Knoten enthält.
+		 * 			die aber auch {@link Iterable} ist. <code>for (Node n : document.getNodeList(...))</code>
+		 * 			ist also möglich. Gibt es im Dokument keine Knoten, die von dem XPath-Ausdruck selektiert
+		 * 			werden, wird eine NodeList zurückgegeben, die keine Knoten enthält.
 		 * @throws XPathExpressionException
 		 */
 		public IterableNodeList getNodeList(String xPathExpression)
@@ -384,7 +375,7 @@ public class XmlDocument {
 		 * </p>
 		 * <p>
 		 * <strong>Beachten:</strong> Knoten müssen nicht Elemente sein; Attribute, CData-Abschnitte usw.
-		 * sind auch Knoten. Siehe {@link Node}.
+		 * sind auch Knoten; siehe {@link Node}.
 		 * </p>
 		 *
 		 * @param xPathExpression

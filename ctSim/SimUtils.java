@@ -98,21 +98,21 @@ public class SimUtils {
 	}
 
 
-	//	public static double getRotation(Vector3f heading) {
-	//		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
-	//		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
-	//		// müssen hier zwei Fälle unterschieden werden:
-	//		if (heading.x >= 0)
-	//			return -angle;
-	//		else
-	//			return angle;
-	//	}
+	// public static double getRotation(Vector3f heading) {
+	// 		double angle = heading.angle(new Vector3f(0f, 1f, 0f));
+	// 		// Da Vector3f.angle() nur Werte zwischen 0 und PI liefert,
+	// 		// müssen hier zwei Fälle unterschieden werden:
+	// 		if (heading.x >= 0)
+	// 			return -angle;
+	// 		else
+	// 		return angle;
+	// }
 
 	/**
 	 * Errechnet den Winkel zwischen Nordrichtung des Universums (Richtung der  positiven Y-Achse)
 	 * und der angegeben Blickrichtung.
 	 *
-	 * @param heading	Gibt die Blickrichtung an, zu welcher der Winkel berechnet werden soll.
+	 * @param heading	gibt die Blickrichtung an, zu welcher der Winkel berechnet werden soll.
 	 * @return Gibt den Winkel in Bogenmass (radians, Rad) zurück
 	 */
 	public static double getRotation(Vector3d heading) {
@@ -148,7 +148,7 @@ public class SimUtils {
 	/**
 	 * Wandelt Millisekunden in die Anzeige h:m:s:ms um
 	 *
-	 * @param millis	Die Zeit in Millisekunden
+	 * @param millis	die Zeit in Millisekunden
 	 * @return Die Zeit als Text
 	 */
 	public static String millis2time(long millis){

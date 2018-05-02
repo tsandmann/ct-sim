@@ -86,10 +86,10 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		 */
 		@Override
 		public void paint(Graphics g) {
-			// Löschen
+			// löschen
 			g.setColor(getBackground());
 			g.fillRect(0, 0, getSize().width, getSize().height);
-			// Malen
+			// malen
 			g.drawImage(image, 0, 0, null);
 		}
 
@@ -158,7 +158,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		cb.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Wenn Checkbox an, Button deaktivieren
+				// wenn Checkbox an, Button deaktivieren
 				bt.setEnabled(! cb.isSelected());
 				try {
 					compnt.requestPicture();
@@ -181,7 +181,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 			}
 		});
 
-		/* Ausliefern */
+		/* ausliefern */
 		p.add(controls, BorderLayout.SOUTH);
 
 		add(p);

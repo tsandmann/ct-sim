@@ -46,7 +46,7 @@ public class EchoTest {
 		command.setDataR(0);
 		command.setSeq(seq++);
 		connection.send(command.getCommandBytes());
-//		System.out.println(world.getRealTime()+"ms: requesting @"+lastTransmittedSimulTime+" ms");
+		// System.out.println(world.getRealTime()+"ms: requesting @"+lastTransmittedSimulTime+" ms");
 
 	}
 	
@@ -85,7 +85,7 @@ public class EchoTest {
 		try{
 			EchoTest et = new EchoTest();
 			
-//			long sendTime;
+			// long sendTime;
 			
 			ServerSocket server = new ServerSocket(10001);
 			TcpConnection tcp = new TcpConnection();
@@ -95,7 +95,7 @@ public class EchoTest {
 	
 			while(1==1){
 				et.send(tcp);
-//				sendTime=System.nanoTime()/1000;
+				// sendTime=System.nanoTime()/1000;
 				et.receiveCommands(tcp);
 			}
 			

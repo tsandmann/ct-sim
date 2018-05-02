@@ -42,13 +42,13 @@ public abstract class CtBot extends BasicBot {
 
 	/** LED-Farben */
 	private static final Color[] ledColors = {
-			new Color(  0,  84, 255), // blau
-			new Color(  0,  84, 255), // blau
+			new Color(  0,  84, 255),	// blau
+			new Color(  0,  84, 255),	// blau
 			Color.RED,
-			new Color(255, 200,   0), // orange
+			new Color(255, 200,   0),	// orange
 			Color.YELLOW,
 			Color.GREEN,
-			new Color(  0, 255, 210), // tuerkis
+			new Color(  0, 255, 210),	// türkis
 			Color.WHITE,
 	};
 
@@ -68,8 +68,7 @@ public abstract class CtBot extends BasicBot {
 	protected WelcomeReceiver welcomeReceiver = null;
 
 	/**
-	 * Vorverarbeitung der Kommandos
-	 * z.B. Weiterleiten von Kommandos für andere Bots Adressvergabe, etc.
+	 * Vorverarbeitung der Kommandos z.B. Weiterleiten von Kommandos für andere Bots Adressvergabe, etc.
 	 *
 	 * @param cmd	das Kommando
 	 * @return True, wenn das Kommando abgearbeitet wurde, sonst False

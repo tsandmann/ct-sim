@@ -375,8 +375,7 @@ public class Config {
 			try { return getClassTolerateNumber(classNameFromXml); }
 			catch (ClassNotFoundException e) { /* weitermachen */ }
 
-			// 3. + 4. Versuch: Angegebenes Package weg wenn vorhanden, unsere
-			// eigenen Schätzungen versuchen
+			// 3. + 4. Versuch: Angegebenes Package weg wenn vorhanden, unsere eigenen Schätzungen versuchen
 			String c = Misc.lastOf(classNameFromXml.split("\\."));
 			try { return getClassTolerateNumber("ctSim.model.bots."+c); }
 			catch (ClassNotFoundException e) { /* weitermachen */ }

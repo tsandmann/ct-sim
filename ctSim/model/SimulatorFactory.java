@@ -24,10 +24,7 @@ import ctSim.model.bots.ctbot.CtBotSimTcp;
 import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.bots.ctbot.MasterSimulator;
 
-/**
- * Erzeugt einen Simulator für einen Bot, der zu einer Welt gehört
- * und eine 3D-Darstellung besitzt
- */
+/** Erzeugt einen Simulator für einen Bot, der zu einer Welt gehört und eine 3D-Darstellung besitzt */
 public abstract class SimulatorFactory {
 	/** SimulatorFactory */
 	private SimulatorFactory() {

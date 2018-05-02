@@ -114,14 +114,14 @@ public class TournamentTree extends ArrayList<Integer> {
 	 * Spiele im Zweiunddreißigstelfinale gespielt werden, die anderen bleiben leer. 10 Spiele = 20 Spieler,
 	 * d.h. die übrigen 22 Spieler bekommen ein Freilos.
 	 * </p>
-	 * Freiloslevel immer ein Level höher als lowestLevelId. 0 = 0
+	 * Freilos-Level immer ein Level höher als lowestLevelId. 0 = 0
 	 *
 	 * @param desiredLevelId
 	 * @return der Plan
 	 */
 	public ArrayList<Integer> getTournamentPlan(int desiredLevelId) {
 		assert desiredLevelId > 0;
-		// Muss Zweierpotenz sein
+		// muss eine Zweierpotenz sein
 		assert Misc.log2(desiredLevelId) == Math.round(Misc.log2(desiredLevelId));
 		assert desiredLevelId <= getLowestLevelId();
 		assert size() >= 2;

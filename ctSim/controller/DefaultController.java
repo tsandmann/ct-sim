@@ -145,7 +145,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	public void run() {
 		int timeout = 10000;
 
-		// Sequencer-Thread hat eigene Referenz auf die Welt -- siehe Bug 55
+		// Sequencer-Thread hat eigene Referenz auf die Welt - siehe Bug 55
 		final World sequencersWorld = world;
 
 		try {
@@ -191,7 +191,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 					view.onSimulationFinished();
 				}
 
-				// den View(s) bescheid sagen
+				// den View(s) Bescheid sagen
 				view.onSimulationStep(sequencersWorld.getSimTimeInMs());
 
 				if(this.pause) {
@@ -287,7 +287,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		lg.info("Neue Welt geöffnet");
 
 		lg.fine("Initialisiere Sequencer");
-		pause = true;	// Immer pausiert starten
+		pause = true;	// immer pausiert starten
 		sequencer = new Thread(this, "ctSim-Sequencer");
 		sequencer.start();
 	}
@@ -295,7 +295,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	/** Hält den Sequencer-Thread an */
 	@Override
 	public void closeWorld() {
-		if (sequencer == null)	// Keine Welt geladen, d.h. kein Sequencer läuft
+		if (sequencer == null)	// keine Welt geladen, d.h. kein Sequencer läuft
 			return;
 
 		lg.fine("Terminieren des Sequencer angefordert");
@@ -372,7 +372,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 			if (System.getProperty("os.name").indexOf("Linux") >= 0){
 				Process p = Runtime.getRuntime().exec(
 						new String[] { "chmod", "ugo+x", filename });
-				p.waitFor();	// Warten bis der gelaufen ist
+				p.waitFor();	// warten bis der gelaufen ist
 				if (p.exitValue() != 0) {
 					lg.warning("Fehler beim Setzen der execute-Permission: " +
 							"chmod lieferte %d zurück", p.exitValue());
@@ -453,8 +453,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		// für den Kommunikationsproxy brauchen wir eine Liste aller Bots
 		bots.add(bot);
 
-		// Und einen Dispose-Handler installieren, damit wir Bots auch wieder
-		// sauber beenden
+		// ...und einen Dispose-Handler installieren, damit wir Bots auch wieder sauber beenden
 		bot.addDisposeListener(new Runnable() {
 			@Override
 			public void run() {
@@ -473,7 +472,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	}
 
 	/**
-	 * @param judgeClassName	Die Art des Schiedrichters zu setzen
+	 * @param judgeClassName	die Art des Schiedrichters zu setzen
 	 *
 	 * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist.
 	 */
@@ -511,7 +510,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		if (judge == null)
 			throw new NullPointerException();
 		this.judge = judge;
-		//      view.onJudgeSet(judge);
+		// view.onJudgeSet(judge);
 	}
 
 	/**

@@ -32,14 +32,17 @@ import java.util.logging.LogRecord;
  * <p>
  * <strong>Beispielausgabe:</strong>
  *
- * <pre>[18 Oct 06 13:32:51.441] INFO: Elefanten sind i.d.R. grau [ctSim.controller.info() Thread (10)]</pre>
+ * <pre>
+ * [18 Oct 06 13:32:51.441] INFO: Elefanten sind i.d.R. grau [ctSim.controller.info() Thread (10)]
+ * </pre>
  *
  * Format ist also
  * "[Zeit-der-Logausgabe] Loglevel: Meldung [Quellpaket.Quellmethode() Thread Threadname-falls-vorhanden
  * (Thread-ID)]".
  * Falls der Logmeldung eine Exception mitgegeben wird, sieht die Ausgabe so aus:
  *
- * <pre>[10 Oct 06 13:53:36.623] SEVERE: TCP-Verbindungen haben sich ganz schlimm verwurstelt
+ * <pre>
+ * [10 Oct 06 13:53:36.623] SEVERE: TCP-Verbindungen haben sich ganz schlimm verwurstelt
  * [ctSim.model.bots.ctbot.CtBotSimTcp.severe() Thread AWT-Shutdown (18)]
  * java.io.IOException
  * 		at java.io.DataInputStream.readFully(DataInputStream.java:178)

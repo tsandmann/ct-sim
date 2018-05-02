@@ -336,7 +336,7 @@ public class Actuators {
 		 * Sendet den Inhalt des Fensters als Programm zum Bot
 		 *
 		 * @param filename	Dateiname für das Programm
-		 * @param data		Das Programm
+		 * @param data		das Programm
 		 * @param type		Typ, 0: Basic, 1: ABL
 		 * @param bot		Referenz auf die zugehörige Bot-Instanz
 		 * @throws IOException
@@ -601,8 +601,7 @@ public class Actuators {
 		 * Setzt das Display zurück, sodass es auf ganzer Breite und Höhe nur Leerzeichen anzeigt.
 		 *
 		 * @param d	Document des Displays
-		 * @throws BadLocationException	nur falls jemand etwas am Code ändert;
-		 * 			sollte normalerweise nie vorkommen.
+		 * @throws BadLocationException	nur falls jemand etwas am Code ändert; sollte normalerweise nie vorkommen.
 		 */
 		protected synchronized void clearModel(Document d) throws BadLocationException {
 			StringBuilder b = new StringBuilder();
@@ -622,7 +621,7 @@ public class Actuators {
 		 * Text einfügen an der aktuellen Cursorposition
 		 * Dort stehender Text wird überschrieben (nicht verschoben).
 		 *
-		 * @param text	Der Text, der ab der neuen Cursorposition einzutragen ist
+		 * @param text	der Text, der ab der neuen Cursorposition einzutragen ist
 		 * @throws BadLocationException	"Kann nicht passieren"
 		 */
 		protected synchronized void overwrite(String text) throws BadLocationException {

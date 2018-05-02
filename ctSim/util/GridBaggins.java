@@ -181,15 +181,19 @@ public class GridBaggins extends GridBagConstraints {
 	}
 
 	/**
+	 * <p>
 	 * Specifies the number of cells in a column for the component's display area.
+	 * </p>
 	 * <p>
 	 * Use <code>REMAINDER</code> to specify that the component's display area will be from <code>gridy</code>
 	 * to the last cell in the column.
 	 * Use <code>RELATIVE</code> to specify that the component's display area will be from <code>gridy</code>
 	 * to the next to the last one in its column.
+	 * </p>
 	 * <p>
 	 * <code>gridheight</code> should be a non-negative value and the default value is 1.
-	 *
+	 * </p>
+	 * 
 	 * @param numRows
 	 * @return GridBaggin
 	 */
@@ -209,15 +213,19 @@ public class GridBaggins extends GridBagConstraints {
 	}
 
 	/**
+	 * <p>
 	 * Specifies the number of cells in a row for the component's display area.
+	 * </p>
 	 * <p>
 	 * Use <code>REMAINDER</code> to specify that the component's display area will be from <code>gridx</code>
 	 * to the last cell in the row.
 	 * Use <code>RELATIVE</code> to specify that the component's display area will be from <code>gridx</code>
 	 * to the next to the last one in its row.
+	 * </p>
 	 * <p>
 	 * <code>gridwidth</code> should be non-negative and the default value is 1.
-	 *
+	 * </p>
+	 * 
 	 * @param numCols
 	 * @return GridBaggin
 	 */
@@ -237,15 +245,18 @@ public class GridBaggins extends GridBagConstraints {
 	}
 
 	/**
+	 * <p>
 	 * Specifies the cell containing the leading edge of the component's display area, where the first
 	 * cell in a row has <code>gridx=0</code>. The leading edge of a component's display area is its
 	 * left edge for a horizontal, left-to-right container and its right edge for a horizontal,
 	 * right-to-left container. The value <code>RELATIVE</code> specifies that the component be placed
 	 * immediately following the component that was added to the container just before this component
 	 * was added.
+	 * </p>
 	 * <p>
 	 * The default value is <code>RELATIVE</code>. <code>gridx</code> should be a non-negative value.
-	 *
+	 * </p>
+	 * 
 	 * @param col
 	 * @return GridBaggin
 	 */

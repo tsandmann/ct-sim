@@ -192,7 +192,7 @@ public class LogViewer extends JPanel {
 				s.getInsets().bottom + getInsets().bottom +	toolbar.getPreferredSize().height;
 		setPreferredSize(new Dimension(w, h));
 
-		// Ausliefern
+		// ausliefern
 		add(toolbar, BorderLayout.NORTH);
 		add(s, BorderLayout.CENTER);
 	}

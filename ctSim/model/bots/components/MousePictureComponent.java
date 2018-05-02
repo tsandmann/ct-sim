@@ -57,9 +57,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private static final int HEIGHT = 18;
 
 	/**
-	 * Rohe Pixeldaten des Maussensors; ein Int pro Pixel. Format so, wie
-	 * {@link ColorModel#getRGBdefault()} es braucht; die Methode
-	 * {@link #colorFromRgb(int, int, int) colorFromRgb} liefert das Format; Details siehe dort.
+	 * Rohe Pixeldaten des Maussensors; ein Int pro Pixel. Format so, wie {@link ColorModel#getRGBdefault()}
+	 * es braucht; die Methode {@link #colorFromRgb(int, int, int) colorFromRgb} liefert das Format;
+	 * Details siehe dort.
 	 */
 	private final int[] pixels = new int[WIDTH * HEIGHT];
 	/** Sync austehend? */

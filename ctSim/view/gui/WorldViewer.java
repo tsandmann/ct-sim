@@ -64,9 +64,9 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	final protected GraphicsConfiguration gc =
 			GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D());
 	/**
-	 * Das letzte verwendete GraphicsDevice, wird für das Erzeugen einer neuen Welt in einem Multi-Monitor
+	 * Das letzte verwendete GraphicsDevice; wird für das Erzeugen einer neuen Welt in einem Multi-Monitor
 	 * Setup benötigt
-	 * */
+	 */
 	protected GraphicsDevice last_gd = gc.getDevice();
 
 	/** OnScreen Fläche */
@@ -146,7 +146,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		}
 
 		if (System.getProperty("os.name").indexOf("OS X") == 0) {
-			/*
+			/**
 			 * Workaround gegen Crash unter macOS und Java >= 9 (context.destroy() in
 			 * JoglPipeline.java crasht). Nachteil: Auch nach dem Schließen der Welt wird diese noch
 			 * angezeigt, bis eine Neue geladen wurde.
@@ -171,11 +171,13 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	 */
 	protected void init(World w) {
 		onScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice()
-				/*GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D())*/,
-				false);
+			/* GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(
+			 * new GraphicsConfigTemplate3D())
+			 */, false);
 		offScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice()
-				/*GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D())*/,
-				true);
+			/* GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(
+			 * new GraphicsConfigTemplate3D())
+			 */, true);
 		add(onScreenCanvas, MODEL);
 		universe = new SimpleUniverse(onScreenCanvas);
 		universe.getViewer().getView().addCanvas3D(offScreenCanvas);

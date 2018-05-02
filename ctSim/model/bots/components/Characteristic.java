@@ -37,15 +37,14 @@ import java.util.Vector;
  * liefern viele Sensoren natürlich ebenfalls ganzzahlige Werte).
  *
  * @author p-king
- *
  */
 
 public class Characteristic {
 
 	/**
-	 * Das Array mit ausgewählten Messgrößen (M) und Sensordaten (S), Format:
-	 * M1, S1, M2, S2 .... wobei Mx ganzzahlige, positive Werte sind und M(x+1) > Mx sein muss
-	 * (Lücken sind aber erlaubt). Sx sind die Sensordaten als Gleitkommazahlen (floats).
+	 * Das Array mit ausgewählten Messgrößen (M) und Sensordaten (S), Format: M1, S1, M2, S2 .... wobei
+	 * Mx ganzzahlige, positive Werte sind und M(x+1) > Mx sein muss (Lücken sind aber erlaubt).
+	 * Sx sind die Sensordaten als Gleitkommazahlen (floats).
 	 */
 	private float[] characteristic;
 
@@ -229,9 +228,8 @@ public class Characteristic {
 	 * Präzise Funktion, die bei Messgrößen zwischen ganzen Zahlen weitere Zwischenwerte berechnet.
 	 * Nur sinnvoll bei Sensoren, die nicht nur ganzzahlige Messwerte liefern
 	 *
-	 * @param measure
-	 * 				Die Messgröße, aufgrund derer der Sensor seinen Wert erzeugt
-	 * 				(z.B. die Distanz bei Distanzsensoren)
+	 * @param measure	Die Messgröße, aufgrund derer der Sensor seinen Wert erzeugt (z.B. die Distanz
+	 * 			bei Distanzsensoren)
 	 * @return Das Sensordatum laut Kennlinie, ist eine ganze Zahl
 	 */
 	public double lookupPrecise(Number measure) {
@@ -308,10 +306,10 @@ public class Characteristic {
 		}
 		stream.close();
 
-		/*
-		 * Merkwürdigerweise wird bei dieser Methode, einen FileInputStream in einen String zu
-		 * verwandeln, ans Ende ein '?' als Zeichen für EOF angehängt, das wir auf etwas unschöne Art
-		 * und Weise abschneiden müssen:
+		/**
+		 * Merkwürdigerweise wird bei dieser Methode, einen FileInputStream in einen String zu verwandeln,
+		 * ans Ende ein '?' als Zeichen für EOF angehängt, das wir auf etwas unschöne Art und Weise
+		 * abschneiden müssen:
 		 */
 		input = input.deleteCharAt((input.length()) - 1);
 		return (input.toString());

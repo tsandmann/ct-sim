@@ -138,7 +138,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 		 * Liefert die Zeit, wie lange das Spiel maximal dauern darf. Nach dieser Zeit soll das Spiel vom
 		 * Judge als abgebrochen werden.
 		 *
-		 * @return Geplante Simzeit [ms], wie lange ein Spiel des Levels dieses Spiels maximal dauern darf.
+		 * @return Geplante Simzeit [ms], also wie lange ein Spiel des Levels dieses Spiels maximal dauern darf
 		 * @throws SQLException
 		 * @throws IllegalStateException
 		 * @see World#getSimTimeInMs()
@@ -178,15 +178,15 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * von der Online-Redaktion benutzt, um den aktuellen Spielstand im Web anzuzeigen.
 	 *
 	 * @param bots	Ein Set, das ein oder zwei Bots enthält. Position, Blickrichtung und Status der Bots
-	 * 				wird in die Datenbank geloggt.
+	 * 			wird in die Datenbank geloggt.
 	 * @param simTimeElapsed	Simulatorzeit [ms] seit Beginn des Spiels
 	 * @throws IllegalArgumentException	falls der Parameter <code>bots</code> weniger als ein oder mehr
-	 * 				als zwei Elemente enthält.
+	 * 			als zwei Elemente enthält.
 	 * @throws SQLException
 	 * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
-	 * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
-	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
-	 * 				beendet wurde.
+	 * 			<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
+	 * 			<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
+	 * 			beendet wurde.
 	 *
 	 * @see World#getSimTimeInMs()
 	 */
@@ -312,7 +312,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	}
 
 	/**
-	 * Liefert das aus der Datenbank kommende XML, das einen Parcours beschreibt.
+	 * Liefert das aus der Datenbank kommende XML, das einen Parcours beschreibt
 	 *
 	 * @param levelId	Der Schlüssel des Levels, dessen Parcours angefordert wird.
 	 * @return Das XML-Dokument, das den Parcours beschreibt (selbes Schema wie das on-disk-Parcours-Schema).
@@ -369,7 +369,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 
 
 	/**
-	 * Zeichnet in der Datenbank auf, wer Gewinner des aktuellen Spiels war, und beendet das aktuelle Spiel.
+	 * Zeichnet in der Datenbank auf, wer Gewinner des aktuellen Spiels war, und beendet das aktuelle Spiel
 	 * Setzt außerdem den Gewinner ein Level weiter.
 	 *
 	 * @param winnerBotId	Primärschlüssel des Bots, der das Spiel gewonnen hat.
@@ -377,12 +377,12 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * 				überschritten?
 	 * @throws SQLException
 	 * @throws TournamentPlanException	falls das aktuelle Spiel ein Hauptrundenspiel ist und der Gewinner
-	 * 				in ein Level weitergesetzt wird, für das schon zwei Spieler eingetragen sind. Mit
-	 * 				anderen Worten, falls der Turnierbaum verunstaltet ist.
+	 * 			in ein Level weitergesetzt wird, für das schon zwei Spieler eingetragen sind. Mit anderen
+	 * 			Worten, falls der Turnierbaum verunstaltet ist.
 	 * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
-	 * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
-	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
-	 * 				beendet wurde.
+	 * 			<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
+	 * 			<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
+	 * 			beendet wurde.
 	 */
 	public void setWinner(int winnerBotId, long finishSimTime)
 			throws SQLException, TournamentPlanException, NullPointerException {
@@ -403,7 +403,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	/**
 	 * <p>
 	 * Liefert die ID des Bots, der der Verlierer des aktuellen Spiels ist, wenn man die übergebene Zahl
-	 * als die ID des Gewinners annimmt. Mit anderen Worten, liefert aus dem aktuellen Spiel den
+	 * als die ID des Gewinners annimmt. Mit anderen Worten: Liefert aus dem aktuellen Spiel den
 	 * Spielpartner des übergebenen Spielers. Funktioniert nur in Hauptrundenspielen.
 	 * </p>
 	 *
@@ -411,12 +411,12 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * @return Bot-ID		Bot-ID des Verlierers des aktuellen Spiels
 	 * @throws SQLException
 	 * @throws IllegalStateException	wenn in den beiden botIds des aktuellen Spiels der Wert NULL in
-	 * 				der Datenbank auftaucht. (Wirft daher auch diese Exception, wenn die Methode aufgerufen
-	 * 				wird, während ein Vorrundenspiel läuft.)
+	 * 			der Datenbank auftaucht. (Wirft daher auch diese Exception, wenn die Methode aufgerufen
+	 * 			wird, während ein Vorrundenspiel läuft.)
 	 * @throws NullPointerException		falls zur Zeit kein Spiel läuft, d.h. falls noch nie
-	 * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
-	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
-	 * 				beendet wurde.
+	 * 			<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
+	 * 			<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
+	 * 			beendet wurde.
 	 */
 	private int getCurrentGameLoserId(int winnerBotId)
 			throws SQLException, IllegalStateException, NullPointerException {
@@ -445,12 +445,12 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * @param winnerBotId	Bot-ID des Gewinners
 	 * @throws SQLException
 	 * @throws TournamentPlanException	falls in dem Spiel, in das der Gewinner des aktuellen Spiels
-	 * 				gesetzt werden soll, bereits zwei Spieler eingetragen sind (= falls der Turnierbaum
-	 * 				verunstaltet ist).
+	 * 			gesetzt werden soll, bereits zwei Spieler eingetragen sind (= falls der Turnierbaum
+	 * 			verunstaltet ist).
 	 * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
-	 * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
-	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
-	 * 				beendet wurde.
+	 * 			<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
+	 * 			<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
+	 * 			beendet wurde.
 	 */
 	private void propagateWinner(int winnerBotId)
 			throws SQLException, TournamentPlanException, NullPointerException {
@@ -481,13 +481,13 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * Liefert die Binary eines der beiden Bots im aktuellen Spiel
 	 *
 	 * @param whichPlayer	Name des DB-Felds, das angibt, welcher Bot. Kann im gegenwärtigen DB-Schema
-	 * 				"bot1" oder "bot2" sein.
+	 * 			"bot1" oder "bot2" sein.
 	 * @return Die mit dem gewählten Bot im aktuellen Spiel assoziierte Binary (ELF).
 	 * @throws SQLException
 	 * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
-	 * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
-	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
-	 * 				beendet wurde.
+	 * 			<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
+	 * 			<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
+	 * 			beendet wurde.
 	 */
 	private Blob getBotBinary(String whichPlayer)
 			throws SQLException, NullPointerException {
@@ -510,9 +510,9 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * @return Die mit Teilnehmer 1 des aktuellen Spiels assoziierte Binary (ELF).
 	 * @throws SQLException
 	 * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
-	 * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
-	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
-	 * 				beendet wurde.
+	 * 			<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
+	 * 			<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
+	 * 			beendet wurde.
 	 */
 	public Blob getBot1Binary() throws SQLException {
 		return getBotBinary("bot1");
@@ -524,9 +524,9 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * @return Die mit Teilnehmer 2 des aktuellen Spiels assoziierte Binary (ELF).
 	 * @throws SQLException
 	 * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
-	 * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
-	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
-	 * 				beendet wurde.
+	 * 			<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
+	 * 			<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
+	 * 			beendet wurde.
 	 */
 	public Blob getBot2Binary() throws SQLException {
 		return getBotBinary("bot2");
@@ -535,14 +535,14 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	/**
 	 * Liefert den Schlüssel eines der Spieler im zur Zeit laufenden Spiel
 	 *
-	 * @param whichPlayer	Gibt das DB-Feld an, das den gewünschten Schlüssel enthält.
-	 * 				Dies kann "bot1" oder "bot2" sein.
+	 * @param whichPlayer	Gibt das DB-Feld an, das den gewünschten Schlüssel enthält. Dies kann "bot1"
+	 * 			oder "bot2" sein.
 	 * @return Bot-ID
 	 * @throws SQLException
 	 * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
-	 * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
-	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
-	 * 				beendet wurde.
+	 * 			<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
+	 * 			<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
+	 * 			beendet wurde.
 	 */
 	private int getBotId(String whichPlayer)
 			throws SQLException, NullPointerException {
@@ -598,12 +598,12 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * Liefert die Spiele, die bereit zur Durchführung sind
 	 *
 	 * @return Ein ResultSet, das auf das Spiel zeigt. Das Format ist das der Zeilen in der Tabelle
-	 * 				ctsim_game. Wenn der erste next()-Aufruf auf dem ResultSet den Wert <code>false</code>
-	 * 				liefert, gibt es keine Spiele mehr, die bereit zur Durchführung wären.
+	 * 			ctsim_game. Wenn der erste next()-Aufruf auf dem ResultSet den Wert <code>false</code>
+	 * 			liefert, gibt es keine Spiele mehr, die bereit zur Durchführung wären.
 	 * @throws SQLException
 	 */
 	public ResultSet getReadyGames() throws SQLException {
-		// Nur Spiele wählen, die READY_TO_RUN haben
+		// nur Spiele wählen, die READY_TO_RUN haben
 		return execSql(
 				"SELECT * FROM ctsim_game " +
 						"WHERE state = ? ORDER BY scheduled",
@@ -630,12 +630,12 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * Zeigt an, ob das zur Zeit laufende Spiel ein Hauptrundenspiel ist
 	 *
 	 * @return <code>true</code>, falls das aktuelle Spiel zur Hauptrunde gehört (ein anderes Level als
-	 * 				-1 hat); <code>false</code>, falls das aktuelle Spiel zur Vorrunde gehört (ein Level
-	 * 				von -1 hat).
+	 * 			-1 hat); <code>false</code>, falls das aktuelle Spiel zur Vorrunde gehört (ein Level von
+	 * 			-1 hat).
 	 * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
-	 * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
-	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
-	 * 				beendet wurde.
+	 * 			<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
+	 * 			<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
+	 * 			beendet wurde.
 	 */
 	private boolean isCurrentGameMainRound() throws NullPointerException {
 		return currentGame.getLevelId() != -1;

@@ -87,13 +87,13 @@ public class RemoteCallViewer extends JPanel {
 				else
 					label = p.name;
 
-				// Nach links hin bisschen Platz, mit der Low-tech-Methode
+				// nach links hin bisschen Platz, mit der Low-tech-Methode
 				JLabel jl = new JLabel("   "+label+" =");
 				jl.setToolTipText(tooltip);
 				add(jl);
 				JSpinner js = new JSpinner(p);
 				js.setToolTipText(tooltip);
-				int numCols = 3; // Default
+				int numCols = 3;	// Default
 				try {
 					numCols = Math.max(
 							// Wie viele Stellen haben Min und Max?
@@ -107,7 +107,7 @@ public class RemoteCallViewer extends JPanel {
 				add(js);
 			}
 
-			/* Mindestbreite ausrechnen, damit ScrollPane bescheidweiß */
+			/* Mindestbreite ausrechnen, damit ScrollPane Bescheid weiß */
 			/* Zwischenräume */
 			int prefWidth = (getComponentCount() - 1) *
 					((FlowLayout)getLayout()).getHgap();
@@ -439,7 +439,7 @@ public class RemoteCallViewer extends JPanel {
 					return;
 				}
 			}
-			//			lg.warn("Ein Remote Call wurde beendet, der laut Liste gar nicht läuft"); // unproblematisch
+			// lg.warn("Ein Remote Call wurde beendet, der laut Liste gar nicht läuft");	// unproblematisch
 		}
 
 		/**
@@ -569,7 +569,7 @@ public class RemoteCallViewer extends JPanel {
 		});
 		availBhvs.setTableHeader(null);	// Header weg
 		availBhvs.getColumnClass(getComponentCount());
-		// Nur 1 Zeile markierbar
+		// nur eine Zeile markierbar
 		availBhvs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		availBhvs.setColumnSelectionAllowed(true);
 		availBhvs.setRowSelectionAllowed(true);
@@ -635,8 +635,7 @@ public class RemoteCallViewer extends JPanel {
 		// Font vergrößern
 		Font f = b.getFont();
 		/**
-		 * Wichtig:
-		 * deriveFont(float) aufrufen, nicht deriveFont(int), beide bedeuten ganz unterschiedliche
+		 * Wichtig: deriveFont(float) aufrufen, nicht deriveFont(int), beide bedeuten ganz unterschiedliche
 		 * Sachen; also "f" an die Zahl anhängen.
 		 */
 		b.setFont(f.deriveFont(f.getSize() * 3f));

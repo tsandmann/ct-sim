@@ -51,8 +51,8 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 
 	/**
 	 * Vorsicht: Wenn hier Exceptions auftreten, verschluckt JUnit diese und meldet nur unverständlich
-	 * "No runnable methods". Im Zweifel main()-Methode schreiben, die das hier aufruft, und als
-	 * Applikation (nicht Unit-Test) laufen lassen
+	 * "No runnable methods"; im Zweifel eine main()-Methode schreiben, die das hier aufruft, und diese
+	 * dann als Applikation (nicht Unit-Test) laufen lassen.
 	 */
 
 	/** Tests */
@@ -256,7 +256,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		for (int i = 0; i < 42; i++)
 			makePrelimGame(i, GameState.GAME_OVER, i, Math.abs(30 - i));
 		db.execSql("delete from ctsim_level");
-		makeLevel(0, gameIntervalInS); // Spiel um den 3. Platz
+		makeLevel(0, gameIntervalInS);	// Spiel um den 3. Platz
 		for (int i = 1; i <= 32; i *= 2)
 			makeLevel(i, gameIntervalInS);
 

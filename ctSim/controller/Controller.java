@@ -58,7 +58,7 @@ public interface Controller {
 	/**
 	 * Startet einen externen Bot
 	 *
-	 * @param file	Zeigt auf die Binary des Bots
+	 * @param file	zeigt auf die Binary des Bots
 	 */
 	public void invokeBot(File file);
 
@@ -76,7 +76,7 @@ public interface Controller {
 	/**
 	 * Lädt eine Welt aus einer Datei
 	 *
-	 * @param sourceFile Weltdatei
+	 * @param sourceFile	Weltdatei
 	 */
 	public void openWorldFromFile(File sourceFile);
 

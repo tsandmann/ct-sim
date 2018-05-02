@@ -611,7 +611,7 @@ public class ContestConductor implements View {
 		 * Zu startendes Spiel könnte auch von unserem Aufrufer (sleepAndStartNextGame()) übergeben
 		 * werden, aber wir fordern das neu von der DB an, weil: Wenn sleepAndStartNextGame() das anfordert
 		 * und dann lang wartet, könnte in dieser Wartezeit die Verbindung abreißen, was das ResultSet
-		 * ungültig macht - ist in Tests auch so passiert
+		 * ungültig macht - ist in Tests auch so passiert.
 		 */
 		ResultSet game = db.getReadyGames();
 		game.next();

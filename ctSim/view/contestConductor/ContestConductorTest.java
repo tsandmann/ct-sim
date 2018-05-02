@@ -52,7 +52,7 @@ public class ContestConductorTest {
 	 * Siehe {@link ContestConductorTest}
 	 *
 	 * @param args
-	 * */
+	 */
 	public static void main(String[] args) {
 		Main.dependencies.reRegisterImplementation(
 				ContestJudge.class, MockContestJudge.class);

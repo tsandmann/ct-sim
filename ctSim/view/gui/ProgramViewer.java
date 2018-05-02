@@ -349,7 +349,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 
 		syntaxCheckABL = new JCheckBox("Check");
 		syntaxCheckABL.setToolTipText("Syntax-Check des ABL-Programms nach der Übertragung");
-		//syntaxCheck.setSelected((bot instanceof CtBotSimTcp));
+		// syntaxCheck.setSelected((bot instanceof CtBotSimTcp));
 		syntaxCheckABL.setSelected(false);
 
 		RemoteCallViewer rcViwer = new RemoteCallViewer(null);
@@ -404,7 +404,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 
 		setMinimumSize(new Dimension(min_w, min_h + 60));
 
-		/* Ausliefern */
+		/* ausliefern */
 		add(toolbars, BorderLayout.NORTH);
 		add(s, BorderLayout.CENTER);
 
@@ -498,9 +498,9 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		if (line == 1) {
 			/*check for() / endf() */
 			int fors = countSubString(programText.getText(), "for(");
-			//			lg.info("fors=" + fors);
+			// lg.info("fors=" + fors);
 			int endfs = countSubString(programText.getText(), "endf()");
-			//			lg.info("endfs=" + endfs);
+			// lg.info("endfs=" + endfs);
 			if (fors != endfs) {
 				lg.warn("ungleiche Anzahl von for(X) und endf()!");
 				lastCheckedLine = 0;
@@ -544,19 +544,19 @@ public class ProgramViewer extends JPanel implements ActionListener {
 			int nextSubString = s.indexOf(subString, i + 1);
 			if (nextSubString >= 0) {
 				++count;
-				//				lg.info("nextSubString=" + nextSubString);
+				// lg.info("nextSubString=" + nextSubString);
 				String foundSubString = s.substring(i + 1, nextSubString);
 
 				int lastComment = foundSubString.lastIndexOf("//");
-				//				lg.info("lastComment=" + lastComment);
+				// lg.info("lastComment=" + lastComment);
 
 				int lastNewLine = foundSubString.lastIndexOf('\n');
-				//				lg.info("lastNewLine=" + lastNewLine);
+				// lg.info("lastNewLine=" + lastNewLine);
 
 				if (lastComment > lastNewLine) {
 					/* Kommentar */
-					--count; // nicht mitzählen
-					//					lg.info("kommentar");
+					--count;	// nicht mitzählen
+					// lg.info("kommentar");
 				}
 			}
 			i = nextSubString;

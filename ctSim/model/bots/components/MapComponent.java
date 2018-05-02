@@ -47,6 +47,7 @@ import ctSim.util.Misc;
 
 /**
  * Map-Repräsentation im Sim
+ * 
  * <ul>
  * <li>Command-Code MAP</li>
  * <li>Nutzlast: Ein Block der Map-Rohdaten</li>

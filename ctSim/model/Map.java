@@ -230,7 +230,7 @@ public class Map {
 	}
 
 	/**
-	 * Trägt die Daten eines Parcours in die Karte ein. Als Urpsrung wird das Startfeld verwendet,
+	 * Trägt die Daten eines Parcours in die Karte ein. Als Ursprung wird das Startfeld verwendet,
 	 * das zum Bot der angegebenen Nr. gehört.
 	 *
 	 * @param parcours	zu verwendender Parcours

@@ -38,7 +38,7 @@ import ctSim.util.FmtLogger;
  * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamReader
  * von Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu
  * transferieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
- * 
+ *
  * @author Benjamin Benz (bbe@heise.de)
  */
 public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
@@ -102,7 +102,6 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 		}
 	}
 
-
 	/**
 	 * Sucht etwas im Szenegraphen
 	 *
@@ -128,5 +127,4 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 		}
 		return null;
 	}
-
 }

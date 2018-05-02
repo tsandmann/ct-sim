@@ -106,7 +106,7 @@ public class MainWinMenuBar extends JMenuBar {
 	/**
 	 * @param controller
 	 * @param mainWindow	als 'parent' der modalen Dialoge und für das gelegentliche Event, was auch
-	 * 				im mainWindow verarbeitet werden muss.
+	 * 			im mainWindow verarbeitet werden muss.
 	 */
 	public MainWinMenuBar(Controller controller, MainWindow mainWindow) {
 		this.controller = controller;
@@ -249,7 +249,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 			tcpEntryDialog.setVisible(true);
 			if (((Integer)optionPane.getValue()) == JOptionPane.YES_OPTION) {
-				//				parseInt() muss funktionieren dank MaskFormatter
+				// parseInt() muss funktionieren dank MaskFormatter
 				controller.connectToTcp(host.getText(), port.getText());
 			}
 		}
@@ -459,15 +459,13 @@ public class MainWinMenuBar extends JMenuBar {
 		return toolBar;
 	}
 
-	//	public void onJudgeSet(Judge judge) {
-	//		if (!controller.setJudge(judge.toString())) return;
-	//		for (AbstractButton b : Enumerations.asIterable(
-	//			judgesButtonGroup.getElements())) {
-	//			if (judge.getClass().getName().equals(
-	//				((JudgeMenuItem)b).fqJudgeClassName))
-	//				b.setSelected(true);
-	//		}
-	//   }
+	// public void onJudgeSet(Judge judge) {
+	// 		if (!controller.setJudge(judge.toString())) return;
+	// 		for (AbstractButton b : Enumerations.asIterable(judgesButtonGroup.getElements())) {
+	// 			if (judge.getClass().getName().equals(((JudgeMenuItem)b).fqJudgeClassName))
+	// 				b.setSelected(true);
+	// 		}
+	// }
 
 	///////////////////////////////////////////////////////////////////////////
 

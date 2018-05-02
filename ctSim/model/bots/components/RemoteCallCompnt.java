@@ -159,8 +159,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		 * {@code RemoteCallCompnt} im synchronen Modus läuft.
 		 * </p>
 		 *
-		 * @throws IOException	falls die {@code RemoteCallCompnt} im asynchronen Modus läuft
-		 * 						und beim Senden ein E/A-Problem auftritt.
+		 * @throws IOException	falls die {@code RemoteCallCompnt} im asynchronen Modus läuft und beim
+		 * 			Senden ein E/A-Problem auftritt.
 		 */
 		public void call() throws IOException {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -188,8 +188,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				// Kann nicht passieren; wir rufen Object.clone() auf
 				throw new AssertionError(e);
 			}
-			// Nach super.clone() zeigt rv's parameters-Ref auf das Objekt,
-			// auf das auch unsere parameters-Ref zeigt
+			// Nach super.clone() zeigt rv's parameters-Ref auf das Objekt, auf das auch unsere
+			// parameters-Ref zeigt
 			rv.parameters = Misc.newList();
 			for (Parameter p : parameters)
 				rv.parameters.add(p.clone());
@@ -536,7 +536,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		// No-op
 	}
 
-	// E/A - Lesen ///////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////
+	
+	// E/A - Lesen
 
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)

@@ -92,8 +92,8 @@ public class TournamentPlanner {
 	 *
 	 * @throws SQLException
 	 * @throws IllegalStateException	falls in der Datenbank-Tabelle ctsim_level keine Angaben über die
-	 * 				Vorrunde zu finden sind, oder falls weniger als zwei Bots mit Binary in der Datenbank
-	 * 				zu finden sind.
+	 * 			Vorrunde zu finden sind, oder falls weniger als zwei Bots mit Binary in der Datenbank zu
+	 * 			finden sind.
 	 */
 	public void planPrelimRound() throws SQLException {
 		lg.fine("Plane Vorrunde");
@@ -201,12 +201,12 @@ public class TournamentPlanner {
 	 * spielt, erst nach Spielen des Sechzehntelfinales wird das nach und nach klar). Wenn Spieler
 	 * <code>null</code> sind, werden die zugehörigen Spiele trotzdem angelegt.
 	 *
-	 * @param players	Eine Liste von Bot-IDs, die die Spieler repräsentieren. <code>null</code> bedeutet,
-	 * 				dass für dieses Spiel (noch) kein Spieler vorgesehen ist.
+	 * @param players	eine Liste von Bot-IDs, die die Spieler repräsentieren. <code>null</code> bedeutet,
+	 * 			dass für dieses Spiel (noch) kein Spieler vorgesehen ist.
 	 * @param levelId	Nummer des zu schreibenden Levels.
 	 * @throws SQLException
 	 * @throws TournamentPlanException	falls {@link DatabaseAdapter#placeBot(Integer, int, int)} diese
-	 * 				Exception wirft.
+	 * 			Exception wirft.
 	 */
 	private void writeLevelToDb(ArrayList<Integer> players, int levelId)
 			throws SQLException, TournamentPlanException {
@@ -224,7 +224,7 @@ public class TournamentPlanner {
 	/**
 	 * Diese Exception tritt auf, wenn etwas mit dem Turnierplan nicht stimmt.
 	 *
-	 * @author bbe (bbe@heise.de)
+	 * @author Benjamin Benz (bbe@heise.de)
 	 * @author Hendrik Krauß (hkr@heise.de)
 	 */
 	static class TournamentPlanException extends Exception {

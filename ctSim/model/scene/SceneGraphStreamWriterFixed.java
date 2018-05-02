@@ -35,7 +35,7 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
  * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamWriter
  * von Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die Namen der Objekte zu
  * transferieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
- * 
+ *
  * @author Benjamin Benz (bbe@heise.de)
  */
 public class SceneGraphStreamWriterFixed extends SceneGraphStreamWriter {
@@ -71,7 +71,6 @@ public class SceneGraphStreamWriterFixed extends SceneGraphStreamWriter {
 			so.setUserData(new String(name));
 
 			System.out.println("Key "+name+" vorbereitet");
-
 		}
 	}
 }

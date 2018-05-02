@@ -63,6 +63,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui");
 
 	//////////////////////////////////////////////////////////////////////
+	
 	// GUI-Components:
 
 	/** Statusbar */
@@ -82,7 +83,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * entfernt keine Tabs etc. </li>
 	 * <li>Der Bot geht seine Deinitialisierungs-Routine durch.</li>
 	 * <li>Der Bot ruft seine DisposeListener auf. Einer davon ist der, welchen MainWindow beim Bot
-	 * angemeldet hat: Dieser sagt schließlich dem Tab "zeig dich nicht mehr an"</li>
+	 * angemeldet hat: Dieser sagt schließlich dem Tab "zeig dich nicht mehr an".</li>
 	 * </ol>
 	 * </p>
 	 * <p>

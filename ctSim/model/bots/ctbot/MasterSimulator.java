@@ -294,7 +294,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 					}
 					last_s_l = 0;
 					s_l = rand * (WHEEL_CIRCUMFERENCE / 60.0);
-					//					lg.fine("s_l=" + s_l * 1000 + " mm");
+					// lg.fine("s_l=" + s_l * 1000 + " mm");
 					leftWheel.setLag(rand);
 				} else {
 					last_s_l = s_l;
@@ -307,7 +307,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 					}
 					last_s_r = 0;
 					s_r = rand * (WHEEL_CIRCUMFERENCE / 60.0);
-					//					lg.fine("s_r=" + s_r * 1000 + " mm");
+					// lg.fine("s_r=" + s_r * 1000 + " mm");
 					rightWheel.setLag(rand);
 				} else {
 					last_s_r = s_r;
@@ -355,7 +355,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
 			/* Grundplatte auf Kollision prüfen */
 			{
-				//				parent.clearDebugBG();	// löscht alte Debug-Anzeige
+				// parent.clearDebugBG();	// löscht alte Debug-Anzeige
 
 				/* Bounds für Grundplatte erstellen */
 				Bounds plate = new BoundingSphere(new Point3d(0, 0, 0), CtBotSimTcp.BOT_RADIUS);
@@ -365,7 +365,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				t.setTranslation(newPos);
 				plate.transform(t);
 
-				//				parent.showDebugSphere(CtBotSimTcp.BOT_RADIUS, t);
+				// parent.showDebugSphere(CtBotSimTcp.BOT_RADIUS, t);
 
 				/* Kollision berechnen lassen */
 				PickInfo platePickInfo = world.getCollision(botShape, plate);
@@ -379,8 +379,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 					/* Bounds für Transportfachs erstellen */
 					Bounds pocket = createBounds(newPosPoint, newHeadAngle, 0, 0.04, 0.05 / 2, transform);
 
-					//					parent.showDebugBox(0.05 / 2, 0.055 / 2, 0.04 / 2, transform, newHeadAngle);
-					//					parent.showDebugSphere(0.05 / 2, transform);
+					// parent.showDebugBox(0.05 / 2, 0.055 / 2, 0.04 / 2, transform, newHeadAngle);
+					// parent.showDebugSphere(0.05 / 2, transform);
 
 					/* Kollision berechnen lassen */
 					PickInfo pocketPickInfo = world.getCollision(botShape, pocket);
@@ -394,8 +394,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 						/* Bounds für Innenseite erstellen */
 						Bounds pocketBack = createBounds(newPosPoint, newHeadAngle, 0, - 0.011, 0.05 / 2, transform);
 
-						//						parent.showDebugBox(0.05 / 2, 0.015, 0.04 / 2, transform, newHeadAngle);
-						//						parent.showDebugSphere(0.05 / 2, transform);
+						// parent.showDebugBox(0.05 / 2, 0.015, 0.04 / 2, transform, newHeadAngle);
+						// parent.showDebugSphere(0.05 / 2, transform);
 
 						/* Kollision berechnen lassen */
 						PickInfo pocketBackPickInfo = world.getCollision(botShape, pocketBack);
@@ -403,14 +403,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 						if ((pocketBackPickInfo != null) && (pocketBackPickInfo.getNode() != null)) {
 							botCollision = true;
 							objectInPocket = null;
-							//							lg.info("Kollision im Transportfach und (mindestens) auch dahinter");
+							// lg.info("Kollision im Transportfach und (mindestens) auch dahinter");
 						} else {
 
 							/* Bounds für Seitenfläche links erstellen */
 							Bounds pocketLeft = createBounds(newPosPoint, newHeadAngle, - 0.045, 0.034775, 0.03 / 2, transform);
 
-							//							parent.showDebugBox(0.035 / 2, 0.03955, 0.04 / 2, transform, newHeadAngle);
-							//							parent.showDebugSphere(0.03 / 2, transform);
+							// parent.showDebugBox(0.035 / 2, 0.03955, 0.04 / 2, transform, newHeadAngle);
+							// parent.showDebugSphere(0.03 / 2, transform);
 
 							/* Kollision berechnen lassen */
 							PickInfo pocketLeftPickInfo = world.getCollision(botShape, pocketLeft);
@@ -419,13 +419,13 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 								botCollision = true;
 								collisionInPocket = true;
 								objectInPocket = null;
-								//								lg.info("Kollision im Transportfach und (mindestens) auch links davon");
+								// lg.info("Kollision im Transportfach und (mindestens) auch links davon");
 							} else {
 								/* Bounds für Seitenfläche rechts erstellen */
 								Bounds pocketRight = createBounds(newPosPoint, newHeadAngle, 0.045, 0.034775, 0.03 / 2, transform);
 
-								//								parent.showDebugBox(0.035 / 2, 0.03955, 0.04 / 2, transform, newHeadAngle);
-								//								parent.showDebugSphere(0.03 / 2, transform);
+								// parent.showDebugBox(0.035 / 2, 0.03955, 0.04 / 2, transform, newHeadAngle);
+								// parent.showDebugSphere(0.03 / 2, transform);
 
 								/* Kollision berechnen lassen */
 								PickInfo pocketRightPickInfo = world.getCollision(botShape, pocketRight);
@@ -434,11 +434,11 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 									botCollision = true;
 									collisionInPocket = true;
 									objectInPocket = null;
-									//									lg.info("Kollision im Transportfach und rechts davon");
+									// lg.info("Kollision im Transportfach und rechts davon");
 								} else {
-									//									lg.info("Kollision nur im Transportfach");
+									// lg.info("Kollision nur im Transportfach");
 									objectInPocket = pocketPickInfo.getNode().getParent();
-									//									lg.info("objectInPocket=" + objectInPocket.getName());
+									// lg.info("objectInPocket=" + objectInPocket.getName());
 								}
 							}
 						}
@@ -1020,17 +1020,17 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     /**
      * @see java.lang.Runnable#run()
      */
-    public void run() {
-        // Wichtig: Zuerst die Sensoren, dann Kraut + Rüben     
-        for (Runnable simulator : simulators) {
-            simulator.run();
-        }
-        krautUndRuebenSim.run();
-    }
+	public void run() {
+		// Wichtig: Zuerst die Sensoren, dann Kraut + Rüben     
+		for (Runnable simulator : simulators) {
+			simulator.run();
+		}
+		krautUndRuebenSim.run();
+	}
     
-    /** Destruktor */
-    public void cleanup() {
-    	// steckt ein evtl. im Transportfach befindliches Objekt wieder in die Welt:
-    	krautUndRuebenSim.setAssociatedObject(null);
-    }
+	/** Destruktor */
+	public void cleanup() {
+		// steckt ein evtl. im Transportfach befindliches Objekt wieder in die Welt:
+		krautUndRuebenSim.setAssociatedObject(null);
+	}
 }

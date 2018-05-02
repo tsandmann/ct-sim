@@ -28,7 +28,7 @@ import ctSim.util.Misc;
  * <p>
  * Der Turnierbaum ist folgendermaßen zu verstehen:
  * <ul>
- * <li>Ein Knoten des Baums repräsentiert einen Spieler</li>
+ * <li>Ein Knoten des Baums repräsentiert einen Spieler.</li>
  * <li>Die beiden Kinder eines Knotens <em>U</em> repräsentieren die beiden Spiele, deren Gewinner im
  * Spiel <em>U</em> aufeinandertreffen werden. Beispiel: Die beiden Halbfinalspiele ergeben je einen
  * Gewinner; diese treffen im Finale aufeinander.</li>

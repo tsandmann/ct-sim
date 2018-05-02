@@ -65,7 +65,7 @@ public class AuxFrameButton extends JToggleButton {
 	 * @param buttonLabel	Text, der auf dem Knopf anzuzeigen ist
 	 * @param frameTitle	Text, der in die Titelzeile des extra Fensters zu schreiben ist
 	 * @param frameContent	Inhalt des Fensters, der beliebig komplex sein kann. Oft empfiehlt es sich,
-	 * 				hier eine {@link JScrollPane} zu übergeben, die alles weitere enthält
+	 * 			hier eine {@link JScrollPane} zu übergeben, die alles weitere enthält
 	 * @param enabled		soll der Button aktiviert sein?
 	 */
 	public AuxFrameButton(String buttonLabel, String frameTitle, final JComponent frameContent, boolean enabled) {
@@ -74,12 +74,12 @@ public class AuxFrameButton extends JToggleButton {
 		// Fenster erzeugen aber erst später konfigurieren
 		auxFrame = new ComponentJFrame(frameTitle, frameContent, this);
 
-		//auxFrame.setLocation(300, 300);
+		// auxFrame.setLocation(300, 300);
 
 
-		// Uns selber konfigurieren
+		// uns selber konfigurieren
 		setAlignmentX(Component.CENTER_ALIGNMENT);
-		// Falls wir Platz haben, ausnutzen (keiner hat was von leerem nicht-klickbaren Platz)
+		// falls wir Platz haben, ausnutzen (keiner hat was von leerem nicht-klickbaren Platz)
 		setMaximumSize(new Dimension(Integer.MAX_VALUE, getMaximumSize().height));
 
 		setEnabled(enabled);

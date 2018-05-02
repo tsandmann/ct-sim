@@ -94,7 +94,7 @@ public class RealCtBot extends CtBot {
 			try {
 				connection.close();
 			} catch (IOException e) {
-				// Strategie auf Best-effort-Basis (soll heißen: ist uns egal)
+				// No-op, Strategie auf Best-effort-Basis (soll heißen: ist uns egal)
 			}
 		}
 	}
@@ -171,7 +171,7 @@ public class RealCtBot extends CtBot {
 			}
 		}
 
-		// Und einen CommandProcessor herstellen
+		// ...und einen CommandProcessor herstellen
 		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
 			@Override
@@ -209,30 +209,30 @@ public class RealCtBot extends CtBot {
 		}
 	}
 
-	//	/**
-	//	 * Startet das Verhalten "name" per RemoteCall
-	//	 * @param name	Das zu startende Verhalten
-	//	 * @param param	Int-Parameter für das Verhalten (16 Bit)
-	//	 * @param ref	Referenz auf den Program-Viewer, falls das Ergebnis dort angezeigt werden soll
-	//	 */
-	//	public void startRemoteCall(String name, int param, ProgramViewer ref) {
-	//		for (BotComponent<?> c : components) {
-	//			if (c instanceof RemoteCallCompnt) {
-	//				try {
-	//					ablResult = ref;
-	//					RemoteCallCompnt rc = (RemoteCallCompnt)c;
-	//					ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-	//					bytes.write(name.getBytes());
-	//					bytes.write(0);
-	//					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
-	//					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
-	//					par.setValue(param);
-	//					beh.getParameters().add(par);
-	//					beh.call();
-	//				} catch (IOException e) {
-	//					e.printStackTrace();
-	//				}
-	//			}
-	//		}
-	//	}
+	// /**
+	//  * Startet das Verhalten "name" per RemoteCall
+	//  * @param name	Das zu startende Verhalten
+	//  * @param param	Int-Parameter für das Verhalten (16 Bit)
+	//  * @param ref	Referenz auf den Program-Viewer, falls das Ergebnis dort angezeigt werden soll
+	//  */
+	// public void startRemoteCall(String name, int param, ProgramViewer ref) {
+	// 		for (BotComponent<?> c : components) {
+	// 			if (c instanceof RemoteCallCompnt) {
+	// 				try {
+	// 					ablResult = ref;
+	// 					RemoteCallCompnt rc = (RemoteCallCompnt)c;
+	// 					ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+	// 					bytes.write(name.getBytes());
+	// 					bytes.write(0);
+	// 					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
+	// 					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
+	// 					par.setValue(param);
+	// 					beh.getParameters().add(par);
+	// 					beh.call();
+	// 				} catch (IOException e) {
+	// 					e.printStackTrace();
+	// 				}
+	// 			}
+	// 		}
+	// }
 }

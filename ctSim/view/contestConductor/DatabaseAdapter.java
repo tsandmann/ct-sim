@@ -62,8 +62,7 @@ class DatabaseAdapter {
 	/** HashMap für Statements */
 	class StatementCache extends HashMap<String, PreparedStatement> {
 		/** UID */
-		private static final long serialVersionUID =
-				- 293074803104060506L;
+		private static final long serialVersionUID = - 293074803104060506L;
 
 		/**
 		 * @see java.util.HashMap#get(java.lang.Object)
@@ -72,7 +71,7 @@ class DatabaseAdapter {
 		public PreparedStatement get(Object key) {
 			// Wenn nicht drin, hinzufügen, damit super.get garantiert etwas zurückliefert
 			if (! containsKey(key)) {
-				/*
+				/**
 				 * Cast ist okay, weil wir eine HashMap<String, ...> sind und der Compiler sicherstellt,
 				 * dass nur Strings in uns geputtet werden
 				 */
@@ -80,7 +79,7 @@ class DatabaseAdapter {
 				try {
 					put(s, dbConn.prepareStatement(s));
 				} catch (SQLException e) {
-					// In non-checked Excp einwickeln, um mit der geerbten Signatur kompatibel zu bleiben
+					// In non-checked Exception einwickeln, um mit der geerbten Signatur kompatibel zu bleiben
 					throw new RuntimeException(e);
 				}
 			}
@@ -132,8 +131,8 @@ class DatabaseAdapter {
 		 * <code>"SELECT * FROM games WHERE state = '"+GameState.RUNNING+"'"</code>
 		 *
 		 * @return Der String, der in der Datenbank das Objekt dieser Klasse repräsentiert. Beispielsweise
-		 * 				liefert GameState.NOT_INITIALIZED.toString() den unter
-		 * 				<a href="#enum_constant_summary">Enum Constant Summary</a> aufgeführten Wert.
+		 * 			liefert GameState.NOT_INITIALIZED.toString() den unter
+		 * 			<a href="#enum_constant_summary">Enum Constant Summary</a> aufgeführten Wert.
 		 */
 		@Override
 		public String toString() {
@@ -261,16 +260,17 @@ class DatabaseAdapter {
 	 * @param sqlWithInParams	(siehe Beispielaufruf oben)
 	 * @param inValues			(siehe Beispielaufruf oben)
 	 * @return Falls der Parameter <code>sqlWithParams</code> mit "select" beginnt, das ResultSet,
-	 * wie es ein Aufruf von executeQuery mit demselben SQL-Befehl zurückgegeben hätte. Falls der
-	 * genannte Parameter mit "insert", "update" oder "delete" beginnt, wird <code>null</code>
-	 * zurückgegeben.
+	 * 			wie es ein Aufruf von executeQuery mit demselben SQL-Befehl zurückgegeben hätte. Falls der
+	 * 			genannte Parameter mit "insert", "update" oder "delete" beginnt, wird <code>null</code>
+	 * 			zurückgegeben.
 	 * @throws SQLException
 	 * @throws IllegalArgumentException	falls der Parameter <code>sqlWithParams</code> weder mit SELECT
-	 * 				noch mit INSERT, UPDATE oder DELETE beginnt. (Groß-/Kleinschreibung irrelevant.)
+	 * 			noch mit INSERT, UPDATE oder DELETE beginnt. (Groß-/Kleinschreibung irrelevant.)
 	 */
 	protected ResultSet execSql(String sqlWithInParams, Object... inValues)
 			throws SQLException, IllegalArgumentException {
-		/* Idee: SQL-Kommando ausführen; wenn's nicht klappt, Verbindung neu herstellen und nochmal
+		/**
+		 * Idee: SQL-Kommando ausführen; wenn's nicht klappt, Verbindung neu herstellen und nochmal
 		 * ausführen. Fix gegen abreißende DB-Verbindungen (wenn die Verbindung abreißt, bekommt man von
 		 * MySQL mit dem nächsten SQL-Befehl eine com.mysql.jdbc.CommunicationsException, die von
 		 * SQLException abgeleitet ist)
@@ -320,7 +320,7 @@ class DatabaseAdapter {
 	 * die Spielergebnisse herausstellt, welche Bots um ein Level weiterkommen.
 	 *
 	 * @param botId		Bot, repräsentiert von seinem Primärschlüssel, der eingettragen werden soll.
-	 * 					Falls <code>null</code>, tut die Methode nichts.
+	 * 			Falls <code>null</code>, macht die Methode nichts.
 	 * @param levelId	das Level, in das der Bot platziert werden soll
 	 * @param gameId	die Nummer des Spiels im jeweiligen Level
 	 * @throws SQLException

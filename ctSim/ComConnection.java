@@ -176,6 +176,7 @@ public class ComConnection extends Connection {
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+	
 	// Auto-detect-Kram
 
 	/**
@@ -319,13 +320,13 @@ public class ComConnection extends Connection {
 
 			////////////////
 
-			//			Bot b = new RealCtBot(comConnSingleton, (byte) 0);
-			//			b.addDisposeListener(new Runnable() {
-			//				public void run() {
-			//					spawnThread(botReceiver);
-			//				}
-			//			});
-			//			botReceiver.onBotAppeared(b);
+			// Bot b = new RealCtBot(comConnSingleton, (byte) 0);
+			// b.addDisposeListener(new Runnable() {
+			// 		public void run() {
+			//			spawnThread(botReceiver);
+			//		}
+			// });
+			// botReceiver.onBotAppeared(b);
 
 			die();
 		}

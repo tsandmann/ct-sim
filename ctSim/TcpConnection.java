@@ -144,8 +144,7 @@ public class TcpConnection extends Connection {
 				} catch (UnknownHostException e) {
 					lg.warn("Host '"+e.getMessage()+"' nicht gefunden");
 				} catch (ConnectException e) {
-					// ConnectExcp deckt so Sachen ab wie "connection refused"
-					// und "connection timed out"
+					// ConnectExcp deckt Sachen ab wie "connection refused" und "connection timed out"
 					lg.warn("Konnte Verbindung mit "+address+
 							" nicht herstellen ("+e.getLocalizedMessage()+")");
 				} catch (IOException e) {

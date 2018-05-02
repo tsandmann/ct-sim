@@ -16,6 +16,7 @@
  * MA 02111-1307, USA.
  *
  */
+
 package ctSim.view.gui;
 
 import java.util.logging.Formatter;

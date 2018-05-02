@@ -138,7 +138,7 @@ public class Leds extends GuiBotBuisitor {
 	}
 
 	/**
-	 * @param led LED-Buisitor
+	 * @param led	LED-Buisitor
 	 */
 	public void buisit(Actuators.Led led) {
 		setBorder(new TitledBorder("LEDs"));

@@ -53,6 +53,7 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
  * sie potentiell schreiben könnten. Beim Setzen der Flags wird geprüft, ob die Component das Flag
  * überhaupt unterstützt; andernfalls tritt eine UnsupportedOperationException auf.
  * </p>
+ * 
  * TODO Aktuatoren vs. Sensoren
  *
  * @param <M>	Typ der Komponente
@@ -72,8 +73,7 @@ public abstract class BotComponent<M> {
 		void readFrom(Command c) throws ProtocolException;
 
 		/**
-		 * Nicht aufrufen - sollte nur von
-		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
+		 * Nicht aufrufen - sollte nur von {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
 		 *
 		 * @return Command-Code
