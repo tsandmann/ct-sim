@@ -57,7 +57,7 @@ public class IterableNodeList implements NodeList, Iterable<QueryableNode> {
 	 */
 	@Override
 	public Iterator<QueryableNode> iterator() {
-		return new Iterator<>() {
+		return new Iterator<QueryableNode>() {
 			private int lastIdx = -1;
 
 			@Override

@@ -168,7 +168,7 @@ public class XmlDocument {
 					throws SAXException, IOException, ParserConfigurationException {
 		// Irrsinnige Bürokratie ...
 		DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
-		f.setValidating(true);	// Soll gegen DTD validieren
+		f.setValidating(true);	// soll gegen DTD validieren
 		DocumentBuilder parser = f.newDocumentBuilder();
 		/**
 		 * Wichtig für die Validierung: Wenn kein ErrorHandler gesetzt und eine XML-Datei geparst wird,
