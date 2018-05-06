@@ -350,7 +350,7 @@ public class Actuators {
 				try {
 					Thread.sleep(WAIT_TIME * 3);
 				} catch (InterruptedException e) {
-					// No-op, kein Plan
+					// kein Plan
 				}
 			}
 			
@@ -368,7 +368,7 @@ public class Actuators {
 					try {
 						Thread.sleep(WAIT_TIME);
 					} catch (InterruptedException e) {
-						// No-op, kein Plan
+						// kein Plan
 					}
 				}
 			}
@@ -386,7 +386,7 @@ public class Actuators {
 					try {
 						Thread.sleep(WAIT_TIME);
 					} catch (InterruptedException e) {
-						// No-op, kein Plan
+						// kein Plan
 					}
 				}
 			}
