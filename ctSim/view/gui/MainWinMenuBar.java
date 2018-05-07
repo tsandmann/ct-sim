@@ -325,8 +325,8 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 	
-	/** Handler für Trac-Link */
-	private Runnable onTracLink = new Runnable() {
+	/** Handler für Github-Link */
+	private Runnable onGithubLink = new Runnable() {
 		public void run() {
 			try {
 				Desktop.getDesktop().browse(new URL("https://github.com/tsandmann/ct-sim").toURI());
