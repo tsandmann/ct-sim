@@ -26,26 +26,24 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Der Turnierbaum ist folgendermassen zu verstehen:
+ * Der Turnierbaum ist folgendermaßen zu verstehen:
  * <ul>
  * <li>Ein Knoten des Baums repräsentiert einen Spieler</li>
- * <li>Die beiden Kinder eines Knotens <em>U</em> repräsentieren die
- * beiden Spiele, deren Gewinner im Spiel <em>U</em> aufeinandertreffen
- * werden. Beispiel: Die beiden Halbfinalspiele ergeben je einen Gewinner; diese
- * treffen im Finale aufeinander.</li>
- * <li>Die Nutzlast eines Knotens </li>
+ * <li>Die beiden Kinder eines Knotens <em>U</em> repräsentieren die beiden Spiele, deren Gewinner im
+ * Spiel <em>U</em> aufeinandertreffen werden. Beispiel: Die beiden Halbfinalspiele ergeben je einen
+ * Gewinner; diese treffen im Finale aufeinander.</li>
+ * <li>Die Nutzlast eines Knotens</li>
  * </ul>
  * </p>
  * <p>
- * Bäume dieser Klasse sind <a
- * href="http://de.wikipedia.org/wiki/Bin%C3%A4rbaum">binär</a>, <a
- * href="http://de.wikipedia.org/wiki/Bin%C3%A4rbaum#Weitere_Begriffe">strikt</a>
- * und <a href="http://de.wikipedia.org/wiki/Balancierter_Baum">balanciert</a>
- * (Invariante: Höhe &plusmn;0).
+ * Bäume dieser Klasse sind <a href="http://de.wikipedia.org/wiki/Bin%C3%A4rbaum">binär</a>,
+ * <a href="http://de.wikipedia.org/wiki/Bin%C3%A4rbaum#Weitere_Begriffe">strikt</a> und
+ * <a href="http://de.wikipedia.org/wiki/Balancierter_Baum">balanciert</a> (Invariante: Höhe ± 0).
  * </p>
  *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
- * @param <T> Typ
+ * @author Hendrik Krauß (hkr@heise.de)
+ * 
+ * @param <T>	Typ
  */
 public class SpreadingTree<T> {
 	/** Payload */
@@ -58,8 +56,9 @@ public class SpreadingTree<T> {
 	protected boolean lastAdditionLeft = false;
 
 	/** 
-	 * neuer Baum 
-	 * @param payload Payload
+	 * Neuer Baum
+	 * 
+	 * @param payload	Payload
 	 */
 	protected SpreadingTree(T payload) {
 		this.payload = payload;
@@ -67,8 +66,9 @@ public class SpreadingTree<T> {
 
 	/**
 	 * Neuer Baum
-	 * @param left links
-	 * @param right rechts
+	 * 
+	 * @param left	links
+	 * @param right	rechts
 	 */
 	protected SpreadingTree(SpreadingTree<T> left, SpreadingTree<T> right) {
 		this.left = left;
@@ -77,8 +77,10 @@ public class SpreadingTree<T> {
 
 	/**
 	 * Node hinzufügen
-	 * null undef.
-	 * @param node neuer Node
+	 * 
+	 * null: undefined
+	 * 
+	 * @param node	neuer Node
 	 * @return Baum
 	 */
 	protected SpreadingTree<T> add(SpreadingTree<T> node) {
@@ -96,8 +98,8 @@ public class SpreadingTree<T> {
 	}
 
 	/**
-	 * @param <T> Typ
-	 * @param c Liste
+	 * @param <T>	Typ
+	 * @param c		Liste
 	 * @return Tree
 	 */
 	public static <T> SpreadingTree<T> buildTree(List<T> c) {
@@ -111,7 +113,8 @@ public class SpreadingTree<T> {
 	}
 
 	/**
-	 * von aussen aufzurufen
+	 * Von außen aufzurufen
+	 * 
 	 * @param desiredLevelId
 	 * @return ArrayList
 	 */
@@ -128,9 +131,9 @@ public class SpreadingTree<T> {
 	}
 
 	/**
-	 * @param desiredLevelId gewünschtes Level
-	 * @param currentLevel aktuelles Level
-	 * @param payloads Payloads
+	 * @param desiredLevelId	gewünschtes Level
+	 * @param currentLevel		aktuelles Level
+	 * @param payloads			Payloads
 	 */
 	protected void levelOrder(int desiredLevelId, int currentLevel,
 			List<T> payloads) {

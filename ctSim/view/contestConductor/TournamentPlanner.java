@@ -29,10 +29,9 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 
 /**
  * <p>
- * High-Level-Klasse, die die Spiele eines Turniers plant. Arbeitet eng mit der
- * Klasse {@link ContestConductor} zusammen. Plant einen vollständigen
- * Wettbewerb: Schreibt den Turnierbaum in die Datenbank (<a
- * href="package-summary.html#turnierbaum">Was ist der Turnierbaum?</a>)
+ * High-Level-Klasse, die die Spiele eines Turniers plant. Arbeitet eng mit der Klasse
+ * {@link ContestConductor} zusammen. Plant einen vollständigen Wettbewerb: Schreibt den Turnierbaum in
+ * die Datenbank (<a href="package-summary.html#turnierbaum">Was ist der Turnierbaum?</a>)
  * </p>
  * <p>
  * <strong>Verwendungsbeispiel:</strong>
@@ -41,11 +40,11 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
  * <li><code>planner.{@link #planPrelimRound()};</code></li>
  * <li>Durchführen der Vorrundenspiele (durch die Klasse ContestConductor)</li>
  * <li><code>planner.{@link #planMainRound()};</code></li>
- * <li>Durchführen der Hauptrundenspiele (durch die Klasse
- * ContestConductor)</li>
+ * <li>Durchführen der Hauptrundenspiele (durch die Klasse ContestConductor)</li>
  * </ol>
- *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * </p>
+ * 
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class TournamentPlanner {
 	/** Logger */
@@ -54,10 +53,10 @@ public class TournamentPlanner {
 	/** Datenbank */
 	private PlannerToDatabaseAdapter db;
 
-	/** Konstruiert einen TournamentPlanner, der mit der übergebenen
-	 * Datenbank verbunden ist. Nützlich für Unit-Tests, die dem
-	 * Planner über diesen Konstruktor eine Testdatenbank unterschieben
-	 * können.
+	/**
+	 * Konstruiert einen TournamentPlanner, der mit der übergebenen Datenbank verbunden ist. Nützlich für
+	 * Unit-Tests, die dem Planner über diesen Konstruktor eine Testdatenbank unterschieben können.
+	 * 
 	 * @param database 
 	 */
 	public TournamentPlanner(PlannerToDatabaseAdapter database) {
@@ -65,18 +64,16 @@ public class TournamentPlanner {
 	}
 
 	/**
-	 * Hilfsmethode: Denkt sich Spielzeiten aus für alle Spiele in einem
-	 * Level und schreibt sie in die DB.
+	 * Hilfsmethode: Denkt sich Spielzeiten für alle Spiele in einem Level aus und schreibt sie in die DB.
 	 *
-	 * @param levelId Primärschlüssel des Levels, für das die
-	 * Zeiten gesetzt werden sollen.
+	 * @param levelId	Primärschlüssel des Levels, für das die Zeiten gesetzt werden sollen
 	 * @throws SQLException 
 	 */
 	private void scheduleGames(int levelId) throws SQLException {
 		ResultSet games = db.getGames(levelId, "game");
 		games.last();
 		if (games.getRow() == 0)
-			return; // keine Spiele in diesem Level, nichts zu tun
+			return;	// keine Spiele in diesem Level, also nichts zu tun
 		games.beforeFirst();
 
 		Timestamp gameBegin = db.getLevelBegin(levelId);
@@ -87,15 +84,16 @@ public class TournamentPlanner {
 		}
 	}
 
-	/** Löscht alle bisher geplanten Spiele und plant die Vorrunde.
-	 * Für jeden Bot, für den eine Binary in der Datenbank steht,
-	 * wird ein Vorrundenspiel angelegt. Jeder Bot durchläuft ein
-	 * Vorrundenspiel einzeln.
+	/**
+	 * Löscht alle bisher geplanten Spiele und plant die Vorrunde
+	 * 
+	 * Für jeden Bot, für den eine Binary in der Datenbank steht, wird ein Vorrundenspiel angelegt.
+	 * Jeder Bot durchläuft ein Vorrundenspiel einzeln.
+	 * 
 	 * @throws SQLException 
-	 *
-	 * @throws IllegalStateException Falls in der DB-Tabelle ctsim_level
-	 * keine Angaben über die Vorrunde zu finden sind, oder falls
-	 * weniger als zwei Bots mit Binary in der Datenbank zu finden sind.
+	 * @throws IllegalStateException	falls in der Datenbank-Tabelle ctsim_level keine Angaben über die
+	 * 				Vorrunde zu finden sind, oder falls weniger als zwei Bots mit Binary in der Datenbank
+	 * 				zu finden sind.
 	 */
 	public void planPrelimRound() throws SQLException {
 		lg.fine("Plane Vorrunde");
@@ -118,16 +116,19 @@ public class TournamentPlanner {
 		bots.beforeFirst();
 		int i = 1;
 		while (bots.next()) {
-			// Level -1 heisst Vorrunde
+			// Level -1 heißt Vorrunde
 			db.createPrelimGame(i++, bots.getInt("id"));
 		}
 		scheduleGames(-1);
 		lg.fine("Vorrunde geplant");
 	}
 
-	/** Plant die Hauptrunde. Sie besteht aus $$ doc planMainRound
+	/**
+	 * Plant die Hauptrunde
+	 * 
+	 * Sie besteht aus $$ doc planMainRound.
+	 * 
 	 * @throws SQLException 
-	 *
 	 * @throws TournamentPlanException
 	 * @throws IllegalStateException
 	 */
@@ -195,21 +196,17 @@ public class TournamentPlanner {
 	}
 
 	/**
-	 * Schreibt ein Level aus einem TournamentTree in die Datenbank. Manche oder
-	 * alle der Spieler, die in dem Level sitzen, können <code>null</code>
-	 * sein (d.h. anfangs steht nicht fest, wer im Achtelfinale spielt, erst
-	 * nach Spielen des Sechzehntelfinales wird das nach und nach klar). Wenn
-	 * Spieler <code>null</code> sind, werden die zugehörigen Spiele
-	 * trotzdem angelegt.
+	 * Schreibt ein Level aus einem TournamentTree in die Datenbank. Manche oder alle der Spieler, die in
+	 * dem Level sitzen, können <code>null</code> sein (d.h. anfangs steht nicht fest, wer im Achtelfinale
+	 * spielt, erst nach Spielen des Sechzehntelfinales wird das nach und nach klar). Wenn Spieler
+	 * <code>null</code> sind, werden die zugehörigen Spiele trotzdem angelegt.
 	 *
-	 * @param players Eine Liste von Bot-IDs, die die Spieler
-	 * repräsentieren. <code>null</code> bedeutet, das f�r dieses Spiel
-	 * (noch) kein Spieler vorgesehen ist.
-	 * @param levelId Nummer des zu schreibenden Levels.
+	 * @param players	Eine Liste von Bot-IDs, die die Spieler repräsentieren. <code>null</code> bedeutet,
+	 * 				dass für dieses Spiel (noch) kein Spieler vorgesehen ist.
+	 * @param levelId	Nummer des zu schreibenden Levels.
 	 * @throws SQLException 
-	 * @throws TournamentPlanException Falls
-	 * {@link DatabaseAdapter#placeBot(Integer, int, int)} diese Exception
-	 * wirft.
+	 * @throws TournamentPlanException	falls {@link DatabaseAdapter#placeBot(Integer, int, int)} diese
+	 * 				Exception wirft.
 	 */
 	private void writeLevelToDb(ArrayList<Integer> players, int levelId)
 	throws SQLException, TournamentPlanException {
@@ -224,31 +221,37 @@ public class TournamentPlanner {
 	    }
     }
 
-	/** Diese Exception tritt auf, wenn etwas mit dem Turnierplan nicht stimmt.
+	/**
+	 * Diese Exception tritt auf, wenn etwas mit dem Turnierplan nicht stimmt.
+	 * 
 	 * @author bbe (bbe@heise.de)
-	 * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+	 * @author Hendrik Krauß (hkr@heise.de)
 	 */
 	static class TournamentPlanException extends Exception {
 		/** UID */
 		private static final long serialVersionUID = -9195564639022108463L;
 
-		/**
-		 * Exception
-		 */
+		/** Exception */
 		public TournamentPlanException() { super(); }
+		
 		/**
 		 * Exception
-		 * @param message Text
+		 * 
+		 * @param message	Text
 		 */
 		public TournamentPlanException(String message) { super(message); }
+		
 		/**
 		 * Exception
+		 * 
 		 * @param cause
 		 */
 		public TournamentPlanException(Throwable cause) { super(cause); }
+		
 		/**
 		 * Exception
-		 * @param message Text
+		 * 
+		 * @param message	Text
 		 * @param cause
 		 */
 		public TournamentPlanException(String message, Throwable cause) {

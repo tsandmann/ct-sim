@@ -25,10 +25,9 @@ import java.net.ServerSocket;
 import ctSim.model.Command;
 
 /**
- * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim
- * gehört. Hab keine Ahnung, wofür das sein soll. Ich nehm die Datei aus dem
- * Build Path, damit man bei Namensänderungen in Sim-Klassen das nicht immer
- * hier mitführen muss. --hkr@heise.de
+ * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim gehört. Habe keine Ahnung, wofür
+ * das sein soll. Ich nehme die Datei aus dem Build Path, damit man bei Namensänderungen in Sim-Klassen
+ * das nicht immer hier mitführen muss. - Hendrik Krauß (hkr@heise.de)
  */
 public class EchoTest {
 
@@ -41,7 +40,7 @@ public class EchoTest {
 	
 	public void send(Connection connection) throws IOException{
 		Command command = new Command();
-		lastTransmittedSimulTime+=1; //(int)world.getSimulTime();
+		lastTransmittedSimulTime+=1;	// (int)world.getSimulTime();
 		command.setCommand(Command.CMD_DONE);
 		command.setDataL(lastTransmittedSimulTime);
 		command.setDataR(0);

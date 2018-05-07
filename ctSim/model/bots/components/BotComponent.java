@@ -57,14 +57,14 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
  *
  * @param <M>	Typ der Komponente
  * 
- * @author Felix Beckwermert
+ * @author Felix Beckwermert (felix@beckwermert.de)
  * @author Hendrik Krauß (hkr@heise.de)
  */
 public abstract class BotComponent<M> {
 	/** Interface für lesende Komponenten */
 	protected interface CanRead {
 		/**
-		 * Nicht aufrufen - stattdessen {@link BotComponent#offerRead(Command)} verwenden.
+		 * Nicht aufrufen - stattdessen {@link BotComponent#offerRead(Command)} verwenden
 		 * 
 		 * @param c	Kommando
 		 * @throws ProtocolException 
@@ -115,13 +115,13 @@ public abstract class BotComponent<M> {
 	}
 
 	/** Einfacher Sensor */
-	public interface SimpleSensor {	// $$$ abstract class
-		// Marker-Interface
+	public interface SimpleSensor {
+		// Marker-Interface (abstract class)
 	}
 
 	/** Einfacher Aktuator */
-	public interface SimpleActuator {	// $$$ abstract class
-		// Marker-Interface
+	public interface SimpleActuator {
+		// Marker-Interface (abstract class)
 	}
 
 	/** Connection-Eigenschaften */

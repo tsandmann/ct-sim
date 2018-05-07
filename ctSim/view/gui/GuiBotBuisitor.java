@@ -25,9 +25,7 @@ import ctSim.model.bots.Bot;
 import ctSim.model.bots.BotBuisitor;
 import ctSim.util.Buisitor;
 
-/**
- * GUI der Buisitors 
- */
+/** GUI der Buisitors */
 public abstract class GuiBotBuisitor extends JPanel implements BotBuisitor {
 	/** UID */
 	private static final long serialVersionUID = 1654996309645415223L;
@@ -36,17 +34,14 @@ public abstract class GuiBotBuisitor extends JPanel implements BotBuisitor {
 	/** Anzeige? */
 	private boolean shouldBeDisplayed = false;
 
-	/**
-	 * neuer GUI-Buisitor
-	 */
+	/** Neuer GUI-Buisitor */
 	public GuiBotBuisitor() {
-		super(true); // Double-Buffering an
+		super(true);	// Double-Buffering an
 	}
 
 	/**
-	 * 
-	 * @param o Objekt
-	 * @param bot Bot
+	 * @param o		Objekt
+	 * @param bot	Bot
 	 */
 	public void visit(Object o, Bot bot) {
 		if (buisitor.dispatchBuisit(o) > 0)

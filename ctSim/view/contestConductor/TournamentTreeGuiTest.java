@@ -36,13 +36,9 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-/**
- * Testklasse
- */
+/** Testklasse */
 public class TournamentTreeGuiTest extends JFrame {
-	/**
-	 * für Tests
-	 */
+	/** für Tests */
 	public class TournamentTreeModel implements TreeModel {
 		/** Listenerliste */
 		ArrayList<TreeModelListener> listeners =
@@ -52,24 +48,18 @@ public class TournamentTreeGuiTest extends JFrame {
 		/** Carrier-Baum */
 		SpreadingTree<Integer> carrier;
 
-		/**
-		 * für Tests
-		 */
+		/** für Tests */
 		public TournamentTreeModel() {
 			init();
 		}
 
-		/**
-		 * für Tests
-		 */
+		/** für Tests */
 		public void init() {
 			currentLevel = 1;
 			addLevel();
 		}
 
-        /**
-         * für Tests
-         */
+        /** für Tests */
         public void addLevel() {
         	ArrayList<Integer> li = new ArrayList<Integer>();
         	for (int i = 1; i <= Math.pow(2, currentLevel); i++)
@@ -81,9 +71,7 @@ public class TournamentTreeGuiTest extends JFrame {
 			currentLevel++;
         }
 
-        /**
-         * für Tests
-         */
+        /** für Tests */
         public void removeNode() {
         	int u = currentLevel - 4;
         	init();
@@ -146,6 +134,7 @@ public class TournamentTreeGuiTest extends JFrame {
 
 		/**
 		 * für Tests
+		 * 
 		 * @param path 
 		 * @param newValue 
 		 */
@@ -163,9 +152,7 @@ public class TournamentTreeGuiTest extends JFrame {
     /** Label */
     JLabel label = new JLabel("2 Level");
 
-    /**
-     * Tests
-     */
+    /** Tests */
     public TournamentTreeGuiTest() {
     	setLayout(new BorderLayout());
     	JButton her = new JButton("+");
@@ -204,6 +191,7 @@ public class TournamentTreeGuiTest extends JFrame {
 
     /**
      * main
+     * 
      * @param args
      */
 	public static void main(String[] args) {
