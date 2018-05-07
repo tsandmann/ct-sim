@@ -32,45 +32,39 @@ import javax.swing.JTabbedPane;
 
 /**
  * <p>
- * TabbedPane, deren Tabs ein Schließen-Icon haben (kleines "X",
- * das auch einen eigenen Tooltip haben kann). Diese Klasse ist ein Hack, um
- * auch mit Java 5 klickbare Icons an der Stelle machen zu können. (Java 6
- * würde das direkt unterstützen, womit diese Klasse
- * überflüssig wäre. Näheres: <a
- * href="http://java.sun.com/docs/books/tutorial/uiswing/components/tabbedpane.html">Sun's
- * How to Use Tabbed Panes</a>, Abschnitt "Tabs With Custom Components".)
+ * TabbedPane, deren Tabs ein Schließen-Icon haben (kleines "X", das auch einen eigenen Tooltip haben
+ * kann). Diese Klasse ist ein Hack, um auch mit Java 5+ klickbare Icons an der Stelle machen zu können.
+ * (Java 6 würde das direkt unterstützen, womit diese Klasse überflüssig wäre. Näheres:
+ * <a href="http://java.sun.com/docs/books/tutorial/uiswing/components/tabbedpane.html">Sun's How to Use
+ * Tabbed Panes</a>, Abschnitt "Tabs With Custom Components".)
  * </p>
  * <p>
- * Tabs mit Schließen-Icon werden nur bei Verwendung der
- * addClosableTab(...)-Methoden erzeugt. addTab(...) erzeugt reguläre Tabs.
+ * Tabs mit Schließen-Icon werden nur bei Verwendung der addClosableTab(...)-Methoden erzeugt. addTab(...)
+ * erzeugt reguläre Tabs.
  * </p>
  * <p>
- * Verwendung: <br />
+ * Verwendung:<br />
  * <code>JComponent tabContent = new JPanel();</code><br />
  * <code>tabContent.add(...);</code><br />
  * <code>ClosableTabsPane ctp = new {@link #ClosableTabsPane(Icon) ClosableTabsPane}(...);</code><br/>
  * <code>ctp.{@link #addClosableTab(String, Component, String) addClosableTab}("Tab-Titel", tabContent, "Tab-Tooltip");</code><br/>
  * </p>
  * <p>
- * Grundprinzip aus einem <a
- * href="http://forum.java.sun.com/thread.jspa?threadID=337070">Forumsposting
+ * Grundprinzip aus einem <a href="http://forum.java.sun.com/thread.jspa?threadID=337070">Forumsposting
  * von einem Mr_Silly</a> übernommen; Code neu geschrieben und erweitert.
  * </p>
  * <p>
- * Der Sim verwendet derzeit nur eine Instanz dieser Klasse, in der
- * <em>alle</em> Tabs ein Schließen-Icon haben. <em>Theoretisch</em>
- * kann man in einer Instanz dieser Klasse schließbare und
- * nicht-schließbare Tabs gemischt verwenden, aber das hab ich nie
- * getestet. Es ist ein Hack wie gesagt.
+ * Der Sim verwendet derzeit nur eine Instanz dieser Klasse, in der <em>alle</em> Tabs ein Schließen-Icon
+ * haben. <em>Theoretisch</em> kann man in einer Instanz dieser Klasse schließbare und nicht-schließbare
+ * Tabs gemischt verwenden, aber das habe ich nie getestet. Es ist ein Hack wie gesagt.
  * </p>
  *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class ClosableTabsPane extends JTabbedPane {
 	/**
-	 * Icon-Wrapper, der sich merkt, wo das Icon zuletzt gezeichnet wurde
-	 * (Koordinaten in Pixeln von der oberen linken Ecke der JComponent, in der
-	 * das Icon gemalt wurde)
+	 * Icon-Wrapper, der sich merkt, wo das Icon zuletzt gezeichnet wurde (Koordinaten in Pixeln von der
+	 * oberen linken Ecke der JComponent, in der das Icon gemalt wurde)
 	 */
     public static class BoundedIcon implements Icon {
     	/** Icon */
@@ -81,7 +75,7 @@ public class ClosableTabsPane extends JTabbedPane {
 		private int lastY;
 
 		/**
-		 * @param wrappee Inhalt
+		 * @param wrappee	Inhalt
 		 */
 		public BoundedIcon(Icon wrappee) {
     		this.wrappee = wrappee;
@@ -108,7 +102,8 @@ public class ClosableTabsPane extends JTabbedPane {
 		 */
 		public Icon getWrappee() { return wrappee; }
 		/**
-		 * Warppee-Icon setzen
+		 * Wrappee-Icon setzen
+		 * 
 		 * @param wrappee
 		 */
 		public void setWrappee(Icon wrappee) { this.wrappee = wrappee; }
@@ -117,6 +112,7 @@ public class ClosableTabsPane extends JTabbedPane {
 		 * @see javax.swing.Icon#getIconHeight()
 		 */
 		public int getIconHeight() { return wrappee.getIconHeight(); }
+		
 		/**
 		 * @see javax.swing.Icon#getIconWidth()
 		 */
@@ -124,33 +120,26 @@ public class ClosableTabsPane extends JTabbedPane {
     }
 
     /*
-	 * Implementierungsprinzip: Die Schließen-Icons sind spezielle Icons, die
-	 * wissen, an welchen Koordinaten sie zuletzt gemalt wurden. Die
-	 * ClosableTabsPane hat zwei Listener: 1. einen MouseListener, der das Icon
-	 * fragt, ob die Koordinaten des Klick-Event innerhalb des Icon liegen oder
-	 * nicht; falls ja, wird das Tab geschlossen. 2. einen MouseMotionListener,
-	 * der ebenfalls die Mauskoordinaten gegen das Icon prüft und ggf. das Icon
-	 * austauscht, um den Hover-Effekt (mouseover / mouseout) zu erzielen. Die
-	 * Tooltips der Icons werden ähnlich gemacht.
+	 * Implementierungsprinzip: Die Schließen-Icons sind spezielle Icons, die wissen, an welchen
+	 * Koordinaten sie zuletzt gemalt wurden. Die ClosableTabsPane hat zwei Listener:
+	 * 1. einen MouseListener, der das Icon fragt, ob die Koordinaten des Klick-Event innerhalb des
+	 * Icon liegen oder nicht; falls ja, wird das Tab geschlossen.
+	 * 2. einen MouseMotionListener, der ebenfalls die Mauskoordinaten gegen das Icon prüft und ggf.
+	 * das Icon austauscht, um den Hover-Effekt (mouseover / mouseout) zu erzielen.
+	 * Die Tooltips der Icons werden ähnlich gemacht.
 	 */
     /** UID */
 	private static final long serialVersionUID = 1030593683059736787L;
 
-	/**
-	 * Nicht gewrapptes Schließen-Icon für dann, wenn Mauscursor
-	 * nicht drüber
-	 */
+	/** Nicht gewrapptes Schließen-Icon für dann, wenn Mauscursor nicht darüber */
 	private final Icon rawCloseIcon;
 
-	/**
-	 * Nicht gewrapptes Schließen-Icon für dann, wenn Mauscursor
-	 * drüber
-	 */
+	/** Nicht gewrapptes Schließen-Icon für dann, wenn Mauscursor darüber */
 	private final Icon rawCloseIconHover;
 
 	/**
-	 * Tooltips der Schließen-Icons (nicht der Tab-Beschriftung). Indices:
-	 * Wie Tab-Indices, die von JTabbedPane sonst immer verwendet werden.
+	 * Tooltips der Schließen-Icons (nicht der Tab-Beschriftung). Indices: Wie Tab-Indices, die von
+	 * JTabbedPane sonst immer verwendet werden.
 	 */
 	private final List<String> closeIconToolTips = Misc.newList();
 
@@ -166,6 +155,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * wird nicht tatsächlich geschlossen, Event feuert nur
+	 * 
 	 * @param closeIcon
 	 * @param closeIconHover
 	 */
@@ -180,8 +170,7 @@ public class ClosableTabsPane extends JTabbedPane {
 				}
 			}
 
-			// Falls einer aus der TabbedPane nach oben rausfährt, so dass
-			// der MotionListener nicht greift
+			// Falls einer aus der TabbedPane nach oben rausfährt, sodass der MotionListener nicht greift
 			@Override
 			public void mouseExited(MouseEvent e) {
 				handleMouseMotionEvent(e);
@@ -200,7 +189,8 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Behandelt das MouseMotion-Event
-	 * @param e Event
+	 * 
+	 * @param e	Event
 	 */
 	private void handleMouseMotionEvent(MouseEvent e) {
 		int mouseOverIdx = indexOfBoundedIconAt(e.getX(), e.getY());
@@ -217,19 +207,20 @@ public class ClosableTabsPane extends JTabbedPane {
 	}
 
 	/**
-	 * X/Y relativ zu dieser TabbedPane, d.h. man kann die Koordinaten, wie sie
-	 * ein MouseEvent liefert, direkt weiterverwursten. Gibt einen Tab-Index
-	 * zurück wie die {@code index...()}-Methoden in JTabbedPane.
-	 * @param x X-Koordinate
-	 * @param y Y-Koordinate
+	 * X/Y relativ zu dieser TabbedPane, d.h. man kann die Koordinaten, wie sie ein MouseEvent liefert,
+	 * direkt weiterverarbeiten. Gibt einen Tab-Index zurück wie die {@code index...()}-Methoden in
+	 * JTabbedPane.
+	 * 
+	 * @param x	X-Koordinate
+	 * @param y	Y-Koordinate
 	 * @return Tab-Index
 	 */
 	private int indexOfBoundedIconAt(int x, int y) {
-		// Tab mit welcher Indexnr. geklickt?
+		// Tab mit welcher Indexnummer geklickt?
 		int idx = indexAtLocation(x, y);
 		if (idx == -1)
 			return -1;
-		// War das aufm Icon?
+		// War das auf dem Icon?
 		Icon ic = getIconAt(idx);
 		if (! (ic instanceof BoundedIcon))
 			return -1;
@@ -250,6 +241,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Fügt neuen Tab hinzu
+	 * 
 	 * @param title		Titel
 	 * @param component	Komponente
 	 */
@@ -259,6 +251,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Fügt neuen Tab hinzu
+	 * 
 	 * @param title		Titel
 	 * @param component	Komponente
 	 * @param toolTip	Tooltip
@@ -271,9 +264,10 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Fügt neuen Tab hinzu
-	 * @param title		Titel
-	 * @param component	Komponente
-	 * @param toolTip	Tooltip
+	 * 
+	 * @param title				Titel
+	 * @param component			Komponente
+	 * @param toolTip			Tooltip
 	 * @param closeIconToolTip	Icon-Tooltip
 	 */
 	public void addClosableTab(String title, Component component,
@@ -286,23 +280,22 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * <p>
-	 * Registriert einen Listener, der benachrichtigt wird, wenn der Benutzer
-	 * ein Tab aus dieser TabsPane schließt. Der Parameter, der dem
-	 * Listener übergeben wird, ist der Index des Tab (einer der in
+	 * Registriert einen Listener, der benachrichtigt wird, wenn der Benutzer ein Tab aus dieser TabsPane
+	 * schließt. Der Parameter, der dem Listener übergeben wird, ist der Index des Tab (einer der in
 	 * {@link JTabbedPane} üblichen Indizes). Verwendungsbeispiel:
 	 * 
 	 * <pre>
-	 * tabsPane.addCloseListener(new Closure&lt;Integer&gt;() {
+	 * tabsPane.addCloseListener(new Closure<Integer>() {
 	 *     public void run(Integer index) { 
 	 *         Component c = tabsPane.getComponentAt(index);
 	 *         ...
 	 *     }
-	 * });</pre>
-	 * 
+	 * });
+	 * </pre>
 	 * </p>
 	 * 
 	 * @param li
-	 * @throws NullPointerException Falls li == {@code null} ist.
+	 * @throws NullPointerException	Falls li == {@code null} ist.
 	 */
 	public void addCloseListener(Runnable1<Integer> li) {
 		if (li == null)
@@ -311,11 +304,11 @@ public class ClosableTabsPane extends JTabbedPane {
 	}
 
 	/**
-	 * Entfernt einen Listener, den man zuvor registriert hat. Siehe
-	 * {@link #addCloseListener(Runnable1)}. Der Aufruf wird stillschweigend
-	 * ignoriert, falls der Listener schon entfernt ist oder nie registriert
-	 * wurde.
-	 * @param li Listener
+	 * Entfernt einen Listener, den man zuvor registriert hat. Siehe {@link #addCloseListener(Runnable1)}.
+	 * Der Aufruf wird stillschweigend ignoriert, falls der Listener schon entfernt ist oder nie
+	 * registriert wurde.
+	 * 
+	 * @param li	Listener
 	 */
 	public void removeCloseListener(Runnable1<Integer> li) {
 		closeListeners.remove(li);

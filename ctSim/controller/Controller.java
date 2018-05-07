@@ -33,15 +33,13 @@ import ctSim.view.View;
 /**
  * <p>
  * Interface, das die Views der Applikation verwendet, um auf den Controller
- * zuzugreifen. ("View" und "Controller" sind dabei im Sinne von <a
- * href="http://en.wikipedia.org/wiki/Model-view-controller"
- * target="_blank">MVC</a> zu verstehen.)
+ * zuzugreifen. ("View" und "Controller" sind dabei im Sinne von
+ * <a href="http://en.wikipedia.org/wiki/Model-view-controller" target="_blank">MVC</a> zu verstehen.)
  * </p>
  * <p>
- * Das Interface definiert also in erster Linie, welche Dienste ein Controller
- * den Views der Applikation zur Verfügung stellt. Daneben hat das
- * Interface die offensichtliche Bedeutung, dass der Controller der Applikation
- * gegenüber den Views (ausschließlich) unter diesem Interface erscheint.
+ * Das Interface definiert also in erster Linie, welche Dienste ein Controller den Views der Applikation
+ * zur Verfügung stellt. Daneben hat das Interface die offensichtliche Bedeutung, dass der Controller
+ * der Applikation gegenüber den Views (ausschließlich) unter diesem Interface erscheint.
  * </p>
  *
  * @see View
@@ -64,7 +62,7 @@ public interface Controller {
 	 */
 	public void invokeBot(File file);
 
-	/** ügt einen Testbot hinzu */
+	/** Fügt einen Testbot hinzu */
 	public void addTestBot();
 
 	/**
@@ -129,7 +127,7 @@ public interface Controller {
 	 * Sender und Empfänger stehen in dem Command drin.
 	 * 
 	 * @param command	das zu übertragende Kommando
-	 * @throws ProtocolException	Falls kein passender Empfänger gefunden wurde
+	 * @throws ProtocolException	falls kein passender Empfänger gefunden wurde
 	 */
 	public void deliverMessage(Command command) throws ProtocolException;
 	
@@ -137,7 +135,7 @@ public interface Controller {
 	 * Liefert eine Id aus dem Adresspoll zurück
 	 * 
 	 * @return Die neue Id
-	 * @throws ProtocolException	Wenn keine Adresse mehr frei
+	 * @throws ProtocolException	wenn keine Adresse mehr frei
 	 */
 	public BotID generateBotId() throws ProtocolException;
 	

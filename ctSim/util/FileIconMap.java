@@ -28,48 +28,44 @@ import javax.swing.ImageIcon;
 
 /**
  * <p>
- * Hilfsklasse, die im Dateisystem ein Verzeichnis abklappert und alle dortigen
- * Dateien als Icons lädt (genauer: als Instanzen der Klasse
- * {@link ImageIcon}).
+ * Hilfsklasse, die im Dateisystem ein Verzeichnis abklappert und alle dortigen Dateien als Icons lädt
+ * (genauer: als Instanzen der Klasse {@link ImageIcon}).
  * </p>
  * <p>
  * <strong>Verwendungsbeispiel:</strong>
  * </p>
  * <ol>
- * <li><code>FileIconMap icons = new
- * FileIconMap(new File("pfad/zu/den/icons"));</code></li>
- * <li><code>meinWurstButton.setIcon(icons.get("Wurst"))</code>, um dem
- * Button das Icon zuzuweisen, was unter dem Dateinamen
- * "pfad/zu/den/icons/Wurst.xyz" zu finden war. "xyz" steht dabei für eine
+ * <li><code>FileIconMap icons = new FileIconMap(new File("pfad/zu/den/icons"));</code></li>
+ * <li><code>meinWurstButton.setIcon(icons.get("Wurst"))</code>, um dem Button das Icon zuzuweisen,
+ * was unter dem Dateinamen "pfad/zu/den/icons/Wurst.xyz" zu finden war. "xyz" steht dabei für eine
  * beliebige Erweiterung; sie wird von dieser Klasse ignoriert.</li>
  * </ol>
  * </p>
  * <p>
- * <strong>Sinn:</strong> Es muss nicht mehr jedes Icon persönlich
- * angefordert werden, was zu Vereinfachungen führt:
+ * <strong>Sinn:</strong> Es muss nicht mehr jedes Icon persönlich angefordert werden, was zu
+ * Vereinfachungen führt:
  * <ul>
- * <li>beliebige Mengen Icons können mit einer einzelnen Zeile geladen
- * werden: <code>FileIconMap ganzeChose = new
- * FileIconMap(new File("IconUnterverzeichnis"));</code></li>
- * <li>Beim Erweitern der Applikation können Icons hinzugefügt
- * werden, indem nur die Icon-Datei ins entsprechende Verzeichnis gelegt wird.
- * Code-Änderungen zum Laden sind nicht nötig.</li>
+ * <li>beliebige Mengen Icons können mit einer einzelnen Zeile geladen werden:
+ * <code>FileIconMap ganzeChose = new FileIconMap(new File("IconUnterverzeichnis"));</code></li>
+ * <li>Beim Erweitern der Applikation können Icons hinzugefügt werden, indem nur die Icon-Datei ins
+ * entsprechende Verzeichnis gelegt wird. Code-Änderungen zum Laden sind nicht nötig.</li>
  * </ul>
  * </p>
  *
  * @see ImageIcon
- * @author Hendrik Krauss &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * 
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class FileIconMap implements IconProvider {
-//    /** UID */
+    /** UID */
 //	private static final long serialVersionUID = 7916128473992195865L;
 
     /** Logger */
     final FmtLogger lg = FmtLogger.getLogger("ctSim.util.FileIconMap");
 
     /**
-	 * Aus dem Verzeichnis, das dem Konstruktor übergeben wurde, werden
-	 * alle Icons geladen und hier zwischengespeichert
+	 * Aus dem Verzeichnis, das dem Konstruktor übergeben wurde, werden alle Icons geladen und hier
+	 * zwischengespeichert
 	 */
     private final HashMap<String, ImageIcon> map;
 
@@ -78,23 +74,19 @@ public class FileIconMap implements IconProvider {
 
     /**
      * <p>
-     * Erzeugt eine Instanz, die das angegebene Verzeichnis abklappert und alle
-     * dortigen Dateien als Icons lädt. Der Abklappervorgang erfolgt nicht
-     * rekursiv, d.h. Unterverzeichnisse werden von der vorliegenden
-     * Implementierung nicht berücksichtigt.
+     * Erzeugt eine Instanz, die das angegebene Verzeichnis abklappert und alle dortigen Dateien als
+     * Icons lädt. Der Abklapper-Vorgang erfolgt nicht rekursiv, d.h. Unterverzeichnisse werden von der
+     * vorliegenden Implementierung nicht berücksichtigt.
      * </p>
      * <p>
-     * Das Verhalten der Klasse bei Namenskollisionen, d.h. falls zwei Dateien
-     * mit gleichen Namen und verschiedenen Erweiterungen gefunden werden
-     * (kaese.png, kaese.gif), ist undefiniert.
+     * Das Verhalten der Klasse bei Namenskollisionen, d.h. falls zwei Dateien mit gleichen Namen und
+     * verschiedenen Erweiterungen gefunden werden (kaese.png, kaese.gif), ist undefiniert.
      * </p>
      *
-     * @param parentDir Das Verzeichnis, das die zu ladenden Bilddateien
-     * enthält.
-     * @throws NullPointerException Falls parentDir <code>null</code> ist.
-     * @throws FileNotFoundException Falls parentDir nicht existiert.
-     * @throws IllegalArgumentException Falls parentDir kein Verzeichnis
-     * darstellt.
+     * @param parentDir	das Verzeichnis, das die zu ladenden Bilddateien enthält
+     * @throws NullPointerException		falls parentDir <code>null</code> ist
+     * @throws FileNotFoundException	falls parentDir nicht existiert
+     * @throws IllegalArgumentException	falls parentDir kein Verzeichnis darstellt
      */
     public FileIconMap(File parentDir)
     throws NullPointerException, FileNotFoundException,
@@ -117,10 +109,9 @@ public class FileIconMap implements IconProvider {
     }
 
     /**
-	 * ähnlich wie {@link IconProvider#get(String)}. Liefert {@code null},
-	 * falls das gewünschte Icon im Dateisystem nicht existiert (genauer:
-	 * falls es nicht existiert hat zu dem Zeitpunkt, als der Konstruktor
-	 * aufgerufen wurde).
+	 * Ähnlich wie {@link IconProvider#get(String)}. Liefert {@code null}, falls das gewünschte Icon
+	 * im Dateisystem nicht existiert (genauer: falls es nicht existiert hat zu dem Zeitpunkt, als der
+	 * Konstruktor aufgerufen wurde).
 	 */
     public Icon get(String key) {
         ImageIcon rv = map.get(key);

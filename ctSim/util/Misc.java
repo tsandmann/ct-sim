@@ -32,9 +32,7 @@ import java.util.HashMap;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 
-/**
- * Tools
- */
+/** Tools */
 public class Misc {
 	/**
 	 * @param x 
@@ -45,9 +43,9 @@ public class Misc {
 	}
 
 	/**
-	 * Bringt einen Winkel in das Intervall ]&minus;180&deg;; 180&deg;].
+	 * Bringt einen Winkel in das Intervall ]-180°; 180°].
 	 * 
-	 * @param angleInDeg Winkel in Grad
+	 * @param angleInDeg	Winkel in Grad
 	 * @return Winkel
 	 */
 	public static double normalizeAngleDeg(double angleInDeg) {
@@ -59,9 +57,9 @@ public class Misc {
 	}
 
 	/**
-	 * Bringt einen Winkel in das Intervall ]&minus;&pi;; &pi;].
+	 * Bringt einen Winkel in das Intervall ]-π; π].
 	 * 
-	 * @param angleInRad Winkel im Bogenmaß
+	 * @param angleInRad	Winkel im Bogenmaß
 	 * @return Winkel
 	 */
 	public static double normalizeAngleRad(double angleInRad) {
@@ -73,10 +71,11 @@ public class Misc {
 	}
 
 	/**
-	 * Liefert den übergebenen Wert <code>value</code> zurück, falls 0
-	 * &lt; <code>value</code> &lt; <code>maxAllowed</code> gilt. Falls
-	 * nicht, liefert den Wert aus dem Intervall [0; <code>maxAllowed</code>],
-	 * der <code>value</code> am nächsten liegt.
+	 * Liefert den übergebenen Wert <code>value</code> zurück, falls
+	 * 0 < <code>value</code> < <code>maxAllowed</code>
+	 * gilt. Falls nicht, liefert den Wert aus dem Intervall [0; <code>maxAllowed</code>],
+	 * der <code>value</code> am Nächsten liegt.
+	 * 
 	 * @param value 
 	 * @param maxAllowed 
 	 * @return Wert
@@ -89,7 +88,8 @@ public class Misc {
 	}
 
 	/** 
-	 * Wie {@link #clamp(int, int)} 
+	 * Wie {@link #clamp(int, int)}
+	 * 
 	 * @param value 
 	 * @param maxAllowed 
 	 * @return Wert 
@@ -121,7 +121,7 @@ public class Misc {
 		return false;
 	}
 
-	// throws NullPtr wenn separator == null
+	// @throws NullPtr	wenn separator == null
 	/**
 	 * @param <T>
 	 * @param separator
@@ -164,7 +164,7 @@ public class Misc {
 		dest.close();
 	}
 
-	/** ??? */
+	/** TBD */
 	private static HashMap<RenderingHints.Key, Object> antiAliasOn = newMap();
 
 	static {
@@ -173,15 +173,16 @@ public class Misc {
 	}
 
 	/**
-	 * @param g Graphics2D
+	 * @param g	Graphics2D
 	 */
 	public static void enableAntiAliasing(Graphics2D g) {
 		g.addRenderingHints(antiAliasOn);
 	}
 
 	/**
-	 * Konvertiert ein Byte (Wertebereich [&minus;128; +127]) in ein
-	 * <em>unsigned byte</em> (Wertebereich [0; 255]).
+	 * Konvertiert ein Byte (Wertebereich [&minus;128; +127]) in ein <em>unsigned byte</em>
+	 * (Wertebereich [0; 255]).
+	 * 
 	 * @param value 
 	 * @return uByte
 	 */
@@ -191,15 +192,13 @@ public class Misc {
 	}
 
 	/**
-	 * Liefert das letzte Element des übergebenen Arrays.
+	 * Liefert das letzte Element des übergebenen Arrays
+	 * 
 	 * @param array 
 	 * @param <T> 
 	 * @return letztes Element
-	 *
-	 * @throws ArrayIndexOutOfBoundsException falls das übergebene
-	 * Array leer ist (Länge 0 hat)
-	 * @throws NullPointerException falls das übergebene Array
-	 * {@code null} ist.
+	 * @throws ArrayIndexOutOfBoundsException	falls das übergebene Array leer ist (Länge 0 hat)
+	 * @throws NullPointerException				falls das übergebene Array {@code null} ist
 	 */
 	public static <T> T lastOf(T[] array) {
 		return array[array.length - 1];
@@ -207,16 +206,16 @@ public class Misc {
 
 	/**
 	 * <p>
-	 * Erzeugt eine {@link ArrayList} mit den korrekten Typparametern.
-	 * Verwendung:<br />
-	 * {@code List&lt;EchtLangerAnstrengenderTyp&gt; listInstance = newList();}<br />
+	 * Erzeugt eine {@link ArrayList} mit den korrekten Typparametern. Verwendung:<br />
+	 * {@code List<EchtLangerAnstrengenderTyp> listInstance = newList();}<br />
 	 * Das ist schöner und leichter änderbar als:<br />
-	 * {@code List&lt;EchtLangerAnstrengenderTyp&gt; listInstance = new ArrayList&lt;EchtLangerAnstrengenderTyp&gt;();}
+	 * {@code List<EchtLangerAnstrengenderTyp> listInstance = new ArrayList<EchtLangerAnstrengenderTyp>();}
 	 * </p>
 	 * <p>
-	 * Nach der hervorragenden Entdeckung von Josh Bloch; siehe <a
-	 * href="http://developers.sun.com/learning/javaoneonline/2006//coreplatform/TS-1512.html">Vortrag
-	 * bei der JavaOne</a>.
+	 * Nach der hervorragenden Entdeckung von Josh Bloch; siehe
+	 * <a href="http://developers.sun.com/learning/javaoneonline/2006//coreplatform/TS-1512.html">Vortrag
+	 * bei der JavaOne</a>
+	 * 
 	 * @param <T> 
 	 * @return ArrayList
 	 */
@@ -225,7 +224,8 @@ public class Misc {
 	}
 
 	/** 
-	 * Wie {@link #newList()}, aber für eine {@link HashMap}. 
+	 * Wie {@link #newList()}, aber für eine {@link HashMap}
+	 * 
 	 * @param <K> 
 	 * @param <V> 
 	 * @return HashMap 
@@ -235,7 +235,6 @@ public class Misc {
 	}
 
 	/**
-	 * 
 	 * @param t
 	 * @param updatePolicy
 	 */

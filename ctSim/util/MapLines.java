@@ -21,6 +21,7 @@ package ctSim.util;
 
 /**
  * Datentyp für Linien, die der MapViewer darstellen kann
+ * 
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class MapLines {
@@ -37,6 +38,7 @@ public class MapLines {
 	
 	/**
 	 * Linie, wie sie vom MapViewer dargestellt werden kann
+	 * 
 	 * @param x1	X-Koordinate Startpunkt
 	 * @param y1	Y-Koordinate Startpunkt
 	 * @param x2	X-Koordinate Endpunkt

@@ -33,19 +33,19 @@ import java.awt.image.WritableRaster;
 
 /**
  * <p>
- * Ermöglicht runde (radiale) Farbverläufe. Implementierung mit
- * Inspiration von <a
- * href="http://www.oreilly.com/catalog/java2d/chapter/ch04.html">http://www.oreilly.com/catalog/java2d/chapter/ch04.html</a>
+ * Ermöglicht runde (radiale) Farbverläufe. Implementierung mit Inspiration von
+ * <a href="http://www.oreilly.com/catalog/java2d/chapter/ch04.html"></a>
  * </p>
  * <p>
- * Beispiel: Ein Farbverlauf, dessen Hintergrund rot ist und der mit Pixel x=42
- * y=37 als Zentrum einen blauen radialen Farbverlauf mit 20 Pixel Radius hat
- *
+ * Beispiel: Ein Farbverlauf, dessen Hintergrund rot ist und der mit Pixel x=42 y=37 als Zentrum einen
+ * blauen radialen Farbverlauf mit 20 Pixel Radius hat
+ * </p>
+ * 
  * <pre>
  * class EineComponent extends JComponent {
  *     Paint paint = new RoundGradientPaint(42, 37, Color.BLUE, 20, Color.RED);
  *
- *     &#64;Override
+ *     @Override
  *     protected void paintComponent(Graphics graphics) {
  *         Graphics2D g = (Graphics2D)graphics;
  *         g.setPaint(paint);
@@ -55,12 +55,10 @@ import java.awt.image.WritableRaster;
  * }
  * </pre>
  *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class RoundGradientPaint implements Paint {
-	/**
-	 * RoundGradientPaint
-	 */
+	/** RoundGradientPaint */
 	public class RoundGradientContext implements PaintContext {
 		/** Mittelpunkt */
 		protected final Point2D center;

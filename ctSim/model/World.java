@@ -115,13 +115,15 @@ public class World {
 	///////////////////////////////////////////////////////////////////////////
 	// "Geerbte" Zeit-Sachen
 
-	/** @see #setSimStepIntervalInMs(int) */
+	/**
+	 * @see #setSimStepIntervalInMs(int)
+	 * */
 	private int simStepIntervalInMs = 0;
 
 	/** <p>Pro Simulationsschritt rückt die Simulationszeit-Uhr um diesen Wert vor.
 	 *  Einheit Millisekunden.</p>
 	 *
-	 * $$ Dokumentieren: Bot kriegt Zeit in diesen Schritten mitgeteilt; setzt indirekt max. Auflösung
+	 * TODO: Dokumentieren: Bot kriegt Zeit in diesen Schritten mitgeteilt; setzt indirekt max. Auflösung
 	 */
 	private static final int SIM_TIME_PER_STEP =
 		Integer.parseInt(Config.getValue("simTimePerStep"));
@@ -161,9 +163,9 @@ public class World {
 
 	/** Entfernt alle Bots */
 	public synchronized void removeAllBotsNow() {
-		// Listen kopieren: b.dispose() entfernt den Bot aus botsToStart und
-		// botsRunning, ein Iterator wuerde also eine ConcurrentModificationExcp
-		// werfen (d.h. for (ThreeDBot b : botsRunning) geht nicht)
+		// Listen kopieren: b.dispose() entfernt den Bot aus botsToStart und botsRunning, ein Iterator
+		// würde also eine ConcurrentModificationExcp werfen (d.h. for (ThreeDBot b : botsRunning)
+		// geht nicht)
 		List<ThreeDBot> lb = Misc.newList();
 		lb.addAll(botsToStart);
 		lb.addAll(botsRunning);
@@ -187,8 +189,8 @@ public class World {
 	}
 
 	/** <p>Setzen des Zeitraffer-/Zeitlupen-Faktors:
-	 * Stellt ein, wieviel Realzeit (Armbanduhrenzeit) zwischen zwei Schritten der Simulation
-	 * vergeht. Die Einheit ist Millisekunden.</p>
+	 * Stellt ein, wieviel Realzeit (Armbanduhrenzeit) zwischen zwei Schritten der Simulation vergeht.
+	 * Die Einheit ist Millisekunden.</p>
 	 *
 	 * <p>Vorgänge in der Simulation werden von diesem Wert nicht beeinflusst, da jeder Simulationsschritt
 	 * unabhängig von ihm ausgeführt wird. Der Wert beeinflusst nur, wie lange zwischen den Schritten
@@ -204,7 +206,7 @@ public class World {
 
 	/** Liefert die aktuelle Simulationszeit in Millisekunden.
 	 *
-	 * @return Die momentane Simulationszeit [ms].
+	 * @return Die momentane Simulationszeit [ms]
 	 * 			Sie ist gleich der Zahl der bisher ausgeführten Simulationsschritte mal einem
 	 * 			konstanten Faktor. Daher ist sie unabhängig von der Realzeit (Armbanduhrenzeit):
 	 * 			eine Sim-Sekunde ist im Allgemeinen	nicht gleich lang wie eine Armbanduhr-Sekunde,
@@ -216,7 +218,8 @@ public class World {
 		return simTimeInMs;
     }
 
-	/** Setzt die Simulationszeit-Uhr um den Gegenwert eines Simulationsschrittes weiter.
+	/**
+	 * Setzt die Simulationszeit-Uhr um den Gegenwert eines Simulationsschrittes weiter
 	 *
 	 * @see #SIM_TIME_PER_STEP
 	 * @see #getSimTimeInMs()
@@ -229,7 +232,7 @@ public class World {
 	// Statische Methoden, um eine Welt zu erzeugen
 
 	/**
-	 * Lädt einen Parcours aus einer Datei und baut damit eine Welt.
+	 * Lädt einen Parcours aus einer Datei und baut damit eine Welt
 	 * 
 	 * @param sourceFile	Die zu öffnende Datei. Sie hat in dem für Parcours vorgesehenen Schema zu sein.
 	 * @return Die neue Welt
@@ -298,9 +301,8 @@ public class World {
 	 * <p>Liest einen Parcours aus einer XML-Quelle und baut damit eine Welt.</p>
 	 * 
 	 * <p>Der Konstruktor ist privat, da ihn niemand von außen verwendet hat.
-	 * Es stehen die statischen Methoden <code>buildWorldFromFile</code>
-	 * und <code>buildWorldFromXmlString</code> aus dieser Klasse zu Verfügung,
-	 * um Welten zu erzeugen.</p>
+	 * Es stehen die statischen Methoden <code>buildWorldFromFile</code> und
+	 * <code>buildWorldFromXmlString</code> aus dieser Klasse zu Verfügung, um Welten zu erzeugen.</p>
 	 *
 	 * @param source
 	 * 				Die Xerces-Eingabequelle, aus der der die XML-Darstellung des Parcours kommt.
@@ -345,14 +347,14 @@ public class World {
 	}
 
 	/**
-	 * @return X-Dimension des Spielfeldes in Meter
+	 * @return X-Dimension des Spielfeldes in Metern
 	 */
 	public float getWidthInM() {
 		return parcours.getWidthInM();
 	}
 
 	/**
-	 * @return Y-Dimension des Spielfeldes in Meter
+	 * @return Y-Dimension des Spielfeldes in Metern
 	 */
 	public float getHeightInM() {
 		return parcours.getHeightInM();
@@ -361,7 +363,7 @@ public class World {
 	/**
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
 	 * 
-	 * @param parc Der Parcours
+	 * @param parc der Parcours
 	 */
 	private void setParcours(Parcours parc) {
 		parcours = parc;
@@ -479,7 +481,7 @@ public class World {
 	/**
 	 * Fügt eine ViewPlatform hinzu
 	 * 
-	 * @param view	Die neue Ansicht
+	 * @param view	die neue Ansicht
 	 */
 	public void addViewPlatform(ViewPlatform view) {
 		viewPlatforms.add(view);
@@ -488,7 +490,7 @@ public class World {
 	/**
 	 * Fügt einen neuen Bot hinzu
 	 * 
-	 * @param bot 		Der neue Bot
+	 * @param bot 		der neue Bot
 	 * @param barrier 	Barrier für den Bot
 	 * @return Neue ThreeDBot-Instanz
 	 */
@@ -557,9 +559,9 @@ public class World {
 	/**
 	 * Prüft, ob ein Objekt mit einem Objekt aus der obstacle-BG der Welt kollidiert
 	 * 
-	 * @param body		Körper des Objekts
-	 * @param bounds	Grenzen des Objekts
-	 * @return PickInfo über die Kollision (null, falls keine)
+	 * @param body		der Körper des Objekts
+	 * @param bounds	die Grenzen des Objekts
+	 * @return PickInfo über die Kollision (null, falls keine vorhanden)
 	 */
 	public PickInfo getCollision(Group body, Bounds bounds) {
 		/* Welttransformation anwenden */
@@ -592,8 +594,8 @@ public class World {
 	 * Prüft, ob unter dem angegebenen Punkt innerhalb der Bodenfreiheit des
 	 * Bots noch Boden zu finden ist
 	 *
-	 * @param pos				Die Position, von der aus nach unten gemessen wird
-	 * @param groundClearance	Die als normal anzusehende Bodenfreiheit
+	 * @param pos				die Position, von der aus nach unten gemessen wird
+	 * @param groundClearance	die als normal anzusehende Bodenfreiheit
 	 * @return True wenn Bodenkontakt besteht.
 	 */
 	public boolean checkTerrain(Point3d pos, double groundClearance) {
@@ -608,9 +610,9 @@ public class World {
 	 *
 	 * Es werden rayCount viele Strahlen gleichmäßig orthogonal zum Heading in die Szene geschossen.
 	 *
-	 * @param pos			Die Position, an der der Sensor angebracht ist
-	 * @param heading		Die Blickrichtung
-	 * @param openingAngle	Der Öffnungswinkel des Sensors
+	 * @param pos			die Position, an der der Sensor angebracht ist
+	 * @param heading		die Blickrichtung
+	 * @param openingAngle	der Öffnungswinkel des Sensors
 	 * @param rayCount		Es werden rayCount viele Strahlen vom Sensor ausgewertet.
 	 * @return Die Menge an Licht, die absorbiert wird, von 1023 (100%) bis 0 (0%)
 	 */
@@ -686,9 +688,9 @@ public class World {
 	 *
 	 * Es werden rayCount viele Strahlen gleichmäßig in Form eines "+" in die Szene geschossen.
 	 *
-	 * @param pos			Die Position, an der der Sensor angebracht ist
-	 * @param heading		Die Blickrichtung
-	 * @param openingAngle	Der Öffnungswinkel des Sensors
+	 * @param pos			die Position, an der der Sensor angebracht ist
+	 * @param heading		die Blickrichtung
+	 * @param openingAngle	der Öffnungswinkel des Sensors
 	 * @param rayCount		Es werden rayCount viele Strahlen vom Sensor ausgewertet.
 	 * @return Die Menge an Licht, die absorbiert wird, von 1023 (100%) bis 0 (0%)
 	 */
@@ -710,10 +712,10 @@ public class World {
 	 * ist sie seinen Bugs unterworfen. Ausführliche Dokumentation siehe
 	 * watchObstacle(Point3d, Vector3d, double, Shape3D).</p>
 	 *
-	 * @param pos			Die Position des Lichtsensors
-	 * @param heading		Die Blickrichtung des Lichtsensors
-	 * @param lightReach	Reichweite des Lichtsensors / m
-	 * @param openingAngle	Der Öffnungswinkel des Blickstrahls / radians
+	 * @param pos			die Position des Lichtsensors
+	 * @param heading		die Blickrichtung des Lichtsensors
+	 * @param lightReach	die Reichweite des Lichtsensors / m
+	 * @param openingAngle	der Öffnungswinkel des Blickstrahls / radians
 	 * @return Die Dunkelheit um den Sensor herum, von 1023 (100%) bis 0 (0%)
 	 * 
 	 * @see PickConeRay
@@ -744,14 +746,14 @@ public class World {
 	}
 
 	/**
-	 * <p>Liefert die Bakencodierung der Bake im Blickfeld mit der kürzesten 
-	 * Entfernung zum Sensor, oder 1023, falls keine Bake gesehen wird.</p>
+	 * <p>Liefert die Bakencodierung der Bake im Blickfeld mit der kürzesten Entfernung zum Sensor,
+	 * oder 1023, falls keine Bake gesehen wird.</p>
 	 *
-	 * @param pos			Die Position des Sensors
-	 * @param end			Die Position der maximalen Sensorreichweite
-	 * @param openingAngle	Der Öffnungswinkel des Blickstrahls
-	 * @return Die Bakencodierung, der Bake im Blickfeld mit der kürzesten 
-	 * 			Entfernung zum Sensor, oder 1023, falls keine Bake gesehen wird
+	 * @param pos			die Position des Sensors
+	 * @param end			die Position der maximalen Sensorreichweite
+	 * @param openingAngle	der Öffnungswinkel des Blickstrahls
+	 * @return Die Bakencodierung, der Bake im Blickfeld mit der kürzesten Entfernung zum Sensor,
+	 * 				oder 1023, falls keine Bake gesehen wird
 	 * 
 	 * @see PickConeSegment
 	 */
@@ -791,8 +793,8 @@ public class World {
 	 * wenn man von der übergebenen Position aus in Richtung des übergebenen
 	 * Endpunktes schaut.</p>
 	 *
-	 * @param pos	Die Position, von der aus der Seh-Strahl verfolgt wird
-	 * @param end	Die Position, wo der Seh-Strahl spätestens enden soll (falls kein Objekt gesehen wird)
+	 * @param pos	die Position, von der aus der Seh-Strahl verfolgt wird
+	 * @param end	die Position, wo der Seh-Strahl spätestens enden soll (falls kein Objekt gesehen wird)
 	 * @param openingAngle
 	 * 				Der Sehstrahl ist in Wahrheit ein Kegel; {@code openingAngle} gibt seinen Öffnungswinkel
 	 * 				an (Bogenmaß).
@@ -834,15 +836,12 @@ public class World {
 		return d;
 	}
 
-	/**
-	 * Damit jedes Obstacle fair behandelt wird, merken wir uns,
-	 * wer das letzte Mal zuerst dran war
-	 */
+	/** Damit jedes Obstacle fair behandelt wird, merken wir uns, wer das letzte Mal zuerst dran war */
 	private int runningBotsPtr = 0;
 	
 	/**
 	 * Diese Methode setzt die Simulation um einen Simulationsschritt weiter.
-	 * Siehe {@link ctSim.controller.DefaultController#run()}.
+	 * siehe {@link ctSim.controller.DefaultController#run()}.
 	 */
 	public void updateSimulation() {
 		// Simzeit um einen Schritt weiter
@@ -892,7 +891,7 @@ public class World {
 	}
 
 	/**
-	 * Ermittelt die kürzestet Distanz zum Ziel
+	 * Ermittelt die kürzeste Distanz zum Ziel
 	 * 
 	 * @param fromWhere	Anfangsposition
 	 * @return Entfernung

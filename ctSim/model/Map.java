@@ -39,14 +39,14 @@ public class Map {
 
 	/** Größe der Karte [m] */
 	private final float size;
-	/** Aufloesung der Karte [Punkte / m] */
+	/** Auflösung der Karte [Punkte / m] */
 	private final int resolution;
 	/** Kantenlänge einer Section [Punkte] */
 	private final int section_points;
 	/** Kantenlänge eines Makroblocks [Punkte] */
 	private final int macroblock_length;
 	
-	/** Makrobloecke der kompletten Karte */
+	/** Makroblöcke der kompletten Karte */
 	private Macroblock[][] macroblocks;
 	
 	/**
@@ -135,8 +135,8 @@ public class Map {
 		/**
 		 * Schreibt einen Feld-Wert in die Section
 		 * 
-		 * @param x	X-Index des Feldes innerhalb der Section
-		 * @param y	Y-Index des Feldes innerhalb der Section
+		 * @param x		X-Index des Feldes innerhalb der Section
+		 * @param y		Y-Index des Feldes innerhalb der Section
 		 * @param value zu schreibender Wert
 		 * @throws MapException	falls auf ein Feld außerhalb der Section zugegriffen wird
 		 */
@@ -165,8 +165,8 @@ public class Map {
 	/**
 	 * Erstellt eine leere Map mit den folgenden Parametern:
 	 * 
-	 * @param size	Größe der Karte [m]
-	 * @param resolution	Auflösung der Karte [Punkte / m]
+	 * @param size				Größe der Karte [m]
+	 * @param resolution		Auflösung der Karte [Punkte / m]
 	 * @param section_points	Kantenlänge einer Section [Punkte]
 	 * @param macroblock_length	Kantenlänge eines Macroblocks [Punkte]
 	 */
@@ -184,8 +184,8 @@ public class Map {
 	/**
 	 * Greift auf ein Map-Feld lesend oder schreibend zu
 	 * 
-	 * @param x	Map-Koordinate X
-	 * @param y	Map-Koordinate Y
+	 * @param x		Map-Koordinate X
+	 * @param y		Map-Koordinate Y
 	 * @param value	zu schreibender Wert (falls set == true)
 	 * @param set	lesender (false) oder schreibender (true) Zugriff
 	 * @return Wert des Feldes (fall set == false)
@@ -230,12 +230,12 @@ public class Map {
 	}
 	
 	/**
-	 * Trägt die Daten eines Parcours in die Karte ein. Als Urpsrung wird das Startfeld 
-	 * verwendet, das zum Bot der angegebenen Nr. gehört.
+	 * Trägt die Daten eines Parcours in die Karte ein. Als Urpsrung wird das Startfeld verwendet,
+	 * das zum Bot der angegebenen Nr. gehört.
 	 * 
 	 * @param parcours	zu verwendender Parcours 
-	 * @param bot	Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird
-	 * @param free	Wert, mit dem freie Felder eingetragen werden (z.B. 100)
+	 * @param bot		Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird
+	 * @param free		Wert, mit dem freie Felder eingetragen werden (z.B. 100)
 	 * @param occupied	Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
 	 * @throws MapException	im Fehlerfall
 	 */
@@ -251,7 +251,7 @@ public class Map {
 		}
 
 		if (bot >= Parcours.BOTS) {
-			/* ungueltige Bot-Nr. */
+			/* ungültige Bot-Nr. */
 			throw new MapException("Bot-Nr. ist zu gross");
 		}
 
@@ -307,8 +307,8 @@ public class Map {
 	 * des angegebenen Bots verwendet.
 	 * 
 	 * @param parcours	zu verwendender Parcours
-	 * @param bot	Bot, dessen Startfeld als Koordinatenursprung der Map benutzt wird
-	 * @param free	Wert, mit dem freie Felder eingetragen werden (z.B. 100)
+	 * @param bot		Bot, dessen Startfeld als Koordinatenursprung der Map benutzt wird
+	 * @param free		Wert, mit dem freie Felder eingetragen werden (z.B. 100)
 	 * @param occupied	Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
 	 * @throws MapException	im Fehlerfall
 	 */

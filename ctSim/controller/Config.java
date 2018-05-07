@@ -66,18 +66,18 @@ public class Config {
 	/** Logger */
 	static FmtLogger lg = FmtLogger.getLogger("ctSim.controller.Config");
 
-	/** <p>Default-Werte der Konfiguration. Ist ein Array, um sie im Quelltext
-	 * möglichst bequem notieren zu können.</p>
+	/** <p>Default-Werte der Konfiguration. Ist ein Array, um sie im Quelltext möglichst bequem notieren
+	 * zu können.</p>
 	 *
-	 * <p>Vorteile: Die Werte sind hier zentral statt quer durch den Quelltext
-	 * verteilt; Code, der {@link #getValue(String)} aufruft, kann einfacher
-	 * werden, da nicht dauernd der Rügabewert gegen <code>null</code>
-	 * geprüft werden muss – wenn in diesem Array ein Wert steht,
-	 * kann getValue(String) kein <code>null</code> mehr liefern.</p>*/
+	 * <p>Vorteile: Die Werte sind hier zentral statt quer durch den Quelltext verteilt; Code, der
+	 * {@link #getValue(String)} aufruft, kann einfacher werden, da nicht dauernd der Rügabewert gegen
+	 * <code>null</code> geprüft werden muss - wenn in diesem Array ein Wert steht, kann getValue(String)
+	 * kein <code>null</code> mehr liefern.</p>
+	 */
 	static final String[] parameterFallbacks = {
 		"botport", "10001",
 		"judge", "ctSim.model.rules.DefaultJudge",
-		"worlddir", ".", // TODO: besser dokumentieren in ct-sim.xml und Co.
+		"worlddir", ".",	// TODO: besser dokumentieren in ct-sim.xml und Co.
 		"botdir", ".",
 		"useContestConductor", "false",
 		"contestBotTargetDir", "tmp",
@@ -101,12 +101,11 @@ public class Config {
 		new ParameterType("botdir", File.class),
 	};
 
-	/** <p>Enthält die Einzelparameter der Konfiguration (spiegelt also
-	 * die <code><parameter></code>-Tags wider)</p>
+	/** <p>Enthält die Einzelparameter der Konfiguration (spiegelt also die <code><parameter></code>-Tags
+	 * wider)</p>
 	 *
-	 * <p>Verwendung: Wird zunächst auf die Default-Werte gesetzt, die aus
-	 * dem hartkodierten Array <code>configDefaults</code> kommen. Beim
-	 * späteren Parsen der Konfigurationsdatei werden Defaults
+	 * <p>Verwendung: Wird zunächst auf die Default-Werte gesetzt, die aus dem hartkodierten Array
+	 * <code>configDefaults</code> kommen. Beim späteren Parsen der Konfigurationsdatei werden Defaults
 	 * dann möglicherweise überschrieben.</p> */
 	private static PlainParameters parameters;
 
@@ -118,9 +117,8 @@ public class Config {
 	private static IconProvider icons;
 	
 	/**
-	 * Lädt die <code>&lt;parameter></code>-Tags aus der
-	 * Konfigurationsdatei des Sims. Die Werte der Tags sind dann mittels
-	 * {@link #getValue(String)} verfügbar.
+	 * Lädt die <code><parameter></code>-Tags aus der Konfigurationsdatei des Sims. Die Werte der Tags
+	 * sind dann mittels {@link #getValue(String)} verfügbar.
 	 * 
 	 * @param file	Konfigurationsdatei dem von "config/config.dtd" vorgeschriebenen XML-Format.
 	 * @throws ParserConfigurationException
@@ -223,10 +221,10 @@ public class Config {
 					String currentOs = System.getProperty("os.name")
 						.toLowerCase();
 
-					// Attribut os nicht vorhanden (= alle Betriebsysteme), oder
-					// vorhanden und System passt
-					// startsWith() damit "Windows" in der ct-sim.xml das
-					// von System.getProperty() gelieferte "Windows XP" matcht
+					/* Attribut os nicht vorhanden (= alle Betriebsysteme), oder vorhanden und System
+					 * passt startsWith() damit "Windows" in der ct-sim.xml das von System.getProperty()
+					 * gelieferte "Windows XP" matcht
+					 */
 					if ("".equals(parmOs) || Misc.startsWith(currentOs, parmOs))
 						put(n.getString("@name"), n.getString("@value"));
 				}
@@ -284,9 +282,8 @@ public class Config {
 			}
 
 			/**
-			 * Wichtig, weil wir es als Schlüssel in der Map verwenden
-			 * Implementiert nach Josh Bloch: "Effective Java",
-			 * (http://developer.java.sun.com/developer/Books/effectivejava/Chapter3.pdf)
+			 * Wichtig, weil wir es als Schlüssel in der Map verwenden Implementiert nach Josh Bloch:
+			 * "Effective Java", (http://developer.java.sun.com/developer/Books/effectivejava/Chapter3.pdf)
 			 * 
 			 * @see java.lang.Object#hashCode()
 			 */
@@ -410,8 +407,8 @@ public class Config {
 		}
 
 		/**
-		 * Modulo, d.h. wenn als Farben Rot, Grün und Hellbordeauxdemousin
-		 * da sind, kommt raus: (botType und appearanceType bleiben gleich)
+		 * Modulo, d.h. wenn als Farben Rot, Grün und Hellbordeauxdemousin da sind, kommt raus:
+		 * (botType und appearanceType bleiben gleich)
 		 * <ul>
 		 * <li>Index 0: Rot</li>
 		 * <li>Index 1: Grün </li>

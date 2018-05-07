@@ -38,7 +38,7 @@
  * der Hauptphase: Die Spieler werden so platziert, dass sich der schnellste und
  * der zweitschnellste aus der Vorrunde erst im Finale begegnen können, der
  * schnellste und der drittschnellste erst im Halbfinale usw. So werden allzu
- * verzerrte Wettbewerbsergebnisse vermieden – gäbe es z.B. eine
+ * verzerrte Wettbewerbsergebnisse vermieden - gäbe es z.B. eine
  * einfache Auslosung statt einer Vorrunde, könnten zufällig die
  * beiden besten Implementierungen in der ersten Runde aufeinandertreffen. Das
  * würde heißen, dass einer der beiden Schnellsten schon im ersten
@@ -51,7 +51,7 @@
  * Zweikämpfe des ersten Durchgangs zu füllen, erhalten möglichst
  * viele Bots ein Freilos, das sie automatisch für die nächste Runde
  * qualifiziert. Im Extremfall findet somit in der ersten Runde des Turniers nur
- * ein einziges Duell statt – dafür sind alle anschließenden
+ * ein einziges Duell statt - dafür sind alle anschließenden
  * Durchgänge voll besetzt.
  * </p>
  * <p>
@@ -116,7 +116,7 @@
  *      |
  *      |
  *      v                     hat einen
- *   ContestConductor -------------------------&gt; TournamentPlanner
+ *   ContestConductor -------------------------> TournamentPlanner
  *          |                                            |
  *          |                                            |
  *          | hat einen                                  | hat einen
@@ -144,6 +144,6 @@
  * Gewinner und trägt ihn im Turnierbaum ein.
  * </p>
  *
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 package ctSim.view.contestConductor;

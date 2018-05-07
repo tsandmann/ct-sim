@@ -37,23 +37,22 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Superklasse für alle Bots, unabhängig davon, ob sie –
+ * Superklasse für alle Bots, unabhängig davon, ob sie:
  * <ul>
- * <li><strong>real</strong> sind, d.h. ein Bot aus Hardware wurde an den Sim angeschlossen
- * und der Sim spielt daher hauptsächlich die Rolle eines erweiterten Displays für Sensorwerte,
- * die von echten Sensoren stammen (mit anderen Worten, der Sim läuft im Slave-Modus).</li>
- * <li><strong>simuliert</strong> sind, d.h. es gibt keinen Bot aus Hardware, es läuft nur der
- * Steuercode auf einem PC. Sensordaten kommen in diesem Fall nicht von echter Hardware,
- * sondern über TCP vom Sim, der sie ausgerechnet hat (Sim im Master-Modus).</li>
- * <li><strong>c't-Bots</strong> sind oder nicht -- theoretisch könnte jemand ja mal den
- * Simulator um selbstgestrickte Bots erweitern, die keine c't-Bot sind.</li>
+ * <li><strong>real</strong> sind, d.h. ein Bot aus Hardware wurde an den Sim angeschlossen und der Sim
+ * spielt daher hauptsächlich die Rolle eines erweiterten Displays für Sensorwerte, die von echten
+ * Sensoren stammen (mit anderen Worten, der Sim läuft im Slave-Modus).</li>
+ * <li><strong>simuliert</strong> sind, d.h. es gibt keinen Bot aus Hardware, es läuft nur der Steuercode
+ * auf einem PC. Sensordaten kommen in diesem Fall nicht von echter Hardware, sondern über TCP vom Sim,
+ * der sie ausgerechnet hat (Sim im Master-Modus).</li>
+ * <li><strong>c't-Bots</strong> sind oder nicht -- theoretisch könnte jemand ja mal den Simulator um
+ * selbstgestrickte Bots erweitern, die keine c't-Bot sind.</li>
  * </ul>
  * </p>
- * <p>Die Klasse ist abstrakt und muss daher erst abgeleitet werden, um instanziiert werden
- * zu können.</p>
- * <p>Der Haupt-Thread kümmert sich um die eigentliche Simulation und die Koordination mit
- * dem Zeittakt der Welt. Die Kommunikation z.B. über eine TCP/IP-Verbindung muss von den
- * abgeleiteten Klassen selbst behandelt werden.</p>
+ * <p>Die Klasse ist abstrakt und muss daher erst abgeleitet werden, um instanziiert werden zu können.</p>
+ * <p>Der Haupt-Thread kümmert sich um die eigentliche Simulation und die Koordination mit dem Zeittakt
+ * der Welt. Die Kommunikation z.B. über eine TCP/IP-Verbindung muss von den abgeleiteten Klassen selbst
+ * behandelt werden.</p>
  *
  * @author Benjamin Benz (bbe@heise.de)
  * @author Peter König (pek@heise.de)
@@ -83,7 +82,7 @@ public abstract class BasicBot implements Bot {
 	 * Setzt die Id des Bots für die Adressierung der Commands
 	 * 
 	 * @param newId	ID des Bots
-	 * @throws ProtocolException	Wenn die Id bereits vergeben ist
+	 * @throws ProtocolException	wenn die Id bereits vergeben ist
 	 */
 	public void setId(BotID newId) throws ProtocolException {
 		if (newId.equals(this.getId()))
@@ -112,7 +111,7 @@ public abstract class BasicBot implements Bot {
 		/**
 		 * Fügt Elemente hinzu
 		 * 
-		 * @param elements	Die Elemente
+		 * @param elements	die Elemente
 		 */
 		public void add(T... elements) {
             for (T e : elements)
@@ -155,9 +154,9 @@ public abstract class BasicBot implements Bot {
 	 *
 	 * <pre>
 	 * componentList.add(
-	 *     new BotComponent&lt;...&gt;(...),
-	 *     new BotComponent&lt;...&gt;(...),
-	 *     new BotComponent&lt;...&gt;(...),
+	 *     new BotComponent<...>(...),
+	 *     new BotComponent<...>(...),
+	 *     new BotComponent<...>(...),
 	 *     ...
 	 * );
 	 * </pre>
@@ -202,16 +201,15 @@ public abstract class BasicBot implements Bot {
          * }
          * </pre>
 		 *
-		 * Component-Flag-Tabellen sind also eine Verknüpfung dieser Methode, einer Hilfsmethode
-		 * mit Namen Unterstrich (_) und einer kleinen Klasse (CompntWithFlag). Vorteil: eine
-		 * Superklasse, z.B. CtBot, kann die Komponenten instanziieren. Subklassen, z.B.
-		 * SimulierterCtBot und UeberTcpVerbundenerRealerCtBot, haben ja alle dieselben Komponenten,
-		 * aber betreiben sie in verschiedenen Modi (z.B. realer Bot: (fast) alle nur lesen).
-		 * Die Superklasse macht also {@code components.add(...)}, die Subklassen können dann den
-		 * {@code applyFlagsTable(...)}-Aufruf machen.
+		 * Component-Flag-Tabellen sind also eine Verknüpfung dieser Methode, einer Hilfsmethode mit
+		 * Namen Unterstrich (_) und einer kleinen Klasse (CompntWithFlag). Vorteil: eine Superklasse,
+		 * z.B. CtBot, kann die Komponenten instanziieren. Subklassen, z.B. SimulierterCtBot und
+		 * UeberTcpVerbundenerRealerCtBot, haben ja alle dieselben Komponenten, aber betreiben sie in
+		 * verschiedenen Modi (z.B. realer Bot: (fast) alle nur lesen). Die Superklasse macht also
+		 * {@code components.add(...)}, die Subklassen können dann den {@code applyFlagsTable(...)}-Aufruf
+		 * machen.
 		 * </p>
-		 * <p>Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von ihnen allen
-		 * betroffen.</p>
+		 * <p>Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von ihnen allen betroffen.</p>
 		 * 
          * @param compntFlagTable	Flags
 		 */
@@ -225,12 +223,12 @@ public abstract class BasicBot implements Bot {
     	}
 
     	/**
-		 * <p>Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und
-		 * Aktuatoren). Die Komponente(n), die sich zuständig fühlt (fühlen), können etwas damit tun
-		 * (typischerweise ihren eigenen Wert setzen auf den im Kommando gespeicherten).</p>
+		 * <p>Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und Aktuatoren). Die
+		 * Komponente(n), die sich zuständig fühlt (fühlen), können etwas damit tun (typischerweise
+		 * ihren eigenen Wert setzen auf den im Kommando gespeicherten).</p>
 		 * <p>
-		 * Implementiert das <a
-		 * href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-Responsibility-Pattern</a>.
+		 * Implementiert das
+		 * <a href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-Responsibility-Pattern</a>.
 		 * </p>
 		 * 
     	 * @param command	Kommando
@@ -281,7 +279,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * <p>
 	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann
-	 * – siehe
+	 * - siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
 	 * 
@@ -440,7 +438,7 @@ public abstract class BasicBot implements Bot {
 	 * Setzt den zuständigen Controller
 	 * 
 	 * @param controller
-	 * @throws ProtocolException	Wenn die Id dieses Bots im Controller schon belegt ist
+	 * @throws ProtocolException	wenn die Id dieses Bots im Controller schon belegt ist
 	 */
 	public void setController(Controller controller) throws ProtocolException {
 		this.controller = controller;

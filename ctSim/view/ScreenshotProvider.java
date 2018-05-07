@@ -21,9 +21,7 @@ package ctSim.view;
 
 import java.awt.image.BufferedImage;
 
-/**
- * Screenshot-Klasse 
- */
+/** Screenshot-Klasse */
 public interface ScreenshotProvider {
     /**
      * @return Image vom Screenshot

@@ -34,18 +34,14 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-/**
- * Komponenten-Tabelle
- */
+/** Komponenten-Tabelle */
 public class ComponentTable extends JTable {
 	/** UID */
 	private static final long serialVersionUID = 2766695602066190632L;
 
 	// Konstruktoren wie in der Superklasse ///////////////////////////////////
 
-	/**
-	 * Komponenten-Tabelle
-	 */
+	/** Komponenten-Tabelle */
 	public ComponentTable() {
 		super();
 		init();
@@ -116,9 +112,10 @@ public class ComponentTable extends JTable {
 
 	/**
 	 * Konfiguration
-	 * @param compnt Komponente
-	 * @param table Tabelle
-	 * @param isSelected ausgewählt?
+	 * 
+	 * @param compnt		Komponente
+	 * @param table			Tabelle
+	 * @param isSelected	ausgewählt?
 	 * @return Component
 	 */
 	protected Component configure(JComponent compnt, JTable table,
@@ -136,11 +133,10 @@ public class ComponentTable extends JTable {
 	}
 
 	/**
-	 * In der Tabelle: Falls das hinzugefügte Ding breiter ist als die
-	 * Spalte, dann diese Spalte verbreitern; Falls das hinzugefügte
-	 * Ding höher ist als die Zeile, dann alle (!) Zeilen höher machen
-	 * (unterschiedlich hohe Zeilen werden von JTable nicht unterstützt
-	 * soweit ich weiss und sähen sowieso doof aus)
+	 * In der Tabelle: Falls das hinzugefügte Ding breiter ist als die Spalte, dann diese Spalte
+	 * verbreitern; Falls das hinzugefügte Ding höher ist als die Zeile, dann alle (!) Zeilen höher
+	 * machen (unterschiedlich hohe Zeilen werden von JTable nicht unterstützt soweit ich weiß
+	 * und würden sowieso doof aussehen)
 	 */
 	public void accomodateContent() {
 		int maxHeight = 0;
@@ -163,12 +159,10 @@ public class ComponentTable extends JTable {
 
 	// Workaround für Bug "horizontale Scrollbars" ///////////////////////////
 
-	// Bug: Eine JTable in einer JScrollPane loest nie die horizontale Scrollbar
-	// aus -- siehe http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936
-	// Hier der Workaround wie auf der Bug-Seite beschrieben
-
-	// when the viewport shrinks below the preferred size, stop tracking the
-	// viewport width
+	// Bug: Eine JTable in einer JScrollPane loest nie die horizontale Scrollbar aus;
+	// siehe http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936
+	// Hier der Workaround wie auf der Bug-Seite beschrieben:
+	// when the viewport shrinks below the preferred size, stop tracking the viewport width
 	/**
 	 * @see javax.swing.JTable#getScrollableTracksViewportWidth()
 	 */
@@ -181,8 +175,8 @@ public class ComponentTable extends JTable {
 		return false;
 	}
 
-	// when the viewport shrinks below the preferred size, return the minimum
-	// size so that scrollbars will be shown
+	// when the viewport shrinks below the preferred size, return the minimum size so that scrollbars
+	// will be shown
 	/**
 	 * @see javax.swing.JComponent#getPreferredSize()
 	 */
@@ -197,9 +191,7 @@ public class ComponentTable extends JTable {
 
 	// Hilfsklassen ///////////////////////////////////////////////////////////
 
-	/**
-	 * Zellen-Renderer
-	 */
+	/** Zellen-Renderer */
 	class CellRenderer implements TableCellRenderer {
 		/**
 		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
@@ -211,9 +203,7 @@ public class ComponentTable extends JTable {
 	    }
 	}
 
-	/**
-	 * Zellen-Editor
-	 */
+	/** Zellen-Editor */
 	class CellEditor extends AbstractCellEditor implements TableCellEditor {
 		/** UID */
 		private static final long serialVersionUID = 4073894569366140421L;

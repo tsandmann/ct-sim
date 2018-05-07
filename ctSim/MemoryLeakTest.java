@@ -26,8 +26,8 @@ import ctSim.controller.DefaultController;
 import ctSim.controller.Main;
 
 /**
- * Test zum Untersuchen von Speicherlecks, wenn hintereinander viele
- * World-Objekte geladen werden. Ist als Hauptprogramm auszuführen...
+ * Test zum Untersuchen von Speicherlecks, wenn hintereinander viele World-Objekte geladen werden.
+ * Ist als Hauptprogramm auszuführen...
  */
 public class MemoryLeakTest {
 	/**

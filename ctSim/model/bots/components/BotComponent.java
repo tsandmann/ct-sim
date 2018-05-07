@@ -52,18 +52,19 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
  * Für einen Real-Bot setzt der Sim zum Beispiel (fast) alle Components auf "nur lesen", auch wenn
  * sie potentiell schreiben könnten. Beim Setzen der Flags wird geprüft, ob die Component das Flag
  * überhaupt unterstützt; andernfalls tritt eine UnsupportedOperationException auf.
- * </p> $$ Aktuatoren vs. Sensoren
+ * </p>
+ * TODO Aktuatoren vs. Sensoren
  *
- * @author Felix Beckwermert
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
- * 
  * @param <M>	Typ der Komponente
+ * 
+ * @author Felix Beckwermert
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public abstract class BotComponent<M> {
 	/** Interface für lesende Komponenten */
 	protected interface CanRead {
 		/**
-		 * Nicht aufrufen – stattdessen {@link BotComponent#offerRead(Command)} verwenden.
+		 * Nicht aufrufen - stattdessen {@link BotComponent#offerRead(Command)} verwenden.
 		 * 
 		 * @param c	Kommando
 		 * @throws ProtocolException 
@@ -71,7 +72,7 @@ public abstract class BotComponent<M> {
 		void readFrom(Command c) throws ProtocolException;
 
 		/**
-		 * Nicht aufrufen – sollte nur von
+		 * Nicht aufrufen - sollte nur von
 		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
 		 * 
@@ -86,7 +87,7 @@ public abstract class BotComponent<M> {
 	 */
 	protected interface CanWrite {
 		/**
-		 * Nicht aufrufen – stattdessen {@link BotComponent#askForWrite(CommandOutputStream)}
+		 * Nicht aufrufen - stattdessen {@link BotComponent#askForWrite(CommandOutputStream)}
 		 * verwenden.
 		 * 
 		 * @param c	Kommando
@@ -94,7 +95,7 @@ public abstract class BotComponent<M> {
 		void writeTo(Command c);
 
 		/**
-		 * Nicht aufrufen – sollte nur von
+		 * Nicht aufrufen - sollte nur von
 		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
 		 * 

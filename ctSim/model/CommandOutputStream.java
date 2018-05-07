@@ -81,8 +81,8 @@ public class CommandOutputStream {
 	 * @throws IOException
 	 */
 	public synchronized void flush() throws IOException {
-		Command error = buffer.remove(Command.Code.SENS_ERROR);	// ist evtl null
-		Command done = buffer.remove(Command.Code.DONE);	// ist evtl null
+		Command error = buffer.remove(Command.Code.SENS_ERROR);	// ist evtl. null
+		Command done = buffer.remove(Command.Code.DONE);	// ist evtl. null
 
 		for (Command c : buffer.values())
 			write(c);

@@ -19,14 +19,12 @@
 
 package ctSim.util;
 
-/**
- * Threading-Klasse
- */
+/** Threading-Klasse */
 public abstract class SaferThread extends Thread {
 	/** Logger */
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.util.SaferThread");
 	
-	/** Abbruchbedingung */
+	/** Abbruch-Bedingung */
 	private volatile boolean deathPending = false;
 
 	/**
@@ -36,9 +34,7 @@ public abstract class SaferThread extends Thread {
 		return deathPending;
 	}
 
-	/**
-	 * die
-	 */
+	/** die */
 	public void die() {
 		deathPending = true;
 		interrupt();
@@ -46,6 +42,7 @@ public abstract class SaferThread extends Thread {
 
 	/**
 	 * work-Methode
+	 * 
 	 * @throws InterruptedException
 	 */
 	public abstract void work() throws InterruptedException;
@@ -65,9 +62,7 @@ public abstract class SaferThread extends Thread {
 		dispose();
 	}
 	
-	/**
-	 * Thread beenden
-	 */
+	/** Thread beenden */
 	public void dispose() {
 		lg.fine("Thread "+getName()+" stirbt");
 	}
@@ -81,15 +76,14 @@ public abstract class SaferThread extends Thread {
 		super.start();
 	}
 
-	/**
-	 * Neuer Thread
-	 */
+	/** Neuer Thread */
 	public SaferThread() {
 		super();
 	}
 
 	/**
 	 * Neuer Thread "name"
+	 * 
 	 * @param name
 	 */
 	public SaferThread(String name) {
@@ -98,6 +92,7 @@ public abstract class SaferThread extends Thread {
 
 	/**
 	 * Neuer Thread "name" in Gruppe "group"
+	 * 
 	 * @param group
 	 * @param name
 	 */

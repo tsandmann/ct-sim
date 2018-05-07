@@ -26,7 +26,7 @@ import javax.swing.Icon;
  * Ding, das Icons bereitstellt.
  * </p>
  * <p>
- *
+ * 
  * <pre>
  * .--------.  verwendet einen   .--------------.
  * | Config | -----------------> | IconProvider |
@@ -42,19 +42,18 @@ import javax.swing.Icon;
  *                  '-------------------' '---------------------'
  * </pre>
  *
- * Der c't-Sim verwendet die Klasse {@link FileIconMap}; das Applet lädt
- * seine Icons aus einer Jar-Datei, da es ja nicht aufs Dateisystem zugreifen
- * darf. Die Config und die Verwender der Config müssen davon aber nichts
- * wissen.
+ * Der c't-Sim verwendet die Klasse {@link FileIconMap}; das Applet lädt seine Icons aus einer Jar-Datei,
+ * da es ja nicht aufs Dateisystem zugreifen darf. Die Config und die Verwender der Config müssen davon
+ * aber nichts wissen.
  * </p>
  */
 public interface IconProvider {
 	/**
 	 * Liefert ein aus einer Datei geladenes Icon.
 	 *
-	 * @param key Der Dateiname (ohne Extension) des zurückzuliefernden
-	 * Icons. Für ein Icon "fruehstück/Marmelade.gif" wäre das
-	 * "Marmelade". Volles Verwendungsbeispiel siehe {@link FileIconMap}.
+	 * @param key	Der Dateiname (ohne Extension) des zurückzuliefernden Icons. Für ein Icon
+	 * 				"fruehstück/Marmelade.gif" wäre das "Marmelade". Volles Verwendungsbeispiel siehe
+	 * 				unter {@link FileIconMap}.
 	 * @return Icon
 	 */
 	public Icon get(String key);

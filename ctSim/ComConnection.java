@@ -35,19 +35,18 @@ import ctSim.util.SaferThread;
 
 /**
  * <p>
- * Serielle Verbindung / USB-Verbindung zu realen Bots (als Hardware vorhandenen
- * Bots). Der Treiber, den wir mit unserem USB-2-Bot-Adapter verwenden, emuliert
- * einen seriellen Anschluss. Dieser kann dann von dieser Klasse angesprochen
- * werden.
+ * Serielle Verbindung / USB-Verbindung zu realen Bots (als Hardware vorhandenen Bots). Der Treiber,
+ * den wir mit unserem USB-2-Bot-Adapter verwenden, emuliert einen seriellen Anschluss. Dieser kann dann
+ * von dieser Klasse angesprochen werden.
  * </p>
  * <p>
- * Die <a href="http://fazecast.github.io/jSerialComm/">jSerialComm-Dokumentation</a>
- * beschreibt die API, die in dieser Klasse verwendet wird ({@com.fazecast.jSerialComm.*}).
+ * Die <a href="http://fazecast.github.io/jSerialComm/">jSerialComm-Dokumentation</a> beschreibt die API,
+ * die in dieser Klasse verwendet wird ({@com.fazecast.jSerialComm.*}).
  * </p>
  *
  * @author Maximilian Odendahl (maximilian.odendahl@rwth-aachen.de)
  * @author Hendrik Krauß (hkr@heise.de)
- * @author Timo Sandmann
+ * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class ComConnection extends Connection {
 	/** Input verfügbar? */
