@@ -24,7 +24,6 @@
 	<classpathentry exported="true" kind="lib" path="contrib/JogAmp/jogl-all.jar"/>
 	<classpathentry exported="true" kind="lib" path="contrib/jSerialComm/jSerialComm-2.0.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="contrib/junit/junit-4.12.jar"/>
-	<classpathentry exported="true" kind="lib" path="contrib/BrowserLauncher2-1_3.jar"/>
 	<classpathentry exported="true" kind="lib" path="contrib/mysql-connector-java-3.1.13-bin.jar"/>
 	<classpathentry exported="true" kind="lib" path="contrib/picocontainer-1.2.jar"/>
 	<classpathentry kind="output" path=""/>

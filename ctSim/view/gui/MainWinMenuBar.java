@@ -19,10 +19,12 @@
 
 package ctSim.view.gui;
 
+import java.awt.Desktop;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
@@ -46,12 +48,8 @@ import ctSim.model.Map.MapException;
 import ctSim.util.FmtLogger;
 import ctSim.util.GridBaggins;
 import ctSim.util.Menu;
-//import ctSim.util.Runnable1;
-//import ctSim.util.Menu.Checkbox;
 import ctSim.util.Menu.Entry;
-import edu.stanford.ejalbert.BrowserLauncher;
-import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
-import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
+
 
 /**
  * <p>
@@ -147,7 +145,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 		JMenu supportMenu = new Menu("Support",
 			new Entry("Webseite", Config.getIcon("website16"), onSiteLink),
-			new Entry("Trac", Config.getIcon("trac16"), onTracLink),
+			new Entry("Github", Config.getIcon("github16"), onGithubLink),
 			new Entry("Forum", Config.getIcon("forum16"), onForumLink),
 			new Entry("About", Config.getIcon("about16"), onAbout));
 		add(supportMenu);
@@ -274,6 +272,7 @@ public class MainWinMenuBar extends JMenuBar {
 					return (f.isDirectory() || f.getName().endsWith(".exe")
 							|| f.getName().endsWith(".elf") || f.getName().lastIndexOf('.') == -1);
 				}
+
 				@Override
 				public String getDescription() {
 					return "Bot-Controller (*.exe, *.elf)";
@@ -311,7 +310,7 @@ public class MainWinMenuBar extends JMenuBar {
 			java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
 			SplashWindow.splash(url, "Version " + Main.VERSION);
 			SplashWindow.setMessage("                                                      " +
-				"c't-Bot Projekt 2006-2008");
+				"c't-Bot Projekt 2006-2018");
 		}
 	};
 	
@@ -319,11 +318,8 @@ public class MainWinMenuBar extends JMenuBar {
 	private Runnable onSiteLink = new Runnable() {
 		public void run() {
 			try {
-				BrowserLauncher launcher = new BrowserLauncher();
-				launcher.openURLinBrowser("http://www.ct-bot.de");
-			} catch (BrowserLaunchingInitializingException e) {
-				e.printStackTrace();
-			} catch (UnsupportedOperatingSystemException e) {
+				Desktop.getDesktop().browse(new URL("https://www.heise.de/ct/artikel/c-t-Bot-und-c-t-Sim-284119.html").toURI());
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -333,11 +329,8 @@ public class MainWinMenuBar extends JMenuBar {
 	private Runnable onTracLink = new Runnable() {
 		public void run() {
 			try {
-				BrowserLauncher launcher = new BrowserLauncher();
-				launcher.openURLinBrowser("http://www.heise.de/ct/projekte/machmit/ctbot/wiki");
-			} catch (BrowserLaunchingInitializingException e) {
-				e.printStackTrace();
-			} catch (UnsupportedOperatingSystemException e) {
+				Desktop.getDesktop().browse(new URL("https://github.com/tsandmann/ct-sim").toURI());
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -347,11 +340,8 @@ public class MainWinMenuBar extends JMenuBar {
 	private Runnable onForumLink = new Runnable() {
 		public void run() {
 			try {
-				BrowserLauncher launcher = new BrowserLauncher();
-				launcher.openURLinBrowser("http://www.heise.de/ct/foren/go.shtml?list=1&forum_id=89813");
-			} catch (BrowserLaunchingInitializingException e) {
-				e.printStackTrace();
-			} catch (UnsupportedOperatingSystemException e) {
+				Desktop.getDesktop().browse(new URL("https://www.ctbot.de").toURI());
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -501,6 +491,7 @@ public class MainWinMenuBar extends JMenuBar {
 				public boolean accept(File f) {
 					return (f.isDirectory() || f.getName().endsWith(".xml"));
 				}
+
 				@Override
 				public String getDescription() {
 					return "Parcours-Dateien (*.xml)";
