@@ -22,7 +22,7 @@ package ctSim.view.gui;
 /**
  * Interface für Debug-Fenster
  * 
- * @author Felix Beckwermert (felix@beckwermert.de)
+ * @author Felix Beckwermert
  *
  */
 public interface DebugWindow {

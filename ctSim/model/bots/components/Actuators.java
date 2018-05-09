@@ -573,7 +573,7 @@ public class Actuators {
 				getExternalModel().insertString(0, getAllText(internalModel),
 					null);
 			} catch (NullPointerException e) {
-				// No-op
+				// egal
 			} catch (BadLocationException e) {
 				// "Kann nicht passieren"
 				throw new AssertionError(e);

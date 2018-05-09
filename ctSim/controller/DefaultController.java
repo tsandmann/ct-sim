@@ -390,7 +390,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     			lg.info("Bot "+bot.toString()+" ("+bot.getDescription()+") meldet sich beim " +
 	    			"Controller ab!");
     		} catch (Exception e) {
-    			// No-op
+    			// egal
     		} finally {
     			bots.remove(bot);
     		}

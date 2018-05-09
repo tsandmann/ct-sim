@@ -124,7 +124,6 @@ public class TestServer implements Runnable {
 				this.in  = new DataInputStream(this.socket.getInputStream());
 				this.out = new DataOutputStream(this.socket.getOutputStream());
 			} catch (IOException e) {
-				// TODO: Auto-generated catch block
 				e.printStackTrace();
 				System.exit(-1);
 			}
@@ -212,7 +211,6 @@ public class TestServer implements Runnable {
 						this.worker.waitOnWorker();
 				
 				} catch (InterruptedException e) {
-					// TODO: Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -220,19 +218,16 @@ public class TestServer implements Runnable {
 			try {
 				this.out.close();
 			} catch (IOException e1) {
-				// TODO: Auto-generated catch block
 				e1.printStackTrace();
 			}
 			try {
 				this.in.close();
 			} catch (IOException e) {
-				// TODO: Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
 				this.socket.close();
 			} catch (IOException e) {
-				// TODO: Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.exit(-1);
@@ -458,7 +453,6 @@ public class TestServer implements Runnable {
 					this.reinit();
 					Thread.sleep(TestServer.TICK_RATE);
 				} catch (InterruptedException e) {
-					// TODO: Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -495,7 +489,6 @@ public class TestServer implements Runnable {
 		try {
 			this.serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
-			// TODO: Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -524,7 +517,6 @@ public class TestServer implements Runnable {
 				ServerCom com = new ServerCom(this.clientSocket);
 				com.start();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.exit(-1);
 			}
@@ -533,7 +525,6 @@ public class TestServer implements Runnable {
 		try {
 			this.serverSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -575,11 +566,9 @@ class TestClient implements Runnable {
 			in = new BufferedReader(new InputStreamReader(socket
 					.getInputStream()));
 		} catch (UnknownHostException e) {
-			// TODO: Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
 		} catch (IOException e) {
-			// TODO: Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -643,7 +632,6 @@ class TestClient implements Runnable {
 				}
 				
 			} catch (IOException e) {
-				// TODO: Auto-generated catch block
 				e.printStackTrace();
 				System.exit(-1);
 			}
@@ -653,13 +641,11 @@ class TestClient implements Runnable {
 		try {
 			this.in.close();
 		} catch (IOException e) {
-			// TODO: Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			this.socket.close();
 		} catch (IOException e) {
-			// TODO: Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

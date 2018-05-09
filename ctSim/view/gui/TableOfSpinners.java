@@ -190,7 +190,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 
         setBorder(new TitledBorder(getPanelTitle()));
 
-        /**
+        /*
 		 * Schweißtreibend:
 		 * Ich habe t.setBorder() mit "lowered bevel border" versucht, aber das führte zu unschönen
 		 * Ergebnissen; JTable kann offenbar keine Borders.

@@ -29,7 +29,7 @@ import javax.swing.JTextArea;
 /**
  * Eine Textkonsole in der c't-Sim-GUI
  * 
- * @author Felix Beckwermert (felix@beckwermert.de)
+ * @author Felix Beckwermert
  */
 public class ConsoleComponent extends JScrollPane implements DebugWindow {
 	/** UID */

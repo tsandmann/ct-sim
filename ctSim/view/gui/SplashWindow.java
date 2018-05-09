@@ -86,7 +86,7 @@ public class SplashWindow extends Window {
 		try {
 			mt.waitForID(0);
 		} catch (InterruptedException ie) {
-			// No-op, ist egal
+			// ist egal
 		}
 
 		/* Abbruch bei Fehler */

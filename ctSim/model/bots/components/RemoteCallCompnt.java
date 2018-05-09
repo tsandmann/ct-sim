@@ -528,7 +528,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @param c	Command
 	 */
 	public void writeTo(Command c) {
-		/* No-op */ 
+		// No-op
 	}
 
 	// E/A - Lesen ///////////////////////////////////////////////////////////
@@ -584,7 +584,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				}
 			}
 		} catch (IOException e) {
-			/* No-op */
+			// egal
 		}
 		byte beh_name[] = new byte[name_len];
 		System.arraycopy(data, 0, beh_name, 0, name_len);

@@ -39,7 +39,7 @@ import ctSim.util.FmtLogger;
 /**
  * Repräsentiert eine Verbindung
  *
- * @author bbe (bbe@heise.de)
+ * @author Benjamin Benz (bbe@heise.de)
  * @author Hendrik Krauß (hkr@heise.de)
  */
 public abstract class Connection {	

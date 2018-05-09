@@ -95,22 +95,22 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 			try {
 				objIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream("config/window.settings")));
 			} catch (FileNotFoundException e1) {
-				// No-op
+				// egal
 			} catch (IOException e1) {
-				// No-op
+				// egal
 			} 
 			if (objIn != null) {
 				try {
 					positions = (PositionMap) objIn.readObject();
 				} catch (IOException e1) {
-					// No-op
+					// egal
 				} catch (ClassNotFoundException e1) {
-					// No-op
+					// egal
 				} 
 				try {
 					objIn.close();
 				} catch (IOException e1) {
-					// No-op
+					// egal
 				}
 			} else {
 				/* Laden nicht möglich, leere Map erzeugen */
@@ -138,7 +138,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 				try {
 					button.doClick();	// Klick auf den Button schließt das Fenster und schaltet den Button um
 				} catch (NullPointerException ex) {
-					// No-op
+					// egal
 				}
 			}
         });

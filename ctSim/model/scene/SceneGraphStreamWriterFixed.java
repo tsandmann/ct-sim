@@ -36,7 +36,7 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
  * von Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die Namen der Objekte zu
  * transferieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
  * 
- * @author bbe (bbe@heise.de)
+ * @author Benjamin Benz (bbe@heise.de)
  */
 public class SceneGraphStreamWriterFixed extends SceneGraphStreamWriter {
 

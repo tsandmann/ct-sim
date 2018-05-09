@@ -299,8 +299,7 @@ public class Sensors {
 		 */
 		@Override
 		public void updateExternalModel() {
-			// No-op, weil wir ja sowieso nicht angezeigt werden und direkt auf dem ExternalModel
-			// operieren
+			// No-op, weil wir ja sowieso nicht angezeigt werden und direkt auf dem ExternalModel operieren
 		}
 
 		/**

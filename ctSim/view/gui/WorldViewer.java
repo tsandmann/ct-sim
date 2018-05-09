@@ -250,7 +250,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
      * 
      */
     public BufferedImage getScreenshot() {
-    	/**
+    	/*
 		 * Das hier ist sehr bürokratisch, aber leider habe ich keinen einfacheren Weg gefunden...
 		 * Was man mit Google findet sind i.d.R. Beispiele, die java.awt.Robot.createScreenCapture()
 		 * verwenden - was aber einen "echten Screenshot" macht, d.h. wenn jemand ein anderes Fenster

@@ -53,7 +53,7 @@ import ctSim.util.Runnable1;
 /**
  * Die GUI-Hauptklasse für den c't-Sim
  *
- * @author Felix Beckwermert (felix@beckwermert.de)
+ * @author Felix Beckwermert
  * @author Hendrik Krauß (hkr@heise.de)
  */
 public class MainWindow extends JFrame implements ctSim.view.View {
@@ -258,7 +258,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		try {
 			world.setSimStepIntervalInMs(rate);
 		} catch (NullPointerException e) {
-			// No-op
+			// egal
 		}
 	}
 

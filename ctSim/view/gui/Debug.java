@@ -30,7 +30,7 @@ import java.util.Date;
 /**
  * Sorgt für Debug-Ausgaben
  * 
- * @author Felix Beckwermert (felix@beckwermert.de)
+ * @author Felix Beckwermert
  */
 public class Debug {
 	

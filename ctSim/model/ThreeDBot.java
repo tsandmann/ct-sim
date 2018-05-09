@@ -868,7 +868,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 				}
 			}
 		} catch(InterruptedException ie) {
-			// No-op: nochmal Meldung ausgeben, dann Ende
+			// nochmal Meldung ausgeben, dann Ende
 		}
 		lg.fine("Thread " + Thread.currentThread().getName() + " wurde beendet");
 	}

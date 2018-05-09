@@ -171,7 +171,7 @@ class DatabaseAdapter {
 			acquireConn();
             lg.info("Verwende Datenbank " + dbConn.getMetaData().getURL());
         } catch (SQLException e) {
-        	// No-op, da nur eine Info-Meldung nicht geht
+        	// nur eine Info-Meldung geht nicht
         }
 	}
 

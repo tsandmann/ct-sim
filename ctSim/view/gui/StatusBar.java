@@ -42,7 +42,7 @@ import ctSim.controller.Config;
 /**
  * Zeigt Statusinformationen zum Simulator an
  * 
- * @author Felix Beckwermert (felix@beckwermert.de)
+ * @author Felix Beckwermert
  */
 public class StatusBar extends Box {
 	/** UID */
@@ -82,7 +82,7 @@ public class StatusBar extends Box {
 		try {
 			tickrate = Integer.parseInt(Config.getValue("ctSimTickRate"));
 		} catch (NumberFormatException exc) {
-			// No-op
+			// egal
 		}
 		INIT_TICK_RATE = Math.min(tickrate, MAX_TICK_RATE);
 		

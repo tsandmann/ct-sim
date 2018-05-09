@@ -193,7 +193,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @param c	Command
 	 */
 	public void writeTo(Command c) { 
-		/* No-op */ 
+		// No-op
 	}
 
 	/**
