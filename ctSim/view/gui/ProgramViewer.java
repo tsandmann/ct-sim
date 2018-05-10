@@ -55,8 +55,8 @@ import ctSim.util.FmtLogger;
 /**
  * Stellt das Eingabefenster für ABL- oder Basic-Programme dar. Diese können geladen, gespeichert
  * (Textdatei) oder zum Bot gesendet und dort optional gestartet und auf Syntaxfehler überprüft werden.
- * 
- * @author Timo Sandmann (mail@timosandmann.de)
+ *
+ * @author Timo Sandmann
  */
 public class ProgramViewer extends JPanel implements ActionListener {
 	/** UID	*/

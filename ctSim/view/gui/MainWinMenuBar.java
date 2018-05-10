@@ -124,9 +124,8 @@ public class MainWinMenuBar extends JMenuBar {
 	    	new Entry("Per TCP ...", Config.getIcon("tcpbot16"), onAddTcpBot) /*,
 	    	new Checkbox("Per USB (COM) automatisch", noOp).disable().check()
 	    	// Die Checkbox hat nen Haken und ist unveränderbar disabled (ausgegraut).
-	    	// Sinn dahinter ist den Benutzer wissen zu lassen, dass ctSim das automatisch macht
-	    	*/ );
-		
+	    	// Sinn dahinter ist den Benutzer wissen zu lassen, dass ctSim das automatisch macht */);
+	
 		add(connectMenu);
 		JMenu botMenu = new Menu("Simuliere Bot",
 	    	new Entry("Testbot", onAddTestBot),

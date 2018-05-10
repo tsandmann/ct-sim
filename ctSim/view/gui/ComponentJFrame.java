@@ -44,8 +44,8 @@ import ctSim.util.FmtLogger;
 /**
  * Ein JFrame, das die letzte Position speichert und einen KeyHandler zum Schließen des Fensters
  * implementiert
- * 
- * @author Timo Sandmann (mail@timosandmann.de)
+ *
+ * @author Timo Sandmann
  */
 public class ComponentJFrame extends JFrame implements WindowListener {
 	/** UID */
