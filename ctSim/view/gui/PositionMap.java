@@ -24,9 +24,7 @@ import java.io.Serializable;
 import java.util.Map;
 import ctSim.util.Misc;
 
-/**
- * Klasse, um die Positionsdaten von Fenstern serialisieren zu können
- */
+/** Klasse, um die Positionsdaten von Fenstern serialisieren zu können */
 public class PositionMap implements Serializable {
 	/** UID */
 	private static final long serialVersionUID = 6400751022999982782L;

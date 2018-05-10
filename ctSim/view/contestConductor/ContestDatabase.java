@@ -27,12 +27,10 @@ import ctSim.controller.Config;
 import ctSim.view.contestConductor.ConductorTestUtil.TestDatabase;
 
 /**
- * Repräsentiert die Datenbank, die alles über den Wettbewerb
- * ("contest") weiß. Idee: Die Klassen, die die Datenbank
- * verwenden, holen sie von hier. Daher können Unit-Tests einfach diese
- * Klasse ableiten und getConnection() überschreiben, um dem
- * Contest-Conductor eine Test-Datenbank unterzuschieben. Beispiel siehe
- * {@link TestDatabase}.
+ * Repräsentiert die Datenbank, die alles über den Wettbewerb ("contest") weiß. Idee: Die Klassen, welche
+ * die Datenbank verwenden, holen sie von hier. Daher können Unit-Tests einfach diese Klasse ableiten und
+ * getConnection() überschreiben, um dem Contest-Conductor eine Test-Datenbank unterzuschieben. Für ein
+ * Beispiel siehe {@link TestDatabase}.
  */
 public class ContestDatabase {
 	/**

@@ -16,6 +16,7 @@
  * MA 02111-1307, USA.
  * 
  */
+
 package ctSim.view.gui;
 
 /**
@@ -27,12 +28,12 @@ package ctSim.view.gui;
 public interface DebugWindow {
 	
 	/**
-	 * @param str Text, der in das Debug-Fenster geschrieben werden soll
+	 * @param str	Text, der in das Debug-Fenster geschrieben werden soll
 	 */
 	public void print(String str);
 	
 	/**
-	 * @param str Textzeile, die in das Debug-Fenster geschrieben werden soll
+	 * @param str	Textzeile, die in das Debug-Fenster geschrieben werden soll
 	 */
 	public void println(String str);
 }

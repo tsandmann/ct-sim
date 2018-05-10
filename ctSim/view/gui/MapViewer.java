@@ -51,7 +51,8 @@ import ctSim.util.MapLines;
 import ctSim.util.Misc;
 
 /**
- * Stellt das Fenster für die Map-Anzeige dar.
+ * Stellt das Fenster für die Map-Anzeige dar
+ * 
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class MapViewer extends JPanel {
@@ -66,15 +67,14 @@ public class MapViewer extends JPanel {
 	/** ScrollPane des Fensters */
 	private final JScrollPane scrollPane;
 
-	/**
-	 * Stellt unsere Buttons dar mit Icon und Tooltip
-	 */
+	/** Stellt unsere Buttons dar mit Icon und Tooltip */
 	class Button extends JButton {
 		/** UID */
 		private static final long serialVersionUID = 5494027181895045961L;
 
 		/**
 		 * Button-Klasse
+		 * 
 		 * @param label			Name
 		 * @param toolTipText	Tooltip
 		 * @param icon			Icon
@@ -93,13 +93,12 @@ public class MapViewer extends JPanel {
 		}
 	}
 	
-	/**
-	 * Filter für den Dialog zur Dateiauswahl
-	 */
+	/** Filter für den Dialog zur Dateiauswahl */
 	class PNGFilter extends FileFilter {
 	    /**
 	     * Ermittelt die Dateinamenerweiterung
-	     * @param f Datei
+	     * 
+	     * @param f	Datei
 	     * @return Erweiterung
 	     */  
 	    public String getExtension(File f) {
@@ -143,9 +142,7 @@ public class MapViewer extends JPanel {
 	    }
 	}	
 	
-	/**
-	 * Fordert die komplette Karte neu an
-	 */
+	/** Fordert die komplette Karte neu an */
 	private final Runnable onReload = new Runnable() {
 		public void run() {
 			try {
@@ -156,9 +153,7 @@ public class MapViewer extends JPanel {
 		}
 	};
 	
-	/**
-	 * Speichert die Karte als png-Bild
-	 */
+	/** Speichert die Karte als png-Bild */
 	private final Runnable onSave = new Runnable() {
 		public void run() {
 			JFileChooser fc = new JFileChooser();
@@ -184,8 +179,9 @@ public class MapViewer extends JPanel {
 	};
 	
 	/**
-	 * Erzeugt das Map-Fenster.
-	 * @param map	Map-Komponenten, die vom Fenster verwendet werden soll.
+	 * Erzeugt das Map-Fenster
+	 * 
+	 * @param map	Map-Komponenten, die vom Fenster verwendet werden soll
 	 * @param bot	Bot-Referenz
 	 */
 	public MapViewer(MapComponent map, Bot bot) {
@@ -215,14 +211,12 @@ public class MapViewer extends JPanel {
 			toolbar.getPreferredSize().height;
 		setPreferredSize(new Dimension(w, h));
 		
-		/* ausliefern */
+		/* Ausliefern */
 		add(scrollPane, BorderLayout.CENTER);
 		add(toolbar, BorderLayout.SOUTH);
 	}
 	
-	/**
-	 * Map-Anzeige
-	 */
+	/** Map-Anzeige */
 	public static class ImageViewer extends JPanel implements Runnable {
 		/** UID */
 		private static final long serialVersionUID = -4764621960629937298L;
@@ -248,7 +242,7 @@ public class MapViewer extends JPanel {
 		private final Point3i botPos;
 		
 		/**
-		 * @param c Map-Komponente
+		 * @param c	Map-Komponente
 		 */
 		public ImageViewer(MapComponent c) {			
 			this.image = c.getImg();
@@ -264,9 +258,7 @@ public class MapViewer extends JPanel {
 			targetHeight = c.getHeight();
 		}
 
-		/** 
-		 * Methode einer Swing-Komponente, aber thread-sicher 
-		 */
+		/** Methode einer Swing-Komponente, aber thread-sicher */
 		public synchronized void run() {			
 			/* Bereich um den Bot in den sichtbaren Bereich scrollen */
 			this.scrollPosition.x = Misc.clamp(botPos.x - 125, targetWidth);
@@ -368,19 +360,20 @@ public class MapViewer extends JPanel {
 
 	/**
 	 * Baut den Viewer
-	 * @param compnt Map-Komponente
+	 * 
+	 * @param compnt	Map-Komponente
 	 */
 	public void buisitMapViewer(final MapComponent compnt) {
-		// Container
+		/* Container */
 		JPanel p = new JPanel(new BorderLayout());
 		p.setBorder(BorderFactory.createTitledBorder(compnt.getName()));
 		JPanel controls = new JPanel();
 
-		// Map als Bild anzeigen
+		/* Map als Bild anzeigen */
 		ImageViewer v = new ImageViewer(compnt);
 		p.add(v, BorderLayout.CENTER);
 
-		// Ausliefern
+		/* Ausliefern */
 		p.add(controls, BorderLayout.CENTER);
 
 		add(p);

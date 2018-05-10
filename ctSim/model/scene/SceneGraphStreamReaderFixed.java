@@ -39,7 +39,7 @@ import ctSim.util.FmtLogger;
  * von Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu
  * transferieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
  * 
- * @author bbe (bbe@heise.de)
+ * @author Benjamin Benz (bbe@heise.de)
  */
 public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	/** Logger */

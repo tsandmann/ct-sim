@@ -26,13 +26,11 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Baut den grundlegenden Turnierbaum der Hauptrunde. Mit anderen Worten, plant
- * nach Abschluss der Vorrunde, welcher Bot gegen welchen spielen soll.
+ * Baut den grundlegenden Turnierbaum der Hauptrunde. Mit anderen Worten, plant nach Abschluss der Vorrunde,
+ * welcher Bot gegen welchen spielen soll.
  * </p>
  * <p>
- * Näheres siehe <a
- * href="TournamentPlanner.html#turnier-zwei-phasen">Beschreibung von Vor- und
- * Hauptrunde</a>.
+ * Für näheres siehe <a href="TournamentPlanner.html#turnier-zwei-phasen">Beschreibung von Vor- und Hauptrunde</a>.
  * </p>
  * <p>
  * <strong>Verwendungsbeispiel:</strong>
@@ -41,39 +39,36 @@ import ctSim.util.Misc;
  * <li><code>tree.add(<em>Bester der Vorrunde</em>);<br />
  * tree.add(<em>Zweitbester der Vorrunde</em>);<br />
  * tree.add(<em>Drittbester der Vorrunde</em>);<br />
- * ...</code> </li>
+ * ...</code></li>
  * <li>
  * <pre>
- * for (int i = 0; i &lt; tree.getLowestLevelId(); i *= 2) {
+ * for (int i = 0; i < tree.getLowestLevelId(); i *= 2) {
  *     for (Player p : tree.getTournamentPlan(i)) {
  *         if (p == null)
  *             // Für diesen Platz steht noch kein Kontrahent fest
  *         else
  *             // Für diesen Platz ist p der Kontrahent
  *     }
- * }</code></li>
+ * }
+ * </prei>
  * </ol>
  * </p>
  */
-// level: 2er-Potenzen
+
+// Level: 2er-Potenzen
 public class TournamentTree extends ArrayList<Integer> {
-	/**
-	 * Spieler
-	 */
+	/** Spieler */
 	public static class Player {
-		/**
-		 * Rank
-		 */
+		/** Rang */
 		public final int rankNo;
-		/**
-		 * Bot
-		 */
+		/** Bot */
 		public final int botId;
 
 		/**
 		 * Player
-		 * @param rankNo Rank
-		 * @param botId Bot-ID
+		 * 
+		 * @param rankNo	Rank
+		 * @param botId		Bot-ID
 		 */
 		protected Player(int rankNo, int botId) {
 	        this.rankNo = rankNo;
@@ -85,9 +80,9 @@ public class TournamentTree extends ArrayList<Integer> {
     private static final long serialVersionUID = - 6908062086416166612L;
 
 	/**
-	 * Level, auf das die Spieler mit Freilos kommen. (Sprachlicher Hinweis:
-	 * "bye" = "Freilos", siehe
-	 * http://en.wikipedia.org/wiki/Single-elimination_tournament )
+	 * Level, auf das die Spieler mit Freilos kommen. (Sprachlicher Hinweis: "bye" = "Freilos", siehe
+	 * <a href="http://en.wikipedia.org/wiki/Single-elimination_tournament">Single-elimination tournament</a>)
+	 * 
 	 * @return Level
 	 */
     public int getByeLevelId() {
@@ -105,40 +100,36 @@ public class TournamentTree extends ArrayList<Integer> {
 
     /**
 	 * <p>
-	 * <strong>Wieviele Spiele?</strong> Gegeben ist die Zahl der Spieler. Bei
-	 * z. B. 42 Spielern kriegen wir die mit einem Sechzehntelfinale nicht mehr
-	 * unter - Sechzehntelfinale bedeutet 16 Spiele, und das bedeutet 32
-	 * Spieler. Also muss ein Zweiunddreißigstelfinale her, auch wenn das
-	 * nur teilweise besetzt sein wird (Sechzehntelfinale und alle folgenden
-	 * werden dann voll besetzt sein). - Allgemein: Zahl der Spiele =
-	 * 2^(aufgerundeter lb(Zahl der Spieler))
+	 * <strong>Wieviele Spiele?</strong>
+	 * Gegeben ist die Zahl der Spieler. Bei z.B. 42 Spielern bekommt man diese mit einem
+	 * Sechzehntelfinale nicht mehr unter - Sechzehntelfinale bedeutet 16 Spiele, und das bedeutet
+	 * 32 Spieler. Also muss ein Zweiunddreißigstelfinale her, auch wenn das nur teilweise besetzt sein
+	 * wird (Sechzehntelfinale und alle folgenden werden dann voll besetzt sein).
+	 * Allgemein: Anzahl Spiele = 2^(aufgerundeter lb(Anzahl Spieler))/2 (lb = Binärer Logarithmus, also log_2(x))
 	 * </p>
 	 * <p>
-	 * <strong>Wieviele Freilose?</strong> Im Zweiunddreißigstelfinale
-	 * müssen genau soviele Spieler rausfliegen, dass (im Beispiel) das
-	 * Sechzehntelfinale seine 32 Spieler hat &rarr; Da pro Spiel ein Spieler
-	 * rausfliegt, müssen 42 &minus; 32 = 10 Spiele im
-	 * Zweiunddreißigstelfinale gespielt werden, die anderen bleiben leer.
-	 * 10 Spiele = 20 Spieler, d.h. die übrigen 22 Spieler kriegen ein
-	 * Freilos.
+	 * <strong>Wie viele Freilose?</strong>
+	 * Im Zweiunddreißigstelfinale müssen genau so viele Spieler rausfliegen, dass (im Beispiel) das
+	 * Sechzehntelfinale seine 32 Spieler hat --> Da pro Spiel ein Spieler rausfliegt, müssen 42 - 32 = 10
+	 * Spiele im Zweiunddreißigstelfinale gespielt werden, die anderen bleiben leer. 10 Spiele = 20 Spieler,
+	 * d.h. die übrigen 22 Spieler bekommen ein Freilos.
 	 * </p>
 	 * Freiloslevel immer ein Level höher als lowestLevelId. 0 = 0
 	 *
 	 * @param desiredLevelId
-	 * @return	der Plan
+	 * @return der Plan
 	 */
     public ArrayList<Integer> getTournamentPlan(int desiredLevelId) {
     	assert desiredLevelId > 0;
     	// Muss Zweierpotenz sein
-    	assert Misc.log2(desiredLevelId) == 
-    		Math.round(Misc.log2(desiredLevelId));
+    	assert Misc.log2(desiredLevelId) == Math.round(Misc.log2(desiredLevelId));
     	assert desiredLevelId <= getLowestLevelId();
     	assert size() >= 2;
 
     	// x-tel-Finale -> x Spiele -> 2 * x Spieler
     	final int numPlayersByeLevel = 2 * getByeLevelId();
 
-    	// Baum bauen für Freilos- und höhere Level, noch nicht niedrigstes
+    	// Baum bauen für Freilos- und höhere Level, noch nicht für niedrigstes Level
     	ArrayList<Player> playersByeLevel = new ArrayList<Player>();
     	for (int i = 0; i < numPlayersByeLevel; i++)
     		playersByeLevel.add(new Player(i, get(i)));
@@ -151,8 +142,7 @@ public class TournamentTree extends ArrayList<Integer> {
     		final int numGamesLowestLevel = size() - numPlayersByeLevel;
     		final int lastRankWithBye = size() - 2 * numGamesLowestLevel;
     		if (desiredLevelId == getByeLevelId()) {
-    			ArrayList<Player> playersRaw = tree.getTournamentPlan(
-    				desiredLevelId);
+    			ArrayList<Player> playersRaw = tree.getTournamentPlan(desiredLevelId);
 	    		for (int i = 0; i < playersRaw.size(); i++) {
     				if (playersRaw.get(i).rankNo >= lastRankWithBye)
     					playersRaw.set(i, null);
@@ -160,8 +150,7 @@ public class TournamentTree extends ArrayList<Integer> {
     			return botIdsFromPlayers(playersRaw);
     		} else {
     			// Wir sollen lowestLevel zurückliefern
-    			ArrayList<Player> playersRaw = tree.getTournamentPlan(
-    				getByeLevelId());
+    			ArrayList<Player> playersRaw = tree.getTournamentPlan(getByeLevelId());
 				ArrayList<Integer> rv = new ArrayList<Integer>();
 				for (int i = 0; i < playersRaw.size(); i++) {
     				if (playersRaw.get(i).rankNo >= lastRankWithBye) {
@@ -180,7 +169,8 @@ public class TournamentTree extends ArrayList<Integer> {
 
     /**
      * Gibt die Bot-IDs zu den Playern zurück
-     * @param li Player-Liste
+     * 
+     * @param li	Player-Liste
      * @return Liste der Bot-IDs
      */
     private ArrayList<Integer> botIdsFromPlayers(List<Player> li) {
@@ -196,14 +186,14 @@ public class TournamentTree extends ArrayList<Integer> {
 
     /**
      * main
+     * 
      * @param args
      */
     public static void main(String... args) {
     	TournamentTree r = new TournamentTree();
     	for (int i = 1; i <= 21; i++)
     		r.add(i);
-    	System.out.println("Bye " + r.getByeLevelId() + " Lowest " +
-    		r.getLowestLevelId());
+    	System.out.println("Bye " + r.getByeLevelId() + " Lowest " + r.getLowestLevelId());
     	for (int i = 1; i <= r.getLowestLevelId(); i *= 2) {
     		boolean u = false;
     		for (Integer itg : r.getTournamentPlan(i)) {

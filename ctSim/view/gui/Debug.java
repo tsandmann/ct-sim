@@ -29,6 +29,7 @@ import java.util.Date;
 
 /**
  * Sorgt für Debug-Ausgaben
+ * 
  * @author Felix Beckwermert
  */
 public class Debug {
@@ -49,20 +50,15 @@ public class Debug {
 	/** Neue Zeile? */
 	private boolean isNewLine = true;
 	
-	/**
-	 * Der Konstruktor
-	 */
+	/** Der Konstruktor */
 	Debug() {
 		
 		this.timeFormatter = new SimpleDateFormat(this.TIME_PREFIX);
 		
 //		try {
 //			File file = new File(this.LOG_FILE);
-//			
 //			FileWriter fw = new FileWriter(file);
-//			
 //			this.bw = new BufferedWriter(fw);
-//			
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
@@ -70,6 +66,7 @@ public class Debug {
 	
 	/**
 	 * Setzt das Debug-Fenster
+	 * 
 	 * @param window
 	 */
 	private void setDebugWindow(DebugWindow window) {
@@ -98,7 +95,7 @@ public class Debug {
 			}
 		}
 		
-		if(!str.endsWith("\n")) //$NON-NLS-1$
+		if(!str.endsWith("\n"))
 			this.isNewLine = false;
 	}
 	

@@ -30,9 +30,10 @@ import ctSim.util.FmtLogger;
 /**
  * Splash-Screen für den c't-Sim
  * 
- * Grundidee übernommen von http://www.randelshofer.ch/oop/javasplash/javasplash.html - Werner Randelshofer
+ * Grundidee übernommen von:
+ * <a href="http://www.randelshofer.ch/oop/javasplash/javasplash.html">Java Splash - Werner Randelshofer</a> 
  * 
- * @author	Timo Sandmann
+ * @author Timo Sandmann
  */
 public class SplashWindow extends Window {
 	/** UID	*/
@@ -54,14 +55,11 @@ public class SplashWindow extends Window {
 	private static Handler logHandler;
 
 	/**
-	 * This attribute indicates whether the method
-	 * paint(Graphics) has been called at least once since the
-	 * construction of this window.<br>
-	 * This attribute is used to notify method splash(Image)
-	 * that the window has been drawn at least once
+	 * This attribute indicates whether the method paint(Graphics) has been called at least once since
+	 * the construction of this window.<br>
+	 * This attribute is used to notify method splash(Image) that the window has been drawn at least once
 	 * by the AWT event dispatcher thread.<br>
-	 * This attribute acts like a latch. Once set to true,
-	 * it will never be changed back to false again.
+	 * This attribute acts like a latch. Once set to true, it will never be changed back to false again.
 	 *
 	 * @see #paint
 	 */
@@ -69,9 +67,10 @@ public class SplashWindow extends Window {
 
 	/**
 	 * Erzeugt ein neues Splash-Fenster
-	 * @param parent Parent
-	 * @param image Splash-Image
-	 * @param version Versionsnummer
+	 * 
+	 * @param parent	Parent
+	 * @param image		Splash-Image
+	 * @param version	Versionsnummer
 	 */
 	private SplashWindow(Frame parent, Image image, String version) {
 		super(parent);
@@ -87,10 +86,10 @@ public class SplashWindow extends Window {
 		try {
 			mt.waitForID(0);
 		} catch (InterruptedException ie) {
-			// egal
+			// ist egal
 		}
 
-		/* Bei Fehler Abbruch */
+		/* Abbruch bei Fehler */
 		if (mt.isErrorID(0)) {
 			setSize(0, 0);
 			System.err.println("Warning: SplashWindow couldn't load splash image.");
@@ -101,7 +100,7 @@ public class SplashWindow extends Window {
 			return;
 		}
 
-		/* zentrieren */
+		/* Zentrieren */
 		int imgWidth = image.getWidth(this);
 		int imgHeight = image.getHeight(this);
 		setSize(imgWidth, imgHeight);
@@ -126,7 +125,8 @@ public class SplashWindow extends Window {
 
 	/**
 	 * Aktualisiert den Splash-Screen
-	 * @param g Graphics
+	 * 
+	 * @param g	Graphics
 	 */
 	@Override
 	public void update(Graphics g) {
@@ -135,7 +135,8 @@ public class SplashWindow extends Window {
 
 	/**
 	 * Zeichnet den Splash-Screen
-	 * @param g  Graphics-Objekt
+	 * 
+	 * @param g	Graphics-Objekt
 	 */
 	@Override
 	public void paint(Graphics g) {
@@ -153,19 +154,20 @@ public class SplashWindow extends Window {
 
 	/**
 	 * Zeigt ein Image als Splash-Screen an
-	 * @param image Splash-Image, das angezeigt wird
-	 * @param version Name und Versionsnummer
+	 * 
+	 * @param image		Splash-Image, das angezeigt wird
+	 * @param version	Name und Versionsnummer
 	 */
 	public static void splash(Image image, String version) {
 		Frame f = new Frame();
 		instance = new SplashWindow(f, image, version);
 		instance.setVisible(true);
 
-		// Note: To make sure the user gets a chance to see the
-		// splash window we wait until its paint method has been
-		// called at least once by the AWT event dispatcher thread.
-		// If more than one processor is available, we don't wait,
-		// and maximize CPU throughput instead.
+		/**
+		 * Note: To make sure the user gets a chance to see the splash window we wait until its paint 
+		 * method has been called at least once by the AWT event dispatcher thread. If more than one
+		 * processor is available, we don't wait, and maximize CPU throughput instead.
+		 */
 		if (!EventQueue.isDispatchThread() && Runtime.getRuntime().availableProcessors() == 1) {
 			synchronized (instance) {
 				while (!instance.paintCalled) {
@@ -182,8 +184,8 @@ public class SplashWindow extends Window {
 	/**
 	 * Zeigt ein Image als Splash-Screen an
 	 * 
-	 * @param image Splash-Image, das angezeigt wird
-	 * @param version Name und Versionsnummer
+	 * @param image		Splash-Image, das angezeigt wird
+	 * @param version	Name und Versionsnummer
 	 */
 	public static void splash(URL image, String version) {
 		if (image != null) {
@@ -191,9 +193,7 @@ public class SplashWindow extends Window {
 		}
 	}
 
-	/**
-	 * Schliesst das Splash-Fenster
-	 */
+	/** Schließt das Splash-Fenster */
 	public static void disposeSplash() {
 		try {
 			Thread.sleep(1000);
@@ -209,7 +209,8 @@ public class SplashWindow extends Window {
 	
 	/**
 	 * Zeigt eine Nachricht auf dem Splash-Screen an, löscht dabei die alte Nachricht
-	 * @param msg Nachricht, die angezeigt werden soll
+	 * 
+	 * @param msg	Nachricht, die angezeigt werden soll
 	 */
 	public static void setMessage(String msg) {
 		message = msg;	
@@ -218,6 +219,7 @@ public class SplashWindow extends Window {
 	
 	/**
 	 * Gibt den Log-Handler zurück
+	 * 
 	 * @return unser Log-Handler
 	 */
 	public static Handler getLogHandler() {
@@ -233,6 +235,7 @@ public class SplashWindow extends Window {
 	
 	/**
 	 * Log-Handler für den Splash-Screen, damit dort auch die Konsolenausgaben erscheinen
+	 * 
 	 * @author Timo Sandmann
 	 */
 	class SplashLogHandler extends Handler {
@@ -253,7 +256,8 @@ public class SplashWindow extends Window {
 		}
 
 		/**
-		 * Schreibt die Log-Message ins Splash-Fenster
+		 * Schreibt die Log-Message in das Splash-Fenster
+		 * 
 		 * @see java.util.logging.Handler#publish(java.util.logging.LogRecord)
 		 */
 		@Override

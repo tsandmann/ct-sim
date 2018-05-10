@@ -38,7 +38,7 @@ import ctSim.model.bots.ctbot.RealCtBot;
 
 /**
  * @author Felix Beckwermert
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class BotViewer extends JScrollPane {
 	/** UID */
@@ -87,7 +87,7 @@ public class BotViewer extends JScrollPane {
 			};
 		}
 		
-		/* Panelbreite soll mindestens so gross sein, dass alle Elemente darin komplett sichtbar sind */
+		/* Panelbreite soll mindestens so groß sein, dass alle Elemente darin komplett sichtbar sind */
 		this.setMinimumSize(new Dimension(220, this.getHeight()));
 
 		setBorder(null);
@@ -101,11 +101,10 @@ public class BotViewer extends JScrollPane {
 					panel.add(buisitor);
 				}
 			} catch (IllegalAccessException e) {
-				/*
-				 * Kommt nur vor, wenn ein BotBuisitor keinen Konstruktor hat,
-				 * der public und parameterlos ist. Wäre ein
-				 * Compile-time-Fehler, nur wegen Verwendung von Reflection
-				 * sehen wir das erst zur Laufzeit.
+				/**
+				 * Kommt nur vor, wenn ein BotBuisitor keinen Konstruktor hat, der public und parameterlos
+				 * ist. Wäre ein Compile-time-Fehler; nur wegen Verwendung von Reflection sehen wir das erst
+				 * zur Laufzeit.
 				 */
 				throw new AssertionError(e);
 			} catch (InstantiationException e) {

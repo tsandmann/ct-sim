@@ -36,18 +36,24 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
-/** <p>Diese Klasse (und die von ihr abgeleiteten) abstrahieren die Datenbank, d.h. sitzen zwischen der
+/** <p>
+ * Diese Klasse (und die von ihr abgeleiteten) abstrahieren die Datenbank, d.h. sitzen zwischen der
  * Datenbank für den Wettbewerb Oktober 2006 einerseits und ContestConductor / TournamentPlanner
- * andererseits.</p>
+ * andererseits.
+ * </p>
  *
- * <p>Diese Klasse besteht, um den ContestConductor und den TournamentPlanner um SQL zu entlasten.
+ * <p>
+ * Diese Klasse besteht, um den ContestConductor und den TournamentPlanner um SQL zu entlasten.
  * (Ein Aufruf <code>db.setWinner(42);</code> ist übersichtlicher als ein halbes dutzend Zeilen
- * Datenbank-Getue).</p>
+ * Datenbank-Getue).
+ * </p>
  *
- * <p>Alle Methoden dieser Klasse und alle Methoden der abgeleiteten Klassen werfen Instanzen von
+ * <p>
+ * Alle Methoden dieser Klasse und alle Methoden der abgeleiteten Klassen werfen Instanzen von
  * java.sql.SQLException, falls die darunterliegenden Methoden, die auf die Datenbank zugreifen,
  * eine solche Exception werfen. üblicherweise deutet das darauf hin, dass die Datenbank nach einem
- * anderen Schema aufgebaut ist als der Code erwartet.</p>
+ * anderen Schema aufgebaut ist als der Code erwartet.
+ * </p>
  *
  * @see "Von dieser Klasse abgeleitete Klassen"
  * @see ContestConductor
@@ -66,7 +72,7 @@ class DatabaseAdapter {
 		 */
 		@Override
 		public PreparedStatement get(Object key) {
-			// Wenn nicht drin, hinzufügen, damit super.get garantiert was zurückliefert
+			// Wenn nicht drin, hinzufügen, damit super.get garantiert etwas zurückliefert
 			if (! containsKey(key)) {
 				/*
 				 * Cast ist okay, weil wir eine HashMap<String, ...> sind und der Compiler sicherstellt,
@@ -86,7 +92,7 @@ class DatabaseAdapter {
 
 	/**
 	 * <p>
-	 * Repräsentiert die möglichen Zustände eines Spiels. Die Enum funktioniert Map-artig: sie umfasst
+	 * Repräsentiert die möglichen Zustände eines Spiels. Die Enum funktioniert Map-artig: Sie umfasst
 	 * Paare aus einem Symbol im Code und einem String zugeordnet. Letzterer ist die Repräsentation,
 	 * wie der Spielzustand in der Datenbank dargestellt wird.
 	 * </p>
@@ -95,15 +101,13 @@ class DatabaseAdapter {
 	enum GameState {
 		/** Zeigt an, dass (noch) keine Spieler für das Spiel eingetragen sind. */
 		NOT_INITIALIZED("not init"),
-		/** Zeigt an, dass ein Spieler, aber (noch) kein zweiter für das Spiel eingetragen ist. */
+		/** Zeigt an, dass ein Spieler, aber (noch) kein Zweiter für das Spiel eingetragen ist. */
 		WAITING_FOR_BOT2("wait for bot2"),
-		/** Zeigt an, dass das Spiel gestartet werden kann (es sind so viele Spieler eingetragen wie
-		 * nötig).
-		 */
+		/** Zeigt an, dass das Spiel gestartet werden kann (es sind so viele Spieler eingetragen wie nötig). */
 		READY_TO_RUN ("ready to run"),
 		/**
-		 * Zeigt an, dass das Spiel gestartet, aber noch nicht abgeschlossen ist. Normalerweise hat zu
-		 * jedem Zeitpunkt nur höchstens ein Spiel diesen Zustand.
+		 * Zeigt an, dass das Spiel gestartet, aber noch nicht abgeschlossen ist.
+		 * Normalerweise hat zu jedem Zeitpunkt nur höchstens ein Spiel diesen Zustand.
 		 */
 		RUNNING ("running"),
 
@@ -122,13 +126,16 @@ class DatabaseAdapter {
 			this.representationInDb = representationInDb;
 		}
 
-		/** <p>Diese Methode erlaubt es, Objekte dieser Klasse (dieser Enum) auf unbürokratische Art in
-		 * Strings einzubauen, die SQL-Queries repräsentieren. Beispiel:</p>
+		/**
+		 * <p>
+		 * Diese Methode erlaubt es, Objekte dieser Klasse (dieser Enum) auf unbürokratische Art in
+		 * Strings einzubauen, die SQL-Queries repräsentieren. Beispiel:
+		 * </p>
 		 * <code>"SELECT * FROM games WHERE state = '"+GameState.RUNNING+"'"</code>
 		 *
 		 * @return Der String, der in der Datenbank das Objekt dieser Klasse repräsentiert. Beispielsweise
-		 * liefert GameState.NOT_INITIALIZED.toString() den unter
-		 * <a href="#enum_constant_summary">Enum Constant Summary</a> aufgeführten Wert.
+		 * 				liefert GameState.NOT_INITIALIZED.toString() den unter
+		 * 				<a href="#enum_constant_summary">Enum Constant Summary</a> aufgeführten Wert.
 		 */
 		@Override
 		public String toString() {
@@ -154,7 +161,7 @@ class DatabaseAdapter {
 
 
 	/**
-	 * DB-Verbidung
+	 * DB-Verbindung
 	 * 
 	 * @param connFactory	DB
 	 */
@@ -164,7 +171,7 @@ class DatabaseAdapter {
 			acquireConn();
             lg.info("Verwende Datenbank " + dbConn.getMetaData().getURL());
         } catch (SQLException e) {
-        	// No-op, da nur ne Info-Meldung nicht geht
+        	// nur eine Info-Meldung geht nicht
         }
 	}
 
@@ -189,7 +196,7 @@ class DatabaseAdapter {
 	protected PreparedStatement buildPreparedStatement(String sqlWithInParams,
 		Object... inValues) throws SQLException {
 		PreparedStatement rv = statementCache.get(sqlWithInParams);
-		// Sicherheitsmaßnahme, nicht dass einer auf teilweise alten Daten operiert
+		// Sicherheitsmaßnahme, damit niemand auf teilweise alten Daten operiert
 		rv.clearParameters();
 		for (int i = 0; i < inValues.length; i++) {
 			// PreparedStatement ist 1-based, inValues ist 0-based
@@ -276,7 +283,8 @@ class DatabaseAdapter {
 			lg.warn(e, "SQLException; stelle DB-Verbindung neu her und " +
 					"probiere nochmal");
 			acquireConn();
-			/* Wenn jetzt nochmal eine Exception kommt, reichen wir sie nach oben durch - es liegt nicht
+			/**
+			 * Wenn jetzt nochmal eine Exception kommt, reichen wir sie nach oben durch - es liegt nicht
 			 * an einer abgerissenen Verbindung, sondern an falscher SQL-Syntax oder so - da hilft auch
 			 * keine neue Verbindung.
 			 */
@@ -308,13 +316,13 @@ class DatabaseAdapter {
 		}
 	}
 
-	/** Trägt einen Bot für ein Spiel ein. Aufzurufen entweder vor dem Wettbewerb in der Planungsphase
-	 * oder im Wettbewerb, wenn sich durch die Spielergebnisse herausstellt, welche Bots um ein Level
-	 * weiterkommen.
+	/**
+	 * Trägt einen Bot für ein Spiel ein
+	 * Aufzurufen entweder vor dem Wettbewerb in der Planungsphase oder im Wettbewerb, wenn sich durch
+	 * die Spielergebnisse herausstellt, welche Bots um ein Level weiterkommen.
      *
-     * @param botId
-     * 			Bot, repräsentiert von seinem Primärschlüssel, der eingettragen werden soll.
-     * 			Falls <code>null</code>, tut die Methode nichts.
+     * @param botId		Bot, repräsentiert von seinem Primärschlüssel, der eingettragen werden soll.
+     * 					Falls <code>null</code>, tut die Methode nichts.
      * @param levelId	das Level, in das der Bot platziert werden soll
      * @param gameId	die Nummer des Spiels im jeweiligen Level
 	 * @throws SQLException 

@@ -35,10 +35,9 @@ import ctSim.model.Command;
 import ctSim.util.FmtLogger;
 
 /**
- * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim
- * gehört. Hab keine Ahnung, wofür das sein soll. Ich nehm die Datei aus dem
- * Build Path, damit man bei Namensänderungen in Sim-Klassen das nicht immer
- * hier mitführen muss. --hkr@heise.de
+ * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim gehört. Habe keine Ahnung, wofür
+ * das sein soll. Ich nehme die Datei aus dem Build Path, damit man bei Namensänderungen in Sim-Klassen
+ * das nicht immer hier mitführen muss. - Hendrik Krauß (hkr@heise.de)
  */
 public class TestServer implements Runnable {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.TestServer");
@@ -49,59 +48,49 @@ public class TestServer implements Runnable {
 	/** Content, der hin und her geschickt wird... */
 	public static final String  CONTENT     = "Test";
 	
-	/**
-	 * Will man einen Java-Client?
-	 * Ansonsten C-Client "von Hand" starten...
-	 */
+	/** Will man einen Java-Client? Ansonsten C-Client "von Hand" starten... */
 	public static final boolean JAVA_CLIENT = true;
 	
 	/** 
 	 * Wie oft soll der Java-Client "flushen"?
-	 * Wenn TRUE, dann jedes byte, sonst
-	 * ca. jedes "Command"...
+	 * Wenn TRUE, dann jedes byte, sonst ca. jedes "Command"...
 	 */
 	public static final boolean FLUSH_ALL   = false;
 	
-//	/** 
-//	 * TRUE: Server -> Client -> Server
-//	 * FALSE: Client -> Server -> Client
-//	 */
+	/** 
+	 * TRUE: Server -> Client -> Server
+	 * FALSE: Client -> Server -> Client
+	 */
 //	public static final boolean SERVER_TIME = true;
 	
 	/** 
-	 * Soll der Server einen Worker-Thread
-	 * benutzen, der den Ctrl. im Sim simuliert?
+	 * Soll der Server einen Worker-Thread benutzen, der den Ctrl. im Sim simuliert?
 	 * (synchronisiert wie im Sim der Ctrl.)
 	 */
 	public static final boolean USE_WORKER  = true;
 	
 	/**
-	 * Wie lange der Worker pro Zyklus warten soll,
-	 * bevor er den Com-Thread wieder laufen lässt
+	 * Wie lange der Worker pro Zyklus warten soll, bevor er den Com-Thread wieder laufen lässt
 	 * (simuliert Arbeit des Ctrl.)
 	 */
 	public static final long    WORKER_WAIT = 100;
 	
 	/**
-	 * Tick-Rate im Simulator: Jede Runde wird
-	 * mindestens diese Zeit gewartet
+	 * Tick-Rate im Simulator: Jede Runde wird mindestens diese Zeit gewartet
 	 * (+ simulierte Arbeit -- s.o.)
 	 */
 	public static final long    TICK_RATE   = 10;
 	
 	/**
-	 * Server-Connection mit _einem_ Client. Diese entspricht einem
-	 * Java-Bot im Simulator.
+	 * Server-Connection mit _einem_ Client. Diese entspricht einem Java-Bot im Simulator.
 	 * 
-	 * Bekommt vom Server den Client_Port übergeben
-	 * und kommuniziert dann mit diesem.
+	 * Bekommt vom Server den Client_Port übergeben und kommuniziert dann mit diesem.
 	 * 
 	 * Je nach Einstellung von SERVER_TIME schickt er...
 	 * - wenn TRUE: ein Datum an den Client und wartet auf die Antwort
 	 * - wenn FALSE: das ankommende Datum einfach an den Client zurück
 	 * 
-	 * Nach einem Empfangs-/Sende-Vorgang wird auf den Worker
-	 * (wenn eingestellt über USE_WORKER) gewartet...
+	 * Nach einem Empfangs-/Sende-Vorgang wird auf den Worker (wenn eingestellt über USE_WORKER) gewartet...
 	 */
 	class ServerCom
 			extends Connection
@@ -135,7 +124,6 @@ public class TestServer implements Runnable {
 				this.in  = new DataInputStream(this.socket.getInputStream());
 				this.out = new DataOutputStream(this.socket.getOutputStream());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.exit(-1);
 			}
@@ -223,7 +211,6 @@ public class TestServer implements Runnable {
 						this.worker.waitOnWorker();
 				
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -231,19 +218,16 @@ public class TestServer implements Runnable {
 			try {
 				this.out.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			try {
 				this.in.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
 				this.socket.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.exit(-1);
@@ -271,7 +255,7 @@ public class TestServer implements Runnable {
 			in.readFully( b, 0, len);
 		}
 		
-		// Connection-Gedöns aus dem Bot
+		// Connection-Gehabe aus dem Bot
 		private int seq = 0;
 		
 		private synchronized void transmitSensors() {
@@ -302,7 +286,6 @@ public class TestServer implements Runnable {
 				command.setSeq(this.seq++);
 				this.send(command.getCommandBytes());
 				
-				// TODO
 				command.setCommand(Command.CMD_SENS_DOOR);
 				command.setDataL(0);
 				command.setDataR(0);
@@ -368,7 +351,7 @@ public class TestServer implements Runnable {
 				
 //				lastTransmittedSimulTime= (int)world.getSimulTime();
 //				lastTransmittedSimulTime %= 10000;
-				// Wir haben nur 16 Bit zur Verfügung und 10.000 ist ne nette Zahl ;-)
+				// Wir haben nur 16 Bit zur Verfügung und 10.000 ist eine nette Zahl ;-)
 				command.setCommand(Command.CMD_DONE);
 //				command.setDataL(lastTransmittedSimulTime);
 				command.setDataL(10);
@@ -427,26 +410,19 @@ public class TestServer implements Runnable {
 	}
 	
 	/**
-	 * Optional einzustellender Worker. Dieser simuliert
-	 * den Controller des Sim.
+	 * Optional einzustellender Worker. Dieser simuliert den Controller des Sim.
 	 * 
-	 * Wenn USE_WORKER gesetzt ist, wartet die 'ServerCom' (s.o.)
-	 * jeden Zyklus auf den Worker (genauso sync., wie der Ctrl. mit den
-	 * Bots im Sim).
+	 * Wenn USE_WORKER gesetzt ist, wartet die 'ServerCom' (s.o.) jeden Zyklus auf den Worker (genauso
+	 * sync., wie der Ctrl. mit den Bots im Sim).
 	 * 
-	 * Über WORKER_WAIT kann eingestellt werden, ob
-	 * der Worker arbeit (des Ctrl.) simulieren soll (er schläft einfach die
-	 * angegebene Zeit, bevor die 'ServerCom' wieder freigegeben wird und weiter
+	 * Über WORKER_WAIT kann eingestellt werden, ob der Worker arbeit (des Ctrl.) simulieren soll (er
+	 * schläft einfach die angegebene Zeit, bevor die 'ServerCom' wieder freigegeben wird und weiter
 	 * machen darf).
 	 * 
-	 * Über TICK_RATE wird eine mindest (Bot-)Laufzeit eingestellt.
-	 * Der Worker schläft diese, nachdem er die 'ServerCom' (entspricht einem Bot)
-	 * wieder freigegeben hat. Ein neuer Zyklus (in diesem Fall Sende-Vorgang)
-	 * kann also nicht vor Ablauf dieser Zeit _wieder_ beginnen (aber der
-	 * Bot kann während dieser Zeit rechnen; in diesem Fall die ServerCom
-	 * kommunizieren)...
-	 * 
-	 * 
+	 * Über TICK_RATE wird eine mindest (Bot-)Laufzeit eingestellt. Der Worker schläft diese, nachdem
+	 * er die 'ServerCom' (entspricht einem Bot) wieder freigegeben hat. Ein neuer Zyklus (in diesem
+	 * Fall Sende-Vorgang) kann also nicht vor Ablauf dieser Zeit _wieder_ beginnen (aber der Bot kann
+	 * während dieser Zeit rechnen; in diesem Fall die ServerCom kommunizieren)...
 	 */
 	class Worker implements Runnable {
 		
@@ -477,7 +453,6 @@ public class TestServer implements Runnable {
 					this.reinit();
 					Thread.sleep(TestServer.TICK_RATE);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -491,11 +466,9 @@ public class TestServer implements Runnable {
 			start.countDown();
 		}
 		
-		// Hier warten die Bots, bzw. die ServerCom auf den
-		// Ctrl., bzw. den Worker
+		// Hier warten die Bots, bzw. die ServerCom auf den Ctrl., bzw. den Worker
 		public void waitOnWorker() throws InterruptedException {
 			CountDownLatch start = this.start;
-			// überflüssig ?
 			CountDownLatch done  = this.done;
 			done.countDown();
 			start.await();
@@ -508,18 +481,14 @@ public class TestServer implements Runnable {
 	private ServerSocket serverSocket;
 	
 	/**
-	 * Der TestServer lauscht auf Connections auf dem
-	 * global angegebenen Port.
+	 * Der TestServer lauscht auf Connections auf dem global angegebenen Port.
 	 * 
-	 * Bei einer ankommenden Connection wird diese an eine
-	 * 'ServerCom' übergeben und weiter gelauscht...
-	 * 
+	 * Bei einer ankommenden Connection wird diese an eine 'ServerCom' übergeben und weiter gelauscht...
 	 */
 	TestServer(int port) {
 		try {
 			this.serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -548,7 +517,6 @@ public class TestServer implements Runnable {
 				ServerCom com = new ServerCom(this.clientSocket);
 				com.start();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.exit(-1);
 			}
@@ -557,7 +525,6 @@ public class TestServer implements Runnable {
 		try {
 			this.serverSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -579,12 +546,10 @@ public class TestServer implements Runnable {
 }
 
 /** 
- * Der TestClient schickt einfach ein ankommendes Datum zurück
- * an den Server, der dann die Zeit stoppt und ausgibt (SERVER_TIME).
+ * Der TestClient schickt einfach ein ankommendes Datum zurück an den Server, der dann die Zeit stoppt
+ * und ausgibt (SERVER_TIME).
  * 
- * Oder er schickt ein Datum an den Server und wartet selbst bis
- * dieses zurückkommt (SERVER_TIME == FALSE).
- * 
+ * Oder er schickt ein Datum an den Server und wartet selbst bis dieses zurückkommt (SERVER_TIME == FALSE).
  */
 class TestClient implements Runnable {
 
@@ -601,11 +566,9 @@ class TestClient implements Runnable {
 			in = new BufferedReader(new InputStreamReader(socket
 					.getInputStream()));
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -669,7 +632,6 @@ class TestClient implements Runnable {
 				}
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.exit(-1);
 			}
@@ -679,13 +641,11 @@ class TestClient implements Runnable {
 		try {
 			this.in.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			this.socket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

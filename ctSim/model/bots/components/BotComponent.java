@@ -64,7 +64,7 @@ public abstract class BotComponent<M> {
 	/** Interface für lesende Komponenten */
 	protected interface CanRead {
 		/**
-		 * Nicht aufrufen - stattdessen {@link BotComponent#offerRead(Command)} verwenden.
+		 * Nicht aufrufen - stattdessen {@link BotComponent#offerRead(Command)} verwenden
 		 * 
 		 * @param c	Kommando
 		 * @throws ProtocolException 
@@ -115,12 +115,12 @@ public abstract class BotComponent<M> {
 	}
 
 	/** Einfacher Sensor */
-	public interface SimpleSensor {	// $$$ abstract class
+	public interface SimpleSensor {
 		// Marker-Interface
 	}
 
 	/** Einfacher Aktuator */
-	public interface SimpleActuator {	// $$$ abstract class
+	public interface SimpleActuator {
 		// Marker-Interface
 	}
 

@@ -39,16 +39,12 @@ import javax.swing.JPanel;
 import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.util.Runnable1;
 
-/**
- * Mausbild-Anzeige 
- */
+/** Mausbild-Anzeige */
 public class MousePictureViewer extends GuiBotBuisitor {
 	/** UID */
 	private static final long serialVersionUID = - 2167640810854877294L;
 
-	/**
-	 * Bild-Anzeige
-	 */
+	/** Bild-Anzeige */
 	public static class ImageViewer extends JPanel implements Runnable1<Image> {
 		/** UID */
 		private static final long serialVersionUID = 3878110649950448386L;
@@ -61,22 +57,22 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		private final int targetHeight;
 
 		/**
-		 * @param scaleFactor Skalierung
-		 * @param c Mausbild-Komponente
+		 * @param scaleFactor	Skalierung
+		 * @param c				Mausbild-Komponente
 		 */
 		public ImageViewer(double scaleFactor, MousePictureComponent c) {
 			c.addImageListener(this);
 			setToolTipText(c.getDescription());
-			setBorder(BorderFactory.createLoweredBevelBorder()); //$$$ bevel, insets gehen nicht
+			setBorder(BorderFactory.createLoweredBevelBorder());	//$$$ bevel, insets gehen nicht
 			targetWidth  = (int)Math.round(scaleFactor * c.getWidth());
 			targetHeight = (int)Math.round(scaleFactor * c.getHeight());
 		}
 
-		// Wir sind ja ein ImageListener, daher brauchen wir eine
-		// run(Image)-Methode
+		// Wir sind ja ein ImageListener, daher brauchen wir eine run(Image)-Methode
 		/** 
-		 * Methode einer Swing-Komponente, aber thread-sicher 
-		 * @param img Bild
+		 * Methode einer Swing-Komponente, aber thread-sicher
+		 * 
+		 * @param img	Bild
 		 */
 		public synchronized void run(Image img) {
 			this.image = img.getScaledInstance(targetWidth, targetHeight,
@@ -89,7 +85,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		 */
 		@Override
 		public void paint(Graphics g) {
-			// Loeschen
+			// Löschen
 			g.setColor(getBackground());
 			g.fillRect(0, 0, getSize().width, getSize().height);
 			// Malen
@@ -116,7 +112,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 	}
 
 	/**
-	 * @param compnt Mausbild-Komponente
+	 * @param compnt	Mausbild-Komponente
 	 */
 	public void buisitMousePictureViewer(final MousePictureComponent compnt) {
 		// Container
@@ -124,7 +120,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		p.setBorder(BorderFactory.createTitledBorder(compnt.getName()));
 		JPanel controls = new JPanel();
 
-		// 1/3: Anzeige des Mausbilds
+		/* 1/3: Anzeige des Mausbilds */
 		ImageViewer v = new ImageViewer(6, compnt);
 		p.add(v, BorderLayout.CENTER);
 		v.addMouseListener(new MouseAdapter() {
@@ -133,12 +129,12 @@ public class MousePictureViewer extends GuiBotBuisitor {
 				try {
 					compnt.requestPicture();
 				} catch (IOException e1) {
-					e1.printStackTrace(); //$$$ Excp
+					e1.printStackTrace();	//$$$ Excp
 				}
 			}
 		});
 
-		// 2/3: Knopp
+		/* 2/3: Knopf */
 		final JButton bt = new JButton("Holen");
 		bt.setToolTipText("Fordert beim Bot ein Bild dessen an, was der " +
 			"Maussensor sieht");
@@ -147,13 +143,13 @@ public class MousePictureViewer extends GuiBotBuisitor {
 				try {
 					compnt.requestPicture();
 				} catch (IOException e1) {
-					e1.printStackTrace(); //$$$ Excp
+					e1.printStackTrace();	//$$$ Excp
 				}
 			}
 		});
 		controls.add(bt);
 
-		// 3/3: Checkbox
+		/* 3/3: Checkbox */
 		final JCheckBox cb = new JCheckBox("laufend");
 		cb.setToolTipText("Fordert das nächste an, sobald ein Mausbild " +
 			"übertragen ist");
@@ -181,7 +177,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 			}
 		});
 
-		// Ausliefern
+		/* Ausliefern */
 		p.add(controls, BorderLayout.SOUTH);
 
 		add(p);

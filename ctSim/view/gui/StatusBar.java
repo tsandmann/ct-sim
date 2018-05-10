@@ -16,6 +16,7 @@
  * MA 02111-1307, USA.
  * 
  */
+
 package ctSim.view.gui;
 
 import java.awt.Dimension;
@@ -42,7 +43,6 @@ import ctSim.controller.Config;
  * Zeigt Statusinformationen zum Simulator an
  * 
  * @author Felix Beckwermert
- *
  */
 public class StatusBar extends Box {
 	/** UID */
@@ -70,7 +70,8 @@ public class StatusBar extends Box {
 	
 	/**
 	 * Konstruktor
-	 * @param par Referenz auf den Frame, in dem die StatusBar angezeigt wird
+	 * 
+	 * @param par	Referenz auf den Frame, in dem die StatusBar angezeigt wird
 	 */
 	StatusBar(MainWindow par) {
 		super(BoxLayout.LINE_AXIS);
@@ -81,7 +82,7 @@ public class StatusBar extends Box {
 		try {
 			tickrate = Integer.parseInt(Config.getValue("ctSimTickRate"));
 		} catch (NumberFormatException exc) {
-			// No-op
+			// egal
 		}
 		INIT_TICK_RATE = Math.min(tickrate, MAX_TICK_RATE);
 		
@@ -109,9 +110,7 @@ public class StatusBar extends Box {
 		add(tickRateSlider);
 	}
 	
-	/**
-	 * Erzeugt einen Schieberegler für den Simulatortakt
-	 */
+	/** Erzeugt einen Schieberegler für den Simulatortakt */
 	void initTickRateSlider() {
 		tickRateSlider = new JSlider(StatusBar.MIN_TICK_RATE, StatusBar.MAX_TICK_RATE, INIT_TICK_RATE);
 		
@@ -132,9 +131,7 @@ public class StatusBar extends Box {
 		tickRateSlider.setBorder(BorderFactory.createEtchedBorder());
 	}
 	
-	/**
-	 * Erzeugt ein Anzeigefeld für den Simulatortakt
-	 */
+	/** Erzeugt ein Anzeigefeld für den Simulatortakt */
 	void initTickRateField() {
 		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
 		formatter.setMinimum(StatusBar.MIN_TICK_RATE);
@@ -158,15 +155,13 @@ public class StatusBar extends Box {
 	}
 	
 	/**
-	 * @param time Zeitspanne, um die Simulatorzeit erhöht werden soll
+	 * @param time	Zeitspanne, um die Simulatorzeit erhöht werden soll
 	 */
 	public void updateTime(long time) {
 		timeLabel.setText("Zeit: " + String.format("%tT.%<tL", new Date(time - TIME_TO_SUB)));
 	}
 	
-	/**
-	 * Setzt den Simulatortakt auf den initialen Wert zurück
-	 */
+	/** Setzt den Simulatortakt auf den initialen Wert zurück */
 	protected void reinit() {
 		tickRateField.setValue(INIT_TICK_RATE);
 		updateTime(0);

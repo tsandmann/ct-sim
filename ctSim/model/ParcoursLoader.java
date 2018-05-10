@@ -71,7 +71,7 @@ import ctSim.util.Misc;
  * { - in Uhrzeigersinn gedrehte T-Kreuzung, Linie geht nach links weg (Richtung der Mittelspitze)
  * } - entgegen Uhrzeigersinn gedrehte T-Kreuzung (Linie geht in Richtung der Mittelspitze nach rechts weg)
  *
- * @author bbe (bbe@heise.de)
+ * @author Benjamin Benz (bbe@heise.de)
  */
 public class ParcoursLoader {
 	/** Logger */
