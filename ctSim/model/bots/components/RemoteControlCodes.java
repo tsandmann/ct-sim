@@ -28,7 +28,7 @@ import ctSim.util.Misc;
  * Erzeugt die Zuordnung von Tasten auf Fernbedienungscodes je nach Typ der Fernbedienung (einstellbar
  * wie beim Bot-Code über die Datei rc5-codes.h).
  * 
- * @author Timo Sandmann (mail@timosandmann.de)
+ * @author Timo Sandmann
  */
 public class RemoteControlCodes {
 	/** Logger */
@@ -90,7 +90,7 @@ public class RemoteControlCodes {
 	/**
 	 * Interface für alle RC5-Fernbedienungen
 	 * 
-	 * @author Timo Sandmann (mail@timosandmann.de)
+	 * @author Timo Sandmann
 	 */
 	interface RC5Codes {
 		/** Erzeugt die Fernbedienungstasten */
@@ -104,7 +104,7 @@ public class RemoteControlCodes {
 	 * implementieren und genauso aufgebaut sind wie diese. Außerdem trägt man sie ebenfalls in
 	 * RemoteControlCodes() ein.
 	 * 
-	 * @author Timo Sandmann (mail@timosandmann.de)
+	 * @author Timo Sandmann
 	 */
 	class HQ_RC_UNIVERS29_334 implements RC5Codes {
 		/**
@@ -151,7 +151,7 @@ public class RemoteControlCodes {
 	/**
 	 * Definiert den Fernbedienungstyp "HAUPPAUGE_WINTV" und ihre Tastenzuordnungen
 	 * 
-	 * @author Timo Sandmann (mail@timosandmann.de)
+	 * @author Timo Sandmann
 	 */
 	class HAUPPAUGE_WINTV implements RC5Codes {
 		/**

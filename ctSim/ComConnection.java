@@ -46,7 +46,7 @@ import ctSim.util.SaferThread;
  *
  * @author Maximilian Odendahl (maximilian.odendahl@rwth-aachen.de)
  * @author Hendrik Krauß (hkr@heise.de)
- * @author Timo Sandmann (mail@timosandmann.de)
+ * @author Timo Sandmann
  */
 public class ComConnection extends Connection {
 	/** Input verfügbar? */
