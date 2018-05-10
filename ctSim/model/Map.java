@@ -32,8 +32,8 @@ import ctSim.model.bots.Bot;
 
 /**
  * Modell der Karte, die der Bot von der Umgebung erstellt (MAP_AVAILABLE)
- *
- * @author Timo Sandmann (mail@timosandmann.de)
+ * 
+ * @author Timo Sandmann
  */
 public class Map {
 

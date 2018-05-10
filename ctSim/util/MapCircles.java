@@ -21,8 +21,8 @@ package ctSim.util;
 
 /**
  * Datentyp für Kreise, die der MapViewer darstellen kann
- *
- * @author Timo Sandmann (mail@timosandmann.de)
+ * 
+ * @author Timo Sandmann
  */
 public class MapCircles {
 	/** X-Koordinate Mittelpunkt */

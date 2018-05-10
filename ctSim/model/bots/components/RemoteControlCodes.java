@@ -27,8 +27,8 @@ import ctSim.util.Misc;
 /**
  * Erzeugt die Zuordnung von Tasten auf Fernbedienungscodes je nach Typ der Fernbedienung (einstellbar
  * wie beim Bot-Code über die Datei rc5-codes.h).
- *
- * @author Timo Sandmann (mail@timosandmann.de)
+ * 
+ * @author Timo Sandmann
  */
 public class RemoteControlCodes {
 	/** Logger */
@@ -89,8 +89,13 @@ public class RemoteControlCodes {
 
 	/**
 	 * Interface für alle RC5-Fernbedienungen
+<<<<<<< bugfixes/format_spelling2
 	 *
 	 * @author Timo Sandmann (mail@timosandmann.de)
+=======
+	 * 
+	 * @author Timo Sandmann
+>>>>>>> 120d6a1 comment in MainWinMenuBar.java restored, author information unified
 	 */
 	interface RC5Codes {
 		/** Erzeugt die Fernbedienungstasten */
@@ -103,8 +108,13 @@ public class RemoteControlCodes {
 	 * Möchte man weitere Fernbedienungen ergänzen, erzeugt man weitere Klassen, die RC5Codes
 	 * implementieren und genauso aufgebaut sind wie diese. Außerdem trägt man sie ebenfalls in
 	 * RemoteControlCodes() ein.
+<<<<<<< bugfixes/format_spelling2
 	 *
 	 * @author Timo Sandmann (mail@timosandmann.de)
+=======
+	 * 
+	 * @author Timo Sandmann
+>>>>>>> 120d6a1 comment in MainWinMenuBar.java restored, author information unified
 	 */
 	class HQ_RC_UNIVERS29_334 implements RC5Codes {
 		/**
@@ -151,8 +161,13 @@ public class RemoteControlCodes {
 
 	/**
 	 * Definiert den Fernbedienungstyp "HAUPPAUGE_WINTV" und ihre Tastenzuordnungen
+<<<<<<< bugfixes/format_spelling2
 	 *
 	 * @author Timo Sandmann (mail@timosandmann.de)
+=======
+	 * 
+	 * @author Timo Sandmann
+>>>>>>> 120d6a1 comment in MainWinMenuBar.java restored, author information unified
 	 */
 	class HAUPPAUGE_WINTV implements RC5Codes {
 		/**
