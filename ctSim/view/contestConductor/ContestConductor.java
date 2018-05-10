@@ -296,7 +296,7 @@ public class ContestConductor implements View {
 	 * Typischer Ablauf:
 	 *
 	 * <pre>
-	 * PRELIM_ROUND --> MAIN_ROUND --> (Programmende)
+	 * PRELIM_ROUND -&gt; MAIN_ROUND -&gt; (Programmende)
 	 * </pre>
 	 */
 	enum Phase {

@@ -36,8 +36,8 @@ import ctSim.util.Misc;
  * </ul>
  * </p>
  * <p>
- * Bäume dieser Klasse sind <a href="http://de.wikipedia.org/wiki/Bin%C3%A4rbaum">binär</a>,
- * <a href="http://de.wikipedia.org/wiki/Bin%C3%A4rbaum#Weitere_Begriffe">strikt</a> und
+ * Bäume dieser Klasse sind <a href="http://de.wikipedia.org/wiki/Binärbaum">binär</a>,
+ * <a href="http://de.wikipedia.org/wiki/Binärbaum#Weitere_Begriffe">strikt</a> und
  * <a href="http://de.wikipedia.org/wiki/Balancierter_Baum">balanciert</a> (Invariante: Höhe ± 0).
  * </p>
  *
@@ -139,7 +139,7 @@ public class SpreadingTree<T> {
 			List<T> payloads) {
 		if (currentLevel == desiredLevelId)
 			payloads.add(payload);
-		if (payload == null) { // wir sind ein innerer Knoten
+		if (payload == null) {	// wir sind ein innerer Knoten
 			left. levelOrder(desiredLevelId, currentLevel * 2, payloads);
 			right.levelOrder(desiredLevelId, currentLevel * 2, payloads);
 		}

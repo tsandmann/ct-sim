@@ -642,7 +642,7 @@ public class Actuators {
 	    }
 
 		/** 
-		 * Wieviele Spalten breit ist das Display? (1 Zeichen pro Spalte)
+		 * Wie viele Spalten breit ist das Display? (1 Zeichen pro Spalte)
 		 * 
 		 * @return Spaltenanzahl 
 		 */
@@ -651,7 +651,7 @@ public class Actuators {
 		}
 
 		/** 
-		 * Wieviele Zeilen hoch ist das Display?
+		 * Wie viele Zeilen hoch ist das Display?
 		 * 
 		 * @return Zeilenanzahl
 		 */
@@ -702,8 +702,8 @@ public class Actuators {
 	 *       | | | | | | .--- blau vorne links
 	 *       | | | | | | | .- blau vorne rechts
 	 *       | | | | | | | |
-	 * Wert  0 1 0 0 0 0 1 0  <- Wie vom Draht gelesen
-	 * Bit#  7 6 5 4 3 2 1 0  <- bitIndexFromLsb (Das hier an Konstruktor geben)
+	 * Wert  0 1 0 0 0 0 1 0  &lt;- Wie vom Draht gelesen
+	 * Bit#  7 6 5 4 3 2 1 0  &lt;- bitIndexFromLsb (Das hier an Konstruktor geben)
 	 *       |             |
 	 *      MSB           LSB
 	 * </pre>

@@ -29,7 +29,7 @@ import javax.swing.Icon;
  * 
  * <pre>
  * .--------.  verwendet einen   .--------------.
- * | Config | -----------------> | IconProvider |
+ * | Config | -----------------&gt; | IconProvider |
  * '--------'                    '--------------'
  *                                 ^          ^
  *                                 |          |

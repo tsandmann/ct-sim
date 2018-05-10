@@ -45,7 +45,7 @@ import ctSim.util.Misc;
  * <li><strong>simuliert</strong> sind, d.h. es gibt keinen Bot aus Hardware, es läuft nur der Steuercode
  * auf einem PC. Sensordaten kommen in diesem Fall nicht von echter Hardware, sondern über TCP vom Sim,
  * der sie ausgerechnet hat (Sim im Master-Modus).</li>
- * <li><strong>c't-Bots</strong> sind oder nicht -- theoretisch könnte jemand ja mal den Simulator um
+ * <li><strong>c't-Bots</strong> sind oder nicht - theoretisch könnte jemand ja mal den Simulator um
  * selbstgestrickte Bots erweitern, die keine c't-Bot sind.</li>
  * </ul>
  * </p>
@@ -154,9 +154,9 @@ public abstract class BasicBot implements Bot {
 	 *
 	 * <pre>
 	 * componentList.add(
-	 *     new BotComponent<...>(...),
-	 *     new BotComponent<...>(...),
-	 *     new BotComponent<...>(...),
+	 *     new BotComponent&lt;...&gt;(...),
+	 *     new BotComponent&lt;...&gt;(...),
+	 *     new BotComponent&lt;...&gt;(...),
 	 *     ...
 	 * );
 	 * </pre>
