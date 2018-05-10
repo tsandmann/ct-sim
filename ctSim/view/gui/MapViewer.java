@@ -52,7 +52,7 @@ import ctSim.util.Misc;
 
 /**
  * Stellt das Fenster für die Map-Anzeige dar
- * 
+ *
  * @author Timo Sandmann
  */
 public class MapViewer extends JPanel {

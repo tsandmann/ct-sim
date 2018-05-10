@@ -27,7 +27,7 @@ import ctSim.util.Misc;
 /**
  * Erzeugt die Zuordnung von Tasten auf Fernbedienungscodes je nach Typ der Fernbedienung (einstellbar
  * wie beim Bot-Code über die Datei rc5-codes.h).
- * 
+ *
  * @author Timo Sandmann
  */
 public class RemoteControlCodes {

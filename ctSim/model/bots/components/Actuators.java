@@ -275,7 +275,7 @@ public class Actuators {
 	/**
 	 * Programm-Komponente eines Bots. Kann Basic- und ABL-Programme aus Textdateien laden,
 	 * in Textdateien schreiben und zum simulierten oder echten Bot senden.
-	 * 
+	 *
 	 * @author Timo Sandmann
 	 */
 	public static class Program extends BotComponent<PlainDocument> implements CanWriteAsynchronously {

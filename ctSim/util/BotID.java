@@ -23,7 +23,7 @@ package ctSim.util;
  * Datentyp für Bot-IDs. Im Prinzip wie byte, gibt das Byte aber als unsigned aus.
  * Mit set() kann man der ID einen neuen Wert geben; mit equals() kann man die ID und eine andere auf
  * Gleichheit prüfen. Die get-Methoden sollten immer eine neue ID erstellen, (wg. call by reference).
- * 
+ *
  * @author Timo Sandmann
  */
 public class BotID extends java.lang.Number {

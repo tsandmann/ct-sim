@@ -52,7 +52,7 @@ import ctSim.util.Misc;
  * <li>Command-Code MAP</li>
  * <li>Nutzlast: Ein Block der Map-Rohdaten</li>
  * </ul>
- * 
+ *
  * @author Timo Sandmann
  */
 public class MapComponent extends BotComponent<Void>

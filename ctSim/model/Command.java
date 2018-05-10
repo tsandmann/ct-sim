@@ -264,7 +264,7 @@ public class Command {
 	 * Wird für Bot-2-Bot-Kommunikation benutzt, der Sim kann somit auch Kommandos weiterleiten, die er
 	 * selbst gar nicht kennt. Erstellt werden können aber weiterhin nur Kommandos, die für Bot-2-Sim
 	 * gültig sind (siehe Klasse Command).
-	 * 
+	 *
 	 * @author Timo Sandmmann
 	 */
 	public static class Bot2BotCode implements BotCodes {
