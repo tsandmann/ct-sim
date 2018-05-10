@@ -39,10 +39,10 @@ import ctSim.util.FmtLogger;
 /**
  * Repräsentiert eine Verbindung
  *
- * @author bbe (bbe@heise.de)
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Benjamin Benz (bbe@heise.de)
+ * @author Hendrik Krauß (hkr@heise.de)
  */
-public abstract class Connection {	
+public abstract class Connection {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
 
@@ -70,7 +70,7 @@ public abstract class Connection {
 	/**
 	 * Hat keinen BufferedOutputStream, denn auf dem muss man (offenbar) immer
 	 * flush() aufrufen. Wir wissen jedoch nicht, wann die Leute, die uns
-	 * verwenden, flushen wollen &amp;ndash; daher müssen die das machen
+	 * verwenden, flushen wollen - daher müssen die das machen
 	 * mit dem BufferedOutputStream.
 	 */
 	private DataOutputStream output = null;
@@ -92,6 +92,7 @@ public abstract class Connection {
 
 	/**
 	 * Überträgt ein Kommando
+	 *
 	 * @param c	das Kommando
 	 * @throws IOException
 	 */
@@ -102,7 +103,8 @@ public abstract class Connection {
 
 	/**
 	 * Liefert den Cmd-Stream
-	 * @return	der CommandOutputStream
+	 *
+	 * @return der CommandOutputStream
 	 */
 	public synchronized CommandOutputStream getCmdOutStream() {
 		assert cmdOutStream != null;
@@ -111,6 +113,7 @@ public abstract class Connection {
 
 	/**
 	 * Liest Daten aus dem InputStream
+	 *
 	 * @param b	Daten
 	 * @throws IOException
 	 */
@@ -118,17 +121,19 @@ public abstract class Connection {
 		input.readFully(b);
 	}
 
-	/** 
-	 * Muss während Konstruktion aufgerufen werden
-	 * @param is InputStream
+	/**
+	 * Muss während der Konstruktion aufgerufen werden...
+	 *
+	 * @param is	InputStream
 	 */
 	protected void setInputStream(InputStream is) {
 		input = new DataInputStream(new BufferedInputStream(is));
 	}
 
 	/**
-	 * Muss während Konstruktion aufgerufen werden
-	 * @param os OutputStream
+	 * Muss während der Konstruktion aufgerufen werden...
+	 *
+	 * @param os	OutputStream
 	 */
 	protected void setOutputStream(OutputStream os) {
 		output = new DataOutputStream(os);
@@ -137,20 +142,23 @@ public abstract class Connection {
 
 	/**
 	 * Gibt den Kurznamen der Connection zurück
-	 * @return	Name
+	 *
+	 * @return Name
 	 */
 	public abstract String getShortName();
 
 	/**
 	 * Gibt den Namen der Connection zurück
-	 * @return	Name
+	 *
+	 * @return Name
 	 */
 	public abstract String getName();
-	
+
 	/**
 	 * Blockiert, bis Handshake erfolgreich oder IOException
-	 * Abbruch nach 100 Versuchen 
-	 * @param receiver Bot-Receiver
+	 * Abbruch nach 100 Versuchen
+	 *
+	 * @param receiver	Bot-Receiver
 	 */
 	protected void doHandshake(BotReceiver receiver) {
 		for (int i = 0; i < 1000; i++) {
@@ -170,7 +178,7 @@ public abstract class Connection {
 						return; // Erfolg
 					} else {
 						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot läuft schon oder ist "
-										+ "veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
+								+ "veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
 						continue; // Handshake nochmal versuchen
 					}
 				} catch (ProtocolException e) {
@@ -186,24 +194,25 @@ public abstract class Connection {
 
 	/**
 	 * Erzeugt einen Bot
-	 * @param c Kommando
+	 *
+	 * @param c	Kommando
 	 * @return Bot
 	 * @throws ProtocolException
 	 */
 	protected Bot createBot(Command c) throws ProtocolException {
 		CtBot bot;
 		switch (c.getSubCode()) {
-    		case WELCOME_SIM:
-    			lg.fine("TCP-Verbindung von simuliertem Bot eingegangen");
-    			bot = new CtBotSimTcp(this, c.getFrom(), c.getDataL());
-    			break;
-    		case WELCOME_REAL:
-    			lg.fine("TCP-Verbindung von realem Bot eingegangen");
-    			bot = new RealCtBot(this, c.getFrom(), c.getDataL());
-    			break;
-    		default:
-    			throw new ProtocolException(c.toString());
-    	}
+		case WELCOME_SIM:
+			lg.fine("TCP-Verbindung von simuliertem Bot eingegangen");
+			bot = new CtBotSimTcp(this, c.getFrom(), c.getDataL());
+			break;
+		case WELCOME_REAL:
+			lg.fine("TCP-Verbindung von realem Bot eingegangen");
+			bot = new RealCtBot(this, c.getFrom(), c.getDataL());
+			break;
+		default:
+			throw new ProtocolException(c.toString());
+		}
 
 		return bot;
 	}

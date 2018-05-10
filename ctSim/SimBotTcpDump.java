@@ -18,6 +18,7 @@
  */
 
 package ctSim;
+
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.net.ServerSocket;
@@ -26,20 +27,19 @@ import ctSim.model.Command;
 
 /**
  * <p>
- * Entwicklertool: Macht die Command-Objekte sichtbar, die durch die
- * TCP-Verbindung zwischen c't-Sim und Steuercode laufen. Für Debugging der
- * IO. Tool läuft solange, bis man es ausdrücklich beendet.
+ * Entwicklertool: Macht die Command-Objekte sichtbar, die durch die TCP-Verbindung zwischen c't-Sim
+ * und Steuercode laufen. Für Debugging der IO. Tool läuft solange, bis man es ausdrücklich beendet.
  * </p>
  * <p>
- * Verwendung: "botport" in config/ct-sim.xml umstellen auf "10002"; Sim und
- * dieses Tool starten; Bot-Code starten. Das Hinschreiben der ganzen Commands
- * verzögert alles – falls der Sim Meldungen wirft "Bot viel zu
- * langsam", dann den entsprechenden Timeout-Wert in der Konfigdatei hochsetzen.
+ * Verwendung: "botport" in config/ct-sim.xml umstellen auf "10002"; Sim und dieses Tool starten;
+ * Bot-Code starten. Das Hinschreiben der ganzen Commands verzögert alles - falls der Sim Meldungen wirft
+ * "Bot viel zu langsam", dann den entsprechenden Timeout-Wert in der Konfigdatei hochsetzen.
  * </p>
  */
 public class SimBotTcpDump {
 	/**
 	 * main
+	 *
 	 * @param args
 	 * @throws Exception
 	 */
@@ -61,14 +61,12 @@ public class SimBotTcpDump {
 				srvSock.close();
 			}
 			try { sim.close(); } catch (IOException e) {
-				srvSock.close();	
+				srvSock.close();
 			}
 		}
 	}
 
-	/**
-	 * Forwarder-Thread
-	 */
+	/** Forwarder-Thread */
 	static class Forwarder extends Thread {
 		/** Quelle */
 		TcpConnection from;
@@ -81,6 +79,7 @@ public class SimBotTcpDump {
 
 		/**
 		 * Forwarder
+		 *
 		 * @param name
 		 * @param from
 		 * @param to

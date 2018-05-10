@@ -25,16 +25,12 @@ import org.junit.Test;
 
 import ctSim.model.bots.components.Actuators.LcDisplay;
 
-/** 
- * Unit-Test für LcDisplay 
- */
+/** Unit-Test für LcDisplay */
 public class LcDisplayTest extends LcDisplay {
 	/** Testdaten */
 	private final String twentyFourLines;
 
-	/**
-	 * Display-Test
-	 */
+	/** Display-Test */
 	public LcDisplayTest() {
 		super(42, 24);
 		String fortyTwoSpaces = "";
@@ -46,9 +42,7 @@ public class LcDisplayTest extends LcDisplay {
 		twentyFourLines = s.substring(0, s.length() - 1);
 	}
 
-	/**
-	 * Testcode
-	 */
+	/** Testcode */
 	@Test
 	public void ctor() {
 		assertEquals(42, getNumCols());
@@ -57,6 +51,7 @@ public class LcDisplayTest extends LcDisplay {
 
 	/**
 	 * Testcode
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -64,14 +59,15 @@ public class LcDisplayTest extends LcDisplay {
 		clearModel(getExternalModel());
 		assertEquals(twentyFourLines, getAllText(getExternalModel()));
 	}
-	
+
 	/**
 	 * Testcode
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void internalModelIsDifferentFromExternalOne() 
-	throws Exception {
+	public void internalModelIsDifferentFromExternalOne()
+			throws Exception {
 		clearModel(getExternalModel());
 		setCursor(3, 3);
 		overwrite("Katastrophenfalleinsatzbehörde");
@@ -81,73 +77,78 @@ public class LcDisplayTest extends LcDisplay {
 
 	/** Testdaten */
 	private String insertion = "beeblebrox";
-	
+
 	/**
 	 * Testcode
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void setTextAtAll() throws Exception {
-		// Einfügen bei 0,0 -- geht's überhaupt
+		// Einfügen bei 0,0 - geht das überhaupt?
 		setCursor(0, 0);
 		overwrite(insertion);
 		updateExternalModel();
 		String expected = twentyFourLines.replaceFirst(
-			"^ {" + insertion.length() + "}", insertion);
+				"^ {" + insertion.length() + "}", insertion);
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * Testcode
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void setTextColCorrect() throws Exception {
-		// Einfügen bei 10,0 -- kommt das in der richtigen Spalte an
+		// Einfügen bei 10,0 - kommt das in der richtigen Spalte an?
 		setCursor(10, 0);
 		overwrite(insertion);
 		updateExternalModel();
 		String expected = twentyFourLines;
 		expected = expected.substring(0, 10) + insertion +
-			expected.substring(10 + insertion.length(), expected.length());
+				expected.substring(10 + insertion.length(), expected.length());
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * Testcode
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void setTextRowCorrect() throws Exception {
-		// Einfügen bei 0,8 -- kommt das in der richtigen Zeile an
+		// Einfügen bei 0,8 - kommt das in der richtigen Zeile an?
 		clearModel(getExternalModel());
 		setCursor(0, 8);
 		overwrite(insertion);
 		updateExternalModel();
 		String expected = twentyFourLines.substring(0, 43*8) + insertion +
-		twentyFourLines.substring(43*8 + insertion.length(),
-			twentyFourLines.length());
+				twentyFourLines.substring(43*8 + insertion.length(),
+						twentyFourLines.length());
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * Testcode
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void setTextTruncate() throws Exception {
-		// Einfügen bei 38,23 -- wird das richtig abgeschnitten
+		// Einfügen bei 38,23 - wird das richtig abgeschnitten?
 		clearModel(getExternalModel());
 		setCursor(38, 23);
 		overwrite(insertion);
 		updateExternalModel();
 		String expected = twentyFourLines.substring(0, 43*23 + 38) +
-			insertion.substring(0, 4);
+				insertion.substring(0, 4);
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * @return Text
+	 *
 	 * @throws Exception
 	 */
 	private String getExText() throws Exception {

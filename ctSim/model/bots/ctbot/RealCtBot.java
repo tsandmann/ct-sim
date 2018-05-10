@@ -19,10 +19,12 @@
 
 package ctSim.model.bots.ctbot;
 
-import static ctSim.model.bots.components.BotComponent.ConnectionFlags.*;
+import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
+import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES_ASYNCLY;
 
 import java.io.IOException;
 import java.net.ProtocolException;
+
 import ctSim.Connection;
 import ctSim.model.Command;
 import ctSim.model.bots.components.Actuators;
@@ -30,20 +32,16 @@ import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
+import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
-import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
 import ctSim.util.BotID;
 import ctSim.util.Runnable1;
 import ctSim.util.SaferThread;
 
-/**
- * Reale Bots
- */
+/** Reale Bots */
 public class RealCtBot extends CtBot {
-	/**
-	 * Kommando-Auswerter
-	 */
+	/** Kommando-Auswerter */
 	protected class CmdProcessor extends SaferThread {
 		/** Verbindung zum Sim */
 		private final Connection connection;
@@ -69,13 +67,13 @@ public class RealCtBot extends CtBot {
 					updateView();
 					return;
 				}
-				
+
 				if (cmd.has(Command.Code.SHUTDOWN)) {
 					die();
 					RealCtBot.this.dispose();
 					return;
 				}
-				
+
 				if (! preProcessCommands(cmd)) {
 					components.processCommand(cmd);
 				}
@@ -96,69 +94,69 @@ public class RealCtBot extends CtBot {
 			try {
 				connection.close();
 			} catch (IOException e) {
-				// Strategie auf Best-effort-Basis
-				// (soll heissen ist uns wurscht)
+				// No-op, Strategie auf Best-effort-Basis (soll heißen: ist uns egal)
 			}
 		}
 	}
-	
+
 	/** Name der Verbindung */
 	private final String connectionName;
 
 	/**
-	 * @param connection Connection zum Bot
-	 * @param newId Id für die Kommunikation 
-	 * @param features Features des Bots gepackt in einen Integer
-	 * @throws ProtocolException 
+	 * @param connection	Connection zum Bot
+	 * @param newId			Id für die Kommunikation
+	 * @param features		Features des Bots gepackt in einen Integer
+	 * @throws ProtocolException
 	 */
 	public RealCtBot(Connection connection, BotID newId, int features) throws ProtocolException {
 		super(connection.getShortName() + "-Bot");
-		
-		// connection speichern
+
+		// Connection speichern
 		setConnection(connection);
-		
+
 		setId(newId);
-		
+
 		connectionName = connection.getName();
 
 		components.add(
-			new MousePictureComponent(),
-			new WelcomeReceiver(Command.SubCode.WELCOME_REAL)
-		);
+				new MousePictureComponent(),
+				new WelcomeReceiver(Command.SubCode.WELCOME_REAL)
+				);
 
 		components.applyFlagTable(
-			createCompnt(MousePictureComponent.class, READS, WRITES_ASYNCLY),
-			createCompnt(Actuators.Governor.class   , READS),
-			createCompnt(Actuators.LcDisplay.class  , READS),
-			createCompnt(Actuators.Log.class        , READS),
-			createCompnt(Actuators.DoorServo.class  , READS),
-			createCompnt(Actuators.CamServo.class   , READS),
-			createCompnt(Actuators.Led.class        , READS),
-			createCompnt(Sensors.Encoder.class      , READS),
-			createCompnt(Sensors.Distance.class     , READS),
-			createCompnt(Sensors.Line.class         , READS),
-			createCompnt(Sensors.Border.class       , READS),
-			createCompnt(Sensors.Light.class        , READS),
-			createCompnt(Sensors.Mouse.class        , READS),
-			createCompnt(Sensors.RemoteControl.class, WRITES_ASYNCLY),
-			createCompnt(Sensors.Door.class         , READS),
-			createCompnt(Sensors.Trans.class        , READS),
-			createCompnt(Sensors.Error.class        , READS),
-			createCompnt(Sensors.BPSReceiver.class  , READS),
-			createCompnt(Sensors.Shutdown.class     , READS, WRITES_ASYNCLY),
-			createCompnt(WelcomeReceiver.class      , READS),
-			createCompnt(Actuators.Program.class	, WRITES_ASYNCLY),
-			createCompnt(MapComponent.class			, READS, WRITES_ASYNCLY),
-			createCompnt(RemoteCallCompnt.class     , READS, WRITES_ASYNCLY)
-		);
+				createCompnt(MousePictureComponent.class, READS, WRITES_ASYNCLY),
+				createCompnt(Actuators.Governor.class   , READS),
+				createCompnt(Actuators.LcDisplay.class  , READS),
+				createCompnt(Actuators.Log.class        , READS),
+				createCompnt(Actuators.DoorServo.class  , READS),
+				createCompnt(Actuators.CamServo.class   , READS),
+				createCompnt(Actuators.Led.class        , READS),
+				createCompnt(Sensors.Encoder.class      , READS),
+				createCompnt(Sensors.Distance.class     , READS),
+				createCompnt(Sensors.Line.class         , READS),
+				createCompnt(Sensors.Border.class       , READS),
+				createCompnt(Sensors.Light.class        , READS),
+				createCompnt(Sensors.Mouse.class        , READS),
+				createCompnt(Sensors.RemoteControl.class, WRITES_ASYNCLY),
+				createCompnt(Sensors.Door.class         , READS),
+				createCompnt(Sensors.Trans.class        , READS),
+				createCompnt(Sensors.Error.class        , READS),
+				createCompnt(Sensors.BPSReceiver.class  , READS),
+				createCompnt(Sensors.Shutdown.class     , READS, WRITES_ASYNCLY),
+				createCompnt(WelcomeReceiver.class      , READS),
+				createCompnt(Actuators.Program.class	, WRITES_ASYNCLY),
+				createCompnt(MapComponent.class			, READS, WRITES_ASYNCLY),
+				createCompnt(RemoteCallCompnt.class     , READS, WRITES_ASYNCLY)
+				);
 
 		for (BotComponent<?> c : components) {
 			c.offerAsyncWriteStream(connection.getCmdOutStream());
-			
-			/* RemoteCall-Componente suchen und DoneListener registrieren (ProgramViewer) */
+
+			/* RemoteCall-Komponente suchen und DoneListener registrieren (ProgramViewer) */
 			if (c instanceof RemoteCallCompnt) {
-				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
+				RemoteCallCompnt rc = (RemoteCallCompnt) c;
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
+					@Override
 					public void run(BehaviorExitStatus status) {
 						if (ablResult != null) {
 							ablResult.setSyntaxCheck(status == BehaviorExitStatus.SUCCESS);
@@ -166,16 +164,17 @@ public class RealCtBot extends CtBot {
 					}
 				});
 			}
-			
+
 			if (c instanceof WelcomeReceiver) {
 				welcomeReceiver = (WelcomeReceiver) c;
 				welcomeReceiver.setFeatures(features);
 			}
 		}
 
-		// Und einen CommandProcessor herstellen
+		// ...und einen CommandProcessor herstellen
 		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
+			@Override
 			public void run() {
 				cp.die();
 			}
@@ -193,6 +192,7 @@ public class RealCtBot extends CtBot {
 
 	/**
 	 * Sendet einen Fernbedienungscode an den Bot
+	 *
 	 * @param code	zu sendender RC5-Code als String
 	 */
 	public void sendRC5Code(String code) {
@@ -206,33 +206,33 @@ public class RealCtBot extends CtBot {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
-	}	
-	
-//	/**
-//	 * Startet das Verhalten "name" per RemoteCall
-//	 * @param name	Das zu startende Verhalten
-//	 * @param param	Int-Parameter für das Verhalten (16 Bit)
-//	 * @param ref	Referenz auf den Program-Viewer, falls das Ergebnis dort angezeigt werden soll
-//	 */
-//	public void startRemoteCall(String name, int param, ProgramViewer ref) {
-//		for (BotComponent<?> c : components) {
-//			if (c instanceof RemoteCallCompnt) {
-//				try {
-//					ablResult = ref;
-//					RemoteCallCompnt rc = (RemoteCallCompnt)c;
-//					ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//					bytes.write(name.getBytes());
-//					bytes.write(0);
-//					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
-//					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
-//					par.setValue(param);
-//					beh.getParameters().add(par);					
-//					beh.call();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-//	}	
+		}
+	}
+
+	// /**
+	//  * Startet das Verhalten "name" per RemoteCall
+	//  * @param name	Das zu startende Verhalten
+	//  * @param param	Int-Parameter für das Verhalten (16 Bit)
+	//  * @param ref	Referenz auf den Program-Viewer, falls das Ergebnis dort angezeigt werden soll
+	//  */
+	// public void startRemoteCall(String name, int param, ProgramViewer ref) {
+	// 		for (BotComponent<?> c : components) {
+	// 			if (c instanceof RemoteCallCompnt) {
+	// 				try {
+	// 					ablResult = ref;
+	// 					RemoteCallCompnt rc = (RemoteCallCompnt)c;
+	// 					ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+	// 					bytes.write(name.getBytes());
+	// 					bytes.write(0);
+	// 					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
+	// 					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
+	// 					par.setValue(param);
+	// 					beh.getParameters().add(par);
+	// 					beh.call();
+	// 				} catch (IOException e) {
+	// 					e.printStackTrace();
+	// 				}
+	// 			}
+	// 		}
+	// }
 }

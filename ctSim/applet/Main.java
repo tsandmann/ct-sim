@@ -49,18 +49,15 @@ import ctSim.util.FmtLogger;
 import ctSim.util.IconProvider;
 import ctSim.view.gui.BotViewer;
 
-/**
- * Main-Klasse für das c't-Bot-Applet 
- */
+/** Main-Klasse für das c't-Bot-Applet */
 public class Main extends JApplet implements BotReceiver {
 	/** UID */
 	private static final long serialVersionUID = - 2381362461560258968L;
 
 	/**
-	 * Nur für Entwicklung: Normalerweise verbindet sich das Applet mit dem
-	 * Host, von dem es heruntergeladen wurde. Falls es keinen Host gibt, weil
-	 * man es lokal im Browser aufgerufen hat (file:///home/dings/...), dann
-	 * wird ersatzweise diese Adresse genommen, um testen zu können.
+	 * Nur für Entwicklung: Normalerweise verbindet sich das Applet mit dem Host, von dem es
+	 * heruntergeladen wurde. Falls es keinen Host gibt, weil man es lokal im Browser aufgerufen hat
+	 * (file:///home/dings/...), dann wird ersatzweise diese Adresse genommen, um testen zu können.
 	 */
 	private static final String fallbackAddress = "192.168.1.22";
 
@@ -76,9 +73,8 @@ public class Main extends JApplet implements BotReceiver {
 	/** Controller-Referenz */
 	private Controller controller = null;
 
-	/**
-	 * Initialiserung des Applets
-	 */
+
+	/** Initialisierung des Applets */
 	@Override
 	public void init() {
 		initLogging();
@@ -92,14 +88,12 @@ public class Main extends JApplet implements BotReceiver {
 		JPanel p = new JPanel();
 		p.add(status);
 		getContentPane().add(p);
-		
+
 		// Controller wird für Bot-ID-Vergabe benötigt!
 		controller = new DefaultController();
 	}
 
-	/**
-	 * Logging initialisieren
-	 */
+	/** Logging initialisieren */
 	private void initLogging() {
 		FmtLogger.setFactory(new FmtLogger.Factory() {
 			@Override
@@ -125,9 +119,9 @@ public class Main extends JApplet implements BotReceiver {
 			public void publish(LogRecord record) {
 				Level lvl = record.getLevel();
 				status.setIcon(UIManager.getLookAndFeel().getDefaults().getIcon(
-					lvl == Level.WARNING || lvl == Level.SEVERE
-					? "OptionPane.warningIcon"
-					: "OptionPane.informationIcon"));
+						lvl == Level.WARNING || lvl == Level.SEVERE
+						? "OptionPane.warningIcon"
+								: "OptionPane.informationIcon"));
 				status.setText(record.getMessage());
 				status.setToolTipText(record.getMessage());
 			}
@@ -135,27 +129,23 @@ public class Main extends JApplet implements BotReceiver {
 		mainLogger.addHandler(h);
 	}
 
-	/**
-	 * Icons initialisieren
-	 */
+	/** Icons initialisieren */
 	private void initIcons() {
 		Config.setIconProvider(new IconProvider() {
+			@Override
 			public Icon get(String key) {
-				// Icon aus jar-Datei laden; Annahme: jar enthält Icon in
-				// seinem Root-Verzeichnis
-				URL u = getClass().getClassLoader().getResource(key+".gif");//$$ images-unterverz
+				// Icon aus jar-Datei laden; Annahme: jar enthält Icon in seinem Root-Verzeichnis
+				URL u = getClass().getClassLoader().getResource(key+".gif");	// $$ images-unterverz
 				// NullPointerException vermeiden
 				if (u == null)
-					return new ImageIcon(); // leeres Icon
+					return new ImageIcon();	// leeres Icon
 				else
 					return new ImageIcon(u);
 			}
 		});
 	}
 
-	/**
-	 * Startet die TCP-Connection
-	 */
+	/** Startet die TCP-Connection */
 	@Override
 	public void start() {
 		int port;
@@ -166,15 +156,18 @@ public class Main extends JApplet implements BotReceiver {
 		}
 		String host = getCodeBase().getHost();
 		TcpConnection.connectTo(host.equals("") ? fallbackAddress : host,
-			port, this);
+				port, this);
 	}
 
 	/**
-* Fügt einen neuen (bereits erstellten) Bot in das Fenster ein
+	 * Fügt einen neuen (bereits erstellten) Bot in das Fenster ein
+	 * 
 	 * @param b	Referenz auf den neuen Bot
 	 */
+	@Override
 	public void onBotAppeared(final Bot b) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				String title = getParameter("windowTitle");
 				if (title == null || title.trim().length() == 0)
@@ -191,21 +184,21 @@ public class Main extends JApplet implements BotReceiver {
 				});
 				f.add(bv);
 				f.setSize(
-					bv.getInsets().left +
-					bv.getPreferredSize().width +
-					bv.getInsets().right +
-					bv.getVerticalScrollBar().getPreferredSize().width,
+						bv.getInsets().left +
+						bv.getPreferredSize().width +
+						bv.getInsets().right +
+						bv.getVerticalScrollBar().getPreferredSize().width,
 
-					bv.getInsets().top +
-					bv.getPreferredSize().height +
-					bv.getInsets().bottom +
-					bv.getHorizontalScrollBar().getPreferredSize().height);
+						bv.getInsets().top +
+						bv.getPreferredSize().height +
+						bv.getInsets().bottom +
+						bv.getHorizontalScrollBar().getPreferredSize().height);
 				f.setLocationRelativeTo(null);
 				f.setVisible(true);
 			}
 		});
 		bot = b;
-		/* Der Bot braucht nen Controller! */
+		/** Der Bot braucht einen Controller! */
 		try {
 			bot.setController(controller);
 		} catch (ProtocolException e) {
@@ -214,17 +207,16 @@ public class Main extends JApplet implements BotReceiver {
 		}
 	}
 
-	/**
-	 * Beendet das c't-Bot-Applet
-	 */
+	/** Beendet das c't-Bot-Applet */
 	@Override
 	public void destroy() {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				if (bot != null)
 					bot.dispose();
 				mainLogger.info("c't-Bot-Applet wird beendet");
 			}
-		});
+		} );
 	}
 }

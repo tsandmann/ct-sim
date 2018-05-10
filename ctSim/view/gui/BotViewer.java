@@ -38,7 +38,7 @@ import ctSim.model.bots.ctbot.RealCtBot;
 
 /**
  * @author Felix Beckwermert
- * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß (hkr@heise.de)
  */
 public class BotViewer extends JScrollPane {
 	/** UID */
@@ -56,7 +56,7 @@ public class BotViewer extends JScrollPane {
 	public BotViewer(Bot bot) {
 		super(VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER);
 		this.bot = bot;
-		
+
 		/* buisitors nach Bot-Art anlegen */
 		Bot botinstance = null;
 		if (bot instanceof ThreeDBot) {
@@ -71,23 +71,23 @@ public class BotViewer extends JScrollPane {
 		if (botinstance instanceof CtBotSimTest) {
 			/* Test-Bots haben kein LCD, LOG, RemoteCall, ABL, Mausbild */
 			buisitors = new Class[] {
-				Tables.Position.class,
-				Tables.Sensors.class,
-				Tables.Actuators.class,
+					Tables.Position.class,
+					Tables.Sensors.class,
+					Tables.Actuators.class,
 			};
 		} else {
 			buisitors = new Class[] {
-				Tables.Position.class,
-				Tables.GlobalPosition.class,
-				Leds.class,
-				AndEverything.class,
-				Tables.Sensors.class,
-				Tables.Actuators.class,
-				MousePictureViewer.class,
+					Tables.Position.class,
+					Tables.GlobalPosition.class,
+					Leds.class,
+					AndEverything.class,
+					Tables.Sensors.class,
+					Tables.Actuators.class,
+					MousePictureViewer.class,
 			};
 		}
-		
-		/* Panelbreite soll mindestens so gross sein, dass alle Elemente darin komplett sichtbar sind */
+
+		/* Panelbreite soll mindestens so groß sein, dass alle Elemente darin komplett sichtbar sind */
 		this.setMinimumSize(new Dimension(220, this.getHeight()));
 
 		setBorder(null);
@@ -101,11 +101,10 @@ public class BotViewer extends JScrollPane {
 					panel.add(buisitor);
 				}
 			} catch (IllegalAccessException e) {
-				/*
-				 * Kommt nur vor, wenn ein BotBuisitor keinen Konstruktor hat,
-				 * der public und parameterlos ist. Wäre ein
-				 * Compile-time-Fehler, nur wegen Verwendung von Reflection
-				 * sehen wir das erst zur Laufzeit.
+				/**
+				 * Kommt nur vor, wenn ein BotBuisitor keinen Konstruktor hat, der public und parameterlos
+				 * ist. Wäre ein Compile-time-Fehler; nur wegen Verwendung von Reflection sehen wir das erst
+				 * zur Laufzeit.
 				 */
 				throw new AssertionError(e);
 			} catch (InstantiationException e) {
@@ -114,17 +113,18 @@ public class BotViewer extends JScrollPane {
 			}
 		}
 		setViewportView(panel);
-		
+
 		/* Key-Handler */
-        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
-        
-        inputMap.put(key, "close");
-        getActionMap().put("close", new AbstractAction() {
+		InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+
+		inputMap.put(key, "close");
+		getActionMap().put("close", new AbstractAction() {
 			private static final long serialVersionUID = -7639062234107576185L;
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				BotViewer.this.bot.dispose();
-        	}
-        });
+			}
+		});
 	}
 }

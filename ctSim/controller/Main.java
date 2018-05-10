@@ -43,12 +43,11 @@ import ctSim.view.gui.SplashWindow;
 
 /**
  * <p>
- * Haupt-Einsprungpunkt in den ctSim. Der normale Weg, das Programm zu starten,
- * ist der Aufruf der {@link #main(String[])}-Methode dieser Klasse.
+ * Haupt-Einsprungpunkt in den ctSim<br>
+ * Der normale Weg, das Programm zu starten, ist der Aufruf der {@link #main(String[])}-Methode dieser Klasse.
  * </p>
  * <p>
- * Inhaltlich befasst sich die Klasse mit grundlegenden
- * Initialisierungs-Geschichten.
+ * Inhaltlich befasst sich die Klasse mit grundlegenden Initialisierungs-Geschichten.
  * </p>
  */
 public class Main {
@@ -56,89 +55,89 @@ public class Main {
 	public static final String VERSION = "2.26";
 	/** Konfigurationsdatei */
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
-    /** Flag, welches die Anzeige des Splashscreens bewirkt (DEFAULT: TRUE) */
-    private static boolean showSplash = true;
+	/** Flag, welches die Anzeige des Splashscreens bewirkt (DEFAULT: TRUE) */
+	private static boolean showSplash = true;
 
 	/** Logger */
 	static FmtLogger lg;
 
 	/** Init-Container */
 	public static final InitializingPicoContainer dependencies =
-		new InitializingPicoContainer();
+			new InitializingPicoContainer();
 
 
 	static {
 		dependencies.registerImplementation(ContestConductor.class);
 		dependencies.registerImplementation(Controller.class,
-			DefaultController.class);
+				DefaultController.class);
 		dependencies.registerInstance(
-			new Config.SourceFile(DEFAULT_CONFIGFILE));
+				new Config.SourceFile(DEFAULT_CONFIGFILE));
 	}
 
 	/**
-	 * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu
-	 * starten.
+	 * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu starten.
 	 *
-	 * @param args Als Kommandozeilenargumente sind momentan zulässig:
+	 * @param args	Als Kommandozeilenargumente sind momentan zulässig:
 	 * <ul>
 	 * <li>{@code -conf pfad/zur/konfigdatei.xml}: Andere Konfigurationsdatei
 	 * als die standardmäßige config/ct-sim.xml verwenden</li>
 	 * </ul>
 	 */
-    public static void main(String... args) {
-    	final String[] cmdArgs = args;
+	public static void main(String... args) {
+		final String[] cmdArgs = args;
 		handleCommandLineArgs(cmdArgs);
-	
+
 		if (showSplash) {
-		    /* Splash-Screen anzeigen */
-		    java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
-		    SplashWindow.splash(url, "Version " + VERSION);
-		    SplashWindow.setMessage("Initialisierung...");
-		    /* Inits ausführen */
-		    try {
+			/* Splash-Screen anzeigen */
+			java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
+			SplashWindow.splash(url, "Version " + VERSION);
+			SplashWindow.setMessage("Initialisierung...");
+			/* Inits ausführen */
+			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
-			    	public void run() {
+					@Override
+					public void run() {
 						lg = initLogging();
 						loadConfig();
 						Init.setLookAndFeel();
 						setupViewAndController();
-				    }
+					}
 				});
-		    } catch (Exception e) {
+			} catch (Exception e) {
 				System.err.println("Initialisierungen in Main fehlgeschlagen");
 				e.printStackTrace();
 				/* Programm erst nach Klick auf Splash schließen */
 				MouseAdapter disposeOnClick = new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent evt) {
-				    	System.exit(1);
-				    }
+						System.exit(1);
+					}
 				};
 				SplashWindow.getWindow().addMouseListener(disposeOnClick);
 				return;
-		    }
-		    /* Splash-Screen weg */
-		    SplashWindow.disposeSplash();
+			}
+			/* Splash-Screen weg */
+			SplashWindow.disposeSplash();
 		} else {
-		    /* Starten von ct-Sim ohne Splash-Screen */
-		    lg = initLogging();
-		    loadConfig();
-		    Init.setLookAndFeel();
-		    setupViewAndController();
+			/* Starten von ct-Sim ohne Splash-Screen */
+			lg = initLogging();
+			loadConfig();
+			Init.setLookAndFeel();
+			setupViewAndController();
 		}
-    }
+	}
 
 	/**
 	 * Siehe {@link #main(String...)}.
-	 * 
-	 * @param args Command-Line-Argumente
+	 *
+	 * @param args	Command-Line-Argumente
 	 */
 	private static void handleCommandLineArgs(String[] args) {
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].toLowerCase().equals("-conf")) {
 				i++;
 				dependencies.reRegisterInstance(new Config.SourceFile(args[i]));
-		    } else if (args[i].toLowerCase().equals("-nosplash")) {
+			} else if (args[i].toLowerCase().equals("-nosplash")) {
 				showSplash = false;
 			} else {
 				System.out.println("Ungültiges Argument '" + args[i] + "'");
@@ -152,12 +151,13 @@ public class Main {
 
 	/**
 	 * Initialisiert den Logger
-	 * @return	Logger-Instanz
+	 *
+	 * @return Logger-Instanz
 	 */
 	public static FmtLogger initLogging() {
 		try {
 			java.net.URL url = ClassLoader.getSystemResource("config/logging.conf");
-	        LogManager.getLogManager().readConfiguration(url.openStream());
+			LogManager.getLogManager().readConfiguration(url.openStream());
 		} catch (Exception e) {
 			System.err.println("Logging konnte nicht initialisiert werden");
 			e.printStackTrace();
@@ -167,14 +167,12 @@ public class Main {
 		rv.fine("Logging-Subsystem initialisiert");
 
 		if (showSplash) {
-		    rv.addHandler(SplashWindow.getLogHandler());
+			rv.addHandler(SplashWindow.getLogHandler());
 		}
 		return rv;
-    }
+	}
 
-	/**
-	 * Lädt die Konfiguration
-	 */
+	/** Lädt die Konfiguration */
 	private static void loadConfig() {
 		try {
 			Config.loadConfigFile(DEFAULT_CONFIGFILE);
@@ -183,19 +181,17 @@ public class Main {
 			lg.severe(e, "Konfigurationsdatei '"+DEFAULT_CONFIGFILE+"' nicht gefunden");
 		} catch (SAXException e) {
 			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
-				DEFAULT_CONFIGFILE);
+					DEFAULT_CONFIGFILE);
 		} catch (IOException e) {
 			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'",
-				DEFAULT_CONFIGFILE);
+					DEFAULT_CONFIGFILE);
 		} catch (ParserConfigurationException e) {
 			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
-				DEFAULT_CONFIGFILE);
+					DEFAULT_CONFIGFILE);
 		}
 	}
 
-	/**
-	 * Initialisierung von View und Controller
-	 */
+	/** Initialisierung von View und Controller */
 	private static void setupViewAndController() {
 		Controller c = dependencies.get(Controller.class);
 
@@ -224,5 +220,5 @@ public class Main {
 
 		c.setView(ViewYAdapter.newInstance(v));
 		c.onApplicationInited();
-    }
+	}
 }

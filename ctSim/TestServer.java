@@ -18,6 +18,7 @@
  */
 
 package ctSim;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -34,10 +35,9 @@ import ctSim.model.Command;
 import ctSim.util.FmtLogger;
 
 /**
- * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim
- * gehört. Hab keine Ahnung, wofür das sein soll. Ich nehm die Datei aus dem
- * Build Path, damit man bei Namensänderungen in Sim-Klassen das nicht immer
- * hier mitführen muss. --hkr@heise.de
+ * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim gehört. Habe keine Ahnung, wofür
+ * das sein soll. Ich nehme die Datei aus dem Build Path, damit man bei Namensänderungen in Sim-Klassen
+ * das nicht immer hier mitführen muss. - Hendrik Krauß (hkr@heise.de)
  */
 public class TestServer implements Runnable {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.TestServer");
@@ -45,75 +45,52 @@ public class TestServer implements Runnable {
 	public static final String  HOST        = "localhost";
 	public static final int     PORT        = 10001;
 	
-	/** 
-	 * Content, der hin und her geschickt wird...
-	 * 
-	 */
+	/** Content, der hin und her geschickt wird... */
 	public static final String  CONTENT     = "Test";
 	
-	/**
-	 * Will man einen Java-Client?
-	 * 
-	 * Ansonsten C-Client "von Hand" starten...
-	 * 
-	 */
+	/** Will man einen Java-Client? Ansonsten C-Client "von Hand" starten... */
 	public static final boolean JAVA_CLIENT = true;
 	
 	/** 
 	 * Wie oft soll der Java-Client "flushen"?
-	 * 
-	 * Wenn TRUE, dann jedes byte, sonst
-	 * ca. jedes "Command"...
-	 * 
+	 * Wenn TRUE, dann jedes byte, sonst ca. jedes "Command"...
 	 */
 	public static final boolean FLUSH_ALL   = false;
 	
-//	/** 
-//	 * TRUE: Server -> Client -> Server
-//	 * FALSE: Client -> Server -> Client
-//	 * 
-//	 */
-//	public static final boolean SERVER_TIME = true;
+	/** 
+	 * TRUE: Server -> Client -> Server
+	 * FALSE: Client -> Server -> Client
+	 */
+	// public static final boolean SERVER_TIME = true;
 	
 	/** 
-	 * Soll der Server einen Worker-Thread
-	 * benutzen, der den Ctrl. im Sim simuliert?
-	 * 
+	 * Soll der Server einen Worker-Thread benutzen, der den Ctrl. im Sim simuliert?
 	 * (synchronisiert wie im Sim der Ctrl.)
-	 * 
 	 */
 	public static final boolean USE_WORKER  = true;
 	
 	/**
-	 * Wie lange der Worker pro Zyklus warten soll,
-	 * bevor er den Com-Thread wieder laufen lässt
+	 * Wie lange der Worker pro Zyklus warten soll, bevor er den Com-Thread wieder laufen lässt
 	 * (simuliert Arbeit des Ctrl.)
-	 * 
 	 */
 	public static final long    WORKER_WAIT = 100;
 	
 	/**
-	 * Tick-Rate im Simulator: Jede Runde wird
-	 * mindestens diese Zeit gewartet
+	 * Tick-Rate im Simulator: Jede Runde wird mindestens diese Zeit gewartet
 	 * (+ simulierte Arbeit -- s.o.)
-	 * 
 	 */
 	public static final long    TICK_RATE   = 10;
 	
 	/**
-	 * Server-Connection mit _einem_ Client. Diese entspricht einem
-	 * Java-Bot im Simulator.
+	 * Server-Connection mit _einem_ Client. Diese entspricht einem Java-Bot im Simulator.
 	 * 
-	 * Bekommt vom Server den Client_Port übergeben
-	 * und kommuniziert dann mit diesem.
+	 * Bekommt vom Server den Client_Port übergeben und kommuniziert dann mit diesem.
 	 * 
 	 * Je nach Einstellung von SERVER_TIME schickt er...
 	 * - wenn TRUE: ein Datum an den Client und wartet auf die Antwort
 	 * - wenn FALSE: das ankommende Datum einfach an den Client zurück
 	 * 
-	 * Nach einem Empfangs-/Sende-Vorgang wird auf den Worker
-	 * (wenn eingestellt über USE_WORKER) gewartet...
-	 * 
+	 * Nach einem Empfangs-/Sende-Vorgang wird auf den Worker (wenn eingestellt über USE_WORKER) gewartet...
 	 */
 	class ServerCom
 			extends Connection
@@ -125,8 +102,8 @@ public class TestServer implements Runnable {
 		
 		private Worker worker;
 		
-//		private PrintWriter out;
-//		private BufferedReader in;
+		// private PrintWriter out;
+		// private BufferedReader in;
 		
 		private DataInputStream  in;
 		private DataOutputStream out;
@@ -140,32 +117,26 @@ public class TestServer implements Runnable {
 			
 			try {
 				this.socket = socket;
-//				this.out = new PrintWriter(socket.getOutputStream(), true);
-//				this.in = new BufferedReader(
-//						new InputStreamReader(
-//						socket.getInputStream()));
+				// this.out = new PrintWriter(socket.getOutputStream(), true);
+				// this.in = new BufferedReader(
+				//		new InputStreamReader(
+				//		socket.getInputStream()));
 				this.in  = new DataInputStream(this.socket.getInputStream());
 				this.out = new DataOutputStream(this.socket.getOutputStream());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.exit(-1);
 			}
 		}
 		
 		public void start() {
-			
 			this.thrd = new Thread(this);
-			
 			this.thrd.start();
 		}
 		
 		public void stop() {
-			
 			Thread dummy = this.thrd;
-			
 			this.thrd = null;
-			
 			dummy.interrupt();
 		}
 		
@@ -176,7 +147,7 @@ public class TestServer implements Runnable {
 			System.out.println("Connection wurde hergestellt...");
 			
 			try {
-				send((new Command(Command.CMD_WELCOME, 0,	0, 0)).getCommandBytes());
+				send((new Command(Command.CMD_WELCOME, 0, 0, 0)).getCommandBytes());
 				System.out.println("Willkommen gesendet...");
 			} catch (IOException e2) {
 				e2.printStackTrace();
@@ -207,25 +178,25 @@ public class TestServer implements Runnable {
 			while(this.thrd == thisThrd) {
 				try {
 					
-//					if(TestServer.SERVER_TIME) {
-//						
-//						long time = System.nanoTime();
-//						
-//						this.out.println("Test");
-//						@SuppressWarnings("unused")
-//						String str = this.in.readLine();
-//						
-//						if (str != null)
-//							System.out.println(String.format("SERVER: Antwort nach " +
-//															//"%9d ns", (System.nanoTime()-time)));
-//															"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
-//						else
-//							//throw (new IOException("Stream ends here or connection broken"));
-//							break;
-//						
-//					} else {
-//						this.out.println(this.in.readLine());
-//					}
+					// if(TestServer.SERVER_TIME) {
+					//
+					// 		long time = System.nanoTime();
+					//
+					// 		this.out.println("Test");
+					// 		@SuppressWarnings("unused")
+					// 		String str = this.in.readLine();
+					//
+					// 		if (str != null)
+					// 			System.out.println(String.format("SERVER: Antwort nach " +
+					// 			// "%9d ns", (System.nanoTime()-time)));
+					// 			"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
+					// 		else
+					// 			//throw (new IOException("Stream ends here or connection broken"));
+					// 			break;
+					//
+					// 		} else {
+					// 			this.out.println(this.in.readLine());
+					// 		}
 					
 					long time = System.nanoTime();
 					
@@ -233,14 +204,13 @@ public class TestServer implements Runnable {
 					receiveCommands();
 					
 					System.out.println(String.format("SERVER: Antwort nach " +
-							//"%9d ns", (System.nanoTime()-time)));
-							"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
+						//"%9d ns", (System.nanoTime()-time)));
+						"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
 					
 					if(this.worker != null)
 						this.worker.waitOnWorker();
 				
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -248,25 +218,22 @@ public class TestServer implements Runnable {
 			try {
 				this.out.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			try {
 				this.in.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
 				this.socket.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.exit(-1);
 		}
 		
-		// Erweiterung f�r Connection-Ged�ns aus dem Bot:
+		// Erweiterung für Connection-Gedöns aus dem Bot:
 		
 		// Kopiert aus Connection:
 		public void send(byte sendByte[]) throws IOException {
@@ -288,7 +255,7 @@ public class TestServer implements Runnable {
 			in.readFully( b, 0, len);
 		}
 		
-		// Connection-Ged�ns aus dem Bot
+		// Connection-Gehabe aus dem Bot
 		private int seq = 0;
 		
 		private synchronized void transmitSensors() {
@@ -298,28 +265,27 @@ public class TestServer implements Runnable {
 				command.setCommand(Command.CMD_SENS_IR);
 				command.setDataL(1000);
 				command.setDataR(1000);
-//				command.setDataL(((Double)this.irL.getValue()).intValue());
-//				command.setDataR(((Double)this.irR.getValue()).intValue());
+				// command.setDataL(((Double)this.irL.getValue()).intValue());
+				// command.setDataR(((Double)this.irR.getValue()).intValue());
 				command.setSeq(this.seq++);
 				this.send(command.getCommandBytes());
 				
 				command.setCommand(Command.CMD_SENS_ENC);
-//				command.setDataL((Integer)this.encL.getValue());
-//				command.setDataR((Integer)this.encR.getValue());
+				// command.setDataL((Integer)this.encL.getValue());
+				// command.setDataR((Integer)this.encR.getValue());
 				command.setDataL(1000);
 				command.setDataR(1000);
 				command.setSeq(this.seq++);
 				this.send(command.getCommandBytes());
 				
 				command.setCommand(Command.CMD_SENS_BORDER);
-//				command.setDataL(((Short)this.borderL.getValue()).intValue());
-//				command.setDataR(((Short)this.borderR.getValue()).intValue());
+				// command.setDataL(((Short)this.borderL.getValue()).intValue());
+				// command.setDataR(((Short)this.borderR.getValue()).intValue());
 				command.setDataL((short)1000);
 				command.setDataR((short)1000);
 				command.setSeq(this.seq++);
 				this.send(command.getCommandBytes());
 				
-				// TODO
 				command.setCommand(Command.CMD_SENS_DOOR);
 				command.setDataL(0);
 				command.setDataR(0);
@@ -327,28 +293,28 @@ public class TestServer implements Runnable {
 				this.send(command.getCommandBytes());
 
 				command.setCommand(Command.CMD_SENS_LDR);
-//				command.setDataL((Integer)this.lightL.getValue());
-//				command.setDataR((Integer)this.lightR.getValue());
+				// command.setDataL((Integer)this.lightL.getValue());
+				// command.setDataR((Integer)this.lightR.getValue());
 				command.setDataL(1000);
 				command.setDataR(1000);
 				command.setSeq(this.seq++);
 				this.send(command.getCommandBytes());
 				
 				command.setCommand(Command.CMD_SENS_LINE);
-//				command.setDataL(((Short)this.lineL.getValue()).intValue());
-//				command.setDataR(((Short)this.lineR.getValue()).intValue());
+				// command.setDataL(((Short)this.lineL.getValue()).intValue());
+				// command.setDataR(((Short)this.lineR.getValue()).intValue());
 				command.setDataL((short) 1000);
 				command.setDataR((short) 1000);
 				command.setSeq(this.seq++);
 				this.send(command.getCommandBytes());
 				
-//				if(this.getObstState() != OBST_STATE_NORMAL) {
-//					this.mouseX = 0;
-//					this.mouseY = 0;
-//				}
+				// if(this.getObstState() != OBST_STATE_NORMAL) {
+				// 		this.mouseX = 0;
+				// 		this.mouseY = 0;
+				// }
 				command.setCommand(Command.CMD_SENS_MOUSE);
-//				command.setDataL(this.mouseX);
-//				command.setDataR(this.mouseY);
+				// command.setDataL(this.mouseX);
+				// command.setDataR(this.mouseY);
 				command.setDataL(0);
 				command.setDataR(0);
 				command.setSeq(this.seq++);
@@ -361,19 +327,19 @@ public class TestServer implements Runnable {
 				command.setSeq(this.seq++);
 				this.send(command.getCommandBytes());
 
-//				Object rc5 = this.rc5.getValue();
-//				if(rc5 != null) {
-//					
-//					Integer val = (Integer)rc5;
-//					
-//					if(val != 0) {
-//						command.setCommand(Command.CMD_SENS_RC5);
-//						command.setDataL(val);
-//						command.setDataR(42);
-//						command.setSeq(seq++);
-//						this.send(command.getCommandBytes());
-//					}
-//				}
+				// Object rc5 = this.rc5.getValue();
+				// if(rc5 != null) {
+				//
+				// 		Integer val = (Integer)rc5;
+				//
+				// 		if(val != 0) {
+				// 			command.setCommand(Command.CMD_SENS_RC5);
+				// 			command.setDataL(val);
+				// 			command.setDataR(42);
+				// 			command.setSeq(seq++);
+				// 			this.send(command.getCommandBytes());
+				// 		}
+				// }
 				
 				// TODO: nur für real-bot
 				command.setCommand(Command.CMD_SENS_ERROR);
@@ -383,10 +349,11 @@ public class TestServer implements Runnable {
 				this.send(command.getCommandBytes());
 
 				
-//				lastTransmittedSimulTime= (int)world.getSimulTime();
-//				lastTransmittedSimulTime %= 10000;	// Wir haben nur 16 Bit zur Verfügung und 10.000 ist ne nette Zahl ;-)
+				// lastTransmittedSimulTime= (int)world.getSimulTime();
+				// lastTransmittedSimulTime %= 10000;
+				// Wir haben nur 16 Bit zur Verfügung und 10.000 ist eine nette Zahl ;-)
 				command.setCommand(Command.CMD_DONE);
-//				command.setDataL(lastTransmittedSimulTime);
+				// command.setDataL(lastTransmittedSimulTime);
 				command.setDataL(10);
 				command.setDataR(0);
 				command.setSeq(this.seq++);
@@ -394,7 +361,7 @@ public class TestServer implements Runnable {
 				
 			} catch (IOException e) {
 				lg.severe(e, "Error sending Sensor data, dying");
-//				die();
+				// die();
 				System.exit(-1);
 			}
 		}
@@ -407,16 +374,15 @@ public class TestServer implements Runnable {
 			while (run==0) {
 				try {
 					Command command = new Command();
-					
 					valid = command.readCommand(this);
 					
-					if (valid == 0) {// Kommando ist in Ordnung
+					if (valid == 0) {	// Kommando ist in Ordnung
 						run = storeCommand(command);
 					} else
-						System.out.println("Ungueltiges Kommando"); //$NON-NLS-1$
+						System.out.println("Ungueltiges Kommando");	// $NON-NLS-1$
 				} catch (IOException e) {
 					lg.severe(e, "Verbindung unterbrochen -- Bot stirbt");
-//					die();
+					// die();
 					System.exit(-1);
 				}
 			}
@@ -428,16 +394,13 @@ public class TestServer implements Runnable {
 		public int storeCommand(Command command) {
 			int result=0;
 			synchronized (commandBuffer) {
-				
 				commandBuffer.add(command);
 				
-				if (command.getCommand() ==  Command.CMD_DONE){ 
+				if (command.getCommand() == Command.CMD_DONE){ 
 					
-					//if (command.getDataL() == lastTransmittedSimulTime){
+					// if (command.getDataL() == lastTransmittedSimulTime){
 					if (command.getDataL() == 10){
-						
 						result = 1;
-						
 						waitForCommands.countDown();
 					}
 				}
@@ -447,26 +410,19 @@ public class TestServer implements Runnable {
 	}
 	
 	/**
-	 * Optional einzustellender Worker. Dieser simuliert
-	 * den Controller des Sim.
+	 * Optional einzustellender Worker. Dieser simuliert den Controller des Sim.
 	 * 
-	 * Wenn USE_WORKER gesetzt ist, wartet die 'ServerCom' (s.o.)
-	 * jeden Zyklus auf den Worker (genauso sync., wie der Ctrl. mit den
-	 * Bots im Sim).
+	 * Wenn USE_WORKER gesetzt ist, wartet die 'ServerCom' (s.o.) jeden Zyklus auf den Worker (genauso
+	 * sync., wie der Ctrl. mit den Bots im Sim).
 	 * 
-	 * Über WORKER_WAIT kann eingestellt werden, ob
-	 * der Worker arbeit (des Ctrl.) simulieren soll (er schläft einfach die
-	 * angegebene Zeit, bevor die 'ServerCom' wieder freigegeben wird und weiter
+	 * Über WORKER_WAIT kann eingestellt werden, ob der Worker arbeit (des Ctrl.) simulieren soll (er
+	 * schläft einfach die angegebene Zeit, bevor die 'ServerCom' wieder freigegeben wird und weiter
 	 * machen darf).
 	 * 
-	 * Über TICK_RATE wird eine mindest (Bot-)Laufzeit eingestellt.
-	 * Der Worker schläft diese, nachdem er die 'ServerCom' (entspr. einem Bot)
-	 * wieder freigegeben hat. Ein neuer Zyklus (in diesem Fall Sende-Vorgang)
-	 * kann also nicht vor Ablauf dieser Zeit _wieder_ beginnen (aber der
-	 * Bot kann während dieser Zeit rechnen; in diesem Fall die ServerCom
-	 * kommunizieren)...
-	 * 
-	 * 
+	 * Über TICK_RATE wird eine mindest (Bot-)Laufzeit eingestellt. Der Worker schläft diese, nachdem
+	 * er die 'ServerCom' (entspricht einem Bot) wieder freigegeben hat. Ein neuer Zyklus (in diesem
+	 * Fall Sende-Vorgang) kann also nicht vor Ablauf dieser Zeit _wieder_ beginnen (aber der Bot kann
+	 * während dieser Zeit rechnen; in diesem Fall die ServerCom kommunizieren)...
 	 */
 	class Worker implements Runnable {
 		
@@ -476,40 +432,27 @@ public class TestServer implements Runnable {
 		private CountDownLatch done  = new CountDownLatch(1);
 		
 		public void start() {
-			
 			this.thrd = new Thread(this);
-			
 			this.thrd.start();
 		}
 		
 		public void stop() {
-			
 			Thread dummy = this.thrd;
-			
 			this.thrd = null;
-			
 			dummy.interrupt();
 		}
 		
 		public void run() {
-			
 			Thread thisThrd = Thread.currentThread();
-			
 			System.out.println("Worker wurde gestartet...");
 			
 			while(this.thrd == thisThrd) {
-				
 				try {
 					this.done.await();
-					
 					Thread.sleep(TestServer.WORKER_WAIT);
-					
 					this.reinit();
-					
 					Thread.sleep(TestServer.TICK_RATE);
-				
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -517,26 +460,17 @@ public class TestServer implements Runnable {
 		
 		// Initialisiert Latches für den "nächsten" Zyklus
 		public synchronized void reinit() {
-			
 			CountDownLatch start = this.start;
-			
 			this.start = new CountDownLatch(1);
 			this.done  = new CountDownLatch(1);
-			
 			start.countDown();
 		}
 		
-		// Hier warten die Bots, bzw. die ServerCom auf den
-		// Ctrl., bzw. den Worker
-		public void waitOnWorker()
-				throws InterruptedException {
-			
+		// Hier warten die Bots, bzw. die ServerCom auf den Ctrl., bzw. den Worker
+		public void waitOnWorker() throws InterruptedException {
 			CountDownLatch start = this.start;
-			// überflüssig ?
 			CountDownLatch done  = this.done;
-			
 			done.countDown();
-			
 			start.await();
 		}
 	}
@@ -547,19 +481,14 @@ public class TestServer implements Runnable {
 	private ServerSocket serverSocket;
 	
 	/**
-	 * Der TestServer lauscht auf Connections auf dem
-	 * global angegebenen Port.
+	 * Der TestServer lauscht auf Connections auf dem global angegebenen Port.
 	 * 
-	 * Bei einer ankommenden Connection wird diese an eine
-	 * 'ServerCom' übergeben und weiter gelauscht...
-	 * 
+	 * Bei einer ankommenden Connection wird diese an eine 'ServerCom' übergeben und weiter gelauscht...
 	 */
 	TestServer(int port) {
-		
 		try {
 			this.serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -567,39 +496,27 @@ public class TestServer implements Runnable {
 	}
 	
 	public void start() {
-		
 		this.serverThrd = new Thread(this);
-		
 		this.serverThrd.start();
 	}
 	
 	public void stop() {
-		
 		Thread dummy = this.serverThrd;
-		
 		this.serverThrd = null;
-		
 		dummy.interrupt();
 	}
 
 	public void run() {
-		
 		Thread thisThrd = Thread.currentThread();
-		
 		System.out.println("Server ist hoch und rennen...");
 		
 		while(this.serverThrd == thisThrd) {
-			
 			try {
-				
 				this.clientSocket = this.serverSocket.accept();
-				
 				System.out.println("Connection wird hergestellt...");
 				ServerCom com = new ServerCom(this.clientSocket);
 				com.start();
-				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.exit(-1);
 			}
@@ -608,37 +525,31 @@ public class TestServer implements Runnable {
 		try {
 			this.serverSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	/**
 	 * main
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
 		TestServer server = new TestServer(TestServer.PORT);
-		
 		server.start();
 		
 		if(TestServer.JAVA_CLIENT) {
-			
 			TestClient client = new TestClient(TestServer.HOST, TestServer.PORT);
-			
 			client.start();
 		}
 	}
 }
 
 /** 
- * Der TestClient schickt einfach ein ankommendes Datum zurück
- * an den Server, der dann die Zeit stoppt und ausgibt (SERVER_TIME).
+ * Der TestClient schickt einfach ein ankommendes Datum zurück an den Server, der dann die Zeit stoppt
+ * und ausgibt (SERVER_TIME).
  * 
- * Oder schickt ein Datum an den Server und wartet selbst bis
- * dieses zurückkommt (SERVER_TIME == FALSE).
- * 
+ * Oder er schickt ein Datum an den Server und wartet selbst bis dieses zurückkommt (SERVER_TIME == FALSE).
  */
 class TestClient implements Runnable {
 
@@ -646,51 +557,40 @@ class TestClient implements Runnable {
 	private Thread clientThrd;
 
 	PrintWriter out;
-
 	BufferedReader in;
 
 	TestClient(String host, int port) {
-
 		try {
 			this.socket = new Socket(host, port);
 			out = new PrintWriter(socket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(socket
 					.getInputStream()));
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(-1);
 		}
 	}
 	
 	public void start() {
-		
 		this.clientThrd = new Thread(this);
-		
 		this.clientThrd.start();
 	}
 	
 	public void stop() {
-		
 		Thread dummy = this.clientThrd;
-		
 		this.clientThrd = null;
-		
 		dummy.interrupt();
 	}
 
 	public void run() {
-		
 		Thread thisThrd = Thread.currentThread();
-		
 		System.out.println("Client ist hoch und rennen...");
-		
 		System.out.println("Warten und Senden willkommen...");
 		int cmd = 0;
+		
 		while(cmd != 60) {
 			try {
 				cmd = this.in.read();
@@ -703,36 +603,35 @@ class TestClient implements Runnable {
 			}
 		}
 		int c = 1;
+		
 		while(this.clientThrd == thisThrd) {
-			
 			try {
-//				if(TestServer.SERVER_TIME) {
-//					this.out.println(this.in.readLine());
-//					
-//				} else {
-//					long time = System.nanoTime();
-//					
-//					this.out.println("Test");
-//					@SuppressWarnings("unused")
-//					String str = this.in.readLine();
-//					
-//					System.out.println(String.format("CLIENT: Antwort nach " +
-//													//"%9d ns", (System.nanoTime()-time)));
-//													"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
-//				}
+				// if(TestServer.SERVER_TIME) {
+				// 		this.out.println(this.in.readLine());
+				//					
+				// 	} else {
+				// 		long time = System.nanoTime();
+				//
+				// 		this.out.println("Test");
+				// 		@SuppressWarnings("unused")
+				// 		String str = this.in.readLine();
+				//
+				// 		System.out.println(String.format("CLIENT: Antwort nach " +
+				// 		// "%9d ns", (System.nanoTime()-time)));
+				// 		"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
+				//		}
 				
 				int str = this.in.read();
-				//if(c==1) {
+ 				// if(c==1) {
 				System.out.println(c+".: "+str);
 				this.out.write(str);
-				//}
+ 				// }
 				if(TestServer.FLUSH_ALL || str == 60) {
 					this.out.flush();
 					c++;
 				}
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.exit(-1);
 			}
@@ -742,13 +641,11 @@ class TestClient implements Runnable {
 		try {
 			this.in.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			this.socket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

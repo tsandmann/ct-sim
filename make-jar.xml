@@ -18,7 +18,7 @@
   MA 02111-1307, USA.
   
   Autor: Dominik Kalb (dominik@dkalb.com)
-  		 Timo Sandmann (mail@timosandmann.de)
+  		 Timo Sandmann
 
 
 
@@ -77,13 +77,13 @@ mehr benötigt wird.
 	-->
 	<property name="src.name" value="ctSim" />
 	<property name="config.name" value="config" />
-	<property name="parcours.name" value="parcours"/>
-	<property name="characteristics.name" value="characteristics"/>
-	<property name="images.name" value="images"/>
+	<property name="parcours.name" value="parcours" />
+	<property name="characteristics.name" value="characteristics" />
+	<property name="images.name" value="images" />
 	<property name="textures.name" value="textures" />
-	<property name="contrib.name" value="contrib"/>
+	<property name="contrib.name" value="contrib" />
 		
-	<property name="build.name" value="build" />
+	<property name="build.name" value="build-jar" />
 	<property name="build.classes.name" value="classes" />
 	<property name="build.lib.name" value="ct-Sim" />
 	
@@ -95,12 +95,12 @@ mehr benötigt wird.
 	===================================================================
 	-->
 	<property name="src.dir" location="${src.name}" />
-	<property name="config.dir" location="${config.name}"/>
-	<property name="parcours.dir" location="${parcours.name}"/>
-	<property name="characteristics.dir" location="${characteristics.name}"/>
-	<property name="images.dir" location="${images.name}"/>
+	<property name="config.dir" location="${config.name}" />
+	<property name="parcours.dir" location="${parcours.name}" />
+	<property name="characteristics.dir" location="${characteristics.name}" />
+	<property name="images.dir" location="${images.name}" />
 	<property name="textures.dir" location="${textures.name}" />   
-	<property name="contrib.dir" location="${contrib.name}"/>
+	<property name="contrib.dir" location="${contrib.name}" />
 	
 	<!--
 	===================================================================
@@ -128,26 +128,27 @@ mehr benötigt wird.
 	-->
 	<path id="ctSim.classpath">
 		<path location="." />
-		<path location="contrib/junit-4.1.jar" />
+		<path location="contrib/jSerialComm/jSerialComm-2.0.2.jar" />
+		<path location="contrib/junit/junit-4.12.jar" />
+		<path location="contrib/java3d/j3dcore.jar" />
+		<path location="contrib/java3d/j3dutils.jar" />
+		<path location="contrib/java3d/vecmath.jar" />
+		<path location="contrib/JogAmp/gluegen-rt-natives-linux-amd64.jar" />
+		<path location="contrib/JogAmp/gluegen-rt-natives-linux-i586.jar" />
+		<path location="contrib/JogAmp/gluegen-rt-natives-macosx-universal.jar" />
+		<path location="contrib/JogAmp/gluegen-rt-natives-windows-amd64.jar" />
+		<path location="contrib/JogAmp/gluegen-rt-natives-windows-i586.jar" />
+		<path location="contrib/JogAmp/gluegen-rt.jar" />
+		<path location="contrib/JogAmp/gluegen.jar" />
+		<path location="contrib/JogAmp/jogl-all-natives-linux-amd64.jar" />
+		<path location="contrib/JogAmp/jogl-all-natives-linux-i586.jar" />
+		<path location="contrib/JogAmp/jogl-all-natives-macosx-universal.jar" />
+		<path location="contrib/JogAmp/jogl-all-natives-windows-amd64.jar" />
+		<path location="contrib/JogAmp/jogl-all-natives-windows-i586.jar" />
+		<path location="contrib/JogAmp/jogl-all.jar" />
+		<path location="contrib/picocontainer-1.2.jar" />
+		<path location="contrib/BrowserLauncher2-1_3.jar" />
 		<path location="contrib/mysql-connector-java-3.1.13-bin.jar" />
-		<path location="contrib/picocontainer-1.2.jar" />		
-		<path location="contrib/jSerialComm-1.3.10.jar" />
-		<path location="contrib/j3d/gluegen-rt-natives-linux-amd64.jar" />
-		<path location="contrib/j3d/gluegen-rt-natives-linux-i586.jar" />
-		<path location="contrib/j3d/gluegen-rt-natives-macosx-universal.jar" />
-		<path location="contrib/j3d/gluegen-rt-natives-windows-amd64.jar" />
-		<path location="contrib/j3d/gluegen-rt-natives-windows-i586.jar" />
-		<path location="contrib/j3d/gluegen-rt.jar" />
-		<path location="contrib/j3d/gluegen.jar" />
-		<path location="contrib/j3d/j3dcore.jar" />
-		<path location="contrib/j3d/j3dutils.jar" />
-		<path location="contrib/j3d/jogl-all-natives-linux-amd64.jar" />
-		<path location="contrib/j3d/jogl-all-natives-linux-i586.jar" />
-		<path location="contrib/j3d/jogl-all-natives-macosx-universal.jar" />
-		<path location="contrib/j3d/jogl-all-natives-windows-amd64.jar" />
-		<path location="contrib/j3d/jogl-all-natives-windows-i586.jar" />
-		<path location="contrib/j3d/jogl-all.jar" />
-		<path location="contrib/j3d/vecmath.jar" />
 	</path>
 	
 	<!--
@@ -211,33 +212,35 @@ mehr benötigt wird.
 		<!--
 		Libs kopieren
 		-->
-		<copy file="${contrib.dir}/junit-4.1.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/mysql-connector-java-3.1.13-bin.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/jSerialComm/jSerialComm-2.0.2.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/junit/junit-4.12.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/java3d/j3dcore.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/java3d/j3dutils.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/java3d/vecmath.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/gluegen-rt-natives-linux-amd64.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/gluegen-rt-natives-linux-i586.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/gluegen-rt-natives-macosx-universal.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/gluegen-rt-natives-windows-amd64.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/gluegen-rt-natives-windows-i586.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/gluegen-rt.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/gluegen.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/jogl-all-natives-linux-amd64.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/jogl-all-natives-linux-i586.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/jogl-all-natives-macosx-universal.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/jogl-all-natives-windows-amd64.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/jogl-all-natives-windows-i586.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/JogAmp/jogl-all.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/picocontainer-1.2.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/jSerialComm-1.3.10.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/gluegen-rt-natives-linux-amd64.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/gluegen-rt-natives-linux-i586.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/gluegen-rt-natives-macosx-universal.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/gluegen-rt-natives-windows-amd64.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/gluegen-rt-natives-windows-i586.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/gluegen-rt.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/gluegen.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/j3dcore.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/j3dutils.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/jogl-all-natives-linux-amd64.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/jogl-all-natives-linux-i586.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/jogl-all-natives-macosx-universal.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/jogl-all-natives-windows-amd64.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/jogl-all-natives-windows-i586.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/jogl-all.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/j3d/vecmath.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/mysql-connector-java-3.1.13-bin.jar" todir="${build.lib.dir}" />
 		
 		<!--
 		ct-Sim compilieren
 		-->
-		<compile src="${src.dir}" 
+		<compile
+			src="${src.dir}" 
 			dest="${build.classes.dir}" 
-			classpath="ctSim.classpath" /> 
+			classpath="ctSim.classpath"
+		/>
 
 	</target>
 	
@@ -246,27 +249,55 @@ mehr benötigt wird.
 		Erzeugt das ct-Sim-xx.jar Archiv
 	===================================================================
 	-->
-	<target name="build-jar"
+	<target
+		name="build-jar"
 		description="--> create jar libaries"
 		depends="clean, build" >
 		
 		<mkdir dir="${build.lib.dir}" />
 		
-		<jar destfile="${build.lib.dir}/${name}.jar"
+		<jar
+			destfile="${build.lib.dir}/${name}.jar"
 			basedir="${build.classes.dir}">
 		
 			<!--
 			Ausführbare Hauptklasse mit main-Methode setzen
 			-->
 			<manifest>
-				<attribute name="Main-Class" value="${main.class.name}" />
-				<attribute name="Class-Path" value="junit-4.1.jar : mysql-connector-java-3.1.13-bin.jar : picocontainer-1.2.jar : jSerialComm-1.3.10.jar : gluegen-rt-natives-linux-amd64.jar : gluegen-rt-natives-linux-i586.jar : gluegen-rt-natives-macosx-universal.jar : gluegen-rt-natives-windows-amd64.jar : gluegen-rt-natives-windows-i586.jar : gluegen-rt.jar : gluegen.jar : j3dcore.jar : j3dutils.jar : jogl-all-natives-linux-amd64.jar : jogl-all-natives-linux-i586.jar : jogl-all-natives-macosx-universal.jar : jogl-all-natives-windows-amd64.jar : jogl-all-natives-windows-i586.jar : jogl-all.jar : vecmath.jar" />
+				<attribute
+					name="Main-Class"
+					value="${main.class.name}"
+				/>
+				<attribute
+					name="Class-Path"
+					value="
+						jSerialComm-2.0.2.jar :
+						junit-4.12.jar :
+						j3dcore.jar :
+						j3dutils.jar :
+						vecmath.jar :
+						gluegen.jar :
+						gluegen-rt.jar :
+						gluegen-rt-natives-linux-amd64.jar :
+						gluegen-rt-natives-linux-i586.jar :
+						gluegen-rt-natives-macosx-universal.jar :
+						gluegen-rt-natives-windows-amd64.jar :
+						gluegen-rt-natives-windows-i586.jar :
+						jogl-all.jar :
+						jogl-all-natives-linux-amd64.jar :
+						jogl-all-natives-linux-i586.jar :
+						jogl-all-natives-macosx-universal.jar :
+						jogl-all-natives-windows-amd64.jar :
+						jogl-all-natives-windows-i586.jar :
+						picocontainer-1.2.jar :
+						mysql-connector-java-3.1.13-bin.jar
+						" />
 			</manifest>
 		
 		</jar>
 		
 		<!--
-		.class-Dateien wieder loeschen
+		.class-Dateien wieder löschen
 		-->
 		<delete dir="${build.classes.dir}" includeEmptyDirs="true" quiet="true" />		
 	</target>
@@ -308,15 +339,18 @@ mehr benötigt wird.
 			<!--
 			Compiler aufrufen.
 			-->
-			<javac srcdir="@{src}"
+			<javac
+				srcdir="@{src}"
 				destdir="@{dest}"
-				excludes="TestServer.java,EchoTest.java"
+				excludes="TestServer.java : EchoTest.java"
 				debug="${debug}"
 				deprecation="${deprecation}"
 				source="${javac.source}"
 				target="${javac.target}"
 				optimize="${optimize}"
-				nowarn="false" >
+				nowarn="false"
+				includeantruntime="false"
+				>
 				
 				<!--
 				Wenn der Java >= 1.5 Compiler verwendet wird, sollte diese
