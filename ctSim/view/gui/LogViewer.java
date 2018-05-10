@@ -104,7 +104,7 @@ public class LogViewer extends JPanel {
 			} catch (IOException e) {
 				lg.warn(e, "E/A-Problem beim Schreiben der Log-Daten; " + "ignoriere");
 			} catch (BadLocationException e) {
-				// ''Kann nicht passieren''
+				// "Kann nicht passieren"
 				throw new AssertionError(e);
 			}
 		}
@@ -116,7 +116,7 @@ public class LogViewer extends JPanel {
 			try {
 				logContent.remove(0, logContent.getLength());
 			} catch (BadLocationException e) {
-				// ''Kann nicht passieren''
+				// "Kann nicht passieren"
 				throw new AssertionError(e);
 			}
 		}

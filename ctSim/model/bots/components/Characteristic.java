@@ -260,7 +260,7 @@ public class Characteristic {
 	/**
 	 * Zerlegt einen CSV-String und schreibt alle gefundenen Zahlenwerte in ein Array.
 	 * 
-	 * @param input	Der zu zerlegende String, Einzelteile durch ; getrennt
+	 * @param input	der zu zerlegende String, Einzelteile durch ";" getrennt
 	 * @return Das Array
 	 */
 	private static Number[] csv2array(String input) {
@@ -286,7 +286,7 @@ public class Characteristic {
 	/**
 	 * Liest den Inhalt einer Datei und gibt ihn als String zurück.
 	 * 
-	 * @param file	Die Datei
+	 * @param file	die Datei
 	 * @return Der String mit dem Inhalt der Datei
 	 * @throws IOException
 	 * @throws FileNotFoundException
