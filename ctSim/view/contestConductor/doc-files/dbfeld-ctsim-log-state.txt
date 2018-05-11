@@ -3,51 +3,43 @@ Tabelle ctsim_log, Felder state1 und state2
 
 
 
-Diese Felder beschreiben, wie der Bot darzustellen ist. (Im ctSim wird die
-Farbe des Bots geändert, man k�nnte sich auch vorstellen, ein anderes Icon zu
-verwenden oder so.) state1 und state2 sind i.d.R. immer 0, 1, 2 oder 256 --
-siehe aber unten!
-
+Diese Felder beschreiben, wie der Bot darzustellen ist. (Im ctSim wird die Farbe des Bots geändert, man
+könnte sich auch vorstellen, ein anderes Icon zu verwenden oder so.) state1 und state2 sind i.d.R. immer
+0, 1, 2 oder 256 - siehe aber unten!
 
 
 Bedeutungen:
 
 0: Normal, der Bot fährt rum
 
-1: Der Bot ist kollidiert (mit einer Wand oder einem anderen Bot). Aus diesem
-Zustand kann sich der Bot wieder befreien (umdrehen und woanders hinfahren).
+1: Der Bot ist kollidiert (mit einer Wand oder einem anderen Bot). Aus diesem Zustand kann sich der Bot
+wieder befreien (umdrehen und woanders hinfahren).
 
-2: Der Bot ist in ein Loch gefallen, d.h. kann sich nicht mehr bewegen. Aus
-diesem Zustand kann sich der Bot in Grenzf�llen noch befreien; oft bleibt er
-aber "hängen" und steht dann mit diesem Zustand bis Ende der Runde rum.
+2: Der Bot ist in ein Loch gefallen, d.h. kann sich nicht mehr bewegen. Aus diesem Zustand kann sich der
+Bot in Grenzfällen noch befreien; oft bleibt er aber "hängen" und steht dann mit diesem Zustand bis Ende
+der Runde rum.
 
-256: Der Bot ist gesperrt. Das passiert, wenn der ctSim die TCP-Verbindung
-verliert (d.h. wenn der Leser-Code abstürzt), oder wenn der Bot seine
-Rechenzeit massiv �berschritten hat und den Wettbewerb irrsinnig langsam
-machen würde (passiert üblicherweise, wenn der Bot wegen einem Bug in eine
-Endlosschleife gerät). Deutet also auf Fehler im Bot-Code des Lesers hin. Bots
-k�nnen sich aus diesem Zustand nicht mehr befreien -- wenn sie mal drin sind,
-bleiben sie bis Ende der Runde auch drin.
-(Detail: Theoretisch kann der Bot aber noch gewinnen: wenn ein Bot z.B. bis
-kurz vors Ziel fahrt und dann die TCP-Verbindung abreißt, und der Konkurrent
-meilenweit vom Ziel entfernt ist und es partout nicht findet, und dann der
-Timeout zuschlägt. Der gesperrte Bot hat in diesem Fall also trotz verlorener
-TCP-Verbindung gewonnen.)
-
+256: Der Bot ist gesperrt. Das passiert, wenn der ctSim die TCP-Verbindung verliert (d.h. wenn der
+Leser-Code abstürzt), oder wenn der Bot seine Rechenzeit massiv überschritten hat und den Wettbewerb
+irrsinnig langsam machen würde (passiert üblicherweise, wenn der Bot wegen einem Bug in eine Endlosschleife
+gerät). Deutet also auf Fehler im Bot-Code des Lesers hin. Bots können sich aus diesem Zustand nicht mehr
+befreien - wenn sie mal drin sind, bleiben sie bis Ende der Runde auch drin.
+(Detail: Theoretisch kann der Bot aber noch gewinnen: wenn ein Bot z.B. bis kurz vors Ziel fahrt und dann
+die TCP-Verbindung abreißt, und der Konkurrent meilenweit vom Ziel entfernt ist und es partout nicht findet,
+und dann der Timeout zuschlägt. Der gesperrte Bot hat in diesem Fall also trotz verlorener TCP-Verbindung
+gewonnen.)
 
 
 Detail
 
-Denkbar sind auch Kombinationen der Zust�nde, z.B.:
-* Der Bot k�nnte gleichzeitig kollidiert und fallend sein (wurde in ein Loch
-geschubst ...). Das würde dann durch state = 1 + 2 = 3 ausgedrückt.
-* Der Bot ist in ein Loch gefallen und der Code ist dann abgestürzt
-(2 + 256 = 258).
+Denkbar sind auch Kombinationen der Zustände, z.B.:
+* Der Bot könnte gleichzeitig kollidiert und fallend sein (wurde in ein Loch geschubst ...). Das würde dann
+durch state = 1 + 2 = 3 ausgedrückt.
+* Der Bot ist in ein Loch gefallen und der Code ist dann abgestürzt (2 + 256 = 258).
 * usw.
 
-Das sind aber obskure F�lle, die praktisch nie vorkommen. Der ctSim hat dafür
-auch keine Extrabehandlung. Nur sollte Euer Code halt nicht völlig überfordert
-sein, wenn doch mal so ein Zustand eintritt und 257 oder sowas in der
-Datenbank steht.
+Das sind aber obskure Fälle, die praktisch nie vorkommen. Der ctSim hat dafür auch keine Extrabehandlung.
+Nur sollte euer Code halt nicht völlig überfordert sein, wenn doch mal so ein Zustand eintritt und 257 oder
+soetwas in der Datenbank steht.
 
 (hkr)

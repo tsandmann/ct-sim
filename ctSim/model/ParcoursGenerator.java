@@ -63,7 +63,7 @@ public class ParcoursGenerator {
 	private static final String xmlHead = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 			+ "<!DOCTYPE world SYSTEM \"parcours.dtd\">\n"
 			+ "<world>\n"
-			+ "	<description>Dieses ist ein automatisch generierter Beispielparcours für den c't-Sim-Wettbewerb.</description>\n" //$NON-NLS-1$
+			+ "	<description>Dieses ist ein automatisch generierter Beispielparcours für den c't-Sim-Wettbewerb.</description>\n"
 			+ "	<parcours>\n";
 
 	/** XML-String -- Ende der Parcours-Datei */
@@ -135,7 +135,7 @@ public class ParcoursGenerator {
 			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"
 			+ "		</appearance>\n" + "		<appearance type=\"~\">\n"
 			+ "			<description>Linie</description>\n" + "			<clone>-</clone>\n"
-			+ "		</appearance>\n" + "	</optics>\n" + "</world>\n";	// $NON-NLS-3$
+			+ "		</appearance>\n" + "	</optics>\n" + "</world>\n";
 
 	/**
 	 * Die Karte ist ein char-Array, erste Dimension die Zeilennummer,

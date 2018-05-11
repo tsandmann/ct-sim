@@ -61,7 +61,7 @@ public class TurningPoint {
 	 * heißt (nämlich Bot-Zentrum ist näher als distFromCorner an einer Ecke). Es wäre besser,
 	 * wenn das Model und diese Klasse einen Bot unter den gleichen Umständen als "im Loch" betrachten, 
 	 * und nicht unter subtil unterschiedlichen Umständen. Variable distFromCorner ist wirklich
-	 * problematisch und sollte anders gelöst werden - siehe zugehörige Doku
+	 * problematisch und sollte anders gelöst werden -- siehe zugehörige Doku
 	 */
 	public static final double distFromCorner = 0.05;
 

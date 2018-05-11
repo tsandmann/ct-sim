@@ -115,7 +115,7 @@ public class Config {
 	 * <code>configDefaults</code> kommen. Beim späteren Parsen der Konfigurationsdatei werden Defaults
 	 * dann möglicherweise überschrieben.
 	 * </p>
-	 * */
+	 */
 	private static PlainParameters parameters;
 
 	/** Bot-Appearances */

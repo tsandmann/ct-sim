@@ -715,7 +715,7 @@ public class Parcours {
 	 * @return Distanz (ohne Drehungen) in Metern
 	 */
 	public double getShortestDistanceToFinish(Vector3d from) {
-		// TODO: z wird ignoriert -- wird nicht mehr klappen, wenn der Bot
+		// TODO: z wird ignoriert - wird nicht mehr klappen, wenn der Bot
 		// (hypothetisch) mal Rampen hochfährt und sich auf verschiedenen
 		// Ebenen bewegt.
 		return getShortestDistanceToFinish(new Vector2d(from.x, from.y));

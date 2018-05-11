@@ -91,7 +91,7 @@ public class Decoratoror {
 	public static <T> T createDecorated(
 	Class<T> resultInterface, Object... decorators)
 	throws NoSuchMethodException {
-		// Sanity check -- newProxyInstance will also report that, but to be clear and explicit ...
+		// Sanity check - newProxyInstance will also report that, but to be clear and explicit ...
 		if (! resultInterface.isInterface()) {
 			throw new IllegalArgumentException("First argument must " +
 			"represent an interface");
