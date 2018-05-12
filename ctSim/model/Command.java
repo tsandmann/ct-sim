@@ -133,17 +133,17 @@ import ctSim.util.Misc;
  * <pre>
  * Richtung  Command-Code         dataL dataR
  *
- * Sim2Bot: SENS_MOUSE           L   0 R   0 Payload=''
- * Sim2Bot: SENS_DOOR            L   0 R   0 Payload=''
- * Sim2Bot: SENS_BORDER          L 690 R 690 Payload=''
- * Sim2Bot: SENS_LDR             L 965 R 965 Payload=''
- * Sim2Bot: SENS_IR              L 100 R  80 Payload=''
- * Sim2Bot: SENS_ERROR           L   0 R   0 Payload=''
- * Sim2Bot: SENS_RC5             L   0 R   0 Payload=''
- * Sim2Bot: SENS_TRANS           L   0 R   0 Payload=''
- * Sim2Bot: SENS_LINE            L 690 R 690 Payload=''
- * Sim2Bot: SENS_ENC             L   0 R   0 Payload=''
- * Sim2Bot: DONE                 L  30 R   0 Payload=''
+ * Sim-&gt;Bot: SENS_MOUSE           L   0 R   0 Payload=''
+ * Sim-&gt;Bot: SENS_DOOR            L   0 R   0 Payload=''
+ * Sim-&gt;Bot: SENS_BORDER          L 690 R 690 Payload=''
+ * Sim-&gt;Bot: SENS_LDR             L 965 R 965 Payload=''
+ * Sim-&gt;Bot: SENS_IR              L 100 R  80 Payload=''
+ * Sim-&gt;Bot: SENS_ERROR           L   0 R   0 Payload=''
+ * Sim-&gt;Bot: SENS_RC5             L   0 R   0 Payload=''
+ * Sim-&gt;Bot: SENS_TRANS           L   0 R   0 Payload=''
+ * Sim-&gt;Bot: SENS_LINE            L 690 R 690 Payload=''
+ * Sim-&gt;Bot: SENS_ENC             L   0 R   0 Payload=''
+ * Sim-&gt;Bot: DONE                 L  30 R   0 Payload=''
  * </pre>
  *
  * Wenn ein Bot andere Sensoren hätte als der normale c't-Bot, sähe die Liste anders aus.
@@ -158,17 +158,17 @@ import ctSim.util.Misc;
  * <pre>
  * Richtung  CmdCode/SubCmdCode   dataL dataR
  *
- * Bot2Sim: ACT_LED              L 128 R 128 Payload=''
- * Bot2Sim: ACT_MOT              L -24 R  24 Payload=''
- * Bot2Sim: ACT_LCD/LCD_CURSOR   L   0 R   0 Payload=''
- * Bot2Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='P=3C5 3C5 D=999 999 '
- * Bot2Sim: ACT_LCD/LCD_CURSOR   L   0 R   1 Payload=''
- * Bot2Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='B=2B2 2B2 L=2B2 2B2 '
- * Bot2Sim: ACT_LCD/LCD_CURSOR   L   0 R   2 Payload=''
- * Bot2Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='R= 0  0 F=0 K=0 T=0 '
- * Bot2Sim: ACT_LCD/LCD_CURSOR   L   0 R   3 Payload=''
- * Bot2Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='I=1005 M=00000 00000'
- * Bot2Sim: DONE                 L  30 R   0 Payload=''
+ * Bot-&gt;Sim: ACT_LED              L 128 R 128 Payload=''
+ * Bot-&gt;Sim: ACT_MOT              L -24 R  24 Payload=''
+ * Bot-&gt;Sim: ACT_LCD/LCD_CURSOR   L   0 R   0 Payload=''
+ * Bot-&gt;Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='P=3C5 3C5 D=999 999 '
+ * Bot-&gt;Sim: ACT_LCD/LCD_CURSOR   L   0 R   1 Payload=''
+ * Bot-&gt;Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='B=2B2 2B2 L=2B2 2B2 '
+ * Bot-&gt;Sim: ACT_LCD/LCD_CURSOR   L   0 R   2 Payload=''
+ * Bot-&gt;Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='R= 0  0 F=0 K=0 T=0 '
+ * Bot-&gt;Sim: ACT_LCD/LCD_CURSOR   L   0 R   3 Payload=''
+ * Bot-&gt;Sim: ACT_LCD/LCD_DATA     L   0 R   0 Payload='I=1005 M=00000 00000'
+ * Bot-&gt;Sim: DONE                 L  30 R   0 Payload=''
  * </pre>
  *
  * Das DONE-Command enthält zur Bestätigung die Simulatorzeit, die vom c't-Sim zuletzt empfangen wurde.</li>

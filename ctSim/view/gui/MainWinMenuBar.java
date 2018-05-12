@@ -118,41 +118,45 @@ public class MainWinMenuBar extends JMenuBar {
 			new Entry("Generieren", Config.getIcon("New16"), onOpenRandomWorld),
 			new Entry("Speichern als ...", Config.getIcon("SaveAs16"), onSaveWorld),
 			new Entry("Als Map exportieren...", Config.getIcon("ToMap16"), onWorldToMap),
-			new Entry("Schließen", Config.getIcon("Delete16"), onCloseWorld));
+			new Entry("Schließen", Config.getIcon("Delete16"), onCloseWorld)
+		);
 		add(worldMenu);
+		
 		JMenu connectMenu = new Menu("Verbinde mit Bot",
 			new Entry("Per TCP ...", Config.getIcon("tcpbot16"), onAddTcpBot) /*,
 			// Die Checkbox hat nen Haken und ist unveränderbar disabled (ausgegraut).
 			// Sinn dahinter ist es den Benutzer wissen zu lassen, dass ctSim das automatisch macht.
 			new Checkbox("Per USB (COM) automatisch", noOp).disable().check() */
-			);
-	
+		);
 		add(connectMenu);
+		
 		JMenu botMenu = new Menu("Simuliere Bot",
-	    	new Entry("Testbot", onAddTestBot),
-	    	new Entry("c't-Bot", onInvokeExecutable));
+			new Entry("Testbot", onAddTestBot),
+			new Entry("c't-Bot", onInvokeExecutable)
+		);
 		add(botMenu);
 
-	    JMenu m = new JMenu("Schiedsrichter");
-	    for (JMenuItem item : buildJudgeMenuItems())
-	    	m.add(item);
-	    add(m);
-	    
-	    JMenu simulationMenu = new Menu("Simulation", 
-	    		new Entry("Start", Config.getIcon("Play16"), onStartSimulation), 
-	    		new Entry("Pause", Config.getIcon("Pause16"), onPauseSimulation),
-	    		new Entry("Reset", Config.getIcon("reset16"), onResetBots)
-	    );
-	    add(simulationMenu);
+		JMenu m = new JMenu("Schiedsrichter");
+		for (JMenuItem item : buildJudgeMenuItems())
+			m.add(item);
+		add(m);
+		
+		JMenu simulationMenu = new Menu("Simulation", 
+			new Entry("Start", Config.getIcon("Play16"), onStartSimulation), 
+			new Entry("Pause", Config.getIcon("Pause16"), onPauseSimulation),
+			new Entry("Reset", Config.getIcon("reset16"), onResetBots)
+		);
+		add(simulationMenu);
 
 		JMenu supportMenu = new Menu("Support",
 			new Entry("Webseite", Config.getIcon("website16"), onSiteLink),
 			new Entry("Github", Config.getIcon("github16"), onGithubLink),
 			new Entry("Forum", Config.getIcon("forum16"), onForumLink),
-			new Entry("About", Config.getIcon("about16"), onAbout));
+			new Entry("About", Config.getIcon("about16"), onAbout)
+		);
 		add(supportMenu);
-	    
-	    toolBar = buildToolBar(worldMenu, connectMenu, botMenu, simulationMenu, supportMenu);
+		
+		toolBar = buildToolBar(worldMenu, connectMenu, botMenu, simulationMenu, supportMenu);
 	}
 
 	///////////////////////////////////////////////////////////////////////////
