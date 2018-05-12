@@ -107,7 +107,7 @@ public class Characteristic {
 		}
 		
 		// Lookup-Table hat so viele Stellen wie die letzte Messgröße (in der vorletzten Stelle der
-		// Kennlinie) angibt -- natürlich plus eine für den 0-Index: 
+		// Kennlinie) angibt - natürlich plus eine für den 0-Index: 
 		lookup = new float[(int) (1 + Math.floor(characteristic[characteristic.length - 2]))];
 		// Lookup-Table jetzt füllen:
 		int firstMeas = (int) Math.floor(characteristic[0]);
@@ -129,7 +129,7 @@ public class Characteristic {
 				float valDiff = characteristic[i + 3] - characteristic[i + 1];
 				// Das ist pro Schritt gleich der Wertdifferenz durch die Messgrößendifferenz:
 				float delta = valDiff / diff;
-				// Zwischenwerte addieren, für jeden weiteren einmal delta auf lookup[firMea] draufrechnen:
+				// Zwischenwerte addieren, für jeden weiteren einmal delta auf lookup[firMea] dazurechnen:
 				for (int j = 1; j < diff; j++) {
 					lookup[firMea + j] = lookup[firMea] + j * delta;
 				}
@@ -152,7 +152,7 @@ public class Characteristic {
 	 * 
 	 * @param file
 	 * 				Eine Textdatei mit der Stützwerttabelle; Format:
-	 * 				Messgröße (int>=0) \t resultierendes Sensordatum (float) \n
+	 * 				Messgröße (int&gt;=0) \t resultierendes Sensordatum (float) \n
 	 * 				Messgrößen aufsteigend, aber nicht zwingend lückenlos
 	 * @param inf	Sensordatum für Messgrößen außerhalb der Kennlinie	  
 	 */
@@ -177,7 +177,7 @@ public class Characteristic {
 		}
 		
 		// Lookup-Table hat so viele Stellen wie die letzte Messgröße (in der vorletzten Stelle der
-		// Kennlinie) angibt -- natürlich plus eine für den 0-Index:	
+		// Kennlinie) angibt - natürlich plus eine für den 0-Index:	
 		this.lookup = new float[(int) (1 + Math.floor(characteristic[characteristic.length - 2]))];
 		// Lookup-Table jetzt füllen:
 		int firstMeas = (int) Math.floor(characteristic[0]);
@@ -185,7 +185,7 @@ public class Characteristic {
 		for (int i = 0; i < firstMeas; i++) {
 			lookup[i] = INF;
 		}
-		// Dann jeweils in Zweierschritten voran:
+		// ... dann jeweils in Zweierschritten voran:
 		for (int i = 0; i < characteristic.length; i += 2) {
 			// Zwei aufeinanderfolgende Messgrößen heraussuchen:	
 			int firMea = (int) Math.floor(characteristic[i]);
@@ -199,8 +199,7 @@ public class Characteristic {
 				float valDiff = characteristic[i + 3] - characteristic[i + 1];
 				// Das ist pro Schritt gleich der Wertdifferenz durch die Messgrößendifferenz:
 				float delta = valDiff / diff;
-				// Zwischenwerte addieren, für jeden weiteren einmal delta auf lookup[firMea]
-				// draufrechnen:
+				// Zwischenwerte addieren, für jeden weiteren einmal delta auf lookup[firMea] dazurechnen:
 				for (int j = 1; j < diff; j++) {
 					lookup[firMea + j] = lookup[firMea] + j * delta;
 				}
@@ -234,14 +233,14 @@ public class Characteristic {
 		if (measurement >= 0 && measurement <= lookup.length - 1) {
 			int index = (int) Math.floor(measurement);
 			data = lookup[index];
-			// Falls der Wert nicht am Rand der Tabelle liegt, noch einen Zwischenwert extrapolieren:
+			// falls der Wert nicht am Rand der Tabelle liegt, noch einen Zwischenwert extrapolieren:
 			if (data != INF && index < lookup.length - 1) {
 				data = data + (measurement - index) * (lookup[index + 1] - lookup[index]);
 				// Es sollen, wie für einen digitalen Sensor üblich, ganze Zahlen zurückgegeben werden:
 				data = Math.round(data);
 			}
 		} else {
-			// Sonst INF zurückgeben:
+			// sonst INF zurückgeben:
 			data = INF;
 		}
 		return data;
@@ -260,7 +259,7 @@ public class Characteristic {
 	/**
 	 * Zerlegt einen CSV-String und schreibt alle gefundenen Zahlenwerte in ein Array.
 	 * 
-	 * @param input	Der zu zerlegende String, Einzelteile durch ; getrennt
+	 * @param input	der zu zerlegende String, Einzelteile durch ";" getrennt
 	 * @return Das Array
 	 */
 	private static Number[] csv2array(String input) {
@@ -272,7 +271,7 @@ public class Characteristic {
 				curr = new Double(st.nextToken());
 				num.add(curr);
 			} catch (NumberFormatException e) {
-				// Alles auslassen, was keine Zahl ist 
+				// alles auslassen, was keine Zahl ist 
 			}
 		}
 		
@@ -286,7 +285,7 @@ public class Characteristic {
 	/**
 	 * Liest den Inhalt einer Datei und gibt ihn als String zurück.
 	 * 
-	 * @param file	Die Datei
+	 * @param file	die Datei
 	 * @return Der String mit dem Inhalt der Datei
 	 * @throws IOException
 	 * @throws FileNotFoundException

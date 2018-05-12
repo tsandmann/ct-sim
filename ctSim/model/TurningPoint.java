@@ -33,7 +33,7 @@ public class TurningPoint {
 	/**
 	 * <p>
 	 * Der Abstand, wie weit der Mittelpunkt des Bots von den
-	 * Wänden/Löchern/andern Hindernissen hält, in Grid-Einheiten.
+	 * Wänden/Löchern/anderen Hindernissen hält, in Grid-Einheiten.
 	 * </p>
 	 * <p>
 	 * 0.25 ist <strong>bei momentaner Block-Größe</strong> ein Bot-Radius.
@@ -49,10 +49,9 @@ public class TurningPoint {
 	 * dieses Algorithmus in ungültiger Position. Das heißt, dass
 	 * {@link #getShortestPathTo(TurningPoint, int[][])} zurückliefert, es gäbe keinen gültigen
 	 * Weg von der Botposition zum Ziel, obwohl laut {@link ThreeDBot} der Bot noch lange nicht
-	 * in ein Loch gefallen ist. </li>
+	 * in ein Loch gefallen ist.</li>
 	 * <li> Es ist nicht empfehlenswert, diesen Wert auf 0 zu setzen.
-	 * Angenommen, solche Stellen kommen auf der Karte (XML) vor: <br /> #<br />
-	 * #===<br /> #<br/>
+	 * Angenommen, solche Stellen kommen auf der Karte (XML) vor: <br>#<br>#===<br>#<br>
 	 * Ein Weg zum Ziel wird dann auch gefunden in der zweiten Zeile zwischen den Blöcken "#" und "=",
 	 * wo der Bot natürlich nicht durchkommt. Dieser Wegfindungsalgorithmus ist für den Wert 0
 	 * also praktisch nutzlos, da er auch Wege durch Wände u.dgl. sucht.</li>
@@ -75,7 +74,7 @@ public class TurningPoint {
 	/**
 	 * z-Koordinate der Linie: 0 entspricht Bodenhöhe, dann wird die Linie
 	 * allerdings von Start- und Zielfeld überdeckt. Nicht getestet wurde ob
-	 * der bot stolpert, wenn height > 0
+	 * der bot stolpert, wenn height &gt; 0
 	 */
 	public static final float height = 0.0f;
 

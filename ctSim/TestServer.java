@@ -77,7 +77,7 @@ public class TestServer implements Runnable {
 	
 	/**
 	 * Tick-Rate im Simulator: Jede Runde wird mindestens diese Zeit gewartet
-	 * (+ simulierte Arbeit -- s.o.)
+	 * (+ simulierte Arbeit - s.o.)
 	 */
 	public static final long    TICK_RATE   = 10;
 	
@@ -379,7 +379,7 @@ public class TestServer implements Runnable {
 					if (valid == 0) {	// Kommando ist in Ordnung
 						run = storeCommand(command);
 					} else
-						System.out.println("Ungueltiges Kommando");	// $NON-NLS-1$
+						System.out.println("Ungültiges Kommando");
 				} catch (IOException e) {
 					lg.severe(e, "Verbindung unterbrochen -- Bot stirbt");
 //					die();

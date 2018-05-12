@@ -82,7 +82,7 @@ mehr benötigt wird.
 	<property name="images.name" value="images" />
 	<property name="textures.name" value="textures" />
 	<property name="contrib.name" value="contrib" />
-		
+	
 	<property name="build.name" value="build-jar" />
 	<property name="build.classes.name" value="classes" />
 	<property name="build.lib.name" value="ct-Sim" />
@@ -128,8 +128,6 @@ mehr benötigt wird.
 	-->
 	<path id="ctSim.classpath">
 		<path location="." />
-		<path location="contrib/jSerialComm/jSerialComm-2.0.2.jar" />
-		<path location="contrib/junit/junit-4.12.jar" />
 		<path location="contrib/java3d/j3dcore.jar" />
 		<path location="contrib/java3d/j3dutils.jar" />
 		<path location="contrib/java3d/vecmath.jar" />
@@ -146,8 +144,9 @@ mehr benötigt wird.
 		<path location="contrib/JogAmp/jogl-all-natives-windows-amd64.jar" />
 		<path location="contrib/JogAmp/jogl-all-natives-windows-i586.jar" />
 		<path location="contrib/JogAmp/jogl-all.jar" />
+		<path location="contrib/jSerialComm/jSerialComm-2.0.2.jar" />
+		<path location="contrib/junit/junit-4.12.jar" />
 		<path location="contrib/picocontainer-1.2.jar" />
-		<path location="contrib/BrowserLauncher2-1_3.jar" />
 		<path location="contrib/mysql-connector-java-3.1.13-bin.jar" />
 	</path>
 	
@@ -212,8 +211,6 @@ mehr benötigt wird.
 		<!--
 		Libs kopieren
 		-->
-		<copy file="${contrib.dir}/jSerialComm/jSerialComm-2.0.2.jar" todir="${build.lib.dir}" />
-		<copy file="${contrib.dir}/junit/junit-4.12.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/java3d/j3dcore.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/java3d/j3dutils.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/java3d/vecmath.jar" todir="${build.lib.dir}" />
@@ -230,6 +227,8 @@ mehr benötigt wird.
 		<copy file="${contrib.dir}/JogAmp/jogl-all-natives-windows-amd64.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/JogAmp/jogl-all-natives-windows-i586.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/JogAmp/jogl-all.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/jSerialComm/jSerialComm-2.0.2.jar" todir="${build.lib.dir}" />
+		<copy file="${contrib.dir}/junit/junit-4.12.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/picocontainer-1.2.jar" todir="${build.lib.dir}" />
 		<copy file="${contrib.dir}/mysql-connector-java-3.1.13-bin.jar" todir="${build.lib.dir}" />
 		
@@ -271,8 +270,6 @@ mehr benötigt wird.
 				<attribute
 					name="Class-Path"
 					value="
-						jSerialComm-2.0.2.jar :
-						junit-4.12.jar :
 						j3dcore.jar :
 						j3dutils.jar :
 						vecmath.jar :
@@ -289,6 +286,8 @@ mehr benötigt wird.
 						jogl-all-natives-macosx-universal.jar :
 						jogl-all-natives-windows-amd64.jar :
 						jogl-all-natives-windows-i586.jar :
+						jSerialComm-2.0.2.jar :
+						junit-4.12.jar :
 						picocontainer-1.2.jar :
 						mysql-connector-java-3.1.13-bin.jar
 						" />

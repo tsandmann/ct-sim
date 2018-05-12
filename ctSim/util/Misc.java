@@ -72,7 +72,7 @@ public class Misc {
 
 	/**
 	 * Liefert den übergebenen Wert <code>value</code> zurück, falls
-	 * 0 < <code>value</code> < <code>maxAllowed</code>
+	 * 0 &lt; <code>value</code> &lt; <code>maxAllowed</code>
 	 * gilt. Falls nicht, liefert den Wert aus dem Intervall [0; <code>maxAllowed</code>],
 	 * der <code>value</code> am Nächsten liegt.
 	 * 
@@ -180,7 +180,7 @@ public class Misc {
 	}
 
 	/**
-	 * Konvertiert ein Byte (Wertebereich [&minus;128; +127]) in ein <em>unsigned byte</em>
+	 * Konvertiert ein Byte (Wertebereich [-128; +127]) in ein <em>unsigned byte</em>
 	 * (Wertebereich [0; 255]).
 	 * 
 	 * @param value 
@@ -206,9 +206,9 @@ public class Misc {
 
 	/**
 	 * <p>
-	 * Erzeugt eine {@link ArrayList} mit den korrekten Typparametern. Verwendung:<br />
-	 * {@code List<EchtLangerAnstrengenderTyp> listInstance = newList();}<br />
-	 * Das ist schöner und leichter änderbar als:<br />
+	 * Erzeugt eine {@link ArrayList} mit den korrekten Typparametern. Verwendung:<br>
+	 * {@code List<EchtLangerAnstrengenderTyp> listInstance = newList();}<br>
+	 * Das ist schöner und leichter änderbar als:<br>
 	 * {@code List<EchtLangerAnstrengenderTyp> listInstance = new ArrayList<EchtLangerAnstrengenderTyp>();}
 	 * </p>
 	 * <p>

@@ -36,13 +36,13 @@ import ctSim.util.Misc;
  * <strong>Verwendungsbeispiel:</strong>
  * <ol>
  * <li><code>TournamentTree tree = new TournamentTree();</code></li>
- * <li><code>tree.add(<em>Bester der Vorrunde</em>);<br />
- * tree.add(<em>Zweitbester der Vorrunde</em>);<br />
- * tree.add(<em>Drittbester der Vorrunde</em>);<br />
+ * <li><code>tree.add(<em>Bester der Vorrunde</em>);<br>
+ * tree.add(<em>Zweitbester der Vorrunde</em>);<br>
+ * tree.add(<em>Drittbester der Vorrunde</em>);<br>
  * ...</code></li>
  * <li>
  * <pre>
- * for (int i = 0; i < tree.getLowestLevelId(); i *= 2) {
+ * for (int i = 0; i &lt; tree.getLowestLevelId(); i *= 2) {
  *     for (Player p : tree.getTournamentPlan(i)) {
  *         if (p == null)
  *             // Für diesen Platz steht noch kein Kontrahent fest
@@ -110,7 +110,7 @@ public class TournamentTree extends ArrayList<Integer> {
 	 * <p>
 	 * <strong>Wie viele Freilose?</strong>
 	 * Im Zweiunddreißigstelfinale müssen genau so viele Spieler rausfliegen, dass (im Beispiel) das
-	 * Sechzehntelfinale seine 32 Spieler hat --> Da pro Spiel ein Spieler rausfliegt, müssen 42 - 32 = 10
+	 * Sechzehntelfinale seine 32 Spieler hat -&gt; Da pro Spiel ein Spieler rausfliegt, müssen 42 - 32 = 10
 	 * Spiele im Zweiunddreißigstelfinale gespielt werden, die anderen bleiben leer. 10 Spiele = 20 Spieler,
 	 * d.h. die übrigen 22 Spieler bekommen ein Freilos.
 	 * </p>

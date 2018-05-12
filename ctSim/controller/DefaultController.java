@@ -125,7 +125,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         if (Config.getValue("BotAutoStart").equalsIgnoreCase("true")) {
         	String botBin = ConfigManager.path2Os(Config.getValue("botbinary"));
         	if (botBin != null) {
-        		invokeBot(new File(botBin)); // mit botBin als String funktioniert es nicht
+        		invokeBot(new File(botBin));	// mit botBin als String funktioniert es nicht
         	}
         }
     }
@@ -143,7 +143,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	public void run() {
 		int timeout = 10000;
 
-		// Sequencer-Thread hat eigene Referenz auf die Welt -- siehe Bug 55
+		// Sequencer-Thread hat eigene Referenz auf die Welt - siehe Bug 55
 		final World sequencersWorld = world;
 
         try {

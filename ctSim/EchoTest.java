@@ -73,7 +73,7 @@ public class EchoTest {
 		}
 		
 		t2 = System.nanoTime()/1000;
-		System.out.println("zeit in receiveCommands: "+(t2-t1)+" us   --  Zeit ausserhalb :"+aussen+ " us" );
+		System.out.println("zeit in receiveCommands: "+(t2-t1)+" us -- Zeit außerhalb :"+aussen+ " us" );
 	}	
 	
 	/**

@@ -49,8 +49,8 @@
  * <p>
  * <a name="turnierbaum">
  * <h3>Turnierbaum</h3>
- * </a> <em>Beispiel:</em><br />
- * <a href="doc-files/turnierbaum.pdf"> <img src="doc-files/turnierbaum-thumbnail.png" /> </a><br />
+ * </a> <em>Beispiel:</em><br>
+ * <a href="doc-files/turnierbaum.pdf"><img src="doc-files/turnierbaum-thumbnail.png" /> </a><br>
  * </p>
  * <p>
  * Der Turnierbaum beschreibt:
@@ -100,7 +100,7 @@
  *      |
  *      |
  *      v                     hat einen
- *   ContestConductor -------------------------> TournamentPlanner
+ *   ContestConductor -------------------------&gt; TournamentPlanner
  *          |                                            |
  *          |                                            |
  *          | hat einen                                  | hat einen

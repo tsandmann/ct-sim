@@ -43,11 +43,11 @@ import javax.swing.JTabbedPane;
  * erzeugt reguläre Tabs.
  * </p>
  * <p>
- * Verwendung:<br />
- * <code>JComponent tabContent = new JPanel();</code><br />
- * <code>tabContent.add(...);</code><br />
- * <code>ClosableTabsPane ctp = new {@link #ClosableTabsPane(Icon) ClosableTabsPane}(...);</code><br/>
- * <code>ctp.{@link #addClosableTab(String, Component, String) addClosableTab}("Tab-Titel", tabContent, "Tab-Tooltip");</code><br/>
+ * Verwendung:<br>
+ * <code>JComponent tabContent = new JPanel();</code><br>
+ * <code>tabContent.add(...);</code><br>
+ * <code>ClosableTabsPane ctp = new {@link #ClosableTabsPane(Icon) ClosableTabsPane}(...);</code><br>
+ * <code>ctp.{@link #addClosableTab(String, Component, String) addClosableTab}("Tab-Titel", tabContent, "Tab-Tooltip");</code>
  * </p>
  * <p>
  * Code neu geschrieben und erweitert; hierbei wurde das Grundprinzip übernommen aus:

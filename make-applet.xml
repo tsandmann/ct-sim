@@ -16,10 +16,10 @@ zu erreichen.
 <project default="make-applet">
 
 <!-- Variablen -->
-<property name="builddir" location="build-applet" />
-<property name="iconsdir" location="./images" />
+<property name="build.dir" location="build-applet" />
+<property name="icons.dir" location="./images" />
 <property name="jar-base-filename" value="ctsim-applet" />
-<property name="makecobdir" location="./contrib/makecob" />
+<property name="makecob.dir" location="./contrib/makecob" />
 
 <!--
 	Soll das Applet automatisch auf den Bot geladen werden, 
@@ -38,10 +38,10 @@ zu erreichen.
 	
 <target name="make-applet">
 	<!-- Builddir samt Inhalt loeschen falls vorhanden -->
-	<delete dir="${builddir}" />
+	<delete dir="${build.dir}" />
 
 	<!-- Builddir und META-INF machen falls nötig -->
-	<mkdir dir="${builddir}/META-INF" />
+	<mkdir dir="${build.dir}/META-INF" />
 
 	<!-- Wenn man das Ant-File debuggen will
 	<echoproperties />
@@ -51,19 +51,18 @@ zu erreichen.
 	<javac
 		srcdir="ctSim/applet"
 		sourcepath="."
-		destdir="${builddir}"
+		destdir="${build.dir}"
 		classpath="
-		contrib/jSerialComm/jSerialComm-2.0.2.jar\:
 		contrib/java3d/j3dcore.jar\:
 		contrib/java3d/j3dutils.jar\:
 		contrib/java3d/vecmath.jar\:
-		contrib/picocontainer-1.2.jar\:
-		contrib/BrowserLauncher2-1_3.jar"
+		contrib/jSerialComm/jSerialComm-2.0.2.jar\:
+		contrib/picocontainer-1.2.jar"
 		includeantruntime="false"
 	/>
 
 	<!-- Manifest für die Jars schreiben -->
-	<manifest file="${builddir}/META-INF/MANIFEST.MF">
+	<manifest file="${build.dir}/META-INF/MANIFEST.MF">
 	  <attribute name="Built-By" value="${user.name}" />
 	</manifest>
 
@@ -95,17 +94,17 @@ zu erreichen.
 			<param name="num" value="5" />
 			<param name="subdirs" value="ctSim/model/bots/components/*.class" />
 	</antcall>
-	<jar destfile="${builddir}/icons.jar"
-		basedir="${iconsdir}"
-		includes="${builddir}/ctSim/META-INF,*.gif"
+	<jar destfile="${build.dir}/icons.jar"
+		basedir="${icons.dir}"
+		includes="${build.dir}/ctSim/META-INF,*.gif"
 	/>
 
 	<!-- Ok Kompilat ist eingepackt, also kann das unkomprimierte jetzt weg
 	(verwirrt nur beim Hochladen) -->
-	<delete dir="${builddir}/ctSim" />
-	<delete dir="${builddir}/META-INF" />
+	<delete dir="${build.dir}/ctSim" />
+	<delete dir="${build.dir}/META-INF" />
 
-	<copy file="applet.html" tofile="${builddir}/index.html" />
+	<copy file="applet.html" tofile="${build.dir}/index.html" />
 
 	<!-- Bei Bedarf das Applet gleich auf den Bot laden -->
 	<antcall target="upload-applet" />
@@ -116,22 +115,22 @@ zu erreichen.
 
 <target name="make-jar">
 	<jar
-		destfile="${builddir}/${jar-base-filename}-${num}.jar"
-		basedir="${builddir}"
-		includes="${builddir}/ctSim/META-INF,${subdirs}"
+		destfile="${build.dir}/${jar-base-filename}-${num}.jar"
+		basedir="${build.dir}"
+		includes="${build.dir}/ctSim/META-INF,${subdirs}"
 		excludes="${exclude}"
 	/>
 </target>	
 	
 <!-- Erstellt eine cob-Datei für den WiPort -->
 <target name="make-cob">
-	<exec executable="perl" dir="${builddir}">
+	<exec executable="perl" dir="${build.dir}">
 		<arg value="makecob" />
 		<arg value="-v" />
 		<arg value="${file}" />
 	</exec>
-	<copy file="${builddir}/web.cob" tofile="${builddir}/web${num}.cob" />
-	<delete file="${builddir}/web.cob" />
+	<copy file="${build.dir}/web.cob" tofile="${build.dir}/web${num}.cob" />
+	<delete file="${build.dir}/web.cob" />
 </target>
 
 <!-- Erstellt eine cob-Datei aus jar-Archiv Nr. "num" -->
@@ -144,7 +143,7 @@ zu erreichen.
 
 <!-- Erstellt alle cob-Dateien -->
 <target name="make-all-cobs">
-	<copy file="${makecobdir}/makecob" tofile="${builddir}/makecob" />
+	<copy file="${makecob.dir}/makecob" tofile="${build.dir}/makecob" />
 	
 	<antcall target="make-cob">
 		<param name="file" value="index.html" />
@@ -172,27 +171,27 @@ zu erreichen.
 		<param name="i" value="5" />
 	</antcall>
 	
-	<delete file="${builddir}/makecob" />
+	<delete file="${build.dir}/makecob" />
 </target>
 
 <!-- Lädt die cob-Dateien per tftp auf den Bot -->
 <target name="tftp-upload">
 	<!-- Linux benutzt das Sh-Script -->
-	<exec executable="sh" dir="${builddir}" os="Linux">
-		<arg value="${makecobdir}/upload.sh" />
+	<exec executable="sh" dir="${build.dir}" os="Linux">
+		<arg value="${makecob.dir}/upload.sh" />
 		<arg value="${botaddress}" />
 		<arg value="binary\nput ${src} ${dest}" />
 	</exec>
 
 	<!-- Mac OS X benutzt das Sh-Script -->
-	<exec executable="sh" dir="${builddir}" os="Mac OS X">
-		<arg value="${makecobdir}/upload.sh" />
+	<exec executable="sh" dir="${build.dir}" os="Mac OS X">
+		<arg value="${makecob.dir}/upload.sh" />
 		<arg value="-e ${botaddress}" />
 		<arg value="put ${src} ${dest}" />
 	</exec>
 	
 	<!-- Windows bekommt die Parameter direkt -->
-	<exec executable="tftp" dir="${builddir}" os="Windows XP">
+	<exec executable="tftp" dir="${build.dir}" os="Windows XP">
 		<arg value="-i" />
 		<arg value="${botaddress}" />
 		<arg value="PUT" />
