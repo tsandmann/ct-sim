@@ -25,8 +25,8 @@ import java.util.Map;
 
 import ctSim.controller.Config;
 import ctSim.model.Command;
-import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWrite;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;

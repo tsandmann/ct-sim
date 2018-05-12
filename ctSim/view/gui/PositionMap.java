@@ -22,6 +22,7 @@ package ctSim.view.gui;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.Map;
+
 import ctSim.util.Misc;
 
 /** Klasse, um die Positionsdaten von Fenstern serialisieren zu können */

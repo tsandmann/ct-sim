@@ -40,6 +40,9 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -57,7 +60,6 @@ import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.image.TextureLoader;
-import javax.xml.parsers.*;
 
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;

@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -44,6 +45,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.BadLocationException;
+
 import ctSim.ConfigManager;
 import ctSim.controller.Config;
 import ctSim.model.bots.Bot;

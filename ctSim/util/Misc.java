@@ -20,6 +20,7 @@
 package ctSim.util;
 
 import static java.lang.Math.PI;
+
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;

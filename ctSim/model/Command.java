@@ -24,12 +24,12 @@ import java.net.ProtocolException;
 
 import ctSim.Connection;
 import ctSim.model.bots.SimulatedBot;
-import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.Actuators.DoorServo;
 import ctSim.model.bots.components.Actuators.Governor;
 import ctSim.model.bots.components.Actuators.LcDisplay;
 import ctSim.model.bots.components.Actuators.Led;
 import ctSim.model.bots.components.Actuators.Log;
+import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.Sensors.Border;
 import ctSim.model.bots.components.Sensors.Distance;
 import ctSim.model.bots.components.Sensors.Door;

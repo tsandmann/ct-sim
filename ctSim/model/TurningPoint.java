@@ -20,6 +20,7 @@
 package ctSim.model;
 
 import java.util.Vector;
+
 import javax.vecmath.Vector2d;
 
 /**
