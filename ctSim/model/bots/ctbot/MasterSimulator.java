@@ -19,7 +19,10 @@
 
 package ctSim.model.bots.ctbot;
 
-import static ctSim.model.ThreeDBot.State.*;
+import static ctSim.model.ThreeDBot.State.COLLIDED;
+import static ctSim.model.ThreeDBot.State.DOOR_OPEN;
+import static ctSim.model.ThreeDBot.State.IN_HOLE;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -45,12 +48,12 @@ import ctSim.model.bots.BotBuisitor;
 import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.Actuators.CamServo;
 import ctSim.model.bots.components.Actuators.DoorServo;
+import ctSim.model.bots.components.Actuators.Governor;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.Characteristic;
 import ctSim.model.bots.components.NumberTwin;
-import ctSim.model.bots.components.Sensors;
-import ctSim.model.bots.components.Actuators.Governor;
 import ctSim.model.bots.components.NumberTwin.NumberTwinVisitor;
+import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.Sensors.Clock;
 import ctSim.model.bots.components.Sensors.Door;
 import ctSim.model.bots.components.Sensors.Shutdown;

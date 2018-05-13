@@ -25,6 +25,7 @@ import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES_AS
 
 import java.io.IOException;
 import java.net.ProtocolException;
+
 import ctSim.Connection;
 import ctSim.controller.Config;
 import ctSim.model.Command;
@@ -34,9 +35,9 @@ import ctSim.model.bots.components.Actuators;
 import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
+import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
-import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
 import ctSim.util.BotID;
 import ctSim.util.Runnable1;
 

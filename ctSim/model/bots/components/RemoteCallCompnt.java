@@ -25,10 +25,12 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ProtocolException;
 import java.util.List;
+
 import javax.swing.SpinnerNumberModel;
+
 import ctSim.model.Command;
-import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWrite;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;

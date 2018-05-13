@@ -24,8 +24,8 @@ import java.util.Arrays;
 import java.util.EnumSet;
 
 import ctSim.model.Command;
-import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.components.Actuators.Led;
 import ctSim.model.bots.components.Actuators.Log;
 import ctSim.model.bots.components.Sensors.Mouse;

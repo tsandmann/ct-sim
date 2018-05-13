@@ -19,11 +19,13 @@
 
 package ctSim;
 
-import com.fazecast.jSerialComm.*;
-
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.logging.Level;
+
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
 
 import ctSim.controller.BotReceiver;
 import ctSim.controller.Config;

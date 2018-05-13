@@ -31,9 +31,9 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
 import ctSim.model.Command;
-import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
 import ctSim.model.Command.SubCode;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.Bot;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;

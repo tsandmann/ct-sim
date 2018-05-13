@@ -27,13 +27,13 @@ import java.io.IOException;
 import java.util.List;
 
 import ctSim.model.Command;
-import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.components.BotComponent.CanRead;
 import ctSim.model.bots.components.BotComponent.CanWrite;
 import ctSim.model.bots.components.BotComponent.CanWriteAsynchronously;
-import ctSim.util.Runnable1;
 import ctSim.util.Misc;
+import ctSim.util.Runnable1;
 
 /**
  * <ul>

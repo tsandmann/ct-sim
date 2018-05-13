@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ProtocolException;
+
 import ctSim.controller.Config;
 import ctSim.controller.Controller;
 import ctSim.model.Command;
