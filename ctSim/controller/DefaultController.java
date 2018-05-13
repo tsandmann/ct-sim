@@ -164,8 +164,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	        try {
 				long realTimeBeginInMs = System.currentTimeMillis();
 
-				// Warte, bis alle Bots fertig sind und auf die nächste Aktualisierung warten
-				// breche ab, wenn die Bots zu lange brauchen !
+				/* 
+				 * Warte, bis alle Bots fertig sind und auf die nächste Aktualisierung warten;
+				 * breche ab, wenn die Bots zu lange brauchen!
+				 */
 				if(! doneSignal.await(timeout, TimeUnit.MILLISECONDS)) {
 					lg.warn("Bot-Probleme: Ein oder mehrere Bots waren " +
 							"viel zu langsam (>"+timeout+" ms)");
@@ -184,12 +186,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 					lg.fine("Sequencer: Simulationsende");
 					// Spiel ist beendet
 					pause();
-					// Alle Bots entfernen
+					// alle Bots entfernen
 					sequencersWorld.removeAllBotsNow();
 					view.onSimulationFinished();
 				}
 
-				// den View(s) bescheid sagen
+				// den View(s) Bescheid sagen
 				view.onSimulationStep(sequencersWorld.getSimTimeInMs());
 
 				if(this.pause) {
@@ -200,7 +202,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 					lg.fine("Pause beendet: Sequencer freigegeben");
 				}
 
-				// Die ganze Simulation aktualisieren
+				// die ganze Simulation aktualisieren
 				sequencersWorld.updateSimulation();
 
 				// Fix für Bug 12
@@ -209,15 +211,17 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 					pause();
 				}
 
-				// Add/Start new Bot + neue Runde einläuten überschreibt startSignal, aber wir haben
-				// mit oldStartSignal eine Referenz aufgehoben
+				/* 
+				 * Add/Start new Bot + neue Runde einläuten überschreibt startSignal,
+				 * aber wir haben mit oldStartSignal eine Referenz aufgehoben
+				 */
 				doneSignal  = new CountDownLatch(sequencersWorld
 					.getFutureNumOfBots());
 				startSignal = new CountDownLatch(1);
 
 				sequencersWorld.startBots();
 
-				// Alle Bots wieder freigeben
+				// alle Bots wieder freigeben
 				oldStartSignal.countDown();
 
 				// Schlafe nur, wenn nicht schon zuviel Zeit "verbraucht" wurde
@@ -226,9 +230,11 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				if (timeToSleep > 0)
 					Thread.sleep(timeToSleep);
 	        } catch (InterruptedException e) {
-	            // Wird von wait() geworfen, wenn jemand closeWorld() macht während wait() noch läuft
-	        	// (closeWorld() ruft interrupt() auf). Man bittet uns, unsere while-Bedingung auszuwerten,
-				// weil die false geworden ist. Also normal weiter gehen.
+	            /* 
+	             * Wird von wait() geworfen, wenn jemand closeWorld() macht während wait() noch läuft
+	        	 * (closeWorld() ruft interrupt() auf). Man bittet uns, unsere while-Bedingung auszuwerten,
+				 * weil die false geworden ist. Also normal weiter gehen.
+				 */
 	        }
 	    }
 		sequencersWorld.cleanup();
@@ -275,21 +281,21 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		if (world == null)
 			throw new NullPointerException();
 
-		closeWorld();	// Beendet Thread
+		closeWorld();	// beendet Thread
 		this.world = world;
 		judge.setWorld(world);
 		view.onWorldOpened(world);
 		lg.info("Neue Welt geöffnet");
 
 		lg.fine("Initialisiere Sequencer");
-		pause = true;	// Immer pausiert starten
+		pause = true;	// immer pausiert starten
 		sequencer = new Thread(this, "ctSim-Sequencer");
 		sequencer.start();
     }
 
 	/** Hält den Sequencer-Thread an */
     public void closeWorld() {
-    	if (sequencer == null)	// Keine Welt geladen, d.h. kein Sequencer läuft
+    	if (sequencer == null)	// keine Welt geladen, d.h. kein Sequencer läuft
     		return;
 
     	lg.fine("Terminieren des Sequencer angefordert");
@@ -363,15 +369,17 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     		if (System.getProperty("os.name").indexOf("Linux") >= 0){
     			Process p = Runtime.getRuntime().exec(
     				new String[] { "chmod", "ugo+x", filename });
-    			p.waitFor();	// Warten bis der gelaufen ist
+    			p.waitFor();	// warten bis der gelaufen ist
     			if (p.exitValue() != 0) {
     				lg.warning("Fehler beim Setzen der execute-Permission: " +
     						"chmod lieferte %d zurück", p.exitValue());
     			}
     		}
-    		// Bot ausführen
-    		// String[], sonst trennt er das nach dem ersten Leerzeichen ab,
-    		// dann geht's nicht, wenn der Pfad mal ein Leerzeichen enthält
+    		/* 
+    		 * Bot ausführen
+    		 * String[], sonst trennt er das nach dem ersten Leerzeichen ab,
+    		 * dann geht's nicht, wenn der Pfad mal ein Leerzeichen enthält
+    		 */
     		File dir = new File(filename).getAbsoluteFile().getParentFile();
             Runtime.getRuntime().exec(new String[] { filename }, null, dir);
         } catch (Exception e){
@@ -442,8 +450,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		// für den Kommunikationsproxy brauchen wir eine Liste aller Bots
 		bots.add(bot);
 
-		// Und einen Dispose-Handler installieren, damit wir Bots auch wieder
-		// sauber beenden
+		// und einen Dispose-Handler installieren, damit wir Bots auch wieder sauber beenden
 		bot.addDisposeListener(new Runnable() {
 			public void run() {
 				onBotDisappeared(bot);
@@ -461,12 +468,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
     /**
-     * @param judgeClassName	Die Art des Schiedrichters zu setzen
+     * @param judgeClassName	die Art des Schiedrichters setzen
      * 
      * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist.
      */
     public void setJudge(String judgeClassName) {
-    	/* Kein Jugde-Wechsel wenn eine Welt offen ist */
+    	/* kein Jugde-Wechsel wenn eine Welt offen ist */
     	if (sequencer != null) {
     		lg.info("Kein Wechsel erlaubt, weil noch eine Welt offen ist");
     		return;
@@ -564,7 +571,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 */
 	public void deliverMessage(Command command) throws ProtocolException {
 		for (Bot b : bots) {
-			// Wir betrachten hier nur CtBot
+			// Wir betrachten hier nur CtBot.
 			if (b instanceof CtBot) {
 				/* direkte Nachrichten an Empfänger */
 				if (((CtBot)b).getId().equals(command.getTo())) {

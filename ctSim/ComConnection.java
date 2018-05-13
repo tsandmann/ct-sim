@@ -108,7 +108,7 @@ public class ComConnection extends Connection {
 			@Override
 			public void serialEvent(SerialPortEvent evt) {
 				if (evt.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
-					// Es gibt etwas zu lesen
+					// Es gibt etwas zu lesen.
 					synchronized (inputAvailMutex) {
 						inputAvailable = true;
 						inputAvailMutex.notify();

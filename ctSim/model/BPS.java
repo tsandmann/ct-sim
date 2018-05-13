@@ -34,9 +34,7 @@ public class BPS {
 	/** Wert des Sensors, wenn keine Landmarke gesehen wird */
 	public static final int NO_DATA = 0xffff; 
 	
-	/**
-	 * Eine Bake des BPS
-	 */
+	/** Eine Bake des BPS */
 	public static class Beacon {	
 		/** Position der Landmarke [parcoursBlockSizeInMM mm] */
 		private final Point2i position;
@@ -46,8 +44,8 @@ public class BPS {
 		/**
 		 * Erzeugt eine neue Landmarke
 		 * 
-		 * @param parc Parcours, in dem die Landmarke steht
-		 * @param source Position der Landmarke, so wie PickInfo sie ermittelt hat [m]
+		 * @param parc		Parcours, in dem die Landmarke steht
+		 * @param source	Position der Landmarke, so wie PickInfo sie ermittelt hat [m]
 		 */
 		public Beacon(Parcours parc, Point3d source) {
 			parcoursBlockSizeInMM = parc.getBlockSizeInMM();
@@ -83,8 +81,8 @@ public class BPS {
 		}
 		
 //		/**
-//		 * Prüft, ob die angegebene Parcours-Position für eine BPS-Landmarke gueltig ist
-//		
+//		 * Prüft, ob die angegebene Parcours-Position für eine BPS-Landmarke gültig ist
+//		 *
 //		 * @param parc	Parcours, in dem die Landmarke steht
 //		 * @param x		X-Koordinate [Parcours-Block]
 //		 * @param y		Y-Koordinate [Parcours-Block]

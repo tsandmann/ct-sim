@@ -101,7 +101,7 @@ import ctSim.util.Misc;
  * anderen Statusinformationen, die der Sim auswertet und dem Benutzer anzeigt.
  * Welche einzelnen Commands behandelt werden, und wie sie im Detail interpretiert
  * werden, ist Sache der Bot-Komponenten wie in der {@linkplain Code Command-Code-Liste}
- * beschrieben. </li>
+ * beschrieben.</li>
  * <li>Beim Start des Sim überträgt er ein Command mit dem Command-Code
  * {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * Der Bot antwortet mit einem Command, das ihn als realen Bot ausweist
@@ -183,8 +183,8 @@ import ctSim.util.Misc;
  * Java verwendet intern Big-Endian. Die Konvertierung erfolgt zu Fuß in dieser Klasse.
  * </p>
  *
- * @author Benjamin Benz (bbe@heise.de)
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Benjamin Benz
+ * @author Hendrik Krauß
  */
 public class Command {
 	/** Logger */
@@ -336,6 +336,7 @@ public class Command {
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
+
 	// Enum Command-Code
 	
 	/**
@@ -479,8 +480,7 @@ public class Command {
 				if (c.toUint7() == b)
 					return c;
 			}
-			throw new ProtocolException("Command-Code "+formatChar(b)+
-				" unbekannt");
+			throw new ProtocolException("Command-Code " + formatChar(b) + " unbekannt");
 		}
 
 		/**
@@ -497,9 +497,8 @@ public class Command {
 				if (c.toUint7() == b)
 					return c;
 			}
-			throw new ProtocolException("Sub-Command-Code "+formatChar(b)+
-				" nicht vorgesehen für Command-Code "+
-				formatChar(toUint7()));
+			throw new ProtocolException("Sub-Command-Code " + formatChar(b) +
+				" nicht vorgesehen für Command-Code "+ formatChar(toUint7()));
 		}
 
 		/**
@@ -507,12 +506,13 @@ public class Command {
 		 * @throws ProtocolException
 		 */
 		public void assertSubCodeValid(SubCode sc) throws ProtocolException {
-			// Wenn SubCode ungültig, explodiert der folgende Aufruf mit einer ProtoExcp
+			// wenn SubCode ungültig, explodiert der folgende Aufruf mit einer ProtoExcp
 			getSubCode(sc.toUint7());
 		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+
 	// Enum Sub-Command-Code
 
 	/** Ein Sub-Command-Code kann einen der Werte in diesem Enum haben. */
@@ -709,8 +709,8 @@ public class Command {
 	}
 
 	/**
-	 * Wie {@link #Command(Connection, boolean)} mit
-	 * {@code suppressSyncWarnings == false} (dem Normalwert).
+	 * Wie {@link #Command(Connection, boolean)} mit {@code suppressSyncWarnings == false}
+	 * (dem Normalwert).
 	 * 
 	 * @param con	Connection für das Kommando
 	 * @throws IOException
@@ -754,7 +754,8 @@ public class Command {
 		byte startCode = b[0];
 		if (startCode != STARTCODE) {
 			while (startCode != STARTCODE) {
-				String msg = "Unerwartetes Zeichen als Startcode; Synchronisierung verloren; synchronisiere neu. startCode=" + startCode + " anstatt " + STARTCODE;
+				String msg = "Unerwartetes Zeichen als Startcode; Synchronisierung verloren; synchronisiere neu. startCode=" +
+						startCode + " anstatt " + STARTCODE;
 				if (suppressSyncWarnings) {
 					lg.fine(msg);
 				} else {
@@ -774,7 +775,7 @@ public class Command {
 
 		byte i =0;
 		byte code = b[i++];
-		// Nur 7 least significant bits
+		// nur 7 least significant bits
 		int subcode = b[i] & 127;
 		// 7 least significant Bits weg, nur 8. angucken
 		direction = b[i++] >> 7 & 1;
@@ -899,11 +900,12 @@ public class Command {
 		if (payload == null)
 			payloadStr = "";
 		else {
-			payloadStr = "'"+replaceCtrlChars(getPayloadAsString())+
-				"' ("+payload.length+" Byte)";
+			payloadStr = "'" + replaceCtrlChars(getPayloadAsString()) + "' ("+payload.length+" Byte)";
 		}
-		// Vorsicht beim Ausgeben; wenn man lustig %c macht und der Wert wegen Sync- oder Lesefehlern
-		// mal < 0 wird, explodiert alles. Daher formatChar() eingeführt.
+		/* 
+		 * Vorsicht beim Ausgeben; wenn man lustig %c macht und der Wert wegen Sync- oder Lesefehlern
+		 * mal < 0 wird, explodiert alles. Daher formatChar() eingeführt.
+		 */
 		return
 			"\n\tCommand-Code:\t"+commandCode+
 			"\n\tSubcommand-Code:\t"+subCommandCode+
@@ -923,8 +925,7 @@ public class Command {
 	 */
 	public String toCompactString() {
 		return
-			String.format("%-20s",
-				commandCode + (has(SubCode.NORM) ? "" : "/"+subCommandCode))+
+			String.format("%-20s", commandCode + (has(SubCode.NORM) ? "" : "/"+subCommandCode))+
 			String.format(" L %4d R %4d", dataL, dataR)+
 			String.format(" Payload='%s'",
 				replaceCtrlChars(escapeNewlines(getPayloadAsString())));
@@ -1042,7 +1043,7 @@ public class Command {
 		try {
 			((Code) commandCode).assertSubCodeValid(sc);
 		} catch (ProtocolException e) {
-			// Das ist ein Fehler des Programmierers, keine Laufzeitsache
+			// Das ist ein Fehler des Programmierers und keine Laufzeitsache.
 			throw new AssertionError(e);
 		}
 		subCommandCode = sc;

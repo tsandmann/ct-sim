@@ -210,8 +210,7 @@ public class Main {
 			if (Config.getValue("useContestConductor").equalsIgnoreCase("true"))
 				v.add(dependencies.get(ContestConductor.class));
 		} catch (Exception e) {
-			lg.warn(e, "Probleme beim Instanziieren des ContestConductor; " +
-					"starte ohne");
+			lg.warn(e, "Probleme beim Instanziieren des ContestConductor; " + "starte ohne");
 		}
 
 		if (Config.getValue("TimeLogger").equalsIgnoreCase("true"))

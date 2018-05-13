@@ -27,7 +27,7 @@ import javax.vecmath.Vector3d;
 /**
  * Interface für Hindernisse aller Art in der Bot-Welt
  * 
- * @author Benjamin Benz (bbe@ctmagazin.de)
+ * @author Benjamin Benz
  */
 
 public abstract interface Obstacle {
@@ -48,7 +48,7 @@ public abstract interface Obstacle {
 	public abstract Vector3d getHeadingInWorldCoord();
 	
 	/** Erzeugt die 3D-Repräsentation eines Objektes */
-	//public abstract void createBranchGroup();
+//	public abstract void createBranchGroup();
 	
 	/**
 	 * @return die 3D-Repräsentation eines Objektes

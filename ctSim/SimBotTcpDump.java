@@ -46,11 +46,11 @@ public class SimBotTcpDump {
 	public static void main(String... args) throws Exception {
 		ServerSocket srvSock = new ServerSocket(10001);
 		while (true) {
-			// Blockiert
+			// blockiert
 			TcpConnection bot = new TcpConnection(srvSock.accept());
-			// Blockiert auch
+			// blockiert auch
 			TcpConnection sim = new TcpConnection("127.0.0.1", 10002);
-			// Go
+			// Go!
 			Forwarder bs = new Forwarder("Bot->Sim     ", bot, sim);
 			Forwarder sb = new Forwarder("     Sim->Bot", sim, bot);
 			bs.peer = sb;
@@ -115,7 +115,7 @@ public class SimBotTcpDump {
 
 			peer.deathRequested = true;
 			peer.interrupt();
-			// Rabiater, aber interrupt() zeigt vielleicht keine Wirkung
+			// rabiater, aber interrupt() zeigt vielleicht keine Wirkung
 			try { peer.from.close(); } catch (IOException e) { /* No-op */ }
 			try { peer.to.close(); } catch (IOException e) { /* No-op */ }
 		}

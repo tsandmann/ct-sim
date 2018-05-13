@@ -156,8 +156,7 @@ public class Config {
 	 * @throws IllegalArgumentException
 	 */
 	public static void loadIcons(File iconsBaseDirectory)
-	throws NullPointerException, FileNotFoundException,
-	IllegalArgumentException {
+	throws NullPointerException, FileNotFoundException, IllegalArgumentException {
 		setIconProvider(new FileIconMap(iconsBaseDirectory));
 	}
 
@@ -209,8 +208,8 @@ public class Config {
 		private static final long serialVersionUID = - 6931464910390788433L;
 
 		/**
-		 * Lädt die <code><parameter></code>-Tags aus der Konfigurationsdatei des Sims. Die Werte der
-		 * Tags sind dann mittels get(String) verfügbar.
+		 * Lädt die <code><parameter></code>-Tags aus der Konfigurationsdatei des Sims.
+		 * Die Werte der Tags sind dann mittels get(String) verfügbar.
 		 * 
 		 * @param doc	Config-Dokument
 		 */
@@ -225,12 +224,15 @@ public class Config {
 			try {
 				for(QueryableNode n : doc.getNodeList("/ct-sim/parameter")) {
 					String parmOs = n.getString("@os").toLowerCase();
-					// Beispiele für os.name: "Windows XP", "Linux", "Mac OS X"
-					// Siehe http://tolstoy.com/samizdat/sysprops.html
+					/* 
+					 * Beispiele für os.name: "Windows XP", "Linux", "Mac OS X"
+					 * Siehe http://tolstoy.com/samizdat/sysprops.html
+					 */
 					String currentOs = System.getProperty("os.name")
 						.toLowerCase();
 
-					/* Attribut os nicht vorhanden (= alle Betriebsysteme), oder vorhanden und System
+					/* 
+					 * Attribut os nicht vorhanden (= alle Betriebsysteme), oder vorhanden und System
 					 * passt startsWith() damit "Windows" in der ct-sim.xml das von System.getProperty()
 					 * gelieferte "Windows XP" matcht
 					 */
@@ -238,7 +240,7 @@ public class Config {
 						put(n.getString("@name"), n.getString("@value"));
 				}
 			} catch (XPathExpressionException e) {
-				// "Kann nicht passieren"
+				// "kann nicht passieren"
 				throw new AssertionError(e);
 			}
 		}
@@ -321,10 +323,10 @@ public class Config {
 		BotAppearances(QueryableDocument d) {
 			try {
 				for (QueryableNode botTag : d.getNodeList("/ct-sim/bots/bot")) {
-					// Neues Format versuchen
+					// neues Format versuchen
 					String className = botTag.getString("@class");
 					if ("".equals(className))
-						// Altes Format
+						// altes Format
 						className = botTag.getString("@name");
 					try {
 						// getClass() == null, falls className "default" ist
@@ -338,7 +340,7 @@ public class Config {
 					}
 				}
 			} catch (XPathExpressionException e) {
-				// Kann nur passieren, wenn jemand etwas am Code ändert
+				// kann nur passieren, wenn jemand etwas am Code ändert
 				throw new AssertionError(e);
 			}
 		}
@@ -375,18 +377,16 @@ public class Config {
 			try { return getClassTolerateNumber(classNameFromXml); }
 			catch (ClassNotFoundException e) { /* weitermachen */ }
 
-			// 3. + 4. Versuch: Angegebenes Package weg wenn vorhanden, unsere
-			// eigenen Schätzungen versuchen
+			// 3. + 4. Versuch: Angegebenes Package weg wenn vorhanden, unsere eigenen Schätzungen versuchen
 			String c = Misc.lastOf(classNameFromXml.split("\\."));
 			try { return getClassTolerateNumber("ctSim.model.bots."+c); }
 			catch (ClassNotFoundException e) { /* weitermachen */ }
 
-			// Wenn das auch nicht geht, Exception rauslassen
+			// wenn das auch nicht geht, Exception rauslassen
 			return getClassTolerateNumber("ctSim.model.bots.ctbot."+c);
 		}
 
-		// Das alte Format erlaubte z.B. "CtBotSimTcp_3";
-		// probieren wir es ohne Unterstrich und Nummer
+		// Das alte Format erlaubte z.B. "CtBotSimTcp_3"; probieren wir es ohne Unterstrich und Nummer
 		
 		/**
 		 * @param classNameFromXml	Klasse als XML
@@ -441,8 +441,7 @@ public class Config {
 			}
 
 			if (cList == null) {
-				lg.warn("Konfigdatei: Keine Default-Appearance gefunden; " +
-					"verwende Fallback");
+				lg.warn("Konfigdatei: Keine Default-Appearance gefunden; " + "verwende Fallback");
 				return botColorFallback;
 			}
 

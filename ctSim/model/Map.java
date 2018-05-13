@@ -81,7 +81,7 @@ public class Map {
 			int index_y = y / section_points;
 			
 			if (index_x >= this.sections.length || index_y >= this.sections.length) {
-				throw new MapException("Zugriff auf eine Section ausserhalb des Makroblocks " + this);
+				throw new MapException("Zugriff auf eine Section außerhalb des Makroblocks " + this);
 			}
 			
 			return this.sections[index_x][index_y];
@@ -127,7 +127,7 @@ public class Map {
 		 */
 		public byte getField(int x, int y) throws MapException {
 			if (x >= section_points || y >= section_points) {
-				throw new MapException("Zugriff auf ein Feld ausserhalb der Section " + this);
+				throw new MapException("Zugriff auf ein Feld außerhalb der Section " + this);
 			}
 			return fields[x][y];
 		}
@@ -142,7 +142,7 @@ public class Map {
 		 */
 		public void setField(int x, int y, byte value) throws MapException {
 			if (x >= section_points || y >= section_points) {
-				throw new MapException("Zugriff auf ein Feld ausserhalb der Section " + this);
+				throw new MapException("Zugriff auf ein Feld außerhalb der Section " + this);
 			}
 			fields[x][y] = value;
 		}
