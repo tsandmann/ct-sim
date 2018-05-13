@@ -39,7 +39,7 @@ import ctSim.model.Command;
 public class SimBotTcpDump {
 	/**
 	 * main
-	 * 
+	 *
 	 * @param args
 	 * @throws Exception
 	 */
@@ -61,7 +61,7 @@ public class SimBotTcpDump {
 				srvSock.close();
 			}
 			try { sim.close(); } catch (IOException e) {
-				srvSock.close();	
+				srvSock.close();
 			}
 		}
 	}
@@ -79,7 +79,7 @@ public class SimBotTcpDump {
 
 		/**
 		 * Forwarder
-		 * 
+		 *
 		 * @param name
 		 * @param from
 		 * @param to
@@ -116,8 +116,8 @@ public class SimBotTcpDump {
 			peer.deathRequested = true;
 			peer.interrupt();
 			// Rabiater, aber interrupt() zeigt vielleicht keine Wirkung
-			try { peer.from.close(); } catch (IOException e) {/**/}
-			try { peer.to.close(); } catch (IOException e) {/**/}
+			try { peer.from.close(); } catch (IOException e) { /* No-op */ }
+			try { peer.to.close(); } catch (IOException e) { /* No-op */ }
 		}
 	}
 }

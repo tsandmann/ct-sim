@@ -27,7 +27,7 @@ import ctSim.model.Command;
 /**
  * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim gehört. Habe keine Ahnung, wofür
  * das sein soll. Ich nehme die Datei aus dem Build Path, damit man bei Namensänderungen in Sim-Klassen
- * das nicht immer hier mitführen muss. - Hendrik Krauß (hkr@heise.de)
+ * das nicht immer hier mitführen muss. - Hendrik Krauß
  */
 public class EchoTest {
 
@@ -73,7 +73,7 @@ public class EchoTest {
 		}
 		
 		t2 = System.nanoTime()/1000;
-		System.out.println("zeit in receiveCommands: "+(t2-t1)+" us -- Zeit außerhalb :"+aussen+ " us" );
+		System.out.println("Zeit in receiveCommands: "+(t2-t1)+" us -- Zeit außerhalb :"+aussen+ " us" );
 	}	
 	
 	/**

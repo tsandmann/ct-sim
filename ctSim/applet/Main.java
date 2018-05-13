@@ -73,7 +73,7 @@ public class Main extends JApplet implements BotReceiver {
 	/** Controller-Referenz */
 	private Controller controller = null;
 
-	
+
 	/** Initialiserung des Applets */
 	@Override
 	public void init() {
@@ -88,7 +88,7 @@ public class Main extends JApplet implements BotReceiver {
 		JPanel p = new JPanel();
 		p.add(status);
 		getContentPane().add(p);
-		
+
 		// Controller wird für Bot-ID-Vergabe benötigt!
 		controller = new DefaultController();
 	}
@@ -160,6 +160,7 @@ public class Main extends JApplet implements BotReceiver {
 
 	/**
 	 * Fügt einen neuen (bereits erstellten) Bot in das Fenster ein
+	 * 
 	 * @param b	Referenz auf den neuen Bot
 	 */
 	public void onBotAppeared(final Bot b) {
@@ -198,7 +199,7 @@ public class Main extends JApplet implements BotReceiver {
 		try {
 			bot.setController(controller);
 		} catch (ProtocolException e) {
-			// kann eigentlich nicht passieren...
+			// "kann nicht passieren"
 			destroy();
 		}
 	}

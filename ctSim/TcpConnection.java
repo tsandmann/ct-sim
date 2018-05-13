@@ -32,7 +32,7 @@ import ctSim.util.SaferThread;
 /**
  * Repräsentiert eine TCP-Verbindung
  *
- * @author Benjamin Benz (bbe@heise.de)
+ * @author Benjamin Benz
  * @author Christoph Grimmer (c.grimmer@futurio.de)
  */
 public class TcpConnection extends Connection {
@@ -41,7 +41,7 @@ public class TcpConnection extends Connection {
 
 	/**
 	 * TCP-Verbindung
-	 * 
+	 *
 	 * @param sock	Socket
 	 * @throws IOException
 	 */
@@ -52,8 +52,8 @@ public class TcpConnection extends Connection {
 	}
 
 	/**
-	 * Wandelt den übergebenen String und die Portnummer in eine TCP/IP-Adresse
-	 * und stellt dann die Verbindung her
+	 * Wandelt den übergebenen String und die Portnummer in eine TCP/IP-Adresse und stellt dann die
+	 * Verbindung her
 	 *
 	 * @param hostname	Adresse als String
 	 * @param port		Portnummer
@@ -65,7 +65,7 @@ public class TcpConnection extends Connection {
 
 	/**
 	 * Beendet die laufende Verbindung
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Override
@@ -92,7 +92,7 @@ public class TcpConnection extends Connection {
 
 	/**
 	 * Beginnt zu lauschen
-	 * 
+	 *
 	 * @param receiver	Bot-Receiver
 	 */
 	public static void startListening(final BotReceiver receiver) {
@@ -111,7 +111,7 @@ public class TcpConnection extends Connection {
 				@Override
 				public void work() {
 					try {
-						Socket s = srvSocket.accept(); // blockiert
+						Socket s = srvSocket.accept();	// blockiert
 						lg.fine("Verbindung auf Port " + srvSocket.getLocalPort() + "/tcp eingegangen");
 						new TcpConnection(s).doHandshake(receiver);
 					} catch (IOException e) {
@@ -127,14 +127,14 @@ public class TcpConnection extends Connection {
 
 	/**
 	 * Verbindet zu Host:Port
-	 * 
+	 *
 	 * @param hostname	Host-Name des Bots
 	 * @param port		Port
 	 * @param receiver	Bot-Receiver
 	 */
 	public static void connectTo(final String hostname, final int port,
 	final BotReceiver receiver) {
-		final String address = hostname+":"+port; // Nur für Meldungen
+		final String address = hostname+":"+port;	// nur für Meldungen
     	lg.info("Verbinde mit "+address+" ...");
 		new SaferThread("ctSim-Connect-"+address) {
 			@Override
@@ -144,8 +144,7 @@ public class TcpConnection extends Connection {
 		    	} catch (UnknownHostException e) {
 		    		lg.warn("Host '"+e.getMessage()+"' nicht gefunden");
 		    	} catch (ConnectException e) {
-		    		// ConnectExcp deckt so Sachen ab wie "connection refused"
-		    		// und "connection timed out"
+		    		// ConnectExcp deckt so Sachen ab wie "connection refused" und "connection timed out"
 		    		lg.warn("Konnte Verbindung mit "+address+
 		    			" nicht herstellen ("+e.getLocalizedMessage()+")");
 				} catch (IOException e) {

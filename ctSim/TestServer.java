@@ -37,7 +37,7 @@ import ctSim.util.FmtLogger;
 /**
  * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim gehört. Habe keine Ahnung, wofür
  * das sein soll. Ich nehme die Datei aus dem Build Path, damit man bei Namensänderungen in Sim-Klassen
- * das nicht immer hier mitführen muss. - Hendrik Krauß (hkr@heise.de)
+ * das nicht immer hier mitführen muss. - Hendrik Krauß
  */
 public class TestServer implements Runnable {
 	FmtLogger lg = FmtLogger.getLogger("ctSim.TestServer");
@@ -97,14 +97,10 @@ public class TestServer implements Runnable {
 			implements Runnable {
 		
 		private Socket socket;
-		
 		private Thread thrd;
-		
 		private Worker worker;
-		
 //		private PrintWriter out;
 //		private BufferedReader in;
-		
 		private DataInputStream  in;
 		private DataOutputStream out;
 		
@@ -118,9 +114,7 @@ public class TestServer implements Runnable {
 			try {
 				this.socket = socket;
 //				this.out = new PrintWriter(socket.getOutputStream(), true);
-//				this.in = new BufferedReader(
-//						new InputStreamReader(
-//						socket.getInputStream()));
+//				this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				this.in  = new DataInputStream(this.socket.getInputStream());
 				this.out = new DataOutputStream(this.socket.getOutputStream());
 			} catch (IOException e) {
@@ -191,7 +185,7 @@ public class TestServer implements Runnable {
 //								// "%9d ns", (System.nanoTime()-time)));
 //								"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
 //						else
-//							//throw (new IOException("Stream ends here or connection broken"));
+//							// throw (new IOException("Stream ends here or connection broken"));
 //							break;
 //						
 //					} else {
@@ -204,7 +198,7 @@ public class TestServer implements Runnable {
 					receiveCommands();
 					
 					System.out.println(String.format("SERVER: Antwort nach " +
-						//"%9d ns", (System.nanoTime()-time)));
+						// "%9d ns", (System.nanoTime()-time)));
 						"%4.3f ms", ((float) (System.nanoTime()-time)) / 1000000.));
 					
 					if(this.worker != null)
@@ -240,7 +234,7 @@ public class TestServer implements Runnable {
 			try {
 				synchronized (this.out) {
 					this.out.write(sendByte);
-					this.out.flush(); // write dos
+					this.out.flush();	// write dos
 				}
 			} catch (IOException iOEx) {
 				throw iOEx;
@@ -482,7 +476,6 @@ public class TestServer implements Runnable {
 	
 	/**
 	 * Der TestServer lauscht auf Connections auf dem global angegebenen Port.
-	 * 
 	 * Bei einer ankommenden Connection wird diese an eine 'ServerCom' übergeben und weiter gelauscht...
 	 */
 	TestServer(int port) {
@@ -547,9 +540,8 @@ public class TestServer implements Runnable {
 
 /** 
  * Der TestClient schickt einfach ein ankommendes Datum zurück an den Server, der dann die Zeit stoppt
- * und ausgibt (SERVER_TIME).
- * 
- * Oder er schickt ein Datum an den Server und wartet selbst bis dieses zurückkommt (SERVER_TIME == FALSE).
+ * und ausgibt (SERVER_TIME) oder er schickt ein Datum an den Server und wartet selbst bis dieses
+ * zurückkommt (SERVER_TIME == FALSE).
  */
 class TestClient implements Runnable {
 
