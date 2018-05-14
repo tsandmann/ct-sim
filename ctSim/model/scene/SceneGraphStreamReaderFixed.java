@@ -35,11 +35,11 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 import ctSim.util.FmtLogger;
 
 /**
- * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamReader
- * von Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu
- * transferieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
+ * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamReader von
+ * Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu transferieren.
+ * Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
  * 
- * @author Benjamin Benz (bbe@heise.de)
+ * @author Benjamin Benz
  */
 public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	/** Logger */
@@ -88,13 +88,12 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 				map.put(name,so);
 				System.out.println(string+name+" rekonstruiert");
 			} else {
-				lg.warn(string+name+" konnte nach der Übertragung nicht " +
-						"rekonstruiert werden");
+				lg.warn(string+name+" konnte nach der Übertragung nicht " + "rekonstruiert werden");
 				toKill.add(name);
 			}
 		}
 		
-		// Entferne alle Listeneinträge, die nicht korrekt übertragen wurden
+		// entferne alle Listeneinträge, die nicht korrekt übertragen wurden
 		it=toKill.iterator();
 		while (it.hasNext()){
 			String name = (String)it.next();
@@ -128,5 +127,4 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 		}
 		return null;
 	}
-
 }

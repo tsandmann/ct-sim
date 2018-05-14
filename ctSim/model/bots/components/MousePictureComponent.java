@@ -167,7 +167,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		int i;
 		for (i = 0; i < c.getPayload().length; i++) {
 			int gray = Misc.toUnsignedInt8(c.getPayload()[i]);
-			gray &= 0x3F;	// Nur 6 rechteste Bits (Statusinfos ausblenden)
+			gray &= 0x3F;	// nur 6 rechteste Bits (Statusinfos ausblenden)
 			// verbleibende Bits auf den normalen Graustufenraum ausdehnen
 			gray = gray << 2;
 
@@ -175,7 +175,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			int row = (offset + i) / WIDTH;
 			col = HEIGHT - 1 - col;	// spiegeln - oben und unten vertauschen
 			// Um 90 Grad drehen = Spaltennr. und Zeilennr. vertauschen (siehe )	// $$$ siehe Protokoll-Doku
-			// Ohne Drehen wäre pixels[col + (row * WIDTH)]
+			// ohne Drehen wäre pixels[col + (row * WIDTH)]
 			pixels[(col * HEIGHT) + row] = colorFromRgb(gray, gray, gray);
 		}
 
@@ -265,7 +265,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		if (imageEventPending) {
 			imageEventPending = false;
 			Image img = Toolkit.getDefaultToolkit().createImage(
-				new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
+					new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH));
 			for (Runnable1<Image> li : imageLi)
 				li.run(img);
 		}

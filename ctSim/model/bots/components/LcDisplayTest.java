@@ -89,8 +89,7 @@ public class LcDisplayTest extends LcDisplay {
 		setCursor(0, 0);
 		overwrite(insertion);
 		updateExternalModel();
-		String expected = twentyFourLines.replaceFirst(
-			"^ {" + insertion.length() + "}", insertion);
+		String expected = twentyFourLines.replaceFirst("^ {" + insertion.length() + "}", insertion);
 		assertEquals(expected, getExText());
 	}
 	
@@ -107,7 +106,7 @@ public class LcDisplayTest extends LcDisplay {
 		updateExternalModel();
 		String expected = twentyFourLines;
 		expected = expected.substring(0, 10) + insertion +
-			expected.substring(10 + insertion.length(), expected.length());
+				expected.substring(10 + insertion.length(), expected.length());
 		assertEquals(expected, getExText());
 	}
 	
@@ -124,8 +123,7 @@ public class LcDisplayTest extends LcDisplay {
 		overwrite(insertion);
 		updateExternalModel();
 		String expected = twentyFourLines.substring(0, 43*8) + insertion +
-		twentyFourLines.substring(43*8 + insertion.length(),
-			twentyFourLines.length());
+				twentyFourLines.substring(43*8 + insertion.length(), twentyFourLines.length());
 		assertEquals(expected, getExText());
 	}
 	
@@ -141,8 +139,7 @@ public class LcDisplayTest extends LcDisplay {
 		setCursor(38, 23);
 		overwrite(insertion);
 		updateExternalModel();
-		String expected = twentyFourLines.substring(0, 43*23 + 38) +
-			insertion.substring(0, 4);
+		String expected = twentyFourLines.substring(0, 43*23 + 38) + insertion.substring(0, 4);
 		assertEquals(expected, getExText());
 	}
 	

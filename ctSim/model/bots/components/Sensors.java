@@ -38,8 +38,7 @@ import ctSim.view.gui.RemoteControlViewer;
 /** Sensoren */
 public class Sensors {
 	/** Logger */
-	static final FmtLogger lg = FmtLogger.getLogger(
-		"ctSim.model.bots.components.Sensors");
+	static final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.components.Sensors");
 
 	/** Klasse der Liniensensoren */
 	public static class Line extends NumberTwin
@@ -276,12 +275,11 @@ public class Sensors {
 		public synchronized void readFrom(Command c) {
 			if (c.getDataL() != lastTransmittedSimTime) {
 				if (lastTransmittedSimTime == -1)
-					// Für das allererste DONE-Kommando doch nicht warnen
+					// für das allererste DONE-Kommando doch nicht warnen
 					return;		
-				lg.warn("Bot-Steuercode hat unerwartete lastTransmitted-Zeit "+
-						"gesendet (erwartet: %d, tatsächlich: %d); dies "+
-						"deutet darauf hin, dass der Steuercode Simschritte "+
-						"verschlafen hat",
+				lg.warn("Bot-Steuercode hat unerwartete lastTransmitted-Zeit " +
+						"gesendet (erwartet: %d, tatsächlich: %d); dies " +
+						"deutet darauf hin, dass der Steuercode Simschritte verschlafen hat",
 						lastTransmittedSimTime, c.getDataL());
 				
 			}
@@ -361,9 +359,7 @@ public class Sensors {
 		@Override
 		public String getDescription() {
 			return "Maus-Sensor: " +
-				(isX
-				? "Drehgeschwindigkeit (X-Komponente)"
-				: "Geradeaus-Geschwindigkeit (Y-Komponente)");
+				(isX ? "Drehgeschwindigkeit (X-Komponente)" : "Geradeaus-Geschwindigkeit (Y-Komponente)");
 		}
 
 		/**
@@ -429,13 +425,13 @@ public class Sensors {
 		 */
 		private synchronized void send(int rc5Code) throws IOException {
 			if (writesAsynchronously()) {
-				// Gleich schreiben
+				// gleich schreiben
 				synchronized (asyncOut) {
 					asyncOut.getCommand(getHotCmdCode()).setDataL(rc5Code);
 					asyncOut.flush();
 				}
 			} else {
-				// Puffern bis zum writeTo
+				// puffern bis zum writeTo
 				syncPendingRcCode = rc5Code;
 			}
 		}
@@ -667,13 +663,12 @@ public class Sensors {
 		 */
 		@Override
 		public String getDescription() {
-			return "Sensor für Motor- oder Batteriefehler; 0 = Fehler; " +
-					"1 = okay";
+			return "Sensor für Motor- oder Batteriefehler; 0 = Fehler; " + "1 = okay";
 		}
 
 		/** Error-Sensor */
 		public Error() {
-			// Hat 1 als Standardwert, nicht 0
+			// hat 1 als Standardwert, nicht 0
 			internalModel = Double.valueOf(1);
 			updateExternalModel();
 		}

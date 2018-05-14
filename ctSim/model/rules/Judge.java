@@ -27,15 +27,14 @@ import ctSim.view.gui.Debug;
 /**
  * Abstrakte Superklasse für alle Judges, die prüfen, ob die Spielregeln eingehalten werden.
  *
- * @author Benjamin Benz (bbe@heise.de)
+ * @author Benjamin Benz
  */
 public abstract class Judge {
 	/**
-	 * Diese konfus benannte Variable gibt an, ob {@link #isSimulationFinished()} in irgendeinem der
-	 * bisherigen Simulatorschritte <code>true</code> zurückgegeben hat. Mit der vorliegenden
-	 * Implementierung von DefaultJudge bleibt die Variable immer auf <code>true</code> stehen.
-	 * Mit der vorliegenden Implementierung von LabyrinthJudge wird die Variable genau dann
-	 * <code>false</code>, wenn ein Bot das Ziel erreicht hat.
+	 * Diese konfus benannte Variable gibt an, ob {@link #isSimulationFinished()} in irgendeinem der bisherigen
+	 * Simulatorschritte <code>true</code> zurückgegeben hat. Mit der vorliegenden Implementierung von
+	 * DefaultJudge bleibt die Variable immer auf <code>true</code> stehen. Mit der vorliegenden Implementierung
+	 * von LabyrinthJudge wird die Variable genau dann <code>false</code>, wenn ein Bot das Ziel erreicht hat.
 	 */
 	private boolean start = true;
 
@@ -59,7 +58,7 @@ public abstract class Judge {
 	}
 
 	/** 
-	 * Gibt an, ob es erlaubt ist, Bots zum Spiel hinzuzufügen.
+	 * Gibt an, ob es erlaubt ist, Bots zum Spiel hinzuzufügen
 	 * 
 	 * @return true/false
 	 */
@@ -90,9 +89,8 @@ public abstract class Judge {
 	/** Stellt fest, ob die momentane Simulation beendet werden soll
 	 * 
 	 * @param t	Zeit
-	 * @return <code>true</code>, falls die Simulation beendet werden soll; typischerweise, weil ein
-	 * 			Bot das Ziel erreicht hat. <code>false</code>, falls die Simulation fortgesetzt werden
-	 * 			soll.
+	 * @return <code>true</code>, falls die Simulation beendet werden soll; typischerweise, weil ein Bot das
+	 * 			Ziel erreicht hat. <code>false</code>, falls die Simulation fortgesetzt werden soll.
 	 */
 	public final boolean isSimulationFinished(long t) {
 		this.time = t;

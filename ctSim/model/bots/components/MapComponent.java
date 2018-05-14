@@ -118,16 +118,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		try {
 			size = Float.parseFloat(size_str);
 		} catch (NumberFormatException exc) {
-			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
-				"Parameter 'mapSize' ist keine gueltige Map-Größe!");
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: "
+					+ "Parameter 'mapSize' ist keine gültige Map-Größe!");
 		}
 		String resolution_str = Config.getValue("mapResolution");
 		int resolution = 0;
 		try {
 			resolution = Integer.parseInt(resolution_str);
 		} catch (NumberFormatException exc) {
-			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
-				"Parameter 'mapResolution' ist keine gueltige Map-Größe!");
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: "
+					+ "Parameter 'mapResolution' ist keine gültige Map-Größe!");
 		}
 		size *= resolution;
 		
@@ -136,8 +136,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		try {
 			section_size = Integer.parseInt(section_size_str);
 		} catch (NumberFormatException exc) {
-			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
-				"Parameter 'mapSectionSize' ist keine gueltige Sektionsgröße!");
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: "
+					+ "Parameter 'mapSectionSize' ist keine gültige Sektionsgröße!");
 		}
 		
 		String makroblock_size_str = Config.getValue("mapMacroblockSize");
@@ -145,15 +145,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		try {
 			makroblock_size = Integer.parseInt(makroblock_size_str);
 		} catch (NumberFormatException exc) {
-			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
-				"Parameter 'mapMacroblockSize' ist keine gueltige Sektionsgröße!");
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: "
+					+ "Parameter 'mapMacroblockSize' ist keine gültige Sektionsgröße!");
 		}
 		
 		WIDTH = (int) size;
 		HEIGHT = (int) size;
 		SECTION_SIZE = section_size;
 		MAKROBLOCK_SIZE = makroblock_size;
-		lg.fine("Map-Paramter: WIDTH=" + WIDTH + " HEIGHT=" + HEIGHT + " SECTION_SIZE=" + SECTION_SIZE + " MAKROBLOCK_SIZE=" + MAKROBLOCK_SIZE);
+		lg.fine("Map-Paramter: WIDTH=" + WIDTH + " HEIGHT=" + HEIGHT + " SECTION_SIZE=" + SECTION_SIZE
+					+ " MAKROBLOCK_SIZE=" + MAKROBLOCK_SIZE);
 		
 		pixels = new int[WIDTH * HEIGHT];
 		botPos = new Point3i(WIDTH / 2, HEIGHT / 2, 0);
@@ -166,8 +167,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
         try {
         	tmp = Integer.parseInt(Config.getValue("MapUpdateIntervall"));
         } catch(NumberFormatException exc) {
-            lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
-                    "Parameter 'MapUpdateIntervall' ist keine Ganzzahl");
+            lg.warning(exc, "Problem beim Parsen der Konfiguration: "
+                    + "Parameter 'MapUpdateIntervall' ist keine Ganzzahl");
         } finally {
         	updateIntervall = tmp;
         }
@@ -268,8 +269,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 */
 	private final void updateInternalModel(byte[] data, int block, int from, int to) {
 		/* Monsters here... */
-		int x = ((block * (SECTION_SIZE * 2)) % MAKROBLOCK_SIZE + (block / MAKROBLOCK_SIZE) * MAKROBLOCK_SIZE) % WIDTH; // 2 sections pro Block in X-Richtung (nach Map-Orientierung)
-		int y = (((block / SECTION_SIZE) * SECTION_SIZE) % MAKROBLOCK_SIZE) + (block / HEIGHT) * MAKROBLOCK_SIZE; // 1 section pro Block in Y-Richtung (nach Map-Orientierung)
+		int x = ((block * (SECTION_SIZE * 2)) % MAKROBLOCK_SIZE + (block / MAKROBLOCK_SIZE)
+					* MAKROBLOCK_SIZE) % WIDTH;	// 2 sections pro Block in X-Richtung (nach Map-Orientierung)
+		int y = (((block / SECTION_SIZE) * SECTION_SIZE) % MAKROBLOCK_SIZE) + (block / HEIGHT)
+					* MAKROBLOCK_SIZE;	// 1 section pro Block in Y-Richtung (nach Map-Orientierung)
 
 		/* neu empfangene Daten ins Map-Array kopieren */
 		int pic_x = 0, pic_y = 0;
@@ -278,7 +281,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			pic_y = x + j;	// X der Map ist Y beim Sim
 			if (pic_y >= HEIGHT || pic_y < 0) {
 				/* ungültige Daten */
-				lg.warn("ungueltige Map-Position (pic_y=" + pic_y + ") breche Update ab");
+				lg.warn("ungültige Map-Position (pic_y=" + pic_y + ") breche Update ab");
 				return;
 			}
 			pic_y = (HEIGHT - 1) - pic_y;	// Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
@@ -287,7 +290,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				pic_x = y + i;	// Spaltenindex im Block berechnen, Y der Map ist X beim Sim
 				if (pic_x >= WIDTH || pic_x < 0) {
 					/* ungültige Daten */
-					lg.warn("ungueltige Map-Position (pic_x=" + pic_x + ") breche Update ab");
+					lg.warn("ungültige Map-Position (pic_x=" + pic_x + ") breche Update ab");
 					return;
 				}
 				pic_x = (WIDTH - 1) - pic_x;	// Karte wird um 180 Grad gedreht, denn (0|0) ist hier "oben links"
@@ -303,7 +306,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				pixels[pic_x + row_offset] = colorFromRgb(gray, gray, gray);
 			}
 		}
-		// Koordinaten innerhalb des Blocks ausblenden ==> Eckpunkt mit kleinsten Koordinaten:
+		// Koordinaten innerhalb des Blocks ausblenden -> Eckpunkt mit kleinsten Koordinaten:
 		pic_x &= ~(SECTION_SIZE - 1);
 		// 2 Sections pro Block in X-Richtung (Map-Orientierung) entspricht Y-Richtung (Sim-Orientierung):
 		pic_y &= ~(SECTION_SIZE * 2 - 1);
@@ -364,8 +367,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 		int block = c.getDataL();	// 16 Bit Adresse des Map-Blocks
 		
-		/* SubCode auswerten, ein Block wird in vier Teilen übertragen. 
-		 * Alle Teile müssen die selbe Blockadresse in DataL mitführen! */
+		/*
+		 * SubCode auswerten, ein Block wird in vier Teilen übertragen. 
+		 * Alle Teile müssen die selbe Blockadresse in DataL mitführen!
+		 */
 		Command.SubCode sub = c.getSubCode();
 		if (sub.equals(Command.SubCode.MAP_DATA_1)) {
 			if (receiveState != 0) {
@@ -436,7 +441,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			}
 			imageEventPending = true;
 		} else {
-			lg.warn("Abbruch, ungueltiger SubCode");
+			lg.warn("Abbruch, ungültiger SubCode");
 			receiveState = 0;
 		}
 	}
@@ -572,7 +577,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		
 		/* Bild zeichnen und als png speichern */
 		g.drawImage(Toolkit.getDefaultToolkit().createImage(
-			new MemoryImageSource(width, height, map, 0, width)), 0, 0, null);
+				new MemoryImageSource(width, height, map, 0, width)), 0, 0, null);
 		g.dispose();
 		ImageIO.write(bimg, "png", file);
 	}

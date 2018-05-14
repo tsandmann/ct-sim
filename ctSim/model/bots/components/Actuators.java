@@ -46,7 +46,7 @@ import ctSim.util.Misc;
  * Klasse, die nur als Container für innere Klassen dient und selber keine Methoden oder Felder hat.
  * (Für die winzigen inneren Klassen lohnt sich keine eigene Datei.)
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class Actuators {
 	/**
@@ -233,7 +233,7 @@ public class Actuators {
 					newStuff.delete(0, newStuff.length());
 				}
 			} catch (BadLocationException e) {
-				// kann nur passieren wenn einer was am Code vermurkst; weiter werfen zu Debugzwecken
+				// kann nur passieren wenn jemand etwas am Code vermurkst; weiter werfen zu Debugzwecken
 				throw new AssertionError(e);
 			}
 		}
@@ -440,7 +440,7 @@ public class Actuators {
 				break;
 				
 			default:
-				lg.warn("ungueltiger Programm-Typ");
+				lg.warn("ungültiger Programm-Typ");
 				return;
 			}
 			Command c = asyncOut.getCommand(getHotCmdCode());
@@ -460,7 +460,7 @@ public class Actuators {
 		 * @param type	Typ, 0: Basic, 1: ABL
 		 */
 		public void stopProgram(int type) {			
-			lg.fine("breche Programm auf dem Bot ab");
+			lg.fine("Breche Programm auf dem Bot ab");
 			Command c = asyncOut.getCommand(getHotCmdCode());
 			c.setSubCmdCode(Command.SubCode.PROGRAM_STOP);
 			c.setDataL(type);
@@ -482,17 +482,17 @@ public class Actuators {
 	 * Das LCD lauscht auf Kommandos mit dem {@linkplain Code#ACT_LCD Command-Code ACT_LCD}.
 	 * Diese Kommandos müssen als Sub-Command-Code einen der folgenden Werte haben:
 	 * <ul>
-	 * <li>{@linkplain SubCode#LCD_CLEAR} - löscht das LCD, so dass überall nur Leerzeichen stehen.</li>
-	 * <li>{@linkplain SubCode#LCD_CURSOR} - Bewegt den Cursor in die Spalte, die in {@code dataL}
+	 * <li>{@linkplain SubCode#LCD_CLEAR} -- löscht das LCD, so dass überall nur Leerzeichen stehen.</li>
+	 * <li>{@linkplain SubCode#LCD_CURSOR} -- Bewegt den Cursor in die Spalte, die in {@code dataL}
 	 * angegeben ist, und die Zeile, die in {@code dataR} angegeben ist. Beide Angaben zero-based,
 	 * d.h. 0,0 bezeichnet das linkeste Zeichen der obersten Zeile. Negative Werte werden wie 0
 	 * behandelt. Werte rechts außerhalb des Display werden wie die rechteste Spalte behandelt;
 	 * Werte unten außerhalb des Display wie die unterste Zeile.</li>
-	 * <li>{@linkplain SubCode#LCD_DATA} - Holt die Nutzlast des Kommandos und schreibt sie ins
+	 * <li>{@linkplain SubCode#LCD_DATA} -- Holt die Nutzlast des Kommandos und schreibt sie ins
 	 * Display an die aktuelle Cursor-Position. Falls dort schon etwas steht, wird der alte Text
 	 * überschrieben (nicht weitergeschoben). Falls der Text rechts aus dem Display hinauslaufen
 	 * würde, wird er abgeschnitten (bricht nicht in die nächste Zeile um).</li>
-	 * <li>{@linkplain SubCode#NORM} - Kombination von LCD_CURSOR und LCD_DATA: Bewegt den Cursor
+	 * <li>{@linkplain SubCode#NORM} -- Kombination von LCD_CURSOR und LCD_DATA: Bewegt den Cursor
 	 * wie ein LCD_CURSOR-Kommando und zeigt dann Text an wie ein LCD_DATA-Kommando.</li>
 	 * </ul>
 	 * </p>
@@ -575,7 +575,7 @@ public class Actuators {
 			} catch (NullPointerException e) {
 				// egal
 			} catch (BadLocationException e) {
-				// "Kann nicht passieren"
+				// "kann nicht passieren"
 				throw new AssertionError(e);
 			}
 		}
@@ -677,18 +677,21 @@ public class Actuators {
 	}
 
 	/**
-	 * <p>Repräsentation einer LED (Leuchtdiode) auf dem Bot. Nicht verwirren lassen wegen dem Model:
+	 * <p>
+	 * Repräsentation einer LED (Leuchtdiode) auf dem Bot. Nicht verwirren lassen wegen dem Model:
 	 * Eine LED ist etwas, was an oder aus sein kann, d.h. sie ist sinnvollerweise eine Art
 	 * {@link JCheckBox} (auch wenn unsere LEDs sich nicht als Kasten mit/ohne Häkchen malen, sondern
 	 * als runde helle/dunkle Punkte). Diese Klasse hat daher das Model, das Checkboxen auch verwenden:
 	 * JToggleButton.ToggleButtonModel. (Das wiederum kommt daher, dass Checkboxen in Java von Buttons
-	 * abgeleitet sind.)</p>
+	 * abgeleitet sind.)
+	 * </p>
 	 * <p>
 	 * <h3>{@link Command c't-Bot-Plotokoll}</h3>
 	 * Jede LED lauscht auf {@link Command}s mit Command-Code {@link Code#ACT_LED ACT_LED}. Bei diesen
 	 * Commands gibt das Feld {@code dataL} den Zustand aller LEDs an: ein Bit pro LED, 1 = an, 0 = aus.
 	 * Jede Instanz dieser Klasse lauscht auf ein Bit und ignoriert die anderen; welches Bit wird beim
-	 * Konstruieren angegeben.</p>
+	 * Konstruieren angegeben.
+	 * </p>
 	 * <p>
 	 * Datenformat des Felds dataL: Beispiel dataL = 0x42 = 0b01000010
 	 *
