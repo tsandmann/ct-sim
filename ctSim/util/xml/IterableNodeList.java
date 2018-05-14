@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
  * Implementierung: Diese Klasse ist ein ottonormaler Wrapper.
  * </p>
  * 
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class IterableNodeList implements NodeList, Iterable<QueryableNode> {
 	/** Node-Liste */
