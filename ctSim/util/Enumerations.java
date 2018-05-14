@@ -27,7 +27,7 @@ import java.util.Iterator;
  * Utility-Klasse im Stil von {@link Arrays}, die Hilfen für die Arbeit mit {@link Enumeration}-Objekten
  * enthält.
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class Enumerations {
 	/**
@@ -54,7 +54,7 @@ public class Enumerations {
 	 * </p>
 	 *
 	 * @param source	Enumeration, die dem zurückgelieferten Iterable zugrunde liegt.
-	 * @param <T>		Elementtyp der übergebenen Enumeration und damit auch des zurückgelieferten Iterable.
+	 * @param <T>		Element-Typ der übergebenen Enumeration und damit auch des zurückgelieferten Iterable.
 	 * @return T
 	 */
 	public static <T> Iterable<T> asIterable(final Enumeration<T> source) {

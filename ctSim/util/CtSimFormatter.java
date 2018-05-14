@@ -52,7 +52,7 @@ import java.util.logging.LogRecord;
  * </pre>
  * </p>
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class CtSimFormatter extends Formatter {
 	/** Format */
@@ -70,8 +70,10 @@ public class CtSimFormatter extends Formatter {
 			r.getThrown().printStackTrace(new PrintWriter(s));
 			throwable = s.toString();
 		}
-		// "*2" ist quick and dirty. Kommt daher, dass Thread.activeCount() nur Schätzungen über die
-		// Größe zurückgibt; für Details siehe Doku der Methode
+		/*
+		 * "*2" ist quick and dirty. Kommt daher, dass Thread.activeCount() nur Schätzungen über die Größe
+		 * zurückgibt; für Details siehe Doku der Methode
+		 */
 		Thread[] threads = new Thread[Thread.activeCount() * 2];
 		Thread.enumerate(threads);
 		String threadName = "";
@@ -83,10 +85,10 @@ public class CtSimFormatter extends Formatter {
 		}
 
 		return "[" + timestampFormatter.format(r.getMillis()) + "] " +
-			r.getLevel().getName() + ": " + r.getMessage() +
-			" [" + r.getLoggerName() + "."
-		    + r.getSourceMethodName() + "() " +
-		    "Thread " + threadName + "(" + r.getThreadID() + ")" +
-		    "]\n" + throwable;
+				r.getLevel().getName() + ": " +
+				r.getMessage() + " [" +
+				r.getLoggerName() + "." +
+				r.getSourceMethodName() + "() " + "Thread " + threadName + "(" +
+				r.getThreadID() + ")" + "]\n" + throwable;
     }
 }

@@ -56,7 +56,7 @@ public abstract class SaferThread extends Thread {
 			try {
 				work();
 			} catch (InterruptedException e) {
-				// wir machen mit dispose() weiter
+				// wir machen mit dispose() weiter...
 			}
 		}
 		dispose();

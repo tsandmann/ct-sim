@@ -39,7 +39,9 @@ public class ComponentTable extends JTable {
 	/** UID */
 	private static final long serialVersionUID = 2766695602066190632L;
 
-	// Konstruktoren wie in der Superklasse ///////////////////////////////////
+	///////////////////////////////////
+	
+	// Konstruktoren wie in der Superklasse
 
 	/** Komponenten-Tabelle */
 	public ComponentTable() {
@@ -143,26 +145,26 @@ public class ComponentTable extends JTable {
 		int maxWidth = 0;
 		for (int i = 0; i < getColumnCount(); i++) {
 			for (int j = 0; j < getRowCount(); j++) {
-				maxHeight = Math.max(maxHeight,
-					((Component)getValueAt(j, i)).getPreferredSize().height);
-				maxWidth = Math.max(maxWidth,
-					((Component)getValueAt(j, i)).getPreferredSize().width);
+				maxHeight = Math.max(maxHeight, ((Component)getValueAt(j, i)).getPreferredSize().height);
+				maxWidth = Math.max(maxWidth, ((Component)getValueAt(j, i)).getPreferredSize().width);
 			}
 			// Spaltenbreite setzen (1x pro Spalte)
-			getColumnModel().getColumn(i).setMinWidth(
-				maxWidth + getIntercellSpacing().width);
+			getColumnModel().getColumn(i).setMinWidth(maxWidth + getIntercellSpacing().width);
 			maxWidth = 0;
 		}
 		// Zeilenbreite setzen (1x für ganze Tabelle)
 		setRowHeight(maxHeight + getIntercellSpacing().height);
 	}
 
-	// Workaround für Bug "horizontale Scrollbars" ///////////////////////////
+	///////////////////////////
+	
+	// Workaround für Bug "horizontale Scrollbars"
 
-	// Bug: Eine JTable in einer JScrollPane loest nie die horizontale Scrollbar aus;
-	// siehe http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936
-	// Hier der Workaround wie auf der Bug-Seite beschrieben:
-	// when the viewport shrinks below the preferred size, stop tracking the viewport width
+	/* Bug: Eine JTable in einer JScrollPane loest nie die horizontale Scrollbar aus;
+	 * siehe http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936
+	 * Hier der Workaround wie auf der Bug-Seite beschrieben:
+	 * when the viewport shrinks below the preferred size, stop tracking the viewport width
+	 */
 	/**
 	 * @see javax.swing.JTable#getScrollableTracksViewportWidth()
 	 */
@@ -175,8 +177,9 @@ public class ComponentTable extends JTable {
 		return false;
 	}
 
-	// when the viewport shrinks below the preferred size, return the minimum size so that scrollbars
-	// will be shown
+	/* when the viewport shrinks below the preferred size,
+	 * return the minimum size so that scrollbars will be shown
+	 */
 	/**
 	 * @see javax.swing.JComponent#getPreferredSize()
 	 */
@@ -189,16 +192,17 @@ public class ComponentTable extends JTable {
 		return super.getPreferredSize();
 	}
 
-	// Hilfsklassen ///////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////
+	
+	// Hilfsklassen
 
 	/** Zellen-Renderer */
 	class CellRenderer implements TableCellRenderer {
 		/**
 		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 		 */
-		public Component getTableCellRendererComponent(JTable table,
-		Object value, boolean isSelected, boolean hasFocus, int row,
-		int column) {
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+				boolean hasFocus, int row, int column) {
 			return configure((JComponent)value, table, isSelected);
 	    }
 	}
