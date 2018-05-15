@@ -103,8 +103,8 @@ public class AndEverything extends GuiBotBuisitor {
 	 */
 	public void buisitRemoteControl(Sensors.RemoteControl s, Bot bot) {
 		add(new AuxFrameButton(
-			s.getDescription()+" ("+s.getName()+")",
-			s.getDescription()+" für "+bot,
+			s.getDescription() + " (" + s.getName() + ")",
+			s.getDescription() + " für " + bot,
 			new RemoteControlViewer(s),
 			bot.get_feature_rc5()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
@@ -119,7 +119,7 @@ public class AndEverything extends GuiBotBuisitor {
 	public void buisitRemoteCallViewer(RemoteCallCompnt c, Bot bot) {
 		add(new AuxFrameButton(
 			c.getName(),
-			c.getName()+" an "+bot,
+			c.getName() + " an " + bot,
 			new RemoteCallViewer(c),
 			bot.get_feature_remotecall()));
 		add(Box.createRigidArea(new Dimension(0, 5)));

@@ -54,7 +54,7 @@ import ctSim.util.Runnable1;
  * Die GUI-Hauptklasse für den c't-Sim
  *
  * @author Felix Beckwermert
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class MainWindow extends JFrame implements ctSim.view.View {
     /** UID */
@@ -63,6 +63,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
     final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui");
 
 	//////////////////////////////////////////////////////////////////////
+
 	// GUI-Components:
 	
     /** Statusbar */
@@ -72,25 +73,24 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * <p>
-	 * Enthält ein Tab pro Bot. Wenn einer am Tab das Schließen-Icon ("X") klickt, gilt das Prinzip
-	 * "zuständig für Bot entfernen ist der Bot, sonst niemand". Das führt zu einem nicht ganz
-	 * offensichtlichen Ablauf:
+	 * Enthält ein Tab pro Bot. Wenn einer am Tab das Schließen-Icon ("X") klickt, gilt das Prinzip "zuständig
+	 * für Bot entfernen ist der Bot, sonst niemand". Das führt zu einem nicht ganz offensichtlichen Ablauf:
 	 * <ol>
 	 * <li>ClosableTabsPane ruft den CloseListener auf, den MainWindow bei der ClosableTabsPane angemeldet
 	 * hat</li>
-	 * <li>CloseListener sagt Bot "verkrümel dich" ({@code dispose()}), macht aber sonst nichts;
-	 * entfernt keine Tabs etc. </li>
+	 * <li>CloseListener sagt Bot "verkrümel dich" ({@code dispose()}), macht aber sonst nichts; entfernt keine
+	 * Tabs etc. </li>
 	 * <li>Der Bot geht seine Deinitialisierungs-Routine durch.</li>
-	 * <li>Der Bot ruft seine DisposeListener auf. Einer davon ist der, welchen MainWindow beim Bot
-	 * angemeldet hat: Dieser sagt schließlich dem Tab "zeig dich nicht mehr an"</li>
+	 * <li>Der Bot ruft seine DisposeListener auf. Einer davon ist der, welchen MainWindow beim Bot angemeldet
+	 * hat: Dieser sagt schließlich dem Tab "zeig dich nicht mehr an"</li>
 	 * </ol>
 	 * </p>
 	 * <p>
 	 * Grund: Der CloseListener <em>könnte</em> auch direkt das Tab entfernen. Allerdings muss der
-	 * DisposeListener in jedem Fall das Tab entfernen, schon weil das Bot.dispose() ja von woanders
-	 * ausgelöst werden kann. Daher kommt es zu Problemen, wenn nach einem "Schließen"-Klick der
-	 * CloseListener ein Tab entfernt und der DisposeListener ebenfalls eines entfernt. Deswegen die klare
-	 * Regelung, dass nur im DisposeListener Tabs entfernt werden.
+	 * DisposeListener in jedem Fall das Tab entfernen, schon weil das Bot.dispose() ja von woanders ausgelöst
+	 * werden kann. Daher kommt es zu Problemen, wenn nach einem "Schließen"-Klick der CloseListener ein Tab
+	 * entfernt und der DisposeListener ebenfalls eines entfernt. Deswegen die klare Regelung, dass nur im
+	 * DisposeListener Tabs entfernt werden.
 	 * </p>
 	 */
 	private final ClosableTabsPane botTabs;
@@ -114,10 +114,10 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
     	/*
 		 * Riesenspaß: Swing (also auch unsere GUI) ist "lightweight", Java3D ist jedoch "heavyweight".
-		 * Daher erscheint die Java3D-Anzeige immer _vor_ allen GUI-Komponenten: Wenn z.B. ein Menü
-		 * aufgeklappt wird, welches die 3D-Anzeige überlappt, _sollte_ natürlich das Menü im Vordergrund
-		 * sein, stattdessen _ist_ aber die 3D-Anzeige im Vordergrund (d.h. das Menü wird dort
-		 * abgeschnitten, wo die 3D-Anzeige beginnt). - Abhilfe gibt es zumindest für Menüs und Tooltips:
+		 * Daher erscheint die Java3D-Anzeige immer _vor_ allen GUI-Komponenten: Wenn z.B. ein Menü aufgeklappt
+		 * wird, welches die 3D-Anzeige überlappt, _sollte_ natürlich das Menü im Vordergrund sein, stattdessen
+		 * _ist_ aber die 3D-Anzeige im Vordergrund (d.h. das Menü wird dort abgeschnitten, wo die 3D-Anzeige
+		 * beginnt). - Abhilfe gibt es zumindest für Menüs und Tooltips:
 		 * 
 		 * Näheres unter:
 		 * <a href="http://java3d.j3d.org/faq/swing.html">Swing FAQ</a>
@@ -154,8 +154,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		/* Workaround für Java3D Canvas Bug unter Mac OS X 10.11 */
 		botTabs.setMinimumSize(new Dimension(230, getHeight()));
 
-		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-			botTabs, buildWorldAndConsole());
+		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, botTabs, buildWorldAndConsole());
 		split.setOneTouchExpandable(true);
 
 		add(split, BorderLayout.CENTER);
@@ -173,7 +172,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	private ConsoleComponent buildLogViewer() {
     	ConsoleComponent rv = new ConsoleComponent();
     	Debug.registerDebugWindow(rv);	//$$ Legacy: Debug-Klasse
-    	// Wir melden uns als Handler für den Root-Logger an
+    	// wir melden uns als Handler für den Root-Logger an
     	Handler h = rv.createLoggingHandler();
     	String logLevel = Config.getValue("LogLevel");
     	h.setLevel(Level.parse(logLevel));
@@ -187,8 +186,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * @return Split-Pane
 	 */
 	private JSplitPane buildWorldAndConsole() {
-		JSplitPane rv = new JSplitPane(
-			JSplitPane.VERTICAL_SPLIT, worldViewer, buildLogViewer());
+		JSplitPane rv = new JSplitPane(JSplitPane.VERTICAL_SPLIT, worldViewer, buildLogViewer());
 		rv.setResizeWeight(1);
 		rv.setOneTouchExpandable(true);
 		return rv;
@@ -207,8 +205,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	/** Screenshot-Handler */
 	public void onScreenshot() {
 		try {
-	        ImageIO.write(worldViewer.getScreenshot(), "png",
-	        	File.createTempFile("screenshot", ".png"));
+	        ImageIO.write(worldViewer.getScreenshot(), "png", File.createTempFile("screenshot", ".png"));
         } catch (IOException e) {
 	        e.printStackTrace();
         }
@@ -289,8 +286,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			public void run() {
 				String tabTitle = bot.toString();
 				final JComponent tabContent = new BotViewer(bot);
-				String tabTitleTooltip = bot.getDescription()+" (Klasse "+
-					bot.getClass().getSimpleName()+")";
+				String tabTitleTooltip = bot.getDescription()+" (Klasse " + bot.getClass().getSimpleName() + ")";
 				String keyinfo = " (";
 				if (System.getProperty("os.name").toLowerCase().startsWith("linux")) {
 					keyinfo += "Strg";
@@ -364,12 +360,14 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	/**
 	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
 	 */
-	public void onJudgeSet(final Judge judge) {	
+	public void onJudgeSet(final Judge judge) {
+
 //		SwingUtilities.invokeLater(new Runnable() {
 //			public void run() {
 //				menuBar.onJudgeSet(judge);
 //			}
 //		});
+
     }
 	
 	/**
@@ -382,15 +380,15 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	public void onResetAllBots() {
 		/* Bots das Reset-Signal schicken */
 		for (int i=0; i<botTabs.getTabCount(); i++) {
-			/* BotViewer des Tabs holen... */
+			// BotViewer des Tabs holen...
 			BotViewer bv = (BotViewer)botTabs.getComponentAt(i);
-			/* ...dann Bot zum BotViewer verwenden */
+			// ...dann Bot zum BotViewer verwenden
 			Bot bot = bv.bot;
 			if (bot instanceof ThreeDBot) {
 				/* Sim-Bots das Reset-Signal senden */
 				Bot b = ((ThreeDBot) bot).getSimBot();
 				if (b instanceof CtBotSimTcp) {
-				((CtBotSimTcp) b).sendRC5Code("CH*P/P");
+					((CtBotSimTcp) b).sendRC5Code("CH*P/P");
 				}
 				
 			} else if (bot instanceof RealCtBot) {
@@ -399,7 +397,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			}
 
 		}
-		/* Alle Bots in der Welt auf die Startplätze zurück */
+		// alle Bots in der Welt auf die Startplätze zurück
 		world.resetAllBots();
 	}
 }

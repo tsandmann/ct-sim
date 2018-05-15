@@ -38,7 +38,7 @@ import ctSim.model.bots.ctbot.RealCtBot;
 
 /**
  * @author Felix Beckwermert
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class BotViewer extends JScrollPane {
 	/** UID */
@@ -108,7 +108,7 @@ public class BotViewer extends JScrollPane {
 				 */
 				throw new AssertionError(e);
 			} catch (InstantiationException e) {
-				// Dito
+				// dito
 				throw new AssertionError(e);
 			}
 		}
