@@ -25,14 +25,14 @@ import java.sql.Timestamp;
 
 /**
  * <p>
- * Stellt der Klasse {@link TournamentPlanner} Methoden zur Verfügung, um mit der Wettbewerbs-Datenbank
- * zu arbeiten. Mit anderen Worten: Sitzt zwischen der Datenbank und dem TournamentPlanner.
+ * Stellt der Klasse {@link TournamentPlanner} Methoden zur Verfügung, um mit der Wettbewerbs-Datenbank zu
+ * arbeiten. Mit anderen Worten: Sitzt zwischen der Datenbank und dem TournamentPlanner.
  * </p>
  * <p>
  * Näheres findet sich in der Dokumentation der Klasse {@link DatabaseAdapter}.
  * </p>
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	/** Hat dieselbe Funktion wie {@link DatabaseAdapter#DatabaseAdapter(ContestDatabase)}. */
@@ -48,7 +48,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @throws SQLException
 	 */
 	public Timestamp getLevelBegin(int levelId) throws SQLException {
-		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id ="+levelId);
+		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id =" + levelId);
 		rs.next();
 		return rs.getTimestamp("scheduled");
 	}
@@ -61,8 +61,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @throws SQLException
 	 */
 	public int getGameIntervalInS(int levelId) throws SQLException {
-		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?",
-			levelId);
+		ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?", levelId);
 		rs.next();
 		return rs.getInt("gametime_real");
 	}
@@ -76,9 +75,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void createPrelimGame(int gameId, int player1botId)
 	throws SQLException {
-		execSql("INSERT INTO ctsim_game " +
-				"(level, game, bot1, state) " +
-				"VALUES (?, ?, ?, ?);",
+		execSql("INSERT INTO ctsim_game " + "(level, game, bot1, state) " + "VALUES (?, ?, ?, ?);",
 				-1, gameId, player1botId, GameState.READY_TO_RUN);
 	}
 
@@ -93,9 +90,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void createMainGame(int levelId, int gameId)
 	throws SQLException {
-		execSql("INSERT INTO ctsim_game " +
-				"(level, game, state) " +
-				"VALUES (?, ?, ?);",
+		execSql("INSERT INTO ctsim_game " + "(level, game, state) " + "VALUES (?, ?, ?);",
 				levelId, gameId, GameState.NOT_INITIALIZED);
 	}
 
@@ -129,9 +124,8 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void scheduleGame(int levelId, int gameId, Timestamp time)
 	throws SQLException {
-		execSql("UPDATE ctsim_game "+
-				"SET scheduled='"+time+"' "+
-				"WHERE level ="+levelId+ " AND game = "+gameId);
+		execSql("UPDATE ctsim_game " + "SET scheduled='" + time + "' " + "WHERE level =" + levelId
+				+ " AND game = " + gameId);
 	}
 
 	/**
@@ -142,7 +136,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @throws SQLException 
 	 */
 	public boolean doesLevelExist(int levelId) throws SQLException {
-		ResultSet rs = execSql("SELECT * FROM ctsim_level WHERE id = "+levelId);
+		ResultSet rs = execSql("SELECT * FROM ctsim_level WHERE id = " + levelId);
 	    return rs.next();
     }
 
@@ -151,12 +145,10 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
      *
      * @param levelId	Schlüssel des gewünschten Levels.
      * @param sortKey	ein Spaltenname in der Datenbanktabelle ctsim_game, nach dem der Rückgabewert sortiert wird
-     * @return Ein ResultSet im Format der DB-Tabelle ctsim_game.
+     * @return Ein ResultSet im Format der DB-Tabelle ctsim_game
 	 * @throws SQLException 
      */
     public ResultSet getGames(int levelId, String sortKey) throws SQLException {
-    	return execSql("SELECT * FROM ctsim_game" +
-    			" WHERE level = ? " +
-    			" ORDER BY " + sortKey, levelId);
+    	return execSql("SELECT * FROM ctsim_game" + " WHERE level = ? " + " ORDER BY " + sortKey, levelId);
     }
 }

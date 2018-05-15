@@ -29,9 +29,9 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 
 /**
  * <p>
- * High-Level-Klasse, die die Spiele eines Turniers plant. Arbeitet eng mit der Klasse
- * {@link ContestConductor} zusammen. Plant einen vollständigen Wettbewerb: Schreibt den Turnierbaum in
- * die Datenbank (<a href="package-summary.html#turnierbaum">Was ist der Turnierbaum?</a>)
+ * High-Level-Klasse, die die Spiele eines Turniers plant. Arbeitet eng mit der Klasse {@link ContestConductor}
+ * zusammen. Plant einen vollständigen Wettbewerb: Schreibt den Turnierbaum in die Datenbank
+ * (<a href="package-summary.html#turnierbaum">Was ist der Turnierbaum?</a>)
  * </p>
  * <p>
  * <strong>Verwendungsbeispiel:</strong>
@@ -44,7 +44,7 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
  * </ol>
  * </p>
  * 
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class TournamentPlanner {
 	/** Logger */
@@ -79,8 +79,7 @@ public class TournamentPlanner {
 		Timestamp gameBegin = db.getLevelBegin(levelId);
 		while (games.next()) {
 			db.scheduleGame(levelId, games.getInt("game"), gameBegin);
-			gameBegin.setTime(
-				gameBegin.getTime() + db.getGameIntervalInS(levelId) * 1000);
+			gameBegin.setTime(gameBegin.getTime() + db.getGameIntervalInS(levelId) * 1000);
 		}
 	}
 
@@ -100,15 +99,13 @@ public class TournamentPlanner {
 		ResultSet bots = db.getBotsWithBinary();
 		// Gesundheitscheck
 		if (! db.doesLevelExist(-1)) {
-			throw new IllegalStateException("Level -1 " +
-					"(Vorrunde) in der Datenbank nicht gefunden. Vorrunde " +
-					"kann nicht geplant werden.");
+			throw new IllegalStateException("Level -1 (Vorrunde) in der Datenbank nicht gefunden. "
+					+ "Vorrunde kann nicht geplant werden.");
 		}
 		bots.last();
 		if (bots.getRow() < 2) {
-			throw new IllegalStateException("Weniger als zwei Bots mit " +
-					"Binary in der Datenbank. Vorrunde kann nicht " +
-					"geplant werden.");
+			throw new IllegalStateException("Weniger als zwei Bots mit Binary in der Datenbank. "
+					+ "Vorrunde kann nicht geplant werden.");
 		}
 
 		// Hauptcode
@@ -139,19 +136,15 @@ public class TournamentPlanner {
 		ResultSet prelimRound = db.getGames(-1, "finishtime, bot1restweg");
 		// Gesundheitscheck
 		while (prelimRound.next()) {
-			if (! GameState.GAME_OVER.toString().equals(
-					prelimRound.getString("state"))) {
-				throw new TournamentPlanException("Eins oder mehrere der " +
-					"Vorrundenspiele haben noch nicht den Status '"+
-					GameState.GAME_OVER+"'. Hauptrunde kann nicht geplant " +
-					"werden.");
+			if (! GameState.GAME_OVER.toString().equals(prelimRound.getString("state"))) {
+				throw new TournamentPlanException("Eines oder mehrere der Vorrundenspiele haben noch nicht "
+						+ "den Status '" + GameState.GAME_OVER + "'. Hauptrunde kann nicht geplant werden.");
 			}
 		}
 		prelimRound.last();
 		if (prelimRound.getRow() == 0) {
-			throw new IllegalStateException("Keine Vorrundenspiele in der " +
-					"Datenbank gefunden. Hauptrunde kann nicht geplant " +
-					"werden.");
+			throw new IllegalStateException("Keine Vorrundenspiele in der Datenbank gefunden. "
+					+ "Hauptrunde kann nicht geplant werden.");
 		}
 
 		// Hauptcode
@@ -160,25 +153,21 @@ public class TournamentPlanner {
 		while(prelimRound.next()) {
 			tree.add(prelimRound.getInt("winner"));
 			if (prelimRound.wasNull()) {
-				throw new TournamentPlanException("Eins oder mehrere der " +
-					"Vorrundenspiele haben winner == NULL. Hauptrunde kann " +
-					"nicht geplant werden.");
+				throw new TournamentPlanException("Eins oder mehrere der Vorrundenspiele haben winner == NULL. "
+						+ "Hauptrunde kann nicht geplant werden.");
 			}
 		}
 
 		// Gesundheitscheck
 		if (! db.doesLevelExist(0)) {
-			throw new IllegalStateException("Level 0 (Spiel um den 3. " +
-					"Platz) in der Datenbank nicht gefunden. Planung der " +
-					"Hauptrunde fehlgeschlagen.");
+			throw new IllegalStateException("Level 0 (Spiel um den 3. Platz) in der Datenbank nicht gefunden. "
+					+ "Planung der Hauptrunde fehlgeschlagen.");
 		}
 		for (int i = 1; i <= tree.getLowestLevelId(); i *= 2) {
 			if (! db.doesLevelExist(i)) {
-				throw new IllegalStateException(String.format(
-						"Level %d " +
-						"in der Datenbank nicht gefunden. Für die gegebene " +
-						"Anzahl Spiele werden alle Levels bis inkl. %d " +
-						"benötigt. Planung der Hauptrunde fehlgeschlagen.",
+				throw new IllegalStateException(String.format("Level %d in der Datenbank nicht gefunden. "
+						+ "Für die gegebene Anzahl Spiele werden alle Levels bis inkl. %d benötigt. "
+						+ "Planung der Hauptrunde fehlgeschlagen.",
 						i, tree.getLowestLevelId()));
 			}
 		}
@@ -196,20 +185,19 @@ public class TournamentPlanner {
 	}
 
 	/**
-	 * Schreibt ein Level aus einem TournamentTree in die Datenbank. Manche oder alle der Spieler, die in
-	 * dem Level sitzen, können <code>null</code> sein (d.h. anfangs steht nicht fest, wer im Achtelfinale
-	 * spielt, erst nach Spielen des Sechzehntelfinales wird das nach und nach klar). Wenn Spieler
-	 * <code>null</code> sind, werden die zugehörigen Spiele trotzdem angelegt.
+	 * Schreibt ein Level aus einem TournamentTree in die Datenbank. Manche oder alle der Spieler, die in dem
+	 * Level sitzen, können <code>null</code> sein (d.h. anfangs steht nicht fest, wer im Achtelfinale spielt,
+	 * erst nach Spielen des Sechzehntelfinales wird das nach und nach klar). Wenn Spieler <code>null</code>
+	 * sind, werden die zugehörigen Spiele trotzdem angelegt.
 	 *
-	 * @param players	Eine Liste von Bot-IDs, die die Spieler repräsentieren. <code>null</code> bedeutet,
+	 * @param players	eine Liste von Bot-IDs, die die Spieler repräsentieren; <code>null</code> bedeutet,
 	 * 				dass für dieses Spiel (noch) kein Spieler vorgesehen ist.
 	 * @param levelId	Nummer des zu schreibenden Levels.
 	 * @throws SQLException 
 	 * @throws TournamentPlanException	falls {@link DatabaseAdapter#placeBot(Integer, int, int)} diese
 	 * 				Exception wirft.
 	 */
-	private void writeLevelToDb(ArrayList<Integer> players, int levelId)
-	throws SQLException, TournamentPlanException {
+	private void writeLevelToDb(ArrayList<Integer> players, int levelId) throws SQLException, TournamentPlanException {
 		int gameId = 1;
 		// Spieler auf diesem Level; kann null enthalten
 		assert players.size() % 2 == 0;
@@ -232,21 +220,27 @@ public class TournamentPlanner {
 		private static final long serialVersionUID = -9195564639022108463L;
 
 		/** Exception */
-		public TournamentPlanException() { super(); }
+		public TournamentPlanException() {
+			super();
+		}
 		
 		/**
 		 * Exception
 		 * 
 		 * @param message	Text
 		 */
-		public TournamentPlanException(String message) { super(message); }
+		public TournamentPlanException(String message) {
+			super(message);
+		}
 		
 		/**
 		 * Exception
 		 * 
 		 * @param cause
 		 */
-		public TournamentPlanException(Throwable cause) { super(cause); }
+		public TournamentPlanException(Throwable cause) {
+			super(cause);
+		}
 		
 		/**
 		 * Exception

@@ -30,8 +30,8 @@ import ctSim.util.Misc;
  * <ul>
  * <li>Ein Knoten des Baums repräsentiert einen Spieler</li>
  * <li>Die beiden Kinder eines Knotens <em>U</em> repräsentieren die beiden Spiele, deren Gewinner im
- * Spiel <em>U</em> aufeinandertreffen werden. Beispiel: Die beiden Halbfinalspiele ergeben je einen
- * Gewinner; diese treffen im Finale aufeinander.</li>
+ * Spiel <em>U</em> aufeinandertreffen werden. Beispiel: Die beiden Halbfinalspiele ergeben je einen Gewinner;
+ * diese treffen im Finale aufeinander.</li>
  * <li>Die Nutzlast eines Knotens</li>
  * </ul>
  * </p>
@@ -41,7 +41,7 @@ import ctSim.util.Misc;
  * <a href="http://de.wikipedia.org/wiki/Balancierter_Baum">balanciert</a> (Invariante: Höhe ± 0).
  * </p>
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  * 
  * @param <T>	Typ
  */
@@ -120,10 +120,9 @@ public class SpreadingTree<T> {
 	 */
 	public ArrayList<T> getTournamentPlan(int desiredLevelId) {
 		if (payload != null) {
-			// Wurzel ist kein innerer Knoten => Baum hat nur einen Knoten
-			throw new IllegalStateException("Es muss mindestens zwei " +
-					"Spieler geben, wenn ein Turnierplan erstellt werden " +
-					"soll");
+			// Wurzel ist kein innerer Knoten -> Baum hat nur einen Knoten
+			throw new IllegalStateException("Es muss mindestens zwei Spieler geben, wenn ein Turnierplan"
+					+ "erstellt werden soll");
 		}
 		ArrayList<T> payloads = Misc.newList();
 		levelOrder(desiredLevelId * 2, 1, payloads);
@@ -150,6 +149,6 @@ public class SpreadingTree<T> {
 	 */
 	@Override
 	public String toString() {
-	    return payload == null ? "?" : ""+payload;
+	    return payload == null ? "?" : "" + payload;
     }
 }

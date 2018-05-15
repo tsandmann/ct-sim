@@ -29,16 +29,13 @@ import ctSim.util.Misc;
 
 /**
  * Element, das ein Verzeichnis voller Screenshots in eine Datenbank hochlädt. Sollte weitgehend
- * selbstdokumentierend sein...
+ * selbst-dokumentierend sein...
  */
 public class ScreenshotUploadTool {
     /** usage-Meldung */
     public static void usage() {
-        System.out.println(
-        	"Syntax:   java ScreenshotUploadTool dburl dbuser dbpassword");
-        System.out.println(
-        	"Beispiel: java ScreenshotUploadTool " +
-        	"10.10.22.111:3306/ctbot-contest root wurstbrot");
+        System.out.println("Syntax:   java ScreenshotUploadTool dburl dbuser dbpassword");
+        System.out.println("Beispiel: java ScreenshotUploadTool 10.10.22.111:3306/ctbot-contest root wurstbrot");
         System.exit(1);
     }
 
@@ -70,20 +67,17 @@ public class ScreenshotUploadTool {
        	final String user = args[1];
         final String pw = args[2];
 
-        System.out.printf("Verbinde mit Datenbank %s, User %s, Passwort ",
-        	url, user);
+        System.out.printf("Verbinde mit Datenbank %s, User %s, Passwort ", url, user);
         for (int i = 0; i < pw.length(); i++)
         	System.out.print("*");
         System.out.println();
 
-        Main.dependencies.reRegisterInstance(ContestDatabase.class,
-            new ContestDatabase() {
+        Main.dependencies.reRegisterInstance(ContestDatabase.class, new ContestDatabase() {
         	@Override
         	public Connection getConnection() {
         		try {
         			Class.forName("com.mysql.jdbc.Driver");
-        			return DriverManager.getConnection(
-        				url, user, pw);
+        			return DriverManager.getConnection(url, user, pw);
         		} catch (Exception e) {
         			throw new RuntimeException(e);
         		}
@@ -91,27 +85,22 @@ public class ScreenshotUploadTool {
         });
 
         DatabaseAdapter da = (DatabaseAdapter)Main.dependencies.
-        	getComponentInstanceOfType(ConductorToDatabaseAdapter.class);
+        		getComponentInstanceOfType(ConductorToDatabaseAdapter.class);
 
         File dir = new File(".");
         int len = dir.list().length;
-        System.out.println("Eiere durch Verzeichnis " +
-        	dir.getAbsolutePath() + " (" + len + " Sache" +
-        	(len == 1 ? "" : "n") +" drin)");
+        System.out.println("Eiere durch Verzeichnis " + dir.getAbsolutePath() + " ("
+        		+ len + " Sache" + (len == 1 ? "" : "n") +" drin)");
         for (File f : dir.listFiles()) {
         	String name = f.getName();
         	if (! name.endsWith(".png") || ! name.matches(".*\\d.*"))
         		continue;
         	int id = Integer.parseInt(name.replaceAll("[^\\d-]", ""));
-        	System.out.println("Datei gefunden: " + name + "; Upload in die " +
-        			"DB mit Level-ID " + id);
-        	if (da.execSql("SELECT * FROM ctsim_level WHERE id = ?", id).
-        		next()) {
-        		da.execSql("UPDATE ctsim_level SET screenshot = ? WHERE id = ?",
-        			new FileInputStream(f), id);
+        	System.out.println("Datei gefunden: " + name + "; Upload in die DB mit Level-ID " + id);
+        	if (da.execSql("SELECT * FROM ctsim_level WHERE id = ?", id).next()) {
+        		da.execSql("UPDATE ctsim_level SET screenshot = ? WHERE id = ?", new FileInputStream(f), id);
         	} else {
-        		System.err.println("Warnung: Kein Level mit ID " + id + 
-        			" in der DB");
+        		System.err.println("Warnung: Kein Level mit ID " + id + " in der DB");
         	}
         }
     }
