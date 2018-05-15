@@ -86,7 +86,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				if (received == b.onTheWire)
 					return b;
 			}
-			lg.warn("Ungültiger Exit-Status '"+received+"' empfangen; " + "behandle wie Exit-Status für Fehler");
+			lg.warn("Ungültiger Exit-Status '" + received + "' empfangen; behandle wie Exit-Status für Fehler");
 			return FAILURE;
 		}
 
@@ -144,7 +144,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		 * <ol>
 		 * <li>Name des Behavior (variable Länge)</li>
 		 * <li>ein Null-Byte</li>
-		 * <li>vier Byte für den serialisierten Parameter 1 ({@linkplain Parameter#writeTo(ByteArrayOutputStream) Wie serialisiert er sich?})</li>
+		 * <li>vier Byte für den serialisierten Parameter 1
+		 * ({@linkplain Parameter#writeTo(ByteArrayOutputStream) Wie serialisiert er sich?})</li>
 		 * <li>vier Byte für den serialisierten Parameter 2</li>
 		 * <li>...</li>
 		 * <li>vier Byte für den serialisierten letzten Parameter.</li>
@@ -161,11 +162,11 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		 */
 		public void call() throws IOException {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-			String msg = "Sende Remote-Call, um Behavior "+getName()+ " aufzurufen";
+			String msg = "Sende Remote-Call, um Behavior " + getName() + " aufzurufen";
 			bytes.write(name.getBytes());
 			bytes.write(0);	// terminierendes Nullbyte
 			for (Parameter p : parameters) {
-				msg += ", "+p.fullName+" = "+p.getNumber();
+				msg += ", " + p.fullName + " = " + p.getNumber();
 				p.writeTo(bytes);
 			}
 			lg.info(msg);
@@ -304,10 +305,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				int bitCount = Integer.parseInt(s);
 				// Gesundheitscheck
 				if (bitCount < 0) {
-					throw new ProtocolException("Bitzahl des Int ist "+ bitCount+" (muss aber positiv sein)");
+					throw new ProtocolException("Bitzahl des Int ist " + bitCount + " (muss aber positiv sein)");
 				}
 				if (bitCount > 16) {
-					throw new ProtocolException("Ints mit mehr als 16 Bit " + "nicht unterstützt");
+					throw new ProtocolException("Ints mit mehr als 16 Bit nicht unterstützt");
 				}
 				// Hauptarbeit
 				if (isUnsigned) {
@@ -385,8 +386,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 */
 	@Override
 	public String getDescription() {
-		return "Ding, was dem Bot Remote-Calls (Funktionsaufrufe) schicken " +
-				"kann";
+		return "Element, was dem Bot Remote-Calls (Funktionsaufrufe) schicken kann";
 	}
 
 	/**
@@ -414,7 +414,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 */
 	public Code getHotCmdCode() { return Command.Code.REMOTE_CALL; }
 
-	// E/A - Schreiben ///////////////////////////////////////////////////////
+	/* ============================================================ */
+	
+	// E/A - Schreiben 
 
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
@@ -463,7 +465,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @throws IOException
 	 */
 	public void listRemoteCalls() throws IOException {
-		lg.info("Fordere beim Bot eine Liste der möglichen " + "Behaviors an");
+		lg.info("Fordere beim Bot eine Liste der möglichen Behaviors an");
 		if (writesAsynchronously()) {
 			prepareListCmd(asyncOut);
 			asyncOut.flush();
@@ -527,7 +529,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		// No-op
 	}
 
-	///////////////////////////////////////////////////////////
+	/* ============================================================ */
 	
 	// E/A - Lesen 
 
@@ -594,7 +596,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		String[] parmNames = new String(beh_params).split(",");
 		if (numParms > 0) {
 			if (numParms != parmNames.length) {
-				lg.warn("Bot-Code scheint fehlerhaft; hat " + "angekündigt, der Remote-Call hat " + numParms
+				lg.warn("Bot-Code scheint fehlerhaft; hat angekündigt, der Remote-Call hätte " + numParms
 						+ " Parameter; tatsächlich hat er " + parmNames.length + " Parameter; Gehe von "
 						+ parmNames.length + " Parametern aus; Kommando folgt" + command);
 			}
@@ -628,7 +630,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		try {
 			is.read(rv);
 		} catch (IOException e) {
-			throw new ProtocolException("Remote Call Entry: Ungültige " + "Payload");
+			throw new ProtocolException("Remote Call Entry: Ungültige Payload");
 		}
 		return rv;
 	}
@@ -640,12 +642,12 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 */
 	public void fireDoneEvent(int rCallExitStatus) {
 		BehaviorExitStatus status = BehaviorExitStatus.decode(rCallExitStatus);
-		lg.info("Bot meldet: Behavior erledigt; Status "+status);
+		lg.info("Bot meldet: Behavior erledigt; Status " + status);
 		for (Runnable1<BehaviorExitStatus> li : doneListeners)
 			li.run(status);
 	}
 
-	/////////////////////////////////////////////////////
+	/* ============================================================ */
 	
 	// Listener-Verwaltung 
 

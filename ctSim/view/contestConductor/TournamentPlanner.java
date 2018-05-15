@@ -212,8 +212,8 @@ public class TournamentPlanner {
 	/**
 	 * Diese Exception tritt auf, wenn etwas mit dem Turnierplan nicht stimmt.
 	 * 
-	 * @author bbe (bbe@heise.de)
-	 * @author Hendrik Krauß (hkr@heise.de)
+	 * @author Benjamin Benz
+	 * @author Hendrik Krauß
 	 */
 	static class TournamentPlanException extends Exception {
 		/** UID */

@@ -62,7 +62,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
     /** Logger */
     final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui");
 
-	//////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 
 	// GUI-Components:
 	
@@ -95,7 +95,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 */
 	private final ClosableTabsPane botTabs;
 
-	//////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 	
 	/** Welt */
 	private World world;

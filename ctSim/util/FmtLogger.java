@@ -87,7 +87,7 @@ public class FmtLogger extends Logger {
 		delegate.warning(msg);
 	}
 
-	//////////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 
 	// Kurzschreibweise mit Throwable
 
@@ -171,7 +171,7 @@ public class FmtLogger extends Logger {
 		delegate.log(Level.FINEST, msg, t);
 	}
 
-	//////////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 
 	// Kurzschreibweisen mit Format-Strings
 
@@ -312,7 +312,7 @@ public class FmtLogger extends Logger {
 	}
 
 
-	//////////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 
 	// Albtraum: Delegate-Elemente
 

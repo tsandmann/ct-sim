@@ -175,7 +175,7 @@ public class ComConnection extends Connection {
 		return "USB";
 	}
 
-	///////////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 
 	// Auto-detect-Kram
 
@@ -243,7 +243,7 @@ public class ComConnection extends Connection {
 		new ComListenerThread(receiver).start();
 	}
 
-	///////////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 
 	/** Exception-Klasse für ComConnection */
 	public static class CouldntOpenTheDamnThingException extends Exception {
@@ -311,7 +311,7 @@ public class ComConnection extends Connection {
 
 			comConnSingleton.doHandshake(botReceiver);
 
-			////////////////
+	/* ============================================================ */
 
 //			Bot b = new RealCtBot(comConnSingleton, (byte) 0);
 //			b.addDisposeListener(new Runnable() {

@@ -39,7 +39,7 @@ public class ComponentTable extends JTable {
 	/** UID */
 	private static final long serialVersionUID = 2766695602066190632L;
 
-	///////////////////////////////////
+	/* ============================================================ */
 	
 	// Konstruktoren wie in der Superklasse
 
@@ -156,7 +156,7 @@ public class ComponentTable extends JTable {
 		setRowHeight(maxHeight + getIntercellSpacing().height);
 	}
 
-	///////////////////////////
+	/* ============================================================ */
 	
 	// Workaround für Bug "horizontale Scrollbars"
 
@@ -192,7 +192,7 @@ public class ComponentTable extends JTable {
 		return super.getPreferredSize();
 	}
 
-	///////////////////////////////////////////////////////////
+	/* ============================================================ */
 	
 	// Hilfsklassen
 

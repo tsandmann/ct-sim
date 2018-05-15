@@ -59,7 +59,7 @@ import javax.swing.JTabbedPane;
  * Tabs gemischt verwenden, aber das habe ich nie getestet. Es ist ein Hack wie gesagt.
  * </p>
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class ClosableTabsPane extends JTabbedPane {
 	/**
