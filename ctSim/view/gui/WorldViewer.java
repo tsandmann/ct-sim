@@ -61,8 +61,8 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     private static final String MODEL = "showing a model";
 
     /** Hilfselement für die J3D-Bürokratie */
-    final protected GraphicsConfiguration gc =
-    		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D());
+    final protected GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().
+    		getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D());
     /**
      * Das letzte verwendete GraphicsDevice, wird für das Erzeugen einer neuen Welt in einem Multi-Monitor
      * Setup benötigt
@@ -130,14 +130,14 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 
     /**
 	 * <p>
-	 * Altes Universum deinitialisieren (falls vorhanden), inkl. seiner Java3D-Threads. Es ist enorm
-	 * wichtig, diese Methode aufzurufen!
+	 * Altes Universum deinitialisieren (falls vorhanden), inkl. seiner Java3D-Threads
+	 * Es ist enorm wichtig, diese Methode aufzurufen!
 	 * </p>
 	 * <p>
-	 * Mit jedem Aufruf von {@link #init(World)} werden ca. ein Dutzend Java3D-Threads instanziiert, die
-	 * ohne <code>deinit()</code> dann nie mehr beendet würden und ein massives Ressourcenleck (v.a.
-	 * Speicherleck wegen Referenzen auf alte Welten, Bots, etc.) darstellen. Bei häufigem Welt-Wechsel,
-	 * etwa in Wettbewerbssituationen, hat das gruselige Auswirkungen.
+	 * Mit jedem Aufruf von {@link #init(World)} werden ca. ein Dutzend Java3D-Threads instanziiert, die ohne
+	 * <code>deinit()</code> dann nie mehr beendet würden und ein massives Ressourcenleck (v.a. Speicherleck
+	 * wegen Referenzen auf alte Welten, Bots, etc.) darstellen. Bei häufigem Welt-Wechsel, etwa in
+	 * Wettbewerbssituationen, hat das gruselige Auswirkungen.
 	 * </p>
 	 */
 	protected void deinit() {
@@ -147,9 +147,8 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		
 		if (System.getProperty("os.name").indexOf("OS X") == 0) {
 			/* 
-			 * Workaround gegen Crash unter macOS und Java >= 9 (context.destroy() in
-			 * JoglPipeline.java crasht). Nachteil: Auch nach dem Schließen der Welt wird diese noch
-			 * angezeigt, bis eine Neue geladen wurde.
+			 * Workaround gegen Crash unter macOS und Java >= 9 (context.destroy() in JoglPipeline.java crasht).
+			 * Nachteil: Auch nach dem Schließen der Welt wird diese noch angezeigt, bis eine Neue geladen wurde.
 			 */
 	    	if (universe != null) {
 	    		universe.cleanup();
@@ -171,11 +170,13 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
      */
     protected void init(World w) {    	
     	onScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice()
-    			/*GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D())*/,
-    			false);
+    			/* GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().
+    			 * getBestConfiguration(new GraphicsConfigTemplate3D()) */
+    			, false);
     	offScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice()
-    			/*GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D())*/,
-    			true);
+    			/* GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().
+    			 * getBestConfiguration(new GraphicsConfigTemplate3D()) */
+    			, true);
     	add(onScreenCanvas, MODEL);
     	universe = new SimpleUniverse(onScreenCanvas);
         universe.getViewer().getView().addCanvas3D(offScreenCanvas);
@@ -192,8 +193,8 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     	universe.addBranchGraph(new BranchGroup() {
     		{
     			/*
-				 * Syntaxhinweis zu den doppelten Schweifklammern: Es handelt sich um
-				 * "instance initializer", die den Code kompakter machen sollen - siehe JLS §8.6 und
+				 * Syntaxhinweis zu den doppelten Schweifklammern: Es handelt sich um "instance initializer",
+				 * die den Code kompakter machen sollen - siehe JLS §8.6 und
 				 * <a href="http://www.c2.com/cgi/wiki?DoubleBraceInitialization">DoubleBraceInitialization</a>
 				 */
     			addMouseBehavior(new MouseRotate(MouseBehavior.INVERT_INPUT)
@@ -207,10 +208,9 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     		}
 
     		private void addMouseBehavior(MouseBehavior b) {
-    			b.setTransformGroup(
-    				universe.getViewingPlatform().getViewPlatformTransform());
+    			b.setTransformGroup(universe.getViewingPlatform().getViewPlatformTransform());
     			b.setSchedulingBounds(new BoundingSphere(new Point3d(), 1000));
-    			// TODO Könnte besser sein: Was, wenn irgendne Welt mal > 1000 ist?
+    			// TODO: Könnte besser sein: Was, wenn irgendne Welt mal > 1000 ist?
     			addChild(b);
     		}
     	});
@@ -227,18 +227,15 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     private void initPerspective(World w) {
     	double centerX = w.getWidthInM() / 2;
     	double centerY = w.getHeightInM() / 2;
-    	double longerSide = Math.max(
-    		w.getWidthInM(), w.getHeightInM());
+    	double longerSide = Math.max(w.getWidthInM(), w.getHeightInM());
     	// Winkel im Bogenmaß
     	double field = universe.getViewer().getView().getFieldOfView();
 
     	Transform3D targetTfm = new Transform3D();
-    	TransformGroup tg =
-    		universe.getViewingPlatform().getViewPlatformTransform();
+    	TransformGroup tg = universe.getViewingPlatform().getViewPlatformTransform();
 
     	tg.getTransform(targetTfm);
-    	targetTfm.setTranslation(new Vector3d(centerX, centerY,
-    		(longerSide/2) / Math.tan(field/2)));
+    	targetTfm.setTranslation(new Vector3d(centerX, centerY, (longerSide/2) / Math.tan(field/2)));
     	tg.setTransform(targetTfm);
     }
 
@@ -252,15 +249,16 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     public BufferedImage getScreenshot() {
     	/*
 		 * Das hier ist sehr bürokratisch, aber leider habe ich keinen einfacheren Weg gefunden...
-		 * Was man mit Google findet sind i.d.R. Beispiele, die java.awt.Robot.createScreenCapture()
-		 * verwenden - was aber einen "echten Screenshot" macht, d.h. wenn jemand ein anderes Fenster
-		 * über den ctSim geschoben hat, wird eben dieses abgelichtet. Die Alternative, auf dem Canvas3D
-		 * oder auf diesem Objekt paint(...) aufzurufen, funktioniert nicht (dies ergibt immer einfarbig
-		 * schwarze Screenshots - vermutlich ist Canvas3D eben doch keine ganz so normale Swing-Komponente).
+		 * Was man mit Google findet sind i.d.R. Beispiele, die java.awt.Robot.createScreenCapture() verwenden -
+		 * was aber einen "echten Screenshot" macht, d.h. wenn jemand ein anderes Fenster über den ctSim
+		 * geschoben hat, wird eben dieses abgelichtet. Die Alternative, auf dem Canvas3D oder auf diesem Objekt
+		 * paint(...) aufzurufen, funktioniert nicht (dies ergibt immer einfarbig schwarze Screenshots -
+		 * vermutlich ist Canvas3D eben doch keine ganz so "normale" Swing-Komponente).
 		 */
     	Screen3D onScr = onScreenCanvas.getScreen3D();
     	Screen3D offScr = offScreenCanvas.getScreen3D();
-    	offScreenCanvas.setOffScreenBuffer(new ImageComponent2D(ImageComponent2D.FORMAT_RGB, onScr.getSize().width, onScr.getSize().height));
+    	offScreenCanvas.setOffScreenBuffer(new ImageComponent2D(ImageComponent2D.FORMAT_RGB,
+    			onScr.getSize().width, onScr.getSize().height));
     	offScr.setSize(onScr.getSize());
     	offScr.setPhysicalScreenHeight(onScr.getPhysicalScreenHeight());
     	offScr.setPhysicalScreenWidth(onScr.getPhysicalScreenWidth());

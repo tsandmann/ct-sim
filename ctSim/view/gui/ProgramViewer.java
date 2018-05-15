@@ -55,8 +55,8 @@ import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.FmtLogger;
 
 /**
- * Stellt das Eingabefenster für ABL- oder Basic-Programme dar. Diese können geladen, gespeichert
- * (Textdatei) oder zum Bot gesendet und dort optional gestartet und auf Syntaxfehler überprüft werden.
+ * Stellt das Eingabefenster für ABL- oder Basic-Programme dar. Diese können geladen, gespeichert (Textdatei)
+ * oder zum Bot gesendet und dort optional gestartet und auf Syntaxfehler überprüft werden.
  *
  * @author Timo Sandmann
  */
@@ -120,51 +120,51 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	
 	/** Filter für Textdateien */
 	class TextFilter extends FileFilter {
-	    /**
-	     * Die Dateinanmen-Erweiterung einer Datei auslesen
-	     * 
-	     * @param f	File
-	     * @return Extension
-	     */  
-	    public String getExtension(File f) {
-	        String ext = null;
-	        String s = f.getName();
-	        int i = s.lastIndexOf('.');
+		/**
+		 * Die Dateinanmen-Erweiterung einer Datei auslesen
+		 * 
+		 * @param f	File
+		 * @return Extension
+		 */  
+		public String getExtension(File f) {
+			String ext = null;
+			String s = f.getName();
+			int i = s.lastIndexOf('.');
 
-	        if (i > 0 &&  i < s.length() - 1) {
-	            ext = s.substring(i + 1).toLowerCase();
-	        }
-	        return ext;
-	    }
+			if (i > 0 &&  i < s.length() - 1) {
+				ext = s.substring(i + 1).toLowerCase();
+			}
+			return ext;
+		}
 		
-	    /**
-	     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
-	     */
-	    @Override
-	    public boolean accept(File f) {
-	    	if (f.isDirectory()) {
-	    		return true;
-	    	}
+		/**
+		 * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
+		 */
+		@Override
+		public boolean accept(File f) {
+			if (f.isDirectory()) {
+				return true;
+			}
 
-	    	String extension = getExtension(f);
-	    	if (extension != null) {
-	    		if (extension.equals("txt")) {
-	    			return true;
-	    		} else {
-	    			return false;
-	    		}
-	    	}
+			String extension = getExtension(f);
+			if (extension != null) {
+				if (extension.equals("txt")) {
+					return true;
+				} else {
+					return false;
+				}
+			}
 
-	    	return false;
-	    }
+			return false;
+		}
 
 		/**
 		 * @see javax.swing.filechooser.FileFilter#getDescription()
 		 */
 		@Override
 		public String getDescription() {
-	        return "Textdateien";
-	    }
+			return "Textdateien";
+		}
 	}
 
 	/** Programm-Laden-Handler */
@@ -182,9 +182,9 @@ public class ProgramViewer extends JPanel implements ActionListener {
 				path = f.getParent();
 				String fname = fileName.getText().substring(0, fileName.getText().lastIndexOf('/') + 1);
 				fileName.setText(fname + f.getName());
-			    BufferedReader in = new BufferedReader(new FileReader(f));
-			    String line;
-			    String data = new String();
+				BufferedReader in = new BufferedReader(new FileReader(f));
+				String line;
+				String data = new String();
 				while ((line = in.readLine()) != null) {
 					data += line + "\n";
 				}
@@ -203,7 +203,8 @@ public class ProgramViewer extends JPanel implements ActionListener {
 			programText.setSelectedTextColor(Color.BLACK);
 			JFileChooser fc = new JFileChooser(path);
 			fc.addChoosableFileFilter(new TextFilter());
-			fc.setSelectedFile(new File(path + "/" + fileName.getText().substring(fileName.getText().lastIndexOf('/') + 1)));
+			fc.setSelectedFile(new File(path + "/" + fileName.getText().substring(fileName.getText().
+					lastIndexOf('/') + 1)));
 			int userChoice = fc.showSaveDialog(ProgramViewer.this);
 			if (userChoice != JFileChooser.APPROVE_OPTION) {
 				// Benutzer hat abgebrochen
@@ -325,16 +326,18 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	    group.add(typeBasic);
 		
 		/* Buttons bauen */
-		JButton load = new Button("Laden  ", "Programm aus einer Textdatei laden. Voreingestelltes Bot-Verzeichnis " +
-			"wie in Konfig-Datei angegeben.", Config.getIcon("Open16"), onLoad);
-		JButton save = new Button("Speichern  ", "Programm in eine Textdatei speichern. Voreingestelltes Bot-Verzeichnis " +
-			"wie in Konfig-Datei angegeben.", Config.getIcon("Save16"), onSave);
+		JButton load = new Button("Laden  ", "Programm aus einer Textdatei laden. "
+				+ "Voreingestelltes Bot-Verzeichnis wie in Konfig-Datei angegeben.",
+				Config.getIcon("Open16"), onLoad);
+		JButton save = new Button("Speichern  ", "Programm in eine Textdatei speichern. "
+				+ "Voreingestelltes Bot-Verzeichnis wie in Konfig-Datei angegeben.",
+				Config.getIcon("Save16"), onSave);
 		exmplABL = new Button("ABL-Beispiel  ",	"Erzeugt ein kleines Beispiel-ABL-Programm",
-			Config.getIcon("New16"), onExmplAbl);
+				Config.getIcon("New16"), onExmplAbl);
 		JButton stop = new Button("Stopp  ", "laufendes Programm abbrechen",
 				Config.getIcon("Stop16"), onStop);
-		JButton send = new Button("Senden  ", "Programm zum Bot senden", 
-			Config.getIcon("Play16"), onSend);
+		JButton send = new Button("Senden  ", "Programm zum Bot senden",
+				Config.getIcon("Play16"), onSend);
 
 		/* Checkboxes bauen */
 		autoStart = new JCheckBox("Start");
@@ -343,7 +346,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		
 		syntaxCheckABL = new JCheckBox("Check");
 		syntaxCheckABL.setToolTipText("Syntax-Check des ABL-Programms nach der Übertragung");
-		//syntaxCheck.setSelected((bot instanceof CtBotSimTcp));
+//		syntaxCheck.setSelected((bot instanceof CtBotSimTcp));
 		syntaxCheckABL.setSelected(false);
 		
 		RemoteCallViewer rcViwer = new RemoteCallViewer(null);
@@ -381,20 +384,20 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		
 		/* Gesamtgröße setzen */
 		JScrollPane s = new JScrollPane(programText);
-		int edit_w = getInsets().left + s.getInsets().left + s.getPreferredSize().width +
-			s.getInsets().right + getInsets().right + 20; // scrollbar-width == 20
-		int h = getInsets().top + s.getInsets().top + s.getPreferredSize().height + 
-			s.getInsets().bottom + getInsets().bottom +	toolbars.getPreferredSize().height;
+		int edit_w = getInsets().left + s.getInsets().left + s.getPreferredSize().width + s.getInsets().right
+				+ getInsets().right + 20;	// scrollbar-width == 20
+		int h = getInsets().top + s.getInsets().top + s.getPreferredSize().height + s.getInsets().bottom
+				+ getInsets().bottom +	toolbars.getPreferredSize().height;
 		
-		int toolbar_w = getInsets().left + toolbars.getInsets().left + toolbars.getPreferredSize().width +
-			toolbars.getInsets().right + getInsets().right;
+		int toolbar_w = getInsets().left + toolbars.getInsets().left + toolbars.getPreferredSize().width
+				+ toolbars.getInsets().right + getInsets().right;
 		
 		setPreferredSize(new Dimension(Math.max(edit_w, toolbar_w), h));
 		
-		int min_w = getInsets().left + toolbars.getInsets().left + toolbar_w +
-			toolbars.getInsets().right + getInsets().right;
-		int min_h = getInsets().top + s.getInsets().top + s.getMinimumSize().height + 
-			s.getInsets().bottom + getInsets().bottom +	toolbars.getPreferredSize().height;
+		int min_w = getInsets().left + toolbars.getInsets().left + toolbar_w + toolbars.getInsets().right
+				+ getInsets().right;
+		int min_h = getInsets().top + s.getInsets().top + s.getMinimumSize().height + s.getInsets().bottom
+				+ getInsets().bottom +	toolbars.getPreferredSize().height;
 		
 		setMinimumSize(new Dimension(min_w, min_h + 60));
 
@@ -414,27 +417,27 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	 * 
 	 * @param e	Event 
 	 */
-    public void actionPerformed(ActionEvent e) {
-    	if (e.getActionCommand().equals("Basic")) {
-    		type = 0;
-    		syntaxCheckABL.setEnabled(false);
-    		exmplABL.setEnabled(false);
-    		checkLabelABL.setText("-");
-    		checkLabelABL.setToolTipText("Nicht verfügbar für Basic-Programme");
-    		checkLabelABL.setBackground(Color.GRAY);
-    		fileName.setText("bas1.txt");
-    		path = path.replace("/abl", "/basic");
-    	} else if (e.getActionCommand().equals("ABL")) {
-    		type = 1;
-    		syntaxCheckABL.setEnabled(true);
-    		exmplABL.setEnabled(true);
-    		checkLabelABL.setText("-");
-    		checkLabelABL.setToolTipText("Kein Syntaxcheck bisher");
-    		checkLabelABL.setBackground(Color.GRAY);
-    		fileName.setText("prog1.txt");
-    		path = path.replace("/basic", "/abl");
-    	}
-    }
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals("Basic")) {
+			type = 0;
+			syntaxCheckABL.setEnabled(false);
+			exmplABL.setEnabled(false);
+			checkLabelABL.setText("-");
+			checkLabelABL.setToolTipText("Nicht verfügbar für Basic-Programme");
+			checkLabelABL.setBackground(Color.GRAY);
+			fileName.setText("bas1.txt");
+			path = path.replace("/abl", "/basic");
+		} else if (e.getActionCommand().equals("ABL")) {
+			type = 1;
+			syntaxCheckABL.setEnabled(true);
+			exmplABL.setEnabled(true);
+			checkLabelABL.setText("-");
+			checkLabelABL.setToolTipText("Kein Syntaxcheck bisher");
+			checkLabelABL.setBackground(Color.GRAY);
+			fileName.setText("prog1.txt");
+			path = path.replace("/basic", "/abl");
+		}
+	}
 	
 	/** zuletzt geprüfte Programmzeile */
 	private int lastCheckedLine = 0;
@@ -442,7 +445,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	/**
 	 * Zeigt das Ergebnis eines ABL-Syntax-Checks in der Toolbar an
 	 * 
-	 * @param result	Das Ergebnnis, true für SUCCESS
+	 * @param result	das Ergebnnis, true für SUCCESS
 	 */
 	public void setSyntaxCheck(boolean result) {
 		if (result == false || lastCheckedLine == programText.getLineCount()) {
@@ -461,7 +464,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 				/* Zeile mit Syntaxfehler markieren */
 				programText.setSelectedTextColor(Color.RED);
 				try {
-					programText.select(programText.getLineStartOffset(lastCheckedLine - 1), 
+					programText.select(programText.getLineStartOffset(lastCheckedLine - 1),
 						programText.getLineEndOffset(lastCheckedLine - 1));
 				} catch (BadLocationException e) {
 					// kann nicht passieren, wenn wir nur vorhandene Zeilen checken
@@ -489,7 +492,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	 */
 	private void checkSyntax(int line) {
 		if (line == 1) {
-			/*check for() / endf() */
+			/* check for() / endf() */
 			int fors = countSubString(programText.getText(), "for(");
 //			lg.info("fors=" + fors);
 			int endfs = countSubString(programText.getText(), "endf()");
@@ -548,7 +551,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 				
 				if (lastComment > lastNewLine) {
 					/* Kommentar */
-					--count; // nicht mitzählen
+					--count;	// nicht mitzählen
 //					lg.info("kommentar");
 				}
 			}

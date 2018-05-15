@@ -41,8 +41,7 @@ public class RemoteControlViewer extends JPanel {
 	private static final long serialVersionUID = - 6483687307396837800L;
 
 	/** Logger */
-	static final FmtLogger lg = FmtLogger.getLogger(
-		"ctSim.view.gui.RemoteControlViewer");
+	static final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.RemoteControlViewer");
 
 	/** blau */
 	private static final Color LIGHT_BLUE = new Color(150, 150, 255);
@@ -75,7 +74,7 @@ public class RemoteControlViewer extends JPanel {
 	 * @return Button
 	 */
 	private JButton b(String label, Color color) {
-		/**
+		/*
 		 * Bindestrich durch längeren Streckenstrich ersetzen
 		 * (Bindestrich sieht unschön aus neben den großen Pluszeichen.)
 		 */
