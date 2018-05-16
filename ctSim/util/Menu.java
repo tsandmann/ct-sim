@@ -105,6 +105,7 @@ public class Menu extends JMenu {
 		/**
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
+		@Override
 		public void actionPerformed(
 		ActionEvent e) {
 			code.run();
@@ -166,6 +167,7 @@ public class Menu extends JMenu {
 		/**
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			setChecked(((JCheckBoxMenuItem)e.getSource()).isSelected());
 		}

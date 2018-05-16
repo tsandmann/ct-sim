@@ -43,6 +43,7 @@ public abstract class GuiBotBuisitor extends JPanel implements BotBuisitor {
 	 * @param o		Objekt
 	 * @param bot	Bot
 	 */
+	@Override
 	public void visit(Object o, Bot bot) {
 		if (buisitor.dispatchBuisit(o) > 0)
 			shouldBeDisplayed = true;

@@ -135,6 +135,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
         inputMap.put(key, "close");
         comp.getActionMap().put("close", new AbstractAction() {
 			private static final long serialVersionUID = -7639062435105576105L;
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					button.doClick();	// Klick auf den Button schließt das Fenster und schaltet den Button um
@@ -150,6 +151,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	 * 
 	 * @param e	Event
 	 */
+	@Override
 	public void windowClosed(WindowEvent e) {
 		lg.fine(this.getTitle() + ": windowClosed()");
 		positions.getMap().put(stripTitle(getTitle()), getLocation());
@@ -183,6 +185,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowActivated(WindowEvent e) {
 		// No-op
 	}
@@ -190,6 +193,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowClosing(WindowEvent e) {
 		// No-op
 	}
@@ -197,6 +201,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowDeactivated(WindowEvent e) {
 		// No-op
 	}
@@ -204,6 +209,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowDeiconified(WindowEvent e) {
 		// No-op
 	}
@@ -211,6 +217,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowIconified(WindowEvent e) {
 		// No-op
 	}
@@ -218,6 +225,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
+	@Override
 	public void windowOpened(WindowEvent e) {
 		// No-op
 	}

@@ -171,6 +171,7 @@ public class MainWinMenuBar extends JMenuBar {
 		
 	/** Handler für Welt öffnen */
 	private Runnable onOpenWorld = new Runnable() {
+		@Override
 		public void run() {
 			File f = worldChooser.showOpenWorldDialog();
 			if (f != null)
@@ -180,6 +181,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/** Handler für neue Zufallswelt */
 	private Runnable onOpenRandomWorld = new Runnable() {
+		@Override
 		public void run() {
 			controller.openRandomWorld();
 		}
@@ -187,6 +189,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/** Handler für Welt speichern */
 	private Runnable onSaveWorld = new Runnable() {
+		@Override
 		public void run() {
 			File file = worldChooser.showSaveWorldDialog();
 			if (file.exists()) {
@@ -206,6 +209,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/** Handler für Welt schließen */
 	private Runnable onCloseWorld = new Runnable() {
+		@Override
 		public void run() {
 			controller.closeWorld();
 			mainWindow.closeWorld();
@@ -219,6 +223,7 @@ public class MainWinMenuBar extends JMenuBar {
 		private JDialog tcpEntryDialog = null;
 		private JOptionPane optionPane = null;
 
+		@Override
 		public void run() {
 			if (tcpEntryDialog == null) {
 				JPanel p = new JPanel();
@@ -246,6 +251,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/** Handler für neuen Testbot */
 	private Runnable onAddTestBot = new Runnable() {
+		@Override
 		public void run() {
 			controller.addTestBot();
 		}
@@ -270,6 +276,7 @@ public class MainWinMenuBar extends JMenuBar {
 			});
 		}
 
+		@Override
 		public void run() {
 			if (botChooser.showOpenDialog(mainWindow) == JFileChooser.APPROVE_OPTION) {
 				controller.invokeBot(botChooser.getSelectedFile());
@@ -279,6 +286,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/** Handler für Simulation starten */
 	private Runnable onStartSimulation = new Runnable() {
+		@Override
 		public void run() {
 			controller.unpause();
 		}
@@ -286,6 +294,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/** Handler für Simulation anhalten */
 	private Runnable onPauseSimulation = new Runnable() {
+		@Override
 		public void run() {
 			controller.pause();
 		}
@@ -293,6 +302,7 @@ public class MainWinMenuBar extends JMenuBar {
 	
 	/** Handler für About-Eintrag */
 	private Runnable onAbout = new Runnable() {
+		@Override
 		public void run() {
 			/* Splash-Screen anzeigen */
 			java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
@@ -303,6 +313,7 @@ public class MainWinMenuBar extends JMenuBar {
 	
 	/** Handler für Webseite-Link */
 	private Runnable onSiteLink = new Runnable() {
+		@Override
 		public void run() {
 			try {
 				Desktop.getDesktop().browse(
@@ -317,6 +328,7 @@ public class MainWinMenuBar extends JMenuBar {
 	 * Handler für Github-Link
 	 */
 	private Runnable onGithubLink = new Runnable() {
+		@Override
 		public void run() {
 			try {
 				Desktop.getDesktop().browse(
@@ -329,6 +341,7 @@ public class MainWinMenuBar extends JMenuBar {
 	
 	/** Handler für Forum-Link */
 	private Runnable onForumLink = new Runnable() {
+		@Override
 		public void run() {
 			try {
 				Desktop.getDesktop().browse(
@@ -341,6 +354,7 @@ public class MainWinMenuBar extends JMenuBar {
 	
 	/** Handler für Bots resetten */
 	private Runnable onResetBots = new Runnable() {
+		@Override
 		public void run() {
 			controller.resetAllBots();
 		}
@@ -354,6 +368,7 @@ public class MainWinMenuBar extends JMenuBar {
 		private JDialog mapDialog = null;
 		private JOptionPane optionPane = null;
 
+		@Override
 		public void run() {
 			if (mapDialog == null) {
 				JPanel p = new JPanel();
@@ -515,6 +530,7 @@ public class MainWinMenuBar extends JMenuBar {
 				{
 					private static final long serialVersionUID = -1873920690635293756L;
 
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						controller.setJudge(fqName);
 					}

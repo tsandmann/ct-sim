@@ -111,7 +111,8 @@ public class FileIconMap implements IconProvider {
 	 * Dateisystem nicht existiert (genauer: falls es nicht existiert hat zu dem Zeitpunkt, als der Konstruktor
 	 * aufgerufen wurde).
 	 */
-    public Icon get(String key) {
+    @Override
+	public Icon get(String key) {
         ImageIcon rv = map.get(key);
         if (rv == null) {
         	lg.warn("Icon-Datei '%s%s%s.*' nicht gefunden", parentDir.getPath(), File.separator, key);

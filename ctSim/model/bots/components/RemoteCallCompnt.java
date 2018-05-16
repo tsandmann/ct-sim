@@ -412,6 +412,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 	 */
+	@Override
 	public Code getHotCmdCode() { return Command.Code.REMOTE_CALL; }
 
 	/* ============================================================ */
@@ -421,6 +422,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
 	 */
+	@Override
 	public void setAsyncWriteStream(CommandOutputStream s) {
 		asyncOut = s;
 	}
@@ -525,6 +527,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * 
 	 * @param c	Command
 	 */
+	@Override
 	public void writeTo(Command c) {
 		// No-op
 	}
@@ -536,6 +539,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 	 */
+	@Override
 	public void readFrom(Command c) throws ProtocolException {
 		if (c.has(Command.SubCode.REMOTE_CALL_ENTRY))
 			newBehaviors.add(decodeBehavior(c));

@@ -201,6 +201,7 @@ public class ComponentTable extends JTable {
 		/**
 		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 		 */
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 				boolean hasFocus, int row, int column) {
 			return configure((JComponent)value, table, isSelected);
@@ -217,6 +218,7 @@ public class ComponentTable extends JTable {
 		/**
 		 * @see javax.swing.CellEditor#getCellEditorValue()
 		 */
+		@Override
 		public Object getCellEditorValue() {
 			return lastActive;
 		}
@@ -224,6 +226,7 @@ public class ComponentTable extends JTable {
 		/**
 		 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
 		 */
+		@Override
 		public Component getTableCellEditorComponent(JTable table,
 		Object value, boolean isSelected, int row, int column) {
 			lastActive = configure((JComponent)value, table, true);

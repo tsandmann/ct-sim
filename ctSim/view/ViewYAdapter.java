@@ -83,6 +83,7 @@ public class ViewYAdapter {
 	public static View newInstance(final Iterable<View> views) {
 		return (View) Proxy.newProxyInstance(View.class.getClassLoader(),
 				new Class[] { View.class }, new InvocationHandler() {
+					@Override
 					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 						for (View v : views)
 							method.invoke(v, args);

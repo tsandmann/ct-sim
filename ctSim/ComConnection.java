@@ -201,7 +201,8 @@ public class ComConnection extends Connection {
     			lg.fine("COM-Verbindung von realem Bot eingegangen");
     			bot = new RealCtBot(comConnSingleton, c.getFrom(), c.getDataL());
     			bot.addDisposeListener(new Runnable() {
-    				public void run() {
+    				@Override
+					public void run() {
     					spawnThread(botReceiver);
     				}
     			});
