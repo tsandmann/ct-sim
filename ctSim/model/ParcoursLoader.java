@@ -98,7 +98,7 @@ public class ParcoursLoader {
 	public static final float[] LINE_VERT = {
 		0f - LINEWIDTH/2,	-0.5f,	0f,	// Start unten links
 		0f + LINEWIDTH/2,	-0.5f,	0f,	// kurze Linie nach rechts
-		0f + LINEWIDTH/2,	0.5f,	0f,	// Lange Linie hoch
+		0f + LINEWIDTH/2,	0.5f,	0f,	// lange Linie hoch
 		0f - LINEWIDTH/2,	0.5f,	0f,	// kurze Linie nach links
 		0f - LINEWIDTH/2,	-0.5f,	0f,	// lange Linie runter
 	};
@@ -107,11 +107,11 @@ public class ParcoursLoader {
 	public static final float[] LINE_CORNER_SE = {
 		0f - LINEWIDTH/2,	-0.5f,				0f,	// Start unten links
 		0f + LINEWIDTH/2,	-0.5f,				0f,	// kurze Linie nach rechts
-		0f + LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// Lange Linie hoch
-		0.5f,				0.0f - LINEWIDTH/2,	0f,	// Lange Linie nach rechts
+		0f + LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// lange Linie hoch
+		0.5f,				0.0f - LINEWIDTH/2,	0f,	// lange Linie nach rechts
 		0.5f,				0.0f + LINEWIDTH/2,	0f,	// kurze Linie hoch
-		0f -LINEWIDTH/2,	0.0f + LINEWIDTH/2,	0f,	// Lange Linie nach links
-		0f - LINEWIDTH/2,	-0.5f,				0f,	// Lange Linie nach unten
+		0f -LINEWIDTH/2,	0.0f + LINEWIDTH/2,	0f,	// lange Linie nach links
+		0f - LINEWIDTH/2,	-0.5f,				0f,	// lange Linie nach unten
 	};
 	
 	/** Linie -- Südwestecke */
