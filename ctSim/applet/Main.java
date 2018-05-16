@@ -135,7 +135,7 @@ public class Main extends JApplet implements BotReceiver {
 			@Override
 			public Icon get(String key) {
 				// Icon aus jar-Datei laden; Annahme: jar enthält Icon in seinem Root-Verzeichnis
-				URL u = getClass().getClassLoader().getResource(key+".gif");	// $$ images-unterverz
+				URL u = getClass().getClassLoader().getResource(key+".gif");	// //$$ images-unterverz
 				// NullPointerException vermeiden
 				if (u == null)
 					return new ImageIcon();	// leeres Icon

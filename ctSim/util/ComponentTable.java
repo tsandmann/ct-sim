@@ -160,7 +160,7 @@ public class ComponentTable extends JTable {
 	
 	// Workaround für Bug "horizontale Scrollbars"
 
-	/* Bug: Eine JTable in einer JScrollPane loest nie die horizontale Scrollbar aus;
+	/* Bug: Eine JTable in einer JScrollPane löst nie die horizontale Scrollbar aus;
 	 * siehe http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936
 	 * Hier der Workaround wie auf der Bug-Seite beschrieben:
 	 * when the viewport shrinks below the preferred size, stop tracking the viewport width
