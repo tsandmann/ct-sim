@@ -304,7 +304,7 @@ public class RemoteCallViewer extends JPanel {
 
 			/** Löschen-Button */
 			public DeleteButton() {
-				setIcon(Config.getIcon("schließen-hover"));
+				setIcon(Config.getIcon("schliessen-hover"));
 				addActionListener(this);
 
 				setMaximumSize(new Dimension(24, 24));

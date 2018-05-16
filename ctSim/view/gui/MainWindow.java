@@ -142,8 +142,8 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		add(menuBar.getToolBar(), BorderLayout.NORTH);
 		add(buildStatusBar(), BorderLayout.SOUTH);
 
-		botTabs = new ClosableTabsPane(Config.getIcon("schließen"),
-			Config.getIcon("schließen-hover"));
+		botTabs = new ClosableTabsPane(Config.getIcon("schliessen"),
+			Config.getIcon("schliessen-hover"));
 		// Listener wenn jemand auf dem Tab das Schließen-Icon klickt
 		botTabs.addCloseListener(new Runnable1<Integer>() {
 			public void run(Integer index) {
