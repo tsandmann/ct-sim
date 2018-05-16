@@ -107,7 +107,7 @@ Das build-Verzeichnis kann man problemlos loeschen, wenn es nicht mehr benötigt 
 			ct-Sim (ct-Sim-xx.jar Archiv und Libs)
 	===================================================================
 	-->
-	<property name="build.dir" location="${build.name}" />
+	<property name="build.dir" location="./bin/${build.name}" />
 	<property name="build.classes.dir" location="${build.dir}/${build.classes.name}" />
 	<property name="build.textures.dir" location="${build.classes.dir}/${textures.name}" />
 	<property name="build.config.dir" location="${build.classes.dir}/${config.name}" />

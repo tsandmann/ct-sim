@@ -13,7 +13,7 @@ Ausführen in Eclipse: Alt-Shift-X, dann Q. Auch über Run > External Tools zu e
 <project default="make-applet">
 
 <!-- Variablen -->
-<property name="build.dir" location="build-applet" />
+<property name="build.dir" location="./bin/build-applet" />
 <property name="icons.dir" location="./images" />
 <property name="jar-base-filename" value="ctsim-applet" />
 <property name="makecob.dir" location="./contrib/makecob" />
