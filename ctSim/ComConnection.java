@@ -71,7 +71,7 @@ public class ComConnection extends Connection {
 		port = SerialPort.getCommPort(comPortName);
 		port.closePort();
 		if (! port.openPort()) {
-			throw new CouldntOpenTheDamnThingException("Serial Port '" + comPortName + "' ungueltig");
+			throw new CouldntOpenTheDamnThingException("Serial Port '" + comPortName + "' ungültig");
 		}
 
 		try {

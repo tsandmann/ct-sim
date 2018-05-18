@@ -615,7 +615,7 @@ class TestClient implements Runnable {
 				
 				int str = this.in.read();
 // 				if(c==1) {
-				System.out.println(c+".: "+str);
+				System.out.println(c + ".: " + str);
 				this.out.write(str);
 // 				}
 				if(TestServer.FLUSH_ALL || str == 60) {

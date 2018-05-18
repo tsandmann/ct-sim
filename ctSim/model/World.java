@@ -676,7 +676,6 @@ public class World {
 		 * Wenn mehr als ein Strahl ausgesendet werden soll, dann taste den Sensorbereich parallel zur
 		 * Achse des Bots ab. Bei nur einem Strahl schaue in die Mitte.
 		 */
-		// 
 		if (rayCount > 2) {
 			// beginne links außen
 			AxisAngle4d rotationAxisX = new AxisAngle4d(heading, openingAngle / 2);

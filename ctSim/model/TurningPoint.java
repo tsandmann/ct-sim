@@ -272,7 +272,7 @@ public class TurningPoint {
 		halfWidth.normalize();
 		halfWidth.scale(lineWidth / 2);
 		Vector2d corner = new Vector2d(this.pos);
-		// corner.add(new Vector2d(0.5,0.5));
+//		corner.add(new Vector2d(0.5,0.5));
 		corner.sub(halfWidth);
 		corner.sub(offset);
 		float[] polygon = new float[18];
@@ -397,7 +397,7 @@ public class TurningPoint {
 		int count = incidenceMatrix.length;
 		int[][] neighbors = new int[count][];
 		for (int i = 0; i < count; i++) {
-			// System.out.print(turningPoints.get(i).pos);System.out.print(":");
+//			System.out.print(turningPoints.get(i).pos);System.out.print(":");
 			int coordination = 0;
 			for (int j = 0; j < count; j++) {
 				if (i != j && incidenceMatrix[i][j] < infinity)

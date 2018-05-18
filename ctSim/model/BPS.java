@@ -91,12 +91,12 @@ public class BPS {
 //		public static boolean checkParcoursPosition(Parcours parc, int x, int y) {
 //			float tmp = (parc.getWidthInBlocks() - 1 - x) * parc.getBlockSizeInMM() + parc.getBlockSizeInMM() / 2.0f;
 //			if (tmp % BEACON_GRID_SIZE != 0) {
-//				System.out.println("x=" + x + " ungueltig, tmp=" + tmp);
+//				System.out.println("x=" + x + " ungültig, tmp=" + tmp);
 //				return false;
 //			}
 //			tmp = y * parc.getBlockSizeInMM() + parc.getBlockSizeInMM() / 2.0f;
 //			if (tmp % BEACON_GRID_SIZE != 0) {
-//				System.out.println("y=" + y + " ungueltig, tmp=" + tmp);
+//				System.out.println("y=" + y + " ungültig, tmp=" + tmp);
 //				return false;
 //			}
 //			return true;

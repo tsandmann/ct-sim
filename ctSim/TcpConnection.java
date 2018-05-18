@@ -80,8 +80,8 @@ public class TcpConnection extends Connection {
 	@Override
 	public String getName() {
 		return
-			"TCP "+socket.getLocalAddress()+":"+socket.getLocalPort()+
-			  "->"+socket.getInetAddress() +":"+socket.getPort();
+			"TCP " + socket.getLocalAddress() + ":" + socket.getLocalPort() +
+			  "->" + socket.getInetAddress() + ":" + socket.getPort();
 	}
 
 	/**
@@ -101,10 +101,10 @@ public class TcpConnection extends Connection {
         try {
             p = Integer.parseInt(Config.getValue("botport"));
         } catch(NumberFormatException nfe) {
-            lg.warning(nfe, "Problem beim Parsen der Konfiguration: " + "Parameter 'botport' ist keine Ganzzahl");
+            lg.warning(nfe, "Problem beim Parsen der Konfiguration: Parameter 'botport' ist keine Ganzzahl");
         }
 
-        lg.info("Warte auf Verbindung vom c't-Bot auf TCP-Port "+p);
+        lg.info("Warte auf Verbindung vom c't-Bot auf TCP-Port " + p);
 		try {
 			final ServerSocket srvSocket = new ServerSocket(p);
 			new SaferThread("ctSim-Listener-" + p + "/tcp") {
@@ -115,12 +115,12 @@ public class TcpConnection extends Connection {
 						lg.fine("Verbindung auf Port " + srvSocket.getLocalPort() + "/tcp eingegangen");
 						new TcpConnection(s).doHandshake(receiver);
 					} catch (IOException e) {
-						lg.warn(e, "Thread "+getName() + " hat ein E/A-Problem " + "beim Lauschen");
+						lg.warn(e, "Thread " + getName() + " hat ein E/A-Problem beim Lauschen");
 					}
 				}
 			}.start();
 		} catch (IOException e) {
-			lg.warning(e, "E/A-Problem beim Binden an TCP-Port "+p+"; " + "läuft der c't-Sim schon?");
+			lg.warning(e, "E/A-Problem beim Binden an TCP-Port " + p + "; läuft der c't-Sim schon?");
 			System.exit(1);
 		}
 	}
@@ -134,21 +134,20 @@ public class TcpConnection extends Connection {
 	 */
 	public static void connectTo(final String hostname, final int port,
 	final BotReceiver receiver) {
-		final String address = hostname+":"+port;	// nur für Meldungen
-    	lg.info("Verbinde mit "+address+" ...");
-		new SaferThread("ctSim-Connect-"+address) {
+		final String address = hostname + ":" + port;	// nur für Meldungen
+    	lg.info("Verbinde mit " + address + " ...");
+		new SaferThread("ctSim-Connect-" + address) {
 			@Override
 			public void work() {
 				try {
 					new TcpConnection(hostname, port).doHandshake(receiver);
 		    	} catch (UnknownHostException e) {
-		    		lg.warn("Host '"+e.getMessage()+"' nicht gefunden");
+		    		lg.warn("Host '" + e.getMessage() + "' nicht gefunden");
 		    	} catch (ConnectException e) {
 		    		// ConnectExcp deckt so Sachen ab wie "connection refused" und "connection timed out"
-		    		lg.warn("Konnte Verbindung mit "+address+
-		    			" nicht herstellen ("+e.getLocalizedMessage()+")");
+		    		lg.warn("Konnte Verbindung mit " + address + " nicht herstellen (" + e.getLocalizedMessage() + ")");
 				} catch (IOException e) {
-					lg.severe(e, "E/A-Problem beim Verbinden mit "+address);
+					lg.severe(e, "E/A-Problem beim Verbinden mit " + address);
 				}
 				// Arbeit ist getan, ob es funktioniert hat oder nicht...
 				die();
