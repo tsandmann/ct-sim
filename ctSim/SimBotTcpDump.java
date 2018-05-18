@@ -39,18 +39,18 @@ import ctSim.model.Command;
 public class SimBotTcpDump {
 	/**
 	 * main
-	 * 
+	 *
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String... args) throws Exception {
 		ServerSocket srvSock = new ServerSocket(10001);
 		while (true) {
-			// Blockiert
+			// blockiert
 			TcpConnection bot = new TcpConnection(srvSock.accept());
-			// Blockiert auch
+			// blockiert auch
 			TcpConnection sim = new TcpConnection("127.0.0.1", 10002);
-			// Go
+			// Go!
 			Forwarder bs = new Forwarder("Bot->Sim     ", bot, sim);
 			Forwarder sb = new Forwarder("     Sim->Bot", sim, bot);
 			bs.peer = sb;
@@ -61,7 +61,7 @@ public class SimBotTcpDump {
 				srvSock.close();
 			}
 			try { sim.close(); } catch (IOException e) {
-				srvSock.close();	
+				srvSock.close();
 			}
 		}
 	}
@@ -79,7 +79,7 @@ public class SimBotTcpDump {
 
 		/**
 		 * Forwarder
-		 * 
+		 *
 		 * @param name
 		 * @param from
 		 * @param to
@@ -110,14 +110,13 @@ public class SimBotTcpDump {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.err.println("\nThread " + getName().trim() + " dying; " +
-					"killing peer");
+			System.err.println("\nThread " + getName().trim() + " dying; killing peer");
 
 			peer.deathRequested = true;
 			peer.interrupt();
-			// Rabiater, aber interrupt() zeigt vielleicht keine Wirkung
-			try { peer.from.close(); } catch (IOException e) {/**/}
-			try { peer.to.close(); } catch (IOException e) {/**/}
+			// rabiater, aber interrupt() zeigt vielleicht keine Wirkung
+			try { peer.from.close(); } catch (IOException e) { /* ... */ }
+			try { peer.to.close(); } catch (IOException e) { /* ... */ }
 		}
 	}
 }

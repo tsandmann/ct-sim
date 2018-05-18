@@ -32,7 +32,7 @@ import ctSim.controller.Main;
 public class MemoryLeakTest {
 	/**
 	 * main
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -58,7 +58,7 @@ public class MemoryLeakTest {
 				try {
 					Thread.sleep(2000);
                 } catch (InterruptedException e) {
-                	// ist egal
+                	// egal
                 }
 			}
         }

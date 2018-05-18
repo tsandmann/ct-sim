@@ -73,7 +73,7 @@ import ctSim.util.Misc;
  * { - in Uhrzeigersinn gedrehte T-Kreuzung, Linie geht nach links weg (Richtung der Mittelspitze)
  * } - entgegen Uhrzeigersinn gedrehte T-Kreuzung (Linie geht in Richtung der Mittelspitze nach rechts weg)
  *
- * @author Benjamin Benz (bbe@heise.de)
+ * @author Benjamin Benz
  */
 public class ParcoursLoader {
 	/** Logger */
@@ -118,22 +118,22 @@ public class ParcoursLoader {
 	public static final float[] LINE_CORNER_SW = {
 		0f - LINEWIDTH/2,	-0.5f,				0f,	// Start unten links
 		0f + LINEWIDTH/2,	-0.5f,				0f,	// kurze Linie nach rechts
-		0f + LINEWIDTH/2,	0.0f + LINEWIDTH/2,	0f,	// Lange Linie hoch
-		-0.5f,				0.0f + LINEWIDTH/2,	0f,	// Lange Linie nach links
+		0f + LINEWIDTH/2,	0.0f + LINEWIDTH/2,	0f,	// lange Linie hoch
+		-0.5f,				0.0f + LINEWIDTH/2,	0f,	// lange Linie nach links
 		-0.5f,				0.0f - LINEWIDTH/2,	0f,	// kurze Linie runter
-		0f -LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// Lange Linie nach links
-		0f - LINEWIDTH/2,	-0.5f,				0f,	// Lange Linie nach unten
+		0f -LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// lange Linie nach links
+		0f - LINEWIDTH/2,	-0.5f,				0f,	// lange Linie nach unten
 	};
 	
 	/** Linie -- Nordwestecke */
 	public static final float[] LINE_CORNER_NW = {
 		-0.5f,				0.0f + LINEWIDTH/2,	0f,	// Start Links oben
 		-0.5f,				0.0f - LINEWIDTH/2,	0f,	// kurze Linie runter
-		0f +LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// Lange Linie nach rechts
-		0f +LINEWIDTH/2,	0.5f,				0f,	// Lange Linie nach oben
+		0f +LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// lange Linie nach rechts
+		0f +LINEWIDTH/2,	0.5f,				0f,	// lange Linie nach oben
 		0f -LINEWIDTH/2,	0.5f,				0f,	// kurze Linie nach links
 		0f -LINEWIDTH/2,	0.0f + LINEWIDTH/2,	0f,	// lange Linie nach unten
-		-0.5f,				0.0f + LINEWIDTH/2,	0f,	// Lange Linie nach links
+		-0.5f,				0.0f + LINEWIDTH/2,	0f,	// lange Linie nach links
 	};
 
 	/** Linie -- Nordostecke */
@@ -141,7 +141,7 @@ public class ParcoursLoader {
 		0f +LINEWIDTH/2 , 0.5f               ,0f,	// Start oben rechts
 		0f -LINEWIDTH/2 , 0.5f               ,0f,	// kurze Linie nach links
 		0f -LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,	// lange Linie nach unten
-		0.5f			, 0.0f - LINEWIDTH/2 ,0f,	// Lange Linie nach rechts
+		0.5f			, 0.0f - LINEWIDTH/2 ,0f,	// lange Linie nach rechts
 		0.5f			, 0.0f + LINEWIDTH/2 ,0f,	// kurze Linie nach oben
 		0f +LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,	// lange Linie nach links
 		0f +LINEWIDTH/2 , 0.5f				 ,0f,	// lange Linie nach oben
@@ -152,7 +152,7 @@ public class ParcoursLoader {
 		0f - LINEWIDTH/2,	-0.5f,				0f,	// Start unten links
 		0f + LINEWIDTH/2,	-0.5f,				0f,	// kurze Linie nach rechts
 		0f + LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// Linie hoch bis Mitte
-		0.5f,				0.0f - LINEWIDTH/2,	0f,	// Lange Linie nach rechts
+		0.5f,				0.0f - LINEWIDTH/2,	0f,	// lange Linie nach rechts
 		0.5f,				0.0f + LINEWIDTH/2,	0f,	// kurze Linie hoch
 		0f + LINEWIDTH/2,	0.0f + LINEWIDTH/2,	0f,	// Linie bis Mitte
 		0f + LINEWIDTH/2,	0.5f,				0f,	// Linie bis Hoch
@@ -169,7 +169,7 @@ public class ParcoursLoader {
 		0f - LINEWIDTH/2,	-0.5f,				0f,	// Start unten links
 		0f + LINEWIDTH/2,	-0.5f,				0f,	// kurze Linie nach rechts
 		0f + LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// Linie hoch bis Mitte
-		0.5f,				0.0f - LINEWIDTH/2,	0f,	// Lange Linie nach rechts
+		0.5f,				0.0f - LINEWIDTH/2,	0f,	// lange Linie nach rechts
 		0.5f,				0.0f + LINEWIDTH/2,	0f,	// kurze Linie hoch
 		-0.5f,			0.0f + LINEWIDTH/2,		0f,	// lange Linie nach links
 		-0.5f,			0f - LINEWIDTH/2,		0f,	// kurze Linie runter
@@ -278,7 +278,8 @@ public class ParcoursLoader {
 	 * @param appearance	Die Appearance
 	 */
 	private void createWall(int x, int y, int lengthX, int lengthY, Appearance appearance) {
-		Box box = new Box(parcours.getBlockSizeInM() / 2 * lengthX, parcours.getBlockSizeInM() / 2 * lengthY, WALL_HEIGHT, appearance);
+		Box box = new Box(parcours.getBlockSizeInM() / 2 * lengthX, parcours.getBlockSizeInM() / 2 * lengthY,
+				WALL_HEIGHT, appearance);
 		parcours.addObstacle(box, x + lengthX / 2.0f, y + lengthY / 2.0f);
 	}
 
@@ -294,7 +295,8 @@ public class ParcoursLoader {
 	 */
 	@SuppressWarnings("unused")
 	private void createFloor(int x, int y, int lengthX, int lengthY, Appearance app) {
-		Box box = new Box(parcours.getBlockSizeInM() / 2 * lengthX, parcours.getBlockSizeInM() / 2 * lengthY, World.PLAYGROUND_THICKNESS, app);
+		Box box = new Box(parcours.getBlockSizeInM() / 2 * lengthX, parcours.getBlockSizeInM() / 2 * lengthY,
+				World.PLAYGROUND_THICKNESS, app);
 		parcours.addFloor(box, x + lengthX / 2.0f, y + lengthY / 2.0f, - World.PLAYGROUND_THICKNESS + 0.001f);
 	}
 
@@ -307,7 +309,8 @@ public class ParcoursLoader {
 	 * @param app	Aussehen des Bodens
 	 */
 	private void createFloor(int x, int y, Appearance app) {
-		Box box = new Box(parcours.getBlockSizeInM() * 0.5f, parcours.getBlockSizeInM() * 0.5f, World.PLAYGROUND_THICKNESS, app);
+		Box box = new Box(parcours.getBlockSizeInM() * 0.5f, parcours.getBlockSizeInM() * 0.5f,
+				World.PLAYGROUND_THICKNESS, app);
 		parcours.addFloor(box, x + 0.5f, y + 0.5f, - World.PLAYGROUND_THICKNESS + 0.001f);
 	}
 
@@ -383,7 +386,8 @@ public class ParcoursLoader {
 	 * @param lightAppearance	Licht-Appearance oder null
 	 * @param moveable			Soll das Objekt bewegbar sein?
 	 */
-	private void createPillar(float x, float y, float diameter, float height, Appearance bodyAppearance, Appearance lightAppearance, boolean moveable) {
+	private void createPillar(float x, float y, float diameter, float height, Appearance bodyAppearance,
+			Appearance lightAppearance, boolean moveable) {
 		Cylinder pillar = new Cylinder(diameter / 2.0f, height, bodyAppearance);
 //		pillar.setName("Object");
 		pillar.setCapability(javax.media.j3d.Node.ALLOW_PICKABLE_WRITE);
@@ -408,7 +412,8 @@ public class ParcoursLoader {
 			parcours.addObstacle(tg, x + 0.5f, y + 0.5f);
 		}
 		if (lightAppearance != null) {
-			createLight(new BoundingSphere(new Point3d(0d, 0d, 0d), 10d), new Color3f(1.0f, 1.0f, 0.9f), (int) x, (int) y, lightAppearance);
+			createLight(new BoundingSphere(new Point3d(0d, 0d, 0d), 10d), new Color3f(1.0f, 1.0f, 0.9f),
+					(int) x, (int) y, lightAppearance);
 		}
 	}
 	
@@ -431,17 +436,19 @@ public class ParcoursLoader {
 	 * @param y					Y-Koordinate
 	 * @param appearance		Die Appearance
 	 */
-	private void createLight(BoundingSphere pointLightBounds, Color3f pointLightColor, int x, int y, Appearance appearance) {
+	private void createLight(BoundingSphere pointLightBounds, Color3f pointLightColor, int x, int y,
+			Appearance appearance) {
 		// Lichter bestehen aus dem echten Licht
 		PointLight pointLight = new PointLight();
 		pointLight.setColor(pointLightColor);
-		pointLight.setPosition((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM(), LIGHTZ);
+		pointLight.setPosition((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM(),
+				LIGHTZ);
 		pointLight.setInfluencingBounds(pointLightBounds);
 		pointLight.setAttenuation(1f, 3f, 0f);
 		pointLight.setEnable(true);
 		parcours.addLight(pointLight);
 
-		// Und einer gelben Kugel, um es zu visualisieren
+		// und einer gelben Kugel, um es zu visualisieren
 		Sphere lightSphere = new Sphere(0.07f);
 		lightSphere.setAppearance(appearance);
 		parcours.addLight(lightSphere, x + 0.5f, y + 0.5f, LIGHTZ);
@@ -457,7 +464,8 @@ public class ParcoursLoader {
 	private void createBPSBeacon(int x, int y, Appearance appearance) {
 		PointLight pointBPSLight = new PointLight();
 //		pointBPSLight.setColor(new Color3f(0.5f, 0.5f, 0.5f));
-		pointBPSLight.setPosition((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM(), BPS.BPSZ);
+		pointBPSLight.setPosition((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM(),
+				BPS.BPSZ);
 		
 //		pointBPSLight.setInfluencingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 1.0));
 //		pointBPSLight.setAttenuation(1f, 3f, 0f);
@@ -470,8 +478,7 @@ public class ParcoursLoader {
 	}
 
 	/**
-	 * Prüft die angrenzenden Felder (ohne diagonalen), ob mindestens eines
-	 * davon den übergebenen Wert hat
+	 * Prüft die angrenzenden Felder (ohne diagonalen), ob mindestens eines davon den übergebenen Wert hat
 	 * 
 	 * @param x	X-Koordinate des mittelfeldes
 	 * @param y	Y-Koordinate des mittelfeldes
@@ -540,7 +547,8 @@ public class ParcoursLoader {
 						}
 						break;
 					case 'o':	// bewegliches Objekt
-						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM());
+						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f)
+								* parcours.getBlockSizeInM());
 						break;
 					case 'l':	// Landmarke
 //						if (Beacon.checkParcoursPosition(this.parcours, x, y)) {
@@ -627,31 +635,29 @@ public class ParcoursLoader {
 			/* für den Rest Boden aus einem Stück einfügen */
 			createWholeFloor(getAppearance(' '));
 			
-			// Hat mit dem Einzeichnen des Wegs bis zum Ziel zu tun; sollte
-			// ordentlich integriert werden: Menüeintrag in GUI, der das
-			// Einzeichnen ein-/ausschaltet. Aus Gründen der Klarheit sollten
-			// die Linien vorher ihre eigene BranchGroup bekommen
-			
-			/*
-			 * for (int i=0; i<Parcours.BOTS; i++){ double dist=
-			 * this.parcours.getShortestDistanceToFinish
-			 * (this.parcours.getStartPosition(i));
-			 * 
-			 * if (dist>=0)
-			 * System.out.println("Distanz zum Ziel von Startpunkt "+
-			 * i+" = "+dist+" m"); else
-			 * System.out.println("Kein Weg zum Ziel von Startpunkt "+i);
-			 * 
-			 * 
-			 * // finde die kürzeste Verbindung Vector<TurningPoint>
-			 * shortestPath=
-			 * this.parcours.getShortestPath(this.parcours.getStartPosition(i));
-			 * 
-			 * if(shortestPath==null || shortestPath.size()<2){ } else{ for(int
-			 * q=1;q<shortestPath.size();q++){
-			 * createLine(0,0,shortestPath.get(q-
-			 * 1).returnLineTo(shortestPath.get(q)),getAppearance('-')); } } }
+			/* Hat mit dem Einzeichnen des Wegs bis zum Ziel zu tun; sollte ordentlich integriert werden:
+			 * Menüeintrag in GUI, der das Einzeichnen ein-/ausschaltet. Aus Gründen der Klarheit sollten
+			 * die Linien vorher ihre eigene BranchGroup bekommen
 			 */
+			
+
+//			for (int i=0; i<Parcours.BOTS; i++){
+//				double dist=this.parcours.getShortestDistanceToFinish(this.parcours.getStartPosition(i));
+//				if (dist>=0)
+//					System.out.println("Distanz zum Ziel von Startpunkt " + i + " = " + dist + " m");
+//				else
+//					System.out.println("Kein Weg zum Ziel von Startpunkt "+i);
+//
+//				// finde die kürzeste Verbindung Vector<TurningPoint>
+//				shortestPath=this.parcours.getShortestPath(this.parcours.getStartPosition(i));
+//				if(shortestPath==null || shortestPath.size()<2){
+//				}else{
+//					for(int q=1;q<shortestPath.size();q++){
+//					createLine(0,0,shortestPath.get(q-1).returnLineTo(shortestPath.get(q)),getAppearance('-'));
+//					}
+//				}
+//			}
+
 		}
 	}
 
@@ -666,33 +672,32 @@ public class ParcoursLoader {
 	 * <p>
 	 * Lädt einen Parcours aus einer InputSource.
 	 * 
-	 * @param source
-	 *            Xerces-InputSource-Objekt, aus dem der Parcours geholt werden kann.
-	 *            Der Sinn ist, dass beliebige Eingabequellen übergeben werden können
-	 *            und daher nicht mehr nur aus Dateien, sondern auch aus Strings oder
-	 *            von sonstwo gelesen werden kann.</p>
+	 * @param source	Xerces-InputSource-Objekt, aus dem der Parcours geholt werden kann.
+	 *            		Der Sinn ist, dass beliebige Eingabequellen übergeben werden können
+	 *            		und daher nicht mehr nur aus Dateien, sondern auch aus Strings oder
+	 *            		von sonstwo gelesen werden kann.</p>
 	 * 
-	 * @param resolver
-	 *            Der zu verwendende Xerces-EntityResolver, oder <code>null</code>,
-	 *            wenn der Standard-Resolver verwendet werden soll. Der DocumentBuilder,
-	 *            der dieser Methode zugrundeliegt, verwendet den Resolver während dem
-	 *            Verarbeiten der im XML vorkommenden "system identifier" und
-	 *            "public identifier". Diese treten in unseren Parcoursdateien nur an
-	 *            einer Stelle auf, nämlich in Zeile 2:
-	 *            <code><!DOCTYPE collection SYSTEM "parcours.dtd"></code>.
-	 *            Der system identifier ist dabei <code>parcours.dtd</code>.
-	 *            Für Parcours-Dateien ist kein Resolver nötig (= es kann <code>null</code>
-	 *            übergeben werden), weil sie im gleichen Verzeichnis liegen wie die Datei
-	 *            parcours.dtd. Für Parcours, die aus XML-Strings gelesen werden, ist ein
-	 *            Resolver nötig, da der Parser sonst nur im ctSim-Verzeichnis sucht (nicht
-	 *            im Verzeichnis ctSim/parcours), und daher die Datei ctSim/parcours/parcours.dtd
-	 *            nicht findet.
+	 * @param resolver	Der zu verwendende Xerces-EntityResolver, oder <code>null</code>,
+	 *            		wenn der Standard-Resolver verwendet werden soll. Der DocumentBuilder,
+	 *            		der dieser Methode zugrundeliegt, verwendet den Resolver während dem
+	 *            		Verarbeiten der im XML vorkommenden "system identifier" und
+	 *            		"public identifier". Diese treten in unseren Parcoursdateien nur an
+	 *            		einer Stelle auf, nämlich in Zeile 2:
+	 *            		<code><!DOCTYPE collection SYSTEM "parcours.dtd"></code>.
+	 *           		Der system identifier ist dabei <code>parcours.dtd</code>.
+	 *            		Für Parcours-Dateien ist kein Resolver nötig (= es kann <code>null</code>
+	 *            		übergeben werden), weil sie im gleichen Verzeichnis liegen wie die Datei
+	 *            		parcours.dtd. Für Parcours, die aus XML-Strings gelesen werden, ist ein
+	 *            		Resolver nötig, da der Parser sonst nur im ctSim-Verzeichnis sucht (nicht
+	 *            		im Verzeichnis ctSim/parcours), und daher die Datei ctSim/parcours/parcours.dtd
+	 *            		nicht findet.
 	 * 
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws ParserConfigurationException 
 	 */
-	public void loadParcours(InputSource source, EntityResolver resolver) throws SAXException, IOException, ParserConfigurationException {
+	public void loadParcours(InputSource source, EntityResolver resolver)
+			throws SAXException, IOException, ParserConfigurationException {
 		// Ein DocumentBuilder liest ein XML-File ein
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder;
@@ -705,7 +710,7 @@ public class ParcoursLoader {
 			// einlesen und umwandeln in ein Document
 			Document doc = builder.parse(source);
 
-			// Und anfangen mit dem Abarbeiten
+			// und anfangen mit dem Abarbeiten
 
 			// als erstes suchen wir uns den Parcours-Block
 			Node n = doc.getDocumentElement().getFirstChild();
@@ -717,7 +722,7 @@ public class ParcoursLoader {
 			int y = 0;	// Anzahl der Zeilen im File
 			int x = 0;	// Anzahl der Spalten im File
 
-			// Eine Liste aller Kinder des Parcours-Eitnrags organsisieren
+			// eine Liste aller Kinder des Parcours-Eitnrags organsisieren
 			if (n == null) {
 				throw new SAXException("kein Node gefunden!");
 			}
@@ -738,7 +743,7 @@ public class ParcoursLoader {
 			parcours.setDimX(x);
 			parcours.setDimY(y);
 
-			// Und eine Map anlegen
+			// und eine Map anlegen
 			parcoursMap = new int[x][y];
 
 			parcours.setParcoursMap(parcoursMap);
@@ -766,7 +771,7 @@ public class ParcoursLoader {
 			}
 			// ... jetzt haben wir ihn
 
-			// Eine Liste aller Kinder des Parcours-Eintrags organsisieren
+			// eine Liste aller Kinder des Parcours-Eintrags organsisieren
 			if (n == null) {
 				throw new SAXException("kein Node gefunden!");
 			}			
@@ -802,7 +807,7 @@ public class ParcoursLoader {
 				}
 			}
 
-			// Soweit fertig...
+			// soweit fertig...
 			parse();	// Parcours zusammenbauen
 
 		} catch (SAXException e) {
@@ -834,9 +839,9 @@ public class ParcoursLoader {
 	/**
 	 * Fügt die der Liste hinzu
 
-	 * @param item			Der Key, iunter dem diese Apperance abgelegt wird
+	 * @param item			der Key, iunter dem diese Apperance abgelegt wird
 	 * @param colors		HashMap mit je Farbtyp und ASCII-Represenation der Farbe
-	 * @param textureFile	Der Name des Texture-Files
+	 * @param textureFile	der Name des Texture-Files
 	 * @param clone			Referenz auf einen schon bestehenden Eintrag, der geclonet werden soll
 	 */
 	private void addAppearance(char item, HashMap colors, String textureFile, String clone) {
@@ -872,8 +877,9 @@ public class ParcoursLoader {
 		}
 
 		if (textureFile != null) {
-			TexCoordGeneration tcg = new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR, TexCoordGeneration.TEXTURE_COORDINATE_3, new Vector4f(1.0f, 
-				1.0f, 0.0f, 0.0f), new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f, 1.0f, 0.0f));
+			TexCoordGeneration tcg = new TexCoordGeneration(TexCoordGeneration.OBJECT_LINEAR,
+					TexCoordGeneration.TEXTURE_COORDINATE_3, new Vector4f(1.0f, 1.0f, 0.0f, 0.0f),
+					new Vector4f(0.0f, 1.0f, 1.0f, 0.0f), new Vector4f(1.0f, 0.0f, 1.0f, 0.0f));
 			appearance.setTexCoordGeneration(tcg);
 
 			try {

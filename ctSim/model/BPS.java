@@ -34,9 +34,7 @@ public class BPS {
 	/** Wert des Sensors, wenn keine Landmarke gesehen wird */
 	public static final int NO_DATA = 0xffff; 
 	
-	/**
-	 * Eine Bake des BPS
-	 */
+	/** Eine Bake des BPS */
 	public static class Beacon {	
 		/** Position der Landmarke [parcoursBlockSizeInMM mm] */
 		private final Point2i position;
@@ -46,8 +44,8 @@ public class BPS {
 		/**
 		 * Erzeugt eine neue Landmarke
 		 * 
-		 * @param parc Parcours, in dem die Landmarke steht
-		 * @param source Position der Landmarke, so wie PickInfo sie ermittelt hat [m]
+		 * @param parc		Parcours, in dem die Landmarke steht
+		 * @param source	Position der Landmarke, so wie PickInfo sie ermittelt hat [m]
 		 */
 		public Beacon(Parcours parc, Point3d source) {
 			parcoursBlockSizeInMM = parc.getBlockSizeInMM();
@@ -83,8 +81,8 @@ public class BPS {
 		}
 		
 //		/**
-//		 * Prüft, ob die angegebene Parcours-Position für eine BPS-Landmarke gueltig ist
-//		
+//		 * Prüft, ob die angegebene Parcours-Position für eine BPS-Landmarke gültig ist
+//		 *
 //		 * @param parc	Parcours, in dem die Landmarke steht
 //		 * @param x		X-Koordinate [Parcours-Block]
 //		 * @param y		Y-Koordinate [Parcours-Block]
@@ -93,12 +91,12 @@ public class BPS {
 //		public static boolean checkParcoursPosition(Parcours parc, int x, int y) {
 //			float tmp = (parc.getWidthInBlocks() - 1 - x) * parc.getBlockSizeInMM() + parc.getBlockSizeInMM() / 2.0f;
 //			if (tmp % BEACON_GRID_SIZE != 0) {
-//				System.out.println("x=" + x + " ungueltig, tmp=" + tmp);
+//				System.out.println("x=" + x + " ungültig, tmp=" + tmp);
 //				return false;
 //			}
 //			tmp = y * parc.getBlockSizeInMM() + parc.getBlockSizeInMM() / 2.0f;
 //			if (tmp % BEACON_GRID_SIZE != 0) {
-//				System.out.println("y=" + y + " ungueltig, tmp=" + tmp);
+//				System.out.println("y=" + y + " ungültig, tmp=" + tmp);
 //				return false;
 //			}
 //			return true;

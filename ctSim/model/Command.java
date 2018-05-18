@@ -101,7 +101,7 @@ import ctSim.util.Misc;
  * anderen Statusinformationen, die der Sim auswertet und dem Benutzer anzeigt.
  * Welche einzelnen Commands behandelt werden, und wie sie im Detail interpretiert
  * werden, ist Sache der Bot-Komponenten wie in der {@linkplain Code Command-Code-Liste}
- * beschrieben. </li>
+ * beschrieben.</li>
  * <li>Beim Start des Sim überträgt er ein Command mit dem Command-Code
  * {@link Command.Code#WELCOME WELCOME}, das einen Handshake anfordert.
  * Der Bot antwortet mit einem Command, das ihn als realen Bot ausweist
@@ -183,8 +183,8 @@ import ctSim.util.Misc;
  * Java verwendet intern Big-Endian. Die Konvertierung erfolgt zu Fuß in dieser Klasse.
  * </p>
  *
- * @author Benjamin Benz (bbe@heise.de)
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Benjamin Benz
+ * @author Hendrik Krauß
  */
 public class Command {
 	/** Logger */
@@ -336,6 +336,7 @@ public class Command {
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
+
 	// Enum Command-Code
 	
 	/**
@@ -368,8 +369,7 @@ public class Command {
 		ACT_MOT('M'),
 
 		/** LCD-Anzeige; siehe {@link LcDisplay}. */
-		ACT_LCD('c', SubCode.NORM, SubCode.LCD_CLEAR, SubCode.LCD_CURSOR,
-			SubCode.LCD_DATA),
+		ACT_LCD('c', SubCode.NORM, SubCode.LCD_CLEAR, SubCode.LCD_CURSOR, SubCode.LCD_DATA),
 
 		/** Abgrundsensoren; siehe {@link Border}. */
 		SENS_BORDER('B'),
@@ -413,21 +413,36 @@ public class Command {
 		 * Sim ("Ungültiges Kommando, SubCode NORM passt nicht zu Code REMOTE_CALL") zu unterdrücken,
 		 * füge ich das hier hinzu.
 		 */
-		REMOTE_CALL('r', SubCode.NORM, SubCode.REMOTE_CALL_LIST,
-			SubCode.REMOTE_CALL_ENTRY, SubCode.REMOTE_CALL_ORDER,
-			SubCode.REMOTE_CALL_DONE, SubCode.REMOTE_CALL_ABORT),
+		REMOTE_CALL('r',
+				SubCode.NORM,
+				SubCode.REMOTE_CALL_LIST,
+				SubCode.REMOTE_CALL_ENTRY,
+				SubCode.REMOTE_CALL_ORDER,
+				SubCode.REMOTE_CALL_DONE,
+				SubCode.REMOTE_CALL_ABORT),
 			
 		/** Map-Übertragung */
-		MAP('Q', SubCode.MAP_DATA_1, SubCode.MAP_DATA_2, SubCode.MAP_DATA_3,
-				SubCode.MAP_DATA_4, SubCode.MAP_REQUEST, SubCode.MAP_LINE,
-				SubCode.MAP_CIRCLE,	SubCode.MAP_CLEAR_LINES, 
-				SubCode.MAP_CLEAR_CIRCLES, SubCode.MAP_REQUEST),
+		MAP('Q',
+				SubCode.MAP_DATA_1,
+				SubCode.MAP_DATA_2,
+				SubCode.MAP_DATA_3,
+				SubCode.MAP_DATA_4,
+				SubCode.MAP_REQUEST,
+				SubCode.MAP_LINE,
+				SubCode.MAP_CIRCLE,
+				SubCode.MAP_CLEAR_LINES,
+				SubCode.MAP_CLEAR_CIRCLES,
+				SubCode.MAP_REQUEST),
 
 		/** Kommando zum Herunterfahren */
 		SHUTDOWN('q', SubCode.NORM),		
 				
 		/** Programmdaten (Basic oder ABL) */
-		PROGRAM('p', SubCode.PROGRAM_PREPARE, SubCode.PROGRAM_DATA, SubCode.PROGRAM_START, SubCode.PROGRAM_STOP);
+		PROGRAM('p',
+				SubCode.PROGRAM_PREPARE,
+				SubCode.PROGRAM_DATA,
+				SubCode.PROGRAM_START,
+				SubCode.PROGRAM_STOP);
 		
 		/** Code auf der Leitung */
 		private final byte onTheWire;
@@ -479,8 +494,7 @@ public class Command {
 				if (c.toUint7() == b)
 					return c;
 			}
-			throw new ProtocolException("Command-Code "+formatChar(b)+
-				" unbekannt");
+			throw new ProtocolException("Command-Code " + formatChar(b) + " unbekannt");
 		}
 
 		/**
@@ -497,9 +511,8 @@ public class Command {
 				if (c.toUint7() == b)
 					return c;
 			}
-			throw new ProtocolException("Sub-Command-Code "+formatChar(b)+
-				" nicht vorgesehen für Command-Code "+
-				formatChar(toUint7()));
+			throw new ProtocolException("Sub-Command-Code " + formatChar(b) +
+					" nicht vorgesehen für Command-Code " + formatChar(toUint7()));
 		}
 
 		/**
@@ -507,12 +520,13 @@ public class Command {
 		 * @throws ProtocolException
 		 */
 		public void assertSubCodeValid(SubCode sc) throws ProtocolException {
-			// Wenn SubCode ungültig, explodiert der folgende Aufruf mit einer ProtoExcp
+			// wenn SubCode ungültig, explodiert der folgende Aufruf mit einer ProtoExcp
 			getSubCode(sc.toUint7());
 		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+
 	// Enum Sub-Command-Code
 
 	/** Ein Sub-Command-Code kann einen der Werte in diesem Enum haben. */
@@ -647,9 +661,8 @@ public class Command {
 		}
 
 		/**
-		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB) dargestellt
-		 * werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int
-		 * zurückgegeben.
+		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB) dargestellt werden soll.
+		 * 			Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int zurückgegeben.
 		 */
 		public byte toUint7() { 
 			return onTheWire; 
@@ -709,8 +722,8 @@ public class Command {
 	}
 
 	/**
-	 * Wie {@link #Command(Connection, boolean)} mit
-	 * {@code suppressSyncWarnings == false} (dem Normalwert).
+	 * Wie {@link #Command(Connection, boolean)} mit {@code suppressSyncWarnings == false}
+	 * (dem Normalwert).
 	 * 
 	 * @param con	Connection für das Kommando
 	 * @throws IOException
@@ -754,7 +767,8 @@ public class Command {
 		byte startCode = b[0];
 		if (startCode != STARTCODE) {
 			while (startCode != STARTCODE) {
-				String msg = "Unerwartetes Zeichen als Startcode; Synchronisierung verloren; synchronisiere neu. startCode=" + startCode + " anstatt " + STARTCODE;
+				String msg = "Unerwartetes Zeichen als Startcode; Synchronisierung verloren; synchronisiere neu. " +
+						"startCode=" + startCode + " anstatt " + STARTCODE;
 				if (suppressSyncWarnings) {
 					lg.fine(msg);
 				} else {
@@ -774,16 +788,16 @@ public class Command {
 
 		byte i =0;
 		byte code = b[i++];
-		// Nur 7 least significant bits
+		// nur 7 least significant bits
 		int subcode = b[i] & 127;
 		// 7 least significant Bits weg, nur 8. angucken
 		direction = b[i++] >> 7 & 1;
 
 		// Sinnvollität prüfen
 		if (direction != DIR_REQUEST) {
-			throw new ProtocolException(String.format("Ungültiges " +
-				"Kommando (verkehrtes Richtungsbit, hätte %d sein " +
-				"sollen); Kommando folgt%s", direction, this));
+			throw new ProtocolException(
+					String.format("Ungültiges Kommando (verkehrtes Richtungsbit, hätte %d sein sollen); " +
+							"Kommando folgt %s", direction, this));
 		}
 
 		int payloadSize = Misc.toUnsignedInt8(b[i++]);
@@ -798,7 +812,7 @@ public class Command {
 				
 		
 		from.set(b[i++]);	// neue Version mit Adressen
-		to.set(b[i++]);	// neue Version mit Adressen		
+		to.set(b[i++]);		// neue Version mit Adressen
 		
 		if (to.equals(Command.getSimId())) {
 			commandCode = Code.fromByte(code);
@@ -816,9 +830,9 @@ public class Command {
 		
 		// Sinnvollität prüfen
 		if (crc != CRCCODE) {
-			throw new ProtocolException(String.format("Ungültiges " +
-				"Kommando (verkehrter CRC, hätte %s sein " +
-				"sollen); Kommando folgt%s", formatChar(CRCCODE), this));
+			throw new ProtocolException(
+					String.format("Ungültiges Kommando (verkehrter CRC, hätte %s sein sollen); " +
+							"Kommando folgt %s", formatChar(CRCCODE), this));
 		}
 	}
 
@@ -899,21 +913,22 @@ public class Command {
 		if (payload == null)
 			payloadStr = "";
 		else {
-			payloadStr = "'"+replaceCtrlChars(getPayloadAsString())+
-				"' ("+payload.length+" Byte)";
+			payloadStr = "'" + replaceCtrlChars(getPayloadAsString()) + "' (" + payload.length + " Byte)";
 		}
-		// Vorsicht beim Ausgeben; wenn man lustig %c macht und der Wert wegen Sync- oder Lesefehlern
-		// mal < 0 wird, explodiert alles. Daher formatChar() eingeführt.
+		/* 
+		 * Vorsicht beim Ausgeben; wenn man lustig %c macht und der Wert wegen Sync- oder Lesefehlern
+		 * mal < 0 wird, explodiert alles. Daher formatChar() eingeführt.
+		 */
 		return
-			"\n\tCommand-Code:\t"+commandCode+
-			"\n\tSubcommand-Code:\t"+subCommandCode+
-			"\n\tDirection:\t"+direction+
-			"\n\tData:\tL "+dataL+" / R "+dataR+
-			"\n\tSeq:\t"+seq+
-			"\n\tFrom:\t"+from+
-			"\n\tTo:\t"+to+
-			"\n\tPayload:\t"+payloadStr+
-			"\n\tCRC:\t"+formatChar(crc);
+			"\n\tCommand-Code:\t" + commandCode +
+			"\n\tSubcommand-Code:\t" + subCommandCode +
+			"\n\tDirection:\t" + direction +
+			"\n\tData:\tL " + dataL + " / R " + dataR +
+			"\n\tSeq:\t" + seq +
+			"\n\tFrom:\t" + from +
+			"\n\tTo:\t" + to +
+			"\n\tPayload:\t" + payloadStr +
+			"\n\tCRC:\t" + formatChar(crc);
 	}
 
 	/** 
@@ -923,9 +938,8 @@ public class Command {
 	 */
 	public String toCompactString() {
 		return
-			String.format("%-20s",
-				commandCode + (has(SubCode.NORM) ? "" : "/"+subCommandCode))+
-			String.format(" L %4d R %4d", dataL, dataR)+
+			String.format("%-20s", commandCode + (has(SubCode.NORM) ? "" : "/" + subCommandCode)) +
+			String.format(" L %4d R %4d", dataL, dataR) +
 			String.format(" Payload='%s'",
 				replaceCtrlChars(escapeNewlines(getPayloadAsString())));
 	}
@@ -1042,7 +1056,7 @@ public class Command {
 		try {
 			((Code) commandCode).assertSubCodeValid(sc);
 		} catch (ProtocolException e) {
-			// Das ist ein Fehler des Programmierers, keine Laufzeitsache
+			// Das ist ein Fehler des Programmierers und keine Laufzeitsache.
 			throw new AssertionError(e);
 		}
 		subCommandCode = sc;

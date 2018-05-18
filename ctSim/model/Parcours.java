@@ -41,7 +41,7 @@ import ctSim.util.Misc;
  * benötigt. Des Weiteren stehen hier auch Informationen über Start- und
  * Zielpunkte der Bots.
  * 
- * @author Benjamin Benz (bbe@heise.de)
+ * @author Benjamin Benz
  */
 public class Parcours {
 	/** Logger */
@@ -81,16 +81,16 @@ public class Parcours {
 	private int dimY = 0;
 
 	/**
-	 * Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1
-	 * Wettkampfbots), zweite Dimension X, Y
+	 * Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots),
+	 * zweite Dimension X, Y
 	 */
 	private int[][] startPositions = new int[BOTS][2];
 	/** Info, welcher Bot wo gestartet ist oder starten wird */
 	private Bot[] startPositionsUsed = new Bot[BOTS];
 
 	/**
-	 * Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1
-	 * Wettkampfbots), zweite Dimension X, Y
+	 * Startposition der Bots [Gitter] Erste Dimension: Bots (0= default, ab 1 Wettkampfbots),
+	 * zweite Dimension X, Y
 	 */
 	private int[][] startHeadings = new int[BOTS][2];
 
@@ -101,8 +101,8 @@ public class Parcours {
 	private Vector<Vector2d> holes = new Vector<Vector2d>();
 
 	/**
-	 * Referenz auf eine Rohversion der Karte des Parcours (wie aus dem XML
-	 * gelesen). Format siehe {@link ParcoursLoader}.
+	 * Referenz auf eine Rohversion der Karte des Parcours (wie aus dem XML gelesen).
+	 * Format siehe {@link ParcoursLoader}.
 	 */
 	private int[][] parcoursMap;
 	
@@ -117,6 +117,7 @@ public class Parcours {
 	public Parcours(ParcoursLoader parcoursLoader) {
 		super();
 		this.parcoursLoader = parcoursLoader;
+
 		// Die Branchgroup für die Hindernisse
 		ObstBG = new BranchGroup();
 		ObstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
@@ -452,9 +453,11 @@ public class Parcours {
 			if (i == BOTS) {
 				i = 0;
 			}
-			pos = new Point3d(startPositions[i][0] * blockSizeInM + blockSizeInM / 2, startPositions[i][1] * blockSizeInM + blockSizeInM / 2, 0.0f);
+			pos = new Point3d(startPositions[i][0] * blockSizeInM + blockSizeInM / 2, startPositions[i][1] *
+					blockSizeInM + blockSizeInM / 2, 0.0f);
 		} else {
-			pos = new Point3d(startPositions[0][0] * blockSizeInM + blockSizeInM / 2, startPositions[0][1] * blockSizeInM + blockSizeInM / 2, 0.0f);
+			pos = new Point3d(startPositions[0][0] * blockSizeInM + blockSizeInM / 2, startPositions[0][1] *
+					blockSizeInM + blockSizeInM / 2, 0.0f);
 		}
 		return pos;
 	}
@@ -483,9 +486,11 @@ public class Parcours {
 	public Point3d getUsedStartPosition(int bot) {
 		Point3d pos = null;
 		if (bot < BOTS) {
-			pos = new Point3d(startPositions[bot][0] * blockSizeInM + blockSizeInM / 2, startPositions[bot][1] * blockSizeInM + blockSizeInM / 2, 0.0f);
+			pos = new Point3d(startPositions[bot][0] * blockSizeInM + blockSizeInM / 2, startPositions[bot][1] *
+					blockSizeInM + blockSizeInM / 2, 0.0f);
 		} else {
-			pos = new Point3d(startPositions[0][0] * blockSizeInM + blockSizeInM / 2, startPositions[0][1] * blockSizeInM + blockSizeInM / 2, 0.0f);
+			pos = new Point3d(startPositions[0][0] * blockSizeInM + blockSizeInM / 2, startPositions[0][1] *
+					blockSizeInM + blockSizeInM / 2, 0.0f);
 		}
 
 		return pos;
@@ -509,8 +514,8 @@ public class Parcours {
 
 		if (pos.length() == 0) {
 			pos.x = 1.0f;
-			lg.warn("getStartHeading wurde nach einer noch nicht gesetzten "
-				+ "Heading gefragt (Bot " + bot + "). Setze Default");
+			lg.warn("getStartHeading wurde nach einer noch nicht gesetzten Heading gefragt (Bot " + bot + "). " +
+					"Setze Default");
 		}
 
 		pos.normalize();
@@ -715,9 +720,6 @@ public class Parcours {
 	 * @return Distanz (ohne Drehungen) in Metern
 	 */
 	public double getShortestDistanceToFinish(Vector3d from) {
-		// TODO: z wird ignoriert - wird nicht mehr klappen, wenn der Bot
-		// (hypothetisch) mal Rampen hochfährt und sich auf verschiedenen
-		// Ebenen bewegt.
 		return getShortestDistanceToFinish(new Vector2d(from.x, from.y));
 	}
 

@@ -24,45 +24,43 @@ import java.util.Vector;
 import javax.vecmath.Vector2d;
 
 /**
- * Diese Klasse beschreibt die Position eines Knicks im Pfad des Roboters,
- * wenn er an einem Hindernis abbiegt. Ausserdem enthält sie Methoden um die
- * kürzeste Verbindung in einem ungerichteten Graphen zu finden
+ * Diese Klasse beschreibt die Position eines Knicks im Pfad des Roboters, wenn er an einem Hindernis
+ * abbiegt. Außerdem enthält sie Methoden um die kürzeste Verbindung in einem ungerichteten Graphen zu
+ * finden.
  *
  * @author phophermi (mpraehofer@web.de)
  */
 public class TurningPoint {
 	/**
 	 * <p>
-	 * Der Abstand, wie weit der Mittelpunkt des Bots von den
-	 * Wänden/Löchern/anderen Hindernissen hält, in Grid-Einheiten.
+	 * Der Abstand, wie weit der Mittelpunkt des Bots von den Wänden/Löchern/anderen Hindernissen hält,
+	 * in Grid-Einheiten.
 	 * </p>
 	 * <p>
 	 * 0.25 ist <strong>bei momentaner Block-Größe</strong> ein Bot-Radius.
 	 * ("Block-Größe": siehe blockSizeInM in der Klasse Parcours.) 0.25 bedeutet also,
-	 * dass dieser Wegfindungs-Algorithmus dem Bot erlaubt , bis zur Kollision an Wände
-	 * heranzukommen.
+	 * dass dieser Wegfindungs-Algorithmus dem Bot erlaubt, bis zur Kollision an Wände heranzukommen.
 	 * </p>
 	 * <ol>
 	 * <h3>Probleme:</h3>
-	 * <li>Wenn dieser Wert zu groß ist (z.B. 0.25), und man den Weg bis zum Ziel bestimmt
-	 * von der Position eines Bots aus, kann folgendes passieren:
-	 * Bots, die mit ihrer Vorderseite ein bisschen über einem Loch stehen, sind nach Meinung
-	 * dieses Algorithmus in ungültiger Position. Das heißt, dass
-	 * {@link #getShortestPathTo(TurningPoint, int[][])} zurückliefert, es gäbe keinen gültigen
-	 * Weg von der Botposition zum Ziel, obwohl laut {@link ThreeDBot} der Bot noch lange nicht
-	 * in ein Loch gefallen ist.</li>
+	 * <li>Wenn dieser Wert zu groß ist (z.B. 0.25), und man den Weg bis zum Ziel bestimmt von der Position
+	 * eines Bots aus, kann folgendes passieren: Bots, die mit ihrer Vorderseite ein bisschen über einem
+	 * Loch stehen, sind nach Meinung dieses Algorithmus in ungültiger Position. Das heißt, dass
+	 * {@link #getShortestPathTo(TurningPoint, int[][])} zurückliefert, es gäbe keinen gültigen Weg von
+	 * der Botposition zum Ziel, obwohl laut {@link ThreeDBot} der Bot noch lange nicht in ein Loch gefallen
+	 * ist.</li>
 	 * <li> Es ist nicht empfehlenswert, diesen Wert auf 0 zu setzen.
 	 * Angenommen, solche Stellen kommen auf der Karte (XML) vor: <br>#<br>#===<br>#<br>
 	 * Ein Weg zum Ziel wird dann auch gefunden in der zweiten Zeile zwischen den Blöcken "#" und "=",
-	 * wo der Bot natürlich nicht durchkommt. Dieser Wegfindungsalgorithmus ist für den Wert 0
-	 * also praktisch nutzlos, da er auch Wege durch Wände u.dgl. sucht.</li>
+	 * wo der Bot natürlich nicht durchkommt. Dieser Wegfindungsalgorithmus ist für den Wert 0 also praktisch
+	 * nutzlos, da er auch Wege durch Wände u.dgl. sucht.</li>
 	 * </ol>
 	 * 
 	 * Mist: Dieser Algorithmus hat ganz eigene Vorstellungen davon, was "Bot ist in ein Loch gefallen"
-	 * heißt (nämlich Bot-Zentrum ist näher als distFromCorner an einer Ecke). Es wäre besser,
-	 * wenn das Model und diese Klasse einen Bot unter den gleichen Umständen als "im Loch" betrachten, 
-	 * und nicht unter subtil unterschiedlichen Umständen. Variable distFromCorner ist wirklich
-	 * problematisch und sollte anders gelöst werden -- siehe zugehörige Doku
+	 * heißt (nämlich Bot-Zentrum ist näher als distFromCorner an einer Ecke). Es wäre besser, wenn das Model
+	 * und diese Klasse einen Bot unter den gleichen Umständen als "im Loch" betrachten,  und nicht unter
+	 * subtil unterschiedlichen Umständen. Variable distFromCorner ist wirklich problematisch und sollte
+	 * anders gelöst werden -- siehe zugehörige Doku
 	 */
 	public static final double distFromCorner = 0.05;
 
@@ -73,9 +71,8 @@ public class TurningPoint {
 	public static final float lineWidth = 0.5f;
 
 	/**
-	 * z-Koordinate der Linie: 0 entspricht Bodenhöhe, dann wird die Linie
-	 * allerdings von Start- und Zielfeld überdeckt. Nicht getestet wurde ob
-	 * der bot stolpert, wenn height &gt; 0
+	 * z-Koordinate der Linie: 0 entspricht Bodenhöhe, dann wird die Linie allerdings von Start- und
+	 * Zielfeld überdeckt. Nicht getestet wurde ob der bot stolpert, wenn height &gt; 0
 	 */
 	public static final float height = 0.0f;
 
@@ -103,43 +100,33 @@ public class TurningPoint {
 	}
 
 	/**
-	 * Testet ob this mit p2 in der parcoursMapSimple auf direktem Wege vom Bot
-	 * erreicht werden können
+	 * Testet ob this mit p2 in der parcoursMapSimple auf direktem Wege vom Bot erreicht werden können
 	 *
-	 * @param p2				Zu testender Punkt
+	 * @param p2				zu testender Punkt
 	 * @param parcoursMapSimple	ParcoursMap
 	 * @return true wenn direkt erreichbar
 	 */
 	boolean isDirectlyConnectedTo(TurningPoint p2, int[][] parcoursMapSimple) {
 		Vector2d direction = new Vector2d(p2.pos);
 		direction.sub(this.pos);
-		double rectL = (this.pos.x < p2.pos.x ? this.pos.x : p2.pos.x)
-				- (1. + distFromCorner);
-		double rectR = (this.pos.x > p2.pos.x ? this.pos.x : p2.pos.x)
-				+ distFromCorner;
-		double rectD = (this.pos.y < p2.pos.y ? this.pos.y : p2.pos.y)
-				- (1. + distFromCorner);
-		double rectU = (this.pos.y > p2.pos.y ? this.pos.y : p2.pos.y)
-				+ distFromCorner;
+		double rectL = (this.pos.x < p2.pos.x ? this.pos.x : p2.pos.x) - (1. + distFromCorner);
+		double rectR = (this.pos.x > p2.pos.x ? this.pos.x : p2.pos.x) + distFromCorner;
+		double rectD = (this.pos.y < p2.pos.y ? this.pos.y : p2.pos.y) - (1. + distFromCorner);
+		double rectU = (this.pos.y > p2.pos.y ? this.pos.y : p2.pos.y) + distFromCorner;
 		for (int x = 0; x < parcoursMapSimple.length; x++) {
 			for (int y = 0; y < parcoursMapSimple[0].length; y++) {
-				if (parcoursMapSimple[x][y] == 1 && x > rectL && x < rectR
-						&& y > rectD && y < rectU) {
-					Vector2d corner = new Vector2d(x - distFromCorner, y
-							- distFromCorner);
+				if (parcoursMapSimple[x][y] == 1 && x > rectL && x < rectR && y > rectD && y < rectU) {
+					Vector2d corner = new Vector2d(x - distFromCorner, y - distFromCorner);
 					corner.sub(this.pos);
-					double whichside = direction.x * corner.y - direction.y
-							* corner.x;
+					double whichside = direction.x * corner.y - direction.y * corner.x;
 					corner.set(x + (1. + distFromCorner), y - distFromCorner);
 					corner.sub(this.pos);
-					double sameside = direction.x * corner.y - direction.y
-							* corner.x;
+					double sameside = direction.x * corner.y - direction.y * corner.x;
 					if (whichside == 0)
 						whichside = sameside;
 					else if (sameside * whichside < 0)
 						return false;
-					corner.set(x + (1. + distFromCorner), y
-							+ (1. + distFromCorner));
+					corner.set(x + (1. + distFromCorner), y + (1. + distFromCorner));
 					corner.sub(this.pos);
 					sameside = direction.x * corner.y - direction.y * corner.x;
 					if (whichside == 0)
@@ -172,8 +159,8 @@ public class TurningPoint {
 	}
 
 	/**
-	 * gibt die Länge des durch path gegebenen Streckenzugs bezüglich der
-	 * Inzidenz- (und Abstands-)Matrix M zurück
+	 * Gibt die Länge des durch path gegebenen Streckenzugs bezüglich der Inzidenz-
+	 * (und Abstands-)Matrix M zurück
 	 *
 	 * @param path
 	 * @param M
@@ -216,7 +203,7 @@ public class TurningPoint {
 	}
 
 	/**
-	 * die kürzeste Verbindung von this zu p2 wird rekursiv bestimmt
+	 * Die kürzeste Verbindung von this zu p2 wird rekursiv bestimmt
 	 *
 	 * @param s			?
 	 * @param f			?
@@ -255,10 +242,8 @@ public class TurningPoint {
 					}
 					if (!shortcutFlag) {
 						Vector<Integer> helpPath = this.getShortestPath(
-								N[s][i], f, newInitPath, minDist
-										- M[s][N[s][i]], M, N);
-						double helpDist = getLengthOfPath(helpPath, M)
-								+ M[s][N[s][i]];
+								N[s][i], f, newInitPath, minDist - M[s][N[s][i]], M, N);
+						double helpDist = getLengthOfPath(helpPath, M) + M[s][N[s][i]];
 						if (helpDist < minDist) {
 							minDist = helpDist;
 							minPath = helpPath;
@@ -287,7 +272,7 @@ public class TurningPoint {
 		halfWidth.normalize();
 		halfWidth.scale(lineWidth / 2);
 		Vector2d corner = new Vector2d(this.pos);
-		// corner.add(new Vector2d(0.5,0.5));
+//		corner.add(new Vector2d(0.5,0.5));
 		corner.sub(halfWidth);
 		corner.sub(offset);
 		float[] polygon = new float[18];
@@ -331,8 +316,8 @@ public class TurningPoint {
 	 */
 	Vector<TurningPoint> findTurningPoints(int[][] parcoursMapSimple) {
 		Vector<TurningPoint> turningPoints = new Vector<TurningPoint>();
-		// turningPoints.add(new TurningPoint(start));
-		// turningPoints.add(new TurningPoint(finish));
+//		turningPoints.add(new TurningPoint(start));
+//		turningPoints.add(new TurningPoint(finish));
 //		int count = 0;
 		for (int i = 1; i < parcoursMapSimple[0].length; i++) {
 			for (int j = 1; j < parcoursMapSimple.length; j++) {
@@ -340,32 +325,28 @@ public class TurningPoint {
 						&& parcoursMapSimple[j - 1][i] == 0
 						&& parcoursMapSimple[j][i - 1] == 0
 						&& parcoursMapSimple[j][i] == 0) {
-					turningPoints.add(new TurningPoint(j + distFromCorner, i
-							+ distFromCorner));
+					turningPoints.add(new TurningPoint(j + distFromCorner, i + distFromCorner));
 //					count++;
 				}
 				if (parcoursMapSimple[j - 1][i - 1] == 0
 						&& parcoursMapSimple[j - 1][i] == 1
 						&& parcoursMapSimple[j][i - 1] == 0
 						&& parcoursMapSimple[j][i] == 0) {
-					turningPoints.add(new TurningPoint(j + distFromCorner, i
-							- distFromCorner));
+					turningPoints.add(new TurningPoint(j + distFromCorner, i - distFromCorner));
 //					count++;
 				}
 				if (parcoursMapSimple[j - 1][i - 1] == 0
 						&& parcoursMapSimple[j - 1][i] == 0
 						&& parcoursMapSimple[j][i - 1] == 1
 						&& parcoursMapSimple[j][i] == 0) {
-					turningPoints.add(new TurningPoint(j - distFromCorner, i
-							+ distFromCorner));
+					turningPoints.add(new TurningPoint(j - distFromCorner, i + distFromCorner));
 //					count++;
 				}
 				if (parcoursMapSimple[j - 1][i - 1] == 0
 						&& parcoursMapSimple[j - 1][i] == 0
 						&& parcoursMapSimple[j][i - 1] == 0
 						&& parcoursMapSimple[j][i] == 1) {
-					turningPoints.add(new TurningPoint(j - distFromCorner, i
-							- distFromCorner));
+					turningPoints.add(new TurningPoint(j - distFromCorner, i - distFromCorner));
 //					count++;
 				}
 			}
@@ -394,14 +375,14 @@ public class TurningPoint {
 							turningPoints.get(j), parcoursMapSimple)) {
 						incidenceMatrix[i][j] = incidenceMatrix[j][i] = turningPoints
 								.get(i).getDistanceTo(turningPoints.get(j));
-						// System.out.print("*");
+//						System.out.print("*");
 					} else {
 						incidenceMatrix[i][j] = incidenceMatrix[j][i] = infinity;
-						// System.out.print("0");
+//						System.out.print("0");
 					}
 				}
 			}
-			// System.out.println();
+//			System.out.println();
 		}
 		return incidenceMatrix;
 	}
@@ -416,7 +397,7 @@ public class TurningPoint {
 		int count = incidenceMatrix.length;
 		int[][] neighbors = new int[count][];
 		for (int i = 0; i < count; i++) {
-			// System.out.print(turningPoints.get(i).pos);System.out.print(":");
+//			System.out.print(turningPoints.get(i).pos);System.out.print(":");
 			int coordination = 0;
 			for (int j = 0; j < count; j++) {
 				if (i != j && incidenceMatrix[i][j] < infinity)
@@ -428,21 +409,21 @@ public class TurningPoint {
 				if (i != j && incidenceMatrix[i][j] < infinity) {
 					neighbors[i][coordination] = j;
 					coordination++;
-					// System.out.print(turningPoints.get(j).pos);
+//					System.out.print(turningPoints.get(j).pos);
 				}
 			}
-			// System.out.println(",");
+//			System.out.println(",");
 		}
 		return neighbors;
 	}
 
 	/**
-	 * Gibt eine Folge von Punkten zurück, die den kürzesten Weg von
-	 * <code>this</code> nach <code>finish</code> beschreiben, den der Bot
-	 * im Labyrinth <code>parcoursMapSimple</code> durchfahren kann.
+	 * Gibt eine Folge von Punkten zurück, die den kürzesten Weg von <code>this</code> nach
+	 * <code>finish</code> beschreiben, den der Bot im Labyrinth <code>parcoursMapSimple</code>
+	 * durchfahren kann.
 	 *
 	 * @param finish
-	 * 				Der Punkt, zu dem der kürzeste Weg bestimmt werden soll;
+	 * 				der Punkt, zu dem der kürzeste Weg bestimmt werden soll;
 	 * 				typischerweise das Zielfeld des Labyrinths.
 	 * @param parcoursMapSimple
 	 * 				Vereinfachte Karte des Parcours: 0 = befahrbar, 1 = Hindernis
@@ -451,18 +432,16 @@ public class TurningPoint {
 	 */
 	Vector<TurningPoint> getShortestPathTo(TurningPoint finish,
 			int[][] parcoursMapSimple) {
-		Vector<TurningPoint> turningPoints = this
-				.findTurningPoints(parcoursMapSimple);
+		Vector<TurningPoint> turningPoints = this.findTurningPoints(parcoursMapSimple);
 		turningPoints.insertElementAt(finish, 0);
 		turningPoints.insertElementAt(this, 0);
 		// Erstellen der Inzidenzmatrix des ungerichteten Graphen
-		double[][] incidenceMatrix = this.createIncidenceMatrix(turningPoints,
-				parcoursMapSimple);
+		double[][] incidenceMatrix = this.createIncidenceMatrix(turningPoints, parcoursMapSimple);
 		// Erstellen der Tabelle der jeweils direkt erreichbaren Nachbarn
 		int[][] neighbors = this.getDirectNeighbors(incidenceMatrix);
 		// finde die kürzeste Verbindung
-		Vector<Integer> shortestPath = turningPoints.get(0).getShortestPath(0,
-				1, new Vector<Integer>(), 1e30, incidenceMatrix, neighbors);
+		Vector<Integer> shortestPath = turningPoints.get(0).getShortestPath(0, 1,
+				new Vector<Integer>(), 1e30, incidenceMatrix, neighbors);
 		Vector<TurningPoint> shortest = new Vector<TurningPoint>();
 		if (shortestPath != null) {
 			for (int i : shortestPath) {

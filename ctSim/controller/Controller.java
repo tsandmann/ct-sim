@@ -44,7 +44,7 @@ import ctSim.view.View;
  *
  * @see View
  * 
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public interface Controller {
 	/**
@@ -52,7 +52,7 @@ public interface Controller {
 	 */
 	public void setView(View view);
 
-	/** Schliesst die Welt */
+	/** Schließt die Welt */
 	public void closeWorld();
 	
 	/**
@@ -111,10 +111,9 @@ public interface Controller {
 	public void unpause();
 
 	/**
-	 * Von außen, d.h. von einer Bootstrap-Komponente, aufrufen, sobald
-	 * die Hauptkomponenten der Applikation (Controller und View) initialisiert
-	 * und untereinander korrekt verdrahtet sind. Ab diesem Methodenaufruf liegt
-	 * die Verantwortung für den Programmablauf beim Controller.
+	 * Von außen, d.h. von einer Bootstrap-Komponente, aufrufen, sobald die Hauptkomponenten der
+	 * Applikation (Controller und View) initialisiert und untereinander korrekt verdrahtet sind.
+	 * Ab diesem Methodenaufruf liegt die Verantwortung für den Programmablauf beim Controller.
 	 */
 	void onApplicationInited();
 	
@@ -123,7 +122,7 @@ public interface Controller {
 	
 	/**
 	 * Liefert ein Kommando an einen Bot aus.
-	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben
+	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben.
 	 * Sender und Empfänger stehen in dem Command drin.
 	 * 
 	 * @param command	das zu übertragende Kommando

@@ -39,10 +39,10 @@ import ctSim.util.FmtLogger;
 /**
  * Repräsentiert eine Verbindung
  *
- * @author Benjamin Benz (bbe@heise.de)
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Benjamin Benz
+ * @author Hendrik Krauß
  */
-public abstract class Connection {	
+public abstract class Connection {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
 
@@ -68,10 +68,9 @@ public abstract class Connection {
 	private DataInputStream input = null;
 
 	/**
-	 * Hat keinen BufferedOutputStream, denn auf dem muss man (offenbar) immer
-	 * flush() aufrufen. Wir wissen jedoch nicht, wann die Leute, die uns
-	 * verwenden, flushen wollen - daher müssen die das machen
-	 * mit dem BufferedOutputStream.
+	 * Hat keinen BufferedOutputStream, denn auf dem muss man (offenbar) immer flush() aufrufen. Wir
+	 * wissen jedoch nicht, wann die Leute, die uns verwenden, flushen wollen - daher müssen die das
+	 * machen mit dem BufferedOutputStream.
 	 */
 	private DataOutputStream output = null;
 
@@ -92,7 +91,7 @@ public abstract class Connection {
 
 	/**
 	 * Überträgt ein Kommando
-	 * 
+	 *
 	 * @param c	das Kommando
 	 * @throws IOException
 	 */
@@ -103,7 +102,7 @@ public abstract class Connection {
 
 	/**
 	 * Liefert den Cmd-Stream
-	 * 
+	 *
 	 * @return der CommandOutputStream
 	 */
 	public synchronized CommandOutputStream getCmdOutStream() {
@@ -113,7 +112,7 @@ public abstract class Connection {
 
 	/**
 	 * Liest Daten aus dem InputStream
-	 * 
+	 *
 	 * @param b	Daten
 	 * @throws IOException
 	 */
@@ -121,9 +120,9 @@ public abstract class Connection {
 		input.readFully(b);
 	}
 
-	/** 
+	/**
 	 * Muss während der Konstruktion aufgerufen werden...
-	 * 
+	 *
 	 * @param is	InputStream
 	 */
 	protected void setInputStream(InputStream is) {
@@ -132,7 +131,7 @@ public abstract class Connection {
 
 	/**
 	 * Muss während der Konstruktion aufgerufen werden...
-	 * 
+	 *
 	 * @param os	OutputStream
 	 */
 	protected void setOutputStream(OutputStream os) {
@@ -142,22 +141,22 @@ public abstract class Connection {
 
 	/**
 	 * Gibt den Kurznamen der Connection zurück
-	 * 
+	 *
 	 * @return Name
 	 */
 	public abstract String getShortName();
 
 	/**
 	 * Gibt den Namen der Connection zurück
-	 * 
+	 *
 	 * @return Name
 	 */
 	public abstract String getName();
-	
+
 	/**
 	 * Blockiert, bis Handshake erfolgreich oder IOException
 	 * Abbruch nach 100 Versuchen
-	 * 
+	 *
 	 * @param receiver	Bot-Receiver
 	 */
 	protected void doHandshake(BotReceiver receiver) {
@@ -175,14 +174,14 @@ public abstract class Connection {
 					Command cmd = new Command(this, true);
 					if (cmd.has(Command.Code.WELCOME)) {
 						receiver.onBotAppeared(createBot(cmd));
-						return; // Erfolg
+						return;	// Erfolg
 					} else {
-						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot läuft schon oder ist "
-										+ "veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
-						continue; // Handshake nochmal versuchen
+						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot läuft schon oder ist " +
+								"veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
+						continue;	// Handshake nochmal versuchen
 					}
 				} catch (ProtocolException e) {
-					lg.severe(e, "Ung\uu00FCltiges Kommando beim Handshake; ignoriere");
+					lg.severe(e, "Ungültiges Kommando beim Handshake; ignoriere");
 					continue;
 				} catch (IOException e) {
 					lg.severe(e, "E/A-Problem beim Handshake; Abbruch");
@@ -194,7 +193,7 @@ public abstract class Connection {
 
 	/**
 	 * Erzeugt einen Bot
-	 * 
+	 *
 	 * @param c	Kommando
 	 * @return Bot
 	 * @throws ProtocolException

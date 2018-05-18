@@ -19,9 +19,7 @@
 
 package ctSim.controller;
 
-/**
- * Bot-Barrier Interface
- */
+/** Bot-Barrier Interface */
 public interface BotBarrier {
 	/**
 	 * Wartet auf die nächste Runde
