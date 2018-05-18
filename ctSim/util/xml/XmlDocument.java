@@ -48,17 +48,20 @@ import ctSim.util.Decoratoror;
  * <h3>XPath?</h3>
  * <p>
  * Eine Metapher für <a href="http://en.wikipedia.org/wiki/Xpath">XPath</a> sind reguläre Ausdrücke:
- * So, wie reguläre Ausdrücke Teilstrings in einem langen String fangen, fängt XPath Teile aus einem
- * XML-Dokument. XPath lässt sich schnell lernen durch die
+ * So, wie reguläre Ausdrücke Teilstrings in einem langen String fangen, fängt XPath Teile aus einem XML-Dokument.
+ * XPath lässt sich schnell lernen durch die
  * <a href="http://www.w3.org/TR/xpath.html#path-abbrev">Anwendungsbeispiele in der Spezifikation</a>
  * ("context node" heißt in aller Regel Root-Knoten des XML-Dokuments.)
  * </p>
  * <h3>Verwendungsbeispiel:</h3>
  * <p>
  * <ul>
- * <li><code>XmlDocument d = new <a href="#XmlDocument(java.lang.String)">XmlDocument</a>("pfad/zu/ner/datei.xml");</code></li>
- * <li><code>Node r = d.<a href="#getNode(java.lang.String)">getNode</a>("//ruebe[12]"); // Einzelknoten: zwölfte Rübe</code></li>
- * <li><code>for (Node node : d.<a href="#getNodeList(java.lang.String)">getNodeList</a>("//gurke")) { ... } // Liste aller Gurken im XML</code></li>
+ * <li><code>XmlDocument d = new <a href="#XmlDocument(java.lang.String)">XmlDocument</a>
+ * ("pfad/zu/ner/datei.xml");</code></li>
+ * <li><code>Node r = d.<a href="#getNode(java.lang.String)">getNode</a>
+ * ("//ruebe[12]"); // Einzelknoten: zwölfte Rübe</code></li>
+ * <li><code>for (Node node : d.<a href="#getNodeList(java.lang.String)">getNodeList</a>
+ * ("//gurke")) { ... } // Liste aller Gurken im XML</code></li>
  * </ul>
  * <code>getNodeList()</code> liefert dabei eine {@link org.w3c.dom.NodeList} gemäß der Java-Plattform-API,
  * die aber als Verbesserung auch {@link Iterable} implementiert. Daher ist sie in der gezeigten Weise in
@@ -74,13 +77,14 @@ import ctSim.util.Decoratoror;
  * <h3>Motivation:</h3>
  * <p>
  * Die Handhabung von XPath in der normalen Java-Plattform ist leider sehr "javaig" (d.h. umständlich
- * und bürokratisch). Eine Routineaufgabe wie "bitte mal <code>//tomate</code> auf gemuese.xml anwenden"
- * erfordert, wenn ich das richtig sehe, mindestens folgende Monstrosität:
- * <code>XPathFactory.newInstance().newXPath().evaluate(DocumentBuilderFactory.newDocumentBuilder().parse("gemuese.xml"), "//tomate");</code>
- * ... und ist dann noch nicht mal typsicher. (Bei der verwendeten Methode handelt es sich übrigens um
- * eine "convenience"-Methode, d.h. das ist noch der einfachere Fall. Was auch nicht hilft ist, dass
- * man sich den o.g. Aufruf mühsam zusammenstückeln muss, da die Dokumentation leider unübersichtlich
- * geraten ist und sich ständig verzettelt.)
+ * und bürokratisch). Eine Routineaufgabe wie "bitte mal <code>//tomate</code> auf gemuese.xml anwenden" erfordert,
+ * wenn ich das richtig sehe, mindestens die folgende Monstrosität:
+ * <code>XPathFactory.newInstance().newXPath().evaluate(DocumentBuilderFactory.newDocumentBuilder().parse("gemuese.xml"),
+ * "//tomate");</code>
+ * ... und ist dann noch nicht mal typsicher. (Bei der verwendeten Methode handelt es sich übrigens um eine
+ * "convenience"-Methode, d.h. das ist noch der einfachere Fall. Was auch nicht hilft ist, dass man sich den o.g.
+ * Aufruf mühsam zusammenstückeln muss, da die Dokumentation leider unübersichtlich geraten ist und sich ständig
+ * in Details verzettelt.)
  * </p>
  * <p>
  * Diese Klasse vereinfacht die o.g. Routineaufgabe zu:
@@ -90,7 +94,7 @@ import ctSim.util.Decoratoror;
  *
  * siehe javax.xml.xpath
  * 
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class XmlDocument {
 	/**
@@ -100,24 +104,23 @@ public class XmlDocument {
 	 * 				Die XML-Datei, die geparst und validiert werden soll,
 	 * 				z.B. <code>new File("spielzeug/tiere/kuschelnilpferd.xml")</code>.
 	 * @param baseDir
-	 * 				Das Verzeichnis, das fürs Auflösen von relativen URIs als Ausgangspunkt
-	 * 				genommen wird. Das ist hauptsächlich relevant für das Finden von DTDs, besonders
-	 * 				falls die DTD in einem anderen	Verzeichnis liegt als die XML-Datei. - Beispiel:
+	 * 				Das Verzeichnis, das fürs Auflösen von relativen URIs als Ausgangspunkt genommen wird.
+	 * 				Das ist hauptsächlich relevant für das Finden von DTDs, besonders falls die DTD in einem
+	 * 				anderen	Verzeichnis liegt als die XML-Datei. -- Beispiel:
 	 * 				In unseren Parcoursdateien wird die DTD folgendermaßen angegeben:
 	 * 				<code><!DOCTYPE collection SYSTEM "parcours.dtd"></code>.
-	 * 				Die relative URI ist dabei ist <code>parcours.dtd</code> (im XML-Jargon
-	 * 				"system identifier" genannt). Wenn diese Klasse also eine XML-Datei mit eben
-	 * 				genannten Zeile parst und z.B. als baseDir "wurst" übergeben wurde, wird der Parser
-	 * 				versuchen, die Datei wurst/parcours.dtd zu öffnen und als DTD zu verwenden.
+	 * 				Die relative URI ist dabei ist <code>parcours.dtd</code> (im XML-Jargon "system identifier"
+	 * 				genannt). Wenn diese Klasse also eine XML-Datei mit eben genannten Zeile parst und z.B. als
+	 * 				baseDir "wurst" übergeben wurde, wird der Parser versuchen, die Datei wurst/parcours.dtd zu
+	 * 				öffnen und als DTD zu verwenden.
 	 * @return das Dokument
 	 * @throws SAXException
-	 * 				falls die übergebene Datei nicht geparst werden kann, etwa weil das enthaltene XML
-	 * 				nicht wohlgeformt ist oder nicht gegen die DTD validiert. Eine SAXException wird
-	 * 				unter genau den Umständen geworfen, wenn {@link DocumentBuilder#parse(InputStream, String)},
-	 * 				eine solche wirft.
+	 * 				falls die übergebene Datei nicht geparst werden kann, etwa weil das enthaltene XML nicht
+	 * 				wohlgeformt ist oder nicht gegen die DTD validiert. Eine SAXException wird unter genau den
+	 * 				Umständen geworfen, wenn {@link DocumentBuilder#parse(InputStream, String)}, eine solche wirft.
 	 * @throws IOException
-	 * 				falls beim Lesen der übergebenen Datei eine IOException auftritt, etwa weil die Datei
-	 * 				nicht lesbar ist.
+	 * 				falls beim Lesen der übergebenen Datei eine IOException auftritt, etwa weil die Datei nicht
+	 * 				lesbar ist.
 	 * @throws ParserConfigurationException
 	 * 				In dem abwegigen Fall, dass die Java-Plattform keinen validierenden Parser auftreiben kann.
 	 */
@@ -127,9 +130,9 @@ public class XmlDocument {
 	}
 
 	/**
-	 * Wie {@link #parse(java.io.File, java.lang.String)}, aber verwendet als Parameter "baseDir" das
-	 * Verzeichnis, das das übergebene File enthält. Relevant also für den Fall, dass die XML- und
-	 * DTD-Datei im selben Verzeichnis liegen.
+	 * Wie {@link #parse(java.io.File, java.lang.String)}, aber verwendet als Parameter "baseDir" das Verzeichnis,
+	 * das das übergebene File enthält. Relevant also für den Fall, dass die XML- und DTD-Datei im selben
+	 * Verzeichnis liegen.
 	 *
 	 * @param fileToParse
 	 * 				Die XML-Datei, die geparst und validiert werden soll,
@@ -161,8 +164,7 @@ public class XmlDocument {
 	}
 
 	/**
-	 * Wie {@link #parse(java.io.File, java.lang.String)}, liest aber die Datei aus dem übergebenen
-	 * InputStream.
+	 * Wie {@link #parse(java.io.File, java.lang.String)}, liest aber die Datei aus dem übergebenen InputStream.
 	 * 
 	 * @param documentStream 
 	 * @param baseDir 
@@ -174,14 +176,14 @@ public class XmlDocument {
 	public static QueryableDocument parse(
 		InputStream documentStream, String baseDir)
 		throws SAXException, IOException, ParserConfigurationException {
-		// Irrsinnige Bürokratie ...
+		// irrsinnige Bürokratie ...
 		DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
-		f.setValidating(true);	// Soll gegen DTD validieren
+		f.setValidating(true);	// soll gegen DTD validieren
 		DocumentBuilder parser = f.newDocumentBuilder();
 		/**
-		 * Wichtig für Validierung: Wenn kein ErrorHandler gesetzt und eine XML-Datei geparst wird,
-		 * die zwar wohlgeformt, aber nicht gültig (valid) ist, dann gibt der Parser eine dumme Warnung
-		 * auf stderr aus, man solle doch einen ErrorHandler setzen.
+		 * Wichtig für Validierung: Wenn kein ErrorHandler gesetzt und eine XML-Datei geparst wird, die zwar
+		 * wohlgeformt, aber nicht gültig (valid) ist, dann gibt der Parser eine dumme Warnung auf stderr aus,
+		 * man solle doch einen ErrorHandler setzen.
 		 */
 		parser.setErrorHandler(new ErrorHandler() {
 			public void error(SAXParseException exception)
@@ -201,10 +203,9 @@ public class XmlDocument {
 		Document document = parser.parse(documentStream, baseDir);
 		try {
 			// document kann nicht null sein
-			return Decoratoror.createDecorated(QueryableDocument.class,
-				new QueryableMixin(document), document);
+			return Decoratoror.createDecorated(QueryableDocument.class, new QueryableMixin(document), document);
 		} catch (NoSuchMethodException e) {
-			// "Kann nicht passieren"
+			// "kann nicht passieren"
 			throw new AssertionError(e);
 		}
 	}
@@ -217,10 +218,9 @@ public class XmlDocument {
 		try {
 			if (baseNode == null)
 				return null;
-			return Decoratoror.createDecorated(QueryableNode.class,
-				new QueryableMixin(baseNode), baseNode);
+			return Decoratoror.createDecorated(QueryableNode.class, new QueryableMixin(baseNode), baseNode);
 		} catch (NoSuchMethodException e) {
-			// "Kann nicht passieren"
+			// "kann nicht passieren"
 			throw new AssertionError(e);
 		}
 	}
@@ -245,8 +245,7 @@ public class XmlDocument {
 		 */
 		public IterableNodeList getNodeList(String xPathExpression)
 		throws XPathExpressionException {
-			return new IterableNodeList((NodeList)evaluator.evaluate(
-				xPathExpression, cocktail, XPathConstants.NODESET));
+			return new IterableNodeList((NodeList)evaluator.evaluate(xPathExpression, cocktail, XPathConstants.NODESET));
 		}
 
 		/**
@@ -254,8 +253,7 @@ public class XmlDocument {
 		 */
 		public QueryableNode getNode(String xPathExpression)
 		throws XPathExpressionException {
-			return createQueryableNode((Node)evaluator.evaluate(
-				xPathExpression, cocktail, XPathConstants.NODE));
+			return createQueryableNode((Node)evaluator.evaluate(xPathExpression, cocktail, XPathConstants.NODE));
 		}
 
 		/**
@@ -263,8 +261,7 @@ public class XmlDocument {
 		 */
 		public String getString(String xPathExpression)
 		throws XPathExpressionException {
-			return (String)evaluator.evaluate(xPathExpression, cocktail,
-				XPathConstants.STRING);
+			return (String)evaluator.evaluate(xPathExpression, cocktail, XPathConstants.STRING);
 		}
 
 		/**
@@ -276,8 +273,7 @@ public class XmlDocument {
 			 * Cast nach Double (nicht Number) - eine XPath-Number mappt in Java auf einen Double,
 			 * siehe <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/xml/xpath/XPathConstants.html#NUMBER"></a>
 			 */
-			return (Double)evaluator.evaluate(xPathExpression, cocktail,
-				XPathConstants.NUMBER);
+			return (Double)evaluator.evaluate(xPathExpression, cocktail, XPathConstants.NUMBER);
 		}
 
 		/**
@@ -285,8 +281,7 @@ public class XmlDocument {
 		 */
 		public Boolean getBoolean(String xPathExpression)
 		throws XPathExpressionException {
-			return (Boolean)evaluator.evaluate(xPathExpression, cocktail,
-				XPathConstants.BOOLEAN);
+			return (Boolean)evaluator.evaluate(xPathExpression, cocktail, XPathConstants.BOOLEAN);
 		}
 
 		/**
@@ -345,21 +340,20 @@ public class XmlDocument {
 	public interface XPathQueryable {
 		/**
 		 * <p>
-		 * Selektiert mehrere Knoten. Wenn z.B. beim Konstruieren dieses Objekts eine Datei angegeben
-		 * wurde, die 42 Stück <code><wurst>...</wurst></code>-Elemente enthält, wird
-		 * <code>getNodeList("//wurst")</code> eine Liste dieser 42 Elemente zurückliefern.
+		 * Selektiert mehrere Knoten. Wenn z.B. beim Konstruieren dieses Objekts eine Datei angegeben wurde,
+		 * die 42 Stück <code><wurst>...</wurst></code>-Elemente enthält, wird <code>getNodeList("//wurst")</code>
+		 * eine Liste dieser 42 Elemente zurückliefern.
 		 * </p>
 		 * <p>
-		 * <strong>Beachten:</strong> Knoten müssen nicht Elemente sein; Attribute, CData-Abschnitte
-		 * usw. sind auch Knoten. Siehe {@link Node}.
+		 * <strong>Beachten:</strong> Knoten müssen nicht Elemente sein; Attribute, CData-Abschnitte usw. sind
+		 * auch Knoten. Siehe {@link Node}.
 		 * </p>
 		 * 
 		 * @param xPathExpression 
 		 * @return Die selektierten Knoten als {@link NodeList}, wie sie die Java-Plattform implementiert,
-		 * 			die aber auch {@link Iterable} ist.
-		 * 			<code>for (Node n : document.getNodeList(...))</code> ist also möglich. Gibt es im
-		 * 			Dokument keine Knoten, die von dem XPath-Ausdruck selektiert werden, wird eine NodeList
-		 * 			zurückgegeben, die keine Knoten enthält.
+		 * 			die aber auch {@link Iterable} ist. <code>for (Node n : document.getNodeList(...))</code> ist
+		 * 			also möglich. Gibt es im Dokument keine Knoten, die von dem XPath-Ausdruck selektiert werden,
+		 * 			wird eine NodeList zurückgegeben, die keine Knoten enthält.
 		 * @throws XPathExpressionException 
 		 */
 		public IterableNodeList getNodeList(String xPathExpression)
@@ -367,13 +361,12 @@ public class XmlDocument {
 
 		/**
 		 * <p>
-		 * Selektiert einen einzelnen Knoten. Falls der übergebene XPath-Ausdruck mehrere Knoten
-		 * selektiert, wird er erste zurückgeliefert; falls er keine Knoten selektiert, wird {@code null}
-		 * zurückliefert.
+		 * Selektiert einen einzelnen Knoten. Falls der übergebene XPath-Ausdruck mehrere Knoten selektiert,
+		 * wird der Erste zurückgeliefert; falls er keine Knoten selektiert, wird {@code null} zurückliefert.
 		 * </p>
 		 * <p>
-		 * <strong>Beachten:</strong> Knoten müssen nicht Elemente sein; Attribute, CData-Abschnitte usw.
-		 * sind auch Knoten. Siehe {@link Node}.
+		 * <strong>Beachten:</strong> Knoten müssen nicht Elemente sein; Attribute, CData-Abschnitte usw. sind
+		 * auch Knoten. Siehe {@link Node}.
 		 * </p>
 		 * 
 		 * @param xPathExpression 
@@ -414,9 +407,9 @@ public class XmlDocument {
 		throws XPathExpressionException;
 
 		/**
-		 * Selektiert Knoten, konvertiert sie in einen String (siehe {@link #getString(String)}) und
-		 * konvertiert den String in einen Double. Falls der übergebene XPath-Ausdruck keine Knoten
-		 * selektiert, wird {@code NaN} zurückgeliefert (d.h. {@code getNumber(...).isNaN() == true}).
+		 * Selektiert Knoten, konvertiert sie in einen String (siehe {@link #getString(String)}) und konvertiert
+		 * den String in einen Double. Falls der übergebene XPath-Ausdruck keine Knoten selektiert, wird
+		 * {@code NaN} zurückgeliefert (d.h. {@code getNumber(...).isNaN() == true}).
 		 * <a href="http://www.w3.org/TR/xpath#function-number">Details zur Konvertierung in eine Zahl</a>
 		 * 
 		 * @param xPathExpression 
@@ -429,9 +422,9 @@ public class XmlDocument {
 		throws XPathExpressionException;
 
 		/**
-		 * Selektiert Knoten, konvertiert sie in einen String (siehe {@link #getString(String)}) und
-		 * konvertiert den String in einen Boolean. Falls der übergebene XPath-Ausdruck keine Knoten
-		 * selektiert, wird {@code false} zurückgeliefert.
+		 * Selektiert Knoten, konvertiert sie in einen String (siehe {@link #getString(String)}) und konvertiert
+		 * den String in einen Boolean. Falls der übergebene XPath-Ausdruck keine Knoten selektiert, wird
+		 * {@code false} zurückgeliefert.
 		 * <a href="http://www.w3.org/TR/xpath#function-boolean">Details zur Konvertierung in einen Boolean</a>
 		 * 
 		 * @param xPathExpression 
@@ -444,9 +437,9 @@ public class XmlDocument {
 		throws XPathExpressionException;
 
 		/**
-		 * Wie {@link #getString(String) getString()}, aber falls der übergebene XPath-Ausdruck keine
-		 * Knoten selektiert, wird {@code null} zurückgeliefert. So kann man auseinanderhalten, ob der
-		 * Knoten nicht existiert ({@code null}) oder ob er existiert, aber keinen Text enthält ("").
+		 * Wie {@link #getString(String) getString()}, aber falls der übergebene XPath-Ausdruck keine Knoten
+		 * selektiert, wird {@code null} zurückgeliefert. So kann man auseinanderhalten, ob der Knoten nicht
+		 * existiert ({@code null}) oder ob er existiert, aber keinen Text enthält ("").
 		 * 
 		 * @param xPathExpression 
 		 * @return String / null
@@ -456,10 +449,9 @@ public class XmlDocument {
 		throws XPathExpressionException;
 
 		/**
-		 * Wie {@link #getNumber(String) getNumber()}, aber falls der übergebene XPath-Ausdruck keine
-		 * Knoten selektiert, wird {@code null} zurückgeliefert. So kann man auseinanderhalten, ob der
-		 * Knoten nicht existiert ({@code null}) oder ob er existiert, aber etwas anderes als eine Zahl
-		 * enthält.
+		 * Wie {@link #getNumber(String) getNumber()}, aber falls der übergebene XPath-Ausdruck keine Knoten
+		 * selektiert, wird {@code null} zurückgeliefert. So kann man auseinanderhalten, ob der Knoten nicht
+		 * existiert ({@code null}) oder ob er existiert, aber etwas anderes als eine Zahl enthält.
 		 * 
 		 * @param xPathExpression 
 		 * @return Zahl / null
@@ -469,9 +461,9 @@ public class XmlDocument {
 		throws XPathExpressionException;
 
 		/**
-		 * Wie {@link #getBoolean(String) getBoolean()}, aber falls der übergebene XPath-Ausdruck keine
-		 * Knoten selektiert, wird {@code null} zurückgeliefert. So kann man auseinander halten, ob der
-		 * Knoten nicht existiert ({@code null}) oder ob er wirklich da ist und {@code false} enthält.
+		 * Wie {@link #getBoolean(String) getBoolean()}, aber falls der übergebene XPath-Ausdruck keine Knoten
+		 * selektiert, wird {@code null} zurückgeliefert. So kann man auseinander halten, ob der Knoten nicht
+		 * existiert ({@code null}) oder ob er wirklich da ist und {@code false} enthält.
 		 * 
 		 * @param xPathExpression 
 		 * @return Boolean / null

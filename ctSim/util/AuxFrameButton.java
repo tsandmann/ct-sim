@@ -42,12 +42,12 @@ import ctSim.view.gui.RemoteCallViewer;
  * Nützlich für Dinge wie das Logfenster und die Fernbedienung.
  * </p>
  * <p>
- * Er erscheint in der Oberfläche wie ein Knopf ({@link JButton}). Drückt man ihn, wird er dauerhaft
- * als "gedrückt" dargestellt und ein unabhängiges Fenster ({@link JFrame}) wird angezeigt. Drückt
- * man den Knopf erneut, springt er wieder heraus und das Fenster verschwindet.
+ * Er erscheint in der Oberfläche wie ein Knopf ({@link JButton}). Drückt man ihn, wird er dauerhaft als
+ * "gedrückt" dargestellt und ein unabhängiges Fenster ({@link JFrame}) wird angezeigt. Drückt man den Knopf
+ * erneut, springt er wieder heraus und das Fenster verschwindet.
  * </p>
  * 
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class AuxFrameButton extends JToggleButton {
 	/** UID */
@@ -71,15 +71,15 @@ public class AuxFrameButton extends JToggleButton {
 	public AuxFrameButton(String buttonLabel, String frameTitle, final JComponent frameContent, boolean enabled) {
 		super(buttonLabel);
 
-		// Fenster erzeugen aber erst später konfigurieren
+		// Fenster erzeugen, aber erst später konfigurieren
 		auxFrame = new ComponentJFrame(frameTitle, frameContent, this);
 		
-		//auxFrame.setLocation(300, 300);
+//		auxFrame.setLocation(300, 300);
 		
 
-		// Uns selber konfigurieren
+		// uns selber konfigurieren
 		setAlignmentX(Component.CENTER_ALIGNMENT);
-		// Falls wir Platz haben, ausnutzen (keiner hat was von leerem nicht-klickbaren Platz) 
+		// Falls wir Platz haben, ausnutzen (niemand hat etwas von leerem nicht-klickbaren Platz) 
 		setMaximumSize(new Dimension(Integer.MAX_VALUE, getMaximumSize().height));
 		
 		setEnabled(enabled);
@@ -114,13 +114,13 @@ public class AuxFrameButton extends JToggleButton {
 		
 		// Fenster konfigurieren aber noch nicht anzeigen
 		auxFrame.addWindowListener(new WindowAdapter() {
-			// Wenn Fenster geschlossen wird soll der gedrückte Button wieder rausspringen
+			// wenn Fenster geschlossen wird soll der gedrückte Button wieder rausspringen
 			@Override
 			public void windowClosing(WindowEvent e) {
 				AuxFrameButton.this.setSelected(false);
 			}
 		});
-		// HIDE, damit sich das Fenster Position + Größe merkt
+		// HIDE, damit sich das Fenster Position und Größe merkt
 		auxFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		auxFrame.add(frameContent);
 		if (!(frameContent instanceof RemoteCallViewer)) {
@@ -137,8 +137,10 @@ public class AuxFrameButton extends JToggleButton {
 		auxFrame.setMinimumSize(frameContent.getMinimumSize());
 	}
 
-	// Wenn der Knopf aus der Anzeige entfernt wird (z.B. weil der Container, der ihn enthält, aus der
-	// UI entfernt wird), dann auch das Fenster schließen
+	/* 
+	 * wenn der Knopf aus der Anzeige entfernt wird (z.B. weil der Container, der ihn enthält, aus der
+	 * UI entfernt wird), dann auch das Fenster schließen
+	 */
 	/**
 	 * @see javax.swing.JComponent#removeNotify()
 	 */

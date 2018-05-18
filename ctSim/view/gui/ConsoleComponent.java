@@ -39,8 +39,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 	
 	/** Neue Textconsole */
 	public ConsoleComponent() {
-		super(new JTextArea(3, 40), 
-				VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		super(new JTextArea(3, 40), VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		textArea = (JTextArea)getViewport().getView();
 		textArea.setEditable(false);
 		textArea.setBorder(BorderFactory.createEtchedBorder());

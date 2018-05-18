@@ -42,7 +42,7 @@ import ctSim.util.FmtLogger;
  * Splash-Screen für den c't-Sim
  * 
  * Grundidee übernommen von:
- * <a href="http://www.randelshofer.ch/oop/javasplash/javasplash.html">Java Splash - Werner Randelshofer</a> 
+ * <a href="http://www.randelshofer.ch/oop/javasplash/javasplash.html">Java Splash -- Werner Randelshofer</a> 
  * 
  * @author Timo Sandmann
  */
@@ -97,13 +97,13 @@ public class SplashWindow extends Window {
 		try {
 			mt.waitForID(0);
 		} catch (InterruptedException ie) {
-			// ist egal
+			// egal
 		}
 
 		/* Abbruch bei Fehler */
 		if (mt.isErrorID(0)) {
 			setSize(0, 0);
-			System.err.println("Warning: SplashWindow couldn't load splash image.");
+			System.err.println("Warning: SplashWindow could not load splash image.");
 			synchronized (this) {
 				paintCalled = true;
 				notifyAll();

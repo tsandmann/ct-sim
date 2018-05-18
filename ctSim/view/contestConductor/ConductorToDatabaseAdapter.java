@@ -37,8 +37,8 @@ import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
 /**
  * <p>
- * Stellt der Klasse ContestConductor Methoden zur Verfügung, um mit der Wettbewerbs-Datenbank zu
- * arbeiten. Mit anderen Worten: Sitzt zwischen der Datenbank und dem ContestConductor.
+ * Stellt der Klasse ContestConductor Methoden zur Verfügung, um mit der Wettbewerbs-Datenbank zu arbeiten.
+ * Mit anderen Worten: Sitzt zwischen der Datenbank und dem ContestConductor.
  * </p>
  * <p>
  * Näheres in der Dokumentation der Klasse {@link DatabaseAdapter}.
@@ -52,24 +52,23 @@ import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
  * @see DatabaseAdapter
  * @see ContestConductor
  * 
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class ConductorToDatabaseAdapter extends DatabaseAdapter {
-	// Annahme: Keiner modifiziert ctsim_game während wir laufen
+	// Annahme: Niemand modifiziert ctsim_game während wir laufen
 	/**
-	 * 8 für Achtelfinale, 4 für Viertelfinale usw. Ist zusammen mit 'currentGameId' DB-Schlüssel für
-	 * ein Spiel.
+	 * 8 für Achtelfinale, 4 für Viertelfinale usw. Ist zusammen mit 'currentGameId' DB-Schlüssel für ein Spiel.
      *
-     * Integer (nicht int), um Zugriffe im uninitialisierten Zustand per NullPointerException mitgeteilt
-     * zu bekommen (sonst würde im SQL einfach id == 0 auftauchen)
+     * Integer (nicht int), um Zugriffe im uninitialisierten Zustand per NullPointerException mitgeteilt zu
+     * bekommen (sonst würde im SQL einfach id == 0 auftauchen)
      */
 	
     /**
-     * ID des aktuellen Spiels innerhalb des momentanen Level. Ist zusammen mit 'currentLevelId'
-     * DB-Schlüssel für ein Spiel.
+     * ID des aktuellen Spiels innerhalb des momentanen Level. Ist zusammen mit 'currentLevelId' DB-Schlüssel
+     * für ein Spiel.
      *
-     * Integer (nicht int), um Zugriffe im uninitialisierten Zustand per NullPointerException mitgeteilt
-     * zu bekommen (sonst würde im SQL einfach id == 0 auftauchen)
+     * Integer (nicht int), um Zugriffe im uninitialisierten Zustand per NullPointerException mitgeteilt zu
+     * bekommen (sonst würde im SQL einfach id == 0 auftauchen)
      */
 	class Game {
 		/** Game-ID */
@@ -102,8 +101,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 		 * @param gameId
 		 */
 		public void set(Integer levelId, Integer gameId) {
-			if ((levelId == null && gameId != null)
-				|| (levelId != null && gameId == null)) {
+			if ((levelId == null && gameId != null) || (levelId != null && gameId == null)) {
 				throw new IllegalArgumentException();
 			}
 
@@ -125,8 +123,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 				throw new IllegalStateException();
 
 			if (cachedUniqueId == null) {
-				ResultSet rs = execSql("SELECT * FROM ctsim_game " +
-		    		"WHERE game = ? AND level = ?", gameId, levelId);
+				ResultSet rs = execSql("SELECT * FROM ctsim_game " + "WHERE game = ? AND level = ?", gameId, levelId);
 		    	rs.next();
 		    	cachedUniqueId = rs.getInt("id");
 		    	assert ! rs.wasNull();
@@ -149,8 +146,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 				throw new IllegalStateException();
 
 			if (cachedMaxLengthInMs == null) {
-				ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?",
-					getLevelId());
+				ResultSet rs = execSql("SELECT * from ctsim_level WHERE id = ?", getLevelId());
 				rs.next();
 				cachedMaxLengthInMs = rs.getInt("gametime");
 				assert ! rs.wasNull();
@@ -174,14 +170,14 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     }
 
     /**
-     * Macht einen Log-Eintrag in die Datenbank. Das Log wird von der JavaScript-Applikation der Autoren
-     * von der Online-Redaktion benutzt, um den aktuellen Spielstand im Web anzuzeigen.
+     * Macht einen Log-Eintrag in die Datenbank. Das Log wird von der JavaScript-Applikation der Autoren von
+     * der Online-Redaktion benutzt, um den aktuellen Spielstand im Web anzuzeigen.
      *
-     * @param bots	Ein Set, das ein oder zwei Bots enthält. Position, Blickrichtung und Status der Bots
-     * 				wird in die Datenbank geloggt.
+     * @param bots	ein Set, das ein oder zwei Bots enthält; Position, Blickrichtung und Status der Bots wird
+     * 				in die Datenbank geloggt.
      * @param simTimeElapsed	Simulatorzeit [ms] seit Beginn des Spiels
-     * @throws IllegalArgumentException	falls der Parameter <code>bots</code> weniger als ein oder mehr
-     * 				als zwei Elemente enthält.
+     * @throws IllegalArgumentException	falls der Parameter <code>bots</code> weniger als ein oder mehr als
+     * 				zwei Elemente enthält.
      * @throws SQLException 
      * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
      * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
@@ -212,23 +208,15 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     throws IllegalArgumentException, SQLException, NullPointerException {
     	// Gesundheitscheck
     	if (bots.size() != 1 && bots.size() != 2) {
-    		throw new IllegalArgumentException("Falsche Anzahl von Bots im " +
-    				"Set: erwarteter Wert 1 oder 2, tatsächlicher Wert "+
-    				bots.size());
+    		throw new IllegalArgumentException("Falsche Anzahl von Bots im Set: "
+    				+ "erwarteter Wert 1 oder 2, tatsächlicher Wert " + bots.size());
     	}
 
     	// Hauptcode
-    	String common =
-    		"insert into ctsim_log (" +
-    		"game, logtime, " +
-    		"pos1x, pos1y, head1x, head1y, state1";
-    	String oneBot =
-    		") " +
-    		"values (?, ?, ?, ?, ?, ?, ?)";
-    	String twoBots =
-    		", " +
-    		"pos2x, pos2y, head2x, head2y, state2) " +
-    		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    	String common = "insert into ctsim_log (" + "game, logtime, " + "pos1x, pos1y, head1x, head1y, state1";
+    	String oneBot = ") " + "values (?, ?, ?, ?, ?, ?, ?)";
+    	String twoBots = ", " + "pos2x, pos2y, head2x, head2y, state2) "
+    			+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     	ArrayList<Object> values = Misc.newList();
     	values.add(currentGame.getUniqueId());
@@ -273,17 +261,13 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * @throws IllegalArgumentException
      * @throws SQLException
      */
-    public void resetRunningGames()
-    throws IllegalArgumentException, SQLException {
-    	ResultSet rs = execSql(
-    		"SELECT * FROM ctsim_game WHERE state = ?", GameState.RUNNING);
+    public void resetRunningGames() throws IllegalArgumentException, SQLException {
+    	ResultSet rs = execSql("SELECT * FROM ctsim_game WHERE state = ?", GameState.RUNNING);
     	while (rs.next()) {
-    		execSql("DELETE FROM ctsim_log " +
-    			"WHERE game = ? ", rs.getInt("id"));
+    		execSql("DELETE FROM ctsim_log " + "WHERE game = ? ", rs.getInt("id"));
     	}
 
-    	execSql("UPDATE ctsim_game SET state = ? WHERE state = ?",
-    		GameState.READY_TO_RUN, GameState.RUNNING);
+    	execSql("UPDATE ctsim_game SET state = ? WHERE state = ?", GameState.READY_TO_RUN, GameState.RUNNING);
     }
 
     /**
@@ -291,8 +275,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * @throws IllegalArgumentException
      * @throws SQLException
      */
-    public boolean gamesExist()
-    throws IllegalArgumentException, SQLException {
+    public boolean gamesExist() throws IllegalArgumentException, SQLException {
     	return execSql("SELECT * FROM ctsim_game").next();
     }
 
@@ -301,13 +284,11 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * @throws IllegalArgumentException
      * @throws SQLException
      */
-    public boolean wasCrashDuringMainRound()
-    throws IllegalArgumentException, SQLException {
+    public boolean wasCrashDuringMainRound() throws IllegalArgumentException, SQLException {
     	boolean incompletePrelimGamesExist = execSql(
-    		"SELECT * FROM ctsim_game WHERE level = -1 AND state != ?",
-    		GameState.GAME_OVER).next();
+    			"SELECT * FROM ctsim_game WHERE level = -1 AND state != ?",GameState.GAME_OVER).next();
     	boolean isMainRoundPlanned = execSql(
-    		"SELECT * FROM ctsim_game WHERE level != -1").next();
+    			"SELECT * FROM ctsim_game WHERE level != -1").next();
     	return ! incompletePrelimGamesExist && isMainRoundPlanned;
     }
 
@@ -319,8 +300,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * @throws SQLException 
      */
     public String getParcours(int levelId) throws SQLException {
-        ResultSet rs = execSql(
-        	"SELECT * FROM ctsim_level WHERE id = ?", levelId);
+        ResultSet rs = execSql("SELECT * FROM ctsim_level WHERE id = ?", levelId);
         rs.next();
         return rs.getString("parcours");
     }
@@ -330,14 +310,12 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
    	 * @param distanceToFinishInM
    	 * @throws SQLException
    	 */
-    public void writeDistanceToFinish(int botId, double distanceToFinishInM)
-    throws SQLException {
+    public void writeDistanceToFinish(int botId, double distanceToFinishInM) throws SQLException {
     	// Feld "bot1restweg" oder "bot2restweg" setzen
-    	execSql(
-    		"UPDATE ctsim_game SET " + getColumnName(botId) + "restweg = ? " +
-    		"WHERE level = ? AND game = ?",
-    		distanceToFinishInM,
-    		currentGame.getLevelId(), currentGame.getGameId());
+    	execSql("UPDATE ctsim_game SET " + getColumnName(botId) + "restweg = ? "
+    			+ "WHERE level = ? AND game = ?", distanceToFinishInM,
+    			currentGame.getLevelId(),
+    			currentGame.getGameId());
     }
 
     /**
@@ -346,9 +324,10 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * @throws SQLException
      */
     private String getColumnName(int botId) throws SQLException {
-    	ResultSet rs = execSql("SELECT bot1, bot2 FROM ctsim_game " +
-    			"WHERE level = ? AND game = ?",
-    			currentGame.getLevelId(), currentGame.getGameId());
+    	ResultSet rs = execSql("SELECT bot1, bot2 FROM ctsim_game "
+    			+ "WHERE level = ? AND game = ?",
+    			currentGame.getLevelId(),
+    			currentGame.getGameId());
     	rs.next();
 
     	int b1 = rs.getInt("bot1");
@@ -376,9 +355,9 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * @param finishSimTime	Nach wieviel Simulatorzeit [ms] seit Beginn des Spiels wurde die Ziellinie
      * 				überschritten?
      * @throws SQLException 
-     * @throws TournamentPlanException	falls das aktuelle Spiel ein Hauptrundenspiel ist und der Gewinner
-     * 				in ein Level weitergesetzt wird, für das schon zwei Spieler eingetragen sind. Mit
-     * 				anderen Worten, falls der Turnierbaum verunstaltet ist.
+     * @throws TournamentPlanException	falls das aktuelle Spiel ein Hauptrundenspiel ist und der Gewinner in
+     * 				ein Level weitergesetzt wird, für das schon zwei Spieler eingetragen sind. Mit anderen Worten,
+     * 				falls der Turnierbaum verunstaltet ist.
      * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
      * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
      * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
@@ -386,14 +365,12 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      */
     public void setWinner(int winnerBotId, long finishSimTime)
     throws SQLException, TournamentPlanException, NullPointerException {
-    	lg.finer("Schreibe Gewinner (Bot-ID %d, Simzeit %dms) in die DB",
-    		winnerBotId, finishSimTime);
-        execSql(
-            "UPDATE ctsim_game " +
-            "SET winner = ?, finishtime = ?, state = ? "+
-            "WHERE level = ? AND game = ?",
+    	lg.finer("Schreibe Gewinner (Bot-ID %d, Simzeit %dms) in die DB", winnerBotId, finishSimTime);
+        execSql("UPDATE ctsim_game " + "SET winner = ?, finishtime = ?, state = ? "
+            + "WHERE level = ? AND game = ?",
             winnerBotId, finishSimTime, GameState.GAME_OVER,
-            currentGame.getLevelId(), currentGame.getGameId());
+            currentGame.getLevelId(),
+            currentGame.getGameId());
 
         propagateWinner(winnerBotId);
 
@@ -410,9 +387,9 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * @param winnerBotId	Bot-ID des Gewinners des aktuellen Spiels
      * @return Bot-ID		Bot-ID des Verlierers des aktuellen Spiels
      * @throws SQLException 
-     * @throws IllegalStateException	wenn in den beiden botIds des aktuellen Spiels der Wert NULL in
-     * 				der Datenbank auftaucht. (Wirft daher auch diese Exception, wenn die Methode aufgerufen
-     * 				wird, während ein Vorrundenspiel läuft.)
+     * @throws IllegalStateException	wenn in den beiden botIds des aktuellen Spiels der Wert NULL in der
+     * 				Datenbank auftaucht. (Wirft daher auch diese Exception, wenn die Methode aufgerufen wird,
+     * 				während ein Vorrundenspiel läuft.)
      * @throws NullPointerException		falls zur Zeit kein Spiel läuft, d.h. falls noch nie
      * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
      * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
@@ -420,9 +397,10 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      */
     private int getCurrentGameLoserId(int winnerBotId)
     throws SQLException, IllegalStateException, NullPointerException {
-        ResultSet currentGameRs = execSql(
-                "SELECT * FROM ctsim_game WHERE level = ? AND game = ?",
-				currentGame.getLevelId(), currentGame.getGameId());
+        ResultSet currentGameRs = execSql("SELECT * FROM ctsim_game "
+        		+ "WHERE level = ? AND game = ?",
+				currentGame.getLevelId(),
+				currentGame.getGameId());
         currentGameRs.next();
         int b1 = currentGameRs.getInt("bot1");
         if (currentGameRs.wasNull())
@@ -459,8 +437,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
         switch (currentGame.getLevelId()) {
         	case 0:	// Spiel um den 3. Platz wurde gespielt
             case 1:	// Finale wurde gespielt
-            	lg.finer("Gewinner des Finales oder Spiels um den 3. Platz " +
-            			"wird im Turnierbaum nicht weitergesetzt");
+            	lg.finer("Gewinner des Finales oder Spiels um den 3. Platz "
+            			+ "wird im Turnierbaum nicht weitergesetzt");
                 break;
             case 2:	// Halbfinale wurde gespielt
             	lg.finer("Setze Gewinner ins Finale");
@@ -471,9 +449,7 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
                 break;
             default:	// jedes andere Level
             	lg.finer("Setze Gewinner ein Level weiter");
-                placeBot(winnerBotId,
-                	currentGame.getLevelId()/2,
-                	(currentGame.getGameId()+1)/2);
+                placeBot(winnerBotId, currentGame.getLevelId()/2, (currentGame.getGameId()+1)/2);
         }
     }
 
@@ -489,17 +465,13 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
 	 * 				beendet wurde.
 	 */
-    private Blob getBotBinary(String whichPlayer)
-    throws SQLException, NullPointerException {
-    	String sql = String.format(
-            "SELECT bin " +
-            "FROM ctsim_bot AS bot, ctsim_game AS game " +
-            "WHERE game.%s = bot.id " +
-            "AND game.level = ? " +
-            "AND game.game  = ?;",
-            whichPlayer);
-    	ResultSet binary = execSql(sql,
-    		currentGame.getLevelId(), currentGame.getGameId());
+    private Blob getBotBinary(String whichPlayer) throws SQLException, NullPointerException {
+    	String sql = String.format("SELECT bin "
+    			+ "FROM ctsim_bot AS bot, ctsim_game AS game "
+    			+ "WHERE game.%s = bot.id "
+    			+ "AND game.level = ? "
+    			+ "AND game.game  = ?;", whichPlayer);
+    	ResultSet binary = execSql(sql, currentGame.getLevelId(), currentGame.getGameId());
         binary.next();
         return binary.getBlob("bin");
     }
@@ -544,11 +516,11 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
 	 * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>
 	 * 				beendet wurde.
 	 */
-    private int getBotId(String whichPlayer)
-    throws SQLException, NullPointerException {
-        ResultSet rs = execSql(
-            "SELECT * FROM ctsim_game WHERE level = ? AND game = ?;",
-            currentGame.getLevelId(), currentGame.getGameId());
+    private int getBotId(String whichPlayer) throws SQLException, NullPointerException {
+        ResultSet rs = execSql("SELECT * FROM ctsim_game "
+        	+ "WHERE level = ? AND game = ?;",
+            currentGame.getLevelId(),
+            currentGame.getGameId());
         rs.next();
         return rs.getInt(whichPlayer);
     }
@@ -603,11 +575,9 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * @throws SQLException 
      */
     public ResultSet getReadyGames() throws SQLException {
-        // Nur Spiele wählen, die READY_TO_RUN haben
-        return execSql(
-            "SELECT * FROM ctsim_game " +
-            "WHERE state = ? ORDER BY scheduled",
-            GameState.READY_TO_RUN);
+        // nur Spiele wählen, die READY_TO_RUN haben
+        return execSql("SELECT * FROM ctsim_game " + "WHERE state = ? ORDER BY scheduled",
+        		GameState.READY_TO_RUN);
     }
 
     /**
@@ -618,10 +588,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
      * @throws SQLException 
      */
     public void setGameRunning(int levelId, int gameId) throws SQLException {
-        execSql("UPDATE ctsim_game " +
-                "SET state= ? "+
-                "WHERE level = ? AND game = ?",
-                GameState.RUNNING, levelId, gameId);
+        execSql("UPDATE ctsim_game " + "SET state= ? "+ "WHERE level = ? AND game = ?",
+        		GameState.RUNNING, levelId, gameId);
         currentGame.set(levelId, gameId);
         discardedLogEntries = 0;
     }
@@ -629,9 +597,8 @@ public class ConductorToDatabaseAdapter extends DatabaseAdapter {
     /**
      * Zeigt an, ob das zur Zeit laufende Spiel ein Hauptrundenspiel ist
      *
-     * @return <code>true</code>, falls das aktuelle Spiel zur Hauptrunde gehört (ein anderes Level als
-     * 				-1 hat); <code>false</code>, falls das aktuelle Spiel zur Vorrunde gehört (ein Level
-     * 				von -1 hat).
+     * @return <code>true</code>, falls das aktuelle Spiel zur Hauptrunde gehört (ein anderes Level als -1 hat);
+     * 				<code>false</code>, falls das aktuelle Spiel zur Vorrunde gehört (ein Level von -1 hat).
      * @throws NullPointerException	falls zur Zeit kein Spiel läuft, d.h. falls noch nie
      * 				<code>setGameRunning</code> aufgerufen wurde oder falls seit dem letzten
      * 				<code>setGameRunning</code>-Aufruf das Spiel durch Aufruf von <code>setWinner</code>

@@ -64,14 +64,14 @@ import ctSim.util.Menu.Entry;
  * </ul>
  * </p>
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class MainWinMenuBar extends JMenuBar {
 	/** UID */
 	private static final long serialVersionUID = - 5927950169956191902L;
 	
 	 /** Logger */
-    final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.MainWinMenuBar");
+	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.MainWinMenuBar");
 
 	/**
 	 * Je nach dem, was der Benutzer im Menü; klickt, müssen wir oft im Controller eine Aktion anschieben;
@@ -105,8 +105,8 @@ public class MainWinMenuBar extends JMenuBar {
 	
 	/**
 	 * @param controller
-	 * @param mainWindow	als 'parent' der modalen Dialoge und für das gelegentliche Event, was auch
-	 * 				im mainWindow verarbeitet werden muss.
+	 * @param mainWindow	als 'parent' der modalen Dialoge und für das gelegentliche Event, was auch im
+	 * 			mainWindow verarbeitet werden muss.
 	 */
 	public MainWinMenuBar(Controller controller, MainWindow mainWindow) {
 		this.controller = controller;
@@ -159,7 +159,7 @@ public class MainWinMenuBar extends JMenuBar {
 		toolBar = buildToolBar(worldMenu, connectMenu, botMenu, simulationMenu, supportMenu);
 	}
 
-	///////////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 	
 	// Event-Handling-Code der Menüpunkte / Toolbar-Knöpfe
 
@@ -193,9 +193,8 @@ public class MainWinMenuBar extends JMenuBar {
 				int result = JOptionPane.showConfirmDialog(
 					mainWindow,
 					// Meldung
-					"Die Datei '"+file.getName()+"' existiert " +
-					"bereits. Soll sie überschrieben werden?",
-					"\00DCberschreiben?",	// Dialogtitel
+					"Die Datei '" + file.getName() + "' existiert bereits. Soll sie überschrieben werden?",
+					"überschreiben?",	// Dialogtitel
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 				if (result != JOptionPane.YES_OPTION)
@@ -215,10 +214,8 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/** Handler für neuen Bot */
 	private Runnable onAddTcpBot = new Runnable() {
-		private final JTextField host = new JTextField(
-			Config.getValue("ipForConnectByTcp"), 12);
-		private final JTextField port = new JTextField(
-			Config.getValue("portForConnectByTcp"), 5);
+		private final JTextField host = new JTextField(Config.getValue("ipForConnectByTcp"), 12);
+		private final JTextField port = new JTextField(Config.getValue("portForConnectByTcp"), 5);
 		private JDialog tcpEntryDialog = null;
 		private JOptionPane optionPane = null;
 
@@ -226,19 +223,14 @@ public class MainWinMenuBar extends JMenuBar {
 			if (tcpEntryDialog == null) {
 				JPanel p = new JPanel();
 				p.setLayout(new GridBagLayout());
-				p.add(new JLabel("Host"),
-					new GridBaggins().west().epadx(2).epady(4));
-				p.add(new JLabel("Port"),
-					new GridBaggins().col(2).west().epadx(2).epady(4));
+				p.add(new JLabel("Host"), new GridBaggins().west().epadx(2).epady(4));
+				p.add(new JLabel("Port"), new GridBaggins().col(2).west().epadx(2).epady(4));
 
 				p.add(host, new GridBaggins().row(1));
 				p.add(new JLabel(":"), new GridBaggins().row(1).epadx(3));
 				p.add(port, new GridBaggins().row(1));
 
-				optionPane = new JOptionPane(
-					p,
-					JOptionPane.QUESTION_MESSAGE,
-					JOptionPane.OK_CANCEL_OPTION);
+				optionPane = new JOptionPane(p, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
 				tcpEntryDialog = optionPane.createDialog(
 					mainWindow,				// parent
 					"Wohin verbinden?");	// Dialog-Titel
@@ -261,15 +253,14 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/** Handler zum ausführen eines Binaries */
 	private Runnable onInvokeExecutable = new Runnable() {
-		private final JFileChooser botChooser = new JFileChooser(
-			ConfigManager.path2Os(Config.getValue("botdir")));
+		private final JFileChooser botChooser = new JFileChooser(ConfigManager.path2Os(Config.getValue("botdir")));
 
 		{	// der "Konstruktor" des Runnables sozusagen
 			botChooser.setFileFilter(new FileFilter() {
 				@Override
 				public boolean accept(File f) {
-					return (f.isDirectory() || f.getName().endsWith(".exe")
-							|| f.getName().endsWith(".elf") || f.getName().lastIndexOf('.') == -1);
+					return (f.isDirectory() || f.getName().endsWith(".exe") || f.getName().endsWith(".elf")
+							|| f.getName().lastIndexOf('.') == -1);
 				}
 
 				@Override
@@ -280,9 +271,7 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 
 		public void run() {
-			if (botChooser.showOpenDialog(mainWindow) ==
-				JFileChooser.APPROVE_OPTION) {
-
+			if (botChooser.showOpenDialog(mainWindow) == JFileChooser.APPROVE_OPTION) {
 				controller.invokeBot(botChooser.getSelectedFile());
 			}
 		}
@@ -308,8 +297,7 @@ public class MainWinMenuBar extends JMenuBar {
 			/* Splash-Screen anzeigen */
 			java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
 			SplashWindow.splash(url, "Version " + Main.VERSION);
-			SplashWindow.setMessage("                                                      " +
-				"c't-Bot Projekt 2006-2018");
+			SplashWindow.setMessage("                                                      " + "c't-Bot Projekt 2006-2018");
 		}
 	};
 	
@@ -317,7 +305,8 @@ public class MainWinMenuBar extends JMenuBar {
 	private Runnable onSiteLink = new Runnable() {
 		public void run() {
 			try {
-				Desktop.getDesktop().browse(new URL("https://www.heise.de/ct/artikel/c-t-Bot-und-c-t-Sim-284119.html").toURI());
+				Desktop.getDesktop().browse(
+						new URL("https://www.heise.de/ct/artikel/c-t-Bot-und-c-t-Sim-284119.html").toURI());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -330,7 +319,8 @@ public class MainWinMenuBar extends JMenuBar {
 	private Runnable onGithubLink = new Runnable() {
 		public void run() {
 			try {
-				Desktop.getDesktop().browse(new URL("https://github.com/tsandmann/ct-sim").toURI());
+				Desktop.getDesktop().browse(
+						new URL("https://github.com/tsandmann/ct-sim").toURI());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -341,7 +331,8 @@ public class MainWinMenuBar extends JMenuBar {
 	private Runnable onForumLink = new Runnable() {
 		public void run() {
 			try {
-				Desktop.getDesktop().browse(new URL("https://www.ctbot.de").toURI());
+				Desktop.getDesktop().browse(
+						new URL("https://www.ctbot.de").toURI());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -367,21 +358,15 @@ public class MainWinMenuBar extends JMenuBar {
 			if (mapDialog == null) {
 				JPanel p = new JPanel();
 				p.setLayout(new GridBagLayout());
-				p.add(new JLabel("Startfeld"),
-						new GridBaggins().west().epadx(2).epady(4));
-				p.add(new JLabel("Wert frei"),
-					new GridBaggins().col(1).west().epadx(2).epady(4));
-				p.add(new JLabel("Wert belegt"),
-					new GridBaggins().col(2).west().epadx(2).epady(4));
+				p.add(new JLabel("Startfeld"), new GridBaggins().west().epadx(2).epady(4));
+				p.add(new JLabel("Wert frei"), new GridBaggins().col(1).west().epadx(2).epady(4));
+				p.add(new JLabel("Wert belegt"), new GridBaggins().col(2).west().epadx(2).epady(4));
 
 				p.add(bot, new GridBaggins().row(1));
 				p.add(free, new GridBaggins().row(1));
 				p.add(occupied, new GridBaggins().row(1));
 
-				optionPane = new JOptionPane(
-					p,
-					JOptionPane.QUESTION_MESSAGE,
-					JOptionPane.OK_CANCEL_OPTION);
+				optionPane = new JOptionPane(p, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
 				mapDialog = optionPane.createDialog(
 					mainWindow,							// parent
 					"Parcours als Map exportieren");	// Dialog-Titel
@@ -390,10 +375,11 @@ public class MainWinMenuBar extends JMenuBar {
 			mapDialog.setVisible(true);
 			if (((Integer)optionPane.getValue()) == JOptionPane.YES_OPTION) {
 				try {
-					controller.worldToMap(Integer.parseInt(bot.getText()), Integer.parseInt(free.getText()), Integer.parseInt(occupied.getText()));
+					controller.worldToMap(Integer.parseInt(bot.getText()), Integer.parseInt(free.getText()),
+							Integer.parseInt(occupied.getText()));
 					lg.info("Welt wurde korrekt als Bot-Map exportiert");
 				} catch (NumberFormatException e) {
-					lg.warn("Ungueltige Eingabewerte: " + e.getMessage());
+					lg.warn("Ungültige Eingabewerte: " + e.getMessage());
 				} catch (IOException e) {
 					lg.warn("Fehler beim Schreiben der Datei: " + e.getMessage());
 				} catch (MapException e) {
@@ -403,13 +389,12 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
-	
-	///////////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 	
 	// Hilfsmethoden
 
 	/**
-	 * Baut das Jugde-Menü
+	 * Baut das Judge-Menü
 	 * 
 	 * @return Menü
 	 */
@@ -455,9 +440,9 @@ public class MainWinMenuBar extends JMenuBar {
 //				((JudgeMenuItem)b).fqJudgeClassName))
 //				b.setSelected(true);
 //		}
-//   }
+//	}
 
-	///////////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 	
 	// Hilfsklasse
 
@@ -511,13 +496,13 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	}
 
-    /** Judge-Menü */
-    private class JudgeMenuItem extends JMenuItem {
-        /** UID */
-    	private static final long serialVersionUID = - 8177774672896579874L;
+	/** Judge-Menü */
+	private class JudgeMenuItem extends JMenuItem {
+		/** UID */
+		private static final long serialVersionUID = - 8177774672896579874L;
 
-        /** Judge-Klassenname */
-    	@SuppressWarnings("unused")
+		/** Judge-Klassenname */
+		@SuppressWarnings("unused")
 		public final String fqJudgeClassName;
 
 		/**
@@ -525,17 +510,18 @@ public class MainWinMenuBar extends JMenuBar {
 		 */
 		public JudgeMenuItem(final String fqName) {
 			// für das Anzeigen den Packagename wegnehmen, nur den Klassenname angeben
-	        super(new AbstractAction(fqName.replaceAll("^.*\\.(.*)$", "$1"))
-	        	 {
-					private static final long serialVersionUID =
-						-1873920690635293756L;
+			super(new AbstractAction(fqName.replaceAll("^.*\\.(.*)$", "$1"))
+
+				{
+					private static final long serialVersionUID = -1873920690635293756L;
 
 					public void actionPerformed(ActionEvent e) {
 						controller.setJudge(fqName);
 					}
 				}
-	        );
-	        this.fqJudgeClassName = fqName;
-        }
-    }
+
+			);
+			this.fqJudgeClassName = fqName;
+		}
+	}
 }

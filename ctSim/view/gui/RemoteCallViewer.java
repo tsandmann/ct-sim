@@ -60,8 +60,7 @@ public class RemoteCallViewer extends JPanel {
 	private static final long serialVersionUID = - 3844905681548769569L;
 
 	/** Logger */
-	static final FmtLogger lg = FmtLogger.getLogger(
-		"ctSim.view.gui.RemoteCallViewer");
+	static final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.RemoteCallViewer");
 
 	/** Behaviour-Viewer */
 	static class BehaviorViewer extends JPanel {
@@ -87,13 +86,13 @@ public class RemoteCallViewer extends JPanel {
 				else
 					label = p.name;
 
-				// Nach links hin bisschen Platz, mit der Low-tech-Methode
+				// nach links hin ein bisschen Platz, mit der Low-tech-Methode
 				JLabel jl = new JLabel("   "+label+" =");
 				jl.setToolTipText(tooltip);
 				add(jl);
 				JSpinner js = new JSpinner(p);
 				js.setToolTipText(tooltip);
-				int numCols = 3; // Default
+				int numCols = 3;	// Default
 				try {
 					numCols = Math.max(
 						// Wie viele Stellen haben Min und Max?
@@ -102,15 +101,13 @@ public class RemoteCallViewer extends JPanel {
 				} catch (NullPointerException e) {
 					// p.getMax() oder p.getMin() können null sein, in dem Fall ignorieren und Default nehmen
 				}
-				((DefaultEditor)js.getEditor()).getTextField().setColumns(
-					numCols);
+				((DefaultEditor)js.getEditor()).getTextField().setColumns(numCols);
 				add(js);
 			}
 
-			/* Mindestbreite ausrechnen, damit ScrollPane bescheidweiß */
+			/* Mindestbreite ausrechnen, damit ScrollPane Bescheid weiß */
 			/* Zwischenräume */
-			int prefWidth = (getComponentCount() - 1) *
-				((FlowLayout)getLayout()).getHgap();
+			int prefWidth = (getComponentCount() - 1) * ((FlowLayout)getLayout()).getHgap();
 			/* Breiten der Komponenten */
 			for (int i = 0; i < getComponentCount(); i++)
 				prefWidth += getComponent(i).getPreferredSize().width;
@@ -118,7 +115,7 @@ public class RemoteCallViewer extends JPanel {
 			setMinimumSize(new Dimension(prefWidth, getMinimumSize().height));
 		}
 
-		// An alle Kinder weitergeben
+		// an alle Kinder weitergeben
 		/**
 		 * @see javax.swing.JComponent#setForeground(java.awt.Color)
 		 */
@@ -128,7 +125,7 @@ public class RemoteCallViewer extends JPanel {
 				getComponent(i).setForeground(fg);
 		}
 
-		// An alle Kinder weitergeben
+		// an alle Kinder weitergeben
 		/**
 		 * @see javax.swing.JComponent#setEnabled(boolean)
 		 */
@@ -222,7 +219,7 @@ public class RemoteCallViewer extends JPanel {
 			 */
 			@Override
 			public void setForeground(Color fg) {
-				// No-op: Wir setzen das im Konstruktor, die Tabelle soll es ab dann nicht mehr ändern
+				// No-op: Wir setzen das im Konstruktor; die Tabelle soll es ab dann nicht mehr ändern.
 			}
 
 			/**
@@ -238,7 +235,7 @@ public class RemoteCallViewer extends JPanel {
 			 */
 			@Override
 			public void setEnabled(boolean b) {
-				// No-op: Wir sind auf enabled und das soll so bleiben, weil sonst der Text grau wird
+				// No-op: Wir sind auf enabled und das soll so bleiben, weil sonst der Text grau wird.
 			}
 		}
 
@@ -249,8 +246,7 @@ public class RemoteCallViewer extends JPanel {
 
 			/** Wartestatus */
 			public Waiting() {
-				super("Wartet", "Remote-Call wartet, bis alle Calls " +
-						"über ihm abgeschlossen sind", Color.GRAY);
+				super("Wartet", "Remote-Call wartet, bis alle Calls über ihm abgeschlossen sind", Color.GRAY);
 			}
 		}
 
@@ -261,8 +257,7 @@ public class RemoteCallViewer extends JPanel {
 
 			/** Aktivstatus */
 			public Running() {
-				super("Läuft", "Remote-Call wird vom Bot " +
-						"gegenwärtig ausgeführt", Color.BLUE);
+				super("Läuft", "Remote-Call wird vom Bot gegenwärtig ausgeführt", Color.BLUE);
 			}
 		}
 
@@ -319,8 +314,7 @@ public class RemoteCallViewer extends JPanel {
 					try {
 						rcCompnt.abortCurrentBehavior();
 					} catch (IOException excp) {
-						lg.warn(excp, "E/A-Problem beim Senden des " +
-								"Abbruchkommandos");
+						lg.warn(excp, "E/A-Problem beim Senden des Abbruchkommandos");
 					}
 				}
 				else
@@ -335,9 +329,8 @@ public class RemoteCallViewer extends JPanel {
 						return;
 					}
 				}
-				throw new IllegalStateException("Interner Fehler " +
-						"(Selbstfindungsproblem): Löschen-Knopf " +
-						"funktioniert nicht");
+				throw new IllegalStateException("Interner Fehler (Selbstfindungsproblem): "
+						+ "Löschen-Knopf funktioniert nicht");
 			}
 
 			/**
@@ -358,11 +351,7 @@ public class RemoteCallViewer extends JPanel {
 		 */
 		@Override
 		protected void addBehavior(Behavior b) {
-			addRow(new Object[] {
-				new Waiting(),
-				buildName(b),
-				buildBhvViewer(b),
-				new DeleteButton() });
+			addRow(new Object[] { new Waiting(), buildName(b), buildBhvViewer(b), new DeleteButton() });
 			if (nowRunning == null)
 				callNextBehavior();
 		}
@@ -419,8 +408,7 @@ public class RemoteCallViewer extends JPanel {
 			try {
 				((BehaviorViewer)getValueAt(row, 2)).getBehavior().call();
 			} catch (IOException e) {
-				lg.warn(e, "Schlimm: E/A-Problem beim Senden des " +
-				"Remote-Call; ignoriere Remote-Call und fahre fort");
+				lg.warn(e, "Schlimm: E/A-Problem beim Senden des Remote-Calls; ignoriere Remote-Call und fahre fort");
 			}
 		}
 
@@ -438,7 +426,7 @@ public class RemoteCallViewer extends JPanel {
 					return;
 				}
 			}
-//			lg.warn("Ein Remote Call wurde beendet, der laut Liste gar nicht läuft"); // unproblematisch
+//			lg.warn("Ein Remote Call wurde beendet, der laut Liste gar nicht läuft");	// unproblematisch
 		}
 
 		/**
@@ -456,7 +444,7 @@ public class RemoteCallViewer extends JPanel {
 					color = new Color(0, 160, 0);
 					break;
 				case FAILURE:
-					tooltip = "Remote-Call ist in die Hose gegangen";
+					tooltip = "Remote-Call ist fehlgeschlagen";
 					color = Color.RED;
 					break;
 				case CANCELLED:
@@ -534,9 +522,8 @@ public class RemoteCallViewer extends JPanel {
 			rcCompnt.listRemoteCalls();
 			this.listReceived = true;
 		} catch (IOException e) {
-			lg.warn(e, "E/A-Problem aufgetreten, als die Anforderung der " +
-				"Remote-Call-Liste gesendet wurde; wer weiß, ob " +
-				"das jetzt funktioniert mit den Remote-Calls");
+			lg.warn(e, "E/A-Problem aufgetreten, als die Anforderung der Remote-Call-Liste gesendet wurde; "
+					+ "unklar ob das jetzt funktioniert mit den Remote-Calls");
 		}
 	}
 
@@ -566,7 +553,7 @@ public class RemoteCallViewer extends JPanel {
         });
         availBhvs.setTableHeader(null);	// Header weg
         availBhvs.getColumnClass(getComponentCount());
-        // Nur 1 Zeile markierbar
+        // nur eine Zeile markierbar
         availBhvs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         availBhvs.setColumnSelectionAllowed(true);
         availBhvs.setRowSelectionAllowed(true);
@@ -590,17 +577,14 @@ public class RemoteCallViewer extends JPanel {
 
 		add(availHeading, new GridBaggins().row(0).col(0).epady(3));
 
-		add(new JScrollPane(availBhvs),
-			new GridBaggins().row(1).col(0).weightx(0.4).weighty(1).fillHV()
-			.epadx(10));
+		add(new JScrollPane(availBhvs), new GridBaggins().row(1).col(0).weightx(0.4).weighty(1).fillHV().epadx(10));
 
 		final ComponentTable plannedBhvs = buildCompntTable(plannedM);
 
 		/*
-		 * Workaround für Bug in JTable: Wenn das Model sich ändert (der JButton im Model löscht Zeilen
-		 * aus dem Model), dann bekommen wir u.U. eine Exception im Zusammenhang mit
-		 * editingStopped-Ereignissen, weil die Ereignisse Zellen aktualisieren, die schon nicht mehr da
-		 * sind. Für Details siehe:
+		 * Workaround für Bug in JTable: Wenn das Model sich ändert (der JButton im Model löscht Zeilen aus dem
+		 * Model), dann bekommen wir u.U. eine Exception im Zusammenhang mit editingStopped-Ereignissen, weil
+		 * die Ereignisse Zellen aktualisieren, die schon nicht mehr da sind. Für Details siehe:
 		 * <a href="http://forum.java.sun.com/thread.jspa?threadID=5133941&tstart=75">Forum-Thread JTable-Bug</a> und
 		 * <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4777756">Workaround JTable-Bug von Oracle</a>
 		 * Wir verwenden den Workaround von bugs.java.com.
@@ -621,8 +605,7 @@ public class RemoteCallViewer extends JPanel {
 				int selected = availBhvs.getSelectedRow();
 				if (selected == -1)
 					return;
-				BehaviorViewer bv = (BehaviorViewer)availBhvs.getModel()
-					.getValueAt(selected, 1);
+				BehaviorViewer bv = (BehaviorViewer)availBhvs.getModel().getValueAt(selected, 1);
 				plannedM.addBehavior(bv.getBehavior().clone());
 			}
 		});
@@ -630,8 +613,8 @@ public class RemoteCallViewer extends JPanel {
 		Font f = b.getFont();
 		/** 
 		 * Wichtig:
-		 * deriveFont(float) aufrufen, nicht deriveFont(int), beide bedeuten ganz unterschiedliche
-		 * Sachen; also "f" an die Zahl anhängen.
+		 * deriveFont(float) aufrufen, nicht deriveFont(int), beide bedeuten ganz unterschiedliche Sachen;
+		 * also "f" an die Zahl anhängen um einen float-Wert zu übergeben.
 		 */
 		b.setFont(f.deriveFont(f.getSize() * 3f));
 		add(b, new GridBaggins().row(1).col(1).epadx(10).fillV());
@@ -668,9 +651,7 @@ public class RemoteCallViewer extends JPanel {
 		
 		plannedBhvs.setTableHeader(null);
 
-		add(new JScrollPane(plannedBhvs),
-			new GridBaggins().row(1).col(2).weightx(0.6).weighty(1).fillHV()
-			.epadx(10));
+		add(new JScrollPane(plannedBhvs), new GridBaggins().row(1).col(2).weightx(0.6).weighty(1).fillHV().epadx(10));
 
 		rcCompnt.addDoneListener(new Runnable1<BehaviorExitStatus>() {
 			public void run(BehaviorExitStatus status) {

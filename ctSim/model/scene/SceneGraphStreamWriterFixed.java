@@ -32,11 +32,11 @@ import com.sun.j3d.utils.scenegraph.io.NamedObjectException;
 import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter;
 
 /**
- * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamWriter
- * von Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die Namen der Objekte zu
- * transferieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
+ * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamWriter von
+ * Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die Namen der Objekte zu transferieren.
+ * Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
  * 
- * @author Benjamin Benz (bbe@heise.de)
+ * @author Benjamin Benz
  */
 public class SceneGraphStreamWriterFixed extends SceneGraphStreamWriter {
 
@@ -52,7 +52,8 @@ public class SceneGraphStreamWriterFixed extends SceneGraphStreamWriter {
 	 * @see com.sun.j3d.utils.scenegraph.io.SceneGraphStreamWriter#writeBranchGraph(javax.media.j3d.BranchGroup, java.util.HashMap)
 	 */
 	@Override
-	public void writeBranchGraph(BranchGroup bg, HashMap map) throws IOException, DanglingReferenceException, NamedObjectException {
+	public void writeBranchGraph(BranchGroup bg, HashMap map) throws IOException, DanglingReferenceException,
+			NamedObjectException {
 		prepareMap(map);
 		super.writeBranchGraph(bg, map);
 	}

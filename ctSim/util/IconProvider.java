@@ -23,7 +23,7 @@ import javax.swing.Icon;
 
 /**
  * <p>
- * Ding, das Icons bereitstellt.
+ * Element, das Icons bereitstellt.
  * </p>
  * <p>
  * 

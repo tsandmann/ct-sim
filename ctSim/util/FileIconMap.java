@@ -54,7 +54,7 @@ import javax.swing.ImageIcon;
  *
  * @see ImageIcon
  * 
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class FileIconMap implements IconProvider {
     /** UID */
@@ -94,12 +94,10 @@ public class FileIconMap implements IconProvider {
         this.parentDir = parentDir;
         map = Misc.newMap();
         if (! parentDir.exists()) {
-            throw new FileNotFoundException("Icon-Verzeichnis '"+
-                parentDir.getAbsolutePath()+"' nicht gefunden");
+            throw new FileNotFoundException("Icon-Verzeichnis '" + parentDir.getAbsolutePath()+"' nicht gefunden");
         }
         if (! parentDir.isDirectory()) {
-            throw new IllegalArgumentException(
-                    "Icon-Pfad '"+parentDir+"' ist kein Verzeichnis");
+            throw new IllegalArgumentException("Icon-Pfad '" + parentDir + "' ist kein Verzeichnis");
         }
         for (File f : parentDir.listFiles()) {
             // Dateiname ohne Pfad und ohne Extension
@@ -109,15 +107,14 @@ public class FileIconMap implements IconProvider {
     }
 
     /**
-	 * Ähnlich wie {@link IconProvider#get(String)}. Liefert {@code null}, falls das gewünschte Icon
-	 * im Dateisystem nicht existiert (genauer: falls es nicht existiert hat zu dem Zeitpunkt, als der
-	 * Konstruktor aufgerufen wurde).
+	 * Ähnlich wie {@link IconProvider#get(String)}. Liefert {@code null}, falls das gewünschte Icon im
+	 * Dateisystem nicht existiert (genauer: falls es nicht existiert hat zu dem Zeitpunkt, als der Konstruktor
+	 * aufgerufen wurde).
 	 */
     public Icon get(String key) {
         ImageIcon rv = map.get(key);
         if (rv == null) {
-        	lg.warn("Icon-Datei '%s%s%s.*' nicht gefunden",
-        		parentDir.getPath(), File.separator, key);
+        	lg.warn("Icon-Datei '%s%s%s.*' nicht gefunden", parentDir.getPath(), File.separator, key);
         }
         return rv;
     }

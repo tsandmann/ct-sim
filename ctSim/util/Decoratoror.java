@@ -77,8 +77,7 @@ public class Decoratoror {
 			if (providesImplementationOf(decorators[i], m))
 				return decorators[i];
 		}
-		throw new NoSuchMethodException("None of the decorators implements " +
-				"method '"+m+"'");
+		throw new NoSuchMethodException("None of the decorators implements " + "method '" + m + "'");
 	}
 
 	/**
@@ -93,13 +92,12 @@ public class Decoratoror {
 	throws NoSuchMethodException {
 		// Sanity check - newProxyInstance will also report that, but to be clear and explicit ...
 		if (! resultInterface.isInterface()) {
-			throw new IllegalArgumentException("First argument must " +
-			"represent an interface");
+			throw new IllegalArgumentException("First argument must " + "represent an interface");
 		}
-		// Will also fail down the line, but to have a clearer error message
+		// will also fail down the line, but to have a clearer error message
 		for (int i = 0; i < decorators.length; i++) {
 			if (decorators[i] == null)
-				throw new NullPointerException("Decorator #"+i+" is null");
+				throw new NullPointerException("Decorator #" + i + " is null");
 		}
 
 		final Map<Method, Object> methodImpls = Misc.newMap();
@@ -107,20 +105,19 @@ public class Decoratoror {
 			methodImpls.put(ifcMeth, findImplementor(decorators, ifcMeth));
 
 		/*
-		 * Gotcha: Object's methods don't show up in resultInterface.getMethods(), but we need entries
-		 * in methodImpls for them
+		 * Gotcha: Object's methods don't show up in resultInterface.getMethods(),
+		 * but we need entries in methodImpls for them
 		 */
 		for (Method objMeth : Object.class.getMethods())
 			// NoSuchMethodException is impossible here
 			methodImpls.put(objMeth, findImplementor(decorators, objMeth));
 
-		// Actual work
+		// actual work
 		return (T)Proxy.newProxyInstance(
 			ClassLoader.getSystemClassLoader(),
 			new Class[] { resultInterface },
 			new InvocationHandler() {
-				public Object invoke(Object proxy,
-					Method method, Object[] args) throws Throwable {
+				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 					return method.invoke(methodImpls.get(method), args);
 				}
 		});

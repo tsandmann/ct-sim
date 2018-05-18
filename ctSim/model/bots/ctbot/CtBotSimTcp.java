@@ -150,8 +150,10 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 				}
 			}
 		} catch (IOException e) {
-			// Kann nicht passieren, da die RC nur IOExcp wirft, wenn sie asynchron betrieben wird,
-			// was CtBotSimTcp nicht macht
+			/* 
+			 * Kann nicht passieren, da die RC nur IOExcp wirft, wenn sie asynchron betrieben wird,
+			 * was CtBotSimTcp nicht macht
+			 */
 			throw new AssertionError(e);
 		}		
 	}

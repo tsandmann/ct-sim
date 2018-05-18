@@ -80,15 +80,15 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 		
 		/* Ansteuerung für die Motoren in Abhängigkeit vom Input der IR-Abstandssensoren */
 
-		/* Solange die Wand weit weg ist, gilt: volle Fahrt voraus */
+		/* solange die Wand weit weg ist, gilt: volle Fahrt voraus */
 		double ll = 255, rr = 255;
 		final double irl = irL.get().doubleValue();
 		final double irr = irR.get().doubleValue();
 		
-		/* Falls Wand in Sicht, per Zufall nach links oder rechts drehen */
+		/* falls Wand in Sicht, per Zufall nach links oder rechts drehen */
 		if (irl > 160 || irr > 130) {
 			switch (lastState) {
-			/* Wenn wir bereits drehen, dann in die gleiche Richtung weiterdrehen */
+			/* wenn wir bereits drehen, dann in die gleiche Richtung weiterdrehen */
 			case 0: {
 				if (rand.nextInt(42) < 25) {
 					/* links herum */
@@ -121,7 +121,7 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 			lastState = 0;
 		}
 		
-		/* Gewschwindigkeiten an die Motoren weitergeben */
+		/* Geschwindigkeiten an die Motoren weitergeben */
 		govL.set(ll);
 		govR.set(rr);
 	}

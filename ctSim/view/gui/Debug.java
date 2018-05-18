@@ -33,7 +33,6 @@ import java.util.Date;
  * @author Felix Beckwermert
  */
 public class Debug {
-	
 	/** Output */
 	public static final Debug out = new Debug();
 	/** Log-File */
@@ -52,9 +51,8 @@ public class Debug {
 	
 	/** Der Konstruktor */
 	Debug() {
-		
 		this.timeFormatter = new SimpleDateFormat(this.TIME_PREFIX);
-		
+
 //		try {
 //			File file = new File(this.LOG_FILE);
 //			FileWriter fw = new FileWriter(file);
@@ -62,6 +60,7 @@ public class Debug {
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
+
 	}
 	
 	/**
@@ -77,15 +76,11 @@ public class Debug {
 	 * @param str
 	 */
 	public synchronized void print(String str) {
-		
 		if(this.isNewLine)
 			str = this.timeFormatter.format(new Date()) + str;
-		
 		System.out.print(str);
-		
 		if(this.win != null)
 			this.win.print(str);
-		
 		if(this.bw != null) {
 			try {
 				this.bw.write(str);
@@ -103,15 +98,11 @@ public class Debug {
 	 * @param str
 	 */
 	public synchronized void println(String str) {
-		
 		str = this.timeFormatter.format(new Date()) + str;
-		
 		System.out.println(str);
-		
 		if(this.win != null) {
 			this.win.println(str);
 		}
-		
 		if(this.bw != null) {
 			try {
 				this.bw.write(str);
@@ -121,7 +112,6 @@ public class Debug {
 				e.printStackTrace();
 			}
 		}
-		
 		this.isNewLine = true;
 	}
 	
@@ -130,7 +120,6 @@ public class Debug {
 	 */
 	@Override
 	protected void finalize() throws Throwable {
-		
 		try {
 			this.bw.flush();
 			this.bw.close();
@@ -143,7 +132,6 @@ public class Debug {
 	 * @param win
 	 */
 	public static void registerDebugWindow(DebugWindow win) {
-		
 		Debug.out.setDebugWindow(win);
 	}
 }

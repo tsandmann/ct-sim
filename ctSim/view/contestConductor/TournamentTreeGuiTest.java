@@ -41,8 +41,7 @@ public class TournamentTreeGuiTest extends JFrame {
 	/** für Tests */
 	public class TournamentTreeModel implements TreeModel {
 		/** Listenerliste */
-		ArrayList<TreeModelListener> listeners =
-			new ArrayList<TreeModelListener>();
+		ArrayList<TreeModelListener> listeners = new ArrayList<TreeModelListener>();
 		/** Level */
 		int currentLevel;
 		/** Carrier-Baum */
@@ -66,8 +65,7 @@ public class TournamentTreeGuiTest extends JFrame {
         		li.add(i);
         	carrier = SpreadingTree.buildTree(li);
 			for (TreeModelListener l : listeners)
-				l.treeStructureChanged(new TreeModelEvent(this,
-					new TreePath(carrier)));
+				l.treeStructureChanged(new TreeModelEvent(this, new TreePath(carrier)));
 			currentLevel++;
         }
 

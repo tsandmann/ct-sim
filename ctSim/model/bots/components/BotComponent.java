@@ -43,7 +43,8 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
  * der Verbindung gelesen wird). Manche Components können sich auch aufs TCP (USB) schreiben
  * (Beispiel: {@link RemoteControl}, Gegenbeispiel: {@link Log}, das nie aus dem Sim herausgesendet
  * wird). Die Fähigkeiten "kann lesen" und "kann schreiben" sind unabhängig, jede Kombination ist
- * möglich.</p>
+ * möglich.
+ * </p>
  * <p>
  * Die <em>grundsätzliche</em> Fähigkeit "Lesen können" oder "Schreiben können" wird durch die
  * Interfaces {@link CanRead} und {@link CanWrite} ausgedrückt. (Nur eine Component, die CanWrite
@@ -53,12 +54,13 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
  * sie potentiell schreiben könnten. Beim Setzen der Flags wird geprüft, ob die Component das Flag
  * überhaupt unterstützt; andernfalls tritt eine UnsupportedOperationException auf.
  * </p>
+ * 
  * TODO Aktuatoren vs. Sensoren
  *
  * @param <M>	Typ der Komponente
  * 
  * @author Felix Beckwermert
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public abstract class BotComponent<M> {
 	/** Interface für lesende Komponenten */
@@ -72,8 +74,7 @@ public abstract class BotComponent<M> {
 		void readFrom(Command c) throws ProtocolException;
 
 		/**
-		 * Nicht aufrufen - sollte nur von
-		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
+		 * Nicht aufrufen - sollte nur von {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
 		 * 
 		 * @return Command-Code
@@ -87,16 +88,14 @@ public abstract class BotComponent<M> {
 	 */
 	protected interface CanWrite {
 		/**
-		 * Nicht aufrufen - stattdessen {@link BotComponent#askForWrite(CommandOutputStream)}
-		 * verwenden.
+		 * Nicht aufrufen - stattdessen {@link BotComponent#askForWrite(CommandOutputStream)} verwenden.
 		 * 
 		 * @param c	Kommando
 		 */
 		void writeTo(Command c);
 
 		/**
-		 * Nicht aufrufen - sollte nur von
-		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
+		 * Nicht aufrufen - sollte nur von {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
 		 * 
 		 * @return Command-Code
@@ -133,12 +132,12 @@ public abstract class BotComponent<M> {
 		/** schreibt asynchron */
 		WRITES_ASYNCLY }
 
-	///////////////////////////////////////////////////////////////////////////
+	/* ============================================================ */
 
 	/** externes Modell */
 	private final M externalModel;
 
-	/** Anfänglich alles false */
+	/** anfänglich alles false */
 	private EnumSet<ConnectionFlags> flags =
 		EnumSet.noneOf(ConnectionFlags.class);
 
@@ -171,7 +170,7 @@ public abstract class BotComponent<M> {
 			? EnumSet.noneOf(ConnectionFlags.class)
 			: EnumSet.copyOf(Arrays.asList(flags));
 
-		// Prüfen, ob dieses Objekt in der Lage ist zu dem, was die von uns wollen
+		// prüfen, ob dieses Objekt in der Lage ist zu dem, was die von uns wollen
 		if (f.contains(ConnectionFlags.READS)) {
 			if (! (this instanceof CanRead))
 				throw createUnsuppOp("Lesen");
