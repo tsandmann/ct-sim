@@ -208,8 +208,8 @@ public class Actuators {
 			synchronized (newStuff) {
 				final String newLine = Command.replaceCtrlChars(c.getPayloadAsString());
 				newStuff.append(newLine);
-				if (newStuff.charAt(newStuff.length() - 1) != '\n' && 
-						(newLine.contains("DEBUG") || newLine.contains("INFO") || newLine.contains("WARNING")
+				if (newStuff.charAt(newStuff.length() - 1) != '\n' && (newLine.contains("DEBUG")
+						|| newLine.contains("INFO") || newLine.contains("WARNING")
 						|| newLine.contains("ERROR") || newLine.contains("FATAL"))) {
 					newStuff.append("\n");
 				}

@@ -77,7 +77,7 @@ public class Decoratoror {
 			if (providesImplementationOf(decorators[i], m))
 				return decorators[i];
 		}
-		throw new NoSuchMethodException("None of the decorators implements " + "method '" + m + "'");
+		throw new NoSuchMethodException("None of the decorators implements method '" + m + "'");
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class Decoratoror {
 	throws NoSuchMethodException {
 		// Sanity check - newProxyInstance will also report that, but to be clear and explicit ...
 		if (! resultInterface.isInterface()) {
-			throw new IllegalArgumentException("First argument must " + "represent an interface");
+			throw new IllegalArgumentException("First argument must represent an interface");
 		}
 		// will also fail down the line, but to have a clearer error message
 		for (int i = 0; i < decorators.length; i++) {

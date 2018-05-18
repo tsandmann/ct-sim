@@ -82,7 +82,7 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	public void readFrom(Command c) throws ProtocolException {
 		if (! c.has(expectedForWelcome)) {
 			throw new ProtocolException("Willkommenskommando empfangen, das nicht den erwarteten Subcode " + 
-				expectedForWelcome + " hatte");
+					expectedForWelcome + " hatte");
 		}
 	}
 

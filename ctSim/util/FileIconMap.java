@@ -94,7 +94,7 @@ public class FileIconMap implements IconProvider {
         this.parentDir = parentDir;
         map = Misc.newMap();
         if (! parentDir.exists()) {
-            throw new FileNotFoundException("Icon-Verzeichnis '" + parentDir.getAbsolutePath()+"' nicht gefunden");
+            throw new FileNotFoundException("Icon-Verzeichnis '" + parentDir.getAbsolutePath() + "' nicht gefunden");
         }
         if (! parentDir.isDirectory()) {
             throw new IllegalArgumentException("Icon-Pfad '" + parentDir + "' ist kein Verzeichnis");

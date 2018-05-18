@@ -509,13 +509,13 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				if (! parent.is(IN_HOLE) && ! parent.is(COLLIDED)) {
 					parent.setPosition(newPosPoint);
 				}
-	
+
 				if (! parent.is(IN_HOLE) && ! collisionInPocket) {
 					parent.setHeading(newHeading);
 				} else {
 					mouseSensorX.sensor.set(0);
 				}
-	
+
 				if (parent.is(IN_HOLE) || parent.is(COLLIDED)) {
 					mouseSensorY.sensor.set(0);
 				}
@@ -539,7 +539,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		 * @param t	Transformationsmatrix (wird verändert)
 		 * @return erzeugte Bounds
 		 */
-		private Bounds createBounds(Point3d newPos, double newHeading, double dX, double dY, double radius, Transform3D t) {
+		private Bounds createBounds(Point3d newPos, double newHeading, double dX, double dY, double radius,
+				Transform3D t) {
 			final double dZ = - CtBotSimTcp.BOT_HEIGHT / 2;
 			
 			/* Vektor für die Verschiebung erstellen */
@@ -660,8 +661,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          */
         public void run() {
             sensor.set(world.sensGroundReflectionCross(
-            		parent.worldCoordFromBotCoord(distFromBotCenter), parent.worldCoordFromBotCoord(headingInBotCoord), OPENING_ANGLE_IN_RAD, PRECISION)
-            );
+            		parent.worldCoordFromBotCoord(distFromBotCenter),
+            		parent.worldCoordFromBotCoord(headingInBotCoord),
+            		OPENING_ANGLE_IN_RAD, PRECISION));
         }
     }
 

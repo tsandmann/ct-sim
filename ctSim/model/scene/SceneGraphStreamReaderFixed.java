@@ -43,8 +43,7 @@ import ctSim.util.FmtLogger;
  */
 public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	/** Logger */
-	FmtLogger lg = FmtLogger.getLogger(
-		"ctSim.model.scene.SceneGraphStreamReaderFixed");
+	FmtLogger lg = FmtLogger.getLogger("ctSim.model.scene.SceneGraphStreamReaderFixed");
 
 	/**
 	 * @param arg0
@@ -86,9 +85,9 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 			String string = "Key ";
 			if (so != null){
 				map.put(name,so);
-				System.out.println(string+name+" rekonstruiert");
+				System.out.println(string + name + " rekonstruiert");
 			} else {
-				lg.warn(string+name+" konnte nach der Übertragung nicht " + "rekonstruiert werden");
+				lg.warn(string + name + " konnte nach der Übertragung nicht rekonstruiert werden");
 				toKill.add(name);
 			}
 		}

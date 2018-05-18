@@ -31,8 +31,9 @@ public class TimeLogger implements View {
 	/** verkürzte Ausgabe */
 	private static final String minimalMsg = "Simzeit %d ms; Armbanduhrenzeit %tT.%<tL";
 	/** komplette Ausgabe */
-	private static final String normalMsg = minimalMsg + "; Verhältnis 1 : %.3f seit letzter "
-			+ "TimeLogger-Ausgabe; 1 : %.3f seit Simulationsbeginn";
+	private static final String normalMsg = minimalMsg + "; " +
+			"Verhältnis 1 : %.3f seit letzter TimeLogger-Ausgabe; " +
+			"Verhältnis 1 : %.3f seit Simulationsbeginn";
 
 	/** Logger */
 	// sicherstellen, dass beim ersten Schritt geloggt wird:
@@ -59,7 +60,7 @@ public class TimeLogger implements View {
 	 * @see ctSim.view.View#onApplicationInited()
 	 */
 	public void onApplicationInited() {
-		lg.info("TimeLogger läuft; Simzeit und Realzeit werden " + "während der Simulation periodisch ausgegeben");
+		lg.info("TimeLogger läuft; Simzeit und Realzeit werden während der Simulation periodisch ausgegeben");
 	}
 
 	/**

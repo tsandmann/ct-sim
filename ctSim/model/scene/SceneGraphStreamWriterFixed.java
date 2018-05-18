@@ -71,7 +71,7 @@ public class SceneGraphStreamWriterFixed extends SceneGraphStreamWriter {
 			SceneGraphObject so = (SceneGraphObject)map.get(name);
 			so.setUserData(new String(name));
 			
-			System.out.println("Key "+name+" vorbereitet");
+			System.out.println("Key " + name + " vorbereitet");
 
 		}
 	}

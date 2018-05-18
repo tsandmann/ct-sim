@@ -99,13 +99,13 @@ public class TournamentPlanner {
 		ResultSet bots = db.getBotsWithBinary();
 		// Gesundheitscheck
 		if (! db.doesLevelExist(-1)) {
-			throw new IllegalStateException("Level -1 (Vorrunde) in der Datenbank nicht gefunden. "
-					+ "Vorrunde kann nicht geplant werden.");
+			throw new IllegalStateException("Level -1 (Vorrunde) in der Datenbank nicht gefunden. " +
+					"Vorrunde kann nicht geplant werden.");
 		}
 		bots.last();
 		if (bots.getRow() < 2) {
-			throw new IllegalStateException("Weniger als zwei Bots mit Binary in der Datenbank. "
-					+ "Vorrunde kann nicht geplant werden.");
+			throw new IllegalStateException("Weniger als zwei Bots mit Binary in der Datenbank. " +
+					"Vorrunde kann nicht geplant werden.");
 		}
 
 		// Hauptcode
@@ -137,14 +137,14 @@ public class TournamentPlanner {
 		// Gesundheitscheck
 		while (prelimRound.next()) {
 			if (! GameState.GAME_OVER.toString().equals(prelimRound.getString("state"))) {
-				throw new TournamentPlanException("Eines oder mehrere der Vorrundenspiele haben noch nicht "
-						+ "den Status '" + GameState.GAME_OVER + "'. Hauptrunde kann nicht geplant werden.");
+				throw new TournamentPlanException("Eines oder mehrere der Vorrundenspiele haben noch nicht den Status '" +
+						GameState.GAME_OVER + "'. Hauptrunde kann nicht geplant werden.");
 			}
 		}
 		prelimRound.last();
 		if (prelimRound.getRow() == 0) {
-			throw new IllegalStateException("Keine Vorrundenspiele in der Datenbank gefunden. "
-					+ "Hauptrunde kann nicht geplant werden.");
+			throw new IllegalStateException("Keine Vorrundenspiele in der Datenbank gefunden. " +
+					"Hauptrunde kann nicht geplant werden.");
 		}
 
 		// Hauptcode
@@ -153,21 +153,21 @@ public class TournamentPlanner {
 		while(prelimRound.next()) {
 			tree.add(prelimRound.getInt("winner"));
 			if (prelimRound.wasNull()) {
-				throw new TournamentPlanException("Eins oder mehrere der Vorrundenspiele haben winner == NULL. "
-						+ "Hauptrunde kann nicht geplant werden.");
+				throw new TournamentPlanException("Eins oder mehrere der Vorrundenspiele haben winner == NULL. " +
+						"Hauptrunde kann nicht geplant werden.");
 			}
 		}
 
 		// Gesundheitscheck
 		if (! db.doesLevelExist(0)) {
-			throw new IllegalStateException("Level 0 (Spiel um den 3. Platz) in der Datenbank nicht gefunden. "
-					+ "Planung der Hauptrunde fehlgeschlagen.");
+			throw new IllegalStateException("Level 0 (Spiel um den 3. Platz) in der Datenbank nicht gefunden. " +
+					"Planung der Hauptrunde fehlgeschlagen.");
 		}
 		for (int i = 1; i <= tree.getLowestLevelId(); i *= 2) {
 			if (! db.doesLevelExist(i)) {
-				throw new IllegalStateException(String.format("Level %d in der Datenbank nicht gefunden. "
-						+ "Für die gegebene Anzahl Spiele werden alle Levels bis inkl. %d benötigt. "
-						+ "Planung der Hauptrunde fehlgeschlagen.",
+				throw new IllegalStateException(String.format("Level %d in der Datenbank nicht gefunden. " +
+						"Für die gegebene Anzahl Spiele werden alle Levels bis inkl. %d benötigt. "	+
+						"Planung der Hauptrunde fehlgeschlagen.",
 						i, tree.getLowestLevelId()));
 			}
 		}

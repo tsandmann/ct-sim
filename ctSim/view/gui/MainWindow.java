@@ -315,7 +315,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 				updateLayout();
 
-				lg.info("Bot \""+bot+"\" wurde hinzugefügt.");
+				lg.info("Bot \"" + bot + "\" wurde hinzugefügt.");
 			}
 		});
 	}

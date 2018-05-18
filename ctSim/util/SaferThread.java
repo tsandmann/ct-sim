@@ -64,7 +64,7 @@ public abstract class SaferThread extends Thread {
 	
 	/** Thread beenden */
 	public void dispose() {
-		lg.fine("Thread "+getName()+" stirbt");
+		lg.fine("Thread " + getName() + " stirbt");
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public abstract class SaferThread extends Thread {
 	 */
 	@Override
 	public synchronized void start() {
-		lg.fine("Thread "+getName()+" startet");
+		lg.fine("Thread " + getName() + " startet");
 		super.start();
 	}
 

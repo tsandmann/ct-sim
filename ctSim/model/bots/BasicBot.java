@@ -242,7 +242,7 @@ public abstract class BasicBot implements Bot {
 		 */
     	public void processCommand(Command command) throws ProtocolException {
     		if (command.getDirection() != Command.DIR_REQUEST) {
-    			throw new ProtocolException("Kommando ist Unfug: Hat als " + "Richtung nicht 'Anfrage'; ignoriere");
+    			throw new ProtocolException("Kommando ist Unfug: Hat als Richtung nicht 'Anfrage'; ignoriere");
     		}
     		for (BotComponent<?> c : this)
     			c.offerRead(command);

@@ -121,8 +121,8 @@ public class SpreadingTree<T> {
 	public ArrayList<T> getTournamentPlan(int desiredLevelId) {
 		if (payload != null) {
 			// Wurzel ist kein innerer Knoten -> Baum hat nur einen Knoten
-			throw new IllegalStateException("Es muss mindestens zwei Spieler geben, wenn ein Turnierplan"
-					+ "erstellt werden soll");
+			throw new IllegalStateException("Es muss mindestens zwei Spieler geben, wenn ein Turnierplan" +
+					"erstellt werden soll");
 		}
 		ArrayList<T> payloads = Misc.newList();
 		levelOrder(desiredLevelId * 2, 1, payloads);

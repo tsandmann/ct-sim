@@ -185,7 +185,7 @@ public class RealCtBot extends CtBot {
 	 */
 	@Override
 	public String getDescription() {
-		return "Realer c't-Bot, verbunden über "+connectionName;
+		return "Realer c't-Bot, verbunden über " + connectionName;
 	}
 
 	/**

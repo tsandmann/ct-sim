@@ -146,8 +146,8 @@ public abstract class CtBot extends BasicBot {
 				}
 				controller.deliverMessage(cmd);
 			} else {
-				throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id=" + cmd.getTo()
-					+ ") gehen sollte. Habe aber keinen Controller!");
+				throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id=" + cmd.getTo() +
+						") gehen sollte. Habe aber keinen Controller!");
 			}
 			return true;
 		}
@@ -163,8 +163,8 @@ public abstract class CtBot extends BasicBot {
 	 */
 	public void receiveCommand(Command command) throws ProtocolException {
 		if (!command.getTo().equals(this.getId()) && !command.getTo().equals(Command.getBroadcastId()))
-			throw new ProtocolException("Bot " + getId() + " hat ein Kommando "+command.toCompactString()
-					+ " empfangen, dass nicht für ihn ist");
+			throw new ProtocolException("Bot " + getId() + " hat ein Kommando "+command.toCompactString() +
+					" empfangen, dass nicht für ihn ist");
 		
 		if (getConnection() == null) {
 			throw new ProtocolException("Bot " + getId() + " hat gar keine Connection");
