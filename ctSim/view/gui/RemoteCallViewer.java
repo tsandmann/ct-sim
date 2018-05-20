@@ -548,11 +548,11 @@ public class RemoteCallViewer extends JPanel {
 		};
 		final ComponentTable availBhvs = buildCompntTable(availM);
 
-        rcCompnt.addBehaviorListener(new Runnable1<Behavior>() {
-        	@Override
+		rcCompnt.addBehaviorListener(new Runnable1<Behavior>() {
+			@Override
 			public void run(Behavior newBehavior) {
-        		availM.addBehavior(newBehavior);
-        	}
+				availM.addBehavior(newBehavior);
+			}
         });
         availBhvs.setTableHeader(null);	// Header weg
         availBhvs.getColumnClass(getComponentCount());

@@ -106,12 +106,12 @@ public class FileIconMap implements IconProvider {
         }
     }
 
-    /**
+	/**
 	 * Ähnlich wie {@link IconProvider#get(String)}. Liefert {@code null}, falls das gewünschte Icon im
 	 * Dateisystem nicht existiert (genauer: falls es nicht existiert hat zu dem Zeitpunkt, als der Konstruktor
 	 * aufgerufen wurde).
 	 */
-    @Override
+	@Override
 	public Icon get(String key) {
         ImageIcon rv = map.get(key);
         if (rv == null) {

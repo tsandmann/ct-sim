@@ -197,19 +197,19 @@ public class ComConnection extends Connection {
 	protected Bot createBot(Command c) throws ProtocolException {
 		CtBot bot;
 		switch (c.getSubCode()) {
-    		case WELCOME_REAL:
-    			lg.fine("COM-Verbindung von realem Bot eingegangen");
-    			bot = new RealCtBot(comConnSingleton, c.getFrom(), c.getDataL());
-    			bot.addDisposeListener(new Runnable() {
-    				@Override
+			case WELCOME_REAL:
+				lg.fine("COM-Verbindung von realem Bot eingegangen");
+				bot = new RealCtBot(comConnSingleton, c.getFrom(), c.getDataL());
+				bot.addDisposeListener(new Runnable() {
+					@Override
 					public void run() {
-    					spawnThread(botReceiver);
-    				}
-    			});
-    			break;
-    		default:
-    			throw new ProtocolException(c.toString());
-    	}
+						spawnThread(botReceiver);
+					}
+				});
+				break;
+			default:
+				throw new ProtocolException(c.toString());
+		}
 
 		return bot;
 	}

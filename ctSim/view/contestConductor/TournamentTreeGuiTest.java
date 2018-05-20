@@ -158,22 +158,22 @@ public class TournamentTreeGuiTest extends JFrame {
     /** Label */
     JLabel label = new JLabel("2 Level");
 
-    /** Tests */
-    public TournamentTreeGuiTest() {
-    	setLayout(new BorderLayout());
-    	JButton her = new JButton("+");
-    	her.addActionListener(new ActionListener() {
-            @Override
+	/** Tests */
+	public TournamentTreeGuiTest() {
+		setLayout(new BorderLayout());
+		JButton her = new JButton("+");
+		her.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-	            tm.addLevel();
-	            for (int i = 0; i < t.getRowCount(); i++)
-	            	t.expandRow(i);
-	            label.setText(tm.currentLevel - 1 + " Level");
-            }
-    	});
-    	JButton weg = new JButton("\u2013");
-    	weg.addActionListener(new ActionListener() {
-    		@Override
+		        tm.addLevel();
+		        for (int i = 0; i < t.getRowCount(); i++)
+		        	t.expandRow(i);
+		        label.setText(tm.currentLevel - 1 + " Level");
+		    }
+		});
+		JButton weg = new JButton("\u2013");
+		weg.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
     			tm.removeNode();
     			for (int i = 0; i < t.getRowCount(); i++)

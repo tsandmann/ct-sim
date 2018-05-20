@@ -77,21 +77,21 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	/** Bots */
 	private final List<Bot> bots = Misc.newList();
 
-    /** Flag für Bot-Reset */
+	/** Flag für Bot-Reset */
 	private boolean reset = false;
 	
-    /**
-     * Setzt das View und initialisiert alles Nötige dafür
-     * 
-     * @param view	unser View
-     */
-    @Override
+	/**
+	 * Setzt das View und initialisiert alles Nötige dafür
+	 * 
+	 * @param view	unser View
+	 */
+	@Override
 	public void setView(View view) {
 	    this.pause = true;
-        this.view = view;
-        setJudge(Config.getValue("judge"));
-        TcpConnection.startListening(this);
-        try {
+	    this.view = view;
+	    setJudge(Config.getValue("judge"));
+	    TcpConnection.startListening(this);
+	    try {
 	        if (Config.getValue("serialport") == null) {
 	        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstützung für serielle Schnittstellen deaktiviert");
 	        } else
@@ -297,7 +297,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
 	/** Hält den Sequencer-Thread an */
-    @Override
+	@Override
 	public void closeWorld() {
     	if (sequencer == null)	// keine Welt geladen, d.h. kein Sequencer läuft
     		return;
@@ -312,13 +312,13 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     	judge.reinit();
     }
 
-    /**
-     * Verbindet zu Host:Port
-     * 
-     * @param hostname	Ziel der Verbindung (Name)
-     * @param port		Ziel der Verbindung (Port)
-     */
-    @Override
+	/**
+	 * Verbindet zu Host:Port
+	 * 
+	 * @param hostname	Ziel der Verbindung (Name)
+	 * @param port		Ziel der Verbindung (Port)
+	 */
+	@Override
 	public void connectToTcp(String hostname, String port) {
     	int p = 10002;
     	try {
@@ -329,12 +329,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     	}
     }
 
-    /** Fügt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu */
-    @Override
+	/** Fügt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu */
+	@Override
 	public void addTestBot() {
-    	if (sequencer == null) {
-    		try {
-    			InputStream openStream;
+		if (sequencer == null) {
+			try {
+				InputStream openStream;
 				openStream = ClassLoader.getSystemResource("parcours/testbots_home.xml").openStream();
 	    		BufferedReader in = new BufferedReader(new InputStreamReader(openStream));
 	    	    String line;
@@ -472,12 +472,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         return world.getFutureNumOfBots();
     }
 
-    /**
-     * @param judgeClassName	die Art des zu setzenden Schiedsrichters
-     * 
-     * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist.
-     */
-    @Override
+	/**
+	 * @param judgeClassName	die Art des zu setzenden Schiedsrichters
+	 * 
+	 * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist.
+	 */
+	@Override
 	public void setJudge(String judgeClassName) {
     	/* kein Jugde-Wechsel wenn eine Welt offen ist */
     	if (sequencer != null) {
@@ -500,25 +500,25 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         setJudge(j);	// wird nur erreicht, wenn der try-Block geklappt hat
     }
 
-    /**
-     * Setzt den Schiedsrichter
-     * 
-     * @param judge	gewünschte Judge-Instanz
-     */
-    @Override
+	/**
+	 * Setzt den Schiedsrichter
+	 * 
+	 * @param judge	gewünschte Judge-Instanz
+	 */
+	@Override
 	public void setJudge(Judge judge) {
     	if (judge == null)
             throw new NullPointerException();
         this.judge = judge;
 //      view.onJudgeSet(judge);
     }
-    
-    /**
-     * Lädt eine Welt aus einer Datei
-     * 
-     * @param sourceFile	File-Objekt der Welt
-     */
-    @Override
+
+	/**
+	 * Lädt eine Welt aus einer Datei
+	 * 
+	 * @param sourceFile	File-Objekt der Welt
+	 */
+	@Override
 	public void openWorldFromFile(File sourceFile) {
         try {
             setWorld(World.buildWorldFromFile(sourceFile));
@@ -527,12 +527,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         }
     }
 
-    /**
-     * Lädt eine Welt aus einem String
-     * 
-     * @param parcoursAsXml	String mit den XML-Dater der Welt
-     */
-    @Override
+	/**
+	 * Lädt eine Welt aus einem String
+	 * 
+	 * @param parcoursAsXml	String mit den XML-Dater der Welt
+	 */
+	@Override
 	public void openWorldFromXmlString(String parcoursAsXml) {
         try {
             setWorld(World.buildWorldFromXmlString(parcoursAsXml));
@@ -541,8 +541,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         }
     }
 
-    /** Erzeugt eine zufällige Welt */
-    @Override
+	/** Erzeugt eine zufällige Welt */
+	@Override
 	public void openRandomWorld() {
         try {
             String p = ParcoursGenerator.generateParc();
@@ -553,19 +553,19 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         }
     }
 
-    /** Init-Handler */
-    @Override
+	/** Init-Handler */
+	@Override
 	public void onApplicationInited() {
         view.onApplicationInited();
     }
     
         
-    /**
-     * Setzt alle Bots im nächsten Sim-Schritt zurück.
-     * Dadurch, dass hier nur das Reset-Flag gesetzt wird, erübrigt sich das Synchronisieren der
-     * (Bot-)Threads; der Reset erfolgt einfach beim nächsten Zeitschritt.
-     */
-    @Override
+	/**
+	 * Setzt alle Bots im nächsten Sim-Schritt zurück.
+	 * Dadurch, dass hier nur das Reset-Flag gesetzt wird, erübrigt sich das Synchronisieren der
+	 * (Bot-)Threads; der Reset erfolgt einfach beim nächsten Zeitschritt.
+	 */
+	@Override
 	public void resetAllBots() {
     	this.reset = true;
     }
