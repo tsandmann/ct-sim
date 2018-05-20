@@ -156,8 +156,7 @@ public abstract class BotComponent<M> {
 	 * @return Exception
 	 */
 	private UnsupportedOperationException createUnsuppOp(String s) {
-		return new UnsupportedOperationException("Bot-Komponente "+this+
-			" unterstützt kein "+s);
+		return new UnsupportedOperationException("Bot-Komponente " + this + " unterstützt kein " + s);
 	}
 
 	/**

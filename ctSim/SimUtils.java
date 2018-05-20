@@ -41,8 +41,7 @@ public class SimUtils {
 	 * @return die Gradzahl als String
 	 */
 	public static String vec3dToString(Vector3d vec) {
-		return Integer.valueOf(Math.round(Math.round(vec3dToDouble(vec))))
-				.toString();
+		return Integer.valueOf(Math.round(Math.round(vec3dToDouble(vec)))).toString();
 	}
 
 	/**

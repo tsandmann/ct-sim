@@ -58,8 +58,8 @@ public abstract class ConductorTestUtil {
 	 * @throws SQLException
 	 */
 	protected void makeBot(int id, String name) throws SQLException {
-		getDbFromChildClass().execSql("insert into ctsim_bot (id, name, team, bin) "
-				+ "values (?, ?, ?, ?)", id, name, 42, "wurst");
+		getDbFromChildClass().execSql("insert into ctsim_bot (id, name, team, bin) " +
+				"values (?, ?, ?, ?)", id, name, 42, "wurst");
 	}
 
 	/**
@@ -80,8 +80,8 @@ public abstract class ConductorTestUtil {
 	 * @throws SQLException
 	 */
 	protected void makeLevel(int levelId, int gametime_real) throws SQLException {
-		getDbFromChildClass().execSql("insert into ctsim_level (id, gametime_real) values ("
-				+ levelId + ", " + gametime_real + ")");
+		getDbFromChildClass().execSql("insert into ctsim_level (id, gametime_real) values (" +
+				levelId + ", " + gametime_real + ")");
 	}
 
 	/**
@@ -93,8 +93,8 @@ public abstract class ConductorTestUtil {
 	 * @throws SQLException
 	 */
 	protected void makePrelimGame(int i, GameState state, int finishtime) throws SQLException {
-		getDbFromChildClass().execSql("insert into ctsim_game " + "(level, game, bot1, state, finishtime) "
-				+ "values (?, ?, ?, ?, ?)", -1, i, i, state, finishtime);
+		getDbFromChildClass().execSql("insert into ctsim_game (level, game, bot1, state, finishtime) " +
+				"values (?, ?, ?, ?, ?)", -1, i, i, state, finishtime);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public abstract class ConductorTestUtil {
 	 * @throws SQLException
 	 */
 	protected void makePrelimGame(int i, GameState state, int winner, int finishtime) throws SQLException {
-		getDbFromChildClass().execSql("insert into ctsim_game " + "(level, game, bot1, state, winner, finishtime) "
-				+ "values (?, ?, ?, ?, ?, ?)", -1, i, i, state, winner, finishtime);
+		getDbFromChildClass().execSql("insert into ctsim_game (level, game, bot1, state, winner, finishtime) " +
+				"values (?, ?, ?, ?, ?, ?)", -1, i, i, state, winner, finishtime);
 	}
 }

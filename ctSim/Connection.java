@@ -176,8 +176,8 @@ public abstract class Connection {
 						receiver.onBotAppeared(createBot(cmd));
 						return;	// Erfolg
 					} else {
-						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot läuft schon oder ist "
-										+ "veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
+						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot läuft schon oder ist " +
+								"veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
 						continue;	// Handshake nochmal versuchen
 					}
 				} catch (ProtocolException e) {

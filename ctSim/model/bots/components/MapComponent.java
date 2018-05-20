@@ -118,16 +118,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		try {
 			size = Float.parseFloat(size_str);
 		} catch (NumberFormatException exc) {
-			lg.warning(exc, "Problem beim Parsen der Konfiguration: "
-					+ "Parameter 'mapSize' ist keine gültige Map-Größe!");
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
+					"Parameter 'mapSize' ist keine gültige Map-Größe!");
 		}
 		String resolution_str = Config.getValue("mapResolution");
 		int resolution = 0;
 		try {
 			resolution = Integer.parseInt(resolution_str);
 		} catch (NumberFormatException exc) {
-			lg.warning(exc, "Problem beim Parsen der Konfiguration: "
-					+ "Parameter 'mapResolution' ist keine gültige Map-Größe!");
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
+					"Parameter 'mapResolution' ist keine gültige Map-Größe!");
 		}
 		size *= resolution;
 		
@@ -136,8 +136,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		try {
 			section_size = Integer.parseInt(section_size_str);
 		} catch (NumberFormatException exc) {
-			lg.warning(exc, "Problem beim Parsen der Konfiguration: "
-					+ "Parameter 'mapSectionSize' ist keine gültige Sektionsgröße!");
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
+					"Parameter 'mapSectionSize' ist keine gültige Sektionsgröße!");
 		}
 		
 		String makroblock_size_str = Config.getValue("mapMacroblockSize");
@@ -145,8 +145,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		try {
 			makroblock_size = Integer.parseInt(makroblock_size_str);
 		} catch (NumberFormatException exc) {
-			lg.warning(exc, "Problem beim Parsen der Konfiguration: "
-					+ "Parameter 'mapMacroblockSize' ist keine gültige Sektionsgröße!");
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
+					"Parameter 'mapMacroblockSize' ist keine gültige Sektionsgröße!");
 		}
 		
 		WIDTH = (int) size;
@@ -164,16 +164,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			pixels[i] = color;
 		}
 		int tmp = 500;
-        try {
-        	tmp = Integer.parseInt(Config.getValue("MapUpdateIntervall"));
-        } catch(NumberFormatException exc) {
-            lg.warning(exc, "Problem beim Parsen der Konfiguration: "
-                    + "Parameter 'MapUpdateIntervall' ist keine Ganzzahl");
-        } finally {
-        	updateIntervall = tmp;
-        }
-        lg.fine("MapUpdateIntervall=" + updateIntervall + " ms");
-        
+		try {
+			tmp = Integer.parseInt(Config.getValue("MapUpdateIntervall"));
+		} catch(NumberFormatException exc) {
+			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
+					"Parameter 'MapUpdateIntervall' ist keine Ganzzahl");
+		} finally {
+			updateIntervall = tmp;
+		}
+		lg.fine("MapUpdateIntervall=" + updateIntervall + " ms");
+
 		memImage = new MemoryImageSource(WIDTH, HEIGHT, pixels, 0, WIDTH);
 		memImage.setAnimated(true);
 		image = Toolkit.getDefaultToolkit().createImage(memImage);
@@ -576,7 +576,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		/* Pixel kopieren */
 		int[] map = new int[width * height];
 		for (int y = min_y + 1; y < max_y + SECTION_SIZE * 2; ++y) {	// Zeilen
-			System.arraycopy(pixels, min_x + 1 + y * WIDTH, map, (y - min_y - 1) * width, width);	// alle Spalten einer Zeile
+			System.arraycopy(pixels, min_x + 1 + y * WIDTH, map, (y - min_y - 1) * width, width);
+				// alle Spalten einer Zeile
 		}
 		
 		/* Bild zeichnen und als png speichern */

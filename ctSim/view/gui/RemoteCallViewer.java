@@ -87,7 +87,7 @@ public class RemoteCallViewer extends JPanel {
 					label = p.name;
 
 				// nach links hin ein bisschen Platz, mit der Low-tech-Methode
-				JLabel jl = new JLabel("   "+label+" =");
+				JLabel jl = new JLabel("   " + label + " =");
 				jl.setToolTipText(tooltip);
 				add(jl);
 				JSpinner js = new JSpinner(p);
@@ -299,7 +299,7 @@ public class RemoteCallViewer extends JPanel {
 
 			/** Löschen-Button */
 			public DeleteButton() {
-				setIcon(Config.getIcon("schließen-hover"));
+				setIcon(Config.getIcon("schliessen-hover"));
 				addActionListener(this);
 
 				setMaximumSize(new Dimension(24, 24));
@@ -330,8 +330,8 @@ public class RemoteCallViewer extends JPanel {
 						return;
 					}
 				}
-				throw new IllegalStateException("Interner Fehler (Selbstfindungsproblem): "
-						+ "Löschen-Knopf funktioniert nicht");
+				throw new IllegalStateException("Interner Fehler (Selbstfindungsproblem): " +
+						"Löschen-Knopf funktioniert nicht");
 			}
 
 			/**
@@ -524,8 +524,8 @@ public class RemoteCallViewer extends JPanel {
 			rcCompnt.listRemoteCalls();
 			this.listReceived = true;
 		} catch (IOException e) {
-			lg.warn(e, "E/A-Problem aufgetreten, als die Anforderung der Remote-Call-Liste gesendet wurde; "
-					+ "unklar ob das jetzt funktioniert mit den Remote-Calls");
+			lg.warn(e, "E/A-Problem aufgetreten, als die Anforderung der Remote-Call-Liste gesendet wurde; " +
+					"unklar ob das jetzt funktioniert mit den Remote-Calls");
 		}
 	}
 

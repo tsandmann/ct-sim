@@ -110,7 +110,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 			
 	/** Klappenzustand des Bots */
 		DOOR_OPEN(0x003, "door_open",
-			"Klappe ist nun geoeffnet",
+			"Klappe ist nun geöffnet",
 			"Klappe ist nun geschlossen"),
 
 		/**
@@ -264,7 +264,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		 */
 		@Override
 		public String getName() {
-			return coord +" [mm]";
+			return coord + " [mm]";
 		}
 
 		/**
@@ -741,12 +741,10 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 *
 	 * </p>
 	 * <p>
-	 * Liefert den Winkel zwischen positiver y-Achse der Welt und
-	 * übergebenem Vektor. Ergebnis ist im Bogenmaß und liegt im
-	 * Intervall ]-π; +π]. Gemessen im Gegenuhrzeigersinn
-	 * ("mathematisch positiver Drehsinn"), d.h. positive Winkel liegen links,
-	 * wenn man in Richtung der y-Achse guckt. Ein Vektor, der exakt in Richtung
-	 * der negativen y-Achse zeigt, produziert +π als Ergebnis.
+	 * Liefert den Winkel zwischen positiver y-Achse der Welt und übergebenem Vektor. Ergebnis ist im Bogenmaß
+	 * und liegt im Intervall ]-π; +π]. Gemessen im Gegenuhrzeigersinn ("mathematisch positiver Drehsinn"),
+	 * d.h. positive Winkel liegen links, wenn man in Richtung der y-Achse guckt. Ein Vektor, der exakt in
+	 * Richtung der negativen y-Achse zeigt, produziert +π als Ergebnis.
 	 * </p>
 	 * 
 	 * @param v	Vektor
@@ -870,12 +868,12 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/** Implementiert Bug 39 (http://www.heise.de/trac/ctbot/ticket/39) */
 	private void dieOrHalt() {
 		String eh = Config.getValue("simBotErrorHandling");
-		String warning = toString()+" hat ein E/A-Problem: " + "Bot-Code ist wohl abgestuerzt; ";
+		String warning = toString() + " hat ein E/A-Problem: Bot-Code ist wohl abgestürzt; ";
 		if ("kill".equals(eh)) {
-			lg.warn(warning+"entferne Bot");
+			lg.warn(warning + "entferne Bot");
 			dispose();
 		} else if ("halt".equals(eh)) {
-			lg.warn(warning+"Bot ist steckengeblieben");
+			lg.warn(warning + "Bot ist steckengeblieben");
 			set(HALTED);
 		}
 	}
@@ -915,7 +913,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * Diese Methode wird von außen aufgerufen und erledigt die Aktualisierung der Simulation:
 	 * Bot-Position weitersetzen je nach dem, wie schnell die Motoren gerade drehen usw.
 	 *
-	 * @param simTimeInMs	aktuelle Simulation in Millisekunden
+	 * @param simTimeInMs	aktuelle Simulationszeit in Millisekunden
 	 */
 	public void updateSimulation(long simTimeInMs) {
 		if (is(HALTED)) {	// Fix für Bug 44

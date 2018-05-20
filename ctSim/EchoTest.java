@@ -69,11 +69,11 @@ public class EchoTest {
 				if (command.getDataL() == lastTransmittedSimulTime)
 					run=1;
 			
-			System.out.println("habe auf Kommando "+(char)command.getCommand()+" "+duration+" usec gewartet");
+			System.out.println("habe auf Kommando " + (char)command.getCommand() + " " + duration + " usec gewartet");
 		}
 		
 		t2 = System.nanoTime()/1000;
-		System.out.println("Zeit in receiveCommands: "+(t2-t1)+" us -- Zeit außerhalb :"+aussen+ " us" );
+		System.out.println("Zeit in receiveCommands: " + (t2-t1) + " us -- Zeit außerhalb :" + aussen + " us" );
 	}	
 	
 	/**

@@ -359,8 +359,7 @@ public class MapViewer extends JPanel {
 		@Override
 		public Dimension getPreferredSize() {
 			Insets is = getBorder().getBorderInsets(this);
-			return new Dimension(targetWidth  + is.left + is.right,
-			                     targetHeight + is.top  + is.bottom);
+			return new Dimension(targetWidth  + is.left + is.right, targetHeight + is.top  + is.bottom);
 		}
 	}
 

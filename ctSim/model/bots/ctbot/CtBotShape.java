@@ -151,7 +151,7 @@ public class CtBotShape extends Group {
          */
         public GeometryArray toLineGeometry() {
             LineStripArray a = new LineStripArray(size(), GeometryArray.COORDINATES, new int[] { size() });
-			a.setCoordinates(0, toArray(new Point3d[] { /* No-op */ }));
+			a.setCoordinates(0, toArray(new Point3d[] {}));
 			return a;
         }
 
@@ -161,7 +161,7 @@ public class CtBotShape extends Group {
          */
         public GeometryArray toGeometry(int geometryInfoPrimitive) {
             GeometryInfo gi = new GeometryInfo(geometryInfoPrimitive);
-            gi.setCoordinates(toArray(new Point3d[] { /* No-op */ }));
+            gi.setCoordinates(toArray(new Point3d[] {}));
             gi.setStripCounts(new int[] { size() });
 
             // noch ein paar Beschwörungsformeln, unklar warum...

@@ -104,8 +104,8 @@ public class ContestConductor implements View {
 			try {
 				return isAnyoneOnFinishTile() || isGameTimeoutElapsed();
 			} catch (NullPointerException e) {
-				concon.lg.severe(e, "Inkonsistenter Zustand: "
-						+ "Es läuft laut Datenbank kein Spiel, laut Controller aber schon");
+				concon.lg.severe(e, "Inkonsistenter Zustand: Es läuft laut Datenbank kein Spiel, " +
+						"laut Controller aber schon");
 				assert false;
 			} catch (SQLException e) {
 				concon.lg.severe(e, "Low-Level-Datenbankproblem");
@@ -488,8 +488,8 @@ public class ContestConductor implements View {
 	 * @param f
 	 */
 	private void executeBot(File f){
-		String host = Config.getValue("host"+nextHost);
-		String user = Config.getValue("host"+nextHost+"_username");
+		String host = Config.getValue("host" + nextHost);
+		String user = Config.getValue("host" + nextHost + "_username");
 
 		String server = Config.getValue("ctSimIP");
 		if (server == null)
@@ -500,18 +500,17 @@ public class ContestConductor implements View {
 		 * sonst lokal
 		 */
 		if ((user == null) || (host == null)){
-			lg.fine("Host oder Username für Remote-Ausführung " + "(Rechner " + nextHost
-					+ ") nicht gesetzt. Starte lokal");
+			lg.fine("Host oder Username für Remote-Ausführung (Rechner " + nextHost + ") nicht gesetzt. Starte lokal");
 			// Datei ausführen und warten bis auf den neuen Bot hingewiesen wird
 			controller.invokeBot(f);
 		} else {
 			try {
-				execute("scp "+f.getAbsolutePath()+" "+user+"@"+host+":. ").waitFor();
-				execute("ssh "+user+"@"+host+" chmod u+x "+f.getName()).waitFor();
-				execute("ssh "+user+"@"+host+" ./"+f.getName()+" -t "+server);
+				execute("scp " + f.getAbsolutePath() + " " + user + "@" + host + ":. ").waitFor();
+				execute("ssh " + user + "@" + host + " chmod u+x " + f.getName()).waitFor();
+				execute("ssh " + user + "@" + host + " ./" + f.getName() + " -t " + server);
 			} catch (Exception e) {
-				lg.warn(e, "Probleme beim Remote-Starten von Bot: "+ f.getAbsolutePath()
-					+ " auf Rechner: " + user + "@" + host);
+				lg.warn(e, "Probleme beim Remote-Starten von Bot: " + f.getAbsolutePath() + " auf Rechner: " +
+						user + "@" + host);
 			}
 		}
 
@@ -535,7 +534,7 @@ public class ContestConductor implements View {
 			new File(Config.getValue("contestBotTargetDir")));
 		f.deleteOnExit();
 		// //$$ deleteOnExit() scheint nicht zu klappen; Theorie:Prozesse noch offen wenn VM das aufrufen will
-		lg.fine("Schreibe Bot nach '"+f.getAbsolutePath()+"'");
+		lg.fine("Schreibe Bot nach '" + f.getAbsolutePath() + "'");
 		Misc.copyStreamToStream(b.getBinaryStream(), new FileOutputStream(f));
 
 		// Datei ausführen und warten bis auf den neuen Bot hingewiesen wird
@@ -546,8 +545,8 @@ public class ContestConductor implements View {
 				try {
 					botArrivalLock.wait();
 				} catch (InterruptedException e) {
-					lg.fine(e, "Wurde aufgeweckt. Kommt nur unter seltsamen Umständen vor, "
-							+ "aber für sich allein unkritisch. Schlafe weiter.");
+					lg.fine(e, "Wurde aufgeweckt. Kommt nur unter seltsamen Umständen vor, " +
+							"aber für sich allein unkritisch. Schlafe weiter.");
 				}
 			}
 		}
@@ -558,7 +557,7 @@ public class ContestConductor implements View {
 				BotView.remove(rv);
 			}
 		});
-		lg.fine("Gestarteter Bot '"+rv+"' ist korrekt angemeldet; " + "Go für ContestConductor");
+		lg.fine("Gestarteter Bot '" + rv + "' ist korrekt angemeldet; Go für ContestConductor");
 		newlyArrivedBot = null;
 		return rv;
 	}
@@ -596,7 +595,7 @@ public class ContestConductor implements View {
 		game.next();
 		int gameId  = game.getInt("game");
 		int levelId = game.getInt("level");
-		lg.info("Starte Spiel; Level %d, Spiel %d, Bots %s (\"%s\") und %s " + "(\"%s\"), geplante Startzeit %s",
+		lg.info("Starte Spiel; Level %d, Spiel %d, Bots %s (\"%s\") und %s (\"%s\"), geplante Startzeit %s",
 			levelId, gameId,
 			game.getString("bot1"), db.getBotName(game.getInt("bot1")),
 			game.getString("bot2"), db.getBotName(game.getInt("bot2")),

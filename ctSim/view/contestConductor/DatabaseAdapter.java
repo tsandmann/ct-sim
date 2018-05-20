@@ -339,14 +339,10 @@ class DatabaseAdapter {
 
     	// Bots aktualisieren
     	if (bot1Id == null) {
-    		execSql("UPDATE ctsim_game " +
-    				"SET bot1 = ?, state = ? " +
-    				"WHERE level = ? AND game = ?",
+    		execSql("UPDATE ctsim_game SET bot1 = ?, state = ? WHERE level = ? AND game = ?",
     				botId, GameState.WAITING_FOR_BOT2, levelId, gameId);
     	} else if (bot2Id == null) {
-    		execSql("UPDATE ctsim_game " +
-    				"SET bot2 = ?, state = ? " +
-    				"WHERE level = ? AND game = ?",
+    		execSql("UPDATE ctsim_game SET bot2 = ?, state = ? WHERE level = ? AND game = ?",
     				botId, GameState.READY_TO_RUN, levelId, gameId);
     	} else {
     		throw new TournamentPlanException(

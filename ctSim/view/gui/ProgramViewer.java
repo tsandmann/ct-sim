@@ -194,7 +194,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 				programText.setText(data);
 				lg.info("Programm aus Datei " + f.getAbsolutePath() + " geladen (" + f.length() + " Byte)");
 			} catch (IOException e) {
-				lg.warn(e, "E/A-Problem beim Laden der Daten; " + "ignoriere");
+				lg.warn(e, "E/A-Problem beim Laden der Daten; ignoriere");
 			}
 		}
 	};	
@@ -222,7 +222,7 @@ public class ProgramViewer extends JPanel implements ActionListener {
 				lg.info("Programm in Datei " + f.getAbsolutePath() + " geschrieben (" + f.length() + " Byte)");
 				out.close();
 			} catch (IOException e) {
-				lg.warn(e, "E/A-Problem beim Schreiben der Daten; " + "ignoriere");
+				lg.warn(e, "E/A-Problem beim Schreiben der Daten; ignoriere");
 			}
 		}
 	};
@@ -290,8 +290,8 @@ public class ProgramViewer extends JPanel implements ActionListener {
 			if (programText.getText().length() == 0) {
 				setExampleProgram();
 			} else {
-				if (JOptionPane.showConfirmDialog(null, "Es sind bereits Programmdaten im Fenster vorhanden. Sollen " + 
-						"diese überschrieben werden?", "Hey!", JOptionPane.YES_NO_OPTION) == 0) {
+				if (JOptionPane.showConfirmDialog(null, "Es sind bereits Programmdaten im Fenster vorhanden. " +
+						"Sollen diese überschrieben werden?", "Hey!", JOptionPane.YES_NO_OPTION) == 0) {
 					setExampleProgram();
 				}
 			}
@@ -332,11 +332,11 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	    group.add(typeBasic);
 		
 		/* Buttons bauen */
-		JButton load = new Button("Laden  ", "Programm aus einer Textdatei laden. "
-				+ "Voreingestelltes Bot-Verzeichnis wie in Konfig-Datei angegeben.",
+		JButton load = new Button("Laden  ", "Programm aus einer Textdatei laden. " +
+				"Voreingestelltes Bot-Verzeichnis wie in Konfig-Datei angegeben.",
 				Config.getIcon("Open16"), onLoad);
-		JButton save = new Button("Speichern  ", "Programm in eine Textdatei speichern. "
-				+ "Voreingestelltes Bot-Verzeichnis wie in Konfig-Datei angegeben.",
+		JButton save = new Button("Speichern  ", "Programm in eine Textdatei speichern. " +
+				"Voreingestelltes Bot-Verzeichnis wie in Konfig-Datei angegeben.",
 				Config.getIcon("Save16"), onSave);
 		exmplABL = new Button("ABL-Beispiel  ",	"Erzeugt ein kleines Beispiel-ABL-Programm",
 				Config.getIcon("New16"), onExmplAbl);
@@ -390,20 +390,20 @@ public class ProgramViewer extends JPanel implements ActionListener {
 		
 		/* Gesamtgröße setzen */
 		JScrollPane s = new JScrollPane(programText);
-		int edit_w = getInsets().left + s.getInsets().left + s.getPreferredSize().width + s.getInsets().right
-				+ getInsets().right + 20;	// scrollbar-width == 20
-		int h = getInsets().top + s.getInsets().top + s.getPreferredSize().height + s.getInsets().bottom
-				+ getInsets().bottom +	toolbars.getPreferredSize().height;
+		int edit_w = getInsets().left + s.getInsets().left + s.getPreferredSize().width + s.getInsets().right +
+				getInsets().right + 20;	// scrollbar-width == 20
+		int h = getInsets().top + s.getInsets().top + s.getPreferredSize().height + s.getInsets().bottom +
+				getInsets().bottom +	toolbars.getPreferredSize().height;
 		
-		int toolbar_w = getInsets().left + toolbars.getInsets().left + toolbars.getPreferredSize().width
-				+ toolbars.getInsets().right + getInsets().right;
+		int toolbar_w = getInsets().left + toolbars.getInsets().left + toolbars.getPreferredSize().width +
+				toolbars.getInsets().right + getInsets().right;
 		
 		setPreferredSize(new Dimension(Math.max(edit_w, toolbar_w), h));
 		
-		int min_w = getInsets().left + toolbars.getInsets().left + toolbar_w + toolbars.getInsets().right
-				+ getInsets().right;
-		int min_h = getInsets().top + s.getInsets().top + s.getMinimumSize().height + s.getInsets().bottom
-				+ getInsets().bottom +	toolbars.getPreferredSize().height;
+		int min_w = getInsets().left + toolbars.getInsets().left + toolbar_w + toolbars.getInsets().right +
+				getInsets().right;
+		int min_h = getInsets().top + s.getInsets().top + s.getMinimumSize().height + s.getInsets().bottom +
+				getInsets().bottom +	toolbars.getPreferredSize().height;
 		
 		setMinimumSize(new Dimension(min_w, min_h + 60));
 

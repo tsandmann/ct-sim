@@ -260,7 +260,7 @@ public class Characteristic {
 	private void printLookup() {
 		System.out.println("Lookup-Table");
 		for (int i = 0; i < lookup.length; i++) {
-			System.out.println("Zeile\t" + i + "\t" + lookup[i]+ "\t" + intLookup[i]);
+			System.out.println("Zeile\t" + i + "\t" + lookup[i] + "\t" + intLookup[i]);
 		}
 	}
 

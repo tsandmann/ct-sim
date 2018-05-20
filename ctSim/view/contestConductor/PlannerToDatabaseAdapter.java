@@ -75,7 +75,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void createPrelimGame(int gameId, int player1botId)
 	throws SQLException {
-		execSql("INSERT INTO ctsim_game " + "(level, game, bot1, state) " + "VALUES (?, ?, ?, ?);",
+		execSql("INSERT INTO ctsim_game (level, game, bot1, state) VALUES (?, ?, ?, ?);",
 				-1, gameId, player1botId, GameState.READY_TO_RUN);
 	}
 
@@ -90,7 +90,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void createMainGame(int levelId, int gameId)
 	throws SQLException {
-		execSql("INSERT INTO ctsim_game " + "(level, game, state) " + "VALUES (?, ?, ?);",
+		execSql("INSERT INTO ctsim_game (level, game, state) VALUES (?, ?, ?);",
 				levelId, gameId, GameState.NOT_INITIALIZED);
 	}
 
@@ -124,8 +124,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 */
 	public void scheduleGame(int levelId, int gameId, Timestamp time)
 	throws SQLException {
-		execSql("UPDATE ctsim_game " + "SET scheduled='" + time + "' " + "WHERE level =" + levelId
-				+ " AND game = " + gameId);
+		execSql("UPDATE ctsim_game SET scheduled='" + time + "' WHERE level =" + levelId + " AND game = " + gameId);
 	}
 
 	/**
@@ -149,6 +148,6 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @throws SQLException 
      */
     public ResultSet getGames(int levelId, String sortKey) throws SQLException {
-    	return execSql("SELECT * FROM ctsim_game" + " WHERE level = ? " + " ORDER BY " + sortKey, levelId);
+    	return execSql("SELECT * FROM ctsim_game WHERE level = ? ORDER BY " + sortKey, levelId);
     }
 }

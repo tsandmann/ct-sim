@@ -89,8 +89,8 @@ public class ScreenshotUploadTool {
 
         File dir = new File(".");
         int len = dir.list().length;
-        System.out.println("Eiere durch Verzeichnis " + dir.getAbsolutePath() + " ("
-        		+ len + " Sache" + (len == 1 ? "" : "n") +" drin)");
+        System.out.println("Eiere durch Verzeichnis " + dir.getAbsolutePath() +
+        		" (" + len + " Sache" + (len == 1 ? "" : "n") +" drin)");
         for (File f : dir.listFiles()) {
         	String name = f.getName();
         	if (! name.endsWith(".png") || ! name.matches(".*\\d.*"))

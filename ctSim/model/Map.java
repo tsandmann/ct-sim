@@ -195,7 +195,7 @@ public class Map {
 		int mb_index_x = x / macroblock_length;
 		int mb_index_y = y / macroblock_length;
 		if (mb_index_x >= this.macroblocks.length || mb_index_y >= this.macroblocks.length) {
-			throw new MapException("Zugriff auf ein Feld ausserhalb der Karte");
+			throw new MapException("Zugriff auf ein Feld außerhalb der Karte");
 		}
 		
 		int s_index_x = x % macroblock_length;
@@ -245,14 +245,13 @@ public class Map {
 		if (parcours.getHeightInM() > this.size
 				|| parcours.getHeightInM() > this.size) {
 			/* Parcours ist zu groß */
-			throw new MapException("Parcours " + parcours
-					+ " ist zu gross, max " + this.size + " m x " + this.size
-					+ " m möglich");
+			throw new MapException("Parcours " + parcours + " ist zu groß, max " + this.size + " m x " +
+					this.size + " m möglich");
 		}
 
 		if (bot >= Parcours.BOTS) {
 			/* ungültige Bot-Nr. */
-			throw new MapException("Bot-Nr. ist zu gross");
+			throw new MapException("Bot-Nr. ist zu groß");
 		}
 
 		int simpleParcours[][] = parcours.getFlatParcoursWithHoles();
@@ -288,8 +287,7 @@ public class Map {
 					break;
 				default:
 					/* Fehler */
-					throw new MapException(
-							"Unbekannte Daten im Simple-Parcours");
+					throw new MapException("Unbekannte Daten im Simple-Parcours");
 				}
 				for (int i = 0; i < parcours.getBlockSizeInMM(); i += 1000 / this.resolution) {
 					int map_x = world_to_map(world_length_x - (world_x + i)); // an Y-Achse spiegeln
@@ -303,7 +301,7 @@ public class Map {
 	}
 	
 	/**
-	 * Trägt die Daten eines Parcours in die Karte ein. Als Urpsrung wird das Startfeld 
+	 * Trägt die Daten eines Parcours in die Karte ein. Als Ursprung wird das Startfeld 
 	 * des angegebenen Bots verwendet.
 	 * 
 	 * @param parcours	zu verwendender Parcours
@@ -312,8 +310,7 @@ public class Map {
 	 * @param occupied	Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
 	 * @throws MapException	im Fehlerfall
 	 */
-	public void createFromParcours(Parcours parcours, Bot bot, int free,
-			int occupied) throws MapException {
+	public void createFromParcours(Parcours parcours, Bot bot, int free, int occupied) throws MapException {
 
 		int bot_nr = parcours.getStartPositionNumber(bot);
 		createFromParcours(parcours, bot_nr, free, occupied);

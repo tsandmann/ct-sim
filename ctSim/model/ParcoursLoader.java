@@ -696,7 +696,8 @@ public class ParcoursLoader {
 	 * @throws IOException
 	 * @throws ParserConfigurationException 
 	 */
-	public void loadParcours(InputSource source, EntityResolver resolver) throws SAXException, IOException, ParserConfigurationException {
+	public void loadParcours(InputSource source, EntityResolver resolver)
+			throws SAXException, IOException, ParserConfigurationException {
 		// Ein DocumentBuilder liest ein XML-File ein
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder;

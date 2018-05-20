@@ -110,14 +110,13 @@ public class SimBotTcpDump {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.err.println("\nThread " + getName().trim() + " dying; " +
-					"killing peer");
+			System.err.println("\nThread " + getName().trim() + " dying; killing peer");
 
 			peer.deathRequested = true;
 			peer.interrupt();
 			// rabiater, aber interrupt() zeigt vielleicht keine Wirkung
-			try { peer.from.close(); } catch (IOException e) { /* No-op */ }
-			try { peer.to.close(); } catch (IOException e) { /* No-op */ }
+			try { peer.from.close(); } catch (IOException e) { /* ... */ }
+			try { peer.to.close(); } catch (IOException e) { /* ... */ }
 		}
 	}
 }

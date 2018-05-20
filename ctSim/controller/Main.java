@@ -178,16 +178,13 @@ public class Main {
 			Config.loadConfigFile(DEFAULT_CONFIGFILE);
 			return;
 		} catch (FileNotFoundException e) {
-			lg.severe(e, "Konfigurationsdatei '"+DEFAULT_CONFIGFILE+"' nicht gefunden");
+			lg.severe(e, "Konfigurationsdatei '" + DEFAULT_CONFIGFILE + "' nicht gefunden");
 		} catch (SAXException e) {
-			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
-				DEFAULT_CONFIGFILE);
+			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
 		} catch (IOException e) {
-			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'",
-				DEFAULT_CONFIGFILE);
+			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
 		} catch (ParserConfigurationException e) {
-			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
-				DEFAULT_CONFIGFILE);
+			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
 		}
 	}
 
@@ -211,7 +208,7 @@ public class Main {
 			if (Config.getValue("useContestConductor").equalsIgnoreCase("true"))
 				v.add(dependencies.get(ContestConductor.class));
 		} catch (Exception e) {
-			lg.warn(e, "Probleme beim Instanziieren des ContestConductor; " + "starte ohne");
+			lg.warn(e, "Probleme beim Instanziieren des ContestConductor; starte ohne");
 		}
 
 		if (Config.getValue("TimeLogger").equalsIgnoreCase("true"))

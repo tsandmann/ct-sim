@@ -129,7 +129,7 @@ public class Misc {
 	 * @param stuff
 	 * @return T
 	 */
-    public static <T> T[] intersperse(T separator, T... stuff) {
+	public static <T> T[] intersperse(T separator, T... stuff) {
 		T[] rv = (T[])Array.newInstance(separator.getClass(), stuff.length * 2 - 1);
 		for (int i = 0; i < stuff.length; i++) {
 			rv[i * 2] = stuff[i];
@@ -159,7 +159,7 @@ public class Misc {
 		byte[] buf = new byte[4096];
 		int len;
 		while ((len = source.read(buf)) > 0)
-            dest.write(buf, 0, len);
+			dest.write(buf, 0, len);
 		dest.close();
 	}
 

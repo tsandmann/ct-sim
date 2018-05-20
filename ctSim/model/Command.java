@@ -374,8 +374,7 @@ public class Command {
 		ACT_MOT('M'),
 
 		/** LCD-Anzeige; siehe {@link LcDisplay}. */
-		ACT_LCD('c', SubCode.NORM, SubCode.LCD_CLEAR, SubCode.LCD_CURSOR,
-			SubCode.LCD_DATA),
+		ACT_LCD('c', SubCode.NORM, SubCode.LCD_CLEAR, SubCode.LCD_CURSOR, SubCode.LCD_DATA),
 
 		/** Abgrundsensoren; siehe {@link Border}. */
 		SENS_BORDER('B'),
@@ -419,21 +418,36 @@ public class Command {
 		 * Sim ("Ungültiges Kommando, SubCode NORM passt nicht zu Code REMOTE_CALL") zu unterdrücken,
 		 * füge ich das hier hinzu.
 		 */
-		REMOTE_CALL('r', SubCode.NORM, SubCode.REMOTE_CALL_LIST,
-			SubCode.REMOTE_CALL_ENTRY, SubCode.REMOTE_CALL_ORDER,
-			SubCode.REMOTE_CALL_DONE, SubCode.REMOTE_CALL_ABORT),
+		REMOTE_CALL('r',
+				SubCode.NORM,
+				SubCode.REMOTE_CALL_LIST,
+				SubCode.REMOTE_CALL_ENTRY,
+				SubCode.REMOTE_CALL_ORDER,
+				SubCode.REMOTE_CALL_DONE,
+				SubCode.REMOTE_CALL_ABORT),
 			
 		/** Map-Übertragung */
-		MAP('Q', SubCode.MAP_DATA_1, SubCode.MAP_DATA_2, SubCode.MAP_DATA_3,
-				SubCode.MAP_DATA_4, SubCode.MAP_REQUEST, SubCode.MAP_LINE,
-				SubCode.MAP_CIRCLE,	SubCode.MAP_CLEAR_LINES, 
-				SubCode.MAP_CLEAR_CIRCLES, SubCode.MAP_REQUEST),
+		MAP('Q',
+				SubCode.MAP_DATA_1,
+				SubCode.MAP_DATA_2,
+				SubCode.MAP_DATA_3,
+				SubCode.MAP_DATA_4,
+				SubCode.MAP_REQUEST,
+				SubCode.MAP_LINE,
+				SubCode.MAP_CIRCLE,
+				SubCode.MAP_CLEAR_LINES,
+				SubCode.MAP_CLEAR_CIRCLES,
+				SubCode.MAP_REQUEST),
 
 		/** Kommando zum Herunterfahren */
 		SHUTDOWN('q', SubCode.NORM),		
 				
 		/** Programmdaten (Basic oder ABL) */
-		PROGRAM('p', SubCode.PROGRAM_PREPARE, SubCode.PROGRAM_DATA, SubCode.PROGRAM_START, SubCode.PROGRAM_STOP);
+		PROGRAM('p',
+				SubCode.PROGRAM_PREPARE,
+				SubCode.PROGRAM_DATA,
+				SubCode.PROGRAM_START,
+				SubCode.PROGRAM_STOP);
 		
 		/** Code auf der Leitung */
 		private final byte onTheWire;
@@ -505,7 +519,7 @@ public class Command {
 					return c;
 			}
 			throw new ProtocolException("Sub-Command-Code " + formatChar(b) +
-				" nicht vorgesehen für Command-Code "+ formatChar(toUint7()));
+					" nicht vorgesehen für Command-Code " + formatChar(toUint7()));
 		}
 
 		/**
@@ -654,9 +668,8 @@ public class Command {
 		}
 
 		/**
-		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB) dargestellt
-		 * werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int
-		 * zurückgegeben.
+		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB) dargestellt werden soll.
+		 * 			Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int zurückgegeben.
 		 */
 		@Override
 		public byte toUint7() { 
@@ -763,8 +776,8 @@ public class Command {
 		byte startCode = b[0];
 		if (startCode != STARTCODE) {
 			while (startCode != STARTCODE) {
-				String msg = "Unerwartetes Zeichen als Startcode; Synchronisierung verloren; synchronisiere neu. startCode=" +
-						startCode + " anstatt " + STARTCODE;
+				String msg = "Unerwartetes Zeichen als Startcode; Synchronisierung verloren; synchronisiere neu. " +
+						"startCode=" + startCode + " anstatt " + STARTCODE;
 				if (suppressSyncWarnings) {
 					lg.fine(msg);
 				} else {
@@ -791,9 +804,9 @@ public class Command {
 
 		// Sinnvollität prüfen
 		if (direction != DIR_REQUEST) {
-			throw new ProtocolException(String.format("Ungültiges " +
-				"Kommando (verkehrtes Richtungsbit, hätte %d sein " +
-				"sollen); Kommando folgt%s", direction, this));
+			throw new ProtocolException(
+					String.format("Ungültiges Kommando (verkehrtes Richtungsbit, hätte %d sein sollen); " +
+							"Kommando folgt %s", direction, this));
 		}
 
 		int payloadSize = Misc.toUnsignedInt8(b[i++]);
@@ -808,7 +821,7 @@ public class Command {
 				
 		
 		from.set(b[i++]);	// neue Version mit Adressen
-		to.set(b[i++]);	// neue Version mit Adressen		
+		to.set(b[i++]);		// neue Version mit Adressen
 		
 		if (to.equals(Command.getSimId())) {
 			commandCode = Code.fromByte(code);
@@ -826,9 +839,9 @@ public class Command {
 		
 		// Sinnvollität prüfen
 		if (crc != CRCCODE) {
-			throw new ProtocolException(String.format("Ungültiges " +
-				"Kommando (verkehrter CRC, hätte %s sein " +
-				"sollen); Kommando folgt%s", formatChar(CRCCODE), this));
+			throw new ProtocolException(
+					String.format("Ungültiges Kommando (verkehrter CRC, hätte %s sein sollen); " +
+							"Kommando folgt %s", formatChar(CRCCODE), this));
 		}
 	}
 
@@ -909,22 +922,22 @@ public class Command {
 		if (payload == null)
 			payloadStr = "";
 		else {
-			payloadStr = "'" + replaceCtrlChars(getPayloadAsString()) + "' ("+payload.length+" Byte)";
+			payloadStr = "'" + replaceCtrlChars(getPayloadAsString()) + "' (" + payload.length + " Byte)";
 		}
 		/* 
 		 * Vorsicht beim Ausgeben; wenn man lustig %c macht und der Wert wegen Sync- oder Lesefehlern
 		 * mal < 0 wird, explodiert alles. Daher formatChar() eingeführt.
 		 */
 		return
-			"\n\tCommand-Code:\t"+commandCode+
-			"\n\tSubcommand-Code:\t"+subCommandCode+
-			"\n\tDirection:\t"+direction+
-			"\n\tData:\tL "+dataL+" / R "+dataR+
-			"\n\tSeq:\t"+seq+
-			"\n\tFrom:\t"+from+
-			"\n\tTo:\t"+to+
-			"\n\tPayload:\t"+payloadStr+
-			"\n\tCRC:\t"+formatChar(crc);
+			"\n\tCommand-Code:\t" + commandCode +
+			"\n\tSubcommand-Code:\t" + subCommandCode +
+			"\n\tDirection:\t" + direction +
+			"\n\tData:\tL " + dataL + " / R " + dataR +
+			"\n\tSeq:\t" + seq +
+			"\n\tFrom:\t" + from +
+			"\n\tTo:\t" + to +
+			"\n\tPayload:\t" + payloadStr +
+			"\n\tCRC:\t" + formatChar(crc);
 	}
 
 	/** 
@@ -934,8 +947,8 @@ public class Command {
 	 */
 	public String toCompactString() {
 		return
-			String.format("%-20s", commandCode + (has(SubCode.NORM) ? "" : "/"+subCommandCode))+
-			String.format(" L %4d R %4d", dataL, dataR)+
+			String.format("%-20s", commandCode + (has(SubCode.NORM) ? "" : "/" + subCommandCode)) +
+			String.format(" L %4d R %4d", dataL, dataR) +
 			String.format(" Payload='%s'",
 				replaceCtrlChars(escapeNewlines(getPayloadAsString())));
 	}

@@ -136,7 +136,7 @@ public class Config {
 	 */
 	public static void loadConfigFile(String file)
 	throws SAXException, IOException, ParserConfigurationException {
-		lg.info("Lade Konfigurationsdatei '"+file+"'");
+		lg.info("Lade Konfigurationsdatei '" + file + "'");
 		java.net.URL url = ClassLoader.getSystemResource(file);
 		if (url != null) {
 			QueryableDocument doc = XmlDocument.parse(url.openStream(), url.toString());
@@ -194,7 +194,7 @@ public class Config {
 	 * @return Icon zum Key
 	 */
 	public static Icon getIcon(String key) {
-		URL u = ClassLoader.getSystemResource("images/" + key+".gif");
+		URL u = ClassLoader.getSystemResource("images/" + key + ".gif");
 		// NullPointerException vermeiden
 		if (u == null)
 			return new ImageIcon();	// leeres Icon
@@ -332,10 +332,8 @@ public class Config {
 						// getClass() == null, falls className "default" ist
 						loadAppearances(botTag, getClass(className));
 					} catch (ClassNotFoundException e) {
-						lg.warn("Konfigurationsdatei hat Klasse '%s' " +
-							"angefordert, die nicht gefunden werden " +
-							"konnte; ignoriere diesen <bot>-Tag in der " +
-							"Datei", className);
+						lg.warn("Konfigurationsdatei hat Klasse '%s' angefordert, die nicht gefunden werden konnte; " +
+								"ignoriere diesen <bot>-Tag in der Datei", className);
 						continue;
 					}
 				}
@@ -434,21 +432,20 @@ public class Config {
 		Color get(Class<?> botType, String appearanceType, int index) {
 			List<Color> cList = get(new AppearanceKey(botType, appearanceType));
 			if (cList == null) {
-				lg.warn("Konfigdatei: Keine Appearance vom Typ '%s' für " +
-					"Bots vom Typ '%s' gefunden; verwende Default",
+				lg.warn("Konfigdatei: Keine Appearance vom Typ '%s' für Bots vom Typ '%s' gefunden; " +
+						"verwende Default",
 					appearanceType, botType.getSimpleName());
 				cList = get(new AppearanceKey(null, appearanceType));
 			}
 
 			if (cList == null) {
-				lg.warn("Konfigdatei: Keine Default-Appearance gefunden; " + "verwende Fallback");
+				lg.warn("Konfigdatei: Keine Default-Appearance gefunden; verwende Fallback");
 				return botColorFallback;
 			}
 
 			if (index >= cList.size()) {
-				lg.warn("Konfigdatei: %d Bots vom Typ '%s' vorhanden, aber " +
-					"nur %d Appearances; muss Appearances mehrfach verwenden",
-					index + 1, botType.getSimpleName(), cList.size());
+				lg.warn("Konfigdatei: %d Bots vom Typ '%s' vorhanden, aber nur %d Appearances; " +
+						"muss Appearances mehrfach verwenden", index + 1, botType.getSimpleName(), cList.size());
 			}
 			return cList.get(index % cList.size());
 		}

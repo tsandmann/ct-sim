@@ -130,11 +130,11 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		assertEquals(3, rs.getRow());
 
 		// keine doppelten Spiele?
-		rs = db.execSql("select * from ( select level, game, count(*) as c "
-				+ "from ctsim_game group by level, game ) as x where c > 1");
+		rs = db.execSql("select * from ( select level, game, count(*) as c from ctsim_game group by level, game ) " +
+				"as x where c > 1");
 		if (rs.next()) {
-			fail(String.format("Mehrere Spiele haben Level %d Game %d. "
-					+ "(Level-Game-Kombinationen sollten immer eindeutig sein)",
+			fail(String.format("Mehrere Spiele haben Level %d Game %d. " +
+					"(Level-Game-Kombinationen sollten immer eindeutig sein)",
 				rs.getInt("level"), rs.getInt("game")));
 		}
 
@@ -223,12 +223,12 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	 */
 	private void checkPlayerId(String playerIdField) throws SQLException {
 		// zur Erinnerung: count() und count(distinct) zählen NULL nicht mit
-		ResultSet rs = db.execSql("select count(" + playerIdField + ") " + "from `ctsim_game` where level != -1");
+		ResultSet rs = db.execSql("select count(" + playerIdField + ") from `ctsim_game` where level != -1");
 		rs.next();
 		int playerIdCount = rs.getInt(1);
 		assertNotSame(0, playerIdCount);
 
-		rs = db.execSql("select count(distinct " + playerIdField + ") from " + "`ctsim_game` where level != -1");
+		rs = db.execSql("select count(distinct " + playerIdField + ") from `ctsim_game` where level != -1");
 		rs.next();
 		int playerIdDistinctCount = rs.getInt(1);
 
@@ -256,25 +256,25 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 		testee.planMainRound();
 
 		{	// keine doppelten Spiele?
-			ResultSet rs = db.execSql("select * from ( " + "select level, game, count(*) as c "
-					+ "from ctsim_game group by level, game ) as x where c > 1");
+			ResultSet rs = db.execSql("select * from ( select level, game, count(*) as c from ctsim_game group " +
+					"by level, game ) as x where c > 1");
 			if (rs.next()) {
-				fail(String.format("Mehrere Spiele haben Level %d Game %d. "
-						+ "(Level-Game-Kombinationen sollten immer eindeutig sein)",
+				fail(String.format("Mehrere Spiele haben Level %d Game %d. " +
+						"(Level-Game-Kombinationen sollten immer eindeutig sein)",
 						rs.getInt("level"), rs.getInt("game")));
 			}
 		}
 
 		// sind alle erwarteten Level da?
 		for (int i = 1; i <= 32; i *= 2) {
-			ResultSet rs = db.execSql("select * from ctsim_game " + "where level = ?", i);
+			ResultSet rs = db.execSql("select * from ctsim_game where level = ?", i);
 			assertTrue(String.format("Planner hat Level %d nicht angelegt", i),
 					rs.next());
 		}
 
 		// ist mindestens ein Spiel ready to run?
 		assertTrue("Kein Spiel ist 'ready to run'",
-				db.execSql("select * from ctsim_game where " + "state = ?",GameState.READY_TO_RUN).next());
+				db.execSql("select * from ctsim_game where state = ?",GameState.READY_TO_RUN).next());
 
 		// machen die playerIDs Sinn?
 		checkPlayerId("bot1");
@@ -298,7 +298,7 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 	 */
 	private void assertScheduledRightInterval(int levelId, long gameIntervalExpected) throws SQLException {
 		// 2x dasselbe; previous hinkt 1 hinterher
-		ResultSet rs = db.execSql("select * from ctsim_game " + "where level = ? order by scheduled", levelId);
+		ResultSet rs = db.execSql("select * from ctsim_game where level = ? order by scheduled", levelId);
 		rs.next();
 		int prevLevel = rs.getInt("level");
 		int prevGame = rs.getInt("game");
@@ -316,5 +316,5 @@ public class TournamentPlannerTest extends ConductorTestUtil {
 			prevGame = rs.getInt("game");
 			prevTime = rs.getTimestamp("scheduled").getTime();
 		}
-    }
+	}
 }

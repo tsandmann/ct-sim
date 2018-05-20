@@ -151,8 +151,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         try {
         	timeout = Integer.parseInt(Config.getValue("ctSimTimeout"));
         } catch(NumberFormatException nfe) {
-            lg.warning(nfe, "Problem beim Parsen der Konfiguration: " +
-                    "Parameter 'ctSimTimeout' ist keine Ganzzahl");
+            lg.warning(nfe, "Problem beim Parsen der Konfiguration: Parameter 'ctSimTimeout' ist keine Ganzzahl");
         }
 
 		lg.fine("Sequencer gestartet");
@@ -171,8 +170,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				 * breche ab, wenn die Bots zu lange brauchen!
 				 */
 				if(! doneSignal.await(timeout, TimeUnit.MILLISECONDS)) {
-					lg.warn("Bot-Probleme: Ein oder mehrere Bots waren " +
-							"viel zu langsam (>"+timeout+" ms)");
+					lg.warn("Bot-Probleme: Ein oder mehrere Bots waren viel zu langsam (>" + timeout + " ms)");
 				}
 
 				CountDownLatch oldStartSignal = this.startSignal;
@@ -231,10 +229,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 						(System.currentTimeMillis() - realTimeBeginInMs);
 				if (timeToSleep > 0)
 					Thread.sleep(timeToSleep);
-	        } catch (InterruptedException e) {
-	            /* 
-	             * Wird von wait() geworfen, wenn jemand closeWorld() macht während wait() noch läuft
-	        	 * (closeWorld() ruft interrupt() auf). Man bittet uns, unsere while-Bedingung auszuwerten,
+			} catch (InterruptedException e) {
+				/* 
+				 * Wird von wait() geworfen, wenn jemand closeWorld() macht während wait() noch läuft
+				 * (closeWorld() ruft interrupt() auf). Man bittet uns, unsere while-Bedingung auszuwerten,
 				 * weil die false geworden ist. Also normal weiter gehen.
 				 */
 	        }
@@ -370,18 +368,17 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 */
     public void invokeBot(String filename) {
         if (! new File(filename).exists()) {
-            lg.warning("Bot-Datei '"+filename+"' nicht gefunden");
+            lg.warning("Bot-Datei '" + filename + "' nicht gefunden");
             return;
         }
-        lg.info("Starte externen Bot '"+filename+"'");
+        lg.info("Starte externen Bot '" + filename + "'");
         try {
     		if (System.getProperty("os.name").indexOf("Linux") >= 0){
     			Process p = Runtime.getRuntime().exec(
     				new String[] { "chmod", "ugo+x", filename });
     			p.waitFor();	// warten bis der gelaufen ist
     			if (p.exitValue() != 0) {
-    				lg.warning("Fehler beim Setzen der execute-Permission: " +
-    						"chmod lieferte %d zurück", p.exitValue());
+    				lg.warning("Fehler beim Setzen der execute-Permission: chmod lieferte %d zurück", p.exitValue());
     			}
     		}
     		/* 
@@ -392,7 +389,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     		File dir = new File(filename).getAbsoluteFile().getParentFile();
             Runtime.getRuntime().exec(new String[] { filename }, null, dir);
         } catch (Exception e){
-            lg.warning(e, "Fehler beim Starten von Bot '"+filename+"'");
+            lg.warning(e, "Fehler beim Starten von Bot '" + filename + "'");
         }
     }
 
@@ -404,8 +401,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     public synchronized void onBotDisappeared(Bot bot) {
     	if (bot != null) {
     		try {
-    			lg.info("Bot "+bot.toString()+" ("+bot.getDescription()+") meldet sich beim " +
-	    			"Controller ab!");
+    			lg.info("Bot " + bot.toString() + " (" + bot.getDescription() + ") meldet sich beim Controller ab!");
     		} catch (Exception e) {
     			// egal
     		} finally {
@@ -423,9 +419,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	public synchronized void onBotAppeared(final Bot bot) {
 		if (bot instanceof SimulatedBot) {
 			if (sequencer == null) {
-				lg.info("Weise " + bot.toString()
-						+ " ab: Es gibt keine Welt, zu "
-						+ "der man ihn hinzufügen könnte");
+				lg.info("Weise " + bot.toString() + " ab: Es gibt keine Welt, zu der man ihn hinzufügen könnte");
 				bot.dispose();	// Bot abweisen
 				return;
 			}
@@ -445,8 +439,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		try {
 			bot.setController(this);
 		} catch (ProtocolException e) {
-			lg.severe("Fehler: Bot " + bot.toString()
-					+ " wurde vom Controller abgewiesen! Bot-ID falsch?");
+			lg.severe("Fehler: Bot " + bot.toString() + " wurde vom Controller abgewiesen! Bot-ID falsch?");
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {	// invokeLater, weil sonst der
@@ -480,7 +473,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
     /**
-     * @param judgeClassName	die Art des Schiedrichters setzen
+     * @param judgeClassName	die Art des zu setzenden Schiedsrichters
      * 
      * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist.
      */
@@ -497,8 +490,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
             Constructor<?> c = cl.getConstructor(DefaultController.class);
             j = (Judge)c.newInstance(this);
         } catch(ClassNotFoundException e) {
-            lg.warning(e, "Die Judge-Klasse '"+judgeClassName+
-                    "' wurde nicht gefunden");
+            lg.warning(e, "Die Judge-Klasse '" + judgeClassName + "' wurde nicht gefunden");
             return;
         } catch(Exception e) {
             lg.warning(e, "Probleme beim Instanziieren der Judge-Klasse");
@@ -531,8 +523,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         try {
             setWorld(World.buildWorldFromFile(sourceFile));
         } catch (Exception e) {
-            lg.warning(e, "Probleme beim Parsen der Parcours-Datei '"+
-                    sourceFile.getAbsolutePath() + "'");
+            lg.warning(e, "Probleme beim Parsen der Parcours-Datei '" + sourceFile.getAbsolutePath() + "'");
         }
     }
 
@@ -558,8 +549,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
             lg.info("Parcours generiert");
             openWorldFromXmlString(p);
         } catch (Exception e) {
-            lg.warning("Probleme beim Öffnen des generierten " +
-                    "Parcours.");
+            lg.warning("Probleme beim Öffnen des generierten Parcours.");
         }
     }
 
@@ -606,7 +596,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		}	
 		if (!command.getTo().equals(Command.getBroadcastId())) {
 			// Es fühlt sich wohl kein Bot aus der Liste zuständig => Fehler 
-			throw new ProtocolException("Nachricht an Empfänger "+command.getTo()+" nicht zustellbar. " +
+			throw new ProtocolException("Nachricht an Empfänger " + command.getTo() + " nicht zustellbar. " +
 					"Kein Bot mit passender Id angemeldet");
 		}
 	}
