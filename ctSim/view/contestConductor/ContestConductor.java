@@ -183,7 +183,7 @@ public class ContestConductor implements View {
 					concon.world.getSimTimeInMs());
 
 			// letzten Schritt loggen
-			//$$ Das ist nicht so toll: Macht die Annahme, dass der DefaultController so bleibt, wie er ist
+			// //$$ Das ist nicht so toll: Macht die Annahme, dass der DefaultController so bleibt, wie er ist
 			concon.db.logUnconditionally(BotView.getAllModelObjects(),
 					concon.world.getSimTimeInMs());
 
@@ -301,7 +301,7 @@ public class ContestConductor implements View {
 			ContestJudge.class,
 			TournamentPlanner.class,
 			ConductorToDatabaseAdapter.class,
-			PlannerToDatabaseAdapter.class	//$$ in seine Klasse?
+			PlannerToDatabaseAdapter.class	// //$$ in seine Klasse?
 		);
 	}
 
@@ -336,6 +336,7 @@ public class ContestConductor implements View {
 	/**
 	 * @see ctSim.view.View#onApplicationInited()
 	 */
+	@Override
 	public void onApplicationInited() {
 		controller.setJudge(Main.dependencies.get(ContestJudge.class));
 
@@ -377,6 +378,7 @@ public class ContestConductor implements View {
 	/**
 	 * @see ctSim.view.View#onSimulationStep(long)
 	 */
+	@Override
 	public void onSimulationStep(long simTimeInMs) {
 		try {
 			db.log(BotView.getAllModelObjects(), world.getSimTimeInMs());
@@ -388,6 +390,7 @@ public class ContestConductor implements View {
 	/**
 	 * @see ctSim.view.View#onSimulationFinished()
 	 */
+	@Override
 	public void onSimulationFinished() {
 		lg.info("Spiel beendet; 10 Sekunden Unterbrechung");
 		try {
@@ -490,7 +493,7 @@ public class ContestConductor implements View {
 
 		String server = Config.getValue("ctSimIP");
 		if (server == null)
-			server = "localhost";	//$$ umziehen: Sollte in Config
+			server = "localhost";	// //$$ umziehen: Sollte in Config
 
 		/*
 		 * Nur wenn ein Config-Eintrag für den entsprechenden Remote-Host existiert starten wir auch remote,
@@ -530,7 +533,7 @@ public class ContestConductor implements View {
 			ConfigManager.path2Os(Config.getValue("contestBotFileNameSuffix")),
 			new File(Config.getValue("contestBotTargetDir")));
 		f.deleteOnExit();
-		//$$ deleteOnExit() scheint nicht zu klappen; Theorie:Prozesse noch offen wenn VM das aufrufen will
+		// //$$ deleteOnExit() scheint nicht zu klappen; Theorie:Prozesse noch offen wenn VM das aufrufen will
 		lg.fine("Schreibe Bot nach '" + f.getAbsolutePath() + "'");
 		Misc.copyStreamToStream(b.getBinaryStream(), new FileOutputStream(f));
 
@@ -549,6 +552,7 @@ public class ContestConductor implements View {
 		}
 		final ThreeDBot rv = newlyArrivedBot;
 		rv.addDisposeListener(new Runnable() {
+			@Override
 			public void run() {
 				BotView.remove(rv);
 			}
@@ -563,6 +567,7 @@ public class ContestConductor implements View {
 	 * 
 	 * @param bot	Bot
 	 */
+	@Override
 	public void onBotAdded(Bot bot) {
 		if (! (bot instanceof ThreeDBot)) {
 			throw new IllegalStateException("Bot angemeldet, ist aber kein ThreeDBot");
@@ -614,6 +619,7 @@ public class ContestConductor implements View {
 	/**
 	 * @see ctSim.view.View#onWorldOpened(ctSim.model.World)
 	 */
+	@Override
 	public void onWorldOpened(World newWorld) {
 		this.world = newWorld;
 	}
@@ -621,6 +627,7 @@ public class ContestConductor implements View {
 	/**
 	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
 	 */
+	@Override
 	public void onJudgeSet(Judge j) {
 		// No-op
 	}
@@ -628,6 +635,7 @@ public class ContestConductor implements View {
 	/**
 	 * @see ctSim.view.View#onResetAllBots()
 	 */
+	@Override
 	public void onResetAllBots() {
 		// No-op
 	}

@@ -2,7 +2,7 @@
 
 <!--
   c't-Sim - Robotersimulator für den c't-Bot
-  
+
   This program is free software; you can redistribute it
   and/or modify it under the terms of the GNU General
   Public License as published by the Free Software
@@ -16,24 +16,20 @@
   License along with this program; if not, write to the Free 
   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
   MA 02111-1307, USA.
-  
+
   Autor: Dominik Kalb (dominik@dkalb.com)
   		 Timo Sandmann
 
+==========================================================================================
 
-
-==================================================================
-
-Um ein JAR-Archiv des c't-Sim zu erstellen, ruft man dieses 
-Ant-Script in Eclipse über Rechtsklick -> "Run As" -> "Ant Build"
-auf. Anschließend befindet sich im Unterverzeichnis "build" das
-Verzeichnis "ct-Sim", in dem das c't-Sim-JAR und die Libs liegen.
+Um ein JAR-Archiv des c't-Sim zu erstellen, ruft man dieses Ant-Script in Eclipse über
+Rechtsklick -> "Run As" -> "Ant Build" auf. Anschließend befindet sich im Unterverzeichnis
+"build" das Verzeichnis "ct-Sim", in dem das c't-Sim-JAR und die Libs liegen.
 Ein Aufruf von "ct-Sim-xx.jar" startet den c't-Sim.
 
-Das build-Verzeichnis kann man problemlos loeschen, wenn es nicht
-mehr benötigt wird.
+Das build-Verzeichnis kann man problemlos loeschen, wenn es nicht mehr benötigt wird.
 
-==================================================================
+==========================================================================================
 
 -->
 
@@ -67,8 +63,7 @@ mehr benötigt wird.
 	<property name="deprecation" value="false" />
 	<property name="optimize" value="true" />
 	<property name="javac.source" value="1.8" />
-	<property name="javac.target" value="1.8" />	
-	<property name="compile.option" value="-Xlint:unchecked" />
+	<property name="javac.target" value="1.8" />
 	
 	<!--
 	===================================================================
@@ -99,7 +94,7 @@ mehr benötigt wird.
 	<property name="parcours.dir" location="${parcours.name}" />
 	<property name="characteristics.dir" location="${characteristics.name}" />
 	<property name="images.dir" location="${images.name}" />
-	<property name="textures.dir" location="${textures.name}" />   
+	<property name="textures.dir" location="${textures.name}" />
 	<property name="contrib.dir" location="${contrib.name}" />
 	
 	<!--
@@ -112,7 +107,7 @@ mehr benötigt wird.
 			ct-Sim (ct-Sim-xx.jar Archiv und Libs)
 	===================================================================
 	-->
-	<property name="build.dir" location="${build.name}" />
+	<property name="build.dir" location="./bin/${build.name}" />
 	<property name="build.classes.dir" location="${build.dir}/${build.classes.name}" />
 	<property name="build.textures.dir" location="${build.classes.dir}/${textures.name}" />
 	<property name="build.config.dir" location="${build.classes.dir}/${config.name}" />
@@ -298,7 +293,7 @@ mehr benötigt wird.
 		<!--
 		.class-Dateien wieder löschen
 		-->
-		<delete dir="${build.classes.dir}" includeEmptyDirs="true" quiet="true" />		
+		<delete dir="${build.classes.dir}" includeEmptyDirs="true" quiet="true" />
 	</target>
 	
 	<!--
@@ -350,12 +345,6 @@ mehr benötigt wird.
 				nowarn="false"
 				includeantruntime="false"
 				>
-				
-				<!--
-				Wenn der Java >= 1.5 Compiler verwendet wird, sollte diese
-				Option mit angegeben werden.
-				-->
-				<compilerarg value="${compile.option}" />
 				
 				<!--
 				Diesen Klassenpfad verwenden.

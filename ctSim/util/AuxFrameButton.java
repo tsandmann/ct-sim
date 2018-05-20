@@ -100,6 +100,7 @@ public class AuxFrameButton extends JToggleButton {
 		}
 		addActionListener(new ActionListener() {
 			// Fenster anzeigen/verbergen, wenn wir gedrückt werden
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				auxFrame.setVisible(AuxFrameButton.this.isSelected());
 				if (frameContent instanceof RemoteCallViewer) {

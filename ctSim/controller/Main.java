@@ -95,7 +95,8 @@ public class Main {
 		    /* Inits ausführen */
 		    try {
 				SwingUtilities.invokeAndWait(new Runnable() {
-			    	public void run() {
+			    	@Override
+					public void run() {
 						lg = initLogging();
 						loadConfig();
 						Init.setLookAndFeel();

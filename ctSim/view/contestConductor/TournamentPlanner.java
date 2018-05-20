@@ -123,7 +123,7 @@ public class TournamentPlanner {
 	/**
 	 * Plant die Hauptrunde
 	 * 
-	 * Sie besteht aus $$ doc planMainRound.
+	 * Sie besteht aus //$$ doc planMainRound.
 	 * 
 	 * @throws SQLException 
 	 * @throws TournamentPlanException

@@ -115,6 +115,7 @@ public class StatusBar extends Box {
 		tickRateSlider = new JSlider(StatusBar.MIN_TICK_RATE, StatusBar.MAX_TICK_RATE, INIT_TICK_RATE);
 		
 		tickRateSlider.addChangeListener(new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent e) {
 				if (tickRateSlider.getValueIsAdjusting()) {
 					tickRateField.setText(String.valueOf(tickRateSlider.getValue()));
@@ -146,6 +147,7 @@ public class StatusBar extends Box {
 		tickRateField.setPreferredSize(new Dimension(44, 22));
 		
 		tickRateField.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				if ("value".equals(evt.getPropertyName())) {
 					tickRateSlider.setValue((Integer) tickRateField.getValue());

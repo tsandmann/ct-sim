@@ -80,6 +80,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { 
 			return Code.ACT_MOT; 
 		}
@@ -117,6 +118,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { 
 			return Code.ACT_SERVO; 
 		}
@@ -170,6 +172,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { 
 			return Code.ACT_SERVO; 
 		}
@@ -204,6 +207,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 		 */
+		@Override
 		public void readFrom(Command c) {
 			synchronized (newStuff) {
 				final String newLine = Command.replaceCtrlChars(c.getPayloadAsString());
@@ -246,6 +250,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { 
 			return Command.Code.LOG; 
 		}
@@ -322,6 +327,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
 		 */
+		@Override
 		public void setAsyncWriteStream(CommandOutputStream s) {
 			asyncOut = s;
 		}
@@ -533,11 +539,13 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { return Command.Code.ACT_LCD; }
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 		 */
+		@Override
 		public synchronized void readFrom(Command c) throws ProtocolException {
 			try {
 	    	    switch (c.getSubCode()) {
@@ -749,6 +757,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 		 */
+		@Override
 		public synchronized void readFrom(Command c) {
 			internalModel = (c.getDataL() & bitMask) != 0;
 		}
@@ -764,6 +773,7 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
+		@Override
 		public Code getHotCmdCode() { 
 			return Command.Code.ACT_LED; 
 		}

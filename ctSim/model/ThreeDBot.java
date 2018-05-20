@@ -184,6 +184,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 			updateExternalModel();	// Initialen Wert setzen
 			getExternalModel().addChangeListener(new ChangeListener() {
+				@Override
 				public void stateChanged(ChangeEvent e) {
 					double newValue = getExternalModel().getNumber().doubleValue();
 					Point3d p = getPositionInWorldCoord();
@@ -297,18 +298,16 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		public HeadingCompnt() {
 			super(new SpinnerNumberModel());
 
-			updateExternalModel();	// Initialen Wert setzen
+			updateExternalModel();	// initialen Wert setzen
 			getExternalModel().addChangeListener(new ChangeListener() {
+				@Override
 				public void stateChanged(ChangeEvent e) {
 					/*
-					 * $$ ignoreStateChange: setHeading() sollte erkennen, wann
-					 * ein Aufruf überflüssig ist (weil das neue Heading sich
-					 * nicht vom alten unterscheidet). Wegen der doofen Sache,
-					 * dass Headings auf zwei Arten ausgedrückt werden können
-					 * (Vector3d, double), funktioniert die Erkennung nicht gut.
-					 * Daher braucht wir ignoreStateChange. Wenn Heading mal
-					 * komplett auf double umgestellt ist, ist ignoreStateChange
-					 * überflüssig.
+					 * //$$ ignoreStateChange: setHeading() sollte erkennen, wann ein Aufruf überflüssig ist
+					 * (weil das neue Heading sich nicht vom alten unterscheidet). Wegen der doofen Sache,
+					 * dass Headings auf zwei Arten ausgedrückt werden können (Vector3d, double), funktioniert
+					 * die Erkennung nicht gut. Daher braucht wir ignoreStateChange. Wenn Heading mal komplett
+					 * auf double umgestellt ist, ist ignoreStateChange überflüssig.
 					 */
 					if (ignoreStateChange) {
 						return;
@@ -618,6 +617,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	public final void start() {
 		thrd = new Thread(this, "ctSim-"+toString());
 		addDisposeListener(new Runnable() {
+			@Override
 			public void run() {
 				if (thrd != null) {
 					lg.fine("Stoppe Thread " + thrd.getName());
@@ -840,6 +840,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * </ul>
 	 * Die Schleife läuft so lang, bis sie von der Methode {@link #dispose()} beendet wird.
 	 */
+	@Override
 	public final void run() {
 		Thread thisThread = Thread.currentThread();
 

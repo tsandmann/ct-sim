@@ -121,6 +121,7 @@ public class BotViewer extends JScrollPane {
         inputMap.put(key, "close");
         getActionMap().put("close", new AbstractAction() {
 			private static final long serialVersionUID = -7639062234107576185L;
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				BotViewer.this.bot.dispose();
         	}

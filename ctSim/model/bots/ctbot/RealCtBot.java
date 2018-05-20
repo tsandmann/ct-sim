@@ -156,6 +156,7 @@ public class RealCtBot extends CtBot {
 			if (c instanceof RemoteCallCompnt) {
 				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
+					@Override
 					public void run(BehaviorExitStatus status) {
 						if (ablResult != null) {
 							ablResult.setSyntaxCheck(status == BehaviorExitStatus.SUCCESS);
@@ -173,6 +174,7 @@ public class RealCtBot extends CtBot {
 		// und einen CommandProcessor herstellen
 		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
+			@Override
 			public void run() {
 				cp.die();
 			}

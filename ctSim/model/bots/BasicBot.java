@@ -336,6 +336,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * @see ctSim.model.bots.Bot#addDisposeListener(java.lang.Runnable)
 	 */
+	@Override
 	public void addDisposeListener(Runnable runsWhenAObstDisposes) {
 		if (runsWhenAObstDisposes == null)
 			throw new NullPointerException();
@@ -345,6 +346,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * @see ctSim.model.bots.Bot#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// keine Ausgabe für 3D-Bots, denn zu jedem 3D-Bot gibt es auch einen Sim-Bot
 		if (! (this instanceof ThreeDBot)) {
@@ -378,6 +380,7 @@ public abstract class BasicBot implements Bot {
 	 * @return Nummer
 	 * @see #toString()
 	 */
+	@Override
 	public int getInstanceNumber() {
 		/*
 		 * Bedenke: Wenn einer ne Subklasse instanziiert, die von AliveObstacle abgeleitet ist,
@@ -410,6 +413,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * @see ctSim.model.bots.Bot#getDescription()
 	 */
+	@Override
 	public String getDescription() {
 		return "Unbekannter Bottyp";
 	}
@@ -417,6 +421,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * @see ctSim.model.bots.Bot#accept(ctSim.model.bots.BotBuisitor)
 	 */
+	@Override
 	public void accept(BotBuisitor buisitor) {
 		for (BotComponent<?> c : components)
 			buisitor.visit(c, this);
@@ -425,6 +430,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * @see ctSim.model.bots.Bot#updateView()
 	 */
+	@Override
 	public void updateView() throws InterruptedException {
 		components.updateView();
 	}
@@ -434,6 +440,7 @@ public abstract class BasicBot implements Bot {
 	 * 
 	 * @return Controller	der Controller
 	 */
+	@Override
 	public Controller getController() {
 		return controller;
 	}
@@ -444,6 +451,7 @@ public abstract class BasicBot implements Bot {
 	 * @param controller
 	 * @throws ProtocolException	wenn die Id dieses Bots im Controller schon belegt ist
 	 */
+	@Override
 	public void setController(Controller controller) throws ProtocolException {
 		this.controller = controller;
 		if (this instanceof CtBotSimTest)

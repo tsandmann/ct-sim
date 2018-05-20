@@ -59,12 +59,15 @@ public class Enumerations {
 	 */
 	public static <T> Iterable<T> asIterable(final Enumeration<T> source) {
 		return new Iterable<T>() {
+			@Override
 			public Iterator<T> iterator() {
 	            return new Iterator<T>() {
+					@Override
 					public boolean hasNext() {
 	                    return source.hasMoreElements();
                     }
 
+					@Override
 					public T next() {
 	                    return source.nextElement();
                     }

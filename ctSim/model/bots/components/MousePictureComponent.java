@@ -81,6 +81,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
 	 */
+	@Override
 	public void setAsyncWriteStream(CommandOutputStream s) {
 		asyncOut = s;
 	}
@@ -157,6 +158,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * 
 	 * @param c	Command
 	 */
+	@Override
 	public synchronized void readFrom(Command c) {
 		// TODO Ist alles ziemlich zerbrechlich. Was ist zum Beispiel, wenn der Bot aufgrund eines Bug eine dataL außerhalb des Arrays sendet? -> Mehr Input Validation, wofür haben wir ProtocolExceptions
 		if (! c.has(getHotCmdCode()))
@@ -174,7 +176,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			int col = (offset + i) % WIDTH;
 			int row = (offset + i) / WIDTH;
 			col = HEIGHT - 1 - col;	// spiegeln - oben und unten vertauschen
-			// Um 90 Grad drehen = Spaltennr. und Zeilennr. vertauschen (siehe )	// $$$ siehe Protokoll-Doku
+			// Um 90 Grad drehen = Spaltennr. und Zeilennr. vertauschen (siehe )	//$$ siehe Protokoll-Doku
 			// ohne Drehen wäre pixels[col + (row * WIDTH)]
 			pixels[(col * HEIGHT) + row] = colorFromRgb(gray, gray, gray);
 		}
@@ -192,6 +194,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * 
 	 * @param c	Command
 	 */
+	@Override
 	public void writeTo(Command c) { 
 		// No-op
 	}
@@ -209,6 +212,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 	 */
+	@Override
 	public Code getHotCmdCode() { return Code.SENS_MOUSE_PICTURE; }
 	
 	/**

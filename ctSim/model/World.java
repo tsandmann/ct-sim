@@ -280,6 +280,7 @@ public class World {
 			 * er soll die parcours.dtd im Verzeichnis "parcours" suchen.
 			 */
 			new EntityResolver() {
+				@Override
 				public InputSource resolveEntity(String publicId, String systemId)
 				throws SAXException, IOException {
 					if (systemId.endsWith(PARCOURS_DTD))
@@ -315,6 +316,7 @@ public class World {
 			 * er soll die parcours.dtd im Verzeichnis "parcours" suchen.
 			 */
 			new EntityResolver() {
+				@Override
 				public InputSource resolveEntity(String publicId, String systemId)
 				throws SAXException, IOException {
 					if (systemId.endsWith(PARCOURS_DTD))
@@ -555,6 +557,7 @@ public class World {
 //		botWrapper.updateSimulation(getSimTimeInMs());
 
 		botWrapper.addDisposeListener(new Runnable() {
+			@Override
 			public void run() {
 				botsToStart.remove(botWrapper);
 				botsRunning.remove(botWrapper);

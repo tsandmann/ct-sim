@@ -55,7 +55,7 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
  * überhaupt unterstützt; andernfalls tritt eine UnsupportedOperationException auf.
  * </p>
  * 
- * TODO Aktuatoren vs. Sensoren
+ * //$$ Aktuatoren vs. Sensoren
  *
  * @param <M>	Typ der Komponente
  * 

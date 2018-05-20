@@ -196,13 +196,13 @@ class DatabaseAdapter {
 		for (int i = 0; i < inValues.length; i++) {
 			// PreparedStatement ist 1-based, inValues ist 0-based
 			if (inValues[i] instanceof GameState)
-				rv.setString(i + 1, inValues[i].toString());	//$$ GameState-Hack
+				rv.setString(i + 1, inValues[i].toString());	// //$$ GameState-Hack
 			else if (inValues[i] instanceof RenderedImage) {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				try {
 	                ImageIO.write((RenderedImage)inValues[i], "png", out);
                 } catch (IOException e) {
-                	throw new IllegalArgumentException(e);	//$$ doc IllegalArg
+                	throw new IllegalArgumentException(e);	// //$$ doc IllegalArg
                 }
 				rv.setBinaryStream(i + 1, new ByteArrayInputStream(out.toByteArray()), out.size());
 			}

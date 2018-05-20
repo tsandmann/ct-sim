@@ -91,6 +91,7 @@ public class ClosableTabsPane extends JTabbedPane {
 		/**
 		 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 		 */
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			lastX = x;
 			lastY = y;
@@ -111,11 +112,13 @@ public class ClosableTabsPane extends JTabbedPane {
 		/**
 		 * @see javax.swing.Icon#getIconHeight()
 		 */
+		@Override
 		public int getIconHeight() { return wrappee.getIconHeight(); }
 		
 		/**
 		 * @see javax.swing.Icon#getIconWidth()
 		 */
+		@Override
 		public int getIconWidth() { return wrappee.getIconWidth(); }
     }
 

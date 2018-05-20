@@ -61,6 +61,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 		setId(newId);
 
 		addDisposeListener(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					connection.close();
@@ -110,6 +111,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			if (c instanceof RemoteCallCompnt) {
 				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
+					@Override
 					public void run(BehaviorExitStatus status) {
 						if (ablResult != null) {
 							ablResult.setSyntaxCheck(status == BehaviorExitStatus.SUCCESS);
@@ -170,6 +172,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	/**
 	 * @see ctSim.model.bots.SimulatedBot#doSimStep()
 	 */
+	@Override
 	public void doSimStep()
 	throws InterruptedException, UnrecoverableScrewupException {
 		transmitSensors();
