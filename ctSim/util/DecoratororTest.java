@@ -59,7 +59,7 @@ public class DecoratororTest {
 			new Object() {
 				public SubA getU() { return null; }
 			}.getClass().getDeclaredMethods()[0],
-			C.class.getMethod("getA", new Class[] { /* No-op */ })));
+			C.class.getMethod("getA", new Class[] { })));
 	}
 
 	/**
@@ -73,28 +73,28 @@ public class DecoratororTest {
 			new Object() {
 				public B getA() { return null; }
 			}.getClass().getDeclaredMethods()[0],
-			C.class.getMethod("getA", new Class[] { /* No-op */ })));
+			C.class.getMethod("getA", new Class[] {})));
 
 		// wrong: return type too general
 		assertFalse(doesImplement(
 			new Object() {
 				public A getA() { return null; }
 			}.getClass().getDeclaredMethods()[0],
-			C.class.getMethod("getA", new Class[] { /* No-op */ })));
+			C.class.getMethod("getA", new Class[] {})));
 
 		// ok: return type same
 		assertTrue(doesImplement(
 			new Object() {
 				public SubA getA() { return null; }
 			}.getClass().getDeclaredMethods()[0],
-			C.class.getMethod("getA", new Class[] { /* No-op */ })));
+			C.class.getMethod("getA", new Class[] {})));
 
 		// ok: return type specialised
 		assertTrue(doesImplement(
 			new Object() {
 				public SubSubA getA() { return null; }
 			}.getClass().getDeclaredMethods()[0],
-			C.class.getMethod("getA", new Class[] { /* No-op */ })));
+			C.class.getMethod("getA", new Class[] {})));
 	}
 
 	/** TBD */
@@ -104,35 +104,35 @@ public class DecoratororTest {
 		// wrong: too many parameters
 		assertFalse(doesImplement(
 			new Object() {
-				public void doSomething(SubA x, SubA y) { /* No-op */ }
+				public void doSomething(SubA x, SubA y) { /* ... */ }
 			}.getClass().getDeclaredMethods()[0],
 			C.class.getDeclaredMethods()[0]));
 
 		// wrong: too few parameters
 		assertFalse(doesImplement(
 			new Object() {
-				public void doSomething() { /* No-op */ }
+				public void doSomething() { /* ... */ }
 			}.getClass().getDeclaredMethods()[0],
 			C.class.getDeclaredMethods()[0]));
 
 		// wrong: right number, type too general
 		assertFalse(doesImplement(
 			new Object() {
-				public void doSomething(A x) { /* No-op */ }
+				public void doSomething(A x) { /* ... */ }
 			}.getClass().getDeclaredMethods()[0],
 			C.class.getDeclaredMethods()[0]));
 
 		// wrong: right number, type too specific
 		assertFalse(doesImplement(
 			new Object() {
-				public void doSomething(SubSubA x) { /* No-op */ }
+				public void doSomething(SubSubA x) { /* ... */ }
 			}.getClass().getDeclaredMethods()[0],
 			C.class.getDeclaredMethods()[0]));
 
 		// ok
 		assertFalse(doesImplement(
 			new Object() {
-				public void doSomething(SubA x) { /* No-op */ }
+				public void doSomething(SubA x) { /* ... */ }
 			}.getClass().getDeclaredMethods()[0],
 			C.class.getDeclaredMethods()[0]));
 
