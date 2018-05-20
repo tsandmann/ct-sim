@@ -85,8 +85,7 @@ public class Buisitor {
 	 * @return true / false 
 	 */
 	private static boolean isSupertype(Class<?> supertype, Class<?> subtype) {
-		// isAssignableFrom() geht mit Referenztypen richtig um; berücksichtigt Autoboxing/-unboxing
-		// aber nicht
+		// isAssignableFrom() geht mit Referenztypen richtig um; berücksichtigt Autoboxing/-unboxing aber nicht
 		if (supertype.isAssignableFrom(subtype))
 			return true;
 		else {

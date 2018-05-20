@@ -42,13 +42,13 @@ public abstract class CtBot extends BasicBot {
 	
 	/** LED-Farben */
 	private static final Color[] ledColors = {
-		new Color(  0,  84, 255), // blau
-		new Color(  0,  84, 255), // blau
+		new Color(  0,  84, 255),	// blau
+		new Color(  0,  84, 255),	// blau
 		Color.RED,
-		new Color(255, 200,   0), // orange
+		new Color(255, 200,   0),	// orange
 		Color.YELLOW,
 		Color.GREEN,
-		new Color(  0, 255, 210), // tuerkis
+		new Color(  0, 255, 210),	// türkis
 		Color.WHITE,
 	};
 
@@ -79,7 +79,7 @@ public abstract class CtBot extends BasicBot {
 	protected boolean preProcessCommands(Command cmd) throws IOException, ProtocolException {
 		BotID id = cmd.getFrom();
 		if (cmd.has(Command.Code.WELCOME)) {
-			// Von einem Welcome nehmen wir sicherheitshalber erstmal die ID an
+			// Von einem Welcome nehmen wir sicherheitshalber erstmal die ID an.
 			lg.info("Nehme für Bot " + toString() + " erstmal die ID des Welcome-Paketes:"	+ id);
 			try {
 				setId(id);
@@ -146,8 +146,8 @@ public abstract class CtBot extends BasicBot {
 				}
 				controller.deliverMessage(cmd);
 			} else {
-				throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id=" + cmd.getTo()
-					+ ") gehen sollte. Habe aber keinen Controller!");
+				throw new ProtocolException("Nachricht empfangen, die an einen anderen Bot (Id=" + cmd.getTo() +
+						") gehen sollte. Habe aber keinen Controller!");
 			}
 			return true;
 		}
@@ -163,7 +163,8 @@ public abstract class CtBot extends BasicBot {
 	 */
 	public void receiveCommand(Command command) throws ProtocolException {
 		if (!command.getTo().equals(this.getId()) && !command.getTo().equals(Command.getBroadcastId()))
-			throw new ProtocolException("Bot " + getId() + " hat ein Kommando "+command.toCompactString() + " empfangen, dass nicht für ihn ist");
+			throw new ProtocolException("Bot " + getId() + " hat ein Kommando "+command.toCompactString() +
+					" empfangen, dass nicht für ihn ist");
 		
 		if (getConnection() == null) {
 			throw new ProtocolException("Bot " + getId() + " hat gar keine Connection");

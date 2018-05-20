@@ -44,7 +44,7 @@ import java.awt.Insets;
  * Note: Documentation of most methods is copied from the corresponding {@link GridBagConstraints} field
  * or constant.
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class GridBaggins extends GridBagConstraints {
 	/** UID */

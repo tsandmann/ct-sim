@@ -75,8 +75,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		 * @param img	Bild
 		 */
 		public synchronized void run(Image img) {
-			this.image = img.getScaledInstance(targetWidth, targetHeight,
-				Image.SCALE_SMOOTH);
+			this.image = img.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
 			repaint();
 		}
 
@@ -85,10 +84,10 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		 */
 		@Override
 		public void paint(Graphics g) {
-			// Löschen
+			// löschen
 			g.setColor(getBackground());
 			g.fillRect(0, 0, getSize().width, getSize().height);
-			// Malen
+			// malen
 			g.drawImage(image, 0, 0, null);
 		}
 
@@ -98,8 +97,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		@Override
 		public Dimension getPreferredSize() {
 			Insets is = getBorder().getBorderInsets(this);
-			return new Dimension(targetWidth  + is.left + is.right,
-			                     targetHeight + is.top  + is.bottom);
+			return new Dimension(targetWidth  + is.left + is.right, targetHeight + is.top  + is.bottom);
 		}
 
 		/**
@@ -136,8 +134,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 
 		/* 2/3: Knopf */
 		final JButton bt = new JButton("Holen");
-		bt.setToolTipText("Fordert beim Bot ein Bild dessen an, was der " +
-			"Maussensor sieht");
+		bt.setToolTipText("Fordert beim Bot ein Bild dessen an, was der Maussensor sieht");
 		bt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -151,8 +148,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 
 		/* 3/3: Checkbox */
 		final JCheckBox cb = new JCheckBox("laufend");
-		cb.setToolTipText("Fordert das nächste an, sobald ein Mausbild " +
-			"übertragen ist");
+		cb.setToolTipText("Fordert das Nächste an, sobald ein Mausbild übertragen ist");
 		cb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Wenn Checkbox an, Button deaktivieren
@@ -160,7 +156,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 				try {
 					compnt.requestPicture();
 				} catch (IOException e1) {
-					e1.printStackTrace(); //$$$ Excp
+					e1.printStackTrace();	//$$$ Excp
 				}
 			}
 		});
@@ -171,13 +167,13 @@ public class MousePictureViewer extends GuiBotBuisitor {
 					try {
 						compnt.requestPicture();
 					} catch (IOException e1) {
-						e1.printStackTrace(); //$$$ Excp
+						e1.printStackTrace();	//$$$ Excp
 					}
 				}
 			}
 		});
 
-		/* Ausliefern */
+		/* Auslieferung */
 		p.add(controls, BorderLayout.SOUTH);
 
 		add(p);

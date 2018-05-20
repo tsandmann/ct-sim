@@ -72,7 +72,7 @@ public class LabyrinthJudge extends Judge {
 	@Override
 	public boolean isStartingSimulationAllowed() {
 		if (this.controller.getParticipants() < this.participants) {
-			Debug.out.println("Fehler: Noch nicht genuegend Bots auf der Karte.");
+			Debug.out.println("Fehler: Noch nicht genügend Bots auf der Karte.");
 			return false;
 		}
 

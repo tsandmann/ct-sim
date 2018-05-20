@@ -50,7 +50,7 @@ import ctSim.model.ThreeDBot;
 import ctSim.util.Runnable1;
 
 /**
- * <a href="doc-files/grundplatte_bemassung.pdf">Grundplatte mit Bemassung</a>
+ * <a href="doc-files/grundplatte_bemassung.pdf">Grundplatte mit Bemaßung</a>
  */
 public class CtBotShape extends Group {
 	/** Abstand zwischen Zentrum und Außenkante des Bots [m] laut PDF */
@@ -150,8 +150,7 @@ public class CtBotShape extends Group {
          * @return GeometryArray
          */
         public GeometryArray toLineGeometry() {
-            LineStripArray a = new LineStripArray(size(),
-                GeometryArray.COORDINATES, new int[] { size() });
+            LineStripArray a = new LineStripArray(size(), GeometryArray.COORDINATES, new int[] { size() });
 			a.setCoordinates(0, toArray(new Point3d[] {}));
 			return a;
         }
@@ -165,7 +164,7 @@ public class CtBotShape extends Group {
             gi.setCoordinates(toArray(new Point3d[] {}));
             gi.setStripCounts(new int[] { size() });
 
-            // Noch ein paar Beschwörungsformeln, weiß der Henker warum...
+            // noch ein paar Beschwörungsformeln, unklar warum...
             new NormalGenerator().generateNormals(gi);
             gi.recomputeIndices();
 
@@ -212,18 +211,17 @@ public class CtBotShape extends Group {
      * @param appearanceEventSource	ThreeDBot
      */
     public CtBotShape(Color baseColor, ThreeDBot appearanceEventSource) {
-    	// Kann kollidieren - gilt auch für alle Kinder im Szenegraph
+    	// "kann kollidieren" - gilt auch für alle Kinder im Szenegraph
     	setPickable(true);
 
-    	// "Kann kollidieren" während der Anzeige noch änderbar (World ruft auf uns später
-    	// setPickable() auf)
+    	// "kann kollidieren" während der Anzeige noch änderbar (World ruft auf uns später setPickable() auf)
     	setCapability(Node.ALLOW_PICKABLE_WRITE);
 
     	// Form bauen
     	rightCheek = buildRightCheek();
     	addChild(rightCheek);
 
-    	// Linke Backe: Shape der rechten Backe, um 180 Grad gedreht
+    	// linke Backe: Shape der rechten Backe, um 180 Grad gedreht
     	leftCheek = (Shape3D)rightCheek.cloneNode(false);
     	TransformGroup g = new TransformGroup(z180aboutCenter());
     	g.addChild(leftCheek);
@@ -262,24 +260,23 @@ public class CtBotShape extends Group {
     	Shape3D rv = new Shape3D();
 
     	PointList floor = buildCheekArc(- BOT_HEIGHT / 2);
-        rv.addGeometry(floor.toFanGeometry()); // ausliefern
+        rv.addGeometry(floor.toFanGeometry());	// ausliefern
 
         PointList ceil  = buildCheekArc(+ BOT_HEIGHT / 2);
         /*
-		 * reverse() um Backface-Culling auszutricksen; "richtiger" wäre, in den PolygonAttributes
-		 * der Appearance setCullFace(FRONT) zu setzen, aber das würde die Appearance der gesamten
-		 * Shape beeinflussen, und diese soll hier nicht verändert werden
+		 * reverse() um Backface-Culling auszutricksen; "richtiger" wäre, in den PolygonAttributes der
+		 * Appearance setCullFace(FRONT) zu setzen, aber das würde die Appearance der gesamten Shape
+		 * beeinflussen, und diese soll hier nicht verändert werden.
 		 */
         ceil.reverse();
-        rv.addGeometry(ceil.toFanGeometry()); // ausliefern
+        rv.addGeometry(ceil.toFanGeometry());	// ausliefern
 
         // Mantel außen (vom Botzentrum weg gewandt); das ist ein Teil eines Zylindermantels
         PointList arcBottom = buildCheekArc(- BOT_HEIGHT / 2);
         PointList arcTop    = buildCheekArc(+ BOT_HEIGHT / 2);
         PointList lateralSurface = arcBottom.interleave(arcTop);
 
-        // Mantel innen (zum Botzentrum gewandt; d.h. Innenwand Mund); wir schließen einfach den
-        // Zylindermantel-Abschnitt
+        // Mantel innen (zum Botzentrum gewandt; d.h. Innenwand Mund); wir schließen einfach den Zylindermantel-Abschnitt
         lateralSurface.add(arcBottom.get(0));
         lateralSurface.add(arcTop.get(0));
 
@@ -295,8 +292,14 @@ public class CtBotShape extends Group {
      * @return 3D-Shape
      */
     protected static Shape3D buildMiddle() {
-    	// Shape (= Mittelteil) besteht aus 5 Teilen: Zylinderboden, Zyl.-Decke,
-    	// Abschnitt eines Zyl.-Mantel, 1. Quaderviertel, 2. Quaderviertel
+    	/* 
+    	 * Shape (= Mittelteil) besteht aus 5 Teilen:
+    	 * 	1) Zylinderboden,
+    	 * 	2) Zyl.-Decke,
+    	 * 	3) Abschnitt eines Zyl.-Mantel,
+    	 * 	4) 1. Quaderviertel,
+    	 * 	5) 2. Quaderviertel
+    	 */
     	Shape3D rv = new Shape3D();
 
     	PointList floor = buildStern(- BOT_HEIGHT / 2);
@@ -315,8 +318,8 @@ public class CtBotShape extends Group {
 
         // Quaderviertel
         PointList cuboidQuarter = new PointList();
-        cuboidQuarter.add((Point3d)topArc.last().clone()); // 0
-        cuboidQuarter.add((Point3d)topArc.get(0).clone()); // 1
+        cuboidQuarter.add((Point3d)topArc.last().clone());	// 0
+        cuboidQuarter.add((Point3d)topArc.get(0).clone());	// 1
 
         Transform3D moveDown = new Transform3D();
         moveDown.setTranslation(new Vector3d(0, - MOUTH_DEPTH_IN_M, 0));
@@ -373,12 +376,9 @@ public class CtBotShape extends Group {
      * @param toAngleInDeg		bis (Winkel in Deg)
      * @return Punktliste
      */
-    protected static PointList buildBotCircumference(double z,
-    double fromAngleInDeg, double toAngleInDeg) {
+    protected static PointList buildBotCircumference(double z, double fromAngleInDeg, double toAngleInDeg) {
         PointList rv = new PointList();
-        for (double a = fromAngleInDeg; a < toAngleInDeg;
-            a += CORNER_INTERVAL_IN_DEG) {
-
+        for (double a = fromAngleInDeg; a < toAngleInDeg; a += CORNER_INTERVAL_IN_DEG) {
             rv.add(buildPointOnCircumference(z, a));
         }
         // sicherstellen, dass genau der Zielwinkel erreicht wird (nicht vorher aufgehört)
@@ -391,8 +391,7 @@ public class CtBotShape extends Group {
      * @param angleInDeg	Winkel
      * @return 3D-Punkt
      */
-    protected static Point3d buildPointOnCircumference(double z,
-   	double angleInDeg) {
+    protected static Point3d buildPointOnCircumference(double z, double angleInDeg) {
         double angleInRad = toRadians(angleInDeg);
         return new Point3d(
         	BOT_RADIUS * sin(angleInRad),
@@ -407,8 +406,7 @@ public class CtBotShape extends Group {
      * @param transforms	Transformierung(en)
      * @return 3D-Punkt
      */
-    private static Point3d transformPoint(Point3d p,
-    Transform3D... transforms) {
+    private static Point3d transformPoint(Point3d p, Transform3D... transforms) {
     	Point3d rv = (Point3d)p.clone();
     	for (Transform3D t : transforms)
     		t.transform(rv);
@@ -436,8 +434,7 @@ public class CtBotShape extends Group {
      */
     protected Appearance getBotAppearance(Color c) {
     	Appearance rv = new Appearance();
-    	rv.setColoringAttributes(new ColoringAttributes(new Color3f(c),
-    		ColoringAttributes.SHADE_GOURAUD));
+    	rv.setColoringAttributes(new ColoringAttributes(new Color3f(c), ColoringAttributes.SHADE_GOURAUD));
     	return rv;
     }
 }

@@ -57,7 +57,7 @@ public class RealCtBot extends CtBot {
 		/**
 		 * @see ctSim.util.SaferThread#work()
 		 */
-		// Bei den zwei Logging-Aufrufen ist uns das egal
+		// bei den zwei Logging-Aufrufen ist uns das egal
 		@Override
 		public void work() throws InterruptedException {
 			Command cmd = null;
@@ -170,7 +170,7 @@ public class RealCtBot extends CtBot {
 			}
 		}
 
-		// Und einen CommandProcessor herstellen
+		// und einen CommandProcessor herstellen
 		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
 			public void run() {
@@ -185,7 +185,7 @@ public class RealCtBot extends CtBot {
 	 */
 	@Override
 	public String getDescription() {
-		return "Realer c't-Bot, verbunden über "+connectionName;
+		return "Realer c't-Bot, verbunden über " + connectionName;
 	}
 
 	/**
@@ -232,5 +232,6 @@ public class RealCtBot extends CtBot {
 //				}
 //			}
 //		}
-//	}	
+//	}
+
 }

@@ -129,9 +129,8 @@ public class Misc {
 	 * @param stuff
 	 * @return T
 	 */
-    public static <T> T[] intersperse(T separator, T... stuff) {
-		T[] rv = (T[])Array.newInstance(separator.getClass(),
-			stuff.length * 2 - 1);
+	public static <T> T[] intersperse(T separator, T... stuff) {
+		T[] rv = (T[])Array.newInstance(separator.getClass(), stuff.length * 2 - 1);
 		for (int i = 0; i < stuff.length; i++) {
 			rv[i * 2] = stuff[i];
 			if (i + 1 < stuff.length)
@@ -156,12 +155,11 @@ public class Misc {
 	 * @param dest
 	 * @throws IOException
 	 */
-	public static void copyStreamToStream(InputStream source,
-		OutputStream dest) throws IOException {
+	public static void copyStreamToStream(InputStream source, OutputStream dest) throws IOException {
 		byte[] buf = new byte[4096];
 		int len;
 		while ((len = source.read(buf)) > 0)
-            dest.write(buf, 0, len);
+			dest.write(buf, 0, len);
 		dest.close();
 	}
 
@@ -169,8 +167,7 @@ public class Misc {
 	private static HashMap<RenderingHints.Key, Object> antiAliasOn = newMap();
 
 	static {
-		antiAliasOn.put(RenderingHints.KEY_ANTIALIASING,
-			RenderingHints.VALUE_ANTIALIAS_ON);
+		antiAliasOn.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	}
 
 	/**
@@ -181,8 +178,7 @@ public class Misc {
 	}
 
 	/**
-	 * Konvertiert ein Byte (Wertebereich [-128; +127]) in ein <em>unsigned byte</em>
-	 * (Wertebereich [0; 255]).
+	 * Konvertiert ein Byte (Wertebereich [-128; +127]) in ein <em>unsigned byte</em> (Wertebereich [0; 255]).
 	 * 
 	 * @param value 
 	 * @return uByte

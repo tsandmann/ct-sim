@@ -62,15 +62,13 @@ public class Leds extends GuiBotBuisitor {
 		 * @param tooltip		Tooltip
 		 * @param colorWhenOn	An-Farbe
 		 */
-		LedViewer(final ButtonModel model, boolean editable, 
-			final String tooltip, Color colorWhenOn) {
+		LedViewer(final ButtonModel model, boolean editable, final String tooltip, Color colorWhenOn) {
 
 			setModel(model);
 			model.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
-					LedViewer.this.setToolTipText(
-						tooltip + " \u2013 "	// Streckenstrich ("Minuszeichen")
-						+ (model.isSelected() ? "leuchtet" : "leuchtet nicht"));
+					LedViewer.this.setToolTipText(tooltip + " \u2013 "	// Streckenstrich ("Minuszeichen")
+							+ (model.isSelected() ? "leuchtet" : "leuchtet nicht"));
 				}
 			});
 			setSelected(false);	// um initialen Tooltip setzen zu lassen
@@ -79,10 +77,8 @@ public class Leds extends GuiBotBuisitor {
 			// Farbverläufe setzen
 			double center = Math.round(RADIUS / 4.0);
 			double radius = Math.round(RADIUS / 2f);
-			paintWhenOn  = new RoundGradientPaint(center, center,
-				reduceSaturation(colorWhenOn), radius, colorWhenOn);
-			paintWhenOff = new RoundGradientPaint(center, center,
-				colorWhenOn, radius, colorWhenOn.darker().darker());
+			paintWhenOn  = new RoundGradientPaint(center, center, reduceSaturation(colorWhenOn), radius, colorWhenOn);
+			paintWhenOff = new RoundGradientPaint(center, center, colorWhenOn, radius, colorWhenOn.darker().darker());
 		}
 
 		/**
@@ -141,7 +137,6 @@ public class Leds extends GuiBotBuisitor {
 	 */
 	public void buisit(Actuators.Led led) {
 		setBorder(new TitledBorder("LEDs"));
-		add(new LedViewer(led.getExternalModel(), led.isGuiEditable(), 
-			led.getName(), led.getColorWhenOn()));
+		add(new LedViewer(led.getExternalModel(), led.isGuiEditable(), led.getName(), led.getColorWhenOn()));
 	}
 }

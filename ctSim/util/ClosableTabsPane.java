@@ -59,7 +59,7 @@ import javax.swing.JTabbedPane;
  * Tabs gemischt verwenden, aber das habe ich nie getestet. Es ist ein Hack wie gesagt.
  * </p>
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class ClosableTabsPane extends JTabbedPane {
 	/**
@@ -120,8 +120,8 @@ public class ClosableTabsPane extends JTabbedPane {
     }
 
     /*
-	 * Implementierungsprinzip: Die Schließen-Icons sind spezielle Icons, die wissen, an welchen
-	 * Koordinaten sie zuletzt gemalt wurden. Die ClosableTabsPane hat zwei Listener:
+	 * Implementierungsprinzip: Die Schließen-Icons sind spezielle Icons, die wissen, an welchen Koordinaten
+	 * sie zuletzt gemalt wurden. Die ClosableTabsPane hat zwei Listener:
 	 * 1. einen MouseListener, der das Icon fragt, ob die Koordinaten des Klick-Event innerhalb des
 	 * Icon liegen oder nicht; falls ja, wird das Tab geschlossen.
 	 * 2. einen MouseMotionListener, der ebenfalls die Mauskoordinaten gegen das Icon prüft und ggf.
@@ -154,7 +154,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	}
 
 	/**
-	 * wird nicht tatsächlich geschlossen, Event feuert nur
+	 * Wird nicht tatsächlich geschlossen, Event feuert nur
 	 * 
 	 * @param closeIcon
 	 * @param closeIconHover
@@ -170,7 +170,7 @@ public class ClosableTabsPane extends JTabbedPane {
 				}
 			}
 
-			// Falls einer aus der TabbedPane nach oben rausfährt, sodass der MotionListener nicht greift
+			// falls einer aus der TabbedPane nach oben rausfährt, sodass der MotionListener nicht greift
 			@Override
 			public void mouseExited(MouseEvent e) {
 				handleMouseMotionEvent(e);
@@ -273,7 +273,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	public void addClosableTab(String title, Component component,
 		String toolTip, String closeIconToolTip) {
 
-		// Hier (und nur hier) BoundedIcon erstellen
+		// hier (und nur hier) BoundedIcon erstellen
 		addTab(title, new BoundedIcon(rawCloseIcon), component, toolTip);
 		closeIconToolTips.add(closeIconToolTip);
 	}
@@ -295,7 +295,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * </p>
 	 * 
 	 * @param li
-	 * @throws NullPointerException	Falls li == {@code null} ist.
+	 * @throws NullPointerException	falls li == {@code null} ist
 	 */
 	public void addCloseListener(Runnable1<Integer> li) {
 		if (li == null)

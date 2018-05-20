@@ -49,12 +49,16 @@ import ctSim.util.Misc;
  * selbstgestrickte Bots erweitern, die keine c't-Bot sind.</li>
  * </ul>
  * </p>
- * <p>Die Klasse ist abstrakt und muss daher erst abgeleitet werden, um instanziiert werden zu können.</p>
- * <p>Der Haupt-Thread kümmert sich um die eigentliche Simulation und die Koordination mit dem Zeittakt
+ * <p>
+ * Die Klasse ist abstrakt und muss daher erst abgeleitet werden, um instanziiert werden zu können.
+ * </p>
+ * <p>
+ * Der Haupt-Thread kümmert sich um die eigentliche Simulation und die Koordination mit dem Zeittakt
  * der Welt. Die Kommunikation z.B. über eine TCP/IP-Verbindung muss von den abgeleiteten Klassen selbst
- * behandelt werden.</p>
+ * behandelt werden.
+ * </p>
  *
- * @author Benjamin Benz (bbe@heise.de)
+ * @author Benjamin Benz
  * @author Peter König (pek@heise.de)
  * @author Lasse Schwarten (lasse@schwarten.org)
  */
@@ -89,10 +93,8 @@ public abstract class BasicBot implements Bot {
 			return;	// ID ist schon gesetzt
 		if (controller != null) {
 			if (!controller.isIdFree(newId)) {
-				lg.warn("Die neue Id dieses Bots (" + newId
-						+ ") existiert schon im Controller!");
-				throw new ProtocolException("Die neue Id dieses Bots (" + newId
-						+ ") existiert schon im Controller!");
+				lg.warn("Die neue Id dieses Bots (" + newId + ") existiert schon im Controller!");
+				throw new ProtocolException("Die neue Id dieses Bots (" + newId + ") existiert schon im Controller!");
 			}
 		}
 		lg.info("Setze die Id von Bot " + toString() + " auf " + newId);
@@ -162,7 +164,7 @@ public abstract class BasicBot implements Bot {
 	 * </pre>
 	 * </p>
 	 *
-	 * @author Hendrik Krauß (hkr@heise.de)
+	 * @author Hendrik Krauß
 	 */
 	public static class BotComponentList extends BulkList<BotComponent<?>> {
         /** UID */
@@ -186,12 +188,12 @@ public abstract class BasicBot implements Bot {
          *         components.add(
          *             new Plappermaul(...),
          *             new Goldbein("links"),
-         *             new Goldbein("rechts"),	// Beide Instanzen werden betroffen
+         *             new Goldbein("rechts"),	// beide Instanzen werden betroffen
          *             new Nervensaegmodul(...),
          *         );
          *
-         *         // Hier die Component-Flag-Tabelle
-         *         // Setzen, welche BotComponents lesen/schreiben
+         *         // hier die Component-Flag-Tabelle
+         *         // setzen, welche BotComponents lesen/schreiben
          *         components.applyFlagTable(
          *             _(Plappermaul.class, WRITES),	// schreibt ins TCP
          *             _(Nervensaegmodul.class, READS, WRITES),	// liest + schreibt
@@ -209,7 +211,9 @@ public abstract class BasicBot implements Bot {
 		 * {@code components.add(...)}, die Subklassen können dann den {@code applyFlagsTable(...)}-Aufruf
 		 * machen.
 		 * </p>
-		 * <p>Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von ihnen allen betroffen.</p>
+		 * <p>
+		 * Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von ihnen allen betroffen.
+		 * </p>
 		 * 
          * @param compntFlagTable	Flags
 		 */
@@ -223,12 +227,14 @@ public abstract class BasicBot implements Bot {
     	}
 
     	/**
-		 * <p>Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und Aktuatoren). Die
+		 * <p>
+		 * Gibt ein empfangenes Kommando an alle Botkomponenten (= Sensoren und Aktuatoren). Die
 		 * Komponente(n), die sich zuständig fühlt (fühlen), können etwas damit tun (typischerweise
-		 * ihren eigenen Wert setzen auf den im Kommando gespeicherten).</p>
+		 * ihren eigenen Wert setzen auf den im Kommando gespeicherten).
+		 * </p>
 		 * <p>
 		 * Implementiert das
-		 * <a href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-Responsibility-Pattern</a>.
+		 * <a href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-Responsibility-Pattern</a>
 		 * </p>
 		 * 
     	 * @param command	Kommando
@@ -236,8 +242,7 @@ public abstract class BasicBot implements Bot {
 		 */
     	public void processCommand(Command command) throws ProtocolException {
     		if (command.getDirection() != Command.DIR_REQUEST) {
-    			throw new ProtocolException("Kommando ist Unfug: Hat als " +
-    					"Richtung nicht 'Anfrage'; ignoriere");
+    			throw new ProtocolException("Kommando ist Unfug: Hat als Richtung nicht 'Anfrage'; ignoriere");
     		}
     		for (BotComponent<?> c : this)
     			c.offerRead(command);
@@ -255,7 +260,7 @@ public abstract class BasicBot implements Bot {
 	/**
 	 * <p>
 	 * Ordnet einer BotComponent {@link ConnectionFlags} zu.
-	 * Component-Flag-Tabellen sind Arrays von diesem Typ. Siehe
+	 * Component-Flag-Tabellen sind Arrays von diesem Typ; siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
 	 */
@@ -278,8 +283,7 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * <p>
-	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann
-	 * - siehe
+	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann; siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
 	 * 

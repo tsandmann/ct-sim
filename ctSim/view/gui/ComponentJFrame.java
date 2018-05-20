@@ -44,8 +44,7 @@ import ctSim.util.AuxFrameButton;
 import ctSim.util.FmtLogger;
 
 /**
- * Ein JFrame, das die letzte Position speichert und einen KeyHandler zum Schließen des Fensters
- * implementiert
+ * Ein JFrame, das die letzte Position speichert und einen KeyHandler zum Schließen des Fensters implementiert
  *
  * @author Timo Sandmann
  */

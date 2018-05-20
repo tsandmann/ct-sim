@@ -47,8 +47,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 	private static final long serialVersionUID = -4717996663435641535L;
 
 	/** Komponenten-Editor */
-	public static class CompntEditor extends AbstractCellEditor
-	implements TableCellEditor {
+	public static class CompntEditor extends AbstractCellEditor implements TableCellEditor {
 		/** UID */
 		private static final long serialVersionUID = 4073894569366140421L;
 
@@ -65,8 +64,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
 		 */
-		public Component getTableCellEditorComponent(JTable table,
-		Object value, boolean isSelected, int row, int column) {
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 			lastActive = (Component)value;
 			return lastActive;
 		}
@@ -119,11 +117,11 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 			JSpinner spinner = new JSpinner(sModel);
 			if (decimalFormat != null) {
 				JSpinner.NumberEditor e = new JSpinner.NumberEditor(spinner, decimalFormat);
-				/* Werte nicht grau anzeigen, falls nicht editierbar */
+				// Werte nicht grau anzeigen, falls nicht editierbar
 				e.getTextField().setDisabledTextColor(UIManager.getColor("TextField.foreground"));
 				spinner.setEditor(e);
 			} else {
-				/* Werte nicht grau anzeigen, falls nicht editierbar */
+				// Werte nicht grau anzeigen, falls nicht editierbar
 				JSpinner.DefaultEditor e = (DefaultEditor) spinner.getEditor();
 				e.getTextField().setDisabledTextColor(UIManager.getColor("TextField.foreground"));
 			}
@@ -150,18 +148,15 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		 * @param c	Bot-Komponente
 		 */
 		public void addRow(BotComponent<? extends SpinnerModel> c) {
-			addRow(c.getName(), c.getDescription(), c.isGuiEditable(),
-				c.getExternalModel(), null);
+			addRow(c.getName(), c.getDescription(), c.isGuiEditable(), c.getExternalModel(), null);
 		}
 
 		/**
 		 * @param c				Bot-Komponente
 		 * @param decimalFormat	Format
 		 */
-		public void addRow(BotComponent<? extends SpinnerModel> c,
-		String decimalFormat) {
-			addRow(c.getName(), c.getDescription(), c.isGuiEditable(),
-				c.getExternalModel(), decimalFormat);
+		public void addRow(BotComponent<? extends SpinnerModel> c, String decimalFormat) {
+			addRow(c.getName(), c.getDescription(), c.isGuiEditable(), c.getExternalModel(), decimalFormat);
 		}
     }
 
@@ -179,8 +174,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
     /** Tabellen für Komponenten */
     public TableOfSpinners() {
         final JTable t = new JTable(model);
-        t.setRowHeight(new JSpinner().getMinimumSize().height +
-        	t.getRowMargin());
+        t.setRowHeight(new JSpinner().getMinimumSize().height + t.getRowMargin());
         t.setTableHeader(null);
 
         TableCellRenderer renderer = new CompntRenderer();

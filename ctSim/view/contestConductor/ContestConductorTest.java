@@ -25,13 +25,13 @@ import ctSim.view.contestConductor.ContestConductor.ContestJudge;
 
 /**
  * <p>
- * Test-Case, der einen vollen Wettbewerbsdurchlauf testet. Der ctSim startet im Contest-Modus, mit nur
- * einer Unterschied: Als Judge wird ein Test-Judge verwendet, der bei jedem Spiel im Simulatorschritt 1
- * den Bot 1 gewinnen lässt. Sinn hierbei ist Testläufe zeitlich nicht ausufern zu lassen.
+ * Test-Case, der einen vollen Wettbewerbsdurchlauf testet. Der ctSim startet im Contest-Modus, mit nur einer
+ * Unterschied: Als Judge wird ein Test-Judge verwendet, der bei jedem Spiel im Simulatorschritt 1 den Bot 1
+ * gewinnen lässt. Sinn hierbei ist Testläufe zeitlich nicht ausufern zu lassen.
  * </p>
  * <p>
- * Abgesehen vom Test-Judge wird der Test-Wettbewerb so ausgeführt, wie der Tatsächliche. Insbesondere wird
- * als Wettbewerbsdatenbank die normale, in der Konfigurationsdatei ct-sim-contest-conductor.xml Angegebene
+ * Abgesehen vom Test-Judge wird der Test-Wettbewerb so ausgeführt, wie der Tatsächliche. Insbesondere wird als
+ * Wettbewerbsdatenbank die normale, in der Konfigurationsdatei ct-sim-contest-conductor.xml Angegebene
  * verwendet (also keine Testdatenbank wie in anderen Test-Cases).
  * </p>
  * <p>
@@ -45,7 +45,7 @@ import ctSim.view.contestConductor.ContestConductor.ContestJudge;
  * Möglicherweise ist ctSim zu groß für JUnit (zuviele Threads usw.).
  * </p>
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class ContestConductorTest {
 	/**
@@ -54,8 +54,7 @@ public class ContestConductorTest {
 	 * @param args
 	 * */
 	public static void main(String[] args) {
-		Main.dependencies.reRegisterImplementation(
-			ContestJudge.class, MockContestJudge.class);
+		Main.dependencies.reRegisterImplementation(ContestJudge.class, MockContestJudge.class);
 		Main.main("-conf", "config/ct-sim-contest-conductor-local.xml");
 	}
 
@@ -65,8 +64,7 @@ public class ContestConductorTest {
 		 * @param controller
 		 * @param concon
 		 */
-		public MockContestJudge(Controller controller,
-			ContestConductor concon) {
+		public MockContestJudge(Controller controller, ContestConductor concon) {
 			super(controller, concon);
 	    }
 
@@ -75,8 +73,7 @@ public class ContestConductorTest {
 		 */
 		@Override
 		public boolean isSimulationFinished() {
-			concon.lg.fine("ContestJudge-Attrappe: Bot 1 gewinnt, " +
-					"beende Spiel");
+			concon.lg.fine("ContestJudge-Attrappe: Bot 1 gewinnt, beende Spiel");
             try {
             	GameOutcome o = new GameOutcome();
             	o.winner = ContestConductor.BotView.getAll().get(0);

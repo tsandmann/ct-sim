@@ -92,7 +92,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         private Actuators.Governor governor;
 
         /**
-         * Setzt den governor
+         * Setzt den Governor
          * 
          * @param governor
          */
@@ -101,9 +101,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         }
 
         /**
-         * Zahl der Umdrehungen, die das Rad im jetzigen Sim-Schritt macht (Beispiel: 10 Umdrehungen
-         * pro Sekunde, Sim-Schritt ist 0,2 Sim-Sekunden lang -&gt; Rückgabewert 2). Methode kann in
-         * einem Simschritt ohne Nebenwirkungen mehrfach aufgerufen werden (idempotente Methode).
+         * Zahl der Umdrehungen, die das Rad im jetzigen Sim-Schritt macht (Beispiel: 10 Umdrehungen pro
+         * Sekunde, Sim-Schritt ist 0,2 Sim-Sekunden lang -&gt; Rückgabewert 2). Methode kann in einem
+         * Simschritt ohne Nebenwirkungen mehrfach aufgerufen werden (idempotente Methode).
          *
          * @return Umdrehungen pro Sekunde (exakter Wert, d.h. mit Nachkomma-Anteil)
          */
@@ -214,15 +214,16 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         }
 
         /**
-        * Errechnet die Anzahl an Dots, die der Maussensor für eine Bewegung der angegebenen Länge
-        * zurückmeldet.
+        * Errechnet die Anzahl an Dots, die der Maussensor für eine Bewegung der angegebenen Länge zurückmeldet
         *
         * @param distanceInM	Die Länge der Strecke in Metern
         * @return Anzahl der Dots
         */
         private double meter2Dots(double distanceInM) {
-            // distance ist in Metern angegeben, x100 macht daraus cm; 2,54 cm sind ein Inch,
-            // anschließend Multiplikation mit der Auflösung des Maussensors
+            /* 
+             * distance ist in Metern angegeben, x100 macht daraus cm; 2,54 cm sind ein Inch,
+             * anschließend Multiplikation mit der Auflösung des Maussensors
+             */
             return distanceInM * 100 / 2.54 * SENS_MOUSE_DPI;
         }
 
@@ -325,7 +326,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
 			newHeading.normalize();
 
-			/* Neue Position bestimmen */
+			/* neue Position bestimmen */
 			Vector3d newPos = new Vector3d(parent.getPositionInWorldCoord());
 			double _sg = Math.sin(_gamma);
 			double _cg = Math.cos(_gamma);
@@ -334,7 +335,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				/* Bewegung geradeaus */
 				moveDistance = s_l;
 			} else {
-				/* andernfalls die Distanz laut Formel berechnen */
+				/* anderenfalls die Distanz laut Formel berechnen */
 				moveDistance = 0.5 * (s_l + s_r) * Math.sin(_gamma) / _gamma;
 			}
 
@@ -406,7 +407,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 						} else {
 
 							/* Bounds für Seitenfläche links erstellen */
-							Bounds pocketLeft = createBounds(newPosPoint, newHeadAngle, - 0.045, 0.034775, 0.03 / 2, transform);
+							Bounds pocketLeft = createBounds(newPosPoint, newHeadAngle, - 0.045, 0.034775, 0.03 / 2,
+									transform);
 
 //							parent.showDebugBox(0.035 / 2, 0.03955, 0.04 / 2, transform, newHeadAngle);
 //							parent.showDebugSphere(0.03 / 2, transform);
@@ -421,7 +423,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 //								lg.info("Kollision im Transportfach und (mindestens) auch links davon");
 							} else {					
 								/* Bounds für Seitenfläche rechts erstellen */
-								Bounds pocketRight = createBounds(newPosPoint, newHeadAngle, 0.045, 0.034775, 0.03 / 2, transform);
+								Bounds pocketRight = createBounds(newPosPoint, newHeadAngle, 0.045, 0.034775, 0.03 / 2,
+										transform);
 
 //								parent.showDebugBox(0.035 / 2, 0.03955, 0.04 / 2, transform, newHeadAngle);
 //								parent.showDebugSphere(0.03 / 2, transform);
@@ -498,21 +501,21 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				isFalling |= ! world.checkTerrain(new Point3d(posRadR), CtBotSimTcp.BOT_GROUND_CLEARANCE);
 
 				/** 
-				 * Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat, wird der Bot
-				 * gestoppt und entsprechend gefärbt.
+				 * Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat, wird der Bot gestoppt
+				 * und entsprechend gefärbt.
 				 * */
 				parent.set(IN_HOLE, isFalling);
 
 				if (! parent.is(IN_HOLE) && ! parent.is(COLLIDED)) {
 					parent.setPosition(newPosPoint);
 				}
-	
+
 				if (! parent.is(IN_HOLE) && ! collisionInPocket) {
 					parent.setHeading(newHeading);
 				} else {
 					mouseSensorX.sensor.set(0);
 				}
-	
+
 				if (parent.is(IN_HOLE) || parent.is(COLLIDED)) {
 					mouseSensorY.sensor.set(0);
 				}
@@ -536,7 +539,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		 * @param t	Transformationsmatrix (wird verändert)
 		 * @return erzeugte Bounds
 		 */
-		private Bounds createBounds(Point3d newPos, double newHeading, double dX, double dY, double radius, Transform3D t) {
+		private Bounds createBounds(Point3d newPos, double newHeading, double dX, double dY, double radius,
+				Transform3D t) {
 			final double dZ = - CtBotSimTcp.BOT_HEIGHT / 2;
 			
 			/* Vektor für die Verschiebung erstellen */
@@ -623,8 +627,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	}
 
     /**
-    * Repräsentiert einen optischen Sensor vom Typ CNY70. Beim c't-Bot kommt der CNY70 u.a. als
-    * Liniensensor (2x) und als Abgrundsensor (2x) zum Einsatz.
+    * Repräsentiert einen optischen Sensor vom Typ CNY70. Beim c't-Bot kommt der CNY70 u.a. als Liniensensor (2x)
+    * und als Abgrundsensor (2x) zum Einsatz.
     */
     class Cny70Simulator implements Runnable {
         /** Öffnungswinkel (rad) */
@@ -657,8 +661,9 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
          */
         public void run() {
             sensor.set(world.sensGroundReflectionCross(
-            		parent.worldCoordFromBotCoord(distFromBotCenter), parent.worldCoordFromBotCoord(headingInBotCoord), OPENING_ANGLE_IN_RAD, PRECISION)
-            );
+            		parent.worldCoordFromBotCoord(distFromBotCenter),
+            		parent.worldCoordFromBotCoord(headingInBotCoord),
+            		OPENING_ANGLE_IN_RAD, PRECISION));
         }
     }
 
@@ -843,8 +848,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
                 // Anzahl der Umdrehungen der Räder
                 double revs = wheel.revsThisSimStep();
 
-                // Encoder-Schritte als Fließkommazahl errechnen:
-                // Anzahl der Drehungen mal Anzahl der Markierungen, dazu der Rest der letzten Runde
+                /*
+                 * Encoder-Schritte als Fließkommazahl errechnen:
+                 * Anzahl der Drehungen mal Anzahl der Markierungen,dazu der Rest der letzten Runde
+                 */
                 double tmp = (revs * ENCODER_MARKS) + encoderRest;
                 if (encoderSensor.getHasLag()) {
 //					if (wheel.getLag() != 0.0) {
@@ -875,15 +882,17 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         endPoint.add(new Point3d(0.0, MAX_RANGE, 0.0));
         final boolean GP2Y0A60 = Config.getValue("GP2Y0A60").equals("true");
         final Characteristic charstic = GP2Y0A60 ? 
-        	(isLeft ? new Characteristic("characteristics/gp2y0a60Left.txt", 100) : new Characteristic("characteristics/gp2y0a60Right.txt", 100))
-        	: (isLeft ? new Characteristic("characteristics/gp2d12Left.txt", 100) : new Characteristic("characteristics/gp2d12Right.txt", 80));
+        	(isLeft ? new Characteristic("characteristics/gp2y0a60Left.txt", 100) :
+        			new Characteristic("characteristics/gp2y0a60Right.txt", 100))
+        	: (isLeft ? new Characteristic("characteristics/gp2d12Left.txt", 100) :
+        			new Characteristic("characteristics/gp2d12Right.txt", 80));
 
         simulators.add(new Runnable() {
             private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
 
             public void run() {
-                double distInM = world.watchObstacle(parent.worldCoordFromBotCoord(distFromBotCenter), parent.worldCoordFromBotCoord(endPoint),
-                    OPENING_ANGLE_IN_RAD, parent.getShape());
+                double distInM = world.watchObstacle(parent.worldCoordFromBotCoord(distFromBotCenter),
+                		parent.worldCoordFromBotCoord(endPoint), OPENING_ANGLE_IN_RAD, parent.getShape());
                 double distInCm = 100 * distInM;
                 double sensorReading = charstic.lookupPrecise(distInCm);
                 sensor.set(sensorReading);
@@ -896,8 +905,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @param isLeft	links?
      */
     public void buisitLineSensorSim(Sensors.Line s, boolean isLeft) {
-        simulators.add(new Cny70Simulator(
-            at(0.004, 0.009, - 0.011 - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
+        simulators.add(new Cny70Simulator(at(0.004, 0.009, - 0.011 - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
             looksForward(), s));
     }
 
@@ -906,8 +914,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @param isLeft	links?
      */
     public void buisitBorderSensorSim(Sensors.Border s, boolean isLeft) {
-        simulators.add(new Cny70Simulator(
-            at(0.036, 0.0384, - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
+        simulators.add(new Cny70Simulator(at(0.036, 0.0384, - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
             looksForward(), s));
     }
 
@@ -933,7 +940,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     
     /**
 	 * @param sensor	BPS-Sensor
-	 * @param isLeft	immer true, denn es gibt nur einen Sensor
+	 * @param isLeft	immer true, da es nur einen Sensor gibt
 	 */
 	public void buisitBPSSim(final Sensors.BPSReceiver sensor, final boolean isLeft) {
 		if (! isLeft) {
@@ -1010,7 +1017,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @see java.lang.Runnable#run()
      */
     public void run() {
-        // Wichtig: Zuerst die Sensoren, dann Kraut + Rüben     
+        // Wichtig: zuerst die Sensoren, dann Kraut + Rüben     
         for (Runnable simulator : simulators) {
             simulator.run();
         }

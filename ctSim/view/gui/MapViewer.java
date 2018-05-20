@@ -80,8 +80,7 @@ public class MapViewer extends JPanel {
 		 * @param icon			Icon
 		 * @param onClick		onClick-Handler
 		 */
-		public Button(String label, String toolTipText, Icon icon,
-		final Runnable onClick) {
+		public Button(String label, String toolTipText, Icon icon, final Runnable onClick) {
 			super(label);
 			setToolTipText(toolTipText);
 			setIcon(icon);
@@ -202,13 +201,16 @@ public class MapViewer extends JPanel {
 		/* Gesamtgröße setzen */
 		scrollPane = new JScrollPane(imageViewer);
 		scrollPane.setPreferredSize(new Dimension(500, 600));
-		int w = getInsets().left + scrollPane.getInsets().left +
-			scrollPane.getPreferredSize().width +
-			scrollPane.getInsets().right + getInsets().right + 20;
-		int h = getInsets().top + scrollPane.getInsets().top +
-			scrollPane.getPreferredSize().height + 
-			scrollPane.getInsets().bottom + getInsets().bottom +
-			toolbar.getPreferredSize().height;
+		int w = getInsets().left +
+				scrollPane.getInsets().left +
+				scrollPane.getPreferredSize().width +
+				scrollPane.getInsets().right +
+				getInsets().right + 20;
+		int h = getInsets().top +
+				scrollPane.getInsets().top +
+				scrollPane.getPreferredSize().height + 
+				scrollPane.getInsets().bottom +
+				getInsets().bottom + toolbar.getPreferredSize().height;
 		setPreferredSize(new Dimension(w, h));
 		
 		/* Ausliefern */
@@ -353,8 +355,7 @@ public class MapViewer extends JPanel {
 		@Override
 		public Dimension getPreferredSize() {
 			Insets is = getBorder().getBorderInsets(this);
-			return new Dimension(targetWidth  + is.left + is.right,
-			                     targetHeight + is.top  + is.bottom);
+			return new Dimension(targetWidth  + is.left + is.right, targetHeight + is.top  + is.bottom);
 		}
 	}
 

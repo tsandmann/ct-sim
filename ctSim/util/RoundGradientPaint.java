@@ -55,7 +55,7 @@ import java.awt.image.WritableRaster;
  * }
  * </pre>
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class RoundGradientPaint implements Paint {
 	/** RoundGradientPaint */
@@ -92,8 +92,7 @@ public class RoundGradientPaint implements Paint {
 		 * @see java.awt.PaintContext#getRaster(int, int, int, int)
 		 */
 		public Raster getRaster(int baseX, int baseY, int width, int height) {
-			WritableRaster raster = getColorModel()
-				.createCompatibleWritableRaster(width, height);
+			WritableRaster raster = getColorModel().createCompatibleWritableRaster(width, height);
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
 					double distance = center.distance(baseX + x, baseY + y);
@@ -146,8 +145,7 @@ public class RoundGradientPaint implements Paint {
 	 * @param radius
 	 * @param backgroundColor
 	 */
-	public RoundGradientPaint(double centerX, double centerY, Color centerColor,
-		double radius, Color backgroundColor) {
+	public RoundGradientPaint(double centerX, double centerY, Color centerColor, double radius, Color backgroundColor) {
 
 		if (radius <= 0)
 			throw new IllegalArgumentException();
@@ -161,21 +159,18 @@ public class RoundGradientPaint implements Paint {
 	/**
 	 * @see java.awt.Paint#createContext(java.awt.image.ColorModel, java.awt.Rectangle, java.awt.geom.Rectangle2D, java.awt.geom.AffineTransform, java.awt.RenderingHints)
 	 */
-	public PaintContext createContext(ColorModel cm, Rectangle deviceBounds,
-		Rectangle2D userBounds, AffineTransform aff, RenderingHints h) {
+	public PaintContext createContext(ColorModel cm, Rectangle deviceBounds, Rectangle2D userBounds,
+			AffineTransform aff, RenderingHints h) {
 
-		Point2D transformedRadius = aff.deltaTransform(
-			new Point2D.Double(0, rawRadius), null);
-		return new RoundGradientContext(
-			aff.transform(rawCenter, null), transformedRadius.distance(0, 0));
+		Point2D transformedRadius = aff.deltaTransform(new Point2D.Double(0, rawRadius), null);
+		return new RoundGradientContext(aff.transform(rawCenter, null), transformedRadius.distance(0, 0));
 	}
 
 	/**
 	 * @see java.awt.Transparency#getTransparency()
 	 */
 	public int getTransparency() {
-		if (centerColor.getTransparency() == OPAQUE
-		&&  bgColor.getTransparency() == OPAQUE)
+		if (centerColor.getTransparency() == OPAQUE &&  bgColor.getTransparency() == OPAQUE)
 			return OPAQUE;
 		else
 			return TRANSLUCENT;

@@ -32,7 +32,7 @@ import java.io.OutputStream;
  * Der Stream wrappt einen anderen Stream (gibt nichts selber aus).
  * </p>
  *
- * @author Hendrik Krauß (hkr@heise.de)
+ * @author Hendrik Krauß
  */
 public class BackslashNConverterStream extends OutputStream {
 	/** Output-Stream */

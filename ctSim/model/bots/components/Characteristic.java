@@ -113,18 +113,20 @@ public class Characteristic {
 			characteristic[i] = charac[i].floatValue();
 		}
 		
-		// Lookup-Table hat so viele Stellen wie die letzte Messgröße (in der vorletzten Stelle der
-		// Kennlinie) angibt - natürlich plus eine für den 0-Index: 
+		/* 
+		 * Lookup-Table hat so viele Stellen wie die letzte Messgröße (in der vorletzten Stelle der
+		 * Kennlinie) angibt - natürlich plus eine für den 0-Index:
+		 */
 		lookup = new float[(int) (1 + Math.floor(characteristic[characteristic.length - 2]))];
 		// Lookup-Table jetzt füllen:
 		int firstMeas = (int) Math.floor(characteristic[0]);
-		// Alles vor der ersten Messgröße mit INF füllen:
+		// alles vor der ersten Messgröße mit INF füllen:
 		for (int i = 0; i < firstMeas; i++) {
 			lookup[i] = INF;
 		}
-		// Dann jeweils in Zweierschritten voran:
+		// dann jeweils in Zweierschritten voran:
 		for (int i = 0; i < characteristic.length; i += 2) {
-			// Zwei aufeinanderfolgende Messgrößen heraussuchen:
+			// zwei aufeinanderfolgende Messgrößen heraussuchen:
 			int firMea = (int) Math.floor(characteristic[i]);
 			// Wert am ersten Index eintragen:
 			lookup[firMea] = characteristic[i + 1];
@@ -157,10 +159,8 @@ public class Characteristic {
 	 * Der Konstruktor errechnet aus der lückenhaften Stützwerttabelle die komplette Lookup-Table mit
 	 * Zwischenwerten für alle ganzzahligen Messgrößen im Bereich der Kennlinie
 	 * 
-	 * @param file
-	 * 				Eine Textdatei mit der Stützwerttabelle; Format:
-	 * 				Messgröße (int&gt;=0) \t resultierendes Sensordatum (float) \n
-	 * 				Messgrößen aufsteigend, aber nicht zwingend lückenlos
+	 * @param file	Eine Textdatei mit der Stützwerttabelle; Format: Messgröße (int&gt;=0) \t resultierendes
+	 * 				Sensordatum (float) \n Messgrößen aufsteigend, aber nicht zwingend lückenlos
 	 * @param inf	Sensordatum für Messgrößen außerhalb der Kennlinie	  
 	 */
 	public Characteristic(File file, float inf) {
@@ -183,18 +183,20 @@ public class Characteristic {
 			characteristic[i] = charac[i].floatValue();
 		}
 		
-		// Lookup-Table hat so viele Stellen wie die letzte Messgröße (in der vorletzten Stelle der
-		// Kennlinie) angibt - natürlich plus eine für den 0-Index:	
+		/* 
+		 * Lookup-Table hat so viele Stellen wie die letzte Messgröße (in der vorletzten Stelle der
+		 * Kennlinie) angibt - natürlich plus eine für den 0-Index:
+		 */
 		this.lookup = new float[(int) (1 + Math.floor(characteristic[characteristic.length - 2]))];
 		// Lookup-Table jetzt füllen:
 		int firstMeas = (int) Math.floor(characteristic[0]);
-		// Alles vor der ersten Messgröße mit INF füllen:
+		// alles vor der ersten Messgröße mit INF füllen:
 		for (int i = 0; i < firstMeas; i++) {
 			lookup[i] = INF;
 		}
 		// ... dann jeweils in Zweierschritten voran:
 		for (int i = 0; i < characteristic.length; i += 2) {
-			// Zwei aufeinanderfolgende Messgrößen heraussuchen:	
+			// zwei aufeinanderfolgende Messgrößen heraussuchen:	
 			int firMea = (int) Math.floor(characteristic[i]);
 			// Wert am ersten Index eintragen:
 			lookup[firMea] = characteristic[i + 1];
@@ -228,9 +230,8 @@ public class Characteristic {
 	 * Präzise Funktion, die bei Messgrößen zwischen ganzen Zahlen weitere Zwischenwerte berechnet.
 	 * Nur sinnvoll bei Sensoren, die nicht nur ganzzahlige Messwerte liefern
 	 * 
-	 * @param measure
-	 * 				Die Messgröße, aufgrund derer der Sensor seinen Wert erzeugt
-	 * 				(z.B. die Distanz bei Distanzsensoren)
+	 * @param measure	Die Messgröße, aufgrund derer der Sensor seinen Wert erzeugt
+	 * 					(z.B. die Distanz bei Distanzsensoren)
 	 * @return Das Sensordatum laut Kennlinie, ist eine ganze Zahl
 	 */
 	public double lookupPrecise(Number measure) {
@@ -259,12 +260,12 @@ public class Characteristic {
 	private void printLookup() {
 		System.out.println("Lookup-Table");
 		for (int i = 0; i < lookup.length; i++) {
-			System.out.println("Zeile\t" + i + "\t" + lookup[i]+ "\t" + intLookup[i]);
+			System.out.println("Zeile\t" + i + "\t" + lookup[i] + "\t" + intLookup[i]);
 		}
 	}
 
 	/**
-	 * Zerlegt einen CSV-String und schreibt alle gefundenen Zahlenwerte in ein Array.
+	 * Zerlegt einen CSV-String und schreibt alle gefundenen Zahlenwerte in ein Array
 	 * 
 	 * @param input	der zu zerlegende String, Einzelteile durch ";" getrennt
 	 * @return Das Array
@@ -290,7 +291,7 @@ public class Characteristic {
 	}
 
 	/**
-	 * Liest den Inhalt einer Datei und gibt ihn als String zurück.
+	 * Liest den Inhalt einer Datei und gibt ihn als String zurück
 	 * 
 	 * @param file	die Datei
 	 * @return Der String mit dem Inhalt der Datei
@@ -308,9 +309,9 @@ public class Characteristic {
 		stream.close();
 		
 		/*
-		 * Merkwürdigerweise wird bei dieser Methode, einen FileInputStream in einen String zu
-		 * verwandeln, ans Ende ein '?' als Zeichen für EOF angehängt, das wir auf etwas unschöne Art
-		 * und Weise abschneiden müssen:
+		 * Merkwürdigerweise wird bei dieser Methode, einen FileInputStream in einen String zu verwandeln,
+		 * ans Ende ein '?' als Zeichen für EOF angehängt, das wir auf etwas unschöne Art und Weise
+		 * abschneiden müssen:
 		 */
 		input = input.deleteCharAt((input.length()) - 1);
 		return (input.toString());

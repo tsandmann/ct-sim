@@ -59,7 +59,7 @@ public class DecoratororTest {
 			new Object() {
 				public SubA getU() { return null; }
 			}.getClass().getDeclaredMethods()[0],
-			C.class.getMethod("getA", new Class[] {})));
+			C.class.getMethod("getA", new Class[] { })));
 	}
 
 	/**
