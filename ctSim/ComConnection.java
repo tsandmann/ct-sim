@@ -175,8 +175,6 @@ public class ComConnection extends Connection {
 		return "USB";
 	}
 
-	/* ============================================================ */
-
 	// Auto-detect-Kram
 
 	/** COM-Verbindung */
@@ -244,8 +242,6 @@ public class ComConnection extends Connection {
 		new ComListenerThread(receiver).start();
 	}
 
-	/* ============================================================ */
-
 	/** Exception-Klasse für ComConnection */
 	public static class CouldntOpenTheDamnThingException extends Exception {
 		/** UID */
@@ -311,8 +307,6 @@ public class ComConnection extends Connection {
 			lg.fine("Serielle Verbindung eingegangen");
 
 			comConnSingleton.doHandshake(botReceiver);
-
-	/* ============================================================ */
 
 //			Bot b = new RealCtBot(comConnSingleton, (byte) 0);
 //			b.addDisposeListener(new Runnable() {

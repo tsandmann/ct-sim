@@ -87,8 +87,6 @@ public class FmtLogger extends Logger {
 		delegate.warning(msg);
 	}
 
-	/* ============================================================ */
-
 	// Kurzschreibweise mit Throwable
 
 	/**
@@ -170,8 +168,6 @@ public class FmtLogger extends Logger {
 	public void finest(Throwable t, String msg) {
 		delegate.log(Level.FINEST, msg, t);
 	}
-
-	/* ============================================================ */
 
 	// Kurzschreibweisen mit Format-Strings
 
@@ -310,9 +306,6 @@ public class FmtLogger extends Logger {
 	public void finest(Throwable t, String formatString, Object... parameters) {
 		delegate.log(Level.FINEST, String.format(formatString, parameters), t);
 	}
-
-
-	/* ============================================================ */
 
 	// Albtraum: Delegate-Elemente
 

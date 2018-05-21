@@ -132,8 +132,6 @@ public abstract class BotComponent<M> {
 		/** schreibt asynchron */
 		WRITES_ASYNCLY }
 
-	/* ============================================================ */
-
 	/** externes Modell */
 	private final M externalModel;
 

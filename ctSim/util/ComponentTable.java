@@ -39,8 +39,6 @@ public class ComponentTable extends JTable {
 	/** UID */
 	private static final long serialVersionUID = 2766695602066190632L;
 
-	/* ============================================================ */
-	
 	// Konstruktoren wie in der Superklasse
 
 	/** Komponenten-Tabelle */
@@ -156,8 +154,6 @@ public class ComponentTable extends JTable {
 		setRowHeight(maxHeight + getIntercellSpacing().height);
 	}
 
-	/* ============================================================ */
-	
 	// Workaround für Bug "horizontale Scrollbars"
 
 	/* Bug: Eine JTable in einer JScrollPane löst nie die horizontale Scrollbar aus;
@@ -192,8 +188,6 @@ public class ComponentTable extends JTable {
 		return super.getPreferredSize();
 	}
 
-	/* ============================================================ */
-	
 	// Hilfsklassen
 
 	/** Zellen-Renderer */

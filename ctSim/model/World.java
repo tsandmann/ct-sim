@@ -116,8 +116,6 @@ public class World {
 	/** Die Quelle, aus der der Parcours dieser Welt gelesen wurde */
 	private static String sourceString;
 
-	/* ============================================================ */
-
 	// "Geerbte" Zeit-Sachen
 
 	/**
@@ -145,8 +143,6 @@ public class World {
 	 * @see #getSimTimeInMs()
 	 */
 	private long simTimeInMs = 0;
-
-	/* ============================================================ */
 
 	/** aktive Bots */
 	private final List<ThreeDBot> botsRunning = Misc.newList();
@@ -186,8 +182,6 @@ public class World {
 			b.dispose();
 		}
 	}
-
-	/* ============================================================ */
 
 	/**
 	 * <p>
@@ -250,8 +244,6 @@ public class World {
 	private void increaseSimulTime() {
 		simTimeInMs += SIM_TIME_PER_STEP;
 	}
-
-	/* ============================================================ */
 
 	// Statische Methoden, um eine Welt zu erzeugen
 
@@ -327,8 +319,6 @@ public class World {
             }
 		});
 	}
-
-	/* ============================================================ */
 
 	/**
 	 * <p>

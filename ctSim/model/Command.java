@@ -339,8 +339,6 @@ public class Command {
 			return formatChar(codeOnTheWire);
 		}
 	}
-	
-	/* ============================================================ */
 
 	// Enum Command-Code
 	
@@ -532,8 +530,6 @@ public class Command {
 		}
 	}
 
-	/* ============================================================ */
-
 	// Enum Sub-Command-Code
 
 	/** Ein Sub-Command-Code kann einen der Werte in diesem Enum haben. */
@@ -676,8 +672,6 @@ public class Command {
 			return onTheWire; 
 		}
 	}
-
-	/* ============================================================ */
 
 	// Instanzvariablen
 

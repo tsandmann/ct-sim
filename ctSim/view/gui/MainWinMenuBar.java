@@ -159,8 +159,6 @@ public class MainWinMenuBar extends JMenuBar {
 		toolBar = buildToolBar(worldMenu, connectMenu, botMenu, simulationMenu, supportMenu);
 	}
 
-	/* ============================================================ */
-	
 	// Event-Handling-Code der Menüpunkte / Toolbar-Knöpfe
 
 	/**
@@ -404,8 +402,6 @@ public class MainWinMenuBar extends JMenuBar {
 		}
 	};
 
-	/* ============================================================ */
-	
 	// Hilfsmethoden
 
 	/**
@@ -457,8 +453,6 @@ public class MainWinMenuBar extends JMenuBar {
 //		}
 //	}
 
-	/* ============================================================ */
-	
 	// Hilfsklasse
 
 	/** Siehe {@link #worldChooser} */

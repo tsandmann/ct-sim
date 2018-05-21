@@ -415,8 +415,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	@Override
 	public Code getHotCmdCode() { return Command.Code.REMOTE_CALL; }
 
-	/* ============================================================ */
-	
 	// E/A - Schreiben 
 
 	/**
@@ -532,8 +530,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		// No-op
 	}
 
-	/* ============================================================ */
-	
 	// E/A - Lesen 
 
 	/**
@@ -651,8 +647,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			li.run(status);
 	}
 
-	/* ============================================================ */
-	
 	// Listener-Verwaltung 
 
 	/**
