@@ -182,7 +182,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
 	 */
-	@Override
 	public void setAsyncWriteStream(CommandOutputStream s) {
 		asyncOut = s;
 	}
@@ -361,7 +360,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * 
 	 * @param c	Command
 	 */
-	@Override
 	public synchronized void readFrom(Command c) {
 		if (! c.has(getHotCmdCode())) {
 			return;
@@ -454,7 +452,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * 
 	 * @param c	Command
 	 */
-	@Override
 	public void writeTo(Command c) { 
 		// No-op
 	}
@@ -506,7 +503,6 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 	 */
-	@Override
 	public Code getHotCmdCode() { return Code.MAP; }
 	
 	/**

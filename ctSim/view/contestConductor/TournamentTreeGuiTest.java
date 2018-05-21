@@ -80,15 +80,13 @@ public class TournamentTreeGuiTest extends JFrame {
 		/**
 		 * @see javax.swing.tree.TreeModel#addTreeModelListener(javax.swing.event.TreeModelListener)
 		 */
-		@Override
 		public void addTreeModelListener(TreeModelListener l) {
-	        listeners.add(l);
-        }
+			listeners.add(l);
+		}
 
 		/**
 		 * @see javax.swing.tree.TreeModel#removeTreeModelListener(javax.swing.event.TreeModelListener)
 		 */
-		@Override
 		public void removeTreeModelListener(TreeModelListener l) {
 			listeners.remove(l);
 		}
@@ -96,7 +94,6 @@ public class TournamentTreeGuiTest extends JFrame {
 		/**
 		 * @see javax.swing.tree.TreeModel#getChildCount(java.lang.Object)
 		 */
-		@Override
 		public int getChildCount(Object parent) {
 			return isLeaf(parent) ? 0 : 2;
 		}
@@ -104,7 +101,6 @@ public class TournamentTreeGuiTest extends JFrame {
 		/**
 		 * @see javax.swing.tree.TreeModel#getChild(java.lang.Object, int)
 		 */
-		@Override
 		public Object getChild(Object parent, int index) {
 			if (index < 0 || index > 1)
 				throw new IllegalArgumentException();
@@ -116,7 +112,6 @@ public class TournamentTreeGuiTest extends JFrame {
 		/**
 		 * @see javax.swing.tree.TreeModel#getIndexOfChild(java.lang.Object, java.lang.Object)
 		 */
-		@Override
 		public int getIndexOfChild(Object parent, Object child) {
 	        throw new UnsupportedOperationException();
         }
@@ -124,7 +119,6 @@ public class TournamentTreeGuiTest extends JFrame {
 		/**
 		 * @see javax.swing.tree.TreeModel#getRoot()
 		 */
-		@Override
 		public Object getRoot() {
 	        return carrier;
         }
@@ -132,7 +126,6 @@ public class TournamentTreeGuiTest extends JFrame {
 		/**
 		 * @see javax.swing.tree.TreeModel#isLeaf(java.lang.Object)
 		 */
-		@Override
 		public boolean isLeaf(Object node) {
 	        return ((SpreadingTree)node).payload != null;
         }
@@ -143,7 +136,6 @@ public class TournamentTreeGuiTest extends JFrame {
 		 * @param path 
 		 * @param newValue 
 		 */
-		@Override
 		public void valueForPathChanged(TreePath path, Object newValue) {
 	        throw new UnsupportedOperationException();
         }
@@ -163,7 +155,6 @@ public class TournamentTreeGuiTest extends JFrame {
 		setLayout(new BorderLayout());
 		JButton her = new JButton("+");
 		her.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 		        tm.addLevel();
 		        for (int i = 0; i < t.getRowCount(); i++)
@@ -173,7 +164,6 @@ public class TournamentTreeGuiTest extends JFrame {
 		});
 		JButton weg = new JButton("\u2013");
 		weg.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
     			tm.removeNode();
     			for (int i = 0; i < t.getRowCount(); i++)

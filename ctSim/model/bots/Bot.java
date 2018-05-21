@@ -33,7 +33,6 @@ public interface Bot {
 	/**
 	 * @return Name des Bots
 	 */
-	@Override
 	public String toString();
 	
 	/**

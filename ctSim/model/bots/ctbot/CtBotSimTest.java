@@ -73,7 +73,6 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 	/**
 	 * @see ctSim.model.bots.SimulatedBot#doSimStep()
 	 */
-	@Override
 	public void doSimStep() throws InterruptedException, UnrecoverableScrewupException {
 		if (govL == null || govR == null || irL == null || irR == null) {
 			throw new UnrecoverableScrewupException();

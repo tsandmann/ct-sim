@@ -85,7 +85,6 @@ public class MapViewer extends JPanel {
 			setToolTipText(toolTipText);
 			setIcon(icon);
 			addActionListener(new ActionListener() {
-				@Override
 				public void actionPerformed(ActionEvent e) {
 					onClick.run();
 				}
@@ -144,7 +143,6 @@ public class MapViewer extends JPanel {
 	
 	/** Fordert die komplette Karte neu an */
 	private final Runnable onReload = new Runnable() {
-		@Override
 		public void run() {
 			try {
 				mapCompnt.requestMap();
@@ -156,7 +154,6 @@ public class MapViewer extends JPanel {
 	
 	/** Speichert die Karte als png-Bild */
 	private final Runnable onSave = new Runnable() {
-		@Override
 		public void run() {
 			JFileChooser fc = new JFileChooser();
 			PNGFilter filter = new PNGFilter();
@@ -264,7 +261,6 @@ public class MapViewer extends JPanel {
 		}
 
 		/** Methode einer Swing-Komponente, aber thread-sicher */
-		@Override
 		public synchronized void run() {			
 			/* Bereich um den Bot in den sichtbaren Bereich scrollen */
 			this.scrollPosition.x = Misc.clamp(botPos.x - 125, targetWidth);

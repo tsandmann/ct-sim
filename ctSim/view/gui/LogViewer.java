@@ -78,7 +78,6 @@ public class LogViewer extends JPanel {
 			setToolTipText(toolTipText);
 			setIcon(icon);
 			addActionListener(new ActionListener() {
-				@Override
 				public void actionPerformed(ActionEvent e) {
 					onClick.run();
 				}
@@ -88,7 +87,6 @@ public class LogViewer extends JPanel {
 
 	/** Save-Handler */
 	private final Runnable onSaveLog = new Runnable() {
-		@Override
 		public void run() {
 			JFileChooser fc = new JFileChooser();
 			int userChoice = fc.showSaveDialog(LogViewer.this);
@@ -115,7 +113,6 @@ public class LogViewer extends JPanel {
 
 	/** Clear-Handler */
 	private final Runnable onClearLog = new Runnable() {
-		@Override
 		public void run() {
 			try {
 				logContent.remove(0, logContent.getLength());
@@ -167,17 +164,14 @@ public class LogViewer extends JPanel {
 				}
 			}
 
-			@Override
 			public void changedUpdate(DocumentEvent e) {
 				// No-op
 			}
 
-			@Override
 			public void insertUpdate(DocumentEvent e) {
 				scrollToEnd();
 			}
 
-			@Override
 			public void removeUpdate(DocumentEvent e) {
 				scrollToEnd();
 			}

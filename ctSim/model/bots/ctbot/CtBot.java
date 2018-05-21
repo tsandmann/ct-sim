@@ -257,7 +257,6 @@ public abstract class CtBot extends BasicBot {
 		}
 		
 		addDisposeListener(new Runnable() {
-			@Override
 			public void run() {
 				sendShutdown();
 			}
@@ -284,7 +283,6 @@ public abstract class CtBot extends BasicBot {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_log()
 	 */
-	@Override
 	public boolean get_feature_log() {
 		try {
 			return welcomeReceiver.get_feature_log();
@@ -296,7 +294,6 @@ public abstract class CtBot extends BasicBot {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_rc5()
 	 */
-	@Override
 	public boolean get_feature_rc5() {
 		try {
 			return welcomeReceiver.get_feature_rc5();
@@ -308,7 +305,6 @@ public abstract class CtBot extends BasicBot {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_abl_program()
 	 */
-	@Override
 	public boolean get_feature_abl_program() {
 		try {
 			return welcomeReceiver.get_feature_abl_program();
@@ -320,7 +316,6 @@ public abstract class CtBot extends BasicBot {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_basic_program()
 	 */
-	@Override
 	public boolean get_feature_basic_program() {
 		try {
 			return welcomeReceiver.get_feature_basic_program();
@@ -332,7 +327,6 @@ public abstract class CtBot extends BasicBot {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_map()
 	 */
-	@Override
 	public boolean get_feature_map() {
 		try {
 			return welcomeReceiver.get_feature_map();
@@ -344,7 +338,6 @@ public abstract class CtBot extends BasicBot {
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_remotecall()
 	 */
-	@Override
 	public boolean get_feature_remotecall() {
 		try {
 			return welcomeReceiver.get_feature_remotecall();

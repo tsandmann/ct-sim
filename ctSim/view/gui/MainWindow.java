@@ -142,7 +142,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 			Config.getIcon("schliessen-hover"));
 		// Listener wenn jemand auf dem Tab das Schließen-Icon klickt
 		botTabs.addCloseListener(new Runnable1<Integer>() {
-			@Override
 			public void run(Integer index) {
 				BotViewer bv = (BotViewer)botTabs.getComponentAt(index);
 				bv.bot.dispose();
@@ -213,10 +212,8 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * 
 	 * @param w	die Welt
 	 */
-	@Override
 	public void onWorldOpened(final World w) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				closeWorld();
 				world = w;
@@ -271,7 +268,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * 
 	 * @param time	die Zeit, die zur Simulatorzeit hinzugezählt wird
 	 */
-	@Override
 	public void onSimulationStep(final long time) {
 		statusBar.updateTime(time);
 	}
@@ -281,10 +277,8 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * 
 	 * @param bot	der neue Bot
 	 * */
-	@Override
 	public void onBotAdded(final Bot bot) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				String tabTitle = bot.toString();
 				final JComponent tabContent = new BotViewer(bot);
@@ -308,7 +302,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 					tabIconTooltip);
 				// Listener für "Wenn Bot stirbt, Tab entfernen"
 				bot.addDisposeListener(new Runnable() {
-					@Override
 					public void run() {
 						removeBotTab(bot);
 						updateLayout();
@@ -330,7 +323,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 */
 	private void removeBotTab(final Bot bot) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				for (int i = 0; i < botTabs.getTabCount(); i++) {
 					BotViewer bv = (BotViewer)botTabs.getComponentAt(i);
@@ -350,15 +342,13 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	/**
 	 * @see ctSim.view.View#onApplicationInited()
 	 */
-	@Override
 	public void onApplicationInited() {
 		// No-op
-    }
+	}
 
 	/**
 	 * @see ctSim.view.View#onSimulationFinished()
 	 */
-	@Override
 	public void onSimulationFinished() {
 		// No-op
 	}
@@ -366,7 +356,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	/**
 	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
 	 */
-	@Override
 	public void onJudgeSet(final Judge judge) {
 
 //		SwingUtilities.invokeLater(new Runnable() {
@@ -384,7 +373,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 * Reset-Signal per RC5-Code. Anschließend werden alle Bots in der Welt zurück auf ihre Startplätze
 	 * gesetzt. 
 	 */
-	@Override
 	public void onResetAllBots() {
 		/* Bots das Reset-Signal schicken */
 		for (int i=0; i<botTabs.getTabCount(); i++) {

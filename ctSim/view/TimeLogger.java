@@ -59,7 +59,6 @@ public class TimeLogger implements View {
 	/**
 	 * @see ctSim.view.View#onApplicationInited()
 	 */
-	@Override
 	public void onApplicationInited() {
 		lg.info("TimeLogger läuft; Simzeit und Realzeit werden während der Simulation periodisch ausgegeben");
 	}
@@ -67,7 +66,6 @@ public class TimeLogger implements View {
 	/**
 	 * @see ctSim.view.View#onSimulationStep(long)
 	 */
-	@Override
 	public void onSimulationStep(long simTimeInMs) {
 		if (realTimeAtSimulationStart == Long.MIN_VALUE)
 			realTimeAtSimulationStart = System.currentTimeMillis();
@@ -91,7 +89,6 @@ public class TimeLogger implements View {
 	/**
 	 * @see ctSim.view.View#onSimulationFinished()
 	 */
-	@Override
 	public void onSimulationFinished() {
 		initVariables();
 	}
@@ -99,7 +96,6 @@ public class TimeLogger implements View {
 	/**
 	 * @see ctSim.view.View#onBotAdded(ctSim.model.bots.Bot)
 	 */
-	@Override
 	public void onBotAdded(Bot bot) {
 		// No-op
 	}
@@ -107,7 +103,6 @@ public class TimeLogger implements View {
 	/**
 	 * @see ctSim.view.View#onJudgeSet(ctSim.model.rules.Judge)
 	 */
-	@Override
 	public void onJudgeSet(Judge j) {
 		// No-op
 	}
@@ -115,7 +110,6 @@ public class TimeLogger implements View {
 	/**
 	 * @see ctSim.view.View#onWorldOpened(ctSim.model.World)
 	 */
-	@Override
 	public void onWorldOpened(World newWorld) {
 		// No-op
 	}
@@ -123,7 +117,6 @@ public class TimeLogger implements View {
 	/**
 	 * @see ctSim.view.View#onResetAllBots()
 	 */
-	@Override
 	public void onResetAllBots() {
 		// No-op
 	}

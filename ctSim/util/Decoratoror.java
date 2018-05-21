@@ -116,7 +116,6 @@ public class Decoratoror {
 		return (T)Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
 			new Class[] { resultInterface },
 			new InvocationHandler() {
-				@Override
 				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 					return method.invoke(methodImpls.get(method), args);
 				}

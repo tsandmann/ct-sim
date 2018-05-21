@@ -272,15 +272,14 @@ public class World {
 			 * er soll die parcours.dtd im Verzeichnis "parcours" suchen.
 			 */
 			new EntityResolver() {
-				@Override
 				public InputSource resolveEntity(String publicId, String systemId)
 				throws SAXException, IOException {
 					if (systemId.endsWith(PARCOURS_DTD))
 						return new InputSource(ClassLoader.getSystemResource(
 							// "./" darf hier nicht enthalten sein
 							Config.getValue("worlddir").substring(2) + PARCOURS_DTD).openStream());
-	                return null;	// Standard-EntityResolver verwenden
-	            }
+					return null;	// Standard-EntityResolver verwenden
+				}
 			}
 		);
 	}
@@ -308,15 +307,14 @@ public class World {
 			 * er soll die parcours.dtd im Verzeichnis "parcours" suchen.
 			 */
 			new EntityResolver() {
-				@Override
 				public InputSource resolveEntity(String publicId, String systemId)
 				throws SAXException, IOException {
 					if (systemId.endsWith(PARCOURS_DTD))
 						return new InputSource(ClassLoader.getSystemResource(
 						// "./" darf hier nicht enthalten sein
 						Config.getValue("worlddir").substring(2) + PARCOURS_DTD).openStream());
-                return null; // Standard-EntityResolver verwenden
-            }
+				return null; // Standard-EntityResolver verwenden
+			}
 		});
 	}
 
@@ -547,7 +545,6 @@ public class World {
 //		botWrapper.updateSimulation(getSimTimeInMs());
 
 		botWrapper.addDisposeListener(new Runnable() {
-			@Override
 			public void run() {
 				botsToStart.remove(botWrapper);
 				botsRunning.remove(botWrapper);

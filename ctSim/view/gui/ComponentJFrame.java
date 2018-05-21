@@ -131,11 +131,10 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 		/* Key-Handler */
 		InputMap inputMap = comp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		// Ctrl / Cmd + w
-        KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
-        inputMap.put(key, "close");
-        comp.getActionMap().put("close", new AbstractAction() {
+		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		inputMap.put(key, "close");
+		comp.getActionMap().put("close", new AbstractAction() {
 			private static final long serialVersionUID = -7639062435105576105L;
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					button.doClick();	// Klick auf den Button schließt das Fenster und schaltet den Button um
@@ -143,7 +142,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 					// egal
 				}
 			}
-        });
+		});
 	}
 
 	/**
@@ -151,7 +150,6 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	 * 
 	 * @param e	Event
 	 */
-	@Override
 	public void windowClosed(WindowEvent e) {
 		lg.fine(this.getTitle() + ": windowClosed()");
 		positions.getMap().put(stripTitle(getTitle()), getLocation());
@@ -185,7 +183,6 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
-	@Override
 	public void windowActivated(WindowEvent e) {
 		// No-op
 	}
@@ -193,7 +190,6 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
-	@Override
 	public void windowClosing(WindowEvent e) {
 		// No-op
 	}
@@ -201,7 +197,6 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
-	@Override
 	public void windowDeactivated(WindowEvent e) {
 		// No-op
 	}
@@ -209,7 +204,6 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
-	@Override
 	public void windowDeiconified(WindowEvent e) {
 		// No-op
 	}
@@ -217,7 +211,6 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
-	@Override
 	public void windowIconified(WindowEvent e) {
 		// No-op
 	}
@@ -225,7 +218,6 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param e
 	 */
-	@Override
 	public void windowOpened(WindowEvent e) {
 		// No-op
 	}

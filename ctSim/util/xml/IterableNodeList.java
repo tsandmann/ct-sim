@@ -55,17 +55,14 @@ public class IterableNodeList implements NodeList, Iterable<QueryableNode> {
 	/**
 	 * @see java.lang.Iterable#iterator()
 	 */
-	@Override
 	public Iterator<QueryableNode> iterator() {
 		return new Iterator<QueryableNode>() {
 			private int lastIdx = -1;
 
-			@Override
 			public boolean hasNext() {
 				return lastIdx + 1 < wrappee.getLength();
 			}
 
-			@Override
 			public QueryableNode next() {
 				lastIdx++;
 				return IterableNodeList.this.item(lastIdx);
@@ -80,7 +77,6 @@ public class IterableNodeList implements NodeList, Iterable<QueryableNode> {
 	/**
 	 * @see org.w3c.dom.NodeList#getLength()
 	 */
-	@Override
 	public int getLength() {
 		return wrappee.getLength();
 	}
@@ -88,7 +84,6 @@ public class IterableNodeList implements NodeList, Iterable<QueryableNode> {
 	/**
 	 * @see org.w3c.dom.NodeList#item(int)
 	 */
-	@Override
 	public QueryableNode item(int index) {
 		return XmlDocument.createQueryableNode(wrappee.item(index));
 	}

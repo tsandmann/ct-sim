@@ -274,9 +274,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		private Node associatedObject = null;
 
 		/**
-         * @see java.lang.Runnable#run()
-         */
-		@Override
+		 * @see java.lang.Runnable#run()
+		 */
 		public void run() {
 			/* Position und Heading berechnen 
 			 * für ausführliche Erläuterung der Positionsberechnung siehe doc-files/odometrie.pdf
@@ -660,7 +659,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		/**
 		 * @see java.lang.Runnable#run()
 		 */
-		@Override
 		public void run() {
             sensor.set(world.sensGroundReflectionCross(
             		parent.worldCoordFromBotCoord(distFromBotCenter),
@@ -732,7 +730,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	/**
 	 * @see ctSim.model.bots.BotBuisitor#visit(java.lang.Object, ctSim.model.bots.Bot)
 	 */
-	@Override
 	public void visit(Object o, Bot b) {
         if (o instanceof BotComponent<?>)
             buisitor.dispatchBuisit((BotComponent<?>)o);
@@ -743,7 +740,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	/**
 	 * @see ctSim.model.bots.components.NumberTwin.NumberTwinVisitor#visit(ctSim.model.bots.components.NumberTwin, boolean)
 	 */
-	@Override
 	public void visit(NumberTwin numberTwin, boolean isLeft) {
 		buisitor.dispatchBuisit(numberTwin, isLeft);
 	}
@@ -786,7 +782,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     	
         if (servo != null) {
 	        simulators.add(new Runnable() {
-				@Override
 				public void run() {
 	                final int doorState = servo.getServoPosition() < 12 ? 0 : 1;	// 0: Klappe zu; 1: Klappe auf
 					final boolean change = doorState != doorSensor.get().intValue();
@@ -817,7 +812,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         if (servo != null) {
 	        simulators.add(new Runnable() {
 	        	int last_pos = 0;
-				@Override
 				public void run() {
 	                final int cam_pos = servo.getServoPosition();
 	                final boolean change = cam_pos != last_pos;
@@ -850,7 +844,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             */
             private double encoderRest = 0.0;
 
-			@Override
 			public void run() {
                 // Anzahl der Umdrehungen der Räder
                 double revs = wheel.revsThisSimStep();
@@ -897,7 +890,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         simulators.add(new Runnable() {
             private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
 
-			@Override
 			public void run() {
                 double distInM = world.watchObstacle(parent.worldCoordFromBotCoord(distFromBotCenter),
                 		parent.worldCoordFromBotCoord(endPoint), OPENING_ANGLE_IN_RAD, parent.getShape());
@@ -937,7 +929,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         final Vector3d headingInBotCoord = looksForward();
 
         simulators.add(new Runnable() {
-			@Override
 			public void run() {
             	sensor.set(world.sensLight(
             		parent.worldCoordFromBotCoord(distFromBotCenter),
@@ -960,7 +951,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 			// Sensor schaut nach -90 Grad:
 			private final Point3d endOfSens = new Point3d(BPS_LIGHT_DISTANCE, 0.0, 0.0);
 
-			@Override
 			public void run() {
 				Point3d pos = parent.worldCoordFromBotCoord(startOfSens);				
 				pos.setZ(BPS.BPSZ);
@@ -986,7 +976,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		simulators.add(new Runnable() {
 			private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
 
-			@Override
 			public void run() {
             	if (krautUndRuebenSim.getAssociatedObject() != null) {
             		sensor.set(1);
@@ -1027,7 +1016,6 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	/**
 	 * @see java.lang.Runnable#run()
 	 */
-	@Override
 	public void run() {
         // Wichtig: zuerst die Sensoren, dann Kraut + Rüben     
         for (Runnable simulator : simulators) {

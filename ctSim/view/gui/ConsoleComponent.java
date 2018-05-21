@@ -51,7 +51,6 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 	 * 
 	 * @param msg	Text
 	 */
-	@Override
 	public synchronized void print(String msg) {
 		textArea.append(msg);
 		textArea.setCaretPosition(textArea.getText().length());
@@ -62,7 +61,6 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 	 * 
 	 * @param msg	Text
 	 */
-	@Override
 	public synchronized void println(String msg) {
 		print(msg + "\n");
 	}

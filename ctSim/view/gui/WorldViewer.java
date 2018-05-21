@@ -246,7 +246,6 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	 * @return null wenn nix geladen, sonst Screenshot
 	 * 
 	 */
-	@Override
 	public BufferedImage getScreenshot() {
 		/*
 		 * Das hier ist sehr bürokratisch, aber leider habe ich keinen einfacheren Weg gefunden...

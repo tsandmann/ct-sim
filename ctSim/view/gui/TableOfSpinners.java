@@ -57,7 +57,6 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.CellEditor#getCellEditorValue()
 		 */
-		@Override
 		public Object getCellEditorValue() {
 			return lastActive;
 		}
@@ -65,7 +64,6 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
 		 */
-		@Override
 		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 			lastActive = (Component)value;
 			return lastActive;
@@ -77,7 +75,6 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 		 */
-		@Override
 		public Component getTableCellRendererComponent(JTable table,
 		Object value, boolean isSelected, boolean hasFocus, int row,
 		int column) {
@@ -141,7 +138,6 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 			// Events aus dem SpinnerModel sollen Neu-Malen der Tabelle auslösen
 			final int thisRow = getRowCount() - 1;
 			sModel.addChangeListener(new ChangeListener() {
-				@Override
 				public void stateChanged(ChangeEvent e) {
 					fireTableCellUpdated(thisRow, 1);
 				}

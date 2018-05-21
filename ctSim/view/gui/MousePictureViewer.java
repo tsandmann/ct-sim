@@ -74,7 +74,6 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		 * 
 		 * @param img	Bild
 		 */
-		@Override
 		public synchronized void run(Image img) {
 			this.image = img.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
 			repaint();
@@ -137,7 +136,6 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		final JButton bt = new JButton("Holen");
 		bt.setToolTipText("Fordert beim Bot ein Bild dessen an, was der Maussensor sieht");
 		bt.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					compnt.requestPicture();
@@ -152,7 +150,6 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		final JCheckBox cb = new JCheckBox("laufend");
 		cb.setToolTipText("Fordert das Nächste an, sobald ein Mausbild übertragen ist");
 		cb.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Wenn Checkbox an, Button deaktivieren
 				bt.setEnabled(! cb.isSelected());
@@ -165,7 +162,6 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		});
 		controls.add(cb);
 		compnt.addCompletionListener(new Runnable() {
-			@Override
 			public void run() {
 				if (cb.isSelected()) {
 					try {

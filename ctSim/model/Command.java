@@ -237,7 +237,6 @@ public class Command {
 		 * 
 		 * @return Code des Kommandos
 		 */
-		@Override
 		public String toString();
 	}
 	
@@ -255,7 +254,6 @@ public class Command {
 		 * 
 		 * @return Code des Subkommandos
 		 */
-		@Override
 		public String toString();
 	}
 	
@@ -285,7 +283,6 @@ public class Command {
 			/**
 			 * @see ctSim.model.Command.BotSubCodes#toUint7()
 			 */
-			@Override
 			public byte toUint7() {
 				return onTheWire; 
 			}	
@@ -316,7 +313,6 @@ public class Command {
 		 * @return Bot2BotSubCode-Instanz
 		 * @throws ProtocolException 
 		 */
-		@Override
 		public Bot2BotSubCode getSubCode(int b) throws ProtocolException {
 			return new Bot2BotSubCode((byte)b);
 		}
@@ -326,7 +322,6 @@ public class Command {
 		 * werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int
 		 * zurückgegeben.
 		 */
-		@Override
 		public byte toUint7() { 
 			return codeOnTheWire; 
 		}
@@ -482,7 +477,6 @@ public class Command {
 		 * werden soll. Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int
 		 * zurückgegeben.
 		 */
-		@Override
 		public byte toUint7() { return onTheWire; }
 
 		/**
@@ -510,7 +504,6 @@ public class Command {
 		 * @return SubCude
 		 * @throws ProtocolException 
 		 */
-		@Override
 		public BotSubCodes getSubCode(int b) throws ProtocolException {
 			for (SubCode c : validSubCodes) {
 				if (c.toUint7() == b)
@@ -667,7 +660,6 @@ public class Command {
 		 * @return Liefert das Byte, wie dieser SubCode auf dem Draht (im TCP oder USB) dargestellt werden soll.
 		 * 			Das erste Bit des Byte ist immer 0; daher wird ein 7 Bit langer unsigned Int zurückgegeben.
 		 */
-		@Override
 		public byte toUint7() { 
 			return onTheWire; 
 		}

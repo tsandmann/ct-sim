@@ -110,7 +110,6 @@ public class RemoteControlCodes {
 		/**
 		 * @see ctSim.model.bots.components.RemoteControlCodes.RC5Codes#createCodes()
 		 */
-		@Override
 		public void createCodes() {
 			addKey("\u03A6", 0x118C);	// 03A6: "Power-Symbol" (wie Kombination von O und |)
 			addKey("1" , 0x1181);
@@ -158,7 +157,6 @@ public class RemoteControlCodes {
 		/**
 		 * @see ctSim.model.bots.components.RemoteControlCodes.RC5Codes#createCodes()
 		 */
-		@Override
 		public void createCodes() {
 			addKey("\u03A6", 0x1026);	// 03A6: "Power-Symbol" (wie Kombination von O und |)
 			addKey("1" , 0x1001);
@@ -187,7 +185,6 @@ public class RemoteControlCodes {
 		/**
 		 * @see ctSim.model.bots.components.RemoteControlCodes.RC5Codes#createCodes()
 		 */
-		@Override
 		public void createCodes() {
 			addKey("\u03A6", 0x128C);	// 03A6: "Power-Symbol" (wie Kombination von O und |)
 			addKey("1" , 0x1281);

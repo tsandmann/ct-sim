@@ -85,7 +85,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * 
 	 * @param view	unser View
 	 */
-	@Override
 	public void setView(View view) {
 	    this.pause = true;
 	    this.view = view;
@@ -141,7 +140,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * <li>Die Bots übertragen die Sensordaten zum C-Code, warten auf Antwort, und verarbeiten die Antwort.</li>
 	 * </ul>
 	 */
-	@Override
 	public void run() {
 		int timeout = 10000;
 
@@ -244,7 +242,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	/**
 	 * @throws InterruptedException
 	 */
-	@Override
 	public void awaitNextSimStep() throws InterruptedException {
 		CountDownLatch doneSig = this.doneSignal;
 		CountDownLatch startSig = this.startSignal;
@@ -254,14 +251,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	}
 
 	/** Lässt den Sequencer (= die Simulation) pausieren. Keine Wirkung, falls keine Welt geladen ist. */
-	@Override
 	public void pause() {
 		lg.fine("Pause angefordert");
 		this.pause = true;
 	}
 
 	/** Beendet die Pause des Sequencers (= der Simulation) */
-	@Override
 	public synchronized void unpause() {
 		lg.fine("Pausenende angefordert");
 		if(this.world == null)
@@ -297,7 +292,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
 	/** Hält den Sequencer-Thread an */
-	@Override
 	public void closeWorld() {
     	if (sequencer == null)	// keine Welt geladen, d.h. kein Sequencer läuft
     		return;
@@ -318,7 +312,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * @param hostname	Ziel der Verbindung (Name)
 	 * @param port		Ziel der Verbindung (Port)
 	 */
-	@Override
 	public void connectToTcp(String hostname, String port) {
     	int p = 10002;
     	try {
@@ -330,7 +323,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
 	/** Fügt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu */
-	@Override
 	public void addTestBot() {
 		if (sequencer == null) {
 			try {
@@ -342,21 +334,20 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	    		while ((line = in.readLine()) != null) {
 	    			sourceString += line + "\r\n";
 	    		}
-	    		in.close();            
+	    		in.close();
 	    		openWorldFromXmlString(sourceString);
 			} catch (IOException e) {
 				lg.info("Testbot-Home konnte nicht geladen werden");
 			}
     	}
 		onBotAppeared(new CtBotSimTest());
-    }
+	}
 
-    /**
-     * Startet einen externen Bot
-     * 
-     * @param file	File-Objekt des Bots
-     */
-	@Override
+	/**
+	 * Startet einen externen Bot
+	 * 
+	 * @param file	File-Objekt des Bots
+	 */
 	public void invokeBot(File file) {
 		invokeBot(file.getAbsolutePath());
 	}
@@ -415,7 +406,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * 
 	 * @param bot	der neue Bot
 	 */
-	@Override
 	public synchronized void onBotAppeared(final Bot bot) {
 		if (bot instanceof SimulatedBot) {
 			if (sequencer == null) {
@@ -441,9 +431,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		} catch (ProtocolException e) {
 			lg.severe("Fehler: Bot " + bot.toString() + " wurde vom Controller abgewiesen! Bot-ID falsch?");
 			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {	// invokeLater, weil sonst der
-					// dispose-Listener der GUI noch nicht eingetragen ist!
+				public void run() {	// invokeLater, weil sonst der dispose-Listener der GUI noch nicht eingetragen ist!
 					bot.dispose();	// Bot ist unerwünscht => weg
 				}
 			});
@@ -456,7 +444,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 		// und einen Dispose-Handler installieren, damit wir Bots auch wieder sauber beenden
 		bot.addDisposeListener(new Runnable() {
-			@Override
 			public void run() {
 				onBotDisappeared(bot);
 			}
@@ -477,7 +464,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * 
 	 * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist.
 	 */
-	@Override
 	public void setJudge(String judgeClassName) {
     	/* kein Jugde-Wechsel wenn eine Welt offen ist */
     	if (sequencer != null) {
@@ -505,7 +491,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * 
 	 * @param judge	gewünschte Judge-Instanz
 	 */
-	@Override
 	public void setJudge(Judge judge) {
     	if (judge == null)
             throw new NullPointerException();
@@ -518,7 +503,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * 
 	 * @param sourceFile	File-Objekt der Welt
 	 */
-	@Override
 	public void openWorldFromFile(File sourceFile) {
         try {
             setWorld(World.buildWorldFromFile(sourceFile));
@@ -532,7 +516,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * 
 	 * @param parcoursAsXml	String mit den XML-Dater der Welt
 	 */
-	@Override
 	public void openWorldFromXmlString(String parcoursAsXml) {
         try {
             setWorld(World.buildWorldFromXmlString(parcoursAsXml));
@@ -542,7 +525,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
 	/** Erzeugt eine zufällige Welt */
-	@Override
 	public void openRandomWorld() {
         try {
             String p = ParcoursGenerator.generateParc();
@@ -554,7 +536,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
 	/** Init-Handler */
-	@Override
 	public void onApplicationInited() {
         view.onApplicationInited();
     }
@@ -565,7 +546,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * Dadurch, dass hier nur das Reset-Flag gesetzt wird, erübrigt sich das Synchronisieren der
 	 * (Bot-)Threads; der Reset erfolgt einfach beim nächsten Zeitschritt.
 	 */
-	@Override
 	public void resetAllBots() {
     	this.reset = true;
     }
@@ -578,7 +558,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * @param command	das zu übertragende Kommando
 	 * @throws ProtocolException	falls kein passender Empfänger gefunden wurde
 	 */
-	@Override
 	public void deliverMessage(Command command) throws ProtocolException {
 		for (Bot b : bots) {
 			// Wir betrachten hier nur CtBot.
@@ -595,7 +574,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 			}
 		}	
 		if (!command.getTo().equals(Command.getBroadcastId())) {
-			// Es fühlt sich wohl kein Bot aus der Liste zuständig => Fehler 
+			// Es fühlt sich wohl kein Bot aus der Liste zuständig... -> Fehler 
 			throw new ProtocolException("Nachricht an Empfänger " + command.getTo() + " nicht zustellbar. " +
 					"Kein Bot mit passender Id angemeldet");
 		}
@@ -607,7 +586,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * @param id	zu testende Id
 	 * @return True, wenn noch kein Bot diese Id nutzt 
 	 */
-	@Override
 	public boolean isIdFree(BotID id){
 		if (id.equals(Command.getBroadcastId()))
 			// Broadcast ist immer frei
@@ -628,7 +606,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * @return Die neue Id
 	 * @throws ProtocolException	wenn keine Adresse mehr frei
 	 */
-	@Override
 	public BotID generateBotId() throws ProtocolException{
 		byte poolSize= (byte)64;
 		byte poolAdress= (byte) 128;
@@ -654,7 +631,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	 * @throws IOException	falls Fehler beim Schreiben der Datei
 	 * @throws MapException	falls keine Daten in der Map
 	 */
-	@Override
 	public void worldToMap(int bot, int free, int occupied) throws IOException, MapException {
 		this.world.toMap(bot, free, occupied);
 	}
@@ -662,7 +638,6 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	/**
 	 * @see ctSim.controller.Controller#getWorld()
 	 */
-	@Override
 	public World getWorld() {
 		return this.world;
 	}

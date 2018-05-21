@@ -186,19 +186,16 @@ public class XmlDocument {
 		 * man solle doch einen ErrorHandler setzen.
 		 */
 		parser.setErrorHandler(new ErrorHandler() {
-			@Override
 			public void error(SAXParseException exception)
 			throws SAXException {
 				throw exception;
 			}
 
-			@Override
 			public void fatalError(SAXParseException exception)
 			throws SAXException {
 				throw exception;
 			}
 
-			@Override
 			public void warning(SAXParseException exception)
 			throws SAXException {
 				throw exception;
@@ -246,7 +243,6 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNodeList(java.lang.String)
 		 */
-		@Override
 		public IterableNodeList getNodeList(String xPathExpression)
 		throws XPathExpressionException {
 			return new IterableNodeList((NodeList)evaluator.evaluate(xPathExpression, cocktail, XPathConstants.NODESET));
@@ -255,7 +251,6 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNode(java.lang.String)
 		 */
-		@Override
 		public QueryableNode getNode(String xPathExpression)
 		throws XPathExpressionException {
 			return createQueryableNode((Node)evaluator.evaluate(xPathExpression, cocktail, XPathConstants.NODE));
@@ -264,7 +259,6 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getString(java.lang.String)
 		 */
-		@Override
 		public String getString(String xPathExpression)
 		throws XPathExpressionException {
 			return (String)evaluator.evaluate(xPathExpression, cocktail, XPathConstants.STRING);
@@ -273,7 +267,6 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNumber(java.lang.String)
 		 */
-		@Override
 		public Double getNumber(String xPathExpression)
 		throws XPathExpressionException {
 			/*
@@ -286,7 +279,6 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getBoolean(java.lang.String)
 		 */
-		@Override
 		public Boolean getBoolean(String xPathExpression)
 		throws XPathExpressionException {
 			return (Boolean)evaluator.evaluate(xPathExpression, cocktail, XPathConstants.BOOLEAN);
@@ -310,7 +302,6 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getStringOrNull(java.lang.String)
 		 */
-		@Override
 		public String getStringOrNull(String xPathExpression)
 		throws XPathExpressionException {
 			String rv = getString(xPathExpression);
@@ -323,7 +314,6 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getNumberOrNull(java.lang.String)
 		 */
-		@Override
 		public Number getNumberOrNull(String xPathExpression)
 		throws XPathExpressionException {
 			Double rv = getNumber(xPathExpression);
@@ -336,7 +326,6 @@ public class XmlDocument {
 		/**
 		 * @see ctSim.util.xml.XmlDocument.XPathQueryable#getBooleanOrNull(java.lang.String)
 		 */
-		@Override
 		public Boolean getBooleanOrNull(String xPathExpression)
 		throws XPathExpressionException {
 			Boolean rv = getBoolean(xPathExpression);

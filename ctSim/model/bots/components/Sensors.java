@@ -67,7 +67,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { return Code.SENS_LINE; }
 	}
 
@@ -98,7 +97,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { return Code.SENS_LDR; }
 	}
 
@@ -133,7 +131,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { 
 			return Code.SENS_BPS; 
 		}
@@ -187,7 +184,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { return Code.SENS_ENC; }
 		
 		/** 
@@ -223,7 +219,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { return Code.SENS_IR; }
 	}
 
@@ -254,7 +249,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { return Code.SENS_BORDER; }
 	}
 
@@ -278,7 +272,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 		 */
-		@Override
 		public synchronized void readFrom(Command c) {
 			if (c.getDataL() != lastTransmittedSimTime) {
 				if (lastTransmittedSimTime == -1)
@@ -294,7 +287,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWrite#writeTo(ctSim.model.Command)
 		 */
-		@Override
 		public synchronized void writeTo(Command c) {
 			c.setDataL(lastTransmittedSimTime);
 		}
@@ -327,7 +319,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { return Command.Code.DONE; }
 	}
 
@@ -385,7 +376,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { return Code.SENS_MOUSE; }
 	}
 
@@ -414,7 +404,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
 		 */
-		@Override
 		public void setAsyncWriteStream(CommandOutputStream s) {
 			asyncOut = s;
 		}
@@ -422,7 +411,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWrite#writeTo(ctSim.model.Command)
 		 */
-		@Override
 		public synchronized void writeTo(Command c) {
 			c.setDataL(syncPendingRcCode);
 			syncPendingRcCode = 0;
@@ -502,7 +490,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWrite#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { 
 			return Code.SENS_RC5; 
 		}
@@ -545,7 +532,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { 
 			return Code.ACT_SERVO; 
 		}
@@ -596,7 +582,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { 
 			return Code.SENS_DOOR; 
 		}
@@ -647,7 +632,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { 
 			return Code.SENS_TRANS; 
 		}
@@ -697,7 +681,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 		 */
-		@Override
 		public Code getHotCmdCode() { return Code.SENS_ERROR; }
 	}
 	
@@ -712,7 +695,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanWriteAsynchronously#setAsyncWriteStream(ctSim.model.CommandOutputStream)
 		 */
-		@Override
 		public void setAsyncWriteStream(CommandOutputStream s) {
 			asyncOut = s;
 		}
@@ -759,7 +741,6 @@ public class Sensors {
 		 * 
 		 * @return Command-Code 
 		 */
-		@Override
 		public Code getHotCmdCode() { 
 			return Code.SHUTDOWN; 
 		}
@@ -775,7 +756,6 @@ public class Sensors {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 		 */
-		@Override
 		public void readFrom(Command c) throws ProtocolException {
 			shutdownRequest = true;
 		}

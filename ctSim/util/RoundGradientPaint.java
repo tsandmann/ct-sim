@@ -77,7 +77,6 @@ public class RoundGradientPaint implements Paint {
 		/**
 		 * @see java.awt.PaintContext#dispose()
 		 */
-		@Override
 		public void dispose() {
 			// No-op
 		}
@@ -85,7 +84,6 @@ public class RoundGradientPaint implements Paint {
 		/**
 		 * @see java.awt.PaintContext#getColorModel()
 		 */
-		@Override
 		public ColorModel getColorModel() {
 			return ColorModel.getRGBdefault();
 		}
@@ -93,7 +91,6 @@ public class RoundGradientPaint implements Paint {
 		/**
 		 * @see java.awt.PaintContext#getRaster(int, int, int, int)
 		 */
-		@Override
 		public Raster getRaster(int baseX, int baseY, int width, int height) {
 			WritableRaster raster = getColorModel().createCompatibleWritableRaster(width, height);
 			for (int y = 0; y < height; y++) {
@@ -162,7 +159,6 @@ public class RoundGradientPaint implements Paint {
 	/**
 	 * @see java.awt.Paint#createContext(java.awt.image.ColorModel, java.awt.Rectangle, java.awt.geom.Rectangle2D, java.awt.geom.AffineTransform, java.awt.RenderingHints)
 	 */
-	@Override
 	public PaintContext createContext(ColorModel cm, Rectangle deviceBounds, Rectangle2D userBounds,
 			AffineTransform aff, RenderingHints h) {
 
@@ -173,7 +169,6 @@ public class RoundGradientPaint implements Paint {
 	/**
 	 * @see java.awt.Transparency#getTransparency()
 	 */
-	@Override
 	public int getTransparency() {
 		if (centerColor.getTransparency() == OPAQUE &&  bgColor.getTransparency() == OPAQUE)
 			return OPAQUE;

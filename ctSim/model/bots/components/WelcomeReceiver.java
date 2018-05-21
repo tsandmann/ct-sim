@@ -72,7 +72,6 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 	 */
-	@Override
 	public Code getHotCmdCode() {
 		return Command.Code.WELCOME;
 	}
@@ -80,7 +79,6 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#readFrom(ctSim.model.Command)
 	 */
-	@Override
 	public void readFrom(Command c) throws ProtocolException {
 		if (! c.has(expectedForWelcome)) {
 			throw new ProtocolException("Willkommenskommando empfangen, das nicht den erwarteten Subcode " + 

@@ -243,7 +243,6 @@ public class CtBotShape extends Group {
 
     	if (appearanceEventSource != null) {
 	    	appearanceEventSource.addAppearanceListener(new Runnable1<Color>() {
-				@Override
 				public void run(Color newAppearance) {
 					setCheeksColor(newAppearance);
 				}

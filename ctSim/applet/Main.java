@@ -132,7 +132,6 @@ public class Main extends JApplet implements BotReceiver {
 	/** Icons initialisieren */
 	private void initIcons() {
 		Config.setIconProvider(new IconProvider() {
-			@Override
 			public Icon get(String key) {
 				// Icon aus jar-Datei laden; Annahme: jar enthält Icon in seinem Root-Verzeichnis
 				URL u = getClass().getClassLoader().getResource(key + ".gif");	// //$$ images-unterverz
@@ -164,10 +163,8 @@ public class Main extends JApplet implements BotReceiver {
 	 * 
 	 * @param b	Referenz auf den neuen Bot
 	 */
-	@Override
 	public void onBotAppeared(final Bot b) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				String title = getParameter("windowTitle");
 				if (title == null || title.trim().length() == 0)
@@ -211,7 +208,6 @@ public class Main extends JApplet implements BotReceiver {
 	@Override
 	public void destroy() {
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				if (bot != null)
 					bot.dispose();

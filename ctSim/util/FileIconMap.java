@@ -111,7 +111,6 @@ public class FileIconMap implements IconProvider {
 	 * Dateisystem nicht existiert (genauer: falls es nicht existiert hat zu dem Zeitpunkt, als der Konstruktor
 	 * aufgerufen wurde).
 	 */
-	@Override
 	public Icon get(String key) {
         ImageIcon rv = map.get(key);
         if (rv == null) {

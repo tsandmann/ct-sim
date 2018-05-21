@@ -84,7 +84,6 @@ public class RemoteControlViewer extends JPanel {
 		rv.setForeground(color);
 		rv.setBackground(Color.DARK_GRAY);
 		rv.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				lg.fine("Fernbedienungsknopf '%s' gedrückt", rv.getText());
 				try {

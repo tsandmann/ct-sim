@@ -111,7 +111,6 @@ public class ProgramViewer extends JPanel implements ActionListener {
 			setToolTipText(toolTipText);
 			setIcon(icon);
 			addActionListener(new ActionListener() {
-				@Override
 				public void actionPerformed(ActionEvent e) {
 					onClick.run();
 				}
@@ -170,7 +169,6 @@ public class ProgramViewer extends JPanel implements ActionListener {
 
 	/** Programm-Laden-Handler */
 	private final Runnable onLoad = new Runnable() {
-		@Override
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
 			JFileChooser fc = new JFileChooser(path);
@@ -201,7 +199,6 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	
 	/** Programm-Speichern-Handler */
 	private final Runnable onSave = new Runnable() {
-		@Override
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
 			JFileChooser fc = new JFileChooser(path);
@@ -238,7 +235,6 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	
 	/** Programm-Senden-Handler */
 	private final Runnable onSend = new Runnable() {
-		@Override
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
 			if (fileName.getText().length() == 0) {
@@ -271,7 +267,6 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	
 	/** Programm-Abbrechen-Handler */
 	private final Runnable onStop = new Runnable() {
-		@Override
 		public void run() {
 			programCompnt.stopProgram(type);
 		}
@@ -284,7 +279,6 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	
 	/** Beispiel-Programm-Handler der ein einfaches ABL-Beispiel erzeugt */
 	private final Runnable onExmplAbl = new Runnable() {
-		@Override
 		public void run() {
 			programText.setSelectedTextColor(Color.BLACK);
 			if (programText.getText().length() == 0) {
@@ -423,7 +417,6 @@ public class ProgramViewer extends JPanel implements ActionListener {
 	 * 
 	 * @param e	Event 
 	 */
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Basic")) {
 			type = 0;
