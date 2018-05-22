@@ -167,7 +167,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 */
 	private ConsoleComponent buildLogViewer() {
     	ConsoleComponent rv = new ConsoleComponent();
-    	Debug.registerDebugWindow(rv);	// //$$ Legacy: Debug-Klasse
+    	Debug.registerDebugWindow(rv);	// $$$ Legacy: Debug-Klasse
     	// wir melden uns als Handler für den Root-Logger an
     	Handler h = rv.createLoggingHandler();
     	String logLevel = Config.getValue("LogLevel");

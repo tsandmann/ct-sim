@@ -63,7 +63,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 		public ImageViewer(double scaleFactor, MousePictureComponent c) {
 			c.addImageListener(this);
 			setToolTipText(c.getDescription());
-			setBorder(BorderFactory.createLoweredBevelBorder());	// //$$ bevel, insets gehen nicht
+			setBorder(BorderFactory.createLoweredBevelBorder());	// $$$ bevel, insets gehen nicht
 			targetWidth  = (int)Math.round(scaleFactor * c.getWidth());
 			targetHeight = (int)Math.round(scaleFactor * c.getHeight());
 		}
@@ -140,7 +140,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 				try {
 					compnt.requestPicture();
 				} catch (IOException e1) {
-					e1.printStackTrace();	// //$$ Excp
+					e1.printStackTrace();	// $$$ Excp
 				}
 			}
 		});
@@ -156,7 +156,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 				try {
 					compnt.requestPicture();
 				} catch (IOException e1) {
-					e1.printStackTrace();	// //$$ Excp
+					e1.printStackTrace();	// $$$ Excp
 				}
 			}
 		});
@@ -167,7 +167,7 @@ public class MousePictureViewer extends GuiBotBuisitor {
 					try {
 						compnt.requestPicture();
 					} catch (IOException e1) {
-						e1.printStackTrace();	// //$$ Excp
+						e1.printStackTrace();	// $$$ Excp
 					}
 				}
 			}

@@ -92,7 +92,7 @@ public class Buisitor {
 			// Primitive müssen wir separat prüfen
 			if (isBoolean(supertype))
 				return isBoolean(subtype);
-			// //$$ Restliche 8 Primitivtypen prüfen
+			// $$$ Restliche 8 Primitivtypen prüfen
 			return false;
 		}
 	}
