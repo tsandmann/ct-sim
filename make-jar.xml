@@ -27,7 +27,7 @@ Rechtsklick -> "Run As" -> "Ant Build" auf. Anschließend befindet sich im Unterv
 "build" das Verzeichnis "ct-Sim", in dem das c't-Sim-JAR und die Libs liegen.
 Ein Aufruf von "ct-Sim-xx.jar" startet den c't-Sim.
 
-Das build-Verzeichnis kann man problemlos loeschen, wenn es nicht mehr benötigt wird.
+Das build-Verzeichnis kann man problemlos löschen, wenn es nicht mehr benötigt wird.
 
 ==========================================================================================
 
@@ -64,6 +64,7 @@ Das build-Verzeichnis kann man problemlos loeschen, wenn es nicht mehr benötigt 
 	<property name="optimize" value="true" />
 	<property name="javac.source" value="1.8" />
 	<property name="javac.target" value="1.8" />
+	<property name="compile.option" value="-Xlint:unchecked" />
 	
 	<!--
 	===================================================================
@@ -228,7 +229,7 @@ Das build-Verzeichnis kann man problemlos loeschen, wenn es nicht mehr benötigt 
 		<copy file="${contrib.dir}/mysql-connector-java-3.1.13-bin.jar" todir="${build.lib.dir}" />
 		
 		<!--
-		ct-Sim compilieren
+		ct-Sim kompilieren
 		-->
 		<compile
 			src="${src.dir}" 
@@ -345,6 +346,12 @@ Das build-Verzeichnis kann man problemlos loeschen, wenn es nicht mehr benötigt 
 				nowarn="false"
 				includeantruntime="false"
 				>
+				
+				<!--
+				Wenn der Java >= 1.5 Compiler verwendet wird, sollte diese
+				Option mit angegeben werden.
+				-->
+				<compilerarg value="${compile.option}" />
 				
 				<!--
 				Diesen Klassenpfad verwenden.
