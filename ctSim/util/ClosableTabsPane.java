@@ -117,9 +117,9 @@ public class ClosableTabsPane extends JTabbedPane {
 		 * @see javax.swing.Icon#getIconWidth()
 		 */
 		public int getIconWidth() { return wrappee.getIconWidth(); }
-    }
+	}
 
-    /*
+	/*
 	 * Implementierungsprinzip: Die Schließen-Icons sind spezielle Icons, die wissen, an welchen Koordinaten
 	 * sie zuletzt gemalt wurden. Die ClosableTabsPane hat zwei Listener:
 	 * 1. einen MouseListener, der das Icon fragt, ob die Koordinaten des Klick-Event innerhalb des

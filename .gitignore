@@ -1,10 +1,8 @@
 .DS_Store
-/README.md
 /config/window.settings
 /log/*.log
 /log/*.log.lck
 /hs_err_*.log
 /documentation/api/
-/build-applet
-/build-jar
-*.class
+/bin/
+*class

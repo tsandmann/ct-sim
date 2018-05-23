@@ -77,20 +77,20 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	/** Bots */
 	private final List<Bot> bots = Misc.newList();
 
-    /** Flag für Bot-Reset */
+	/** Flag für Bot-Reset */
 	private boolean reset = false;
 	
-    /**
-     * Setzt das View und initialisiert alles Nötige dafür
-     * 
-     * @param view	unser View
-     */
-    public void setView(View view) {
+	/**
+	 * Setzt das View und initialisiert alles Nötige dafür
+	 * 
+	 * @param view	unser View
+	 */
+	public void setView(View view) {
 	    this.pause = true;
-        this.view = view;
-        setJudge(Config.getValue("judge"));
-        TcpConnection.startListening(this);
-        try {
+	    this.view = view;
+	    setJudge(Config.getValue("judge"));
+	    TcpConnection.startListening(this);
+	    try {
 	        if (Config.getValue("serialport") == null) {
 	        	lg.fine("Einstellung 'serialport' nicht gesetzt; Unterstützung für serielle Schnittstellen deaktiviert");
 	        } else
@@ -292,7 +292,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     }
 
 	/** Hält den Sequencer-Thread an */
-    public void closeWorld() {
+	public void closeWorld() {
     	if (sequencer == null)	// keine Welt geladen, d.h. kein Sequencer läuft
     		return;
 
@@ -306,13 +306,13 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     	judge.reinit();
     }
 
-    /**
-     * Verbindet zu Host:Port
-     * 
-     * @param hostname	Ziel der Verbindung (Name)
-     * @param port		Ziel der Verbindung (Port)
-     */
-    public void connectToTcp(String hostname, String port) {
+	/**
+	 * Verbindet zu Host:Port
+	 * 
+	 * @param hostname	Ziel der Verbindung (Name)
+	 * @param port		Ziel der Verbindung (Port)
+	 */
+	public void connectToTcp(String hostname, String port) {
     	int p = 10002;
     	try {
     		p = Integer.parseInt(port);
@@ -322,11 +322,11 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     	}
     }
 
-    /** Fügt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu */
-    public void addTestBot() {
-    	if (sequencer == null) {
-    		try {
-    			InputStream openStream;
+	/** Fügt der Welt einen neuen Bot der Klasse CtBotSimTest hinzu */
+	public void addTestBot() {
+		if (sequencer == null) {
+			try {
+				InputStream openStream;
 				openStream = ClassLoader.getSystemResource("parcours/testbots_home.xml").openStream();
 	    		BufferedReader in = new BufferedReader(new InputStreamReader(openStream));
 	    	    String line;
@@ -334,20 +334,20 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	    		while ((line = in.readLine()) != null) {
 	    			sourceString += line + "\r\n";
 	    		}
-	    		in.close();            
+	    		in.close();
 	    		openWorldFromXmlString(sourceString);
 			} catch (IOException e) {
 				lg.info("Testbot-Home konnte nicht geladen werden");
 			}
     	}
 		onBotAppeared(new CtBotSimTest());
-    }
+	}
 
-    /**
-     * Startet einen externen Bot
-     * 
-     * @param file	File-Objekt des Bots
-     */
+	/**
+	 * Startet einen externen Bot
+	 * 
+	 * @param file	File-Objekt des Bots
+	 */
 	public void invokeBot(File file) {
 		invokeBot(file.getAbsolutePath());
 	}
@@ -431,8 +431,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		} catch (ProtocolException e) {
 			lg.severe("Fehler: Bot " + bot.toString() + " wurde vom Controller abgewiesen! Bot-ID falsch?");
 			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {	// invokeLater, weil sonst der
-					// dispose-Listener der GUI noch nicht eingetragen ist!
+				public void run() {	// invokeLater, weil sonst der dispose-Listener der GUI noch nicht eingetragen ist!
 					bot.dispose();	// Bot ist unerwünscht => weg
 				}
 			});
@@ -460,12 +459,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         return world.getFutureNumOfBots();
     }
 
-    /**
-     * @param judgeClassName	die Art des zu setzenden Schiedsrichters
-     * 
-     * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist.
-     */
-    public void setJudge(String judgeClassName) {
+	/**
+	 * @param judgeClassName	die Art des zu setzenden Schiedsrichters
+	 * 
+	 * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist.
+	 */
+	public void setJudge(String judgeClassName) {
     	/* kein Jugde-Wechsel wenn eine Welt offen ist */
     	if (sequencer != null) {
     		lg.info("Kein Wechsel erlaubt, weil noch eine Welt offen ist");
@@ -487,24 +486,24 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         setJudge(j);	// wird nur erreicht, wenn der try-Block geklappt hat
     }
 
-    /**
-     * Setzt den Schiedsrichter
-     * 
-     * @param judge	gewünschte Judge-Instanz
-     */
-    public void setJudge(Judge judge) {
+	/**
+	 * Setzt den Schiedsrichter
+	 * 
+	 * @param judge	gewünschte Judge-Instanz
+	 */
+	public void setJudge(Judge judge) {
     	if (judge == null)
             throw new NullPointerException();
         this.judge = judge;
 //      view.onJudgeSet(judge);
     }
-    
-    /**
-     * Lädt eine Welt aus einer Datei
-     * 
-     * @param sourceFile	File-Objekt der Welt
-     */
-    public void openWorldFromFile(File sourceFile) {
+
+	/**
+	 * Lädt eine Welt aus einer Datei
+	 * 
+	 * @param sourceFile	File-Objekt der Welt
+	 */
+	public void openWorldFromFile(File sourceFile) {
         try {
             setWorld(World.buildWorldFromFile(sourceFile));
         } catch (Exception e) {
@@ -512,12 +511,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         }
     }
 
-    /**
-     * Lädt eine Welt aus einem String
-     * 
-     * @param parcoursAsXml	String mit den XML-Dater der Welt
-     */
-    public void openWorldFromXmlString(String parcoursAsXml) {
+	/**
+	 * Lädt eine Welt aus einem String
+	 * 
+	 * @param parcoursAsXml	String mit den XML-Dater der Welt
+	 */
+	public void openWorldFromXmlString(String parcoursAsXml) {
         try {
             setWorld(World.buildWorldFromXmlString(parcoursAsXml));
         } catch (Exception e) {
@@ -525,8 +524,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         }
     }
 
-    /** Erzeugt eine zufällige Welt */
-    public void openRandomWorld() {
+	/** Erzeugt eine zufällige Welt */
+	public void openRandomWorld() {
         try {
             String p = ParcoursGenerator.generateParc();
             lg.info("Parcours generiert");
@@ -536,18 +535,18 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
         }
     }
 
-    /** Init-Handler */
-    public void onApplicationInited() {
+	/** Init-Handler */
+	public void onApplicationInited() {
         view.onApplicationInited();
     }
     
         
-    /**
-     * Setzt alle Bots im nächsten Sim-Schritt zurück.
-     * Dadurch, dass hier nur das Reset-Flag gesetzt wird, erübrigt sich das Synchronisieren der
-     * (Bot-)Threads; der Reset erfolgt einfach beim nächsten Zeitschritt.
-     */
-    public void resetAllBots() {
+	/**
+	 * Setzt alle Bots im nächsten Sim-Schritt zurück.
+	 * Dadurch, dass hier nur das Reset-Flag gesetzt wird, erübrigt sich das Synchronisieren der
+	 * (Bot-)Threads; der Reset erfolgt einfach beim nächsten Zeitschritt.
+	 */
+	public void resetAllBots() {
     	this.reset = true;
     }
     
@@ -575,7 +574,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 			}
 		}	
 		if (!command.getTo().equals(Command.getBroadcastId())) {
-			// Es fühlt sich wohl kein Bot aus der Liste zuständig => Fehler 
+			// Es fühlt sich wohl kein Bot aus der Liste zuständig... -> Fehler 
 			throw new ProtocolException("Nachricht an Empfänger " + command.getTo() + " nicht zustellbar. " +
 					"Kein Bot mit passender Id angemeldet");
 		}

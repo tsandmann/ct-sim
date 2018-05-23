@@ -144,7 +144,7 @@ public class StatusBar extends Box {
 		tickRateField.setMinimumSize(new Dimension(44, 22));
 		tickRateField.setMaximumSize(new Dimension(44, 22));
 		tickRateField.setPreferredSize(new Dimension(44, 22));
-		
+
 		tickRateField.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				if ("value".equals(evt.getPropertyName())) {

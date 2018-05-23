@@ -183,7 +183,7 @@ public class ContestConductor implements View {
 					concon.world.getSimTimeInMs());
 
 			// letzten Schritt loggen
-			//$$ Das ist nicht so toll: Macht die Annahme, dass der DefaultController so bleibt, wie er ist
+			// $$$ Das ist nicht so toll: Macht die Annahme, dass der DefaultController so bleibt, wie er ist
 			concon.db.logUnconditionally(BotView.getAllModelObjects(),
 					concon.world.getSimTimeInMs());
 
@@ -301,7 +301,7 @@ public class ContestConductor implements View {
 			ContestJudge.class,
 			TournamentPlanner.class,
 			ConductorToDatabaseAdapter.class,
-			PlannerToDatabaseAdapter.class	//$$ in seine Klasse?
+			PlannerToDatabaseAdapter.class	// $$$ in seine Klasse?
 		);
 	}
 
@@ -490,7 +490,7 @@ public class ContestConductor implements View {
 
 		String server = Config.getValue("ctSimIP");
 		if (server == null)
-			server = "localhost";	//$$ umziehen: Sollte in Config
+			server = "localhost";	// $$$ umziehen: Sollte in Config
 
 		/*
 		 * Nur wenn ein Config-Eintrag für den entsprechenden Remote-Host existiert starten wir auch remote,
@@ -530,7 +530,7 @@ public class ContestConductor implements View {
 			ConfigManager.path2Os(Config.getValue("contestBotFileNameSuffix")),
 			new File(Config.getValue("contestBotTargetDir")));
 		f.deleteOnExit();
-		//$$ deleteOnExit() scheint nicht zu klappen; Theorie:Prozesse noch offen wenn VM das aufrufen will
+		// $$$ deleteOnExit() scheint nicht zu klappen; Theorie:Prozesse noch offen wenn VM das aufrufen will
 		lg.fine("Schreibe Bot nach '" + f.getAbsolutePath() + "'");
 		Misc.copyStreamToStream(b.getBinaryStream(), new FileOutputStream(f));
 

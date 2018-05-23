@@ -196,13 +196,13 @@ class DatabaseAdapter {
 		for (int i = 0; i < inValues.length; i++) {
 			// PreparedStatement ist 1-based, inValues ist 0-based
 			if (inValues[i] instanceof GameState)
-				rv.setString(i + 1, inValues[i].toString());	//$$ GameState-Hack
+				rv.setString(i + 1, inValues[i].toString());	// $$$ GameState-Hack
 			else if (inValues[i] instanceof RenderedImage) {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				try {
 	                ImageIO.write((RenderedImage)inValues[i], "png", out);
                 } catch (IOException e) {
-                	throw new IllegalArgumentException(e);	//$$ doc IllegalArg
+                	throw new IllegalArgumentException(e);	// $$$ doc IllegalArg
                 }
 				rv.setBinaryStream(i + 1, new ByteArrayInputStream(out.toByteArray()), out.size());
 			}
@@ -247,7 +247,7 @@ class DatabaseAdapter {
 	 * erforderlich. Es hat sich herausgestellt, dass bisher die laufend erzeugten Statements offenbar erst
 	 * zur Garbage Collection freigegeben werden, wenn das Connection-Objekt, von dem sie erzeugt wurden,
 	 * geschlossen wurde -- d.h. am Programmende. Korrekt angewendet löst diese Methode das Speicherproblem.
-	 * //$$ doc update close()
+	 * $$$ doc update close()
 	 * </p>
 	 * <p>
 	 * Die vorliegende Implementierung unterstützt nur SELECT, INSERT, UPDATE und DELETE. Unterstützung für

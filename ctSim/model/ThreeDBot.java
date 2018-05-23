@@ -297,18 +297,15 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		public HeadingCompnt() {
 			super(new SpinnerNumberModel());
 
-			updateExternalModel();	// Initialen Wert setzen
+			updateExternalModel();	// initialen Wert setzen
 			getExternalModel().addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
 					/*
-					 * $$ ignoreStateChange: setHeading() sollte erkennen, wann
-					 * ein Aufruf überflüssig ist (weil das neue Heading sich
-					 * nicht vom alten unterscheidet). Wegen der doofen Sache,
-					 * dass Headings auf zwei Arten ausgedrückt werden können
-					 * (Vector3d, double), funktioniert die Erkennung nicht gut.
-					 * Daher braucht wir ignoreStateChange. Wenn Heading mal
-					 * komplett auf double umgestellt ist, ist ignoreStateChange
-					 * überflüssig.
+					 * $$$ ignoreStateChange: setHeading() sollte erkennen, wann ein Aufruf überflüssig ist
+					 * (weil das neue Heading sich nicht vom alten unterscheidet). Wegen der doofen Sache,
+					 * dass Headings auf zwei Arten ausgedrückt werden können (Vector3d, double), funktioniert
+					 * die Erkennung nicht gut. Daher braucht wir ignoreStateChange. Wenn Heading mal komplett
+					 * auf double umgestellt ist, ist ignoreStateChange überflüssig.
 					 */
 					if (ignoreStateChange) {
 						return;

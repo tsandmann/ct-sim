@@ -175,8 +175,6 @@ public class ComConnection extends Connection {
 		return "USB";
 	}
 
-	/* ============================================================ */
-
 	// Auto-detect-Kram
 
 	/** COM-Verbindung */
@@ -197,18 +195,18 @@ public class ComConnection extends Connection {
 	protected Bot createBot(Command c) throws ProtocolException {
 		CtBot bot;
 		switch (c.getSubCode()) {
-    		case WELCOME_REAL:
-    			lg.fine("COM-Verbindung von realem Bot eingegangen");
-    			bot = new RealCtBot(comConnSingleton, c.getFrom(), c.getDataL());
-    			bot.addDisposeListener(new Runnable() {
-    				public void run() {
-    					spawnThread(botReceiver);
-    				}
-    			});
-    			break;
-    		default:
-    			throw new ProtocolException(c.toString());
-    	}
+			case WELCOME_REAL:
+				lg.fine("COM-Verbindung von realem Bot eingegangen");
+				bot = new RealCtBot(comConnSingleton, c.getFrom(), c.getDataL());
+				bot.addDisposeListener(new Runnable() {
+					public void run() {
+						spawnThread(botReceiver);
+					}
+				});
+				break;
+			default:
+				throw new ProtocolException(c.toString());
+		}
 
 		return bot;
 	}
@@ -242,8 +240,6 @@ public class ComConnection extends Connection {
 	private static void spawnThread(BotReceiver receiver) {
 		new ComListenerThread(receiver).start();
 	}
-
-	/* ============================================================ */
 
 	/** Exception-Klasse für ComConnection */
 	public static class CouldntOpenTheDamnThingException extends Exception {
@@ -310,8 +306,6 @@ public class ComConnection extends Connection {
 			lg.fine("Serielle Verbindung eingegangen");
 
 			comConnSingleton.doHandshake(botReceiver);
-
-	/* ============================================================ */
 
 //			Bot b = new RealCtBot(comConnSingleton, (byte) 0);
 //			b.addDisposeListener(new Runnable() {

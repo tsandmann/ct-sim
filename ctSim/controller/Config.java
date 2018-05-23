@@ -398,7 +398,7 @@ public class Config {
 			catch (ClassNotFoundException e) { /* weitermachen */ }
 
 			// 2. Versuch: Ohne Anhängsel
-			return Class.forName(classNameFromXml.split("_")[0]);	// $$ XML anpassen
+			return Class.forName(classNameFromXml.split("_")[0]);	// $$$ XML anpassen
 		}
 
 		/**

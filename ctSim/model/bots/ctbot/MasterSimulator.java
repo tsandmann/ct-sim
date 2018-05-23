@@ -272,11 +272,11 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		private Node objectInPocket = null;
 		/** Objekt, das derzeit transportiert wird */
 		private Node associatedObject = null;
-		
-        /**
-         * @see java.lang.Runnable#run()
-         */
-        public void run() {
+
+		/**
+		 * @see java.lang.Runnable#run()
+		 */
+		public void run() {
 			/* Position und Heading berechnen 
 			 * für ausführliche Erläuterung der Positionsberechnung siehe doc-files/odometrie.pdf
 			 * */
@@ -656,10 +656,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             this.sensor = sensor;
         }
 
-        /**
-         * @see java.lang.Runnable#run()
-         */
-        public void run() {
+		/**
+		 * @see java.lang.Runnable#run()
+		 */
+		public void run() {
             sensor.set(world.sensGroundReflectionCross(
             		parent.worldCoordFromBotCoord(distFromBotCenter),
             		parent.worldCoordFromBotCoord(headingInBotCoord),
@@ -727,22 +727,22 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         parent.accept(this);
     }
 
-    /**
-     * @see ctSim.model.bots.BotBuisitor#visit(java.lang.Object, ctSim.model.bots.Bot)
-     */
-    public void visit(Object o, Bot b) {
+	/**
+	 * @see ctSim.model.bots.BotBuisitor#visit(java.lang.Object, ctSim.model.bots.Bot)
+	 */
+	public void visit(Object o, Bot b) {
         if (o instanceof BotComponent<?>)
             buisitor.dispatchBuisit((BotComponent<?>)o);
         if (o instanceof NumberTwin)
             ((NumberTwin)o).acceptNumTwinVisitor(this);
     }
 
-    /**
-     * @see ctSim.model.bots.components.NumberTwin.NumberTwinVisitor#visit(ctSim.model.bots.components.NumberTwin, boolean)
-     */
-    public void visit(NumberTwin numberTwin, boolean isLeft) {
-        buisitor.dispatchBuisit(numberTwin, isLeft);
-    }
+	/**
+	 * @see ctSim.model.bots.components.NumberTwin.NumberTwinVisitor#visit(ctSim.model.bots.components.NumberTwin, boolean)
+	 */
+	public void visit(NumberTwin numberTwin, boolean isLeft) {
+		buisitor.dispatchBuisit(numberTwin, isLeft);
+	}
 
     /**
      * @param g			Governor
@@ -844,7 +844,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             */
             private double encoderRest = 0.0;
 
-            public void run() {
+			public void run() {
                 // Anzahl der Umdrehungen der Räder
                 double revs = wheel.revsThisSimStep();
 
@@ -890,7 +890,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         simulators.add(new Runnable() {
             private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
 
-            public void run() {
+			public void run() {
                 double distInM = world.watchObstacle(parent.worldCoordFromBotCoord(distFromBotCenter),
                 		parent.worldCoordFromBotCoord(endPoint), OPENING_ANGLE_IN_RAD, parent.getShape());
                 double distInCm = 100 * distInM;
@@ -929,7 +929,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         final Vector3d headingInBotCoord = looksForward();
 
         simulators.add(new Runnable() {
-            public void run() {
+			public void run() {
             	sensor.set(world.sensLight(
             		parent.worldCoordFromBotCoord(distFromBotCenter),
             		parent.worldCoordFromBotCoord(headingInBotCoord),
@@ -961,7 +961,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		});
 	}
 
-    /**
+	/**
 	 * @param sensor	Transportfach-Sensor
 	 * @param isLeft	immer true, denn es gibt nur einen Sensor
 	 */
@@ -972,11 +972,11 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		final Point3d startOfSens = new Point3d(- 0.025, 0.025, 0);
 		final Point3d endOfSens = new Point3d(startOfSens);
 		endOfSens.add(new Point3d(0.05, 0, 0));
-		
-		simulators.add(new Runnable() {
-            private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
 
-            public void run() {
+		simulators.add(new Runnable() {
+			private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
+
+			public void run() {
             	if (krautUndRuebenSim.getAssociatedObject() != null) {
             		sensor.set(1);
             	} else {
@@ -1013,10 +1013,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     	shutdown = sensor;
     }
 
-    /**
-     * @see java.lang.Runnable#run()
-     */
-    public void run() {
+	/**
+	 * @see java.lang.Runnable#run()
+	 */
+	public void run() {
         // Wichtig: zuerst die Sensoren, dann Kraut + Rüben     
         for (Runnable simulator : simulators) {
             simulator.run();

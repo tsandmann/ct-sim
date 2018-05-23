@@ -81,8 +81,8 @@ public class TournamentTreeGuiTest extends JFrame {
 		 * @see javax.swing.tree.TreeModel#addTreeModelListener(javax.swing.event.TreeModelListener)
 		 */
 		public void addTreeModelListener(TreeModelListener l) {
-	        listeners.add(l);
-        }
+			listeners.add(l);
+		}
 
 		/**
 		 * @see javax.swing.tree.TreeModel#removeTreeModelListener(javax.swing.event.TreeModelListener)
@@ -150,21 +150,21 @@ public class TournamentTreeGuiTest extends JFrame {
     /** Label */
     JLabel label = new JLabel("2 Level");
 
-    /** Tests */
-    public TournamentTreeGuiTest() {
-    	setLayout(new BorderLayout());
-    	JButton her = new JButton("+");
-    	her.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-	            tm.addLevel();
-	            for (int i = 0; i < t.getRowCount(); i++)
-	            	t.expandRow(i);
-	            label.setText(tm.currentLevel - 1 + " Level");
-            }
-    	});
-    	JButton weg = new JButton("\u2013");
-    	weg.addActionListener(new ActionListener() {
-    		public void actionPerformed(ActionEvent e) {
+	/** Tests */
+	public TournamentTreeGuiTest() {
+		setLayout(new BorderLayout());
+		JButton her = new JButton("+");
+		her.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		        tm.addLevel();
+		        for (int i = 0; i < t.getRowCount(); i++)
+		        	t.expandRow(i);
+		        label.setText(tm.currentLevel - 1 + " Level");
+		    }
+		});
+		JButton weg = new JButton("\u2013");
+		weg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
     			tm.removeNode();
     			for (int i = 0; i < t.getRowCount(); i++)
     				t.expandRow(i);

@@ -65,7 +65,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 		try {
 	        Class.forName(classToInitialize.getName());
         } catch (ClassNotFoundException e) {
-        	//$$ Obskurer Fehler
+        	// $$$ Obskurer Fehler
         	throw new RuntimeException(e);
         }
 	}

@@ -113,8 +113,7 @@ public class Decoratoror {
 			methodImpls.put(objMeth, findImplementor(decorators, objMeth));
 
 		// actual work
-		return (T)Proxy.newProxyInstance(
-			ClassLoader.getSystemClassLoader(),
+		return (T)Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
 			new Class[] { resultInterface },
 			new InvocationHandler() {
 				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

@@ -62,8 +62,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
     /** Logger */
     final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui");
 
-	/* ============================================================ */
-
 	// GUI-Components:
 	
     /** Statusbar */
@@ -95,8 +93,6 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 */
 	private final ClosableTabsPane botTabs;
 
-	/* ============================================================ */
-	
 	/** Welt */
 	private World world;
 	/** Welt-Viewer */
@@ -112,7 +108,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	public MainWindow(final Controller controller) {
 		super("c't-Sim " + Main.VERSION);
 
-    	/*
+		/*
 		 * Riesenspaß: Swing (also auch unsere GUI) ist "lightweight", Java3D ist jedoch "heavyweight".
 		 * Daher erscheint die Java3D-Anzeige immer _vor_ allen GUI-Komponenten: Wenn z.B. ein Menü aufgeklappt
 		 * wird, welches die 3D-Anzeige überlappt, _sollte_ natürlich das Menü im Vordergrund sein, stattdessen
@@ -124,8 +120,8 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		 * <a href="http://java3d.j3d.org/tutorials/quick_fix/swing.html">Swing Quick Fix</a>
 		 * <a href="http://java.sun.com/products/jfc/tsc/articles/mixing/index.html">Mixing</a>
 		 */
-    	JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-    	ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -138,7 +134,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		});
 
 		menuBar = new MainWinMenuBar(controller, this);
-        setJMenuBar(menuBar);
+		setJMenuBar(menuBar);
 		add(menuBar.getToolBar(), BorderLayout.NORTH);
 		add(buildStatusBar(), BorderLayout.SOUTH);
 
@@ -171,7 +167,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 */
 	private ConsoleComponent buildLogViewer() {
     	ConsoleComponent rv = new ConsoleComponent();
-    	Debug.registerDebugWindow(rv);	//$$ Legacy: Debug-Klasse
+    	Debug.registerDebugWindow(rv);	// $$$ Legacy: Debug-Klasse
     	// wir melden uns als Handler für den Root-Logger an
     	Handler h = rv.createLoggingHandler();
     	String logLevel = Config.getValue("LogLevel");
@@ -206,9 +202,9 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	public void onScreenshot() {
 		try {
 	        ImageIO.write(worldViewer.getScreenshot(), "png", File.createTempFile("screenshot", ".png"));
-        } catch (IOException e) {
+	    } catch (IOException e) {
 	        e.printStackTrace();
-        }
+	    }
 	}
 
 	/**
@@ -348,7 +344,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 	 */
 	public void onApplicationInited() {
 		// No-op
-    }
+	}
 
 	/**
 	 * @see ctSim.view.View#onSimulationFinished()
@@ -368,7 +364,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 //			}
 //		});
 
-    }
+	}
 	
 	/**
 	 * Veranlasst einen Reset aller Bots

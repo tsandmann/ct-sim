@@ -131,9 +131,9 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 		/* Key-Handler */
 		InputMap inputMap = comp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		// Ctrl / Cmd + w
-        KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
-        inputMap.put(key, "close");
-        comp.getActionMap().put("close", new AbstractAction() {
+		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		inputMap.put(key, "close");
+		comp.getActionMap().put("close", new AbstractAction() {
 			private static final long serialVersionUID = -7639062435105576105L;
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -142,7 +142,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 					// egal
 				}
 			}
-        });
+		});
 	}
 
 	/**

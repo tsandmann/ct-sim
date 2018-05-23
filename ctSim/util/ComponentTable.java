@@ -39,8 +39,6 @@ public class ComponentTable extends JTable {
 	/** UID */
 	private static final long serialVersionUID = 2766695602066190632L;
 
-	/* ============================================================ */
-	
 	// Konstruktoren wie in der Superklasse
 
 	/** Komponenten-Tabelle */
@@ -156,11 +154,9 @@ public class ComponentTable extends JTable {
 		setRowHeight(maxHeight + getIntercellSpacing().height);
 	}
 
-	/* ============================================================ */
-	
 	// Workaround für Bug "horizontale Scrollbars"
 
-	/* Bug: Eine JTable in einer JScrollPane loest nie die horizontale Scrollbar aus;
+	/* Bug: Eine JTable in einer JScrollPane löst nie die horizontale Scrollbar aus;
 	 * siehe http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936
 	 * Hier der Workaround wie auf der Bug-Seite beschrieben:
 	 * when the viewport shrinks below the preferred size, stop tracking the viewport width
@@ -192,8 +188,6 @@ public class ComponentTable extends JTable {
 		return super.getPreferredSize();
 	}
 
-	/* ============================================================ */
-	
 	// Hilfsklassen
 
 	/** Zellen-Renderer */

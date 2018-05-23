@@ -174,7 +174,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			int col = (offset + i) % WIDTH;
 			int row = (offset + i) / WIDTH;
 			col = HEIGHT - 1 - col;	// spiegeln - oben und unten vertauschen
-			// Um 90 Grad drehen = Spaltennr. und Zeilennr. vertauschen (siehe )	// $$$ siehe Protokoll-Doku
+			// Um 90 Grad drehen = Spaltennr. und Zeilennr. vertauschen (siehe )	$$$ siehe Protokoll-Doku
 			// ohne Drehen wäre pixels[col + (row * WIDTH)]
 			pixels[(col * HEIGHT) + row] = colorFromRgb(gray, gray, gray);
 		}

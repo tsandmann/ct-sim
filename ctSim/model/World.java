@@ -116,8 +116,6 @@ public class World {
 	/** Die Quelle, aus der der Parcours dieser Welt gelesen wurde */
 	private static String sourceString;
 
-	/* ============================================================ */
-
 	// "Geerbte" Zeit-Sachen
 
 	/**
@@ -145,8 +143,6 @@ public class World {
 	 * @see #getSimTimeInMs()
 	 */
 	private long simTimeInMs = 0;
-
-	/* ============================================================ */
 
 	/** aktive Bots */
 	private final List<ThreeDBot> botsRunning = Misc.newList();
@@ -186,8 +182,6 @@ public class World {
 			b.dispose();
 		}
 	}
-
-	/* ============================================================ */
 
 	/**
 	 * <p>
@@ -251,8 +245,6 @@ public class World {
 		simTimeInMs += SIM_TIME_PER_STEP;
 	}
 
-	/* ============================================================ */
-
 	// Statische Methoden, um eine Welt zu erzeugen
 
 	/**
@@ -286,8 +278,8 @@ public class World {
 						return new InputSource(ClassLoader.getSystemResource(
 							// "./" darf hier nicht enthalten sein
 							Config.getValue("worlddir").substring(2) + PARCOURS_DTD).openStream());
-	                return null;	// Standard-EntityResolver verwenden
-	            }
+					return null;	// Standard-EntityResolver verwenden
+				}
 			}
 		);
 	}
@@ -321,12 +313,10 @@ public class World {
 						return new InputSource(ClassLoader.getSystemResource(
 						// "./" darf hier nicht enthalten sein
 						Config.getValue("worlddir").substring(2) + PARCOURS_DTD).openStream());
-                return null; // Standard-EntityResolver verwenden
-            }
+				return null; // Standard-EntityResolver verwenden
+			}
 		});
 	}
-
-	/* ============================================================ */
 
 	/**
 	 * <p>
