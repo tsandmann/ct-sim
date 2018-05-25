@@ -160,7 +160,7 @@ public class Main extends JApplet implements BotReceiver {
 
 	/**
 	 * Fügt einen neuen (bereits erstellten) Bot in das Fenster ein
-	 * 
+	 *
 	 * @param b	Referenz auf den neuen Bot
 	 */
 	public void onBotAppeared(final Bot b) {

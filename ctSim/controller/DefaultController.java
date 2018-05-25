@@ -79,10 +79,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 	/** Flag für Bot-Reset */
 	private boolean reset = false;
-	
+
 	/**
 	 * Setzt das View und initialisiert alles Nötige dafür
-	 * 
+	 *
 	 * @param view	unser View
 	 */
 	public void setView(View view) {
@@ -163,7 +163,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	        try {
 				long realTimeBeginInMs = System.currentTimeMillis();
 
-				/* 
+				/*
 				 * Warte, bis alle Bots fertig sind und auf die nächste Aktualisierung warten;
 				 * breche ab, wenn die Bots zu lange brauchen!
 				 */
@@ -178,7 +178,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 					this.reset = false;
 					view.onResetAllBots();
 				}
-				
+
 				// Judge prüfen:
 				if (judge.isSimulationFinished(sequencersWorld.getSimTimeInMs())) {
 					lg.fine("Sequencer: Simulationsende");
@@ -209,7 +209,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 					pause();
 				}
 
-				/* 
+				/*
 				 * Add/Start new Bot + neue Runde einläuten überschreibt startSignal,
 				 * aber wir haben mit oldStartSignal eine Referenz aufgehoben
 				 */
@@ -228,7 +228,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				if (timeToSleep > 0)
 					Thread.sleep(timeToSleep);
 			} catch (InterruptedException e) {
-				/* 
+				/*
 				 * Wird von wait() geworfen, wenn jemand closeWorld() macht während wait() noch läuft
 				 * (closeWorld() ruft interrupt() auf). Man bittet uns, unsere while-Bedingung auszuwerten,
 				 * weil die false geworden ist. Also normal weiter gehen.
@@ -272,7 +272,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	/**
 	 * Setzt die Welt. Prinzip: Sequencer und Welt werden gemeinsam erstellt und gemeinsam gekillt.
 	 * setWorld() startet einen Sequencer-Thread, der pausiert bleibt bis jemand unpause() aufruft.
-	 * 
+	 *
 	 * @param world	die Welt
 	 */
 	private void setWorld(World world) {
@@ -308,7 +308,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 	/**
 	 * Verbindet zu Host:Port
-	 * 
+	 *
 	 * @param hostname	Ziel der Verbindung (Name)
 	 * @param port		Ziel der Verbindung (Port)
 	 */
@@ -345,7 +345,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 	/**
 	 * Startet einen externen Bot
-	 * 
+	 *
 	 * @param file	File-Objekt des Bots
 	 */
 	public void invokeBot(File file) {
@@ -354,7 +354,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 	/**
 	 * Startet einen externen Bot
-	 * 
+	 *
 	 * @param filename	Pfad zum Bot als String
 	 */
     public void invokeBot(String filename) {
@@ -372,7 +372,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     				lg.warning("Fehler beim Setzen der execute-Permission: chmod lieferte %d zurück", p.exitValue());
     			}
     		}
-    		/* 
+    		/*
     		 * Bot ausführen
     		 * String[], sonst trennt er das nach dem ersten Leerzeichen ab,
     		 * dann geht's nicht, wenn der Pfad mal ein Leerzeichen enthält
@@ -386,7 +386,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
     /**
      * Handler, falls ein Bot stirbt
-     * 
+     *
      * @param bot	der sterbende Bot
      */
     public synchronized void onBotDisappeared(Bot bot) {
@@ -400,10 +400,10 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     		}
     	}
     }
-    
+
     /**
 	 * Handler, falls neuer Bot hinzugefügt wurde
-	 * 
+	 *
 	 * @param bot	der neue Bot
 	 */
 	public synchronized void onBotAppeared(final Bot bot) {
@@ -452,7 +452,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
     /**
      * Gibt die Anzahl der zurzeit geladenen Bots zurück
-     * 
+     *
      * @return	Anzahl der Bots
      */
     public int getParticipants() {
@@ -461,7 +461,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 	/**
 	 * @param judgeClassName	die Art des zu setzenden Schiedsrichters
-	 * 
+	 *
 	 * Stellt sicher, dass immer ein sinnvoller Judge gesetzt ist.
 	 */
 	public void setJudge(String judgeClassName) {
@@ -469,7 +469,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
     	if (sequencer != null) {
     		lg.info("Kein Wechsel erlaubt, weil noch eine Welt offen ist");
     		return;
-    	}    	
+    	}
     	Judge j = null;
         try {
             Class<?> cl = Class.forName(judgeClassName);
@@ -488,7 +488,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 	/**
 	 * Setzt den Schiedsrichter
-	 * 
+	 *
 	 * @param judge	gewünschte Judge-Instanz
 	 */
 	public void setJudge(Judge judge) {
@@ -500,7 +500,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 	/**
 	 * Lädt eine Welt aus einer Datei
-	 * 
+	 *
 	 * @param sourceFile	File-Objekt der Welt
 	 */
 	public void openWorldFromFile(File sourceFile) {
@@ -513,7 +513,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 
 	/**
 	 * Lädt eine Welt aus einem String
-	 * 
+	 *
 	 * @param parcoursAsXml	String mit den XML-Dater der Welt
 	 */
 	public void openWorldFromXmlString(String parcoursAsXml) {
@@ -539,8 +539,8 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	public void onApplicationInited() {
         view.onApplicationInited();
     }
-    
-        
+
+
 	/**
 	 * Setzt alle Bots im nächsten Sim-Schritt zurück.
 	 * Dadurch, dass hier nur das Reset-Flag gesetzt wird, erübrigt sich das Synchronisieren der
@@ -549,12 +549,12 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	public void resetAllBots() {
     	this.reset = true;
     }
-    
+
 	/**
 	 * Liefert ein Kommando an einen Bot aus.
 	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben.
 	 * Sender und Empfänger stehen in dem command drin.
-	 *  
+	 *
 	 * @param command	das zu übertragende Kommando
 	 * @throws ProtocolException	falls kein passender Empfänger gefunden wurde
 	 */
@@ -572,37 +572,37 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 					((CtBot)b).receiveCommand(command);
 				}
 			}
-		}	
+		}
 		if (!command.getTo().equals(Command.getBroadcastId())) {
-			// Es fühlt sich wohl kein Bot aus der Liste zuständig... -> Fehler 
+			// Es fühlt sich wohl kein Bot aus der Liste zuständig... -> Fehler
 			throw new ProtocolException("Nachricht an Empfänger " + command.getTo() + " nicht zustellbar. " +
 					"Kein Bot mit passender Id angemeldet");
 		}
 	}
-	
+
 	/**
 	 * Testet, ob bereits ein Bot diese Id hat
-	 * 
+	 *
 	 * @param id	zu testende Id
-	 * @return True, wenn noch kein Bot diese Id nutzt 
+	 * @return True, wenn noch kein Bot diese Id nutzt
 	 */
 	public boolean isIdFree(BotID id){
 		if (id.equals(Command.getBroadcastId()))
 			// Broadcast ist immer frei
 			return true;
-		for (Bot b : bots) 
-			if (b instanceof BasicBot) 			
+		for (Bot b : bots)
+			if (b instanceof BasicBot)
 				if (((BasicBot)b).getId().equals(id))
 					return false;
 		return true;
 	}
-	
+
 	/** Offset für die Adressvergabe, damit wir nicht jedesmal mit den schon vergebenen Adressen beginnen */
 	private int poolOffset = 0;
-	
+
 	/**
 	 * Liefert eine Id aus dem Adresspoll zurück
-	 * 
+	 *
 	 * @return Die neue Id
 	 * @throws ProtocolException	wenn keine Adresse mehr frei
 	 */
@@ -610,22 +610,22 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 		byte poolSize= (byte)64;
 		byte poolAdress= (byte) 128;
 		BotID newId = new BotID();
-		
+
 		for (byte i=0; i< poolSize; i++){
 			newId.set(((i+ poolOffset) % poolSize) + poolAdress);
 			if (isIdFree(newId)){
 				poolOffset++;
 				return newId;
-			}				
+			}
 		}
-		
+
 		throw new ProtocolException("Keine Id im Pool mehr frei");
 	}
-	
+
 	/**
 	 * Exportiert die aktuelle Welt in eine Bot-Map-Datei
-	 * 
-	 * @param bot		Bot-Nr. dessen Startfeld als Koordinatenursprung der Map benutzt wird 
+	 *
+	 * @param bot		Bot-Nr. dessen Startfeld als Koordinatenursprung der Map benutzt wird
 	 * @param free		Wert mit dem freie Felder eingetragen werden (z.B. 100)
 	 * @param occupied	Wert mit dem Hindernisse eingetragen werden (z.B. -100)
 	 * @throws IOException	falls Fehler beim Schreiben der Datei

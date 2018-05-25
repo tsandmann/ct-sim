@@ -55,7 +55,7 @@ public class TurningPoint {
 	 * wo der Bot natürlich nicht durchkommt. Dieser Wegfindungsalgorithmus ist für den Wert 0 also praktisch
 	 * nutzlos, da er auch Wege durch Wände u.dgl. sucht.</li>
 	 * </ol>
-	 * 
+	 *
 	 * Mist: Dieser Algorithmus hat ganz eigene Vorstellungen davon, was "Bot ist in ein Loch gefallen"
 	 * heißt (nämlich Bot-Zentrum ist näher als distFromCorner an einer Ecke). Es wäre besser, wenn das Model
 	 * und diese Klasse einen Bot unter den gleichen Umständen als "im Loch" betrachten,  und nicht unter

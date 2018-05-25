@@ -86,7 +86,7 @@ public class Main {
     public static void main(String... args) {
     	final String[] cmdArgs = args;
 		handleCommandLineArgs(cmdArgs);
-	
+
 		if (showSplash) {
 		    /* Splash-Screen anzeigen */
 		    java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
@@ -128,7 +128,7 @@ public class Main {
 
 	/**
 	 * Siehe {@link #main(String...)}.
-	 * 
+	 *
 	 * @param args	Command-Line-Argumente
 	 */
 	private static void handleCommandLineArgs(String[] args) {
@@ -150,7 +150,7 @@ public class Main {
 
 	/**
 	 * Initialisiert den Logger
-	 * 
+	 *
 	 * @return Logger-Instanz
 	 */
 	public static FmtLogger initLogging() {

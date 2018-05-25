@@ -90,7 +90,7 @@ public class World {
 
 	/** Name des XML-Schemas für Parcours */
 	private static final String PARCOURS_DTD = "/parcours.dtd";
-	
+
 	/** Dicke des Bodens in m */
 	public static final float PLAYGROUND_THICKNESS = 0.0f;
 
@@ -112,7 +112,7 @@ public class World {
 
 	/** Viewer */
 	private Set<ViewPlatform> viewPlatforms = new HashSet<ViewPlatform>();
-	
+
 	/** Die Quelle, aus der der Parcours dieser Welt gelesen wurde */
 	private static String sourceString;
 
@@ -149,7 +149,7 @@ public class World {
 	/** zu startende Bots */
 	private final List<ThreeDBot> botsToStart = Misc.newList();
 
-	
+
 	/** Startet die neuen Bots */
 	public synchronized void startBots() {
 		for (ThreeDBot b : botsToStart) {
@@ -161,7 +161,7 @@ public class World {
 
 	/**
 	 * Ermittelt die neue Anzahl an Bots (aktive + neue)
-	 * 
+	 *
 	 * @return Botanzahl
 	 */
 	public synchronized int getFutureNumOfBots() {
@@ -192,7 +192,7 @@ public class World {
 	 * <p>
 	 * Näheres siehe {@link #setSimStepIntervalInMs(int)}.
 	 * </p>
-	 * 
+	 *
 	 * @return Zeitintervall
 	 */
 	public int getSimStepIntervalInMs() {
@@ -249,14 +249,14 @@ public class World {
 
 	/**
 	 * Lädt einen Parcours aus einer Datei und baut damit eine Welt
-	 * 
+	 *
 	 * @param sourceFile	Die zu öffnende Datei. Sie hat in dem für Parcours vorgesehenen Schema zu sein.
 	 * @return Die neue Welt
-	 * @throws SAXException 
-	 * @throws IOException 
-	 * @throws ParserConfigurationException 
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
 	 */
-  
+
 	public static World buildWorldFromFile(File sourceFile) throws SAXException, IOException,
 				ParserConfigurationException {
 	    BufferedReader in = new BufferedReader(new FileReader(sourceFile));
@@ -266,7 +266,7 @@ public class World {
 			sourceString += line + "\r\n";
 		}
 		in.close();
-		return new World(new InputSource(sourceFile.toURI().toString()), 
+		return new World(new InputSource(sourceFile.toURI().toString()),
 			/*
 			 * Der EntityResolver hat den Sinn, dem Parser zu sagen,
 			 * er soll die parcours.dtd im Verzeichnis "parcours" suchen.
@@ -286,13 +286,13 @@ public class World {
 
 	/**
 	 * Lädt einen Parcours aus einem String und baut damit eine Welt
-	 * 
+	 *
 	 * @param parcoursAsXml
 	 * 				Der String, der die XML-Darstellung des Parcours enthält. Das XML muss in dem
 	 * 				für Parcours vorgesehenen Schema sein. Die in Zeile 2 des XML angegebene
-	 * 				DTD-Datei wird von dieser Methode im Unterverzeichnis "parcours" gesucht. 
+	 * 				DTD-Datei wird von dieser Methode im Unterverzeichnis "parcours" gesucht.
 	 * @return Die neue Welt
-	 * @throws SAXException 
+	 * @throws SAXException
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
@@ -322,7 +322,7 @@ public class World {
 	 * <p>
 	 * Liest einen Parcours aus einer XML-Quelle und baut damit eine Welt.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Der Konstruktor ist privat, da ihn niemand von außen verwendet hat.
 	 * Es stehen die statischen Methoden <code>buildWorldFromFile</code> und
@@ -341,7 +341,7 @@ public class World {
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws ParserConfigurationException
-	 *  
+	 *
 	 * @see ParcoursLoader#loadParcours(InputSource, EntityResolver)
 	 */
 	private World(InputSource source, EntityResolver resolver) throws SAXException, IOException,
@@ -356,7 +356,7 @@ public class World {
 
 	/**
 	 * Breite in Blöcken
-	 * 
+	 *
 	 * @return Breite
 	 */
 	public int getWidthInGridBlocks() {
@@ -365,7 +365,7 @@ public class World {
 
 	/**
 	 * Höhe in Blöcken
-	 * 
+	 *
 	 * @return Höhe
 	 */
 	public int getHeightInGridBlocks() {
@@ -388,7 +388,7 @@ public class World {
 
 	/**
 	 * Erzeugt einen Szenegraphen mit Boden und Grenzen der Roboterwelt
-	 * 
+	 *
 	 * @param parc der Parcours
 	 */
 	private void setParcours(Parcours parc) {
@@ -448,7 +448,7 @@ public class World {
 		lightBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		lightBG.setPickable(true);
 		worldTG.addChild(lightBG);
-		
+
 		/* Die Branchgroup für BPS (IR-Licht) */
 		bpsBG = new BranchGroup();
 		bpsBG.setPickable(true);
@@ -468,7 +468,7 @@ public class World {
 		obstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		obstBG.setPickable(true);
 		worldTG.addChild(obstBG);
-		
+
 		int tickrate = 0;
 		try {
 			tickrate = Integer.parseInt(Config.getValue("ctSimTickRate"));
@@ -484,21 +484,21 @@ public class World {
 	public BranchGroup getScene() {
 		return scene;
 	}
-	
+
 	/**
 	 * @return Gibt den Parcours der Welt zurück
 	 */
 	public Parcours getParcours() {
 		return parcours;
 	}
-	
+
 	/**
 	 * @return Gibt die BranchGroup der Hindernisse zurück
 	 */
 	public BranchGroup getObstacles() {
 		return obstBG;
 	}
-	
+
 	/**
 	 * @return TG der Welt
 	 */
@@ -508,7 +508,7 @@ public class World {
 
 	/**
 	 * Fügt eine ViewPlatform hinzu
-	 * 
+	 *
 	 * @param view	die neue Ansicht
 	 */
 	public void addViewPlatform(ViewPlatform view) {
@@ -517,7 +517,7 @@ public class World {
 
 	/**
 	 * Fügt einen neuen Bot hinzu
-	 * 
+	 *
 	 * @param bot 		der neue Bot
 	 * @param barrier 	Barrier für den Bot
 	 * @return Neue ThreeDBot-Instanz
@@ -526,7 +526,7 @@ public class World {
 		if (bot == null) {
 			throw new NullPointerException();
 		}
-		
+
 		int newBot = getFutureNumOfBots() + 1;
 		Point3d pos = parcours.getStartPosition(newBot);
 		parcours.setStartFieldUsed(bot);
@@ -559,13 +559,13 @@ public class World {
 	 * **********************************************************************
 	 *  WORLD_FUNCTIONS
 	 * **********************************************************************
-	 * 
+	 *
 	 * Funktionen für die Sensoren usw. (Abstandsfunktionen u.ä.)
 	 */
 
 	/**
 	 * Gibt den Gewinner zurück
-	 * 
+	 *
 	 * @return ThreeDBot, der gewonnen hat
 	 */
 	public ThreeDBot whoHasWon() {
@@ -588,7 +588,7 @@ public class World {
 
 	/**
 	 * Prüft, ob ein Objekt mit einem Objekt aus der obstacle-BG der Welt kollidiert
-	 * 
+	 *
 	 * @param body		der Körper des Objekts
 	 * @param bounds	die Grenzen des Objekts
 	 * @return PickInfo über die Kollision (null, falls keine vorhanden)
@@ -598,25 +598,25 @@ public class World {
 		Transform3D transform = new Transform3D();
 		worldTG.getTransform(transform);
 		bounds.transform(transform);
-		
+
 		PickBounds pickBounds = new PickBounds(bounds);
 		PickInfo pickInfo = null;
 
 		synchronized (obstBG) {
 			/* eigenen Körper verstecken */
 			body.setPickable(false);
-			
+
 			/* Kollisionserkennung von Java3D */
 			pickInfo = obstBG.pickAny(PickInfo.PICK_BOUNDS, PickInfo.NODE, pickBounds);
-			
+
 			/* eigenen Körper wieder zurücksetzen */
 			body.setPickable(true);
 		}
-		
+
 //		if (pickInfo != null && pickInfo.getNode() != null) {
 //			lg.info("Objekt=" + pickInfo.getNode().getParent().getName() + " kollidiert");
 //		}
-		
+
 		return pickInfo;
 	}
 
@@ -742,7 +742,7 @@ public class World {
 	 * <p>
 	 * Liefert die Helligkeit, die auf einen Lichtsensor fällt.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Da diese Methode unter Verwendung des PickConeRay implementiert ist,
 	 * ist sie seinen Bugs unterworfen. Ausführliche Dokumentation siehe
@@ -754,7 +754,7 @@ public class World {
 	 * @param lightReach	die Reichweite des Lichtsensors / m
 	 * @param openingAngle	der Öffnungswinkel des Blickstrahls / radians
 	 * @return Die Dunkelheit um den Sensor herum, von 1023 (100%) bis 0 (0%)
-	 * 
+	 *
 	 * @see PickConeRay
 	 */
 	public int sensLight(Point3d pos, Vector3d heading, double lightReach, double openingAngle) {
@@ -793,7 +793,7 @@ public class World {
 	 * @param openingAngle	der Öffnungswinkel des Blickstrahls
 	 * @return Die Bakencodierung, der Bake im Blickfeld mit der kürzesten Entfernung zum Sensor,
 	 * 				oder 1023, falls keine Bake gesehen wird
-	 * 
+	 *
 	 * @see PickConeSegment
 	 */
 	public int sensBPS(Point3d pos, Point3d end, double openingAngle) {
@@ -814,7 +814,7 @@ public class World {
 			/* keine Landmarke sichtbar */
 			return BPS.NO_DATA;
 		}
-		
+
 		Point3d source = pickInfo.getClosestIntersectionPoint();
 		Transform3D t = pickInfo.getLocalToVWorld();
 		t.transform(source);
@@ -827,7 +827,7 @@ public class World {
 
 		return result;
 	}
-	
+
 	/**
 	 * <p>
 	 * Liefert die Distanz in Metern zum nächsten Objekt zurück, das man sieht,
@@ -846,7 +846,7 @@ public class World {
 	 * 				Ray auf "not pickable" gesetzt werden und nach der Anwendung wieder auf "pickable".
 	 * 				Der Grund ist, dass sonst in Grenzfällen der Botkörper vom PickConeSegment gefunden wird.
 	 * @return Die Distanz zum nächsten Objekt ("pickable") in Metern oder 100 m, falls kein Objekt in Sichtweite
-	 * 
+	 *
 	 * @see PickConeSegment
 	 */
 	public double watchObstacle(Point3d pos, Point3d end, double openingAngle, Node botBody) {
@@ -880,7 +880,7 @@ public class World {
 
 	/** Damit jedes Obstacle fair behandelt wird, merken wir uns, wer das letzte Mal zuerst dran war */
 	private int runningBotsPtr = 0;
-	
+
 	/**
 	 * Diese Methode setzt die Simulation um einen Simulationsschritt weiter.
 	 * siehe {@link ctSim.controller.DefaultController#run()}.
@@ -888,7 +888,7 @@ public class World {
 	public void updateSimulation() {
 		// Simzeit um einen Schritt weiter
 		increaseSimulTime();
-		
+
 		ThreeDBot[] bots = botsRunning.toArray(new ThreeDBot[] {});
 		// Zeiger könnte zu weit stehen
 		if (runningBotsPtr >= bots.length) {
@@ -924,7 +924,7 @@ public class World {
 
 	/**
 	 * Ermittelt die kürzeste Distanz zum Ziel
-	 * 
+	 *
 	 * @param fromWhere	Anfangsposition
 	 * @return Entfernung
 	 */
@@ -934,7 +934,7 @@ public class World {
 
 	/**
 	 * Ermittelt die kürzeste Distanz zum Ziel
-	 * 
+	 *
 	 * @param fromWhere	Anfangsposition
 	 * @return Entfernung
 	 */
@@ -956,17 +956,17 @@ public class World {
 
 	/**
 	 * Löscht einen Bot
-	 * 
+	 *
 	 * @param bot	der zu löschende Bot
 	 */
 	public void deleteBot(Bot bot) {
 		parcours.setStartFieldUnused(bot);
 	}
-	
+
 	/**
 	 * Setzt alle Bots auf ihre Startpplätze zurück.
 	 * Hier werden nur simulierte Bots (ThreeDBot-Instanzen) berücksichtigt,
-	 * weil sonstige Bots in World nicht bekannt sind! 
+	 * weil sonstige Bots in World nicht bekannt sind!
 	 */
 	public void resetAllBots() {
 		for (ThreeDBot b : botsRunning) {
@@ -981,10 +981,10 @@ public class World {
 			b.setPosition(pos);
 		}
 	}
-	
+
 	/**
 	 * Exportiert die aktuelle Welt in eine Bot-Map-Datei
-	 * 
+	 *
 	 * @param bot		Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird
 	 * @param free		Wert, mit dem freie Felder eingetragen werden (z.B. 100)
 	 * @param occupied	Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
@@ -996,9 +996,9 @@ public class World {
 		int resolution = Integer.parseInt(Config.getValue("mapResolution"));
 		int section_points = Integer.parseInt(Config.getValue("mapSectionSize"));
 		int macroblock_length = Integer.parseInt(Config.getValue("mapMacroblockSize"));
-		
+
 		Map map = new Map(size, resolution, section_points, macroblock_length);
-		
+
 		try {
 			map.createFromParcours(parcours, bot, free, occupied);
 		} catch (MapException e) {
@@ -1008,10 +1008,10 @@ public class World {
 		}
 		map.export();
 	}
-	
+
 	/**
 	 * Rechnet eine Welt-Koordinate in eine globale Position um
-	 * 
+	 *
 	 * @param worldPos	Welt-Position (wie von Java3D verwendet)
 	 * @return globale Position (wie zur Lokalisierung verwendet) / mm
 	 */

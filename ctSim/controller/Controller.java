@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.controller;
@@ -43,7 +43,7 @@ import ctSim.view.View;
  * </p>
  *
  * @see View
- * 
+ *
  * @author Hendrik Krauß
  */
 public interface Controller {
@@ -54,7 +54,7 @@ public interface Controller {
 
 	/** Schließt die Welt */
 	public void closeWorld();
-	
+
 	/**
 	 * Startet einen externen Bot
 	 *
@@ -67,7 +67,7 @@ public interface Controller {
 
 	/**
 	 * Verbindet zu einem Bot
-	 * 
+	 *
 	 * @param hostname	Host
 	 * @param port		Port
 	 */
@@ -75,14 +75,14 @@ public interface Controller {
 
 	/**
 	 * Lädt eine Welt aus einer Datei
-	 * 
+	 *
 	 * @param sourceFile Weltdatei
 	 */
 	public void openWorldFromFile(File sourceFile);
 
 	/**
 	 * Lädt eine Welt aus einem XML-formatierten String
-	 * 
+	 *
 	 * @param parcoursAsXml	Welt als XML-String
 	 */
 	public void openWorldFromXmlString(String parcoursAsXml);
@@ -92,14 +92,14 @@ public interface Controller {
 
 	/**
 	 * Setzt den Schiedsrichter
-	 * 
+	 *
 	 * @param judgeClassName
 	 */
 	public void setJudge(String judgeClassName);
 
 	/**
 	 * Setzt den Schiedsrichter
-	 * 
+	 *
 	 * @param j
 	 */
 	public void setJudge(Judge j);
@@ -116,39 +116,39 @@ public interface Controller {
 	 * Ab diesem Methodenaufruf liegt die Verantwortung für den Programmablauf beim Controller.
 	 */
 	void onApplicationInited();
-	
+
 	/** Setzt alle Bots zurück */
     public void resetAllBots();
-	
+
 	/**
 	 * Liefert ein Kommando an einen Bot aus.
 	 * Diese Routine kann dazu benutzt werden, um Bot-2-Bot-Kommunikation zu betreiben.
 	 * Sender und Empfänger stehen in dem Command drin.
-	 * 
+	 *
 	 * @param command	das zu übertragende Kommando
 	 * @throws ProtocolException	falls kein passender Empfänger gefunden wurde
 	 */
 	public void deliverMessage(Command command) throws ProtocolException;
-	
+
 	/**
 	 * Liefert eine Id aus dem Adresspoll zurück
-	 * 
+	 *
 	 * @return Die neue Id
 	 * @throws ProtocolException	wenn keine Adresse mehr frei
 	 */
 	public BotID generateBotId() throws ProtocolException;
-	
+
 	/**
 	 * Testet, ob bereits ein Bot diese Id hat
-	 * 
+	 *
 	 * @param id	zu testende Id
-	 * @return True, wenn noch kein Bot diese Id nutzt 
+	 * @return True, wenn noch kein Bot diese Id nutzt
 	 */
 	public boolean isIdFree(BotID id);
-	
+
 	/**
 	 * Exportiert die aktuelle Welt in eine Bot-Map-Datei
-	 * 
+	 *
 	 * @param bot		Bot-Nr., dessen Startfeld als Koordinatenursprung der Map benutzt wird
 	 * @param free		Wert, mit dem freie Felder eingetragen werden (z.B. 100)
 	 * @param occupied	Wert, mit dem Hindernisse eingetragen werden (z.B. -100)
@@ -156,10 +156,10 @@ public interface Controller {
 	 * @throws MapException	falls keine Daten in der Map
 	 */
 	public void worldToMap(int bot, int free, int occupied) throws IOException, MapException;
-	
+
 	/**
 	 * gibt die aktuelle Welt zurück
-	 * 
+	 *
 	 * @return geladenen Welt
 	 */
 	public World getWorld();

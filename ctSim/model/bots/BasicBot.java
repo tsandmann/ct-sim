@@ -65,13 +65,13 @@ import ctSim.util.Misc;
 public abstract class BasicBot implements Bot {
 	/** Die Connection an der der Bot hängt */
 	private Connection connection;
-	
+
 	/** Hier ist der Controller gespeichert, der den Bot verwaltet */
 	private Controller controller;
 
 	/**
 	 * Liefert die Id eines Bots für die Adressierung der Commands zurück
-	 * 
+	 *
 	 * @return Id des Bots
 	 */
 	public BotID getId() {
@@ -84,7 +84,7 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * Setzt die Id des Bots für die Adressierung der Commands
-	 * 
+	 *
 	 * @param newId	ID des Bots
 	 * @throws ProtocolException	wenn die Id bereits vergeben ist
 	 */
@@ -100,19 +100,19 @@ public abstract class BasicBot implements Bot {
 		lg.info("Setze die Id von Bot " + toString() + " auf " + newId);
 		getConnection().getCmdOutStream().setTo(newId);
 	}
-	
+
 	/**
 	 * Liste
-	 * 
+	 *
 	 * @param <T>	Typ
 	 */
 	public static class BulkList<T> extends ArrayList<T> {
 		/** UID */
 		private static final long serialVersionUID = - 8179783452023605404L;
-		
+
 		/**
 		 * Fügt Elemente hinzu
-		 * 
+		 *
 		 * @param elements	die Elemente
 		 */
 		public void add(T... elements) {
@@ -120,7 +120,7 @@ public abstract class BasicBot implements Bot {
                 add(e);
         }
 	}
-	
+
 	/** Zählklasse */
 	public static class CountingMap
 	extends HashMap<Class<? extends BasicBot>, Integer> {
@@ -214,7 +214,7 @@ public abstract class BasicBot implements Bot {
 		 * <p>
 		 * Hat ein Bot mehrere Komponenten gleicher Klasse, werden die Flags von ihnen allen betroffen.
 		 * </p>
-		 * 
+		 *
          * @param compntFlagTable	Flags
 		 */
         public void applyFlagTable(CompntWithFlag... compntFlagTable) {
@@ -236,9 +236,9 @@ public abstract class BasicBot implements Bot {
 		 * Implementiert das
 		 * <a href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-Responsibility-Pattern</a>
 		 * </p>
-		 * 
+		 *
     	 * @param command	Kommando
-    	 * @throws ProtocolException 
+    	 * @throws ProtocolException
 		 */
     	public void processCommand(Command command) throws ProtocolException {
     		if (command.getDirection() != Command.DIR_REQUEST) {
@@ -286,7 +286,7 @@ public abstract class BasicBot implements Bot {
 	 * Hilfsmethode, mit der man Component-Flag-Tabellen leicht schreiben kann; siehe
 	 * {@link BotComponentList#applyFlagTable(ctSim.model.bots.BasicBot.CompntWithFlag[]) BotComponentList.applyFlagTable()}.
 	 * </p>
-	 * 
+	 *
 	 * @param compntClass	Bot-Komponente
 	 * @param flags			Connection-Flags
 	 * @return Component-Flag-Tabelle
@@ -354,7 +354,7 @@ public abstract class BasicBot implements Bot {
 				// egal
 			}
 		}
-		
+
 		for (Runnable r : disposeListeners) {
 			r.run();
 		}
@@ -374,7 +374,7 @@ public abstract class BasicBot implements Bot {
 	 * </ul>
 	 * Instance-Numbers fangen immer bei 0 an.
 	 * </p>
-	 * 
+	 *
 	 * @return Nummer
 	 * @see #toString()
 	 */
@@ -431,7 +431,7 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * Liefert den Controller zurück, der diesen Bot verwaltet
-	 * 
+	 *
 	 * @return Controller	der Controller
 	 */
 	public Controller getController() {
@@ -440,7 +440,7 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * Setzt den zuständigen Controller
-	 * 
+	 *
 	 * @param controller
 	 * @throws ProtocolException	wenn die Id dieses Bots im Controller schon belegt ist
 	 */
@@ -453,10 +453,10 @@ public abstract class BasicBot implements Bot {
 				throw new ProtocolException("Die Id dieses Bots existiert schon im Controller!");
 		}
 	}
-	
+
 	/**
 	 * Liefert die Connection zurück über die der Bot zu erreichen ist
-	 * 
+	 *
 	 * @return connection
 	 */
 	public Connection getConnection() {
@@ -465,7 +465,7 @@ public abstract class BasicBot implements Bot {
 
 	/**
 	 * Setzt die Connection über die der Bot zu erreichen ist
-	 * 
+	 *
 	 * @param connection
 	 */
 	public void setConnection(Connection connection) {

@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
@@ -103,7 +103,7 @@ public class ClosableTabsPane extends JTabbedPane {
 		public Icon getWrappee() { return wrappee; }
 		/**
 		 * Wrappee-Icon setzen
-		 * 
+		 *
 		 * @param wrappee
 		 */
 		public void setWrappee(Icon wrappee) { this.wrappee = wrappee; }
@@ -112,7 +112,7 @@ public class ClosableTabsPane extends JTabbedPane {
 		 * @see javax.swing.Icon#getIconHeight()
 		 */
 		public int getIconHeight() { return wrappee.getIconHeight(); }
-		
+
 		/**
 		 * @see javax.swing.Icon#getIconWidth()
 		 */
@@ -155,7 +155,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Wird nicht tatsächlich geschlossen, Event feuert nur
-	 * 
+	 *
 	 * @param closeIcon
 	 * @param closeIconHover
 	 */
@@ -189,7 +189,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Behandelt das MouseMotion-Event
-	 * 
+	 *
 	 * @param e	Event
 	 */
 	private void handleMouseMotionEvent(MouseEvent e) {
@@ -210,7 +210,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * X/Y relativ zu dieser TabbedPane, d.h. man kann die Koordinaten, wie sie ein MouseEvent liefert,
 	 * direkt weiterverarbeiten. Gibt einen Tab-Index zurück wie die {@code index...()}-Methoden in
 	 * JTabbedPane.
-	 * 
+	 *
 	 * @param x	X-Koordinate
 	 * @param y	Y-Koordinate
 	 * @return Tab-Index
@@ -241,7 +241,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Fügt neuen Tab hinzu
-	 * 
+	 *
 	 * @param title		Titel
 	 * @param component	Komponente
 	 */
@@ -251,7 +251,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Fügt neuen Tab hinzu
-	 * 
+	 *
 	 * @param title		Titel
 	 * @param component	Komponente
 	 * @param toolTip	Tooltip
@@ -264,7 +264,7 @@ public class ClosableTabsPane extends JTabbedPane {
 
 	/**
 	 * Fügt neuen Tab hinzu
-	 * 
+	 *
 	 * @param title				Titel
 	 * @param component			Komponente
 	 * @param toolTip			Tooltip
@@ -283,17 +283,17 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * Registriert einen Listener, der benachrichtigt wird, wenn der Benutzer ein Tab aus dieser TabsPane
 	 * schließt. Der Parameter, der dem Listener übergeben wird, ist der Index des Tab (einer der in
 	 * {@link JTabbedPane} üblichen Indizes). Verwendungsbeispiel:
-	 * 
+	 *
 	 * <pre>
 	 * tabsPane.addCloseListener(new Closure<Integer>() {
-	 *     public void run(Integer index) { 
+	 *     public void run(Integer index) {
 	 *         Component c = tabsPane.getComponentAt(index);
 	 *         ...
 	 *     }
 	 * });
 	 * </pre>
 	 * </p>
-	 * 
+	 *
 	 * @param li
 	 * @throws NullPointerException	falls li == {@code null} ist
 	 */
@@ -307,7 +307,7 @@ public class ClosableTabsPane extends JTabbedPane {
 	 * Entfernt einen Listener, den man zuvor registriert hat. Siehe {@link #addCloseListener(Runnable1)}.
 	 * Der Aufruf wird stillschweigend ignoriert, falls der Listener schon entfernt ist oder nie
 	 * registriert wurde.
-	 * 
+	 *
 	 * @param li	Listener
 	 */
 	public void removeCloseListener(Runnable1<Integer> li) {

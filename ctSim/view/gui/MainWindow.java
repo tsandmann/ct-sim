@@ -63,7 +63,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
     final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui");
 
 	// GUI-Components:
-	
+
     /** Statusbar */
     private StatusBar statusBar;
     /** Split-Pane */
@@ -102,7 +102,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Main-Fenster
-	 * 
+	 *
 	 * @param controller	Controller für das Fenster
 	 */
 	public MainWindow(final Controller controller) {
@@ -114,7 +114,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		 * wird, welches die 3D-Anzeige überlappt, _sollte_ natürlich das Menü im Vordergrund sein, stattdessen
 		 * _ist_ aber die 3D-Anzeige im Vordergrund (d.h. das Menü wird dort abgeschnitten, wo die 3D-Anzeige
 		 * beginnt). - Abhilfe gibt es zumindest für Menüs und Tooltips:
-		 * 
+		 *
 		 * Näheres unter:
 		 * <a href="http://java3d.j3d.org/faq/swing.html">Swing FAQ</a>
 		 * <a href="http://java3d.j3d.org/tutorials/quick_fix/swing.html">Swing Quick Fix</a>
@@ -162,7 +162,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Baut den LogViewer
-	 * 
+	 *
 	 * @return LogViewer
 	 */
 	private ConsoleComponent buildLogViewer() {
@@ -178,7 +178,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Baut Welt und LogViwer
-	 * 
+	 *
 	 * @return Split-Pane
 	 */
 	private JSplitPane buildWorldAndConsole() {
@@ -190,7 +190,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Baut die Statuszeile
-	 * 
+	 *
 	 * @return Statuszeile
 	 */
 	private StatusBar buildStatusBar() {
@@ -209,7 +209,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Vom Controller aufzurufen, wenn sich die Welt ändert; schließt die alte Welt und zeigt die Neue an.
-	 * 
+	 *
 	 * @param w	die Welt
 	 */
 	public void onWorldOpened(final World w) {
@@ -237,7 +237,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Schreibt den Parcours in eine Datei
-	 * 
+	 *
 	 * @param file	Ausgabedatei
 	 */
 	protected void writeParcoursToFile(File file) {
@@ -265,16 +265,16 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Aktualisiert die GUI
-	 * 
+	 *
 	 * @param time	die Zeit, die zur Simulatorzeit hinzugezählt wird
 	 */
 	public void onSimulationStep(final long time) {
 		statusBar.updateTime(time);
 	}
 
-	/** 
+	/**
 	 * Fügt einen neuen Bot hinzu
-	 * 
+	 *
 	 * @param bot	der neue Bot
 	 * */
 	public void onBotAdded(final Bot bot) {
@@ -293,7 +293,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 				}
 				keyinfo += " + e)";
 				String tabIconTooltip = (bot instanceof ThreeDBot
-					? "Bot löschen" + keyinfo 
+					? "Bot löschen" + keyinfo
 					: "Verbindung zu Bot beenden" + keyinfo);
 				botTabs.addClosableTab(
 					tabTitle,
@@ -318,7 +318,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 
 	/**
 	 * Entfernt einen Bot
-	 * 
+	 *
 	 * @param bot	Bot
 	 */
 	private void removeBotTab(final Bot bot) {
@@ -365,13 +365,13 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 //		});
 
 	}
-	
+
 	/**
 	 * Veranlasst einen Reset aller Bots
-	 * 
+	 *
 	 * Die Bots werden über ihren BotViewer gefunden. TCP-Bots (simuliert und real) erhalten das
 	 * Reset-Signal per RC5-Code. Anschließend werden alle Bots in der Welt zurück auf ihre Startplätze
-	 * gesetzt. 
+	 * gesetzt.
 	 */
 	public void onResetAllBots() {
 		/* Bots das Reset-Signal schicken */
@@ -386,7 +386,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 				if (b instanceof CtBotSimTcp) {
 					((CtBotSimTcp) b).sendRC5Code("CH*P/P");
 				}
-				
+
 			} else if (bot instanceof RealCtBot) {
 				/* Realen Bots das Reset-Signal senden */
 				((RealCtBot) bot).sendRC5Code("CH*P/P");

@@ -24,26 +24,26 @@ import javax.vecmath.Point3d;
 
 /**
  * Repräsentiert das Bot Positioning System (BPS) im Simulator
- * 
+ *
  * @author Timo Sandmann
  */
 public class BPS {
 	/** Z-Koordinate der IR-LED einer Landmarke */
 	public static final float BPSZ = 0.1f;
-	
+
 	/** Wert des Sensors, wenn keine Landmarke gesehen wird */
-	public static final int NO_DATA = 0xffff; 
-	
+	public static final int NO_DATA = 0xffff;
+
 	/** Eine Bake des BPS */
-	public static class Beacon {	
+	public static class Beacon {
 		/** Position der Landmarke [parcoursBlockSizeInMM mm] */
 		private final Point2i position;
 		/** Block-Größe des Parcours, in dem die Landmarke steht [mm] */
 		private final int parcoursBlockSizeInMM;
-		
+
 		/**
 		 * Erzeugt eine neue Landmarke
-		 * 
+		 *
 		 * @param parc		Parcours, in dem die Landmarke steht
 		 * @param source	Position der Landmarke, so wie PickInfo sie ermittelt hat [m]
 		 */
@@ -51,35 +51,35 @@ public class BPS {
 			parcoursBlockSizeInMM = parc.getBlockSizeInMM();
 			position = parc.transformWorldposToGlobalpos(source);
 		}
-		
+
 		/**
 		 * @return Landmarken ID in 10 Bit-Codierung
 		 */
 		public int getID() {
 			return (position.y & 0xff) | ((position.x & 0xff) << 8);
 		}
-		
+
 		/**
 		 * Gibt die Position der Landmarke als String aus [BEACON_GRID_SIZE mm]
-		 * 
+		 *
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
 		public String toString() {
-			return "(" + (position.x * parcoursBlockSizeInMM + parcoursBlockSizeInMM / 2) + "|" + 
+			return "(" + (position.x * parcoursBlockSizeInMM + parcoursBlockSizeInMM / 2) + "|" +
 				(position.y	* parcoursBlockSizeInMM + parcoursBlockSizeInMM / 2) + ")";
 		}
-		
+
 		/**
 		 * Gibt die Position der Landmarke als String aus [Parcours-Block-Koordinaten]
-		 * 
+		 *
 		 * @return (X|Y) [Parcours-Block-Koordinaten]
 		 * @see #toString()
 		 */
 		public String toStringInBlocks() {
 			return "(" + position.x + "|" + position.y + ")";
 		}
-		
+
 //		/**
 //		 * Prüft, ob die angegebene Parcours-Position für eine BPS-Landmarke gültig ist
 //		 *

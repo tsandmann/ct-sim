@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.contestConductor;
@@ -55,7 +55,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 
 	/**
 	 * Getter
-	 * 
+	 *
 	 * @param levelId
 	 * @return Sekunden
 	 * @throws SQLException
@@ -71,7 +71,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 *
 	 * @param gameId		die Nummer des Spiels (innerhalb der Vorrunde).
 	 * @param player1botId	Bot-Primärschlüssel des Spielers (Vorrundenspiele haben nur einen Spieler.)
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void createPrelimGame(int gameId, int player1botId)
 	throws SQLException {
@@ -81,12 +81,12 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 
 	/**
 	 * Legt ein Hauptrundenspiel an
-	 * 
+	 *
 	 * Die Methode weist ihm den GameState#NOT_INITIALIZED zu.
 	 *
 	 * @param levelId	Schlüssel des Levels, auf dem das Spiel angelegt werden soll
 	 * @param gameId	Schlüssel des Spiels innerhalb eines Levels
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void createMainGame(int levelId, int gameId)
 	throws SQLException {
@@ -96,8 +96,8 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 
 	/**
 	 * Löscht alle Spiele
-	 * 
-	 * @throws SQLException 
+	 *
+	 * @throws SQLException
 	 */
 	public void clearGames() throws SQLException {
 		execSql("DELETE FROM ctsim_game");
@@ -108,7 +108,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 *
 	 * @return Ein ResultSet, das die Bots repräsentiert, die als Spieler bereitstehen. Das ResultSet
 	 * 				folgt dem Schema der Tabelle ctsim_bot.
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public ResultSet getBotsWithBinary() throws SQLException {
 		return execSql("SELECT * from ctsim_bot WHERE bin !=''");
@@ -120,7 +120,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 	 * @param levelId	Schlüssel des Levels des Spiels
 	 * @param gameId	Schlüssel des Spiels innerhalb eines Levels
 	 * @param time		Zeit, zu der das Spiel beginnen soll
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void scheduleGame(int levelId, int gameId, Timestamp time)
 	throws SQLException {
@@ -129,10 +129,10 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
 
 	/**
 	 * Zeigt an, ob ein Level in der Tabelle ctsim_level existiert oder nicht
-	 * 
+	 *
 	 * @param levelId	Primärschlüssel des Levels
 	 * @return <code>true</code>, falls das Level existiert; <code>false</code> falls nicht
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public boolean doesLevelExist(int levelId) throws SQLException {
 		ResultSet rs = execSql("SELECT * FROM ctsim_level WHERE id = " + levelId);
@@ -145,7 +145,7 @@ public class PlannerToDatabaseAdapter extends DatabaseAdapter {
      * @param levelId	Schlüssel des gewünschten Levels.
      * @param sortKey	ein Spaltenname in der Datenbanktabelle ctsim_game, nach dem der Rückgabewert sortiert wird
      * @return Ein ResultSet im Format der DB-Tabelle ctsim_game
-	 * @throws SQLException 
+	 * @throws SQLException
      */
     public ResultSet getGames(int levelId, String sortKey) throws SQLException {
     	return execSql("SELECT * FROM ctsim_game WHERE level = ? ORDER BY " + sortKey, levelId);

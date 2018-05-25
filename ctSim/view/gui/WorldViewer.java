@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -76,10 +76,10 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 
     /** wird mit jedem neuen Model ausgetauscht */
     protected SimpleUniverse universe;
-    
+
 	/**
 	 * Gets the best graphics conifguration to display on the current device
-	 * 
+	 *
 	 * @return GraphicsConfiguration
 	 */
 	protected GraphicsConfiguration getBestConfigurationOnSameDevice() {
@@ -113,7 +113,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 
     /**
      * Zeigt eine Welt an, oder einen dummy, falls world == null
-     * 
+     *
      * @param world	die Welt
      */
     public void show(World world) {
@@ -144,9 +144,9 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		if (onScreenCanvas != null) {
 			last_gd = onScreenCanvas.getGraphicsConfiguration().getDevice();
 		}
-		
+
 		if (System.getProperty("os.name").indexOf("OS X") == 0) {
-			/* 
+			/*
 			 * Workaround gegen Crash unter macOS und Java >= 9 (context.destroy() in JoglPipeline.java crasht).
 			 * Nachteil: Auch nach dem Schließen der Welt wird diese noch angezeigt, bis eine Neue geladen wurde.
 			 */
@@ -165,10 +165,10 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 
     /**
      * Initialisiert eine Welt
-     * 
+     *
      * @param w	die Welt
      */
-    protected void init(World w) {    	
+    protected void init(World w) {
     	onScreenCanvas = new Canvas3D(getBestConfigurationOnSameDevice()
     			/* GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().
     			 * getBestConfiguration(new GraphicsConfigTemplate3D()) */
@@ -221,7 +221,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 
     /**
      * Position: X/Y: zentriert, Z: so, dass der Parcours vollständig im Blick ist
-     * 
+     *
      * @param w	Welt
      */
     private void initPerspective(World w) {
@@ -242,9 +242,9 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	/**
 	 * Baut einen Screenshot
 	 * Beispiel: ImageIO.write(worldViewer.getScreenshot(), "png", File.createTempFile("screenshot", ".png"));
-	 * 
+	 *
 	 * @return null wenn nix geladen, sonst Screenshot
-	 * 
+	 *
 	 */
 	public BufferedImage getScreenshot() {
 		/*

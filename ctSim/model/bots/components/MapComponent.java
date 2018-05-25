@@ -51,12 +51,12 @@ import ctSim.util.Misc;
  * <li>Command-Code MAP</li>
  * <li>Nutzlast: Ein Block der Map-Rohdaten</li>
  * </ul>
- * 
+ *
  * @author Timo Sandmann
  */
 public class MapComponent extends BotComponent<Void>
 implements CanRead, CanWrite, CanWriteAsynchronously {
-	/** Breite der Map in Pixeln */	
+	/** Breite der Map in Pixeln */
 	private final int WIDTH;
 	/** Höhe der Map in Pixeln */
 	private final int HEIGHT;
@@ -99,7 +99,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private int max_x = 0;
 	/** Größte belegte Y-Kooridnate */
 	private int max_y = 0;
-	
+
 	/** Zeitpunkt des letzten Bild-Updates */
 	private long lastUpdate = 0;
 	/** Intervall [ms], mit dem die Anzeige aktualisiert wird */
@@ -108,11 +108,11 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private final MemoryImageSource memImage;
 	/** Image-Objekt für das Map-Bild */
 	private final Image image;
-	
+
 	/** Map-Komponente */
-	public MapComponent() { 
+	public MapComponent() {
 		super(null);
-		
+
 		String size_str = Config.getValue("mapSize");
 		float size = 0.0f;
 		try {
@@ -130,7 +130,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 					"Parameter 'mapResolution' ist keine gültige Map-Größe!");
 		}
 		size *= resolution;
-		
+
 		String section_size_str = Config.getValue("mapSectionSize");
 		int section_size = 0;
 		try {
@@ -139,7 +139,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
 					"Parameter 'mapSectionSize' ist keine gültige Sektionsgröße!");
 		}
-		
+
 		String makroblock_size_str = Config.getValue("mapMacroblockSize");
 		int makroblock_size = 0;
 		try {
@@ -148,17 +148,17 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
 					"Parameter 'mapMacroblockSize' ist keine gültige Sektionsgröße!");
 		}
-		
+
 		WIDTH = (int) size;
 		HEIGHT = (int) size;
 		SECTION_SIZE = section_size;
 		MAKROBLOCK_SIZE = makroblock_size;
 		lg.fine("Map-Paramter: WIDTH=" + WIDTH + " HEIGHT=" + HEIGHT + " SECTION_SIZE=" + SECTION_SIZE
 					+ " MAKROBLOCK_SIZE=" + MAKROBLOCK_SIZE);
-		
+
 		pixels = new int[WIDTH * HEIGHT];
 		botPos = new Point3i(WIDTH / 2, HEIGHT / 2, 0);
-		
+
 		int color = colorFromRgb(128, 128, 128);	// Map-Wert 0
 		for (int i=0; i<pixels.length; i++) {
 			pixels[i] = color;
@@ -188,7 +188,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Map anfordern
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public synchronized void requestMap() throws IOException {
@@ -197,7 +197,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		for (int i = 0; i < pixels.length; ++i) {
 			pixels[i] = color;
 		}
-		
+
 		if (writesAsynchronously()) {
 			synchronized (asyncOut) {
 				asyncOut.getCommand(getHotCmdCode()).setSubCmdCode(Command.SubCode.MAP_REQUEST);
@@ -242,7 +242,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Sind die übergebenen Parameter außerhalb des Wertebereichs [0;255], wird geclampt
 	 * (255 wenn zu groß, 0 wenn zu klein).
 	 * </p>
-	 * 
+	 *
 	 * @param r	rot
 	 * @param g	grün
 	 * @param b	blau
@@ -255,16 +255,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		// Alpha voll deckend, die anderen wie als Parameter übergeben
 		return 255 << 24 | r << 16 | g << 8 | b;
 	}
-	
+
 	/**
-	 * Überträgt die empfangenen Daten in das Pixel-Array. 
+	 * Überträgt die empfangenen Daten in das Pixel-Array.
 	 * Die Koordinaten werden dabei gemäß der Map-Parameter aus der Blockadresse berechnet.
-	 * 
+	 *
 	 * @param data	Map-Rohdaten
 	 * @param block	Blockadresse der Daten
 	 * @param from	Startindex der Daten
 	 * @param to	Endindex der Daten
-	 * 
+	 *
 	 * TODO: Karte je nach Startausrichtung des Bots entsprechend drehen, derzeit wird von Startrichtung == Norden ausgegangen
 	 */
 	private final void updateInternalModel(byte[] data, int block, int from, int to) {
@@ -321,10 +321,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			max_y = pic_y;
 		}
 	}
-	
+
 	/**
 	 * Trägt übertragene Zeichnungsdaten einer Linie in die interne Datenstruktur ein
-	 * 
+	 *
 	 * @param color	Farbe der Linie
 	 * @param data	Rohdaten vom Kommando
 	 */
@@ -338,10 +338,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 		lg.finer("Linie von (" + x1 + "|" + y1 + ") bis (" + x2 + "|" + y2 + ")");
 	}
-	
+
 	/**
 	 * Trägt übertragene Zeichnungsdaten eines Kreises in die interne Datenstruktur ein
-	 * 
+	 *
 	 * @param color		Farbe der Kreislinie
 	 * @param radius	Radius des Kreises
 	 * @param data		Rohdaten vom Kommando
@@ -354,10 +354,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 		lg.finer("Kreis mit Radius " + radius + " an (" + x + "|" + y + ")");
 	}
-	
+
 	/**
 	 * Wertet ein Map-Kommando aus
-	 * 
+	 *
 	 * @param c	Command
 	 */
 	public synchronized void readFrom(Command c) {
@@ -366,9 +366,9 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 
 		int block = c.getDataL();	// 16 Bit Adresse des Map-Blocks
-		
+
 		/*
-		 * SubCode auswerten, ein Block wird in vier Teilen übertragen. 
+		 * SubCode auswerten, ein Block wird in vier Teilen übertragen.
 		 * Alle Teile müssen die selbe Blockadresse in DataL mitführen!
 		 */
 		Command.SubCode sub = c.getSubCode();
@@ -417,7 +417,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			// DataR ist nicht belegt
 			updateInternalModel(c.getPayload(), block, 24, 31);	// macht die eigentliche Arbeit
 			receiveState = 0;
-			
+
 			/* GUI-Update freigeben */
 			imageEventPending = true;
 		} else if (sub.equals(Command.SubCode.MAP_LINE)) {
@@ -449,62 +449,62 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * No-op: Wir implementieren dies, weil wir laut Interface müssen, aber wir brauchen es nicht,
 	 * weil wir ja {@link #askForWrite(CommandOutputStream) askForWrite()} überschrieben haben.
-	 * 
+	 *
 	 * @param c	Command
 	 */
-	public void writeTo(Command c) { 
+	public void writeTo(Command c) {
 		// No-op
 	}
 
 	/**
 	 * Kartenbreite (X-Richtung)
-	 * 
+	 *
 	 * @return Breite
 	 */
 	public int getWidth() { return WIDTH; }
-	
+
 	/**
 	 * Kartenhöhe (Y-Richtung)
-	 * 
+	 *
 	 * @return Höhe
 	 */
 	public int getHeight() { return HEIGHT; }
-	
+
 	/**
 	 * @return Image-Referenz
 	 */
 	public Image getImg() { return image; }
-	
+
 	/**
 	 * @return MapLines-Referenz
 	 */
 	public List<MapLines> getMapLines() { return lines; }
-	
+
 	/**
 	 * @return MapCircles-Referenz
 	 */
 	public List<MapCircles> getMapCircles() { return circles; }
-	
-	/** 
+
+	/**
 	 * @return this.linesMutes
 	 */
 	public Object getLinesMutex() { return linesMutex; }
-	
+
 	/**
 	 * @return this.circlesMutex
 	 */
 	public Object getCirclesMutex() { return circlesMutex; }
-	
+
 	/**
 	 * @return this.botPos
 	 */
 	public Point3i getBotPos() { return botPos; }
-	
+
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 	 */
 	public Code getHotCmdCode() { return Code.MAP; }
-	
+
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */
@@ -521,7 +521,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Fügt einen Listener hinzu, der ausgeführt wird, wenn sich die Karte verändert hat
-	 *  
+	 *
 	 * @param li	Listener
 	 */
 	public void addImageListener(Runnable li) {
@@ -530,7 +530,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		}
 		imageLi.add(li);
 	}
-	
+
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#updateExternalModel()
 	 */
@@ -541,41 +541,41 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			long now = System.currentTimeMillis();
 			if (now > lastUpdate + updateIntervall) {
 				lastUpdate = now;
-	
+
 				imageEventPending = false;
 				memImage.newPixels();
-				
+
 				for (Runnable li : imageLi) {
 					li.run();
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Speichert die Karte als png-Bild
-	 * 
+	 *
 	 * @param file	Dateiname
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public void saveImage(File file) throws IOException {		
+	public void saveImage(File file) throws IOException {
 		/* Größe der Map berechnen */
 		final int width = max_x + (SECTION_SIZE - 1) - min_x + 1;
 		final int height = max_y + (SECTION_SIZE * 2 - 1) - min_y + 1;
-		
+
 		/* belegten Teil in neues Bild kopieren */
 		BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics g = bimg.createGraphics();
 		g.setColor(new Color(128, 128, 128, 255));	// "Map-Wert 0"
 		g.fillRect(0, 0, width, height);
-		
+
 		/* Pixel kopieren */
 		int[] map = new int[width * height];
 		for (int y = min_y + 1; y < max_y + SECTION_SIZE * 2; ++y) {	// Zeilen
 			System.arraycopy(pixels, min_x + 1 + y * WIDTH, map, (y - min_y - 1) * width, width);
 				// alle Spalten einer Zeile
 		}
-		
+
 		/* Bild zeichnen und als png speichern */
 		g.drawImage(Toolkit.getDefaultToolkit().createImage(
 				new MemoryImageSource(width, height, map, 0, width)), 0, 0, null);

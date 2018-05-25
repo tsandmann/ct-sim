@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -69,7 +69,7 @@ import ctSim.util.Menu.Entry;
 public class MainWinMenuBar extends JMenuBar {
 	/** UID */
 	private static final long serialVersionUID = - 5927950169956191902L;
-	
+
 	 /** Logger */
 	final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.MainWinMenuBar");
 
@@ -99,10 +99,10 @@ public class MainWinMenuBar extends JMenuBar {
 	private static final String[] judgeClassNames = {
 		"ctSim.model.rules.DefaultJudge",
 		"ctSim.model.rules.LabyrinthJudge"};
-	
+
 	/** Buttons für Jugde */
 	private ButtonGroup judgesButtonGroup = new ButtonGroup();
-	
+
 	/**
 	 * @param controller
 	 * @param mainWindow	als 'parent' der modalen Dialoge und für das gelegentliche Event, was auch im
@@ -121,7 +121,7 @@ public class MainWinMenuBar extends JMenuBar {
 			new Entry("Schließen", Config.getIcon("Delete16"), onCloseWorld)
 		);
 		add(worldMenu);
-		
+
 		JMenu connectMenu = new Menu("Verbinde mit Bot",
 			new Entry("Per TCP ...", Config.getIcon("tcpbot16"), onAddTcpBot) /*,
 			// Die Checkbox hat nen Haken und ist unveränderbar disabled (ausgegraut).
@@ -129,7 +129,7 @@ public class MainWinMenuBar extends JMenuBar {
 			new Checkbox("Per USB (COM) automatisch", noOp).disable().check() */
 		);
 		add(connectMenu);
-		
+
 		JMenu botMenu = new Menu("Simuliere Bot",
 			new Entry("Testbot", onAddTestBot),
 			new Entry("c't-Bot", onInvokeExecutable)
@@ -140,9 +140,9 @@ public class MainWinMenuBar extends JMenuBar {
 		for (JMenuItem item : buildJudgeMenuItems())
 			m.add(item);
 		add(m);
-		
-		JMenu simulationMenu = new Menu("Simulation", 
-			new Entry("Start", Config.getIcon("Play16"), onStartSimulation), 
+
+		JMenu simulationMenu = new Menu("Simulation",
+			new Entry("Start", Config.getIcon("Play16"), onStartSimulation),
 			new Entry("Pause", Config.getIcon("Pause16"), onPauseSimulation),
 			new Entry("Reset", Config.getIcon("reset16"), onResetBots)
 		);
@@ -155,7 +155,7 @@ public class MainWinMenuBar extends JMenuBar {
 			new Entry("About", Config.getIcon("about16"), onAbout)
 		);
 		add(supportMenu);
-		
+
 		toolBar = buildToolBar(worldMenu, connectMenu, botMenu, simulationMenu, supportMenu);
 	}
 
@@ -166,7 +166,7 @@ public class MainWinMenuBar extends JMenuBar {
 	 * Runnables. Die Zuordnung welcher Menüpunkt -> welches Runnable findet im Konstruktor statt.
 	 * (Es sind Runnables, diese haben mit Threading aber nichts zu tun an der Stelle.)
 	 */
-		
+
 	/** Handler für Welt öffnen */
 	private Runnable onOpenWorld = new Runnable() {
 		public void run() {
@@ -288,7 +288,7 @@ public class MainWinMenuBar extends JMenuBar {
 			controller.pause();
 		}
 	};
-	
+
 	/** Handler für About-Eintrag */
 	private Runnable onAbout = new Runnable() {
 		public void run() {
@@ -298,7 +298,7 @@ public class MainWinMenuBar extends JMenuBar {
 			SplashWindow.setMessage("                                                      c't-Bot Projekt 2006-2018");
 		}
 	};
-	
+
 	/** Handler für Webseite-Link */
 	private Runnable onSiteLink = new Runnable() {
 		public void run() {
@@ -310,7 +310,7 @@ public class MainWinMenuBar extends JMenuBar {
 			}
 		}
 	};
-	
+
 	/**
 	 * Handler für Github-Link
 	 */
@@ -324,7 +324,7 @@ public class MainWinMenuBar extends JMenuBar {
 			}
 		}
 	};
-	
+
 	/** Handler für Forum-Link */
 	private Runnable onForumLink = new Runnable() {
 		public void run() {
@@ -336,7 +336,7 @@ public class MainWinMenuBar extends JMenuBar {
 			}
 		}
 	};
-	
+
 	/** Handler für Bots resetten */
 	private Runnable onResetBots = new Runnable() {
 		public void run() {
@@ -391,7 +391,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/**
 	 * Baut das Judge-Menü
-	 * 
+	 *
 	 * @return Menü
 	 */
 	private JMenuItem[] buildJudgeMenuItems() {
@@ -405,7 +405,7 @@ public class MainWinMenuBar extends JMenuBar {
 
 	/**
 	 * Baut die Toolbar
-	 * 
+	 *
 	 * @param menus	Menüs
 	 * @return Toolbar
 	 */

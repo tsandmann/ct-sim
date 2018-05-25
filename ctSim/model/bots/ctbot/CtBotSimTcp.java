@@ -45,17 +45,17 @@ import ctSim.util.Runnable1;
 public class CtBotSimTcp extends CtBot implements SimulatedBot {
 	/**
 	 * @param connection	Verbindung
-	 * @param newId			Id für die Kommunikation 
+	 * @param newId			Id für die Kommunikation
 	 * @param features		Features des Bots gepackt in einen Integer
-	 * @throws ProtocolException 
+	 * @throws ProtocolException
 	 */
 	public CtBotSimTcp(final Connection connection, BotID newId, int features) throws ProtocolException {
 		super("Sim-Bot");
-		
-		if (connection == null) { 
+
+		if (connection == null) {
 			throw new ProtocolException("Connection ist null");
 		}
-		
+
 		setConnection(connection);
 		lg.info("ID ist erstmal " + newId);
 		setId(newId);
@@ -99,31 +99,31 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			createCompnt(Sensors.Shutdown.class		, READS, WRITES_ASYNCLY),
 			createCompnt(WelcomeReceiver.class		, READS),
 			createCompnt(Actuators.Program.class	, WRITES_ASYNCLY),
-			createCompnt(MapComponent.class			, READS, WRITES),	
+			createCompnt(MapComponent.class			, READS, WRITES),
 			createCompnt(RemoteCallCompnt.class		, READS, WRITES)
 		);
-		
+
 		for (BotComponent<?> c : components) {
 			c.offerAsyncWriteStream(connection.getCmdOutStream());
 
 			/* RemoteCall-Komponente suchen und DoneListener registrieren (AblViewer) */
 			if (c instanceof RemoteCallCompnt) {
-				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
+				RemoteCallCompnt rc = (RemoteCallCompnt) c;
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
 					public void run(BehaviorExitStatus status) {
 						if (ablResult != null) {
 							ablResult.setSyntaxCheck(status == BehaviorExitStatus.SUCCESS);
 						}
 					}
-				});	
+				});
 			}
-			
+
 			if (c instanceof WelcomeReceiver) {
 				welcomeReceiver = (WelcomeReceiver) c;
 				welcomeReceiver.setFeatures(features);
 			}
 		}
-		
+
 		sendRcStartCode();
 	}
 
@@ -137,7 +137,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 
 	/**
 	 * Sendet einen Fernbedienungscode an den Bot
-	 * 
+	 *
 	 * @param code	zu sendender RC5-Code als String
 	 */
 	public void sendRC5Code(String code) {
@@ -150,14 +150,14 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 				}
 			}
 		} catch (IOException e) {
-			/* 
+			/*
 			 * Kann nicht passieren, da die RC nur IOExcp wirft, wenn sie asynchron betrieben wird,
 			 * was CtBotSimTcp nicht macht
 			 */
 			throw new AssertionError(e);
-		}		
+		}
 	}
-	
+
 	/**
 	 * Sendet den Fernbedienungs-(RC5-)Code, der in der Konfigdatei angegeben ist. Methode tut nichts,
 	 * falls nichts, 0 oder ein nicht von {@link Integer#decode(String)} verwertbarer Code angegeben ist.
@@ -179,7 +179,7 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 
 	/**
 	 * Leite Sensordaten an den Bot weiter
-	 * 
+	 *
 	 * @throws UnrecoverableScrewupException
 	 */
 	private synchronized void transmitSensors()
@@ -194,10 +194,10 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			throw new UnrecoverableScrewupException(e);
 		}
 	}
-	
+
 	/**
 	 * Alle Kommandos verarbeiten
-	 * 
+	 *
 	 * @throws UnrecoverableScrewupException
 	 */
 	private void processUntilDoneCmd() throws UnrecoverableScrewupException {
@@ -205,12 +205,12 @@ public class CtBotSimTcp extends CtBot implements SimulatedBot {
 			while (true) {
 				try {
 					Command cmd = new Command(getConnection());
-					
+
 					if (preProcessCommands(cmd)) {
 						// Ist das Kommando schon abgearbeitet?
 						continue;
 					}
-					
+
 					components.processCommand(cmd);
 
 					if (cmd.has(Command.Code.DONE)) {

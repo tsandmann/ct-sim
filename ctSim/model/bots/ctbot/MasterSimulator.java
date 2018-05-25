@@ -68,12 +68,12 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	private final double LIGHT_MAX_DISTANCE = 1.0;
 	/** Öffnungswinkel der Lichtsensoren / Radiant */
 	private final double LIGHT_OPENING_ANGLE= Math.toRadians(90);
-	
+
 	/** Reichweite der Baken / m */
 	private static final double BPS_LIGHT_DISTANCE = 2.0;
 	/** Öffnungswinkel des BPS-Sensors / Radiant */
 	private static final double BPS_OPENING_ANGLE = Math.toRadians(0.5);
-	
+
     /** Rad-Simulator */
     class WheelSimulator {
         /**
@@ -84,7 +84,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
         /** Maximale Geschwindigkeit in Umdrehungen pro Sekunde ("revolutions per second") */
         private static final float REVS_PER_SEC_MAX = 151f / 60f;
-        
+
         /** Nachlauf des Rades, falls Richtungswechsel */
         private double lag = 0;
 
@@ -93,7 +93,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
         /**
          * Setzt den Governor
-         * 
+         *
          * @param governor
          */
         public void setGovernor(Actuators.Governor governor) {
@@ -114,14 +114,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             double deltaTInSec = parent.getDeltaTInMs() / 1000.0d;
             return speedInRps * deltaTInSec;
         }
-        
+
         /**
          * @return lag
          */
         public double getLag() {
         		return lag;
         }
-        
+
         /**
          * @param newLag
          */
@@ -129,14 +129,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         		lag = newLag;
         }
     }
-    
+
     /** Servo-Simulator */
     class ServoSimulator {
         /** Klappen-Servo des Simulators */
         private Actuators.DoorServo door_servo;
         /** Kamera-Servo des Simulators */
         private Actuators.CamServo cam_servo;
-        
+
         /** Zustand des Servos (< 12: Klappe zu; >= 12: Klappe offen; 0: Servo aus) */
         private int position[] = {7, 14};
         /** 1: Klappe, 2: Kamera */
@@ -148,19 +148,19 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         public ServoSimulator(int num) {
         		servo_num = num;
         }
-        
+
         /**
          * Setzt den Klappen-Servo
-         * 
+         *
          * @param servo
          */
         public void setServo(Actuators.DoorServo servo) {
             this.door_servo = servo;
         }
-        
+
         /**
          * Setzt den Kamera-Servo
-         * 
+         *
          * @param servo
          */
         public void setServo(Actuators.CamServo servo) {
@@ -169,7 +169,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
         /**
          * Wertet die Servo-Position aus
-         * 
+         *
          * @return Servo-Position
          */
         protected int getServoPosition() {
@@ -184,7 +184,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	        	} else {
 	        		return 0;
 	        	}
-	            
+
 	        	return position[servo_num - 1];
         }
     }
@@ -206,7 +206,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
         /**
          * Setzt den Maussensor
-         * 
+         *
          * @param sensor
          */
         public void setSensor(Sensors.Mouse sensor) {
@@ -220,7 +220,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         * @return Anzahl der Dots
         */
         private double meter2Dots(double distanceInM) {
-            /* 
+            /*
              * distance ist in Metern angegeben, x100 macht daraus cm; 2,54 cm sind ein Inch,
              * anschließend Multiplikation mit der Auflösung des Maussensors
              */
@@ -229,7 +229,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
         /**
          * Setzt den Sensor auf value
-         * 
+         *
          * @param value
          */
         public void set(double value) {
@@ -244,7 +244,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     class KrautUndRuebenSimulator implements Runnable {
     	/** Logger */
     	final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.ctbot.KrautUndRuebenSimulator");
-    	
+
         /** Umfang eines Rades [m] */
         private static final double WHEEL_CIRCUMFERENCE = 0.1781283d;
 
@@ -262,10 +262,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         private Random randGenerator = new Random();
         /** Haben die Räder Nachlauf beim Richtungswechsel? */
         private final boolean wheelsWithLag = Config.getValue("WheelLag").equals("true");
-        
+
         /** BranchGroup des Bot-Shapes */
         private final Group botShape = parent.getBranchGroup();
-        
+
         /** Sensor für Transportfach-Klappe */
 		private Door doorSensor;
 		/** letztes Objekt, das im Transportfach gesehen wurde */
@@ -277,14 +277,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		 * @see java.lang.Runnable#run()
 		 */
 		public void run() {
-			/* Position und Heading berechnen 
+			/* Position und Heading berechnen
 			 * für ausführliche Erläuterung der Positionsberechnung siehe doc-files/odometrie.pdf
 			 * */
 
 			/* Absolut zurückgelegte Strecke pro Rad berechnen */
 			double s_l = leftWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
 			double s_r = rightWheel.revsThisSimStep() * WHEEL_CIRCUMFERENCE;
-			
+
 			/* Nachlauf der Räder berechnen, falls gewünscht */
 			if (wheelsWithLag) {
 				if (s_l == 0 && last_s_l != 0) {
@@ -348,7 +348,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
 			mouseSensorX.set(2 * _gamma * SENS_MOUSE_DIST_Y);
 			mouseSensorY.set(moveDistance);
-			
+
 			final Point3d newPosPoint = new Point3d(newPos);
 			final double newHeadAngle = SimUtils.getRotation(newHeading);	// Winkel des Headings
 			boolean collisionInPocket = false;
@@ -370,7 +370,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				/* Kollision berechnen lassen */
 				PickInfo platePickInfo = world.getCollision(botShape, plate);
 
-				boolean botCollision = platePickInfo == null || platePickInfo.getNode() == null ? false : true;				
+				boolean botCollision = platePickInfo == null || platePickInfo.getNode() == null ? false : true;
 
 				if (botCollision && doorSensor.get().intValue() == 1) {
 					/* Transportfach-Aussparung checken, falls Grundplatte kollidiert und Klappe auf */
@@ -384,10 +384,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
 					/* Kollision berechnen lassen */
 					PickInfo pocketPickInfo = world.getCollision(botShape, pocket);
-					
+
 					if ((pocketPickInfo != null) && (pocketPickInfo.getNode() != null)) {
 						/* Kollision ist (auch) innerhalb des Transportfachs */
-						botCollision = false;					
+						botCollision = false;
 
 						/* Checken, ob Kollision auch außerhalb des Fachs */
 
@@ -421,7 +421,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 								collisionInPocket = true;
 								objectInPocket = null;
 //								lg.info("Kollision im Transportfach und (mindestens) auch links davon");
-							} else {					
+							} else {
 								/* Bounds für Seitenfläche rechts erstellen */
 								Bounds pocketRight = createBounds(newPosPoint, newHeadAngle, 0.045, 0.034775, 0.03 / 2,
 										transform);
@@ -500,7 +500,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
 				isFalling |= ! world.checkTerrain(new Point3d(posRadR), CtBotSimTcp.BOT_GROUND_CLEARANCE);
 
-				/** 
+				/**
 				 * Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat, wird der Bot gestoppt
 				 * und entsprechend gefärbt.
 				 * */
@@ -523,7 +523,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
 			/* Uhr aktualisieren */
 			clock.setSimTimeInMs((int) world.getSimTimeInMs());
-			
+
 			/* Shutdown-Abfrage */
 			if (shutdown.shutdownRequested()) {
 				parent.dispose();
@@ -535,59 +535,59 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		 * @param newHeading
 		 * @param dX
 		 * @param dY
-		 * @param radius 
+		 * @param radius
 		 * @param t	Transformationsmatrix (wird verändert)
 		 * @return erzeugte Bounds
 		 */
 		private Bounds createBounds(Point3d newPos, double newHeading, double dX, double dY, double radius,
 				Transform3D t) {
 			final double dZ = - CtBotSimTcp.BOT_HEIGHT / 2;
-			
+
 			/* Vektor für die Verschiebung erstellen */
 			Vector3d v = new Vector3d(dX, dY, dZ);
 
 			/* Transformations-Matrix für die Rotation erstellen */
 			Transform3D r = new Transform3D();
 			r.rotZ(newHeading);
-			
+
 			/* Transformation um Verschiebung ergänzen */
 			r.transform(v);
 			v.add(newPos);
 			t.setIdentity();
 			t.setTranslation(v);
-			
+
 			/* Bounds erstellen */
 			Bounds bounds = new BoundingSphere(new Point3d(0, 0, 0), radius);
-			
+
 			/* Bounds transformieren */
 			bounds.transform(t);
-			
+
 			return bounds;
 		}
 
 		/**
 		 * Setzt den Klappen-Sensor des Bots
-		 * 
+		 *
 		 * @param doorSensor	Sensor
 		 */
 		public void setDoorSensor(Door doorSensor) {
 			this.doorSensor = doorSensor;
 		}
-		
+
 		/**
 		 * @return this.objectInPocket
 		 */
 		public Node getObjectInPocket() {
 			return objectInPocket;
 		}
-		
+
 		/**
 		 * @return derzeit assoziiertes Objekt
 		 */
 		public Node getAssociatedObject() {
 			return associatedObject;
 		}
-		
+
 		/**
 		 * @param object	zu setzendes Objekt
 		 */
@@ -598,27 +598,27 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				TransformGroup tgParcours = (TransformGroup) object.getParent().getParent();
 				BranchGroup bg = (BranchGroup) tgObject.getParent();
 				bg.detach();
-				
+
 				Transform3D tWorld = new Transform3D();
 				tWorld.setTranslation(new Vector3d(0, 0, 0.2));
 				tgParcours.setTransform(tWorld);
-				
+
 				Transform3D tPocket = new Transform3D();
 				Vector3d diff = new Vector3d(0, 0.036, - CtBotSimTcp.BOT_HEIGHT / 2);
 				tPocket.setTranslation(diff);
 				tgObject.setTransform(tPocket);
-				
+
 				parent.getTransformGroup().addChild(bg);
 			} else if (associatedObject != null) {
 				Transform3D t = new Transform3D();
 				associatedObject.getLocalToVworld(t);
 				Point3d center = new Point3d();
 				t.transform(center);
-				
+
 				TransformGroup tgObject = (TransformGroup) associatedObject.getParent().getParent().getParent();
 				BranchGroup bg = (BranchGroup) tgObject.getParent();
 				bg.detach();
-				
+
 				world.getParcours().createMovableObject((float) center.x, (float) center.y);
 			}
 
@@ -645,7 +645,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 
         /**
          * CNY70-Simulator
-         * 
+         *
          * @param distFromBotCenter
          * @param headingInBotCoord
          * @param sensor
@@ -682,10 +682,10 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     protected final WheelSimulator leftWheel = new WheelSimulator();
     /** Rad rechts */
     protected final WheelSimulator rightWheel = new WheelSimulator();
-    
+
     /** Servo Klappe */
     protected final ServoSimulator servoDoor = new ServoSimulator(1);
-    
+
     /** Servo Kamera */
     protected final ServoSimulator servoCam = new ServoSimulator(2);
 
@@ -751,7 +751,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     public void buisitWheel(Governor g, boolean isLeft) {
         (isLeft ? leftWheel : rightWheel).setGovernor(g);
     }
-    
+
     /**
      * @param s			Servo
      * @param isLeft	links?
@@ -761,7 +761,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	    		servoDoor.setServo(s);
 	    	}
     }
-    
+
     /**
      * @param s			Servo
      * @param isLeft	links?
@@ -771,7 +771,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	    		servoCam.setServo(s);
 	    	}
     }
-    
+
     /**
      * @param doorSensor	Klappensensor
      * @param isLeft		Servo 1 (links) für Klappe
@@ -779,7 +779,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     public void buisitDoor(final Sensors.Door doorSensor, boolean isLeft) {
         final ServoSimulator servo = isLeft ? servoDoor : null;
         krautUndRuebenSim.setDoorSensor(doorSensor);
-    	
+
         if (servo != null) {
 	        simulators.add(new Runnable() {
 				public void run() {
@@ -788,7 +788,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	                if (change) {
 		                	doorSensor.set(doorState);
 		                	parent.set(DOOR_OPEN, doorState != 0);
-		                	
+
 		                	if (doorState == 0) {
 		                		/* Klappe wurde geschlossen */
 		                		krautUndRuebenSim.setAssociatedObject(krautUndRuebenSim.getObjectInPocket());
@@ -801,14 +801,14 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	        });
         }
     }
-    
+
     /**
      * @param camPosSensor	Kamerapositionssensor
      * @param isLeft		false: Servo 2 (rechts) für Kamera
      */
     public void buisitCamPos(final Sensors.CamPos camPosSensor, boolean isLeft) {
         final ServoSimulator servo = isLeft ? servoCam : null;
-    	
+
         if (servo != null) {
 	        simulators.add(new Runnable() {
 	        	int last_pos = 0;
@@ -881,7 +881,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         final Point3d endPoint = new Point3d(distFromBotCenter);
         endPoint.add(new Point3d(0.0, MAX_RANGE, 0.0));
         final boolean GP2Y0A60 = Config.getValue("GP2Y0A60").equals("true");
-        final Characteristic charstic = GP2Y0A60 ? 
+        final Characteristic charstic = GP2Y0A60 ?
         	(isLeft ? new Characteristic("characteristics/gp2y0a60Left.txt", 100) :
         			new Characteristic("characteristics/gp2y0a60Right.txt", 100))
         	: (isLeft ? new Characteristic("characteristics/gp2d12Left.txt", 100) :
@@ -937,7 +937,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             }
         });
     }
-    
+
     /**
 	 * @param sensor	BPS-Sensor
 	 * @param isLeft	immer true, da es nur einen Sensor gibt
@@ -952,7 +952,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 			private final Point3d endOfSens = new Point3d(BPS_LIGHT_DISTANCE, 0.0, 0.0);
 
 			public void run() {
-				Point3d pos = parent.worldCoordFromBotCoord(startOfSens);				
+				Point3d pos = parent.worldCoordFromBotCoord(startOfSens);
 				pos.setZ(BPS.BPSZ);
 				Point3d end = parent.worldCoordFromBotCoord(endOfSens);
 				end.setZ(BPS.BPSZ);
@@ -990,7 +990,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             }
 		});
 	}
-	
+
     /**
      * @param sensor	Maussensor
      * @param isX		X? (sonst Y)
@@ -1005,7 +1005,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     public void buisitClockSim(final Sensors.Clock sensor) {
         clock = sensor;
     }
-    
+
     /**
      * @param sensor	Shutdown-Control
      */
@@ -1017,13 +1017,13 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-        // Wichtig: zuerst die Sensoren, dann Kraut + Rüben     
+        // Wichtig: zuerst die Sensoren, dann Kraut + Rüben
         for (Runnable simulator : simulators) {
             simulator.run();
         }
         krautUndRuebenSim.run();
     }
-    
+
     /** Destruktor */
     public void cleanup() {
     	// steckt ein evtl. im Transportfach befindliches Objekt wieder in die Welt:

@@ -30,14 +30,14 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 	/** neuer Test-Bot */
 	public CtBotSimTest() {
 		super("Test-Bot");
-	
+
 		components.add(new Sensors.Clock());
-		
+
 		for (BotComponent<?> c : components) {
 			if (c.getName().equals("IrL")) {
 				irL = (Sensors.Distance) c;
 			}
-			if (c.getName().equals("IrR")) {			
+			if (c.getName().equals("IrR")) {
 				irR = (Sensors.Distance) c;
 			}
 			if (c.getName().equals("MotorL")) {
@@ -69,7 +69,7 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 	private Sensors.Distance irL = null;
 	/** Dist-Sensor rechts */
 	private Sensors.Distance irR = null;
-	
+
 	/**
 	 * @see ctSim.model.bots.SimulatedBot#doSimStep()
 	 */
@@ -77,14 +77,14 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 		if (govL == null || govR == null || irL == null || irR == null) {
 			throw new UnrecoverableScrewupException();
 		}
-		
+
 		/* Ansteuerung für die Motoren in Abhängigkeit vom Input der IR-Abstandssensoren */
 
 		/* solange die Wand weit weg ist, gilt: volle Fahrt voraus */
 		double ll = 255, rr = 255;
 		final double irl = irL.get().doubleValue();
 		final double irr = irR.get().doubleValue();
-		
+
 		/* falls Wand in Sicht, per Zufall nach links oder rechts drehen */
 		if (irl > 160 || irr > 130) {
 			switch (lastState) {
@@ -120,7 +120,7 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 			/* Drehen beendet */
 			lastState = 0;
 		}
-		
+
 		/* Geschwindigkeiten an die Motoren weitergeben */
 		govL.set(ll);
 		govR.set(rr);

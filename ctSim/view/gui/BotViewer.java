@@ -56,7 +56,7 @@ public class BotViewer extends JScrollPane {
 	public BotViewer(Bot bot) {
 		super(VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER);
 		this.bot = bot;
-		
+
 		/* buisitors nach Bot-Art anlegen */
 		Bot botinstance = null;
 		if (bot instanceof ThreeDBot) {
@@ -86,7 +86,7 @@ public class BotViewer extends JScrollPane {
 				MousePictureViewer.class,
 			};
 		}
-		
+
 		/* Panelbreite soll mindestens so groß sein, dass alle Elemente darin komplett sichtbar sind */
 		this.setMinimumSize(new Dimension(220, this.getHeight()));
 
@@ -113,11 +113,11 @@ public class BotViewer extends JScrollPane {
 			}
 		}
 		setViewportView(panel);
-		
+
 		/* Key-Handler */
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
-        
+
         inputMap.put(key, "close");
         getActionMap().put("close", new AbstractAction() {
 			private static final long serialVersionUID = -7639062234107576185L;

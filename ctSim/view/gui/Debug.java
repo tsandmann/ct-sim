@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -29,7 +29,7 @@ import java.util.Date;
 
 /**
  * Sorgt für Debug-Ausgaben
- * 
+ *
  * @author Felix Beckwermert
  */
 public class Debug {
@@ -48,7 +48,7 @@ public class Debug {
 	private DateFormat timeFormatter;
 	/** Neue Zeile? */
 	private boolean isNewLine = true;
-	
+
 	/** Der Konstruktor */
 	Debug() {
 		this.timeFormatter = new SimpleDateFormat(this.TIME_PREFIX);
@@ -62,16 +62,16 @@ public class Debug {
 //		}
 
 	}
-	
+
 	/**
 	 * Setzt das Debug-Fenster
-	 * 
+	 *
 	 * @param window
 	 */
 	private void setDebugWindow(DebugWindow window) {
 		this.win = window;
 	}
-	
+
 	/**
 	 * @param str
 	 */
@@ -89,11 +89,11 @@ public class Debug {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if(!str.endsWith("\n"))
 			this.isNewLine = false;
 	}
-	
+
 	/**
 	 * @param str
 	 */
@@ -114,7 +114,7 @@ public class Debug {
 		}
 		this.isNewLine = true;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#finalize()
 	 */
@@ -127,7 +127,7 @@ public class Debug {
 			super.finalize();
 		}
 	}
-	
+
 	/**
 	 * @param win
 	 */

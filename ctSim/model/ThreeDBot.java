@@ -70,7 +70,7 @@ import ctSim.util.Runnable1;
  * <p>
  * Die beiden Methoden, die für die Simulation zentral sind:
  * <ul>
- * <li>{@link #run()}, die als eigener Thread läuft. Sie macht periodisch zwei Dinge: 
+ * <li>{@link #run()}, die als eigener Thread läuft. Sie macht periodisch zwei Dinge:
  * Warten und dem SimulatedBot sagen "jetzt Simschritt machen" (für den {@link CtBotSimTcp}
  * heißt das er überträgt Sensordaten, wartet auf Antwort vom C-Code, und aktualisiert dann
  * die Aktuatoren wie vom C-Code gewünscht) {@link #updateSimulation(long)}, die von außen
@@ -107,7 +107,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		IN_HOLE(0x002, "falling",
 			"hat keinen Boden mehr unter den Füßen",
 			"hat wieder Boden unter den Füßen"),
-			
+
 	/** Klappenzustand des Bots */
 		DOOR_OPEN(0x003, "door_open",
 			"Klappe ist nun geöffnet",
@@ -133,7 +133,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 		/**
 		 * Bot-Status
-		 * 
+		 *
 		 * @param legacyValue
 		 * @param appearanceKeyInXml
 		 * @param messageOnEnter
@@ -144,7 +144,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 		/**
 		 * Bot-Status
-		 * 
+		 *
 		 * @param legacyValue
 		 * @param appearanceKeyInXml
 		 * @param messageOnEnter
@@ -159,13 +159,13 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 
 	/** 3D-Koordinaten eines Bots */
-	enum Coord { 
+	enum Coord {
 		/** X-Anteil */
 		X,
 		/** Y-Anteil */
-		Y, 
+		Y,
 		/** Z-Anteil */
-		Z 
+		Z
 	}
 
 	/** Positionskomponente für 3D-Bots */
@@ -175,7 +175,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 		/**
 		 * Erzeugt eine neue Position
-		 * 
+		 *
 		 * @param coord	Koordinaten
 		 */
 		public PositionCompnt(final Coord coord) {
@@ -234,22 +234,22 @@ public class ThreeDBot extends BasicBot implements Runnable {
 			getExternalModel().setValue(newValue);
 		}
 	}
-	
+
 	/** Globale Bot-Position (wie für Lokalisierung verwendet) */
 	public class PositionGlobal extends BotComponent<SpinnerNumberModel> {
 		/** Koordinaten */
 		private final Coord coord;
-		
+
 		/**
 		 * Erzeugt eine neue Position
-		 * 
+		 *
 		 * @param coord	Koordinaten
 		 */
 		public PositionGlobal(final Coord coord) {
 			super(new SpinnerNumberModel());
 			this.coord = coord;
 		}
-		
+
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#isGuiEditable()
 		 */
@@ -273,7 +273,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		public String getDescription() {
 			return "Globale" + coord + "-Koordinate [mm]";
 		}
-		
+
 		/** Aktualisiert das externe Modell */
 		@Override
 		public void updateExternalModel() {
@@ -355,7 +355,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 			ignoreStateChange = false;
 		}
 	}
-	
+
 	/** Globale Blickrichtung (wie für Lokalisierung verwendet) */
 	public class HeadingGlobal extends BotComponent<SpinnerNumberModel> {
 		/** Erzeugt eine neue Blickrichtung für einen 3D-Bot */
@@ -468,7 +468,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @param posInWorldCoord	Position des Objekts
 	 * @param headInWorldCoord	Blickrichtung des Objekts
 	 * @param barrier			Barrier für den neuen Bot
-	 * @param bot				Zugehöriger Bot 
+	 * @param bot				Zugehöriger Bot
 	 */
 	public ThreeDBot(Point3d posInWorldCoord, Vector3d headInWorldCoord, BotBarrier barrier, SimulatedBot bot) {
 		super(bot.toString());
@@ -491,7 +491,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		branchgrp.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 		branchgrp.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		branchgrp.addChild(transformgrp);
-		
+
 		/* BranchGroup für Debug-Anzeigen */
 		testBG = new BranchGroup();
 		testBG.setCapability(BranchGroup.ALLOW_DETACH);
@@ -499,7 +499,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		testBG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 		testBG.setPickable(false);
 		branchgrp.addChild(testBG);
-		
+
 		transformgrp.addChild(shape);
 
 		setPosition(posInWorldCoord);
@@ -508,11 +508,11 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 		// Diese holen sich die Position in ihren Konstruktoren, daher muss jene schon gesetzt sein.
 		components.add(new PositionCompnt(X), new PositionCompnt(Y), new PositionCompnt(Z), new HeadingCompnt());
-		
+
 		if (Config.getValue("BPSSensor").equals("true")) {
 			components.add(new PositionGlobal(X), new PositionGlobal(Y), new HeadingGlobal());
 		}
-		
+
 		addDisposeListener(new Runnable() {
 			@Override
 			public void run() {
@@ -521,10 +521,10 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		});
 	}
 
-	
+
 	/**
 	 * Setzt den Simulator des Bots
-	 * 
+	 *
 	 * @param simulator	Simulator
 	 */
 	public void setSimulator(Runnable simulator) {
@@ -540,20 +540,20 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 	/**
 	 * Liefert die BranchGroup
-	 * 
+	 *
 	 * @return BG
 	 */
 	public final BranchGroup getBranchGroup() {
 		return branchgrp;
 	}
-	
+
 	/**
 	 * @return TG des Bots
 	 */
 	public final TransformGroup getTransformGroup() {
 		return transformgrp;
 	}
-	
+
 	/**
 	 * @param relTrans
 	 * @param comp
@@ -565,17 +565,17 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 		transformgrp.addChild(tg);
 	}
-	
+
 	/**
 	 * Löscht alle Elemente in TestBG (Branchgroup zu Debug-Zwecken)
 	 */
 	public void clearDebugBG() {
 		testBG.removeAllChildren();
 	}
-	
+
 	/**
 	 * Zeichnet eine Kugel zu Debug-Zwecken, indem sie zu TestBG hinzugefügt wird
-	 * 
+	 *
 	 * @param radius	Radius der Kugel
 	 * @param transform	Transformation, die auf die Box angewendet werden soll
 	 */
@@ -592,7 +592,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 	/**
 	 * Zeichnet eine Box zu Debug-Zwecken, indem sie zu TestBG hinzugefügt wird
-	 * 
+	 *
 	 * @param x			Größe in X-Richtung
 	 * @param y			Größe in Y-Richtung
 	 * @param z			Größe in Z-Richtung
@@ -680,7 +680,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 	/**
 	 * Setzt Heading
-	 * 
+	 *
 	 * @param headingInRad	Heading als RAD
 	 */
 	public final synchronized void setHeading(double headingInRad) {
@@ -698,9 +698,9 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 	/**
 	 * Setzt Heading
-	 * 
+	 *
 	 * @param headingInWorldCoord	Heading in Welt-Koordinaten
-	 */	
+	 */
 	public final synchronized void setHeading(Vector3d headingInWorldCoord) {
 		// Optimierung (Transform-Kram ist teuer)
 		if (this.headingInWorldCoord.equals(headingInWorldCoord)) {
@@ -743,7 +743,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * d.h. positive Winkel liegen links, wenn man in Richtung der y-Achse guckt. Ein Vektor, der exakt in
 	 * Richtung der negativen y-Achse zeigt, produziert +π als Ergebnis.
 	 * </p>
-	 * 
+	 *
 	 * @param v	Vektor
 	 * @return Winkel
 	 */
@@ -769,7 +769,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 	/**
 	 * Fügt einen Status hinzu
-	 * 
+	 *
 	 * @param state	Status
 	 */
 	public void set(State state) {
@@ -781,7 +781,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 	/**
 	 * Entfernt Status
-	 * 
+	 *
 	 * @param state	Status
 	 */
 	public void clear(State state) {
@@ -807,7 +807,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 
 	// gemäß dbfeld-ctsim-log-state.txt
-	
+
 	/**
 	 * @return log-state
 	 */
@@ -818,10 +818,10 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		}
 		return rv;
 	}
-	
+
 	/**
 	 * Schreibt eine Info-Nachricht in die Konsole
-	 * 
+	 *
 	 * @param s	Nachricht
 	 */
 	public void printInfoMsg(String s) {
@@ -874,7 +874,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		}
 	}
 
-	
+
 	/**
 	 * @see ctSim.model.bots.BasicBot#updateView()
 	 */
@@ -890,7 +890,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		if (isObstStateNormal()) {
 			key = "normal";
 		} else {
-			/* 
+			/*
 			 * appearanceKey des ersten gesetzten Elements
 			 * Im Fall, dass mehr als ein ObstState gesetzt ist (z.B. COLLIDED und zugleich HALTED),
 			 * werden alle ignoriert außer dem Ersten
@@ -915,7 +915,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		if (is(HALTED)) {	// Fix für Bug 44
 			return;
 		}
-		
+
 		/* Zeit aktualisieren */
 		deltaT = simTimeInMs - lastSimulTime;
 		if (lastSimulTime == 0) {
@@ -925,7 +925,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		lastSimulTime = simTimeInMs;
 
 		/* Simulatoren des Bots ausführen */
-		simulator.run(); 
+		simulator.run();
 	}
 
 	/**
@@ -939,7 +939,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 	/**
 	 * Liefert die letzte als sicher erachtete Position des Bots zurück
-	 * 
+	 *
 	 * @return Returns the lastSavePos.
 	 */
 	public Point3d getLastSafePos() {
@@ -948,7 +948,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 	/**
 	 * Rechnet Bot-Koordinaten in Welt-Koordinaten um
-	 * 
+	 *
 	 * @param inBotCoord	Bot-Koordinaten als Point
 	 * @return Welt-Koordinaten
 	 */
@@ -962,7 +962,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 	/**
 	 * Rechnet Bot-Koordinaten in Welt-Koordinaten um
-	 * 
+	 *
 	 * @param inBotCoord	Bot-Koordinaten als Vektor
 	 * @return Welt-Koordinaten
 	 */
@@ -984,7 +984,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 	/**
 	 * Setzt einen Handler für geändertes Aussehen
-	 * 
+	 *
 	 * @param calledWhenObstStateChanged
 	 */
 	public void addAppearanceListener(Runnable1<Color> calledWhenObstStateChanged) {

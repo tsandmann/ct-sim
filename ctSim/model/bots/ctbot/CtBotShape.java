@@ -87,7 +87,7 @@ public class CtBotShape extends Group {
 
         /**
          * interleave
-         * 
+         *
          * @param other
          * @return PointList
          */
@@ -123,7 +123,7 @@ public class CtBotShape extends Group {
 
         /**
          * transform
-         * 
+         *
          * @param t
          */
         public void transform(Transform3D t) {
@@ -145,7 +145,7 @@ public class CtBotShape extends Group {
             return toGeometry(GeometryInfo.TRIANGLE_FAN_ARRAY);
         }
 
-        
+
         /**
          * @return GeometryArray
          */
@@ -252,7 +252,7 @@ public class CtBotShape extends Group {
 
     /**
      * Seite bauen
-     * 
+     *
      * @return 3D-Shape
      */
     protected static Shape3D buildRightCheek() {
@@ -288,11 +288,11 @@ public class CtBotShape extends Group {
 
     /**
      * Mitte bauen
-     * 
+     *
      * @return 3D-Shape
      */
     protected static Shape3D buildMiddle() {
-    	/* 
+    	/*
     	 * Shape (= Mittelteil) besteht aus 5 Teilen:
     	 * 	1) Zylinderboden,
     	 * 	2) Zyl.-Decke,
@@ -401,7 +401,7 @@ public class CtBotShape extends Group {
 
     /**
      * transformiert einen Punkt
-     * 
+     *
      * @param p				3D-Punkt
      * @param transforms	Transformierung(en)
      * @return 3D-Punkt

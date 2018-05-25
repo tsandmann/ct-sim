@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
@@ -32,7 +32,7 @@ public class FmtLogger extends Logger {
 	public abstract static class Factory {
 		/**
 		 * Neuer Logger
-		 * 
+		 *
 		 * @param name	Name
 		 * @return		Logger
 		 */
@@ -49,7 +49,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Setzt Factory
-	 * 
+	 *
 	 * @param f	Factory
 	 */
 	public static void setFactory(Factory f) {
@@ -61,7 +61,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Logger
-	 * 
+	 *
 	 * @param name		Name
 	 * @param delegate	Delegate
 	 */
@@ -80,7 +80,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Warnung
-	 * 
+	 *
 	 * @param msg	Text
 	 */
 	public void warn(String msg) {
@@ -91,7 +91,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Severe
-	 * 
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -101,7 +101,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Warnung
-	 * 
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -111,7 +111,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Warnung
-	 * 
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -121,7 +121,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Info
-	 * 
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -131,7 +131,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Config
-	 * 
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -141,7 +141,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Fine
-	 * 
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -151,7 +151,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Finer
-	 * 
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -161,7 +161,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Finest
-	 * 
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
