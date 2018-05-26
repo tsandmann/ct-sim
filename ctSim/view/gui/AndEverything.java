@@ -62,7 +62,7 @@ public class AndEverything extends GuiBotBuisitor {
 		t.setEnabled(false);
 
 		/**
-		 * Fix für ct-Sim-GUI-Bug: "Kein Scrollen möglich wenn Sim aktiv".
+		 * Fix für ct-Sim-GUI-Bug: "Kein Scrollen möglich wenn Sim aktiv"
 		 * Details ließen sich zwar nicht ermitteln, aber wenn man das Caret (=Cursor) abschaltet funktioniert es.
 		 * Siehe <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4201999">
 		 * Issue JDK-4201999: JTextArea's don't automatically scroll when appending() to them.</a> und den
