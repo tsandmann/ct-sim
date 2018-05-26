@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Group;
 import javax.media.j3d.Node;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
@@ -121,8 +122,8 @@ public class Parcours {
 		// Die Branchgroup für die Hindernisse
 		ObstBG = new BranchGroup();
 		ObstBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
-		ObstBG.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-		ObstBG.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		ObstBG.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		ObstBG.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 		ObstBG.setCapability(BranchGroup.ALLOW_DETACH);
 		ObstBG.setPickable(true);
 
@@ -252,7 +253,7 @@ public class Parcours {
 	public void addMoveableObstacle(Node obstacle, float x, float y) {
 		BranchGroup bg = new BranchGroup();
 		bg.setCapability(BranchGroup.ALLOW_DETACH);
-		bg.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		bg.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		addNode(obstacle, x, y, 0.0f, bg);
 		ObstBG.addChild(bg);
 	}

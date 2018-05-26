@@ -31,6 +31,7 @@ import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.GraphicsConfigTemplate3D;
+import javax.media.j3d.ImageComponent;
 import javax.media.j3d.ImageComponent2D;
 import javax.media.j3d.Screen3D;
 import javax.media.j3d.Transform3D;
@@ -259,7 +260,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		 */
     	Screen3D onScr = onScreenCanvas.getScreen3D();
     	Screen3D offScr = offScreenCanvas.getScreen3D();
-    	offScreenCanvas.setOffScreenBuffer(new ImageComponent2D(ImageComponent2D.FORMAT_RGB,
+    	offScreenCanvas.setOffScreenBuffer(new ImageComponent2D(ImageComponent.FORMAT_RGB,
     			onScr.getSize().width, onScr.getSize().height));
     	offScr.setSize(onScr.getSize());
     	offScr.setPhysicalScreenHeight(onScr.getPhysicalScreenHeight());

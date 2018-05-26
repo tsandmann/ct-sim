@@ -32,6 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
+import javax.swing.WindowConstants;
 
 import ctSim.view.gui.ComponentJFrame;
 import ctSim.view.gui.RemoteCallViewer;
@@ -121,7 +122,7 @@ public class AuxFrameButton extends JToggleButton {
 			}
 		});
 		// HIDE, damit sich das Fenster Position und Größe merkt
-		auxFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		auxFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		auxFrame.add(frameContent);
 		if (!(frameContent instanceof RemoteCallViewer)) {
 			auxFrame.pack();	// auf die Größe, die der Inhalt will

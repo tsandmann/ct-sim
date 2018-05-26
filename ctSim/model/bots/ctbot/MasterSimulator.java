@@ -358,7 +358,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 //				parent.clearDebugBG();	// löscht alte Debug-Anzeige
 
 				/* Bounds für Grundplatte erstellen */
-				Bounds plate = new BoundingSphere(new Point3d(0, 0, 0), CtBotSimTcp.BOT_RADIUS);
+				Bounds plate = new BoundingSphere(new Point3d(0, 0, 0), CtBot.BOT_RADIUS);
 
 				/* schiebe probehalber Bounds an die neue Position */
 				Transform3D t = new Transform3D();
@@ -483,22 +483,22 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				final double BOT_SKID_Y = -0.054d;
 
 				/* Bodenkontakt des Gleitpins überprüfen */
-				Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -CtBotSimTcp.BOT_HEIGHT / 2);
+				Vector3d skidVec = new Vector3d(BOT_SKID_X, BOT_SKID_Y, -CtBot.BOT_HEIGHT / 2);
 				/* Position des Gleitpins gemäß der Ausrichtung des Bots anpassen */
 				rotation.transform(skidVec);
 				skidVec.add(newPosPoint);
 
-				boolean isFalling = ! world.checkTerrain(new Point3d(skidVec), CtBotSimTcp.BOT_GROUND_CLEARANCE);
+				boolean isFalling = ! world.checkTerrain(new Point3d(skidVec), CtBot.BOT_GROUND_CLEARANCE);
 
 				/* Bodenkontakt des linken Reifens überprüfen */
-				posRadL.z -= CtBotSimTcp.BOT_HEIGHT / 2;
+				posRadL.z -= CtBot.BOT_HEIGHT / 2;
 
-				isFalling |= ! world.checkTerrain(new Point3d(posRadL), CtBotSimTcp.BOT_GROUND_CLEARANCE);
+				isFalling |= ! world.checkTerrain(new Point3d(posRadL), CtBot.BOT_GROUND_CLEARANCE);
 
 				/* Bodenkontakt des rechten Reifens überprüfen */
-				posRadR.z -= CtBotSimTcp.BOT_HEIGHT / 2;
+				posRadR.z -= CtBot.BOT_HEIGHT / 2;
 
-				isFalling |= ! world.checkTerrain(new Point3d(posRadR), CtBotSimTcp.BOT_GROUND_CLEARANCE);
+				isFalling |= ! world.checkTerrain(new Point3d(posRadR), CtBot.BOT_GROUND_CLEARANCE);
 
 				/**
 				 * Wenn einer der Beruehrungspunkte keinen Boden mehr unter sich hat, wird der Bot gestoppt
@@ -541,7 +541,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 		 */
 		private Bounds createBounds(Point3d newPos, double newHeading, double dX, double dY, double radius,
 				Transform3D t) {
-			final double dZ = - CtBotSimTcp.BOT_HEIGHT / 2;
+			final double dZ = - CtBot.BOT_HEIGHT / 2;
 
 			/* Vektor für die Verschiebung erstellen */
 			Vector3d v = new Vector3d(dX, dY, dZ);
@@ -604,7 +604,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
 				tgParcours.setTransform(tWorld);
 
 				Transform3D tPocket = new Transform3D();
-				Vector3d diff = new Vector3d(0, 0.036, - CtBotSimTcp.BOT_HEIGHT / 2);
+				Vector3d diff = new Vector3d(0, 0.036, - CtBot.BOT_HEIGHT / 2);
 				tPocket.setTranslation(diff);
 				tgObject.setTransform(tPocket);
 
@@ -905,7 +905,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @param isLeft	links?
      */
     public void buisitLineSensorSim(Sensors.Line s, boolean isLeft) {
-        simulators.add(new Cny70Simulator(at(0.004, 0.009, - 0.011 - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
+        simulators.add(new Cny70Simulator(at(0.004, 0.009, - 0.011 - CtBot.BOT_HEIGHT / 2, isLeft),
             looksForward(), s));
     }
 
@@ -914,7 +914,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      * @param isLeft	links?
      */
     public void buisitBorderSensorSim(Sensors.Border s, boolean isLeft) {
-        simulators.add(new Cny70Simulator(at(0.036, 0.0384, - CtBotSimTcp.BOT_HEIGHT / 2, isLeft),
+        simulators.add(new Cny70Simulator(at(0.036, 0.0384, - CtBot.BOT_HEIGHT / 2, isLeft),
             looksForward(), s));
     }
 
@@ -924,8 +924,8 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
      */
     public void buisitLightSim(final Sensors.Light sensor, boolean isLeft) {
         final Point3d distFromBotCenter = isLeft
-            ? new Point3d(- 0.032, 0.048, 0.060 - CtBotSimTcp.BOT_HEIGHT / 2)
-            : new Point3d(+ 0.032, 0.048, 0.060 - CtBotSimTcp.BOT_HEIGHT / 2);
+            ? new Point3d(- 0.032, 0.048, 0.060 - CtBot.BOT_HEIGHT / 2)
+            : new Point3d(+ 0.032, 0.048, 0.060 - CtBot.BOT_HEIGHT / 2);
         final Vector3d headingInBotCoord = looksForward();
 
         simulators.add(new Runnable() {
