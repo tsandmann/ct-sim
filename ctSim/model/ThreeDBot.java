@@ -861,7 +861,10 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		lg.fine("Thread " + Thread.currentThread().getName() + " wurde beendet");
 	}
 
-	/** Implementiert Bug 39 (http://www.heise.de/trac/ctbot/ticket/39) */
+	/**
+	 * 	Konfigurationsoption wie mit abgerissenen TCP-Verbindungen (abgestürzten Bots) umzugehen ist:
+	 *  mögliche Werte sind "rauswerfen" (default) oder auf "halted" setzen.
+	 */
 	private void dieOrHalt() {
 		String eh = Config.getValue("simBotErrorHandling");
 		String warning = toString() + " hat ein E/A-Problem: Bot-Code ist wohl abgestürzt; ";
@@ -912,7 +915,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * @param simTimeInMs	aktuelle Simulationszeit in Millisekunden
 	 */
 	public void updateSimulation(long simTimeInMs) {
-		if (is(HALTED)) {	// Fix für Bug 44
+		if (is(HALTED)) {
 			return;
 		}
 
