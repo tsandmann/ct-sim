@@ -45,7 +45,7 @@ import ctSim.util.xml.XmlDocument;
 
 /**
  * Managed die Konfiguration des ct-Sim
- * Theoretisch kann man mehr als einmal initialisieren (Konfig laden), aber das ist ungetestet.
+ * Theoretisch kann man mehr als einmal initialisieren (Konfiguration laden), aber das ist ungetestet.
  */
 public class Config {
 	/** für Dateien */
@@ -74,7 +74,7 @@ public class Config {
 	 * <p>
 	 * Vorteile: Die Werte sind hier zentral statt quer durch den Quelltext verteilt; Code, der
 	 * {@link #getValue(String)} aufruft, kann einfacher werden, da nicht dauernd der Rügabewert gegen
-	 * <code>null</code> geprüft werden muss - wenn in diesem Array ein Wert steht, kann getValue(String)
+	 * <code>null</code> geprüft werden muss -- wenn in diesem Array ein Wert steht, kann getValue(String)
 	 * kein <code>null</code> mehr liefern.
 	 * </p>
 	 */
@@ -224,10 +224,6 @@ public class Config {
 			try {
 				for(QueryableNode n : doc.getNodeList("/ct-sim/parameter")) {
 					String parmOs = n.getString("@os").toLowerCase();
-					/*
-					 * Beispiele für os.name: "Windows XP", "Linux", "Mac OS X"
-					 * Siehe http://tolstoy.com/samizdat/sysprops.html
-					 */
 					String currentOs = System.getProperty("os.name")
 						.toLowerCase();
 
@@ -294,7 +290,7 @@ public class Config {
 
 			/**
 			 * Wichtig, weil wir es als Schlüssel in der Map verwenden;
-			 * Implementiert nach Josh Bloch: "Effective Java (Third Edition)", Addison-Wesley, 2018, Kap 3
+			 * Implementierung nach: Bloch, Joshua (2018)³: "Effective Java", Boston, Addison-Wesley, Kapitel 3
 			 *
 			 * @see java.lang.Object#hashCode()
 			 */

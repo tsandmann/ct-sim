@@ -41,8 +41,8 @@ import ctSim.util.FmtLogger;
 /**
  * Splash-Screen für den c't-Sim
  *
- * Grundidee übernommen von:
- * <a href="http://www.randelshofer.ch/oop/javasplash/javasplash.html">Java Splash -- Werner Randelshofer</a>
+ * Grundidee übernommen von Werner Randelshofer:
+ * <a href="http://www.randelshofer.ch/oop/javasplash/javasplash.html">How to do a fast Splash Screen in Java</a>
  *
  * @author Timo Sandmann
  */

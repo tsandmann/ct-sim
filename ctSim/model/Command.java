@@ -86,8 +86,8 @@ import ctSim.util.Misc;
  * 	7			0				dataR MSB: zugehöriges höherwertiges Byte
  * 	8			61				Sequenznummer LSB, bei aufeinanderfolgenden Commands
  * 								erhöht sich die Sequenznummer immer um eins
- * 	9			0               Absender-Id des Paketes
- * 	10          0               Empänger-Id des Paketes
+ * 	9			0				Absender-Id des Paketes
+ * 	10			0				Empänger-Id des Paketes
  *  11			'&lt;' (Ascii 60)	CRC-Code, markiert Command-Ende, ist immer '&lt;' (Name "CRC" irreführend)
  * 	12 und folgende				Nutzlast falls vorhanden. Wird z.B. verwendet, wenn der Bot den Inhalt
  * 								des LCD überträgt oder die Bilddaten, von dem was der Maussensor sieht
@@ -179,7 +179,7 @@ import ctSim.util.Misc;
  * </p>
  * <p>
  * Die Endianness auf dem Draht bei uns ist
- * <a href="http://de.wikipedia.org/wiki/Little_endian">Little-Endian</a>.
+ * <a href="https://de.wikipedia.org/wiki/Byte-Reihenfolge#Little-Endian">Little-Endian</a>.
  * Java verwendet intern Big-Endian. Die Konvertierung erfolgt zu Fuß in dieser Klasse.
  * </p>
  *

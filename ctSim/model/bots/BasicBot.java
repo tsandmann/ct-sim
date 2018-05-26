@@ -234,7 +234,7 @@ public abstract class BasicBot implements Bot {
 		 * </p>
 		 * <p>
 		 * Implementiert das
-		 * <a href="http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-Responsibility-Pattern</a>
+		 * <a href="https://en.wikipedia.org/wiki/Chain-of-responsibility_pattern">Chain-of-responsibility pattern</a>
 		 * </p>
 		 *
     	 * @param command	Kommando

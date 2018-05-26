@@ -208,9 +208,7 @@ public class Misc {
 	 * {@code List<EchtLangerAnstrengenderTyp> listInstance = new ArrayList<EchtLangerAnstrengenderTyp>();}
 	 * </p>
 	 * <p>
-	 * Nach der hervorragenden Entdeckung von Josh Bloch; siehe
-	 * <a href="http://developers.sun.com/learning/javaoneonline/2006//coreplatform/TS-1512.html">Vortrag
-	 * bei der JavaOne</a>
+	 * Implementierung nach: Bloch, Joshua (2018)³: "Effective Java", Boston, Addison-Wesley
 	 *
 	 * @param <T>
 	 * @return ArrayList

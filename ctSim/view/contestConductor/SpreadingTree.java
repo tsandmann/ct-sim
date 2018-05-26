@@ -36,9 +36,9 @@ import ctSim.util.Misc;
  * </ul>
  * </p>
  * <p>
- * Bäume dieser Klasse sind <a href="http://de.wikipedia.org/wiki/Binärbaum">binär</a>,
- * <a href="http://de.wikipedia.org/wiki/Binärbaum#Weitere_Begriffe">strikt</a> und
- * <a href="http://de.wikipedia.org/wiki/Balancierter_Baum">balanciert</a> (Invariante: Höhe ± 0).
+ * Bäume dieser Klasse sind <a href="https://de.wikipedia.org/wiki/Binärbaum">binär</a>,
+ * <a href="https://de.wikipedia.org/wiki/Binärbaum#Weitere_Begriffe">strikt</a> und
+ * <a href="https://de.wikipedia.org/wiki/Balancierter_Baum">balanciert</a> (Invariante: Höhe ± 0).
  * </p>
  *
  * @author Hendrik Krauß

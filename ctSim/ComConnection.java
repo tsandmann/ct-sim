@@ -42,7 +42,7 @@ import ctSim.util.SaferThread;
  * von dieser Klasse angesprochen werden.
  * </p>
  * <p>
- * Die <a href="http://fazecast.github.io/jSerialComm/">jSerialComm-Dokumentation</a> beschreibt die API,
+ * Die <a href="https://fazecast.github.io/jSerialComm/">jSerialComm-Dokumentation</a> beschreibt die API,
  * die in dieser Klasse verwendet wird ({@com.fazecast.jSerialComm.*}).
  * </p>
  *

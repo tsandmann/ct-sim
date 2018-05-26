@@ -113,12 +113,7 @@ public class MainWindow extends JFrame implements ctSim.view.View {
 		 * Daher erscheint die Java3D-Anzeige immer _vor_ allen GUI-Komponenten: Wenn z.B. ein Menü aufgeklappt
 		 * wird, welches die 3D-Anzeige überlappt, _sollte_ natürlich das Menü im Vordergrund sein, stattdessen
 		 * _ist_ aber die 3D-Anzeige im Vordergrund (d.h. das Menü wird dort abgeschnitten, wo die 3D-Anzeige
-		 * beginnt). - Abhilfe gibt es zumindest für Menüs und Tooltips:
-		 *
-		 * Näheres unter:
-		 * <a href="http://java3d.j3d.org/faq/swing.html">Swing FAQ</a>
-		 * <a href="http://java3d.j3d.org/tutorials/quick_fix/swing.html">Swing Quick Fix</a>
-		 * <a href="http://java.sun.com/products/jfc/tsc/articles/mixing/index.html">Mixing</a>
+		 * beginnt).
 		 */
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);

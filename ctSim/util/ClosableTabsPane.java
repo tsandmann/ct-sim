@@ -34,9 +34,10 @@ import javax.swing.JTabbedPane;
  * <p>
  * TabbedPane, deren Tabs ein Schließen-Icon haben (kleines "X", das auch einen eigenen Tooltip haben
  * kann). Diese Klasse ist ein Hack, um auch mit Java 5+ klickbare Icons an der Stelle machen zu können.
- * (Java 6 würde das direkt unterstützen, womit diese Klasse überflüssig wäre. Näheres:
- * <a href="http://java.sun.com/docs/books/tutorial/uiswing/components/tabbedpane.html">Sun's How to Use
- * Tabbed Panes</a>, Abschnitt "Tabs With Custom Components".)
+ * (seit Java 6 wird das auch direkt unterstützt, womit diese Klasse theoretisch überflüssig wäre);
+ * für Details siehe: <a href="https://docs.oracle.com/javase/tutorial/uiswing/components/tabbedpane.html">
+ * Oracle The Java Tutorials / Using Swing Components / How to Use Various Components /
+ * How to Use Tabbed Panes / Tabs With Custom Components</a>)
  * </p>
  * <p>
  * Tabs mit Schließen-Icon werden nur bei Verwendung der addClosableTab(...)-Methoden erzeugt. addTab(...)
@@ -51,7 +52,7 @@ import javax.swing.JTabbedPane;
  * </p>
  * <p>
  * Code neu geschrieben und erweitert; hierbei wurde das Grundprinzip übernommen aus:
- * <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6632934">Bug JDK-6632934: JTabbedPane with closable tabs</a>
+ * <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6632934">Issue JDK-6632934: JTabbedPane with closable tabs</a>
  * </p>
  * <p>
  * Der Sim verwendet derzeit nur eine Instanz dieser Klasse, in der <em>alle</em> Tabs ein Schließen-Icon

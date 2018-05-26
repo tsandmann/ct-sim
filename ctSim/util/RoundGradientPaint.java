@@ -33,8 +33,8 @@ import java.awt.image.WritableRaster;
 
 /**
  * <p>
- * Ermöglicht runde (radiale) Farbverläufe. Implementierung mit Inspiration von
- * <a href="http://www.oreilly.com/catalog/java2d/chapter/ch04.html"></a>
+ * Ermöglicht runde (radiale) Farbverläufe. Implementierung mit Inspiration aus:
+ * Knudsen, Jonathan (1999): "Java 2D Graphics", Sebastopol, O'Reilly Media, Chapter 4
  * </p>
  * <p>
  * Beispiel: Ein Farbverlauf, dessen Hintergrund rot ist und der mit Pixel x=42 y=37 als Zentrum einen

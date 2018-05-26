@@ -34,7 +34,7 @@ import ctSim.view.View;
  * <p>
  * Interface, das die Views der Applikation verwendet, um auf den Controller
  * zuzugreifen. ("View" und "Controller" sind dabei im Sinne von
- * <a href="http://en.wikipedia.org/wiki/Model-view-controller" target="_blank">MVC</a> zu verstehen.)
+ * <a href="https://en.wikipedia.org/wiki/Model-view-controller">Model-view-controller (MVC)</a> zu verstehen.)
  * </p>
  * <p>
  * Das Interface definiert also in erster Linie, welche Dienste ein Controller den Views der Applikation
