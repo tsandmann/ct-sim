@@ -163,7 +163,6 @@ public class Misc {
 		dest.close();
 	}
 
-	/** TBD */
 	private static HashMap<RenderingHints.Key, Object> antiAliasOn = newMap();
 
 	static {

@@ -143,7 +143,7 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 	public void run() {
 		int timeout = 10000;
 
-		// Sequencer-Thread hat eigene Referenz auf die Welt - siehe Bug 55
+		// Sequencer-Thread hat eigene Referenz auf die Welt
 		final World sequencersWorld = world;
 
         try {
@@ -203,7 +203,11 @@ implements Controller, BotBarrier, Runnable, BotReceiver {
 				// die ganze Simulation aktualisieren
 				sequencersWorld.updateSimulation();
 
-				// Fix für Bug 12
+				/* 
+				 * verhindert Sim-Absturz beim Schließen des letzten Bots in einer laufenden Simulation:
+				 * Sobald keine Bots mehr da sind wird die Simulation pausiert.
+				 * Sie lässt sich erst wieder starten, wenn mind. ein Bot da ist. 
+				 */
 				if (sequencersWorld.getFutureNumOfBots() == 0) {
 					lg.info("Keine Bots mehr in der Simulation, pausiere");
 					pause();
