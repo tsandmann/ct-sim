@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -66,7 +66,7 @@ public class LogViewer extends JPanel {
 
 		/**
 		 * Button-Klasse
-		 * 
+		 *
 		 * @param label			Name
 		 * @param toolTipText	Tooltip
 		 * @param icon			Icon
@@ -125,7 +125,7 @@ public class LogViewer extends JPanel {
 
 	/**
 	 * Log-Viewer
-	 * 
+	 *
 	 * @param log	Log-Kompomente
 	 */
 	public LogViewer(final Log log) {
@@ -192,7 +192,7 @@ public class LogViewer extends JPanel {
 
 	/**
 	 * Gleicht die Höhe von zwei Komponenten an
-	 * 
+	 *
 	 * @param c1
 	 * @param c2
 	 */
@@ -206,7 +206,7 @@ public class LogViewer extends JPanel {
 
 	/**
 	 * Setzt eine Komponente auf eine gewünschte Höhe
-	 * 
+	 *
 	 * @param c
 	 * @param preferredHeight
 	 */

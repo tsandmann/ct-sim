@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.contestConductor;
@@ -120,7 +120,7 @@ public class ContestConductor implements View {
 
 		/**
 		 * Ist jemand am Ziel?
-		 * 
+		 *
 		 * @return true / false
 		 * @throws NullPointerException
 		 * @throws SQLException
@@ -144,7 +144,7 @@ public class ContestConductor implements View {
 
 		/**
 		 * Timeout eingetreten?
-		 * 
+		 *
 		 * @return true / false
 		 * @throws SQLException
 		 * @throws TournamentPlanException
@@ -171,8 +171,8 @@ public class ContestConductor implements View {
 
 		/**
 		 * Setzt den Gewinner
-		 * 
-		 * @param outcome	GameOutcome 
+		 *
+		 * @param outcome	GameOutcome
 		 * @throws NullPointerException
 		 * @throws SQLException
 		 * @throws TournamentPlanException
@@ -213,7 +213,7 @@ public class ContestConductor implements View {
 
 		/** ID für die Datenbank */
 		public final int idInDatabase;
-		
+
 		/** 3D-Bot */
 		public final ThreeDBot modelObj;
 
@@ -233,7 +233,7 @@ public class ContestConductor implements View {
 
 		/**
 		 * Enterfernt einen Bot
-		 * 
+		 *
 		 * @param b	Bot
 		 */
 		static void remove(ctSim.model.bots.Bot b) {
@@ -360,7 +360,7 @@ public class ContestConductor implements View {
 
 	/**
 	 * Crash-Recover
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 * @throws SQLException
 	 */
@@ -406,7 +406,7 @@ public class ContestConductor implements View {
 
 	/**
 	 * Weiter mit nächstem Spiel
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws TournamentPlanException
@@ -438,7 +438,7 @@ public class ContestConductor implements View {
 
 	/**
 	 * Neues Spiel
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws NoMoreGamesException
@@ -466,8 +466,8 @@ public class ContestConductor implements View {
 
 	/**
 	 * Startet einem Prozess
-	 * 
-	 * @param commandAndArgs	Binary-Name und Argumente 
+	 *
+	 * @param commandAndArgs	Binary-Name und Argumente
 	 * @return Prozess zum Binary
 	 * @throws IOException
 	 */
@@ -481,7 +481,7 @@ public class ContestConductor implements View {
 
 	/**
 	 * Startet einen Bot, entweder lokal oder remote
-	 * 
+	 *
 	 * @param f
 	 */
 	private void executeBot(File f){
@@ -517,7 +517,7 @@ public class ContestConductor implements View {
 
 	/**
 	 * Annahme: Niemand außer uns startet Bots, falls jemand gleichzeitig aktiv wird
-	 * 
+	 *
 	 * @param b
 	 * @return ThreeDBot-Instanz des Bots
 	 * @throws SQLException
@@ -560,7 +560,7 @@ public class ContestConductor implements View {
 
 	/**
 	 * Handler für neuer Bot ist da
-	 * 
+	 *
 	 * @param bot	Bot
 	 */
 	public void onBotAdded(Bot bot) {
@@ -575,7 +575,7 @@ public class ContestConductor implements View {
 
 	/**
 	 * Startet ein Spiel
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -624,7 +624,7 @@ public class ContestConductor implements View {
 	public void onJudgeSet(Judge j) {
 		// No-op
 	}
-	
+
 	/**
 	 * @see ctSim.view.View#onResetAllBots()
 	 */

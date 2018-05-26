@@ -67,13 +67,13 @@ public class RealCtBot extends CtBot {
 					updateView();
 					return;
 				}
-				
+
 				if (cmd.has(Command.Code.SHUTDOWN)) {
 					die();
 					RealCtBot.this.dispose();
 					return;
 				}
-				
+
 				if (! preProcessCommands(cmd)) {
 					components.processCommand(cmd);
 				}
@@ -98,24 +98,24 @@ public class RealCtBot extends CtBot {
 			}
 		}
 	}
-	
+
 	/** Name der Verbindung */
 	private final String connectionName;
 
 	/**
 	 * @param connection	Connection zum Bot
-	 * @param newId			Id für die Kommunikation 
+	 * @param newId			Id für die Kommunikation
 	 * @param features		Features des Bots gepackt in einen Integer
-	 * @throws ProtocolException 
+	 * @throws ProtocolException
 	 */
 	public RealCtBot(Connection connection, BotID newId, int features) throws ProtocolException {
 		super(connection.getShortName() + "-Bot");
-		
+
 		// Connection speichern
 		setConnection(connection);
-		
+
 		setId(newId);
-		
+
 		connectionName = connection.getName();
 
 		components.add(
@@ -151,10 +151,10 @@ public class RealCtBot extends CtBot {
 
 		for (BotComponent<?> c : components) {
 			c.offerAsyncWriteStream(connection.getCmdOutStream());
-			
+
 			/* RemoteCall-Komponente suchen und DoneListener registrieren (ProgramViewer) */
 			if (c instanceof RemoteCallCompnt) {
-				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
+				RemoteCallCompnt rc = (RemoteCallCompnt) c;
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
 					public void run(BehaviorExitStatus status) {
 						if (ablResult != null) {
@@ -163,7 +163,7 @@ public class RealCtBot extends CtBot {
 					}
 				});
 			}
-			
+
 			if (c instanceof WelcomeReceiver) {
 				welcomeReceiver = (WelcomeReceiver) c;
 				welcomeReceiver.setFeatures(features);
@@ -190,7 +190,7 @@ public class RealCtBot extends CtBot {
 
 	/**
 	 * Sendet einen Fernbedienungscode an den Bot
-	 * 
+	 *
 	 * @param code	zu sendender RC5-Code als String
 	 */
 	public void sendRC5Code(String code) {
@@ -204,9 +204,9 @@ public class RealCtBot extends CtBot {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
-	}	
-	
+		}
+	}
+
 //	/**
 //	 * Startet das Verhalten "name" per RemoteCall
 //	 * @param name	Das zu startende Verhalten
@@ -225,7 +225,7 @@ public class RealCtBot extends CtBot {
 //					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
 //					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
 //					par.setValue(param);
-//					beh.getParameters().add(par);					
+//					beh.getParameters().add(par);
 //					beh.call();
 //				} catch (IOException e) {
 //					e.printStackTrace();

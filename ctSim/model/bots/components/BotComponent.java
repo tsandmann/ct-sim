@@ -54,11 +54,11 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
  * sie potentiell schreiben könnten. Beim Setzen der Flags wird geprüft, ob die Component das Flag
  * überhaupt unterstützt; andernfalls tritt eine UnsupportedOperationException auf.
  * </p>
- * 
+ *
  * $$$ Aktuatoren vs. Sensoren
  *
  * @param <M>	Typ der Komponente
- * 
+ *
  * @author Felix Beckwermert
  * @author Hendrik Krauß
  */
@@ -67,16 +67,16 @@ public abstract class BotComponent<M> {
 	protected interface CanRead {
 		/**
 		 * Nicht aufrufen - stattdessen {@link BotComponent#offerRead(Command)} verwenden
-		 * 
+		 *
 		 * @param c	Kommando
-		 * @throws ProtocolException 
+		 * @throws ProtocolException
 		 */
 		void readFrom(Command c) throws ProtocolException;
 
 		/**
 		 * Nicht aufrufen - sollte nur von {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
-		 * 
+		 *
 		 * @return Command-Code
 		 */
 		Code getHotCmdCode();
@@ -89,7 +89,7 @@ public abstract class BotComponent<M> {
 	protected interface CanWrite {
 		/**
 		 * Nicht aufrufen - stattdessen {@link BotComponent#askForWrite(CommandOutputStream)} verwenden.
-		 * 
+		 *
 		 * @param c	Kommando
 		 */
 		void writeTo(Command c);
@@ -97,7 +97,7 @@ public abstract class BotComponent<M> {
 		/**
 		 * Nicht aufrufen - sollte nur von {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
 		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
-		 * 
+		 *
 		 * @return Command-Code
 		 */
 		Code getHotCmdCode();
@@ -107,7 +107,7 @@ public abstract class BotComponent<M> {
 	protected interface CanWriteAsynchronously {
 		/**
 		 * Setzt Asynchronen-Schreib-Stream
-		 * 
+		 *
 		 * @param s	OutputStream
 		 */
 		void setAsyncWriteStream(CommandOutputStream s);
@@ -124,11 +124,11 @@ public abstract class BotComponent<M> {
 	}
 
 	/** Connection-Eigenschaften */
-	public static enum ConnectionFlags { 
+	public static enum ConnectionFlags {
 		/** liest */
-		READS, 
+		READS,
 		/** schreibt */
-		WRITES, 
+		WRITES,
 		/** schreibt asynchron */
 		WRITES_ASYNCLY }
 
@@ -159,7 +159,7 @@ public abstract class BotComponent<M> {
 
 	/**
 	 * Setzt die Connection-Flags
-	 * 
+	 *
 	 * @param flags	Flags
 	 */
 	public void setFlags(ConnectionFlags... flags) {
@@ -214,7 +214,7 @@ public abstract class BotComponent<M> {
 
 	/**
 	 * Liest Daten vom Kommando
-	 * 
+	 *
 	 * @param c	Kommando
 	 * @throws ProtocolException
 	 */
@@ -234,7 +234,7 @@ public abstract class BotComponent<M> {
 
 	/**
 	 * Schreibanforderung
-	 * 
+	 *
 	 * @param s	CommandOutputStream
 	 */
 	public void askForWrite(final CommandOutputStream s) {
@@ -247,7 +247,7 @@ public abstract class BotComponent<M> {
 
 	/**
 	 * async Write-Stream setzen
-	 * 
+	 *
 	 * @param s	CommandOutputStream
 	 */
 	public void offerAsyncWriteStream(CommandOutputStream s) {
@@ -257,7 +257,7 @@ public abstract class BotComponent<M> {
 		((CanWriteAsynchronously)this).setAsyncWriteStream(s);
 	}
 
-	/** 
+	/**
 	 * @return Gibt den Namen der Komponente zurück
 	 */
 	public abstract String getName();

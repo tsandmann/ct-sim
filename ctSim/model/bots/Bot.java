@@ -29,59 +29,59 @@ public interface Bot {
 	 * @param buisitor	BotBuisitor
 	 */
 	public void accept(BotBuisitor buisitor);
-	
+
 	/**
 	 * @return Name des Bots
 	 */
 	public String toString();
-	
+
 	/**
 	 * @return Beschreibung des Bots
 	 */
 	public String getDescription();
-	
+
 	/**
 	 * @return Nummer des Bots
 	 */
 	public int getInstanceNumber();
-	
+
 	/**
 	 * View des Bots updaten
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	public void updateView() throws InterruptedException;
-	
+
 	/** Bot zerstören */
 	public void dispose();
-	
+
 	/**
 	 * Fügt einen Handler hinzu, der beim Ableben eines Bots gestartet wird
-	 * 
+	 *
 	 * @param runsWhenAObstDisposes
 	 */
 	public void addDisposeListener(Runnable runsWhenAObstDisposes);
-	
+
 	/**
 	 * Liefert den Controller zurück, der den Bot verwaltet
-	 * 
+	 *
 	 * @return Controller
 	 */
 	public Controller getController();
-	
+
 	/**
 	 * Setzt den Controller, der den Bot verwaltet
-	 * 
+	 *
 	 * @param controller	Der Controller
-	 * @throws ProtocolException 
+	 * @throws ProtocolException
 	 */
 	public void setController(Controller controller) throws ProtocolException;
-	
+
 	/**
 	 * @return Hat der Bot eine Logausgabe aktiviert?
 	 */
 	public boolean get_feature_log();
-	
+
 	/**
 	 * @return Hat der Bot eine Fernbedienung aktiviert?
 	 */
@@ -97,7 +97,7 @@ public interface Bot {
 	 */
 	public boolean get_feature_basic_program();
 
-	
+
 	/**
 	 * @return Hat der Bot die Kartographie aktiviert?
 	 */

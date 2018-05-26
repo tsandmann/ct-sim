@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util.xml;
@@ -93,7 +93,7 @@ import ctSim.util.Decoratoror;
  * </p>
  *
  * siehe javax.xml.xpath
- * 
+ *
  * @author Hendrik Krauß
  */
 public class XmlDocument {
@@ -138,9 +138,9 @@ public class XmlDocument {
 	 * 				Die XML-Datei, die geparst und validiert werden soll,
 	 * 				z.B. <code>new File("sachen/gemuese/gurken.xml")</code>.
 	 * @return Das Dokument
-	 * @throws SAXException 
-	 * @throws IOException 
-	 * @throws ParserConfigurationException 
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
 	 */
 	public static QueryableDocument parse(File fileToParse)
 	throws SAXException, IOException, ParserConfigurationException {
@@ -154,9 +154,9 @@ public class XmlDocument {
 	 * 				Name und ggf. Pfad der XML-Datei, die geparst und validiert werden soll,
 	 * 				z.B. "sachen/gemuese/gurken.xml".
 	 * @return Das Dokument
-	 * @throws SAXException 
-	 * @throws IOException 
-	 * @throws ParserConfigurationException 
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
 	 */
 	public static QueryableDocument parse(String fileToParse)
 		throws SAXException, IOException, ParserConfigurationException {
@@ -165,13 +165,13 @@ public class XmlDocument {
 
 	/**
 	 * Wie {@link #parse(java.io.File, java.lang.String)}, liest aber die Datei aus dem übergebenen InputStream.
-	 * 
-	 * @param documentStream 
-	 * @param baseDir 
+	 *
+	 * @param documentStream
+	 * @param baseDir
 	 * @return Das Dokument
-	 * @throws SAXException 
-	 * @throws IOException 
-	 * @throws ParserConfigurationException 
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
 	 */
 	public static QueryableDocument parse(
 		InputStream documentStream, String baseDir)
@@ -286,7 +286,7 @@ public class XmlDocument {
 
 		/**
 		 * Knoten vorhanden?
-		 * 
+		 *
 		 * @param <T>
 		 * @param xPathExpression
 		 * @param value
@@ -348,13 +348,13 @@ public class XmlDocument {
 		 * <strong>Beachten:</strong> Knoten müssen nicht Elemente sein; Attribute, CData-Abschnitte usw. sind
 		 * auch Knoten. Siehe {@link Node}.
 		 * </p>
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Die selektierten Knoten als {@link NodeList}, wie sie die Java-Plattform implementiert,
 		 * 			die aber auch {@link Iterable} ist. <code>for (Node n : document.getNodeList(...))</code> ist
 		 * 			also möglich. Gibt es im Dokument keine Knoten, die von dem XPath-Ausdruck selektiert werden,
 		 * 			wird eine NodeList zurückgegeben, die keine Knoten enthält.
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 */
 		public IterableNodeList getNodeList(String xPathExpression)
 		throws XPathExpressionException;
@@ -368,10 +368,10 @@ public class XmlDocument {
 		 * <strong>Beachten:</strong> Knoten müssen nicht Elemente sein; Attribute, CData-Abschnitte usw. sind
 		 * auch Knoten. Siehe {@link Node}.
 		 * </p>
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Knoten
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 */
 		public QueryableNode getNode(String xPathExpression)
 		throws XPathExpressionException;
@@ -396,10 +396,10 @@ public class XmlDocument {
 		 * Details zum Thema "string-value":
 		 * siehe <a href="http://www.w3.org/TR/xpath.html#data-model">XPath-Spezifikation Abschnitt 5</a>.
 		 * </p>
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return String
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 *
 		 * @see #getStringOrNull(String)
 		 */
@@ -411,10 +411,10 @@ public class XmlDocument {
 		 * den String in einen Double. Falls der übergebene XPath-Ausdruck keine Knoten selektiert, wird
 		 * {@code NaN} zurückgeliefert (d.h. {@code getNumber(...).isNaN() == true}).
 		 * <a href="http://www.w3.org/TR/xpath#function-number">Details zur Konvertierung in eine Zahl</a>
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Zahl
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 *
 		 * @see #getNumberOrNull(String)
 		 */
@@ -426,10 +426,10 @@ public class XmlDocument {
 		 * den String in einen Boolean. Falls der übergebene XPath-Ausdruck keine Knoten selektiert, wird
 		 * {@code false} zurückgeliefert.
 		 * <a href="http://www.w3.org/TR/xpath#function-boolean">Details zur Konvertierung in einen Boolean</a>
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Boolean
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 *
 		 * @see #getBooleanOrNull(String)
 		 */
@@ -440,10 +440,10 @@ public class XmlDocument {
 		 * Wie {@link #getString(String) getString()}, aber falls der übergebene XPath-Ausdruck keine Knoten
 		 * selektiert, wird {@code null} zurückgeliefert. So kann man auseinanderhalten, ob der Knoten nicht
 		 * existiert ({@code null}) oder ob er existiert, aber keinen Text enthält ("").
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return String / null
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 */
 		public String getStringOrNull(String xPathExpression)
 		throws XPathExpressionException;
@@ -452,10 +452,10 @@ public class XmlDocument {
 		 * Wie {@link #getNumber(String) getNumber()}, aber falls der übergebene XPath-Ausdruck keine Knoten
 		 * selektiert, wird {@code null} zurückgeliefert. So kann man auseinanderhalten, ob der Knoten nicht
 		 * existiert ({@code null}) oder ob er existiert, aber etwas anderes als eine Zahl enthält.
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Zahl / null
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 */
 		public Number getNumberOrNull(String xPathExpression)
 		throws XPathExpressionException;
@@ -464,10 +464,10 @@ public class XmlDocument {
 		 * Wie {@link #getBoolean(String) getBoolean()}, aber falls der übergebene XPath-Ausdruck keine Knoten
 		 * selektiert, wird {@code null} zurückgeliefert. So kann man auseinander halten, ob der Knoten nicht
 		 * existiert ({@code null}) oder ob er wirklich da ist und {@code false} enthält.
-		 * 
-		 * @param xPathExpression 
+		 *
+		 * @param xPathExpression
 		 * @return Boolean / null
-		 * @throws XPathExpressionException 
+		 * @throws XPathExpressionException
 		 */
 		public Boolean getBooleanOrNull(String xPathExpression)
 		throws XPathExpressionException;

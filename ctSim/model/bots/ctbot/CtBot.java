@@ -39,7 +39,7 @@ import ctSim.view.gui.ProgramViewer;
 
 /** Abstrakte Oberklasse für alle c't-Bots */
 public abstract class CtBot extends BasicBot {
-	
+
 	/** LED-Farben */
 	private static final Color[] ledColors = {
 		new Color(  0,  84, 255),	// blau
@@ -60,17 +60,17 @@ public abstract class CtBot extends BasicBot {
 
 	/** Bodenfreiheit des Bots [m] */
 	protected static final double BOT_GROUND_CLEARANCE = 0.015d;
-	
+
     /** Referenz eines ProgramViewers, der bei bei Bedarf ein RemoteCall-Ergebnis anzeigen kann */
 	protected ProgramViewer ablResult;
-	
+
 	/** Referenz zum Welcome-Receiver */
 	protected WelcomeReceiver welcomeReceiver = null;
-	
+
 	/**
-	 * Vorverarbeitung der Kommandos 
+	 * Vorverarbeitung der Kommandos
 	 * z.B. Weiterleiten von Kommandos für andere Bots Adressvergabe, etc.
-	 * 
+	 *
 	 * @param cmd	das Kommando
 	 * @return True, wenn das Kommando abgearbeitet wurde, sonst False
 	 * @throws IOException			falls Output-Stream.flush() fehlschlägt
@@ -154,10 +154,10 @@ public abstract class CtBot extends BasicBot {
 		return false;
 	}
 
-	
+
 	/**
 	 * Verarbeitet ein Kommando und leitet es an den angehängten Bot weiter
-	 * 
+	 *
 	 * @param command	das Kommando
 	 * @throws ProtocolException	wenn etwas nicht klappt
 	 */
@@ -165,22 +165,22 @@ public abstract class CtBot extends BasicBot {
 		if (!command.getTo().equals(this.getId()) && !command.getTo().equals(Command.getBroadcastId()))
 			throw new ProtocolException("Bot " + getId() + " hat ein Kommando "+command.toCompactString() +
 					" empfangen, dass nicht für ihn ist");
-		
+
 		if (getConnection() == null) {
 			throw new ProtocolException("Bot " + getId() + " hat gar keine Connection");
 		}
-		
+
 		// Wir werfen das Kommando direkt an den angehängten Bot
-		try { 
+		try {
 			getConnection().write(command);
 		} catch (IOException e) {
 			lg.warn("Es gab Probleme beim Erreichen des Bots");
 		}
 	}
-	
+
 	/**
 	 * Startet das Verhalten "name" per RemoteCall
-	 * 
+	 *
 	 * @param name	das zu startende Verhalten
 	 * @param param	Int-Parameter für das Verhalten (16 Bit)
 	 * @param ref	Referenz auf den ABL-Viewer, falls das Ergebnis dort angezeigt werden soll
@@ -205,10 +205,10 @@ public abstract class CtBot extends BasicBot {
 			}
 		}
 	}
-	
+
 	/**
 	 * Neuer Bot "name"
-	 * 
+	 *
 	 * @param name
 	 */
 	public CtBot(String name) {
@@ -241,7 +241,7 @@ public abstract class CtBot extends BasicBot {
 			new MapComponent(),
 			new RemoteCallCompnt()
 		);
-		
+
 		if (this instanceof RealCtBot || Config.getValue("LightSensors").equals("true")) {
 			components.add(new Sensors.Light(true), new Sensors.Light(false));
 		}
@@ -255,13 +255,13 @@ public abstract class CtBot extends BasicBot {
 			String ledName = "LED " + (i + 1) + (i == 1 ? " (vorn rechts)" : i == 0 ? " (vorn links)" : "");
 			components.add(new Actuators.Led(ledName, i, ledColors[i]));
 		}
-		
+
 		addDisposeListener(new Runnable() {
 			public void run() {
 				sendShutdown();
 			}
 		});
-		
+
 		ablResult = null;
 	}
 
@@ -279,7 +279,7 @@ public abstract class CtBot extends BasicBot {
 			// egal
 		}
 	}
-	
+
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_log()
 	 */
@@ -290,7 +290,7 @@ public abstract class CtBot extends BasicBot {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_rc5()
 	 */
@@ -301,7 +301,7 @@ public abstract class CtBot extends BasicBot {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_abl_program()
 	 */
@@ -323,7 +323,7 @@ public abstract class CtBot extends BasicBot {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * @see ctSim.model.bots.Bot#get_feature_map()
 	 */

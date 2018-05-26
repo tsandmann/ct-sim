@@ -74,7 +74,7 @@ public class MapViewer extends JPanel {
 
 		/**
 		 * Button-Klasse
-		 * 
+		 *
 		 * @param label			Name
 		 * @param toolTipText	Tooltip
 		 * @param icon			Icon
@@ -91,15 +91,15 @@ public class MapViewer extends JPanel {
 			});
 		}
 	}
-	
+
 	/** Filter für den Dialog zur Dateiauswahl */
 	class PNGFilter extends FileFilter {
 	    /**
 	     * Ermittelt die Dateinamenerweiterung
-	     * 
+	     *
 	     * @param f	Datei
 	     * @return Erweiterung
-	     */  
+	     */
 	    public String getExtension(File f) {
 	        String ext = null;
 	        String s = f.getName();
@@ -110,7 +110,7 @@ public class MapViewer extends JPanel {
 	        }
 	        return ext;
 	    }
-		
+
 	    /**
 	     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
 	     */
@@ -139,8 +139,8 @@ public class MapViewer extends JPanel {
 	    public String getDescription() {
 	    	return "PNG-Bilder";
 	    }
-	}	
-	
+	}
+
 	/** Fordert die komplette Karte neu an */
 	private final Runnable onReload = new Runnable() {
 		public void run() {
@@ -151,7 +151,7 @@ public class MapViewer extends JPanel {
 			}
 		}
 	};
-	
+
 	/** Speichert die Karte als png-Bild */
 	private final Runnable onSave = new Runnable() {
 		public void run() {
@@ -176,28 +176,28 @@ public class MapViewer extends JPanel {
 			}
 		}
 	};
-	
+
 	/**
 	 * Erzeugt das Map-Fenster
-	 * 
+	 *
 	 * @param map	Map-Komponenten, die vom Fenster verwendet werden soll
 	 * @param bot	Bot-Referenz
 	 */
 	public MapViewer(MapComponent map, Bot bot) {
 		mapCompnt = map;
 		imageViewer = new ImageViewer(mapCompnt);
-	
+
 		setLayout(new BorderLayout());
-		
+
 		/* Button bauen */
 		JButton save = new Button("speichern", "Karte als png-Bild speichern", null, onSave);
 		JButton reload = new Button("neu laden", "Karte komplett (neu) übertragen", null, onReload);
-		
+
 		/* Toolbar bauen */
 		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		toolbar.add(reload);
 		toolbar.add(save);
-		
+
 		/* Gesamtgröße setzen */
 		scrollPane = new JScrollPane(imageViewer);
 		scrollPane.setPreferredSize(new Dimension(500, 600));
@@ -208,16 +208,16 @@ public class MapViewer extends JPanel {
 				getInsets().right + 20;
 		int h = getInsets().top +
 				scrollPane.getInsets().top +
-				scrollPane.getPreferredSize().height + 
+				scrollPane.getPreferredSize().height +
 				scrollPane.getInsets().bottom +
 				getInsets().bottom + toolbar.getPreferredSize().height;
 		setPreferredSize(new Dimension(w, h));
-		
+
 		/* Ausliefern */
 		add(scrollPane, BorderLayout.CENTER);
 		add(toolbar, BorderLayout.SOUTH);
 	}
-	
+
 	/** Map-Anzeige */
 	public static class ImageViewer extends JPanel implements Runnable {
 		/** UID */
@@ -242,11 +242,11 @@ public class MapViewer extends JPanel {
 		private final Object circlesMutex;
 		/** Bot-Position */
 		private final Point3i botPos;
-		
+
 		/**
 		 * @param c	Map-Komponente
 		 */
-		public ImageViewer(MapComponent c) {			
+		public ImageViewer(MapComponent c) {
 			this.image = c.getImg();
 			this.lines = c.getMapLines();
 			this.linesMutex = c.getLinesMutex();
@@ -261,14 +261,14 @@ public class MapViewer extends JPanel {
 		}
 
 		/** Methode einer Swing-Komponente, aber thread-sicher */
-		public synchronized void run() {			
+		public synchronized void run() {
 			/* Bereich um den Bot in den sichtbaren Bereich scrollen */
 			this.scrollPosition.x = Misc.clamp(botPos.x - 125, targetWidth);
 			this.scrollPosition.y = Misc.clamp(botPos.y - 125, targetHeight);
 			scrollRectToVisible(this.scrollPosition);
 			repaint();
 		}
-		
+
 		/**
 		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 		 */
@@ -311,7 +311,7 @@ public class MapViewer extends JPanel {
 					g.drawArc(x, y, 2 * radius, 2 * radius, 0, 360);
 				}
 			}
-			
+
 			/* Linien einzeichnen */
 			if (lines != null) {
 				int n;
@@ -342,7 +342,7 @@ public class MapViewer extends JPanel {
 					g.setColor(color);
 					g.drawLine(li.x1, li.y1, li.x2, li.y2);
 				}
-				
+
 				/* Bot-Position einzeichnen */
 				g.setColor(botColor);
 				g.fillArc(botPos.x - 7, botPos.y - 7, 14, 14, botPos.z + 120, 300);
@@ -361,7 +361,7 @@ public class MapViewer extends JPanel {
 
 	/**
 	 * Baut den Viewer
-	 * 
+	 *
 	 * @param compnt	Map-Komponente
 	 */
 	public void buisitMapViewer(final MapComponent compnt) {

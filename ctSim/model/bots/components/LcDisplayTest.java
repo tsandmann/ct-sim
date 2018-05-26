@@ -51,7 +51,7 @@ public class LcDisplayTest extends LcDisplay {
 
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -59,14 +59,14 @@ public class LcDisplayTest extends LcDisplay {
 		clearModel(getExternalModel());
 		assertEquals(twentyFourLines, getAllText(getExternalModel()));
 	}
-	
+
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void internalModelIsDifferentFromExternalOne() 
+	public void internalModelIsDifferentFromExternalOne()
 	throws Exception {
 		clearModel(getExternalModel());
 		setCursor(3, 3);
@@ -77,10 +77,10 @@ public class LcDisplayTest extends LcDisplay {
 
 	/** Testdaten */
 	private String insertion = "beeblebrox";
-	
+
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -92,10 +92,10 @@ public class LcDisplayTest extends LcDisplay {
 		String expected = twentyFourLines.replaceFirst("^ {" + insertion.length() + "}", insertion);
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -109,10 +109,10 @@ public class LcDisplayTest extends LcDisplay {
 				expected.substring(10 + insertion.length(), expected.length());
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -126,10 +126,10 @@ public class LcDisplayTest extends LcDisplay {
 				twentyFourLines.substring(43*8 + insertion.length(), twentyFourLines.length());
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * Testcode
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -142,10 +142,10 @@ public class LcDisplayTest extends LcDisplay {
 		String expected = twentyFourLines.substring(0, 43*23 + 38) + insertion.substring(0, 4);
 		assertEquals(expected, getExText());
 	}
-	
+
 	/**
 	 * @return Text
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	private String getExText() throws Exception {

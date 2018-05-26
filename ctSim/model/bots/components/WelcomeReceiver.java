@@ -32,28 +32,28 @@ import ctSim.util.BotID;
 public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuator, CanRead {
 	/** Subcode */
 	private final SubCode expectedForWelcome;
-	
+
 	/** Log-Ausgabe */
 	private boolean feature_log = false;
-	
+
 	/** Fernbedienung */
 	private boolean feature_rc5 = false;
-	
+
 	/** ABL Programm-Empfang */
 	private boolean feature_abl_program = false;
-	
+
 	/** Basic Programm-Empfang */
 	private boolean feature_basic_program = false;
-	
+
 	/** Kartographie */
 	private boolean feature_map = false;
-	
+
 	/** RemoteCalls */
 	private boolean feature_remotecall = false;
-	
+
 	/**
 	 * Handshake für Connection
-	 * 
+	 *
 	 * @param expectedForWelcome	Subcode für neue Connection
 	 */
 	public WelcomeReceiver(SubCode expectedForWelcome) {
@@ -81,7 +81,7 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	 */
 	public void readFrom(Command c) throws ProtocolException {
 		if (! c.has(expectedForWelcome)) {
-			throw new ProtocolException("Willkommenskommando empfangen, das nicht den erwarteten Subcode " + 
+			throw new ProtocolException("Willkommenskommando empfangen, das nicht den erwarteten Subcode " +
 					expectedForWelcome + " hatte");
 		}
 	}
@@ -101,25 +101,25 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 	public String getName() {
 		return "Bot-ID";
 	}
-	
+
 	/**
 	 * Setzt die Features des Bots. Codierung gemäß ct-Bot/command.c
-	 * 
+	 *
 	 * @param features	Alle Features in einen integer gepackt
 	 */
 	public void setFeatures(int features) {
 		if ((features & 1) == 1) {
 			feature_log = true;
 		}
-		
+
 		if ((features & 2) == 2) {
 			feature_rc5 = true;
 		}
-		
+
 		if ((features & 4) == 4) {
 			feature_abl_program = true;
 		}
-		
+
 		if ((features & 8) == 8) {
 			feature_basic_program = true;
 		}
@@ -130,30 +130,30 @@ public class WelcomeReceiver extends BotComponent<BotID> implements SimpleActuat
 
 		if ((features & 32) == 32) {
 			feature_remotecall = true;
-		}	
+		}
 	}
-	
+
 	/**
 	 * @return Hat der Bot eine Logausgabe aktiviert?
 	 */
 	public boolean get_feature_log() {
 		return feature_log;
 	}
-	
+
 	/**
 	 * @return Hat der Bot eine Fernbedienung aktiviert?
 	 */
 	public boolean get_feature_rc5() {
 		return feature_rc5;
 	}
-	
+
 	/**
 	 * @return Kann der Bot ABL-Programme empfangen?
 	 */
 	public boolean get_feature_abl_program() {
 		return feature_abl_program;
 	}
-	
+
 	/**
 	 * @return Kann der Bot Basic-Programme empfangen?
 	 */

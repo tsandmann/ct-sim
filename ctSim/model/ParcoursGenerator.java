@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.model;
@@ -23,7 +23,7 @@ import java.util.Random;
 
 /**
  * Parcours-Generator für den c't-Sim-Wettbewerb
- * 
+ *
  * @author Peter König (pek@heise.de)
  */
 
@@ -183,7 +183,7 @@ public class ParcoursGenerator {
 	/**
 	 * Diese main-Methode dient nur dem Debugging. Sie generiert 20 Parcours mit zufälligen Parametern
 	 * und gibt sie auf der Konsole aus.
-	 * 
+	 *
 	 * @param args	Keine Argumente
 	 */
 	public static void main(String[] args) {
@@ -197,7 +197,7 @@ public class ParcoursGenerator {
 	 * zufällig gesetzt: Breite zwischen 12 und 30 Feldern; Höhe zwischen 12 und 30 Feldern;
 	 * wallRoughness zwischen 2 und 6; innerRoughness zwischen 7 und 12; twirling zwischen 2 und 5;
 	 * perforation zwischen 6 und 20.
-	 * 
+	 *
 	 * @return Der Parcours als XML-String
 	 */
 	public static String generateParc() {
@@ -216,7 +216,7 @@ public class ParcoursGenerator {
 
 	/**
 	 * Diese Methode generiert das eigentliche Labyrinth.
-	 * 
+	 *
 	 * @param wi	Halbe Breite des Parcours in Feldern
 	 * @param he	Höhe des Parcours in Feldern
 	 * @param wr	Hindernisdichte an der Wand; klein = rauh
@@ -237,7 +237,7 @@ public class ParcoursGenerator {
 
 		/*
 		 * Zunächst wird nur die halbe Karte gebaut.
-		 * 
+		 *
 		 * Erste Dimension ist die Zeilennummer und die Zweite die Spaltennummer,
 		 * daher erst Höhe und dann Breite:
 		 */
@@ -322,7 +322,7 @@ public class ParcoursGenerator {
 	/**
 	 * Fügt ein neues Hindernis an einen zufälligen Ort direkt an der betreffenden Wand hinzu, sofern
 	 * dort Platz genug vorhanden ist.
-	 * 
+	 *
 	 * @param wall	die Wand, die ein Hindernis erhalten soll (N, S, W, E)
 	 */
 	private static void addWallObstacle(char wall) {
@@ -371,7 +371,7 @@ public class ParcoursGenerator {
 	/**
 	 * "Verschnörkelt" ein Hindernis in zufällige Richtung.
 	 * Die Methode ruft sich rekursiv selbst auf.
-	 * 
+	 *
 	 * @param row			Zeile der Startkoordinate
 	 * @param col			Spalte der Startkoordinate
 	 * @param twirlsLeft	Wie viele weitere Segmente (rekursive Methodenaufrufe) noch folgen (dürfen)
@@ -388,7 +388,7 @@ public class ParcoursGenerator {
 	/**
 	 * "Verschnörkelt" ein Hindernis in zufällige Richtung.
 	 * Die Methode ruft sich rekursiv selbst auf.
-	 * 
+	 *
 	 * @param row			Zeile der Startkoordinate
 	 * @param col			Spalte der Startkoordinate
 	 * @param dir			Richtung (0=N, 1=O, 2=S, 3=W)
@@ -409,7 +409,7 @@ public class ParcoursGenerator {
 
 		// falls das nächste Feld in der gewünschten Richtung Boden ist...
 		if (testNextFields(row, col, dir, 1)) {
-			/* 
+			/*
 			 * ... Schnörkel so lange verlängern, bis nicht mehr genügend Raum da ist
 			 * oder bis die gewünschte Länge erreicht ist:
 			 */
@@ -444,7 +444,7 @@ public class ParcoursGenerator {
 	 * einer bestimmten Tiefe nur Bodenfelder vorkommen. Es wird auch in die
 	 * Breite geprüft: bei Tiefe 1 ist der geprüfte Streifen 1 Feld breit, bei
 	 * 2 3 Felder und bei 3 oder mehr 5 Felder.
-	 * 
+	 *
 	 * @param row	Zeile des Startfelds
 	 * @param col	Spalte des Startfelds
 	 * @param depth	Suchtiefe in Feldern
@@ -460,7 +460,7 @@ public class ParcoursGenerator {
 	 * bestimmten Tiefe nur Bodenfelder vorkommen. Es wird auch in die Breite
 	 * geprüft: bei Tiefe 1 ist der geprüfte Streifen 1 Feld breit, bei 2 3
 	 * Felder und bei 3 oder mehr 5 Felder.
-	 * 
+	 *
 	 * @param row	Zeile des Startfelds
 	 * @param col	Spalte des Startfelds
 	 * @param dir	Richtung (0=N, 1=O, 2=S, 3=W)
@@ -506,7 +506,7 @@ public class ParcoursGenerator {
 				result = false;
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
-			/* 
+			/*
 			 * Prüfung freier Felder hat Grenzen des Parcours überschritten,
 			 * damit ist definitiv nicht genügend Platz!
 			 */
@@ -518,7 +518,7 @@ public class ParcoursGenerator {
 	/**
 	 * Gibt die Koordinaten eines Felds zurück,
 	 * das in angegebener Richtung vom übergebenen Feld liegt.
-	 * 
+	 *
 	 * @param row	Die Zeile des Ausgangsfelds
 	 * @param col	Die Spalte des Ausgangsfelds
 	 * @param dir	Richtung (0=N, 1=O, 2=S, 3=W)
@@ -613,7 +613,7 @@ public class ParcoursGenerator {
 
 	/**
 	 * Gibt einen Parcours auf der Konsole aus.
-	 * 
+	 *
 	 * @param step	Bezeichnung des Generierungsschrittes für die Fehlersuche
 	 * @param parc	Der Parcours
 	 */
@@ -625,7 +625,7 @@ public class ParcoursGenerator {
 
 	/**
 	 * Formatiert einen Parcours für die Ausgabe auf der Konsole
-	 * 
+	 *
 	 * @param parc	Der Parcours
 	 * @return Der Ausgabestring
 	 */
@@ -640,9 +640,9 @@ public class ParcoursGenerator {
 		return result.toString();
 	}
 
-	/** 
+	/**
 	 * Schreibt einen Parcours in einen XML-String
-	 * 
+	 *
 	 * @param parc	Der Parcours
 	 * @return Der XML-String
 	 */

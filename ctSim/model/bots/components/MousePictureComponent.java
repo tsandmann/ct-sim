@@ -87,7 +87,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/**
 	 * Bild anfordern
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public synchronized void requestPicture() throws IOException {
@@ -132,7 +132,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Sind die übergebenen Parameter außerhalb des Wertebereichs [0;255], wird geclampt
 	 * (255 wenn zu groß, 0 wenn zu klein).
 	 * </p>
-	 * 
+	 *
 	 * @param r	rot
 	 * @param g	grün
 	 * @param b	blau
@@ -154,7 +154,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 *   2  20 ... ...
 	 *   1  19 ... 307
 	 * </pre>
-	 * 
+	 *
 	 * @param c	Command
 	 */
 	public synchronized void readFrom(Command c) {
@@ -189,10 +189,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * No-op: Wir implementieren dies, weil wir laut Interface müssen, aber wir brauchen es nicht,
 	 * weil wir ja {@link #askForWrite(CommandOutputStream) askForWrite()} überschrieben haben.
-	 * 
+	 *
 	 * @param c	Command
 	 */
-	public void writeTo(Command c) { 
+	public void writeTo(Command c) {
 		// No-op
 	}
 
@@ -200,17 +200,17 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @return Breite
 	 */
 	public int getWidth() { return WIDTH; }
-	
+
 	/**
 	 * @return Höhe
 	 */
 	public int getHeight() { return HEIGHT; }
-	
+
 	/**
 	 * @see ctSim.model.bots.components.BotComponent.CanRead#getHotCmdCode()
 	 */
 	public Code getHotCmdCode() { return Code.SENS_MOUSE_PICTURE; }
-	
+
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */

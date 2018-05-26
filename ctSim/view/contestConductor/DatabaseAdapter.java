@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.contestConductor;
@@ -115,7 +115,7 @@ class DatabaseAdapter {
 
 		/**
 		 * Zustand des Spiels
-		 * 
+		 *
 		 * @param representationInDb	Zustand
 		 */
 		GameState(String representationInDb) {
@@ -151,14 +151,14 @@ class DatabaseAdapter {
 
 	/** Statement-Cache */
 	protected StatementCache statementCache = new StatementCache();
-	
+
 	/** Datenbank */
 	private ContestDatabase connFactory;
 
 
 	/**
 	 * DB-Verbindung
-	 * 
+	 *
 	 * @param connFactory	DB
 	 */
 	protected DatabaseAdapter(ContestDatabase connFactory) {
@@ -173,7 +173,7 @@ class DatabaseAdapter {
 
 	/**
 	 * Connection setzen
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	protected void acquireConn() throws SQLException {
@@ -260,7 +260,7 @@ class DatabaseAdapter {
 	 * 			wie es ein Aufruf von executeQuery mit demselben SQL-Befehl zurückgegeben hätte. Falls der
 	 * 			genannte Parameter mit "insert", "update" oder "delete" beginnt, wird <code>null</code>
 	 * 			zurückgegeben.
-	 * @throws SQLException 
+	 * @throws SQLException
 	 * @throws IllegalArgumentException	falls der Parameter <code>sqlWithParams</code> weder mit SELECT
 	 * 			noch mit INSERT, UPDATE oder DELETE beginnt. (Groß-/Kleinschreibung irrelevant.)
 	 */
@@ -287,7 +287,7 @@ class DatabaseAdapter {
 
 	/**
 	 * Führt ein SQL-Kommando aus
-	 * 
+	 *
 	 * @param sqlWithInParams	Kommando
 	 * @param inValues			Werte
 	 * @return Result
@@ -315,7 +315,7 @@ class DatabaseAdapter {
      * 					Falls <code>null</code>, tut die Methode nichts.
      * @param levelId	das Level, in das der Bot platziert werden soll
      * @param gameId	die Nummer des Spiels im jeweiligen Level
-	 * @throws SQLException 
+	 * @throws SQLException
      * @throws TournamentPlanException	wenn für das übergebene Spiel bereits zwei Spieler eingetragen sind
      */
     public void placeBot(Integer botId, int levelId, int gameId) throws SQLException, TournamentPlanException {

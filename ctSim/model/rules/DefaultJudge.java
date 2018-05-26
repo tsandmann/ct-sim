@@ -29,7 +29,7 @@ public class DefaultJudge extends Judge {
 
 	/**
 	 * Der Konstruktor
-	 * 
+	 *
 	 * @param ctrl	der DefaultController
 	 */
 	public DefaultJudge(DefaultController ctrl) {

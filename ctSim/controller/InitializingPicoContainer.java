@@ -37,9 +37,9 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
     }
 
     /**
-     * Initialisierter Pico-Container 
-     * 
-     * @param parent 
+     * Initialisierter Pico-Container
+     *
+     * @param parent
      */
 	public InitializingPicoContainer(PicoContainer parent) {
 		super(parent);
@@ -47,7 +47,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 
 	/**
 	 * Getter
-	 * 
+	 *
 	 * @param <T>
 	 * @param componentKey
 	 * @return T
@@ -58,7 +58,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 
 	/**
 	 * Klasse initialisiert?
-	 * 
+	 *
 	 * @param classToInitialize Klasse
 	 */
 	private void ensureInitialized(Class<?> classToInitialize) {

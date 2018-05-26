@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -52,10 +52,10 @@ public class AndEverything extends GuiBotBuisitor {
 		setBorder(BorderFactory.createTitledBorder("Display & Remote-Control"));
 	}
 
-	/** 
-	 * Erstellt die Text-Area, die das LCD des Bot zeigt 
-	 * 
-	 * @param d	Display 
+	/**
+	 * Erstellt die Text-Area, die das LCD des Bot zeigt
+	 *
+	 * @param d	Display
 	 */
 	public void buisitLcdViewer(Actuators.LcDisplay d) {
 		JTextArea t = new JTextArea(d.getExternalModel(), null, d.getNumRows(), d.getNumCols());
@@ -80,9 +80,9 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
-	/** 
+	/**
 	 * Baut den Knopf, der zum Log-Fenster führt
-	 * 
+	 *
 	 * @param log	Log
 	 * @param bot	Bot
 	 */
@@ -95,9 +95,9 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
-	/** 
+	/**
 	 * Baut den Knopf, der zum Fernbedienungs-Fenster führt
-	 * 
+	 *
 	 * @param s		RC5-Control
 	 * @param bot	Bot
 	 */
@@ -110,9 +110,9 @@ public class AndEverything extends GuiBotBuisitor {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
 
-	/** 
+	/**
 	 * Baut den Knopf, der zum Remote-Call-Fenster führt
-	 * 
+	 *
 	 * @param c		Remote-Call Komponente
 	 * @param bot	Bot
 	 */
@@ -124,10 +124,10 @@ public class AndEverything extends GuiBotBuisitor {
 			bot.get_feature_remotecall()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
-	
-	/** 
+
+	/**
 	 * Baut den Knopf, der das Map-Fenster anzeigt
-	 * 
+	 *
 	 * @param map	Map-Komponente
 	 * @param bot	Bot
 	 */
@@ -139,10 +139,10 @@ public class AndEverything extends GuiBotBuisitor {
 			bot.get_feature_map()));
 		add(Box.createRigidArea(new Dimension(0, 5)));
 	}
-	
-	/** 
+
+	/**
 	 * Baut den Knopf, der zum Progamm-Fenster führt
-	 * 
+	 *
 	 * @param program	Programm-Komponente
 	 * @param bot		Bot
 	 */

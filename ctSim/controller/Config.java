@@ -55,7 +55,7 @@ public class Config {
 
 		/**
 		 * Neues Dateihandle
-		 * 
+		 *
 		 * @param pathAndName	Pfad
 		 */
 		public SourceFile(String pathAndName) {
@@ -124,11 +124,11 @@ public class Config {
 	/** Icons */
 	@SuppressWarnings("unused")
 	private static IconProvider icons;
-	
+
 	/**
 	 * Lädt die <code><parameter></code>-Tags aus der Konfigurationsdatei des Sims. Die Werte der Tags
 	 * sind dann mittels {@link #getValue(String)} verfügbar.
-	 * 
+	 *
 	 * @param file	Konfigurationsdatei dem von "config/config.dtd" vorgeschriebenen XML-Format.
 	 * @throws ParserConfigurationException
 	 * @throws IOException
@@ -149,7 +149,7 @@ public class Config {
 
 	/**
 	 * Lädt Icons
-	 * 
+	 *
 	 * @param iconsBaseDirectory	Verzeichnis
 	 * @throws NullPointerException
 	 * @throws FileNotFoundException
@@ -199,7 +199,7 @@ public class Config {
 		if (u == null)
 			return new ImageIcon();	// leeres Icon
 		else
-			return new ImageIcon(u);		
+			return new ImageIcon(u);
 	}
 
 	/** HashMap für Plain-Parameter */
@@ -210,7 +210,7 @@ public class Config {
 		/**
 		 * Lädt die <code><parameter></code>-Tags aus der Konfigurationsdatei des Sims.
 		 * Die Werte der Tags sind dann mittels get(String) verfügbar.
-		 * 
+		 *
 		 * @param doc	Config-Dokument
 		 */
 		PlainParameters(QueryableDocument doc) {
@@ -224,14 +224,14 @@ public class Config {
 			try {
 				for(QueryableNode n : doc.getNodeList("/ct-sim/parameter")) {
 					String parmOs = n.getString("@os").toLowerCase();
-					/* 
+					/*
 					 * Beispiele für os.name: "Windows XP", "Linux", "Mac OS X"
 					 * Siehe http://tolstoy.com/samizdat/sysprops.html
 					 */
 					String currentOs = System.getProperty("os.name")
 						.toLowerCase();
 
-					/* 
+					/*
 					 * Attribut os nicht vorhanden (= alle Betriebsysteme), oder vorhanden und System
 					 * passt startsWith() damit "Windows" in der ct-sim.xml das von System.getProperty()
 					 * gelieferte "Windows XP" matcht
@@ -261,7 +261,7 @@ public class Config {
 
 			/**
 			 * Neue Appearance
-			 * 
+			 *
 			 * @param botType			Bot-Typ
 			 * @param appearanceType	Appearance
 			 */
@@ -273,7 +273,7 @@ public class Config {
 
 			/**
 			 * Wichtig, weil wir es als Schlüssel in der Map verwenden
-			 * 
+			 *
 			 * @see java.lang.Object#equals(java.lang.Object)
 			 */
 			@Override
@@ -295,7 +295,7 @@ public class Config {
 			/**
 			 * Wichtig, weil wir es als Schlüssel in der Map verwenden;
 			 * Implementiert nach Josh Bloch: "Effective Java (Third Edition)", Addison-Wesley, 2018, Kap 3
-			 * 
+			 *
 			 * @see java.lang.Object#hashCode()
 			 */
 			@Override
@@ -308,7 +308,7 @@ public class Config {
 
 			/**
 			 * Hashwert des Objekts berechnen
-			 * 
+			 *
 			 * @param o	Objekt
 			 * @return Hashwert
 			 */
@@ -345,7 +345,7 @@ public class Config {
 
 		/**
 		 * Lädt Appearances
-		 * 
+		 *
 		 * @param botTag	Tag
 		 * @param botType	Typ
 		 * @throws XPathExpressionException
@@ -385,7 +385,7 @@ public class Config {
 		}
 
 		// Das alte Format erlaubte z.B. "CtBotSimTcp_3"; probieren wir es ohne Unterstrich und Nummer
-		
+
 		/**
 		 * @param classNameFromXml	Klasse als XML
 		 * @return Klasse
@@ -403,7 +403,7 @@ public class Config {
 
 		/**
 		 * Fügt eine Appearance hinzu
-		 * 
+		 *
 		 * @param key	Schlüssel
 		 * @param value	Farbe
 		 */
@@ -460,7 +460,7 @@ public class Config {
 
 		/**
 		 * Parameter-Typ
-		 * 
+		 *
 		 * @param name	Name
 		 * @param type	Typ
 		 */

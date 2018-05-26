@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.model.bots.components;
@@ -35,14 +35,14 @@ import java.util.Vector;
  * in einer Einheit angegeben werden, die hinreichend fein ist (Distanzsensoren in cm, Abgrundsensoren
  * vielleicht in mm). Die Sensor-Output-Daten dürfen in Gleitkommazahlen angegeben werden (allerdings
  * liefern viele Sensoren natürlich ebenfalls ganzzahlige Werte).
- * 
+ *
  * @author p-king
- * 
+ *
  */
 
 public class Characteristic {
 
-	/** 
+	/**
 	 * Das Array mit ausgewählten Messgrößen (M) und Sensordaten (S), Format:
 	 * M1, S1, M2, S2 .... wobei Mx ganzzahlige, positive Werte sind und M(x+1) > Mx sein muss
 	 * (Lücken sind aber erlaubt). Sx sind die Sensordaten als Gleitkommazahlen (floats).
@@ -54,16 +54,16 @@ public class Characteristic {
 	 * die Funktion der Mx-Werte. Diese sind hier lückenlos, Zwischenwerte werden extrapoliert.
 	 */
 	private float[] lookup;
-	
+
 	/** Kopie der Lookup-Tables, der auf ganze Zahlen gerundete Sensorwerte zurückgibt */
 	private int[] intLookup;
 
 	/** Sensordatum für alle Messgrößen ausserhalb der Kennlinie */
-	private float INF;	
-	
+	private float INF;
+
 	/**
 	 * Main-Methode; nur zum Testen
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -76,7 +76,7 @@ public class Characteristic {
 			}
 		}
 	}
-	
+
 	/**
 	 * @param filename	Pfad zur charac-Datei
 	 * @param inf		Sensordatum für Messgrößen außerhalb der Kennlinie
@@ -105,15 +105,15 @@ public class Characteristic {
 		} catch (IOException e1) {
 			System.err.println("I/O-Fehler");
 		}
-		
-		Number[] charac = csv2array(c); 
+
+		Number[] charac = csv2array(c);
 		// Numbers in primitive floats verwandeln:
-		characteristic = new float[charac.length]; 
+		characteristic = new float[charac.length];
 		for (int i = 0; i < charac.length; i++) {
 			characteristic[i] = charac[i].floatValue();
 		}
-		
-		/* 
+
+		/*
 		 * Lookup-Table hat so viele Stellen wie die letzte Messgröße (in der vorletzten Stelle der
 		 * Kennlinie) angibt - natürlich plus eine für den 0-Index:
 		 */
@@ -130,7 +130,7 @@ public class Characteristic {
 			int firMea = (int) Math.floor(characteristic[i]);
 			// Wert am ersten Index eintragen:
 			lookup[firMea] = characteristic[i + 1];
-			try {	// Klappt nicht, wenn schon das Ende erreicht ist.			
+			try {	// Klappt nicht, wenn schon das Ende erreicht ist.
 				int secMea = (int) Math.floor(characteristic[i + 2]);
 				// Wie viele Schritte lassen die Messgrößen aus?
 				int diff = secMea - firMea;
@@ -148,20 +148,20 @@ public class Characteristic {
 		}
 
 		// Es wird eine zweite Lookup-Table erstellt, für Sensorwerte, die nur aus ganzen Zahlen bestehen:
-		intLookup = new int[lookup.length]; 
+		intLookup = new int[lookup.length];
 		for (int i = 0; i < lookup.length; i++) {
 			intLookup[i] = Math.round(lookup[i]);
 		}
-//		printLookup();		
+//		printLookup();
 	}
-	
+
 	/**
 	 * Der Konstruktor errechnet aus der lückenhaften Stützwerttabelle die komplette Lookup-Table mit
 	 * Zwischenwerten für alle ganzzahligen Messgrößen im Bereich der Kennlinie
-	 * 
+	 *
 	 * @param file	Eine Textdatei mit der Stützwerttabelle; Format: Messgröße (int&gt;=0) \t resultierendes
 	 * 				Sensordatum (float) \n Messgrößen aufsteigend, aber nicht zwingend lückenlos
-	 * @param inf	Sensordatum für Messgrößen außerhalb der Kennlinie	  
+	 * @param inf	Sensordatum für Messgrößen außerhalb der Kennlinie
 	 */
 	public Characteristic(File file, float inf) {
 		// Wert außerhalb des Messbereichs:
@@ -174,16 +174,16 @@ public class Characteristic {
 			System.err.println("Kennlinien-Datei nicht gefunden");
 		} catch (IOException e1) {
 			System.err.println("I/O-Fehler");
-		}			 
-		
-		Number[] charac = csv2array(c); 
+		}
+
+		Number[] charac = csv2array(c);
 		// Numbers in primitive floats verwandeln:
-		characteristic = new float[charac.length]; 
+		characteristic = new float[charac.length];
 		for (int i = 0; i < charac.length; i++) {
 			characteristic[i] = charac[i].floatValue();
 		}
-		
-		/* 
+
+		/*
 		 * Lookup-Table hat so viele Stellen wie die letzte Messgröße (in der vorletzten Stelle der
 		 * Kennlinie) angibt - natürlich plus eine für den 0-Index:
 		 */
@@ -196,7 +196,7 @@ public class Characteristic {
 		}
 		// ... dann jeweils in Zweierschritten voran:
 		for (int i = 0; i < characteristic.length; i += 2) {
-			// zwei aufeinanderfolgende Messgrößen heraussuchen:	
+			// zwei aufeinanderfolgende Messgrößen heraussuchen:
 			int firMea = (int) Math.floor(characteristic[i]);
 			// Wert am ersten Index eintragen:
 			lookup[firMea] = characteristic[i + 1];
@@ -218,7 +218,7 @@ public class Characteristic {
 		}
 
 		// Es wird eine zweite Lookup-Table erstellt, für Sensorwerte, die nur aus ganzen Zahlen bestehen:
-		intLookup = new int[lookup.length]; 
+		intLookup = new int[lookup.length];
 		for (int i = 0; i < lookup.length; i++) {
 			intLookup[i] = Math.round(lookup[i]);
 		}
@@ -229,7 +229,7 @@ public class Characteristic {
 	 * Gibt zur übergebenen Messgröße den passenden Sensorwert zurück.
 	 * Präzise Funktion, die bei Messgrößen zwischen ganzen Zahlen weitere Zwischenwerte berechnet.
 	 * Nur sinnvoll bei Sensoren, die nicht nur ganzzahlige Messwerte liefern
-	 * 
+	 *
 	 * @param measure	Die Messgröße, aufgrund derer der Sensor seinen Wert erzeugt
 	 * 					(z.B. die Distanz bei Distanzsensoren)
 	 * @return Das Sensordatum laut Kennlinie, ist eine ganze Zahl
@@ -254,7 +254,7 @@ public class Characteristic {
 		return data;
 	}
 
-	
+
 	/** Schreibt die Lookup-Tables zum Debuggen auf die Konsole */
 	@SuppressWarnings("unused")
 	private void printLookup() {
@@ -266,7 +266,7 @@ public class Characteristic {
 
 	/**
 	 * Zerlegt einen CSV-String und schreibt alle gefundenen Zahlenwerte in ein Array
-	 * 
+	 *
 	 * @param input	der zu zerlegende String, Einzelteile durch ";" getrennt
 	 * @return Das Array
 	 */
@@ -279,10 +279,10 @@ public class Characteristic {
 				curr = new Double(st.nextToken());
 				num.add(curr);
 			} catch (NumberFormatException e) {
-				// alles auslassen, was keine Zahl ist 
+				// alles auslassen, was keine Zahl ist
 			}
 		}
-		
+
 		Number[] result = new Number[num.size()];
 		for (int i = 0; i < num.size(); i++) {
 			result[i] = num.elementAt(i);
@@ -292,7 +292,7 @@ public class Characteristic {
 
 	/**
 	 * Liest den Inhalt einer Datei und gibt ihn als String zurück
-	 * 
+	 *
 	 * @param file	die Datei
 	 * @return Der String mit dem Inhalt der Datei
 	 * @throws IOException
@@ -307,7 +307,7 @@ public class Characteristic {
 			input.append((char) c);
 		}
 		stream.close();
-		
+
 		/*
 		 * Merkwürdigerweise wird bei dieser Methode, einen FileInputStream in einen String zu verwandeln,
 		 * ans Ende ein '?' als Zeichen für EOF angehängt, das wir auf etwas unschöne Art und Weise

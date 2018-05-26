@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -71,7 +71,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Behaviour-Anzeige
-		 * 
+		 *
 		 * @param b	Behaviour
 		 */
 		public BehaviorViewer(Behavior b) {
@@ -150,7 +150,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Behaviour-Model
-		 * 
+		 *
 		 * @param numCols	Anzahl der Spalten
 		 */
 		public BehaviorModel(int numCols) {
@@ -159,7 +159,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Fügt ein Verhalten hinzu
-		 * 
+		 *
 		 * @param b	Verhalten
 		 */
 		protected void addBehavior(Behavior b) {
@@ -168,7 +168,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Baut den Verhaltens-Viewer zum Verhalten
-		 * 
+		 *
 		 * @param b	Verhalten
 		 * @return Viewer
 		 */
@@ -178,7 +178,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Name zum Verhalten erzeugen
-		 * 
+		 *
 		 * @param b	Verhalten
 		 * @return Name
 		 */
@@ -199,7 +199,7 @@ public class RemoteCallViewer extends JPanel {
 
 			/**
 			 * Statusanzeige
-			 * 
+			 *
 			 * @param label		Text
 			 * @param tooltip	Tooltip
 			 * @param c			Farbe
@@ -268,7 +268,7 @@ public class RemoteCallViewer extends JPanel {
 
 			/**
 			 * Fertig
-			 * 
+			 *
 			 * @param label		Text
 			 * @param tooltip	Tooltip
 			 * @param c			Farbe
@@ -285,7 +285,7 @@ public class RemoteCallViewer extends JPanel {
 		public PlannedBhvModel() {
 			super(4);
 		}
-		
+
 		/** UID */
 		private static final long serialVersionUID = 2841437768966488801L;
 
@@ -335,7 +335,7 @@ public class RemoteCallViewer extends JPanel {
 
 			/**
 			 * Setzt den running-Status
-			 * 
+			 *
 			 * @param isRunning	true oder false
 			 */
 			public void setRunning(boolean isRunning) {
@@ -378,7 +378,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Setzt ein Label auf laufend
-		 * 
+		 *
 		 * @param row	Zeile
 		 */
 		private void setRunningLabel(int row) {
@@ -388,7 +388,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Deaktiviert eine Zeile
-		 * 
+		 *
 		 * @param row	Zeile
 		 */
 		private void disableRow(int row) {
@@ -401,7 +401,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Sendet ein Verhalten
-		 * 
+		 *
 		 * @param row	Zeile mit dem Verhalten
 		 */
 		private void sendBehaviorRequest(int row) {
@@ -414,7 +414,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Setzt das letzte Verhalten auf einen Exit-Status
-		 * 
+		 *
 		 * @param status	gewünschter Status
 		 */
 		protected void setLastCallDone(BehaviorExitStatus status) {
@@ -431,7 +431,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Setzt das Done-Label
-		 * 
+		 *
 		 * @param row		Zeile
 		 * @param status	Exit-Status
 		 */
@@ -465,7 +465,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Aktiviert eine Zeile
-		 * 
+		 *
 		 * @param row	Zeile
 		 */
 		private void enableRow(int row) {
@@ -478,7 +478,7 @@ public class RemoteCallViewer extends JPanel {
 
 		/**
 		 * Setzt den Löschen-Knopf
-		 * 
+		 *
 		 * @param row		Zeile
 		 * @param isRunning	läuft gerade?
 		 */
@@ -492,7 +492,7 @@ public class RemoteCallViewer extends JPanel {
 
 	/** Wurde schon eine Liste der RemoteCalls angefordert? */
 	private boolean listReceived = false;
-	
+
 	/**
 	 * @return True, falls schon eine RemoteCall-Liste angefordert wurde
 	 */
@@ -502,7 +502,7 @@ public class RemoteCallViewer extends JPanel {
 
 	/**
 	 * Baut die Tabelle
-	 * 
+	 *
 	 * @param m	Modell
 	 * @return Tabelle
 	 */
@@ -529,7 +529,7 @@ public class RemoteCallViewer extends JPanel {
 
 	/**
 	 * Remote-Call Anzeige
-	 * 
+	 *
 	 * @param rcCompnt	RemoteCall-Komponente
 	 */
 	public RemoteCallViewer(final RemoteCallCompnt rcCompnt) {
@@ -611,7 +611,7 @@ public class RemoteCallViewer extends JPanel {
 		});
 		// Font vergrößern
 		Font f = b.getFont();
-		/** 
+		/**
 		 * Wichtig:
 		 * deriveFont(float) aufrufen, nicht deriveFont(int), beide bedeuten ganz unterschiedliche Sachen;
 		 * also "f" an die Zahl anhängen um einen float-Wert zu übergeben.
@@ -633,7 +633,7 @@ public class RemoteCallViewer extends JPanel {
 			}
 		});
 		plannedHeading.add(clearAll);
-		
+
 		JButton kill = new JButton("aktiven RC stornieren");
 		kill.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -646,9 +646,9 @@ public class RemoteCallViewer extends JPanel {
 			}
 		});
 		plannedHeading.add(kill);
-		
+
 		add(plannedHeading, new GridBaggins().row(0).col(2).epady(3));
-		
+
 		plannedBhvs.setTableHeader(null);
 
 		add(new JScrollPane(plannedBhvs), new GridBaggins().row(1).col(2).weightx(0.6).weighty(1).fillHV().epadx(10));

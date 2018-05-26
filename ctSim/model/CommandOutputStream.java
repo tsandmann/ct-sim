@@ -38,7 +38,7 @@ public class CommandOutputStream {
 
 	/** An wen gehen die Pakete? */
 	private BotID to = new BotID();
-	
+
 	/**
 	 * @param underlyingStream
 	 */
@@ -60,9 +60,9 @@ public class CommandOutputStream {
 
 	/**
 	 * Schreibt ein Kommando, toleriert null schweigend
-	 * 
+	 *
 	 * @param c	Kommando
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private synchronized void write(Command c) throws IOException {
 		if (c == null)
@@ -73,11 +73,11 @@ public class CommandOutputStream {
 	}
 
 	/**
-	 * Reihenfolge wichtig, sonst kommt der Bot-Steuercode durcheinander 
+	 * Reihenfolge wichtig, sonst kommt der Bot-Steuercode durcheinander
 	 * 1. Alles außer SENS_ERROR und DONE
 	 * 2. SENS_ERROR
 	 * 3. DONE
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public synchronized void flush() throws IOException {
@@ -86,25 +86,25 @@ public class CommandOutputStream {
 
 		for (Command c : buffer.values())
 			write(c);
-		write(error); 
+		write(error);
 		write(done);
 
 		underlyingStream.flush();
 		buffer.clear();
 	}
 
-	/** 
+	/**
 	 * Setzt den Empfänger aller Kommandos
-	 * 
+	 *
 	 * @param to
 	 */
 	public void setTo(BotID to) {
 		this.to = to;
 	}
 
-	/** 
+	/**
 	 * Liefert den Empfänger aller Kommandos
-	 * 
+	 *
 	 * @return Empfänger-Id
 	 */
 	public BotID getTo() {

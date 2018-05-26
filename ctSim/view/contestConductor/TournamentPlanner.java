@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.contestConductor;
@@ -43,7 +43,7 @@ import ctSim.view.contestConductor.DatabaseAdapter.GameState;
  * <li>Durchführen der Hauptrundenspiele (durch die Klasse ContestConductor)</li>
  * </ol>
  * </p>
- * 
+ *
  * @author Hendrik Krauß
  */
 public class TournamentPlanner {
@@ -56,8 +56,8 @@ public class TournamentPlanner {
 	/**
 	 * Konstruiert einen TournamentPlanner, der mit der übergebenen Datenbank verbunden ist. Nützlich für
 	 * Unit-Tests, die dem Planner über diesen Konstruktor eine Testdatenbank unterschieben können.
-	 * 
-	 * @param database 
+	 *
+	 * @param database
 	 */
 	public TournamentPlanner(PlannerToDatabaseAdapter database) {
 		this.db = database;
@@ -67,7 +67,7 @@ public class TournamentPlanner {
 	 * Hilfsmethode: Denkt sich Spielzeiten für alle Spiele in einem Level aus und schreibt sie in die DB.
 	 *
 	 * @param levelId	Primärschlüssel des Levels, für das die Zeiten gesetzt werden sollen
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	private void scheduleGames(int levelId) throws SQLException {
 		ResultSet games = db.getGames(levelId, "game");
@@ -85,11 +85,11 @@ public class TournamentPlanner {
 
 	/**
 	 * Löscht alle bisher geplanten Spiele und plant die Vorrunde
-	 * 
+	 *
 	 * Für jeden Bot, für den eine Binary in der Datenbank steht, wird ein Vorrundenspiel angelegt.
 	 * Jeder Bot durchläuft ein Vorrundenspiel einzeln.
-	 * 
-	 * @throws SQLException 
+	 *
+	 * @throws SQLException
 	 * @throws IllegalStateException	falls in der Datenbank-Tabelle ctsim_level keine Angaben über die
 	 * 				Vorrunde zu finden sind, oder falls weniger als zwei Bots mit Binary in der Datenbank
 	 * 				zu finden sind.
@@ -122,10 +122,10 @@ public class TournamentPlanner {
 
 	/**
 	 * Plant die Hauptrunde
-	 * 
+	 *
 	 * Sie besteht aus $$$ doc planMainRound.
-	 * 
-	 * @throws SQLException 
+	 *
+	 * @throws SQLException
 	 * @throws TournamentPlanException
 	 * @throws IllegalStateException
 	 */
@@ -193,7 +193,7 @@ public class TournamentPlanner {
 	 * @param players	eine Liste von Bot-IDs, die die Spieler repräsentieren; <code>null</code> bedeutet,
 	 * 				dass für dieses Spiel (noch) kein Spieler vorgesehen ist.
 	 * @param levelId	Nummer des zu schreibenden Levels.
-	 * @throws SQLException 
+	 * @throws SQLException
 	 * @throws TournamentPlanException	falls {@link DatabaseAdapter#placeBot(Integer, int, int)} diese
 	 * 				Exception wirft.
 	 */
@@ -211,7 +211,7 @@ public class TournamentPlanner {
 
 	/**
 	 * Diese Exception tritt auf, wenn etwas mit dem Turnierplan nicht stimmt.
-	 * 
+	 *
 	 * @author Benjamin Benz
 	 * @author Hendrik Krauß
 	 */
@@ -223,28 +223,28 @@ public class TournamentPlanner {
 		public TournamentPlanException() {
 			super();
 		}
-		
+
 		/**
 		 * Exception
-		 * 
+		 *
 		 * @param message	Text
 		 */
 		public TournamentPlanException(String message) {
 			super(message);
 		}
-		
+
 		/**
 		 * Exception
-		 * 
+		 *
 		 * @param cause
 		 */
 		public TournamentPlanException(Throwable cause) {
 			super(cause);
 		}
-		
+
 		/**
 		 * Exception
-		 * 
+		 *
 		 * @param message	Text
 		 * @param cause
 		 */
