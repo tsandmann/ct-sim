@@ -78,7 +78,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
     class WheelSimulator {
         /**
         * Maximale Geschwindigkeit als
-        * <a href="http://en.wikipedia.org/wiki/Pulse-width_modulation">PWM-Wert</a>
+        * <a href="https://de.wikipedia.org/wiki/Pulsweitenmodulation">Pulsweitenmodulation (PWM)</a>
         */
         private static final short PWM_MAX = 255;
 

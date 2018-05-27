@@ -28,7 +28,7 @@ import ctSim.model.rules.Judge;
  * <p>
  * Interface, das der Controller verwendet, um auf die Views der Applikation zuzugreifen. ("Controller"
  * und "View" sind dabei im Sinne von
- * <a href="http://en.wikipedia.org/wiki/Model-view-controller" target="_blank">MVC</a> zu verstehen.)
+ * <a href="https://en.wikipedia.org/wiki/Model-view-controller" >Model-view-controller (MVC)</a> zu verstehen.)
  * </p>
  * <p>
  * Alle Methoden des Interface haben Event-Handler-Charakter: Der Controller ruft sie auf, um die Views darüber

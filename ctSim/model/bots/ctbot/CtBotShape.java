@@ -276,7 +276,7 @@ public class CtBotShape extends Group {
         PointList arcTop    = buildCheekArc(+ BOT_HEIGHT / 2);
         PointList lateralSurface = arcBottom.interleave(arcTop);
 
-        // Mantel innen (zum Botzentrum gewandt; d.h. Innenwand Mund); wir schließen einfach den Zylindermantel-Abschnitt
+        // Mantel innen (zum Bot-Zentrum gewandt; d.h. Innenwand Mund); wir schließen einfach den Zylindermantel-Abschnitt
         lateralSurface.add(arcBottom.get(0));
         lateralSurface.add(arcTop.get(0));
 
@@ -295,8 +295,8 @@ public class CtBotShape extends Group {
     	/*
     	 * Shape (= Mittelteil) besteht aus 5 Teilen:
     	 * 	1) Zylinderboden,
-    	 * 	2) Zyl.-Decke,
-    	 * 	3) Abschnitt eines Zyl.-Mantel,
+    	 * 	2) Zylinderdecke,
+    	 * 	3) Abschnitt eines Zylindermantel,
     	 * 	4) 1. Quaderviertel,
     	 * 	5) 2. Quaderviertel
     	 */

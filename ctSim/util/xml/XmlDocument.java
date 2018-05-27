@@ -47,11 +47,11 @@ import ctSim.util.Decoratoror;
  * </p>
  * <h3>XPath?</h3>
  * <p>
- * Eine Metapher für <a href="http://en.wikipedia.org/wiki/Xpath">XPath</a> sind reguläre Ausdrücke:
+ * Eine Metapher für <a href="https://de.wikipedia.org/wiki/XPath">XPath</a> sind reguläre Ausdrücke:
  * So, wie reguläre Ausdrücke Teilstrings in einem langen String fangen, fängt XPath Teile aus einem XML-Dokument.
- * XPath lässt sich schnell lernen durch die
- * <a href="http://www.w3.org/TR/xpath.html#path-abbrev">Anwendungsbeispiele in der Spezifikation</a>
- * ("context node" heißt in aller Regel Root-Knoten des XML-Dokuments.)
+ * XPath lässt sich anhand der Anwendungsbeispiele in der Spezifikation schnell erlernen; siehe
+ * <a href="https://www.w3.org/TR/xpath/all/">W3C-Standards -- XPATH Cover Page</a>)
+ * "context node" bezeichnet in aller Regel den Root-Knoten des XML-Dokuments.
  * </p>
  * <h3>Verwendungsbeispiel:</h3>
  * <p>
@@ -69,10 +69,12 @@ import ctSim.util.Decoratoror;
  * </p>
  * <h3>Spezifikation:</h3>
  * <p>
- * Diese Klasse greift zurück auf die XPath-API aus der Java-Plattform (javax.xml.xpath).
- * Es ist der Dokumentation nicht zu entnehmen, welche XPath-Version die Plattform-API implementiert,
- * aber ich glaube es ist 1.0 (das wird zumindest bei {@link XPath} angedeutet);
- * siehe <a href="http://www.w3.org/TR/xpath.html">XPath-1.0-Spezifikation</a>
+ * Diese Klasse greift auf die XPath-API aus der Java-Plattform (javax.xml.xpath) zurück.
+ * Die Plattform-API implementiert XPath-Version 1.0 (siehe auch {@link XPath}); deren Spezifikation unter folgendem
+ * Link zu finden ist:<br>
+ * <a href="https://www.w3.org/TR/1999/REC-xpath-19991116/">Spezifikation der XML Path Language (XPath) 1.0</a><br>
+ * Die Spezifikation der aktuellsten Version 3.1 (Stand: Q2 2018) findet sich hier:
+ * <a href="https://www.w3.org/TR/xpath/all/">Spezifikation der XML Path Language (XPath)</a>
  * </p>
  * <h3>Motivation:</h3>
  * <p>
@@ -270,8 +272,9 @@ public class XmlDocument {
 		public Double getNumber(String xPathExpression)
 		throws XPathExpressionException {
 			/*
-			 * Cast nach Double (nicht Number) - eine XPath-Number mappt in Java auf einen Double,
-			 * siehe <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/xml/xpath/XPathConstants.html#NUMBER"></a>
+			 * Cast nach Double (nicht Number): eine XPath-Number mappt in Java auf einen Double,
+			 * siehe <a href="https://docs.oracle.com/javase/8/docs/api/javax/xml/xpath/XPathConstants.html">
+			 * Java 8 API / java.lang.Object / javax.xml.xpath.XPathConstants</a>
 			 */
 			return (Double)evaluator.evaluate(xPathExpression, cocktail, XPathConstants.NUMBER);
 		}
@@ -380,21 +383,21 @@ public class XmlDocument {
 		 * <p>
 		 * Liefert den "string-value" der Knoten, die vom übergebenen XPath-Ausdruck selektiert wurden.
 		 * Liefert einen leeren String (""), falls der übergebene XPath-Ausdruck keine Knoten selektiert
-		 * (gemäß <a href="http://www.w3.org/TR/xpath#function-string">XPath-Konvertierungsregeln</a>).
+		 * (gemäß <a href="https://www.w3.org/TR/xpath-functions/#func-string">XPath: Konvertierungsregeln</a>).
 		 * Der "string-value" ist:
 		 * <ul>
 		 * <li>für Elemente: sämtlicher Text, den sie enthalten. Beispiel: "wurstbrot", wenn die Elemente
 		 * <code><fruehstueck><a>wurst</a><b>brot</b></fruehstueck></code> mit XPath selektiert wurden.</li>
 		 * <li>für Attribute: der Wert des Attributs. Beispiel: "käse" falls das erste Attribut von
 		 * <code><fruehstueck belag="käse"></code> mit XPath selektiert wurde.
-		 * <a href="http://www.w3.org/TR/xml/#AVNormalize">Details zur Umwandlung eines Attributknotens in
+		 * <a href="https://www.w3.org/TR/xml/#AVNormalize">XPath: Umwandlung eines Attributknotens in
 		 * einen String</a></li>
 		 * <li>für Textknoten: ihr Inhalt</li>
-		 * <li>für alle anderen Knotenarten:
-		 * siehe <a href="http://www.w3.org/TR/xpath.html#data-model">XPath-Spezifikation Abschnitt 5</a></li>
+		 * <li>für alle anderen Knotenarten: siehe
+		 * <a href="https://www.w3.org/TR/xpath-datamodel/#accessors">XPath: Accessors</a></li>
 		 * </ul>
-		 * Details zum Thema "string-value":
-		 * siehe <a href="http://www.w3.org/TR/xpath.html#data-model">XPath-Spezifikation Abschnitt 5</a>.
+		 * Details zum Thema "string-value"; siehe
+		 * <a href="https://www.w3.org/TR/xpath-datamodel/#dm-string-value">XPath: string-value Accessor</a>.
 		 * </p>
 		 *
 		 * @param xPathExpression
@@ -410,7 +413,7 @@ public class XmlDocument {
 		 * Selektiert Knoten, konvertiert sie in einen String (siehe {@link #getString(String)}) und konvertiert
 		 * den String in einen Double. Falls der übergebene XPath-Ausdruck keine Knoten selektiert, wird
 		 * {@code NaN} zurückgeliefert (d.h. {@code getNumber(...).isNaN() == true}).
-		 * <a href="http://www.w3.org/TR/xpath#function-number">Details zur Konvertierung in eine Zahl</a>
+		 * <a href="https://www.w3.org/TR/xpath-functions/#func-number">Details zur Konvertierung in eine Zahl</a>
 		 *
 		 * @param xPathExpression
 		 * @return Zahl
@@ -425,7 +428,7 @@ public class XmlDocument {
 		 * Selektiert Knoten, konvertiert sie in einen String (siehe {@link #getString(String)}) und konvertiert
 		 * den String in einen Boolean. Falls der übergebene XPath-Ausdruck keine Knoten selektiert, wird
 		 * {@code false} zurückgeliefert.
-		 * <a href="http://www.w3.org/TR/xpath#function-boolean">Details zur Konvertierung in einen Boolean</a>
+		 * <a href="https://www.w3.org/TR/xpath-functions/#func-boolean">Details zur Konvertierung in einen Boolean</a>
 		 *
 		 * @param xPathExpression
 		 * @return Boolean

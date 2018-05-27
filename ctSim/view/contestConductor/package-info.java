@@ -20,7 +20,7 @@
 /**
  * <p>
  * Ermöglicht die Durchführung eines c't-Bot-Wettbewerbs wie den im Oktober 2006. Das Package verwendet eine
- * MySQL-Datenbank (<a href="doc-files/datenbankschema.pdf">Dokumentation des Schemas</a>,
+ * MySQL-Datenbank (<a href="doc-files/datenbankschema.pdf">Dokumentation des Datenbank-Schemas</a>,
  * <a href="doc-files/datenbankschema.sql">Schema als SQL-Skript</a>).
  * </p>
  * <p>
@@ -42,7 +42,7 @@
  * <p>
  * Für die Hauptphase gilt: Treten nicht genügend Teams an, um alle Zweikämpfe des ersten Durchgangs zu füllen,
  * erhalten möglichst viele Bots ein Freilos, das sie automatisch für die nächste Runde qualifiziert.
- * Im Extremfall findet somit in der ersten Runde des Turniers nur ein einziges Duell statt - dafür sind alle
+ * Im Extremfall findet somit in der ersten Runde des Turniers nur ein einziges Duell statt -- dafür sind alle
  * anschließenden Durchgänge voll besetzt.
  * </p>
  * <p>
@@ -61,8 +61,8 @@
  * </p>
  * <p>
  * <h4>Grobes Verfahren</h4>
- * Der Turnierbaum wird nach der Vorrunde und vor der Hauptrunde erzeugt und in die DB-Tabelle
- * <strong>ctsim_game</strong> geschrieben (<a href="doc-files/datenbankschema.pdf">siehe Datenbank-Doku</a>).
+ * Der Turnierbaum wird nach der Vorrunde und vor der Hauptrunde erzeugt und in die DB-Tabelle <strong>ctsim_game</strong>
+ * geschrieben (siehe Dokumentation des <a href="doc-files/datenbankschema.pdf">Datenbank-Schemas</a>).
  * Das Beispiel stellt einen Turnierbaum zu diesem Zeitpunkt dar. Alle Spiele sind zu diesem Zeitpunkt angelegt,
  * aber für viele von ihnen ist noch nicht klar, welche Bots die zwei Kontrahenten sein werden (im Beispiel ist
  * das mit "?" markiert, in der Tabelle mit bot1 = NULL und/oder bot2 = NULL). Wenn später im Verlauf der

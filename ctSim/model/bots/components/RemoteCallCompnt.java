@@ -620,16 +620,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @return Array
 	 * @throws ProtocolException
 	 */
-	private byte[] readArray(ByteArrayInputStream is, int lengthOfString)
-	throws ProtocolException {
-		byte[] rv = new byte[lengthOfString];
-		try {
-			is.read(rv);
-		} catch (IOException e) {
-			throw new ProtocolException("Remote Call Entry: Ungültige Payload");
-		}
-		return rv;
-	}
+//	private byte[] readArray(ByteArrayInputStream is, int lengthOfString)
+//	throws ProtocolException {
+//		byte[] rv = new byte[lengthOfString];
+//		try {
+//			is.read(rv);
+//		} catch (IOException e) {
+//			throw new ProtocolException("Remote Call Entry: Ungültige Payload");
+//		}
+//		return rv;
+//	}
 
 	/**
 	 * Done-Event-Handler

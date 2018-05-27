@@ -53,12 +53,12 @@ import ctSim.view.ScreenshotProvider;
 
 /** Klasse zur Darstellung einer Welt */
 public class WorldViewer extends JPanel implements ScreenshotProvider {
-    /** UID */
+	/** UID */
 	private static final long serialVersionUID = - 2085097216130758546L;
 	/** nichts-Meldung */
-    private static final String NOTHING = "showing nothing";
-    /** model-Meldung */
-    private static final String MODEL = "showing a model";
+	private static final String NOTHING = "showing nothing";
+	/** model-Meldung */
+	private static final String MODEL = "showing a model";
 
     /** Hilfselement für die J3D-Bürokratie */
     final protected GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().
@@ -66,7 +66,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     /**
      * Das letzte verwendete GraphicsDevice, wird für das Erzeugen einer neuen Welt in einem Multi-Monitor
      * Setup benötigt
-     * */
+     */
     protected GraphicsDevice last_gd = gc.getDevice();
 
     /** OnScreen Fläche */
@@ -74,8 +74,8 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     /** OffScreen Fläche */
     protected Canvas3D offScreenCanvas = new Canvas3D(gc, true);
 
-    /** wird mit jedem neuen Model ausgetauscht */
-    protected SimpleUniverse universe;
+	/** wird mit jedem neuen Model ausgetauscht */
+	protected SimpleUniverse universe;
 
 	/**
 	 * Gets the best graphics conifguration to display on the current device
@@ -128,7 +128,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     	}
     }
 
-    /**
+	/**
 	 * <p>
 	 * Altes Universum deinitialisieren (falls vorhanden), inkl. seiner Java3D-Threads
 	 * Es ist enorm wichtig, diese Methode aufzurufen!
@@ -150,9 +150,9 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 			 * Workaround gegen Crash unter macOS und Java >= 9 (context.destroy() in JoglPipeline.java crasht).
 			 * Nachteil: Auch nach dem Schließen der Welt wird diese noch angezeigt, bis eine Neue geladen wurde.
 			 */
-	    	if (universe != null) {
-	    		universe.cleanup();
-	    	}
+			if (universe != null) {
+				universe.cleanup();
+			}
 			/* remove all Java3D Canvas components */
 			while (getComponentCount() > 1) {
 				remove(1);
@@ -161,7 +161,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		universe = null;
 		onScreenCanvas = null;
 		offScreenCanvas = null;
-    }
+	}
 
     /**
      * Initialisiert eine Welt
@@ -194,8 +194,10 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     		{
     			/*
 				 * Syntaxhinweis zu den doppelten Schweifklammern: Es handelt sich um "instance initializer",
-				 * die den Code kompakter machen sollen - siehe JLS §8.6 und
-				 * <a href="http://www.c2.com/cgi/wiki?DoubleBraceInitialization">DoubleBraceInitialization</a>
+				 * die den Code kompakter machen sollen; siehe
+				 * <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.6">
+				 * JLS - Classes - Instance Initializers</a> und
+				 * <a href="http://wiki.c2.com/?DoubleBraceInitialization">Double Brace Initialization</a>
 				 */
     			addMouseBehavior(new MouseRotate(MouseBehavior.INVERT_INPUT)
     				{{ setFactor(0.001); }});
@@ -267,12 +269,12 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     	return offScreenCanvas.getOffScreenBuffer().getImage();
     }
 
-    /**
+	/**
 	 * MinimumSize ist (1,1): Ermöglicht der SplitPane, die uns enthält, ihren Divider zu ändern.
 	 * Würden wir unsere MinimumSize nicht auf etwas sehr kleines setzen, ginge das nicht.
 	 */
 	@Override
 	public Dimension getMinimumSize() {
 		return new Dimension(1,1);
-    }
+	}
 }

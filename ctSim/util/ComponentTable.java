@@ -154,14 +154,12 @@ public class ComponentTable extends JTable {
 		setRowHeight(maxHeight + getIntercellSpacing().height);
 	}
 
-	// Workaround für Bug "horizontale Scrollbars"
-
-	/* Bug: Eine JTable in einer JScrollPane löst nie die horizontale Scrollbar aus;
-	 * siehe http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936
-	 * Hier der Workaround wie auf der Bug-Seite beschrieben:
-	 * when the viewport shrinks below the preferred size, stop tracking the viewport width
-	 */
 	/**
+	 * Workaround für Bug: "horizontale Scrollbars funktionieren nicht"
+	 * Eine JTable in einer JScrollPane löst nie die horizontale Scrollbar aus; siehe
+	 * <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4127936">
+	 * Issue JDK-4127936 : JTable Horizontal Scrollbar doesn't work</a>
+	 *
 	 * @see javax.swing.JTable#getScrollableTracksViewportWidth()
 	 */
 	@Override
@@ -173,10 +171,11 @@ public class ComponentTable extends JTable {
 		return false;
 	}
 
-	/* when the viewport shrinks below the preferred size,
-	 * return the minimum size so that scrollbars will be shown
-	 */
-	/**
+	/** 
+	 * Hier folgt nun der Workaround wie auf der obigen Seite beschrieben:
+	 * "when the viewport shrinks below the preferred size, stop tracking the viewport width
+	 * and return the minimum size so that scrollbars will be shown"
+	 *
 	 * @see javax.swing.JComponent#getPreferredSize()
 	 */
 	@Override

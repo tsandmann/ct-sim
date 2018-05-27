@@ -223,10 +223,11 @@ class DatabaseAdapter {
 	 * -- Die Methode verwendet SQL-Strings mit IN-Parametern (dieselbe Syntax wie in {@link PreparedStatement}
 	 * dokumentiert). Im Wesentlichen gilt: Die Fragezeichen im String werden der vorhandenen Reihenfolge nach
 	 * durch die Parameter ersetzt: Erstes Fragezeichen = erster Parameter, zweites = zweiter Parameter, usw.
-	 * Für die Ersetzung wird {@link PreparedStatement#setObject(int, Object)} verwendet; Details siehe dessen
-	 * Dokumentation und Beschreibung in der
-	 * <a href="http://java.sun.com/products/jdbc/download.html">JDBC-Spezifikation</a>
-	 * (für Java 1.5 gilt JDBC 3.0, Sektion 13.2.2.2 und Anhang B-4).
+	 * Für die Ersetzung wird {@link PreparedStatement#setObject(int, Object)} verwendet;
+	 * für Details siehe zugehörige Dokumentation und die Beschreibung der
+	 * <a href="https://de.wikipedia.org/wiki/Java_Database_Connectivity">Java Database Connectivity (JDBC)</a> in der
+	 * <a href="http://download.oracle.com/otndocs/jcp/jdbc-4_2-mrel2-spec/index.html">JDBC-Spezifikation (JSR 221)</a>
+	 * (für Java 8 gilt JDBC 4.2, Section 13.2.2.2 und Appendix B-4) (Stand: Q2 2018).
 	 * </p>
 	 * <p>
 	 * <strong>Wichtig</strong> bei der Verwendung der Methode ist, die Zahl der verschiedenen SQL-Strings klein

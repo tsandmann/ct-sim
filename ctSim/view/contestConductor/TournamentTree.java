@@ -71,23 +71,23 @@ public class TournamentTree extends ArrayList<Integer> {
 		 * @param botId		Bot-ID
 		 */
 		protected Player(int rankNo, int botId) {
-	        this.rankNo = rankNo;
-	        this.botId = botId;
-        }
+			this.rankNo = rankNo;
+			this.botId = botId;
+		}
 	}
 
 	/** UID */
-    private static final long serialVersionUID = - 6908062086416166612L;
+	private static final long serialVersionUID = - 6908062086416166612L;
 
 	/**
 	 * Level, auf das die Spieler mit Freilos kommen. (Sprachlicher Hinweis: "bye" = "Freilos", siehe
-	 * <a href="http://en.wikipedia.org/wiki/Single-elimination_tournament">Single-elimination tournament</a>)
+	 * <a href="https://de.wikipedia.org/wiki/K.-o.-System">K.-o.-System (Single-elimination tournament)</a>)
 	 *
 	 * @return Level
 	 */
-    public int getByeLevelId() {
-    	return getLowestLevelId() / 2;
-    }
+	public int getByeLevelId() {
+		return getLowestLevelId() / 2;
+	}
 
     /**
      * @return kleinstes Level
@@ -98,7 +98,7 @@ public class TournamentTree extends ArrayList<Integer> {
     	return (int)Math.pow(2, numLevels);
     }
 
-    /**
+	/**
 	 * <p>
 	 * <strong>Wieviele Spiele?</strong>
 	 * Gegeben ist die Zahl der Spieler. Bei z.B. 42 Spielern bekommt man diese mit einem Sechzehntelfinale

@@ -582,12 +582,12 @@ public class RemoteCallViewer extends JPanel {
 		final ComponentTable plannedBhvs = buildCompntTable(plannedM);
 
 		/*
-		 * Workaround für Bug in JTable: Wenn das Model sich ändert (der JButton im Model löscht Zeilen aus dem
-		 * Model), dann bekommen wir u.U. eine Exception im Zusammenhang mit editingStopped-Ereignissen, weil
-		 * die Ereignisse Zellen aktualisieren, die schon nicht mehr da sind. Für Details siehe:
-		 * <a href="http://forum.java.sun.com/thread.jspa?threadID=5133941&tstart=75">Forum-Thread JTable-Bug</a> und
-		 * <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4777756">Workaround JTable-Bug von Oracle</a>
-		 * Wir verwenden den Workaround von bugs.java.com.
+		 * Workaround für einen Fehler in JTable: Wenn das Model sich ändert (der JButton im Model löscht Zeilen
+		 * aus dem Model), dann bekommen wir u.U. eine Exception im Zusammenhang mit editingStopped-Ereignissen,
+		 * weil die Ereignisse Zellen aktualisieren, die schon nicht mehr da sind. Für Details siehe:
+		 * <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4777756">
+		 * Issue JDK-4777756: JTable doesn't remove active CellEditor when TableModel changes</a>
+		 * Im Folgenden verwenden wir den obigen Workaround von bugs.java.com.
 		 */
 		plannedM.addTableModelListener(new TableModelListener() {
 			public void tableChanged(TableModelEvent e) {

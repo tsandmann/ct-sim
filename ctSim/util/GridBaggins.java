@@ -23,7 +23,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 /**
- * Provides a <a href="http://en.wikipedia.org/wiki/Fluent_interface">fluent interface</a> for
+ * Provides a <a href="https://en.wikipedia.org/wiki/Fluent_interface">Fluent interface</a> for
  * {@link GridBagConstraints} objects. Allows to work with GridBagConstraints in a sane way, and provides
  * a few naming clarifications. Example:
  *
