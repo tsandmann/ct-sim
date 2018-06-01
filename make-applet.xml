@@ -52,7 +52,7 @@ Ausführen in Eclipse: Alt-Shift-X, dann Q. Auch über Run > External Tools zu e
 		contrib/java3d/j3dcore.jar\:
 		contrib/java3d/j3dutils.jar\:
 		contrib/java3d/vecmath.jar\:
-		contrib/jSerialComm/jSerialComm-2.0.2.jar\:
+		contrib/jSerialComm/jSerialComm-1.3.11.jar\:
 		contrib/picocontainer-1.2.jar"
 		includeantruntime="false"
 	/>
