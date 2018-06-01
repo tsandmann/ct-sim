@@ -20,7 +20,7 @@ In Eclipse Alt-Shift-X, dann Q. Auch über Run > External Tools zu erreichen
 	access="package"
 	author="true"
 	classpath="
-		./contrib/jSerialComm/jSerialComm-2.0.2.jar;
+		./contrib/jSerialComm/jSerialComm-1.3.11.jar;
 		./contrib/junit/junit-4.12.jar;
 		./contrib/java3d/j3dcore.jar;
 		./contrib/java3d/j3dutils.jar;
@@ -38,8 +38,7 @@ In Eclipse Alt-Shift-X, dann Q. Auch über Run > External Tools zu erreichen
 		./contrib/JogAmp/jogl-all-natives-windows-amd64.jar;
 		./contrib/JogAmp/jogl-all-natives-windows-i586.jar;
 		./contrib/JogAmp/jogl-all.jar;
-		./contrib/picocontainer-1.2.jar;
-		./contrib/BrowserLauncher2-1_3.jar
+		./contrib/picocontainer-1.2.jar
 		"
 	doctitle="ct-Sim-API"
 	nodeprecated="false"
