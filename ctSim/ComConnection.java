@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -19,11 +19,13 @@
 
 package ctSim;
 
-import com.fazecast.jSerialComm.*;
-
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.logging.Level;
+
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
 
 import ctSim.controller.BotReceiver;
 import ctSim.controller.Config;
@@ -35,22 +37,21 @@ import ctSim.util.SaferThread;
 
 /**
  * <p>
- * Serielle Verbindung / USB-Verbindung zu realen Bots (als Hardware vorhandenen
- * Bots). Der Treiber, den wir mit unserem USB-2-Bot-Adapter verwenden, emuliert
- * einen seriellen Anschluss. Dieser kann dann von dieser Klasse angesprochen
- * werden.
+ * Serielle Verbindung / USB-Verbindung zu realen Bots (als Hardware vorhandenen Bots). Der Treiber,
+ * den wir mit unserem USB-2-Bot-Adapter verwenden, emuliert einen seriellen Anschluss. Dieser kann dann
+ * von dieser Klasse angesprochen werden.
  * </p>
  * <p>
- * Die <a href="http://fazecast.github.io/jSerialComm/">jSerialComm-Dokumentation</a>
- * beschreibt die API, die in dieser Klasse verwendet wird ({@com.fazecast.jSerialComm.*}).
+ * Die <a href="https://fazecast.github.io/jSerialComm/">jSerialComm-Dokumentation</a> beschreibt die API,
+ * die in dieser Klasse verwendet wird ({@com.fazecast.jSerialComm.*}).
  * </p>
  *
  * @author Maximilian Odendahl (maximilian.odendahl@rwth-aachen.de)
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß
  * @author Timo Sandmann
  */
 public class ComConnection extends Connection {
-	/** Input verfuegbar? */
+	/** Input verfügbar? */
 	protected boolean inputAvailable = false;
 	/** Mutex */
 	protected final Object inputAvailMutex = new Object();
@@ -70,9 +71,9 @@ public class ComConnection extends Connection {
 		port = SerialPort.getCommPort(comPortName);
 		port.closePort();
 		if (! port.openPort()) {
-			throw new CouldntOpenTheDamnThingException("Serial Port '" + comPortName + "' ungueltig");
+			throw new CouldntOpenTheDamnThingException("Serial Port '" + comPortName + "' ungültig");
 		}
-		
+
 		try {
 			int br = Integer.parseInt(baudrate);
 			port.setComPortParameters(br, 8, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
@@ -80,14 +81,14 @@ public class ComConnection extends Connection {
 			lg.info("Warte auf Verbindung vom c't-Bot an seriellem Port " + comPortName + " (" + br + " baud)");
 		} catch (NumberFormatException e) {
 			port.closePort();
-			throw new CouldntOpenTheDamnThingException("Die Baud-Rate '" + baudrate + "' ist keine g\u00FCltige Zahl", e);
+			throw new CouldntOpenTheDamnThingException("Die Baud-Rate '" + baudrate + "' ist keine gültige Zahl", e);
 		}
 
 		setInputStream(port.getInputStream());
 		setOutputStream(port.getOutputStream());
 
 		registerEventListener();
-		
+
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -97,20 +98,17 @@ public class ComConnection extends Connection {
 		});
 	}
 
-	/**
-	 * Registriert einen Listener
-	 */
+	/** Registriert einen Listener */
 	private void registerEventListener() {
 		class OurEventListener implements SerialPortDataListener {
 			@Override
-			public int getListeningEvents() { 
+			public int getListeningEvents() {
 				return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
 			}
-			
 			@Override
 			public void serialEvent(SerialPortEvent evt) {
 				if (evt.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
-					// Es gibt was zu lesen
+					// Es gibt etwas zu lesen.
 					synchronized (inputAvailMutex) {
 						inputAvailable = true;
 						inputAvailMutex.notify();
@@ -124,6 +122,7 @@ public class ComConnection extends Connection {
 
 	/**
 	 * Wartet, bis neue Daten eingetroffen sind
+	 *
 	 * @throws InterruptedException
 	 */
 	public void blockUntilDataAvailable() throws InterruptedException {
@@ -137,6 +136,7 @@ public class ComConnection extends Connection {
 
 	/**
 	 * Liest Daten aus einem Inputstream
+	 *
 	 * @throws IOException
 	 */
 	@Override
@@ -147,8 +147,8 @@ public class ComConnection extends Connection {
 
 	/**
 	 * Tut nichts: ComConnection ist ein Singleton und soll nie geschlossen
-	 * werden. Wir verhindern durch den Override auch, dass die Vaterklasse was
-	 * schlie&szlig;t.
+	 * werden. Wir verhindern durch den Override auch, dass die Vaterklasse etwas
+	 * schließt.
 	 */
 	@Override
 	public synchronized void close() {
@@ -156,37 +156,38 @@ public class ComConnection extends Connection {
 	}
 
 	/**
-	 * Gibt den Namen des Ports unserer Connection zurueck
-	 * @return	Name 
+	 * Gibt den Namen des Ports unserer Connection zurück
+	 *
+	 * @return Name
 	 */
-	@Override 
+	@Override
 	public String getName() {
-		return port.getDescriptivePortName(); 
+		return port.getDescriptivePortName();
 	}
 
 	/**
-	 * Gibt den Kurznamen unserer Connection zurueck
-	 * @return	"USB"
+	 * Gibt den Kurznamen unserer Connection zurück
+	 *
+	 * @return "USB"
 	 */
-	@Override 
-	public String getShortName() { 
-		return "USB"; 
+	@Override
+	public String getShortName() {
+		return "USB";
 	}
 
-	///////////////////////////////////////////////////////////////////////////
 	// Auto-detect-Kram
 
-	/**
-	 * COM-Verbindung
-	 */
+	/** COM-Verbindung */
 	private static ComConnection comConnSingleton = null;
-	/** Der Empfaenger der Bots */
-	private static BotReceiver botReceiver = null; 
-	
+	/** Der Empfänger der Bots */
+	private static BotReceiver botReceiver = null;
+
 	/**
-	 * Erzeugt einen Bot
-	 * Ueberschreibt die entsprechende Methode von Connection, weil hier ein paar Sondersachen dazukommen
-	 * @param c Kommando
+	 * Erzeugt einen Bot.
+	 * Überschreibt die entsprechende Methode von Connection,
+	 * weil hier ein paar Sondersachen dazukommen
+	 *
+	 * @param c	Kommando
 	 * @return Bot
 	 * @throws ProtocolException
 	 */
@@ -194,25 +195,26 @@ public class ComConnection extends Connection {
 	protected Bot createBot(Command c) throws ProtocolException {
 		CtBot bot;
 		switch (c.getSubCode()) {
-    		case WELCOME_REAL:
-    			lg.fine("COM-Verbindung von realem Bot eingegangen");
-    			bot = new RealCtBot(comConnSingleton, c.getFrom(), c.getDataL());
-    			bot.addDisposeListener(new Runnable() {
-    				public void run() {
-    					spawnThread(botReceiver);
-    				}
-    			});
-    			break;
-    		default:
-    			throw new ProtocolException(c.toString());
-    	}
-		
+			case WELCOME_REAL:
+				lg.fine("COM-Verbindung von realem Bot eingegangen");
+				bot = new RealCtBot(comConnSingleton, c.getFrom(), c.getDataL());
+				bot.addDisposeListener(new Runnable() {
+					public void run() {
+						spawnThread(botReceiver);
+					}
+				});
+				break;
+			default:
+				throw new ProtocolException(c.toString());
+		}
+
 		return bot;
-	}	
-	
+	}
+
 	/**
-	 * Startet das Lauschen fuer neue Bots
-	 * @param receiver	BotReceiver fuer neuen Bot
+	 * Startet das Lauschen für neue Bots
+	 *
+	 * @param receiver	BotReceiver für neuen Bot
 	 */
 	public static void startListening(final BotReceiver receiver) {
 		if (comConnSingleton != null)
@@ -223,7 +225,7 @@ public class ComConnection extends Connection {
 			spawnThread(receiver);
 		} catch (Exception e) {
 			lg.warn("Konnte serielle Verbindung nicht aufbauen");
-			
+
 			if (Level.parse(Config.getValue("LogLevel")).intValue() <= Level.FINE.intValue()) {
 				e.printStackTrace(System.out);
 			}
@@ -232,32 +234,28 @@ public class ComConnection extends Connection {
 
 	/**
 	 * Neuer Thread
-	 * @param receiver Bot-Receiver
+	 *
+	 * @param receiver	Bot-Receiver
 	 */
 	private static void spawnThread(BotReceiver receiver) {
 		new ComListenerThread(receiver).start();
 	}
 
-	///////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Exception-Klasse fuer ComConnection
-	 */
+	/** Exception-Klasse für ComConnection */
 	public static class CouldntOpenTheDamnThingException extends Exception {
 		/** UID */
 		private static final long serialVersionUID = 4896454703538812700L;
 
-		/**
-		 * Erzeugt eine neue Exception
-		 */
+		/** Erzeugt eine neue Exception */
 		public CouldntOpenTheDamnThingException() {
 			super();
 		}
 
 		/**
 		 * Erzeugt eine neue Exception
+		 *
 		 * @param message	Text der Exception
-		 * @param cause		
+		 * @param cause
 		 */
 		public CouldntOpenTheDamnThingException(String message, Throwable cause) {
 			super(message, cause);
@@ -265,6 +263,7 @@ public class ComConnection extends Connection {
 
 		/**
 		 * Erzeugt eine neue Exception
+		 *
 		 * @param message	Text der Exception
 		 */
 		public CouldntOpenTheDamnThingException(String message) {
@@ -273,43 +272,41 @@ public class ComConnection extends Connection {
 
 		/**
 		 * Erzeugt eine neue Exception
+		 *
 		 * @param cause
 		 */
 		public CouldntOpenTheDamnThingException(Throwable cause) {
 			super(cause);
 		}
 	}
-	
-	/**
-	 * Thread, der die COM-Connection ueberwacht
-	 */
+
+	/** Thread, der die COM-Connection überwacht */
 	static class ComListenerThread extends SaferThread {
 		/** Bot-Receiver */
 		private final BotReceiver botReceiver;
-		
+
 		/**
 		 * Erzeugt einen Thread, der auf COM-Connections lauscht
-		 * @param receiver	BotReceiver fuer den neuen Bot
+		 *
+		 * @param receiver	BotReceiver für den neuen Bot
 		 */
 		public ComListenerThread(BotReceiver receiver) {
 			super("ctSim-Listener-COM");
 			this.botReceiver = receiver;
 		}
-		
+
 		/**
 		 * work-Methode des Threads
+		 *
 		 * @throws InterruptedException
 		 */
-		@SuppressWarnings("synthetic-access")
 		@Override
 		public void work() throws InterruptedException {
 			comConnSingleton.blockUntilDataAvailable();
 			lg.fine("Serielle Verbindung eingegangen");
-			
+
 			comConnSingleton.doHandshake(botReceiver);
-			
-			////////////////
-			
+
 //			Bot b = new RealCtBot(comConnSingleton, (byte) 0);
 //			b.addDisposeListener(new Runnable() {
 //				public void run() {
@@ -317,6 +314,7 @@ public class ComConnection extends Connection {
 //				}
 //			});
 //			botReceiver.onBotAppeared(b);
+
 			die();
 		}
 	}

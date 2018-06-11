@@ -1,20 +1,20 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
- * 
+ * c't-Sim - Robotersimulator für den c't-Bot
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.model.scene;
@@ -35,16 +35,15 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 import ctSim.util.FmtLogger;
 
 /**
- * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benoetigt, da SceneGraphStreamReader von j3d defekt ist
- * Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu transerieren. Das koennte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht
- * 
- * @author bbe (bbe@heise.de)
+ * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamReader von
+ * Java3D (j3d) defekt ist. Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu transferieren.
+ * Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht.
  *
+ * @author Benjamin Benz
  */
 public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	/** Logger */
-	FmtLogger lg = FmtLogger.getLogger(
-		"ctSim.model.scene.SceneGraphStreamReaderFixed");
+	FmtLogger lg = FmtLogger.getLogger("ctSim.model.scene.SceneGraphStreamReaderFixed");
 
 	/**
 	 * @param arg0
@@ -66,35 +65,34 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 
 	/**
 	 * Rekonstruiert eine Map
-	 * @param scene Gruppe
-	 * @param map Map
+	 *
+	 * @param scene	Gruppe
+	 * @param map	Map
 	 */
-	@SuppressWarnings({ "unchecked" })
 	private void reconstructMap(Group scene, HashMap map){
 		if (scene == null){
 			lg.warn("Keine Group empfangen");
 			return;
 		}
-		
+
 		Vector toKill = new Vector();
-		
+
 		Iterator it = map.keySet().iterator();
-		
+
 		while (it.hasNext()){
 			String name = (String)it.next();
 			SceneGraphObject so = findInScenegraph(scene,name);
 			String string = "Key ";
 			if (so != null){
 				map.put(name,so);
-				System.out.println(string+name+" rekonstruiert");
+				System.out.println(string + name + " rekonstruiert");
 			} else {
-				lg.warn(string+name+" konnte nach der \u00DCbertragung nicht " +
-						"rekonstruiert werden");
+				lg.warn(string + name + " konnte nach der Übertragung nicht rekonstruiert werden");
 				toKill.add(name);
 			}
 		}
-		
-		// Entferne alle Listeneintraege, die nicht korrekt uebertragen wurden
+
+		// entferne alle Listeneinträge, die nicht korrekt übertragen wurden
 		it=toKill.iterator();
 		while (it.hasNext()){
 			String name = (String)it.next();
@@ -102,30 +100,30 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 		}
 	}
 
-	
+
 	/**
 	 * Sucht etwas im Szenegraphen
-	 * @param group Gruppe
-	 * @param name gesuchter Name
+	 *
+	 * @param group	Gruppe
+	 * @param name	gesuchter Name
 	 * @return SceneGraphObject
 	 */
 	private SceneGraphObject findInScenegraph(Group group,String name){
 		if (group.getUserData() != null)
 				if (((String)group.getUserData()).equals(name))
 					return group;
-		
+
 		Enumeration en = group.getAllChildren();
 		while (en.hasMoreElements()){
 			SceneGraphObject so = (SceneGraphObject) en.nextElement();
-			// Ist das eine Gruppe? Wenn ja, durchsuchen
+			// Ist das eine Gruppe? Wenn ja, durchsuchen...
 			if (so instanceof Group){
-				// rekursion
-				SceneGraphObject res = findInScenegraph((Group)so, name); 
-				if ( res != null) // etwas gefunen? 
-					return res;		// abbruch der rekursion
+				// Rekursion
+				SceneGraphObject res = findInScenegraph((Group)so, name);
+				if ( res != null)	// etwas gefunden?
+					return res;	// Abbruch der Rekursion
 			}
 		}
 		return null;
 	}
-
 }

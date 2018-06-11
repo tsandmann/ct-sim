@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -16,6 +16,7 @@
  * MA 02111-1307, USA.
  *
  */
+
 package ctSim.model.rules;
 
 import ctSim.SimUtils;
@@ -24,10 +25,7 @@ import ctSim.model.ThreeDBot;
 import ctSim.model.World;
 import ctSim.view.gui.Debug;
 
-/**
- * Schiedsrichter fuer Rennen von zwei Bots durch ein Labyrinth
- *
- */
+/** Schiedsrichter für Rennen von zwei Bots durch ein Labyrinth */
 public class LabyrinthJudge extends Judge {
 	/** Controller */
 	private DefaultController controller;
@@ -35,10 +33,11 @@ public class LabyrinthJudge extends Judge {
 	private World world;
 	/** Teilnehmerzahl */
 	private int participants = 2;
-	
-	/** 
-	 * Variable um den ersten Start zu markieren 
-	 * @param ctrl Controller 
+
+	/**
+	 * Variable um den ersten Start zu markieren
+	 *
+	 * @param ctrl	Controller
 	 */
 	public LabyrinthJudge(DefaultController ctrl) {
 		super(ctrl);
@@ -49,7 +48,7 @@ public class LabyrinthJudge extends Judge {
 	 * @see ctSim.model.rules.Judge#setWorld(ctSim.model.World)
 	 */
 	@Override
-    public void setWorld(World world) {
+	public void setWorld(World world) {
 		this.world = world;
 		super.setWorld(world);
 	}
@@ -73,7 +72,7 @@ public class LabyrinthJudge extends Judge {
 	@Override
 	public boolean isStartingSimulationAllowed() {
 		if (this.controller.getParticipants() < this.participants) {
-			Debug.out.println("Fehler: Noch nicht genuegend Bots auf der Karte.");
+			Debug.out.println("Fehler: Noch nicht genügend Bots auf der Karte.");
 			return false;
 		}
 
@@ -86,14 +85,14 @@ public class LabyrinthJudge extends Judge {
 	}
 
 	/**
-	 * @return true, wenn alle Regelen eingehalten werden
+	 * @return true, wenn alle Regeln eingehalten werden
 	 */
 	@Override
 	public boolean isSimulationFinished(){
 		if (world == null) {
 			return true;
 		}
-		
+
 		ThreeDBot winner = world.whoHasWon();
 		if (winner == null) {
 			return false;

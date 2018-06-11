@@ -1,29 +1,27 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
- * 
+ * c't-Sim - Robotersimulator für den c't-Bot
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
 
 import java.lang.reflect.Method;
 
-/**
- * Buisitor-Klasse
- */
+/** Buisitor-Klasse */
 public class Buisitor {
 	/** Ziel */
 	private final Object target;
@@ -36,7 +34,7 @@ public class Buisitor {
 	}
 
 	/**
-	 * @param args Objekte
+	 * @param args	Objekte
 	 * @return Anzahl
 	 */
 	public int dispatchBuisit(Object... args) {
@@ -62,9 +60,10 @@ public class Buisitor {
 	}
 
 	/**
-	 * Checkt eine Signatur
-	 * @param m Methode
-	 * @param types Typen
+	 * Überprüft eine Signatur
+	 *
+	 * @param m		Methode
+	 * @param types	Typen
 	 * @return true / false
 	 */
 	private static boolean hasSignature(Method m, Class... types) {
@@ -79,21 +78,21 @@ public class Buisitor {
 	}
 
 	/**
-	 * Checkt einen Tyen
+	 * Überprüft einen Type
+	 *
 	 * @param supertype
 	 * @param subtype
-	 * @return true / false 
+	 * @return true / false
 	 */
 	private static boolean isSupertype(Class<?> supertype, Class<?> subtype) {
-		// isAssignableFrom() geht mit Referenztypen richtig um; beruecksichtigt
-		// Autoboxing/-unboxing aber nicht
+		// isAssignableFrom() geht mit Referenztypen richtig um; berücksichtigt Autoboxing/-unboxing aber nicht
 		if (supertype.isAssignableFrom(subtype))
 			return true;
 		else {
-			// Primitive muessen wir zu Fuss pruefen
+			// Primitive müssen wir separat prüfen
 			if (isBoolean(supertype))
 				return isBoolean(subtype);
-			//$$ Restliche 8 Primitivtypen pruefen
+			// $$$ Restliche 8 Primitivtypen prüfen
 			return false;
 		}
 	}

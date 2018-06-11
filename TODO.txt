@@ -1,4 +1,4 @@
-Weitere Schritte fuer den Simulator, der Prioritaet nach geordnet (oben=wichtig)
+Weitere Schritte für den Simulator, der Priorität nach geordnet (oben=wichtig)
 ================================================================================
 
 Known Bugs:   
@@ -8,21 +8,21 @@ Known Bugs:
 Requested Features:
 -------------------
 
-* FB-Kommandos koennen (so nicht) vom Judge geschickt werden
+* FB-Kommandos können (so nicht) vom Judge geschickt werden
 
 * Manipulation von Pos. und Sensoren unterbinden
 
-* Positionen ueberarbeiten
+* Positionen überarbeiten
 
-* Controller ueberarbeiten
+* Controller überarbeiten
 
 * Characteristic verallgemeinern
 
-* Grafiken fuer Fernbedienung (pek)
+* Grafiken für Fernbedienung (pek)
 
-* FB-Position? --> eventuell eine Fernbedieung fuer alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
+* FB-Position? --> eventuell eine Fernbedieung für alle Bots einbauen, die immer dem Bot zugeordnet ist, dessen TabbedPane gerade vorne zu sehen ist.
 
-* Klassenstruktur wieder aufraeumen (fbe)
+* Klassenstruktur wieder aufräumen (fbe)
 
 ERLEDIGT:
 =========
@@ -33,30 +33,30 @@ ERLEDIGT:
   sie im Ordner parcours innerhalb des Projekts gespeichert worden sind.
   Der Sim findet sonst parcours.dtd nicht.
 
-* Verzeichnis-Angabe fuer die DTD in der Config
+* Verzeichnis-Angabe für die DTD in der Config
 
-* Was machen bei Mangel an Startplaetzen?
+* Was machen bei Mangel an Startplätzen?
 
 * ContestJudge wieder einbauen (fbe)
 
 * Zielerkennung (des Judge) nicht immer korrekt (fbe)
 
-* Gleitpinn faellt, obwohl er nicht faellt? (fbe)
+* Gleitpinn fällt, obwohl er nicht fällt? (fbe)
   -> Durch Mithilfe aus dem Forum (auch ein Bug zum linken Rad gefixt)
 
 * TabbedPane -> TabbedPaneWithCloseIcons (fbe)
 
-* Hinzufuegen von Bots ist auch ohne Welt moeglich (fbe)
+* Hinzufügen von Bots ist auch ohne Welt möglich (fbe)
   -> erledigt
 
-* Appearnaces werden noch nicht wieder gesetzt! (fbe)
+* Appearances werden noch nicht wieder gesetzt! (fbe)
 
-* Sensor-Daten werden oefters in einem Zyklus gesendet
+* Sensor-Daten werden öfters in einem Zyklus gesendet
   -> lag an mangelnder Sync.
   -> behoben (fbe)
 
-* Bots brauchen einen eindeutigen Namen fuer Panel, Log und Fernbedienung (fbe) --> wenn dieser der alten Struktur entspricht, werden auch wieder die richtigen Appearances aus der config gelesen
-Das Namensschema bitte aus der letzten Version des alten Sims uebernehmen. Ein Teil davon ist auch schon wieder eingebaut, so dass die Appearances wieder gelesen werden
+* Bots brauchen einen eindeutigen Namen für Panel, Log und Fernbedienung (fbe) --> wenn dieser der alten Struktur entspricht, werden auch wieder die richtigen Appearances aus der config gelesen
+Das Namensschema bitte aus der letzten Version des alten Sims übernehmen. Ein Teil davon ist auch schon wieder eingebaut, so dass die Appearances wieder gelesen werden
   -> die tollen alten Strukturen sind da
   -> die App. wird wie zuvor gesetzt
 
@@ -64,45 +64,47 @@ Das Namensschema bitte aus der letzten Version des alten Sims uebernehmen. Ein T
 
 * Bot-Name wird in FB angezeigt (fbe)
 
-* Durch die staendigen Ausgaben bei Unfaellen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren koennte das der andere Bot sich nicht mehr bewegt.
+* Durch die ständigen Ausgaben bei Unfällen etc. steigt meine CPU-Belastung auf 100% sodass es hierdurch passieren könnte das der andere Bot sich nicht mehr bewegt.
   -> Das ist wohl das performante Java-IO; was soll man da jetzt machen?
 
 * Bei den Enfernungssensoren Characteristics.lookupPrecise() aufrufen, dann pustet der Sim kontinuierliche Abstandswerte rauspusten und deckt das gesamte Datenspektrum der IR-Sensoren ab (fbe)
 
-* Beim hinzufuegen von neuen Bots den Judge fragen, ob das zulaessig ist
-  --> war doch laengst erledigt? (fbe)
+* Beim Hinzufügen von neuen Bots den Judge fragen, ob das zulässig ist
+  --> war doch längst erledigt? (fbe)
 
-* FB schliessen, wenn Bot stirbt (fbe)
+* FB schließen, wenn Bot stirbt (fbe)
 
-* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird koennen keine Bots mehr hinzugefuegt werden. (fbe)
+* Gleiches Problem nochmal: Wenn das Rennen durch die Sopp-Taste beendet wird können keine Bots mehr hinzugefügt werden. (fbe)
 
-* Nach dem Ende eines Rennens koennen keine Bots wieder hinzugefuegt werden --> Erst neues Level generieren. (fbe)
+* Nach dem Ende eines Rennens können keine Bots wieder hinzugefügt werden --> Erst neues Level generieren. (fbe)
 
-* JudgeChooser sollte aktuell gewaehlten Jugde anzeigen (fbe)
+* JudgeChooser sollte aktuell gewählten Jugde anzeigen (fbe)
 
 * Fernbedienungs-Optik verbessern (pek)
 
-* Wenn ct-Sim.xml ein Botbinary vorsieht, soll dieses nicht von selbst bei Sim-Start platziert werden, sondern bei jedem Klick auf "Bot hinzufuegen/C-Bot" [von pek]
-  -> es gibt ein DefaultDirectory fuer die BotBins (sowie fuer die world-files), dass ueber die Config angegeben werden kann (fbe)
+* Wenn ct-Sim.xml ein Botbinary vorsieht, soll dieses nicht von selbst bei Sim-Start platziert werden, sondern bei jedem Klick auf "Bot hinzufügen/C-Bot" [von pek]
+  -> es gibt ein DefaultDirectory für die BotBins (sowie für die world-files), dass über die Config angegeben werden kann (fbe)
 
 * Threads syncen (bbe)
 
-* Kommunikation ueberarbeiten (bbe)
+* Kommunikation überarbeiten (bbe)
 
 * Characteristics.lookupPrecise() nimmt Number
 
-* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten uebernommen werden (fbe)
+* beim Generieren/Laden einer neuer Welt sollen die TCP-Verbindungen beendet werden (so dass ct-Bot.exe beendet) und der Judge u. TickRate der alten Welt sollten übernommen werden (fbe)
 
-* wenn der Stop-Button gedrueckt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
+* wenn der Stop-Button gedrückt wird, sollen alle TCP-Verbindung beendet werden, so dass ct-Bot.exe auch beendet wird (fbe)
 
 * Parcours und Binaries im XML-Config-File festlegen (fbe)
 
-* Zu haeufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz) (fbe)
+* Zu häufiges Generieren einer neuen Welt erzeugt HeapOverflow (wahrscheinlich belegen die alten Welten zu viel Platz) (fbe)
 
-* Slider fuer Position (fbe) -> Spinner aendern Wert jetzt mit jedem Klick
+* Slider für Position (fbe) -> Spinner ändern Wert jetzt mit jedem Klick
 
 * Bodenplatte im Sim korrigieren -- ist manchmal verschoben (pek)
 
 * ParcoursGenerator static machen (pek)
 
-* Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (bbe) 
+* Vereinfachte Abfrage des Bodenkontaktes und der Sensorwerte (bbe)
+
+* Code-Anpassungen für Java9+: Ersatz von deprecated elements (nw87)

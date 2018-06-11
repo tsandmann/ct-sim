@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -23,20 +23,17 @@ import javax.swing.UIManager;
 
 import ctSim.util.FmtLogger;
 
-/**
- * Initialisierungen fuer ct-Sim 
- */
+/** Initialisierungen für ct-Sim */
 public class Init {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.controller.Init");
-	
-	/**
-	 * Setzt das Design auf Java-System oder Metal fuer Linux
-	 */
+
+	/** Setzt das Design auf Java-System oder Metal für Linux */
 	public static void setLookAndFeel() {
-		// Ubuntu 6.10 + Gnome: Stelle fest, dass c't-Sim absolut bekackt 
-		// aussieht mit dem Look+Feel des Systems, daher lieber gleich Metal
-		// nehmen
+		/*
+		 * Ubuntu 6.10 + Gnome: Stelle fest, dass c't-Sim absolut bekackt aussieht mit dem Look+Feel
+		 * des Systems, daher lieber gleich Metal nehmen
+		 */
 		if (System.getProperty("os.name").equals("Linux"))
 			useMetalLookAndFeel();
 		else {
@@ -49,10 +46,8 @@ public class Init {
 			}
 		}
 	}
-	
-	/**
-	 * Metal-Design einstellen
-	 */
+
+	/** Metal-Design einstellen */
 	private static void useMetalLookAndFeel() {
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");

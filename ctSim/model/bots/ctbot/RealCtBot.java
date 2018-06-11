@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -19,10 +19,12 @@
 
 package ctSim.model.bots.ctbot;
 
-import static ctSim.model.bots.components.BotComponent.ConnectionFlags.*;
+import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
+import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES_ASYNCLY;
 
 import java.io.IOException;
 import java.net.ProtocolException;
+
 import ctSim.Connection;
 import ctSim.model.Command;
 import ctSim.model.bots.components.Actuators;
@@ -30,20 +32,16 @@ import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
+import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
-import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
 import ctSim.util.BotID;
 import ctSim.util.Runnable1;
 import ctSim.util.SaferThread;
 
-/**
- * Reale Bots
- */
+/** Reale Bots */
 public class RealCtBot extends CtBot {
-	/**
-	 * Kommando-Auswerter
-	 */
+	/** Kommando-Auswerter */
 	protected class CmdProcessor extends SaferThread {
 		/** Verbindung zum Sim */
 		private final Connection connection;
@@ -59,7 +57,7 @@ public class RealCtBot extends CtBot {
 		/**
 		 * @see ctSim.util.SaferThread#work()
 		 */
-		@SuppressWarnings("synthetic-access") // Bei den zwei Logging-Aufrufen ist uns das wurst
+		// bei den zwei Logging-Aufrufen ist uns das egal
 		@Override
 		public void work() throws InterruptedException {
 			Command cmd = null;
@@ -69,18 +67,18 @@ public class RealCtBot extends CtBot {
 					updateView();
 					return;
 				}
-				
+
 				if (cmd.has(Command.Code.SHUTDOWN)) {
 					die();
 					RealCtBot.this.dispose();
 					return;
 				}
-				
+
 				if (! preProcessCommands(cmd)) {
 					components.processCommand(cmd);
 				}
 			} catch (ProtocolException e) {
-				lg.warn(e, "Ung\u00FCltiges Kommando; ignoriere");
+				lg.warn(e, "Ungültiges Kommando; ignoriere");
 			} catch (IOException e) {
 				lg.severe("E/A-Problem; Verbindung zu Bot verloren");
 				die();
@@ -96,29 +94,28 @@ public class RealCtBot extends CtBot {
 			try {
 				connection.close();
 			} catch (IOException e) {
-				// Strategie auf Best-effort-Basis
-				// (soll heissen ist uns wurscht)
+				// Strategie auf Best-effort-Basis (soll heißen: ist uns egal)
 			}
 		}
 	}
-	
+
 	/** Name der Verbindung */
 	private final String connectionName;
 
 	/**
-	 * @param connection Connection zum Bot
-	 * @param newId Id fuer die Kommunikation 
-	 * @param features Features des Bots gepackt in einen Integer
-	 * @throws ProtocolException 
+	 * @param connection	Connection zum Bot
+	 * @param newId			Id für die Kommunikation
+	 * @param features		Features des Bots gepackt in einen Integer
+	 * @throws ProtocolException
 	 */
 	public RealCtBot(Connection connection, BotID newId, int features) throws ProtocolException {
 		super(connection.getShortName() + "-Bot");
-		
-		// connection speichern
+
+		// Connection speichern
 		setConnection(connection);
-		
+
 		setId(newId);
-		
+
 		connectionName = connection.getName();
 
 		components.add(
@@ -154,10 +151,10 @@ public class RealCtBot extends CtBot {
 
 		for (BotComponent<?> c : components) {
 			c.offerAsyncWriteStream(connection.getCmdOutStream());
-			
-			/* RemoteCall-Componente suchen und DoneListener registrieren (ProgramViewer) */
+
+			/* RemoteCall-Komponente suchen und DoneListener registrieren (ProgramViewer) */
 			if (c instanceof RemoteCallCompnt) {
-				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
+				RemoteCallCompnt rc = (RemoteCallCompnt) c;
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
 					public void run(BehaviorExitStatus status) {
 						if (ablResult != null) {
@@ -166,14 +163,14 @@ public class RealCtBot extends CtBot {
 					}
 				});
 			}
-			
+
 			if (c instanceof WelcomeReceiver) {
 				welcomeReceiver = (WelcomeReceiver) c;
 				welcomeReceiver.setFeatures(features);
 			}
 		}
 
-		// Und einen CommandProcessor herstellen
+		// und einen CommandProcessor herstellen
 		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
 			public void run() {
@@ -188,11 +185,12 @@ public class RealCtBot extends CtBot {
 	 */
 	@Override
 	public String getDescription() {
-		return "Realer c't-Bot, verbunden \u00FCber "+connectionName;
+		return "Realer c't-Bot, verbunden über " + connectionName;
 	}
 
 	/**
 	 * Sendet einen Fernbedienungscode an den Bot
+	 *
 	 * @param code	zu sendender RC5-Code als String
 	 */
 	public void sendRC5Code(String code) {
@@ -200,19 +198,19 @@ public class RealCtBot extends CtBot {
 			for (BotComponent<?> c : components) {
 				if (c instanceof Sensors.RemoteControl) {
 					((Sensors.RemoteControl)c).send(code);
-					lg.fine("RC5Code fuer Taste \"" + code + "\" gesendet");
+					lg.fine("RC5Code für Taste \"" + code + "\" gesendet");
 					break;
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
-	}	
-	
+		}
+	}
+
 //	/**
 //	 * Startet das Verhalten "name" per RemoteCall
 //	 * @param name	Das zu startende Verhalten
-//	 * @param param	Int-Parameter fuer das Verhalten (16 Bit)
+//	 * @param param	Int-Parameter für das Verhalten (16 Bit)
 //	 * @param ref	Referenz auf den Program-Viewer, falls das Ergebnis dort angezeigt werden soll
 //	 */
 //	public void startRemoteCall(String name, int param, ProgramViewer ref) {
@@ -227,12 +225,13 @@ public class RealCtBot extends CtBot {
 //					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
 //					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
 //					par.setValue(param);
-//					beh.getParameters().add(par);					
+//					beh.getParameters().add(par);
 //					beh.call();
 //				} catch (IOException e) {
 //					e.printStackTrace();
 //				}
 //			}
 //		}
-//	}	
+//	}
+
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE world SYSTEM "parcours.dtd">
 <world>
-	<description>Testparcour fuer Skriptpogramme.</description>
+	<description>Testparcour für Skriptpogramme.</description>
 	<parcours>
 <line>*============ZZ============*</line>
 <line>#        #        #        #</line>

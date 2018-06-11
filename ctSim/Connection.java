@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -37,12 +37,12 @@ import ctSim.model.bots.ctbot.RealCtBot;
 import ctSim.util.FmtLogger;
 
 /**
- * Repr&auml;sentiert eine Verbindung
+ * Repräsentiert eine Verbindung
  *
- * @author bbe (bbe@heise.de)
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Benjamin Benz
+ * @author Hendrik Krauß
  */
-public abstract class Connection {	
+public abstract class Connection {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.Connection");
 
@@ -68,14 +68,13 @@ public abstract class Connection {
 	private DataInputStream input = null;
 
 	/**
-	 * Hat keinen BufferedOutputStream, denn auf dem muss man (offenbar) immer
-	 * flush() aufrufen. Wir wissen jedoch nicht, wann die Leute, die uns
-	 * verwenden, flushen wollen &amp;ndash; daher m&uuml;ssen die das machen
-	 * mit dem BufferedOutputStream.
+	 * Hat keinen BufferedOutputStream, denn auf dem muss man (offenbar) immer flush() aufrufen. Wir
+	 * wissen jedoch nicht, wann die Leute, die uns verwenden, flushen wollen - daher müssen die das
+	 * machen mit dem BufferedOutputStream.
 	 */
 	private DataOutputStream output = null;
 
-	/** OutputStream fuer Kommandos */
+	/** OutputStream für Kommandos */
 	private CommandOutputStream cmdOutStream = null;
 
 	/**
@@ -91,7 +90,8 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Uebertraegt ein Kommando
+	 * Überträgt ein Kommando
+	 *
 	 * @param c	das Kommando
 	 * @throws IOException
 	 */
@@ -102,7 +102,8 @@ public abstract class Connection {
 
 	/**
 	 * Liefert den Cmd-Stream
-	 * @return	der CommandOutputStream
+	 *
+	 * @return der CommandOutputStream
 	 */
 	public synchronized CommandOutputStream getCmdOutStream() {
 		assert cmdOutStream != null;
@@ -111,6 +112,7 @@ public abstract class Connection {
 
 	/**
 	 * Liest Daten aus dem InputStream
+	 *
 	 * @param b	Daten
 	 * @throws IOException
 	 */
@@ -118,17 +120,19 @@ public abstract class Connection {
 		input.readFully(b);
 	}
 
-	/** 
-	 * Muss waehrend Konstruktion aufgerufen werden
-	 * @param is InputStream
+	/**
+	 * Muss während der Konstruktion aufgerufen werden...
+	 *
+	 * @param is	InputStream
 	 */
 	protected void setInputStream(InputStream is) {
 		input = new DataInputStream(new BufferedInputStream(is));
 	}
 
 	/**
-	 * Muss waehrend Konstruktion aufgerufen werden
-	 * @param os OutputStream
+	 * Muss während der Konstruktion aufgerufen werden...
+	 *
+	 * @param os	OutputStream
 	 */
 	protected void setOutputStream(OutputStream os) {
 		output = new DataOutputStream(os);
@@ -136,21 +140,24 @@ public abstract class Connection {
 	}
 
 	/**
-	 * Gibt den Kurznamen der Connection zurueck
-	 * @return	Name
+	 * Gibt den Kurznamen der Connection zurück
+	 *
+	 * @return Name
 	 */
 	public abstract String getShortName();
 
 	/**
-	 * Gibt den Namen der Connection zurueck
-	 * @return	Name
+	 * Gibt den Namen der Connection zurück
+	 *
+	 * @return Name
 	 */
 	public abstract String getName();
-	
+
 	/**
 	 * Blockiert, bis Handshake erfolgreich oder IOException
-	 * Abbruch nach 100 Versuchen 
-	 * @param receiver Bot-Receiver
+	 * Abbruch nach 100 Versuchen
+	 *
+	 * @param receiver	Bot-Receiver
 	 */
 	protected void doHandshake(BotReceiver receiver) {
 		for (int i = 0; i < 1000; i++) {
@@ -167,14 +174,14 @@ public abstract class Connection {
 					Command cmd = new Command(this, true);
 					if (cmd.has(Command.Code.WELCOME)) {
 						receiver.onBotAppeared(createBot(cmd));
-						return; // Erfolg
+						return;	// Erfolg
 					} else {
-						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot l\u00E4uft schon oder ist "
-										+ "veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
-						continue; // Handshake nochmal versuchen
+						lg.fine("Kommando, aber kein Willkommen von Verbindung gelesen: Bot läuft schon oder ist " +
+								"veraltet, schicke Willkommen nochmals; ignoriertes Kommando folgt" + cmd);
+						continue;	// Handshake nochmal versuchen
 					}
 				} catch (ProtocolException e) {
-					lg.severe(e, "Ung\uu00FCltiges Kommando beim Handshake; ignoriere");
+					lg.severe(e, "Ungültiges Kommando beim Handshake; ignoriere");
 					continue;
 				} catch (IOException e) {
 					lg.severe(e, "E/A-Problem beim Handshake; Abbruch");
@@ -186,7 +193,8 @@ public abstract class Connection {
 
 	/**
 	 * Erzeugt einen Bot
-	 * @param c Kommando
+	 *
+	 * @param c	Kommando
 	 * @return Bot
 	 * @throws ProtocolException
 	 */

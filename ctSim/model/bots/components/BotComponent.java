@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -16,6 +16,7 @@
  * MA 02111-1307, USA.
  *
  */
+
 package ctSim.model.bots.components;
 
 import java.net.ProtocolException;
@@ -23,8 +24,8 @@ import java.util.Arrays;
 import java.util.EnumSet;
 
 import ctSim.model.Command;
-import ctSim.model.CommandOutputStream;
 import ctSim.model.Command.Code;
+import ctSim.model.CommandOutputStream;
 import ctSim.model.bots.components.Actuators.Led;
 import ctSim.model.bots.components.Actuators.Log;
 import ctSim.model.bots.components.Sensors.Mouse;
@@ -32,129 +33,114 @@ import ctSim.model.bots.components.Sensors.RemoteControl;
 
 /**
  * <p>
- * Superklasse f&uuml;r alle Bot-Komponenten. Diese lassen sich in zwei Gruppen
- * einteilen: Sensoren (&uuml;ber sie bekommt der Bot-Steuercode Eingaben:
- * Lichtsensor, Abstandssensoren, ...) und Aktuatoren (dorthin kann der
- * Steuercode Anweisungen geben: Motoren, LEDs, ...).
+ * Superklasse für alle Bot-Komponenten. Diese lassen sich in zwei Gruppen einteilen:
+ * Sensoren (über sie bekommt der Bot-Steuercode Eingaben: Lichtsensor, Abstandssensoren, ...)
+ * und Aktuatoren (dorthin kann der Steuercode Anweisungen geben: Motoren, LEDs, ...).
  * </p>
  * <p>
- * Manche Bot-Components k&ouml;nnen lesen von der TCP-(oder USB-)Verbindung mit
- * dem Bot (Beispiel: {@link Led}, Gegenbeispiel:
- * {@link Mouse}, der immer innerhalb des Sim berechnet und nicht von
- * der Verbindung gelesen wird). Manche Components k&ouml;nnen sich auch aufs
- * TCP (USB) schreiben (Beispiel: {@link RemoteControl}, Gegenbeispiel:
- * {@link Log}, das nie aus dem Sim herausgesendet wird). Die
- * F&auml;higkeiten &quot;kann lesen&quot; und &quot;kann schreiben&quot; sind
- * unabh&auml;ngig, jede Kombination ist m&ouml;glich.</p>
+ * Manche Bot-Components können lesen von der TCP-(oder USB-)Verbindung mit dem Bot (Beispiel:
+ * {@link Led}, Gegenbeispiel: {@link Mouse}, der immer innerhalb des Sim berechnet und nicht von
+ * der Verbindung gelesen wird). Manche Components können sich auch aufs TCP (USB) schreiben
+ * (Beispiel: {@link RemoteControl}, Gegenbeispiel: {@link Log}, das nie aus dem Sim herausgesendet
+ * wird). Die Fähigkeiten "kann lesen" und "kann schreiben" sind unabhängig, jede Kombination ist
+ * möglich.
+ * </p>
  * <p>
- * Die <em>grunds&auml;tzliche</em> F&auml;higkeit &quot;Lesen
- * k&ouml;nnen&quot; oder &quot;Schreiben k&ouml;nnen&quot; wird durch die
- * Interfaces {@link CanRead} und {@link CanWrite} ausgedr&uuml;ckt. (Nur eine
- * Component, die CanWrite implementiert, kann &uuml;berhaupt schreiben.) Ob die
- * F&auml;higkeit <em>in einem Einzelfall</em> verwendet wird, h&auml;ngt
- * zus&auml;tzlich ab von den beiden {@link ConnectionFlags} READS und WRITES:
- * F&uuml;r einen Real-Bot setzt der Sim zum Beispiel (fast) alle Components auf
- * &quot;nur lesen&quot;, auch wenn sie potentiell schreiben k&ouml;nnten. Beim
- * Setzen der Flags wird gepr&uuml;ft, ob die Component das Flag &uuml;berhaupt
- * unterst&uuml;tzt; andernfalls tritt eine UnsupportedOperationException auf.
- * </p> $$ Aktuatoren vs. Sensoren
+ * Die <em>grundsätzliche</em> Fähigkeit "Lesen können" oder "Schreiben können" wird durch die
+ * Interfaces {@link CanRead} und {@link CanWrite} ausgedrückt. (Nur eine Component, die CanWrite
+ * implementiert, kann überhaupt schreiben.) Ob die Fähigkeit <em>in einem Einzelfall</em> verwendet
+ * wird, hängt zusätzlich ab von den beiden {@link ConnectionFlags} READS und WRITES:
+ * Für einen Real-Bot setzt der Sim zum Beispiel (fast) alle Components auf "nur lesen", auch wenn
+ * sie potentiell schreiben könnten. Beim Setzen der Flags wird geprüft, ob die Component das Flag
+ * überhaupt unterstützt; andernfalls tritt eine UnsupportedOperationException auf.
+ * </p>
+ *
+ * $$$ Aktuatoren vs. Sensoren
+ *
+ * @param <M>	Typ der Komponente
  *
  * @author Felix Beckwermert
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
- * @param <M> Typ der Komponente
+ * @author Hendrik Krauß
  */
 public abstract class BotComponent<M> {
-	/**
-	 * Interface fuer lesende Komponenten
-	 */
+	/** Interface für lesende Komponenten */
 	protected interface CanRead {
 		/**
-		 * Nicht aufrufen &ndash; stattdessen
-		 * {@link BotComponent#offerRead(Command)} verwenden.
-		 * @param c Kommando
-		 * @throws ProtocolException 
+		 * Nicht aufrufen - stattdessen {@link BotComponent#offerRead(Command)} verwenden
+		 *
+		 * @param c	Kommando
+		 * @throws ProtocolException
 		 */
 		void readFrom(Command c) throws ProtocolException;
 
 		/**
-		 * Nicht aufrufen &ndash; sollte nur von
-		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
-		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet
-		 * werden.
+		 * Nicht aufrufen - sollte nur von {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
+		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
+		 *
 		 * @return Command-Code
 		 */
 		Code getHotCmdCode();
 	}
 
 	/**
-	 * Schreibbare (genauer: von der UI aus &auml;nderbare) Dinger sollten sich
-	 * auf ihrem externen Model als Listener anmelden
+	 * Schreibbare (genauer: von der UI aus änderbare) Dinge sollten sich auf ihrem externen Model
+	 * als Listener anmelden.
 	 */
 	protected interface CanWrite {
 		/**
-		 * Nicht aufrufen &ndash; stattdessen
-		 * {@link BotComponent#askForWrite(CommandOutputStream)} verwenden.
-		 * @param c Kommando
+		 * Nicht aufrufen - stattdessen {@link BotComponent#askForWrite(CommandOutputStream)} verwenden.
+		 *
+		 * @param c	Kommando
 		 */
 		void writeTo(Command c);
 
 		/**
-		 * Nicht aufrufen &ndash; sollte nur von
-		 * {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
-		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet
-		 * werden.
+		 * Nicht aufrufen - sollte nur von {@link BotComponent#askForWrite(CommandOutputStream) askForWrite()}
+		 * und {@link BotComponent#offerRead(Command) offerRead()} verwendet werden.
+		 *
 		 * @return Command-Code
 		 */
 		Code getHotCmdCode();
 	}
 
-	/**
-	 * Interface fuer Komponenten, die asynchron schreiben
-	 */
+	/** Interface für Komponenten, die asynchron schreiben */
 	protected interface CanWriteAsynchronously {
 		/**
 		 * Setzt Asynchronen-Schreib-Stream
-		 * @param s OutputStream
+		 *
+		 * @param s	OutputStream
 		 */
 		void setAsyncWriteStream(CommandOutputStream s);
 	}
 
-	/**
-	 * Einfacher Sensor
-	 */
-	public interface SimpleSensor { //$$$ abstract class
+	/** Einfacher Sensor */
+	public interface SimpleSensor {
 		// Marker-Interface
 	}
 
-	/**
-	 * Einfacher Aktuator
-	 */
-	public interface SimpleActuator { //$$$ abstract class
+	/** Einfacher Aktuator */
+	public interface SimpleActuator {
 		// Marker-Interface
 	}
 
-	/**
-	 * Connection-Eigenschaften
-	 */
-	public static enum ConnectionFlags { 
+	/** Connection-Eigenschaften */
+	public static enum ConnectionFlags {
 		/** liest */
-		READS, 
+		READS,
 		/** schreibt */
-		WRITES, 
+		WRITES,
 		/** schreibt asynchron */
 		WRITES_ASYNCLY }
-
-	///////////////////////////////////////////////////////////////////////////
 
 	/** externes Modell */
 	private final M externalModel;
 
-	/** Anf&auml;nglich alles false */
+	/** anfänglich alles false */
 	private EnumSet<ConnectionFlags> flags =
 		EnumSet.noneOf(ConnectionFlags.class);
 
 	/**
-	 * @param externalModel externes Modell vom Typ M
+	 * @param externalModel	externes Modell vom Typ M
 	 */
 	public BotComponent(M externalModel) { this.externalModel = externalModel; }
 
@@ -164,16 +150,16 @@ public abstract class BotComponent<M> {
 	public M getExternalModel() { return externalModel; }
 
 	/**
-	 * @param s nicht unterstuetzte Operation
+	 * @param s	nicht unterstützte Operation
 	 * @return Exception
 	 */
 	private UnsupportedOperationException createUnsuppOp(String s) {
-		return new UnsupportedOperationException("Bot-Komponente "+this+
-			" unterst\u00FCtzt kein "+s);
+		return new UnsupportedOperationException("Bot-Komponente " + this + " unterstützt kein " + s);
 	}
 
 	/**
 	 * Setzt die Connection-Flags
+	 *
 	 * @param flags	Flags
 	 */
 	public void setFlags(ConnectionFlags... flags) {
@@ -181,8 +167,7 @@ public abstract class BotComponent<M> {
 			? EnumSet.noneOf(ConnectionFlags.class)
 			: EnumSet.copyOf(Arrays.asList(flags));
 
-		// Pruefen, ob dieses Objekt in der Lage ist zu dem, was die von uns
-		// wollen
+		// prüfen, ob dieses Objekt in der Lage ist zu dem, was die von uns wollen
 		if (f.contains(ConnectionFlags.READS)) {
 			if (! (this instanceof CanRead))
 				throw createUnsuppOp("Lesen");
@@ -229,13 +214,14 @@ public abstract class BotComponent<M> {
 
 	/**
 	 * Liest Daten vom Kommando
-	 * @param c Kommando
+	 *
+	 * @param c	Kommando
 	 * @throws ProtocolException
 	 */
 	public void offerRead(final Command c) throws ProtocolException {
 		if (! readsCommands())
 			return;
-		// Cast kann nicht in die Hose gehen wegen setFlags()
+		// Cast kann nicht schiefgehen wegen setFlags()
 		CanRead self = (CanRead)this;
 		if (c.has(self.getHotCmdCode())) {
 			self.readFrom(c);
@@ -243,35 +229,41 @@ public abstract class BotComponent<M> {
 		}
 	}
 
-	/** Nur auf dem EDT laufenlassen */
+	/** Nur auf dem EDT laufen lassen */
 	public abstract void updateExternalModel();
 
 	/**
 	 * Schreibanforderung
-	 * @param s CommandOutputStream
+	 *
+	 * @param s	CommandOutputStream
 	 */
 	public void askForWrite(final CommandOutputStream s) {
 		if (! writesSynchronously())
 			return;
-		// Cast kann nicht in die Hose gehen wegen setFlags()
+		// Cast kann nicht schiefgehen wegen setFlags()
 		CanWrite self = (CanWrite)this;
 		self.writeTo(s.getCommand(self.getHotCmdCode()));
 	}
 
 	/**
 	 * async Write-Stream setzen
+	 *
 	 * @param s	CommandOutputStream
 	 */
 	public void offerAsyncWriteStream(CommandOutputStream s) {
 		if (! writesAsynchronously())
 			return;
-		// Cast kann nicht in die Hose gehen wegen setFlags()
+		// Cast kann nicht schiefgehen wegen setFlags()
 		((CanWriteAsynchronously)this).setAsyncWriteStream(s);
 	}
 
-	/** @return Gibt den Namen der Komponente zur&uuml;ck */
+	/**
+	 * @return Gibt den Namen der Komponente zurück
+	 */
 	public abstract String getName();
 
-	/** @return Beschreibung der Komponente */
+	/**
+	 * @return Beschreibung der Komponente
+	 */
 	public abstract String getDescription();
 }

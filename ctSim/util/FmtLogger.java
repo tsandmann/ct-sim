@@ -1,20 +1,20 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
- * 
+ * c't-Sim - Robotersimulator für den c't-Bot
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
@@ -26,25 +26,20 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-/**
- * Logger-Klasse
- */
+/** Logger-Klasse */
 public class FmtLogger extends Logger {
-	/**
-	 * Logger-Factory
-	 */
+	/** Logger-Factory */
 	public abstract static class Factory {
 		/**
 		 * Neuer Logger
+		 *
 		 * @param name	Name
 		 * @return		Logger
 		 */
 		public abstract Logger createLogger(String name);
 	}
 
-	/**
-	 * Logger-Factory
-	 */
+	/** Logger-Factory */
 	private static Factory loggerFactory = new Factory() {
 		@Override
 		public Logger createLogger(String name) {
@@ -54,7 +49,8 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Setzt Factory
-	 * @param f Factory
+	 *
+	 * @param f	Factory
 	 */
 	public static void setFactory(Factory f) {
 		loggerFactory = f;
@@ -65,8 +61,9 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Logger
-	 * @param name Name
-	 * @param delegate Delegate
+	 *
+	 * @param name		Name
+	 * @param delegate	Delegate
 	 */
 	protected FmtLogger(String name, Logger delegate) {
 	    super(name, null);
@@ -74,7 +71,7 @@ public class FmtLogger extends Logger {
     }
 
 	/**
-	 * @param name Name des Loggers
+	 * @param name	Name des Loggers
 	 * @return Logger
 	 */
 	public static synchronized FmtLogger getLogger(String name) {
@@ -83,17 +80,18 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Warnung
-	 * @param msg Text
+	 *
+	 * @param msg	Text
 	 */
 	public void warn(String msg) {
 		delegate.warning(msg);
 	}
 
-	//////////////////////////////////////////////////////////////////////////
 	// Kurzschreibweise mit Throwable
 
 	/**
 	 * Severe
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -103,6 +101,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Warnung
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -112,6 +111,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Warnung
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -121,6 +121,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Info
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -130,6 +131,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Config
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -139,6 +141,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Fine
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -148,6 +151,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Finer
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -157,6 +161,7 @@ public class FmtLogger extends Logger {
 
 	/**
 	 * Finest
+	 *
 	 * @param t		Throwable
 	 * @param msg	Text
 	 */
@@ -164,7 +169,6 @@ public class FmtLogger extends Logger {
 		delegate.log(Level.FINEST, msg, t);
 	}
 
-	//////////////////////////////////////////////////////////////////////////
 	// Kurzschreibweisen mit Format-Strings
 
 	/**
@@ -303,15 +307,13 @@ public class FmtLogger extends Logger {
 		delegate.log(Level.FINEST, String.format(formatString, parameters), t);
 	}
 
-
-	//////////////////////////////////////////////////////////////////////////
-	// Alptraum: Delegate-Zeugs
+	// Albtraum: Delegate-Elemente
 
 	/**
 	 * @see java.util.logging.Logger#addHandler(java.util.logging.Handler)
 	 */
 	@Override
-    public synchronized void addHandler(Handler handler) throws SecurityException {
+	public synchronized void addHandler(Handler handler) throws SecurityException {
 	    delegate.addHandler(handler);
     }
 
@@ -319,7 +321,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#config(java.lang.String)
 	 */
 	@Override
-    public void config(String msg) {
+	public void config(String msg) {
 	    delegate.config(msg);
     }
 
@@ -327,7 +329,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#entering(java.lang.String, java.lang.String, java.lang.Object)
 	 */
 	@Override
-    public void entering(String sourceClass, String sourceMethod, Object param1) {
+	public void entering(String sourceClass, String sourceMethod, Object param1) {
 	    delegate.entering(sourceClass, sourceMethod, param1);
     }
 
@@ -335,7 +337,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#entering(java.lang.String, java.lang.String, java.lang.Object[])
 	 */
 	@Override
-    public void entering(String sourceClass, String sourceMethod, Object[] params) {
+	public void entering(String sourceClass, String sourceMethod, Object[] params) {
 	    delegate.entering(sourceClass, sourceMethod, params);
     }
 
@@ -343,7 +345,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#entering(java.lang.String, java.lang.String)
 	 */
 	@Override
-    public void entering(String sourceClass, String sourceMethod) {
+	public void entering(String sourceClass, String sourceMethod) {
 	    delegate.entering(sourceClass, sourceMethod);
     }
 
@@ -351,7 +353,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#exiting(java.lang.String, java.lang.String, java.lang.Object)
 	 */
 	@Override
-    public void exiting(String sourceClass, String sourceMethod, Object result) {
+	public void exiting(String sourceClass, String sourceMethod, Object result) {
 	    delegate.exiting(sourceClass, sourceMethod, result);
     }
 
@@ -359,7 +361,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#exiting(java.lang.String, java.lang.String)
 	 */
 	@Override
-    public void exiting(String sourceClass, String sourceMethod) {
+	public void exiting(String sourceClass, String sourceMethod) {
 	    delegate.exiting(sourceClass, sourceMethod);
     }
 
@@ -367,7 +369,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#fine(java.lang.String)
 	 */
 	@Override
-    public void fine(String msg) {
+	public void fine(String msg) {
 	    delegate.fine(msg);
     }
 
@@ -375,7 +377,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#finer(java.lang.String)
 	 */
 	@Override
-    public void finer(String msg) {
+	public void finer(String msg) {
 	    delegate.finer(msg);
     }
 
@@ -383,7 +385,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#finest(java.lang.String)
 	 */
 	@Override
-    public void finest(String msg) {
+	public void finest(String msg) {
 	    delegate.finest(msg);
     }
 
@@ -391,7 +393,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#getFilter()
 	 */
 	@Override
-    public Filter getFilter() {
+	public Filter getFilter() {
 	    return delegate.getFilter();
     }
 
@@ -399,7 +401,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#getHandlers()
 	 */
 	@Override
-    public synchronized Handler[] getHandlers() {
+	public synchronized Handler[] getHandlers() {
 	    return delegate.getHandlers();
     }
 
@@ -407,7 +409,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#getLevel()
 	 */
 	@Override
-    public Level getLevel() {
+	public Level getLevel() {
 	    return delegate.getLevel();
     }
 
@@ -415,7 +417,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#getName()
 	 */
 	@Override
-    public String getName() {
+	public String getName() {
 	    return delegate.getName();
     }
 
@@ -423,7 +425,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#getParent()
 	 */
 	@Override
-    public Logger getParent() {
+	public Logger getParent() {
 	    return delegate.getParent();
     }
 
@@ -431,7 +433,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#getResourceBundle()
 	 */
 	@Override
-    public ResourceBundle getResourceBundle() {
+	public ResourceBundle getResourceBundle() {
 	    return delegate.getResourceBundle();
     }
 
@@ -439,7 +441,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#getResourceBundleName()
 	 */
 	@Override
-    public String getResourceBundleName() {
+	public String getResourceBundleName() {
 	    return delegate.getResourceBundleName();
     }
 
@@ -447,7 +449,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#getUseParentHandlers()
 	 */
 	@Override
-    public synchronized boolean getUseParentHandlers() {
+	public synchronized boolean getUseParentHandlers() {
 	    return delegate.getUseParentHandlers();
     }
 
@@ -455,7 +457,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#info(java.lang.String)
 	 */
 	@Override
-    public void info(String msg) {
+	public void info(String msg) {
 	    delegate.info(msg);
     }
 
@@ -463,7 +465,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#isLoggable(java.util.logging.Level)
 	 */
 	@Override
-    public boolean isLoggable(Level level) {
+	public boolean isLoggable(Level level) {
 	    return delegate.isLoggable(level);
     }
 
@@ -471,7 +473,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#log(java.util.logging.Level, java.lang.String, java.lang.Object)
 	 */
 	@Override
-    public void log(Level level, String msg, Object param1) {
+	public void log(Level level, String msg, Object param1) {
 	    delegate.log(level, msg, param1);
     }
 
@@ -479,7 +481,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#log(java.util.logging.Level, java.lang.String, java.lang.Object[])
 	 */
 	@Override
-    public void log(Level level, String msg, Object[] params) {
+	public void log(Level level, String msg, Object[] params) {
 	    delegate.log(level, msg, params);
     }
 
@@ -487,7 +489,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#log(java.util.logging.Level, java.lang.String, java.lang.Throwable)
 	 */
 	@Override
-    public void log(Level level, String msg, Throwable thrown) {
+	public void log(Level level, String msg, Throwable thrown) {
 	    delegate.log(level, msg, thrown);
     }
 
@@ -495,7 +497,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#log(java.util.logging.Level, java.lang.String)
 	 */
 	@Override
-    public void log(Level level, String msg) {
+	public void log(Level level, String msg) {
 	    delegate.log(level, msg);
     }
 
@@ -503,7 +505,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#log(java.util.logging.LogRecord)
 	 */
 	@Override
-    public void log(LogRecord record) {
+	public void log(LogRecord record) {
 	    delegate.log(record);
     }
 
@@ -511,7 +513,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#logp(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.Object)
 	 */
 	@Override
-    public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object param1) {
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object param1) {
 	    delegate.logp(level, sourceClass, sourceMethod, msg, param1);
     }
 
@@ -519,7 +521,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#logp(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.Object[])
 	 */
 	@Override
-    public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object[] params) {
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object[] params) {
 	    delegate.logp(level, sourceClass, sourceMethod, msg, params);
     }
 
@@ -527,7 +529,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#logp(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.Throwable)
 	 */
 	@Override
-    public void logp(Level level, String sourceClass, String sourceMethod, String msg, Throwable thrown) {
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg, Throwable thrown) {
 	    delegate.logp(level, sourceClass, sourceMethod, msg, thrown);
     }
 
@@ -535,7 +537,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#logp(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-    public void logp(Level level, String sourceClass, String sourceMethod, String msg) {
+	public void logp(Level level, String sourceClass, String sourceMethod, String msg) {
 	    delegate.logp(level, sourceClass, sourceMethod, msg);
     }
 
@@ -543,39 +545,39 @@ public class FmtLogger extends Logger {
 //	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Object)
 //	 */
 //	@Override
-//    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object param1) {
-//	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, param1);
-//    }
+//	public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object param1) {
+//		delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, param1);
+//	}
 //
 //	/**
 //	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Object[])
 //	 */
 //	@Override
-//    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object[] params) {
-//	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, params);
-//    }
+//	public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Object[] params) {
+//		delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, params);
+//	}
 //
 //	/**
 //	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Throwable)
 //	 */
 //	@Override
-//    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Throwable thrown) {
-//	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, thrown);
-//    }
+//	public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg, Throwable thrown) {
+//		delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg, thrown);
+//	}
 //
 //	/**
 //	 * @see java.util.logging.Logger#logrb(java.util.logging.Level, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 //	 */
 //	@Override
-//    public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg) {
-//	    delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg);
-//    }
+//	public void logrb(Level level, String sourceClass, String sourceMethod, String bundleName, String msg) {
+//		delegate.logrb(level, sourceClass, sourceMethod, bundleName, msg);
+//	}
 
 	/**
 	 * @see java.util.logging.Logger#removeHandler(java.util.logging.Handler)
 	 */
 	@Override
-    public synchronized void removeHandler(Handler handler) throws SecurityException {
+	public synchronized void removeHandler(Handler handler) throws SecurityException {
 	    delegate.removeHandler(handler);
     }
 
@@ -583,7 +585,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#setFilter(java.util.logging.Filter)
 	 */
 	@Override
-    public void setFilter(Filter newFilter) throws SecurityException {
+	public void setFilter(Filter newFilter) throws SecurityException {
 	    delegate.setFilter(newFilter);
     }
 
@@ -591,7 +593,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#setLevel(java.util.logging.Level)
 	 */
 	@Override
-    public void setLevel(Level newLevel) throws SecurityException {
+	public void setLevel(Level newLevel) throws SecurityException {
 	    delegate.setLevel(newLevel);
     }
 
@@ -599,7 +601,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#setParent(java.util.logging.Logger)
 	 */
 	@Override
-    public void setParent(Logger parent) {
+	public void setParent(Logger parent) {
 	    delegate.setParent(parent);
     }
 
@@ -607,7 +609,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#setUseParentHandlers(boolean)
 	 */
 	@Override
-    public synchronized void setUseParentHandlers(boolean useParentHandlers) {
+	public synchronized void setUseParentHandlers(boolean useParentHandlers) {
 	    delegate.setUseParentHandlers(useParentHandlers);
     }
 
@@ -615,7 +617,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#severe(java.lang.String)
 	 */
 	@Override
-    public void severe(String msg) {
+	public void severe(String msg) {
 	    delegate.severe(msg);
     }
 
@@ -623,7 +625,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#throwing(java.lang.String, java.lang.String, java.lang.Throwable)
 	 */
 	@Override
-    public void throwing(String sourceClass, String sourceMethod, Throwable thrown) {
+	public void throwing(String sourceClass, String sourceMethod, Throwable thrown) {
 	    delegate.throwing(sourceClass, sourceMethod, thrown);
     }
 
@@ -631,7 +633,7 @@ public class FmtLogger extends Logger {
 	 * @see java.util.logging.Logger#warning(java.lang.String)
 	 */
 	@Override
-    public void warning(String msg) {
+	public void warning(String msg) {
 	    delegate.warning(msg);
     }
 }

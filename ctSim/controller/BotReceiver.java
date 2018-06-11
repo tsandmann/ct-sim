@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -21,13 +21,12 @@ package ctSim.controller;
 
 import ctSim.model.bots.Bot;
 
-/**
- * Bot-Receiver-Interface
- */
+/** Bot-Receiver-Interface */
 public interface BotReceiver {
 	/**
-	 * Handler fuer neuer Bot da
-	 * @param b Bot
+	 * Handler für neuer Bot ist da
+	 *
+	 * @param b	Bot
 	 */
 	public void onBotAppeared(Bot b);
 }

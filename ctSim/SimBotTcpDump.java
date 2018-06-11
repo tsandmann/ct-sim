@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -18,6 +18,7 @@
  */
 
 package ctSim;
+
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.net.ServerSocket;
@@ -26,31 +27,30 @@ import ctSim.model.Command;
 
 /**
  * <p>
- * Entwicklertool: Macht die Command-Objekte sichtbar, die durch die
- * TCP-Verbindung zwischen c't-Sim und Steuercode laufen. F&uuml;r Debugging der
- * IO. Tool l&auml;uft solange, bis man es ausdr&uuml;cklich beendet.
+ * Entwicklertool: Macht die Command-Objekte sichtbar, die durch die TCP-Verbindung zwischen c't-Sim
+ * und Steuercode laufen. Für Debugging der IO. Tool läuft solange, bis man es ausdrücklich beendet.
  * </p>
  * <p>
- * Verwendung: "botport" in config/ct-sim.xml umstellen auf "10002"; Sim und
- * dieses Tool starten; Bot-Code starten. Das Hinschreiben der ganzen Commands
- * verz&ouml;gert alles &ndash; falls der Sim Meldungen wirft "Bot viel zu
- * langsam", dann den entsprechenden Timeout-Wert in der Konfigdatei hochsetzen.
+ * Verwendung: "botport" in config/ct-sim.xml umstellen auf "10002"; Sim und dieses Tool starten;
+ * Bot-Code starten. Das Hinschreiben der ganzen Commands verzögert alles - falls der Sim Meldungen wirft
+ * "Bot viel zu langsam", dann den entsprechenden Timeout-Wert in der Konfigdatei hochsetzen.
  * </p>
  */
 public class SimBotTcpDump {
 	/**
 	 * main
+	 *
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String... args) throws Exception {
 		ServerSocket srvSock = new ServerSocket(10001);
 		while (true) {
-			// Blockiert
+			// blockiert
 			TcpConnection bot = new TcpConnection(srvSock.accept());
-			// Blockiert auch
+			// blockiert auch
 			TcpConnection sim = new TcpConnection("127.0.0.1", 10002);
-			// Go
+			// Go!
 			Forwarder bs = new Forwarder("Bot->Sim     ", bot, sim);
 			Forwarder sb = new Forwarder("     Sim->Bot", sim, bot);
 			bs.peer = sb;
@@ -61,14 +61,12 @@ public class SimBotTcpDump {
 				srvSock.close();
 			}
 			try { sim.close(); } catch (IOException e) {
-				srvSock.close();	
+				srvSock.close();
 			}
 		}
 	}
 
-	/**
-	 * Forwarder-Thread
-	 */
+	/** Forwarder-Thread */
 	static class Forwarder extends Thread {
 		/** Quelle */
 		TcpConnection from;
@@ -81,6 +79,7 @@ public class SimBotTcpDump {
 
 		/**
 		 * Forwarder
+		 *
 		 * @param name
 		 * @param from
 		 * @param to
@@ -111,14 +110,13 @@ public class SimBotTcpDump {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.err.println("\nThread " + getName().trim() + " dying; " +
-					"killing peer");
+			System.err.println("\nThread " + getName().trim() + " dying; killing peer");
 
 			peer.deathRequested = true;
 			peer.interrupt();
-			// Rabiater, aber interrupt() zeigt vielleicht keine Wirkung
-			try { peer.from.close(); } catch (IOException e) {/**/}
-			try { peer.to.close(); } catch (IOException e) {/**/}
+			// rabiater, aber interrupt() zeigt vielleicht keine Wirkung
+			try { peer.from.close(); } catch (IOException e) { /* ... */ }
+			try { peer.to.close(); } catch (IOException e) { /* ... */ }
 		}
 	}
 }

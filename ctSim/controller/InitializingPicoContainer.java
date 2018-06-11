@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -26,23 +26,20 @@ import org.picocontainer.Parameter;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultPicoContainer;
 
-/**
- * Initialisierter Pico-Container 
- */
+/** Initialisierter Pico-Container */
 public class InitializingPicoContainer extends DefaultPicoContainer {
     /** UID */
 	private static final long serialVersionUID = - 6940983694133437239L;
 
-    /**
-     * Initialisierter Pico-Container 
-     */
+    /** Initialisierter Pico-Container */
     public InitializingPicoContainer() {
     	super();
     }
 
     /**
-     * Initialisierter Pico-Container 
-     * @param parent 
+     * Initialisierter Pico-Container
+     *
+     * @param parent
      */
 	public InitializingPicoContainer(PicoContainer parent) {
 		super(parent);
@@ -50,24 +47,25 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 
 	/**
 	 * Getter
+	 *
 	 * @param <T>
 	 * @param componentKey
 	 * @return T
 	 */
-	@SuppressWarnings("unchecked")
     public <T> T get(Class<T> componentKey) {
 	    return (T)super.getComponentInstance(componentKey);
 	}
 
 	/**
 	 * Klasse initialisiert?
+	 *
 	 * @param classToInitialize Klasse
 	 */
 	private void ensureInitialized(Class<?> classToInitialize) {
 		try {
 	        Class.forName(classToInitialize.getName());
         } catch (ClassNotFoundException e) {
-        	//$$ Obskurer Fehler
+        	// $$$ Obskurer Fehler
         	throw new RuntimeException(e);
         }
 	}
@@ -94,7 +92,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Class)
 	 */
 	@Override
-    public ComponentAdapter registerComponentImplementation(
+	public ComponentAdapter registerComponentImplementation(
     	Class componentImplementation) {
 	    ensureInitialized(componentImplementation);
 	    return super.registerComponentImplementation(componentImplementation);
@@ -104,7 +102,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class)
 	 */
 	@Override
-    public ComponentAdapter registerComponentImplementation(
+	public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation) {
 		ensureInitialized(componentImplementation);
 	    return super.registerComponentImplementation(componentKey,
@@ -115,7 +113,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, java.util.List)
 	 */
 	@Override
-    public ComponentAdapter registerComponentImplementation(
+	public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation, List parameters) {
 		ensureInitialized(componentImplementation);
 	    return super.registerComponentImplementation(componentKey,
@@ -126,7 +124,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @see org.picocontainer.defaults.DefaultPicoContainer#registerComponentImplementation(java.lang.Object, java.lang.Class, org.picocontainer.Parameter[])
 	 */
 	@Override
-    public ComponentAdapter registerComponentImplementation(
+	public ComponentAdapter registerComponentImplementation(
     	Object componentKey, Class componentImplementation,
     	Parameter[] parameters) {
 		ensureInitialized(componentImplementation);

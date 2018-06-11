@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -25,10 +25,9 @@ import java.net.ServerSocket;
 import ctSim.model.Command;
 
 /**
- * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim
- * gehoert. Hab keine Ahnung, wofuer das sein soll. Ich nehm die Datei aus dem
- * Build Path, damit man bei Namensaenderungen in Sim-Klassen das nicht immer
- * hier mitfuehren muss. --hkr@heise.de
+ * Diese Klasse scheint ein extra Tool zu sein, was nicht direkt zum Sim gehört. Habe keine Ahnung, wofür
+ * das sein soll. Ich nehme die Datei aus dem Build Path, damit man bei Namensänderungen in Sim-Klassen
+ * das nicht immer hier mitführen muss. - Hendrik Krauß
  */
 public class EchoTest {
 
@@ -41,7 +40,7 @@ public class EchoTest {
 	
 	public void send(Connection connection) throws IOException{
 		Command command = new Command();
-		lastTransmittedSimulTime+=1;//(int)world.getSimulTime();
+		lastTransmittedSimulTime+=1;	// (int)world.getSimulTime();
 		command.setCommand(Command.CMD_DONE);
 		command.setDataL(lastTransmittedSimulTime);
 		command.setDataR(0);
@@ -70,22 +69,23 @@ public class EchoTest {
 				if (command.getDataL() == lastTransmittedSimulTime)
 					run=1;
 			
-			System.out.println("habe auf Kommando "+(char)command.getCommand()+" "+duration+" usec gewartet");
+			System.out.println("habe auf Kommando " + (char)command.getCommand() + " " + duration + " usec gewartet");
 		}
 		
 		t2 = System.nanoTime()/1000;
-		System.out.println("zeit in receiveCommands: "+(t2-t1)+" us   --  Zeit ausserhalb :"+aussen+ " us" );
+		System.out.println("Zeit in receiveCommands: " + (t2-t1) + " us -- Zeit außerhalb :" + aussen + " us" );
 	}	
 	
 	/**
 	 * main
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try{
 			EchoTest et = new EchoTest();
 			
-		//	long sendTime;
+//			long sendTime;
 			
 			ServerSocket server = new ServerSocket(10001);
 			TcpConnection tcp = new TcpConnection();
@@ -95,7 +95,7 @@ public class EchoTest {
 	
 			while(1==1){
 				et.send(tcp);
-			//	sendTime=System.nanoTime()/1000;
+//				sendTime=System.nanoTime()/1000;
 				et.receiveCommands(tcp);
 			}
 			

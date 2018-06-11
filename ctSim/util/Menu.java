@@ -1,20 +1,20 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
- * 
+ * c't-Sim - Robotersimulator für den c't-Bot
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
@@ -27,9 +27,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-/**
- * Menu-Klasse
- */
+/** Menu-Klasse */
 public class Menu extends JMenu {
 	/** UID */
 	private static final long serialVersionUID = - 1890962781596714017L;
@@ -44,13 +42,9 @@ public class Menu extends JMenu {
     		add(a.getMenuItem());
     }
 
-	/**
-	 * Menu-Action
-	 */
+	/** Menu-Action */
 	public static abstract class MAction extends AbstractAction {
-		/**
-		 * UID
-		 */
+		/** UID */
 		private static final long serialVersionUID = -8593361086944554328L;
 
 		/**
@@ -67,9 +61,7 @@ public class Menu extends JMenu {
 		public abstract JMenuItem getMenuItem();
 	}
 
-	/**
-	 * Menue-Eintraege
-	 */
+	/** Menü-Einträge */
 	public static class Entry extends MAction {
 		/** UID */
 		private static final long serialVersionUID = 8468636621500013742L;
@@ -80,11 +72,11 @@ public class Menu extends JMenu {
 		private final JMenuItem ourMenuItem;
 
 		/**
-		 * Konstruiert eine {@link MAction} aus Beschriftung, Icon und
-		 * auszuf&uuml;hrendem Code.
-		 * @param label Text
-		 * @param icon Icon
-		 * @param code Handler
+		 * Konstruiert eine {@link MAction} aus Beschriftung, Icon und auszuführendem Code.
+		 *
+		 * @param label	Text
+		 * @param icon	Icon
+		 * @param code	Handler
 		 */
 		public Entry(String label, Icon icon, Runnable code) {
 			super(label, icon);
@@ -92,10 +84,11 @@ public class Menu extends JMenu {
 			ourMenuItem = new JMenuItem(this);
 		}
 
-		/** 
-		 * Wie Entry(String, Icon, Runnable), nur mit ohne Icon 
-		 * @param name Text 
-		 * @param code Handler
+		/**
+		 * Wie Entry(String, Icon, Runnable), nur mit ohne Icon
+		 *
+		 * @param name	Text
+		 * @param code	Handler
 		 */
 		public Entry(String name, Runnable code) {
 			this(name, null, code);
@@ -118,9 +111,7 @@ public class Menu extends JMenu {
 		}
 	}
 
-	/**
-	 * Checkboxes
-	 */
+	/** Checkboxes */
 	public static class Checkbox extends MAction {
 		/** UID */
 		private static final long serialVersionUID = 3470458051483318867L;
@@ -159,7 +150,7 @@ public class Menu extends JMenu {
 		 * @return Checkbox
 		 */
 		public Checkbox check()   { setChecked(true ); return this; }
-		/** 
+		/**
 		 * @return Checkbox
 		 */
 		public Checkbox uncheck() { setChecked(false); return this; }

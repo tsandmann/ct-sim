@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -19,12 +19,11 @@
 
 package ctSim.controller;
 
-/**
- * Bot-Barrier Interface
- */
+/** Bot-Barrier Interface */
 public interface BotBarrier {
 	/**
-	 * Wartet auf die naechste Runde
+	 * Wartet auf die nächste Runde
+	 *
 	 * @throws InterruptedException
 	 */
 	public void awaitNextSimStep() throws InterruptedException;

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -25,29 +25,29 @@ import ctSim.model.bots.ctbot.CtBotSimTest;
 import ctSim.model.bots.ctbot.MasterSimulator;
 
 /**
- * Erzeugt einen Simulator fuer einen Bot, der zu einer Welt gehoert und eine 3D-Darstellung besitzt 
+ * Erzeugt einen Simulator für einen Bot, der zu einer Welt gehört
+ * und eine 3D-Darstellung besitzt
  */
 public abstract class SimulatorFactory {
-	/**
-	 * SimulatorFactory
-	 */
+	/** SimulatorFactory */
 	private SimulatorFactory() {
 		// No-op
 	}
 
 	/**
 	 * Erstellt einen neuen Simulator
-	 * @param world			Welt, zu der der Bot gehoert
+	 *
+	 * @param world			Welt, zu der der Bot gehört
 	 * @param botWrapper	3D-Darstellung des Bots
 	 * @param bot			Bot-Instanz, die simuliert werden soll
-	 * @return				Simulator fuer Bot bot
+	 * @return Simulator für Bot bot
 	 */
 	public static Runnable createFor(World world, ThreeDBot botWrapper,	SimulatedBot bot) {
 		/* ct-Bot per TCP-Verbindung (C-Binary) */
 		if (bot instanceof CtBotSimTcp) {
 			return new MasterSimulator(world, botWrapper);
 		}
-		
+
 		/* Testbot (Java-Klasse) */
 		if (bot instanceof CtBotSimTest) {
 			return new MasterSimulator(world, botWrapper);

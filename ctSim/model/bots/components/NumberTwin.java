@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -25,14 +25,9 @@ import javax.swing.event.ChangeListener;
 
 import ctSim.model.Command;
 
-/**
- * Zahlendarstellung fuer links oder rechts
- * ist Haelfte eines Paars (z.B. IrL + IrR)
- */
+/** Zahlendarstellung für links oder rechts ist Hälfte eines Paars (z.B. IrL + IrR) */
 public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
-	/**
-	 * NumberTwinVisitor
-	 */
+	/** NumberTwinVisitor */
 	public interface NumberTwinVisitor {
 		/**
 		 * @param numberTwin	Zahl
@@ -42,13 +37,14 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	}
 
 	/** Zahlenwert */
-	protected Number internalModel = Double.valueOf(0); 
+	protected Number internalModel = Double.valueOf(0);
 	/** "linke" oder "rechte" Zahl */
 	protected final boolean isLeft;
 
 	/**
-	 * Zahlendarstellung fuer links oder rechts
-	 * @param isLeft links?
+	 * Zahlendarstellung für links oder rechts
+	 *
+	 * @param isLeft	links?
 	 */
 	public NumberTwin(boolean isLeft) {
 		super(new SpinnerNumberModel());
@@ -66,7 +62,7 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	 * @return Kurzname
 	 */
 	protected abstract String getBaseName();
-	
+
 	/**
 	 * @return Beschreibung
 	 */
@@ -91,14 +87,14 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 	}
 
 	/**
-	 * @param c Command
+	 * @param c	Command
 	 */
 	public synchronized void readFrom(Command c) {
 		internalModel = isLeft ? c.getDataL() : c.getDataR();
 	}
 
 	/**
-	 * @param c Command
+	 * @param c	Command
 	 */
 	public synchronized void writeTo(Command c) {
 		// Verengende Konvertierung Number -> int
@@ -117,24 +113,26 @@ public abstract class NumberTwin extends BotComponent<SpinnerNumberModel> {
 		getExternalModel().setValue(internalModel);
 	}
 
-	/** 
-	 * Nur auf dem EDT laufenlassen 
-	 * @param n Number 
+	/**
+	 * Nur auf dem EDT laufen lassen
+	 *
+	 * @param n	Number
 	 */
 	public synchronized void set(Number n) {
 		getExternalModel().setValue(n);
 	}
 
-	/** 
-	 * Nur auf dem EDT laufenlassen 
-	 * @return Number 
+	/**
+	 * Nur auf dem EDT laufen lassen
+	 *
+	 * @return Number
 	 */
 	public synchronized Number get() {
 		return getExternalModel().getNumber();
 	}
 
 	/**
-	 * @param visitor NumberTwinVisitor
+	 * @param visitor	NumberTwinVisitor
 	 */
 	public void acceptNumTwinVisitor(NumberTwinVisitor visitor) {
 		visitor.visit(this, isLeft);
