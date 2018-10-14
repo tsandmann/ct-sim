@@ -1,3 +1,3 @@
 We use Java3D / JogAmp provided by:
  - Java3D https://github.com/hharrison/{java3d-core,java3d-utils,vecmath}
- - JogAmp http://jogamp.org
+ - JogAmp http://jogamp.org v2.3.2 with patch for bug 1357 from https://sourceforge.net/p/tuer/code/1319/tree/pre_beta/lib/jogamp/jogamp-fat.jar?format=raw
