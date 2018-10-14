@@ -1,5 +1,14 @@
 Changelog für c't-Sim
 ======================
+2018-10-14: Release 26 (v2.26)
+            - Support für Java 9
+						- Durchgängige Unicode Formatierung
+						- Code Conventions aus Wiki ergänzt
+						- Coding Style vereinheitlicht
+						- Menübuttons aktualisiert
+						- Workaround für Java3D Bug unter macOS
+						- jogl Patch für Mesa Bug unter Linux
+
 2017-10-01: Release 25 (v2.25)
 
 2017-09-16: Fehlerausgaben bei Synchronisierungsproblemen verbessert
