@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -28,7 +28,7 @@ import ctSim.util.BotID;
 import ctSim.util.Misc;
 
 /**
- * Output-Stream fuer Kommandos
+ * Output-Stream für Kommandos
  */
 public class CommandOutputStream {
 	/** Puffer */
@@ -94,7 +94,7 @@ public class CommandOutputStream {
 	}
 
 	/** 
-	 * Setzt den Empfaenger all der schoenen Kommandos
+	 * Setzt den Empfänger all der schoenen Kommandos
 	 * @param to
 	 */
 	public void setTo(BotID to) {
@@ -102,8 +102,8 @@ public class CommandOutputStream {
 	}
 
 	/** 
-	 * Liefert den Empfaenger all der schoenen Kommandos
-	 * @return Empfaenger-Id
+	 * Liefert den Empfänger all der schoenen Kommandos
+	 * @return Empfänger-Id
 	 */
 	public BotID getTo() {
 		return new BotID(to);

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -24,7 +24,7 @@ import java.net.ProtocolException;
 import ctSim.controller.Controller;
 
 /**
- * Interface fuer alle Bots
+ * Interface für alle Bots
  */
 public interface Bot {
 	/**
@@ -59,13 +59,13 @@ public interface Bot {
 	public void dispose();
 	
 	/**
-	 * Fuegt einen Handler hinzu, der beim Ableben eines Bots gestartet wird
+	 * Fügt einen Handler hinzu, der beim Ableben eines Bots gestartet wird
 	 * @param runsWhenAObstDisposes
 	 */
 	public void addDisposeListener(Runnable runsWhenAObstDisposes);
 	
 	/**
-	 * Liefert den Controller zurueck, der den Bot verwaltet
+	 * Liefert den Controller zurück, der den Bot verwaltet
 	 * @return Controller Der Controller
 	 */
 	public Controller getController();

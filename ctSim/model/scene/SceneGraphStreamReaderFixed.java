@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -35,8 +35,8 @@ import com.sun.j3d.utils.scenegraph.io.SceneGraphStreamReader;
 import ctSim.util.FmtLogger;
 
 /**
- * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benoetigt, da SceneGraphStreamReader von j3d defekt ist
- * Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu transerieren. Das koennte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht
+ * Diese Hilfsklasse transferiert einen Scenegraphen und wird nur benötigt, da SceneGraphStreamReader von j3d defekt ist
+ * Achtung, sie "missbraucht" die UserData, um die namen der Objekte zu transerieren. Das könnte Kollisionen mit anderen Routinen erzeugen, tut es aber bislang nicht
  * 
  * @author bbe (bbe@heise.de)
  *
@@ -69,7 +69,6 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 	 * @param scene Gruppe
 	 * @param map Map
 	 */
-	@SuppressWarnings({ "unchecked" })
 	private void reconstructMap(Group scene, HashMap map){
 		if (scene == null){
 			lg.warn("Keine Group empfangen");
@@ -88,13 +87,13 @@ public class SceneGraphStreamReaderFixed extends SceneGraphStreamReader {
 				map.put(name,so);
 				System.out.println(string+name+" rekonstruiert");
 			} else {
-				lg.warn(string+name+" konnte nach der \u00DCbertragung nicht " +
+				lg.warn(string+name+" konnte nach der Übertragung nicht " +
 						"rekonstruiert werden");
 				toKill.add(name);
 			}
 		}
 		
-		// Entferne alle Listeneintraege, die nicht korrekt uebertragen wurden
+		// Entferne alle Listeneinträge, die nicht korrekt übertragen wurden
 		it=toKill.iterator();
 		while (it.hasNext()){
 			String name = (String)it.next();

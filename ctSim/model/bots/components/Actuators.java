@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -43,11 +43,11 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
 /**
- * Klasse, die nur als Container f&uuml;r innere Klassen dient und selber keine
- * Methoden oder Felder hat. (F&uuml;r die winzigen inneren Klassen lohnt sich
+ * Klasse, die nur als Container für innere Klassen dient und selber keine
+ * Methoden oder Felder hat. (Für die winzigen inneren Klassen lohnt sich
  * keine eigene Datei.)
  *
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class Actuators {
 	/**
@@ -67,7 +67,8 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.NumberTwin#getBaseName()
 		 */
-		@Override protected String getBaseName() { 
+		@Override
+		protected String getBaseName() { 
 			return "Motor"; 
 		}
 		
@@ -87,11 +88,11 @@ public class Actuators {
 	}
 
 	/**
-	 * Servor fuer Klappe
+	 * Servor für Klappe
 	 */
 	public static class DoorServo extends NumberTwin implements SimpleActuator, CanRead {
 		/**
-		 * Servor fuer Klappe
+		 * Servor für Klappe
 		 * @param isLeft Servo 1 ("links") oder 2 ("rechts")?
 		 */
 		public DoorServo(boolean isLeft) {
@@ -104,13 +105,14 @@ public class Actuators {
 		 */
 		@Override
 		public String getBaseDescription() {
-			return "Servomotor f\u00FCr Klappe";
+			return "Servomotor für Klappe";
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getBaseName() { 
+		@Override
+		public String getBaseName() { 
 			return "DoorServo"; 
 		}
 		
@@ -139,11 +141,11 @@ public class Actuators {
 	}
 	
 	/**
-	 * Servor fuer Kamera
+	 * Servor für Kamera
 	 */
 	public static class CamServo extends NumberTwin implements SimpleActuator, CanRead {
 		/**
-		 * Servor fuer Kamera
+		 * Servor für Kamera
 		 * @param isLeft Servo 1 ("links") oder 2 ("rechts")?
 		 */
 		public CamServo(boolean isLeft) {
@@ -156,13 +158,14 @@ public class Actuators {
 		 */
 		@Override
 		public String getBaseDescription() {
-			return "Servomotor f\u00FCr Kamera";
+			return "Servomotor für Kamera";
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getBaseName() { 
+		@Override
+		public String getBaseName() { 
 			return "CamServo"; 
 		}
 		
@@ -255,14 +258,16 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { 
+		@Override
+		public String getName() { 
 			return "Log"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		@Override
+		public String getDescription() { 
 			return "Log-Anzeige"; 
 		}
 	}
@@ -273,13 +278,13 @@ public class Actuators {
 	 * @author Timo Sandmann (mail@timosandmann.de)
 	 */
 	public static class Program extends BotComponent<PlainDocument> implements CanWriteAsynchronously {
-		/** Logger fuer die Programm-Komponente */
+		/** Logger für die Programm-Komponente */
 		final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.components.Program");
 		
 		/** asynchroner Outputstream */
 		private CommandOutputStream asyncOut;
 		
-		/** Groesse eines uebertragenen Blocks [Byte] */
+		/** Größe eines übertragenen Blocks [Byte] */
 		private final int SEND_SIZE = 64;
 
 		/**
@@ -298,7 +303,7 @@ public class Actuators {
 		}
 		
 		/**
-		 * @return Command-Code fuer Skript-Programme
+		 * @return Command-Code für Skript-Programme
 		 */
 		public Code getHotCmdCode() {
 			return Command.Code.PROGRAM; 
@@ -307,15 +312,17 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() {
+		@Override
+		public String getName() {
 			return "Programm"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
-			return "Programmfenster f\u00FCr Skriptsprachen"; 
+		@Override
+		public String getDescription() { 
+			return "Programmfenster für Skriptsprachen"; 
 		}
 
 		/**
@@ -327,10 +334,10 @@ public class Actuators {
 
 		/**
 		 * Sendet den Inhalt des Fensters als Programm zum Bot.
-		 * @param filename	Dateiname fuer das Programm
+		 * @param filename	Dateiname für das Programm
 		 * @param data		Das Programm
 		 * @param type		Typ, 0: Basic, 1: ABL
-		 * @param bot		Referenz auf die zugehoerige Bot-Instanz
+		 * @param bot		Referenz auf die zugehörige Bot-Instanz
 		 * @throws IOException
 		 */
 		public void sendProgramData(String filename, String data, int type, Bot bot) throws IOException {
@@ -374,7 +381,7 @@ public class Actuators {
 			final int to_send = length % SEND_SIZE;
 			lg.fine("to_send=" + to_send);
 			if (to_send > 0) {
-				lg.fine(" sende zusaetzliche " + to_send + " Byte");
+				lg.fine(" sende zusätzliche " + to_send + " Byte");
 				bytes = new byte[to_send];
 				System.arraycopy(data.getBytes(), length - to_send, bytes, 0, to_send - 1);
 				sendData(asyncOut, bytes, type, i);
@@ -392,10 +399,10 @@ public class Actuators {
 		
 		/**
 		 * Bereitet den Transfer eines Programms zum Bot vor.
-		 * @param s			OutputStream fuer die Daten
-		 * @param filename	Dateiname fuer das Programm
+		 * @param s			OutputStream für die Daten
+		 * @param filename	Dateiname für das Programm
 		 * @param type		Typ, 0: Basic, 1: ABL
-		 * @param length	Laenge des Programms in Byte
+		 * @param length	Länge des Programms in Byte
 		 */
 		private void prepareCmd(CommandOutputStream s, byte[] filename, int type, int length) {
 			Command c = s.getCommand(getHotCmdCode());
@@ -406,11 +413,11 @@ public class Actuators {
 		}
 		
 		/**
-		 * Sendet die Programmdaten zum Bot (in SEND_SIZE Byte groessen Teilen)
-		 * @param s		OutputStream fuer die Daten
+		 * Sendet die Programmdaten zum Bot (in SEND_SIZE Byte großen Teilen)
+		 * @param s		OutputStream für die Daten
 		 * @param data	Programmdaten
 		 * @param type	Typ, 0: Basic, 1: ABL
-		 * @param step	Nr. des Datenstuecks
+		 * @param step	Nr. des Datenstücks
 		 */
 		private void sendData(CommandOutputStream s, byte[] data, int type, int step) {
 			Command c = s.getCommand(getHotCmdCode());
@@ -475,24 +482,24 @@ public class Actuators {
 	 * <h3>{@link Command c't-Bot-Protokoll}</h3>
 	 * Das LCD lauscht auf Kommandos mit dem
 	 * {@linkplain Code#ACT_LCD Command-Code ACT_LCD}. Diese Kommandos
-	 * m&uuml;ssen als Sub-Command-Code einen der folgenden Werte haben:
+	 * müssen als Sub-Command-Code einen der folgenden Werte haben:
 	 * <ul>
-	 * <li>{@linkplain SubCode#LCD_CLEAR} &ndash; l&ouml;scht das LCD, so dass
-	 * &uuml;berall nur Leerzeichen stehen. </li>
-	 * <li>{@linkplain SubCode#LCD_CURSOR} &ndash; Bewegt den Cursor in die
+	 * <li>{@linkplain SubCode#LCD_CLEAR} – löscht das LCD, so dass
+	 * überall nur Leerzeichen stehen. </li>
+	 * <li>{@linkplain SubCode#LCD_CURSOR} – Bewegt den Cursor in die
 	 * Spalte, die in {@code dataL} angegeben ist, und die Zeile, die in
 	 * {@code dataR} angegeben ist. Beide Angaben zero-based, d.h. 0,0
 	 * bezeichnet das linkeste Zeichen der obersten Zeile. Negative Werte werden
-	 * wie 0 behandelt. Werte rechts au&szlig;erhalb des Display werden wie die
-	 * rechteste Spalte behandelt; Werte unten au&szlig;erhalb des Display wie
+	 * wie 0 behandelt. Werte rechts außerhalb des Display werden wie die
+	 * rechteste Spalte behandelt; Werte unten außerhalb des Display wie
 	 * die unterste Zeile. </li>
-	 * <li>{@linkplain SubCode#LCD_DATA} &ndash; Holt die Nutzlast des
+	 * <li>{@linkplain SubCode#LCD_DATA} – Holt die Nutzlast des
 	 * Kommandos und schreibt sie ins Display an die aktuelle Cursor-Position.
-	 * Falls dort schon etwas steht, wird der alte Text &uuml;berschrieben
+	 * Falls dort schon etwas steht, wird der alte Text überschrieben
 	 * (nicht weitergeschoben). Falls der Text rechts aus dem Display
-	 * hinauslaufen w&uuml;rde, wird er abgeschnitten (bricht nicht in die
-	 * n&auml;chste Zeile um). </li>
-	 * <li>{@linkplain SubCode#NORM} &ndash; Kombination von LCD_CURSOR und
+	 * hinauslaufen würde, wird er abgeschnitten (bricht nicht in die
+	 * nächste Zeile um). </li>
+	 * <li>{@linkplain SubCode#NORM} – Kombination von LCD_CURSOR und
 	 * LCD_DATA: Bewegt den Cursor wie ein LCD_CURSOR-Kommando und zeigt dann
 	 * Text an wie ein LCD_DATA-Kommando. </li>
 	 * </ul>
@@ -591,12 +598,12 @@ public class Actuators {
 		}
 
 		/**
-		 * Setzt das Display zur&uuml;ck, so dass es auf ganzer Breite und
-		 * H&ouml;he nur Leerzeichen anzeigt.
+		 * Setzt das Display zurück, so dass es auf ganzer Breite und
+		 * Höhe nur Leerzeichen anzeigt.
 		 * @param d Document des Displays
 		 *
 		 * @throws BadLocationException nur falls jemand was am Code
-		 * &auml;ndert; sollte normalerweise nie vorkommen.
+		 * ändert; sollte normalerweise nie vorkommen.
 		 */
 		protected synchronized void clearModel(Document d) throws BadLocationException {
 			StringBuilder b = new StringBuilder();
@@ -613,14 +620,14 @@ public class Actuators {
 		}
 
 		/**
-		 * Text einf&uuml;gen an der aktuellen Cursorposition. Dort stehender
-		 * Text wird &uuml;berschrieben (nicht verschoben).
+		 * Text einfügen an der aktuellen Cursorposition. Dort stehender
+		 * Text wird überschrieben (nicht verschoben).
 		 *
 		 * @param text Der Text, der ab der neuen Cursorposition einzutragen ist
 		 * @throws BadLocationException "Kann nicht passieren"&#8482;
 		 */
 		protected synchronized void overwrite(String text) throws BadLocationException {
-			// +1 fuer \n am Zeilenende
+			// +1 für \n am Zeilenende
 	    	int offset = cursorY * (numCols + 1) + cursorX;
 	    	int numCharsAvail = numCols - cursorX;
 	    	if (numCharsAvail < text.length())
@@ -634,9 +641,9 @@ public class Actuators {
 	    /**
 		 * Bewegt den Cursor.
 		 *
-		 * @param col Neue Cursorposition (Spalte). Falls sie au&szlig;erhalb
+		 * @param col Neue Cursorposition (Spalte). Falls sie außerhalb
 		 * der Ausdehnung dieses Displays liegt, wird sie auf den
-		 * n&auml;chstliegenden zul&auml;ssigen Wert gesetzt.
+		 * nächstliegenden zulässigen Wert gesetzt.
 		 * @param row Dito (Zeile).
 		 */
 		protected synchronized void setCursor(int col, int row) {
@@ -663,24 +670,26 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { 
+		@Override
+		public String getName() { 
 			return "LCD"; 
 		}
 		
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		@Override
+		public String getDescription() { 
 			return "LCD-Anzeige"; 
 		}
 	}
 
 	/**
 	 * <p>
-	 * Repr&auml;sentation einer LED (Leuchtdiode) auf dem Bot. Nicht verwirren
+	 * Repräsentation einer LED (Leuchtdiode) auf dem Bot. Nicht verwirren
 	 * lassen wegen dem Model: Eine LED ist etwas, was an oder aus sein kann,
 	 * d.h. sie ist sinnvollerweise eine Art {@link JCheckBox} (auch wenn unsere
-	 * LEDs sich nicht als Kasten mit/ohne H&auml;kchen malen, sondern als runde
+	 * LEDs sich nicht als Kasten mit/ohne Häkchen malen, sondern als runde
 	 * helle/dunkle Punkte). Diese Klasse hat daher das Model, das Checkboxen
 	 * auch verwenden:JToggleButton.ToggleButtonModel. (Das wiederum
 	 * kommt daher, dass Checkboxen in Java von Buttons abgeleitet sind.)
@@ -697,9 +706,9 @@ public class Actuators {
 	 * Datenformat des Felds dataL: Beispiel dataL = 0x42 = 0b01000010
 	 *
 	 * <pre>
-	 *       .--------------- wei&szlig;
-	 *       | .------------- t&uuml;rkis
-	 *       | | .----------- gr&uuml;n
+	 *       .--------------- weiß
+	 *       | .------------- türkis
+	 *       | | .----------- grün
 	 *       | | | .--------- gelb
 	 *       | | | | .------- orange
 	 *       | | | | | .----- rot
@@ -727,12 +736,12 @@ public class Actuators {
 		/**
 		 * Erstellt eine LED.
 		 *
-		 * @param name Name der LED, wie er dem Benutzer pr&auml;sentiert wird
+		 * @param name Name der LED, wie er dem Benutzer präsentiert wird
 		 * @param bitIndexFromLsb Welches Bit der LED-Statusangaben soll die LED
-		 * beachten? 0 = LSB, N&auml;heres siehe {@link Led oben}, Abschnitt
-		 * &quot;c't-Bot-Protokoll&quot;
+		 * beachten? 0 = LSB, Näheres siehe {@link Led oben}, Abschnitt
+		 * "c't-Bot-Protokoll"
 		 * @param colorWhenOn Farbe der LED, wenn sie leuchtet. Eine dunklere
-		 * Valiante f&uuml;r dann, wenn sie nicht leuchtet, wird automatisch
+		 * Valiante für dann, wenn sie nicht leuchtet, wird automatisch
 		 * berechnet
 		 */
 		public Led(String name, int bitIndexFromLsb, Color colorWhenOn) {
@@ -773,8 +782,8 @@ public class Actuators {
 
 		/**
 		 * Liefert die Farbe, in der die LED darzustellen ist, wenn sie an ist.
-		 * Die Farbe f&uuml;r dann, wenn sie aus ist, sollte hieraus berechnet
-		 * werden (typischerweise durch Reduzieren der S&auml;ttigung und/oder
+		 * Die Farbe für dann, wenn sie aus ist, sollte hieraus berechnet
+		 * werden (typischerweise durch Reduzieren der Sättigung und/oder
 		 * Helligkeit).
 		 * @return Farbe
 		 */
@@ -785,14 +794,16 @@ public class Actuators {
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getName()
 		 */
-		@Override public String getName() { 
+		@Override
+		public String getName() { 
 			return name; 
 		}
 
 		/**
 		 * @see ctSim.model.bots.components.BotComponent#getDescription()
 		 */
-		@Override public String getDescription() { 
+		@Override
+		public String getDescription() { 
 			return ""; 
 		}
 	}

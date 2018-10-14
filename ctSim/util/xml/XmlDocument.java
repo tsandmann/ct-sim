@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -43,35 +43,35 @@ import ctSim.util.Decoratoror;
 
 /**
  * <p>
- * Klasse, die die Arbeit mit XPath vereinfachen und verertr&auml;glichen
+ * Klasse, die die Arbeit mit XPath vereinfachen und vererträglichen
  * soll.
  * </p>
  * <h3>XPath?</h3>
  * <p>
- * Eine Metapher f&uuml;r <a href="http://en.wikipedia.org/wiki/Xpath">XPath</a>
- * sind regul&auml;re Ausdr&uuml;cke: So, wie regul&auml;re Ausdr&uuml;cke
- * Teilstrings in einem langen String fangen, f&auml;ngt XPath Teile aus einem
- * XML-Dokument. XPath l&auml;sst sich rubbeldiekatz lernen durch die <a
+ * Eine Metapher für <a href="http://en.wikipedia.org/wiki/Xpath">XPath</a>
+ * sind reguläre Ausdrücke: So, wie reguläre Ausdrücke
+ * Teilstrings in einem langen String fangen, fängt XPath Teile aus einem
+ * XML-Dokument. XPath lässt sich rubbeldiekatz lernen durch die <a
  * href="http://www.w3.org/TR/xpath.html#path-abbrev">Anwendungsbeispiele in
- * der Spezifikation</a> (&quot;context node&quot; hei&szlig;t in aller Regel
+ * der Spezifikation</a> ("context node" heißt in aller Regel
  * Root-Knoten des XML-Dokuments.)
  * </p>
  * <h3>Verwendungsbeispiel</h3>
  * <p>
  * <ul>
  * <li><code>XmlDocument d = new <a href="#XmlDocument(java.lang.String)">XmlDocument</a>("pfad/zu/ner/datei.xml");</code></li>
- * <li><code>Node r = d.<a href="#getNode(java.lang.String)">getNode</a>("//ruebe[12]"); // Einzelknoten: zw&ouml;lfte R&uuml;be</code></li>
+ * <li><code>Node r = d.<a href="#getNode(java.lang.String)">getNode</a>("//ruebe[12]"); // Einzelknoten: zwölfte Rübe</code></li>
  * <li><code>for (Node node : d.<a href="#getNodeList(java.lang.String)">getNodeList</a>("//gurke")) { ... } // Liste aller Gurken im XML</code></li>
  * </ul>
  * <code>getNodeList()</code> liefert dabei eine
- * {@link org.w3c.dom.NodeList} gem&auml;&szlig; der Java-Plattform-API, die
+ * {@link org.w3c.dom.NodeList} gemäß der Java-Plattform-API, die
  * aber als Verbesserung auch {@link Iterable} implementiert. Daher ist sie in
  * der gezeigten Weise in for-each-Schleifen verwendbar, im Gegensatz zur
  * normalen NodeList.
  * </p>
  * <h3>Spezifikation</h3>
  * <p>
- * Diese Klasse greift zur&uuml;ck auf die XPath-API aus der Java-Plattform (javax.xml.xpath).
+ * Diese Klasse greift zurück auf die XPath-API aus der Java-Plattform (javax.xml.xpath).
  * Es ist der Dokumentation nicht zu entnehmen, welche XPath-Version die
  * Plattform-API implementiert, aber ich glaube es ist 1.0 (das wird zumindest
  * bei {@link XPath} angedeutet). &rarr; <a
@@ -80,51 +80,51 @@ import ctSim.util.Decoratoror;
  * <h3>Motivation</h3>
  * <p>
  * Die Handhabung von XPath in der normalen Java-Plattform ist leider sehr
- * javaig (d.h. umst&auml;ndlich und b&uuml;rokratisch). Eine Routineaufgabe
+ * javaig (d.h. umständlich und bürokratisch). Eine Routineaufgabe
  * wie "bitte mal <code>//tomate</code> auf gemuese.xml anwenden" erfordert,
- * wenn ich das richtig sehe, mindestens folgende Monstrosit&auml;t:
+ * wenn ich das richtig sehe, mindestens folgende Monstrosität:
  * <code>XPathFactory.newInstance().newXPath().evaluate(DocumentBuilderFactory.newDocumentBuilder().parse("gemuese.xml"), "//tomate");</code>
- * &ndash; und ist dann noch nicht mal typsicher. (Bei der verwendeten Methode
- * handelt es sich &uuml;brigens um eine "convenience&quot;-Methode, d.h. das
+ * – und ist dann noch nicht mal typsicher. (Bei der verwendeten Methode
+ * handelt es sich übrigens um eine "convenience"-Methode, d.h. das
  * ist noch der einfachere Fall. Was auch nicht hilft ist, dass man sich den
- * o.g. Aufruf m&uuml;hsam zusammenst&uuml;ckeln muss, da die Dokumentation
- * leider un&uuml;bersichtlich geraten ist und sich st&auml;ndig verzettelt.)
+ * o.g. Aufruf mühsam zusammenstückeln muss, da die Dokumentation
+ * leider unübersichtlich geraten ist und sich ständig verzettelt.)
  * </p>
  * <p>
  * Diese Klasse vereinfacht die o.g. Routineaufgabe zu:
  * <code>new XmlDocument("gemuese.xml").getNodeList("//tomate")</code>.
- * Sie bietet au&szlig;erdem Typsicherheit beim Umgang mit XPath, im Gegensatz
+ * Sie bietet außerdem Typsicherheit beim Umgang mit XPath, im Gegensatz
  * zur Java-Plattform.
  * </p>
  *
  * siehe javax.xml.xpath
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class XmlDocument {
 	/**
-	 * Parst die &uuml;bergegebene XML-Datei und validiert sie gegen die DTD,
+	 * Parst die übergegebene XML-Datei und validiert sie gegen die DTD,
 	 * die in der Datei angegeben ist.
 	 *
 	 * @param fileToParse Die XML-Datei, die geparst und validiert werden soll,
 	 * z.B. <code>new File("spielzeug/tiere/kuschelnilpferd.xml")</code>.
-	 * @param baseDir Das Verzeichnis, das f&uuml;rs Aufl&ouml;sen von relativen
-	 * URIs als Ausgangspunkt genommen wird. Das ist haupts&auml;chlich relevant
-	 * f&uuml;rs Finden von DTDs, besonders falls die DTD in einem anderen
-	 * Verzeichnis liegt als die XML-Datei. &ndash; Beispiel: In unseren
-	 * Parcoursdateien wird die DTD folgenderma&szlig;en angegeben:
+	 * @param baseDir Das Verzeichnis, das fürs Auflösen von relativen
+	 * URIs als Ausgangspunkt genommen wird. Das ist hauptsächlich relevant
+	 * fürs Finden von DTDs, besonders falls die DTD in einem anderen
+	 * Verzeichnis liegt als die XML-Datei. – Beispiel: In unseren
+	 * Parcoursdateien wird die DTD folgendermaßen angegeben:
 	 * <code>&lt;!DOCTYPE collection SYSTEM "parcours.dtd"></code>. Die
 	 * relative URI ist dabei ist <code>parcours.dtd</code> (im XML-Jargon
 	 * "system identifier" genannt). Wenn diese Klasse also eine XML-Datei mit
-	 * eben genannten Zeile parst und z.B. als baseDir &quot;wurst&quot;
-	 * &uuml;bergeben wurde, wird der Parser versuchen, die Datei
-	 * wurst/parcours.dtd zu &ouml;ffnen und als DTD zu verwenden.
+	 * eben genannten Zeile parst und z.B. als baseDir "wurst"
+	 * übergeben wurde, wird der Parser versuchen, die Datei
+	 * wurst/parcours.dtd zu öffnen und als DTD zu verwenden.
 	 * @return das Dokument
-	 * @throws SAXException Falls die &uuml;bergebene Datei nicht geparst werden
+	 * @throws SAXException Falls die übergebene Datei nicht geparst werden
 	 * kann, etwa weil das enthaltene XML nicht wohlgeformt ist oder nicht gegen
-	 * die DTD validiert. Eine SAXException wird unter genau den Umst&auml;nden
+	 * die DTD validiert. Eine SAXException wird unter genau den Umständen
 	 * geworfen, wenn {@link DocumentBuilder#parse(InputStream, String)}, eine
 	 * wirft.
-	 * @throws IOException Falls beim Lesen der &uuml;bergebenen Datei eine
+	 * @throws IOException Falls beim Lesen der übergebenen Datei eine
 	 * IOException auftritt, etwa weil die Datei nicht lesbar ist.
 	 * @throws ParserConfigurationException In dem abwegigen Fall, dass die
 	 * Java-Plattform keinen validierenden Parser auftreiben kann.
@@ -136,8 +136,8 @@ public class XmlDocument {
 
 	/**
 	 * Wie {@link #parse(java.io.File, java.lang.String)}, aber verwendet
-	 * als Parameter &quot;baseDir&quot; das Verzeichnis, das das
-	 * &uuml;bergebene File enth&auml;lt. Relevant also f&uuml;r den Fall, dass
+	 * als Parameter "baseDir" das Verzeichnis, das das
+	 * übergebene File enthält. Relevant also für den Fall, dass
 	 * die XML- und DTD-Datei im selben Verzeichnis liegen.
 	 *
 	 * @param fileToParse Die XML-Datei, die geparst und validiert werden soll,
@@ -169,7 +169,7 @@ public class XmlDocument {
 
 	/**
 	 * Wie {@link #parse(java.io.File, java.lang.String)}, aber liest die
-	 * Datei aus dem &uuml;bergebenen InputStream.
+	 * Datei aus dem übergebenen InputStream.
 	 * @param documentStream 
 	 * @param baseDir 
 	 * @return Das Dokument
@@ -180,12 +180,12 @@ public class XmlDocument {
 	public static QueryableDocument parse(
 		InputStream documentStream, String baseDir)
 		throws SAXException, IOException, ParserConfigurationException {
-		// Irrsinnige Buerokratie ...
+		// Irrsinnige Bürokratie ...
 		DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
 		f.setValidating(true); // Soll gegen DTD validieren
 		DocumentBuilder parser = f.newDocumentBuilder();
 		/*
-		 * Wichtig fuer Validierung: Wenn kein ErrorHandler gesetzt und eine
+		 * Wichtig für Validierung: Wenn kein ErrorHandler gesetzt und eine
 		 * XML-Datei geparst wird, die zwar wohlgeformt, aber nicht gueltig
 		 * (valid) ist, dann gibt der Parser eine dumme Warnung auf stderr aus,
 		 * man solle doch einen ErrorHandler setzen
@@ -242,7 +242,7 @@ public class XmlDocument {
 		 */
 		private Node cocktail;
 
-		/** Hiwi zum Auswerten von XPath-Ausdr&uuml;cken */
+		/** Hiwi zum Auswerten von XPath-Ausdrücken */
 		private XPath evaluator = XPathFactory.newInstance().newXPath();
 
 		/**
@@ -360,14 +360,14 @@ public class XmlDocument {
 		/**
 		 * <p>
 		 * Selektiert mehrere Knoten. Wenn z.B. beim Konstruieren dieses Objekts
-		 * eine Datei angegeben wurde, die 42 St&uuml;ck
-		 * <code>&lt;wurst&gt;...&lt;/wurst&gt</code>-Elemente enth&auml;lt,
+		 * eine Datei angegeben wurde, die 42 Stück
+		 * <code>&lt;wurst&gt;...&lt;/wurst&gt</code>-Elemente enthält,
 		 * wird <code>getNodeList("//wurst")</code> eine Liste dieser 42
-		 * Elemente zur&uuml;ckliefern.
+		 * Elemente zurückliefern.
 		 * </p>
 		 * <p>
-		 * <strong>Drandenken:</strong> Knoten m&uuml;ssen nicht Elemente sein
-		 * &ndash; Attribute, CData-Abschnitte usw. sind auch Knoten. Siehe
+		 * <strong>Drandenken:</strong> Knoten müssen nicht Elemente sein
+		 * – Attribute, CData-Abschnitte usw. sind auch Knoten. Siehe
 		 * {@link Node}.
 		 * </p>
 		 * @param xPathExpression 
@@ -375,9 +375,9 @@ public class XmlDocument {
 		 * @return Die selektierten Knoten als {@link NodeList}, wie sie die
 		 * Java-Plattform implementiert, die aber auch {@link Iterable} ist.
 		 * <code>for (Node n : document.getNodeList(...))</code> ist also
-		 * m&ouml;glich. Gibt es im Dokument keine Knoten, die von dem
+		 * möglich. Gibt es im Dokument keine Knoten, die von dem
 		 * XPath-Ausdruck selektiert werden, wird eine NodeList
-		 * zur&uuml;ckgegeben, die keine Knoten enth&auml;lt.
+		 * zurückgegeben, die keine Knoten enthält.
 		 * @throws XPathExpressionException 
 		 */
 		public IterableNodeList getNodeList(String xPathExpression)
@@ -385,14 +385,14 @@ public class XmlDocument {
 
 		/**
 		 * <p>
-		 * Selektiert einen einzelnen Knoten. Falls der &uuml;bergebene
+		 * Selektiert einen einzelnen Knoten. Falls der übergebene
 		 * XPath-Ausdruck mehrere Knoten selektiert, wird er erste
-		 * zur&uuml;ckgeliefert; falls er keine Knoten selektiert, wird
-		 * {@code null} zur&uuml;ckliefert.
+		 * zurückgeliefert; falls er keine Knoten selektiert, wird
+		 * {@code null} zurückliefert.
 		 * </p>
 		 * <p>
-		 * <strong>Drandenken:</strong> Knoten m&uuml;ssen nicht Elemente sein
-		 * &ndash; Attribute, CData-Abschnitte usw. sind auch Knoten. Siehe
+		 * <strong>Drandenken:</strong> Knoten müssen nicht Elemente sein
+		 * – Attribute, CData-Abschnitte usw. sind auch Knoten. Siehe
 		 * {@link Node}.
 		 * </p>
 		 * @param xPathExpression 
@@ -404,25 +404,25 @@ public class XmlDocument {
 
 		/**
 		 * <p>
-		 * Liefert den &quot;string-value&quot; der Knoten, die vom
-		 * &uuml;bergebenen XPath-Ausdruck selektiert wurden. Liefert einen
-		 * leeren String (""), falls der &uuml;bergebene XPath-Ausdruck keine
-		 * Knoten selektiert (gem&auml;&szlig; <a
+		 * Liefert den "string-value" der Knoten, die vom
+		 * übergebenen XPath-Ausdruck selektiert wurden. Liefert einen
+		 * leeren String (""), falls der übergebene XPath-Ausdruck keine
+		 * Knoten selektiert (gemäß <a
 		 * href="http://www.w3.org/TR/xpath#function-string">XPath-Konvertierungsregeln</a>).
-		 * Der &quot;string-value&quot; ist &ndash;
+		 * Der "string-value" ist –
 		 * <ul>
-		 * <li>f&uuml;r Elemente: s&auml;mtlicher Text, den sie enthalten.
-		 * Beispiel: &quot;wurstbrot&quot;, wenn die Elemente
-		 * <code>&lt;fruehstueck&gt;&lt;a&gt;wurst&lt;/a&gt;&lt;b&gt;brot&lt;/b&gt;&lt;/fruehstueck&gt;</code>
+		 * <li>für Elemente: sämtlicher Text, den sie enthalten.
+		 * Beispiel: "wurstbrot", wenn die Elemente
+		 * <code>&lt;fruehstück&gt;&lt;a&gt;wurst&lt;/a&gt;&lt;b&gt;brot&lt;/b&gt;&lt;/fruehstück&gt;</code>
 		 * mit XPath selektiert wurden.</li>
-		 * <li>f&uuml;r Attribute: der Wert des Attributs. Beispiel:
-		 * &quot;kaese&quot; falls das erste Attribut von
-		 * <code>&lt;fruehstueck belag=&quot;kaese&quot;&gt;</code> mit XPath
+		 * <li>für Attribute: der Wert des Attributs. Beispiel:
+		 * "käse" falls das erste Attribut von
+		 * <code>&lt;fruehstück belag="käse"&gt;</code> mit XPath
 		 * selektiert wurde. <a
 		 * href="http://www.w3.org/TR/xml/#AVNormalize">Details zur Umwandlung
 		 * eines Attributknotens in einen String</a></li>
-		 * <li>f&uuml;r Textknoten: ihr Inhalt</li>
-		 * <li>f&uuml;r alle anderen Knotenarten: Siehe <a
+		 * <li>für Textknoten: ihr Inhalt</li>
+		 * <li>für alle anderen Knotenarten: Siehe <a
 		 * href="http://www.w3.org/TR/xpath.html#data-model">XPath-Spezifikation
 		 * Abschnitt 5</a></li>
 		 * </ul>
@@ -442,8 +442,8 @@ public class XmlDocument {
 		/**
 		 * Selektiert Knoten, konvertiert sie in einen String (siehe
 		 * {@link #getString(String)}) und konvertiert den String in einen
-		 * Double. Falls der &uuml;bergebene XPath-Ausdruck keine Knoten
-		 * selektiert, wird {@code NaN} zur&uuml;ckgeliefert (d.h.
+		 * Double. Falls der übergebene XPath-Ausdruck keine Knoten
+		 * selektiert, wird {@code NaN} zurückgeliefert (d.h.
 		 * {@code getNumber(...).isNaN() == true}). <a
 		 * href="http://www.w3.org/TR/xpath#function-number">Details zur
 		 * Konvertierung in eine Zahl</a>
@@ -459,8 +459,8 @@ public class XmlDocument {
 		/**
 		 * Selektiert Knoten, konvertiert sie in einen String (siehe
 		 * {@link #getString(String)}) und konvertiert den String in einen
-		 * Boolean. Falls der &uuml;bergebene XPath-Ausdruck keine Knoten
-		 * selektiert, wird {@code false} zur&uuml;ckgeliefert. <a
+		 * Boolean. Falls der übergebene XPath-Ausdruck keine Knoten
+		 * selektiert, wird {@code false} zurückgeliefert. <a
 		 * href="http://www.w3.org/TR/xpath#function-boolean">Details zur
 		 * Konvertierung in einen Boolean</a>
 		 * @param xPathExpression 
@@ -474,10 +474,10 @@ public class XmlDocument {
 
 		/**
 		 * Wie {@link #getString(String) getString()}, aber falls der
-		 * &uuml;bergebene XPath-Ausdruck keine Knoten selektiert, wird
-		 * {@code null} zur&uuml;ckgeliefert. So kann man auseinanderhalten, ob
+		 * übergebene XPath-Ausdruck keine Knoten selektiert, wird
+		 * {@code null} zurückgeliefert. So kann man auseinanderhalten, ob
 		 * der Knoten nicht existiert ({@code null}) oder ob er existiert,
-		 * aber keinen Text enth&auml;lt ("").
+		 * aber keinen Text enthält ("").
 		 * @param xPathExpression 
 		 * @return String / null
 		 * @throws XPathExpressionException 
@@ -487,10 +487,10 @@ public class XmlDocument {
 
 		/**
 		 * Wie {@link #getNumber(String) getNumber()}, aber falls der
-		 * &uuml;bergebene XPath-Ausdruck keine Knoten selektiert, wird
-		 * {@code null} zur&uuml;ckgeliefert. So kann man auseinanderhalten, ob
+		 * übergebene XPath-Ausdruck keine Knoten selektiert, wird
+		 * {@code null} zurückgeliefert. So kann man auseinanderhalten, ob
 		 * der Knoten nicht existiert ({@code null}) oder ob er existiert,
-		 * aber etwas anderes als eine Zahl enth&auml;lt.
+		 * aber etwas anderes als eine Zahl enthält.
 		 * @param xPathExpression 
 		 * @return Zahl / null
 		 * @throws XPathExpressionException 
@@ -500,10 +500,10 @@ public class XmlDocument {
 
 		/**
 		 * Wie {@link #getBoolean(String) getBoolean()}, aber falls der
-		 * &uuml;bergebene XPath-Ausdruck keine Knoten selektiert, wird
-		 * {@code null} zur&uuml;ckgeliefert. So kann man auseinanderhalten, ob
+		 * übergebene XPath-Ausdruck keine Knoten selektiert, wird
+		 * {@code null} zurückgeliefert. So kann man auseinanderhalten, ob
 		 * der Knoten nicht existiert ({@code null}) oder ob er wirklich da
-		 * ist und {@code false} enth&auml;lt.
+		 * ist und {@code false} enthält.
 		 * @param xPathExpression 
 		 * @return Boolean / null
 		 * @throws XPathExpressionException 

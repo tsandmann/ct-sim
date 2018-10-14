@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -42,9 +42,9 @@ import javax.swing.Icon;
  *                  '-------------------' '---------------------'
  * </pre>
  *
- * Der c't-Sim verwendet die Klasse {@link FileIconMap}; das Applet l&auml;dt
+ * Der c't-Sim verwendet die Klasse {@link FileIconMap}; das Applet lädt
  * seine Icons aus einer Jar-Datei, da es ja nicht aufs Dateisystem zugreifen
- * darf. Die Config und die Verwender der Config m&uuml;ssen davon aber nichts
+ * darf. Die Config und die Verwender der Config müssen davon aber nichts
  * wissen.
  * </p>
  */
@@ -52,8 +52,8 @@ public interface IconProvider {
 	/**
 	 * Liefert ein aus einer Datei geladenes Icon.
 	 *
-	 * @param key Der Dateiname (ohne Extension) des zur&uuml;ckzuliefernden
-	 * Icons. F&uuml;r ein Icon "fruehstueck/Marmelade.gif" w&auml;re das
+	 * @param key Der Dateiname (ohne Extension) des zurückzuliefernden
+	 * Icons. Für ein Icon "fruehstück/Marmelade.gif" wäre das
 	 * "Marmelade". Volles Verwendungsbeispiel siehe {@link FileIconMap}.
 	 * @return Icon
 	 */

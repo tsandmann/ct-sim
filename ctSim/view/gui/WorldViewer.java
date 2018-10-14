@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -62,14 +62,14 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     /** model-Meldung */
     private static final String MODEL = "showing a model";
 
-    /** Hilfsding fuer die J3D-Buerokratie */
+    /** Hilfsding für die J3D-Bürokratie */
     final protected GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getBestConfiguration(new GraphicsConfigTemplate3D());
-    /** Das letzte verwendete GraphicsDevice, wird fuer das Erzeugen einer neuen Welt in einem Multi-Monitor Setup benoetigt */
+    /** Das letzte verwendete GraphicsDevice, wird für das Erzeugen einer neuen Welt in einem Multi-Monitor Setup benötigt */
     protected GraphicsDevice last_gd = gc.getDevice();
 
-    /** OnScreen Flaeche */
+    /** OnScreen Fläche */
     protected Canvas3D onScreenCanvas = new Canvas3D(gc, false);
-    /** OffScreen Flaeche */
+    /** OffScreen Fläche */
     protected Canvas3D offScreenCanvas = new Canvas3D(gc, true);
 
     /** wird mit jedem neuen Model ausgetauscht */
@@ -135,9 +135,9 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 	 * <p>
 	 * Mit jedem Aufruf von {@link #init(World)} werden ca. ein Dutzend
 	 * Java3D-Threads instanziiert, die ohne <code>deinit()</code>
-	 * dann nie mehr beendet w&uuml;rden und ein massives Ressourcenleck (v.a.
+	 * dann nie mehr beendet würden und ein massives Ressourcenleck (v.a.
 	 * Speicherleck wegen Referenzen auf alte Welten, Bots, etc.) darstellen.
-	 * Bei h&auml;ufigem Welt-Wechsel, etwa in Wettbewerbssituationen, hat das
+	 * Bei häufigem Welt-Wechsel, etwa in Wettbewerbssituationen, hat das
 	 * gruselige Auswirkungen.
 	 * </p>
 	 */
@@ -145,12 +145,19 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 		if (onScreenCanvas != null) {
 			last_gd = onScreenCanvas.getGraphicsConfiguration().getDevice();
 		}
-    	if (universe != null) {
-    		universe.cleanup();
-    	}
-		/* remove all Java3D Canvas components */
-		while (getComponentCount() > 1) {
-			remove(1);
+		
+		if (System.getProperty("os.name").indexOf("OS X") == 0) {
+			/* 
+			 * Workaround gegen Crash unter macOS und Java >= 9 (context.destroy() in JoglPipeline.java crasht).
+			 * Nachteil: Auch nach dem Schließen der Welt wird diese noch angezeigt, bis eine Neue geladen wurde.
+			 */
+	    	if (universe != null) {
+	    		universe.cleanup();
+	    	}
+			/* remove all Java3D Canvas components */
+			while (getComponentCount() > 1) {
+				remove(1);
+			}
 		}
 		universe = null;
 		onScreenCanvas = null;
@@ -197,7 +204,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     		private void addMouseBehavior(MouseBehavior b) {
     			b.setTransformGroup(
     				universe.getViewingPlatform().getViewPlatformTransform());
-    			b.setSchedulingBounds(new BoundingSphere(new Point3d(), 1000)); //LODO Koennte besser sein: Was, wenn irgendne Welt mal > 1000 ist?
+    			b.setSchedulingBounds(new BoundingSphere(new Point3d(), 1000)); //LODO Könnte besser sein: Was, wenn irgendne Welt mal > 1000 ist?
     			addChild(b);
     		}
     	});
@@ -208,7 +215,7 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
 
     /**
      * Position: X/Y: zentriert, Z: so, dass der Parcours
-     * vollstaendig im Blick ist
+     * vollständig im Blick ist
      * @param w Welt
      */
     private void initPerspective(World w) {
@@ -236,11 +243,11 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
      */
     public BufferedImage getScreenshot() {
     	/*
-		 * Das hier ist sehr buerokratisch, aber leider hab ich keinen
+		 * Das hier ist sehr bürokratisch, aber leider hab ich keinen
 		 * einfacheren Weg gefunden. Was man mit Google findet sind i.d.R.
 		 * Beispiele, die java.awt.Robot.createScreenCapture() verwenden -- was
 		 * aber einen "echten Screenshot" macht, d.h. wenn einer ein anderes
-		 * Fenster ueber den ctSim geschoben hat, wird eben das abgelichtet. Die
+		 * Fenster über den ctSim geschoben hat, wird eben das abgelichtet. Die
 		 * Alternative, auf dem Canvas3D oder auf diesem Objekt paint(...)
 		 * aufzurufen, funktioniert nicht (ergibt immer einfarbig schwarze
 		 * Screenshots -- vermutlich ist Canvas3D eben doch keine ganz so
@@ -258,12 +265,12 @@ public class WorldViewer extends JPanel implements ScreenshotProvider {
     }
 
     /**
-	 * MinimumSize ist (1,1): Erm&ouml;glicht der SplitPane, die uns
-	 * enth&auml;lt, ihren Divider zu &auml;ndern. W&uuml;rden wir unsere
+	 * MinimumSize ist (1,1): Ermöglicht der SplitPane, die uns
+	 * enthält, ihren Divider zu ändern. Würden wir unsere
 	 * MinimumSize nicht auf was sehr kleines setzen, ginge das nicht.
 	 */
-    @Override
-    public Dimension getMinimumSize() {
-        return new Dimension(1,1);
+	@Override
+	public Dimension getMinimumSize() {
+		return new Dimension(1,1);
     }
 }

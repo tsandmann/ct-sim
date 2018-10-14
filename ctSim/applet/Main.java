@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -50,17 +50,17 @@ import ctSim.util.IconProvider;
 import ctSim.view.gui.BotViewer;
 
 /**
- * Main-Klasse fuer das c't-Bot-Applet 
+ * Main-Klasse für das c't-Bot-Applet 
  */
 public class Main extends JApplet implements BotReceiver {
 	/** UID */
 	private static final long serialVersionUID = - 2381362461560258968L;
 
 	/**
-	 * Nur f&uuml;r Entwicklung: Normalerweise verbindet sich das Applet mit dem
+	 * Nur für Entwicklung: Normalerweise verbindet sich das Applet mit dem
 	 * Host, von dem es heruntergeladen wurde. Falls es keinen Host gibt, weil
 	 * man es lokal im Browser aufgerufen hat (file:///home/dings/...), dann
-	 * wird ersatzweise diese Adresse genommen, um testen zu k&ouml;nnen.
+	 * wird ersatzweise diese Adresse genommen, um testen zu können.
 	 */
 	private static final String fallbackAddress = "192.168.1.22";
 
@@ -93,7 +93,7 @@ public class Main extends JApplet implements BotReceiver {
 		p.add(status);
 		getContentPane().add(p);
 		
-		// Controller wird fuer Bot-ID-Vergabe benoetigt!
+		// Controller wird für Bot-ID-Vergabe benötigt!
 		controller = new DefaultController();
 	}
 
@@ -117,10 +117,10 @@ public class Main extends JApplet implements BotReceiver {
 
 		mainLogger.setLevel(level);
 		Handler h = new Handler() {
-			@Override public void close() { /* No-op */ }
-			@Override public void flush() { /* No-op */ }
-
-			@SuppressWarnings("synthetic-access")
+			@Override
+			public void close() { /* No-op */ }
+			@Override
+			public void flush() { /* No-op */ }
 			@Override
 			public void publish(LogRecord record) {
 				Level lvl = record.getLevel();
@@ -141,7 +141,7 @@ public class Main extends JApplet implements BotReceiver {
 	private void initIcons() {
 		Config.setIconProvider(new IconProvider() {
 			public Icon get(String key) {
-				// Icon aus jar-Datei laden; Annahme: jar enthaelt Icon in
+				// Icon aus jar-Datei laden; Annahme: jar enthält Icon in
 				// seinem Root-Verzeichnis
 				URL u = getClass().getClassLoader().getResource(key+".gif");//$$ images-unterverz
 				// NullPointerException vermeiden
@@ -170,12 +170,11 @@ public class Main extends JApplet implements BotReceiver {
 	}
 
 	/**
-	 * Fuegt einen neuen (bereits erstellten) Bot in das Fenster ein
+* Fügt einen neuen (bereits erstellten) Bot in das Fenster ein
 	 * @param b	Referenz auf den neuen Bot
 	 */
 	public void onBotAppeared(final Bot b) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				String title = getParameter("windowTitle");
 				if (title == null || title.trim().length() == 0)
@@ -221,7 +220,6 @@ public class Main extends JApplet implements BotReceiver {
 	@Override
 	public void destroy() {
 		SwingUtilities.invokeLater(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				if (bot != null)
 					bot.dispose();

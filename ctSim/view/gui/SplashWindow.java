@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -28,9 +28,9 @@ import java.util.logging.LogRecord;
 import ctSim.util.FmtLogger;
 
 /**
- * Splash-Screen fuer den c't-Sim
+ * Splash-Screen für den c't-Sim
  * 
- * Grundidee uebernommen von http://www.randelshofer.ch/oop/javasplash/javasplash.html - Werner Randelshofer
+ * Grundidee übernommen von http://www.randelshofer.ch/oop/javasplash/javasplash.html - Werner Randelshofer
  * 
  * @author	Timo Sandmann
  */
@@ -50,7 +50,7 @@ public class SplashWindow extends Window {
 	/** Name und Versionsnummer */
 	private String version;
 	
-	/** Log-Handler, um Log-Nachrichten ausgeben zu koennen */
+	/** Log-Handler, um Log-Nachrichten ausgeben zu können */
 	private static Handler logHandler;
 
 	/**
@@ -108,7 +108,7 @@ public class SplashWindow extends Window {
 		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((screenDim.width - imgWidth) / 2, (screenDim.height - imgHeight) / 2);
 
-		/* Schliessen des Splash-Screens per Mausklick */
+		/* Schließen des Splash-Screens per Mausklick */
 		MouseAdapter disposeOnClick = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
@@ -208,7 +208,7 @@ public class SplashWindow extends Window {
 	}
 	
 	/**
-	 * Zeigt eine Nachricht auf dem Splash-Screen an, loescht dabei die alte Nachricht
+	 * Zeigt eine Nachricht auf dem Splash-Screen an, löscht dabei die alte Nachricht
 	 * @param msg Nachricht, die angezeigt werden soll
 	 */
 	public static void setMessage(String msg) {
@@ -217,7 +217,7 @@ public class SplashWindow extends Window {
 	}
 	
 	/**
-	 * Gibt den Log-Handler zurueck
+	 * Gibt den Log-Handler zurück
 	 * @return unser Log-Handler
 	 */
 	public static Handler getLogHandler() {
@@ -232,7 +232,7 @@ public class SplashWindow extends Window {
 	}
 	
 	/**
-	 * Log-Handler fuer den Splash-Screen, damit dort auch die Konsolenausgaben erscheinen
+	 * Log-Handler für den Splash-Screen, damit dort auch die Konsolenausgaben erscheinen
 	 * @author Timo Sandmann
 	 */
 	class SplashLogHandler extends Handler {

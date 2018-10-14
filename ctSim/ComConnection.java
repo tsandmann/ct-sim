@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -46,7 +46,7 @@ import ctSim.util.SaferThread;
  * </p>
  *
  * @author Maximilian Odendahl (maximilian.odendahl@rwth-aachen.de)
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  * @author Timo Sandmann
  */
 public class ComConnection extends Connection {
@@ -80,7 +80,7 @@ public class ComConnection extends Connection {
 			lg.info("Warte auf Verbindung vom c't-Bot an seriellem Port " + comPortName + " (" + br + " baud)");
 		} catch (NumberFormatException e) {
 			port.closePort();
-			throw new CouldntOpenTheDamnThingException("Die Baud-Rate '" + baudrate + "' ist keine g\u00FCltige Zahl", e);
+			throw new CouldntOpenTheDamnThingException("Die Baud-Rate '" + baudrate + "' ist keine gültige Zahl", e);
 		}
 
 		setInputStream(port.getInputStream());
@@ -106,7 +106,6 @@ public class ComConnection extends Connection {
 			public int getListeningEvents() { 
 				return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
 			}
-			
 			@Override
 			public void serialEvent(SerialPortEvent evt) {
 				if (evt.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
@@ -148,7 +147,7 @@ public class ComConnection extends Connection {
 	/**
 	 * Tut nichts: ComConnection ist ein Singleton und soll nie geschlossen
 	 * werden. Wir verhindern durch den Override auch, dass die Vaterklasse was
-	 * schlie&szlig;t.
+	 * schließt.
 	 */
 	@Override
 	public synchronized void close() {
@@ -156,19 +155,19 @@ public class ComConnection extends Connection {
 	}
 
 	/**
-	 * Gibt den Namen des Ports unserer Connection zurueck
+	 * Gibt den Namen des Ports unserer Connection zurück
 	 * @return	Name 
 	 */
-	@Override 
+	@Override
 	public String getName() {
 		return port.getDescriptivePortName(); 
 	}
 
 	/**
-	 * Gibt den Kurznamen unserer Connection zurueck
+	 * Gibt den Kurznamen unserer Connection zurück
 	 * @return	"USB"
 	 */
-	@Override 
+	@Override
 	public String getShortName() { 
 		return "USB"; 
 	}
@@ -180,12 +179,12 @@ public class ComConnection extends Connection {
 	 * COM-Verbindung
 	 */
 	private static ComConnection comConnSingleton = null;
-	/** Der Empfaenger der Bots */
+	/** Der Empfänger der Bots */
 	private static BotReceiver botReceiver = null; 
 	
 	/**
 	 * Erzeugt einen Bot
-	 * Ueberschreibt die entsprechende Methode von Connection, weil hier ein paar Sondersachen dazukommen
+	 * Überschreibt die entsprechende Methode von Connection, weil hier ein paar Sondersachen dazukommen
 	 * @param c Kommando
 	 * @return Bot
 	 * @throws ProtocolException
@@ -211,8 +210,8 @@ public class ComConnection extends Connection {
 	}	
 	
 	/**
-	 * Startet das Lauschen fuer neue Bots
-	 * @param receiver	BotReceiver fuer neuen Bot
+	 * Startet das Lauschen für neue Bots
+	 * @param receiver	BotReceiver für neuen Bot
 	 */
 	public static void startListening(final BotReceiver receiver) {
 		if (comConnSingleton != null)
@@ -241,7 +240,7 @@ public class ComConnection extends Connection {
 	///////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Exception-Klasse fuer ComConnection
+	 * Exception-Klasse für ComConnection
 	 */
 	public static class CouldntOpenTheDamnThingException extends Exception {
 		/** UID */
@@ -281,7 +280,7 @@ public class ComConnection extends Connection {
 	}
 	
 	/**
-	 * Thread, der die COM-Connection ueberwacht
+	 * Thread, der die COM-Connection überwacht
 	 */
 	static class ComListenerThread extends SaferThread {
 		/** Bot-Receiver */
@@ -289,7 +288,7 @@ public class ComConnection extends Connection {
 		
 		/**
 		 * Erzeugt einen Thread, der auf COM-Connections lauscht
-		 * @param receiver	BotReceiver fuer den neuen Bot
+		 * @param receiver	BotReceiver für den neuen Bot
 		 */
 		public ComListenerThread(BotReceiver receiver) {
 			super("ctSim-Listener-COM");
@@ -300,7 +299,6 @@ public class ComConnection extends Connection {
 		 * work-Methode des Threads
 		 * @throws InterruptedException
 		 */
-		@SuppressWarnings("synthetic-access")
 		@Override
 		public void work() throws InterruptedException {
 			comConnSingleton.blockUntilDataAvailable();

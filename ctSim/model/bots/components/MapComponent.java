@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -46,7 +46,7 @@ import ctSim.util.MapLines;
 import ctSim.util.Misc;
 
 /**
- * Map-Repraesentation im Sim
+ * Map-Repräsentation im Sim
  * <ul><li>Command-Code MAP</li>
  * <li>Nutzlast: Ein Block der Map-Rohdaten</li>
  * </ul>
@@ -56,23 +56,23 @@ public class MapComponent extends BotComponent<Void>
 implements CanRead, CanWrite, CanWriteAsynchronously {
 	/** Breite der Map in Pixeln */	
 	private final int WIDTH;
-	/** Hoehe der Map in Pixeln */
+	/** Höhe der Map in Pixeln */
 	private final int HEIGHT;
-	/** Groesse einer Sektion */
+	/** Größe einer Sektion */
 	private final int SECTION_SIZE;
-	/** Groesse eines Makroblocks */
+	/** Größe eines Makroblocks */
 	private final int MAKROBLOCK_SIZE;
 	/** Rohe Mapdaten; ein Int pro Pixel. */
 	private final int[] pixels;
 	/** eingezeichnete Linien */
 	private List<MapLines> lines = Misc.newList();
-	/** Mutex fuer lines */
+	/** Mutex für lines */
 	private final Object linesMutex = new Object();
 	/** eingezeichnete Kreise */
 	private List<MapCircles> circles = Misc.newList();
-	/** Mutex fuer circles */
+	/** Mutex für circles */
 	private final Object circlesMutex = new Object();
-	/** aktuelle Botposition (z fuer heading) */
+	/** aktuelle Botposition (z für heading) */
 	private final Point3i botPos;
 	/** SyncRequest austehend? */
 	private boolean syncRequestPending = false;
@@ -87,15 +87,15 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 	/** Empfangsstatus (0: noch keine Daten, 1: 1 Teil empfangen, 2: 2. Teil empfangen, 3: 3. Teil empfangen */
 	private int receiveState = 0;
-	/** Adresse des letzten empfangenen Blocks (muss fuer alle Teilbloecke gleich sein) */
+	/** Adresse des letzten empfangenen Blocks (muss für alle Teilbloecke gleich sein) */
 	private int lastBlock = 0;
 	/** Kleinste belegte X-Koordinate */
 	private int min_x = 0xffffff;
 	/** Kleinste belegte Y-Koordinate */
 	private int min_y = 0xffffff;
-	/** Groesste belegte X-Koordinate */
+	/** Größte belegte X-Koordinate */
 	private int max_x = 0;
-	/** Groesste belegte Y-Kooridnate */
+	/** Größte belegte Y-Kooridnate */
 	private int max_y = 0;
 	
 	/** Zeitpunkt des letzten Bild-Updates */
@@ -104,7 +104,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	private final int updateIntervall;
 	/** Zuordnung pixel-Array <-> image */
 	private final MemoryImageSource memImage;
-	/** Image-Objekt fuer das Map-Bild */
+	/** Image-Objekt für das Map-Bild */
 	private final Image image;
 	
 	/**
@@ -119,7 +119,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			size = Float.parseFloat(size_str);
 		} catch (NumberFormatException exc) {
 			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
-				"Parameter 'mapSize' ist keine gueltige Map-Groesse!");
+				"Parameter 'mapSize' ist keine gueltige Map-Größe!");
 		}
 		String resolution_str = Config.getValue("mapResolution");
 		int resolution = 0;
@@ -127,7 +127,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			resolution = Integer.parseInt(resolution_str);
 		} catch (NumberFormatException exc) {
 			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
-				"Parameter 'mapResolution' ist keine gueltige Map-Groesse!");
+				"Parameter 'mapResolution' ist keine gueltige Map-Größe!");
 		}
 		size *= resolution;
 		
@@ -137,7 +137,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			section_size = Integer.parseInt(section_size_str);
 		} catch (NumberFormatException exc) {
 			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
-				"Parameter 'mapSectionSize' ist keine gueltige Sektionsgroesse!");
+				"Parameter 'mapSectionSize' ist keine gueltige Sektionsgröße!");
 		}
 		
 		String makroblock_size_str = Config.getValue("mapMacroblockSize");
@@ -146,7 +146,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			makroblock_size = Integer.parseInt(makroblock_size_str);
 		} catch (NumberFormatException exc) {
 			lg.warning(exc, "Problem beim Parsen der Konfiguration: " +
-				"Parameter 'mapMacroblockSize' ist keine gueltige Sektionsgroesse!");
+				"Parameter 'mapMacroblockSize' ist keine gueltige Sektionsgröße!");
 		}
 		
 		WIDTH = (int) size;
@@ -225,16 +225,16 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Konvertiert ein RGB-Wertetripel in nen Integer, wie er im Array
 	 * {@link #pixels} sein muss. Format ist etwas undurchsichtig:
 	 * <ul>
-	 * <li>Es handelt sich um eine 4-Komponenten-Farbe (Alpha, Rot, Gr&uuml;n,
+	 * <li>Es handelt sich um eine 4-Komponenten-Farbe (Alpha, Rot, Grün,
 	 * Blau in dieser Reihenfolge)</li>
 	 * <li>8 Bit pro Komponente ([0; 255]) = 32 Bit pro Pixel</li>
 	 * <li><strong>Die 32 Bit sind in <em>einen</em> Integer gestopft.</strong>
 	 * (Integer in Java: 32 Bit lang.)
 	 * <ul>
-	 * <li>Alpha-Wert = die 8 h&ouml;chstwertigen Bits (MSBs), also Bits
-	 * 24&ndash;32</li>
+	 * <li>Alpha-Wert = die 8 höchstwertigen Bits (MSBs), also Bits
+	 * 24–32</li>
 	 * <li>usw.</li>
-	 * <li>Blau-Wert = die 8 niedrigstwertigen Bits (LSBs), also Bits 0&ndash;8
+	 * <li>Blau-Wert = die 8 niedrigstwertigen Bits (LSBs), also Bits 0–8
 	 * </li>
 	 * </ul>
 	 * </li>
@@ -245,8 +245,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * Alpha setzt diese Methode immer auf 255 (voll deckend).
 	 * </p>
 	 * <p>
-	 * Sind die &uuml;bergebenen Parameter au&szlig;erhalb des Wertebereichs [0;
-	 * 255], wird geclampt (255 wenn zu gro&szlig;, 0 wenn zu klein).
+	 * Sind die übergebenen Parameter außerhalb des Wertebereichs [0;
+	 * 255], wird geclampt (255 wenn zu groß, 0 wenn zu klein).
 	 * </p>
 	 * @param r rot
 	 * @param g gruen
@@ -257,13 +257,13 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		r = Misc.clamp(r, 255);
 		g = Misc.clamp(g, 255);
 		b = Misc.clamp(b, 255);
-		// Alpha volle Pulle, die anderen wie als Parameter uebergeben
+		// Alpha volle Pulle, die anderen wie als Parameter übergeben
 		return 255 << 24 | r << 16 | g << 8 | b;
 	}
 	
 	/**
-	 * Uebertraegt die empfangenen Daten in das Pixel-Array. 
-	 * Die Koordinaten werden dabei gemaess der Map-Parameter aus der Blockadresse berechnet.
+	 * Überträgt die empfangenen Daten in das Pixel-Array. 
+	 * Die Koordinaten werden dabei gemäß der Map-Parameter aus der Blockadresse berechnet.
 	 * @param data	Map-Rohdaten
 	 * @param block	Blockadresse der Daten
 	 * @param from	Startindex der Daten
@@ -323,7 +323,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 	
 	/**
-	 * Traegt uebertragene Zeichnungsdaten einer Linie in die interne Datenstruktur ein
+	 * Trägt übertragene Zeichnungsdaten einer Linie in die interne Datenstruktur ein
 	 * @param color	Farbe der Linie
 	 * @param data	Rohdaten vom Kommando
 	 */
@@ -339,7 +339,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 	
 	/**
-	 * Traegt uebertragene Zeichnungsdaten eines Kreises in die interne Datenstruktur ein
+	 * Trägt übertragene Zeichnungsdaten eines Kreises in die interne Datenstruktur ein
 	 * @param color	Farbe der Kreislinie
 	 * @param radius Radius des Kreises
 	 * @param data	Rohdaten vom Kommando
@@ -364,8 +364,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 
 		int block = c.getDataL(); // 16 Bit Adresse des Map-Blocks
 		
-		/* SubCode auswerten, ein Block wird in vier Teilen uebertragen. 
-		 * Alle Teile muessen dieselbe Blockadresse in DataL mitfuehren! */
+		/* SubCode auswerten, ein Block wird in vier Teilen übertragen. 
+		 * Alle Teile müssen dieselbe Blockadresse in DataL mitführen! */
 		Command.SubCode sub = c.getSubCode();
 		if (sub.equals(Command.SubCode.MAP_DATA_1)) {
 			if (receiveState != 0) {
@@ -375,7 +375,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				receiveState = 0;
 				return;
 			}
-			botPos.y = HEIGHT - c.getDataR(); // Bot-Position, X-Komponente, wird im Bild in Y-Richtung gezaehlt
+			botPos.y = HEIGHT - c.getDataR(); // Bot-Position, X-Komponente, wird im Bild in Y-Richtung gezählt
 			updateInternalModel(c.getPayload(), block, 0, 7); // macht die eigentliche Arbeit
 			receiveState = 1;
 			lastBlock = block;
@@ -387,7 +387,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 				receiveState = 0;
 				return;
 			}
-			botPos.x = WIDTH - c.getDataR(); // Bot-Position, Y-Komponente, wird im Bild in X-Richtung gezaehlt
+			botPos.x = WIDTH - c.getDataR(); // Bot-Position, Y-Komponente, wird im Bild in X-Richtung gezählt
 			updateInternalModel(c.getPayload(), block, 8, 15); // macht die eigentliche Arbeit
 			receiveState = 2;
 		} else if (sub.equals(Command.SubCode.MAP_DATA_3)) {
@@ -442,10 +442,10 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	/**
-	 * No-op: Wir implementieren die, weil wir laut Interface m&uuml;ssen, aber
+	 * No-op: Wir implementieren die, weil wir laut Interface müssen, aber
 	 * wir brauchen die nicht weil wir ja
 	 * {@link #askForWrite(CommandOutputStream) askForWrite()}
-	 * &uuml;berschrieben haben.
+	 * überschrieben haben.
 	 * @param c Command
 	 */
 	public void writeTo(Command c) { 
@@ -459,8 +459,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	public int getWidth() { return WIDTH; }
 	
 	/**
-	 * Kartenhoehe (Y-Richtung)
-	 * @return Hoehe
+	 * Kartenhöhe (Y-Richtung)
+	 * @return Höhe
 	 */
 	public int getHeight() { return HEIGHT; }
 	
@@ -502,7 +502,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getName()
 	 */
-	@Override public String getName() { return "Map"; }
+	@Override
+	public String getName() { return "Map"; }
 
 	/**
 	 * @see ctSim.model.bots.components.BotComponent#getDescription()
@@ -513,7 +514,7 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	}
 
 	/**
-	 * Fuegt einen Listener hinzu, der ausgefuehrt wird, wenn sich die Karte veraendert hat 
+	 * Fügt einen Listener hinzu, der ausgeführt wird, wenn sich die Karte verändert hat 
 	 * @param li Listener
 	 */
 	public void addImageListener(Runnable li) {

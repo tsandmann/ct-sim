@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -92,7 +92,6 @@ public class LogViewer extends JPanel {
 	 * Save-Hanlder
 	 */
 	private final Runnable onSaveLog = new Runnable() {
-		@SuppressWarnings("synthetic-access")
 		public void run() {
 			JFileChooser fc = new JFileChooser();
 			int userChoice = fc.showSaveDialog(LogViewer.this);
@@ -120,7 +119,6 @@ public class LogViewer extends JPanel {
 	 * Clear-Handler
 	 */
 	private final Runnable onClearLog = new Runnable() {
-		@SuppressWarnings("synthetic-access")
 		public void run() {
 			try {
 				logContent.remove(0, logContent.getLength());
@@ -148,8 +146,8 @@ public class LogViewer extends JPanel {
 			"Inhalt des Logfensters in eine Textdatei speichern",
 			Config.getIcon("Save16"), onSaveLog);
 		JButton clear = new Button("Leeren",
-			"Logausgaben l\u00F6schen",
-			Config.getIcon("schliessen"), onClearLog);
+			"Logausgaben löschen",
+			Config.getIcon("schließen"), onClearLog);
 
 		equalizeHeight(save, clear);
 
@@ -186,7 +184,7 @@ public class LogViewer extends JPanel {
 			}
 		});
 
-		// Gesamtgroesse setzen
+		// Gesamtgröße setzen
 		JScrollPane s = new JScrollPane(t);
 		int w = getInsets().left + s.getInsets().left + s.getPreferredSize().width +
 			s.getInsets().right + getInsets().right + 20;
@@ -200,7 +198,7 @@ public class LogViewer extends JPanel {
 	}
 
 	/**
-	 * Gleicht die Hoehe von zwei Komponenten an
+	 * Gleicht die Höhe von zwei Komponenten an
 	 * @param c1
 	 * @param c2
 	 */
@@ -213,7 +211,7 @@ public class LogViewer extends JPanel {
 	}
 
 	/**
-	 * Setzt eine Komponente auf eine gewuenschte Hoehe
+	 * Setzt eine Komponente auf eine gewünschte Höhe
 	 * @param c
 	 * @param preferredHeight
 	 */

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -75,7 +75,7 @@ public class RemoteControlViewer extends JPanel {
 	 * @return Button
 	 */
 	private JButton b(String label, Color color) {
-		// Bindestrich durch Streckenstrich ersetzen (ist laenger, Bindestrich
+		// Bindestrich durch Streckenstrich ersetzen (ist länger, Bindestrich
 		// sieht so doof aus neben den grossen Pluszeichen)
 		final String key = label.replaceAll("-", "\u2013");
 		final JButton rv = new JButton(key);
@@ -83,9 +83,8 @@ public class RemoteControlViewer extends JPanel {
 		rv.setForeground(color);
 		rv.setBackground(Color.DARK_GRAY);
 		rv.addActionListener(new ActionListener() {
-			@SuppressWarnings("synthetic-access")
 			public void actionPerformed(ActionEvent e) {
-				lg.fine("Fernbedienungsknopf '%s' gedr\u00FCckt", rv.getText());
+				lg.fine("Fernbedienungsknopf '%s' gedrückt", rv.getText());
 				try {
 					sensor.send(key);
 				} catch (IOException e1) {
@@ -108,7 +107,7 @@ public class RemoteControlViewer extends JPanel {
 	/**
 	 * Baut das Panel
 	 * @param width Breite
-	 * @param height Hoehe
+	 * @param height Höhe
 	 * @param buttons Buttons
 	 * @return Panel
 	 */
@@ -141,8 +140,8 @@ public class RemoteControlViewer extends JPanel {
 			b("I/II"),	null,		null,		null,		b("TV/VCR"),
 			null,		null,		b("||"),	null,		null,
 			null,		b("<<"),	b(">"),		b(">>"),	null,
-			null,		null,		b("\u25A1"),null,		null,			// 25A1: Quadrat fuer "Stop"
-			b("\u25CF"),null,		null,		null,		b("CH*P/P")		// 25CF: Dicker Punkt fuer "Record"
+			null,		null,		b("\u25A1"),null,		null,			// 25A1: Quadrat für "Stop"
+			b("\u25CF"),null,		null,		null,		b("CH*P/P")		// 25CF: Dicker Punkt für "Record"
 		),
 		defaultColor(LIGHT_BLUE),
 		grid(3, 2,

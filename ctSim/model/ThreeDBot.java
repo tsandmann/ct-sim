@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -61,22 +61,22 @@ import ctSim.util.Misc;
 
 /**
  * <p>
- * Klasse fuer alle Bots, die eine 3D-Darstellung haben (= simulierte Bots, fuer
- * reale ist das unnoetig). Fungiert als Wrapper um eine {@link SimulatedBot}-Instanz,
+ * Klasse für alle Bots, die eine 3D-Darstellung haben (= simulierte Bots, für
+ * reale ist das unnötig). Fungiert als Wrapper um eine {@link SimulatedBot}-Instanz,
  * d.h. diese Klasse hat eine Referenz auf einen {@code SimulatedBot} und ist
  * selbst ein Bot.
  * </p>
  * <p>
- * Die beiden Methoden, die fuer die Simulation zentral sind:
+ * Die beiden Methoden, die für die Simulation zentral sind:
  * <ul>
- * <li>{@link #run()}, die als eigener Thread laeuft. Sie macht periodisch zwei
- * Dinge: Warten und dem SimulatedBot sagen "jetzt Simschritt machen" (fuer den
- * {@link CtBotSimTcp} heisst das er uebertraegt Sensordaten, wartet auf Antwort
- * vom C-Code, und aktualisiert dann die Aktuatoren wie vom C-Code gewuenscht)</li>
+ * <li>{@link #run()}, die als eigener Thread läuft. Sie macht periodisch zwei
+ * Dinge: Warten und dem SimulatedBot sagen "jetzt Simschritt machen" (für den
+ * {@link CtBotSimTcp} heisst das er überträgt Sensordaten, wartet auf Antwort
+ * vom C-Code, und aktualisiert dann die Aktuatoren wie vom C-Code gewünscht)</li>
  * <li>{@link #updateSimulation(long)}, die von aussen aufgerufen wird. Die
  * Methode betrachtet die Aktuator-Werte (z.B. Motorgeschwindigkeit) und nimmt
- * an der Simulation die relevanten Aenderungen vor (im Beispiel: eine
- * Positions-/Drehungsaenderung). Ausserhalb dieser Klasse wird sichergestellt,
+ * an der Simulation die relevanten Änderungen vor (im Beispiel: eine
+ * Positions-/Drehungsänderung). Ausserhalb dieser Klasse wird sichergestellt,
  * dass {@code updateSimulation()} immer dann aufgerufen wird, wenn der Thread
  * dieser Klasse gerade wartet, nicht wenn er gerade einen Simschritt macht.
  * </li>
@@ -84,7 +84,7 @@ import ctSim.util.Misc;
  * </p>
  *
  * @author Benjamin Benz (bbe@ctmagazin.de)
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class ThreeDBot extends BasicBot implements Runnable {
 	/** Logger */
@@ -103,13 +103,13 @@ public class ThreeDBot extends BasicBot implements Runnable {
 			"ist nicht mehr kollidiert"),
 
 		/**
-		 * Der Bot haengt in einem Loch, d.h. eins der Raeder ist in eine Grube
+		 * Der Bot hängt in einem Loch, d.h. eins der Räder ist in eine Grube
 		 * gerutscht. In diesem State kann sich der Bot noch drehen, aber nicht
 		 * mehr bewegen.
 		 */
 		IN_HOLE(0x002, "falling",
-			"hat keinen Boden mehr unter den F\u00FC\u00DFen",
-			"hat wieder Boden unter den F\u00FC\u00DFen"),
+			"hat keinen Boden mehr unter den Füßen",
+			"hat wieder Boden unter den Füßen"),
 			
 		/**
 		 * Klappenzustand des Bots
@@ -122,7 +122,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		 * Der Bot ist von der weiteren Simulation ausgeschlossen, d.h. seine
 		 * work()-Methode wird nicht mehr aufgerufen. Es steht damit nur noch
 		 * rum, bis die Simulation irgendwann endet. Dieser Zustand kann
-		 * eintreten, wenn die TCP-Verbindung abrei&szlig;t (Bot-Code
+		 * eintreten, wenn die TCP-Verbindung abreißt (Bot-Code
 		 * abgestuerzt) oder ein anderer I/O-Fehler auftritt.
 		 */
 		HALTED(0x100, "halted",
@@ -175,7 +175,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 
 	/**
-	 * Positionskomponente fuer 3D-Bots 
+	 * Positionskomponente für 3D-Bots 
 	 */
 	public class PositionCompnt extends BotComponent<SpinnerNumberModel> {
 		/** Koordinaten */
@@ -245,7 +245,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 	
 	/**
-	 * Globalen Bot-Position (wie fuer Lokalisierung verwendet)
+	 * Globalen Bot-Position (wie für Lokalisierung verwendet)
 	 */
 	public class PositionGlobal extends BotComponent<SpinnerNumberModel> {
 		/** Koordinaten */
@@ -304,11 +304,11 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * Blickrichtung eines 3D-Bots
 	 */
 	public class HeadingCompnt extends BotComponent<SpinnerNumberModel> {
-		/** Flag fuer Status-Aenderung ignorieren */
+		/** Flag für Status-Änderung ignorieren */
 		protected boolean ignoreStateChange = false;
 
 		/**
-		 * Erzeugt eine neue Blickrichtung fuer einen 3D-Bot
+		 * Erzeugt eine neue Blickrichtung für einen 3D-Bot
 		 */
 		public HeadingCompnt() {
 			super(new SpinnerNumberModel());
@@ -318,13 +318,13 @@ public class ThreeDBot extends BasicBot implements Runnable {
 				public void stateChanged(ChangeEvent e) {
 					/*
 					 * $$ ignoreStateChange: setHeading() sollte erkennen, wann
-					 * ein Aufruf ueberfluessig ist (weil das neue Heading sich
+					 * ein Aufruf überflüssig ist (weil das neue Heading sich
 					 * nicht vom alten unterscheidet). Wegen der doofen Sache,
-					 * dass Headings auf zwei Arten ausgedrueckt werden koennen
+					 * dass Headings auf zwei Arten ausgedrückt werden können
 					 * (Vector3d, double), funktioniert die Erkennung nicht gut.
 					 * Daher braucht wir ignoreStateChange. Wenn Heading mal
 					 * komplett auf double umgestellt ist, ist ignoreStateChange
-					 * ueberfluessig
+					 * überflüssig
 					 */
 					if (ignoreStateChange) {
 						return;
@@ -376,11 +376,11 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 	
 	/**
-	 * Globale Blickrichtung (wie fuer Lokalisierung verwendet)
+	 * Globale Blickrichtung (wie für Lokalisierung verwendet)
 	 */
 	public class HeadingGlobal extends BotComponent<SpinnerNumberModel> {
 		/**
-		 * Erzeugt eine neue Blickrichtung fuer einen 3D-Bot
+		 * Erzeugt eine neue Blickrichtung für einen 3D-Bot
 		 */
 		public HeadingGlobal() {
 			super(new SpinnerNumberModel());
@@ -436,7 +436,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * war. Wird verwendet zur Berechnung des Abstands zum Ziel, was auch dann
 	 * funktionieren soll, wenn der Bot z.B. in ein Loch gefallen ist. Daher
 	 * wird in dieser Variablen die letzte Position gehalten, wo der Bot noch
-	 * au&szlig;erhalb des Lochs war.
+	 * außerhalb des Lochs war.
 	 */
 	private Point3d lastSafePos = new Point3d();
 
@@ -463,7 +463,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * </pre>
 	 */
 	private final BranchGroup branchgrp;
-	/** enthaelt Anzeigeelemente zu Debug-Zwecken */
+	/** enthält Anzeigeelemente zu Debug-Zwecken */
 	private final BranchGroup testBG;
 	/** Transformgroup */
 	private final TransformGroup transformgrp;
@@ -491,8 +491,8 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	/**
 	 * @param posInWorldCoord Position des Objekts
 	 * @param headInWorldCoord Blickrichtung des Objekts
-	 * @param barrier 	Barrier fuer den neuen Bot
-	 * @param bot		Zugehoeriger Bot 
+	 * @param barrier 	Barrier für den neuen Bot
+	 * @param bot		Zugehöriger Bot 
 	 */
 	public ThreeDBot(Point3d posInWorldCoord, Vector3d headInWorldCoord, BotBarrier barrier, SimulatedBot bot) {
 		super(bot.toString());
@@ -501,7 +501,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		this.barrier = barrier;
 		this.bot = bot;
 
-		/* TransformGroup fuer den Bot */
+		/* TransformGroup für den Bot */
 		transformgrp = new TransformGroup();
 		transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		transformgrp.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
@@ -516,7 +516,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		branchgrp.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		branchgrp.addChild(transformgrp);
 		
-		/* BranchGroup fuer Debug-Anzeigen */
+		/* BranchGroup für Debug-Anzeigen */
 		testBG = new BranchGroup();
 		testBG.setCapability(BranchGroup.ALLOW_DETACH);
 		testBG.setCapability(Group.ALLOW_CHILDREN_WRITE);
@@ -590,14 +590,14 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 	
 	/**
-	 * Loescht alle Elemente in TestBG (Branchgroup zu Debug-Zwecken)
+	 * Löscht alle Elemente in TestBG (Branchgroup zu Debug-Zwecken)
 	 */
 	public void clearDebugBG() {
 		testBG.removeAllChildren();
 	}
 	
 	/**
-	 * Zeichnet eine Kugel zu Debug-Zwecken, indem sie zu TestBG hinzugefuegt wird
+	 * Zeichnet eine Kugel zu Debug-Zwecken, indem sie zu TestBG hinzugefügt wird
 	 * @param radius Radius der Kugel
 	 * @param transform Transformation, die auf die Box angewendet werden soll
 	 */
@@ -613,10 +613,10 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 
 	/**
-	 * Zeichnet eine Box zu Debug-Zwecken, indem sie zu TestBG hinzugefuegt wird
-	 * @param x Groesse in X-Richtung
-	 * @param y Groesse in Y-Richtung
-	 * @param z Groesse in Z-Richtung
+	 * Zeichnet eine Box zu Debug-Zwecken, indem sie zu TestBG hinzugefügt wird
+	 * @param x Größe in X-Richtung
+	 * @param y Größe in Y-Richtung
+	 * @param z Größe in Z-Richtung
 	 * @param transform Transformation, die auf die Box angewendet werden soll
 	 * @param angle Winkel, um den die Box gedreht werden soll
 	 */
@@ -638,7 +638,6 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	public final void start() {
 		thrd = new Thread(this, "ctSim-"+toString());
 		addDisposeListener(new Runnable() {
-			@SuppressWarnings("synthetic-access")
 			public void run() {
 				if (thrd != null) {
 					lg.fine("Stoppe Thread " + thrd.getName());
@@ -663,7 +662,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 
 	/**
-	 * @return Gibt die Position zurueck
+	 * @return Gibt die Position zurück
 	 */
 	public final Point3d getPositionInWorldCoord() {
 		return new Point3d(posInWorldCoord);
@@ -764,7 +763,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	 * </p>
 	 * <p>
 	 * Liefert den Winkel zwischen positiver y-Achse der Welt und
-	 * &uuml;bergebenem Vektor. Ergebnis ist im Bogenma&szlig; und liegt im
+	 * übergebenem Vektor. Ergebnis ist im Bogenmaß und liegt im
 	 * Intervall ]&minus;&pi;; +&pi;]. Gemessen im Gegenuhrzeigersinn
 	 * ("mathematisch positiver Drehsinn"), d.h. positive Winkel liegen links,
 	 * wenn man in Richtung der y-Achse guckt. Ein Vektor, der exakt in Richtung
@@ -795,7 +794,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 
 	/**
-	 * Fuegt einen Status hinzu
+* Fügt einen Status hinzu
 	 * @param state Status
 	 */
 	public void set(State state) {
@@ -831,7 +830,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		return obstState.isEmpty();
 	}
 
-	// Gemaess dbfeld-ctsim-log-state.txt
+	// Gemäß dbfeld-ctsim-log-state.txt
 	/**
 	 * @return log-state
 	 */
@@ -852,14 +851,14 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 
 	/**
-	 * &Uuml;berschreibt die run()-Methode aus der Klasse Thread und arbeitet in
+	 * Überschreibt die run()-Methode aus der Klasse Thread und arbeitet in
 	 * einer Endlosschleife zwei Schritte ab:
 	 * <ul>
 	 * <li>auf unserem SimulatedBot
 	 * {@link SimulatedBot#doSimStep() doSimStep()} aufrufen</li>
 	 * <li>{@link #updateView()} aufrufen</li>
 	 * </ul>
-	 * Die Schleife l&auml;uft so lang, bis sie von der Methode
+	 * Die Schleife läuft so lang, bis sie von der Methode
 	 * {@link #dispose()} beendet wird.
 	 */
 	public final void run() {
@@ -931,14 +930,14 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 
 	/**
-	 * Diese Methode wird von au&szlig;en aufgerufen und erledigt die
+	 * Diese Methode wird von außen aufgerufen und erledigt die
 	 * Aktualisierung der Simulation: Bot-Position weitersetzen je nach dem,
 	 * wie schnell die Motoren gerade drehen usw.
 	 *
 	 * @param simTimeInMs Aktuelle Simulation in Millisekunden
 	 */
 	public void updateSimulation(long simTimeInMs) {
-		if (is(HALTED)) { // Fix fuer Bug 44
+		if (is(HALTED)) { // Fix für Bug 44
 			return;
 		}
 		
@@ -950,7 +949,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		}
 		lastSimulTime = simTimeInMs;
 
-		/* Simulatoren des Bots ausfuehren */
+		/* Simulatoren des Bots ausführen */
 		simulator.run(); 
 	}
 
@@ -965,7 +964,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 
 	/**
-	 * Liefert die letzte als sicher erachtete Position des Bots zurueck
+	 * Liefert die letzte als sicher erachtete Position des Bots zurück
 	 * @return Returns the lastSavePos.
 	 */
 	public Point3d getLastSafePos() {
@@ -1007,7 +1006,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 	}
 
 	/**
-	 * Setzt einen Handler fuer geandertes Aussehen
+	 * Setzt einen Handler für geändertes Aussehen
 	 * @param calledWhenObstStateChanged
 	 */
 	public void addAppearanceListener(Runnable1<Color> calledWhenObstStateChanged) {

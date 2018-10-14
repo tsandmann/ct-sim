@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -85,15 +85,15 @@ public class Buisitor {
 	 * @return true / false 
 	 */
 	private static boolean isSupertype(Class<?> supertype, Class<?> subtype) {
-		// isAssignableFrom() geht mit Referenztypen richtig um; beruecksichtigt
+		// isAssignableFrom() geht mit Referenztypen richtig um; berücksichtigt
 		// Autoboxing/-unboxing aber nicht
 		if (supertype.isAssignableFrom(subtype))
 			return true;
 		else {
-			// Primitive muessen wir zu Fuss pruefen
+			// Primitive müssen wir zu Fuss prüfen
 			if (isBoolean(supertype))
 				return isBoolean(subtype);
-			//$$ Restliche 8 Primitivtypen pruefen
+			//$$ Restliche 8 Primitivtypen prüfen
 			return false;
 		}
 	}

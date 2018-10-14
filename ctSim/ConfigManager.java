@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -22,7 +22,7 @@ package ctSim;
 import ctSim.util.FmtLogger;
 
 /**
- * OS-spezifische Anpassungen fuer das Einlesen der Config
+ * OS-spezifische Anpassungen für das Einlesen der Config
  */
 public class ConfigManager {
 	/** Logger */

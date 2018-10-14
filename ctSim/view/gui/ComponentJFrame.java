@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -43,14 +43,14 @@ import ctSim.util.FmtLogger;
 
 /**
  * ein JFrame, das die letzte Position speichert und einen KeyHandler zum 
- * Schliessen des Fensters implementiert
+ * Schließen des Fensters implementiert
  * @author Timo Sandmann (mail@timosandmann.de)
  */
 public class ComponentJFrame extends JFrame implements WindowListener {
 	/** UID */
 	private static final long serialVersionUID = 1407018820276635315L;
 	
-	/** Logger fuer das Fenster */
+	/** Logger für das Fenster */
 	private final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.ComponentJFrame");
 	
 	/** Positionen aller Frames */
@@ -79,7 +79,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 	/**
 	 * @param title Fenstertitel
 	 * @param comp Inhalt des Fensters
-	 * @param button Button, der zu diesem Fenster fuehrt
+	 * @param button Button, der zu diesem Fenster führt
 	 */
 	public ComponentJFrame(String title, final JComponent comp, final AuxFrameButton button) {
 		super(title);
@@ -111,7 +111,7 @@ public class ComponentJFrame extends JFrame implements WindowListener {
 					// NOP
 				}
 			} else {
-				/* Laden nicht moeglich, leere Map erzeugen */
+				/* Laden nicht möglich, leere Map erzeugen */
 				positions = new PositionMap();
 			}
 		}

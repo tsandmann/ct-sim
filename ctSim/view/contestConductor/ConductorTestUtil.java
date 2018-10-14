@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -25,7 +25,7 @@ import java.sql.SQLException;
 
 import ctSim.view.contestConductor.DatabaseAdapter.GameState;
 
-/** Hilfsklasse fuer die Unit-Tests in diesem Package */
+/** Hilfsklasse für die Unit-Tests in diesem Package */
 public abstract class ConductorTestUtil {
     /**
      * @return DB
@@ -35,22 +35,22 @@ public abstract class ConductorTestUtil {
     /**
      * TestDatabase
      */
-    public static class TestDatabase extends ContestDatabase {
-        /**
-         * @see ctSim.view.contestConductor.ContestDatabase#getConnection()
-         */
-        @Override
-        public Connection getConnection() {
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                return DriverManager.getConnection(
-                    "jdbc:mysql://10.10.22.179:3306/ctbot-contest-unittests",
-                    "root", "geheimdienst");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+	public static class TestDatabase extends ContestDatabase {
+		/**
+		 * @see ctSim.view.contestConductor.ContestDatabase#getConnection()
+		 */
+		@Override
+		public Connection getConnection() {
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				return DriverManager.getConnection(
+						"jdbc:mysql://10.10.22.179:3306/ctbot-contest-unittests",
+						"root", "geheimdienst");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
 
     /**
      * Neuer Bot

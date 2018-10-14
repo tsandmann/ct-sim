@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -61,7 +61,7 @@ public class Misc {
 	/**
 	 * Bringt einen Winkel in das Intervall ]&minus;&pi;; &pi;].
 	 * 
-	 * @param angleInRad Winkel im Bogenma&szlig;
+	 * @param angleInRad Winkel im Bogenmaß
 	 * @return Winkel
 	 */
 	public static double normalizeAngleRad(double angleInRad) {
@@ -73,10 +73,10 @@ public class Misc {
 	}
 
 	/**
-	 * Liefert den &uuml;bergebenen Wert <code>value</code> zur&uuml;ck, falls 0
+	 * Liefert den übergebenen Wert <code>value</code> zurück, falls 0
 	 * &lt; <code>value</code> &lt; <code>maxAllowed</code> gilt. Falls
 	 * nicht, liefert den Wert aus dem Intervall [0; <code>maxAllowed</code>],
-	 * der <code>value</code> am n&auml;chsten liegt.
+	 * der <code>value</code> am nächsten liegt.
 	 * @param value 
 	 * @param maxAllowed 
 	 * @return Wert
@@ -128,7 +128,6 @@ public class Misc {
 	 * @param stuff
 	 * @return T
 	 */
-	@SuppressWarnings("unchecked")
     public static <T> T[] intersperse(T separator, T... stuff) {
 		T[] rv = (T[])Array.newInstance(separator.getClass(),
 			stuff.length * 2 - 1);
@@ -192,14 +191,14 @@ public class Misc {
 	}
 
 	/**
-	 * Liefert das letzte Element des &uuml;bergebenen Arrays.
+	 * Liefert das letzte Element des übergebenen Arrays.
 	 * @param array 
 	 * @param <T> 
 	 * @return letztes Element
 	 *
-	 * @throws ArrayIndexOutOfBoundsException falls das &uuml;bergebene
-	 * Array leer ist (L&auml;nge 0 hat)
-	 * @throws NullPointerException falls das &uuml;bergebene Array
+	 * @throws ArrayIndexOutOfBoundsException falls das übergebene
+	 * Array leer ist (Länge 0 hat)
+	 * @throws NullPointerException falls das übergebene Array
 	 * {@code null} ist.
 	 */
 	public static <T> T lastOf(T[] array) {
@@ -211,7 +210,7 @@ public class Misc {
 	 * Erzeugt eine {@link ArrayList} mit den korrekten Typparametern.
 	 * Verwendung:<br />
 	 * {@code List&lt;EchtLangerAnstrengenderTyp&gt; listInstance = newList();}<br />
-	 * Das ist sch&ouml;ner und leichter &auml;nderbar als:<br />
+	 * Das ist schöner und leichter änderbar als:<br />
 	 * {@code List&lt;EchtLangerAnstrengenderTyp&gt; listInstance = new ArrayList&lt;EchtLangerAnstrengenderTyp&gt;();}
 	 * </p>
 	 * <p>
@@ -226,7 +225,7 @@ public class Misc {
 	}
 
 	/** 
-	 * Wie {@link #newList()}, aber f&uuml;r eine {@link HashMap}. 
+	 * Wie {@link #newList()}, aber für eine {@link HashMap}. 
 	 * @param <K> 
 	 * @param <V> 
 	 * @return HashMap 

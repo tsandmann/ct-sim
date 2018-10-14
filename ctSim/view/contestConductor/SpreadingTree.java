@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -28,8 +28,8 @@ import ctSim.util.Misc;
  * <p>
  * Der Turnierbaum ist folgendermassen zu verstehen:
  * <ul>
- * <li>Ein Knoten des Baums repr&auml;sentiert einen Spieler</li>
- * <li>Die beiden Kinder eines Knotens <em>U</em> repr&auml;sentieren die
+ * <li>Ein Knoten des Baums repräsentiert einen Spieler</li>
+ * <li>Die beiden Kinder eines Knotens <em>U</em> repräsentieren die
  * beiden Spiele, deren Gewinner im Spiel <em>U</em> aufeinandertreffen
  * werden. Beispiel: Die beiden Halbfinalspiele ergeben je einen Gewinner; diese
  * treffen im Finale aufeinander.</li>
@@ -37,14 +37,14 @@ import ctSim.util.Misc;
  * </ul>
  * </p>
  * <p>
- * B&auml;ume dieser Klasse sind <a
- * href="http://de.wikipedia.org/wiki/Bin%C3%A4rbaum">bin&auml;r</a>, <a
+ * Bäume dieser Klasse sind <a
+ * href="http://de.wikipedia.org/wiki/Bin%C3%A4rbaum">binär</a>, <a
  * href="http://de.wikipedia.org/wiki/Bin%C3%A4rbaum#Weitere_Begriffe">strikt</a>
  * und <a href="http://de.wikipedia.org/wiki/Balancierter_Baum">balanciert</a>
- * (Invariante: H&ouml;he &plusmn;0).
+ * (Invariante: Höhe &plusmn;0).
  * </p>
  *
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  * @param <T> Typ
  */
 public class SpreadingTree<T> {
@@ -76,7 +76,7 @@ public class SpreadingTree<T> {
     }
 
 	/**
-	 * Node hinzufuegen
+	 * Node hinzufügen
 	 * null undef.
 	 * @param node neuer Node
 	 * @return Baum
@@ -128,7 +128,7 @@ public class SpreadingTree<T> {
 	}
 
 	/**
-	 * @param desiredLevelId gewuenschtes Level
+	 * @param desiredLevelId gewünschtes Level
 	 * @param currentLevel aktuelles Level
 	 * @param payloads Payloads
 	 */
@@ -146,7 +146,7 @@ public class SpreadingTree<T> {
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-    public String toString() {
+	public String toString() {
 	    return payload == null ? "?" : ""+payload;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -37,17 +37,17 @@ import ctSim.view.gui.RemoteCallViewer;
 /**
  * <p>
  * Eine Art {@link JToggleButton}, der ein extra Fenster zeigt/verbirgt.
- * N&uuml;tzlich f&uuml;r Dinge wie das Logfenster und die Fernbedienung.
+ * Nützlich für Dinge wie das Logfenster und die Fernbedienung.
  * </p>
  * <p>
- * Er erscheint in der Oberfl&auml;che wie ein Knopf ({@link JButton}).
- * Dr&uuml;ckt man ihn, wird er dauerhaft als &quot;gedr&uuml;ckt&quot;
- * dargestellt und ein unabh&auml;ngiges Fenster ({@link JFrame}) wird
- * angezeigt. Dr&uuml;ckt man den Knopf erneut, springt er wieder heraus und das
+ * Er erscheint in der Oberfläche wie ein Knopf ({@link JButton}).
+ * Drückt man ihn, wird er dauerhaft als "gedrückt"
+ * dargestellt und ein unabhängiges Fenster ({@link JFrame}) wird
+ * angezeigt. Drückt man den Knopf erneut, springt er wieder heraus und das
  * Fenster verschwindet.
  * </p>
  * 
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class AuxFrameButton extends JToggleButton {
 	/** UID */
@@ -60,20 +60,20 @@ public class AuxFrameButton extends JToggleButton {
 	/**
 	 * Erzeugt einen JToggleButton, der mit einem extra Fenster verheiratet ist.
 	 * Tooltip des Knopfs: Falls das {@code buttonLabel} z.B. "Bratwurst" ist,
-	 * wird der Tooltip lauten &quot;Fenster anzeigen mit Bratwurst&quot;.
+	 * wird der Tooltip lauten "Fenster anzeigen mit Bratwurst".
 	 * 
 	 * @param buttonLabel Text, der auf dem Knopf anzuzeigen ist
 	 * @param frameTitle Text, der in die Titelzeile des extra Fensters zu
 	 * schreiben ist
 	 * @param frameContent Inhalt des Fensters, der beliebig komplex sein kann.
-	 * Oft empfiehlt es sich, hier eine {@link JScrollPane} zu &uuml;bergeben,
-	 * die alles weitere enth&auml;lt
+	 * Oft empfiehlt es sich, hier eine {@link JScrollPane} zu übergeben,
+	 * die alles weitere enthält
 	 * @param enabled soll der Button aktiviert sein?
 	 */
 	public AuxFrameButton(String buttonLabel, String frameTitle, final JComponent frameContent, boolean enabled) {
 		super(buttonLabel);
 
-		// Fenster erzeugen; konfigurieren spaeter
+		// Fenster erzeugen; konfigurieren später
 		auxFrame = new ComponentJFrame(frameTitle, frameContent, this);
 		
 		//auxFrame.setLocation(300, 300);
@@ -97,13 +97,12 @@ public class AuxFrameButton extends JToggleButton {
 		}
 		keyinfo += " + w)";
 		if (enabled) {
-			setToolTipText("Fenster \"" + buttonLabel + "\" anzeigen (schlie\u00DFen mit " + keyinfo);
+			setToolTipText("Fenster \"" + buttonLabel + "\" anzeigen (schließen mit " + keyinfo);
 		} else {
 			setToolTipText("Komponente \"" + buttonLabel + "\" im Bot-Code nicht aktiviert");
 		}
 		addActionListener(new ActionListener() {
-			// Fenster anzeigen/verbergen, wenn wir gedrueckt werden
-			@SuppressWarnings("synthetic-access")
+			// Fenster anzeigen/verbergen, wenn wir gedrückt werden
 			public void actionPerformed(ActionEvent e) {
 				auxFrame.setVisible(AuxFrameButton.this.isSelected());
 				if (frameContent instanceof RemoteCallViewer) {
@@ -118,20 +117,20 @@ public class AuxFrameButton extends JToggleButton {
 		
 		// Fenster konfigurieren, noch nicht anzeigen
 		auxFrame.addWindowListener(new WindowAdapter() {
-			// Wenn Fenster geschlossen wird soll der gedrueckte Button wieder
+			// Wenn Fenster geschlossen wird soll der gedrückte Button wieder
 			// rausspringen
 			@Override
 			public void windowClosing(WindowEvent e) {
 				AuxFrameButton.this.setSelected(false);
 			}
 		});
-		// HIDE, damit sich das Fenster Position + Groesse merkt
+		// HIDE, damit sich das Fenster Position + Größe merkt
 		auxFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		auxFrame.add(frameContent);
 		if (!(frameContent instanceof RemoteCallViewer)) {
-			auxFrame.pack(); // auf die Groesse, die der Inhalt will
+			auxFrame.pack(); // auf die Größe, die der Inhalt will
 		} else {
-			/* Remote-Call-Fenster groesser */
+			/* Remote-Call-Fenster größer */
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 			if (dim.width > 1300) {
 				auxFrame.setSize(new Dimension(1300, 500));
@@ -143,8 +142,8 @@ public class AuxFrameButton extends JToggleButton {
 	}
 
 	// wenn der Knopf aus der Anzeige entfernt wird (z.B. weil der Container,
-	// der ihn enthaelt, aus der UI entfernt wird), dann auch das Fenster
-	// schliessen
+	// der ihn enthält, aus der UI entfernt wird), dann auch das Fenster
+	// schließen
 	/**
 	 * @see javax.swing.JComponent#removeNotify()
 	 */

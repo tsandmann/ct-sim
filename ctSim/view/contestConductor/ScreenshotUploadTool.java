@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -29,7 +29,7 @@ import ctSim.util.Misc;
 
 /**
  * Dings, das ein Verzeichnis voller Screenshots in eine Datenbank
- * hochl&auml;dt. Sollte weitgehend selbstdokumentierend sein (hua hua).
+ * hochlädt. Sollte weitgehend selbstdokumentierend sein (hua hua).
  */
 public class ScreenshotUploadTool {
     /**
@@ -78,16 +78,16 @@ public class ScreenshotUploadTool {
 
         Main.dependencies.reRegisterInstance(ContestDatabase.class,
             new ContestDatabase() {
-            @Override
-            public Connection getConnection() {
-            	try {
-	                Class.forName("com.mysql.jdbc.Driver");
-	                return DriverManager.getConnection(
-	                    url, user, pw);
-            	} catch (Exception e) {
-            		throw new RuntimeException(e);
-            	}
-            }
+        	@Override
+        	public Connection getConnection() {
+        		try {
+        			Class.forName("com.mysql.jdbc.Driver");
+        			return DriverManager.getConnection(
+        				url, user, pw);
+        		} catch (Exception e) {
+        			throw new RuntimeException(e);
+        		}
+        	}
         });
 
         DatabaseAdapter da = (DatabaseAdapter)Main.dependencies.

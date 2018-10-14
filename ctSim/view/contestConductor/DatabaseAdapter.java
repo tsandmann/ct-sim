@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -37,28 +37,28 @@ import ctSim.util.Misc;
 import ctSim.view.contestConductor.TournamentPlanner.TournamentPlanException;
 
 /** <p>Diese Klasse (und die von ihr abgeleiteten) abstrahieren die Datenbank,
- * d.h. sitzen zwischen der Datenbank f&uuml;r den Wettbewerb Oktober 2006
+ * d.h. sitzen zwischen der Datenbank für den Wettbewerb Oktober 2006
  * einerseits und ContestConductor / TournamentPlanner andererseits.</p>
  *
  * <p>Diese Klasse besteht, um den ContestConductor und den TournamentPlanner um
  * SQL zu entlasten. (Ein Aufruf <code>db.setWinner(42);</code> ist
- * &uuml;bersichtlicher als ein halbes dutzend Zeilen Datenbank-Getue).</p>
+ * übersichtlicher als ein halbes dutzend Zeilen Datenbank-Getue).</p>
  *
  * <p>Alle Methoden dieser Klasse und alle Methoden der abgeleiteten Klassen
  * werfen Instanzen von java.sql.SQLException,
  * falls die darunterliegenden Methoden, die auf die Datenbank zugreifen,
- * eine solche Exception werfen. &Uuml;blicherweise deutet das darauf hin, dass
+ * eine solche Exception werfen. üblicherweise deutet das darauf hin, dass
  * die Datenbank nach einem anderen Schema aufgebaut ist als der Code
  * erwartet.</p>
  *
  * @see "Von dieser Klasse abgeleitete Klassen"
  * @see ContestConductor
  *
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 class DatabaseAdapter {
 	/**
-	 * HashMap fuer Statements
+	 * HashMap für Statements
 	 */
 	class StatementCache extends HashMap<String, PreparedStatement> {
         /** UID */
@@ -68,11 +68,10 @@ class DatabaseAdapter {
 		/**
 		 * @see java.util.HashMap#get(java.lang.Object)
 		 */
-		@SuppressWarnings("synthetic-access")
-        @Override
+		@Override
 		public PreparedStatement get(Object key) {
-			// Wenn nicht drin, hinzufuegen, damit super.get garantiert was
-			// zurueckliefert
+			// Wenn nicht drin, hinzufügen, damit super.get garantiert was
+			// zurückliefert
 			if (! containsKey(key)) {
 				/*
 				 * Cast ist okay, weil wir eine HashMap<String, ...> sind
@@ -94,33 +93,33 @@ class DatabaseAdapter {
 
 	/**
 	 * <p>
-	 * Repr&auml;sentiert die moeglichen Zust&auml;nde eines Spiels. Die Enum
+	 * Repräsentiert die möglichen Zustände eines Spiels. Die Enum
 	 * funktioniert Map-artig: sie umfasst Paare aus einem Symbol im Code und
-	 * einem String zugeordnet. Letzterer ist die Repr&auml;sentation, wie der
+	 * einem String zugeordnet. Letzterer ist die Repräsentation, wie der
 	 * Spielzustand in der Datenbank dargestellt wird.
 	 * </p>
-	 * F&uuml;r ein Beispiel und zur Verwendung siehe Methode
+	 * Für ein Beispiel und zur Verwendung siehe Methode
 	 * {@link #toString()}.
 	 */
 	enum GameState {
 		/**
-		 * Zeigt an, dass (noch) keine Spieler f&uuml;r das Spiel eingetragen
+		 * Zeigt an, dass (noch) keine Spieler für das Spiel eingetragen
 		 * sind.
 		 */
 		NOT_INITIALIZED("not init"),
 		/**
-		 * Zeigt an, dass ein Spieler, aber (noch) kein zweiter f&uuml;r das
+		 * Zeigt an, dass ein Spieler, aber (noch) kein zweiter für das
 		 * Spiel eingetragen ist.
 		 */
 		WAITING_FOR_BOT2("wait for bot2"),
 		/**
 		 * Zeigt an, dass das Spiel gestartet werden kann (es sind so viele
-		 * Spieler eingetragen wie n&ouml;tig).
+		 * Spieler eingetragen wie nötig).
 		 */
 		READY_TO_RUN ("ready to run"),
 		/**
 		 * Zeigt an, dass das Spiel gestartet, aber noch nicht abgeschlossen
-		 * ist. Normalerweise hat zu jedem Zeitpunkt nur h&ouml;chstens ein
+		 * ist. Normalerweise hat zu jedem Zeitpunkt nur höchstens ein
 		 * Spiel diesen Zustand.
 		 */
 		RUNNING ("running"),
@@ -140,16 +139,16 @@ class DatabaseAdapter {
 		}
 
 		/** <p>Diese Methode erlaubt es, Objekte dieser Klasse (dieser Enum)
-		 * auf unb&uuml;rokratische Art in Strings einzubauen, die SQL-Queries
-		 * repr&auml;sentieren. Beispiel:</p>
+		 * auf unbürokratische Art in Strings einzubauen, die SQL-Queries
+		 * repräsentieren. Beispiel:</p>
 		 * <code>"SELECT * FROM games WHERE state =
 		 * '"+GameState.RUNNING+"'"</code>
 		 *
 		 * @return Der String, der in der Datenbank das Objekt dieser Klasse
-		 * repr&auml;sentiert. Beispielsweise liefert
+		 * repräsentiert. Beispielsweise liefert
 		 * GameState.NOT_INITIALIZED.toString() den unter
 		 * <a href="#enum_constant_summary">Enum Constant Summary</a>
-		 * aufgef&uuml;hrten Wert.
+		 * aufgeführten Wert.
 		 */
 		@Override
 		public String toString() {
@@ -234,22 +233,22 @@ class DatabaseAdapter {
 
 	/**
 	 * <p>
-	 * F&uuml;hrt einen SQL-Befehl aus, unter Benutzung eines Caches von
+	 * Führt einen SQL-Befehl aus, unter Benutzung eines Caches von
 	 * Befehlen. Falls der SQL-Befehl ein SELECT ist, gibt die Methode die
-	 * selektierten Daten zur&uuml;ck.
+	 * selektierten Daten zurück.
 	 * </p>
 	 * <p>
 	 * <strong>Beispielaufruf:</strong>
 	 * <code>ResultSet r = execSql("select * from gurken where id = ? and length = ?", gurkenId, 42);</code>
-	 * &ndash; Die Methode verwendet SQL-Strings mit IN-Parametern (dieselbe
+	 * – Die Methode verwendet SQL-Strings mit IN-Parametern (dieselbe
 	 * Syntax wie in {@link PreparedStatement} dokumentiert). Im wesentlichen
 	 * gilt: Die Fragezeichen im String werden reihenfolgenrichtig durch die
 	 * Parameter ersetzt: Erstes Fragezeichen = erster Parameter, zweites =
-	 * zweiter Parameter, usw. Fuer die Ersetzung wird
+	 * zweiter Parameter, usw. Für die Ersetzung wird
 	 * {@link PreparedStatement#setObject(int, Object)} verwendet; Details siehe
 	 * dessen Dokumentation und dessen Beschreibung in der <a
 	 * href="http://java.sun.com/products/jdbc/download.html">JDBC-Spezifikation</a>
-	 * (fuer Java&nbsp;1.5 gilt JDBC&nbsp;3.0, Sektion&nbsp;13.2.2.2 und
+	 * (für Java&nbsp;1.5 gilt JDBC&nbsp;3.0, Sektion&nbsp;13.2.2.2 und
 	 * Anhang&nbsp;B-4).
 	 * </p>
 	 * <p>
@@ -273,34 +272,34 @@ class DatabaseAdapter {
 	 * aufgrund von Speicherlecks im ctSim erforderlich. Es hat sich
 	 * herausgestellt, dass bisher die laufend erzeugten Statements offenbar
 	 * erst zur Garbage Collection freigegeben werden, wenn das
-	 * Connection-Objekt, von dem sie erzeugt wurden, geschlossen wurde &ndash;
-	 * d.h. am Programmende. Korrekt angewendet l&ouml;st diese Methode das
+	 * Connection-Objekt, von dem sie erzeugt wurden, geschlossen wurde –
+	 * d.h. am Programmende. Korrekt angewendet löst diese Methode das
 	 * Speicherproblem. $$ doc update close()
 	 * </p>
 	 * <p>
-	 * Die vorliegende Implementierung unterst&uuml;tzt nur SELECT, INSERT,
-	 * UPDATE und DELETE. Unterst&uuml;tzung f&uuml;r weitere SQL-Befehle sollte
-	 * leicht nachzur&uuml;sten sein.
+	 * Die vorliegende Implementierung unterstützt nur SELECT, INSERT,
+	 * UPDATE und DELETE. Unterstützung für weitere SQL-Befehle sollte
+	 * leicht nachzurüsten sein.
 	 * </p>
 	 *
 	 * @param sqlWithInParams (siehe Beispielaufruf oben)
 	 * @param inValues (siehe Beispielaufruf oben)
 	 * @return Falls der Parameter <code>sqlWithParams</code> mit "select"
 	 * beginnt, das ResultSet, wie es ein Aufruf von executeQuery mit demselben
-	 * SQL-Befehl zur&uuml;ckgegeben h&auml;tte. Falls der genannte Parameter
+	 * SQL-Befehl zurückgegeben hätte. Falls der genannte Parameter
 	 * mit "insert", "update" oder "delete" beginnt, wird <code>null</code>
-	 * zur&uuml;ckgegeben.
+	 * zurückgegeben.
 	 * @throws SQLException 
 	 * @throws IllegalArgumentException Falls der Parameter
 	 * <code>sqlWithParams</code> weder mit SELECT noch mit INSERT, UPDATE
-	 * oder DELETE beginnt. (Gro&szlig;-/Kleinschreibung irrelevant.)
+	 * oder DELETE beginnt. (Groß-/Kleinschreibung irrelevant.)
 	 */
 	protected ResultSet execSql(String sqlWithInParams, Object... inValues)
 	throws SQLException, IllegalArgumentException {
-		// Idee: SQL-Kommando ausfuehren; wenn's nicht klappt, Verbindung neu
-		// herstellen und nochmal ausfuehren.
+		// Idee: SQL-Kommando ausführen; wenn's nicht klappt, Verbindung neu
+		// herstellen und nochmal ausführen.
 		// Fix gegen abreissende DB-Verbindungen (wenn die Verbindung abreisst,
-		// kriegt man von MySQL mit dem naechsten SQL-Befehl eine
+		// kriegt man von MySQL mit dem nächsten SQL-Befehl eine
 		// com.mysql.jdbc.CommunicationsException, die von SQLException
 		// abgeleitet ist)
 		try {
@@ -318,7 +317,7 @@ class DatabaseAdapter {
 	}
 
 	/**
-	 * Fuehrt ein SQL-Kommando aus
+	 * Führt ein SQL-Kommando aus
 	 * @param sqlWithInParams Kommando
 	 * @param inValues Werte
 	 * @return Result
@@ -336,22 +335,22 @@ class DatabaseAdapter {
 			return null;
 		} else {
 			throw new IllegalArgumentException("Kann keine SQL-Befehle " +
-					"au\u00DFer SELECT, INSERT, UPDATE und DELETE");
+					"außer SELECT, INSERT, UPDATE und DELETE");
 		}
 	}
 
-	/** Tr&auml;gt einen Bot f&uuml;r ein Spiel ein. Aufzurufen entweder
+	/** Trägt einen Bot für ein Spiel ein. Aufzurufen entweder
 	 * vor dem
      * Wettbewerb in der Planungsphase oder im Wettbewerb, wenn sich durch
      * die Spielergebnisse herausstellt, welche Bots um ein Level weiterkommen.
      *
-     * @param botId Bot, repr&auml;sentiert von seinem
-     * Prim&auml;rschl&uuml;ssel, der eingettragen werden soll. Falls
+     * @param botId Bot, repräsentiert von seinem
+     * Primärschlüssel, der eingettragen werden soll. Falls
      * <code>null</code> tut die Methode nichts.
      * @param levelId Das Level, in das der Bot platziert werden soll
      * @param gameId Die Nummer des Spiels im jeweiligen Level
 	 * @throws SQLException 
-     * @throws TournamentPlanException Wenn f&uuml;r das &uuml;bergebene Spiel
+     * @throws TournamentPlanException Wenn für das übergebene Spiel
      * bereits zwei Spieler eingetragen sind
      */
     public void placeBot(Integer botId, int levelId, int gameId)
@@ -359,7 +358,7 @@ class DatabaseAdapter {
     	if (botId == null)
     		return;
 
-    	lg.fine("Trage Bot ID = '"+botId+"' fuer Level "+levelId+
+    	lg.fine("Trage Bot ID = '"+botId+"' für Level "+levelId+
     		" Spiel "+gameId+" ein");
 
     	// Suche das Spiel heraus

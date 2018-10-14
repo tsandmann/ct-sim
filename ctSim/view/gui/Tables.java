@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -30,7 +30,7 @@ import ctSim.model.bots.components.BotComponent.SimpleActuator;
 import ctSim.model.bots.components.BotComponent.SimpleSensor;
 
 /**
- * Tabellen fuer GUI
+ * Tabellen für GUI
  */
 public abstract class Tables {
 	/**
@@ -45,7 +45,7 @@ public abstract class Tables {
 	     */
 	    public void buisit(PositionCompnt c) {
 			c.getExternalModel().setStepSize(0.05);
-			// vorm Semikolon: Pattern fuer positive Zahlen, nachm ; negative
+			// vorm Semikolon: Pattern für positive Zahlen, nachm ; negative
 			model.addRow(c, "0.000;\u22120.000");
 		}
 
@@ -60,7 +60,8 @@ public abstract class Tables {
 		/**
 		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
 		 */
-		@Override protected String getPanelTitle() { return "Sim-Position"; }
+		@Override
+		protected String getPanelTitle() { return "Sim-Position"; }
 	}
 	
 	/**
@@ -74,7 +75,7 @@ public abstract class Tables {
 	     * @param c Positions-Komponente
 	     */
 	    public void buisit(PositionGlobal c) {
-			// vorm Semikolon: Pattern fuer positive Zahlen, nachm ; negative
+			// vorm Semikolon: Pattern für positive Zahlen, nachm ; negative
 			model.addRow(c, "0;\u22120");
 		}
 
@@ -88,7 +89,8 @@ public abstract class Tables {
 		/**
 		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
 		 */
-		@Override protected String getPanelTitle() { return "Bot-Position"; }
+		@Override
+		protected String getPanelTitle() { return "Bot-Position"; }
 	}
 
 	/**
@@ -101,7 +103,6 @@ public abstract class Tables {
 		/**
 		 * @param a Aktuator
 		 */
-		@SuppressWarnings("unchecked")
 		public void buisit(SimpleActuator a) {
 			model.addRow((BotComponent<? extends SpinnerModel>)a);
 		}
@@ -109,7 +110,8 @@ public abstract class Tables {
 		/**
 		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
 		 */
-		@Override protected String getPanelTitle() { return "Aktuatoren"; }
+		@Override
+		protected String getPanelTitle() { return "Aktuatoren"; }
 	}
 
 	/**
@@ -122,7 +124,6 @@ public abstract class Tables {
 		/**
 		 * @param s Sensor
 		 */
-		@SuppressWarnings("unchecked")
 		public void buisit(SimpleSensor s) {
 			model.addRow((BotComponent<? extends SpinnerModel>)s);
 		}
@@ -130,6 +131,7 @@ public abstract class Tables {
 		/**
 		 * @see ctSim.view.gui.TableOfSpinners#getPanelTitle()
 		 */
-		@Override protected String getPanelTitle() { return "Sensoren"; }
+		@Override
+		protected String getPanelTitle() { return "Sensoren"; }
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -38,7 +38,7 @@ import ctSim.model.bots.ctbot.RealCtBot;
 
 /**
  * @author Felix Beckwermert
- * @author Hendrik Krau&szlig; &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
+ * @author Hendrik Krauß &lt;<a href="mailto:hkr@heise.de">hkr@heise.de</a>>
  */
 public class BotViewer extends JScrollPane {
 	/** UID */
@@ -47,11 +47,11 @@ public class BotViewer extends JScrollPane {
 	/** Buisitors */
 	private Class[] buisitors;
 
-	/** zugehoeriger Bot */
+	/** zugehöriger Bot */
 	public final Bot bot;
 
 	/**
-	 * @param bot	Bot, zu dem der Viewer gehoert
+	 * @param bot	Bot, zu dem der Viewer gehört
 	 */
 	public BotViewer(Bot bot) {
 		super(VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER);
@@ -103,7 +103,7 @@ public class BotViewer extends JScrollPane {
 			} catch (IllegalAccessException e) {
 				/*
 				 * Kommt nur vor, wenn ein BotBuisitor keinen Konstruktor hat,
-				 * der public und parameterlos ist. Waere ein
+				 * der public und parameterlos ist. Wäre ein
 				 * Compile-time-Fehler, nur wegen Verwendung von Reflection
 				 * sehen wir das erst zur Laufzeit.
 				 */

@@ -1,20 +1,20 @@
 -- phpMyAdmin SQL Dump
 -- version 2.8.1
 -- http://www.phpmyadmin.net
--- 
+--
 -- Host: 10.10.22.242
 -- Erstellungszeit: 09. Oktober 2006 um 20:23
 -- Server Version: 5.0.22
 -- PHP-Version: 5.1.4
--- 
+--
 -- Datenbank: `ctbot-contest`
--- 
+--
 
 -- --------------------------------------------------------
 
--- 
--- Tabellenstruktur für Tabelle `ctsim_blacklist`
--- 
+--
+-- Tabellenstruktur fuer Tabelle `ctsim_blacklist`
+--
 
 DROP TABLE IF EXISTS `ctsim_blacklist`;
 CREATE TABLE `ctsim_blacklist` (
@@ -27,9 +27,9 @@ CREATE TABLE `ctsim_blacklist` (
 
 -- --------------------------------------------------------
 
--- 
--- Tabellenstruktur für Tabelle `ctsim_bot`
--- 
+--
+-- Tabellenstruktur fuer Tabelle `ctsim_bot`
+--
 
 DROP TABLE IF EXISTS `ctsim_bot`;
 CREATE TABLE `ctsim_bot` (
@@ -48,9 +48,9 @@ CREATE TABLE `ctsim_bot` (
 
 -- --------------------------------------------------------
 
--- 
--- Tabellenstruktur für Tabelle `ctsim_game`
--- 
+--
+-- Tabellenstruktur fuer Tabelle `ctsim_game`
+--
 
 DROP TABLE IF EXISTS `ctsim_game`;
 CREATE TABLE `ctsim_game` (
@@ -72,9 +72,9 @@ CREATE TABLE `ctsim_game` (
 
 -- --------------------------------------------------------
 
--- 
--- Tabellenstruktur für Tabelle `ctsim_level`
--- 
+--
+-- Tabellenstruktur fuer Tabelle `ctsim_level`
+--
 
 DROP TABLE IF EXISTS `ctsim_level`;
 CREATE TABLE `ctsim_level` (
@@ -90,9 +90,9 @@ CREATE TABLE `ctsim_level` (
 
 -- --------------------------------------------------------
 
--- 
--- Tabellenstruktur für Tabelle `ctsim_log`
--- 
+--
+-- Tabellenstruktur fuer Tabelle `ctsim_log`
+--
 
 DROP TABLE IF EXISTS `ctsim_log`;
 CREATE TABLE `ctsim_log` (
@@ -114,9 +114,9 @@ CREATE TABLE `ctsim_log` (
 
 -- --------------------------------------------------------
 
--- 
--- Tabellenstruktur für Tabelle `ctsim_team`
--- 
+--
+-- Tabellenstruktur fuer Tabelle `ctsim_team`
+--
 
 DROP TABLE IF EXISTS `ctsim_team`;
 CREATE TABLE `ctsim_team` (

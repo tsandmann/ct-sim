@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -68,7 +68,7 @@ public class ContestConductor implements View {
 	 */
 	public static class ContestJudge extends Judge {
 		/**
-		 * Fuer Entfernung zun Ziel
+		 * für Entfernung zum Ziel
 		 */
 		class GameOutcome {
 			/** Gewinner */
@@ -79,7 +79,6 @@ public class ContestConductor implements View {
 			/**
 			 * Alle Entfernungen zum Ziel berechnen
 			 */
-			@SuppressWarnings("synthetic-access")
 			GameOutcome() {
 				for (BotView b : BotView.getAll()) {
 					distToFinish.put(
@@ -118,7 +117,7 @@ public class ContestConductor implements View {
 			try {
 				return isAnyoneOnFinishTile() || isGameTimeoutElapsed();
 			} catch (NullPointerException e) {
-				concon.lg.severe(e, "Inkonsistenter Zustand: Es l\u00E4uft " +
+				concon.lg.severe(e, "Inkonsistenter Zustand: Es läuft " +
 					"laut Datenbank kein Spiel, laut Controller aber " +
 				"schon");
 				assert false;
@@ -142,7 +141,6 @@ public class ContestConductor implements View {
 		 * @throws SQLException
 		 * @throws TournamentPlanException
 		 */
-		@SuppressWarnings("synthetic-access")
 		private boolean isAnyoneOnFinishTile()
 		throws NullPointerException, SQLException, TournamentPlanException {
 			ThreeDBot winner = concon.world.whoHasWon();
@@ -152,7 +150,7 @@ public class ContestConductor implements View {
 				GameOutcome o = new GameOutcome();
 				BotView winnerView = BotView.getViewOf(winner);
 				o.winner = winnerView;
-				o.distToFinish.put(winnerView, 0d); // ueberschreiben
+				o.distToFinish.put(winnerView, 0d); // überschreiben
 
 				setWinner(o);
 				return true;
@@ -165,7 +163,6 @@ public class ContestConductor implements View {
 		 * @throws SQLException
 		 * @throws TournamentPlanException
 		 */
-		@SuppressWarnings("synthetic-access")
 		private boolean isGameTimeoutElapsed()
 		throws SQLException, TournamentPlanException {
 			if (concon.world.getSimTimeInMs() <
@@ -175,7 +172,7 @@ public class ContestConductor implements View {
 			}
 
 			concon.lg.info("Spielzeit abgelaufen; Ermittle Bot, der dem " +
-				"Ziel am n\u00E4chsten ist");
+				"Ziel am nächsten ist");
 
 			GameOutcome o = new GameOutcome();
 			o.winner = BotView.getAll().get(0);
@@ -195,7 +192,6 @@ public class ContestConductor implements View {
 		 * @throws SQLException
 		 * @throws TournamentPlanException
 		 */
-		@SuppressWarnings("synthetic-access")
 		protected void setWinner(GameOutcome outcome)
 		throws NullPointerException, SQLException, TournamentPlanException {
 			concon.lg.info("Gewinner ist Bot %s nach einem Spiel von %d ms",
@@ -244,7 +240,7 @@ public class ContestConductor implements View {
 
 		/**
 		 * @param modelObj ThreeDBot
-		 * @param idInDatabase ID fuer Datenbank
+		 * @param idInDatabase ID für Datenbank
 		 * @param bot0or1 Welcher Bot?
 		 */
 		BotView(ThreeDBot modelObj, int idInDatabase, int bot0or1) {
@@ -372,7 +368,7 @@ public class ContestConductor implements View {
 			if (db.gamesExist())
 				recoverFromCrash();
 			else
-				// Turnier faengt neu an
+				// Turnier fängt neu an
 				planner.planPrelimRound();
 		} catch (SQLException e) {
 			lg.severe(e, "Low-level-Datenbankproblem");
@@ -382,7 +378,7 @@ public class ContestConductor implements View {
 		try {
 			proceedWithNextGame();
 		} catch (Exception e) {
-			lg.severe(e, "Problem beim Durchf\u00FChren des ersten Spiels");
+			lg.severe(e, "Problem beim Durchführen des ersten Spiels");
 			assert false;
 		}
 	}
@@ -428,13 +424,13 @@ public class ContestConductor implements View {
 		try {
 			proceedWithNextGame();
 		} catch (Exception e) {
-			lg.severe(e, "Problem mit der Durchf\u00FChrung des Wettbewerbs");
+			lg.severe(e, "Problem mit der Durchführung des Wettbewerbs");
 			assert false;
 		}
 	}
 
 	/**
-	 * Weite rmit naechstem Spiel
+	 * Weite rmit nächstem Spiel
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws TournamentPlanException
@@ -485,7 +481,7 @@ public class ContestConductor implements View {
 		while ((timeTilGameInMs =
 			scheduled.getTime() - System.currentTimeMillis()) > 0) {
 			try {
-				lg.info("Warte %d ms auf n\u00E4chsten Wettkampf (bis %s)",
+				lg.info("Warte %d ms auf nächsten Wettkampf (bis %s)",
 					timeTilGameInMs, scheduled);
 				Thread.sleep(timeTilGameInMs);
 			} catch (InterruptedException e) {
@@ -508,7 +504,7 @@ public class ContestConductor implements View {
 	}
 
 	/**
-	 * Welcher Rechner soll den n&auml;chsten Bot ausf&uuml;hren
+	 * Welcher Rechner soll den nächsten Bot ausführen
 	 */
 	private int nextHost = 1;
 
@@ -524,12 +520,12 @@ public class ContestConductor implements View {
 		if (server == null)
 			server = "localhost"; //$$ umziehen: Sollte in Config
 
-		// Nur wenn ein Config-Eintrag fuer den entstprechenden Remote-Host
+		// Nur wenn ein Config-Eintrag für den entstprechenden Remote-Host
 		// existiert starten wir auch remote, sonst lokal
 		if ((user == null) || (host == null)){
-			lg.fine("Host oder Username f\u00FCr Remote-Ausf\u00FChrung " +
+			lg.fine("Host oder Username für Remote-Ausführung " +
 				"(Rechner " + nextHost + ") nicht gesetzt. Starte lokal");
-			// Datei ausfuehren + warten bis auf den neuen Bot hingewiesen
+			// Datei ausführen + warten bis auf den neuen Bot hingewiesen
 			// werden
 			controller.invokeBot(f);
 		} else {
@@ -566,7 +562,7 @@ public class ContestConductor implements View {
 		lg.fine("Schreibe Bot nach '"+f.getAbsolutePath()+"'");
 		Misc.copyStreamToStream(b.getBinaryStream(), new FileOutputStream(f));
 
-		// Datei ausfuehren + warten bis auf den neuen Bot hingewiesen werden
+		// Datei ausführen + warten bis auf den neuen Bot hingewiesen werden
 		executeBot(f);
 		synchronized (botArrivalLock) {
 			// Schutz vor spurious wakeups (siehe Java-API-Doku zu wait())
@@ -575,7 +571,7 @@ public class ContestConductor implements View {
 					botArrivalLock.wait();
 				} catch (InterruptedException e) {
 					lg.fine(e, "Wurde aufgeweckt. Kommt nur unter seltsamen " +
-						"Umst\u00E4nden vor, aber f\u00FCr sich allein " +
+						"Umständen vor, aber für sich allein " +
 					"unkritisch. Schlafe weiter.");
 				}
 			}
@@ -587,13 +583,13 @@ public class ContestConductor implements View {
 			}
 		});
 		lg.fine("Gestarteter Bot '"+rv+"' ist korrekt angemeldet; " +
-				"Go f\u00FCr ContestConductor");
+				"Go für ContestConductor");
 		newlyArrivedBot = null;
 		return rv;
 	}
 
 	/**
-	 * Handler fuer neuer Bot da
+	 * Handler für neuer Bot da
 	 * @param bot	Bot
 	 */
 	public void onBotAdded(Bot bot) {
@@ -614,10 +610,10 @@ public class ContestConductor implements View {
 	 */
 	private synchronized void startNextGame()
 	throws SQLException, IOException {
-		// Zu startendes Spiel koennte auch von unserem Aufrufer
-		// (sleepAndStartNextGame()) uebergeben werden, aber wir fordern das
+		// Zu startendes Spiel könnte auch von unserem Aufrufer
+		// (sleepAndStartNextGame()) übergeben werden, aber wir fordern das
 		// neu von der DB an, weil: Wenn sleepAndStartNextGame() das anfordert
-		// und dann lang wartet, koennte in dieser Wartezeit die Verbindung
+		// und dann lang wartet, könnte in dieser Wartezeit die Verbindung
 		// abreissen, was das ResultSet ungueltig macht -- ist in Tests auch
 		// so passiert
 		ResultSet game = db.getReadyGames();
@@ -643,7 +639,7 @@ public class ContestConductor implements View {
 			new BotView(executeBot(db.getBot2Binary()), db.getBot2Id(), 1);
 		}
 
-		lg.fine("Go f\u00FCr Controller");
+		lg.fine("Go für Controller");
 		controller.unpause();
 	}
 

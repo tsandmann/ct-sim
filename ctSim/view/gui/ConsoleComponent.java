@@ -1,5 +1,5 @@
 /*
- * c't-Sim - Robotersimulator fuer den c't-Bot
+ * c't-Sim - Robotersimulator für den c't-Bot
  * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -74,7 +74,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 	}
 	
 	/**
-	 * Log-Handler fuer Konsolenausgabe
+	 * Log-Handler für Konsolenausgabe
 	 */
 	private class LoggingHandler extends Handler {
 		/**
@@ -83,7 +83,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 		public LoggingHandler() {
 			setFormatter(new Formatter() {
 				@Override
-                public String format(LogRecord r) {
+				public String format(LogRecord r) {
 					String lvl = r.getLevel().getLocalizedName();
 	                return String.format("[%1$tk:%1$tM:%tS] %s%s: %s\n", 
 	                		r.getMillis(), 
@@ -103,7 +103,7 @@ public class ConsoleComponent extends JScrollPane implements DebugWindow {
 		}
 
 		/**
-		 * Schliessen
+		 * Schließen
 		 * @throws SecurityException
 		 */
 		@Override
