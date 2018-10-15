@@ -50,7 +50,7 @@ import ctSim.model.ThreeDBot;
 import ctSim.util.Runnable1;
 
 /**
- * <a href="doc-files/grundplatte_bemassung.pdf">Grundplatte mit Bemassung</a>
+ * <a href="doc-files/grundplatte_bemassung.pdf">Grundplatte mit Bemaßung</a>
  */
 public class CtBotShape extends Group {
 	/** Abstand zwischen Zentrum und Außenkante des Bots [m] laut PDF */
@@ -68,13 +68,11 @@ public class CtBotShape extends Group {
 
 	/**
 	 * <p>
-	 * Maximalwinkel [Grad] zwischen zwei Ecken in den Vielecken, die die
-	 * Kreislinien am Bot annähern. Die Kreisbögen am Bot sind wie
-	 * üblich keine echten Kreise, sondern haben Ecken: Sie werden
-	 * näherungsweise durch regelmäßige Vielecke dargestellt.
-	 * Der Winkel ist der zwischen den Ecken des Vielecks, wobei auch mal eine
-	 * Ecke einen kleineren Winkel haben kann (z.B. dort, wo Mittelteil und
-	 * Backen aneinanderstoßen).
+	 * Maximalwinkel [Grad] zwischen zwei Ecken in den Vielecken, die die Kreislinien am Bot annähern.
+	 * Die Kreisbögen am Bot sind wie üblich keine echten Kreise, sondern haben Ecken: Sie werden
+	 * näherungsweise durch regelmäßige Vielecke dargestellt. Der Winkel ist der zwischen den Ecken
+	 * des Vielecks, wobei auch mal eine Ecke einen kleineren Winkel haben kann (z.B. dort, wo
+	 * Mittelteil und Backen aneinanderstoßen).
 	 * </p>
 	 * <p>
 	 * Mehr = bessere (rundere) Darstellung, weniger = schnelleres Rechnen.
@@ -82,15 +80,14 @@ public class CtBotShape extends Group {
 	 */
 	private static final double CORNER_INTERVAL_IN_DEG = 10;
 
-    /**
-     * Punkt-Liste
-     */
+    /** Punkt-Liste */
     public static class PointList extends ArrayList<Point3d> {
         /** UID */
     	private static final long serialVersionUID = 436180486157724410L;
 
         /**
          * interleave
+         *
          * @param other
          * @return PointList
          */
@@ -107,9 +104,7 @@ public class CtBotShape extends Group {
             return rv;
         }
 
-        /**
-         * reverse
-         */
+        /** reverse */
         public void reverse() {
         	Point3d p;
             for (int i = 0; i < size() / 2; i++) {
@@ -128,6 +123,7 @@ public class CtBotShape extends Group {
 
         /**
          * transform
+         *
          * @param t
          */
         public void transform(Transform3D t) {
@@ -149,13 +145,12 @@ public class CtBotShape extends Group {
             return toGeometry(GeometryInfo.TRIANGLE_FAN_ARRAY);
         }
 
-        
+
         /**
          * @return GeometryArray
          */
         public GeometryArray toLineGeometry() {
-            LineStripArray a = new LineStripArray(size(),
-                GeometryArray.COORDINATES, new int[] { size() });
+            LineStripArray a = new LineStripArray(size(), GeometryArray.COORDINATES, new int[] { size() });
 			a.setCoordinates(0, toArray(new Point3d[] {}));
 			return a;
         }
@@ -169,7 +164,7 @@ public class CtBotShape extends Group {
             gi.setCoordinates(toArray(new Point3d[] {}));
             gi.setStripCounts(new int[] { size() });
 
-            // Noch ein paar Beschwoerungsformeln, weiss der Henker warum
+            // noch ein paar Beschwörungsformeln, unklar warum...
             new NormalGenerator().generateNormals(gi);
             gi.recomputeIndices();
 
@@ -202,33 +197,31 @@ public class CtBotShape extends Group {
      *        `-- Appearance 3
      * </pre>
 	 *
-	 * Appearance 1 und 2 werden gemeinsam gesetzt, Appearance 3 unabhängig
-	 * davon.
+	 * Appearance 1 und 2 werden gemeinsam gesetzt, Appearance 3 unabhängig davon.
 	 * </p>
 	 */
     private final Shape3D leftCheek;
-    /** rechts */
+    /** Rechts */
     private final Shape3D rightCheek;
     /** Mitte */
     private final Shape3D middle;
 
     /**
-     * @param baseColor	Farbe
-     * @param appearanceEventSource ThreeDBot
+     * @param baseColor				Farbe
+     * @param appearanceEventSource	ThreeDBot
      */
     public CtBotShape(Color baseColor, ThreeDBot appearanceEventSource) {
-    	// Kann kollidieren -- Gilt auch für alle Kinder im Szenegraph
+    	// "kann kollidieren" - gilt auch für alle Kinder im Szenegraph
     	setPickable(true);
 
-    	// "Kann kollidieren" während der Anzeige noch änderbar (World
-    	// ruft auf uns später setPickable() auf)
+    	// "kann kollidieren" während der Anzeige noch änderbar (World ruft auf uns später setPickable() auf)
     	setCapability(Node.ALLOW_PICKABLE_WRITE);
 
     	// Form bauen
     	rightCheek = buildRightCheek();
     	addChild(rightCheek);
 
-    	// Linke Backe: Shape der rechten, um 180 Grad gedreht
+    	// linke Backe: Shape der rechten Backe, um 180 Grad gedreht
     	leftCheek = (Shape3D)rightCheek.cloneNode(false);
     	TransformGroup g = new TransformGroup(z180aboutCenter());
     	g.addChild(leftCheek);
@@ -259,6 +252,7 @@ public class CtBotShape extends Group {
 
     /**
      * Seite bauen
+     *
      * @return 3D-Shape
      */
     protected static Shape3D buildRightCheek() {
@@ -266,26 +260,23 @@ public class CtBotShape extends Group {
     	Shape3D rv = new Shape3D();
 
     	PointList floor = buildCheekArc(- BOT_HEIGHT / 2);
-        rv.addGeometry(floor.toFanGeometry()); // ausliefern
+        rv.addGeometry(floor.toFanGeometry());	// ausliefern
 
         PointList ceil  = buildCheekArc(+ BOT_HEIGHT / 2);
         /*
-		 * reverse() um Backface-Culling auszutricksen; "richtiger" wäre, in
-		 * den PolygonAttributes der Appearance setCullFace(FRONT) zu setzen,
-		 * aber das wuerde die Appearance der gesamten Shape beeinflussen, und
-		 * die soll hier nicht verändert werden
+		 * reverse() um Backface-Culling auszutricksen; "richtiger" wäre, in den PolygonAttributes der
+		 * Appearance setCullFace(FRONT) zu setzen, aber das würde die Appearance der gesamten Shape
+		 * beeinflussen, und diese soll hier nicht verändert werden.
 		 */
         ceil.reverse();
-        rv.addGeometry(ceil.toFanGeometry()); // ausliefern
+        rv.addGeometry(ceil.toFanGeometry());	// ausliefern
 
-        // Mantel aussen (vom Botzentrum weg gewandt); das ist ein Teil eines
-        // Zylindermantels
+        // Mantel außen (vom Botzentrum weg gewandt); das ist ein Teil eines Zylindermantels
         PointList arcBottom = buildCheekArc(- BOT_HEIGHT / 2);
         PointList arcTop    = buildCheekArc(+ BOT_HEIGHT / 2);
         PointList lateralSurface = arcBottom.interleave(arcTop);
 
-        // Mantel innen (zum Botzentrum gewandt; d.h. Innenwand Mund); wir
-        // schließen einfach den Zylindermantel-Abschnitt
+        // Mantel innen (zum Bot-Zentrum gewandt; d.h. Innenwand Mund); wir schließen einfach den Zylindermantel-Abschnitt
         lateralSurface.add(arcBottom.get(0));
         lateralSurface.add(arcTop.get(0));
 
@@ -297,18 +288,25 @@ public class CtBotShape extends Group {
 
     /**
      * Mitte bauen
+     *
      * @return 3D-Shape
      */
     protected static Shape3D buildMiddle() {
-    	// Shape (= Mittelteil) besteht aus 5 Teilen: Zylinderboden, Zyl.-Decke,
-    	// Abschnitt eines Zyl.-Mantel, 1. Quaderviertel, 2. Quaderviertel
+    	/*
+    	 * Shape (= Mittelteil) besteht aus 5 Teilen:
+    	 * 	1) Zylinderboden,
+    	 * 	2) Zylinderdecke,
+    	 * 	3) Abschnitt eines Zylindermantel,
+    	 * 	4) 1. Quaderviertel,
+    	 * 	5) 2. Quaderviertel
+    	 */
     	Shape3D rv = new Shape3D();
 
     	PointList floor = buildStern(- BOT_HEIGHT / 2);
     	rv.addGeometry(floor.toFanGeometry());
 
     	PointList ceil  = buildStern(+ BOT_HEIGHT / 2);
-    	ceil.reverse(); // wegen Backface-Culling; siehe buildRightCheek()
+    	ceil.reverse();	// wegen Backface-Culling; siehe buildRightCheek()
     	rv.addGeometry(ceil.toFanGeometry());
 
     	// Zylindermantel-Abschnitt
@@ -320,8 +318,8 @@ public class CtBotShape extends Group {
 
         // Quaderviertel
         PointList cuboidQuarter = new PointList();
-        cuboidQuarter.add((Point3d)topArc.last().clone()); // 0
-        cuboidQuarter.add((Point3d)topArc.get(0).clone()); // 1
+        cuboidQuarter.add((Point3d)topArc.last().clone());	// 0
+        cuboidQuarter.add((Point3d)topArc.get(0).clone());	// 1
 
         Transform3D moveDown = new Transform3D();
         moveDown.setTranslation(new Vector3d(0, - MOUTH_DEPTH_IN_M, 0));
@@ -332,13 +330,13 @@ public class CtBotShape extends Group {
         cuboidQuarter.add( // 4
         	transformPoint(bottomArc.last(), z180aboutCenter(), moveDown));
 
-        rv.addGeometry(cuboidQuarter.toStripGeometry()); // ausliefern
+        rv.addGeometry(cuboidQuarter.toStripGeometry());	// ausliefern
 
         // Quaderviertel transformieren und nochmal verwenden
         Transform3D y180 = new Transform3D();
         y180.rotY(PI);
         cuboidQuarter.transform(y180);
-        rv.addGeometry(cuboidQuarter.toStripGeometry()); // 2. Mal ausliefern
+        rv.addGeometry(cuboidQuarter.toStripGeometry());	// 2. Mal ausliefern
 
         return rv;
     }
@@ -353,7 +351,7 @@ public class CtBotShape extends Group {
     }
 
     /**
-     * @param z Z
+     * @param z	Z
      * @return Punktliste
      */
     protected static PointList buildStern(double z) {
@@ -363,7 +361,7 @@ public class CtBotShape extends Group {
     }
 
     /**
-     * @param z Z
+     * @param z	Z
      * @return Punktliste
      */
     protected static PointList buildCheekArc(double z) {
@@ -373,32 +371,27 @@ public class CtBotShape extends Group {
     }
 
     /**
-     * @param z Z
-     * @param fromAngleInDeg von (Winkel in Deg)
-     * @param toAngleInDeg bis (Winkel in Deg)
+     * @param z	Z
+     * @param fromAngleInDeg	von (Winkel in Deg)
+     * @param toAngleInDeg		bis (Winkel in Deg)
      * @return Punktliste
      */
-    protected static PointList buildBotCircumference(double z,
-    double fromAngleInDeg, double toAngleInDeg) {
+    protected static PointList buildBotCircumference(double z, double fromAngleInDeg, double toAngleInDeg) {
         PointList rv = new PointList();
-        for (double a = fromAngleInDeg; a < toAngleInDeg;
-            a += CORNER_INTERVAL_IN_DEG) {
-
+        for (double a = fromAngleInDeg; a < toAngleInDeg; a += CORNER_INTERVAL_IN_DEG) {
             rv.add(buildPointOnCircumference(z, a));
         }
-        // sicherstellen, dass genau der Zielwinkel erreicht wird (nicht
-        // vorher aufgehört)
+        // sicherstellen, dass genau der Zielwinkel erreicht wird (nicht vorher aufgehört)
         rv.add(buildPointOnCircumference(z, toAngleInDeg));
         return rv;
     }
 
     /**
-     * @param z Z
-     * @param angleInDeg Winkel
+     * @param z				Z
+     * @param angleInDeg	Winkel
      * @return 3D-Punkt
      */
-    protected static Point3d buildPointOnCircumference(double z,
-   	double angleInDeg) {
+    protected static Point3d buildPointOnCircumference(double z, double angleInDeg) {
         double angleInRad = toRadians(angleInDeg);
         return new Point3d(
         	BOT_RADIUS * sin(angleInRad),
@@ -408,12 +401,12 @@ public class CtBotShape extends Group {
 
     /**
      * transformiert einen Punkt
-     * @param p 3D-Punkt
-     * @param transforms Transformierung(en)
+     *
+     * @param p				3D-Punkt
+     * @param transforms	Transformierung(en)
      * @return 3D-Punkt
      */
-    private static Point3d transformPoint(Point3d p,
-    Transform3D... transforms) {
+    private static Point3d transformPoint(Point3d p, Transform3D... transforms) {
     	Point3d rv = (Point3d)p.clone();
     	for (Transform3D t : transforms)
     		t.transform(rv);
@@ -421,14 +414,14 @@ public class CtBotShape extends Group {
     }
 
     /**
-     * @param c Farbe
+     * @param c	Farbe
      */
     protected void setMiddleColor(Color c) {
     	middle.setAppearance(getBotAppearance(c));
     }
 
     /**
-     * @param c Farbe
+     * @param c	Farbe
      */
     protected void setCheeksColor(Color c) {
     	leftCheek .setAppearance(getBotAppearance(c));
@@ -436,13 +429,12 @@ public class CtBotShape extends Group {
     }
 
     /**
-     * @param c Farbe
+     * @param c	Farbe
      * @return Bot-Appearance
      */
     protected Appearance getBotAppearance(Color c) {
     	Appearance rv = new Appearance();
-    	rv.setColoringAttributes(new ColoringAttributes(new Color3f(c),
-    		ColoringAttributes.SHADE_GOURAUD));
+    	rv.setColoringAttributes(new ColoringAttributes(new Color3f(c), ColoringAttributes.SHADE_GOURAUD));
     	return rv;
     }
 }

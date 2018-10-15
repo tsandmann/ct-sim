@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.contestConductor;
@@ -27,12 +27,10 @@ import ctSim.controller.Config;
 import ctSim.view.contestConductor.ConductorTestUtil.TestDatabase;
 
 /**
- * Repräsentiert die Datenbank, die alles über den Wettbewerb
- * ("contest") weiß. Idee: Die Klassen, die die Datenbank
- * verwenden, holen sie von hier. Daher können Unit-Tests einfach diese
- * Klasse ableiten und getConnection() überschreiben, um dem
- * Contest-Conductor eine Test-Datenbank unterzuschieben. Beispiel siehe
- * {@link TestDatabase}.
+ * Repräsentiert die Datenbank, die alles über den Wettbewerb ("contest") weiß. Idee: Die Klassen, welche die
+ * Datenbank verwenden, holen sie von hier. Daher können Unit-Tests einfach diese Klasse ableiten und
+ * getConnection() überschreiben, um dem Contest-Conductor eine Test-Datenbank unterzuschieben. Für ein
+ * Beispiel siehe {@link TestDatabase}.
  */
 public class ContestDatabase {
 	/**
@@ -42,7 +40,7 @@ public class ContestDatabase {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			// "Kann nicht passieren"
+			// "kann nicht passieren"
 			throw new AssertionError();
 		}
 

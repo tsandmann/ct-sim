@@ -19,12 +19,11 @@
 
 package ctSim.controller;
 
-/**
- * Bot-Barrier Interface
- */
+/** Bot-Barrier Interface */
 public interface BotBarrier {
 	/**
 	 * Wartet auf die nächste Runde
+	 *
 	 * @throws InterruptedException
 	 */
 	public void awaitNextSimStep() throws InterruptedException;

@@ -25,20 +25,21 @@ import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
 /**
- * Erzeugt die Zuordnung von Tasten auf Fernbedienungscodes je nach Typ der Fernbedienung 
- * (einstellbar wie beim Bot-Code über die Datei rc5-codes.h). 
- * @author Timo Sandmann (mail@timosandmann.de)
+ * Erzeugt die Zuordnung von Tasten auf Fernbedienungscodes je nach Typ der Fernbedienung (einstellbar
+ * wie beim Bot-Code über die Datei rc5-codes.h).
+ *
+ * @author Timo Sandmann
  */
 public class RemoteControlCodes {
 	/** Logger */
 	static final FmtLogger lg = FmtLogger.getLogger("ctSim.model.bots.components.RemoteControlCodes");
-	
+
 	/** Zuordnung Tasten <-> RC5-Codes */
 	private final Map<String, Integer> keys = Misc.newMap();
-	
+
 	/**
-	 * @param type Typ der Fernbedienung (wie in rc5-codes.h beim Bot-Code)
-	 * @throws Exception Falls Typ unbekannt
+	 * @param type	Typ der Fernbedienung (wie in rc5-codes.h beim Bot-Code)
+	 * @throws Exception	falls der Typ unbekannt
 	 */
 	public RemoteControlCodes(final String type) throws Exception {
 		RC5Codes codeMapping = null;
@@ -46,17 +47,17 @@ public class RemoteControlCodes {
 		if (type.equals("RC_HAVE_HQ_RC_UNIVERS29_334") || type.equals("")) {
 			codeMapping = new HQ_RC_UNIVERS29_334();
 		}
-		
+
 		/* RC_HAVE_HAUPPAUGE_WINTV */
 		if (type.equals("RC_HAVE_HAUPPAUGE_WINTV")) {
 			codeMapping = new HAUPPAUGE_WINTV();
 		}
-		
+
 		/* RC_HAVE_Technisat_TTS35AI */
 		if (type.equals("RC_HAVE_Technisat_TTS35AI")) {
 			codeMapping = new Technisat_TTS35AI();
 		}
-		
+
 		if (codeMapping != null) {
 			/* Tastenzuordnungen eintragen */
 			codeMapping.createCodes();
@@ -69,39 +70,41 @@ public class RemoteControlCodes {
 
 	/**
 	 * Gibt die Tastenbelegung der erzeugten Fernbedienung zurück
-	 * @return	HashMap mit Tastenzuordnungen
+	 *
+	 * @return HashMap mit Tastenzuordnungen
 	 */
 	public Map<String, Integer> getKeyMap() {
 		return keys;
 	}
-	
+
 	/**
-	 * Fügt eine Taste hinzu und legt ihren RC5-Code in der HashMap ab.
+	 * Fügt eine Taste hinzu und legt ihren RC5-Code in der HashMap ab
+	 *
 	 * @param label	Name der Taste
 	 * @param code	RC5-Code der Taste
 	 */
 	private void addKey(final String label, Integer code) {
 		keys.put(label, code);
 	}
-	
+
 	/**
 	 * Interface für alle RC5-Fernbedienungen
-	 * @author Timo Sandmann (mail@timosandmann.de)
+	 *
+	 * @author Timo Sandmann
 	 */
 	interface RC5Codes {
-		/**
-		 * Erzeugt die Fernbedienungstasten
-		 */
+		/** Erzeugt die Fernbedienungstasten */
 		void createCodes();
 	}
-	
+
 	/**
-	 * Definiert den Fernbedienungstyp der Standardfernbedienung HQ_RC_UNIVERS29_334 
-	 * und ihre Tastenzuordnungen.
-	 * Möchte man weitere Fernbedienungen ergänzen, erzeugt man weitere Klassen, die 
-	 * RC5Codes implementieren und genauso aufgebaut sind wie diese. Ausserdem trägt 
-	 * man sie ebenfalls in RemoteControlCodes() ein.
-	 * @author Timo Sandmann (mail@timosandmann.de)
+	 * Definiert den Fernbedienungstyp der Standardfernbedienung HQ_RC_UNIVERS29_334 und ihre
+	 * Tastenzuordnungen.
+	 * Möchte man weitere Fernbedienungen ergänzen, erzeugt man weitere Klassen, die RC5Codes
+	 * implementieren und genauso aufgebaut sind wie diese. Außerdem trägt man sie ebenfalls in
+	 * RemoteControlCodes() ein.
+	 *
+	 * @author Timo Sandmann
 	 */
 	class HQ_RC_UNIVERS29_334 implements RC5Codes {
 		/**
@@ -121,12 +124,12 @@ public class RemoteControlCodes {
 			addKey("10", 0x1180);
 			addKey("11", 0x118A);
 			addKey("12", 0x11A3);
-			
+
 			addKey("GR \u2013", 0x01BA);
 			addKey("RE +", 0x01BD);
 			addKey("YE \u2013", 0x01B1);
 			addKey("BL +", 0x01B0);
-			
+
 			addKey("I/II", 0x11AB);
 			addKey("TV/VCR", 0x11B8);
 			addKey("||", 0x11A9);		// Stop
@@ -135,19 +138,20 @@ public class RemoteControlCodes {
 			addKey(">>", 0x11B4);		// Forward
 			addKey("\u25A1", 0x11B6);	// 25A1: Quadrat für "Stop"
 			addKey("\u25CF", 0x11AB);	// 25CF: Dicker Punkt für "Record"
-			
+
 			addKey("CH*P/P", 0x11BF);
 			addKey("Vol+", 0x1190);
 			addKey("Mute", 0x01BF);
 			addKey("Ch+",  0x11A0);
 			addKey("Vol\u2013", 0x1191);
-			addKey("Ch\u2013",  0x11A1);			
+			addKey("Ch\u2013",  0x11A1);
 		}
 	}
-	
+
 	/**
-	 * Definiert den Fernbedienungstyp "HAUPPAUGE_WINTV" und ihre Tastenzuordnungen.
-	 * @author Timo Sandmann (mail@timosandmann.de)
+	 * Definiert den Fernbedienungstyp "HAUPPAUGE_WINTV" und ihre Tastenzuordnungen
+	 *
+	 * @author Timo Sandmann
 	 */
 	class HAUPPAUGE_WINTV implements RC5Codes {
 		/**
@@ -173,12 +177,10 @@ public class RemoteControlCodes {
 			addKey(">",  0xffff);		// Play
 			addKey(">>", 0x1010);		// Forward
 			addKey("\u25A1", 0x1021);	// 25A1: Quadrat für "Stop"
-		}		
+		}
 	}
-	
-	/**
-	 * Definiert den Fernbedienungstyp Technisat TTS35AI und ihre Tastenzuordnungen.
-	 */
+
+	/** Definiert den Fernbedienungstyp Technisat TTS35AI und ihre Tastenzuordnungen */
 	class Technisat_TTS35AI implements RC5Codes {
 		/**
 		 * @see ctSim.model.bots.components.RemoteControlCodes.RC5Codes#createCodes()
@@ -197,12 +199,12 @@ public class RemoteControlCodes {
 			addKey("10", 0x1280);
 			addKey("11", 0x128A);
 			addKey("12", 0x12A3);
-			
+
 			addKey("GR \u2013", 0x02AC);
 			addKey("RE +", 0x02AB);
 			addKey("YE \u2013", 0x02AD);
 			addKey("BL +", 0x02AE);
-			
+
 			addKey("I/II", 0x12A2);
 			addKey("TV/VCR", 0x028F);
 			addKey("||", 0x12A0);		// Pause
@@ -211,13 +213,13 @@ public class RemoteControlCodes {
 			addKey(">>", 0x1290);		// Forward
 			addKey("\u25A1", 0x12A1);	// 25A1: Quadrat für "Stop"
 			addKey("\u25CF", 0x12AF);	// 25CF: Dicker Punkt für "Record"
-			
+
 			addKey("CH*P/P", 0x0293);
 			addKey("Vol+", 0x128F);
 			addKey("Mute", 0x128D);
 			addKey("Ch+",  0x12A9);
 			addKey("Vol\u2013", 0x12BC);
-			addKey("Ch\u2013",  0x12B8);		
+			addKey("Ch\u2013",  0x12B8);
 		}
 	}
 }

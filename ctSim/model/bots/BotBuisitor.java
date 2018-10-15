@@ -19,9 +19,7 @@
 
 package ctSim.model.bots;
 
-/**
- * Interface für alle BotBuisitors
- */
+/** Interface für alle BotBuisitors */
 public interface BotBuisitor {
 	/**
 	 * @param o		das Objekt

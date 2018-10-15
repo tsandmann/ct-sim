@@ -43,12 +43,11 @@ import ctSim.view.gui.SplashWindow;
 
 /**
  * <p>
- * Haupt-Einsprungpunkt in den ctSim. Der normale Weg, das Programm zu starten,
- * ist der Aufruf der {@link #main(String[])}-Methode dieser Klasse.
+ * Haupt-Einsprungpunkt in den ctSim<br>
+ * Der normale Weg, das Programm zu starten, ist der Aufruf der {@link #main(String[])}-Methode dieser Klasse.
  * </p>
  * <p>
- * Inhaltlich befasst sich die Klasse mit grundlegenden
- * Initialisierungs-Geschichten.
+ * Inhaltlich befasst sich die Klasse mit grundlegenden Initialisierungs-Geschichten.
  * </p>
  */
 public class Main {
@@ -76,10 +75,9 @@ public class Main {
 	}
 
 	/**
-	 * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu
-	 * starten.
+	 * Haupt-Einsprungpunkt in den ctSim. Das hier starten, um den ctSim zu starten.
 	 *
-	 * @param args Als Kommandozeilenargumente sind momentan zulässig:
+	 * @param args	Als Kommandozeilenargumente sind momentan zulässig:
 	 * <ul>
 	 * <li>{@code -conf pfad/zur/konfigdatei.xml}: Andere Konfigurationsdatei
 	 * als die standardmäßige config/ct-sim.xml verwenden</li>
@@ -88,7 +86,7 @@ public class Main {
     public static void main(String... args) {
     	final String[] cmdArgs = args;
 		handleCommandLineArgs(cmdArgs);
-	
+
 		if (showSplash) {
 		    /* Splash-Screen anzeigen */
 		    java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
@@ -97,7 +95,7 @@ public class Main {
 		    /* Inits ausführen */
 		    try {
 				SwingUtilities.invokeAndWait(new Runnable() {
-			    	public void run() {
+					public void run() {
 						lg = initLogging();
 						loadConfig();
 						Init.setLookAndFeel();
@@ -130,8 +128,8 @@ public class Main {
 
 	/**
 	 * Siehe {@link #main(String...)}.
-	 * 
-	 * @param args Command-Line-Argumente
+	 *
+	 * @param args	Command-Line-Argumente
 	 */
 	private static void handleCommandLineArgs(String[] args) {
 		for (int i = 0; i < args.length; i++) {
@@ -152,7 +150,8 @@ public class Main {
 
 	/**
 	 * Initialisiert den Logger
-	 * @return	Logger-Instanz
+	 *
+	 * @return Logger-Instanz
 	 */
 	public static FmtLogger initLogging() {
 		try {
@@ -172,30 +171,23 @@ public class Main {
 		return rv;
     }
 
-	/**
-	 * Lädt die Konfiguration
-	 */
+	/** Lädt die Konfiguration */
 	private static void loadConfig() {
 		try {
 			Config.loadConfigFile(DEFAULT_CONFIGFILE);
 			return;
 		} catch (FileNotFoundException e) {
-			lg.severe(e, "Konfigurationsdatei '"+DEFAULT_CONFIGFILE+"' nicht gefunden");
+			lg.severe(e, "Konfigurationsdatei '" + DEFAULT_CONFIGFILE + "' nicht gefunden");
 		} catch (SAXException e) {
-			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
-				DEFAULT_CONFIGFILE);
+			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
 		} catch (IOException e) {
-			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'",
-				DEFAULT_CONFIGFILE);
+			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
 		} catch (ParserConfigurationException e) {
-			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'",
-				DEFAULT_CONFIGFILE);
+			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
 		}
 	}
 
-	/**
-	 * Initialisierung von View und Controller
-	 */
+	/** Initialisierung von View und Controller */
 	private static void setupViewAndController() {
 		Controller c = dependencies.get(Controller.class);
 
@@ -215,8 +207,7 @@ public class Main {
 			if (Config.getValue("useContestConductor").equalsIgnoreCase("true"))
 				v.add(dependencies.get(ContestConductor.class));
 		} catch (Exception e) {
-			lg.warn(e, "Probleme beim Instanziieren des ContestConductor; " +
-					"starte ohne");
+			lg.warn(e, "Probleme beim Instanziieren des ContestConductor; starte ohne");
 		}
 
 		if (Config.getValue("TimeLogger").equalsIgnoreCase("true"))
