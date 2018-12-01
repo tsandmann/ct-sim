@@ -255,6 +255,7 @@ public class Parcours {
 		bg.setCapability(BranchGroup.ALLOW_DETACH);
 		bg.setCapability(Group.ALLOW_CHILDREN_WRITE);
 		addNode(obstacle, x, y, 0.0f, bg);
+		lg.fine("obstacle at (" + x + "|" + y + ")");
 		ObstBG.addChild(bg);
 	}
 

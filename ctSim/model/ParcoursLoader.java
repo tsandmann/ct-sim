@@ -526,6 +526,9 @@ public class ParcoursLoader {
 						}
 						createWall(x, y, l, 1, getAppearance('='));
 						break;
+					case 'O':
+						// Feld ist schon bearbeitet
+						break;
 					case '#':
 						l = 0;
 						d = y;
@@ -547,8 +550,7 @@ public class ParcoursLoader {
 						}
 						break;
 					case 'o':	// bewegliches Objekt
-						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f)
-								* parcours.getBlockSizeInM());
+						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM());
 						break;
 					case 'l':	// Landmarke
 //						if (Beacon.checkParcoursPosition(this.parcours, x, y)) {
@@ -626,6 +628,17 @@ public class ParcoursLoader {
 						break;
 					case '%':
 						createLine(x, y, LINE_BREAK_HOR, getAppearance(parcoursMap[x][y]));
+						break;
+					case '(':
+						createLine(x, y, LINE_VERT, getAppearance(parcoursMap[x][y]));
+						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM());
+						break;
+					case '_':
+						createLine(x, y, LINE_HORIZ, getAppearance(parcoursMap[x][y]));
+						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM());
+						break;
+					default:
+						lg.warn("Unbekannter Typ '" + (char)parcoursMap[x][y] + "' in Parcours an Position (" + x + "|" + y + ") gefunden, wird ignoriert.");
 						break;
 					}
 				}
