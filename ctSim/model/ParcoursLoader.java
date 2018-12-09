@@ -103,8 +103,8 @@ public class ParcoursLoader {
 		0f - LINEWIDTH/2,	-0.5f,	0f,	// lange Linie runter
 	};
 
-	/** Linie -- Südostecke */
-	public static final float[] LINE_CORNER_SE = {
+	/** Linie -- Ecke im Nordwesten */
+	public static final float[] LINE_CORNER_NW = {
 		0f - LINEWIDTH/2,	-0.5f,				0f,	// Start unten links
 		0f + LINEWIDTH/2,	-0.5f,				0f,	// kurze Linie nach rechts
 		0f + LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// lange Linie hoch
@@ -114,30 +114,19 @@ public class ParcoursLoader {
 		0f - LINEWIDTH/2,	-0.5f,				0f,	// lange Linie nach unten
 	};
 
-	/** Linie -- Südwestecke */
-	public static final float[] LINE_CORNER_SW = {
+	/** Linie -- Ecke im Nordosten */
+	public static final float[] LINE_CORNER_NE = {
 		0f - LINEWIDTH/2,	-0.5f,				0f,	// Start unten links
 		0f + LINEWIDTH/2,	-0.5f,				0f,	// kurze Linie nach rechts
 		0f + LINEWIDTH/2,	0.0f + LINEWIDTH/2,	0f,	// lange Linie hoch
 		-0.5f,				0.0f + LINEWIDTH/2,	0f,	// lange Linie nach links
 		-0.5f,				0.0f - LINEWIDTH/2,	0f,	// kurze Linie runter
-		0f -LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// lange Linie nach links
+		0f -LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// lange Linie nach rechts
 		0f - LINEWIDTH/2,	-0.5f,				0f,	// lange Linie nach unten
 	};
 
-	/** Linie -- Nordwestecke */
-	public static final float[] LINE_CORNER_NW = {
-		-0.5f,				0.0f + LINEWIDTH/2,	0f,	// Start Links oben
-		-0.5f,				0.0f - LINEWIDTH/2,	0f,	// kurze Linie runter
-		0f +LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// lange Linie nach rechts
-		0f +LINEWIDTH/2,	0.5f,				0f,	// lange Linie nach oben
-		0f -LINEWIDTH/2,	0.5f,				0f,	// kurze Linie nach links
-		0f -LINEWIDTH/2,	0.0f + LINEWIDTH/2,	0f,	// lange Linie nach unten
-		-0.5f,				0.0f + LINEWIDTH/2,	0f,	// lange Linie nach links
-	};
-
-	/** Linie -- Nordostecke */
-	public static final float[] LINE_CORNER_NE = {
+	/** Linie -- Ecke im Südwesten */
+	public static final float[] LINE_CORNER_SW = {
 		0f +LINEWIDTH/2 , 0.5f               ,0f,	// Start oben rechts
 		0f -LINEWIDTH/2 , 0.5f               ,0f,	// kurze Linie nach links
 		0f -LINEWIDTH/2 , 0.0f - LINEWIDTH/2 ,0f,	// lange Linie nach unten
@@ -145,6 +134,17 @@ public class ParcoursLoader {
 		0.5f			, 0.0f + LINEWIDTH/2 ,0f,	// kurze Linie nach oben
 		0f +LINEWIDTH/2 , 0.0f + LINEWIDTH/2 ,0f,	// lange Linie nach links
 		0f +LINEWIDTH/2 , 0.5f				 ,0f,	// lange Linie nach oben
+	};
+
+	/** Linie -- Ecke im Südosten */
+	public static final float[] LINE_CORNER_SE = {
+		-0.5f,				0.0f + LINEWIDTH/2,	0f,	// Start Links oben
+		-0.5f,				0.0f - LINEWIDTH/2,	0f,	// kurze Linie runter
+		0f +LINEWIDTH/2,	0.0f - LINEWIDTH/2,	0f,	// lange Linie nach rechts
+		0f +LINEWIDTH/2,	0.5f,				0f,	// lange Linie nach oben
+		0f -LINEWIDTH/2,	0.5f,				0f,	// kurze Linie nach links
+		0f -LINEWIDTH/2,	0.0f + LINEWIDTH/2,	0f,	// lange Linie nach unten
+		-0.5f,				0.0f + LINEWIDTH/2,	0f,	// lange Linie nach links
 	};
 
 	/** X-Kreuzung */
@@ -569,7 +569,6 @@ public class ParcoursLoader {
 						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						parcours.addHole(x, y);
 						break;
-
 					case '0':
 						parcours.setStartPosition(0, x, y);
 						parcours.setStartHeading(0, checkNeighbours(x, y, '.'));
@@ -596,17 +595,23 @@ public class ParcoursLoader {
 					case '|':
 						createLine(x, y, LINE_VERT, getAppearance(parcoursMap[x][y]));
 						break;
+					case '$':
+						parcours.setStartPosition(1, x, y);
+						parcours.setStartHeading(1, checkNeighbours(x, y, '.'));
+						createFloor(x, y, getAppearance(parcoursMap[x][y]));
+						createLine(x, y, LINE_VERT, getAppearance(parcoursMap[x][y]));
+						break;
 					case '/':
-						createLine(x, y, LINE_CORNER_SE, getAppearance(parcoursMap[x][y]));
+						createLine(x, y, LINE_CORNER_NW, getAppearance(parcoursMap[x][y]));
 						break;
 					case '\\':
-						createLine(x, y, LINE_CORNER_SW, getAppearance(parcoursMap[x][y]));
-						break;
-					case '+':
 						createLine(x, y, LINE_CORNER_NE, getAppearance(parcoursMap[x][y]));
 						break;
+					case '+':
+						createLine(x, y, LINE_CORNER_SW, getAppearance(parcoursMap[x][y]));
+						break;
 					case '~':
-						createLine(x, y, LINE_CORNER_NW, getAppearance(parcoursMap[x][y]));
+						createLine(x, y, LINE_CORNER_SE, getAppearance(parcoursMap[x][y]));
 						break;
 					case '[':
 						createLine(x, y, LINE_CROSSING_X, getAppearance(parcoursMap[x][y]));
@@ -637,12 +642,28 @@ public class ParcoursLoader {
 						createLine(x, y, LINE_HORIZ, getAppearance(parcoursMap[x][y]));
 						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM());
 						break;
+					case 'p':
+						createLine(x, y, LINE_CORNER_NW, getAppearance(parcoursMap[x][y]));
+						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM());
+						break;
+					case 'q':
+						createLine(x, y, LINE_CORNER_NE, getAppearance(parcoursMap[x][y]));
+						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM());
+						break;
+					case 'b':
+						createLine(x, y, LINE_CORNER_SW, getAppearance(parcoursMap[x][y]));
+						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM());
+						break;
+					case 'd':
+						createLine(x, y, LINE_CORNER_SE, getAppearance(parcoursMap[x][y]));
+						createMovableObject((x + 0.5f) * parcours.getBlockSizeInM(), (y + 0.5f) * parcours.getBlockSizeInM());
+						break;
 					default:
 						lg.warn("Unbekannter Typ '" + (char)parcoursMap[x][y] + "' in Parcours an Position (" + x + "|" + y + ") gefunden, wird ignoriert.");
 						break;
+						/** Achtung: Bei Aenderungen/Erweiterung die Liste verfuegbarer Kartenbauelemente in ctSim/parcours/template.xml und ctSim/develop/documentation/map-parts.md bitte ebenfalls aktualisieren! */
 					}
 				}
-
 			}
 
 			/* für den Rest Boden aus einem Stück einfügen */
