@@ -661,7 +661,8 @@ public class ParcoursLoader {
 					default:
 						lg.warn("Unbekannter Typ '" + (char)parcoursMap[x][y] + "' in Parcours an Position (" + x + "|" + y + ") gefunden, wird ignoriert.");
 						break;
-						/** Achtung: Bei Aenderungen/Erweiterung die Liste verfuegbarer Kartenbauelemente in ctSim/parcours/template.xml und ctSim/develop/documentation/map-parts.md bitte ebenfalls aktualisieren! */
+						/** Achtung: Bei Aenderungen/Erweiterung die Liste verfuegbarer Kartenbauelemente in ctSim/parcours/template.xml und
+						 * ctSim/develop/documentation/map-parts.md bitte ebenfalls aktualisieren! */
 					}
 				}
 			}
