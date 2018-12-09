@@ -13,7 +13,7 @@
 | `Z` | Bodenplatte Bot-Zielpunkt | ![Bodenplatte Zielpunkt](pictures/map-part_baseplate_bot-goal.png) | `5a` |
 | `o` | Bodenplatte mit Transportfach-Objekt | ![Bodenplatte mit Transportfach-Objekt](pictures/map-part_baseplate_pillar.png) | `6f` |
 | `l` | Bodenplatte mit Bot Positioning System (BPS)-Landmarke | ![Bodenplatte mit Bot Positioning System (BPS)-Landmarke](pictures/map-part_baseplate_landmark.png) | `6c` |
-| `|` | Bodenplatte mit Linie vertikal | ![Bodenplatte mit Linie vertikal](pictures/map-part_baseplate_line_vert.png) | `7C` |
+| <code>&#124;</code> | Bodenplatte mit Linie vertikal | ![Bodenplatte mit Linie vertikal](pictures/map-part_baseplate_line_vert.png) | `7C` |
 | `$` | Bodenplatte mit Linie vertikal als Startpunkt Bot1 | ![Bodenplatte mit Linie vertikal als Startpunkt Bot1](pictures/map-part_baseplate_line_vert_sp1.png) / ![](pictures/map-part_baseplate_line_vert_sp1_var.png) | `24` |
 | `!` | Bodenplatte mit Linie vertikal unterbrochen | ![Bodenplatte mit Linie vertikal unterbrochen](pictures/map-part_baseplate_line_vert_interrupted.png) | `21` |
 | `-` | Bodenplatte mit Linie horizontal | ![Bodenplatte mit Linie horizontal](pictures/map-part_baseplate_line_hor.png) | `2d` |
