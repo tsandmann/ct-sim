@@ -3,7 +3,7 @@
 
 <world>
 	<description>
-	Beispiel-Parcours in leicht "dadaistischem" Aufbau als Vorlage für eigene Karten mit einer Liste aller akt. verfuegbaren Bauelementen und allen dazugehoerigen optics-Definitionen.
+	Beispiel-Parcours in leicht "dadaistischem" Aufbau als Vorlage für eigene Karten mit einer Liste aller akt. verfuegbaren Bauelementen und allen dazugehoerigen optics-Definitionen. Zur Verwedung am Besten "template.xml" kopieren und unter neuem Map-Namen abspeichern.
 	Nicht alle Bauelemente sind in der Karte eingezeichnet, bspw. "Bodenplatte mit Linie vertikal als Startpunkt Bot1" zugunsten "Bodenplatte Startpunkt Bot1", da es nur einen "Startpunkt Bot1" geben kann.
 	</description>
 
@@ -17,7 +17,7 @@
 		<line>#|+~ |    ==#</line>
 		<line>#|  p!q X o L</line>
 		<line>#| #}[{XXX  #</line>
-		<line>#| #b]d .  2#</line>
+		<line>#|.#b]d   .2#</line>
 		<line>*10=========*</line>
 	</parcours>
 
@@ -32,15 +32,15 @@ X | Wandblock (58)
 # | Wand vertikal (23)
 * | Saeule mit Lichtquelle (2a)
   | Bodenplatte normal (20)
-. | Bodenplatte weisz (e3)
-O | Bodenplatte Default-Bot-Startpunkt (30)
-1 | Bodenplatte Startpunkt Bot1 (31)
-2 | Bodenplatte Startpunkt Bot2 (32)
+. | Bodenplatte weisz; definiert, sofern direkt an "Bodenplatte Startfeld ..." angrenzend, die Blickrichtung eines auf die Karte gerufenen Bots (e3)
+O | Bodenplatte Startpunkt Default; eigentlich sollte hier jeder aufgerufene Bot starten, sofern keine anderen Startpunkte verwendet werden, akt. jedoch startet hier, wahrscheinlich aufgrund eines Bugs, der dritte (und jeder weitere) aufgerufene Bot (30)
+1 | Bodenplatte Startpunkt Bot1; wenn verwendet, startet der erste aufgerufene Bot hier (31)
+2 | Bodenplatte Startpunkt Bot2; wenn verwendet, startet der zweite aufgerufene Bot (32)
 Z | Bodenplatte Bot-Zielpunkt (5a)
 o | Bodenplatte mit Transportfach-Objekt (6f)
 l | Bodenplatte mit Bot Positioning System (BPS)-Landmarke (6c)
 | | Bodenplatte mit Linie vertikal (7C)
-$ | Bodenplatte mit Linie vertikal als Startpunkt Bot1 (24)
+$ | Bodenplatte mit Linie vertikal als Startpunkt Bot1; aktuell leider optisch nicht von "Linie vertikal" zu unterscheiden, weil andere Farb-Definitionen (bspw. durch Kombination der Definition mit "Bodenplatte Startpunkt Bot1") dazu führen, dass die Linie nicht mehr vom Bot erkannt wird (24)
 ! | Bodenplatte mit Linie vertikal unterbrochen (21)
 - | Bodenplatte mit Linie horizontal (2d)
 % | Bodenplatte mit Linie horizontal unterbrochen (25)
@@ -62,7 +62,7 @@ d | Bodenplatte mit Linie Ecke SE und Transportfach-Objekt (64)
 
 ACHTUNG: Die Liste bei Änderungen/Erweiterung in ctSim/model/ParcoursLoader.java und ctSim/develop/documentation/map-parts.md bitte ebenfalls aktualisieren!
 
-Die nachfolgenden optics-Definitionen der Kartenbauelemente folgen der Listen-Reihenfolge. 
+Die nachfolgenden optics-Definitionen der Kartenbauelemente folgen der Listen-Reihenfolge oben. 
 
 Hinweise aus https://www.heise.de/ct/artikel/Genesis-290480.html zu den Farb-Angaben der optics-Definitionen:
 
@@ -115,7 +115,7 @@ Bei bestimmten Kartenbauelementen wie den Bodenplatten mit Linien erzeugen diese
 			<color type="diffuse">#FFFFFF</color>
 		</appearance>
 		<appearance type="0">
-			<description>Bodenplatte Default-Bot-Startpunkt</description>
+			<description>Startpunkt Default</description>
 			<clone>.</clone>
 		</appearance>
 		<appearance type="1">
@@ -151,8 +151,7 @@ Bei bestimmten Kartenbauelementen wie den Bodenplatten mit Linien erzeugen diese
 		</appearance>
 		<appearance type="$"> 
 			<description>Bodenplatte mit Linie vertikal als Startpunkt Bot1</description>
-			<color type="ambient">#000000</color>
-			<color type="diffuse">#993030</color>
+			<clone>|</clone>
 		</appearance>
 		<appearance type="!"> 
 			<description>Bodenplatte mit Linie vertikal unterbrochen</description>

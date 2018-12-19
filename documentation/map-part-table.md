@@ -7,14 +7,14 @@
 | `*` | Saeule mit Lichtquelle | ![Saeule mit Lichtquelle](pictures/map-part_lightsource.png) | `2a` |
 | ` ` | Bodenplatte normal | ![Bodenplatte normal](pictures/map-part_baseplate_normal.png) | `20` |
 | `.` | Bodenplatte weisz | ![Bodenplatte weisz](pictures/map-part_baseplate_white.png) | `e3` |
-| `O` | Bodenplatte Default-Bot-Startpunkt | ![Bodenplatte Default-Bot-Startpunkt](pictures/map-part_baseplate_bot-start-default.png) | `30` |
-| `1` | Bodenplatte Startpunkt Bot1 | ![Bodenplatte Startpunkt Bot1](pictures/map-part_baseplate_bot-start1.png) | `31` |
-| `2` | Bodenplatte Startpunkt Bot2 | ![Bodenplatte Startpunkt Bot2](pictures/map-part_baseplate_bot-start2.png) | `32` |
+| `O` | Bodenplatte Startpunkt Default; eigentlich sollte hier jeder aufgerufene Bot starten, sofern keine anderen Startpunkte verwendet werden, akt. jedoch startet hier, wahrscheinlich aufgrund eines Bugs, der dritte (und jeder weitere) aufgerufene Bot | ![Bodenplatte Default-Bot-Startpunkt](pictures/map-part_baseplate_bot-start-default.png) | `30` |
+| `1` | Bodenplatte Startpunkt Bot1; wenn verwendet, startet der erste aufgerufene Bot hier | ![Bodenplatte Startpunkt Bot1](pictures/map-part_baseplate_bot-start1.png) | `31` |
+| `2` | Bodenplatte Startpunkt Bot2; wenn verwendet, startet der zweite aufgerufene Bot | ![Bodenplatte Startpunkt Bot2](pictures/map-part_baseplate_bot-start2.png) | `32` |
 | `Z` | Bodenplatte Bot-Zielpunkt | ![Bodenplatte Zielpunkt](pictures/map-part_baseplate_bot-goal.png) | `5a` |
 | `o` | Bodenplatte mit Transportfach-Objekt | ![Bodenplatte mit Transportfach-Objekt](pictures/map-part_baseplate_pillar.png) | `6f` |
 | `l` | Bodenplatte mit Bot Positioning System (BPS)-Landmarke | ![Bodenplatte mit Bot Positioning System (BPS)-Landmarke](pictures/map-part_baseplate_landmark.png) | `6c` |
 | <code>&#124;</code> | Bodenplatte mit Linie vertikal | ![Bodenplatte mit Linie vertikal](pictures/map-part_baseplate_line_vert.png) | `7C` |
-| `$` | Bodenplatte mit Linie vertikal als Startpunkt Bot1 | ![Bodenplatte mit Linie vertikal als Startpunkt Bot1](pictures/map-part_baseplate_line_vert_sp1.png) / ![](pictures/map-part_baseplate_line_vert_sp1_var.png) | `24` |
+| `$` | Bodenplatte mit Linie vertikal als Startpunkt Bot1; aktuell leider optisch nicht von "Linie vertikal" zu unterscheiden, weil andere Farb-Definitionen (bspw. durch Kombination der Definition für "Bodenplatte Startpunkt Bot1") dazu führen, dass die Linie nicht mehr vom Bot erkannt wird | ![Bodenplatte mit Linie vertikal als Startpunkt Bot1](pictures/map-part_baseplate_line_vert_sp1.png) / ![](pictures/map-part_baseplate_line_vert_sp1_var.png) | `24` |
 | `!` | Bodenplatte mit Linie vertikal unterbrochen | ![Bodenplatte mit Linie vertikal unterbrochen](pictures/map-part_baseplate_line_vert_interrupted.png) | `21` |
 | `-` | Bodenplatte mit Linie horizontal | ![Bodenplatte mit Linie horizontal](pictures/map-part_baseplate_line_hor.png) | `2d` |
 | `%` | Bodenplatte mit Linie horizontal unterbrochen | ![Bodenplatte mit Linie horizontal unterbrochen](pictures/map-part_baseplate_line_hor_interrupted.png) | `25` |
@@ -36,7 +36,7 @@
 
 Möglich, daher für Erweiterunggen verfügbar, sind alle [ASCII "Printable Characters"](https://en.wikipedia.org/wiki/ASCII#Printable_characters).
 
-ACHTUNG: Die Liste bei Änderungen/Erweiterung in 
+ACHTUNG: Die Liste bei Änderungen in 
 - `ctSim/model/ParcoursLoader.java`
 und
 - `ctSim/parcours/template.xml`

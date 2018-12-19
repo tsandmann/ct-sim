@@ -598,7 +598,6 @@ public class ParcoursLoader {
 					case '$':
 						parcours.setStartPosition(1, x, y);
 						parcours.setStartHeading(1, checkNeighbours(x, y, '.'));
-						createFloor(x, y, getAppearance(parcoursMap[x][y]));
 						createLine(x, y, LINE_VERT, getAppearance(parcoursMap[x][y]));
 						break;
 					case '/':
