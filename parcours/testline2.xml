@@ -93,8 +93,7 @@
 		
 		<appearance type="$"> 
 			<description>Bodenplatte mit Linie vertikal als Startpunkt Bot1</description>
-			<color type="ambient">#000000</color>
-			<color type="diffuse">#993030</color>
+			<clone>|</clone>
 		</appearance>
 
 		<appearance type="/"> 
