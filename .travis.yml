@@ -8,9 +8,6 @@ matrix:
     - os: osx
       osx_image: xcode10.2
 
-language: java
-install: ant deps
-
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install ant; fi
 
