@@ -141,9 +141,13 @@ public class Parcours {
 		terrainBG.setCapability(Node.ALLOW_PICKABLE_WRITE);
 		terrainBG.setPickable(true);
 
-		// Standard Startposition
+		// Startpositionen initialisieren
 		startPositions[0][0] = 0;
 		startPositions[0][1] = 0;
+		for (int i = 1; i < BOTS; ++i) {
+			startPositions[i][0] = -1;
+			startPositions[i][1] = -1;
+		}
 	}
 
 	/**
@@ -452,7 +456,7 @@ public class Parcours {
 					break;
 				}
 			}
-			if (i == BOTS) {
+			if (i == BOTS || startPositions[i][0] == -1) {
 				i = 0;
 			}
 			pos = new Point3d(startPositions[i][0] * blockSizeInM + blockSizeInM / 2, startPositions[i][1] *
