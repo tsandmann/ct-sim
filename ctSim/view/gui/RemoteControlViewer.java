@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -35,20 +35,17 @@ import javax.swing.JPanel;
 import ctSim.model.bots.components.Sensors.RemoteControl;
 import ctSim.util.FmtLogger;
 
-/**
- * Fernbedienungs-GUI
- */
+/** Fernbedienungs-GUI */
 public class RemoteControlViewer extends JPanel {
 	/** UID */
 	private static final long serialVersionUID = - 6483687307396837800L;
 
 	/** Logger */
-	static final FmtLogger lg = FmtLogger.getLogger(
-		"ctSim.view.gui.RemoteControlViewer");
+	static final FmtLogger lg = FmtLogger.getLogger("ctSim.view.gui.RemoteControlViewer");
 
 	/** blau */
 	private static final Color LIGHT_BLUE = new Color(150, 150, 255);
-	/** gruen */
+	/** grün */
 	private static final Color GR         = new Color(50,  200, 50);
 	/** gelb */
 	private static final Color YE         = new Color(200, 200, 0);
@@ -60,7 +57,8 @@ public class RemoteControlViewer extends JPanel {
 
 	/**
 	 * Setzt die Standardfarbe
-	 * @param c Farbe
+	 *
+	 * @param c	Farbe
 	 * @return null
 	 */
 	private JComponent defaultColor(Color c) {
@@ -70,13 +68,16 @@ public class RemoteControlViewer extends JPanel {
 
 	/**
 	 * Button bauen
-	 * @param label Label
-	 * @param color Farbe
+	 *
+	 * @param label	Label
+	 * @param color	Farbe
 	 * @return Button
 	 */
 	private JButton b(String label, Color color) {
-		// Bindestrich durch Streckenstrich ersetzen (ist länger, Bindestrich
-		// sieht so doof aus neben den grossen Pluszeichen)
+		/*
+		 * Bindestrich durch längeren Streckenstrich ersetzen
+		 * (Bindestrich sieht unschön aus neben den großen Pluszeichen.)
+		 */
 		final String key = label.replaceAll("-", "\u2013");
 		final JButton rv = new JButton(key);
 		rv.setToolTipText("Taste "+ key);
@@ -97,7 +98,8 @@ public class RemoteControlViewer extends JPanel {
 
 	/**
 	 * Button bauen
-	 * @param label Label
+	 *
+	 * @param label	Label
 	 * @return Button
 	 */
 	private JButton b(String label) {
@@ -106,9 +108,10 @@ public class RemoteControlViewer extends JPanel {
 
 	/**
 	 * Baut das Panel
-	 * @param width Breite
-	 * @param height Höhe
-	 * @param buttons Buttons
+	 *
+	 * @param width		Breite
+	 * @param height	Höhe
+	 * @param buttons	Buttons
 	 * @return Panel
 	 */
 	private JComponent grid(int width, int height, JButton... buttons) {
@@ -140,18 +143,18 @@ public class RemoteControlViewer extends JPanel {
 			b("I/II"),	null,		null,		null,		b("TV/VCR"),
 			null,		null,		b("||"),	null,		null,
 			null,		b("<<"),	b(">"),		b(">>"),	null,
-			null,		null,		b("\u25A1"),null,		null,			// 25A1: Quadrat für "Stop"
-			b("\u25CF"),null,		null,		null,		b("CH*P/P")		// 25CF: Dicker Punkt für "Record"
+			null,		null,		b("\u25A1"),null,		null,		// 25A1: Quadrat für "Stop"
+			b("\u25CF"),null,		null,		null,		b("CH*P/P")	// 25CF: Dicker Punkt für "Record"
 		),
 		defaultColor(LIGHT_BLUE),
 		grid(3, 2,
 			b("Vol+"),	b("Mute"),	b("Ch+"),
 			b("Vol-"),	null,		b("Ch-")
 		)
-	};	
-	
+	};
+
 	/**
-	 * @param rcSensor RC5-Komponente
+	 * @param rcSensor	RC5-Komponente
 	 */
 	public RemoteControlViewer(RemoteControl rcSensor) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

@@ -4,14 +4,9 @@ sudo: false
 matrix:
   include:
     - os: linux
-      jdk: oraclejdk8
+      jdk: openjdk11
     - os: osx
-      osx_image: xcode8
-
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+      osx_image: xcode10.2
 
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install ant; fi

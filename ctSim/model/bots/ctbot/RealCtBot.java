@@ -19,10 +19,12 @@
 
 package ctSim.model.bots.ctbot;
 
-import static ctSim.model.bots.components.BotComponent.ConnectionFlags.*;
+import static ctSim.model.bots.components.BotComponent.ConnectionFlags.READS;
+import static ctSim.model.bots.components.BotComponent.ConnectionFlags.WRITES_ASYNCLY;
 
 import java.io.IOException;
 import java.net.ProtocolException;
+
 import ctSim.Connection;
 import ctSim.model.Command;
 import ctSim.model.bots.components.Actuators;
@@ -30,20 +32,16 @@ import ctSim.model.bots.components.BotComponent;
 import ctSim.model.bots.components.MapComponent;
 import ctSim.model.bots.components.MousePictureComponent;
 import ctSim.model.bots.components.RemoteCallCompnt;
+import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
 import ctSim.model.bots.components.Sensors;
 import ctSim.model.bots.components.WelcomeReceiver;
-import ctSim.model.bots.components.RemoteCallCompnt.BehaviorExitStatus;
 import ctSim.util.BotID;
 import ctSim.util.Runnable1;
 import ctSim.util.SaferThread;
 
-/**
- * Reale Bots
- */
+/** Reale Bots */
 public class RealCtBot extends CtBot {
-	/**
-	 * Kommando-Auswerter
-	 */
+	/** Kommando-Auswerter */
 	protected class CmdProcessor extends SaferThread {
 		/** Verbindung zum Sim */
 		private final Connection connection;
@@ -59,7 +57,7 @@ public class RealCtBot extends CtBot {
 		/**
 		 * @see ctSim.util.SaferThread#work()
 		 */
-		// Bei den zwei Logging-Aufrufen ist uns das egal
+		// bei den zwei Logging-Aufrufen ist uns das egal
 		@Override
 		public void work() throws InterruptedException {
 			Command cmd = null;
@@ -69,13 +67,13 @@ public class RealCtBot extends CtBot {
 					updateView();
 					return;
 				}
-				
+
 				if (cmd.has(Command.Code.SHUTDOWN)) {
 					die();
 					RealCtBot.this.dispose();
 					return;
 				}
-				
+
 				if (! preProcessCommands(cmd)) {
 					components.processCommand(cmd);
 				}
@@ -96,29 +94,28 @@ public class RealCtBot extends CtBot {
 			try {
 				connection.close();
 			} catch (IOException e) {
-				// Strategie auf Best-effort-Basis
-				// (soll heissen ist uns wurscht)
+				// Strategie auf Best-effort-Basis (soll heißen: ist uns egal)
 			}
 		}
 	}
-	
+
 	/** Name der Verbindung */
 	private final String connectionName;
 
 	/**
-	 * @param connection Connection zum Bot
-	 * @param newId Id für die Kommunikation 
-	 * @param features Features des Bots gepackt in einen Integer
-	 * @throws ProtocolException 
+	 * @param connection	Connection zum Bot
+	 * @param newId			Id für die Kommunikation
+	 * @param features		Features des Bots gepackt in einen Integer
+	 * @throws ProtocolException
 	 */
 	public RealCtBot(Connection connection, BotID newId, int features) throws ProtocolException {
 		super(connection.getShortName() + "-Bot");
-		
-		// connection speichern
+
+		// Connection speichern
 		setConnection(connection);
-		
+
 		setId(newId);
-		
+
 		connectionName = connection.getName();
 
 		components.add(
@@ -154,10 +151,10 @@ public class RealCtBot extends CtBot {
 
 		for (BotComponent<?> c : components) {
 			c.offerAsyncWriteStream(connection.getCmdOutStream());
-			
-			/* RemoteCall-Componente suchen und DoneListener registrieren (ProgramViewer) */
+
+			/* RemoteCall-Komponente suchen und DoneListener registrieren (ProgramViewer) */
 			if (c instanceof RemoteCallCompnt) {
-				RemoteCallCompnt rc = (RemoteCallCompnt) c;			
+				RemoteCallCompnt rc = (RemoteCallCompnt) c;
 				rc.addDoneListener(new Runnable1<BehaviorExitStatus>() {
 					public void run(BehaviorExitStatus status) {
 						if (ablResult != null) {
@@ -166,14 +163,14 @@ public class RealCtBot extends CtBot {
 					}
 				});
 			}
-			
+
 			if (c instanceof WelcomeReceiver) {
 				welcomeReceiver = (WelcomeReceiver) c;
 				welcomeReceiver.setFeatures(features);
 			}
 		}
 
-		// Und einen CommandProcessor herstellen
+		// und einen CommandProcessor herstellen
 		final CmdProcessor cp = new CmdProcessor(connection);
 		addDisposeListener(new Runnable() {
 			public void run() {
@@ -188,11 +185,12 @@ public class RealCtBot extends CtBot {
 	 */
 	@Override
 	public String getDescription() {
-		return "Realer c't-Bot, verbunden über "+connectionName;
+		return "Realer c't-Bot, verbunden über " + connectionName;
 	}
 
 	/**
 	 * Sendet einen Fernbedienungscode an den Bot
+	 *
 	 * @param code	zu sendender RC5-Code als String
 	 */
 	public void sendRC5Code(String code) {
@@ -206,9 +204,9 @@ public class RealCtBot extends CtBot {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
-	}	
-	
+		}
+	}
+
 //	/**
 //	 * Startet das Verhalten "name" per RemoteCall
 //	 * @param name	Das zu startende Verhalten
@@ -227,12 +225,13 @@ public class RealCtBot extends CtBot {
 //					RemoteCallCompnt.Behavior beh = rc.new Behavior(bytes.toByteArray());
 //					RemoteCallCompnt.Parameter par = new RemoteCallCompnt.IntParam("uint16 x");
 //					par.setValue(param);
-//					beh.getParameters().add(par);					
+//					beh.getParameters().add(par);
 //					beh.call();
 //				} catch (IOException e) {
 //					e.printStackTrace();
 //				}
 //			}
 //		}
-//	}	
+//	}
+
 }

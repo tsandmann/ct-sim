@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -49,9 +49,7 @@ import ctSim.util.BackslashNConverterStream;
 import ctSim.util.FmtLogger;
 import ctSim.util.Misc;
 
-/**
- * LOG-Fenster 
- */
+/** LOG-Fenster */
 public class LogViewer extends JPanel {
 	/** UID */
 	private static final long serialVersionUID = 2371285729455694008L;
@@ -61,15 +59,14 @@ public class LogViewer extends JPanel {
 	/** Log-Text */
 	private final Document logContent;
 
-	/**
-	 * Buttons
-	 */
+	/** Buttons */
 	class Button extends JButton {
 		/** UID */
 		private static final long serialVersionUID = 6172889032677505851L;
 
 		/**
 		 * Button-Klasse
+		 *
 		 * @param label			Name
 		 * @param toolTipText	Tooltip
 		 * @param icon			Icon
@@ -88,9 +85,7 @@ public class LogViewer extends JPanel {
 		}
 	}
 
-	/**
-	 * Save-Hanlder
-	 */
+	/** Save-Handler */
 	private final Runnable onSaveLog = new Runnable() {
 		public void run() {
 			JFileChooser fc = new JFileChooser();
@@ -101,29 +96,28 @@ public class LogViewer extends JPanel {
 			}
 			try {
 				File f = fc.getSelectedFile();
-				OutputStreamWriter out = new OutputStreamWriter(new BackslashNConverterStream(new FileOutputStream(f)), "UTF-8");
+				OutputStreamWriter out =
+						new OutputStreamWriter(new BackslashNConverterStream(new FileOutputStream(f)), "UTF-8");
 				out.write(logContent.getText(0, logContent.getLength()));
 				out.flush();
 				lg.info("Log-Ausgabe in Datei " + f.getAbsolutePath() + " geschrieben (" + f.length() + " Byte)");
 				out.close();
 			} catch (IOException e) {
-				lg.warn(e, "E/A-Problem beim Schreiben der Log-Daten; " + "ignoriere");
+				lg.warn(e, "E/A-Problem beim Schreiben der Log-Daten; ignoriere");
 			} catch (BadLocationException e) {
-				// Kann nicht passieren
+				// "kann nicht passieren"
 				throw new AssertionError(e);
 			}
 		}
 	};
 
-	/**
-	 * Clear-Handler
-	 */
+	/** Clear-Handler */
 	private final Runnable onClearLog = new Runnable() {
 		public void run() {
 			try {
 				logContent.remove(0, logContent.getLength());
 			} catch (BadLocationException e) {
-				// Kann nicht passieren
+				// "kann nicht passieren"
 				throw new AssertionError(e);
 			}
 		}
@@ -131,7 +125,8 @@ public class LogViewer extends JPanel {
 
 	/**
 	 * Log-Viewer
-	 * @param log Log-Kompomente
+	 *
+	 * @param log	Log-Kompomente
 	 */
 	public LogViewer(final Log log) {
 		setLayout(new BorderLayout());
@@ -142,16 +137,14 @@ public class LogViewer extends JPanel {
 		t.setEditable(false);
 		Misc.setCaretPolicy(t, DefaultCaret.NEVER_UPDATE);
 
-		JButton save = new Button("Speichern ...",
-			"Inhalt des Logfensters in eine Textdatei speichern",
+		JButton save = new Button("Speichern ...", "Inhalt des Logfensters in eine Textdatei speichern",
 			Config.getIcon("Save16"), onSaveLog);
-		JButton clear = new Button("Leeren",
-			"Logausgaben löschen",
+		JButton clear = new Button("Leeren", "Logausgaben löschen",
 			Config.getIcon("schließen"), onClearLog);
 
 		equalizeHeight(save, clear);
 
-		// Rechtsbuendig (trailing)
+		// rechtsbündig (trailing)
 		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 
 		toolbar.add(save);
@@ -172,7 +165,7 @@ public class LogViewer extends JPanel {
 			}
 
 			public void changedUpdate(DocumentEvent e) {
-				// No-op, keine Ahnung was das ist
+				// No-op
 			}
 
 			public void insertUpdate(DocumentEvent e) {
@@ -186,10 +179,10 @@ public class LogViewer extends JPanel {
 
 		// Gesamtgröße setzen
 		JScrollPane s = new JScrollPane(t);
-		int w = getInsets().left + s.getInsets().left + s.getPreferredSize().width +
-			s.getInsets().right + getInsets().right + 20;
-		int h = getInsets().top + s.getInsets().top + s.getPreferredSize().height + 
-			s.getInsets().bottom + getInsets().bottom +	toolbar.getPreferredSize().height;
+		int w = getInsets().left + s.getInsets().left + s.getPreferredSize().width + s.getInsets().right
+				+ getInsets().right + 20;
+		int h = getInsets().top + s.getInsets().top + s.getPreferredSize().height + s.getInsets().bottom
+				+ getInsets().bottom +	toolbar.getPreferredSize().height;
 		setPreferredSize(new Dimension(w, h));
 
 		// Ausliefern
@@ -199,6 +192,7 @@ public class LogViewer extends JPanel {
 
 	/**
 	 * Gleicht die Höhe von zwei Komponenten an
+	 *
 	 * @param c1
 	 * @param c2
 	 */
@@ -212,11 +206,11 @@ public class LogViewer extends JPanel {
 
 	/**
 	 * Setzt eine Komponente auf eine gewünschte Höhe
+	 *
 	 * @param c
 	 * @param preferredHeight
 	 */
 	private static void setPrefHeight(JComponent c, int preferredHeight) {
-		c.setPreferredSize(new Dimension(
-			c.getPreferredSize().width, preferredHeight));
+		c.setPreferredSize(new Dimension(c.getPreferredSize().width, preferredHeight));
 	}
 }

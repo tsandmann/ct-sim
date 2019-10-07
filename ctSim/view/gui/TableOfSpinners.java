@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.view.gui;
@@ -41,20 +41,13 @@ import javax.swing.table.TableCellRenderer;
 
 import ctSim.model.bots.components.BotComponent;
 
-/**
- * Tabellen für Komponenten
- */
+/** Tabellen für Komponenten */
 public abstract class TableOfSpinners extends GuiBotBuisitor {
-	/**
-	 * UID
-	 */
+	/** UID */
 	private static final long serialVersionUID = -4717996663435641535L;
 
-	/**
-	 * Komponenteneditor
-	 */
-	public static class CompntEditor extends AbstractCellEditor
-	implements TableCellEditor {
+	/** Komponenten-Editor */
+	public static class CompntEditor extends AbstractCellEditor implements TableCellEditor {
 		/** UID */
 		private static final long serialVersionUID = 4073894569366140421L;
 
@@ -71,16 +64,13 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		/**
 		 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
 		 */
-		public Component getTableCellEditorComponent(JTable table,
-		Object value, boolean isSelected, int row, int column) {
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 			lastActive = (Component)value;
 			return lastActive;
 		}
 	}
 
-	/**
-	 * Komponenten-Renderer
-	 */
+	/** Komponenten-Renderer */
 	public static class CompntRenderer implements TableCellRenderer {
 		/**
 		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
@@ -92,16 +82,12 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		}
 	}
 
-    /**
-     * Bot-Komponenten-Tabelle
-     */
+    /** Bot-Komponenten-Tabelle */
     public static class BotComponentTableModel extends DefaultTableModel {
     	/** UID */
     	private static final long serialVersionUID = 3066982780978636288L;
 
-    	/**
-    	 * Neue Tabelle für Bot-Komponenten
-    	 */
+    	/** Neue Tabelle für Bot-Komponenten */
     	public BotComponentTableModel() {
     		super(0, 2);
     	}
@@ -119,6 +105,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 
 		/**
 		 * Fügt eine neue Zeile hinzu
+		 *
 		 * @param label			Text
 		 * @param toolTip		Tooltip
 		 * @param editable		editierbar?
@@ -130,15 +117,15 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 			JSpinner spinner = new JSpinner(sModel);
 			if (decimalFormat != null) {
 				JSpinner.NumberEditor e = new JSpinner.NumberEditor(spinner, decimalFormat);
-				/* Werte nicht grau anzeigen, falls nicht editierbar */
+				// Werte nicht grau anzeigen, falls nicht editierbar
 				e.getTextField().setDisabledTextColor(UIManager.getColor("TextField.foreground"));
 				spinner.setEditor(e);
 			} else {
-				/* Werte nicht grau anzeigen, falls nicht editierbar */
+				// Werte nicht grau anzeigen, falls nicht editierbar
 				JSpinner.DefaultEditor e = (DefaultEditor) spinner.getEditor();
 				e.getTextField().setDisabledTextColor(UIManager.getColor("TextField.foreground"));
 			}
-			// setEditor() setzt den Font auf Courier, keine Ahnung warum
+			// setEditor() setzt den Font auf Courier; warum ist unklar...
 			spinner.setFont(Font.decode("SansSerif"));
 			spinner.setEnabled(editable);
 			spinner.setBorder(null);
@@ -148,7 +135,7 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 			spinner.setToolTipText(toolTip);
 			addRow(new Object[] {la, spinner});
 
-			// Events aus dem SpinnerModel sollen Neumalen der Tabelle ausloesen
+			// Events aus dem SpinnerModel sollen Neu-Malen der Tabelle auslösen
 			final int thisRow = getRowCount() - 1;
 			sModel.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
@@ -158,21 +145,18 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		}
 
 		/**
-		 * @param c Bot-Komponente
+		 * @param c	Bot-Komponente
 		 */
 		public void addRow(BotComponent<? extends SpinnerModel> c) {
-			addRow(c.getName(), c.getDescription(), c.isGuiEditable(),
-				c.getExternalModel(), null);
+			addRow(c.getName(), c.getDescription(), c.isGuiEditable(), c.getExternalModel(), null);
 		}
 
 		/**
-		 * @param c Bot-Komponente
-		 * @param decimalFormat Format
+		 * @param c				Bot-Komponente
+		 * @param decimalFormat	Format
 		 */
-		public void addRow(BotComponent<? extends SpinnerModel> c,
-		String decimalFormat) {
-			addRow(c.getName(), c.getDescription(), c.isGuiEditable(),
-				c.getExternalModel(), decimalFormat);
+		public void addRow(BotComponent<? extends SpinnerModel> c, String decimalFormat) {
+			addRow(c.getName(), c.getDescription(), c.isGuiEditable(), c.getExternalModel(), decimalFormat);
 		}
     }
 
@@ -187,13 +171,10 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
 		return model.getRowCount() > 0;
 	}
 
-    /**
-     * Tabellen für Komponenten
-     */
+    /** Tabellen für Komponenten */
     public TableOfSpinners() {
         final JTable t = new JTable(model);
-        t.setRowHeight(new JSpinner().getMinimumSize().height +
-        	t.getRowMargin());
+        t.setRowHeight(new JSpinner().getMinimumSize().height + t.getRowMargin());
         t.setTableHeader(null);
 
         TableCellRenderer renderer = new CompntRenderer();
@@ -204,14 +185,15 @@ public abstract class TableOfSpinners extends GuiBotBuisitor {
         setBorder(new TitledBorder(getPanelTitle()));
 
         /*
-		 * Schweisstreibend: Hab t.setBorder() mit "lowered bevel border"
-		 * versucht, aber das führte zu doofen Ergebnissen; JTable kann
-		 * offenbar keine Borders. -> Loesung: JTable in ScrollPane einwickeln.
-		 * Dann wird die ScrollPane aber sehr gross, warum weiss ich nicht. ->
-		 * Loesung: getMin/Pref/MaxSize() sollen zur Table weiterleiten. Dann
-		 * ist aber in der ScrollPane nicht genug Platz für ihren
-		 * Lowered-Bevel-Border _und_ die Table, das heisst (Tusch) ein
-		 * Scrollbalken erscheint. -> Loesung: Insets dazurechnen.
+		 * Schweißtreibend:
+		 * Ich habe t.setBorder() mit "lowered bevel border" versucht, aber das führte zu unschönen
+		 * Ergebnissen; JTable kann offenbar keine Borders.
+		 * -> Lösung: JTable in ScrollPane einwickeln. Dann wird die ScrollPane allerdings sehr groß,
+		 * warum weiß ich nicht...
+		 * -> Lösung: getMin/Pref/MaxSize() sollen zur Table weiterleiten. Dann ist aber in der ScrollPane
+		 * nicht genug Platz für ihren Lowered-Bevel-Border _und_ die Table, das heißt (Tusch) ein
+		 * Scrollbalken erscheint.
+		 * -> Lösung: Insets dazurechnen.
 		 */
         add(new JScrollPane(t) {
         	private static final long serialVersionUID = 6362442061290466520L;

@@ -1,20 +1,20 @@
 /*
  * c't-Sim - Robotersimulator für den c't-Bot
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your
- * option) any later version. 
- * This program is distributed in the hope that it will be 
+ * option) any later version.
+ * This program is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public 
- * License along with this program; if not, write to the Free 
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
- * 
+ *
  */
 
 package ctSim.util;
@@ -34,18 +34,14 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-/**
- * Komponenten-Tabelle
- */
+/** Komponenten-Tabelle */
 public class ComponentTable extends JTable {
 	/** UID */
 	private static final long serialVersionUID = 2766695602066190632L;
 
-	// Konstruktoren wie in der Superklasse ///////////////////////////////////
+	// Konstruktoren wie in der Superklasse
 
-	/**
-	 * Komponenten-Tabelle
-	 */
+	/** Komponenten-Tabelle */
 	public ComponentTable() {
 		super();
 		init();
@@ -116,9 +112,10 @@ public class ComponentTable extends JTable {
 
 	/**
 	 * Konfiguration
-	 * @param compnt Komponente
-	 * @param table Tabelle
-	 * @param isSelected ausgewählt?
+	 *
+	 * @param compnt		Komponente
+	 * @param table			Tabelle
+	 * @param isSelected	ausgewählt?
 	 * @return Component
 	 */
 	protected Component configure(JComponent compnt, JTable table,
@@ -136,40 +133,33 @@ public class ComponentTable extends JTable {
 	}
 
 	/**
-	 * In der Tabelle: Falls das hinzugefügte Ding breiter ist als die
-	 * Spalte, dann diese Spalte verbreitern; Falls das hinzugefügte
-	 * Ding höher ist als die Zeile, dann alle (!) Zeilen höher machen
-	 * (unterschiedlich hohe Zeilen werden von JTable nicht unterstützt
-	 * soweit ich weiss und sähen sowieso doof aus)
+	 * In der Tabelle: Falls das hinzugefügte Ding breiter ist als die Spalte, dann diese Spalte
+	 * verbreitern; Falls das hinzugefügte Ding höher ist als die Zeile, dann alle (!) Zeilen höher
+	 * machen (unterschiedlich hohe Zeilen werden von JTable nicht unterstützt soweit ich weiß
+	 * und würden sowieso doof aussehen)
 	 */
 	public void accomodateContent() {
 		int maxHeight = 0;
 		int maxWidth = 0;
 		for (int i = 0; i < getColumnCount(); i++) {
 			for (int j = 0; j < getRowCount(); j++) {
-				maxHeight = Math.max(maxHeight,
-					((Component)getValueAt(j, i)).getPreferredSize().height);
-				maxWidth = Math.max(maxWidth,
-					((Component)getValueAt(j, i)).getPreferredSize().width);
+				maxHeight = Math.max(maxHeight, ((Component)getValueAt(j, i)).getPreferredSize().height);
+				maxWidth = Math.max(maxWidth, ((Component)getValueAt(j, i)).getPreferredSize().width);
 			}
 			// Spaltenbreite setzen (1x pro Spalte)
-			getColumnModel().getColumn(i).setMinWidth(
-				maxWidth + getIntercellSpacing().width);
+			getColumnModel().getColumn(i).setMinWidth(maxWidth + getIntercellSpacing().width);
 			maxWidth = 0;
 		}
 		// Zeilenbreite setzen (1x für ganze Tabelle)
 		setRowHeight(maxHeight + getIntercellSpacing().height);
 	}
 
-	// Workaround für Bug "horizontale Scrollbars" ///////////////////////////
-
-	// Bug: Eine JTable in einer JScrollPane loest nie die horizontale Scrollbar
-	// aus -- siehe http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936
-	// Hier der Workaround wie auf der Bug-Seite beschrieben
-
-	// when the viewport shrinks below the preferred size, stop tracking the
-	// viewport width
 	/**
+	 * Workaround für Bug: "horizontale Scrollbars funktionieren nicht"
+	 * Eine JTable in einer JScrollPane löst nie die horizontale Scrollbar aus; siehe
+	 * <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4127936">
+	 * Issue JDK-4127936 : JTable Horizontal Scrollbar doesn't work</a>
+	 *
 	 * @see javax.swing.JTable#getScrollableTracksViewportWidth()
 	 */
 	@Override
@@ -181,9 +171,11 @@ public class ComponentTable extends JTable {
 		return false;
 	}
 
-	// when the viewport shrinks below the preferred size, return the minimum
-	// size so that scrollbars will be shown
-	/**
+	/** 
+	 * Hier folgt nun der Workaround wie auf der obigen Seite beschrieben:
+	 * "when the viewport shrinks below the preferred size, stop tracking the viewport width
+	 * and return the minimum size so that scrollbars will be shown"
+	 *
 	 * @see javax.swing.JComponent#getPreferredSize()
 	 */
 	@Override
@@ -195,25 +187,20 @@ public class ComponentTable extends JTable {
 		return super.getPreferredSize();
 	}
 
-	// Hilfsklassen ///////////////////////////////////////////////////////////
+	// Hilfsklassen
 
-	/**
-	 * Zellen-Renderer
-	 */
+	/** Zellen-Renderer */
 	class CellRenderer implements TableCellRenderer {
 		/**
 		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 		 */
-		public Component getTableCellRendererComponent(JTable table,
-		Object value, boolean isSelected, boolean hasFocus, int row,
-		int column) {
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+				boolean hasFocus, int row, int column) {
 			return configure((JComponent)value, table, isSelected);
 	    }
 	}
 
-	/**
-	 * Zellen-Editor
-	 */
+	/** Zellen-Editor */
 	class CellEditor extends AbstractCellEditor implements TableCellEditor {
 		/** UID */
 		private static final long serialVersionUID = 4073894569366140421L;
