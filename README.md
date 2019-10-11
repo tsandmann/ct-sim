@@ -6,6 +6,11 @@ The repository here contains the source code of the original c't-Sim robot simul
 
 Feel free to fork from this repository, add your own extensions or improvements and create a pull request to get them integrated.
 
+## Notes
+ - For a Java 7 based setup use the branch *java7*. Unfortunately the latest (unofficial) Java3D jars needed for recent Linux distributions aren't compatible with Java 7 and the official ones (1.6.2) don't work with recent mesa drivers.
+ - ct-Sim does not work on recent linux distributions like Fedora, RHEL 8 / CentOS 8 or Arch Linux. OpenJDK versions newer than Java 8 (1.8.x) also have problems on Linux and macOS. It's highly recommended to use ct-Sim with Java 8.
+
+## Continuous integration tests
 | Branch              | Build status  |
 |:------------------- |:------------- |
 | master              | [![Build status](https://travis-ci.org/tsandmann/ct-sim.svg?branch=master "Build status of branch master")](https://travis-ci.org/tsandmann/ct-sim) |
