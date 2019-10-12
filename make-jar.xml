@@ -201,9 +201,6 @@ Das bin-Verzeichnis kann man problemlos löschen, wenn es nicht mehr benötigt w
 		
 		<jar destfile="${build.lib.dir}/${name}.jar" basedir="${build.classes.dir}">
 			<!-- Libs einbinden	-->			
-            <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/java3d/j3dcore.jar" />
-            <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/java3d/j3dutils.jar" />
-            <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/java3d/vecmath.jar" />
             <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/JogAmp/gluegen-rt-natives-linux-amd64.jar" />
             <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/JogAmp/gluegen-rt-natives-linux-i586.jar" />
             <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/JogAmp/gluegen-rt-natives-macosx-universal.jar" />
@@ -221,7 +218,10 @@ Das bin-Verzeichnis kann man problemlos löschen, wenn es nicht mehr benötigt w
             <zipfileset excludes="META-INF/*.SF, *.txt, Android/" src="${contrib.dir}/jSerialComm/jSerialComm-1.3.11.jar" />
             <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/picocontainer-1.2.jar" />
             <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/mysql-connector-java-3.1.13-bin.jar" />
-			
+            <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/java3d/j3dcore.jar" />
+            <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/java3d/j3dutils.jar" />
+            <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/java3d/vecmath.jar" />
+
 			<manifest>
 				<!-- Ausführbare Hauptklasse mit main-Methode setzen -->
 				<attribute name="Main-Class" value="${main.class.name}" />
