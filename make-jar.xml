@@ -61,8 +61,8 @@ Das bin-Verzeichnis kann man problemlos löschen, wenn es nicht mehr benötigt w
 	<property name="debug" value="false" />
 	<property name="deprecation" value="false" />
 	<property name="optimize" value="true" />
-	<property name="javac.source" value="1.8" />
-	<property name="javac.target" value="1.8" />
+	<property name="javac.source" value="1.7" />
+	<property name="javac.target" value="1.7" />
 	<property name="compile.option" value="-Xlint:unchecked" />
 	
 	<!--
@@ -199,7 +199,7 @@ Das bin-Verzeichnis kann man problemlos löschen, wenn es nicht mehr benötigt w
 	<target	name="build-jar" description="--> create jar libaries" depends="clean, build">
 		<mkdir dir="${build.lib.dir}" />
 		
-		<jar destfile="${build.lib.dir}/${name}.jar" basedir="${build.classes.dir}">
+		<jar destfile="${build.lib.dir}/${name}-java7.jar" basedir="${build.classes.dir}">
 			<!-- Libs einbinden	-->			
             <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/java3d/j3dcore.jar" />
             <zipfileset excludes="META-INF/*.SF, *.txt" src="${contrib.dir}/java3d/j3dutils.jar" />
