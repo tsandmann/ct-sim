@@ -23,7 +23,7 @@
 		<line>*]==*</line>
 	</parcours>
 
-<!-- Liste akt. verwendbarer Kartenbauelemente
+<!-- Liste zum Zeitpunkt der Kartenerstellung verwendbarer Kartenbauelemente
 
 Alle nachfolgenden Elemente, die mit der Beschreibung "Bodenplatte" beginnen, sind fuer den Bot (je nach eingestelltem Verhalten) passierbar.
 
