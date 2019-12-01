@@ -3,24 +3,24 @@
 
 <world>
 	<description>
-	Teststrecke fuer ctBot/bot-logic/behaviour_advent-calendar.c - ein Parcours, auf dem der Bot 24 Positionen entlang einer Linien-Schnecke abfahren und, stellvertretend fuer die Tuerchen eines Advents- bzw. Weihnachtskalenders, 24 Transportfach-Objekte einsammeln kann.
+	Teststrecke fuer ctBot/bot-logic/behaviour_advent-calendar.c - ein Parcours, auf dem der Bot 24 Positionen 
+	entlang einer Linien-Schnecke abfahren und 24 Transportfach-Objekte (stellvertretend fuer die 
+	Tuerchen eines Advents- bzw. Weihnachtskalenders) einsammeln kann.
 	</description>
 
 <!-- Autor: anonybot (anonybot@riseup.net) 2018-12-08 CC-BY-SA -->
 
 	<parcours>
-		<line>*===*</line>
-		<line>#p_q#</line>
-		<line>#(T(#</line>
-		<line>#(((#</line>
-		<line>#(((#</line>
-		<line>#(((#</line>
-		<line>#(((#</line>
-		<line>#(((#</line>
-		<line>#(bd#</line>
-		<line>#(  #</line>
-		<line>#$  #</line>
-		<line>*]==*</line>
+		<line>       *       </line>
+		<line>      *=*      </line>
+		<line>     *= =*     </line>
+		<line>    *=   =*    </line>
+		<line>   *=     =*   </line>
+		<line>  *=p-_-_-q=*  </line>
+		<line> *= (____q( =* </line>
+		<line>*=  (p___d(  =*</line>
+		<line>===#$b____d#===</line>
+		<line>   #]======#   </line>
 	</parcours>
 
 <!-- Liste zum Zeitpunkt der Kartenerstellung verwendbarer Kartenbauelemente
