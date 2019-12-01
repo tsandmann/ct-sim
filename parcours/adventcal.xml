@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE collection SYSTEM "parcours.dtd">
+
+<world>
+	<description>
+	Teststrecke fuer ctBot/bot-logic/behaviour_advent-calendar.c - ein Parcours, auf dem der Bot 24 Positionen entlang einer Linien-Schnecke abfahren und, stellvertretend fuer die Tuerchen eines Advents- bzw. Weihnachtskalenders, 24 Transportfach-Objekte einsammeln kann.
+	</description>
+
+<!-- Autor: anonybot (anonybot@riseup.net) 2018-12-08 CC-BY-SA -->
+
+	<parcours>
+		<line>*===*</line>
+		<line>#p_q#</line>
+		<line>#(T(#</line>
+		<line>#(((#</line>
+		<line>#(((#</line>
+		<line>#(((#</line>
+		<line>#(((#</line>
+		<line>#(((#</line>
+		<line>#(bd#</line>
+		<line>#(  #</line>
+		<line>#$  #</line>
+		<line>*]==*</line>
+	</parcours>
+
+<!-- Liste akt. verwendbarer Kartenbauelemente
+
+Alle nachfolgenden Elemente, die mit der Beschreibung "Bodenplatte" beginnen, sind fuer den Bot (je nach eingestelltem Verhalten) passierbar.
+
+ASCII-Zeichen | Beschreibung (Hex-Code des ASCII-Zeichens)
+L | Abgrund (4c)
+X | Wandblock (58)
+= | Wand horizontal (3d)
+# | Wand vertikal (23)
+* | Saeule mit Lichtquelle (2a)
+  | Bodenplatte normal (20)
+. | Bodenplatte weisz; definiert, sofern direkt an "Bodenplatte Startfeld ..." angrenzend, die Blickrichtung eines auf die Karte gerufenen Bots (e3)
+O | Bodenplatte Startpunkt Default; eigentlich sollte hier jeder aufgerufene Bot starten, sofern keine anderen Startpunkte verwendet werden, akt. jedoch startet hier, wahrscheinlich aufgrund eines Bugs, der dritte (und jeder weitere) aufgerufene Bot (30)
+1 | Bodenplatte Startpunkt Bot1; wenn verwendet, startet der erste aufgerufene Bot hier (31)
+2 | Bodenplatte Startpunkt Bot2; wenn verwendet, startet der zweite aufgerufene Bot (32)
+Z | Bodenplatte Bot-Zielpunkt (5a)
+o | Bodenplatte mit Transportfach-Objekt (6f)
+l | Bodenplatte mit Bot Positioning System (BPS)-Landmarke (6c)
+| | Bodenplatte mit Linie vertikal (7C)
+$ | Bodenplatte mit Linie vertikal als Startpunkt Bot1; aktuell leider optisch nicht von "Linie vertikal" zu unterscheiden, weil andere Farb-Definitionen dazu führen, dass die Linie nicht mehr vom Bot erkannt wird (24)
+! | Bodenplatte mit Linie vertikal unterbrochen (21)
+- | Bodenplatte mit Linie horizontal (2d)
+% | Bodenplatte mit Linie horizontal unterbrochen (25)
+/ | Bodenplatte mit Linie Ecke NW (2f)
+\ | Bodenplatte mit Linie Ecke NE (5c)
++ | Bodenplatte mit Linie Ecke SW (2b)
+~ | Bodenplatte mit Linie Ecke SE (7e)
+[ | Bodenplatte mit Linie Kreuzung +-Form (5b)
+T | Bodenplatte mit Linie Kreuzung T-Form (54)
+} | Bodenplatte mit Linie Kreuzung T-Form 90° gegen UZS (7d)
+{ | Bodenplatte mit Linie Kreuzung T-Form 90° mit UZS (7b)
+] | Bodenplatte mit Linie Kreuzung T-Form kopfstehend (5d)
+( | Bodenplatte mit Linie vertikal und Transportfach-Objekt (28)
+_ | Bodenplatte mit Linie horizontal und Transportfach-Objekt (5f)
+p | Bodenplatte mit Linie Ecke NW und Transportfach-Objekt (70)
+q | Bodenplatte mit Linie Ecke NE und Transportfach-Objekt (71)
+b | Bodenplatte mit Linie Ecke SW und Transportfach-Objekt (62)
+d | Bodenplatte mit Linie Ecke SE und Transportfach-Objekt (64)
+
+ACHTUNG: Die Liste bei Änderungen/Erweiterung in ctSim/model/ParcoursLoader.java und ctSim/develop/documentation/map-parts.md bitte ebenfalls aktualisieren!
+
+Die nachfolgenden optics-Definitionen der Kartenbauelemente folgen der Listen-Reihenfolge. 
+
+Hinweise aus https://www.heise.de/ct/artikel/Genesis-290480.html zu den Farb-Angaben der optics-Definitionen:
+
+Java3D unterscheidet 4 Typen von Farben, laut Artikel:
+- type="ambient": Farbe eines indirekt beleuchteten Objekts
+- type="diffuse": Farbe von gerichteten Lichtquellen
+- type="specular": Farbe von glaenzenden Reflexionen
+- type="emmissive": Farbe einer Lichtquelle, bspw. bei "Saeule mit Lichtquelle"
+
+Definiert werden die Farben in HTML-Notation, also bspw. #FFFFFF fuer "weisz".
+
+Wird keine Farbe definiert, verwendet der ParcoursLoader die Java3D-Standards:
+- type="ambient": grau
+- type="diffuse": weisz
+- type="specular": weisz
+- type="emmissive": schwarz
+
+Bei bestimmten Kartenbauelementen wie den Bodenplatten mit Linien erzeugen diese Default-Werte ein Glaenzen und sollten daher angepasste Werte (wie unten angegeben) verwenden. -->
+
+	<optics>
+		<appearance type="L"> 
+			<description>Abgrund</description>
+			<color type="ambient">#000000</color>
+			<color type="diffuse">#000000</color>
+		</appearance>
+		<appearance type="X">
+			<description>Wandblock</description>
+			<texture>textures/rock_wall.jpg</texture>
+		</appearance>
+		<appearance type="=">
+			<description>Wand horizontal</description>
+			<clone>X</clone>
+		</appearance>
+		<appearance type="#">
+			<description>Wand vertikal</description>
+			<clone>X</clone> 
+		</appearance>
+		<appearance type="*">
+			<description>Saeule mit Lichtquelle</description>
+			<color type="emmissive">#FFFF90</color>
+		</appearance>
+		<appearance type=" "> 
+			<description>Bodenplatte normal</description>
+			<color type="ambient">#606060</color>
+			<color type="diffuse">#606060</color>
+		</appearance>
+		<appearance type="."> 
+			<description>Bodenplatte weisz</description>
+			<color type="ambient">#FFFFFF</color>
+			<color type="diffuse">#FFFFFF</color>
+		</appearance>
+		<appearance type="0">
+			<description>Startpunkt Default</description>
+			<clone>.</clone>
+		</appearance>
+		<appearance type="1">
+			<description>Bodenplatte Start Bot1</description>
+			<color type="ambient">#993030</color>
+			<color type="diffuse">#993030</color>
+		</appearance>
+		<appearance type="2">
+			<description>Bodenplatte Start Bot2</description>
+			<color type="ambient">#000099</color>
+			<color type="diffuse">#000099</color>
+		</appearance>
+		<appearance type="Z"> 
+			<description>Bodenplatte Bot-Zielpunkt</description>
+			<color type="ambient">#66FF00</color>
+			<color type="diffuse">#66FF00</color>
+		</appearance>
+		<appearance type="o">
+			<description>Bodenplatte mit Transportfach-Objekt</description>
+			<texture>textures/object.jpg</texture>
+			<color>#999999</color>
+		</appearance>
+		<appearance type="l"> 
+			<description>Bodenplatte mit Bot Positioning System (BPS)-Landmarke</description>
+			<color type="emmissive">#990000</color>
+		</appearance>
+		<appearance type="|"> 
+			<description>Bodenplatte mit Linie vertikal</description>
+			<color type="ambient">#000000</color>
+			<color type="diffuse">#000000</color>
+			<color type="specular">#000000</color>
+			<color type="emmissive">#000000</color>
+		</appearance>
+		<appearance type="$"> 
+			<description>Bodenplatte mit Linie vertikal als Startpunkt Bot1</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="!"> 
+			<description>Bodenplatte mit Linie vertikal unterbrochen</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="-">
+			<description>Bodenplatte mit Linie horizontal</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="%"> 
+			<description>Bodenplatte mit Linie horizontal unterbrochen</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="\"> 
+			<description>Bodenplatte mit Linie Ecke NE</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="/"> 
+			<description>Bodenplatte mit Linie Ecke NW</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="~"> 
+			<description>Bodenplatte mit Linie Ecke SE</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="+"> 
+			<description>Bodenplatte mit Linie Ecke SW</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="["> 
+			<description>Bodenplatte mit Linie Kreuzung +-Form</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="T"> 
+			<description>Bodenplatte mit Linie T-Form</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="}"> 
+			<description>Bodenplatte mit Linie Kreuzung T-Form 90° gegen UZS</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="{"> 
+			<description>Bodenplatte mit Linie Kreuzung T-Form 90° mit UZS</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="]"> 
+			<description>Bodenplatte mit Linie Kreuzung T-Form kopfstehend</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="("> 
+			<description>Bodenplatte mit Linie vertikal und Transportfach-Objekt</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="_"> 
+			<description>Bodenplatte mit Linie horizontal und Transportfach-Objekt</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="q"> 
+			<description>Bodenplatte mit Linie Ecke NE und Transportfach-Objekt</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="p"> 
+			<description>Bodenplatte mit Linie Ecke NW und Transportfach-Objekt</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="d"> 
+			<description>Bodenplatte mit Linie Ecke SW und Transportfach-Objekt</description>
+			<clone>|</clone>
+		</appearance>
+		<appearance type="b"> 
+			<description>Bodenplatte mit Linie Ecke SE und Transportfach-Objekt</description>
+			<clone>|</clone>
+		</appearance>
+	</optics>
+</world>
