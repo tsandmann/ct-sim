@@ -87,6 +87,7 @@
 	
 	<!-- Distanzsensortyp -->
 	<parameter name="GP2Y0A60" value="false"/>
+	<parameter name="VL53L0X" value="false"/>
 
 	<!-- Schalter für Nachlauf der Räder -->
 	<parameter name="WheelLag" value="false"/>

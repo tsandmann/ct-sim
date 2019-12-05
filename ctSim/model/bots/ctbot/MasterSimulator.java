@@ -881,11 +881,15 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
         final Point3d endPoint = new Point3d(distFromBotCenter);
         endPoint.add(new Point3d(0.0, MAX_RANGE, 0.0));
         final boolean GP2Y0A60 = Config.getValue("GP2Y0A60").equals("true");
-        final Characteristic charstic = GP2Y0A60 ?
-        	(isLeft ? new Characteristic("characteristics/gp2y0a60Left.txt", 100) :
-        			new Characteristic("characteristics/gp2y0a60Right.txt", 100))
-        	: (isLeft ? new Characteristic("characteristics/gp2d12Left.txt", 100) :
-        			new Characteristic("characteristics/gp2d12Right.txt", 80));
+        final boolean VL53L0X = Config.getValue("VL53L0X").equals("true");
+       
+        final Characteristic charstic = 
+        	GP2Y0A60 ? 
+        	  (isLeft ? new Characteristic("characteristics/gp2y0a60Left.txt", 100) : new Characteristic("characteristics/gp2y0a60Right.txt", 100))
+        	: (VL53L0X ?
+        	    (isLeft ? new Characteristic("characteristics/vl53l0xLeft.txt", 2000) : new Characteristic("characteristics/vl53l0xRight.txt", 2000))
+        	  : (isLeft ? new Characteristic("characteristics/gp2d12Left.txt", 100) : new Characteristic("characteristics/gp2d12Right.txt", 80))
+        	);
 
         simulators.add(new Runnable() {
             private final double OPENING_ANGLE_IN_RAD = Math.toRadians(3);
