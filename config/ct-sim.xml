@@ -89,6 +89,9 @@
 	<parameter name="GP2Y0A60" value="false"/>
 	<parameter name="VL53L0X" value="false"/>
 
+	<!-- Anzahl der Encoder-Markierungen auf einem Rad, default=60 -->
+	<parameter name="WheelEncoderMarks" value="60"/>
+
 	<!-- Schalter für Nachlauf der Räder -->
 	<parameter name="WheelLag" value="false"/>
 

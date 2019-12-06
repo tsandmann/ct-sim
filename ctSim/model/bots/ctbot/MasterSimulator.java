@@ -834,17 +834,24 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             ? leftWheel
             : rightWheel;
 
+		int encMarks = 60;
+		try {
+			encMarks = Integer.parseInt(Config.getValue("WheelEncoderMarks"));
+		} catch(NumberFormatException exc) {
+			// do nothing
+		}
+		
+		/** Anzahl an Encoder-Markierungen auf einem Rad */
+		final int ENCODER_MARKS = encMarks;
+        
         simulators.add(new Runnable() {
-            /** Anzahl an Encoder-Markierungen auf einem Rad */
-            private static final short ENCODER_MARKS = 60;
-
             /**
             * Bruchteil des Encoder-Schritts, der beim letztem Sim-Schritt übrig geblieben ist (-1; 1).
             * Wird hier gespeichert, um zu verhindern, dass sich der Rundungsfehler mit der Zeit anhäuft.
             */
             private double encoderRest = 0.0;
 
-			public void run() {
+			public void run() {				
                 // Anzahl der Umdrehungen der Räder
                 double revs = wheel.revsThisSimStep();
 
