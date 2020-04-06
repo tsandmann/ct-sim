@@ -295,7 +295,7 @@ public class MainWinMenuBar extends JMenuBar {
 			/* Splash-Screen anzeigen */
 			java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
 			SplashWindow.splash(url, "Version " + Main.VERSION);
-			SplashWindow.setMessage("                                                      c't-Bot Projekt 2006-2019");
+			SplashWindow.setMessage("                                                      c't-Bot Projekt 2006-2020");
 		}
 	};
 
