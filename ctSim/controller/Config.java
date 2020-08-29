@@ -137,7 +137,12 @@ public class Config {
 	public static void loadConfigFile(String file)
 	throws SAXException, IOException, ParserConfigurationException {
 		lg.info("Lade Konfigurationsdatei '" + file + "'");
-		java.net.URL url = ClassLoader.getSystemResource(file);
+		java.net.URL url;
+		if (file.startsWith("/")) {
+			url = new URL("file://" + file);
+		} else {
+			url = ClassLoader.getSystemResource(file);
+		}
 		if (url != null) {
 			QueryableDocument doc = XmlDocument.parse(url.openStream(), url.toString());
 			parameters = new PlainParameters(doc);
