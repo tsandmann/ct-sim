@@ -173,17 +173,18 @@ public class Main {
 
 	/** Lädt die Konfiguration */
 	private static void loadConfig() {
+		final String configfile = dependencies.get(Config.SourceFile.class).getPath();
 		try {
-			Config.loadConfigFile(DEFAULT_CONFIGFILE);
+			Config.loadConfigFile(configfile);
 			return;
 		} catch (FileNotFoundException e) {
-			lg.severe(e, "Konfigurationsdatei '" + DEFAULT_CONFIGFILE + "' nicht gefunden");
+			lg.severe(e, "Konfigurationsdatei '" + configfile + "' nicht gefunden");
 		} catch (SAXException e) {
-			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
+			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", configfile);
 		} catch (IOException e) {
-			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
+			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'", configfile);
 		} catch (ParserConfigurationException e) {
-			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
+			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", configfile);
 		}
 	}
 
