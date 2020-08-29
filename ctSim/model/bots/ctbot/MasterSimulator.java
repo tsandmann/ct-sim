@@ -851,7 +851,7 @@ implements NumberTwinVisitor, BotBuisitor, Runnable {
             */
             private double encoderRest = 0.0;
 
-			public void run() {				
+			public void run() {
                 // Anzahl der Umdrehungen der Räder
                 double revs = wheel.revsThisSimStep();
 
