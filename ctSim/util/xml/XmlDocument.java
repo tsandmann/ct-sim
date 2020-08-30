@@ -187,7 +187,7 @@ public class XmlDocument {
 		parser.setEntityResolver(new EntityResolver() {
 			public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 				if (systemId.contains("config.dtd")) {
-					InputStream dtdStream = XmlDocument.class.getResourceAsStream("config/config.dtd");
+					InputStream dtdStream = ClassLoader.getSystemResource("config/config.dtd").openStream();
 					return new InputSource(dtdStream);
 				} else {
 					return null;
