@@ -68,10 +68,8 @@ public class Main {
 
 	static {
 		dependencies.registerImplementation(ContestConductor.class);
-		dependencies.registerImplementation(Controller.class,
-			DefaultController.class);
-		dependencies.registerInstance(
-			new Config.SourceFile(DEFAULT_CONFIGFILE));
+		dependencies.registerImplementation(Controller.class, DefaultController.class);
+		dependencies.registerInstance(new Config.SourceFile(DEFAULT_CONFIGFILE));
 	}
 
 	/**
@@ -173,7 +171,7 @@ public class Main {
 
 	/** Lädt die Konfiguration */
 	private static void loadConfig() {
-		final String configfile = dependencies.get(Config.SourceFile.class).getPath();
+		final Config.SourceFile configfile = dependencies.get(Config.SourceFile.class);
 		try {
 			Config.loadConfigFile(configfile);
 			return;
