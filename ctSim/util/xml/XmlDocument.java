@@ -35,7 +35,9 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -182,6 +184,16 @@ public class XmlDocument {
 		DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
 		f.setValidating(true);	// soll gegen DTD validieren
 		DocumentBuilder parser = f.newDocumentBuilder();
+		parser.setEntityResolver(new EntityResolver() {
+			public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+				if (systemId.contains("config.dtd")) {
+					InputStream dtdStream = ClassLoader.getSystemResource("config/config.dtd").openStream();
+					return new InputSource(dtdStream);
+				} else {
+					return null;
+				}
+			}
+		});
 		/**
 		 * Wichtig für Validierung: Wenn kein ErrorHandler gesetzt und eine XML-Datei geparst wird, die zwar
 		 * wohlgeformt, aber nicht gültig (valid) ist, dann gibt der Parser eine dumme Warnung auf stderr aus,

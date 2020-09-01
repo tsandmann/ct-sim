@@ -429,14 +429,14 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 		} else if (sub.equals(Command.SubCode.MAP_CLEAR_LINES)) {
 			synchronized (linesMutex) {
 				int size = lines.size();
-				int n = c.getDataL() > size ? size : size - c.getDataL();
+				int n = c.getDataL() >= size ? 0 : size - c.getDataL();
 				lines.subList(0, n).clear();
 			}
 			imageEventPending = true;
 		} else if (sub.equals(Command.SubCode.MAP_CLEAR_CIRCLES)) {
 			synchronized (circlesMutex) {
 				int size = circles.size();
-				int n = c.getDataL() > size ? size : size - c.getDataL();
+				int n = c.getDataL() >= size ? 0 : size - c.getDataL();
 				circles.subList(0, n).clear();
 			}
 			imageEventPending = true;

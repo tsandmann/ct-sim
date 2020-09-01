@@ -48,19 +48,34 @@ import ctSim.util.xml.XmlDocument;
  * Theoretisch kann man mehr als einmal initialisieren (Konfiguration laden), aber das ist ungetestet.
  */
 public class Config {
-	/** für Dateien */
-	public static class SourceFile extends File {
-		/** UID */
-		private static final long serialVersionUID = 3022935037996253818L;
+	/** Dateipfad als Typ */
+	public static class SourceFile {
+        /**
+         * Pfad zur Datei
+         */
+        String path;
 
-		/**
-		 * Neues Dateihandle
-		 *
-		 * @param pathAndName	Pfad
-		 */
-		public SourceFile(String pathAndName) {
-			super(pathAndName);
-		}
+        /**
+         * @param p Pfad der Datei
+         */
+        SourceFile(String p) {
+            path = p;
+        }
+
+        /**
+         * @return Dateipfad
+         */
+        public String path() {
+            return path;
+        }
+        
+        /**
+         * @see String#toString()
+         */
+		@Override
+		public String toString() {
+        	return path;
+        }
 	}
 
 	/** Logger */
@@ -134,10 +149,16 @@ public class Config {
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	public static void loadConfigFile(String file)
-	throws SAXException, IOException, ParserConfigurationException {
+	public static void loadConfigFile(SourceFile file) throws SAXException, IOException, ParserConfigurationException {
 		lg.info("Lade Konfigurationsdatei '" + file + "'");
-		java.net.URL url = ClassLoader.getSystemResource(file);
+		java.net.URL url;
+		url = ClassLoader.getSystemResource(file.path());
+		
+		if (url == null) {
+			lg.fine("Konfigurationsdatei konnte nicht mit Classloader geladen werden.");
+			url = new File(file.path()).toURI().toURL();
+		}
+		
 		if (url != null) {
 			QueryableDocument doc = XmlDocument.parse(url.openStream(), url.toString());
 			parameters = new PlainParameters(doc);

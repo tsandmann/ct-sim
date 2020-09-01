@@ -52,7 +52,7 @@ import ctSim.view.gui.SplashWindow;
  */
 public class Main {
 	/** Versionsnummer */
-	public static final String VERSION = "2.27";
+	public static final String VERSION = "2.28";
 	/** Konfigurationsdatei */
 	private static final String DEFAULT_CONFIGFILE = "config/ct-sim.xml";
     /** Flag, welches die Anzeige des Splashscreens bewirkt (DEFAULT: TRUE) */
@@ -68,10 +68,8 @@ public class Main {
 
 	static {
 		dependencies.registerImplementation(ContestConductor.class);
-		dependencies.registerImplementation(Controller.class,
-			DefaultController.class);
-		dependencies.registerInstance(
-			new Config.SourceFile(DEFAULT_CONFIGFILE));
+		dependencies.registerImplementation(Controller.class, DefaultController.class);
+		dependencies.registerInstance(new Config.SourceFile(DEFAULT_CONFIGFILE));
 	}
 
 	/**
@@ -173,17 +171,18 @@ public class Main {
 
 	/** Lädt die Konfiguration */
 	private static void loadConfig() {
+		final Config.SourceFile configfile = dependencies.get(Config.SourceFile.class);
 		try {
-			Config.loadConfigFile(DEFAULT_CONFIGFILE);
+			Config.loadConfigFile(configfile);
 			return;
 		} catch (FileNotFoundException e) {
-			lg.severe(e, "Konfigurationsdatei '" + DEFAULT_CONFIGFILE + "' nicht gefunden");
+			lg.severe(e, "Konfigurationsdatei '" + configfile + "' nicht gefunden");
 		} catch (SAXException e) {
-			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
+			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", configfile);
 		} catch (IOException e) {
-			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
+			lg.severe(e, "E/A-Fehler beim Parsen der Konfigurationsdatei '%s'", configfile);
 		} catch (ParserConfigurationException e) {
-			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", DEFAULT_CONFIGFILE);
+			lg.severe(e, "Fehler beim Parsen der Konfigurationsdatei '%s'", configfile);
 		}
 	}
 
