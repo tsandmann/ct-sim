@@ -397,6 +397,8 @@ public class Sensors {
 		private CommandOutputStream asyncOut;
 		/** ausstehender RC5-Code */
 		private int syncPendingRcCode = 0;
+		/** ausstehendes toggle-Bit */
+		private boolean syncPendingToggle = false;
 
 		/** Lookup-Tabelle für RC5-Codes */
 		private Map<String, Integer> RC5Keys = null;
@@ -413,6 +415,7 @@ public class Sensors {
 		 */
 		public synchronized void writeTo(Command c) {
 			c.setDataL(syncPendingRcCode);
+			c.setDataR(syncPendingToggle ? 1 : 0);
 			syncPendingRcCode = 0;
 		}
 
@@ -423,10 +426,12 @@ public class Sensors {
 		 * @throws IOException
 		 */
 		private synchronized void send(int rc5Code) throws IOException {
+			syncPendingToggle = !syncPendingToggle;
 			if (writesAsynchronously()) {
 				// gleich schreiben
 				synchronized (asyncOut) {
 					asyncOut.getCommand(getHotCmdCode()).setDataL(rc5Code);
+					asyncOut.getCommand(getHotCmdCode()).setDataR(syncPendingToggle ? 1 : 0);
 					asyncOut.flush();
 				}
 			} else {
