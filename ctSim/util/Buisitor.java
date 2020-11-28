@@ -86,13 +86,34 @@ public class Buisitor {
 	 */
 	private static boolean isSupertype(Class<?> supertype, Class<?> subtype) {
 		// isAssignableFrom() geht mit Referenztypen richtig um; berücksichtigt Autoboxing/-unboxing aber nicht
-		if (supertype.isAssignableFrom(subtype))
+		if (supertype.isAssignableFrom(subtype)) {
 			return true;
-		else {
+		} else {
 			// Primitive müssen wir separat prüfen
-			if (isBoolean(supertype))
+			if (isBoolean(supertype)) {
 				return isBoolean(subtype);
-			// $$$ Restliche 8 Primitivtypen prüfen
+			}
+			if (isByte(supertype)) {
+				return isByte(subtype);
+			}
+			if (isShort(supertype)) {
+				return isShort(subtype);
+			}
+			if (isInt(supertype)) {
+				return isInt(subtype);
+			}
+			if (isLong(supertype)) {
+				return isLong(subtype);
+			}
+			if (isFloat(supertype)) {
+				return isFloat(subtype);
+			}
+			if (isDouble(supertype)) {
+				return isDouble(subtype);
+			}
+			if (isChar(supertype)) {
+				return isChar(subtype);
+			}
 			return false;
 		}
 	}
@@ -103,5 +124,61 @@ public class Buisitor {
 	 */
 	private static boolean isBoolean(Class<?> type) {
 		return type.equals(Boolean.class) || type.equals(boolean.class);
+	}
+	
+	/**
+	 * @param type
+	 * @return true, falls type ein byte ist
+	 */
+	private static boolean isByte(Class<?> type) {
+		return type.equals(Byte.class) || type.equals(byte.class);
+	}
+	
+	/**
+	 * @param type
+	 * @return true, falls type ein short ist
+	 */
+	private static boolean isShort(Class<?> type) {
+		return type.equals(Short.class) || type.equals(short.class);
+	}
+	
+	/**
+	 * @param type
+	 * @return true, falls type ein int ist
+	 */
+	private static boolean isInt(Class<?> type) {
+		return type.equals(Integer.class) || type.equals(int.class);
+	}
+	
+	/**
+	 * @param type
+	 * @return true, falls type ein long ist
+	 */
+	private static boolean isLong(Class<?> type) {
+		return type.equals(Long.class) || type.equals(long.class);
+	}
+	
+	/**
+	 * @param type
+	 * @return true, falls type ein float ist
+	 */
+	private static boolean isFloat(Class<?> type) {
+		return type.equals(Float.class) || type.equals(float.class);
+	}
+	
+	/**
+	 * @param type
+	 * @return true, falls type ein double ist
+	 */
+	private static boolean isDouble(Class<?> type) {
+		return type.equals(Double.class) || type.equals(double.class);
+	}
+	
+	/**
+	 * @param type
+	 * @return true, falls type ein char ist
+	 */
+	private static boolean isChar(Class<?> type) {
+		return type.equals(Character.class) || type.equals(char.class);
 	}
 }
