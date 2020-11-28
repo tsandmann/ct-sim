@@ -23,7 +23,6 @@ import ctSim.controller.DefaultController;
 import ctSim.model.World;
 import ctSim.view.gui.Debug;
 
-// $$$ Problem: Wenn Judge Bot-hinzufügen verbietet, wird Bot nicht korrekt de-initialisiert
 /**
  * Abstrakte Superklasse für alle Judges, die prüfen, ob die Spielregeln eingehalten werden.
  *
