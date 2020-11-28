@@ -31,7 +31,7 @@ public class Init {
 	/** Setzt das Design auf Java-System oder Metal für Linux */
 	public static void setLookAndFeel() {
 		/*
-		 * Ubuntu 6.10 + Gnome: Stelle fest, dass c't-Sim absolut bekackt aussieht mit dem Look+Feel
+		 * Gnome: Stelle fest, dass c't-Sim absolut bekackt aussieht mit dem Look+Feel
 		 * des Systems, daher lieber gleich Metal nehmen
 		 */
 		if (System.getProperty("os.name").equals("Linux"))
