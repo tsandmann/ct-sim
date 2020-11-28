@@ -52,7 +52,8 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @param componentKey
 	 * @return T
 	 */
-    public <T> T get(Class<T> componentKey) {
+    @SuppressWarnings("unchecked")
+	public <T> T get(Class<T> componentKey) {
 	    return (T)super.getComponentInstance(componentKey);
 	}
 
