@@ -115,6 +115,8 @@ public class CtBotSimTest extends CtBot implements SimulatedBot {
 				rr = -255;
 				break;
 			}
+			default:
+				break;
 			}
 		} else {
 			/* Drehen beendet */

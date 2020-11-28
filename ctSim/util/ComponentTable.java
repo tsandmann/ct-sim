@@ -97,6 +97,7 @@ public class ComponentTable extends JTable {
 	 * @param rowData
 	 * @param columnNames
 	 */
+	@SuppressWarnings("unchecked")
 	public ComponentTable(Vector rowData, Vector columnNames) {
 		super(rowData, columnNames);
 		init();

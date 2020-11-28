@@ -184,6 +184,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 
 			updateExternalModel();	// Initialen Wert setzen
 			getExternalModel().addChangeListener(new ChangeListener() {
+				@SuppressWarnings("incomplete-switch")
 				public void stateChanged(ChangeEvent e) {
 					double newValue = getExternalModel().getNumber().doubleValue();
 					Point3d p = getPositionInWorldCoord();
@@ -222,6 +223,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		}
 
 		/** Aktualisiert das externe Modell */
+		@SuppressWarnings("incomplete-switch")
 		@Override
 		public void updateExternalModel() {
 			double newValue = 0;
@@ -275,6 +277,7 @@ public class ThreeDBot extends BasicBot implements Runnable {
 		}
 
 		/** Aktualisiert das externe Modell */
+		@SuppressWarnings("incomplete-switch")
 		@Override
 		public void updateExternalModel() {
 			double newValue = 0;
