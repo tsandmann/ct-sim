@@ -158,7 +158,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 	 * @param c	Command
 	 */
 	public synchronized void readFrom(Command c) {
-		// TODO Ist alles ziemlich zerbrechlich. Was ist zum Beispiel, wenn der Bot aufgrund eines Bug eine dataL außerhalb des Arrays sendet? -> Mehr Input Validation, wofür haben wir ProtocolExceptions
+		// TODO Ist alles ziemlich zerbrechlich. Was ist zum Beispiel, wenn der Bot aufgrund eines Bug eine dataL außerhalb des Arrays sendet?
+		// -> Mehr Input Validation, wofür haben wir ProtocolExceptions
 		if (! c.has(getHotCmdCode()))
 			return;
 
@@ -174,7 +175,8 @@ implements CanRead, CanWrite, CanWriteAsynchronously {
 			int col = (offset + i) % WIDTH;
 			int row = (offset + i) / WIDTH;
 			col = HEIGHT - 1 - col;	// spiegeln - oben und unten vertauschen
-			// Um 90 Grad drehen = Spaltennr. und Zeilennr. vertauschen (siehe )	$$$ siehe Protokoll-Doku
+			// Um 90 Grad drehen = Spaltennr. und Zeilennr. vertauschen (siehe 
+			// Protokoll-Doku: https://github.com/tsandmann/ct-bot/blob/master/mcu/mouse.c#L150)
 			// ohne Drehen wäre pixels[col + (row * WIDTH)]
 			pixels[(col * HEIGHT) + row] = colorFromRgb(gray, gray, gray);
 		}
