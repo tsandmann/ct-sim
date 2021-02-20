@@ -115,6 +115,7 @@ public abstract class BasicBot implements Bot {
 		 *
 		 * @param elements	die Elemente
 		 */
+		@SuppressWarnings("unchecked")
 		public void add(T... elements) {
             for (T e : elements)
                 add(e);

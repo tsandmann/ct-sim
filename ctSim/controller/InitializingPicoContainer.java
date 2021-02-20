@@ -52,7 +52,8 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 	 * @param componentKey
 	 * @return T
 	 */
-    public <T> T get(Class<T> componentKey) {
+    @SuppressWarnings("unchecked")
+	public <T> T get(Class<T> componentKey) {
 	    return (T)super.getComponentInstance(componentKey);
 	}
 
@@ -65,7 +66,7 @@ public class InitializingPicoContainer extends DefaultPicoContainer {
 		try {
 	        Class.forName(classToInitialize.getName());
         } catch (ClassNotFoundException e) {
-        	// $$$ Obskurer Fehler
+        	// Exception bei nicht vorhandener/geladener Klasse
         	throw new RuntimeException(e);
         }
 	}

@@ -411,6 +411,7 @@ public class ContestConductor implements View {
 	 * @throws IOException
 	 * @throws TournamentPlanException
 	 */
+	@SuppressWarnings("incomplete-switch")
 	private void proceedWithNextGame() throws SQLException, IOException, TournamentPlanException {
 		try {
 			sleepAndStartNextGame();
@@ -579,6 +580,7 @@ public class ContestConductor implements View {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unused")
 	private synchronized void startNextGame() throws SQLException, IOException {
 		/**
 		 * Zu startendes Spiel könnte auch von unserem Aufrufer (sleepAndStartNextGame()) übergeben werden,

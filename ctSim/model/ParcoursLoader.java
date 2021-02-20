@@ -878,6 +878,7 @@ public class ParcoursLoader {
 	 * @param textureFile	der Name des Texture-Files
 	 * @param clone			Referenz auf einen schon bestehenden Eintrag, der geclonet werden soll
 	 */
+	@SuppressWarnings("unchecked")
 	private void addAppearance(char item, HashMap colors, String textureFile, String clone) {
 		if (clone != null) {
 			appearances.put(item, appearances.get(clone.toCharArray()[0]));
@@ -981,6 +982,8 @@ public class ParcoursLoader {
 				out.print(" " + data);
 			}
 			out.println("?>");
+			break;
+		default:
 			break;
 		}
 	}

@@ -87,6 +87,7 @@ public class Decoratoror {
 	 * @return T
 	 * @throws NoSuchMethodException
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T createDecorated(
 	Class<T> resultInterface, Object... decorators)
 	throws NoSuchMethodException {

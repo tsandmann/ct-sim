@@ -192,6 +192,7 @@ public class TournamentTreeGuiTest extends JFrame {
      *
      * @param args
      */
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		new TournamentTreeGuiTest();
 	}

@@ -97,7 +97,10 @@ public class DecoratororTest {
 			C.class.getMethod("getA", new Class[] {})));
 	}
 
-	/** TBD */
+
+	/**
+	 * Test, ob Parameteranzahl und Typen passen
+	 */
 	@Test
 	@SuppressWarnings("unused")
 	public void doesImplementParameterStuff() {
