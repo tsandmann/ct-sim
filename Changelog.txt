@@ -1,6 +1,13 @@
 Changelog für c't-Sim
 ======================
-2020-09-01: Relase 28 (v2.28)
+2021-02-20: Release 29 (v2.29)
+	- Readme updated
+	- RC5: send toggle bit to bot
+	- Unnecessary warnings and todos resolved
+	- Fix for datatype checks in Buisitor
+	- Unclear comments and documentation updated
+
+2020-09-01: Release 28 (v2.28)
     - jar file improved: contains all dependent library jars, enforce UTF-8 encoding
 	- Parcours for behaviour_adventcal
 	- Support for distance sensor VL53L0X added (see config/ct-sim.xml: parameter name="VL53L0X")
