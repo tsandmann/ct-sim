@@ -16,5 +16,6 @@ Feel free to fork from this repository, add your own extensions or improvements 
 ## Continuous integration tests
 | Branch              | Build status  |
 |:------------------- |:------------- |
-| master              | [![Build status](https://travis-ci.org/tsandmann/ct-sim.svg?branch=master "Build status of branch master")](https://travis-ci.org/tsandmann/ct-sim) |
-| develop             | [![Build status](https://travis-ci.org/tsandmann/ct-sim.svg?branch=develop "Build status of branch develop")](https://travis-ci.org/tsandmann/ct-sim) |
+| master              | [![Java CI](https://github.com/tsandmann/ct-sim/actions/workflows/ant_build.yml/badge.svg?branch=master "Build status of branch master")](https://github.com/tsandmann/ct-sim/actions/workflows/ant_build.yml) |
+| develop             | [![Java CI](https://github.com/tsandmann/ct-sim/actions/workflows/ant_build.yml/badge.svg?branch=develop "Build status of branch develop")](https://github.com/tsandmann/ct-sim/actions/workflows/ant_build.yml) |
+
