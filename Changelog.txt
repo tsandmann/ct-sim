@@ -1,5 +1,8 @@
 Changelog für c't-Sim
 ======================
+2021-04-10: Release 29.1 (v2.29.1)
+	- CI moved to GitHub Actions
+
 2021-02-20: Release 29 (v2.29)
 	- Readme updated
 	- RC5: send toggle bit to bot
