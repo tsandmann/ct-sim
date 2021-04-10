@@ -295,7 +295,7 @@ public class MainWinMenuBar extends JMenuBar {
 			/* Splash-Screen anzeigen */
 			java.net.URL url = ClassLoader.getSystemResource("images/splash.jpg");
 			SplashWindow.splash(url, "Version " + Main.VERSION);
-			SplashWindow.setMessage("                                                      c't-Bot Projekt 2006-2020");
+			SplashWindow.setMessage("                                                      c't-Bot Projekt 2006-2021");
 		}
 	};
 
@@ -304,7 +304,7 @@ public class MainWinMenuBar extends JMenuBar {
 		public void run() {
 			try {
 				Desktop.getDesktop().browse(
-						new URL("https://www.heise.de/ct/artikel/c-t-Bot-und-c-t-Sim-284119.html").toURI());
+						new URL("https://www.ct-bot.de").toURI());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
