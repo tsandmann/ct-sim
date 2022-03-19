@@ -1,4 +1,6 @@
-# ct-sim
+# ct-Sim
+
+[![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](LICENSE.md) [![Chat on Matrix](https://matrix.to/img/matrix-badge.svg)](https://matrix.to/#/#ctbot:matrix.org)
 
 This repository contains the source code of the c't-Bot simulator. c't-Bot and c't-Sim belong together and represent a robot project that was initiated by the magazine [c't](https://www.heise.de/ct) in 2006.
 
