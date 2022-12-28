@@ -1,5 +1,9 @@
 Changelog für c't-Sim
 ======================
+2022-12-28: Release 29.2 (v2.29.2)
+	- Readme updated
+	- Parcours updated
+
 2021-04-10: Release 29.1 (v2.29.1)
 	- CI moved to GitHub Actions
 
